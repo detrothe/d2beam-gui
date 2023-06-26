@@ -1,0 +1,62 @@
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.input_int {
+  width: 3.125em;
+  margin: 0;
+  padding: 1px;
+  border-top: 1px solid #444;
+  border-bottom: 1px solid #444;
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+  text-align: center;
+}
+
+td,
+th {
+  padding: 0px;
+  margin: 0px;
+  width: 6em;
+}
+
+table {
+  border: none;
+  border-spacing: 0px;
+  padding: 5px;
+  margin: 5px;
+  background-color: rgb(207, 217, 21);
+  border-radius: 5px;
+}
+
+td.selected {
+  /*background-color: rgb(206, 196, 46);*/
+  color: rgb(13, 13, 13);
+}
+
+td.highlight {
+  background-color: orange;
+  color: darkslateblue;
+}
+
+.input_select {
+  background-color: orange;
+  color: darkslateblue;
+  /*touch-action: none;*/
+}
+
+.input_normal {
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  /*font-variant-numeric: oldstyle-nums tabular-nums;
+  touch-action: none;*/
+}
+

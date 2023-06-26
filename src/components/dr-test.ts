@@ -1,8 +1,15 @@
-import { LitElement, css, html } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
+import styles from './dr-test.css?raw';
 
-@customElement('dr-table')
-export class drTable extends LitElement {
+// <hello-world> Web Component
+class DrTest extends HTMLElement {
+  shadow: any = null;
+
+  nZeilen = 2;
+  nSpalten = 2;
+
+  nTabRow = 3;  // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
+  nTabCol = 3;
+
   cellWidth = 0;
   cellHeight = 0;
   cellRow = 0;
@@ -16,169 +23,201 @@ export class drTable extends LitElement {
 
   tableRoot: any;
 
+  tableId = null;
+  isSelected = false;
+  selectedCellRow = -1;
+  selectedCellCol = -1;
+  col = -1;
+  row = -1;
+  wert = 0;
+  activatedElement = null;
+  //selColY= []
+  //selColZ= []
+  startRowIndex = 0;
+  startColIndex = 0;
+  pointerIsDown = false;
+  startx = 0;
+  starty = 0;
+  zelle = null;
+  //nZeilen = 0
+  //nSpalten = 0
+  selectionMode = false;
 
-    tableId = null
-    isSelected = false
-    selectedCellRow = -1
-    selectedCellCol = -1
-    col = -1
-    row = -1
-    wert = 0
-    activatedElement = null
-    //selColY= []
-    //selColZ= []
-    startRowIndex = 0
-    startColIndex = 0
-    pointerIsDown = false
-    startx = 0
-    starty = 0
-    zelle = null
-    //nZeilen = 0
-    nSpalten = 0
-    selectionMode = false
-
-
-  @property({ type: String }) title = 'simple table';
-
-  @property({ type: Boolean }) enableBack: boolean = false;
-  @property({ type: Number }) nZeilen = 2;
-  @property({ type: String }) inputID = 'leer';
-  @property({ type: Array }) columns = [];
-
-  static get styles() {
-    return css`
-      input,
-      label {
-        font-size: 1em;
-      }
-
-      button {
-        font-size: 1em;
-        border-radius: 3px;
-        border-width: 1px;
-        border-color: #303030;
-        color: #444;
-        padding: 0.2em;
-      }
-
-      button:active {
-        background-color: darkorange;
-      }
-      input[type='number']::-webkit-inner-spin-button,
-      input[type='number']::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-
-      /* Firefox */
-      input[type='number'] {
-        -moz-appearance: textfield;
-      }
-
-      .input_int {
-        width: 3.125em;
-        margin: 0;
-        padding: 1px;
-        border-top: 1px solid #444;
-        border-bottom: 1px solid #444;
-        border-left: 0;
-        border-right: 0;
-        border-radius: 0;
-        text-align: center;
-      }
-
-      td,
-      th {
-        padding: 0px;
-        margin: 0px;
-        width: 6em;
-      }
-
-      table {
-        border: none;
-        border-spacing: 0px;
-        padding: 5px;
-        margin: 5px;
-        background-color: rgb(207, 217, 21);
-        border-radius: 5px;
-      }
-
-      td.selected {
-        /*background-color: rgb(206, 196, 46);*/
-        color: rgb(13, 13, 13);
-      }
-
-      td.highlight {
-        background-color: orange;
-        color: darkslateblue;
-      }
-    `;
+  connectedCallback() {
+    this.textContent = 'Hello, World!';
+  }
+  /*
+  connectedCallback() {
+    console.log('Custom square element added to page.');
+    //updateStyle(this);
+  }
+*/
+  disconnectedCallback() {
+    console.log('Custom square element removed from page.');
   }
 
-  constructor() {
-    super();
+  adoptedCallback() {
+    console.log('Custom square element moved to new page.');
   }
 
-  async firstUpdated() {
-    console.log('inputID', this.inputID);
-    console.log('heads', this.columns);
+  attributeChangedCallback(name: any, oldValue: any, newValue: any) {
+    console.log(
+      'Custom square element attributes changed.',
+      name,
+      oldValue,
+      newValue
+    );
+    //updateStyle(this);
+    this.resize_Tabelle('mytable', newValue, this.nSpalten);
+  }
 
-    const shadow = this.shadowRoot;
-    console.log('this: ', this);
-    if (shadow) {
-      this.tableRoot = shadow;
-      console.log('11', this.tableRoot);
-      const table = shadow.getElementById('id_table') as HTMLTableElement;
-      let thead = table.createTHead();
-      console.log('thead', thead);
-      let row = thead.insertRow();
-      for (let i = 0; i < this.columns.length; i++) {
-        if (table.tHead ) {
-        const th0 = table.tHead.appendChild(document.createElement('th'));
-        th0.innerHTML = this.columns[i];
-        //th0.title = "Elementnummer"
-        th0.style.padding = '5px';
-        th0.style.margin = '0px';
-        th0.style.textAlign = 'center';
-        //th0.setAttribute('title', 'Hilfe')
-        row.appendChild(th0);
+  static get observedAttributes() {
+    return ['nzeilen'];
+  }
+
+  set neueZeilen(n: any) {
+    console.log('in neueZeilen', n);
+    this.nZeilen = n;
+  }
+
+  //----------------------------------------------------------------------------------------------
+  resize_Tabelle(idTable: any, nRowNew: number, nColNew: number) {
+    //----------------------------------------------------------------------------------------------
+
+    console.info('in resize', idTable);
+
+    const table = this.shadow.getElementById(idTable) as HTMLTableElement;
+    console.log('spalten', table);
+    let nZeilen = table.rows.length - 1; // header abziehen
+    let nSpalten = table.rows[0].cells.length - 1;
+
+    //TODO const tableIndex = table_index(idTable);
+    //tableInfo[tableIndex].nZeilen = nRowNew;
+    //tableInfo[tableIndex].nSpalten = nColNew + 1;
+
+    console.log('nRowNew', nRowNew, nColNew, nZeilen, nSpalten);
+
+    if (nSpalten > nColNew) {
+      for (let i = 1; i <= nSpalten - nColNew; i++) {
+        // Spalten löschen  nZeilen - nRowNew
+        for (let j = 0; j <= nZeilen; j++) {
+          let row = table.rows.item(j);
+          if (row) row.deleteCell(-1);
         }
       }
-      let id_table = 'idtable';
+    }
+    if (nZeilen > nRowNew) {
+      for (let i = 1; i <= nZeilen - nRowNew; i++) {
+        table.deleteRow(-1);
+        //console.log("selRow",selectedCellPoly.selRow);
+        //selectedCellPoly.selColY.length -= 1;
+        //selectedCellPoly.selColZ.length -= 1;
+      }
+    }
 
-      let tbody = table.createTBody();
+    if (nColNew > nSpalten) {
+      // nicht getestet, da hier nicht gebraucht
 
-      for (let iZeile = 1; iZeile <= this.nZeilen; iZeile++) {
-        let newRow = tbody.insertRow(-1);
+      for (let iZeile = 0; iZeile <= nZeilen; iZeile++) {
+        // Spalten addieren
+        let row = table.rows.item(iZeile);
+        if (row) {
+          //console.log("row",row);
+          for (let iSpalte = nSpalten + 1; iSpalte <= nColNew; iSpalte++) {
+            // nZeilen + 1; j <= nRowNew
 
-        for (let iSpalte = 0; iSpalte < this.columns.length; iSpalte++) {
-          // columns.length
+            const newCell = row.insertCell(-1);
+            let newText;
+            if (iSpalte === 0) {
+              //newCell = newRow.insertCell(iSpalte);  // Insert a cell in the row at index 0
+              newText = document.createTextNode(String(iZeile)); // Append a text node to the cell
+              newCell.style.textAlign = 'center';
+              //TODO newCell.style.backgroundColor = color_table_in; //'#b3ae00'  //'rgb(150,180, 180)';
+              newCell.style.padding = '0px';
+              newCell.style.margin = '0px';
+              newCell.appendChild(newText);
+            } else {
+              let el = document.createElement('input');
+              el.setAttribute('type', 'number');
+              el.style.width = 'inherit'; //'6em';
+              //el.style.backgroundColor = 'rgb(200,200,200)';
+              el.style.border = 'none';
+              el.style.borderWidth = '0px';
+              el.style.padding = '5px';
+              el.style.margin = '0px';
+              el.style.borderRadius = '0px';
+              const str = idTable + '-' + iZeile + '-' + iSpalte;
+              el.id = str;
+              //el.className = 'input_normal';
+              el.addEventListener('keydown', this.KEYDOWN);
+              //el.addEventListener('change', function () {
+              //  berechnungErforderlich(true);
+              //});
+              //el.addEventListener("mousemove", newMOUSEMOVE);
 
+              //console.log("el", el)
+              //newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
+              //newCell = newRow.insertCell()
+              newCell.style.width = '6em';
+              newCell.style.border = 'solid';
+              newCell.style.borderWidth = '1px';
+              newCell.style.padding = '0px';
+              newCell.style.margin = '0px';
+              newCell.style.backgroundColor = 'rgb(200,200,200)';
+              newCell.style.touchAction = 'auto';
+              const str1 = idTable + 'Cell-' + iZeile + '-' + iSpalte;
+              newCell.id = str1;
+              newCell.className = 'input_normal';
+
+              newCell.appendChild(el);
+              // el.addEventListener("pointermove", POINTERMOVE);
+              el.addEventListener('pointerdown', this.POINTER_DOWN);
+            }
+          }
+        }
+      }
+    }
+
+    if (nRowNew > nZeilen) {
+      //const material_equal = document.getElementById(
+      //  'material_equal'
+      //) as HTMLInputElement | null;
+      //console.log("in setMaterialEqual, nRowNew > nZeilen", nColNew, material_equal.checked);
+
+      for (let iZeile = nZeilen + 1; iZeile <= nRowNew; iZeile++) {
+        //selectedCellPoly.selColY.push(false);
+        //selectedCellPoly.selColZ.push(false);
+
+        // Insert a row at the end of the table
+        let newRow = table.insertRow(-1);
+
+        for (let iSpalte = 0; iSpalte <= nColNew; iSpalte++) {
           let newCell, newText;
           if (iSpalte === 0) {
             newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
             newText = document.createTextNode(String(iZeile)); // Append a text node to the cell
             newCell.style.textAlign = 'center';
-            //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
+            //TODO newCell.style.backgroundColor = color_table_in; //'#b3ae00'  //'rgb(150,180, 180)';
             newCell.style.padding = '0px';
             newCell.style.margin = '0px';
             newCell.appendChild(newText);
-            //newCell.setAttribute('title', 'Knotennummer')
           } else {
             let el = document.createElement('input');
             el.setAttribute('type', 'number');
-            el.style.width = 'inherit'; //'6em';   // 100px
-            //el.style.backgroundColor = 'rgb(200,200,200)';
+            el.style.width = 'inherit'; //'6em';
             el.style.border = 'none';
             el.style.borderWidth = '0px';
             el.style.padding = '5px';
             el.style.margin = '0px';
             el.style.borderRadius = '0px';
-            const str = id_table + '-' + iZeile + '-' + iSpalte;
+            const str = idTable + '-' + iZeile + '-' + iSpalte;
             el.id = str;
             //el.className = 'input_normal';
             el.addEventListener('keydown', this.KEYDOWN);
-            //el.addEventListener("change", function () { berechnungErforderlich(true); });
+            //el.addEventListener('change', function () {
+            //  berechnungErforderlich(true);
+            //});
+            //el.addEventListener("mousemove", newMOUSEMOVE);
 
             newCell = newRow.insertCell();
             newCell.style.width = '6em';
@@ -188,27 +227,128 @@ export class drTable extends LitElement {
             newCell.style.margin = '0px';
             newCell.style.backgroundColor = 'rgb(200,200,200)';
             newCell.style.touchAction = 'auto';
-            const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
+            const str1 = idTable + 'Cell-' + iZeile + '-' + iSpalte;
             newCell.id = str1;
             newCell.className = 'input_normal';
 
             newCell.appendChild(el);
-
             el.addEventListener('pointerdown', this.POINTER_DOWN);
-            el.addEventListener('pointermove', this.POINTER_MOVE);
-            //console.log("rect", iZeile, iSpalte, el.getBoundingClientRect().x, newCell.getBoundingClientRect().y, newCell.getBoundingClientRect().width, newCell.getBoundingClientRect().height)
           }
         }
       }
     }
-    console.log('shadowRoot', this.shadowRoot?.getElementById('id_table'));
-    this.requestUpdate();
   }
 
-  //----------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------
+  constructor() {
+    //----------------------------------------------------------------------------------------
+    super();
 
-  render() {
-    return html` <table id="id_table"></table> `;
+    // defaults
+    console.log('shadowroot ', this.shadowRoot);
+
+    // attach shadow DOM
+    this.shadow = this.attachShadow({ mode: 'open' });
+    console.log('shadow ', this.shadow);
+
+    const stylesheet = new CSSStyleSheet();
+    stylesheet.replace(styles);
+    this.shadow.adoptedStyleSheets = [stylesheet];
+
+    this.shadow.innerHTML = `
+  <style>
+    p {
+      font-size: 5em;
+      text-align: center;
+      font-weight: normal;
+      color: red;
+    }
+  </style>
+
+  <p>Hello!</p>
+`;
+
+    console.log('-------------------------------------------------');
+
+    const table = document.createElement('table');
+    this.shadow.appendChild(table);
+    table.id = 'mytable';
+
+    let thead = table.createTHead();
+    console.log('thead', thead);
+    let row = thead.insertRow();
+    for (let i = 0; i < this.nTabCol; i++) {
+      if (table.tHead) {
+        const th0 = table.tHead.appendChild(document.createElement('th'));
+        th0.innerHTML = String(i);
+        //th0.title = "Elementnummer"
+        th0.style.padding = '5px';
+        th0.style.margin = '0px';
+        th0.style.textAlign = 'center';
+        //th0.setAttribute('title', 'Hilfe')
+        row.appendChild(th0);
+      }
+    }
+
+    let id_table = 'idtable';
+
+    let tbody = table.createTBody();
+
+    for (let iZeile = 1; iZeile < this.nTabRow; iZeile++) {
+      let newRow = tbody.insertRow(-1);
+
+      for (let iSpalte = 0; iSpalte < this.nTabCol; iSpalte++) {
+        //this.columns.length
+        // columns.length
+
+        let newCell, newText;
+        if (iSpalte === 0) {
+          newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
+          newText = document.createTextNode(String(iZeile)); // Append a text node to the cell
+          newCell.style.textAlign = 'center';
+          //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
+          newCell.style.padding = '0px';
+          newCell.style.margin = '0px';
+          newCell.appendChild(newText);
+          //newCell.setAttribute('title', 'Knotennummer')
+        } else {
+          let el = document.createElement('input');
+          el.setAttribute('type', 'number');
+          el.style.width = 'inherit'; //'6em';   // 100px
+          //el.style.backgroundColor = 'rgb(200,200,200)';
+          el.style.border = 'none';
+          el.style.borderWidth = '0px';
+          el.style.padding = '5px';
+          el.style.margin = '0px';
+          el.style.borderRadius = '0px';
+          const str = id_table + '-' + iZeile + '-' + iSpalte;
+          el.id = str;
+          //el.className = 'input_normal';
+          el.addEventListener('keydown', this.KEYDOWN);
+          //el.addEventListener("change", function () { berechnungErforderlich(true); });
+
+          newCell = newRow.insertCell();
+          newCell.style.width = '6em';
+          newCell.style.border = 'solid';
+          newCell.style.borderWidth = '1px';
+          newCell.style.padding = '0px';
+          newCell.style.margin = '0px';
+          newCell.style.backgroundColor = 'rgb(200,200,200)';
+          newCell.style.touchAction = 'auto';
+          const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
+          newCell.id = str1;
+          newCell.className = 'input_normal';
+
+          newCell.appendChild(el);
+
+          el.addEventListener('pointerdown', this.POINTER_DOWN);
+          //TODO el.addEventListener('pointermove', this.POINTER_MOVE);
+          //console.log("rect", iZeile, iSpalte, el.getBoundingClientRect().x, newCell.getBoundingClientRect().y, newCell.getBoundingClientRect().width, newCell.getBoundingClientRect().height)
+        }
+      }
+    }
+
+    console.log('FINAL shadowroot ', this.shadowRoot);
   }
 
   //------------------------------------------------------------------------------------------------
@@ -225,6 +365,8 @@ export class drTable extends LitElement {
 
     //console.log("KEYDOWN", ev.keyCode, ev.shiftKey, ev.key, ev)
     //infoBox.innerHTML += "<br>key= " + ev.key + "  | keyCode= " + ev.keyCode
+
+    ev.target.style.backgroundColor = 'rgb(210,00,00)';
 
     if (ev.shiftKey) {
       ev.preventDefault();
@@ -279,8 +421,8 @@ export class drTable extends LitElement {
     console.log('myTable:', myTable);
     if (selectMode || ev.pointerType === 'mouse') {
       // bei Mouse immer select mode
-      console.log("select Mode = true")
-      myTable.addEventListener('pointermove', this.POINTER_MOVE); // , { passive: false }
+      console.log('select Mode = true', this);
+      this.addEventListener('pointermove', this.POINTER_MOVE); // , { passive: false }
       //TODO myTable.addEventListener("pointerup", POINTER_UP);
     }
 
@@ -342,6 +484,8 @@ export class drTable extends LitElement {
     this.startRowIndex = row;
     this.startColIndex = col;
 */
+      //if (myTable ) myTable.rows[this.cellRow].cells[this.cellCol].firstElementChild.className = 'input_select';  // funktioniert
+
       if (selectMode && ev.pointerType !== 'mouse') {
         ev.preventDefault();
       }
@@ -353,8 +497,8 @@ export class drTable extends LitElement {
   POINTER_MOVE(ev: any) {
     // pointer move
     //--------------------------------------------------------------------------------------------
-    console.log("POINTER MOVE", ev)
-    console.log("tagname", ev.target.tagName)
+    console.log('POINTER MOVE', ev);
+    console.log('tagname', ev.target.tagName);
     ev.preventDefault();
 
     if (ev.target.tagName !== 'INPUT') return;
@@ -423,13 +567,13 @@ export class drTable extends LitElement {
       if (el) {
         el.className = 'input_select';
         //if (browser !== 'Firefox') {
-          if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
-            el.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center',
-              inline: 'center',
-            }); // { behavior: "smooth", block: "end", inline: "nearest" }
-          }
+        if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
+          el.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center',
+          }); // { behavior: "smooth", block: "end", inline: "nearest" }
+        }
         //}
       }
       if (nx !== 0 || ny !== 0) this.selected = true;
@@ -489,4 +633,7 @@ export class drTable extends LitElement {
     }
   }
 }
+
+// register <hello-world> with the HelloWorld class
+customElements.define('dr-test', DrTest);
 

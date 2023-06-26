@@ -1,7 +1,7 @@
 {
-  "name": "pwa-starter",
+  "name": "pwa-d2beam",
   "version": "0.0.1",
-  "description": "A starter kit for building PWAs!",
+  "description": "A layered beam analysis PWA",
   "main": "index.js",
   "scripts": {
     "dev-server": "vite --open --host",
@@ -29,7 +29,7 @@
     "vite-plugin-pwa": "^0.14.7"
   },
   "prettier": {
-    "tabWidth": 2,
+    "tabWidth": 3,
     "useTabs": false,
     "semi": true,
     "singleQuote": true,
