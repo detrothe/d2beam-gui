@@ -135,8 +135,12 @@ export class drLayerQuerSchnitt extends LitElement {
                <label for="nschichten">Anzahl Schichten: </label>
                <input id="nschichten" type="number" /><br />
 
+               <sl-button
+                  id="nschichten-dialog"
+                  @click="${this._handleClick_schichten_dialog}"
+                  >ändere Anzahl Schichten</sl-button
+               >
                <dr-test id="nzlayer"></dr-test>
-
             </sl-tab-panel>
 
             <sl-tab-panel name="tab-stahl">Tab panel Stahl </sl-tab-panel>
@@ -173,6 +177,22 @@ export class drLayerQuerSchnitt extends LitElement {
       const shadow = this.shadowRoot;
       if (shadow)
          (shadow.getElementById('dialog') as HTMLDialogElement).close();
+   }
+
+   _handleClick_schichten_dialog() {
+      console.log('handleClick_schichten_dialog()');
+
+      const shadow = this.shadowRoot;
+      if (shadow) {
+         const el = shadow.getElementById('nschichten') as HTMLInputElement;
+         console.log("el nschichten",el.value)
+
+         const el1 = shadow.getElementById('nzlayer');
+         console.log('EL: >>', el1);
+         el1?.setAttribute('nzeilen', el.value);
+      }
+
+
    }
 }
 
