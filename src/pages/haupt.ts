@@ -128,25 +128,4 @@ function neuZeilen() {
    }
 }
 
-function dialog_ok() {
-   console.log('dialog_ok');
-   /*
-    const shadow = this.shadowRoot;
-    if (shadow) {
-       console.log(
-          'email: ',
-          (shadow.getElementById('email') as HTMLInputElement).value
-       );
-       (shadow.getElementById('dialog') as HTMLDialogElement).close();
-    }
-    */
-   (document.getElementById('dialog') as HTMLDialogElement).close();
-}
-
-function dialog_abbruch() {
-   console.log('dialog_abbruch');
-   //const shadow = this.shadowRoot;
-   //if (shadow) (shadow.getElementById('dialog') as HTMLDialogElement).close();
-   (document.getElementById('dialog') as HTMLDialogElement).close();
-}
 
