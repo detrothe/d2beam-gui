@@ -6,8 +6,9 @@ export class drButtonPM extends LitElement {
   @property({ type: String }) title = 'Button with counter';
 
   @property({ type: Boolean }) enableBack: boolean = false;
-  @property({ type: Number }) nnodes = 2;
+  @property({ type: Number }) nel = 2;
   @property({ type: String }) inputID = "";
+  @property({ type: String }) txt = "";
 
   static get styles() {
     return css`
@@ -89,28 +90,28 @@ export class drButtonPM extends LitElement {
 
   //----------------------------------------------------------------------------------------------
   _increment_nnodes() {
-    this.nnodes++;
-    console.log("_increment_nnodes",this.nnodes)
+    this.nel++;
+    console.log("_increment_nnodes",this.nel)
     const shadow = this.shadowRoot;
-    if (shadow) (shadow.getElementById(this.inputID) as HTMLInputElement).value = String(this.nnodes);
-    //input_nodes.value = this.nnodes;
+    if (shadow) (shadow.getElementById(this.inputID) as HTMLInputElement).value = String(this.nel);
+    //input_nodes.value = this.nel;
     //set_InfosNeueBerechnungErforderlich()
   }
   //----------------------------------------------------------------------------------------------
   _decrement_nnodes() {
-    this.nnodes--;
-    console.log("_decrement_nnodes",this.nnodes)
+    this.nel--;
+    console.log("_decrement_nnodes",this.nel)
     const shadow = this.shadowRoot;
     if (shadow) {
       //console.log("id:",shadow.getElementById(this.inputID));
-      (shadow.getElementById(this.inputID) as HTMLInputElement).value = String(this.nnodes);
+      (shadow.getElementById(this.inputID) as HTMLInputElement).value = String(this.nel);
     }
-    //input_nodes.value = this.nnodes;
+    //input_nodes.value = this.nel;
     //set_InfosNeueBerechnungErforderlich()
   }
   render() {
     return html`
-      <label id="lab_nnodes">Anzahl Knoten :</label>
+      <label id="lab_nnodes">${this.txt}</label>
 
       <button
         id="id_input_node_dec"
@@ -124,7 +125,7 @@ export class drButtonPM extends LitElement {
         id="${this.inputID}"
         name="nnodes"
         class="input_int"
-        value="${this.nnodes}"
+        value="${this.nel}"
       /><button
         id="id_input_node_incr"
         class="spinner increment"

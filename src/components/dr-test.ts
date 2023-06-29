@@ -363,7 +363,7 @@ class DrTest extends HTMLElement {
     );
     //const tableCellId = ev.target.offsetParent.id;
 
-    //console.log("KEYDOWN", ev.keyCode, ev.shiftKey, ev.key, ev)
+    console.log("KEYDOWN", ev.keyCode, ev.shiftKey, ev.key, ev)
     //infoBox.innerHTML += "<br>key= " + ev.key + "  | keyCode= " + ev.keyCode
 
     ev.target.style.backgroundColor = 'rgb(210,00,00)';

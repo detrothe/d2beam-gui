@@ -15,6 +15,9 @@ import '../components/dr-button-pm';
 import '../components/dr-table';
 import '../components/dr-test';
 import '../components/dr-dialog-layerquerschnitt';
+import '../components/dr-dialog-rechteckquerschnitt';
+
+import { rechnen } from './rechnen';
 
 {
    const template = () => html`
@@ -26,11 +29,11 @@ import '../components/dr-dialog-layerquerschnitt';
       </style>
 
       <sl-tab-group>
-         <sl-tab slot="nav" panel="tab-1">Querschnitte</sl-tab>
-         <sl-tab slot="nav" panel="tab-2">Tab 2</sl-tab>
-         <sl-tab slot="nav" panel="tab-3">Tab 3</sl-tab>
+         <sl-tab slot="nav" panel="tab-1">Haupt</sl-tab>
+         <sl-tab slot="nav" panel="tab-2">Querschnitte</sl-tab>
+         <sl-tab slot="nav" panel="tab-3">Knoten</sl-tab>
          <sl-tab slot="nav" panel="tab-4">Tab Test</sl-tab>
-         <sl-tab slot="nav" panel="tab-5">Tab 5</sl-tab>
+         <sl-tab slot="nav" panel="tab-5">Elemente</sl-tab>
          <sl-tab slot="nav" panel="tab-6">Tab 6</sl-tab>
          <sl-tab slot="nav" panel="tab-7">Tab 7</sl-tab>
          <sl-tab slot="nav" panel="tab-8">Tab 8</sl-tab>
@@ -47,10 +50,15 @@ import '../components/dr-dialog-layerquerschnitt';
          <sl-tab slot="nav" panel="tab-19">Tab 19</sl-tab>
          <sl-tab slot="nav" panel="tab-20">Tab 20</sl-tab>
 
-         <sl-tab-panel name="tab-1"
-            >Tab panel 1 <br />
+         <sl-tab-panel name="tab-2">
             <sl-button id="open-dialog" @click="${handleClick}"
                >Zeige die Dialog-Box</sl-button
+            >
+            <br />
+            <sl-button
+               id="open-dialog_rechteck"
+               @click="${handleClick_rechteck}"
+               >Rechteckdialog</sl-button
             >
 
             <sl-tree class="custom-icons">
@@ -59,27 +67,47 @@ import '../components/dr-dialog-layerquerschnitt';
                <sl-icon name="dash-square" slot="collapse-icon"></sl-icon>
       -->
                <sl-tree-item @click="${handleClick_LD}">
-                  Linear direkt
+                  Linear elastisch Querschnittswerte
                   <sl-tree-item>Birch</sl-tree-item>
 
                   <sl-tree-item>Oak</sl-tree-item>
                </sl-tree-item>
 
                <sl-tree-item>
-                  Linear eleastisch allgemein
+                  Linear elastisch allgemein
                   <sl-tree-item>Cedar</sl-tree-item>
                   <sl-tree-item>Pine</sl-tree-item>
                   <sl-tree-item>Spruce</sl-tree-item>
                </sl-tree-item>
-
-
             </sl-tree>
 
             <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt>
+            <dr-rechteckquerschnitt
+               id="id_dialog_rechteck"
+            ></dr-rechteckquerschnitt>
          </sl-tab-panel>
-         <sl-tab-panel name="tab-2">
-            Tab panel 22 <br />
-            <dr-button-pm nnodes="3" inputid="test"></dr-button-pm>
+
+         <sl-tab-panel name="tab-1">
+            <br />
+            <dr-button-pm
+               nel="3"
+               txt="Anzahl Knoten :"
+               inputid="nnodes"
+               id="id_nnodes"
+            ></dr-button-pm>
+            <br />
+            <dr-button-pm
+               nel="4"
+               txt="Anzahl Elemente :"
+               inputid="nelem"
+            ></dr-button-pm>
+            <br />
+            <sl-button id="resize" value="resize" @click="${resize}"
+               >Resize Tables</sl-button
+            ><br />
+            <sl-button id="rechnen" value="Rechnen" @click="${calculate}"
+               >Rechnen</sl-button
+            >
          </sl-tab-panel>
          <sl-tab-panel name="tab-3"
             >Tab panel 3 <br />
@@ -136,6 +164,21 @@ function handleClick() {
    //}
 }
 
+function handleClick_rechteck() {
+   console.log('handleClick_rechteck()');
+
+   const el = document.getElementById('id_dialog_rechteck');
+   console.log('id_dialog_rechteck', el);
+   console.log(
+      'QUERY Dialog',
+      el?.shadowRoot?.getElementById('dialog_rechteck')
+   );
+   (
+      el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement
+   ).showModal();
+   //(shadow.getElementById('dialog') as HTMLDialogElement).showModal();
+   //}
+}
 function neuZeilen() {
    const el = document.getElementById('nz');
    console.log('EL: >>', el);
@@ -160,14 +203,23 @@ function neuZeilen() {
    }
 }
 
-
 function handleClick_LD(ev: any) {
    console.log('handleClick_LD()', ev);
-  /*
+   /*
    const el = document.getElementById('id_dialog');
    console.log('id_dialog', el);
    console.log('QUERY Dialog', el?.shadowRoot?.getElementById('dialog'));
    (el?.shadowRoot?.getElementById('dialog') as HTMLDialogElement).showModal();
   */
+}
+
+function calculate() {
+   console.log('calculate');
+   rechnen();
+}
+
+function resize() {
+   console.log('calculate');
+   rechnen();
 }
 
