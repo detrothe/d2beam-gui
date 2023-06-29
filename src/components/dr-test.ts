@@ -397,7 +397,7 @@ class DrTest extends HTMLElement {
     //TODO selectedCellPoly.tableId = tableId;
 
     //TODO const selectMode = this.selectionMode
-    const selectMode = true;
+    const selectMode = false;
     //TODO toggleMenuOff()
 
     //console.log("POINTERDOWN", ev)

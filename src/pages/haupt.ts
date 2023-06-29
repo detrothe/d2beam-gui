@@ -6,6 +6,8 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/tab/tab.js';
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
+import '@shoelace-style/shoelace/dist/components/tree/tree.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 //import { styles } from '../styles/shared-styles';
 
@@ -16,6 +18,13 @@ import '../components/dr-dialog-layerquerschnitt';
 
 {
    const template = () => html`
+      <style>
+         .custom-icons sl-tree-item::part(expand-button) {
+            /* Disable the expand/collapse animation */
+            rotate: none;
+         }
+      </style>
+
       <sl-tab-group>
          <sl-tab slot="nav" panel="tab-1">Querschnitte</sl-tab>
          <sl-tab slot="nav" panel="tab-2">Tab 2</sl-tab>
@@ -43,6 +52,29 @@ import '../components/dr-dialog-layerquerschnitt';
             <sl-button id="open-dialog" @click="${handleClick}"
                >Zeige die Dialog-Box</sl-button
             >
+
+            <sl-tree class="custom-icons">
+               <!--
+               <sl-icon name="plus-square" slot="expand-icon"></sl-icon>
+               <sl-icon name="dash-square" slot="collapse-icon"></sl-icon>
+      -->
+               <sl-tree-item @click="${handleClick_LD}">
+                  Linear direkt
+                  <sl-tree-item>Birch</sl-tree-item>
+
+                  <sl-tree-item>Oak</sl-tree-item>
+               </sl-tree-item>
+
+               <sl-tree-item>
+                  Linear eleastisch allgemein
+                  <sl-tree-item>Cedar</sl-tree-item>
+                  <sl-tree-item>Pine</sl-tree-item>
+                  <sl-tree-item>Spruce</sl-tree-item>
+               </sl-tree-item>
+
+
+            </sl-tree>
+
             <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt>
          </sl-tab-panel>
          <sl-tab-panel name="tab-2">
@@ -128,4 +160,14 @@ function neuZeilen() {
    }
 }
 
+
+function handleClick_LD(ev: any) {
+   console.log('handleClick_LD()', ev);
+  /*
+   const el = document.getElementById('id_dialog');
+   console.log('id_dialog', el);
+   console.log('QUERY Dialog', el?.shadowRoot?.getElementById('dialog'));
+   (el?.shadowRoot?.getElementById('dialog') as HTMLDialogElement).showModal();
+  */
+}
 
