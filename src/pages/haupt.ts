@@ -111,17 +111,23 @@ import { rechnen } from './rechnen';
          </sl-tab-panel>
          <sl-tab-panel name="tab-3"
             >Tab panel 3 <br />
-            <dr-table
-               columns='["No", "y&#772; [cm]", "z&#772; [cm]"]'
+            <!-- <dr-table
+
+                columns='["No", "y&#772; [cm]", "z&#772; [cm]"]'
                nZeilen="2"
-            ></dr-table>
+            ></dr-table> -->
          </sl-tab-panel>
          <sl-tab-panel name="tab-4"
             >Tab panel 4
             <sl-button id="nZeilen" value="anmelden" @click="${neuZeilen}"
                >neue Zeilen</sl-button
             >
-            <dr-test id="nz"></dr-test>
+            <dr-test
+               id="nz"
+               nzeilen="4"
+               nspalten="5"
+               columns='["No", "x [m]", "z [m]", "L<sub>x</sub>", "L<sub>z</sub>", "L<sub>&phi;</sub>"]'
+            ></dr-test>
          </sl-tab-panel>
          <sl-tab-panel name="tab-5">Tab panel 5</sl-tab-panel>
          <sl-tab-panel name="tab-6">Tab panel 6</sl-tab-panel>
