@@ -3,9 +3,9 @@
 
 //import {html,render} from 'lit'
 
-import './pages/haupt';
-
 import './styles/global.css';
+
+import './pages/haupt';
 
 /*
 const name = 'world';

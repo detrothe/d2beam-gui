@@ -106,33 +106,39 @@ export class drRechteckQuerSchnitt extends LitElement {
          <table id="querschnittwerte_table">
             <tbody>
                <tr>
+                  <td>Name (wichtig):</td>
+                  <td colspan="2">
+                     <input id="qname" type="txt" style="width:95%;" value='Rechteck' />
+                  </td>
+               </tr>
+               <tr>
                   <td>E-Modul:</td>
-                  <td><input id="emodul" type="number" /></td>
+                  <td><input id="emodul" type="number" value='30000'/></td>
                   <td>&nbsp;[MN/m²]</td>
                </tr>
                <tr>
                   <td>I<sub>y</sub>:</td>
-                  <td><input id="traeg_y" type="number" /></td>
+                  <td><input id="traeg_y" type="number" value='160000'/></td>
                   <td>&nbsp;[cm<sup>4</sup>]</td>
                </tr>
                <tr>
                   <td>A:</td>
-                  <td><input id="area" type="number" /></td>
+                  <td><input id="area" type="number" value='1200'/></td>
                   <td>&nbsp;[cm²]</td>
                </tr>
                <tr>
                   <td>Querschnittshöhe:</td>
-                  <td><input id="height" type="number" /></td>
+                  <td><input id="height" type="number" value='40'/></td>
                   <td>&nbsp;[cm]</td>
                </tr>
                <tr>
                   <td>Bettung k<sub>s</sub>:</td>
-                  <td><input id="bettung" type="number" /></td>
+                  <td><input id="bettung" type="number" value='0' /></td>
                   <td>&nbsp;[kN/m²]</td>
                </tr>
                <tr>
                   <td>Wichte:</td>
-                  <td><input id="wichte" type="number" /></td>
+                  <td><input id="wichte" type="number" value='0'/></td>
                   <td>&nbsp;[kN/m³]</td>
                </tr>
             </tbody>
@@ -141,11 +147,11 @@ export class drRechteckQuerSchnitt extends LitElement {
          <form method="dialog">
             <sl-button
                id="Anmeldung"
-               value="anmelden"
+               value="ok"
                @click="${this._dialog_ok}"
                >ok</sl-button
             >
-            <sl-button id="Abbruch" @click="${this._dialog_abbruch}"
+            <sl-button id="Abbruch" value='cancel' @click="${this._dialog_abbruch}"
                >Abbrechen</sl-button
             >
          </form>
@@ -160,7 +166,11 @@ export class drRechteckQuerSchnitt extends LitElement {
          //   'email: ',
          //   (shadow.getElementById('email') as HTMLInputElement).value
          //);
-         (shadow.getElementById('dialog_rechteck') as HTMLDialogElement).close();
+
+
+         (
+            shadow.getElementById('dialog_rechteck') as HTMLDialogElement
+         ).close('ok');
       }
    }
 
@@ -168,9 +178,9 @@ export class drRechteckQuerSchnitt extends LitElement {
       console.log('dialog_abbruch');
       const shadow = this.shadowRoot;
       if (shadow)
-         (shadow.getElementById('dialog_rechteck') as HTMLDialogElement).close();
+         (
+            shadow.getElementById('dialog_rechteck') as HTMLDialogElement
+         ).close('cancel');
    }
-
-
 }
 

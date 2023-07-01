@@ -1,7 +1,5 @@
 import styles from './dr-test.css?raw';
 
-
-
 // <hello-world> Web Component
 class DrTest extends HTMLElement {
    shadow: any = null;
@@ -10,6 +8,7 @@ class DrTest extends HTMLElement {
    nSpalten = 2;
 
    columns: any = [];
+   typs: any = [];
 
    nTabRow = 3; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
    nTabCol = 3;
@@ -102,15 +101,32 @@ class DrTest extends HTMLElement {
                newCell.appendChild(newText);
                //newCell.setAttribute('title', 'Knotennummer')
             } else {
-               let el = document.createElement('input');
-               el.setAttribute('type', 'number');
-               el.style.width = 'inherit'; //'6em';   // 100px
+               console.log('this.typs', '|' + this.typs[iSpalte] + '|');
+               let el;
+               if (this.typs[iSpalte] === ' select') {
+                  el = document.createElement('select');
+                  el.style.width = '100%';   // 100px
+                  console.log('CREATED SELECT');
+                  for (let i = 0; i < 3; i++) {
+                     let option = document.createElement('option');
+
+                     option.value = option.textContent = 'Querschnitt lang ' + (i+1);
+
+                     el.appendChild(option);
+                  }
+               } else {
+                  el = document.createElement('input');
+                  el.setAttribute('type', 'number');
+                  el.style.width = 'inherit'; //'6em';   // 100px
+               }
+
                //el.style.backgroundColor = 'rgb(200,200,200)';
                el.style.border = 'none';
                el.style.borderWidth = '0px';
                el.style.padding = '5px';
                el.style.margin = '0px';
                el.style.borderRadius = '0px';
+
                const str = id_table + '-' + iZeile + '-' + iSpalte;
                el.id = str;
                //el.className = 'input_normal';
@@ -182,6 +198,26 @@ class DrTest extends HTMLElement {
                this.columns[4],
                this.columns[5]
             );
+         } else if (name === 'typs') {
+            let myValue = newValue.replace('[', '');
+            const lastIndex = myValue.lastIndexOf(']');
+            myValue = myValue.slice(0, lastIndex);
+            console.log('myValue', myValue);
+            const myArray = myValue.split(',');
+            console.log('myArray', myArray[0], myArray[1], myArray[2]);
+            for (let i = 0; i < myArray.length; i++) {
+               this.typs[i] = myArray[i].replace(/"/g, '');
+            }
+
+            console.log(
+               '-- columns',
+               this.typs[0],
+               this.typs[1],
+               this.typs[2],
+               this.typs[3],
+               this.typs[4],
+               this.typs[5]
+            );
          } else if (name === 'nzeilen') {
             this.nZeilen = newValue;
             console.log('typeof', typeof (this.nZeilen | 0));
@@ -189,7 +225,7 @@ class DrTest extends HTMLElement {
             console.log('#### name=', name, this.nTabRow);
          } else if (name === 'nspalten') {
             this.nSpalten = newValue;
-            this.nTabCol = Number(this.nSpalten)+ 1; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
+            this.nTabCol = Number(this.nSpalten) + 1; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
             console.log('#### name=', name, this.nTabCol);
          }
       } else {
@@ -201,7 +237,7 @@ class DrTest extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    static get observedAttributes() {
       //------------------------------------------------------------------------------------------------------------
-      return ['nzeilen', 'nspalten', 'columns'];
+      return ['nzeilen', 'nspalten', 'columns', 'typs'];
    }
 
    //---------------------------------------------------------------------------------------------------------------
