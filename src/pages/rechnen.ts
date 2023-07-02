@@ -57,6 +57,19 @@ export function set_querschnittRechteck(name: string, id: string, emodul: number
 }
 
 
+export function update_querschnittRechteck(index: number, name: string, id: string, emodul: number, Iy: number, area: number, height: number, ks: number, wichte: number) {
+
+    querschnittset[index].name = name;
+    querschnittset[index].emodul = emodul;
+    querschnittset[index].Iy = Iy;
+    querschnittset[index].area = area;
+    querschnittset[index].height = height;
+    querschnittset[index].id = id;
+    querschnittset[index].ks = ks;
+    querschnittset[index].wichte = wichte;
+    console.log("update_querschnittRechteck", index, emodul)
+}
+
 export function get_querschnittRechteck(index: number) {
 
     let name: string, id: string, emodul: number, Iy: number, area: number, height: number, ks: number, wichte: number

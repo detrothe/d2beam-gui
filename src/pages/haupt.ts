@@ -17,7 +17,12 @@ import '../components/dr-test';
 import '../components/dr-dialog-layerquerschnitt';
 import '../components/dr-dialog-rechteckquerschnitt';
 
-import { rechnen, nQuerschnittSets, incr_querschnittSets, set_querschnittRechteck, get_querschnittRechteck } from './rechnen';
+import { rechnen, nQuerschnittSets, incr_querschnittSets, set_querschnittRechteck, get_querschnittRechteck, update_querschnittRechteck } from './rechnen';
+
+
+let dialog_querschnitt_new = true;
+let dialog_querschnitt_index = 0;
+let dialog_querschnitt_item_id = '';
 
 {
    const template = () => html`
@@ -235,6 +240,8 @@ function handleClick_rechteck() {
       el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement
    ).addEventListener('close', dialog_closed);
 
+   dialog_querschnitt_new = true;
+
    (
       el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement
    ).showModal();
@@ -340,24 +347,40 @@ function dialog_closed(e: any) {
          elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
          const wichte = +elem.value;
 
-         incr_querschnittSets();
+         if (dialog_querschnitt_new) {
+            incr_querschnittSets();
 
-         set_querschnittRechteck(qname, id, emodul, Iy, area, height, bettung, wichte)
+            set_querschnittRechteck(qname, id, emodul, Iy, area, height, bettung, wichte)
+
+         } else {
+
+            update_querschnittRechteck(dialog_querschnitt_index, qname, id, emodul, Iy, area, height, bettung, wichte)
+
+            //console.log("UPDATE", this)
+            const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
+            //console.log("dialog_querschnitt_item_id", el.innerHTML)
+            if (el.innerHTML !== qname ) el.innerHTML = qname;
+
+         }
 
       }
 
-      const qName = (
-         el?.shadowRoot?.getElementById('qname') as HTMLInputElement
-      ).value;
-      console.log('NAME', qName);
-      var tag = document.createElement('sl-tree-item');
-      var text = document.createTextNode(qName);
-      tag.appendChild(text);
-      tag.addEventListener('click', opendialog);
+      if (dialog_querschnitt_new) {
 
-      tag.id = id;
-      var element = document.getElementById('id_tree_LQ');
-      element?.appendChild(tag);
+         const qName = (
+            el?.shadowRoot?.getElementById('qname') as HTMLInputElement
+         ).value;
+         console.log('NAME', qName);
+         var tag = document.createElement('sl-tree-item');
+         var text = document.createTextNode(qName);
+         tag.appendChild(text);
+         tag.addEventListener('click', opendialog);
+
+         tag.id = id;
+         var element = document.getElementById('id_tree_LQ');
+         element?.appendChild(tag);
+         console.log("child appendchild", element)
+      }
    }
 }
 
@@ -366,7 +389,7 @@ function opendialog(ev: any) {
    //---------------------------------------------------------------------------------------------------------------
 
    // @ts-ignore
-   console.log('opendialog geht', this.id);
+   console.log('opendialog geht', this);
    ev.preventDefault;
 
    // @ts-ignore
@@ -384,7 +407,7 @@ function opendialog(ev: any) {
 
       const [qname, id0, emodul, Iy, area, height, bettung, wichte] = get_querschnittRechteck(index)
 
-      if (id0 !== id) console.log("Problem in opendialog");
+      if (id0 !== id) console.log("BIG Problem in opendialog");
 
       const el = document.getElementById(
          'id_dialog_rechteck'
@@ -406,11 +429,18 @@ function opendialog(ev: any) {
       elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
       elem.value = String(wichte);
 
-
    }
 
    //const el=document.getElementById(id);
    const el = document.getElementById('id_dialog_rechteck');
+
+   (
+      el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement
+   ).addEventListener('close', dialog_closed);
+
+   dialog_querschnitt_new = false;
+   dialog_querschnitt_index = index;
+   dialog_querschnitt_item_id = id;
 
    //console.log('id_dialog', el);
    //console.log('QUERY Dialog', el?.shadowRoot?.getElementById('dialog'));

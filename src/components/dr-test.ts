@@ -1,5 +1,7 @@
 import styles from './dr-test.css?raw';
 
+import { nQuerschnittSets } from '../pages/rechnen';
+
 // <hello-world> Web Component
 class DrTest extends HTMLElement {
    shadow: any = null;
@@ -58,6 +60,8 @@ class DrTest extends HTMLElement {
       //updateStyle(this);
 
       console.log('columns', this.columns);
+
+      console.log("-----------nQuerschnittSets--------------",nQuerschnittSets);
 
       const table = document.createElement('table');
       this.shadow.appendChild(table);
