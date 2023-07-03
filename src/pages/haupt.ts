@@ -24,6 +24,7 @@ import {
    set_querschnittRechteck,
    get_querschnittRechteck,
    update_querschnittRechteck,
+   init_tabellen
 } from './rechnen';
 
 let dialog_querschnitt_new = true;
@@ -50,16 +51,7 @@ let dialog_querschnitt_item_id = '';
          <sl-tab slot="nav" panel="tab-8">Tab 8</sl-tab>
          <sl-tab slot="nav" panel="tab-9">Tab 9</sl-tab>
          <sl-tab slot="nav" panel="tab-10">Tab 10</sl-tab>
-         <sl-tab slot="nav" panel="tab-11">Tab 11</sl-tab>
-         <sl-tab slot="nav" panel="tab-12">Tab 12</sl-tab>
-         <sl-tab slot="nav" panel="tab-13">Tab 13</sl-tab>
-         <sl-tab slot="nav" panel="tab-14">Tab 14</sl-tab>
-         <sl-tab slot="nav" panel="tab-15">Tab 15</sl-tab>
-         <sl-tab slot="nav" panel="tab-16">Tab 16</sl-tab>
-         <sl-tab slot="nav" panel="tab-17">Tab 17</sl-tab>
-         <sl-tab slot="nav" panel="tab-18">Tab 18</sl-tab>
-         <sl-tab slot="nav" panel="tab-19">Tab 19</sl-tab>
-         <sl-tab slot="nav" panel="tab-20">Tab 20</sl-tab>
+
 
          <sl-tab-panel name="tab-querschnitte">
             <sl-button id="open-dialog" @click="${handleClick}"
@@ -109,8 +101,8 @@ let dialog_querschnitt_item_id = '';
                      <td>Anzahl Knoten :</td>
                      <td>
                         <dr-button-pm
-                           id="button_nnodes"
-                           nel="3"
+                           id="id_button_nnodes"
+                           nel="4"
                            inputid="nnodes"
                         ></dr-button-pm>
                      </td>
@@ -183,7 +175,7 @@ let dialog_querschnitt_item_id = '';
          <!--------------------------------------------------------------------------------------->
          <sl-tab-panel name="tab-knoten"
             >Eingabe der Knotenkoordinaten und Lager
-            <!-- <sl-button id="nZeilen" value="anmelden" @click="${neuZeilen}">neue Zeilen</sl-button> -->
+            <sl-button id="nZeilen" value="anmelden" @click="${neuZeilen}">neue Zeilen</sl-button>
             <dr-tabelle
                id="id_knoten_tabelle"
                nzeilen="4"
@@ -208,16 +200,7 @@ let dialog_querschnitt_item_id = '';
          <sl-tab-panel name="tab-8">Tab panel 8</sl-tab-panel>
          <sl-tab-panel name="tab-9">Tab panel 9</sl-tab-panel>
          <sl-tab-panel name="tab-10">Tab panel 10</sl-tab-panel>
-         <sl-tab-panel name="tab-11">Tab panel 11</sl-tab-panel>
-         <sl-tab-panel name="tab-12">Tab panel 12</sl-tab-panel>
-         <sl-tab-panel name="tab-13">Tab panel 13</sl-tab-panel>
-         <sl-tab-panel name="tab-14">Tab panel 14</sl-tab-panel>
-         <sl-tab-panel name="tab-15">Tab panel 15</sl-tab-panel>
-         <sl-tab-panel name="tab-16">Tab panel 16</sl-tab-panel>
-         <sl-tab-panel name="tab-17">Tab panel 17</sl-tab-panel>
-         <sl-tab-panel name="tab-18">Tab panel 18</sl-tab-panel>
-         <sl-tab-panel name="tab-19">Tab panel 19</sl-tab-panel>
-         <sl-tab-panel name="tab-20">Tab panel 20</sl-tab-panel>
+
       </sl-tab-group>
 
       <!-- <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt> -->
@@ -226,6 +209,11 @@ let dialog_querschnitt_item_id = '';
    const container = document.getElementById('container') as HTMLDivElement;
    const renderBefore = container?.querySelector('footer');
    render(template(), container, { renderBefore });
+
+   // Tabellen sin jetzt da, Tabellen mit Voreinstellungen füllen
+
+   init_tabellen();
+
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -496,7 +484,7 @@ function opendialog(ev: any) {
 function resizeTables() {
    //---------------------------------------------------------------------------------------------------------------
    {
-      const el_knoten = document.getElementById('button_nnodes');
+      const el_knoten = document.getElementById('id_button_nnodes');
       const nnodes = (
          el_knoten?.shadowRoot?.getElementById('nnodes') as HTMLInputElement
       ).value;

@@ -133,6 +133,7 @@ class DrTabelle extends HTMLElement {
 
                const str = id_table + '-' + iZeile + '-' + iSpalte;
                el.id = str;
+               el.value=str;
                //el.className = 'input_normal';
                el.addEventListener('keydown', this.KEYDOWN);
                //el.addEventListener("change", function () { berechnungErforderlich(true); });
