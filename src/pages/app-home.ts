@@ -11,7 +11,7 @@ import { styles } from '../styles/shared-styles';
 
 import '../components/dr-button-pm';
 import '../components/dr-table';
-import '../components/dr-test';
+import '../components/dr-tabelle';
 
 @customElement('app-home')
 export class AppHome extends LitElement {
@@ -142,7 +142,7 @@ export class AppHome extends LitElement {
    _neuZeilen() {
       const shadow = this.shadowRoot;
       if (shadow) {
-         const el = shadow.getElementById('nz');
+         const el = shadow.getElementById('id_knoten_tabelle');
          console.log('EL: >>', el);
          el?.setAttribute('nzeilen', '4');
          console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
@@ -227,7 +227,7 @@ export class AppHome extends LitElement {
                      @click="${this._neuZeilen}"
                      >neue Zeilen</sl-button
                   >
-                  <dr-test id="nz"></dr-test>
+                  <dr-tabelle id="nz"></dr-tabelle>
                </sl-tab-panel>
                <sl-tab-panel name="tab-5">Tab panel 5</sl-tab-panel>
                <sl-tab-panel name="tab-6">Tab panel 6</sl-tab-panel>

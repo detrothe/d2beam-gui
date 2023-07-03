@@ -140,7 +140,7 @@ export class drLayerQuerSchnitt extends LitElement {
                   @click="${this._handleClick_schichten_dialog}"
                   >ändere Anzahl Schichten</sl-button
                >
-               <dr-test id="nzlayer"></dr-test>
+               <dr-tabelle id="nzlayer"></dr-tabelle>
             </sl-tab-panel>
 
             <sl-tab-panel name="tab-stahl">Tab panel Stahl </sl-tab-panel>
