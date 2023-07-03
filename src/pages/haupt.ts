@@ -359,8 +359,12 @@ function dialog_closed(e: any) {
             //console.log("UPDATE", this)
             const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
             //console.log("dialog_querschnitt_item_id", el.innerHTML)
-            if (el.innerHTML !== qname ) el.innerHTML = qname;
-
+            if (el.innerHTML !== qname) {
+               el.innerHTML = qname;
+               const ele = document.getElementById('ne');
+               console.log('ELE: >>', ele);
+               ele?.setAttribute('namechanged', String(dialog_querschnitt_index));
+            }
          }
 
       }
@@ -380,6 +384,10 @@ function dialog_closed(e: any) {
          var element = document.getElementById('id_tree_LQ');
          element?.appendChild(tag);
          console.log("child appendchild", element)
+
+         const ele = document.getElementById('ne');
+         console.log('ELE: >>', ele);
+         ele?.setAttribute('newselect', '4');
       }
    }
 }

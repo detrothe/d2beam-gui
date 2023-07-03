@@ -1,6 +1,6 @@
 import styles from './dr-test.css?raw';
 
-import { nQuerschnittSets } from '../pages/rechnen';
+import { nQuerschnittSets, get_querschnittRechteck_name } from '../pages/rechnen';
 
 // <hello-world> Web Component
 class DrTest extends HTMLElement {
@@ -11,6 +11,8 @@ class DrTest extends HTMLElement {
 
    columns: any = [];
    typs: any = [];
+
+   index_namechanged: number = 0;
 
    nTabRow = 3; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
    nTabCol = 3;
@@ -61,7 +63,7 @@ class DrTest extends HTMLElement {
 
       console.log('columns', this.columns);
 
-      console.log("-----------nQuerschnittSets--------------",nQuerschnittSets);
+      console.log("-----------nQuerschnittSets--------------", nQuerschnittSets);
 
       const table = document.createElement('table');
       this.shadow.appendChild(table);
@@ -111,10 +113,10 @@ class DrTest extends HTMLElement {
                   el = document.createElement('select');
                   el.style.width = '100%';   // 100px
                   console.log('CREATED SELECT');
-                  for (let i = 0; i < 3; i++) {
+                  for (let i = 0; i < nQuerschnittSets; i++) {
                      let option = document.createElement('option');
 
-                     option.value = option.textContent = 'Querschnitt lang ' + (i+1);
+                     option.value = option.textContent = 'Querschnitt lang ' + (i + 1);
 
                      el.appendChild(option);
                   }
@@ -180,7 +182,12 @@ class DrTest extends HTMLElement {
          oldValue,
          newValue
       );
-      if (oldValue === null) {
+
+      if (name === 'newselect') {
+         this.update_select_options();
+      } else if (name === 'namechanged') {
+         this.update_select_options_name(Number(newValue));
+      } else if (oldValue === null) {
          console.log('1', newValue.length);
          if (name === 'columns') {
             let myValue = newValue.replace('[', '');
@@ -241,7 +248,7 @@ class DrTest extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    static get observedAttributes() {
       //------------------------------------------------------------------------------------------------------------
-      return ['nzeilen', 'nspalten', 'columns', 'typs'];
+      return ['nzeilen', 'nspalten', 'columns', 'typs', 'newselect', 'namechanged'];
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -249,6 +256,66 @@ class DrTest extends HTMLElement {
       //------------------------------------------------------------------------------------------------------------
       console.log('in neueZeilen', n);
       this.nZeilen = n;
+   }
+
+   //---------------------------------------------------------------------------------------------------------------
+   update_select_options() {
+      //------------------------------------------------------------------------------------------------------------
+      console.log('in update_select_options');
+
+      const table = this.shadow.getElementById('mytable') as HTMLTableElement;
+
+      for (let iZeile = 1; iZeile <= this.nZeilen; iZeile++) {
+         // Spalten addieren
+         let row = table.rows.item(iZeile);
+         if (row) {
+            console.log("row", row);
+            for (let iSpalte = 1; iSpalte <= this.nSpalten; iSpalte++) {
+
+               if (this.typs[iSpalte] === ' select') {
+                  const idstr = 'idtable-' + iZeile + '-' + iSpalte;
+                  const el = this.shadow.getElementById(idstr)
+                  console.log("idstr", el)
+                  const index = nQuerschnittSets - 1;
+                  let option = document.createElement('option');
+
+                  option.value = option.textContent = get_querschnittRechteck_name(index);
+
+                  el.appendChild(option);
+               }
+            }
+         }
+      }
+   }
+
+
+   //---------------------------------------------------------------------------------------------------------------
+   update_select_options_name(index: number) {
+      //------------------------------------------------------------------------------------------------------------
+      console.log('in update_select_options_name', get_querschnittRechteck_name(index));
+
+      const table = this.shadow.getElementById('mytable') as HTMLTableElement;
+
+      for (let iZeile = 1; iZeile <= this.nZeilen; iZeile++) {
+         // Spalten addieren
+         let row = table.rows.item(iZeile);
+         if (row) {
+            console.log("row", row);
+            for (let iSpalte = 1; iSpalte <= this.nSpalten; iSpalte++) {
+
+               if (this.typs[iSpalte] === ' select') {
+                  const idstr = 'idtable-' + iZeile + '-' + iSpalte;
+                  const el = this.shadow.getElementById(idstr)
+                  console.log("idstr", el.children)
+                  for (let i = 0; i < el.children.length; i++) {
+                     console.log("i", i, el.children.item(i))
+                     if (i === index) el.children.item(i).innerHTML = get_querschnittRechteck_name(index);
+                  }
+
+               }
+            }
+         }
+      }
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -734,4 +801,5 @@ class DrTest extends HTMLElement {
 
 // register <hello-world> with the HelloWorld class
 customElements.define('dr-test', DrTest);
+
 

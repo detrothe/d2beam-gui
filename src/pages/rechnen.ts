@@ -87,3 +87,13 @@ export function get_querschnittRechteck(index: number) {
 
     return [name, id, emodul, Iy, area, height, ks, wichte]
 }
+
+
+export function get_querschnittRechteck_name(index: number) {
+
+    let name: string = 'error'
+
+    if ( index >= 0 ) name = querschnittset[index].name;
+
+    return name;
+}
