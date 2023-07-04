@@ -4,6 +4,7 @@ import { testNumber } from './utility'
 export let nnodes: number;
 export let nelem: number;
 export let node = [] as TNode[]
+export let element = [] as TElement[]
 export let querschnittset = [] as any[]
 
 export let nQuerschnittSets = 0
@@ -29,6 +30,23 @@ class TQuerschnittRechteck {
     ks: number = 0.0
 }
 
+class TElement {
+    qname: string = ''
+    EModul: number = 0.0
+    dicke: number = 0.0
+    sl: number = 0.0                                    // Stablänge
+    nod = [0, 0]                                       // globale Knotennummer der Stabenden
+    lm = [0, 0]
+    gelenk = [0, 0]
+    estiff = [[0.0, 0.0], [0.0, 0.0]]
+    F = [0.0, 0.0]
+    F34 = [0.0, 0.0]
+    cosinus: number = 0.0
+    sinus: number = 0.0
+    alpha: number = 0.0
+}
+
+
 //---------------------------------------------------------------------------------------------------------------
 export function incr_querschnittSets() {
     //-----------------------------------------------------------------------------------------------------------
@@ -42,12 +60,17 @@ export function rechnen() {
 
     console.log("in rechnen");
 
-    const el = document.getElementById('id_button_nnodes') as any;
-    //console.log('EL: >>', el.nel);
+    let el = document.getElementById('id_button_nnodes') as any;
 
     nnodes = Number(el.nel);
 
+    el = document.getElementById('id_button_nelem') as any;
+    //console.log('EL: >>', el.nel);
+
+    nelem = Number(el.nel);
+
     read_nodes();
+    read_elements();
 
 }
 
@@ -139,23 +162,65 @@ function read_nodes() {
     let nRowTab = table.rows.length;
     let nColTab = table.rows[0].cells.length;
     let wert: any;
+    const shad = el?.shadowRoot?.getElementById('mytable')
 
     for (let izeile = 1; izeile < nRowTab; izeile++) {
         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
             wert = child.value;
-            console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) node[izeile - 1].x = Number(testNumber(wert, izeile, ispalte, 'id_knoten_tabelle'));
-            else if (ispalte === 2) node[izeile - 1].z = Number(testNumber(wert, izeile, ispalte, 'id_knoten_tabelle'));
-            else if (ispalte === 3) node[izeile - 1].Lx = Number(testNumber(wert, izeile, ispalte, 'id_knoten_tabelle'));
-            else if (ispalte === 4) node[izeile - 1].Lz = Number(testNumber(wert, izeile, ispalte, 'id_knoten_tabelle'));
-            else if (ispalte === 5) node[izeile - 1].Lphi = Number(testNumber(wert, izeile, ispalte, 'id_knoten_tabelle'));
+            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+            if (ispalte === 1) node[izeile - 1].x = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 2) node[izeile - 1].z = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) node[izeile - 1].Lx = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) node[izeile - 1].Lz = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 5) node[izeile - 1].Lphi = Number(testNumber(wert, izeile, ispalte, shad));
+
             //child.value = izeile + '.' + ispalte;
 
         }
     }
 }
 
-export function  init_tabellen() {
+//---------------------------------------------------------------------------------------------------------------
+function read_elements() {
+    //-----------------------------------------------------------------------------------------------------------
+
+    let i: number;
+
+    const el = document.getElementById('id_elment_tabelle');
+    console.log('EL: >>', el);
+
+    console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+
+    const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    console.log('nZeilen', table.rows.length);
+    console.log('nSpalten', table.rows[0].cells.length);
+
+
+    for (i = 0; i < nelem; i++) {
+        element.push(new TElement())
+    }
+
+    let nRowTab = table.rows.length;
+    let nColTab = table.rows[0].cells.length;
+    let wert: any;
+    const shad = el?.shadowRoot?.getElementById('mytable')
+
+    for (let izeile = 1; izeile < nRowTab; izeile++) {
+        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+            wert = child.value;
+            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+            if (ispalte === 1) element[izeile - 1].qname = wert;
+            else if (ispalte === 2) element[izeile - 1].nod[0] = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) element[izeile - 1].nod[1] = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) element[izeile - 1].gelenk[0] = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 5) element[izeile - 1].gelenk[1] = Number(testNumber(wert, izeile, ispalte, shad));
+        }
+        console.log("element", izeile, element[izeile - 1].qname, element[izeile - 1].nod[0], element[izeile - 1].nod[1])
+    }
+}
+
+export function init_tabellen() {
 
 }

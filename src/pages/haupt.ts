@@ -111,7 +111,7 @@ let dialog_querschnitt_item_id = '';
                      <td>Anzahl Elemente :</td>
                      <td>
                         <dr-button-pm
-                           id="button_nelem"
+                           id="id_button_nelem"
                            nel="4"
                            inputid="nelem"
                         ></dr-button-pm>
@@ -494,7 +494,7 @@ function resizeTables() {
       el?.setAttribute('nzeilen', nnodes);
    }
    {
-      const el_elemente = document.getElementById('button_nelem');
+      const el_elemente = document.getElementById('id_button_nelem');
       const nelem = (
          el_elemente?.shadowRoot?.getElementById('nelem') as HTMLInputElement
       ).value;

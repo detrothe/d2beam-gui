@@ -371,7 +371,7 @@ class DrTabelle extends HTMLElement {
                      el.style.borderRadius = '0px';
                      const str = idTable + '-' + iZeile + '-' + iSpalte;
                      el.id = str;
-                     //el.className = 'input_normal';
+                     el.className = 'input_normal';
                      el.addEventListener('keydown', this.KEYDOWN);
                      //el.addEventListener('change', function () {
                      //  berechnungErforderlich(true);

@@ -16,14 +16,17 @@ export function testeZahl(wert: any) {
 export function testNumber(wert: any, zeile: number, spalte: number, id: any) {
     //--------------------------------------------------------------------------------------------
 
+    //console.log("id", id.rows.item(zeile).cells.item(spalte).firstElementChild)
+    //id.rows.item(zeile).cells.item(spalte).firstElementChild.classList.add("input_select");
+
     wert = wert.replace(/,/g, '.');
     //console.log('Komma entfernt',wert);
     if (isNaN(wert)) {
         //window.alert("Das ist keine Zahl ");
 
-        console.log("ss", zeile + spalte + id);
+        //console.log("ss", zeile + spalte + id);
 
-        //document.getElementById(id).rows.item(zeile).cells.item(spalte).classList.add("selected");
+        id.rows.item(zeile).cells.item(spalte).firstElementChild.classList.add("input_select");
         return 0;
     }
     return wert;
