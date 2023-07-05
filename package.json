@@ -26,7 +26,8 @@
   "devDependencies": {
     "typescript": "^5.0.4",
     "vite": "^4.2.1",
-    "vite-plugin-pwa": "^0.14.7"
+    "vite-plugin-pwa": "^0.14.7",
+    "vite-plugin-static-copy": "^0.16.0"
   },
   "prettier": {
     "tabWidth": 3,

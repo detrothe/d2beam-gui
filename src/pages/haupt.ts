@@ -31,6 +31,9 @@ let dialog_querschnitt_new = true;
 let dialog_querschnitt_index = 0;
 let dialog_querschnitt_item_id = '';
 
+export const nnodes_init='2';
+export const nelem_init='1';
+
 {
    const template = () => html`
       <style>
@@ -102,7 +105,7 @@ let dialog_querschnitt_item_id = '';
                      <td>
                         <dr-button-pm
                            id="id_button_nnodes"
-                           nel="4"
+                           nel="${nnodes_init}"
                            inputid="nnodes"
                         ></dr-button-pm>
                      </td>
@@ -112,7 +115,7 @@ let dialog_querschnitt_item_id = '';
                      <td>
                         <dr-button-pm
                            id="id_button_nelem"
-                           nel="4"
+                           nel="${nelem_init}";
                            inputid="nelem"
                         ></dr-button-pm>
                      </td>
@@ -122,7 +125,7 @@ let dialog_querschnitt_item_id = '';
                      <td>
                         <dr-button-pm
                            id="button_nnodalloads"
-                           nel="2"
+                           nel="0"
                            inputid="nelem"
                         ></dr-button-pm>
                      </td>
@@ -159,10 +162,10 @@ let dialog_querschnitt_item_id = '';
 
             <dr-tabelle
                id="id_elment_tabelle"
-               nzeilen="4"
-               nspalten="5"
-               columns='["No", "Querschnitt", "inz a", "inz e", "Gelenk a", "Gelenk e"]'
-               typs='["-", "select", "number", "number", "number", "number"]'
+               nzeilen="${nelem_init}"
+               nspalten="6"
+               columns='["No", "Querschnitt", "nodTyp", "inz a", "inz e", "Gelenk a", "Gelenk e"]'
+               typs='["-", "select", "number", "number", "number", "number", "number"]'
             ></dr-tabelle>
 
             <!-- <dr-table
@@ -178,7 +181,7 @@ let dialog_querschnitt_item_id = '';
             <sl-button id="nZeilen" value="anmelden" @click="${neuZeilen}">neue Zeilen</sl-button>
             <dr-tabelle
                id="id_knoten_tabelle"
-               nzeilen="4"
+               nzeilen="${nnodes_init}"
                nspalten="5"
                columns='["No", "x [m]", "z [m]", "L<sub>x</sub>", "L<sub>z</sub>", "L<sub>&phi;</sub>"]'
             ></dr-tabelle>
