@@ -1,5 +1,6 @@
 
 import { testNumber } from './utility'
+//import {Module} from '../../d2beam_wasm.js'
 
 export let nnodes: number;
 export let nelem: number;
@@ -10,11 +11,11 @@ export let element = [] as TElement[]
 export let querschnittset = [] as any[]
 
 export let nQuerschnittSets = 0
- // @ts-ignore
- //var cmult = Module.cwrap("cmult", null, null);
- //console.log("CMULT-------------", cmult)
- var c_d2beam1 = Module.cwrap("c_d2beam1", null, null);
- console.log("C_D2BEAM1-------------", c_d2beam1)
+// @ts-ignore
+//var cmult = Module.cwrap("cmult", null, null);
+//console.log("CMULT-------------", cmult)
+var c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number"]);
+console.log("C_D2BEAM1-------------", c_d2beam1)
 
 
 class TNode {
@@ -277,6 +278,12 @@ function calculate() {
 
     console.log("Anzahl Gleichungen: ", neq)
 
+    let emodul: number = 0.0, bettung: number = 0.0, ks: number = 0.0, wichte: number = 0.0
+    let nfiber: number = 2, maxfiber: number = 5, offset_abstand: number = 0.0, height: number = 0.0
+    let Iy: number, area: number, b: number;
+
+    let breite: number[] = [2]
+    let abstand: number[] = [2]
 
     for (i = 0; i < nelem; i++) {
         nod1 = element[i].nod[0];
@@ -305,11 +312,61 @@ function calculate() {
         element[i].lm[4] = node[nod2].L[1];
         element[i].lm[5] = node[nod2].L[2];
 
+
+        // get material data
+
+        const qname = element[i].qname
+        let index = -1;
+        for (j = 0; j < nQuerschnittSets; j++) {
+            if (querschnittset[j].name === qname) {
+                index = j;
+                break;
+            }
+        }
+
+        if (index === -1) {
+            alert('element ' + i + ' hat keinen Querschnitt');
+            return -1;
+        }
+        //console.log("typeOf ",index, querschnittset[index].constructor.name)
+        if (querschnittset[index].constructor.name === 'TQuerschnittRechteck') {
+            console.log('es ist ein Rechteck')
+            emodul = querschnittset[index].emodul * 1000.0   // in kN/m²
+            wichte = querschnittset[index].wichte
+            ks = querschnittset[index].ks
+
+            nfiber = 2
+            maxfiber = 3 * (nfiber - 1)
+            height = querschnittset[index].height / 100.0     // in m
+            Iy = querschnittset[index].Iy
+            area = querschnittset[index].area
+            b = Math.sqrt(area * area * area / Iy / 12.0)/100.0     // in m
+            console.log("BREITE=",b)
+            breite[0] = b
+            breite[1] = b
+            abstand[0] = 0.0
+            abstand[1] = height
+            offset_abstand = height / 2.0       // in m
+        }
+        let prop_array = new Float64Array(5); // array of 64-bit signed double to pass
+        prop_array[0] = ks
+        prop_array[1] = wichte
+        prop_array[2] = emodul
+
+        console.log("BETTUNG", bettung)
+
+        let bytes_per_element = prop_array.BYTES_PER_ELEMENT;   // 8 bytes each element
+        // @ts-ignore
+        let prop_ptr = Module._malloc(prop_array.length * bytes_per_element);
+        // @ts-ignore
+        Module.HEAPF64.set(prop_array, prop_ptr / bytes_per_element);
+
+        c_d2beam1(nfiber, maxfiber, offset_abstand, prop_ptr);
     }
 
     //c_benchmark();
-    c_d2beam1();
     console.log("nach c_d2beam1")
+    return 0;
 }
 /*
 async function c_benchmark() {
