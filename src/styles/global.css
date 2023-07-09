@@ -5,12 +5,14 @@
 */
 :root {
   --font-family: sans-serif;
+  font-size: 1em;
 }
 
 html, body {
   font-family: var(--font-family);
   padding: 0;
   margin: 0;
+  font-size: 1em;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -30,6 +32,9 @@ html, body {
     color: black;
   }
 }
+select {
+  font-size: 1em;
+}
 
 /* Style the footer */
 .footer {
@@ -39,4 +44,20 @@ html, body {
   padding: 0;
   text-align: center;
   font-size: 0.7em;
+}
+
+.input_tab {
+  width: 5em;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
 }

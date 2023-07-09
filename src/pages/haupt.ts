@@ -24,15 +24,16 @@ import {
    set_querschnittRechteck,
    get_querschnittRechteck,
    update_querschnittRechteck,
-   init_tabellen
+   init_tabellen,
 } from './rechnen';
 
 let dialog_querschnitt_new = true;
 let dialog_querschnitt_index = 0;
 let dialog_querschnitt_item_id = '';
 
-export const nnodes_init='2';
-export const nelem_init='1';
+export const nnodes_init = '2';
+export const nelem_init = '1';
+export const nnodalloads_init = '1';
 
 {
    const template = () => html`
@@ -54,7 +55,6 @@ export const nelem_init='1';
          <sl-tab slot="nav" panel="tab-8">Tab 8</sl-tab>
          <sl-tab slot="nav" panel="tab-9">Tab 9</sl-tab>
          <sl-tab slot="nav" panel="tab-10">Tab 10</sl-tab>
-
 
          <sl-tab-panel name="tab-querschnitte">
             <sl-button id="open-dialog" @click="${handleClick}"
@@ -109,25 +109,60 @@ export const nelem_init='1';
                            inputid="nnodes"
                         ></dr-button-pm>
                      </td>
+                     <td>Anzahl Integrationspunkte :</td>
+                     <td>
+                        <input
+                           type="number"
+                           step="any"
+                           id="id_ndivsl"
+                           name="ndivsl"
+                           class="input_tab"
+                           pattern="[0-9.,eE+-]*"
+                           value="3"
+                           onchange="berechnungErforderlich()"
+                        />
+                     </td>
+                     <td>
+                        <select name="THIIO" id="id_THIIO">
+                           <option value="0" selected>Theorie I. Ordnung</option>
+                           <option value="1">Theorie II. Ordnung</option>
+                        </select>
+                     </td>
                   </tr>
                   <tr>
                      <td>Anzahl Elemente :</td>
                      <td>
                         <dr-button-pm
                            id="id_button_nelem"
-                           nel="${nelem_init}";
+                           nel="${nelem_init}"
+                           ;
                            inputid="nelem"
                         ></dr-button-pm>
+                     </td>
+                     <td>Art der Integration :</td>
+                     <td>
+                        <select name="intart" id="id_intart">
+                           <option value="0">Gauss-Legendre</option>
+                           <option value="1">Newton Codes</option>
+                           <option value="2" selected>Lobatto</option>
+                        </select>
                      </td>
                   </tr>
                   <tr>
                      <td>Anzahl Knotenlasten :</td>
                      <td>
                         <dr-button-pm
-                           id="button_nnodalloads"
-                           nel="0"
-                           inputid="nelem"
+                           id="id_button_nnodalloads"
+                           nel="${nnodalloads_init}"
+                           inputid="nnodalloads"
                         ></dr-button-pm>
+                     </td>
+                     <td>Art innere Knoten :</td>
+                     <td>
+                        <select name="art" id="id_art">
+                           <option value="0">u, w</option>
+                           <option value="1" selected>u, w, φ </option>
+                        </select>
                      </td>
                   </tr>
                   <tr>
@@ -178,7 +213,9 @@ export const nelem_init='1';
          <!--------------------------------------------------------------------------------------->
          <sl-tab-panel name="tab-knoten"
             >Eingabe der Knotenkoordinaten und Lager
-            <sl-button id="nZeilen" value="anmelden" @click="${neuZeilen}">neue Zeilen</sl-button>
+            <sl-button id="nZeilen" value="anmelden" @click="${neuZeilen}"
+               >neue Zeilen</sl-button
+            >
             <dr-tabelle
                id="id_knoten_tabelle"
                nzeilen="${nnodes_init}"
@@ -191,10 +228,10 @@ export const nelem_init='1';
          <sl-tab-panel name="tab-knotenlasten"
             >Eingabe der Knotenlasten
             <dr-tabelle
-               id="id_knoten_tabelle"
-               nzeilen="2"
-               nspalten="4"
-               columns='["No", "Lastfall", "P<sub>x</sub> [kN]", "P<sub>z</sub> [kN]", "M<sub>y</sub> [kNm]"]'
+               id="id_knotenlasten_tabelle"
+               nzeilen="${nnodalloads_init}"
+               nspalten="5"
+               columns='["No", "Knoten", "Lastfall", "P<sub>x</sub> [kN]", "P<sub>z</sub> [kN]", "M<sub>y</sub> [kNm]"]'
             ></dr-tabelle>
          </sl-tab-panel>
 
@@ -203,7 +240,6 @@ export const nelem_init='1';
          <sl-tab-panel name="tab-8">Tab panel 8</sl-tab-panel>
          <sl-tab-panel name="tab-9">Tab panel 9</sl-tab-panel>
          <sl-tab-panel name="tab-10">Tab panel 10</sl-tab-panel>
-
       </sl-tab-group>
 
       <!-- <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt> -->
@@ -216,7 +252,6 @@ export const nelem_init='1';
    // Tabellen sin jetzt da, Tabellen mit Voreinstellungen füllen
 
    init_tabellen();
-
 }
 
 //---------------------------------------------------------------------------------------------------------------

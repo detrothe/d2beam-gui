@@ -1472,6 +1472,8 @@ var _free = Module["_free"] = createExportWrapper("free");
 /** @type {function(...*):?} */
 var _c_d2beam1 = Module["_c_d2beam1"] = createExportWrapper("c_d2beam1");
 /** @type {function(...*):?} */
+var _c_d2beam2 = Module["_c_d2beam2"] = createExportWrapper("c_d2beam2");
+/** @type {function(...*):?} */
 var ___errno_location = createExportWrapper("__errno_location");
 /** @type {function(...*):?} */
 var _fflush = Module["_fflush"] = createExportWrapper("fflush");
