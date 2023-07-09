@@ -18,13 +18,13 @@ var Module = typeof Module != 'undefined' ? Module : {};
 // refer to Module (if they choose; they can also define Module)
 
 Module['print'] = function(text) {
-    console.log("> ", text)
- /*   const element = document.getElementById('output');
+    //console.log("> ", text)
+    const element = document.getElementById('output');
     if (element) {
        element.value += text + "\n";
        element.scrollTop = element.scrollHeight; // focus on bottom
     }
-    */
+
     //alert('stdout: ' + text)
 };
 

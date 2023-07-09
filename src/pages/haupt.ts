@@ -189,6 +189,9 @@ export const nnodalloads_init = '1';
                   </tr>
                </tbody>
             </table>
+
+            <textarea id="output" rows="20" cols="8"></textarea>
+
          </sl-tab-panel>
 
          <!--------------------------------------------------------------------------------------->
