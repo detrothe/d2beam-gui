@@ -442,15 +442,21 @@ function calculate() {
         element[ielem].lm[0] = node[nod1].L[0];
         element[ielem].lm[1] = node[nod1].L[1];
         element[ielem].lm[2] = node[nod1].L[2];
-        element[ielem].lm[i] = node[nod2].L[0];
-        element[ielem].lm[i + 1] = node[nod2].L[1];
-        element[ielem].lm[i + 2] = node[nod2].L[2];
+        element[ielem].lm[3] = node[nod2].L[0];
+        element[ielem].lm[4] = node[nod2].L[1];
+        element[ielem].lm[5] = node[nod2].L[2];
+        //element[ielem].lm[i] = node[nod2].L[0];
+        //element[ielem].lm[i + 1] = node[nod2].L[1];
+        //element[ielem].lm[i + 2] = node[nod2].L[2];
 
         if (nknoten === 3) {
             let nodi = element[ielem].nod[2];
-            element[ielem].lm[3] = node[nodi].L[0];
-            element[ielem].lm[4] = node[nodi].L[1];
-            element[ielem].lm[5] = node[nodi].L[2];
+            element[ielem].lm[6] = node[nodi].L[0];
+            element[ielem].lm[7] = node[nodi].L[1];
+            element[ielem].lm[8] = node[nodi].L[2];
+            //element[ielem].lm[3] = node[nodi].L[0];
+            //element[ielem].lm[4] = node[nodi].L[1];
+            //element[ielem].lm[5] = node[nodi].L[2];
         }
 
         console.log("lm", element[ielem].lm)
