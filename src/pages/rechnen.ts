@@ -465,7 +465,7 @@ function calculate() {
         prop_array[1] = wichte
         prop_array[2] = emodul
 
-        console.log("BETTUNG, EMODUK", bettung, emodul)
+        console.log("BETTUNG, EMODUL", bettung, emodul)
 
         let bytes_per_element = prop_array.BYTES_PER_ELEMENT;   // 8 bytes each element
         element[ielem].prop_ptr = Module._malloc(prop_array.length * bytes_per_element);
