@@ -9,6 +9,7 @@ export let nnodes: number;
 export let nelem: number;
 export let nloads: number = 0;
 export let neq: number;
+export let nnodesTotal: number = 0;
 
 export let lagerkraft = [] as number[][]
 
@@ -27,8 +28,8 @@ export let THIIO_flag = 0;
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
 //console.log("CMULT-------------", cmult)
-let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number","number", "number", "number"]);
-let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number","number", "number", "number", "number"]);
+let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number", "number", "number", "number"]);
+let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number"]);
 console.log("C_D2BEAM2-------------", c_d2beam2)
 
 const bytes_8 = 8;
@@ -59,7 +60,7 @@ class TQuerschnittRechteck {
 
 class TElement {
     qname: string = ''
-    nodeTyp: Number = 0           // 0= 2 Knoten, 1 = 3 Knoten, 2 = 4 Knoten
+    nodeTyp: number = 0           // 0= 2 Knoten, 1 = 3 Knoten, 2 = 4 Knoten
     EModul: number = 0.0
     dicke: number = 0.0
     x1: number = 0.0
@@ -67,7 +68,7 @@ class TElement {
     z1: number = 0.0
     z2: number = 0.0
     sl: number = 0.0                                    // Stablänge
-    nod = [0, 0]                                       // globale Knotennummer der Stabenden
+    nod = [0, 0, 0, 0]                                   // globale Knotennummer der Stabenden
     lm: number[] = []                          //  as number[]
     gelenk = [0, 0]
     estiff: number[][] = []    // = [[0.0, 0.0], [0.0, 0.0]]
@@ -245,6 +246,8 @@ function read_nodes() {
 
         }
     }
+
+    nnodesTotal = nnodes;
 }
 
 
@@ -293,7 +296,7 @@ function read_nodal_loads() {
 function read_elements() {
     //-----------------------------------------------------------------------------------------------------------
 
-    let i: number;
+    let i: number, ielem: number;
 
     const el = document.getElementById('id_elment_tabelle');
     console.log('EL: >>', el);
@@ -327,7 +330,24 @@ function read_elements() {
             else if (ispalte === 6) element[izeile - 1].gelenk[1] = Number(testNumber(wert, izeile, ispalte, shad));
         }
         console.log("element", izeile, element[izeile - 1].qname, element[izeile - 1].nod[0], element[izeile - 1].nod[1])
+
+        ielem = izeile - 1
+
+        if (element[ielem].nodeTyp === 3) {
+            //let nod1 = element[ielem].nod[0];
+            //let nod2 = element[ielem].nod[1];
+            let x = (element[ielem].x2 + element[ielem].x1) / 2.0
+            let z = (element[ielem].z2 + element[ielem].z1) / 2.0
+            node.push(new TNode())
+            node[nnodesTotal].x = x
+            node[nnodesTotal].z = z
+            element[ielem].nod[2] = nnodesTotal
+            nnodesTotal++;
+
+        }
     }
+
+
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -338,6 +358,7 @@ export function init_tabellen() {
 
     let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
+    (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '3';
     (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '1';
     (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '2';
 
@@ -369,13 +390,13 @@ function calculate() {
     let i: number, j: number, k: number, js: number, nod1: number, nod2: number
     let x1: number, x2: number, z1: number, z2: number, dx: number, dz: number;
     let lmi: number = 0, lmj: number = 0
-    let ielem: number, ieq: number, nodi: number
+    let ielem: number, ieq: number, nodi: number, nknoten: number
 
 
     // Berechnung der Gleichungsnummern
 
     neq = 0;
-    for (i = 0; i < nnodes; i++) {
+    for (i = 0; i < nnodesTotal; i++) {
         for (j = 0; j < 3; j++) {
             if (node[i].L[j] > 0) {
                 node[i].L[j] = -1;
@@ -415,15 +436,26 @@ function calculate() {
         element[ielem].alpha = Math.atan2(dz, dx) // *180.0/Math.PI
         console.log("sl=", ielem, element[ielem].sl, element[ielem].alpha)
 
+        nknoten = element[ielem].nodeTyp
+
+        i = (nknoten - 1) * 3
         element[ielem].lm[0] = node[nod1].L[0];
         element[ielem].lm[1] = node[nod1].L[1];
         element[ielem].lm[2] = node[nod1].L[2];
-        element[ielem].lm[3] = node[nod2].L[0];
-        element[ielem].lm[4] = node[nod2].L[1];
-        element[ielem].lm[5] = node[nod2].L[2];
+        element[ielem].lm[i] = node[nod2].L[0];
+        element[ielem].lm[i + 1] = node[nod2].L[1];
+        element[ielem].lm[i + 2] = node[nod2].L[2];
 
+        if (nknoten === 3) {
+            let nodi = element[ielem].nod[2];
+            element[ielem].lm[3] = node[nodi].L[0];
+            element[ielem].lm[4] = node[nodi].L[1];
+            element[ielem].lm[5] = node[nodi].L[2];
+        }
 
-        element[ielem].estiff = Array.from(Array(6), () => new Array(6));
+        console.log("lm", element[ielem].lm)
+
+        element[ielem].estiff = Array.from(Array(nknoten * 3), () => new Array(nknoten * 3));
 
         // get material data
 
@@ -440,7 +472,7 @@ function calculate() {
             alert('element ' + ielem + ' hat keinen Querschnitt');
             return -1;
         }
-        console.log("typeOf ",index, querschnittset[index].className)
+        console.log("typeOf ", index, querschnittset[index].className)
 
         if (querschnittset[index].className === 'QuerschnittRechteck') {   //  linear elastisch
             console.log('es ist ein Rechteck')
@@ -474,8 +506,9 @@ function calculate() {
         Module.HEAPF64.set(prop_array, element[ielem].prop_ptr / bytes_per_element);
 
         let npar_array = new Int32Array(21);
-        npar_array[0] = 2           // nknoten
+        npar_array[0] = element[ielem].nodeTyp           // nknoten
         npar_array[1] = 0           // nGelenke
+        npar_array[4] = element[ielem].nodeTyp + 1
         npar_array[5] = ndivsl
         npar_array[6] = 1           // model
         npar_array[13] = art
@@ -517,8 +550,8 @@ function calculate() {
         let estiff_array = new Float64Array(Module.HEAPF64.buffer, estiff_ptr, 105);
 
         k = 0
-        for (j = 0; j < 6; j++) {
-            for (js = j; js < 6; js++) {
+        for (j = 0; j < nknoten * 3; j++) {
+            for (js = j; js < nknoten * 3; js++) {
                 //console.log('estiff', j, js, estiff_array[k])
                 element[ielem].estiff[j][js] = estiff_array[k]
                 element[ielem].estiff[js][j] = estiff_array[k]
@@ -546,16 +579,18 @@ function calculate() {
     const R = Array(neq);
     const u = Array(neq);
 
-    lagerkraft = Array.from(Array(nnodes), () => new Array(3).fill(0.0));
+    lagerkraft = Array.from(Array(nnodesTotal), () => new Array(3).fill(0.0));
 
     for (k = 0; k < nelem; k++) {
         console.log("add", element[k].estiff[0])
         console.log("lm", element[k].lm)
 
-        for (i = 0; i < 6; i++) {
+        nknoten = element[k].nodeTyp
+
+        for (i = 0; i < nknoten * 3; i++) {
             lmi = element[k].lm[i];
             if (lmi >= 0) {
-                for (j = 0; j < 6; j++) {
+                for (j = 0; j < nknoten * 3; j++) {
                     lmj = element[k].lm[j];
                     if (lmj >= 0) {
                         stiff[lmi][lmj] = stiff[lmi][lmj] + element[k].estiff[i][j];
@@ -617,7 +652,8 @@ function calculate() {
 
 
     for (ielem = 0; ielem < nelem; ielem++) {
-        for (j = 0; j < 6; j++) {                           // Stabverformungen
+        nknoten = element[ielem].nodeTyp
+        for (j = 0; j < nknoten * 3; j++) {                           // Stabverformungen
             ieq = element[ielem].lm[j]
             if (ieq === -1) {
                 element[ielem].u[j] = 0
@@ -647,17 +683,23 @@ function calculate() {
         Module._free(fk_ptr);
         Module._free(u_ptr);
 
-        for (i = 0; i < 6; i++) {
+        for (i = 0; i < nknoten * 3; i++) {
             console.log("fk ", i, fk_array[i], fk_array.length)
             element[ielem].F[i] = fk_array[i]
         }
 
         // Knotengleichgewicht bilden, um Auflagerkräfte zu bestimmen
-        for (i = 0; i < 2; i++) {
+
+        let iz = []
+        iz[0] = 0;
+        if (nknoten === 2) iz[1] = 3;
+        else if (nknoten === 3) iz[1] = 6; iz[2] = 3;
+
+        for (i = 0; i < nknoten; i++) {
             nodi = element[ielem].nod[i]
-            lagerkraft[nodi][0] = lagerkraft[nodi][0] - element[ielem].F[3 * i]
-            lagerkraft[nodi][1] = lagerkraft[nodi][1] - element[ielem].F[3 * i + 1]
-            lagerkraft[nodi][2] = lagerkraft[nodi][2] - element[ielem].F[3 * i + 2]
+            lagerkraft[nodi][0] = lagerkraft[nodi][0] - element[ielem].F[iz[i]]
+            lagerkraft[nodi][1] = lagerkraft[nodi][1] - element[ielem].F[iz[i] + 1]
+            lagerkraft[nodi][2] = lagerkraft[nodi][2] - element[ielem].F[iz[i] + 2]
         }
     }
 
@@ -669,7 +711,7 @@ function calculate() {
         lagerkraft[nodi][2] = lagerkraft[nodi][2] + load[i].p[2]
     }
 
-    for (i = 0; i < nnodes; i++) {
+    for (i = 0; i < nnodesTotal; i++) {
         console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
     }
 
