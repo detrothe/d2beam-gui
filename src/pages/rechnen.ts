@@ -27,8 +27,8 @@ export let THIIO_flag = 0;
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
 //console.log("CMULT-------------", cmult)
-let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number"]);
-let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number"]);
+let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number","number", "number", "number"]);
+let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number","number", "number", "number", "number"]);
 console.log("C_D2BEAM2-------------", c_d2beam2)
 
 const bytes_8 = 8;
