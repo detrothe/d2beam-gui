@@ -492,7 +492,7 @@ function calculate() {
             Iy = querschnittset[index].Iy
             area = querschnittset[index].area
             b = Math.sqrt(area * area * area / Iy / 12.0) / 100.0     // in m
-            console.log("BREITE=", b)
+            console.log("BREITE=", b,Iy)
             breite[0] = b
             breite[1] = b
             abstand[0] = 0.0
