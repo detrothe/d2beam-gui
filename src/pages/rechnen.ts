@@ -47,6 +47,8 @@ class TNode {
 class TQuerschnittRechteck {
     name: string = ''
     id: string = ''
+    model: number = 1
+    className = 'QuerschnittRechteck'
     emodul: number = 30000.0
     Iy: number = 160000.0
     area: number = 1200.0
@@ -438,9 +440,9 @@ function calculate() {
             alert('element ' + ielem + ' hat keinen Querschnitt');
             return -1;
         }
-        console.log("typeOf ",index, querschnittset[index].constructor.name)
+        console.log("typeOf ",index, querschnittset[index].className)
 
-        if (querschnittset[index].constructor.name == 'TQuerschnittRechteck') {
+        if (querschnittset[index].className === 'QuerschnittRechteck') {   //  linear elastisch
             console.log('es ist ein Rechteck')
             emodul = querschnittset[index].emodul * 1000.0   // in kN/m²
             wichte = querschnittset[index].wichte
