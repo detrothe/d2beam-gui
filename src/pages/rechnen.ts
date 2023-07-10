@@ -438,8 +438,9 @@ function calculate() {
             alert('element ' + ielem + ' hat keinen Querschnitt');
             return -1;
         }
-        //console.log("typeOf ",index, querschnittset[index].constructor.name)
-        if (querschnittset[index].constructor.name === 'TQuerschnittRechteck') {
+        console.log("typeOf ",index, querschnittset[index].constructor.name)
+
+        if (querschnittset[index].constructor.name == 'TQuerschnittRechteck') {
             console.log('es ist ein Rechteck')
             emodul = querschnittset[index].emodul * 1000.0   // in kN/m²
             wichte = querschnittset[index].wichte
@@ -464,7 +465,7 @@ function calculate() {
         prop_array[1] = wichte
         prop_array[2] = emodul
 
-        console.log("BETTUNG", bettung)
+        console.log("BETTUNG, EMODUK", bettung, emodul)
 
         let bytes_per_element = prop_array.BYTES_PER_ELEMENT;   // 8 bytes each element
         element[ielem].prop_ptr = Module._malloc(prop_array.length * bytes_per_element);
