@@ -669,7 +669,7 @@ function calculate() {
         }
 
         let u_array = new Float64Array(14); // array of 64-bit signed double to pass
-        for (i = 0; i < 14; i++) {
+        for (i = 0; i < nknoten*3; i++) {
             u_array[i] = element[ielem].u[i]
             console.log("elem.u", i, u_array[i])
         }
@@ -699,7 +699,7 @@ function calculate() {
         let iz = []
         iz[0] = 0;
         if (nknoten === 2) iz[1] = 3;
-        else if (nknoten === 3) iz[1] = 6; iz[2] = 3;
+        else if (nknoten === 3) iz[1] = 3; iz[2] = 6;
 
         for (i = 0; i < nknoten; i++) {
             nodi = element[ielem].nod[i]
