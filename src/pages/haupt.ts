@@ -143,8 +143,8 @@ export const nnodalloads_init = '1';
                      <td>
                         <select name="intart" id="id_intart">
                            <option value="0">Gauss-Legendre</option>
-                           <option value="1">Newton Codes</option>
-                           <option value="2" selected>Lobatto</option>
+                           <option value="1" selected>Newton Codes</option>
+                           <option value="2" >Lobatto</option>
                         </select>
                      </td>
                   </tr>

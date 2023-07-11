@@ -28,8 +28,8 @@ export let THIIO_flag = 0;
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
 //console.log("CMULT-------------", cmult)
-let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number", "number", "number", "number"]);
-let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number"]);
+let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number"]);
+let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]);
 console.log("C_D2BEAM2-------------", c_d2beam2)
 
 const bytes_8 = 8;
@@ -82,6 +82,7 @@ class TElement {
     npar_ptr: any
     xz_ptr: any
     brAbst_ptr: any
+    stress_ptr: any
 
 }
 
@@ -473,7 +474,7 @@ function calculate() {
             element[ielem].lm[7] = node[nodi].L[1];
             element[ielem].lm[8] = node[nodi].L[2];
         }
-        if ( nknoten === 4) {
+        if (nknoten === 4) {
             let nodi = element[ielem].nod[3];
             element[ielem].lm[9] = node[nodi].L[0];
             element[ielem].lm[10] = node[nodi].L[1];
@@ -519,6 +520,21 @@ function calculate() {
             abstand[0] = 0.0
             abstand[1] = height
             offset_abstand = height / 2.0       // in m
+
+            const leng = 3 * (ndivsl * nfiber * 2)  // das sollte reichen
+            let stress_array = new Float64Array(leng); // array of 64-bit signed double to pass
+            // stress_array enthält sigma, epsx, emodul
+            for (i = 0; i < leng; i++) {
+                stress_array[i] = 0.0
+            }
+            for (i = 2; i < leng; i = i + 3) {
+                stress_array[i] = emodul
+            }
+
+            element[ielem].stress_ptr = Module._malloc(stress_array.length * bytes_8);
+            Module.HEAPF64.set(stress_array, element[ielem].stress_ptr / bytes_8);
+
+
         }
 
         let prop_array = new Float64Array(5); // array of 64-bit signed double to pass
@@ -568,28 +584,7 @@ function calculate() {
         element[ielem].brAbst_ptr = Module._malloc(brAbst_array.length * bytes_8);
         Module.HEAPF64.set(brAbst_array, element[ielem].brAbst_ptr / bytes_8);
 
-        let estiff_ptr = Module._malloc(105 * bytes_8);
-        console.log("estiff ptr", estiff_ptr)
 
-        c_d2beam1(nfiber, maxfiber, offset_abstand, element[ielem].prop_ptr, element[ielem].xz_ptr, element[ielem].brAbst_ptr,
-            element[ielem].npar_ptr, estiff_ptr);
-        // @ts-ignore
-        let estiff_array = new Float64Array(Module.HEAPF64.buffer, estiff_ptr, 105);
-
-        k = 0
-        for (j = 0; j < nknoten * 3; j++) {
-            for (js = j; js < nknoten * 3; js++) {
-                //console.log('estiff', j, js, estiff_array[k])
-                element[ielem].estiff[j][js] = estiff_array[k]
-                element[ielem].estiff[js][j] = estiff_array[k]
-                k++;
-            }
-        }
-        for (j = 0; j < 6; j++) {
-            console.log('xx ', element[ielem].estiff[j])
-        }
-
-        Module._free(estiff_ptr);
     }
 
     //c_benchmark();
@@ -608,139 +603,178 @@ function calculate() {
 
     lagerkraft = Array.from(Array(nnodesTotal), () => new Array(3).fill(0.0));
 
-    for (k = 0; k < nelem; k++) {
-        console.log("add", element[k].estiff[0])
-        console.log("lm", element[k].lm)
+    for (let iter = 0; iter < 2; iter++) {
 
-        nknoten = element[k].nodeTyp
+        for (i = 0; i < neq; i++) {
+            stiff[i].fill(0.0);
+        }
+        R.fill(0.0);
 
-        for (i = 0; i < nknoten * 3; i++) {
-            lmi = element[k].lm[i];
-            if (lmi >= 0) {
-                for (j = 0; j < nknoten * 3; j++) {
-                    lmj = element[k].lm[j];
-                    if (lmj >= 0) {
-                        stiff[lmi][lmj] = stiff[lmi][lmj] + element[k].estiff[i][j];
+        for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0);
+
+        for (ielem = 0; ielem < nelem; ielem++) {
+
+            nknoten = element[ielem].nodeTyp
+
+            let estiff_ptr = Module._malloc(105 * bytes_8);
+            console.log("estiff ptr", estiff_ptr)
+
+            c_d2beam1(nfiber, maxfiber, offset_abstand, element[ielem].prop_ptr, element[ielem].xz_ptr, element[ielem].brAbst_ptr,
+                element[ielem].npar_ptr, estiff_ptr, element[ielem].stress_ptr);
+            // @ts-ignore
+            let estiff_array = new Float64Array(Module.HEAPF64.buffer, estiff_ptr, 105);
+
+            k = 0
+            for (j = 0; j < nknoten * 3; j++) {
+                for (js = j; js < nknoten * 3; js++) {
+                    //console.log('estiff', j, js, estiff_array[k])
+                    element[ielem].estiff[j][js] = estiff_array[k]
+                    element[ielem].estiff[js][j] = estiff_array[k]
+                    k++;
+                }
+            }
+            for (j = 0; j < 6; j++) {
+                console.log('xx ', element[ielem].estiff[j])
+            }
+
+            Module._free(estiff_ptr);
+        }
+
+
+        for (k = 0; k < nelem; k++) {
+            console.log("add", element[k].estiff[0])
+            console.log("lm", element[k].lm)
+
+            nknoten = element[k].nodeTyp
+
+            for (i = 0; i < nknoten * 3; i++) {
+                lmi = element[k].lm[i];
+                if (lmi >= 0) {
+                    for (j = 0; j < nknoten * 3; j++) {
+                        lmj = element[k].lm[j];
+                        if (lmj >= 0) {
+                            stiff[lmi][lmj] = stiff[lmi][lmj] + element[k].estiff[i][j];
+                        }
                     }
                 }
             }
         }
-    }
 
-    for (j = 0; j < neq; j++) {
-        console.log('neq ', stiff[j])
-    }
-
-    // Aufstellen der rechten Seite
-
-    for (i = 0; i < neq; i++) R[i] = 0.0;
-
-    // Aufstellen der rechte Seite
-
-    for (i = 0; i < nloads; i++) {
-        nod1 = load[i].node
-        for (j = 0; j < 3; j++) {
-            lmj = node[nod1].L[j]
-            if (lmj >= 0) {
-                R[lmj] = R[lmj] + load[i].p[j]
-            }
+        for (j = 0; j < neq; j++) {
+            console.log('neq ', stiff[j])
         }
-    }
 
-    /*
-    // Elementlasten
+        // Aufstellen der rechten Seite
 
-        for (k = 0; k < nelem; k++) {
-            for (i = 0; i < 2; i++) {
-                lmi = element[k].lm[i];
-                if (lmi >= 0) {
-                    R[lmi] = R[lmi] + element[k].R[i];
+        //for (i = 0; i < neq; i++) R[i] = 0.0;
+
+        // Aufstellen der rechte Seite
+
+        for (i = 0; i < nloads; i++) {
+            nod1 = load[i].node
+            for (j = 0; j < 3; j++) {
+                lmj = node[nod1].L[j]
+                if (lmj >= 0) {
+                    R[lmj] = R[lmj] + load[i].p[j]
                 }
             }
         }
-    */
+
+        /*
+        // Elementlasten
+
+            for (k = 0; k < nelem; k++) {
+                for (i = 0; i < 2; i++) {
+                    lmi = element[k].lm[i];
+                    if (lmi >= 0) {
+                        R[lmi] = R[lmi] + element[k].R[i];
+                    }
+                }
+            }
+        */
 
 
-    for (i = 0; i < neq; i++) {
-        console.log("R", i, R[i])
-    }
-    // Gleichungssystem lösen
-    let error = gauss(neq, stiff, R);
-    if (error != 0) {
-        window.alert("Gleichungssystem singulär");
-        return 1;
-    }
+        for (i = 0; i < neq; i++) {
+            console.log("R", i, R[i])
+        }
+        // Gleichungssystem lösen
+        let error = gauss(neq, stiff, R);
+        if (error != 0) {
+            window.alert("Gleichungssystem singulär");
+            return 1;
+        }
 
-    for (i = 0; i < neq; i++) u[i] = R[i];
+        for (i = 0; i < neq; i++) u[i] = R[i];
 
-    for (i = 0; i < neq; i++) {
-        console.log("U", i, u[i] * 1000.0)    // in mm, mrad
-    }
+        for (i = 0; i < neq; i++) {
+            console.log("U", i, u[i] * 1000.0)    // in mm, mrad
+        }
 
 
-    for (ielem = 0; ielem < nelem; ielem++) {
-        nknoten = element[ielem].nodeTyp
-        for (j = 0; j < nknoten * 3; j++) {                           // Stabverformungen
-            ieq = element[ielem].lm[j]
-            if (ieq === -1) {
-                element[ielem].u[j] = 0
-            } else {
-                element[ielem].u[j] = u[ieq]
+        for (ielem = 0; ielem < nelem; ielem++) {
+            nknoten = element[ielem].nodeTyp
+            for (j = 0; j < nknoten * 3; j++) {                           // Stabverformungen
+                ieq = element[ielem].lm[j]
+                if (ieq === -1) {
+                    element[ielem].u[j] = 0
+                } else {
+                    element[ielem].u[j] = u[ieq]
+                }
+            }
+
+            let u_array = new Float64Array(14); // array of 64-bit signed double to pass
+            for (i = 0; i < nknoten * 3; i++) {
+                u_array[i] = element[ielem].u[i]
+                console.log("elem.u", i, u_array[i])
+            }
+            let u_ptr = Module._malloc(14 * bytes_8);
+
+            Module.HEAPF64.set(u_array, u_ptr / bytes_8);
+
+            let fk_ptr = Module._malloc(14 * bytes_8);
+            console.log("u fk ptr", u_ptr, fk_ptr)
+
+            c_d2beam2(nfiber, maxfiber, offset_abstand,
+                element[ielem].prop_ptr, element[ielem].xz_ptr, element[ielem].brAbst_ptr, element[ielem].npar_ptr,
+                u_ptr, fk_ptr, element[ielem].stress_ptr);
+
+            let fk_array = new Float64Array(Module.HEAPF64.buffer, fk_ptr, 14);
+
+            Module._free(fk_ptr);
+            Module._free(u_ptr);
+
+            for (i = 0; i < nknoten * 3; i++) {
+                console.log("fk ", i, fk_array[i], fk_array.length)
+                element[ielem].F[i] = fk_array[i]
+            }
+
+            // Knotengleichgewicht bilden, um Auflagerkräfte zu bestimmen
+
+            //let iz = []
+            //iz[0] = 0;
+            //iz[1] = 3;
+            //if (nknoten === 3) {iz[2] = 6;}
+            //else if (nknoten === 4) {iz[2] = 6; iz[3] = 9;}
+
+            for (i = 0; i < nknoten; i++) {
+                nodi = element[ielem].nod[i]
+                lagerkraft[nodi][0] = lagerkraft[nodi][0] - element[ielem].F[3 * i]
+                lagerkraft[nodi][1] = lagerkraft[nodi][1] - element[ielem].F[3 * i + 1]
+                lagerkraft[nodi][2] = lagerkraft[nodi][2] - element[ielem].F[3 * i + 2]
             }
         }
 
-        let u_array = new Float64Array(14); // array of 64-bit signed double to pass
-        for (i = 0; i < nknoten * 3; i++) {
-            u_array[i] = element[ielem].u[i]
-            console.log("elem.u", i, u_array[i])
-        }
-        let u_ptr = Module._malloc(14 * bytes_8);
 
-        Module.HEAPF64.set(u_array, u_ptr / bytes_8);
-
-        let fk_ptr = Module._malloc(14 * bytes_8);
-        console.log("u fk ptr", u_ptr, fk_ptr)
-
-        c_d2beam2(nfiber, maxfiber, offset_abstand,
-            element[ielem].prop_ptr, element[ielem].xz_ptr, element[ielem].brAbst_ptr, element[ielem].npar_ptr,
-            u_ptr, fk_ptr);
-
-        let fk_array = new Float64Array(Module.HEAPF64.buffer, fk_ptr, 14);
-
-        Module._free(fk_ptr);
-        Module._free(u_ptr);
-
-        for (i = 0; i < nknoten * 3; i++) {
-            console.log("fk ", i, fk_array[i], fk_array.length)
-            element[ielem].F[i] = fk_array[i]
+        for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
+            nodi = load[i].node
+            lagerkraft[nodi][0] = lagerkraft[nodi][0] + load[i].p[0]
+            lagerkraft[nodi][1] = lagerkraft[nodi][1] + load[i].p[1]
+            lagerkraft[nodi][2] = lagerkraft[nodi][2] + load[i].p[2]
         }
 
-        // Knotengleichgewicht bilden, um Auflagerkräfte zu bestimmen
-
-        let iz = []
-        iz[0] = 0;
-        if (nknoten === 2) iz[1] = 3;
-        else if (nknoten === 3) {iz[1] = 3; iz[2] = 6;}
-        else if (nknoten === 4) {iz[1] = 3; iz[2] = 6; iz[3] = 9;}
-
-        for (i = 0; i < nknoten; i++) {
-            nodi = element[ielem].nod[i]
-            lagerkraft[nodi][0] = lagerkraft[nodi][0] - element[ielem].F[iz[i]]
-            lagerkraft[nodi][1] = lagerkraft[nodi][1] - element[ielem].F[iz[i] + 1]
-            lagerkraft[nodi][2] = lagerkraft[nodi][2] - element[ielem].F[iz[i] + 2]
+        for (i = 0; i < nnodesTotal; i++) {
+            console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
         }
-    }
-
-
-    for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
-        nodi = load[i].node
-        lagerkraft[nodi][0] = lagerkraft[nodi][0] + load[i].p[0]
-        lagerkraft[nodi][1] = lagerkraft[nodi][1] + load[i].p[1]
-        lagerkraft[nodi][2] = lagerkraft[nodi][2] + load[i].p[2]
-    }
-
-    for (i = 0; i < nnodesTotal; i++) {
-        console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
     }
 
     for (ielem = 0; ielem < nelem; ielem++) {
@@ -749,6 +783,7 @@ function calculate() {
         Module._free(element[ielem].npar_ptr);
         Module._free(element[ielem].xz_ptr);
         Module._free(element[ielem].brAbst_ptr);
+        Module._free(element[ielem].stress_ptr);
     }
 
     return 0;
