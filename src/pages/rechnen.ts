@@ -334,8 +334,7 @@ function read_elements() {
         ielem = izeile - 1
 
         if (element[ielem].nodeTyp === 3) {
-            //let nod1 = element[ielem].nod[0];
-            //let nod2 = element[ielem].nod[1];
+
             let x = (element[ielem].x2 + element[ielem].x1) / 2.0
             let z = (element[ielem].z2 + element[ielem].z1) / 2.0
             node.push(new TNode())
@@ -343,7 +342,26 @@ function read_elements() {
             node[nnodesTotal].z = z
             element[ielem].nod[2] = nnodesTotal
             nnodesTotal++;
+        }
+        else if (element[ielem].nodeTyp === 4) {
 
+            let dx = (element[ielem].x2 - element[ielem].x1) / 3.0
+            let dz = (element[ielem].z2 - element[ielem].z1) / 3.0
+            let x = element[ielem].x1 + dx
+            let z = element[ielem].z1 + dz
+            node.push(new TNode())
+            node[nnodesTotal].x = x
+            node[nnodesTotal].z = z
+            element[ielem].nod[2] = nnodesTotal
+            nnodesTotal++;
+
+            x = x + dx
+            z = z + dz
+            node.push(new TNode())
+            node[nnodesTotal].x = x
+            node[nnodesTotal].z = z
+            element[ielem].nod[3] = nnodesTotal
+            nnodesTotal++;
         }
     }
 
@@ -449,14 +467,17 @@ function calculate() {
         //element[ielem].lm[i + 1] = node[nod2].L[1];
         //element[ielem].lm[i + 2] = node[nod2].L[2];
 
-        if (nknoten === 3) {
+        if (nknoten === 3 || nknoten === 4) {
             let nodi = element[ielem].nod[2];
             element[ielem].lm[6] = node[nodi].L[0];
             element[ielem].lm[7] = node[nodi].L[1];
             element[ielem].lm[8] = node[nodi].L[2];
-            //element[ielem].lm[3] = node[nodi].L[0];
-            //element[ielem].lm[4] = node[nodi].L[1];
-            //element[ielem].lm[5] = node[nodi].L[2];
+        }
+        if ( nknoten === 4) {
+            let nodi = element[ielem].nod[3];
+            element[ielem].lm[9] = node[nodi].L[0];
+            element[ielem].lm[10] = node[nodi].L[1];
+            element[ielem].lm[11] = node[nodi].L[2];
         }
 
         console.log("lm", element[ielem].lm)
@@ -492,7 +513,7 @@ function calculate() {
             Iy = querschnittset[index].Iy
             area = querschnittset[index].area
             b = Math.sqrt(area * area * area / Iy / 12.0) / 100.0     // in m
-            console.log("BREITE=", b,Iy)
+            console.log("BREITE=", b, Iy)
             breite[0] = b
             breite[1] = b
             abstand[0] = 0.0
@@ -669,7 +690,7 @@ function calculate() {
         }
 
         let u_array = new Float64Array(14); // array of 64-bit signed double to pass
-        for (i = 0; i < nknoten*3; i++) {
+        for (i = 0; i < nknoten * 3; i++) {
             u_array[i] = element[ielem].u[i]
             console.log("elem.u", i, u_array[i])
         }
@@ -699,7 +720,8 @@ function calculate() {
         let iz = []
         iz[0] = 0;
         if (nknoten === 2) iz[1] = 3;
-        else if (nknoten === 3) iz[1] = 3; iz[2] = 6;
+        else if (nknoten === 3) {iz[1] = 3; iz[2] = 6;}
+        else if (nknoten === 4) {iz[1] = 3; iz[2] = 6; iz[3] = 9;}
 
         for (i = 0; i < nknoten; i++) {
             nodi = element[ielem].nod[i]
