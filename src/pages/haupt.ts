@@ -31,8 +31,8 @@ let dialog_querschnitt_new = true;
 let dialog_querschnitt_index = 0;
 let dialog_querschnitt_item_id = '';
 
-export const nnodes_init = '2';
-export const nelem_init = '1';
+export const nnodes_init = '3';
+export const nelem_init = '2';
 export const nnodalloads_init = '1';
 
 {
@@ -118,7 +118,7 @@ export const nnodalloads_init = '1';
                            name="ndivsl"
                            class="input_tab"
                            pattern="[0-9.,eE+-]*"
-                           value="3"
+                           value="7"
                            onchange="berechnungErforderlich()"
                         />
                      </td>
@@ -190,7 +190,7 @@ export const nnodalloads_init = '1';
                </tbody>
             </table>
 
-            <textarea id="output" rows="20" cols="8"></textarea>
+            <textarea id="output" rows="40" cols="8"></textarea>
 
          </sl-tab-panel>
 

@@ -377,9 +377,13 @@ export function init_tabellen() {
 
     let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '3';
+    (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '2';
     (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '1';
     (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '2';
+
+    (table.rows[2].cells[2].firstElementChild as HTMLInputElement).value = '2';
+    (table.rows[2].cells[3].firstElementChild as HTMLInputElement).value = '2';
+    (table.rows[2].cells[4].firstElementChild as HTMLInputElement).value = '3';
 
     el = document.getElementById('id_knoten_tabelle');
 
@@ -389,15 +393,17 @@ export function init_tabellen() {
     (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '1';
     (table.rows[1].cells[5].firstElementChild as HTMLInputElement).value = '1';
 
-    (table.rows[2].cells[1].firstElementChild as HTMLInputElement).value = '5';
+    (table.rows[2].cells[1].firstElementChild as HTMLInputElement).value = '2.5';
+    (table.rows[3].cells[1].firstElementChild as HTMLInputElement).value = '5';
 
 
     el = document.getElementById('id_knotenlasten_tabelle');
 
     table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '2';
+    (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '3';
     (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '1';
+    (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '-60';
     (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '50';
 
 }
