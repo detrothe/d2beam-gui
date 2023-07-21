@@ -141,6 +141,16 @@ export class drRechteckQuerSchnitt extends LitElement {
                   <td><input id="wichte" type="number" value='0'/></td>
                   <td>&nbsp;[kN/m³]</td>
                </tr>
+               <tr>
+                  <td>Schubfaktor:</td>
+                  <td><input id="schubfaktor" type="number" value='0.833'/></td>
+                  <td>&nbsp;[-]</td>
+               </tr>
+               <tr>
+                  <td>Querdehnzahl:</td>
+                  <td><input id="querdehnzahl" type="number" value='0.3'/></td>
+                  <td>&nbsp;[-]</td>
+               </tr>
             </tbody>
          </table>
 

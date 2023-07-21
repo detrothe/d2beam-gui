@@ -17,6 +17,8 @@ import '../components/dr-tabelle';
 import '../components/dr-dialog-layerquerschnitt';
 import '../components/dr-dialog-rechteckquerschnitt';
 
+import {testclass} from "./element"
+
 import {
    rechnen,
    nQuerschnittSets,
@@ -34,6 +36,7 @@ let dialog_querschnitt_item_id = '';
 export const nnodes_init = '3';
 export const nelem_init = '2';
 export const nnodalloads_init = '1';
+export const nelemloads_init = '5';
 
 {
    const template = () => html`
@@ -50,9 +53,9 @@ export const nnodalloads_init = '1';
          <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>
          <sl-tab slot="nav" panel="tab-elemente">Elemente</sl-tab>
          <sl-tab slot="nav" panel="tab-knotenlasten">Knotenlasten</sl-tab>
-         <sl-tab slot="nav" panel="tab-6">Tab 6</sl-tab>
-         <sl-tab slot="nav" panel="tab-7">Tab 7</sl-tab>
-         <sl-tab slot="nav" panel="tab-8">Tab 8</sl-tab>
+         <sl-tab slot="nav" panel="tab-elementlasten">Elementlasten</sl-tab>
+         <sl-tab slot="nav" panel="tab-kombinationen">Kombinationen</sl-tab>
+         <sl-tab slot="nav" panel="tab-ergebnisse">Ergebnisse</sl-tab>
          <sl-tab slot="nav" panel="tab-9">Tab 9</sl-tab>
          <sl-tab slot="nav" panel="tab-10">Tab 10</sl-tab>
 
@@ -166,6 +169,17 @@ export const nnodalloads_init = '1';
                      </td>
                   </tr>
                   <tr>
+                     <td>Anzahl Elementlasten :</td>
+                     <td>
+                        <dr-button-pm
+                           id="id_button_nelemloads"
+                           nel="${nelemloads_init}"
+                           inputid="nelemloads"
+                        ></dr-button-pm>
+                     </td>
+
+                  </tr>
+                  <tr>
                      <td></td>
                      <td>
                         <sl-button
@@ -199,7 +213,7 @@ export const nnodalloads_init = '1';
             >Eingabe der Elemente <br />
 
             <dr-tabelle
-               id="id_elment_tabelle"
+               id="id_element_tabelle"
                nzeilen="${nelem_init}"
                nspalten="6"
                columns='["No", "Querschnitt", "nodTyp", "inz a", "inz e", "Gelenk a", "Gelenk e"]'
@@ -216,9 +230,6 @@ export const nnodalloads_init = '1';
          <!--------------------------------------------------------------------------------------->
          <sl-tab-panel name="tab-knoten"
             >Eingabe der Knotenkoordinaten und Lager
-            <sl-button id="nZeilen" value="anmelden" @click="${neuZeilen}"
-               >neue Zeilen</sl-button
-            >
             <dr-tabelle
                id="id_knoten_tabelle"
                nzeilen="${nnodes_init}"
@@ -238,9 +249,19 @@ export const nnodalloads_init = '1';
             ></dr-tabelle>
          </sl-tab-panel>
 
-         <sl-tab-panel name="tab-6">Tab panel 6</sl-tab-panel>
-         <sl-tab-panel name="tab-7">Tab panel 7</sl-tab-panel>
-         <sl-tab-panel name="tab-8">Tab panel 8</sl-tab-panel>
+         <!--------------------------------------------------------------------------------------->
+         <sl-tab-panel name="tab-elementlasten">Eingabe der Elementlasten
+         <dr-tabelle
+               id="id_elementlasten_tabelle"
+               nzeilen="${nelemloads_init}"
+               nspalten="5"
+               columns='["No", "Element", "Lastfall", "Art", "p<sub>links</sub><br> [kN/m]", "p<sub>rechts</sub><br> [kN/m]"]'
+            ></dr-tabelle>
+         </sl-tab-panel>
+
+         <!--------------------------------------------------------------------------------------->
+         <sl-tab-panel name="tab-kombinationen">Tab panel Kombinationen</sl-tab-panel>
+         <sl-tab-panel name="tab-ergebnisse">Ergebnisse</sl-tab-panel>
          <sl-tab-panel name="tab-9">Tab panel 9</sl-tab-panel>
          <sl-tab-panel name="tab-10">Tab panel 10</sl-tab-panel>
       </sl-tab-group>
@@ -308,7 +329,7 @@ function handleClick_rechteck() {
    element?.appendChild(tag);
    */
 }
-
+/*
 //---------------------------------------------------------------------------------------------------------------
 function neuZeilen() {
    //---------------------------------------------------------------------------------------------------------------
@@ -334,7 +355,7 @@ function neuZeilen() {
       wert = child.value;
    }
 }
-
+*/
 //---------------------------------------------------------------------------------------------------------------
 function handleClick_LD(ev: any) {
    //---------------------------------------------------------------------------------------------------------------
@@ -351,7 +372,9 @@ function handleClick_LD(ev: any) {
 function calculate() {
    //---------------------------------------------------------------------------------------------------------------
    console.log('calculate');
-   rechnen();
+   //rechnen();
+
+   testclass();
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -388,7 +411,11 @@ function dialog_closed(e: any) {
          const height = +elem.value;
          elem = el?.shadowRoot?.getElementById('bettung') as HTMLInputElement;
          const bettung = +elem.value;
-         elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
+         elem = el?.shadowRoot?.getElementById('schubfaktor') as HTMLInputElement;
+         const schubfaktor = +elem.value;
+         elem = el?.shadowRoot?.getElementById('querdehnzahl') as HTMLInputElement;
+         const querdehnzahl = +elem.value;
+          elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
          const wichte = +elem.value;
 
          if (dialog_querschnitt_new) {
@@ -402,7 +429,9 @@ function dialog_closed(e: any) {
                area,
                height,
                bettung,
-               wichte
+               wichte,
+               schubfaktor,
+               querdehnzahl
             );
          } else {
             update_querschnittRechteck(
@@ -414,7 +443,10 @@ function dialog_closed(e: any) {
                area,
                height,
                bettung,
-               wichte
+               wichte,
+               schubfaktor,
+               querdehnzahl
+
             );
 
             //console.log("UPDATE", this)
@@ -424,7 +456,7 @@ function dialog_closed(e: any) {
             //console.log("dialog_querschnitt_item_id", el.innerHTML)
             if (el.innerHTML !== qname) {
                el.innerHTML = qname;
-               const ele = document.getElementById('id_elment_tabelle');
+               const ele = document.getElementById('id_element_tabelle');
                console.log('ELE: >>', ele);
                ele?.setAttribute(
                   'namechanged',
@@ -449,7 +481,7 @@ function dialog_closed(e: any) {
          element?.appendChild(tag);
          console.log('child appendchild', element);
 
-         const ele = document.getElementById('id_elment_tabelle');
+         const ele = document.getElementById('id_element_tabelle');
          console.log('ELE: >>', ele);
          ele?.setAttribute('newselect', '4');
       }
@@ -477,7 +509,7 @@ function opendialog(ev: any) {
       //let qname: string = '', id0: string = ''
       //let emodul: number = 0, Iy: number = 0, area: number = 0, height: number = 0, bettung: number = 0, wichte: number = 0;
 
-      const [qname, id0, emodul, Iy, area, height, bettung, wichte] =
+      const [qname, id0, emodul, Iy, area, height, bettung, wichte, schubfaktor, querdehnzahl] =
          get_querschnittRechteck(index);
 
       if (id0 !== id) console.log('BIG Problem in opendialog');
@@ -501,6 +533,10 @@ function opendialog(ev: any) {
       elem.value = String(bettung);
       elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
       elem.value = String(wichte);
+      elem = el?.shadowRoot?.getElementById('schubfaktor') as HTMLInputElement;
+      elem.value = String(schubfaktor);
+      elem = el?.shadowRoot?.getElementById('querdehnzahl') as HTMLInputElement;
+      elem.value = String(querdehnzahl);
    }
 
    //const el=document.getElementById(id);
@@ -540,7 +576,29 @@ function resizeTables() {
          el_elemente?.shadowRoot?.getElementById('nelem') as HTMLInputElement
       ).value;
 
-      const el = document.getElementById('id_elment_tabelle');
+      const el = document.getElementById('id_element_tabelle');
+      console.log('EL: >>', el);
+      el?.setAttribute('nzeilen', nelem);
+   }
+
+   {
+      const el_elemente = document.getElementById('id_button_nnodalloads');
+      const nelem = (
+         el_elemente?.shadowRoot?.getElementById('nnodalloads') as HTMLInputElement
+      ).value;
+
+      const el = document.getElementById('id_knotenlasten_tabelle');
+      console.log('EL: >>', el);
+      el?.setAttribute('nzeilen', nelem);
+   }
+
+   {
+      const el_elemente = document.getElementById('id_button_nelemloads');
+      const nelem = (
+         el_elemente?.shadowRoot?.getElementById('nelemloads') as HTMLInputElement
+      ).value;
+
+      const el = document.getElementById('id_elementlasten_tabelle');
       console.log('EL: >>', el);
       el?.setAttribute('nzeilen', nelem);
    }

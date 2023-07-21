@@ -133,7 +133,7 @@ class DrTabelle extends HTMLElement {
 
                const str = id_table + '-' + iZeile + '-' + iSpalte;
                el.id = str;
-               el.value=str;
+               el.value = str;
                //el.className = 'input_normal';
                el.addEventListener('keydown', this.KEYDOWN);
                //el.addEventListener("change", function () { berechnungErforderlich(true); });
@@ -250,6 +250,7 @@ class DrTabelle extends HTMLElement {
 
       const table = this.shadow.getElementById('mytable') as HTMLTableElement;
 
+      console.log(" TEST this.nZeilen",this.nZeilen)
       for (let iZeile = 1; iZeile <= this.nZeilen; iZeile++) {
          // Spalten addieren
          let row = table.rows.item(iZeile);
@@ -306,6 +307,7 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    resize_Tabelle(idTable: any, nRowNew: number, nColNew: number) {
       //------------------------------------------------------------------------------------------------------------
+      let id_table = 'idtable';
 
       console.info('in resize', idTable);
 
@@ -369,7 +371,7 @@ class DrTabelle extends HTMLElement {
                      el.style.padding = '5px';
                      el.style.margin = '0px';
                      el.style.borderRadius = '0px';
-                     const str = idTable + '-' + iZeile + '-' + iSpalte;
+                     const str = id_table + '-' + iZeile + '-' + iSpalte;
                      el.id = str;
                      el.className = 'input_normal';
                      el.addEventListener('keydown', this.KEYDOWN);
@@ -388,7 +390,7 @@ class DrTabelle extends HTMLElement {
                      newCell.style.margin = '0px';
                      newCell.style.backgroundColor = 'rgb(200,200,200)';
                      newCell.style.touchAction = 'auto';
-                     const str1 = idTable + 'Cell-' + iZeile + '-' + iSpalte;
+                     const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
                      newCell.id = str1;
                      newCell.className = 'input_normal';
 
@@ -425,15 +427,30 @@ class DrTabelle extends HTMLElement {
                   newCell.style.margin = '0px';
                   newCell.appendChild(newText);
                } else {
-                  let el = document.createElement('input');
-                  el.setAttribute('type', 'number');
-                  el.style.width = 'inherit'; //'6em';
+                  let el;
+                  if (this.typs[iSpalte] === ' select') {
+                     el = document.createElement('select');
+                     el.style.width = '100%';   // 100px
+                     console.log('CREATED SELECT');
+                     for (let i = 0; i < nQuerschnittSets; i++) {
+                        let option = document.createElement('option');
+
+                        option.value = option.textContent =  get_querschnittRechteck_name(i);;
+
+                        el.appendChild(option);
+                     }
+                  } else {
+                     el = document.createElement('input');
+                     el.setAttribute('type', 'number');
+                     el.style.width = 'inherit'; //'6em';
+                  }
+
                   el.style.border = 'none';
                   el.style.borderWidth = '0px';
                   el.style.padding = '5px';
                   el.style.margin = '0px';
                   el.style.borderRadius = '0px';
-                  const str = idTable + '-' + iZeile + '-' + iSpalte;
+                  const str = id_table + '-' + iZeile + '-' + iSpalte;
                   el.id = str;
                   //el.className = 'input_normal';
                   el.addEventListener('keydown', this.KEYDOWN);
@@ -450,7 +467,7 @@ class DrTabelle extends HTMLElement {
                   newCell.style.margin = '0px';
                   newCell.style.backgroundColor = 'rgb(200,200,200)';
                   newCell.style.touchAction = 'auto';
-                  const str1 = idTable + 'Cell-' + iZeile + '-' + iSpalte;
+                  const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
                   newCell.id = str1;
                   newCell.className = 'input_normal';
 
@@ -460,6 +477,11 @@ class DrTabelle extends HTMLElement {
             }
          }
       }
+
+      this.nSpalten = nColNew
+      this.nZeilen = nRowNew
+      this.nTabRow = this.nZeilen+1
+      this.nTabCol=this.nSpalten+1
    }
 
    //----------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 ManifoldJS
 
-Copyright (c) Microsoft Corporation
+Copyright (c) statikverstehen.de
 
 All rights reserved.
 
