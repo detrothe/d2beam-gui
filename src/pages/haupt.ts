@@ -33,10 +33,10 @@ let dialog_querschnitt_new = true;
 let dialog_querschnitt_index = 0;
 let dialog_querschnitt_item_id = '';
 
-export const nnodes_init = '3';
-export const nelem_init = '2';
-export const nnodalloads_init = '1';
-export const nelemloads_init = '5';
+export const nnodes_init = '2';
+export const nelem_init = '1';
+export const nnodalloads_init = '0';
+export const nelemloads_init = '1';
 
 {
    const template = () => html`
@@ -372,9 +372,9 @@ function handleClick_LD(ev: any) {
 function calculate() {
    //---------------------------------------------------------------------------------------------------------------
    console.log('calculate');
-   //rechnen();
+   rechnen();
 
-   testclass();
+   //testclass();
 }
 
 //---------------------------------------------------------------------------------------------------------------

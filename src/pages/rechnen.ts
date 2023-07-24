@@ -461,13 +461,13 @@ export function init_tabellen() {
 
     let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    //(table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '2';
+    (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '0';
     (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '1';
     (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '2';
 
-    //(table.rows[2].cells[2].firstElementChild as HTMLInputElement).value = '2';
-    (table.rows[2].cells[3].firstElementChild as HTMLInputElement).value = '2';
-    (table.rows[2].cells[4].firstElementChild as HTMLInputElement).value = '3';
+
+    //(table.rows[2].cells[3].firstElementChild as HTMLInputElement).value = '2';
+    //(table.rows[2].cells[4].firstElementChild as HTMLInputElement).value = '3';
 
     el = document.getElementById('id_knoten_tabelle');
 
@@ -477,19 +477,28 @@ export function init_tabellen() {
     (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '1';
     (table.rows[1].cells[5].firstElementChild as HTMLInputElement).value = '1';
 
-    (table.rows[2].cells[1].firstElementChild as HTMLInputElement).value = '2.5';
-    (table.rows[3].cells[1].firstElementChild as HTMLInputElement).value = '5';
+    (table.rows[2].cells[1].firstElementChild as HTMLInputElement).value = '5';
+    //(table.rows[3].cells[1].firstElementChild as HTMLInputElement).value = '5';
 
+    /*
+        el = document.getElementById('id_knotenlasten_tabelle');
 
-    el = document.getElementById('id_knotenlasten_tabelle');
+        table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+        (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '3';
+        (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '1';
+        (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '-60';
+        (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '50';
+    */
+
+    el = document.getElementById('id_elementlasten_tabelle');
 
     table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '3';
+    (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '1';
     (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '1';
-    (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '-60';
-    (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '50';
-
+    (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '5';
+    (table.rows[1].cells[5].firstElementChild as HTMLInputElement).value = '5';
 }
 
 
@@ -570,8 +579,114 @@ function calculate() {
         }
 
         el.push(new CTimoshenko_beam())
-        el.setQuerschnittsdaten(emodul, Iy, area, wichte, ks, querdehnzahl, schubfaktor)
-        el.initialisiereElementdaten(ielem)
+        el[ielem].setQuerschnittsdaten(emodul, Iy, area, wichte, ks, querdehnzahl, schubfaktor)
+        el[ielem].initialisiereElementdaten(ielem)
+    }
+
+
+    const stiff = Array.from(Array(neq), () => new Array(neq).fill(0.0));
+    const R = Array(neq);
+    const u = Array(neq);
+
+    lagerkraft = Array.from(Array(nnodesTotal), () => new Array(3).fill(0.0));
+
+
+
+    for (let iter = 0; iter < 1; iter++) {
+
+        for (i = 0; i < neq; i++) {
+            stiff[i].fill(0.0);
+        }
+        R.fill(0.0);
+        u.fill(0.0);
+
+        for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0);
+
+        for (ielem = 0; ielem < nelem; ielem++) {
+
+            el[ielem].berechneElementsteifigkeitsmatrix();
+            el[ielem].addiereElementsteifigkeitmatrix(stiff)
+
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                if ((eload[ieload].element === ielem) && (eload[ieload].lf === 1)) {
+                    el[ielem].berechneElementlasten(ieload)
+                }
+            }
+        }
+
+        for (j = 0; j < neq; j++) {
+            console.log('stiff[]', stiff[j])
+        }
+
+        // Aufstellen der rechte Seite, Einzellasten
+
+        let lmj: number = 0, nod1: number, nodi: number
+
+        for (i = 0; i < nloads; i++) {
+            nod1 = load[i].node
+            for (j = 0; j < 3; j++) {
+                lmj = node[nod1].L[j]
+                if (lmj >= 0) {
+                    R[lmj] = R[lmj] + load[i].p[j]
+                }
+            }
+        }
+
+        //  und jetzt noch die normalen Elementlasten
+
+        for (ielem = 0; ielem < nelem; ielem++) {
+
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                if ((eload[ieload].element === ielem) && (eload[ieload].lf === 1)) {
+                    for (j = 0; j < 6; j++) {
+                        lmj = el[ielem].lm[j]
+                        if (lmj >= 0) {
+                            R[lmj] = R[lmj] - eload[ieload].el_r[j]
+                        }
+                    }
+                }
+            }
+
+        }
+
+        for (i = 0; i < neq; i++) {
+            console.log("R", i, R[i])
+        }
+
+        // Gleichungssystem lösen
+
+        let error = gauss(neq, stiff, R);
+        if (error != 0) {
+            window.alert("Gleichungssystem singulär");
+            return 1;
+        }
+
+        for (i = 0; i < neq; i++) u[i] = R[i];
+
+        for (i = 0; i < neq; i++) {
+            console.log("U", i, u[i] * 1000.0)    // in mm, mrad
+        }
+
+        // Rückrechnung
+
+        for (ielem = 0; ielem < nelem; ielem++) {
+            el[ielem].berechneInterneKraefte(ielem, u);
+            el[ielem].berechneLagerkraefte();
+        }
+
+
+
+        for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
+            nodi = load[i].node
+            lagerkraft[nodi][0] = lagerkraft[nodi][0] + load[i].p[0]
+            lagerkraft[nodi][1] = lagerkraft[nodi][1] + load[i].p[1]
+            lagerkraft[nodi][2] = lagerkraft[nodi][2] + load[i].p[2]
+        }
+
+        for (i = 0; i < nnodesTotal; i++) {
+            console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
+        }
+
     }
 
     return 0;

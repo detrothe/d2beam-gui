@@ -1,6 +1,6 @@
 import { CElement } from "./element"
 
-import { node, element, lagerkraft } from "./rechnen"
+import { node, element, eload, lagerkraft, neloads } from "./rechnen"
 
 
 export class CTimoshenko_beam extends CElement {
@@ -114,13 +114,21 @@ export class CTimoshenko_beam extends CElement {
         const L2 = sl * sl
         const L3 = L2 * sl
 
+        let area_s:number
         let EAL = this.emodul * this.area / sl
         const EI = this.emodul * this.Iy
-        const area_s = this.schubfaktor * this.area
         this.gmodul = this.emodul / 2.0 / (1.0 + this.querdehnzahl)
-        this.psi = 1.0 / (1.0 + 12.0 * EI / this.gmodul / area_s / L2)
+
+        if (this.schubfaktor === 0.0 ) {  // schubstarr
+            area_s =  this.area
+            this.psi = 1.0
+        } else {
+            area_s = this.schubfaktor * this.area
+            this.psi = 1.0 / (1.0 + 12.0 * EI / this.gmodul / area_s / L2)
+        }
         const psi = this.psi
 
+        console.log("psi",this.psi)
 
         this.estm[0][0] = EAL
         this.estm[0][1] = 0.0
@@ -232,11 +240,32 @@ export class CTimoshenko_beam extends CElement {
         }
     }
 
+    //---------------------------------------------------------------------------------------------
+    addiereElementsteifigkeitmatrix(stiff: number[][]) {
+
+        let i: number, j: number
+        let lmi: number, lmj: number
+
+
+        for (i = 0; i < 6; i++) {
+            lmi = this.lm[i];
+            if (lmi >= 0) {
+                for (j = 0; j < 6; j++) {
+                    lmj = this.lm[j];
+                    if (lmj >= 0) {
+                        stiff[lmi][lmj] = stiff[lmi][lmj] + this.estiff[i][j];
+                    }
+                }
+            }
+        }
+
+    }
+
 
     //---------------------------------------------------------------------------------------------
-    berechneInterneKraefte(u: number[]) {
+    berechneInterneKraefte(ielem: number, u: number[]) {
 
-        let ieq: number, j: number, k: number
+        let ieq: number, i: number, j: number, k: number
         let sum: number
 
         for (j = 0; j < 6; j++) {                           // Stabverformungen
@@ -255,6 +284,17 @@ export class CTimoshenko_beam extends CElement {
             }
             this.F[j] = sum
         }
+
+        // normale Elementlasten hinzufügen
+
+        for (let ieload = 0; ieload < neloads; ieload++) {
+            if ((eload[ieload].element === ielem) && (eload[ieload].lf === 1)) {
+                for (i = 0; i < 6; i++) {
+                    this.F[i]=this.F[i] + eload[ieload].el_r[i]
+                }
+                }
+        }
+
         console.log("element F global ", this.F)
 
         this.normalkraft = -this.F[0]
@@ -274,4 +314,35 @@ export class CTimoshenko_beam extends CElement {
         }
 
     }
+
+    //---------------------------------------------------------------------------------------------
+    berechneElementlasten(ieload: number) {
+
+        const sl = this.sl
+
+        if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
+
+            const p1 = -sl * (eload[ieload].pR + eload[ieload].pL) / 2.0 / 60.0
+            const p2 = -sl * (eload[ieload].pR - eload[ieload].pL) / 2.0 / 60.0
+            eload[ieload].re[0] = 0
+            eload[ieload].re[3] = 0
+
+            eload[ieload].re[1] = 30.0 * p1 - (10.0 + 2.0 * this.psi) * p2 // VL
+            eload[ieload].re[4] = 30.0 * p1 + (10.0 + 2.0 * this.psi) * p2 // VR
+
+            eload[ieload].re[2] = -5.0 * sl * p1 + sl * this.psi * p2
+            eload[ieload].re[5] =  5.0 * sl * p1 + sl * this.psi * p2
+        }
+
+        eload[ieload].el_r[0] = this.trans[0][0] * eload[ieload].re[0] + this.trans[1][0] * eload[ieload].re[1] // !! mit [T]^T multiplizieren
+        eload[ieload].el_r[1] = this.trans[0][1] * eload[ieload].re[0] + this.trans[1][1] * eload[ieload].re[1]
+        eload[ieload].el_r[2] = eload[ieload].re[2]
+        eload[ieload].el_r[3] = this.trans[3][3] * eload[ieload].re[3] + this.trans[4][3] * eload[ieload].re[4]
+        eload[ieload].el_r[4] = this.trans[3][4] * eload[ieload].re[3] + this.trans[4][4] * eload[ieload].re[4]
+        eload[ieload].el_r[5] = eload[ieload].re[5]
+
+        console.log("elementload global ", eload[ieload].el_r)
+
+    }
+
 }

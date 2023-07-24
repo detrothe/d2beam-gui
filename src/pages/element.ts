@@ -20,21 +20,22 @@ export class CElement {
 
     }
 
-    addiereElementsteifigkeitmatrix() {
-
+    addiereElementsteifigkeitmatrix(stiff: number[][]) {
+        console.log("class element: addiereElementsteifigkeitmatrix", stiff[0][0])
     }
 
-    // @ts-ignore
-    berechneInterneKraefte(u: number[]) {
 
+    berechneInterneKraefte(ielem:number,u: number[]) {
+        console.log("class element: berechneInterneKraefte", ielem, u[0])
     }
 
     berechneLagerkraefte() {
 
     }
-    berechneElementlasten() {
-
+    berechneElementlasten(ieload:number) {
+        console.log("class element: berechneElementlasten von ", ieload)
     }
+
     berechneElementSchnittgroessen() {
 
     }
