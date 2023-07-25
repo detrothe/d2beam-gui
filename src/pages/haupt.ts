@@ -17,7 +17,9 @@ import '../components/dr-tabelle';
 import '../components/dr-dialog-layerquerschnitt';
 import '../components/dr-dialog-rechteckquerschnitt';
 
-import {testclass} from "./element"
+//import { testclass } from './element';
+
+import {addListener_filesave} from  './dateien';
 
 import {
    rechnen,
@@ -37,6 +39,29 @@ export const nnodes_init = '2';
 export const nelem_init = '1';
 export const nnodalloads_init = '0';
 export const nelemloads_init = '1';
+
+
+export const app = {
+   appName: 'd2beam',
+   browserLanguage: 'de',
+   file: {
+       handle: null,
+       name: null,
+       isModified: false,
+   },
+   options: {
+       captureTabs: true,
+       fontSize: 16,
+       monoSpace: false,
+       wordWrap: true,
+   },
+   hasFSAccess: 'chooseFileSystemEntries' in window ||
+       'showOpenFilePicker' in window ||
+       'showSaveFilePicker' in window,
+   isMac: navigator.userAgent.includes('Mac OS X'),
+
+};
+
 
 {
    const template = () => html`
@@ -127,7 +152,9 @@ export const nelemloads_init = '1';
                      </td>
                      <td>
                         <select name="THIIO" id="id_THIIO">
-                           <option value="0" selected>Theorie I. Ordnung</option>
+                           <option value="0" selected>
+                              Theorie I. Ordnung
+                           </option>
                            <option value="1">Theorie II. Ordnung</option>
                         </select>
                      </td>
@@ -147,7 +174,7 @@ export const nelemloads_init = '1';
                         <select name="intart" id="id_intart">
                            <option value="0">Gauss-Legendre</option>
                            <option value="1" selected>Newton Codes</option>
-                           <option value="2" >Lobatto</option>
+                           <option value="2">Lobatto</option>
                         </select>
                      </td>
                   </tr>
@@ -164,10 +191,16 @@ export const nelemloads_init = '1';
                      <td>
                         <select name="art" id="id_art">
                            <option value="0">u, w</option>
-                           <option value="1" selected>u, w, φ </option>
+                           <option value="1" selected>u, w, φ</option>
                         </select>
                      </td>
+                     <td>
+                        <button type="button" id="readFile">
+                           Daten einlesen
+                        </button>
+                     </td>
                   </tr>
+
                   <tr>
                      <td>Anzahl Elementlasten :</td>
                      <td>
@@ -177,7 +210,13 @@ export const nelemloads_init = '1';
                            inputid="nelemloads"
                         ></dr-button-pm>
                      </td>
-
+                     <td></td>
+                     <td></td>
+                     <td>
+                        <button type="button" id="saveFile">
+                           Daten speichern
+                        </button>
+                     </td>
                   </tr>
                   <tr>
                      <td></td>
@@ -205,7 +244,6 @@ export const nelemloads_init = '1';
             </table>
 
             <textarea id="output" rows="40" cols="8"></textarea>
-
          </sl-tab-panel>
 
          <!--------------------------------------------------------------------------------------->
@@ -250,8 +288,9 @@ export const nelemloads_init = '1';
          </sl-tab-panel>
 
          <!--------------------------------------------------------------------------------------->
-         <sl-tab-panel name="tab-elementlasten">Eingabe der Elementlasten
-         <dr-tabelle
+         <sl-tab-panel name="tab-elementlasten"
+            >Eingabe der Elementlasten
+            <dr-tabelle
                id="id_elementlasten_tabelle"
                nzeilen="${nelemloads_init}"
                nspalten="5"
@@ -260,7 +299,9 @@ export const nelemloads_init = '1';
          </sl-tab-panel>
 
          <!--------------------------------------------------------------------------------------->
-         <sl-tab-panel name="tab-kombinationen">Tab panel Kombinationen</sl-tab-panel>
+         <sl-tab-panel name="tab-kombinationen"
+            >Tab panel Kombinationen</sl-tab-panel
+         >
          <sl-tab-panel name="tab-ergebnisse">Ergebnisse</sl-tab-panel>
          <sl-tab-panel name="tab-9">Tab panel 9</sl-tab-panel>
          <sl-tab-panel name="tab-10">Tab panel 10</sl-tab-panel>
@@ -276,6 +317,8 @@ export const nelemloads_init = '1';
    // Tabellen sin jetzt da, Tabellen mit Voreinstellungen füllen
 
    init_tabellen();
+
+   addListener_filesave();
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -411,11 +454,15 @@ function dialog_closed(e: any) {
          const height = +elem.value;
          elem = el?.shadowRoot?.getElementById('bettung') as HTMLInputElement;
          const bettung = +elem.value;
-         elem = el?.shadowRoot?.getElementById('schubfaktor') as HTMLInputElement;
+         elem = el?.shadowRoot?.getElementById(
+            'schubfaktor'
+         ) as HTMLInputElement;
          const schubfaktor = +elem.value;
-         elem = el?.shadowRoot?.getElementById('querdehnzahl') as HTMLInputElement;
+         elem = el?.shadowRoot?.getElementById(
+            'querdehnzahl'
+         ) as HTMLInputElement;
          const querdehnzahl = +elem.value;
-          elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
+         elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
          const wichte = +elem.value;
 
          if (dialog_querschnitt_new) {
@@ -446,7 +493,6 @@ function dialog_closed(e: any) {
                wichte,
                schubfaktor,
                querdehnzahl
-
             );
 
             //console.log("UPDATE", this)
@@ -509,8 +555,18 @@ function opendialog(ev: any) {
       //let qname: string = '', id0: string = ''
       //let emodul: number = 0, Iy: number = 0, area: number = 0, height: number = 0, bettung: number = 0, wichte: number = 0;
 
-      const [qname, id0, emodul, Iy, area, height, bettung, wichte, schubfaktor, querdehnzahl] =
-         get_querschnittRechteck(index);
+      const [
+         qname,
+         id0,
+         emodul,
+         Iy,
+         area,
+         height,
+         bettung,
+         wichte,
+         schubfaktor,
+         querdehnzahl,
+      ] = get_querschnittRechteck(index);
 
       if (id0 !== id) console.log('BIG Problem in opendialog');
 
@@ -558,7 +614,7 @@ function opendialog(ev: any) {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-function resizeTables() {
+export function resizeTables() {
    //---------------------------------------------------------------------------------------------------------------
    {
       const el_knoten = document.getElementById('id_button_nnodes');
@@ -584,7 +640,9 @@ function resizeTables() {
    {
       const el_elemente = document.getElementById('id_button_nnodalloads');
       const nelem = (
-         el_elemente?.shadowRoot?.getElementById('nnodalloads') as HTMLInputElement
+         el_elemente?.shadowRoot?.getElementById(
+            'nnodalloads'
+         ) as HTMLInputElement
       ).value;
 
       const el = document.getElementById('id_knotenlasten_tabelle');
@@ -595,7 +653,9 @@ function resizeTables() {
    {
       const el_elemente = document.getElementById('id_button_nelemloads');
       const nelem = (
-         el_elemente?.shadowRoot?.getElementById('nelemloads') as HTMLInputElement
+         el_elemente?.shadowRoot?.getElementById(
+            'nelemloads'
+         ) as HTMLInputElement
       ).value;
 
       const el = document.getElementById('id_elementlasten_tabelle');

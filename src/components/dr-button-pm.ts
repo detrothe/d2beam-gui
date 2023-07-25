@@ -3,15 +3,22 @@ import { property, customElement } from 'lit/decorators.js';
 
 @customElement('dr-button-pm')
 export class drButtonPM extends LitElement {
-  @property({ type: String }) title = 'Button with counter';
+   @property({ type: String }) title = 'Button with counter';
 
-  @property({ type: Boolean }) enableBack: boolean = false;
-  @property({ type: Number }) nel = 2;
-  @property({ type: String }) inputID = '';
-  @property({ type: String }) txt = '';
+   @property({ type: Boolean }) enableBack: boolean = false;
+   @property({  // only update for odd values of newVal.
+      // @ts-ignore
+      hasChanged(newVal: number, oldVal: number) {
 
-  static get styles() {
-    return css`
+         //console.log(`nel has changed ${newVal}, ${oldVal}`);
+         return true;
+      },
+   }) nel = 0;
+   @property({ type: String }) inputID = '';
+   @property({ type: String }) txt = '';
+
+   static get styles() {
+      return css`
          input,
          label {
             font-size: 1em;
@@ -75,44 +82,59 @@ export class drButtonPM extends LitElement {
             color: #000000;
          }
       `;
-  }
+   }
 
-  constructor() {
-    super();
-  }
+   constructor() {
+      super();
+   }
 
-  async firstUpdated() {
-    console.log('inputID', this.inputID);
-    //document.getElementById('id_input_node_incr').addEventListener('click', increment_nnodes, false);
-    //document.getElementById('id_input_node_dec').addEventListener('click', decrement_nnodes, false);
-  }
 
-  //----------------------------------------------------------------------------------------------
-  _increment_nnodes() {
-    this.nel++;
-    console.log('_increment_nnodes', this.nel);
-    const shadow = this.shadowRoot;
-    if (shadow)
-      (shadow.getElementById(this.inputID) as HTMLInputElement).value =
-        String(this.nel);
-    //input_nodes.value = this.nel;
-    //set_InfosNeueBerechnungErforderlich()
-  }
-  //----------------------------------------------------------------------------------------------
-  _decrement_nnodes() {
-    this.nel--;
-    console.log('_decrement_nnodes', this.nel);
-    const shadow = this.shadowRoot;
-    if (shadow) {
-      //console.log("id:",shadow.getElementById(this.inputID));
-      (shadow.getElementById(this.inputID) as HTMLInputElement).value =
-        String(this.nel);
-    }
-    //input_nodes.value = this.nel;
-    //set_InfosNeueBerechnungErforderlich()
-  }
-  render() {
-    return html`
+   setValue(wert: number) {
+
+      //console.log("in setValue", wert)
+      this.nel = wert;
+      const shadow = this.shadowRoot;
+      if (shadow) {
+         (shadow.getElementById(this.inputID) as HTMLInputElement).value = String(this.nel);
+      }
+   }
+
+
+   async firstUpdated() {
+      console.log('inputID', this.inputID);
+      //document.getElementById('id_input_node_incr').addEventListener('click', increment_nnodes, false);
+      //document.getElementById('id_input_node_dec').addEventListener('click', decrement_nnodes, false);
+   }
+
+   //----------------------------------------------------------------------------------------------
+   _increment_nnodes() {
+      this.nel++;
+      console.log('_increment_nnodes', this.nel);
+      const shadow = this.shadowRoot;
+      if (shadow)
+         (shadow.getElementById(this.inputID) as HTMLInputElement).value =
+            String(this.nel);
+      //input_nodes.value = this.nel;
+      //set_InfosNeueBerechnungErforderlich()
+   }
+
+   //----------------------------------------------------------------------------------------------
+   _decrement_nnodes() {
+      this.nel--;
+      console.log('_decrement_nnodes', this.nel);
+      const shadow = this.shadowRoot;
+      if (shadow) {
+         //console.log("id:",shadow.getElementById(this.inputID));
+         (shadow.getElementById(this.inputID) as HTMLInputElement).value =
+            String(this.nel);
+      }
+      //input_nodes.value = this.nel;
+      //set_InfosNeueBerechnungErforderlich()
+   }
+
+   render() {
+
+      return html`
          <label id="lab_nnodes">${this.txt}</label>
 
          <button
@@ -136,6 +158,7 @@ export class drButtonPM extends LitElement {
             +
          </button>
       `;
-  }
+   }
+
 }
 
