@@ -19,7 +19,7 @@ import '../components/dr-dialog-rechteckquerschnitt';
 
 //import { testclass } from './element';
 
-import {addListener_filesave} from  './dateien';
+import { addListener_filesave } from './dateien';
 
 import {
    rechnen,
@@ -40,28 +40,34 @@ export const nelem_init = '1';
 export const nnodalloads_init = '0';
 export const nelemloads_init = '1';
 
-
 export const app = {
    appName: 'd2beam',
    browserLanguage: 'de',
    file: {
-       handle: null,
-       name: null,
-       isModified: false,
+      handle: null,
+      name: null,
+      isModified: false,
    },
    options: {
-       captureTabs: true,
-       fontSize: 16,
-       monoSpace: false,
-       wordWrap: true,
+      captureTabs: true,
+      fontSize: 16,
+      monoSpace: false,
+      wordWrap: true,
    },
-   hasFSAccess: 'chooseFileSystemEntries' in window ||
-       'showOpenFilePicker' in window ||
-       'showSaveFilePicker' in window,
+   hasFSAccess:
+      'chooseFileSystemEntries' in window ||
+      'showOpenFilePicker' in window ||
+      'showSaveFilePicker' in window,
    isMac: navigator.userAgent.includes('Mac OS X'),
-
 };
 
+{
+   let txt = navigator.language
+   let txtArray = txt.split("-")
+
+   app.browserLanguage = txtArray[0]
+   console.log("app.browserLanguage", app.browserLanguage)
+}
 
 {
    const template = () => html`
@@ -302,7 +308,10 @@ export const app = {
          <sl-tab-panel name="tab-kombinationen"
             >Tab panel Kombinationen</sl-tab-panel
          >
-         <sl-tab-panel name="tab-ergebnisse">Ergebnisse</sl-tab-panel>
+         <sl-tab-panel name="tab-ergebnisse"
+            >Ergebnisse
+            <div id="id_results"></div>
+         </sl-tab-panel>
          <sl-tab-panel name="tab-9">Tab panel 9</sl-tab-panel>
          <sl-tab-panel name="tab-10">Tab panel 10</sl-tab-panel>
       </sl-tab-group>

@@ -80,3 +80,18 @@ select {
     color: #444;
     padding: 0.2em;
 }
+
+td,
+th {
+    padding: 0px;
+    margin: 0px;
+    width: 6em;
+}
+.table_cell_center {
+  text-align: center;
+  background-color: coral;
+}
+.table_cell_right {
+  text-align: right;
+  padding-right: 1em;
+}

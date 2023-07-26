@@ -1,6 +1,8 @@
 declare let Module: any;
+import { app } from "./haupt"
+import { TFVector, TFArray2D, TFArray3D } from "./TFArray"
 
-import { testNumber } from './utility'
+import { testNumber, myFormat } from './utility'
 //import {Module} from '../../d2beam_wasm.js'
 // @ts-ignore
 import { gauss } from "./gauss.js"
@@ -12,9 +14,10 @@ export let nloads: number = 0;
 export let neloads: number = 0;
 export let neq: number;
 export let nnodesTotal: number = 0;
+export let nlastfaelle: number = 0;
 
-export let lagerkraft = [] as number[][]
-
+export let lagerkraft = [] as number[][];
+export let disp_lf: TFArray3D;
 export let node = [] as TNode[]
 export let element = [] as TElement[]
 export let load = [] as TLoads[]
@@ -47,7 +50,7 @@ class TNode {
     x: number = 1.0                                 // Knotenkoordinaten bezogen auf Hilfskoordinatensystem
     z: number = 1.0
 
-    L = [0, 0, 0]                                     // Lagerbedingung  bei Eingabe: 0=frei, 1=fest, später enthält L() die Gleichungsnummern
+    L = [0, 0, 0]                                   // Lagerbedingung  bei Eingabe: 0=frei, 1=fest, später enthält L() die Gleichungsnummern
     nel: number = 0                                 // Anzahl der Elemente, die an dem Knoten hängen
 }
 
@@ -589,8 +592,7 @@ function calculate() {
     const u = Array(neq);
 
     lagerkraft = Array.from(Array(nnodesTotal), () => new Array(3).fill(0.0));
-
-
+    disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, 1);   // nlastfaelle
 
     for (let iter = 0; iter < 1; iter++) {
 
@@ -674,7 +676,21 @@ function calculate() {
             el[ielem].berechneLagerkraefte();
         }
 
+        let disp = [3]
+        for (i = 0; i < nnodes; i++) {                      // Ausgabe der Verschiebungen der einzelnen Knoten im gedrehten Koordinatensystem
+            for (j = 0; j < 3; j++) {
+                let ieq = node[i].L[j]
+                if (ieq === -1) {
+                    disp[j] = 0
+                } else {
+                    disp[j] = u[ieq] * 1000     // Umrechnung in mm und mrad
+                }
+            }
 
+            for (j = 0; j < 3; j++) {
+                disp_lf.set(i + 1, j + 1, 1, disp[j])
+            }
+        }
 
         for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
             nodi = load[i].node
@@ -687,11 +703,166 @@ function calculate() {
             console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
         }
 
+    } //ende iter
+
+    {
+        let elem = document.getElementById('id_ergebnisse');
+        if (elem !== null) elem.parentNode?.removeChild(elem);
+
+        const myResultDiv = document.getElementById("id_results");  //in div
+
+        let tag = document.createElement("p"); // <p></p>
+        tag.setAttribute("id", "id_ergebnisse");
+        let text = document.createTextNode("xxx");
+        tag.appendChild(text);
+        if (app.browserLanguage == 'de') {
+            tag.innerHTML = "Alle Spannungen in " // + current_unit_stress + "<br><br>Schubspannungen aus primärer Torsion M<sub>xp</sub>"
+        } else {
+            tag.innerHTML = "All stresses in " // + current_unit_stress + "<br><br>Shear stresses from primary torsion M<sub>xp</sub>"
+        }
+        myResultDiv?.appendChild(tag);
+
+        tag = document.createElement("p"); // <p></p>
+        text = document.createTextNode("xxx");
+        tag.appendChild(text);
+        tag.innerHTML = "<b>Knotenverformungen</b>"
+
+        myResultDiv?.appendChild(tag);
+        //   Verformungen
+        {
+            const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+            table.setAttribute("id", "id_table_verformungen");
+            table.style.border = 'none';
+            myResultDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+
+            const thead = table.createTHead();
+            const row = thead.insertRow();
+
+            // @ts-ignore
+            const th0 = table.tHead.appendChild(document.createElement("th"));
+            th0.innerHTML = "Node No";
+            th0.title = "Knotennummer"
+            th0.setAttribute("class", "table_cell_center");
+            row.appendChild(th0);
+            // @ts-ignore
+            const th1 = table.tHead.appendChild(document.createElement("th"));
+            th1.innerHTML = "u &nbsp; [mm]";
+            th1.title = "Verschiebung u, positiv in positiver x-Richtung"
+            th1.setAttribute("class", "table_cell_center");
+            row.appendChild(th1);
+            // @ts-ignore
+            const th2 = table.tHead.appendChild(document.createElement("th"));
+            th2.innerHTML = "w &nbsp; [mm]";
+            th2.title = "Verschiebung w, positiv in positiver z-Richtung"
+            th2.setAttribute("class", "table_cell_center");
+            row.appendChild(th2);
+            // @ts-ignore
+            const th3 = table.tHead.appendChild(document.createElement("th"));
+            th3.innerHTML = "&phi; &nbsp;[mrad]";
+            th3.title = "Verdrehung &phi;, positiv im Gegenuhrzeigersinn"
+            th3.setAttribute("class", "table_cell_center");
+            row.appendChild(th3);
+
+            for (i = 0; i < nnodes; i++) {
+
+                let newRow = table.insertRow(-1);
+                let newCell, newText
+                newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+                newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_center");
+
+                newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(disp_lf._(i + 1, 1, 1), 2, 2));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+
+                newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(disp_lf._(i + 1, 2, 1), 2, 2));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+
+                newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(disp_lf._(i + 1, 3, 1), 2, 2));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+            }
+        }
+        // Lagerkräfte
+        {
+            tag = document.createElement("p"); // <p></p>
+            text = document.createTextNode("xxx");
+            tag.appendChild(text);
+            tag.innerHTML = "<b>Lagerreaktionen</b>"
+
+            myResultDiv?.appendChild(tag);
+
+            const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+            table.setAttribute("id", "id_table_lagerkraefte");
+            table.style.border = 'none';
+            myResultDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+
+            const thead = table.createTHead();
+            const row = thead.insertRow();
+
+            // @ts-ignore
+            const th0 = table.tHead.appendChild(document.createElement("th"));
+            th0.innerHTML = "Node No";
+            th0.title = "Knotennummer"
+            th0.setAttribute("class", "table_cell_center");
+            row.appendChild(th0);
+            // @ts-ignore
+            const th1 = table.tHead.appendChild(document.createElement("th"));
+            th1.innerHTML = "A<sub>x</sub>&nbsp;[kN]";
+            th1.title = "Auflagerkraft Ax, positiv in negativer x-Richtung"
+            th1.setAttribute("class", "table_cell_center");
+            row.appendChild(th1);
+            // @ts-ignore
+            const th2 = table.tHead.appendChild(document.createElement("th"));
+            th2.innerHTML = "A<sub>z</sub>&nbsp;[kN]";
+            th2.title = "Auflagerkraft Az, positiv in negativer z-Richtung"
+            th2.setAttribute("class", "table_cell_center");
+            row.appendChild(th2);
+            // @ts-ignore
+            const th3 = table.tHead.appendChild(document.createElement("th"));
+            th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+            th3.title = "Einspannmoment, positiv im Uhrzeigersinn"
+            th3.setAttribute("class", "table_cell_center");
+            row.appendChild(th3);
+
+            for (i = 0; i < nnodes; i++) {
+
+                let newRow = table.insertRow(-1);
+                let newCell, newText
+                newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+                newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_center");
+
+                newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(lagerkraft[i][0], 2, 2));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+
+                newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(lagerkraft[i][1], 2, 2));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+
+                newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(lagerkraft[i][2], 2, 2));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+            }
+        }
+
     }
 
     return 0;
 }
-
+/*
 //---------------------------------------------------------------------------------------------------------------
 function calculate_old() {
     //---------------------------------------------------------------------------------------------------------------
@@ -1285,7 +1456,7 @@ function calculate_old() {
             }
         }
 
-        /*
+
         // Elementlasten
 
             for (k = 0; k < nelem; k++) {
@@ -1296,7 +1467,7 @@ function calculate_old() {
                     }
                 }
             }
-        */
+
 
 
         for (i = 0; i < neq; i++) {
@@ -1409,6 +1580,7 @@ function calculate_old() {
 
     return 0;
 }
+*/
 /*
 async function c_benchmark() {
     console.log("start cmult")
