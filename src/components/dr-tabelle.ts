@@ -184,8 +184,13 @@ class DrTabelle extends HTMLElement {
 
       if (name === 'newselect') {
          this.update_select_options();
+
       } else if (name === 'namechanged') {
          this.update_select_options_name(Number(newValue));
+
+      } else if (name === 'clear') {
+         this.clear_Tabelle('mytable');
+
       } else if (oldValue === null) {
          console.log('1', newValue.length);
          if (name === 'columns') {
@@ -233,7 +238,7 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    static get observedAttributes() {
       //------------------------------------------------------------------------------------------------------------
-      return ['nzeilen', 'nspalten', 'columns', 'typs', 'newselect', 'namechanged'];
+      return ['nzeilen', 'nspalten', 'columns', 'typs', 'newselect', 'namechanged', 'clear'];
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -243,6 +248,10 @@ class DrTabelle extends HTMLElement {
       this.nZeilen = n;
    }
 
+   test() {  // kann nicht aufgerufen werden, leider
+      console.log("IN T E S T #######################################")
+   }
+
    //---------------------------------------------------------------------------------------------------------------
    update_select_options() {
       //------------------------------------------------------------------------------------------------------------
@@ -250,7 +259,7 @@ class DrTabelle extends HTMLElement {
 
       const table = this.shadow.getElementById('mytable') as HTMLTableElement;
 
-      console.log(" TEST this.nZeilen",this.nZeilen)
+      console.log(" TEST this.nZeilen", this.nZeilen)
       for (let iZeile = 1; iZeile <= this.nZeilen; iZeile++) {
          // Spalten addieren
          let row = table.rows.item(iZeile);
@@ -302,6 +311,27 @@ class DrTabelle extends HTMLElement {
             }
          }
       }
+   }
+
+
+   //---------------------------------------------------------------------------------------------------------------
+   clear_Tabelle(idTable: any) {
+      //------------------------------------------------------------------------------------------------------------
+      console.info('in clear_Tabelle');
+
+      const table = this.shadow.getElementById(idTable) as HTMLTableElement;
+      console.log('spalten', table);
+      let nZeilen = table.rows.length
+      let nSpalten = table.rows[0].cells.length
+
+      for (let iZeile = 1; iZeile < nZeilen; iZeile++) {
+
+            for (let iSpalte = 1; iSpalte < nSpalten; iSpalte++) {
+               let child = table.rows[iZeile].cells[iSpalte].firstElementChild as HTMLInputElement;
+               child.value="";
+            }
+         }
+
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -435,7 +465,7 @@ class DrTabelle extends HTMLElement {
                      for (let i = 0; i < nQuerschnittSets; i++) {
                         let option = document.createElement('option');
 
-                        option.value = option.textContent =  get_querschnittRechteck_name(i);;
+                        option.value = option.textContent = get_querschnittRechteck_name(i);;
 
                         el.appendChild(option);
                      }
@@ -480,8 +510,8 @@ class DrTabelle extends HTMLElement {
 
       this.nSpalten = nColNew
       this.nZeilen = nRowNew
-      this.nTabRow = this.nZeilen+1
-      this.nTabCol=this.nSpalten+1
+      this.nTabRow = this.nZeilen + 1
+      this.nTabCol = this.nSpalten + 1
    }
 
    //----------------------------------------------------------------------------------------
@@ -536,7 +566,7 @@ class DrTabelle extends HTMLElement {
       console.log('KEYDOWN', ev.keyCode, ev.shiftKey, ev.key, ev);
       //infoBox.innerHTML += "<br>key= " + ev.key + "  | keyCode= " + ev.keyCode
 
-      ev.target.style.backgroundColor = 'rgb(210,00,00)';
+      //ev.target.style.backgroundColor = 'rgb(210,00,00)';
 
       if (ev.shiftKey) {
          ev.preventDefault();

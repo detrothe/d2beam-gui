@@ -1,6 +1,6 @@
 import { CElement } from "./element"
 
-import { node, element, eload, lagerkraft, neloads } from "./rechnen"
+import { node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag } from "./rechnen"
 
 
 export class CTimoshenko_beam extends CElement {
@@ -33,7 +33,9 @@ export class CTimoshenko_beam extends CElement {
     ksig: number[][] = []
     trans: number[][] = []
     u: number[] = [6]
-    F: number[] = [6]
+    F: number[] = [6]   // Stabendgrößen nach WGV im globalen Koordinatensystem
+    FL: number[] = [6]  // Stabendgrößen nach KGV im lokalen Koordinatensystem
+
 
     //---------------------------------------------------------------------------------------------
     setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number) {
@@ -114,13 +116,13 @@ export class CTimoshenko_beam extends CElement {
         const L2 = sl * sl
         const L3 = L2 * sl
 
-        let area_s:number
+        let area_s: number
         let EAL = this.emodul * this.area / sl
         const EI = this.emodul * this.Iy
         this.gmodul = this.emodul / 2.0 / (1.0 + this.querdehnzahl)
 
-        if (this.schubfaktor === 0.0 ) {  // schubstarr
-            area_s =  this.area
+        if (this.schubfaktor === 0.0) {  // schubstarr
+            area_s = this.area
             this.psi = 1.0
         } else {
             area_s = this.schubfaktor * this.area
@@ -128,7 +130,7 @@ export class CTimoshenko_beam extends CElement {
         }
         const psi = this.psi
 
-        console.log("psi",this.psi)
+        console.log("psi", this.psi)
 
         this.estm[0][0] = EAL
         this.estm[0][1] = 0.0
@@ -213,19 +215,43 @@ export class CTimoshenko_beam extends CElement {
 
 
     //---------------------------------------------------------------------------------------------
-    berechneElementsteifigkeitsmatrix() {
+    berechneElementsteifigkeitsmatrix(theorie: number) {
 
         let sum: number
         let j: number, k: number
         const help = Array.from(Array(6), () => new Array(6));
 
-        for (j = 0; j < 6; j++) {
-            for (k = 0; k < 6; k++) {
-                sum = 0.0
-                for (let l = 0; l < 6; l++) {
-                    sum = sum + this.estm[j][l] * this.trans[l][k]
+        if (theorie === 1) {
+
+            const estm = Array.from(Array(6), () => new Array(6));
+
+            for (j = 0; j < 6; j++) {
+                for (k = 0; k < 6; k++) {
+                    estm[j][k] = this.estm[j][k] + this.normalkraft * this.ksig[j][k]
                 }
-                help[j][k] = sum
+            }
+
+            for (j = 0; j < 6; j++) {
+                for (k = 0; k < 6; k++) {
+                    sum = 0.0
+                    for (let l = 0; l < 6; l++) {
+                        sum = sum + estm[j][l] * this.trans[l][k]
+                    }
+                    help[j][k] = sum
+                }
+            }
+
+        } else {
+
+
+            for (j = 0; j < 6; j++) {
+                for (k = 0; k < 6; k++) {
+                    sum = 0.0
+                    for (let l = 0; l < 6; l++) {
+                        sum = sum + this.estm[j][l] * this.trans[l][k]
+                    }
+                    help[j][k] = sum
+                }
             }
         }
 
@@ -263,7 +289,7 @@ export class CTimoshenko_beam extends CElement {
 
 
     //---------------------------------------------------------------------------------------------
-    berechneInterneKraefte(ielem: number, u: number[]) {
+    berechneInterneKraefte(ielem: number, iLastf: number, u: number[]) {
 
         let ieq: number, i: number, j: number, k: number
         let sum: number
@@ -287,18 +313,47 @@ export class CTimoshenko_beam extends CElement {
 
         // normale Elementlasten hinzufügen
 
-        for (let ieload = 0; ieload < neloads; ieload++) {
-            if ((eload[ieload].element === ielem) && (eload[ieload].lf === 1)) {
-                for (i = 0; i < 6; i++) {
-                    this.F[i]=this.F[i] + eload[ieload].el_r[i]
+        if (THIIO_flag === 0) {
+
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastf)) {
+                    for (i = 0; i < 6; i++) {
+                        this.F[i] = this.F[i] + eload[ieload].el_r[i]
+                    }
                 }
+            }
+        }
+        else if (THIIO_flag === 1) { // ikomb=iLastf
+
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                if (eload[ieload].element === ielem) {
+                    const index = eload[ieload].lf - 1
+                    console.log("elem kombi index", index, kombiTabelle[iLastf - 1][index])
+                    if (kombiTabelle[iLastf - 1][index] !== 0.0) {
+
+                        for (i = 0; i < 6; i++) {
+                            this.F[i] = this.F[i] + eload[ieload].el_r[i] * kombiTabelle[iLastf - 1][index]
+                        }
+                    }
                 }
+            }
         }
 
         console.log("element F global ", this.F)
 
-        this.normalkraft = -this.F[0]
+        for (i = 0; i < 6; i++) {
+            sum = 0.0
+            for (j = 0; j < 6; j++) {
+                sum += this.trans[i][j] * this.F[j]
+            }
+            this.FL[i] = sum
+        }
 
+        for (i = 0; i < 3; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
+
+        this.normalkraft = (this.FL[0] + this.FL[3]) / 2.0
+
+        return this.FL;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -331,7 +386,7 @@ export class CTimoshenko_beam extends CElement {
             eload[ieload].re[4] = 30.0 * p1 + (10.0 + 2.0 * this.psi) * p2 // VR
 
             eload[ieload].re[2] = -5.0 * sl * p1 + sl * this.psi * p2
-            eload[ieload].re[5] =  5.0 * sl * p1 + sl * this.psi * p2
+            eload[ieload].re[5] = 5.0 * sl * p1 + sl * this.psi * p2
         }
 
         eload[ieload].el_r[0] = this.trans[0][0] * eload[ieload].re[0] + this.trans[1][0] * eload[ieload].re[1] // !! mit [T]^T multiplizieren

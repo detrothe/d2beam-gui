@@ -12,8 +12,8 @@ export class CElement {
 
     }
 
-    berechneElementsteifigkeitsmatrix() {
-
+    berechneElementsteifigkeitsmatrix(theorie:number) {
+        console.log("class element: berechneElementsteifigkeitsmatrix", theorie)
     }
 
     berechneLokaleElementsteifigkeitmatrix() {
@@ -25,14 +25,14 @@ export class CElement {
     }
 
 
-    berechneInterneKraefte(ielem:number,u: number[]) {
-        console.log("class element: berechneInterneKraefte", ielem, u[0])
+    berechneInterneKraefte(ielem: number, iLastf: number, u: number[]) {
+        console.log("class element: berechneInterneKraefte", ielem, iLastf, u[0])
     }
 
     berechneLagerkraefte() {
 
     }
-    berechneElementlasten(ieload:number) {
+    berechneElementlasten(ieload: number) {
         console.log("class element: berechneElementlasten von ", ieload)
     }
 

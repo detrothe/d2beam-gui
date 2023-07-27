@@ -1,5 +1,5 @@
 declare let Module: any;
-import { app } from "./haupt"
+import { app, nlastfaelle_init } from "./haupt"
 import { TFVector, TFArray2D, TFArray3D } from "./TFArray"
 
 import { testNumber, myFormat } from './utility'
@@ -15,14 +15,17 @@ export let neloads: number = 0;
 export let neq: number;
 export let nnodesTotal: number = 0;
 export let nlastfaelle: number = 0;
+export let nkombinationen: number = 0;
 
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
+export let stabendkraefte: TFArray3D
 export let node = [] as TNode[]
 export let element = [] as TElement[]
 export let load = [] as TLoads[]
 export let eload = [] as TElLoads[]
 export let querschnittset = [] as any[]
+export let kombiTabelle = [] as number[][]
 
 export let nQuerschnittSets = 0
 
@@ -39,7 +42,7 @@ export let el = [] as any
 //console.log("CMULT-------------", cmult)
 let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number"]);
 let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]);
-console.log("C_D2BEAM2-------------", c_d2beam2)
+//console.log("C_D2BEAM2-------------", c_d2beam2)
 
 const bytes_8 = 8;
 const bytes_4 = 4;
@@ -89,7 +92,8 @@ class TElement {
     estm: number[][] = []
     ksig: number[][] = []
     trans: number[][] = []
-    F: number[] = [14]
+    F: number[] = [14]   // Stabendgrößen nach WGV im globalen Koordinatensystem
+    FL: number[] = [14]  // Stabendgrößen nach KGV im lokalen Koordinatensystem
     F34 = [0.0, 0.0]
     cosinus: number = 0.0
     sinus: number = 0.0
@@ -134,24 +138,20 @@ export function rechnen() {
     console.log("in rechnen");
 
     let el = document.getElementById('id_button_nnodes') as any;
-
     nnodes = Number(el.nel);
 
     el = document.getElementById('id_button_nelem') as any;
-    //console.log('EL: >>', el.nel);
-
     nelem = Number(el.nel);
 
     el = document.getElementById('id_button_nnodalloads') as any;
-    //console.log('EL: >>', el.nel);
-
     nloads = Number(el.nel);
 
     el = document.getElementById('id_button_nelemloads') as any;
-    //console.log('EL: >>', el.nel);
-
     neloads = Number(el.nel);
 
+
+    el = document.getElementById('id_button_nkombinationen') as any;
+    nkombinationen = Number(el.nel);
 
     el = document.getElementById('id_ndivsl') as HTMLInputElement;
     ndivsl = Number(el.value);
@@ -172,6 +172,7 @@ export function rechnen() {
     read_elements();
     read_nodal_loads();
     read_element_loads();
+    read_kombinationen();
 
     calculate();
 
@@ -259,13 +260,12 @@ function read_nodes() {
     let i: number;
 
     const el = document.getElementById('id_knoten_tabelle');
-    console.log('EL: >>', el);
-
-    console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+    //console.log('EL: >>', el);
+    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
     const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    console.log('nZeilen', table.rows.length);
-    console.log('nSpalten', table.rows[0].cells.length);
+    //console.log('nZeilen', table.rows.length);
+    //console.log('nSpalten', table.rows[0].cells.length);
 
 
     for (i = 0; i < nnodes; i++) {
@@ -288,8 +288,6 @@ function read_nodes() {
             else if (ispalte === 4) node[izeile - 1].L[1] = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 5) node[izeile - 1].L[2] = Number(testNumber(wert, izeile, ispalte, shad));
 
-            //child.value = izeile + '.' + ispalte;
-
         }
     }
 
@@ -304,13 +302,12 @@ function read_nodal_loads() {
     let i: number;
 
     const el = document.getElementById('id_knotenlasten_tabelle');
-    console.log('EL: >>', el);
-
-    console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+    //console.log('EL: >>', el);
+    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
     const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    console.log('nZeilen', table.rows.length);
-    console.log('nSpalten', table.rows[0].cells.length);
+    //console.log('nZeilen', table.rows.length);
+    //console.log('nSpalten', table.rows[0].cells.length);
 
 
     for (i = 0; i < nloads; i++) {
@@ -333,6 +330,7 @@ function read_nodal_loads() {
             else if (ispalte === 4) load[izeile - 1].p[1] = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 5) load[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad));
         }
+        if (load[izeile - 1].lf > nlastfaelle) nlastfaelle = load[izeile - 1].lf
 
         console.log("R", izeile, load[izeile - 1])
     }
@@ -345,14 +343,12 @@ function read_element_loads() {
     let i: number;
 
     const el = document.getElementById('id_elementlasten_tabelle');
-    console.log('EL: >>', el);
-
-    console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+    //console.log('EL: >>', el);
+    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
     const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    console.log('nZeilen', table.rows.length);
-    console.log('nSpalten', table.rows[0].cells.length);
-
+    //console.log('nZeilen', table.rows.length);
+    //console.log('nSpalten', table.rows[0].cells.length);
 
     for (i = 0; i < neloads; i++) {
         eload.push(new TElLoads())
@@ -374,8 +370,9 @@ function read_element_loads() {
             else if (ispalte === 4) eload[izeile - 1].pL = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 5) eload[izeile - 1].pR = Number(testNumber(wert, izeile, ispalte, shad));
         }
+        if (eload[izeile - 1].lf > nlastfaelle) nlastfaelle = eload[izeile - 1].lf
 
-        console.log("R", izeile, eload[izeile - 1])
+        console.log("eload", izeile, eload[izeile - 1])
     }
 }
 
@@ -387,14 +384,12 @@ function read_elements() {
     let i: number, ielem: number;
 
     const el = document.getElementById('id_element_tabelle');
-    console.log('EL: >>', el);
-
-    console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+    //console.log('EL: >>', el);
+    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
     const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    console.log('nZeilen', table.rows.length);
-    console.log('nSpalten', table.rows[0].cells.length);
-
+    //console.log('nZeilen', table.rows.length);
+    //console.log('nSpalten', table.rows[0].cells.length);
 
     for (i = 0; i < nelem; i++) {
         element.push(new TElement())
@@ -456,6 +451,41 @@ function read_elements() {
 
 }
 
+
+//---------------------------------------------------------------------------------------------------------------
+function read_kombinationen() {
+    //-----------------------------------------------------------------------------------------------------------
+
+    let i: number;
+
+    const el = document.getElementById('id_kombinationen_tabelle');
+    //console.log('EL: >>', el);
+    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+
+    const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    //console.log('nZeilen', table.rows.length);
+    //console.log('nSpalten', table.rows[0].cells.length);
+
+    kombiTabelle = Array.from(Array(nkombinationen), () => new Array(nlastfaelle).fill(0.0));
+
+    let nRowTab = table.rows.length;
+    let nColTab = table.rows[0].cells.length;
+    let wert: any;
+    const shad = el?.shadowRoot?.getElementById('mytable')
+
+    for (let izeile = 1; izeile < nRowTab; izeile++) {
+        for (let ispalte = 2; ispalte < nColTab; ispalte++) {
+            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+            wert = child.value;
+            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+            kombiTabelle[izeile - 1][ispalte - 2] = Number(testNumber(wert, izeile, ispalte, shad));
+        }
+
+        console.log("kombiTabelle", izeile, kombiTabelle[izeile - 1])
+    }
+}
+
+
 //---------------------------------------------------------------------------------------------------------------
 export function init_tabellen() {
     //---------------------------------------------------------------------------------------------------------------
@@ -483,25 +513,34 @@ export function init_tabellen() {
     (table.rows[2].cells[1].firstElementChild as HTMLInputElement).value = '5';
     //(table.rows[3].cells[1].firstElementChild as HTMLInputElement).value = '5';
 
-    /*
-        el = document.getElementById('id_knotenlasten_tabelle');
 
-        table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    el = document.getElementById('id_knotenlasten_tabelle');
 
-        (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '3';
-        (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '1';
-        (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '-60';
-        (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '50';
-    */
+    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '2';
+    (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '1';
+    (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '-60';
+    (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '50';
+
 
     el = document.getElementById('id_elementlasten_tabelle');
 
     table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
     (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '1';
-    (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '1';
+    (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '2';
     (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '5';
     (table.rows[1].cells[5].firstElementChild as HTMLInputElement).value = '5';
+
+    el = document.getElementById('id_kombinationen_tabelle');
+
+    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    for (let i = 1; i <= Number(nlastfaelle_init); i++) {
+        (table.rows[i].cells[i + 1].firstElementChild as HTMLInputElement).value = '1';
+
+    }
 }
 
 
@@ -535,6 +574,7 @@ function calculate() {
     let querdehnzahl: number = 0.3, schubfaktor: number = 0.833
     let nfiber: number = 2, maxfiber: number = 5, offset_abstand: number = 0.0, height: number = 0.0
     let Iy: number = 0.0, area: number = 0.0, b: number;
+    let lmj: number = 0, nod1: number, nodi: number
 
     let breite: number[] = [2]
     let abstand: number[] = [2]
@@ -592,267 +632,518 @@ function calculate() {
     const u = Array(neq);
 
     lagerkraft = Array.from(Array(nnodesTotal), () => new Array(3).fill(0.0));
-    disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, 1);   // nlastfaelle
 
-    for (let iter = 0; iter < 1; iter++) {
+    //------------------------------------------------------------------------   alte Ausgabe löschen
+    let elem = document.getElementById('id_newDiv');
+    if (elem !== null) elem.parentNode?.removeChild(elem);
 
-        for (i = 0; i < neq; i++) {
-            stiff[i].fill(0.0);
-        }
-        R.fill(0.0);
-        u.fill(0.0);
+    const myResultDiv = document.getElementById("id_results");  //in div
+    const newDiv = document.createElement("div");
+    newDiv.setAttribute("id", "id_newDiv");
+    myResultDiv?.appendChild(newDiv);
+    //------------------------------------------------------------------------
 
-        for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0);
+    if (THIIO_flag === 0) { // Theorie I.Ordnung
 
-        for (ielem = 0; ielem < nelem; ielem++) {
+        disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nlastfaelle);   // nlastfaelle
+        console.log("nlastfaelle", nlastfaelle)
+        stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nlastfaelle);   // nlastfaelle
 
-            el[ielem].berechneElementsteifigkeitsmatrix();
-            el[ielem].addiereElementsteifigkeitmatrix(stiff)
+        for (let iLastfall = 1; iLastfall <= nlastfaelle; iLastfall++) {
 
-            for (let ieload = 0; ieload < neloads; ieload++) {
-                if ((eload[ieload].element === ielem) && (eload[ieload].lf === 1)) {
-                    el[ielem].berechneElementlasten(ieload)
+            for (i = 0; i < neq; i++) stiff[i].fill(0.0);
+
+            R.fill(0.0);
+            u.fill(0.0);
+            for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0)
+
+            for (ielem = 0; ielem < nelem; ielem++) {
+
+                el[ielem].berechneElementsteifigkeitsmatrix(0);
+                el[ielem].addiereElementsteifigkeitmatrix(stiff)
+
+                for (let ieload = 0; ieload < neloads; ieload++) {
+                    if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastfall)) {
+                        el[ielem].berechneElementlasten(ieload)
+                    }
                 }
             }
-        }
 
-        for (j = 0; j < neq; j++) {
-            console.log('stiff[]', stiff[j])
-        }
-
-        // Aufstellen der rechte Seite, Einzellasten
-
-        let lmj: number = 0, nod1: number, nodi: number
-
-        for (i = 0; i < nloads; i++) {
-            nod1 = load[i].node
-            for (j = 0; j < 3; j++) {
-                lmj = node[nod1].L[j]
-                if (lmj >= 0) {
-                    R[lmj] = R[lmj] + load[i].p[j]
-                }
+            for (j = 0; j < neq; j++) {
+                console.log('stiff[]', stiff[j])
             }
-        }
 
-        //  und jetzt noch die normalen Elementlasten
+            // Aufstellen der rechte Seite, Einzellasten
 
-        for (ielem = 0; ielem < nelem; ielem++) {
 
-            for (let ieload = 0; ieload < neloads; ieload++) {
-                if ((eload[ieload].element === ielem) && (eload[ieload].lf === 1)) {
-                    for (j = 0; j < 6; j++) {
-                        lmj = el[ielem].lm[j]
+            for (i = 0; i < nloads; i++) {
+                if (load[i].lf === iLastfall) {
+                    nod1 = load[i].node
+                    for (j = 0; j < 3; j++) {
+                        lmj = node[nod1].L[j]
                         if (lmj >= 0) {
-                            R[lmj] = R[lmj] - eload[ieload].el_r[j]
+                            R[lmj] = R[lmj] + load[i].p[j]
                         }
                     }
                 }
             }
 
-        }
+            //  und jetzt noch die normalen Elementlasten
 
-        for (i = 0; i < neq; i++) {
-            console.log("R", i, R[i])
-        }
+            for (ielem = 0; ielem < nelem; ielem++) {
 
-        // Gleichungssystem lösen
+                for (let ieload = 0; ieload < neloads; ieload++) {
+                    if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastfall)) {
+                        for (j = 0; j < 6; j++) {
+                            lmj = el[ielem].lm[j]
+                            if (lmj >= 0) {
+                                R[lmj] = R[lmj] - eload[ieload].el_r[j]
+                            }
+                        }
+                    }
+                }
 
-        let error = gauss(neq, stiff, R);
-        if (error != 0) {
-            window.alert("Gleichungssystem singulär");
-            return 1;
-        }
+            }
 
-        for (i = 0; i < neq; i++) u[i] = R[i];
+            for (i = 0; i < neq; i++) {
+                console.log("R", i, R[i])
+            }
 
-        for (i = 0; i < neq; i++) {
-            console.log("U", i, u[i] * 1000.0)    // in mm, mrad
-        }
+            // Gleichungssystem lösen
 
-        // Rückrechnung
+            let error = gauss(neq, stiff, R);
+            if (error != 0) {
+                window.alert("Gleichungssystem singulär");
+                return 1;
+            }
 
-        for (ielem = 0; ielem < nelem; ielem++) {
-            el[ielem].berechneInterneKraefte(ielem, u);
-            el[ielem].berechneLagerkraefte();
-        }
+            for (i = 0; i < neq; i++) u[i] = R[i];
 
-        let disp = [3]
-        for (i = 0; i < nnodes; i++) {                      // Ausgabe der Verschiebungen der einzelnen Knoten im gedrehten Koordinatensystem
-            for (j = 0; j < 3; j++) {
-                let ieq = node[i].L[j]
-                if (ieq === -1) {
-                    disp[j] = 0
-                } else {
-                    disp[j] = u[ieq] * 1000     // Umrechnung in mm und mrad
+            for (i = 0; i < neq; i++) {
+                console.log("U", i, u[i] * 1000.0)    // in mm, mrad
+            }
+
+            // Rückrechnung
+
+            let force: number[] = [6]
+
+            for (ielem = 0; ielem < nelem; ielem++) {
+                force = el[ielem].berechneInterneKraefte(ielem, iLastfall, u);
+                console.log("force", force)
+                for (i = 0; i < 6; i++) stabendkraefte.set(i + 1, ielem + 1, iLastfall, force[i]);
+
+                el[ielem].berechneLagerkraefte();
+            }
+
+            let disp = [3]
+            for (i = 0; i < nnodes; i++) {                      // Ausgabe der Verschiebungen der einzelnen Knoten im gedrehten Koordinatensystem
+                for (j = 0; j < 3; j++) {
+                    let ieq = node[i].L[j]
+                    if (ieq === -1) {
+                        disp[j] = 0
+                    } else {
+                        disp[j] = u[ieq] * 1000     // Umrechnung in mm und mrad
+                    }
+                }
+
+                for (j = 0; j < 3; j++) {
+                    disp_lf.set(i + 1, j + 1, iLastfall, disp[j])
                 }
             }
 
-            for (j = 0; j < 3; j++) {
-                disp_lf.set(i + 1, j + 1, 1, disp[j])
+            for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
+                if ((i + 1) === iLastfall) {
+                    nodi = load[i].node
+                    lagerkraft[nodi][0] = lagerkraft[nodi][0] + load[i].p[0]
+                    lagerkraft[nodi][1] = lagerkraft[nodi][1] + load[i].p[1]
+                    lagerkraft[nodi][2] = lagerkraft[nodi][2] + load[i].p[2]
+                }
             }
-        }
 
-        for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
-            nodi = load[i].node
-            lagerkraft[nodi][0] = lagerkraft[nodi][0] + load[i].p[0]
-            lagerkraft[nodi][1] = lagerkraft[nodi][1] + load[i].p[1]
-            lagerkraft[nodi][2] = lagerkraft[nodi][2] + load[i].p[2]
-        }
+            //for (i = 0; i < nnodesTotal; i++) {
+            //    console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
+            //}
 
-        for (i = 0; i < nnodesTotal; i++) {
-            console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
-        }
 
-    } //ende iter
+            ausgabe(iLastfall, newDiv)
 
+        }   //ende iLastfall
+
+    }
+    else if (THIIO_flag === 1) {
+
+        disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);   // nlastfaelle
+        console.log("nkombinationen", nkombinationen)
+        stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nkombinationen);   // nlastfaelle
+
+        for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
+
+            for (let iter = 0; iter < 2; iter++) {
+
+                for (i = 0; i < neq; i++) stiff[i].fill(0.0);
+                for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0)
+
+                R.fill(0.0);
+                u.fill(0.0);
+
+                for (ielem = 0; ielem < nelem; ielem++) {
+
+                    el[ielem].berechneElementsteifigkeitsmatrix(1);
+                    el[ielem].addiereElementsteifigkeitmatrix(stiff)
+
+                    for (let ieload = 0; ieload < neloads; ieload++) {
+                        if ((eload[ieload].element === ielem) && (eload[ieload].lf === iKomb)) {
+                            el[ielem].berechneElementlasten(ieload)
+                        }
+                    }
+                }
+
+                for (j = 0; j < neq; j++) {
+                    console.log('stiff[]', stiff[j])
+                }
+
+                // Aufstellen der rechte Seite, Einzellasten
+
+
+                for (i = 0; i < nloads; i++) {
+                    const index = load[i].lf - 1
+                    if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                        nod1 = load[i].node
+                        for (j = 0; j < 3; j++) {
+                            lmj = node[nod1].L[j]
+                            if (lmj >= 0) {
+                                R[lmj] = R[lmj] + load[i].p[j] * kombiTabelle[iKomb - 1][index]
+                            }
+                        }
+                    }
+                }
+
+                //  und jetzt noch die normalen Elementlasten
+
+                for (ielem = 0; ielem < nelem; ielem++) {
+
+                    for (let ieload = 0; ieload < neloads; ieload++) {
+                        if (eload[ieload].element === ielem) {
+                            const index = eload[ieload].lf - 1
+                            console.log("elem kombi index",index,kombiTabelle[iKomb - 1][index] )
+                            if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                                for (j = 0; j < 6; j++) {
+                                    lmj = el[ielem].lm[j]
+                                    if (lmj >= 0) {
+                                        R[lmj] = R[lmj] - eload[ieload].el_r[j] * kombiTabelle[iKomb - 1][index]
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                for (i = 0; i < neq; i++) {
+                    console.log("R", i, R[i])
+                }
+
+                // Gleichungssystem lösen
+
+                let error = gauss(neq, stiff, R);
+                if (error != 0) {
+                    window.alert("Gleichungssystem singulär");
+                    return 1;
+                }
+
+                for (i = 0; i < neq; i++) u[i] = R[i];
+
+                for (i = 0; i < neq; i++) {
+                    console.log("U", i, u[i] * 1000.0)    // in mm, mrad
+                }
+
+                // Rückrechnung
+
+                let force: number[] = [6]
+
+                for (ielem = 0; ielem < nelem; ielem++) {
+                    force = el[ielem].berechneInterneKraefte(ielem, iKomb, u);
+                    console.log("force", force)
+                    for (i = 0; i < 6; i++) stabendkraefte.set(i + 1, ielem + 1, iKomb, force[i]);
+
+                    el[ielem].berechneLagerkraefte();
+                }
+
+                let disp = [3]
+                for (i = 0; i < nnodes; i++) {                      // Ausgabe der Verschiebungen der einzelnen Knoten im gedrehten Koordinatensystem
+                    for (j = 0; j < 3; j++) {
+                        let ieq = node[i].L[j]
+                        if (ieq === -1) {
+                            disp[j] = 0
+                        } else {
+                            disp[j] = u[ieq] * 1000     // Umrechnung in mm und mrad
+                        }
+                    }
+
+                    for (j = 0; j < 3; j++) {
+                        disp_lf.set(i + 1, j + 1, iKomb, disp[j])
+                    }
+                }
+            }  // ende iter
+
+            for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
+
+                const index = load[i].lf - 1
+                if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                    nodi = load[i].node
+                    lagerkraft[nodi][0] = lagerkraft[nodi][0] + load[i].p[0] * kombiTabelle[iKomb - 1][index]
+                    lagerkraft[nodi][1] = lagerkraft[nodi][1] + load[i].p[1] * kombiTabelle[iKomb - 1][index]
+                    lagerkraft[nodi][2] = lagerkraft[nodi][2] + load[i].p[2] * kombiTabelle[iKomb - 1][index]
+                }
+            }
+
+            //for (i = 0; i < nnodesTotal; i++) {
+            //    console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
+            //}
+
+            ausgabe(iKomb, newDiv)
+
+        }   //ende ikomb
+
+    }
+
+    return 0;
+}
+
+
+//--------------------------------------------------------------------------------------------
+//------------------------------- A U S G A B E ----------------------------------------------
+//--------------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------------------------------
+function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
+    //---------------------------------------------------------------------------------------------------------------
+
+    let i: number, j: number
+
+    let tag = document.createElement("p"); // <p></p>
+    tag.setAttribute("id", "id_ergebnisse");
+    let text = document.createTextNode("xxx");
+    tag.appendChild(text);
+    if (app.browserLanguage == 'de') {
+        tag.innerHTML = "<b>Lastfall " + iLastfall + '</b>' // + current_unit_stress
+    } else {
+        tag.innerHTML = "All stresses in " // + current_unit_stress
+    }
+    newDiv?.appendChild(tag);
+
+    tag = document.createElement("p"); // <p></p>
+    text = document.createTextNode("xxx");
+    tag.appendChild(text);
+    tag.innerHTML = "<b>Knotenverformungen</b>"
+
+    newDiv?.appendChild(tag);
+
+    //   Verformungen
     {
-        let elem = document.getElementById('id_ergebnisse');
-        if (elem !== null) elem.parentNode?.removeChild(elem);
+        const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+        table.setAttribute("id", "id_table_verformungen");
+        table.style.border = 'none';
+        newDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
 
-        const myResultDiv = document.getElementById("id_results");  //in div
+        const thead = table.createTHead();
+        const row = thead.insertRow();
 
-        let tag = document.createElement("p"); // <p></p>
-        tag.setAttribute("id", "id_ergebnisse");
-        let text = document.createTextNode("xxx");
-        tag.appendChild(text);
-        if (app.browserLanguage == 'de') {
-            tag.innerHTML = "Alle Spannungen in " // + current_unit_stress + "<br><br>Schubspannungen aus primärer Torsion M<sub>xp</sub>"
-        } else {
-            tag.innerHTML = "All stresses in " // + current_unit_stress + "<br><br>Shear stresses from primary torsion M<sub>xp</sub>"
+        // @ts-ignore
+        const th0 = table.tHead.appendChild(document.createElement("th"));
+        th0.innerHTML = "Node No";
+        th0.title = "Knotennummer"
+        th0.setAttribute("class", "table_cell_center");
+        row.appendChild(th0);
+        // @ts-ignore
+        const th1 = table.tHead.appendChild(document.createElement("th"));
+        th1.innerHTML = "u &nbsp; [mm]";
+        th1.title = "Verschiebung u, positiv in positiver x-Richtung"
+        th1.setAttribute("class", "table_cell_center");
+        row.appendChild(th1);
+        // @ts-ignore
+        const th2 = table.tHead.appendChild(document.createElement("th"));
+        th2.innerHTML = "w &nbsp; [mm]";
+        th2.title = "Verschiebung w, positiv in positiver z-Richtung"
+        th2.setAttribute("class", "table_cell_center");
+        row.appendChild(th2);
+        // @ts-ignore
+        const th3 = table.tHead.appendChild(document.createElement("th"));
+        th3.innerHTML = "&phi; &nbsp;[mrad]";
+        th3.title = "Verdrehung &phi;, positiv im Gegenuhrzeigersinn"
+        th3.setAttribute("class", "table_cell_center");
+        row.appendChild(th3);
+
+        for (i = 0; i < nnodes; i++) {
+
+            let newRow = table.insertRow(-1);
+            let newCell, newText
+            newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+            newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_center");
+
+            newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
+            newText = document.createTextNode(myFormat(disp_lf._(i + 1, 1, iLastfall), 2, 2));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_right");
+
+            newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
+            newText = document.createTextNode(myFormat(disp_lf._(i + 1, 2, iLastfall), 2, 2));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_right");
+
+            newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
+            newText = document.createTextNode(myFormat(disp_lf._(i + 1, 3, iLastfall), 2, 2));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_right");
         }
-        myResultDiv?.appendChild(tag);
+    }
 
+    // Lagerkräfte
+    {
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Knotenverformungen</b>"
+        tag.innerHTML = "<b>Lagerreaktionen</b>"
 
-        myResultDiv?.appendChild(tag);
-        //   Verformungen
-        {
-            const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
-            table.setAttribute("id", "id_table_verformungen");
-            table.style.border = 'none';
-            myResultDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+        newDiv?.appendChild(tag);
 
-            const thead = table.createTHead();
-            const row = thead.insertRow();
+        const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+        table.setAttribute("id", "id_table_lagerkraefte");
+        table.style.border = 'none';
+        newDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
 
-            // @ts-ignore
-            const th0 = table.tHead.appendChild(document.createElement("th"));
-            th0.innerHTML = "Node No";
-            th0.title = "Knotennummer"
-            th0.setAttribute("class", "table_cell_center");
-            row.appendChild(th0);
-            // @ts-ignore
-            const th1 = table.tHead.appendChild(document.createElement("th"));
-            th1.innerHTML = "u &nbsp; [mm]";
-            th1.title = "Verschiebung u, positiv in positiver x-Richtung"
-            th1.setAttribute("class", "table_cell_center");
-            row.appendChild(th1);
-            // @ts-ignore
-            const th2 = table.tHead.appendChild(document.createElement("th"));
-            th2.innerHTML = "w &nbsp; [mm]";
-            th2.title = "Verschiebung w, positiv in positiver z-Richtung"
-            th2.setAttribute("class", "table_cell_center");
-            row.appendChild(th2);
-            // @ts-ignore
-            const th3 = table.tHead.appendChild(document.createElement("th"));
-            th3.innerHTML = "&phi; &nbsp;[mrad]";
-            th3.title = "Verdrehung &phi;, positiv im Gegenuhrzeigersinn"
-            th3.setAttribute("class", "table_cell_center");
-            row.appendChild(th3);
+        const thead = table.createTHead();
+        const row = thead.insertRow();
 
-            for (i = 0; i < nnodes; i++) {
+        // @ts-ignore
+        const th0 = table.tHead.appendChild(document.createElement("th"));
+        th0.innerHTML = "Node No";
+        th0.title = "Knotennummer"
+        th0.setAttribute("class", "table_cell_center");
+        row.appendChild(th0);
+        // @ts-ignore
+        const th1 = table.tHead.appendChild(document.createElement("th"));
+        th1.innerHTML = "A<sub>x</sub>&nbsp;[kN]";
+        th1.title = "Auflagerkraft Ax, positiv in negativer x-Richtung"
+        th1.setAttribute("class", "table_cell_center");
+        row.appendChild(th1);
+        // @ts-ignore
+        const th2 = table.tHead.appendChild(document.createElement("th"));
+        th2.innerHTML = "A<sub>z</sub>&nbsp;[kN]";
+        th2.title = "Auflagerkraft Az, positiv in negativer z-Richtung"
+        th2.setAttribute("class", "table_cell_center");
+        row.appendChild(th2);
+        // @ts-ignore
+        const th3 = table.tHead.appendChild(document.createElement("th"));
+        th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+        th3.title = "Einspannmoment, positiv im Uhrzeigersinn"
+        th3.setAttribute("class", "table_cell_center");
+        row.appendChild(th3);
 
-                let newRow = table.insertRow(-1);
-                let newCell, newText
-                newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+        for (i = 0; i < nnodes; i++) {
 
-                newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
-                newCell.appendChild(newText);
-                newCell.setAttribute("class", "table_cell_center");
+            let newRow = table.insertRow(-1);
+            let newCell, newText
+            newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
 
-                newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(myFormat(disp_lf._(i + 1, 1, 1), 2, 2));  // Append a text node to the cell
-                newCell.appendChild(newText);
-                newCell.setAttribute("class", "table_cell_right");
+            newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_center");
 
-                newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(myFormat(disp_lf._(i + 1, 2, 1), 2, 2));  // Append a text node to the cell
-                newCell.appendChild(newText);
-                newCell.setAttribute("class", "table_cell_right");
+            newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
+            newText = document.createTextNode(myFormat(lagerkraft[i][0], 2, 2));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_right");
 
-                newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(myFormat(disp_lf._(i + 1, 3, 1), 2, 2));  // Append a text node to the cell
-                newCell.appendChild(newText);
-                newCell.setAttribute("class", "table_cell_right");
-            }
+            newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
+            newText = document.createTextNode(myFormat(lagerkraft[i][1], 2, 2));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_right");
+
+            newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
+            newText = document.createTextNode(myFormat(lagerkraft[i][2], 2, 2));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_right");
         }
-        // Lagerkräfte
-        {
-            tag = document.createElement("p"); // <p></p>
-            text = document.createTextNode("xxx");
-            tag.appendChild(text);
-            tag.innerHTML = "<b>Lagerreaktionen</b>"
+    }
 
-            myResultDiv?.appendChild(tag);
+    // Stabendkräfte/-momente
+    {
+        tag = document.createElement("p"); // <p></p>
+        text = document.createTextNode("xxx");
+        tag.appendChild(text);
+        tag.innerHTML = "<b>Stabendkräfte/-momente</b>"
 
-            const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
-            table.setAttribute("id", "id_table_lagerkraefte");
-            table.style.border = 'none';
-            myResultDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+        newDiv?.appendChild(tag);
 
-            const thead = table.createTHead();
-            const row = thead.insertRow();
+        const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+        table.setAttribute("id", "id_table_stabendkraefte");
+        table.style.border = 'none';
+        newDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
 
-            // @ts-ignore
-            const th0 = table.tHead.appendChild(document.createElement("th"));
-            th0.innerHTML = "Node No";
-            th0.title = "Knotennummer"
-            th0.setAttribute("class", "table_cell_center");
-            row.appendChild(th0);
-            // @ts-ignore
-            const th1 = table.tHead.appendChild(document.createElement("th"));
-            th1.innerHTML = "A<sub>x</sub>&nbsp;[kN]";
-            th1.title = "Auflagerkraft Ax, positiv in negativer x-Richtung"
-            th1.setAttribute("class", "table_cell_center");
-            row.appendChild(th1);
-            // @ts-ignore
-            const th2 = table.tHead.appendChild(document.createElement("th"));
-            th2.innerHTML = "A<sub>z</sub>&nbsp;[kN]";
-            th2.title = "Auflagerkraft Az, positiv in negativer z-Richtung"
-            th2.setAttribute("class", "table_cell_center");
-            row.appendChild(th2);
-            // @ts-ignore
-            const th3 = table.tHead.appendChild(document.createElement("th"));
-            th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
-            th3.title = "Einspannmoment, positiv im Uhrzeigersinn"
-            th3.setAttribute("class", "table_cell_center");
-            row.appendChild(th3);
+        const thead = table.createTHead();
+        const row = thead.insertRow();
 
-            for (i = 0; i < nnodes; i++) {
+        // @ts-ignore
+        const th0 = table.tHead.appendChild(document.createElement("th"));
+        th0.innerHTML = "El No";
+        th0.title = "Stabnummer"
+        th0.setAttribute("class", "table_cell_center");
+        row.appendChild(th0);
+        // @ts-ignore
+        const th1 = table.tHead.appendChild(document.createElement("th"));
+        th1.innerHTML = "N<sub>L</sub> &nbsp;[kN]";
+        th1.title = "Normalkraft N, positiv als Zugktaft"
+        th1.setAttribute("class", "table_cell_center");
+        row.appendChild(th1);
+        // @ts-ignore
+        const th2 = table.tHead.appendChild(document.createElement("th"));
+        th2.innerHTML = "V<sub>Lz</sub>&nbsp;[kN]";
+        th2.title = "Querkraft Vz, positiv in negativer z-Richtung am negativen Schnittufer"
+        th2.setAttribute("class", "table_cell_center");
+        row.appendChild(th2);
+        // @ts-ignore
+        const th3 = table.tHead.appendChild(document.createElement("th"));
+        th3.innerHTML = "M<sub>Ly</sub>&nbsp;[kNm]";
+        th3.title = "Biegemoment, positiv im Uhrzeigersinn am negativen Schnittufer"
+        th3.setAttribute("class", "table_cell_center");
+        row.appendChild(th3);
 
-                let newRow = table.insertRow(-1);
-                let newCell, newText
-                newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+        // @ts-ignore
+        const th4 = table.tHead.appendChild(document.createElement("th"));
+        th4.innerHTML = "N<sub>R</sub> &nbsp;[kN]";
+        th4.title = "Normalkraft N, positiv als Zugktaft"
+        th4.setAttribute("class", "table_cell_center");
+        row.appendChild(th4);
+        // @ts-ignore
+        const th5 = table.tHead.appendChild(document.createElement("th"));
+        th5.innerHTML = "V<sub>Rz</sub>&nbsp;[kN]";
+        th5.title = "Querkraft Vz, positiv in z-Richtung am positiven Schnittufer"
+        th5.setAttribute("class", "table_cell_center");
+        row.appendChild(th5);
+        // @ts-ignore
+        const th6 = table.tHead.appendChild(document.createElement("th"));
+        th6.innerHTML = "M<sub>Ry</sub>&nbsp;[kNm]";
+        th6.title = "Biegemoment, positiv im Gegenuhrzeigersinn am positiven Schnittufer"
+        th6.setAttribute("class", "table_cell_center");
+        row.appendChild(th6);
 
-                newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
-                newCell.appendChild(newText);
-                newCell.setAttribute("class", "table_cell_center");
+        for (i = 0; i < nelem; i++) {
 
-                newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(myFormat(lagerkraft[i][0], 2, 2));  // Append a text node to the cell
-                newCell.appendChild(newText);
-                newCell.setAttribute("class", "table_cell_right");
+            let newRow = table.insertRow(-1);
+            let newCell, newText
+            newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
 
-                newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(myFormat(lagerkraft[i][1], 2, 2));  // Append a text node to the cell
-                newCell.appendChild(newText);
-                newCell.setAttribute("class", "table_cell_right");
+            newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_center");
 
-                newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(myFormat(lagerkraft[i][2], 2, 2));  // Append a text node to the cell
+            for (j = 1; j <= 6; j++) {
+                newCell = newRow.insertCell(j);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(stabendkraefte._(j, i + 1, iLastfall), 2, 2));  // Append a text node to the cell
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_right");
             }
@@ -860,8 +1151,8 @@ function calculate() {
 
     }
 
-    return 0;
 }
+
 /*
 //---------------------------------------------------------------------------------------------------------------
 function calculate_old() {

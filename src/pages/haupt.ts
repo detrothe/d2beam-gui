@@ -37,8 +37,12 @@ let dialog_querschnitt_item_id = '';
 
 export const nnodes_init = '2';
 export const nelem_init = '1';
-export const nnodalloads_init = '0';
+export const nnodalloads_init = '1';
 export const nelemloads_init = '1';
+export const nlastfaelle_init = '2';
+export const nkombinationen_init = '2';
+export let column_string_kombitabelle: string;
+const nkombiSpalten_init = '3'; // immer 1 mehr als nlastfaelle_init
 
 export const app = {
    appName: 'd2beam',
@@ -62,12 +66,19 @@ export const app = {
 };
 
 {
-   let txt = navigator.language
-   let txtArray = txt.split("-")
+   let txt = navigator.language;
+   let txtArray = txt.split('-');
 
-   app.browserLanguage = txtArray[0]
-   console.log("app.browserLanguage", app.browserLanguage)
+   app.browserLanguage = txtArray[0];
+   console.log('app.browserLanguage', app.browserLanguage);
 }
+
+column_string_kombitabelle = '["Kombi", "Kommentar"';
+for (let i = 1; i <= Number(nlastfaelle_init); i++) {
+   column_string_kombitabelle = column_string_kombitabelle + ', "Lf ' + i + '"';
+}
+column_string_kombitabelle = column_string_kombitabelle + ']';
+console.log('column_string_kombitabelle', column_string_kombitabelle);
 
 {
    const template = () => html`
@@ -225,6 +236,27 @@ export const app = {
                      </td>
                   </tr>
                   <tr>
+                     <td>Anzahl Lastfälle :</td>
+                     <td>
+                        <dr-button-pm
+                           id="id_button_nlastfaelle"
+                           nel="${nlastfaelle_init}"
+                           inputid="nlastfaelle"
+                        ></dr-button-pm>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td>Anzahl Kombinationen :</td>
+                     <td>
+                        <dr-button-pm
+                           id="id_button_nkombinationen"
+                           nel="${nkombinationen_init}"
+                           inputid="nkombinationen"
+                        ></dr-button-pm>
+                     </td>
+                  </tr>
+
+                  <tr>
                      <td></td>
                      <td>
                         <sl-button
@@ -232,6 +264,14 @@ export const app = {
                            value="resize"
                            @click="${resizeTables}"
                            >Resize Tabellen</sl-button
+                        >
+                     </td>
+                     <td>
+                        <sl-button
+                           id="clear"
+                           value="clear"
+                           @click="${clearTables}"
+                           >clear Tabellen</sl-button
                         >
                      </td>
                   </tr>
@@ -306,8 +346,14 @@ export const app = {
 
          <!--------------------------------------------------------------------------------------->
          <sl-tab-panel name="tab-kombinationen"
-            >Tab panel Kombinationen</sl-tab-panel
-         >
+            >Eingabe der Kombinationen
+            <dr-tabelle
+               id="id_kombinationen_tabelle"
+               nzeilen="${nkombinationen_init}"
+               nspalten="${nkombiSpalten_init}"
+               columns="${column_string_kombitabelle}"
+            ></dr-tabelle>
+         </sl-tab-panel>
          <sl-tab-panel name="tab-ergebnisse"
             >Ergebnisse
             <div id="id_results"></div>
@@ -671,5 +717,22 @@ export function resizeTables() {
       console.log('EL: >>', el);
       el?.setAttribute('nzeilen', nelem);
    }
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function clearTables() {
+   //------------------------------------------------------------------------------------------------------------
+
+   let el = document.getElementById('id_knoten_tabelle');
+   el?.setAttribute('clear', '0');
+
+   el = document.getElementById('id_element_tabelle');
+   el?.setAttribute('clear', '0');
+
+   el = document.getElementById('id_knotenlasten_tabelle');
+   el?.setAttribute('clear', '0');
+
+   el = document.getElementById('id_elementlasten_tabelle');
+   el?.setAttribute('clear', '0');
 }
 

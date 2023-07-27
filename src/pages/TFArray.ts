@@ -12,6 +12,7 @@ export class TFArray2D {
 
 
     constructor(min_Row = 1, max_Row: number, min_Col = 1, max_Col: number) {
+
         this.nrow = max_Row - min_Row + 1;
         this.ncol = max_Col - min_Col + 1;
         this.minRow = min_Row;
@@ -66,6 +67,7 @@ export class TFVector {
     marray: number[]
 
     constructor(min_Dim = 1, max_Dim: number) {
+
         this.length = max_Dim - min_Dim + 1;
         this.minDim = min_Dim;
         this.maxDim = max_Dim;
@@ -124,6 +126,7 @@ export class TFArray3D {
 
 
     constructor(min_Row = 1, max_Row: number, min_Col = 1, max_Col: number, min_Tab = 1, max_Tab: number) {
+
         this.nrow = max_Row - min_Row + 1;
         this.ncol = max_Col - min_Col + 1;
         this.ntab = max_Tab - min_Tab + 1;
