@@ -29,6 +29,7 @@ export class CTimoshenko_beam extends CElement {
     sinus = 0.0
     alpha = 0.0
     estiff: number[][] = []
+    estiff_sig: number[][] = []
     estm: number[][] = []
     ksig: number[][] = []
     trans: number[][] = []
@@ -93,6 +94,7 @@ export class CTimoshenko_beam extends CElement {
         this.ksig = Array.from(Array(6), () => new Array(6));
         this.trans = Array.from(Array(6), () => new Array(6).fill(0.0));
         this.estiff = Array.from(Array(6), () => new Array(6));
+        this.estiff_sig = Array.from(Array(6), () => new Array(6));
 
         this.trans[0][0] = this.cosinus
         this.trans[0][1] = this.sinus
@@ -287,6 +289,57 @@ export class CTimoshenko_beam extends CElement {
 
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    berechneElementsteifigkeitsmatrix_Ksig() {
+
+        let sum: number
+        let j: number, k: number
+        const help = Array.from(Array(6), () => new Array(6));
+
+        for (j = 0; j < 6; j++) {
+            for (k = 0; k < 6; k++) {
+                sum = 0.0
+                for (let l = 0; l < 6; l++) {
+                    sum = sum + this.ksig[j][l] * this.trans[l][k]
+                }
+                help[j][k] = sum
+            }
+        }
+
+
+        for (j = 0; j < 6; j++) {
+            for (k = 0; k < 6; k++) {
+                sum = 0.0
+                for (let l = 0; l < 6; l++) {
+                    sum = sum + this.trans[l][j] * help[l][k]
+                }
+                this.estiff_sig[j][k] = -sum * this.normalkraft
+            }
+        }
+        console.log("NORMALKRAFT",this.normalkraft)
+    }
+
+    //---------------------------------------------------------------------------------------------
+    addiereElementsteifigkeitmatrix_ksig(stiff: number[][]) {
+
+        let i: number, j: number
+        let lmi: number, lmj: number
+
+
+        for (i = 0; i < 6; i++) {
+            lmi = this.lm[i];
+            if (lmi >= 0) {
+                for (j = 0; j < 6; j++) {
+                    lmj = this.lm[j];
+                    if (lmj >= 0) {
+                        stiff[lmi][lmj] = stiff[lmi][lmj] + this.estiff_sig[i][j];
+                    }
+                }
+            }
+        }
+
+    }
 
     //---------------------------------------------------------------------------------------------
     berechneInterneKraefte(ielem: number, iLastf: number, u: number[]) {

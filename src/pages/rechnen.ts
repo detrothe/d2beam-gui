@@ -17,6 +17,8 @@ export let nnodesTotal: number = 0;
 export let nlastfaelle: number = 0;
 export let nkombinationen: number = 0;
 
+export let neigv:number = 2;
+
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
 export let stabendkraefte: TFArray3D
@@ -42,6 +44,7 @@ export let el = [] as any
 //console.log("CMULT-------------", cmult)
 let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number"]);
 let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]);
+let c_simvektoriteration = Module.cwrap("c_simvektoriteration", null, ["number", "number", "number", "number", "number", "number"]);
 //console.log("C_D2BEAM2-------------", c_d2beam2)
 
 const bytes_8 = 8;
@@ -164,6 +167,9 @@ export function rechnen() {
 
     el = document.getElementById('id_THIIO') as HTMLSelectElement;
     THIIO_flag = Number(el.value);
+
+    el = document.getElementById('id_neigv') as HTMLSelectElement;
+    neigv = Number(el.value);
 
     console.log("THIIO_flag", THIIO_flag)
     console.log("intAt, art", intArt, art, ndivsl)
@@ -552,7 +558,7 @@ function calculate() {
 
     let ielem: number
 
-
+    (document.getElementById('output') as HTMLTextAreaElement).value=''; // Textarea output löschewn
 
     // Berechnung der Gleichungsnummern
 
@@ -772,6 +778,8 @@ function calculate() {
     }
     else if (THIIO_flag === 1) {
 
+        const stiff_sig = Array.from(Array(neq), () => new Array(neq).fill(0.0));
+
         disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);   // nlastfaelle
         console.log("nkombinationen", nkombinationen)
         stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nkombinationen);   // nlastfaelle
@@ -825,7 +833,7 @@ function calculate() {
                     for (let ieload = 0; ieload < neloads; ieload++) {
                         if (eload[ieload].element === ielem) {
                             const index = eload[ieload].lf - 1
-                            console.log("elem kombi index",index,kombiTabelle[iKomb - 1][index] )
+                            console.log("elem kombi index", index, kombiTabelle[iKomb - 1][index])
                             if (kombiTabelle[iKomb - 1][index] !== 0.0) {
                                 for (j = 0; j < 6; j++) {
                                     lmj = el[ielem].lm[j]
@@ -903,6 +911,68 @@ function calculate() {
 
             ausgabe(iKomb, newDiv)
 
+
+            {   // Berechnung alpha_cr, Knickformen
+
+                for (i = 0; i < neq; i++) stiff[i].fill(0.0);
+                for (i = 0; i < neq; i++) stiff_sig[i].fill(0.0);
+
+                R.fill(0.0);
+                u.fill(0.0);
+                //const help = Array.from(Array(6), () => new Array(6));
+
+                for (ielem = 0; ielem < nelem; ielem++) {
+
+                    el[ielem].berechneElementsteifigkeitsmatrix(0);
+                    el[ielem].addiereElementsteifigkeitmatrix(stiff)
+
+                    el[ielem].berechneElementsteifigkeitsmatrix_Ksig();
+                    el[ielem].addiereElementsteifigkeitmatrix_ksig(stiff_sig)
+
+                }
+
+                for (i = 0; i < neq; i++) {
+                    console.log("stiff_sig", stiff_sig[i])
+                }
+
+                let kstiff_array = new Float64Array(neq * neq);
+                let k = 0
+                for (let ispalte = 0; ispalte < neq; ispalte++) {
+                    for (let izeile = 0; izeile < neq; izeile++) {
+                        kstiff_array[k] = stiff[izeile][ispalte];
+                        k++;
+                    }
+                }
+                let kstiff_ptr = Module._malloc(kstiff_array.length * bytes_8);
+                Module.HEAPF64.set(kstiff_array, kstiff_ptr / bytes_8);
+
+                let kstiff_sig_array = new Float64Array(neq * neq);
+                k = 0
+                for (let ispalte = 0; ispalte < neq; ispalte++) {
+                    for (let izeile = 0; izeile < neq; izeile++) {
+                        kstiff_sig_array[k] = stiff_sig[izeile][ispalte];
+                        k++;
+                    }
+                }
+                let kstiff_sig_ptr = Module._malloc(kstiff_sig_array.length * bytes_8);
+                Module.HEAPF64.set(kstiff_sig_array, kstiff_sig_ptr / bytes_8);
+
+                let eigenform_ptr = Module._malloc(neq * neigv * bytes_8);
+                let omega_ptr = Module._malloc(neigv * bytes_8);
+
+                c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv);
+
+                let omega_array = new Float64Array(Module.HEAPF64.buffer, omega_ptr, neigv);
+                console.log("omega", omega_array[0], omega_array[1]);
+
+                let eigenform_array = new Float64Array(Module.HEAPF64.buffer, eigenform_ptr, neq * neigv);
+                console.log("eigenform", eigenform_array);
+
+                Module._free(kstiff_ptr);
+                Module._free(kstiff_sig_ptr);
+                Module._free(eigenform_ptr);
+                Module._free(omega_array);
+            }
         }   //ende ikomb
 
     }

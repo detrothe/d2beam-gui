@@ -175,12 +175,7 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    attributeChangedCallback(name: string, oldValue: any, newValue: any) {
       //------------------------------------------------------------------------------------------------------------
-      console.log(
-         'Custom square element attributes changed.',
-         name,
-         oldValue,
-         newValue
-      );
+      console.log('Custom square element attributes changed.', name, oldValue, newValue);
 
       if (name === 'newselect') {
          this.update_select_options();
@@ -191,7 +186,7 @@ class DrTabelle extends HTMLElement {
       } else if (name === 'clear') {
          this.clear_Tabelle('mytable');
 
-      } else if (oldValue === null) {
+      } else if (oldValue === null) {                         // Initialisierungsphase
          console.log('1', newValue.length);
          if (name === 'columns') {
             let myValue = newValue.replace('[', '');
@@ -210,28 +205,33 @@ class DrTabelle extends HTMLElement {
             let myValue = newValue.replace('[', '');
             const lastIndex = myValue.lastIndexOf(']');
             myValue = myValue.slice(0, lastIndex);
-            console.log('myValue', myValue);
+            //console.log('myValue', myValue);
             const myArray = myValue.split(',');
-            console.log('myArray', myArray[0], myArray[1], myArray[2]);
+            //console.log('myArray', myArray[0], myArray[1], myArray[2]);
             for (let i = 0; i < myArray.length; i++) {
                this.typs[i] = myArray[i].replace(/"/g, '');
             }
 
-            //console.log('-- columns', this.typs[0], this.typs[1], this.typs[2], this.typs[3], this.typs[4], this.typs[5]);
-
          } else if (name === 'nzeilen') {
             this.nZeilen = newValue;
-            console.log('typeof', typeof (this.nZeilen | 0));
+            //console.log('typeof', typeof (this.nZeilen | 0));
             this.nTabRow = Number(this.nZeilen) + 1; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
-            console.log('#### name=', name, this.nTabRow);
+            //console.log('#### name=', name, this.nTabRow);
          } else if (name === 'nspalten') {
             this.nSpalten = newValue;
             this.nTabCol = Number(this.nSpalten) + 1; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
-            console.log('#### name=', name, this.nTabCol);
+            //console.log('#### name=', name, this.nTabCol);
          }
       } else {
-         //updateStyle(this);
-         this.resize_Tabelle('mytable', newValue, this.nSpalten);
+         if (name === 'nzeilen') {
+            this.nZeilen = newValue;
+            this.nTabRow = Number(this.nZeilen) + 1; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
+            this.resize_Tabelle('mytable', newValue, this.nSpalten);
+         } else if (name === 'nspalten') {
+            this.nSpalten = newValue;
+            this.nTabCol = Number(this.nSpalten) + 1; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
+            this.resize_Tabelle('mytable', this.nZeilen, newValue);
+         }
       }
    }
 
@@ -326,11 +326,11 @@ class DrTabelle extends HTMLElement {
 
       for (let iZeile = 1; iZeile < nZeilen; iZeile++) {
 
-            for (let iSpalte = 1; iSpalte < nSpalten; iSpalte++) {
-               let child = table.rows[iZeile].cells[iSpalte].firstElementChild as HTMLInputElement;
-               child.value="";
-            }
+         for (let iSpalte = 1; iSpalte < nSpalten; iSpalte++) {
+            let child = table.rows[iZeile].cells[iSpalte].firstElementChild as HTMLInputElement;
+            child.value = "";
          }
+      }
 
    }
 

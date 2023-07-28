@@ -244,6 +244,19 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            inputid="nlastfaelle"
                         ></dr-button-pm>
                      </td>
+                     <td>Anzahl Eigenwerte :</td>
+                     <td>
+                        <input
+                           type="number"
+                           step="any"
+                           id="id_neigv"
+                           name="neigv"
+                           class="input_tab"
+                           pattern="[0-9.,eE+-]*"
+                           value="2"
+                           onchange="berechnungErforderlich()"
+                        />
+                     </td>
                   </tr>
                   <tr>
                      <td>Anzahl Kombinationen :</td>
@@ -354,6 +367,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                columns="${column_string_kombitabelle}"
             ></dr-tabelle>
          </sl-tab-panel>
+
          <sl-tab-panel name="tab-ergebnisse"
             >Ergebnisse
             <div id="id_results"></div>
@@ -716,6 +730,30 @@ export function resizeTables() {
       const el = document.getElementById('id_elementlasten_tabelle');
       console.log('EL: >>', el);
       el?.setAttribute('nzeilen', nelem);
+   }
+
+   {
+      let el_elemente = document.getElementById('id_button_nkombinationen');
+      let nelem = (
+         el_elemente?.shadowRoot?.getElementById(
+            'nkombinationen'
+         ) as HTMLInputElement
+      ).value;
+
+      let el = document.getElementById('id_kombinationen_tabelle');
+      console.log('EL nzeilen: >>', nelem);
+      el?.setAttribute('nzeilen', nelem);
+//---------------------------------------
+       el_elemente = document.getElementById('id_button_nlastfaelle');
+       nelem = (
+         el_elemente?.shadowRoot?.getElementById(
+            'nlastfaelle'
+         ) as HTMLInputElement
+      ).value;
+
+      el = document.getElementById('id_kombinationen_tabelle');
+      console.log('EL nspalten: >>', nelem);
+      el?.setAttribute('nspalten', String(Number(nelem) + 1))  // +1 wegen Kommentarspalte
    }
 }
 
