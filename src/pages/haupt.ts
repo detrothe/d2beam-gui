@@ -8,6 +8,8 @@ import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
 import '@shoelace-style/shoelace/dist/components/tree/tree.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@shoelace-style/shoelace/dist/components/radio-group/radio-group.js';
+import '@shoelace-style/shoelace/dist/components/radio-button/radio-button.js';
 
 //import { styles } from '../styles/shared-styles';
 
@@ -98,8 +100,8 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
          <sl-tab slot="nav" panel="tab-elementlasten">Elementlasten</sl-tab>
          <sl-tab slot="nav" panel="tab-kombinationen">Kombinationen</sl-tab>
          <sl-tab slot="nav" panel="tab-ergebnisse">Ergebnisse</sl-tab>
-         <sl-tab slot="nav" panel="tab-9">Tab 9</sl-tab>
-         <sl-tab slot="nav" panel="tab-10">Tab 10</sl-tab>
+         <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
+         <sl-tab slot="nav" panel="tab-pro">Pro</sl-tab>
 
          <sl-tab-panel name="tab-querschnitte">
             <sl-button id="open-dialog" @click="${handleClick}"
@@ -372,8 +374,11 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
             >Ergebnisse
             <div id="id_results"></div>
          </sl-tab-panel>
-         <sl-tab-panel name="tab-9">Tab panel 9</sl-tab-panel>
-         <sl-tab-panel name="tab-10">Tab panel 10</sl-tab-panel>
+         <sl-tab-panel name="tab-grafik">
+            <div id="id_grafik"></div>
+         </sl-tab-panel>
+
+         <sl-tab-panel name="tab-pro">Tab panel pro</sl-tab-panel>
       </sl-tab-group>
 
       <!-- <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt> -->
@@ -743,9 +748,9 @@ export function resizeTables() {
       let el = document.getElementById('id_kombinationen_tabelle');
       console.log('EL nzeilen: >>', nelem);
       el?.setAttribute('nzeilen', nelem);
-//---------------------------------------
-       el_elemente = document.getElementById('id_button_nlastfaelle');
-       nelem = (
+      //---------------------------------------
+      el_elemente = document.getElementById('id_button_nlastfaelle');
+      nelem = (
          el_elemente?.shadowRoot?.getElementById(
             'nlastfaelle'
          ) as HTMLInputElement
@@ -753,7 +758,7 @@ export function resizeTables() {
 
       el = document.getElementById('id_kombinationen_tabelle');
       console.log('EL nspalten: >>', nelem);
-      el?.setAttribute('nspalten', String(Number(nelem) + 1))  // +1 wegen Kommentarspalte
+      el?.setAttribute('nspalten', String(Number(nelem) + 1)); // +1 wegen Kommentarspalte
    }
 }
 

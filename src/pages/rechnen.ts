@@ -7,6 +7,7 @@ import { testNumber, myFormat } from './utility'
 // @ts-ignore
 import { gauss } from "./gauss.js"
 import { CTimoshenko_beam } from "./timoshenko_beam"
+import { drawsystem } from "./grafik";
 
 export let nnodes: number;
 export let nelem: number;
@@ -976,6 +977,8 @@ function calculate() {
         }   //ende ikomb
 
     }
+
+    drawsystem();
 
     return 0;
 }
