@@ -18,7 +18,7 @@ export let nnodesTotal: number = 0;
 export let nlastfaelle: number = 0;
 export let nkombinationen: number = 0;
 
-export let neigv:number = 2;
+export let neigv: number = 2;
 
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
@@ -70,8 +70,9 @@ class TQuerschnittRechteck {
     Iy: number = 160000.0
     area: number = 1200.0
     height: number = 0.4
+    width: number = 0.3
     wichte: number = 0.0
-    ks: number = 0.0
+    definedQuerschnitt: number = 1
 }
 
 class TElement {
@@ -186,8 +187,8 @@ export function rechnen() {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-export function set_querschnittRechteck(name: string, id: string, emodul: number, Iy: number, area: number, height: number,
-    ks: number, wichte: number, schubfaktor: number, querdehnzahl: number) {
+export function set_querschnittRechteck(name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number,
+    definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number) {
     //-----------------------------------------------------------------------------------------------------------
 
     const index = nQuerschnittSets - 1;
@@ -197,8 +198,9 @@ export function set_querschnittRechteck(name: string, id: string, emodul: number
     querschnittset[index].Iy = Iy;
     querschnittset[index].area = area;
     querschnittset[index].height = height;
+    querschnittset[index].width = width;
     querschnittset[index].id = id;
-    querschnittset[index].ks = ks;
+    querschnittset[index].definedQuerschnitt = definedQuerschnitt;
     querschnittset[index].wichte = wichte;
     querschnittset[index].schubfaktor = schubfaktor;
     querschnittset[index].querdehnzahl = querdehnzahl;
@@ -208,7 +210,7 @@ export function set_querschnittRechteck(name: string, id: string, emodul: number
 
 //---------------------------------------------------------------------------------------------------------------
 export function update_querschnittRechteck(index: number, name: string, id: string, emodul: number, Iy: number, area: number,
-    height: number, ks: number, wichte: number, schubfaktor: number, querdehnzahl: number) {
+    height: number, width: number, definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number) {
     //-----------------------------------------------------------------------------------------------------------
 
     querschnittset[index].name = name;
@@ -216,8 +218,9 @@ export function update_querschnittRechteck(index: number, name: string, id: stri
     querschnittset[index].Iy = Iy;
     querschnittset[index].area = area;
     querschnittset[index].height = height;
+    querschnittset[index].width = width;
     querschnittset[index].id = id;
-    querschnittset[index].ks = ks;
+    querschnittset[index].definedQuerschnitt = definedQuerschnitt;
     querschnittset[index].wichte = wichte;
     querschnittset[index].schubfaktor = schubfaktor;
     querschnittset[index].querdehnzahl = querdehnzahl;
@@ -229,7 +232,7 @@ export function update_querschnittRechteck(index: number, name: string, id: stri
 export function get_querschnittRechteck(index: number) {
     //-----------------------------------------------------------------------------------------------------------
 
-    let name: string, id: string, emodul: number, Iy: number, area: number, height: number, ks: number, wichte: number
+    let name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number, definedQuerschnitt: number, wichte: number
     let schubfaktor: number, querdehnzahl: number
 
     name = querschnittset[index].name;
@@ -237,15 +240,16 @@ export function get_querschnittRechteck(index: number) {
     Iy = querschnittset[index].Iy;
     area = querschnittset[index].area;
     height = querschnittset[index].height;
+    width = querschnittset[index].width;
     id = querschnittset[index].id;
-    ks = querschnittset[index].ks;
+    definedQuerschnitt = querschnittset[index].definedQuerschnitt;
     wichte = querschnittset[index].wichte;
     schubfaktor = querschnittset[index].schubfaktor;
     querdehnzahl = querschnittset[index].querdehnzahl;
 
     console.log("get_querschnittRechteck", index, emodul)
 
-    return [name, id, emodul, Iy, area, height, ks, wichte, schubfaktor, querdehnzahl]
+    return [name, id, emodul, Iy, area, height, width, definedQuerschnitt, wichte, schubfaktor, querdehnzahl]
 }
 
 
@@ -559,7 +563,7 @@ function calculate() {
 
     let ielem: number
 
-    (document.getElementById('output') as HTMLTextAreaElement).value=''; // Textarea output löschewn
+    (document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
 
     // Berechnung der Gleichungsnummern
 
@@ -577,9 +581,9 @@ function calculate() {
 
     console.log("Anzahl Gleichungen: ", neq)
 
-    let emodul: number = 0.0, ks: number = 0.0, wichte: number = 0.0
+    let emodul: number = 0.0, ks: number = 0.0, wichte: number = 0.0, definedQuerschnitt = 1
     let querdehnzahl: number = 0.3, schubfaktor: number = 0.833
-    let nfiber: number = 2, maxfiber: number = 5, offset_abstand: number = 0.0, height: number = 0.0
+    let nfiber: number = 2, maxfiber: number = 5, offset_abstand: number = 0.0, height: number = 0.0, width = 0.0
     let Iy: number = 0.0, area: number = 0.0, b: number;
     let lmj: number = 0, nod1: number, nodi: number
 
@@ -609,17 +613,25 @@ function calculate() {
             console.log('es ist ein Rechteck')
             emodul = querschnittset[index].emodul * 1000.0   // in kN/m²
             wichte = querschnittset[index].wichte
-            ks = querschnittset[index].ks
+            definedQuerschnitt = querschnittset[index].definedQuerschnitt
             querdehnzahl = querschnittset[index].querdehnzahl
             schubfaktor = querschnittset[index].schubfaktor
 
             nfiber = 2
             maxfiber = 3 * (nfiber - 1)
             height = querschnittset[index].height / 100.0     // in m
-            Iy = querschnittset[index].Iy / 100000000.0
-            area = querschnittset[index].area / 10000.0
-            b = Math.sqrt(area * area * area / Iy / 12.0)      // in m
-            console.log("BREITE=", b, Iy)
+            width = querschnittset[index].width / 100.0     // in m
+            if (definedQuerschnitt === 1) {
+                b = width
+                area = width * height
+                Iy = area * height * height / 12.0
+                console.log("A, Iy",area,Iy)
+            } else {
+                Iy = querschnittset[index].Iy / 100000000.0
+                area = querschnittset[index].area / 10000.0
+                b = Math.sqrt(area * area * area / Iy / 12.0)      // in m
+                console.log("BREITE=", b, Iy)
+            }
             breite[0] = b
             breite[1] = b
             abstand[0] = 0.0

@@ -83,7 +83,8 @@ column_string_kombitabelle = column_string_kombitabelle + ']';
 console.log('column_string_kombitabelle', column_string_kombitabelle);
 
 {
-   const template = () => html`
+//   const template = () => html`
+   const template = html`
       <style>
          .custom-icons sl-tree-item::part(expand-button) {
             /* Disable the expand/collapse animation */
@@ -92,7 +93,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
       </style>
 
       <sl-tab-group>
-         <sl-tab slot="nav" panel="tab-haupt">Haupt</sl-tab>
+         <sl-tab id=id_tab_group slot="nav" panel="tab-haupt">Haupt</sl-tab>
          <sl-tab slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
          <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>
          <sl-tab slot="nav" panel="tab-elemente">Elemente</sl-tab>
@@ -375,18 +376,29 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
             <div id="id_results"></div>
          </sl-tab-panel>
          <sl-tab-panel name="tab-grafik">
-            <div id="id_grafik"></div>
+            <div id="id_grafik"style='width:100vw; background-color:#fffaed;margin:0;padding:0;'></div>  <!--  height: 100%; -->
          </sl-tab-panel>
 
          <sl-tab-panel name="tab-pro">Tab panel pro</sl-tab-panel>
       </sl-tab-group>
 
       <!-- <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt> -->
+
+      <div id="container">
+         <footer  class="footer">
+            2D structural analysis of frames using the d2beam element,
+            29-Juli-2023,
+            <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
+         </footer>
+      </div>
    `;
 
-   const container = document.getElementById('container') as HTMLDivElement;
-   const renderBefore = container?.querySelector('footer');
-   render(template(), container, { renderBefore });
+   //const container = document.getElementById('container') as HTMLDivElement;
+   //const renderBefore = container?.querySelector('footer');
+   //render(template(), container, { renderBefore });
+   render( template, document.body);
+
+
 
    // Tabellen sin jetzt da, Tabellen mit Voreinstellungen füllen
 
@@ -526,8 +538,13 @@ function dialog_closed(e: any) {
          const qname = elem.value;
          elem = el?.shadowRoot?.getElementById('height') as HTMLInputElement;
          const height = +elem.value;
-         elem = el?.shadowRoot?.getElementById('bettung') as HTMLInputElement;
-         const bettung = +elem.value;
+         elem = el?.shadowRoot?.getElementById('width') as HTMLInputElement;
+         const width = +elem.value;
+//         elem = el?.shadowRoot?.querySelector('.radio-group-querschnitt') as any;
+         elem = el?.shadowRoot?.getElementById('id_defquerschnitt') as any;
+         console.log("defquerschnitt",elem)
+         const defquerschnitt = +elem.value;
+         console.log("defquerschnitt",defquerschnitt)
          elem = el?.shadowRoot?.getElementById(
             'schubfaktor'
          ) as HTMLInputElement;
@@ -549,7 +566,8 @@ function dialog_closed(e: any) {
                Iy,
                area,
                height,
-               bettung,
+               width,
+               defquerschnitt,
                wichte,
                schubfaktor,
                querdehnzahl
@@ -563,7 +581,8 @@ function dialog_closed(e: any) {
                Iy,
                area,
                height,
-               bettung,
+               width,
+               defquerschnitt,
                wichte,
                schubfaktor,
                querdehnzahl
@@ -636,7 +655,8 @@ function opendialog(ev: any) {
          Iy,
          area,
          height,
-         bettung,
+         width,
+         definedQuerschnitt,
          wichte,
          schubfaktor,
          querdehnzahl,
@@ -659,8 +679,10 @@ function opendialog(ev: any) {
       elem.value = String(qname);
       elem = el?.shadowRoot?.getElementById('height') as HTMLInputElement;
       elem.value = String(height);
-      elem = el?.shadowRoot?.getElementById('bettung') as HTMLInputElement;
-      elem.value = String(bettung);
+      elem = el?.shadowRoot?.getElementById('width') as HTMLInputElement;
+      elem.value = String(width);
+      elem = el?.shadowRoot?.getElementById('id_defquerschnitt') as HTMLInputElement;
+      elem.value = String(definedQuerschnitt);
       elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
       elem.value = String(wichte);
       elem = el?.shadowRoot?.getElementById('schubfaktor') as HTMLInputElement;

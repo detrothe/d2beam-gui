@@ -123,7 +123,9 @@ export class drRechteckQuerSchnitt extends LitElement {
                      <sl-radio-group
                         label="Defintion des Querschnitts"
                         name="defquerschnitt"
+                        id="id_defquerschnitt"
                         value="1"
+                        class="radio-group-querschnitt"
                      >
                         <sl-radio-button
                            value="1"
