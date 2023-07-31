@@ -15,6 +15,7 @@ export class CTimoshenko_beam extends CElement {
     Iy = 0.0
     area = 0.0
     psi = 0.0
+    kappa = 0.0
     nod1 = -1
     nod2 = -1
     nod = [0, 0]
@@ -126,9 +127,11 @@ export class CTimoshenko_beam extends CElement {
         if (this.schubfaktor === 0.0) {  // schubstarr
             area_s = this.area
             this.psi = 1.0
+            this.kappa = 0.0
         } else {
             area_s = this.schubfaktor * this.area
             this.psi = 1.0 / (1.0 + 12.0 * EI / this.gmodul / area_s / L2)
+            this.kappa = EI / this.gmodul / area_s
         }
         const psi = this.psi
 
@@ -317,7 +320,7 @@ export class CTimoshenko_beam extends CElement {
                 this.estiff_sig[j][k] = -sum * this.normalkraft
             }
         }
-        console.log("NORMALKRAFT",this.normalkraft)
+        console.log("NORMALKRAFT", this.normalkraft)
     }
 
     //---------------------------------------------------------------------------------------------

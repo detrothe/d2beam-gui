@@ -83,8 +83,10 @@ column_string_kombitabelle = column_string_kombitabelle + ']';
 console.log('column_string_kombitabelle', column_string_kombitabelle);
 
 {
-//   const template = () => html`
-   const template = html`
+   //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
+
+   const template = () => html`
+
       <style>
          .custom-icons sl-tree-item::part(expand-button) {
             /* Disable the expand/collapse animation */
@@ -120,7 +122,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                <sl-icon name="plus-square" slot="expand-icon"></sl-icon>
                <sl-icon name="dash-square" slot="collapse-icon"></sl-icon>
       -->
-               <sl-tree-item id="id_tree_LQ" @click="${handleClick_LD}">
+               <sl-tree-item id="id_tree_LQ" @click="${handleClick_rechteck_dialog}">
                   Linear elastisch Querschnittswerte
                   <!-- <sl-tree-item>Birch</sl-tree-item>
 
@@ -383,7 +385,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
       </sl-tab-group>
 
       <!-- <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt> -->
-
+      <!--
       <div id="container">
          <footer  class="footer">
             2D structural analysis of frames using the d2beam element,
@@ -391,12 +393,13 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
             <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
          </footer>
       </div>
+      -->
    `;
 
-   //const container = document.getElementById('container') as HTMLDivElement;
-   //const renderBefore = container?.querySelector('footer');
-   //render(template(), container, { renderBefore });
-   render( template, document.body);
+   const container = document.getElementById('container') as HTMLDivElement;
+   const renderBefore = container?.querySelector('footer');
+   render(template(), container, { renderBefore });
+   //render( template, document.body);
 
 
 
@@ -486,7 +489,7 @@ function neuZeilen() {
 }
 */
 //---------------------------------------------------------------------------------------------------------------
-function handleClick_LD(ev: any) {
+function handleClick_rechteck_dialog(ev: any) {
    //---------------------------------------------------------------------------------------------------------------
    console.log('handleClick_LD()', ev);
    /*
@@ -500,7 +503,7 @@ function handleClick_LD(ev: any) {
 //---------------------------------------------------------------------------------------------------------------
 function calculate() {
    //---------------------------------------------------------------------------------------------------------------
-   console.log('calculate');
+   //console.log('calculate');
    rechnen();
 
    //testclass();
@@ -510,9 +513,7 @@ function calculate() {
 function dialog_closed(e: any) {
    //---------------------------------------------------------------------------------------------------------------
    console.log('Event dialog closed', e);
-   const el = document.getElementById(
-      'id_dialog_rechteck'
-   ) as HTMLDialogElement;
+   const el = document.getElementById('id_dialog_rechteck') as HTMLDialogElement;
 
    // @ts-ignore
    const returnValue = this.returnValue;
@@ -525,9 +526,7 @@ function dialog_closed(e: any) {
       const id = 'mat-' + nQuerschnittSets;
 
       {
-         let elem = el?.shadowRoot?.getElementById(
-            'emodul'
-         ) as HTMLInputElement;
+         let elem = el?.shadowRoot?.getElementById('emodul') as HTMLInputElement;
          console.log('emodul=', elem.value);
          const emodul = +elem.value;
          elem = el?.shadowRoot?.getElementById('traeg_y') as HTMLInputElement;
@@ -540,18 +539,14 @@ function dialog_closed(e: any) {
          const height = +elem.value;
          elem = el?.shadowRoot?.getElementById('width') as HTMLInputElement;
          const width = +elem.value;
-//         elem = el?.shadowRoot?.querySelector('.radio-group-querschnitt') as any;
+         //         elem = el?.shadowRoot?.querySelector('.radio-group-querschnitt') as any;
          elem = el?.shadowRoot?.getElementById('id_defquerschnitt') as any;
-         console.log("defquerschnitt",elem)
+         //console.log("defquerschnitt", elem)
          const defquerschnitt = +elem.value;
-         console.log("defquerschnitt",defquerschnitt)
-         elem = el?.shadowRoot?.getElementById(
-            'schubfaktor'
-         ) as HTMLInputElement;
+         //console.log("defquerschnitt", defquerschnitt)
+         elem = el?.shadowRoot?.getElementById('schubfaktor') as HTMLInputElement;
          const schubfaktor = +elem.value;
-         elem = el?.shadowRoot?.getElementById(
-            'querdehnzahl'
-         ) as HTMLInputElement;
+         elem = el?.shadowRoot?.getElementById('querdehnzahl') as HTMLInputElement;
          const querdehnzahl = +elem.value;
          elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
          const wichte = +elem.value;
@@ -589,14 +584,12 @@ function dialog_closed(e: any) {
             );
 
             //console.log("UPDATE", this)
-            const el = document.getElementById(
-               dialog_querschnitt_item_id
-            ) as HTMLElement;
+            const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
             //console.log("dialog_querschnitt_item_id", el.innerHTML)
             if (el.innerHTML !== qname) {
                el.innerHTML = qname;
                const ele = document.getElementById('id_element_tabelle');
-               console.log('ELE: >>', ele);
+               //console.log('ELE: >>', ele);
                ele?.setAttribute(
                   'namechanged',
                   String(dialog_querschnitt_index)
@@ -628,7 +621,7 @@ function dialog_closed(e: any) {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-function opendialog(ev: any) {
+export function opendialog(ev: any) {
    //---------------------------------------------------------------------------------------------------------------
 
    // @ts-ignore

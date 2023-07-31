@@ -1,5 +1,5 @@
 declare let Module: any;
-import { app, nlastfaelle_init } from "./haupt"
+import { app, nlastfaelle_init, opendialog } from "./haupt"
 import { TFVector, TFArray2D, TFArray3D } from "./TFArray"
 
 import { testNumber, myFormat } from './utility'
@@ -38,6 +38,12 @@ export let intArt = 2;
 export let THIIO_flag = 0;
 
 export let el = [] as any
+
+export let maxValue_lf = [] as TMaxValues[]
+export let maxValue_komb = [] as TMaxValues[]
+
+
+export let xmin = -50.0, zmin = -50.0, xmax = 50.0, zmax = 50.0, slmax = 0.0;
 
 
 // @ts-ignore
@@ -127,6 +133,20 @@ class TElLoads {
     pR: number = 0.0
     re: number[] = [6]                              // Elementlastvektor lokal
     el_r: number[] = [6]                            // Elementlastvektor im globalen Koordinatensystem
+}
+
+class TMaxValues {
+    disp = 0.0
+    N = 0.0
+    Vz = 0.0
+    My = 0.0
+
+    zero() {
+        this.disp = 0.0
+        this.N = 0.0
+        this.Vz = 0.0
+        this.My = 0.0
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -235,6 +255,7 @@ export function get_querschnittRechteck(index: number) {
     let name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number, definedQuerschnitt: number, wichte: number
     let schubfaktor: number, querdehnzahl: number
 
+    console.log("index", index)
     name = querschnittset[index].name;
     emodul = querschnittset[index].emodul;
     Iy = querschnittset[index].Iy;
@@ -501,6 +522,60 @@ function read_kombinationen() {
 export function init_tabellen() {
     //---------------------------------------------------------------------------------------------------------------
 
+    // Querschnitt hinzufügen
+    {
+
+        incr_querschnittSets();
+
+        const qname = 'R 40x30'
+        const id = 'mat-0';
+        const emodul = 30000.
+        const Iy = 160000.
+        const area = 1200.
+        const height = 40.
+        const width = 30.
+        const defquerschnitt = 1
+        const wichte = 0.0
+        const schubfaktor = 0.0
+        const querdehnzahl = 0.2
+
+        set_querschnittRechteck(
+            qname,
+            id,
+            emodul,
+            Iy,
+            area,
+            height,
+            width,
+            defquerschnitt,
+            wichte,
+            schubfaktor,
+            querdehnzahl
+        );
+
+        /*
+        const el = document.getElementById('id_dialog_rechteck') as HTMLDialogElement;
+
+        const qName = (
+            el?.shadowRoot?.getElementById('qname') as HTMLInputElement
+        ).value;
+        console.log('NAME', qName);
+        */
+        var tag = document.createElement('sl-tree-item');
+        var text = document.createTextNode(qname);
+        tag.appendChild(text);
+        tag.addEventListener('click', opendialog);
+
+        tag.id = id;
+        var element = document.getElementById('id_tree_LQ');
+        element?.appendChild(tag);
+        //console.log('child appendchild', element);
+
+        const ele = document.getElementById('id_element_tabelle');
+        //console.log('ELE: >>', ele);
+        ele?.setAttribute('newselect', '4');
+    }
+
     let el = document.getElementById('id_element_tabelle');
 
     let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
@@ -554,7 +629,6 @@ export function init_tabellen() {
     }
 }
 
-
 //---------------------------------------------------------------------------------------------------------------
 function calculate() {
     //---------------------------------------------------------------------------------------------------------------
@@ -577,6 +651,31 @@ function calculate() {
                 neq = neq + 1;
             }
         }
+    }
+
+    // für die Grafik
+
+    xmin = 1.e30
+    zmin = 1.e30
+    xmax = -1.e30
+    zmax = -1.e30
+
+    for (i = 0; i < nnodes; i++) {
+        if (node[i].x < xmin) xmin = node[i].x;
+        if (node[i].z < zmin) zmin = node[i].z;
+        if (node[i].x > xmax) xmax = node[i].x;
+        if (node[i].z > zmax) zmax = node[i].z;
+    }
+
+    slmax = Math.sqrt((xmax - xmin) ** 2 + (zmax - zmin) ** 2)
+
+    for (i = 0; i < nlastfaelle; i++) {
+        maxValue_lf.push(new TMaxValues());
+        maxValue_lf[i].zero();
+    }
+    for (i = 0; i < nkombinationen; i++) {
+        maxValue_komb.push(new TMaxValues());
+        maxValue_komb[i].zero();
     }
 
     console.log("Anzahl Gleichungen: ", neq)
@@ -625,7 +724,7 @@ function calculate() {
                 b = width
                 area = width * height
                 Iy = area * height * height / 12.0
-                console.log("A, Iy",area,Iy)
+                console.log("A, Iy", area, Iy)
             } else {
                 Iy = querschnittset[index].Iy / 100000000.0
                 area = querschnittset[index].area / 10000.0
@@ -767,6 +866,7 @@ function calculate() {
 
                 for (j = 0; j < 3; j++) {
                     disp_lf.set(i + 1, j + 1, iLastfall, disp[j])
+                    if (Math.abs(disp[j]) > maxValue_lf[iLastfall - 1].disp) maxValue_lf[iLastfall - 1].disp = Math.abs(disp[j])
                 }
             }
 
@@ -903,6 +1003,7 @@ function calculate() {
 
                     for (j = 0; j < 3; j++) {
                         disp_lf.set(i + 1, j + 1, iKomb, disp[j])
+                        if (Math.abs(disp[j]) > maxValue_komb[iKomb - 1].disp) maxValue_komb[iKomb - 1].disp = Math.abs(disp[j])
                     }
                 }
             }  // ende iter
@@ -1011,9 +1112,11 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
     let text = document.createTextNode("xxx");
     tag.appendChild(text);
     if (app.browserLanguage == 'de') {
-        tag.innerHTML = "<b>Lastfall " + iLastfall + '</b>' // + current_unit_stress
+        if (THIIO_flag === 0) tag.innerHTML = "<b>Lastfall " + iLastfall + '</b>';
+        else if (THIIO_flag === 1) tag.innerHTML = "<b>Kombination " + iLastfall + '</b>';
     } else {
-        tag.innerHTML = "All stresses in " // + current_unit_stress
+        if (THIIO_flag === 0) tag.innerHTML = "Load case " // + current_unit_stress
+        else if (THIIO_flag === 1) tag.innerHTML = "<b>Load Combination " + iLastfall + '</b>';
     }
     newDiv?.appendChild(tag);
 

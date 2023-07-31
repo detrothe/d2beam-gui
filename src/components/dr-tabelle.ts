@@ -56,19 +56,18 @@ class DrTabelle extends HTMLElement {
    connectedCallback() {
       //------------------------------------------------------------------------------------------------------------
 
-      console.log('connectedCallback  Custom square element added to page.');
-      //updateStyle(this);
+      //console.log('connectedCallback  Custom square element added to page.');
 
-      console.log('columns', this.columns);
+      //console.log('columns', this.columns);
 
-      console.log("-----------nQuerschnittSets--------------", nQuerschnittSets);
+      //console.log("-----------nQuerschnittSets--------------", nQuerschnittSets);
 
       const table = document.createElement('table');
       this.shadow.appendChild(table);
       table.id = 'mytable';
 
       let thead = table.createTHead();
-      console.log('thead', thead);
+      //console.log('thead', thead);
       let row = thead.insertRow();
       for (let i = 0; i < this.nTabCol; i++) {
          if (table.tHead) {
@@ -105,7 +104,7 @@ class DrTabelle extends HTMLElement {
                newCell.appendChild(newText);
                //newCell.setAttribute('title', 'Knotennummer')
             } else {
-               console.log('this.typs', '|' + this.typs[iSpalte] + '|');
+               //console.log('this.typs', '|' + this.typs[iSpalte] + '|');
                let el;
                if (this.typs[iSpalte] === ' select') {
                   el = document.createElement('select');
@@ -163,19 +162,19 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    disconnectedCallback() {
       //------------------------------------------------------------------------------------------------------------
-      console.log('Custom square element removed from page.');
+      //console.log('Custom square element removed from page.');
    }
 
    //---------------------------------------------------------------------------------------------------------------
    adoptedCallback() {
       //------------------------------------------------------------------------------------------------------------
-      console.log('Custom square element moved to new page.');
+      //console.log('Custom square element moved to new page.');
    }
 
    //---------------------------------------------------------------------------------------------------------------
    attributeChangedCallback(name: string, oldValue: any, newValue: any) {
       //------------------------------------------------------------------------------------------------------------
-      console.log('Custom square element attributes changed.', name, oldValue, newValue);
+      //console.log('Custom square element attributes changed.', name, oldValue, newValue);
 
       if (name === 'newselect') {
          this.update_select_options();
@@ -187,14 +186,14 @@ class DrTabelle extends HTMLElement {
          this.clear_Tabelle('mytable');
 
       } else if (oldValue === null) {                         // Initialisierungsphase
-         console.log('1', newValue.length);
+         //console.log('1', newValue.length);
          if (name === 'columns') {
             let myValue = newValue.replace('[', '');
             const lastIndex = myValue.lastIndexOf(']');
             myValue = myValue.slice(0, lastIndex);
-            console.log('myValue', myValue);
+            //console.log('myValue', myValue);
             const myArray = myValue.split(',');
-            console.log('myArray', myArray[0], myArray[1], myArray[2]);
+            //console.log('myArray', myArray[0], myArray[1], myArray[2]);
             for (let i = 0; i < myArray.length; i++) {
                this.columns[i] = myArray[i].replace(/"/g, '');
             }
@@ -520,35 +519,20 @@ class DrTabelle extends HTMLElement {
       super();
 
       // defaults
-      console.log('shadowroot ', this.shadowRoot);
+      //console.log('shadowroot ', this.shadowRoot);
 
       // attach shadow DOM
       this.shadow = this.attachShadow({ mode: 'open' });
-      console.log('shadow ', this.shadow);
+      //console.log('shadow ', this.shadow);
 
       const stylesheet = new CSSStyleSheet();
       stylesheet.replace(styles);
       this.shadow.adoptedStyleSheets = [stylesheet];
-      /*
-      this.shadow.innerHTML = `
-  <style>
-    p {
-      font-size: 5em;
-      text-align: center;
-      font-weight: normal;
-      color: red;
-    }
-  </style>
 
-  <p>Hello!</p>
-`;
-*/
 
-      console.log(
-         'im constructor -------------------------------------------------'
-      );
+      //console.log('im constructor -------------------------------------------------');
 
-      console.log('FINAL shadowroot ', this.shadowRoot);
+      //console.log('FINAL shadowroot ', this.shadowRoot);
    }
 
    //------------------------------------------------------------------------------------------------
