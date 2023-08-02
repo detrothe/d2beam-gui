@@ -7,7 +7,7 @@ import { testNumber, myFormat } from './utility'
 // @ts-ignore
 import { gauss } from "./gauss.js"
 import { CTimoshenko_beam } from "./timoshenko_beam"
-import { drawsystem } from "./grafik";
+import { init_grafik, drawsystem } from "./grafik";
 
 export let nnodes: number;
 export let nelem: number;
@@ -174,6 +174,8 @@ export function rechnen() {
     el = document.getElementById('id_button_nelemloads') as any;
     neloads = Number(el.nel);
 
+    el = document.getElementById('id_button_nlastfaelle') as any;
+    nlastfaelle = Number(el.nel);
 
     el = document.getElementById('id_button_nkombinationen') as any;
     nkombinationen = Number(el.nel);
@@ -1091,6 +1093,7 @@ function calculate() {
 
     }
 
+    init_grafik();
     drawsystem();
 
     return 0;

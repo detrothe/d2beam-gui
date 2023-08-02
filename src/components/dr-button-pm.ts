@@ -6,16 +6,18 @@ export class drButtonPM extends LitElement {
    @property({ type: String }) title = 'Button with counter';
 
    @property({ type: Boolean }) enableBack: boolean = false;
-   @property({  // only update for odd values of newVal.
+   @property({
+      // only update for odd values of newVal.
       // @ts-ignore
       hasChanged(newVal: number, oldVal: number) {
-
          //console.log(`nel has changed ${newVal}, ${oldVal}`);
          return true;
       },
-   }) nel = 0;
+   })
+   nel = 0;
    @property({ type: String }) inputID = '';
    @property({ type: String }) txt = '';
+   @property({ type: String }) minValue = 0;
 
    static get styles() {
       return css`
@@ -88,17 +90,15 @@ export class drButtonPM extends LitElement {
       super();
    }
 
-
    setValue(wert: number) {
-
       //console.log("in setValue", wert)
       this.nel = wert;
       const shadow = this.shadowRoot;
       if (shadow) {
-         (shadow.getElementById(this.inputID) as HTMLInputElement).value = String(this.nel);
+         (shadow.getElementById(this.inputID) as HTMLInputElement).value =
+            String(this.nel);
       }
    }
-
 
    async firstUpdated() {
       console.log('inputID', this.inputID);
@@ -107,6 +107,7 @@ export class drButtonPM extends LitElement {
    }
 
    //----------------------------------------------------------------------------------------------
+
    _increment_nnodes() {
       this.nel++;
       console.log('_increment_nnodes', this.nel);
@@ -120,20 +121,23 @@ export class drButtonPM extends LitElement {
 
    //----------------------------------------------------------------------------------------------
    _decrement_nnodes() {
-      this.nel--;
-      console.log('_decrement_nnodes', this.nel);
-      const shadow = this.shadowRoot;
-      if (shadow) {
-         //console.log("id:",shadow.getElementById(this.inputID));
-         (shadow.getElementById(this.inputID) as HTMLInputElement).value =
-            String(this.nel);
+      if (this.nel > this.minValue) {
+         this.nel--;
+         //console.log('_decrement_nnodes', this.nel);
+         const shadow = this.shadowRoot;
+         if (shadow) {
+            //console.log("id:",shadow.getElementById(this.inputID));
+            (shadow.getElementById(this.inputID) as HTMLInputElement).value =
+               String(this.nel);
+         }
       }
       //input_nodes.value = this.nel;
       //set_InfosNeueBerechnungErforderlich()
    }
 
-   render() {
+   //----------------------------------------------------------------------------------------------
 
+   render() {
       return html`
          <label id="lab_nnodes">${this.txt}</label>
 
@@ -159,6 +163,7 @@ export class drButtonPM extends LitElement {
          </button>
       `;
    }
-
 }
+
+
 

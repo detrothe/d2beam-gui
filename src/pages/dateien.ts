@@ -31,7 +31,7 @@ function handleFileSelect_read() {
         let filename;
 
         // Loop through the FileList and render image files as thumbnails.
-        for ( let ii = 0, f; f = files[ii]; ii++) {
+        for (let ii = 0, f; f = files[ii]; ii++) {
 
             filename = files[0].name;
             console.log("filename: ", files[0].name);
@@ -40,7 +40,7 @@ function handleFileSelect_read() {
 
             // Closure to capture the file information.
             reader.onload = (function (theFile) {
-                console.log("theFile",theFile)
+                console.log("theFile", theFile)
                 return function (e: any) {
                     // Render thumbnail.
 
@@ -70,8 +70,15 @@ function handleFileSelect_read() {
                         el.setValue(jobj.nloads);
                         el = document.getElementById('id_button_nelemloads') as drButtonPM;
                         el.setValue(jobj.neloads);
+
+                        el = document.getElementById('id_button_nlastfaelle') as drButtonPM;
+                        el.setValue(jobj.nloadcases);
+                        el = document.getElementById('id_button_nkombinationen') as drButtonPM;
+                        el.setValue(jobj.ncombinations);
                     }
                     resizeTables();
+
+                    console.log("nach resize")
 
                     let el = document.getElementById('id_knoten_tabelle') as HTMLElement;
                     let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
@@ -116,6 +123,18 @@ function handleFileSelect_read() {
                         for (j = 1; j < nSpalten; j++) {
                             let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
                             child.value = jobj.elemLoad[i - 1][j - 1];
+                        }
+                    }
+
+                    el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
+                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+                    nSpalten = tabelle.rows[0].cells.length;
+
+                    for (i = 1; i < tabelle.rows.length; i++) {
+                        for (j = 1; j < nSpalten; j++) {
+                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+                            child.value = jobj.combination[i - 1][j - 1];
                         }
                     }
 
@@ -211,6 +230,21 @@ async function handleFileSelect_save() {
             }
         }
 
+        el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
+        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+        nZeilen = tabelle.rows.length - 1;
+        nSpalten = tabelle.rows[0].cells.length - 1;
+        const nkombinationen = nZeilen
+        const nlastfaelle = nSpalten - 1
+        const kombination = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+        for (i = 0; i < nZeilen; i++) {
+            for (j = 0; j < nSpalten; j++) {
+                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+                kombination[i][j] = child.value
+            }
+        }
+
         let polyData = {
 
             'version': 0,
@@ -220,6 +254,8 @@ async function handleFileSelect_save() {
             'nelem': n_elem,
             'nloads': nloads,
             'neloads': neloads,
+            'nloadcases': nlastfaelle,
+            'ncombinations': nkombinationen,
             /*
             'Vy': document.getElementById('Vy').value,
             'Vz': document.getElementById('Vz').value,
@@ -237,8 +273,8 @@ async function handleFileSelect_save() {
             'elem': elem,
             'node': node,
             'nodalLoad': nodalload,
-            'elemLoad': elemload
-
+            'elemLoad': elemload,
+            'combination': kombination,
         };
 
 

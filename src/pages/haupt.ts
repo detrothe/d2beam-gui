@@ -22,6 +22,7 @@ import '../components/dr-dialog-rechteckquerschnitt';
 //import { testclass } from './element';
 
 import { addListener_filesave } from './dateien';
+import {select_loadcase_changed} from './grafik';
 
 import {
    rechnen,
@@ -377,8 +378,14 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
             >Ergebnisse
             <div id="id_results"></div>
          </sl-tab-panel>
+
          <sl-tab-panel name="tab-grafik">
-            <div id="id_grafik"style='width:100vw; background-color:#fffaed;margin:0;padding:0;'></div>  <!--  height: 100%; -->
+            <div id="id_grafik"style=' background-color:#fffaed;margin:0;padding:0'> <!-- width:100vw; ;width:300px;height:300px; -->
+            <div id="panel_gui"></div>
+            <div id="id_div_select_lc" >
+               <select id='id_select_loadcase' on></select>
+            </div>
+         </div>  <!--  height: 100%; -->
          </sl-tab-panel>
 
          <sl-tab-panel name="tab-pro">Tab panel pro</sl-tab-panel>
@@ -408,6 +415,9 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
    init_tabellen();
 
    addListener_filesave();
+
+   const el_select_loadcase = document.getElementById("id_select_loadcase")
+   el_select_loadcase?.addEventListener("change", select_loadcase_changed);
 }
 
 //---------------------------------------------------------------------------------------------------------------

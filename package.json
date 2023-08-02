@@ -21,6 +21,7 @@
     "file-saver": "^2.0.5",
     "lit": "^2.7.6",
     "npm-check-updates": "^16.10.17",
+    "tweakpane": "^3.1.10",
     "two.js": "^0.8.10",
     "urlpattern-polyfill": "^9.0.0",
     "workbox-build": "^7.0.0",
@@ -28,7 +29,9 @@
     "workbox-precaching": "^7.0.0"
   },
   "devDependencies": {
+    "@tweakpane/core": "^1.1.9",
     "@types/file-saver": "^2.0.5",
+    "lil-gui": "^0.18.2",
     "typescript": "^5.1.6",
     "vite": "^4.4.7",
     "vite-plugin-pwa": "^0.16.4",
