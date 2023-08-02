@@ -11,6 +11,8 @@ class DrTabelle extends HTMLElement {
 
    columns: any = [];
    typs: any = [];
+   colWidth: any = [];
+   colText = '';
 
    nTabRow = 3; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
    nTabCol = 3;
@@ -138,7 +140,8 @@ class DrTabelle extends HTMLElement {
                //el.addEventListener("change", function () { berechnungErforderlich(true); });
 
                newCell = newRow.insertCell();
-               newCell.style.width = '6em';
+               if (this.colWidth.length === 0) newCell.style.width = '6em';
+               else newCell.style.width = this.colWidth[iSpalte] + 'em';
                newCell.style.border = 'solid';
                newCell.style.borderWidth = '1px';
                newCell.style.padding = '0px';
@@ -211,6 +214,17 @@ class DrTabelle extends HTMLElement {
                this.typs[i] = myArray[i].replace(/"/g, '');
             }
 
+         } else if (name === 'colwidth') {
+            let myValue = newValue.replace('[', '');
+            const lastIndex = myValue.lastIndexOf(']');
+            myValue = myValue.slice(0, lastIndex);
+            const myArray = myValue.split(',');
+            for (let i = 0; i < myArray.length; i++) {
+               this.colWidth[i] = myArray[i].replace(/"/g, '');
+            }
+         } else if (name === 'coltext') {
+            this.colText = newValue;
+
          } else if (name === 'nzeilen') {
             this.nZeilen = newValue;
             //console.log('typeof', typeof (this.nZeilen | 0));
@@ -237,7 +251,7 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    static get observedAttributes() {
       //------------------------------------------------------------------------------------------------------------
-      return ['nzeilen', 'nspalten', 'columns', 'typs', 'newselect', 'namechanged', 'clear'];
+      return ['nzeilen', 'nspalten', 'columns', 'typs', 'newselect', 'namechanged', 'clear', 'colwidth', 'coltext'];
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -246,11 +260,11 @@ class DrTabelle extends HTMLElement {
       console.log('in neueZeilen', n);
       this.nZeilen = n;
    }
-
-   test() {  // kann nicht aufgerufen werden, leider
-      console.log("IN T E S T #######################################")
-   }
-
+   /*
+      test() {  // kann nicht aufgerufen werden, leider
+         console.log("IN T E S T #######################################")
+      }
+   */
    //---------------------------------------------------------------------------------------------------------------
    update_select_options() {
       //------------------------------------------------------------------------------------------------------------
@@ -391,41 +405,64 @@ class DrTabelle extends HTMLElement {
                      newCell.style.margin = '0px';
                      newCell.appendChild(newText);
                   } else {
-                     let el = document.createElement('input');
-                     el.setAttribute('type', 'number');
-                     el.style.width = 'inherit'; //'6em';
-                     //el.style.backgroundColor = 'rgb(200,200,200)';
-                     el.style.border = 'none';
-                     el.style.borderWidth = '0px';
-                     el.style.padding = '5px';
-                     el.style.margin = '0px';
-                     el.style.borderRadius = '0px';
-                     const str = id_table + '-' + iZeile + '-' + iSpalte;
-                     el.id = str;
-                     el.className = 'input_normal';
-                     el.addEventListener('keydown', this.KEYDOWN);
-                     //el.addEventListener('change', function () {
-                     //  berechnungErforderlich(true);
-                     //});
-                     //el.addEventListener("mousemove", newMOUSEMOVE);
+                     if (iZeile === 0) {
+                        console.log("THEAD", table.rows.item(0)?.childElementCount)
+                        /*
+                                                const th0 = table.tHead?.appendChild(document.createElement('th')) as any;
+                                                th0.innerHTML = "Test";
+                                                th0.style.padding = '5px';
+                                                th0.style.margin = '0px';
+                                                th0.style.textAlign = 'center';
+                                                row.appendChild(th0);
+                                                */
+                        newCell.innerHTML = '<b>' + this.colText + ' ' + (iSpalte - 1) + '</b>';
+                        //th0.title = "Elementnummer"
+                        newCell.style.padding = '5px';
+                        newCell.style.margin = '0px';
+                        newCell.style.textAlign = 'center';
+                        //th0.setAttribute('title', 'Hilfe')
+                        //row.appendChild(newCell);
 
-                     //console.log("el", el)
-                     //newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
-                     //newCell = newRow.insertCell()
-                     newCell.style.width = '6em';
-                     newCell.style.border = 'solid';
-                     newCell.style.borderWidth = '1px';
-                     newCell.style.padding = '0px';
-                     newCell.style.margin = '0px';
-                     newCell.style.backgroundColor = 'rgb(200,200,200)';
-                     newCell.style.touchAction = 'auto';
-                     const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
-                     newCell.id = str1;
-                     newCell.className = 'input_normal';
+                     }
+                     else {
 
-                     newCell.appendChild(el);
-                     // el.addEventListener("pointermove", POINTERMOVE);
-                     el.addEventListener('pointerdown', this.POINTER_DOWN);
+
+                        let el = document.createElement('input');
+                        el.setAttribute('type', 'number');
+                        el.style.width = 'inherit'; //'6em';
+                        //el.style.backgroundColor = 'rgb(200,200,200)';
+                        el.style.border = 'none';
+                        el.style.borderWidth = '0px';
+                        el.style.padding = '5px';
+                        el.style.margin = '0px';
+                        el.style.borderRadius = '0px';
+                        const str = id_table + '-' + iZeile + '-' + iSpalte;
+                        el.id = str;
+                        el.className = 'input_normal';
+                        el.addEventListener('keydown', this.KEYDOWN);
+                        //el.addEventListener('change', function () {
+                        //  berechnungErforderlich(true);
+                        //});
+                        //el.addEventListener("mousemove", newMOUSEMOVE);
+
+                        //console.log("el", el)
+                        //newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
+                        //newCell = newRow.insertCell()
+                        newCell.style.width = '6em';
+                        newCell.style.border = 'solid';
+                        newCell.style.borderWidth = '1px';
+                        newCell.style.padding = '0px';
+                        newCell.style.margin = '0px';
+                        newCell.style.backgroundColor = 'rgb(200,200,200)';
+                        newCell.style.touchAction = 'auto';
+                        const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
+                        newCell.id = str1;
+                        newCell.className = 'input_normal';
+
+                        newCell.appendChild(el);
+                        // el.addEventListener("pointermove", POINTERMOVE);
+                        el.addEventListener('pointerdown', this.POINTER_DOWN);
+                     }
                   }
                }
             }

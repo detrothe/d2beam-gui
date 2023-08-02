@@ -13,12 +13,12 @@ export function myPanel() {
         Label: false,
         systemlinie: true,
         verformung: false,
-        sigmaV: false,
-        show_fyrd: false,
+        normalkraft: false,
+        querkraft: false,
+        moment: false,
         woelb_M: false,
-        woelb_V: false,
         scale: 1.0,
-        show_sides: true,
+        eigenform: false,
         show_arrows: true,
         scale_arrows: 1.0,
         show_sigma_frame: true,
@@ -30,11 +30,11 @@ export function myPanel() {
     let beschriftung = 'Beschriftung'
     let systemlinien = 'Systemlinien'
     let verformungen = 'Verformungen'
-    let vergleichsspannung = 'Vergleichsspannung'
-    let fyRd_anzeigen = 'fyRd anzeigen'
-    let verformung_u = 'Verformung u'
+    let normalkraft = 'Normalkraft'
+    let querkraft = 'Querkraft'
+    let moment = 'Moment'
     let skalierung = 'Skalierung'
-    let seiten_anzeigen = 'Seiten anzeigen'
+    let eigenformen = 'Eigenformen'
     let pfeile_anzeigen = 'Pfeile anzeigen'
     let skalierung_pfeile = 'Skalierung Pfeile'
     let sigma_flaeche = 'sigma Fläche'
@@ -71,20 +71,20 @@ export function myPanel() {
         window.dispatchEvent(new Event("draw_verformungen_grafik"));
     });
 
-    gui.add(obj, 'sigmaV').name(vergleichsspannung).onChange(() => {
-        window.dispatchEvent(new Event("sigmaV_webgl"));
+    gui.add(obj, 'normalkraft').name(normalkraft).onChange(() => {
+        window.dispatchEvent(new Event("draw_normalkraft_grafik"));
     });
 
-    gui.add(obj, 'show_fyrd').name(fyRd_anzeigen).onChange(() => {
-        window.dispatchEvent(new Event("show_fyrd_webgl"));
+    gui.add(obj, 'querkraft').name(querkraft).onChange(() => {
+        window.dispatchEvent(new Event("draw_querkraft_grafik"));
     });
 
-    gui.add(obj, 'woelb_M').name('omega').onChange(() => {
-        window.dispatchEvent(new Event("woelb_M_webgl"));
+    gui.add(obj, 'moment').name(moment).onChange(() => {
+        window.dispatchEvent(new Event("draw_moment_grafik"));
     });
 
-    gui.add(obj, 'woelb_V').name(verformung_u).onChange(() => {
-        window.dispatchEvent(new Event("woelb_V_webgl"));
+    gui.add(obj, 'eigenform').name(eigenformen).onChange(() => {
+        window.dispatchEvent(new Event("draw_eigenformen_grafik"));
     });
 
     gui.add(obj, 'scale', 0, 2, 0.1).name(skalierung).onFinishChange((v: any) => {
@@ -93,8 +93,8 @@ export function myPanel() {
         window.dispatchEvent(new Event("scale_factor"));
     });
 
-    gui.add(obj, 'show_sides').name(seiten_anzeigen).onChange(() => {
-        window.dispatchEvent(new Event("show_sides_webgl"));
+    gui.add(obj, 'woelb_M').name('omega').onChange(() => {
+        window.dispatchEvent(new Event("woelb_M_webgl"));
     });
 
     gui.add(obj, 'show_arrows').name(pfeile_anzeigen).onChange(() => {

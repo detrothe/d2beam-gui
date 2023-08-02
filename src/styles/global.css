@@ -113,9 +113,28 @@ th {
 
 #id_select_loadcase {
   font-size: 1em;
-  width: 200px;
+  width: 150px;
+  background-color: #181818;
+  color: #f1f1f1;
 }
 
+#id_div_select_eigv {
+  position: absolute;
+  top: 2px;
+  /* var(--abst_gl_v);*/
+  left: 400px;
+  z-index: 90;
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+}
+
+#id_select_eigenvalue {
+  font-size: 1em;
+  width: 150px;
+  background-color: #181818;
+  color: #f1f1f1;
+}
 #panel_gui {
   position: absolute;
   top: 2px;

@@ -2,9 +2,9 @@ import Two from 'two.js'
 
 import { CTrans } from './trans';
 import { CTimoshenko_beam } from "./timoshenko_beam"
-import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen } from "./rechnen";
+import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv } from "./rechnen";
 import { el as element, node, nelem, nnodes } from "./rechnen";
-import { maxValue_lf, maxValue_komb, disp_lf, THIIO_flag } from "./rechnen";
+import { maxValue_lf, maxValue_komb, maxValue_eigv, disp_lf, eigenform_container, THIIO_flag } from "./rechnen";
 //import { Pane } from 'tweakpane';
 import { myPanel } from './mypanelgui'
 
@@ -13,11 +13,13 @@ console.log("in grafik")
 let tr: CTrans
 let drawPanel = 0
 let draw_lastfall = 1
+let draw_eigenform = 1
 
 
 let show_webgl_label = false;
 let show_systemlinien = true;
 let show_verformungen = false;
+let show_eigenformen = false;
 
 export function select_loadcase_changed() {
 
@@ -25,6 +27,16 @@ export function select_loadcase_changed() {
     const el_select_loadcase = document.getElementById("id_select_loadcase") as HTMLSelectElement
     console.log("option", el_select_loadcase.value)
     draw_lastfall = Number(el_select_loadcase.value)
+    drawsystem();
+}
+
+export function select_eigenvalue_changed() {
+
+    console.log("################################################ select_eigenvalue_changed")
+    const el_select_eigenvalue = document.getElementById("id_select_eigenvalue") as HTMLSelectElement
+    console.log("option", el_select_eigenvalue.value)
+    draw_eigenform = Number(el_select_eigenvalue.value)
+    drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------- i n i t _ g r a f i k
@@ -44,6 +56,13 @@ export function init_grafik() {
     }
     //el.style.width = '100%';   // 100px
     console.log('CREATE SELECT', nlastfaelle, el_select);
+
+    const el_select_eigv = document.getElementById('id_select_eigenvalue') as HTMLSelectElement;
+
+    while (el_select_eigv.hasChildNodes()) {  // alte Optionen entfernen
+        // @ts-ignore
+        el_select_eigv.removeChild(el_select_eigv?.lastChild);
+    }
 
     if (THIIO_flag === 0) {
 
@@ -65,6 +84,16 @@ export function init_grafik() {
             option.textContent = 'Kombination ' + (+i + 1);
 
             el_select.appendChild(option);
+        }
+
+
+        for (let i = 0; i < neigv; i++) {
+            let option = document.createElement('option');
+
+            option.value = String(+i + 1)
+            option.textContent = 'Eigenform ' + (+i + 1);
+
+            el_select_eigv.appendChild(option);
         }
     }
 
@@ -247,6 +276,83 @@ export function drawsystem() {
         }
     }
 
+
+    // Eigenformen
+
+    if (show_eigenformen && (maxValue_eigv[draw_lastfall - 1][draw_eigenform - 1] > 0.0)) {
+
+        let xx1, xx2, zz1, zz2
+        let dx: number, x: number, kappa: number, sl: number, nenner: number
+        let Nu: number[] = [2], Nw: number[] = [4]
+        let nodi: number
+        let u: number, w: number, uG: number, wG: number
+        let disp: number[] = [6], edispL: number[] = [6]
+        let ikomb = draw_lastfall
+        let scalefactor = 0
+
+        //if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] === 0.0) return
+
+        scalefactor = 0.1 * slmax / maxValue_eigv[ikomb - 1][draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
+
+        console.log("scalefaktor", scalefactor, slmax, maxValue_lf[draw_eigenform - 1].disp)
+        console.log("draw_eigenform", draw_eigenform, ikomb)
+
+        for (let ielem = 0; ielem < nelem; ielem++) {
+            x1 = Math.round(tr.xPix(element[ielem].x1));
+            z1 = Math.round(tr.zPix(element[ielem].z1));
+            x2 = Math.round(tr.xPix(element[ielem].x2));
+            z2 = Math.round(tr.zPix(element[ielem].z2));
+
+            nodi = element[ielem].nod1 + 1
+            disp[0] = eigenform_container[ikomb - 1]._(nodi, 1, draw_eigenform);              // disp_lf._(nodi, 1, iLastfall);
+            disp[1] = eigenform_container[ikomb - 1]._(nodi, 2, draw_eigenform);              // disp_lf._(nodi, 2, iLastfall);
+            edispL[2] = disp[2] = eigenform_container[ikomb - 1]._(nodi, 3, draw_eigenform);  //disp_lf._(nodi, 3, iLastfall);
+            nodi = element[ielem].nod2 + 1
+            disp[3] = eigenform_container[ikomb - 1]._(nodi, 1, draw_eigenform);              // disp_lf._(nodi, 1, iLastfall);
+            disp[4] = eigenform_container[ikomb - 1]._(nodi, 2, draw_eigenform);              // disp_lf._(nodi, 2, iLastfall);
+            edispL[5] = disp[5] = eigenform_container[ikomb - 1]._(nodi, 3, draw_eigenform);  // disp_lf._(nodi, 3, iLastfall);
+            console.log("disp", disp)
+
+            edispL[0] = element[ielem].cosinus * disp[0] + element[ielem].sinus * disp[1]
+            edispL[1] = -element[ielem].sinus * disp[0] + element[ielem].cosinus * disp[1]
+            edispL[3] = element[ielem].cosinus * disp[3] + element[ielem].sinus * disp[4]
+            edispL[4] = -element[ielem].sinus * disp[3] + element[ielem].cosinus * disp[4]
+
+            dx = element[ielem].sl / 10.0
+            kappa = element[ielem].kappa
+            sl = element[ielem].sl
+            nenner = sl ** 3 + 12 * kappa * sl
+
+            x = 0.0; xx2 = 0.0; zz2 = 0.0
+            for (let i = 0; i <= 10; i++) {
+                Nu[0] = (1.0 - x / sl);
+                Nu[1] = x / sl
+                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x + sl ** 3 + 12 * kappa * sl) / nenner;
+                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * kappa) * x ** 2 + (sl ** 3 + 6 * kappa * sl) * x) / nenner);
+                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x) / nenner);
+                Nw[3] = -((sl * x ** 3 + (6 * kappa - sl ** 2) * x ** 2 - 6 * kappa * sl * x) / nenner);
+                u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+
+                uG = element[ielem].cosinus * u - element[ielem].sinus * w
+                wG = element[ielem].sinus * u + element[ielem].cosinus * w
+
+                //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
+                xx1 = xx2; zz1 = zz2;
+                xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
+                zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+                //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
+                if (i > 0) {
+                    //console.log("line", xx1, zz1, xx2, zz2)
+                    let line = two.makeLine(xx1, zz1, xx2, zz2);
+                    line.linewidth = 2;
+                }
+                x = x + dx
+            }
+
+        }
+    }
     // Don’t forget to tell two to draw everything to the screen
     two.update();
 
@@ -279,7 +385,20 @@ function draw_verformungen_grafik() {
 
     drawsystem();
 }
+
+//--------------------------------------------------------------------------------------------------------
+function draw_eigenformen_grafik() {
+    //--------------------------------------------------------------------------------------------------------
+
+    console.log("in draw_verformungen_grafik");
+    show_eigenformen = !show_eigenformen;
+
+    //if (Gesamt_ys === undefined || isNaN(yM)) return;
+
+    drawsystem();
+}
 //---------------------------------------------------------------------------------- a d d E v e n t L i s t e n e r
 
 window.addEventListener('draw_systemlinien_grafik', draw_systemlinien_grafik);
 window.addEventListener('draw_verformungen_grafik', draw_verformungen_grafik);
+window.addEventListener('draw_eigenformen_grafik', draw_eigenformen_grafik);

@@ -23,12 +23,14 @@ export let neigv: number = 2;
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
 export let stabendkraefte: TFArray3D
+export let eigenform_container = [] as TFArray3D[]
 export let node = [] as TNode[]
 export let element = [] as TElement[]
 export let load = [] as TLoads[]
 export let eload = [] as TElLoads[]
 export let querschnittset = [] as any[]
 export let kombiTabelle = [] as number[][]
+export let alpha_cr = [] as number[][]
 
 export let nQuerschnittSets = 0
 
@@ -41,6 +43,7 @@ export let el = [] as any
 
 export let maxValue_lf = [] as TMaxValues[]
 export let maxValue_komb = [] as TMaxValues[]
+export let maxValue_eigv = [] as number[][]
 
 
 export let xmin = -50.0, zmin = -50.0, xmax = 50.0, zmax = 50.0, slmax = 0.0;
@@ -675,10 +678,14 @@ function calculate() {
         maxValue_lf.push(new TMaxValues());
         maxValue_lf[i].zero();
     }
+
     for (i = 0; i < nkombinationen; i++) {
         maxValue_komb.push(new TMaxValues());
         maxValue_komb[i].zero();
     }
+
+    console.log("N E I G V",neigv)
+    maxValue_eigv = Array.from(Array(nkombinationen), () => new Array(neigv).fill(0.0));
 
     console.log("Anzahl Gleichungen: ", neq)
 
@@ -891,15 +898,26 @@ function calculate() {
         }   //ende iLastfall
 
     }
+    // -------------------------------------------------------------------------------------------------------  T H  II.  O R D N U N G
+
     else if (THIIO_flag === 1) {
 
         const stiff_sig = Array.from(Array(neq), () => new Array(neq).fill(0.0));
 
-        disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);   // nlastfaelle
-        console.log("nkombinationen", nkombinationen)
-        stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nkombinationen);   // nlastfaelle
+        disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);
+        //console.log("nkombinationen", nkombinationen)
+        stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nkombinationen);
+        for (let i = 0; i < nkombinationen; i++) {
+            let a = new TFArray3D(1, nnodesTotal, 1, 3, 1, neigv)
+            eigenform_container.push(a)
+            //console.log("AAAAAAAA",eigenform_container[i])
+        }
+        alpha_cr = Array.from(Array(nkombinationen), () => new Array(neigv).fill(0.0));
+
 
         for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
+
+            console.log("\n***************  K O M B I N A T I O N ", iKomb, "\n\n")
 
             for (let iter = 0; iter < 2; iter++) {
 
@@ -1025,7 +1043,6 @@ function calculate() {
             //    console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
             //}
 
-            ausgabe(iKomb, newDiv)
 
 
             {   // Berechnung alpha_cr, Knickformen
@@ -1081,15 +1098,50 @@ function calculate() {
                 let omega_array = new Float64Array(Module.HEAPF64.buffer, omega_ptr, neigv);
                 console.log("omega", omega_array[0], omega_array[1]);
 
+                for (i = 0; i < neigv; i++) alpha_cr[iKomb - 1][i] = omega_array[i] ** 2
+
                 let eigenform_array = new Float64Array(Module.HEAPF64.buffer, eigenform_ptr, neq * neigv);
-                console.log("eigenform", eigenform_array);
+                //console.log("eigenform_array", eigenform_array);
+
+                let disp = [3]
+                let offset = 0
+                for (let ieigv = 1; ieigv <= neigv; ieigv++) {
+
+                    for (i = 0; i < nnodes; i++) {                      // Ausgabe der Verschiebungen der einzelnen Knoten im gedrehten Koordinatensystem
+                        for (j = 0; j < 3; j++) {
+                            let ieq = node[i].L[j]
+                            if (ieq === -1) {
+                                disp[j] = 0
+                            } else {
+                                disp[j] = eigenform_array[ieq + offset]
+                            }
+                        }
+
+                        for (j = 0; j < 3; j++) {
+                            // console.log("eigenform_container[iKomb]", eigenform_container[iKomb-1])
+                            eigenform_container[iKomb - 1].set(i + 1, j + 1, ieigv, disp[j])
+                            if (Math.abs(disp[j]) > maxValue_eigv[iKomb - 1][ieigv - 1]) maxValue_eigv[iKomb - 1][ieigv - 1] = Math.abs(disp[j])
+                        }
+                    }
+                    offset = offset + neq
+                    console.log(" maxValue_eigv[iKomb - 1][ieigv-1] = ", maxValue_eigv[iKomb - 1][ieigv - 1])
+                }
+
 
                 Module._free(kstiff_ptr);
                 Module._free(kstiff_sig_ptr);
                 Module._free(eigenform_ptr);
                 Module._free(omega_array);
             }
-        }   //ende ikomb
+
+            ausgabe(iKomb, newDiv)
+
+
+            //for (i = 0; i < nnodes; i++) {
+            //    console.log("eigenform_c", i,eigenform_container[iKomb-1]._(i + 1, 1, 1), eigenform_container[iKomb-1]._(i + 1, 2, 1), eigenform_container[iKomb-1]._(i + 1, 3, 1))
+            //}
+
+        }   //ende iKomb
 
     }
 
@@ -1339,6 +1391,19 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                 newCell.setAttribute("class", "table_cell_right");
             }
         }
+
+    }
+
+    if (THIIO_flag === 1) {
+
+        tag = document.createElement("p"); // <p></p>
+        text = document.createTextNode("xxx");
+        tag.appendChild(text);
+        tag.innerHTML = ''
+        for (i = 0; i < neigv; i++) {
+            tag.innerHTML += "<b>&alpha;<sub>cr</sub></b>[Eigenwert " + (+i + 1) + "] =&nbsp;" + myFormat(alpha_cr[iLastfall - 1][i], 2, 2) + "<br>"
+        }
+        newDiv?.appendChild(tag);
 
     }
 

@@ -22,7 +22,7 @@ import '../components/dr-dialog-rechteckquerschnitt';
 //import { testclass } from './element';
 
 import { addListener_filesave } from './dateien';
-import {select_loadcase_changed} from './grafik';
+import { select_loadcase_changed, select_eigenvalue_changed } from './grafik';
 
 import {
    rechnen,
@@ -45,6 +45,7 @@ export const nelemloads_init = '1';
 export const nlastfaelle_init = '2';
 export const nkombinationen_init = '2';
 export let column_string_kombitabelle: string;
+//export let column_width_elementtabelle: string;
 const nkombiSpalten_init = '3'; // immer 1 mehr als nlastfaelle_init
 
 export const app = {
@@ -82,6 +83,8 @@ for (let i = 1; i <= Number(nlastfaelle_init); i++) {
 }
 column_string_kombitabelle = column_string_kombitabelle + ']';
 console.log('column_string_kombitabelle', column_string_kombitabelle);
+
+
 
 {
    //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
@@ -318,9 +321,10 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
             <dr-tabelle
                id="id_element_tabelle"
                nzeilen="${nelem_init}"
-               nspalten="6"
-               columns='["No", "Querschnitt", "nodTyp", "inz a", "inz e", "Gelenk a", "Gelenk e"]'
-               typs='["-", "select", "number", "number", "number", "number", "number"]'
+               nspalten="10"
+               columns='["No", "Querschnitt", "nodTyp", "inz a", "inz e", "N<sub>L</sub>", "V<sub>L</sub>", "M<sub>L</sub>", "N<sub>R</sub>", "V<sub>R</sub>", "M<sub>R</sub>"]'
+               typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
+               colwidth='["4","8","4","4","4","4","4","4","4","4","4"]'
             ></dr-tabelle>
 
             <!-- <dr-table
@@ -371,6 +375,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                nzeilen="${nkombinationen_init}"
                nspalten="${nkombiSpalten_init}"
                columns="${column_string_kombitabelle}"
+               coltext="Lf"
             ></dr-tabelle>
          </sl-tab-panel>
 
@@ -384,6 +389,9 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
             <div id="panel_gui"></div>
             <div id="id_div_select_lc" >
                <select id='id_select_loadcase' on></select>
+            </div>
+            <div id="id_div_select_eigv" >
+               <select id='id_select_eigenvalue' on></select>
             </div>
          </div>  <!--  height: 100%; -->
          </sl-tab-panel>
@@ -418,6 +426,8 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
 
    const el_select_loadcase = document.getElementById("id_select_loadcase")
    el_select_loadcase?.addEventListener("change", select_loadcase_changed);
+   const el_select_eigenvalue = document.getElementById("id_select_eigenvalue")
+   el_select_eigenvalue?.addEventListener("change", select_eigenvalue_changed);
 }
 
 //---------------------------------------------------------------------------------------------------------------
