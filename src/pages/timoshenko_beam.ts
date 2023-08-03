@@ -226,7 +226,21 @@ export class CTimoshenko_beam extends CElement {
         let j: number, k: number
         const help = Array.from(Array(6), () => new Array(6));
 
-        if (theorie === 1) {
+        console.log("berechneElementsteifigkeitsmatrix", theorie, this.normalkraft)
+
+        if (theorie === 0) {
+
+            for (j = 0; j < 6; j++) {
+                for (k = 0; k < 6; k++) {
+                    sum = 0.0
+                    for (let l = 0; l < 6; l++) {
+                        sum = sum + this.estm[j][l] * this.trans[l][k]
+                    }
+                    help[j][k] = sum
+                }
+            }
+
+        } else {
 
             const estm = Array.from(Array(6), () => new Array(6));
 
@@ -246,18 +260,6 @@ export class CTimoshenko_beam extends CElement {
                 }
             }
 
-        } else {
-
-
-            for (j = 0; j < 6; j++) {
-                for (k = 0; k < 6; k++) {
-                    sum = 0.0
-                    for (let l = 0; l < 6; l++) {
-                        sum = sum + this.estm[j][l] * this.trans[l][k]
-                    }
-                    help[j][k] = sum
-                }
-            }
         }
 
         for (j = 0; j < 6; j++) {
@@ -269,6 +271,7 @@ export class CTimoshenko_beam extends CElement {
                 this.estiff[j][k] = sum
             }
         }
+
     }
 
     //---------------------------------------------------------------------------------------------

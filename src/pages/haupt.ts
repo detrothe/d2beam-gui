@@ -605,7 +605,7 @@ function dialog_closed(e: any) {
 
             //console.log("UPDATE", this)
             const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
-            //console.log("dialog_querschnitt_item_id", el.innerHTML)
+            console.log("dialog_querschnitt_item_id", dialog_querschnitt_index, qname, el.innerHTML)
             if (el.innerHTML !== qname) {
                el.innerHTML = qname;
                const ele = document.getElementById('id_element_tabelle');

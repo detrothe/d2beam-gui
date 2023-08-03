@@ -23,18 +23,18 @@ let show_eigenformen = false;
 
 export function select_loadcase_changed() {
 
-    console.log("################################################ select_loadcase_changed")
+    //console.log("################################################ select_loadcase_changed")
     const el_select_loadcase = document.getElementById("id_select_loadcase") as HTMLSelectElement
-    console.log("option", el_select_loadcase.value)
+    //console.log("option", el_select_loadcase.value)
     draw_lastfall = Number(el_select_loadcase.value)
     drawsystem();
 }
 
 export function select_eigenvalue_changed() {
 
-    console.log("################################################ select_eigenvalue_changed")
+    //console.log("################################################ select_eigenvalue_changed")
     const el_select_eigenvalue = document.getElementById("id_select_eigenvalue") as HTMLSelectElement
-    console.log("option", el_select_eigenvalue.value)
+    //console.log("option", el_select_eigenvalue.value)
     draw_eigenform = Number(el_select_eigenvalue.value)
     drawsystem();
 }

@@ -316,8 +316,11 @@ class DrTabelle extends HTMLElement {
                   const el = this.shadow.getElementById(idstr)
                   //console.log("idstr", el.children)
                   for (let i = 0; i < el.children.length; i++) {
-                     //console.log("i", i, el.children.item(i))
-                     if (i === index) el.children.item(i).innerHTML = get_querschnittRechteck_name(index);
+                     console.log("i", i, el.children.item(i))
+                     if (i === index) {
+                        el.children.item(i).innerHTML = get_querschnittRechteck_name(index);
+                        el.children.item(i).value = get_querschnittRechteck_name(index);
+                     }
                   }
 
                }
