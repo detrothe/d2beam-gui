@@ -31,13 +31,14 @@ export class CTimoshenko_beam extends CElement {
     alpha = 0.0
     estiff: number[][] = []
     estiff_sig: number[][] = []
+    estiff_sig_global: number[][] = []
     estm: number[][] = []
     ksig: number[][] = []
     trans: number[][] = []
     u: number[] = [6]
     F: number[] = [6]   // Stabendgrößen nach WGV im globalen Koordinatensystem
     FL: number[] = [6]  // Stabendgrößen nach KGV im lokalen Koordinatensystem
-
+    Fe: number[] = [6]  // Vorverformungen aus Schiefstellung
 
     //---------------------------------------------------------------------------------------------
     setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number) {
@@ -348,7 +349,7 @@ export class CTimoshenko_beam extends CElement {
     }
 
     //---------------------------------------------------------------------------------------------
-    berechneInterneKraefte(ielem: number, iLastf: number, u: number[]) {
+    berechneInterneKraefte(ielem: number, iLastf: number, iter: number, u: number[]) {
 
         let ieq: number, i: number, j: number, k: number
         let sum: number
@@ -396,6 +397,13 @@ export class CTimoshenko_beam extends CElement {
                     }
                 }
             }
+
+            if (iter > 0) {
+                for (i = 0; i < 6; i++) {                            // Schiefstellung
+                    this.F[i] = this.F[i] + this.Fe[i]
+                }
+            }
+
         }
 
         console.log("element F global ", this.F)
@@ -407,6 +415,7 @@ export class CTimoshenko_beam extends CElement {
             }
             this.FL[i] = sum
         }
+
 
         for (i = 0; i < 3; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
 
@@ -458,5 +467,52 @@ export class CTimoshenko_beam extends CElement {
         console.log("elementload global ", eload[ieload].el_r)
 
     }
+
+    //---------------------------------------------------------------------------------------------
+    berechneElementlasten_Vorverformung(Fe: number[], u: number[]) {
+
+        let ieq: number, i: number, j: number, k: number
+        let sum: number
+
+        let dispL = [6], dispG = [6], FeL = [6]
+
+        for (j = 0; j < 6; j++) {                           // Stabverformungen
+            ieq = this.lm[j]
+            if (ieq === -1) {
+                dispG[j] = 0
+            } else {
+                dispG[j] = u[ieq]
+            }
+        }
+
+        console.log("dispG", dispG)
+
+        for (i = 0; i < 6; i++) {
+            sum = 0.0
+            for (j = 0; j < 6; j++) {
+                sum += this.trans[i][j] * dispG[j]
+            }
+            dispL[i] = sum
+        }
+
+        for (j = 0; j < 6; j++) {
+            sum = 0.0
+            for (k = 0; k < 6; k++) {
+                sum += this.normalkraft * this.ksig[j][k] * dispL[k]    // this.normalkraft *
+            }
+            FeL[j] = sum     // lokal
+        }
+
+        for (i = 0; i < 6; i++) {
+            sum = 0.0
+            for (j = 0; j < 6; j++) {
+                sum += this.trans[j][i] * FeL[j]
+            }
+            this.Fe[i] = Fe[i] = sum          // global
+        }
+
+    }
+
+
 
 }

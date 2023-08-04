@@ -84,13 +84,10 @@ for (let i = 1; i <= Number(nlastfaelle_init); i++) {
 column_string_kombitabelle = column_string_kombitabelle + ']';
 console.log('column_string_kombitabelle', column_string_kombitabelle);
 
-
-
 {
    //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
 
    const template = () => html`
-
       <style>
          .custom-icons sl-tree-item::part(expand-button) {
             /* Disable the expand/collapse animation */
@@ -99,7 +96,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
       </style>
 
       <sl-tab-group>
-         <sl-tab id=id_tab_group slot="nav" panel="tab-haupt">Haupt</sl-tab>
+         <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">Haupt</sl-tab>
          <sl-tab slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
          <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>
          <sl-tab slot="nav" panel="tab-elemente">Elemente</sl-tab>
@@ -126,7 +123,10 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                <sl-icon name="plus-square" slot="expand-icon"></sl-icon>
                <sl-icon name="dash-square" slot="collapse-icon"></sl-icon>
       -->
-               <sl-tree-item id="id_tree_LQ" @click="${handleClick_rechteck_dialog}">
+               <sl-tree-item
+                  id="id_tree_LQ"
+                  @click="${handleClick_rechteck_dialog}"
+               >
                   Linear elastisch Querschnittswerte
                   <!-- <sl-tree-item>Birch</sl-tree-item>
 
@@ -163,19 +163,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            inputid="nnodes"
                         ></dr-button-pm>
                      </td>
-                     <td>Anzahl Integrationspunkte :</td>
-                     <td>
-                        <input
-                           type="number"
-                           step="any"
-                           id="id_ndivsl"
-                           name="ndivsl"
-                           class="input_tab"
-                           pattern="[0-9.,eE+-]*"
-                           value="7"
-                           onchange="berechnungErforderlich()"
-                        />
-                     </td>
+
                      <td>
                         <select name="THIIO" id="id_THIIO">
                            <option value="0" selected>
@@ -183,6 +171,12 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            </option>
                            <option value="1">Theorie II. Ordnung</option>
                         </select>
+                     </td>
+                     <td></td>
+                     <td>
+                        <button type="button" id="readFile" style="min-width:8em;">
+                           Daten einlesen
+                        </button>
                      </td>
                   </tr>
                   <tr>
@@ -195,13 +189,12 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            inputid="nelem"
                         ></dr-button-pm>
                      </td>
-                     <td>Art der Integration :</td>
+                     <td colspan="2" style="text-align:center">Schiefstellung</td>
+
                      <td>
-                        <select name="intart" id="id_intart">
-                           <option value="0">Gauss-Legendre</option>
-                           <option value="1" selected>Newton Codes</option>
-                           <option value="2">Lobatto</option>
-                        </select>
+                        <button type="button" id="saveFile" style="min-width:8em;">
+                           Daten speichern
+                        </button>
                      </td>
                   </tr>
                   <tr>
@@ -213,17 +206,18 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            inputid="nnodalloads"
                         ></dr-button-pm>
                      </td>
-                     <td>Art innere Knoten :</td>
+                     <td>Knoten :</td>
                      <td>
-                        <select name="art" id="id_art">
-                           <option value="0">u, w</option>
-                           <option value="1" selected>u, w, φ</option>
-                        </select>
-                     </td>
-                     <td>
-                        <button type="button" id="readFile">
-                           Daten einlesen
-                        </button>
+                        <input
+                           type="number"
+                           step="any"
+                           id="id_maxu_node"
+                           name="maxu_node"
+                           class="input_tab"
+                           pattern="[0-9.,eE+-]*"
+                           value="2"
+                           onchange="berechnungErforderlich()"
+                        />
                      </td>
                   </tr>
 
@@ -236,12 +230,13 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            inputid="nelemloads"
                         ></dr-button-pm>
                      </td>
-                     <td></td>
-                     <td></td>
+                     <td>Richtung :</td>
                      <td>
-                        <button type="button" id="saveFile">
-                           Daten speichern
-                        </button>
+                        <select name="maxu_dir" id="id_maxu_dir">
+                           <option value="0"> x (u)                           </option>
+                           <option value="1" selected>z (w)</option>
+                           <option value="2" >&phi;</option>
+                        </select>
                      </td>
                   </tr>
                   <tr>
@@ -251,6 +246,29 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            id="id_button_nlastfaelle"
                            nel="${nlastfaelle_init}"
                            inputid="nlastfaelle"
+                        ></dr-button-pm>
+                     </td>
+                     <td>Wert [mm,mrad] :</td>
+                     <td>
+                        <input
+                           type="number"
+                           step="any"
+                           id="id_maxu_schief"
+                           name="maxu_schief"
+                           class="input_tab"
+                           pattern="[0-9.,eE+-]*"
+                           value="20"
+                           onchange="berechnungErforderlich()"
+                        />
+                     </td>
+                  </tr>
+                  <tr>
+                     <td>Anzahl Kombinationen :</td>
+                     <td>
+                        <dr-button-pm
+                           id="id_button_nkombinationen"
+                           nel="${nkombinationen_init}"
+                           inputid="nkombinationen"
                         ></dr-button-pm>
                      </td>
                      <td>Anzahl Eigenwerte :</td>
@@ -265,16 +283,6 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            value="2"
                            onchange="berechnungErforderlich()"
                         />
-                     </td>
-                  </tr>
-                  <tr>
-                     <td>Anzahl Kombinationen :</td>
-                     <td>
-                        <dr-button-pm
-                           id="id_button_nkombinationen"
-                           nel="${nkombinationen_init}"
-                           inputid="nkombinationen"
-                        ></dr-button-pm>
                      </td>
                   </tr>
 
@@ -385,18 +393,64 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
          </sl-tab-panel>
 
          <sl-tab-panel name="tab-grafik">
-            <div id="id_grafik"style=' background-color:#fffaed;margin:0;padding:0'> <!-- width:100vw; ;width:300px;height:300px; -->
-            <div id="panel_gui"></div>
-            <div id="id_div_select_lc" >
-               <select id='id_select_loadcase' on></select>
+            <div
+               id="id_grafik"
+               style=" background-color:#fffaed;margin:0;padding:0"
+            >
+               <!-- width:100vw; ;width:300px;height:300px; -->
+               <div id="panel_gui"></div>
+               <div id="id_div_select_lc">
+                  <select id="id_select_loadcase" on></select>
+               </div>
+               <div id="id_div_select_eigv">
+                  <select id="id_select_eigenvalue" on></select>
+               </div>
             </div>
-            <div id="id_div_select_eigv" >
-               <select id='id_select_eigenvalue' on></select>
-            </div>
-         </div>  <!--  height: 100%; -->
+            <!--  height: 100%; -->
          </sl-tab-panel>
 
-         <sl-tab-panel name="tab-pro">Tab panel pro</sl-tab-panel>
+         <sl-tab-panel name="tab-pro"
+            >Einstellung D2beam Element
+
+            <table id="querschnittwerte_table">
+               <tbody>
+                  <tr>
+                     <td>Anzahl Integrationspunkte :</td>
+                     <td>
+                        <input
+                           type="number"
+                           step="any"
+                           id="id_ndivsl"
+                           name="ndivsl"
+                           class="input_tab"
+                           pattern="[0-9.,eE+-]*"
+                           value="7"
+                           onchange="berechnungErforderlich()"
+                        />
+                     </td>
+                  </tr>
+                  <tr>
+                     <td>Art der Integration :</td>
+                     <td>
+                        <select name="intart" id="id_intart">
+                           <option value="0">Gauss-Legendre</option>
+                           <option value="1" selected>Newton Codes</option>
+                           <option value="2">Lobatto</option>
+                        </select>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td>Art innere Knoten :</td>
+                     <td>
+                        <select name="art" id="id_art">
+                           <option value="0">u, w</option>
+                           <option value="1" selected>u, w, φ</option>
+                        </select>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </sl-tab-panel>
       </sl-tab-group>
 
       <!-- <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt> -->
@@ -416,18 +470,16 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
    render(template(), container, { renderBefore });
    //render( template, document.body);
 
-
-
    // Tabellen sin jetzt da, Tabellen mit Voreinstellungen füllen
 
    init_tabellen();
 
    addListener_filesave();
 
-   const el_select_loadcase = document.getElementById("id_select_loadcase")
-   el_select_loadcase?.addEventListener("change", select_loadcase_changed);
-   const el_select_eigenvalue = document.getElementById("id_select_eigenvalue")
-   el_select_eigenvalue?.addEventListener("change", select_eigenvalue_changed);
+   const el_select_loadcase = document.getElementById('id_select_loadcase');
+   el_select_loadcase?.addEventListener('change', select_loadcase_changed);
+   const el_select_eigenvalue = document.getElementById('id_select_eigenvalue');
+   el_select_eigenvalue?.addEventListener('change', select_eigenvalue_changed);
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -533,7 +585,9 @@ function calculate() {
 function dialog_closed(e: any) {
    //---------------------------------------------------------------------------------------------------------------
    console.log('Event dialog closed', e);
-   const el = document.getElementById('id_dialog_rechteck') as HTMLDialogElement;
+   const el = document.getElementById(
+      'id_dialog_rechteck'
+   ) as HTMLDialogElement;
 
    // @ts-ignore
    const returnValue = this.returnValue;
@@ -546,7 +600,9 @@ function dialog_closed(e: any) {
       const id = 'mat-' + nQuerschnittSets;
 
       {
-         let elem = el?.shadowRoot?.getElementById('emodul') as HTMLInputElement;
+         let elem = el?.shadowRoot?.getElementById(
+            'emodul'
+         ) as HTMLInputElement;
          console.log('emodul=', elem.value);
          const emodul = +elem.value;
          elem = el?.shadowRoot?.getElementById('traeg_y') as HTMLInputElement;
@@ -564,9 +620,13 @@ function dialog_closed(e: any) {
          //console.log("defquerschnitt", elem)
          const defquerschnitt = +elem.value;
          //console.log("defquerschnitt", defquerschnitt)
-         elem = el?.shadowRoot?.getElementById('schubfaktor') as HTMLInputElement;
+         elem = el?.shadowRoot?.getElementById(
+            'schubfaktor'
+         ) as HTMLInputElement;
          const schubfaktor = +elem.value;
-         elem = el?.shadowRoot?.getElementById('querdehnzahl') as HTMLInputElement;
+         elem = el?.shadowRoot?.getElementById(
+            'querdehnzahl'
+         ) as HTMLInputElement;
          const querdehnzahl = +elem.value;
          elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
          const wichte = +elem.value;
@@ -604,8 +664,15 @@ function dialog_closed(e: any) {
             );
 
             //console.log("UPDATE", this)
-            const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
-            console.log("dialog_querschnitt_item_id", dialog_querschnitt_index, qname, el.innerHTML)
+            const el = document.getElementById(
+               dialog_querschnitt_item_id
+            ) as HTMLElement;
+            console.log(
+               'dialog_querschnitt_item_id',
+               dialog_querschnitt_index,
+               qname,
+               el.innerHTML
+            );
             if (el.innerHTML !== qname) {
                el.innerHTML = qname;
                const ele = document.getElementById('id_element_tabelle');
@@ -694,7 +761,9 @@ export function opendialog(ev: any) {
       elem.value = String(height);
       elem = el?.shadowRoot?.getElementById('width') as HTMLInputElement;
       elem.value = String(width);
-      elem = el?.shadowRoot?.getElementById('id_defquerschnitt') as HTMLInputElement;
+      elem = el?.shadowRoot?.getElementById(
+         'id_defquerschnitt'
+      ) as HTMLInputElement;
       elem.value = String(definedQuerschnitt);
       elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
       elem.value = String(wichte);

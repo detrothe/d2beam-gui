@@ -35,6 +35,9 @@ body {
 
 select {
   font-size: 1em;
+  min-width: 100%;
+  margin: 0;
+  padding: 1px;
 }
 
 /* Style the footer */
@@ -45,6 +48,13 @@ select {
   padding: 0;
   text-align: center;
   font-size: 0.7em;
+}
+
+input {
+  font-size: 1em;
+  width: 3.125em;
+  margin: 0;
+  padding: 1px;
 }
 
 .input_tab {
@@ -83,8 +93,8 @@ select {
   padding: 0.2em;
 }
 
-td,
-th {
+.output_table td,
+.output_table th {
   padding: 0px;
   margin: 0px;
   width: 6em;

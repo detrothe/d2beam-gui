@@ -31,7 +31,10 @@ export let eload = [] as TElLoads[]
 export let querschnittset = [] as any[]
 export let kombiTabelle = [] as number[][]
 export let alpha_cr = [] as number[][]
+
 export let maxU_schief = 0.03
+export let maxU_node = -1
+export let maxU_dir = 1
 
 export let nQuerschnittSets = 0
 
@@ -196,11 +199,21 @@ export function rechnen() {
     el = document.getElementById('id_THIIO') as HTMLSelectElement;
     THIIO_flag = Number(el.value);
 
+    el = document.getElementById('id_maxu_node') as HTMLSelectElement;
+    maxU_node = Number(el.value);
+
+    el = document.getElementById('id_maxu_dir') as HTMLSelectElement;
+    maxU_dir = Number(el.value);
+
+    el = document.getElementById('id_maxu_schief') as HTMLSelectElement;
+    maxU_schief = Number(el.value) / 1000.0;  // in m bzw. rad
+
     el = document.getElementById('id_neigv') as HTMLSelectElement;
     neigv = Number(el.value);
 
     console.log("THIIO_flag", THIIO_flag)
     console.log("intAt, art", intArt, art, ndivsl)
+    console.log("maxU", maxU_node, maxU_dir, maxU_schief, neigv)
 
     read_nodes();
     read_elements();
@@ -863,7 +876,7 @@ function calculate() {
             let force: number[] = [6]
 
             for (ielem = 0; ielem < nelem; ielem++) {
-                force = el[ielem].berechneInterneKraefte(ielem, iLastfall, u);
+                force = el[ielem].berechneInterneKraefte(ielem, iLastfall, 0, u);
                 console.log("force", force)
                 for (i = 0; i < 6; i++) stabendkraefte.set(i + 1, ielem + 1, iLastfall, force[i]);
 
@@ -923,12 +936,18 @@ function calculate() {
         }
         alpha_cr = Array.from(Array(nkombinationen), () => new Array(neigv).fill(0.0));
 
+        let pg = new Array(neq)
 
         for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
+
+            pg.fill(0.0)
+            console.log("pg init", pg)
 
             console.log("\n***************  K O M B I N A T I O N ", iKomb, "\n\n")
 
             for (let iter = 0; iter < 2; iter++) {
+
+                console.log("_________________  I T E R  = ", iter, " ___________________")
 
                 for (i = 0; i < neq; i++) stiff[i].fill(0.0);
                 for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0)
@@ -989,6 +1008,29 @@ function calculate() {
 
                 }
 
+                //for (i = 0; i < neq; i++) R[i] -= pg[i]   // Schiefstellung
+
+                if (iter > 0) {
+
+                    let pel = new Array(6)
+
+                    for (ielem = 0; ielem < nelem; ielem++) {
+
+                        el[ielem].berechneElementlasten_Vorverformung(pel, pg)
+                        console.log("P E L", ielem, pel)
+
+                        for (j = 0; j < 6; j++) {
+                            lmj = el[ielem].lm[j]
+                            if (lmj >= 0) {
+                                R[lmj] = R[lmj] - pel[j]
+                            }
+                        }
+                    }
+                }
+
+
+
+
                 for (i = 0; i < neq; i++) {
                     console.log("R", i, R[i])
                 }
@@ -1012,7 +1054,7 @@ function calculate() {
                 let force: number[] = [6]
 
                 for (ielem = 0; ielem < nelem; ielem++) {
-                    force = el[ielem].berechneInterneKraefte(ielem, iKomb, u);
+                    force = el[ielem].berechneInterneKraefte(ielem, iKomb, iter, u);
                     console.log("force", force)
                     for (i = 0; i < 6; i++) stabendkraefte.set(i + 1, ielem + 1, iKomb, force[i]);
 
@@ -1040,19 +1082,29 @@ function calculate() {
                 if (iter === 0) {     // Schiefstellung
 
                     eigenwertberechnung(iKomb, stiff, stiff_sig, u, 0)
+
                     let umax = 0.0
                     for (i = 0; i < neq; i++) if (Math.abs(u[i]) > umax) umax = Math.abs(u[i])
                     console.log("umax=", umax)
 
-                    let pg = [neq]
-                    for (i = 0; i < neq; i++) {
-                        let sum = 0.0
-                        for (j = 0; j < neq; j++) {
-                            sum += stiff_sig[i][j] * u[j] * maxU_schief / umax
-                        }
-                        pg[i] = sum
+                    if (umax > 0.0) {
+                        for (i = 0; i < neq; i++) pg[i] = u[i] * maxU_schief / umax
+                    } else {
+                        pg.fill(0.0)
                     }
-                    console.log("pg", pg)
+                    //console.log("pg", pg)
+
+                    /*
+                                        for (i = 0; i < neq; i++) {
+                                            let sum = 0.0
+                                            for (j = 0; j < neq; j++) {
+                                                sum += stiff_sig[i][j] * u[j] * maxU_schief / umax
+                                            }
+                                            pg[i] = sum
+                                        }
+                                        console.log("pg", pg)
+                    */
+
                 }
 
             }  // ende iter
@@ -1231,6 +1283,7 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
     {
         const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
         table.setAttribute("id", "id_table_verformungen");
+        table.setAttribute("class", "output_table");
         table.style.border = 'none';
         newDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
 
@@ -1300,6 +1353,8 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
         const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
         table.setAttribute("id", "id_table_lagerkraefte");
+        table.setAttribute("class", "output_table");
+
         table.style.border = 'none';
         newDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
 
@@ -1369,6 +1424,8 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
         const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
         table.setAttribute("id", "id_table_stabendkraefte");
+        table.setAttribute("class", "output_table");
+
         table.style.border = 'none';
         newDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
 
