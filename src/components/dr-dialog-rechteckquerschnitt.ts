@@ -103,12 +103,12 @@ export class drRechteckQuerSchnitt extends LitElement {
 
    render() {
       return html` <dialog id="dialog_rechteck">
-         <h2>Eingabe des Querschnitts mit Querschnittswerten</h2>
+         <h2>Eingabe des Querschnitts</h2>
 
          <table id="querschnittwerte_table">
             <tbody>
                <tr>
-                  <td title='der Name des Querschnitts wird bei der Elementeingabe benötigt'>Name (wichtig):</td>
+                  <td title='der Name des Querschnitts wird bei der Elementeingabe benötigt,\nfür jeden Querschnitt ist ein eigener Name zu vergeben'>Name (eindeutig):</td>
                   <td colspan="2">
                      <input
                         id="qname"

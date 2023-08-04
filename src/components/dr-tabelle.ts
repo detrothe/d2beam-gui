@@ -529,7 +529,10 @@ class DrTabelle extends HTMLElement {
                   //el.addEventListener("mousemove", newMOUSEMOVE);
 
                   newCell = newRow.insertCell();
-                  newCell.style.width = '6em';
+                  //newCell.style.width = '6em';
+                  if (this.colWidth.length === 0) newCell.style.width = '6em';
+                  else newCell.style.width = this.colWidth[iSpalte] + 'em';
+
                   newCell.style.border = 'solid';
                   newCell.style.borderWidth = '1px';
                   newCell.style.padding = '0px';

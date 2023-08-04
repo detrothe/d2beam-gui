@@ -12,6 +12,7 @@ import '@shoelace-style/shoelace/dist/components/radio-group/radio-group.js';
 import '@shoelace-style/shoelace/dist/components/radio-button/radio-button.js';
 
 //import { styles } from '../styles/shared-styles';
+import './globals'
 
 import '../components/dr-button-pm';
 //import '../components/dr-table';
@@ -167,9 +168,9 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                      <td>
                         <select name="THIIO" id="id_THIIO">
                            <option value="0" selected>
-                              Theorie I. Ordnung
+                              Th. I. Ordnung
                            </option>
-                           <option value="1">Theorie II. Ordnung</option>
+                           <option value="1">Th. II. Ordnung</option>
                         </select>
                      </td>
                      <td></td>
@@ -189,7 +190,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            inputid="nelem"
                         ></dr-button-pm>
                      </td>
-                     <td colspan="2" style="text-align:center">Schiefstellung</td>
+                     <td colspan="2" style="text-align:center" title='Schiefstellung mit erste Eigenform'>Schiefstellung</td>
 
                      <td>
                         <button type="button" id="saveFile" style="min-width:8em;">
@@ -206,7 +207,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            inputid="nnodalloads"
                         ></dr-button-pm>
                      </td>
-                     <td>Knoten :</td>
+                     <td title='0=automatische Skalierung auf den Größtwert aus der Eigenwertberechnung'>Knoten :</td>
                      <td>
                         <input
                            type="number"
@@ -248,7 +249,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            inputid="nlastfaelle"
                         ></dr-button-pm>
                      </td>
-                     <td>Wert [mm,mrad] :</td>
+                     <td title='Vorverformung am Knoten in gewählter Richtung'>&Delta; [mm, mrad] :</td>
                      <td>
                         <input
                            type="number"
@@ -271,7 +272,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            inputid="nkombinationen"
                         ></dr-button-pm>
                      </td>
-                     <td>Anzahl Eigenwerte :</td>
+                     <td title='Anzahl der zu berechnenden Eigenwerte,\nfür die Schiefstellung wird immer die erste Eigenform verwendet'>Anzahl Eigenwerte :</td>
                      <td>
                         <input
                            type="number"
@@ -330,9 +331,9 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                id="id_element_tabelle"
                nzeilen="${nelem_init}"
                nspalten="10"
-               columns='["No", "Querschnitt", "nodTyp", "inz a", "inz e", "N<sub>L</sub>", "V<sub>L</sub>", "M<sub>L</sub>", "N<sub>R</sub>", "V<sub>R</sub>", "M<sub>R</sub>"]'
+               columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>L</sub>", "V<sub>L</sub>", "M<sub>L</sub>", "N<sub>R</sub>", "V<sub>R</sub>", "M<sub>R</sub>"]'
                typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
-               colwidth='["4","8","4","4","4","4","4","4","4","4","4"]'
+               colwidth='["4","8","3","3","3","3","3","3","3","3","3"]'
             ></dr-tabelle>
 
             <!-- <dr-table

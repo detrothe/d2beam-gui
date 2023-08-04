@@ -1084,14 +1084,23 @@ function calculate() {
                     eigenwertberechnung(iKomb, stiff, stiff_sig, u, 0)
 
                     let umax = 0.0
-                    for (i = 0; i < neq; i++) if (Math.abs(u[i]) > umax) umax = Math.abs(u[i])
-                    console.log("umax=", umax)
+                    if (maxU_node === 0 || maxU_node > nnodes) {
+
+                        for (i = 0; i < neq; i++) if (Math.abs(u[i]) > umax) umax = Math.abs(u[i])
+                        console.log("umax=", umax)
+
+                    } else {
+                        let ieq = node[maxU_node - 1].L[maxU_dir]
+                        console.log("schief", ieq, u[ieq])
+                        umax = Math.abs(u[ieq])
+                    }
 
                     if (umax > 0.0) {
                         for (i = 0; i < neq; i++) pg[i] = u[i] * maxU_schief / umax
                     } else {
                         pg.fill(0.0)
                     }
+
                     //console.log("pg", pg)
 
                     /*
