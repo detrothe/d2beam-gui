@@ -23,7 +23,9 @@ export let neigv: number = 2;
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
 export let stabendkraefte: TFArray3D
-export let eigenform_container = [] as TFArray3D[]
+export let u_lf = [] as number[][]
+export let eigenform_container_node = [] as TFArray3D[]
+export let eigenform_container_u = [] as TFArray2D[]
 export let node = [] as TNode[]
 export let element = [] as TElement[]
 export let load = [] as TLoads[]
@@ -105,7 +107,7 @@ class TElement {
     sl: number = 0.0                                    // Stablänge
     nod = [0, 0, 0, 0]                                   // globale Knotennummer der Stabenden
     lm: number[] = []                          //  as number[]
-    gelenk = [0, 0]
+    gelenk = [0, 0, 0, 0, 0, 0]
     estiff: number[][] = []    // = [[0.0, 0.0], [0.0, 0.0]]
     estm: number[][] = []
     ksig: number[][] = []
@@ -156,6 +158,9 @@ class TMaxValues {
     }
 }
 
+export function add_neq() {
+    neq++;
+}
 //---------------------------------------------------------------------------------------------------------------
 export function incr_querschnittSets() {
     //-----------------------------------------------------------------------------------------------------------
@@ -465,8 +470,9 @@ function read_elements() {
             else if (ispalte === 2) element[izeile - 1].nodeTyp = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 3) element[izeile - 1].nod[0] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte === 4) element[izeile - 1].nod[1] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 5) element[izeile - 1].gelenk[0] = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 6) element[izeile - 1].gelenk[1] = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte > 4 && ispalte <= 10) {
+                element[izeile - 1].gelenk[ispalte - 5] = Number(testNumber(wert, izeile, ispalte, shad));
+            }
         }
         console.log("element", izeile, element[izeile - 1].qname, element[izeile - 1].nod[0], element[izeile - 1].nod[1])
 
@@ -677,6 +683,9 @@ function calculate() {
         }
     }
 
+    for (ielem = 0; ielem < nelem; ielem++) {
+
+    }
     // für die Grafik
 
     xmin = 1.e30
@@ -796,6 +805,7 @@ function calculate() {
         disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nlastfaelle);   // nlastfaelle
         console.log("nlastfaelle", nlastfaelle)
         stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nlastfaelle);   // nlastfaelle
+        u_lf = Array.from(Array(neq), () => new Array(nlastfaelle).fill(0.0));
 
         for (let iLastfall = 1; iLastfall <= nlastfaelle; iLastfall++) {
 
@@ -869,6 +879,7 @@ function calculate() {
 
             for (i = 0; i < neq; i++) {
                 console.log("U", i, u[i] * 1000.0)    // in mm, mrad
+                u_lf[i][iLastfall - 1] = u[i]
             }
 
             // Rückrechnung
@@ -926,13 +937,18 @@ function calculate() {
         const stiff_sig = Array.from(Array(neq), () => new Array(neq).fill(0.0));
 
         disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);
+        u_lf = Array.from(Array(neq), () => new Array(nkombinationen).fill(0.0));
+
         //console.log("nkombinationen", nkombinationen)
         stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nkombinationen);
-        eigenform_container.length = 0
+        eigenform_container_node.length = 0
+        eigenform_container_u.length = 0
         for (let i = 0; i < nkombinationen; i++) {
             let a = new TFArray3D(1, nnodesTotal, 1, 3, 1, neigv)
-            eigenform_container.push(a)
-            //console.log("AAAAAAAA",eigenform_container[i])
+            eigenform_container_node.push(a)
+            //console.log("AAAAAAAA",eigenform_container_node[i])
+            let b = new TFArray2D(0, neq - 1, 1, neigv)
+            eigenform_container_u.push(b)
         }
         alpha_cr = Array.from(Array(nkombinationen), () => new Array(neigv).fill(0.0));
 
@@ -1047,6 +1063,7 @@ function calculate() {
 
                 for (i = 0; i < neq; i++) {
                     console.log("U", i, u[i] * 1000.0)    // in mm, mrad
+                    u_lf[i][iKomb - 1] = u[i]
                 }
 
                 // Rückrechnung
@@ -1141,7 +1158,7 @@ function calculate() {
 
 
             //for (i = 0; i < nnodes; i++) {
-            //    console.log("eigenform_c", i,eigenform_container[iKomb-1]._(i + 1, 1, 1), eigenform_container[iKomb-1]._(i + 1, 2, 1), eigenform_container[iKomb-1]._(i + 1, 3, 1))
+            //    console.log("eigenform_c", i,eigenform_container_node[iKomb-1]._(i + 1, 1, 1), eigenform_container_node[iKomb-1]._(i + 1, 2, 1), eigenform_container_node[iKomb-1]._(i + 1, 3, 1))
             //}
 
         }   //ende iKomb
@@ -1238,10 +1255,14 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
                     }
 
                     for (j = 0; j < 3; j++) {
-                        // console.log("eigenform_container[iKomb]", eigenform_container[iKomb-1])
-                        eigenform_container[iKomb - 1].set(i + 1, j + 1, ieigv, disp[j])
+                        // console.log("eigenform_container_node[iKomb]", eigenform_container_node[iKomb-1])
+                        eigenform_container_node[iKomb - 1].set(i + 1, j + 1, ieigv, disp[j])
                         if (Math.abs(disp[j]) > maxValue_eigv[iKomb - 1][ieigv - 1]) maxValue_eigv[iKomb - 1][ieigv - 1] = Math.abs(disp[j])
                     }
+                }
+
+                for (i = 0; i < neq; i++) {
+                    eigenform_container_u[iKomb - 1].set(i , ieigv, eigenform_array[i + offset])
                 }
                 offset = offset + neq
                 console.log(" maxValue_eigv[iKomb - 1][ieigv-1] = ", maxValue_eigv[iKomb - 1][ieigv - 1])

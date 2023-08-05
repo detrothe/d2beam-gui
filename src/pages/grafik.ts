@@ -4,7 +4,7 @@ import { CTrans } from './trans';
 import { CTimoshenko_beam } from "./timoshenko_beam"
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv } from "./rechnen";
 import { el as element, node, nelem, nnodes } from "./rechnen";
-import { maxValue_lf, maxValue_komb, maxValue_eigv, disp_lf, eigenform_container, THIIO_flag } from "./rechnen";
+import { maxValue_lf, maxValue_komb, maxValue_eigv, THIIO_flag } from "./rechnen";
 //import { Pane } from 'tweakpane';
 import { myPanel } from './mypanelgui'
 
@@ -208,14 +208,15 @@ export function drawsystem() {
         let Nu: number[] = [2], Nw: number[] = [4]
         let nodi: number
         let u: number, w: number, uG: number, wG: number
-        let disp: number[] = [6], edispL: number[] = [6]
+        let disp: number[] = new Array(6)
+        let edispL: number[] = new Array(6)
         let iLastfall = draw_lastfall
         let scalefactor = 0
         if (THIIO_flag === 0) {
-            scalefactor = 0.1 * slmax / maxValue_lf[iLastfall - 1].disp
+            scalefactor = 0.1 * slmax / maxValue_lf[iLastfall - 1].disp * 1000.
         }
         else if (THIIO_flag === 1) {
-            scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].disp
+            scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].disp * 1000.
         }
         console.log("scalefaktor", scalefactor, slmax, maxValue_lf[iLastfall - 1].disp)
 
@@ -224,21 +225,24 @@ export function drawsystem() {
             z1 = Math.round(tr.zPix(element[ielem].z1));
             x2 = Math.round(tr.xPix(element[ielem].x2));
             z2 = Math.round(tr.zPix(element[ielem].z2));
+            /*
+                        nodi = element[ielem].nod1 + 1
+                        disp[0] = disp_lf._(nodi, 1, iLastfall);
+                        disp[1] = disp_lf._(nodi, 2, iLastfall);
+                        edispL[2] = disp[2] = disp_lf._(nodi, 3, iLastfall);
+                        nodi = element[ielem].nod2 + 1
+                        disp[3] = disp_lf._(nodi, 1, iLastfall);
+                        disp[4] = disp_lf._(nodi, 2, iLastfall);
+                        edispL[5] = disp[5] = disp_lf._(nodi, 3, iLastfall);
+                        console.log("disp", disp)
 
-            nodi = element[ielem].nod1 + 1
-            disp[0] = disp_lf._(nodi, 1, iLastfall);
-            disp[1] = disp_lf._(nodi, 2, iLastfall);
-            edispL[2] = disp[2] = disp_lf._(nodi, 3, iLastfall);
-            nodi = element[ielem].nod2 + 1
-            disp[3] = disp_lf._(nodi, 1, iLastfall);
-            disp[4] = disp_lf._(nodi, 2, iLastfall);
-            edispL[5] = disp[5] = disp_lf._(nodi, 3, iLastfall);
-            console.log("disp", disp)
+                        edispL[0] = element[ielem].cosinus * disp[0] + element[ielem].sinus * disp[1]
+                        edispL[1] = -element[ielem].sinus * disp[0] + element[ielem].cosinus * disp[1]
+                        edispL[3] = element[ielem].cosinus * disp[3] + element[ielem].sinus * disp[4]
+                        edispL[4] = -element[ielem].sinus * disp[3] + element[ielem].cosinus * disp[4]
+            */
 
-            edispL[0] = element[ielem].cosinus * disp[0] + element[ielem].sinus * disp[1]
-            edispL[1] = -element[ielem].sinus * disp[0] + element[ielem].cosinus * disp[1]
-            edispL[3] = element[ielem].cosinus * disp[3] + element[ielem].sinus * disp[4]
-            edispL[4] = -element[ielem].sinus * disp[3] + element[ielem].cosinus * disp[4]
+            element[ielem].get_edispL(edispL, iLastfall - 1)
 
             dx = element[ielem].sl / 10.0
             kappa = element[ielem].kappa
@@ -286,7 +290,7 @@ export function drawsystem() {
         let Nu: number[] = [2], Nw: number[] = [4]
         let nodi: number
         let u: number, w: number, uG: number, wG: number
-        let disp: number[] = [6], edispL: number[] = [6]
+        let edispL: number[] = new Array(6)
         let ikomb = draw_lastfall
         let scalefactor = 0
 
@@ -302,21 +306,23 @@ export function drawsystem() {
             z1 = Math.round(tr.zPix(element[ielem].z1));
             x2 = Math.round(tr.xPix(element[ielem].x2));
             z2 = Math.round(tr.zPix(element[ielem].z2));
+            /*
+                        nodi = element[ielem].nod1 + 1
+                        disp[0] = eigenform_container[ikomb - 1]._(nodi, 1, draw_eigenform);              // disp_lf._(nodi, 1, iLastfall);
+                        disp[1] = eigenform_container[ikomb - 1]._(nodi, 2, draw_eigenform);              // disp_lf._(nodi, 2, iLastfall);
+                        edispL[2] = disp[2] = eigenform_container[ikomb - 1]._(nodi, 3, draw_eigenform);  //disp_lf._(nodi, 3, iLastfall);
+                        nodi = element[ielem].nod2 + 1
+                        disp[3] = eigenform_container[ikomb - 1]._(nodi, 1, draw_eigenform);              // disp_lf._(nodi, 1, iLastfall);
+                        disp[4] = eigenform_container[ikomb - 1]._(nodi, 2, draw_eigenform);              // disp_lf._(nodi, 2, iLastfall);
+                        edispL[5] = disp[5] = eigenform_container[ikomb - 1]._(nodi, 3, draw_eigenform);  // disp_lf._(nodi, 3, iLastfall);
+                        console.log("disp", disp)
 
-            nodi = element[ielem].nod1 + 1
-            disp[0] = eigenform_container[ikomb - 1]._(nodi, 1, draw_eigenform);              // disp_lf._(nodi, 1, iLastfall);
-            disp[1] = eigenform_container[ikomb - 1]._(nodi, 2, draw_eigenform);              // disp_lf._(nodi, 2, iLastfall);
-            edispL[2] = disp[2] = eigenform_container[ikomb - 1]._(nodi, 3, draw_eigenform);  //disp_lf._(nodi, 3, iLastfall);
-            nodi = element[ielem].nod2 + 1
-            disp[3] = eigenform_container[ikomb - 1]._(nodi, 1, draw_eigenform);              // disp_lf._(nodi, 1, iLastfall);
-            disp[4] = eigenform_container[ikomb - 1]._(nodi, 2, draw_eigenform);              // disp_lf._(nodi, 2, iLastfall);
-            edispL[5] = disp[5] = eigenform_container[ikomb - 1]._(nodi, 3, draw_eigenform);  // disp_lf._(nodi, 3, iLastfall);
-            console.log("disp", disp)
-
-            edispL[0] = element[ielem].cosinus * disp[0] + element[ielem].sinus * disp[1]
-            edispL[1] = -element[ielem].sinus * disp[0] + element[ielem].cosinus * disp[1]
-            edispL[3] = element[ielem].cosinus * disp[3] + element[ielem].sinus * disp[4]
-            edispL[4] = -element[ielem].sinus * disp[3] + element[ielem].cosinus * disp[4]
+                        edispL[0] = element[ielem].cosinus * disp[0] + element[ielem].sinus * disp[1]
+                        edispL[1] = -element[ielem].sinus * disp[0] + element[ielem].cosinus * disp[1]
+                        edispL[3] = element[ielem].cosinus * disp[3] + element[ielem].sinus * disp[4]
+                        edispL[4] = -element[ielem].sinus * disp[3] + element[ielem].cosinus * disp[4]
+            */
+            element[ielem].get_edispL_eigenform(edispL, ikomb, draw_eigenform)
 
             dx = element[ielem].sl / 10.0
             kappa = element[ielem].kappa

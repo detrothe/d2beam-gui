@@ -40,9 +40,14 @@ export class CElement {
 
     }
 
-    stmglenk() {
-
+    get_edispL(edispL: number[], iLastfall: number) {
+        console.log("class element: get_edispL", iLastfall, edispL[0])
     }
+
+    get_edispL_eigenform(edispL: number[], iLastfall: number, ieigv: number) {
+        console.log("class element: get_edispL", iLastfall, ieigv, edispL[0])
+    }
+
 }
 
 

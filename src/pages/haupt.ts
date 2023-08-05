@@ -229,6 +229,7 @@ console.log('column_string_kombitabelle', column_string_kombitabelle);
                            id="id_button_nelemloads"
                            nel="${nelemloads_init}"
                            inputid="nelemloads"
+                           onchange="berechnungErforderlich()"
                         ></dr-button-pm>
                      </td>
                      <td>Richtung :</td>

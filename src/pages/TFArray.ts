@@ -37,6 +37,7 @@ export class TFArray2D {
 
         if (i < this.minRow || i > this.maxRow || j < this.minCol || j > this.maxCol) {
             console.log("wrong index in set", i, j);
+            console.log("min,max, row,col",this.minRow ,this.maxRow ,this.minCol ,this.maxCol)
             return Number.NaN;
         }
         this.marray[j * this.nrow + i + this.konstante] = wert;

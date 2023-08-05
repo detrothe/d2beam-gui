@@ -1,6 +1,6 @@
 import { CElement } from "./element"
 
-import { node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag } from "./rechnen"
+import { node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, add_neq, neq, u_lf, eigenform_container_u } from "./rechnen"
 
 
 export class CTimoshenko_beam extends CElement {
@@ -26,6 +26,8 @@ export class CTimoshenko_beam extends CElement {
     sl = 0.0
     normalkraft = 0.0
     lm: number[] = [6]
+    gelenk: number[] = [0, 0, 0, 0, 0, 0]
+    nGelenke = 0
     cosinus = 0.0
     sinus = 0.0
     alpha = 0.0
@@ -91,6 +93,16 @@ export class CTimoshenko_beam extends CElement {
         this.lm[3] = node[this.nod2].L[0];
         this.lm[4] = node[this.nod2].L[1];
         this.lm[5] = node[this.nod2].L[2];
+
+        this.nGelenke = 0
+        for (let i = 0; i < 6; i++) {
+            this.gelenk[i] = element[ielem].gelenk[i]
+            if (this.gelenk[i] > 0) {
+                this.nGelenke++;
+                this.lm[i] = neq;
+                add_neq();
+            }
+        }
 
         this.estm = Array.from(Array(6), () => new Array(6));
         this.ksig = Array.from(Array(6), () => new Array(6));
@@ -217,6 +229,19 @@ export class CTimoshenko_beam extends CElement {
         this.ksig[5][4] = 6. * psi2 * fact * sl
         this.ksig[5][5] = (5. + 3. * psi2) * fact * L2
 
+        /*
+                for (let zeile = 0; zeile < 6; zeile++) {
+                    if (this.gelenk[zeile] > 0) {
+                        this.stmglenk(this.estm, zeile)
+                    }
+                }
+
+                for (let zeile = 0; zeile < 6; zeile++) {
+                    if (this.gelenk[zeile] > 0) {
+                        this.stmglenk(this.ksig, zeile)
+                    }
+                }
+        */
     }
 
 
@@ -457,6 +482,27 @@ export class CTimoshenko_beam extends CElement {
             eload[ieload].re[5] = 5.0 * sl * p1 + sl * this.psi * p2
         }
 
+        // Gelenkmechanismen einbauen
+        /*
+                if (this.nGelenke > 0) {
+                    let zeile_old = 0
+                    const estm = Array.from(Array(6), () => new Array(6));
+
+                    this.berechneLokaleElementsteifigkeitmatrix(estm)
+
+                    let iz = 0
+                    for (let zeile = 0; zeile < 6; zeile++) {
+                        if (this.gelenk[zeile] > 0) {
+                            if (iz > 0) this.stmglenk(estm, zeile_old)
+                            iz = iz + 1
+                            this.elrglenk(estm, eload[ieload].re, zeile)
+                            zeile_old = zeile
+                        }
+                    }
+                }
+        */
+
+
         eload[ieload].el_r[0] = this.trans[0][0] * eload[ieload].re[0] + this.trans[1][0] * eload[ieload].re[1] // !! mit [T]^T multiplizieren
         eload[ieload].el_r[1] = this.trans[0][1] * eload[ieload].re[0] + this.trans[1][1] * eload[ieload].re[1]
         eload[ieload].el_r[2] = eload[ieload].re[2]
@@ -515,4 +561,98 @@ export class CTimoshenko_beam extends CElement {
 
 
 
+    //---------------------------------------------------------------------------------------------
+    stmglenk(estm: number[][], zeile: number) {
+
+        let iz: number, i: number, j: number
+        const estm_neu = Array.from(Array(6), () => new Array(6));
+        let div: number
+
+        div = estm[zeile][zeile]
+        for (iz = 0; iz < 6; iz++) {
+            for (i = 0; i < 6; i++) {
+                estm_neu[iz][i] = estm[iz][i] - estm[iz][zeile] * estm[zeile][i] / div
+            }
+        }
+
+        for (i = 0; i < 6; i++) {
+            for (j = 0; j < 6; j++) {
+                estm[i][j] = estm_neu[i][j]
+            }
+        }
+
+    }
+
+
+    //---------------------------------------------------------------------------------------------
+    elrglenk(estm: number[][], el_r: number[], zeile: number) {
+
+        let iz: number, i: number
+        let elr_neu = new Array(6)
+        let div: number
+
+
+        div = estm[zeile][zeile]
+        for (iz = 0; iz < 6; iz++) {
+            elr_neu[iz] = el_r[iz] - estm[iz][zeile] * el_r[zeile] / div
+        }
+
+        for (i = 0; i < 6; i++) {
+            el_r[i] = elr_neu[i]
+        }
+
+    }
+
+    //---------------------------------------------------------------------------------------------
+    get_edispL(edispL: number[], iLastfall: number) {
+
+        let edisp: number[] = new Array(6)
+
+
+        for (let j = 0; j < 6; j++) {
+            let ieq = this.lm[j]
+            if (ieq === -1) {
+                edisp[j] = 0.0
+            } else {
+                edisp[j] = u_lf[ieq][iLastfall]
+            }
+        }
+        console.log("disp", edisp)
+
+        for (let i = 0; i < 6; i++) {
+            let sum = 0.0
+            for (let j = 0; j < 6; j++) {
+                sum += this.trans[i][j] * edisp[j]
+            }
+            edispL[i] = sum
+        }
+        console.log("dispL", edispL)
+    }
+
+
+    //---------------------------------------------------------------------------------------------
+    get_edispL_eigenform(edispL: number[], iKomb: number, ieigv: number) {
+
+        let edisp: number[] = new Array(6)
+
+
+        for (let j = 0; j < 6; j++) {
+            let ieq = this.lm[j]
+            if (ieq === -1) {
+                edisp[j] = 0.0
+            } else {
+                edisp[j] = eigenform_container_u[iKomb - 1]._(ieq, ieigv)
+            }
+        }
+        console.log("eigen, disp", edisp)
+
+        for (let i = 0; i < 6; i++) {
+            let sum = 0.0
+            for (let j = 0; j < 6; j++) {
+                sum += this.trans[i][j] * edisp[j]
+            }
+            edispL[i] = sum
+        }
+        console.log("eigen, dispL", edispL)
+    }
 }
