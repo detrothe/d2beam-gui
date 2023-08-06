@@ -72,15 +72,15 @@ export function myPanel() {
     });
 
     gui.add(obj, 'normalkraft').name(normalkraft).onChange(() => {
-        window.dispatchEvent(new Event("draw_normalkraft_grafik"));
+        window.dispatchEvent(new Event("draw_normalkraftlinien_grafik"));
     });
 
     gui.add(obj, 'querkraft').name(querkraft).onChange(() => {
-        window.dispatchEvent(new Event("draw_querkraft_grafik"));
+        window.dispatchEvent(new Event("draw_querkraftlinien_grafik"));
     });
 
     gui.add(obj, 'moment').name(moment).onChange(() => {
-        window.dispatchEvent(new Event("draw_moment_grafik"));
+        window.dispatchEvent(new Event("draw_momentenlinien_grafik"));
     });
 
     gui.add(obj, 'eigenform').name(eigenformen).onChange(() => {

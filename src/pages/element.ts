@@ -36,8 +36,8 @@ export class CElement {
         console.log("class element: berechneElementlasten von ", ieload)
     }
 
-    berechneElementSchnittgroessen() {
-
+    berechneElementSchnittgroessen(ielem:number,iLastf:number) {
+        console.log("class element: berechneElementSchnittgroessen von ",ielem, iLastf)
     }
 
     get_edispL(edispL: number[], iLastfall: number) {
@@ -48,6 +48,17 @@ export class CElement {
         console.log("class element: get_edispL", iLastfall, ieigv, edispL[0])
     }
 
+    get_elementSchnittgroesse_Moment(Mx:number[], iLastf: number) {
+        console.log("class element: get_elementSchnittgroesse_Moment", iLastf, Mx[0])
+    }
+
+    get_elementSchnittgroesse_Querkraft(Vx:number[], iLastf: number) {
+        console.log("class element: get_elementSchnittgroesse_Querkraft", iLastf, Vx[0])
+    }
+
+    get_elementSchnittgroesse_Normalkraft(Nx:number[], iLastf: number) {
+        console.log("class element: get_elementSchnittgroesse_Normalkraft", iLastf, Nx[0])
+    }
 }
 
 

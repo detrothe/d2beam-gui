@@ -17,6 +17,7 @@ export let neq: number;
 export let nnodesTotal: number = 0;
 export let nlastfaelle: number = 0;
 export let nkombinationen: number = 0;
+export let nelTeilungen = 10;
 
 export let neigv: number = 2;
 
@@ -112,14 +113,14 @@ class TElement {
     estm: number[][] = []
     ksig: number[][] = []
     trans: number[][] = []
-    F: number[] = [14]   // Stabendgrößen nach WGV im globalen Koordinatensystem
-    FL: number[] = [14]  // Stabendgrößen nach KGV im lokalen Koordinatensystem
+    F: number[] = Array(14)   // Stabendgrößen nach WGV im globalen Koordinatensystem
+    FL: number[] = Array(14)  // Stabendgrößen nach KGV im lokalen Koordinatensystem
     F34 = [0.0, 0.0]
     cosinus: number = 0.0
     sinus: number = 0.0
     alpha: number = 0.0
     normalkraft: number = 0.0
-    u: number[] = [14]
+    u: number[] = Array(14)
     prop_ptr: any
     npar_ptr: any
     xz_ptr: any
@@ -140,8 +141,8 @@ class TElLoads {
     art: number = 0
     pL: number = 0.0
     pR: number = 0.0
-    re: number[] = [6]                              // Elementlastvektor lokal
-    el_r: number[] = [6]                            // Elementlastvektor im globalen Koordinatensystem
+    re: number[] = Array(6)                              // Elementlastvektor lokal
+    el_r: number[] =Array(6)                             // Elementlastvektor im globalen Koordinatensystem
 }
 
 class TMaxValues {
@@ -723,8 +724,8 @@ function calculate() {
     let Iy: number = 0.0, area: number = 0.0, b: number;
     let lmj: number = 0, nod1: number, nodi: number
 
-    let breite: number[] = [2]
-    let abstand: number[] = [2]
+    let breite: number[] = Array(2)
+    let abstand: number[] = Array(2)
 
     for (ielem = 0; ielem < nelem; ielem++) {
 
@@ -884,7 +885,7 @@ function calculate() {
 
             // Rückrechnung
 
-            let force: number[] = [6]
+            let force: number[] = Array(6)
 
             for (ielem = 0; ielem < nelem; ielem++) {
                 force = el[ielem].berechneInterneKraefte(ielem, iLastfall, 0, u);
@@ -924,6 +925,10 @@ function calculate() {
             //    console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
             //}
 
+            for (ielem = 0; ielem < nelem; ielem++) {
+                el[ielem].berechneElementSchnittgroessen(ielem, iLastfall - 1)
+            }
+
 
             ausgabe(iLastfall, newDiv)
 
@@ -946,11 +951,12 @@ function calculate() {
         for (let i = 0; i < nkombinationen; i++) {
             let a = new TFArray3D(1, nnodesTotal, 1, 3, 1, neigv)
             eigenform_container_node.push(a)
-            //console.log("AAAAAAAA",eigenform_container_node[i])
+
             let b = new TFArray2D(0, neq - 1, 1, neigv)
             eigenform_container_u.push(b)
         }
         alpha_cr = Array.from(Array(nkombinationen), () => new Array(neigv).fill(0.0));
+
 
         let pg = new Array(neq)
 
@@ -1068,7 +1074,7 @@ function calculate() {
 
                 // Rückrechnung
 
-                let force: number[] = [6]
+                let force: number[] = Array(6)
 
                 for (ielem = 0; ielem < nelem; ielem++) {
                     force = el[ielem].berechneInterneKraefte(ielem, iKomb, iter, u);
@@ -1134,6 +1140,11 @@ function calculate() {
                 }
 
             }  // ende iter
+
+            for (ielem = 0; ielem < nelem; ielem++) {
+                el[ielem].berechneElementSchnittgroessen(ielem, iKomb - 1)
+            }
+
 
             for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
 
@@ -1262,7 +1273,7 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
                 }
 
                 for (i = 0; i < neq; i++) {
-                    eigenform_container_u[iKomb - 1].set(i , ieigv, eigenform_array[i + offset])
+                    eigenform_container_u[iKomb - 1].set(i, ieigv, eigenform_array[i + offset])
                 }
                 offset = offset + neq
                 console.log(" maxValue_eigv[iKomb - 1][ieigv-1] = ", maxValue_eigv[iKomb - 1][ieigv - 1])

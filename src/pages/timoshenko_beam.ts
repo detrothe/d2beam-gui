@@ -1,6 +1,9 @@
 import { CElement } from "./element"
 
-import { node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, add_neq, neq, u_lf, eigenform_container_u } from "./rechnen"
+import {
+    node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, add_neq, neq, u_lf, eigenform_container_u,
+    nelTeilungen, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf
+} from "./rechnen"
 
 
 export class CTimoshenko_beam extends CElement {
@@ -25,7 +28,7 @@ export class CTimoshenko_beam extends CElement {
     z2 = 0.0
     sl = 0.0
     normalkraft = 0.0
-    lm: number[] = [6]
+    lm: number[] = Array(6)
     gelenk: number[] = [0, 0, 0, 0, 0, 0]
     nGelenke = 0
     cosinus = 0.0
@@ -37,10 +40,28 @@ export class CTimoshenko_beam extends CElement {
     estm: number[][] = []
     ksig: number[][] = []
     trans: number[][] = []
-    u: number[] = [6]
-    F: number[] = [6]   // Stabendgrößen nach WGV im globalen Koordinatensystem
-    FL: number[] = [6]  // Stabendgrößen nach KGV im lokalen Koordinatensystem
-    Fe: number[] = [6]  // Vorverformungen aus Schiefstellung
+    u: number[] = Array(6)   // Verformungen global
+    edispL: number[] = Array(6)   // Verformungen lokal
+    edisp0: number[] = Array(6)   // Vorverformungren
+    F: number[] = Array(6)   // Stabendgrößen nach WGV im globalen Koordinatensystem
+    FL: number[] = Array(6)  // Stabendgrößen nach KGV im lokalen Koordinatensystem
+    Fe: number[] = Array(6)  // Vorverformungen aus Schiefstellung
+
+    N_ = [] as number[][]  // Schnittgrößen entlang Stab, lokal
+    V_ = [] as number[][]
+    M_ = [] as number[][]
+    u_ = [] as number[][]  // Verformungen entlang Stab, lokale Richtung
+    w_ = [] as number[][]
+    phi_ = [] as number[][]
+
+    NL: number = 0.0
+    VL: number = 0.0
+    ML: number = 0.0
+    uL: number = 0.0
+    wL: number = 0.0
+    phiL: number = 0.0
+
+
 
     //---------------------------------------------------------------------------------------------
     setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number) {
@@ -58,6 +79,14 @@ export class CTimoshenko_beam extends CElement {
     initialisiereElementdaten(ielem: number) {
 
         let x1, x2, z1, z2, dx: number, dz: number
+
+        let n: number
+        if (THIIO_flag === 0) n = nlastfaelle;
+        else n = nkombinationen;
+
+        this.N_ = Array.from(Array(n), () => new Array(nelTeilungen + 1).fill(0.0));
+        this.V_ = Array.from(Array(n), () => new Array(nelTeilungen + 1).fill(0.0));
+        this.M_ = Array.from(Array(n), () => new Array(nelTeilungen + 1).fill(0.0));
 
         this.nod1 = element[ielem].nod[0];
         this.nod2 = element[ielem].nod[1];
@@ -446,6 +475,21 @@ export class CTimoshenko_beam extends CElement {
 
         this.normalkraft = (this.FL[0] + this.FL[3]) / 2.0
 
+        for (i = 0; i < 6; i++) { // Verformungen lokal
+            sum = 0.0
+            for (j = 0; j < 6; j++) {
+                sum += this.trans[i][j] * this.u[j]
+            }
+            this.edispL[i] = sum
+        }
+
+        this.NL = this.FL[0]                               // Verformungen, Schnittgrößen am Stabanfang für Zustandslinien
+        this.VL = this.FL[1]
+        this.ML = this.FL[2]
+        this.uL = this.edispL[0]
+        this.wL = this.edispL[1]
+        this.phiL = this.edispL[2]
+
         return this.FL;
     }
 
@@ -520,7 +564,7 @@ export class CTimoshenko_beam extends CElement {
         let ieq: number, i: number, j: number, k: number
         let sum: number
 
-        let dispL = [6], dispG = [6], FeL = [6]
+        let dispL = Array(6), dispG = Array(6), FeL = Array(6)
 
         for (j = 0; j < 6; j++) {                           // Stabverformungen
             ieq = this.lm[j]
@@ -538,13 +582,13 @@ export class CTimoshenko_beam extends CElement {
             for (j = 0; j < 6; j++) {
                 sum += this.trans[i][j] * dispG[j]
             }
-            dispL[i] = sum
+            this.edisp0[i] = sum
         }
 
         for (j = 0; j < 6; j++) {
             sum = 0.0
             for (k = 0; k < 6; k++) {
-                sum += this.normalkraft * this.ksig[j][k] * dispL[k]    // this.normalkraft *
+                sum += this.normalkraft * this.ksig[j][k] * this.edisp0[k]    // this.normalkraft *
             }
             FeL[j] = sum     // lokal
         }
@@ -655,4 +699,132 @@ export class CTimoshenko_beam extends CElement {
         }
         console.log("eigen, dispL", edispL)
     }
+
+    //---------------------------------------------------------------------------------------------
+
+    berechneElementSchnittgroessen(ielem: number, iLastf: number) {
+
+        let Mx: number, Vx: number, Nx: number
+        let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
+        let u: number, w: number, wL: number = 0.0
+        let edisp: number[] = Array(6)
+
+        console.log("class element: berechneElementSchnittgroessen von ", iLastf)
+
+        const kappa = this.kappa
+        const sl = this.sl
+        const nenner = sl ** 3 + 12 * kappa * sl
+
+        if (THIIO_flag > 0) {
+            for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i] + this.edisp0[i]
+            wL = this.wL + this.edisp0[1]
+        }
+
+        let d_x = this.sl / (nelTeilungen)
+        let x = 0.0
+
+        for (let iteil = 0; iteil <= nelTeilungen; iteil++) {
+            Mx = this.ML + this.VL * x
+            Vx = this.VL
+            Nx = this.NL
+
+            if (THIIO_flag === 0) {
+                if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
+                if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
+                if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
+            } else {
+                Nu[0] = (1.0 - x / sl);
+                Nu[1] = x / sl
+                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x + sl ** 3 + 12 * kappa * sl) / nenner;
+                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * kappa) * x ** 2 + (sl ** 3 + 6 * kappa * sl) * x) / nenner);
+                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x) / nenner);
+                Nw[3] = -((sl * x ** 3 + (6 * kappa - sl ** 2) * x ** 2 - 6 * kappa * sl * x) / nenner);
+                u = Nu[0] * edisp[0] + Nu[1] * edisp[3]
+                w = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+
+                Mx = Mx - this.NL * (w - wL)
+
+                if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
+                if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
+                if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
+            }
+
+            // normale Elementlasten hinzufügen
+
+            if (THIIO_flag === 0) {
+
+                for (let ieload = 0; ieload < neloads; ieload++) {
+                    if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === iLastf)) {
+
+                        if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
+
+                            const pL = eload[ieload].pR
+                            const pR = eload[ieload].pR
+                            const dp = pR - pL
+
+                            Vx = Vx - pL * x - dp * x * x / 2.
+                            Mx = Mx - pL * x * x / 2 - dp * x * x * x / 6.
+
+                        }
+                    }
+                }
+            }
+            else if (THIIO_flag === 1) { // ikomb=iLastf
+
+                for (let ieload = 0; ieload < neloads; ieload++) {
+
+                    if (eload[ieload].element === ielem) {
+                        const index = eload[ieload].lf - 1
+                        //console.log("elem kombi index", index, kombiTabelle[iLastf][index])
+                        if (kombiTabelle[iLastf][index] !== 0.0) {
+
+                            if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
+
+                                const pL = eload[ieload].pR * kombiTabelle[iLastf][index]
+                                const pR = eload[ieload].pR * kombiTabelle[iLastf][index]
+                                const dp = pR - pL
+
+                                Vx = Vx - pL * x - dp * x * x / 2.
+                                Mx = Mx - pL * x * x / 2 - dp * x * x * x / 6.
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            console.log("x, Vx, Mx", x, Vx, Mx)
+            this.M_[iLastf][iteil] = Mx
+            this.V_[iLastf][iteil] = Vx
+            this.N_[iLastf][iteil] = Nx
+            x += d_x
+        }
+
+    }
+
+    //---------------------------------------------------------------------------------------------
+    get_elementSchnittgroesse_Moment(Mx: number[], iLastf: number) {
+
+        for (let i = 0; i <= nelTeilungen; i++) {
+            Mx[i] = this.M_[iLastf][i]
+        }
+    }
+
+    //---------------------------------------------------------------------------------------------
+    get_elementSchnittgroesse_Querkraft(Vx: number[], iLastf: number) {
+
+        for (let i = 0; i <= nelTeilungen; i++) {
+            Vx[i] = this.V_[iLastf][i]
+        }
+    }
+
+    //---------------------------------------------------------------------------------------------
+    get_elementSchnittgroesse_Normalkraft(Nx: number[], iLastf: number) {
+
+        for (let i = 0; i <= nelTeilungen; i++) {
+            Nx[i] = this.N_[iLastf][i]
+        }
+    }
+
+
 }
