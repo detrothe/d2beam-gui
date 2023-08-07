@@ -188,20 +188,6 @@ export function drawsystem() {
 
     let x1: number, x2: number, z1: number, z2: number
 
-    if (show_systemlinien) {
-
-        for (let ielem = 0; ielem < nelem; ielem++) {
-            //console.log("element",ielem,element)
-            x1 = Math.round(tr.xPix(element[ielem].x1));
-            z1 = Math.round(tr.zPix(element[ielem].z1));
-            x2 = Math.round(tr.xPix(element[ielem].x2));
-            z2 = Math.round(tr.zPix(element[ielem].z2));
-            //console.log("x..", element[ielem].x1, element[ielem].z1, element[ielem].x2, element[ielem].z2)
-            //console.log("elem", ielem, x1, z1, x2, z2)
-            let line = two.makeLine(x1, z1, x2, z2);
-            line.linewidth = 10;
-        }
-    }
 
     // Verformungen
 
@@ -568,7 +554,24 @@ export function drawsystem() {
         }
     }
 
+
+    if (show_systemlinien) {
+
+        for (let ielem = 0; ielem < nelem; ielem++) {
+            //console.log("element",ielem,element)
+            x1 = Math.round(tr.xPix(element[ielem].x1));
+            z1 = Math.round(tr.zPix(element[ielem].z1));
+            x2 = Math.round(tr.xPix(element[ielem].x2));
+            z2 = Math.round(tr.zPix(element[ielem].z2));
+            //console.log("x..", element[ielem].x1, element[ielem].z1, element[ielem].x2, element[ielem].z2)
+            //console.log("elem", ielem, x1, z1, x2, z2)
+            let line = two.makeLine(x1, z1, x2, z2);
+            line.linewidth = 10;
+        }
+    }
+
     draw_lager(two);
+    draw_gelenke(two);
 
     // Don’t forget to tell two to draw everything to the screen
     two.update();
@@ -684,6 +687,40 @@ function draw_lager(two: Two) {
     }
 }
 
+
+//--------------------------------------------------------------------------------------------------------
+function draw_gelenke(two: Two) {
+    //----------------------------------------------------------------------------------------------------
+
+    let x1: number, x2: number, z1: number, z2: number, dx: number, dz: number
+    let radius = 10, a = 10
+
+    for (let ielem = 0; ielem < nelem; ielem++) {
+
+        if (element[ielem].nGelenke > 0) {
+
+            x1 = Math.round(tr.xPix(element[ielem].x1));
+            z1 = Math.round(tr.zPix(element[ielem].z1));
+            x2 = Math.round(tr.xPix(element[ielem].x2));
+            z2 = Math.round(tr.zPix(element[ielem].z2));
+
+            if (element[ielem].gelenk[2] > 0) {                         // Momentengelenk links
+                dx = element[ielem].cosinus * (a + radius)
+                dz = element[ielem].sinus * (a + radius)
+                let kreis = two.makeCircle(x1 + dx, z1 + dz, radius, 10)
+                kreis.fill = '#ffffff';
+
+            }
+            if (element[ielem].gelenk[5] > 0) {                         // Momentengelenk rechts
+                dx = element[ielem].cosinus * (a + radius)
+                dz = element[ielem].sinus * (a + radius)
+                let kreis = two.makeCircle(x2 - dx, z2 - dz, radius, 10)
+                kreis.fill = '#ffffff';
+
+            }
+        }
+    }
+}
 
 //--------------------------------------------------------------------------------------------------------
 function draw_systemlinien_grafik() {
