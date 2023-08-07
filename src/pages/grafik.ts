@@ -590,6 +590,35 @@ function draw_lager(two: Two) {
             let rechteck = two.makeRectangle(x1, z1, 20, 20)
             rechteck.fill = '#dddddd';
         }
+        else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in x-Richtung
+
+            let group = two.makeGroup();
+            let rechteck = two.makeRectangle(0, 0, 20, 20)
+            rechteck.fill = '#dddddd';
+            group.add(rechteck)
+
+            let line = two.makeLine(-16, 15, 16, 15);
+            line.linewidth = 2;
+
+            group.add(line)
+            group.translation.set(x1, z1)
+
+        }
+        else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in z-Richtung
+
+            let group = two.makeGroup();
+            let rechteck = two.makeRectangle(0, 0, 20, 20)
+            rechteck.fill = '#dddddd';
+            group.add(rechteck)
+
+            let line = two.makeLine(-16, 15, 16, 15);
+            line.linewidth = 2;
+
+            group.add(line)
+            group.rotation = 1.5708
+            group.translation.set(x1, z1)
+
+        }
         else if ((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // zweiwertiges Lager
             let group = two.makeGroup();
             console.log("in zweiwertig")
