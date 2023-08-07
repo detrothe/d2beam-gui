@@ -380,7 +380,7 @@ export function drawsystem() {
                 zz2 = element[ielem].z1 + x * element[ielem].sinus + element[ielem].cosinus * Mx[i] * scalefactor
                 xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
                 //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
-                vertices.push(new Two.Vector(xx2, zz2));
+                vertices.push(new Two.Anchor(xx2, zz2));
                 /*
                 if (i > 0) {
                     //console.log("line", xx1, zz1, xx2, zz2)
@@ -488,7 +488,7 @@ export function drawsystem() {
                 xx2 = element[ielem].x1 + x * element[ielem].cosinus - element[ielem].sinus * Vx[i] * scalefactor
                 zz2 = element[ielem].z1 + x * element[ielem].sinus + element[ielem].cosinus * Vx[i] * scalefactor
                 xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
-                vertices.push(new Two.Vector(xx2, zz2));
+                vertices.push(new Two.Anchor(xx2, zz2));
                 /*
                                 if (i > 0) {
                                     //console.log("line", xx1, zz1, xx2, zz2)
@@ -559,7 +559,7 @@ export function drawsystem() {
 
                 x = x + dx
             }
-            vertices.push(new Two.Vector(x2, z2));
+            vertices.push(new Two.Anchor(x2, z2));
 
             // @ts-ignore
             let flaeche = two.makePath(vertices);
@@ -567,6 +567,8 @@ export function drawsystem() {
 
         }
     }
+
+    draw_lager(two);
 
     // Don’t forget to tell two to draw everything to the screen
     two.update();
@@ -576,10 +578,87 @@ export function drawsystem() {
 
 }
 
+//--------------------------------------------------------------------------------------------------------
+function draw_lager(two: Two) {
+    //----------------------------------------------------------------------------------------------------
+
+    for (let i = 0; i < nnodes; i++) {
+        let x1 = Math.round(tr.xPix(node[i].x));
+        let z1 = Math.round(tr.zPix(node[i].z));
+
+        if ((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) {  // Volleinspannung
+            let rechteck = two.makeRectangle(x1, z1, 20, 20)
+            rechteck.fill = '#dddddd';
+        }
+        else if ((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // zweiwertiges Lager
+            let group = two.makeGroup();
+            console.log("in zweiwertig")
+            var vertices = [];
+            vertices.push(new Two.Vector(0, 0));
+            vertices.push(new Two.Vector(-12, 20));
+            vertices.push(new Two.Vector(12, 20));
+
+            // @ts-ignore
+            let flaeche = two.makePath(vertices);
+            flaeche.fill = '#dddddd';
+            group.add(flaeche)
+
+            let line = two.makeLine(-18, 20, 18, 20);
+            line.linewidth = 2;
+
+            group.add(line)
+            group.translation.set(x1, z1)
+
+        }
+        else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // einwertiges horizintales Lager
+            let group = two.makeGroup();
+            console.log("in zweiwertig")
+            var vertices = [];
+            vertices.push(new Two.Vector(0, 0));
+            vertices.push(new Two.Vector(-12, 20));
+            vertices.push(new Two.Vector(12, 20));
+
+            // @ts-ignore
+            let flaeche = two.makePath(vertices);
+            flaeche.fill = '#dddddd';
+            group.add(flaeche)
+
+            let line = two.makeLine(-18, 25, 18, 25);
+            line.linewidth = 2;
+
+            group.add(line)
+            group.translation.set(x1, z1)
+
+        }
+        else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0) && (node[i].L[2] >= 0)) { // einwertiges vertikales Lager
+            let group = two.makeGroup();
+            console.log("in zweiwertig")
+            var vertices = [];
+            vertices.push(new Two.Vector(0, 0));
+            vertices.push(new Two.Vector(-12, 20));
+            vertices.push(new Two.Vector(12, 20));
+
+            // @ts-ignore
+            let flaeche = two.makePath(vertices);
+            flaeche.fill = '#dddddd';
+            group.add(flaeche)
+
+            let line = two.makeLine(-18, 25, 18, 25);
+            line.linewidth = 2;
+
+            group.add(line)
+            group.rotation = -1.5708
+            group.translation.set(x1, z1)
+
+        }
+
+    }
+}
+
 
 //--------------------------------------------------------------------------------------------------------
 function draw_systemlinien_grafik() {
-    //--------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
     console.log("in draw_systemlinien_grafik");
     show_systemlinien = !show_systemlinien;
@@ -591,7 +670,7 @@ function draw_systemlinien_grafik() {
 
 //--------------------------------------------------------------------------------------------------------
 function draw_verformungen_grafik() {
-    //--------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
     console.log("in draw_verformungen_grafik");
     show_verformungen = !show_verformungen;
@@ -603,7 +682,7 @@ function draw_verformungen_grafik() {
 
 //--------------------------------------------------------------------------------------------------------
 function draw_momentenlinien_grafik() {
-    //--------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
     console.log("in draw_verformungen_grafik");
     show_momentenlinien = !show_momentenlinien;
