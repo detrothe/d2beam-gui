@@ -13,6 +13,7 @@ body {
   padding: 0;
   margin: 0;
   font-size: 1em;
+  overscroll-behavior: none;  /* kein pull to refresh , kein reload bei Ziehen mit Finger von oben nach unten */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -30,13 +31,12 @@ body {
   body {
     background-color: #f5f5f5;
     color: black;
-    overscroll-behavior: none;
   }
 }
 
 select {
   font-size: 1em;
-  min-width: 100%;
+  /*min-width: 100%;*/
   margin: 0;
   padding: 1px;
 }
@@ -197,4 +197,12 @@ select {
   --spacing: 2px;
   --font-size: 14px;
   --input-font-size: 14px;
+}
+
+#id_einstellungen {
+  padding: 0;
+  margin: 0;
+  padding-left: 5px;
+  background-color: #D8D8D8;
+  /*background-color: darkkhaki;*/
 }

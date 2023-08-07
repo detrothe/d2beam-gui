@@ -573,6 +573,18 @@ export function drawsystem() {
     draw_lager(two);
     draw_gelenke(two);
 
+    const styles = {
+        family: 'system-ui, sans-serif',
+        size: 50,
+        fill:'red',
+        opacity: 0.33,
+        //leading: 50
+        weight: 'bold'
+      };
+
+    const directions = two.makeText('Hallo welt', two.width / 2, two.height / 2, styles)
+    directions.rotation = 1.5708
+
     // Don’t forget to tell two to draw everything to the screen
     two.update();
 
