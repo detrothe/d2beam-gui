@@ -13,7 +13,7 @@ import "@shoelace-style/shoelace/dist/components/radio-button/radio-button.js";
 
 //import { styles } from '../styles/shared-styles';
 import "./globals";
-import {add_listeners_einstellungen, readLocalStorage} from './einstellungen'
+import { add_listeners_einstellungen, readLocalStorage } from "./einstellungen";
 
 import "../components/dr-button-pm";
 //import '../components/dr-table';
@@ -47,6 +47,7 @@ export const nelemloads_init = "1";
 export const nlastfaelle_init = "2";
 export const nkombinationen_init = "2";
 export let column_string_kombitabelle: string;
+export let typs_string_kombitabelle: string;
 //export let column_width_elementtabelle: string;
 const nkombiSpalten_init = "3"; // immer 1 mehr als nlastfaelle_init
 
@@ -86,6 +87,13 @@ for (let i = 1; i <= Number(nlastfaelle_init); i++) {
 column_string_kombitabelle = column_string_kombitabelle + "]";
 console.log("column_string_kombitabelle", column_string_kombitabelle);
 
+typs_string_kombitabelle = '["-", "text"';
+for (let i = 1; i <= Number(nlastfaelle_init); i++) {
+  typs_string_kombitabelle = typs_string_kombitabelle + ', "number"';
+}
+typs_string_kombitabelle = typs_string_kombitabelle + "]";
+console.log("typs_string_kombitabelle", typs_string_kombitabelle);
+
 {
   //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
 
@@ -111,20 +119,26 @@ console.log("column_string_kombitabelle", column_string_kombitabelle);
       <sl-tab slot="nav" panel="tab-menue3">ꔷꔷꔷ</sl-tab>
 
       <sl-tab-panel name="tab-querschnitte">
-        <sl-button id="open-dialog" @click="${handleClick}"
+        <!--
+      <sl-button id="open-dialog" @click="${handleClick}"
           >neuer allgemeiner Querschnitt</sl-button
         >
+        -->
         <br />
         <sl-button id="open-dialog_rechteck" @click="${handleClick_rechteck}"
-          >neuer Rechteck-Querschnitt</sl-button
+          >neuer Querschnitt</sl-button
         >
-
+        <br /><br />
         <sl-tree class="custom-icons">
           <!--
                <sl-icon name="plus-square" slot="expand-icon"></sl-icon>
                <sl-icon name="dash-square" slot="collapse-icon"></sl-icon>
-      -->
-          <sl-tree-item id="id_tree_LQ" @click="${handleClick_rechteck_dialog}">
+           -->
+          <sl-tree-item
+            id="id_tree_LQ"
+            @click="${handleClick_rechteck_dialog}"
+            expanded
+          >
             Linear elastisch Querschnittswerte
             <!-- <sl-tree-item>Birch</sl-tree-item>
 
@@ -221,7 +235,7 @@ console.log("column_string_kombitabelle", column_string_kombitabelle);
                   name="maxu_node"
                   class="input_tab"
                   pattern="[0-9.,eE+-]*"
-                  value="2"
+                  value=""
                   onchange="berechnungErforderlich()"
                 />
               </td>
@@ -391,6 +405,7 @@ console.log("column_string_kombitabelle", column_string_kombitabelle);
           nzeilen="${nkombinationen_init}"
           nspalten="${nkombiSpalten_init}"
           columns="${column_string_kombitabelle}"
+          typs="${typs_string_kombitabelle}"
           coltext="Lf"
         ></dr-tabelle>
       </sl-tab-panel>
@@ -461,7 +476,7 @@ console.log("column_string_kombitabelle", column_string_kombitabelle);
       </sl-tab-panel>
 
       <sl-tab-panel name="tab-menue3"
-        ><b>Einstellungen</b>
+        ><p><b>Einstellungen</b><br /><br /></p>
         <div id="id_einstellungen">
           <br />
           <table>
@@ -558,7 +573,6 @@ console.log("column_string_kombitabelle", column_string_kombitabelle);
   addListener_filesave();
   add_listeners_einstellungen();
   readLocalStorage();
-
 
   const el_select_loadcase = document.getElementById("id_select_loadcase");
   el_select_loadcase?.addEventListener("change", select_loadcase_changed);

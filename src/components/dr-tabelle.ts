@@ -121,7 +121,11 @@ class DrTabelle extends HTMLElement {
                   }
                } else {
                   el = document.createElement('input');
-                  el.setAttribute('type', 'number');
+                  if (this.typs[iSpalte] === " text") {
+                     el.setAttribute('type', 'text');
+                  } else {
+                     el.setAttribute('type', 'number');
+                  }
                   el.style.width = 'inherit'; //'6em';   // 100px
                }
 
@@ -134,7 +138,7 @@ class DrTabelle extends HTMLElement {
 
                const str = id_table + '-' + iZeile + '-' + iSpalte;
                el.id = str;
-               el.value = str;
+               //el.value = str;
                //el.className = 'input_normal';
                el.addEventListener('keydown', this.KEYDOWN);
                //el.addEventListener("change", function () { berechnungErforderlich(true); });
@@ -210,9 +214,12 @@ class DrTabelle extends HTMLElement {
             //console.log('myValue', myValue);
             const myArray = myValue.split(',');
             //console.log('myArray', myArray[0], myArray[1], myArray[2]);
+            let str=''
             for (let i = 0; i < myArray.length; i++) {
                this.typs[i] = myArray[i].replace(/"/g, '');
+               str = str + this.typs[i]
             }
+            console.log("str",str)
 
          } else if (name === 'colwidth') {
             let myValue = newValue.replace('[', '');
@@ -586,7 +593,8 @@ class DrTabelle extends HTMLElement {
          'KEYDOWN, keycode, id_input, id_tabelle',
          ev.keyCode,
          ev.target.id,
-         ev.target.offsetParent.offsetParent.id
+         ev.target.offsetParent.offsetParent.id,
+         ev.target.type
       );
       //const tableCellId = ev.target.offsetParent.id;
 
@@ -599,6 +607,8 @@ class DrTabelle extends HTMLElement {
          ev.preventDefault();
          return;
       }
+      if (ev.target.type === 'text') return;
+
       if (ev.keyCode > 47 && ev.keyCode < 58) return; // Ziffern 0-9
       if (ev.keyCode > 95 && ev.keyCode < 111) return; // Ziffern 0-9, +, - vom numpad
       if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) return; // e .  ,
