@@ -4,7 +4,7 @@ import { CTrans } from './trans';
 import { CTimoshenko_beam } from "./timoshenko_beam"
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen } from "./rechnen";
 import { el as element, node, nelem, nnodes } from "./rechnen";
-import { maxValue_lf, maxValue_komb, maxValue_eigv, THIIO_flag } from "./rechnen";
+import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, THIIO_flag } from "./rechnen";
 //import { Pane } from 'tweakpane';
 import { myPanel } from './mypanelgui'
 import { colorToRgbNumber } from '@tweakpane/core';
@@ -24,6 +24,7 @@ let show_eigenformen = false;
 let show_momentenlinien = false;
 let show_querkraftlinien = false;
 let show_normalkraftlinien = false;
+let show_schiefstellung = false;
 
 export function select_loadcase_changed() {
 
@@ -134,6 +135,14 @@ export function drawsystem() {
         //return;
     */
 
+        const style_txt = {
+            family: 'system-ui, sans-serif',
+            size: 14,
+            fill: 'red',
+            //opacity: 0.5,
+            //leading: 50
+            weight: 'bold'
+        };
 
     var two = new Two(params).appendTo(elem);
 
@@ -315,6 +324,82 @@ export function drawsystem() {
         }
     }
 
+
+    // Schiefstellung
+
+    if (show_schiefstellung && (maxValue_u0[draw_lastfall - 1].u0 > 0.0)) {
+
+        let xx1, xx2, zz1, zz2
+        let dx: number, x: number, kappa: number, sl: number, nenner: number
+        let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
+
+        let u: number, w: number, uG: number, wG: number
+        let edispL: number[] = new Array(6)
+        let ikomb = draw_lastfall
+        let maxU = 0.0, xx_max=0.0, zz_max=0.0, dispG:number
+
+        let scalefactor = 0.1 * slmax / maxValue_u0[ikomb - 1].u0
+
+        console.log("scalefaktor", scalefactor, slmax, maxValue_u0[ikomb - 1].u0)
+        console.log("draw_schiefstellung", ikomb)
+
+        for (let ielem = 0; ielem < nelem; ielem++) {
+            x1 = Math.round(tr.xPix(element[ielem].x1));
+            z1 = Math.round(tr.zPix(element[ielem].z1));
+            x2 = Math.round(tr.xPix(element[ielem].x2));
+            z2 = Math.round(tr.zPix(element[ielem].z2));
+
+            element[ielem].get_edispL_schiefstellung(edispL, ikomb-1)
+
+            dx = element[ielem].sl / nelTeilungen
+            kappa = element[ielem].kappa
+            sl = element[ielem].sl
+            nenner = sl ** 3 + 12 * kappa * sl
+
+            x = 0.0; xx2 = 0.0; zz2 = 0.0
+            for (let i = 0; i <= nelTeilungen; i++) {
+                Nu[0] = (1.0 - x / sl);
+                Nu[1] = x / sl
+                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x + sl ** 3 + 12 * kappa * sl) / nenner;
+                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * kappa) * x ** 2 + (sl ** 3 + 6 * kappa * sl) * x) / nenner);
+                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x) / nenner);
+                Nw[3] = -((sl * x ** 3 + (6 * kappa - sl ** 2) * x ** 2 - 6 * kappa * sl * x) / nenner);
+                u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+
+                uG = element[ielem].cosinus * u - element[ielem].sinus * w
+                wG = element[ielem].sinus * u + element[ielem].cosinus * w
+
+
+                //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
+                xx1 = xx2; zz1 = zz2;
+                xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
+                zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+                //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
+                if (i > 0) {
+                    //console.log("line", xx1, zz1, xx2, zz2)
+                    let line = two.makeLine(xx1, zz1, xx2, zz2);
+                    line.linewidth = 2;
+                }
+
+                dispG=Math.sqrt(uG*uG+wG*wG)
+                if ( dispG > maxU) {
+                    maxU=dispG
+                    xx_max=xx2
+                    zz_max=zz2
+                }
+                x = x + dx
+            }
+
+        }
+
+        if ( maxU > 0.0 ) {
+            const str=String(maxU*1000)+'mm'
+            const txt = two.makeText(str, xx_max, zz_max, style_txt)
+
+        }
+    }
 
     // Momentenlinien
 
@@ -576,11 +661,11 @@ export function drawsystem() {
     const styles = {
         family: 'system-ui, sans-serif',
         size: 50,
-        fill:'red',
+        fill: 'red',
         opacity: 0.33,
         //leading: 50
         weight: 'bold'
-      };
+    };
 
     const directions = two.makeText('Hallo welt', two.width / 2, two.height / 2, styles)
     directions.rotation = 1.5708
@@ -772,7 +857,7 @@ function draw_momentenlinien_grafik() {
 
 //--------------------------------------------------------------------------------------------------------
 function draw_querkraftlinien_grafik() {
-    //--------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
     console.log("in draw_querkraftlinien_grafik");
     show_querkraftlinien = !show_querkraftlinien;
@@ -784,7 +869,7 @@ function draw_querkraftlinien_grafik() {
 
 //--------------------------------------------------------------------------------------------------------
 function draw_normalkraftlinien_grafik() {
-    //--------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
     console.log("in draw_normalkraftlinien_grafik");
     show_normalkraftlinien = !show_normalkraftlinien;
@@ -796,7 +881,7 @@ function draw_normalkraftlinien_grafik() {
 
 //--------------------------------------------------------------------------------------------------------
 function draw_eigenformen_grafik() {
-    //--------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
     console.log("in draw_verformungen_grafik");
     show_eigenformen = !show_eigenformen;
@@ -805,6 +890,19 @@ function draw_eigenformen_grafik() {
 
     drawsystem();
 }
+
+//--------------------------------------------------------------------------------------------------------
+function draw_schiefstellung_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_schiefstellung_grafik");
+    show_schiefstellung = !show_schiefstellung;
+
+    //if (Gesamt_ys === undefined || isNaN(yM)) return;
+
+    drawsystem();
+}
+
 //---------------------------------------------------------------------------------- a d d E v e n t L i s t e n e r
 
 window.addEventListener('draw_systemlinien_grafik', draw_systemlinien_grafik);
@@ -813,3 +911,4 @@ window.addEventListener('draw_eigenformen_grafik', draw_eigenformen_grafik);
 window.addEventListener('draw_momentenlinien_grafik', draw_momentenlinien_grafik);
 window.addEventListener('draw_querkraftlinien_grafik', draw_querkraftlinien_grafik);
 window.addEventListener('draw_normalkraftlinien_grafik', draw_normalkraftlinien_grafik);
+window.addEventListener('draw_schiefstellung_grafik', draw_schiefstellung_grafik);

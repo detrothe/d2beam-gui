@@ -25,6 +25,7 @@ export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
 export let stabendkraefte: TFArray3D
 export let u_lf = [] as number[][]
+export let u0_komb = [] as number[][]   // berechnete Schiefstellung
 export let eigenform_container_node = [] as TFArray3D[]
 export let eigenform_container_u = [] as TFArray2D[]
 export let node = [] as TNode[]
@@ -51,6 +52,7 @@ export let el = [] as any
 export let maxValue_lf = [] as TMaxValues[]
 export let maxValue_komb = [] as TMaxValues[]
 export let maxValue_eigv = [] as number[][]
+export let maxValue_u0 = [] as TMaxU0[]
 
 
 export let xmin = -50.0, zmin = -50.0, xmax = 50.0, zmax = 50.0, slmax = 0.0;
@@ -142,7 +144,7 @@ class TElLoads {
     pL: number = 0.0
     pR: number = 0.0
     re: number[] = Array(6)                              // Elementlastvektor lokal
-    el_r: number[] =Array(6)                             // Elementlastvektor im globalen Koordinatensystem
+    el_r: number[] = Array(6)                             // Elementlastvektor im globalen Koordinatensystem
 }
 
 class TMaxValues {
@@ -157,6 +159,11 @@ class TMaxValues {
         this.Vz = 0.0
         this.My = 0.0
     }
+}
+
+class TMaxU0 {
+    ieq = -1
+    u0 = 0.0
 }
 
 export function add_neq() {
@@ -711,6 +718,7 @@ function calculate() {
     for (i = 0; i < nkombinationen; i++) {
         maxValue_komb.push(new TMaxValues());
         maxValue_komb[i].zero();
+        maxValue_u0.push(new TMaxU0);
     }
 
     console.log("N E I G V", neigv)
@@ -943,6 +951,7 @@ function calculate() {
 
         disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);
         u_lf = Array.from(Array(neq), () => new Array(nkombinationen).fill(0.0));
+        u0_komb = Array.from(Array(neq), () => new Array(nkombinationen).fill(0.0));
 
         //console.log("nkombinationen", nkombinationen)
         stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nkombinationen);
@@ -957,13 +966,20 @@ function calculate() {
         }
         alpha_cr = Array.from(Array(nkombinationen), () => new Array(neigv).fill(0.0));
 
+        for (ielem = 0; ielem < nelem; ielem++) {
+
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                el[ielem].berechneElementlasten(ieload)
+            }
+        }
+
 
         let pg = new Array(neq)
 
         for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
 
             pg.fill(0.0)
-            console.log("pg init", pg)
+            //console.log("pg init", pg)
 
             console.log("\n***************  K O M B I N A T I O N ", iKomb, "\n\n")
 
@@ -981,12 +997,13 @@ function calculate() {
 
                     el[ielem].berechneElementsteifigkeitsmatrix(iter);
                     el[ielem].addiereElementsteifigkeitmatrix(stiff)
-
-                    for (let ieload = 0; ieload < neloads; ieload++) {
-                        if ((eload[ieload].element === ielem) && (eload[ieload].lf === iKomb)) {
-                            el[ielem].berechneElementlasten(ieload)
-                        }
-                    }
+                    /*
+                                        for (let ieload = 0; ieload < neloads; ieload++) {
+                                            if ((eload[ieload].element === ielem) && (eload[ieload].lf === iKomb)) {
+                                                el[ielem].berechneElementlasten(ieload)
+                                            }
+                                        }
+                    */
                 }
 
                 for (j = 0; j < neq; j++) {
@@ -1008,6 +1025,7 @@ function calculate() {
                         }
                     }
                 }
+                console.log("R Einzellasten", R)
 
                 //  und jetzt noch die normalen Elementlasten
 
@@ -1029,6 +1047,7 @@ function calculate() {
                     }
 
                 }
+                console.log("R mit Elementlasten", R)
 
                 //for (i = 0; i < neq; i++) R[i] -= pg[i]   // Schiefstellung
 
@@ -1106,23 +1125,42 @@ function calculate() {
 
                     eigenwertberechnung(iKomb, stiff, stiff_sig, u, 0)
 
-                    let umax = 0.0
+                    let umax = 0.0, ieq = -1
                     if (maxU_node === 0 || maxU_node > nnodes) {
 
-                        for (i = 0; i < neq; i++) if (Math.abs(u[i]) > umax) umax = Math.abs(u[i])
+                        for (i = 0; i < neq; i++) {
+                            if (Math.abs(u[i]) > umax) {
+                                umax = Math.abs(u[i]);
+                                ieq = i;
+                            }
+                        }
                         console.log("umax=", umax)
 
                     } else {
-                        let ieq = node[maxU_node - 1].L[maxU_dir]
+                        ieq = node[maxU_node - 1].L[maxU_dir]
                         console.log("schief", ieq, u[ieq])
                         umax = Math.abs(u[ieq])
                     }
 
+                    let pg_max = 0.0
                     if (umax > 0.0) {
-                        for (i = 0; i < neq; i++) pg[i] = u[i] * maxU_schief / umax
+                        let vorzeichen_U = Math.sign(u_lf[ieq][iKomb - 1])
+                        let vorzeichen_umax = Math.sign(u[ieq])
+                        let faktor = vorzeichen_U * vorzeichen_umax * maxU_schief / umax
+                        console.log("vorzeichen", vorzeichen_U, vorzeichen_umax)
+                        for (i = 0; i < neq; i++) {
+                            pg[i] = u[i] * faktor
+                            if (Math.abs(pg[i]) > pg_max) pg_max = Math.abs(pg[i])
+                        }
                     } else {
                         pg.fill(0.0)
                     }
+
+                    for (i = 0; i < neq; i++) {
+                        u0_komb[i][iKomb - 1] = pg[i]
+                    }
+                    maxValue_u0[iKomb - 1].ieq = ieq
+                    maxValue_u0[iKomb - 1].u0 = pg_max
 
                     //console.log("pg", pg)
 
@@ -1140,6 +1178,10 @@ function calculate() {
                 }
 
             }  // ende iter
+
+            if (maxValue_u0[iKomb - 1].ieq >= 0) {
+                console.log("==== pg_max", maxValue_u0[iKomb - 1].ieq, maxValue_u0[iKomb - 1].u0, u0_komb[maxValue_u0[iKomb - 1].ieq][iKomb - 1])
+            }
 
             for (ielem = 0; ielem < nelem; ielem++) {
                 el[ielem].berechneElementSchnittgroessen(ielem, iKomb - 1)

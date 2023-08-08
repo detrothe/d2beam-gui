@@ -16,7 +16,7 @@ export function myPanel() {
         normalkraft: false,
         querkraft: false,
         moment: false,
-        woelb_M: false,
+        schief: false,
         scale: 1.0,
         eigenform: false,
         show_arrows: true,
@@ -87,14 +87,14 @@ export function myPanel() {
         window.dispatchEvent(new Event("draw_eigenformen_grafik"));
     });
 
+    gui.add(obj, 'schief').name('Schiefstellung').onChange(() => {
+        window.dispatchEvent(new Event("draw_schiefstellung_grafik"));
+    });
+
     gui.add(obj, 'scale', 0, 2, 0.1).name(skalierung).onFinishChange((v: any) => {
         console.log("skalierung", v)
         scale_factor = v;
         window.dispatchEvent(new Event("scale_factor"));
-    });
-
-    gui.add(obj, 'woelb_M').name('omega').onChange(() => {
-        window.dispatchEvent(new Event("woelb_M_webgl"));
     });
 
     gui.add(obj, 'show_arrows').name(pfeile_anzeigen).onChange(() => {

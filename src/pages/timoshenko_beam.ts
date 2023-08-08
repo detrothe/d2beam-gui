@@ -1,7 +1,7 @@
 import { CElement } from "./element"
 
 import {
-    node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, add_neq, neq, u_lf, eigenform_container_u,
+    node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, add_neq, neq, u_lf, u0_komb, eigenform_container_u,
     nelTeilungen, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf
 } from "./rechnen"
 
@@ -675,6 +675,32 @@ export class CTimoshenko_beam extends CElement {
 
 
     //---------------------------------------------------------------------------------------------
+    get_edispL_schiefstellung(edispL: number[], iKomb: number) {
+
+        let edisp: number[] = new Array(6)
+
+
+        for (let j = 0; j < 6; j++) {
+            let ieq = this.lm[j]
+            if (ieq === -1) {
+                edisp[j] = 0.0
+            } else {
+                edisp[j] = u0_komb[ieq][iKomb]
+            }
+        }
+        console.log("disp", edisp)
+
+        for (let i = 0; i < 6; i++) {
+            let sum = 0.0
+            for (let j = 0; j < 6; j++) {
+                sum += this.trans[i][j] * edisp[j]
+            }
+            edispL[i] = sum
+        }
+        console.log("dispL", edispL)
+    }
+
+    //---------------------------------------------------------------------------------------------
     get_edispL_eigenform(edispL: number[], iKomb: number, ieigv: number) {
 
         let edisp: number[] = new Array(6)
@@ -699,6 +725,7 @@ export class CTimoshenko_beam extends CElement {
         }
         console.log("eigen, dispL", edispL)
     }
+
 
     //---------------------------------------------------------------------------------------------
 
