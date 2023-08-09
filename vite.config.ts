@@ -33,6 +33,10 @@ export default defineConfig({
         {
           src: 'd2beam_wasm.*',
           dest: '.'
+        },
+        {
+          src: 'src/info/Kurzdokumentation_deutsch.html',
+          dest: './info'
         }
       ]
     })
