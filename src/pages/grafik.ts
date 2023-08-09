@@ -112,7 +112,7 @@ export function drawsystem() {
     var params = {
         fullscreen: false
     };
-    var elem = document.getElementById('id_grafik') as any; //HTMLDivElement;
+    const elem = document.getElementById('id_grafik') as any; //HTMLDivElement;
     console.log("childElementCount", elem.childElementCount)
 
     if (elem.childElementCount > 2) elem.removeChild(elem?.lastChild);
@@ -145,7 +145,9 @@ export function drawsystem() {
         weight: 'bold'
     };
 
-    var two = new Two(params).appendTo(elem);
+    let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen);
+
+    const two = new Two(params).appendTo(elem);
 
 
     console.log("document.documentElement", document.documentElement.clientHeight)
@@ -720,8 +722,41 @@ export function drawsystem() {
             //console.log("x..", element[ielem].x1, element[ielem].z1, element[ielem].x2, element[ielem].z2)
             //console.log("elem", ielem, x1, z1, x2, z2)
             let line = two.makeLine(x1, z1, x2, z2);
-            line.linewidth = 10;
+            if (onlyLabels) line.linewidth = 10;
+            else line.linewidth = 5;
+
+            if (show_labels && onlyLabels) {
+
+                let xm = (x1 + x2) / 2. + element[ielem].sinus * 7
+                let zm = (z1 + z2) / 2. - element[ielem].cosinus * 7
+
+                let circle = two.makeCircle(xm, zm, 14, 20)
+                circle.fill = '#ffffff'
+
+                let str = String(+ielem + 1)
+                const txt = two.makeText(str, xm, zm, style_txt)
+                txt.fill = '#000000'
+                //txt.alignment = 'left'
+                //txt.baseline = 'top'
+            }
         }
+
+        if (show_labels && onlyLabels) {
+
+            for (let i = 0; i < nnodes; i++) {
+                x1 = Math.round(tr.xPix(node[i].x)) + 20;
+                z1 = Math.round(tr.zPix(node[i].z)) + 20;
+
+                let rect = two.makeRoundedRectangle(x1, z1, 25, 25, 4)
+                rect.fill = '#ffffff'
+                rect.stroke = '#0000ff'
+
+                let str = String(+i + 1)
+                const txt = two.makeText(str, x1, z1, style_txt)
+                txt.fill = '#000000'
+            }
+        }
+
     }
 
     draw_lager(two);
@@ -736,8 +771,8 @@ export function drawsystem() {
         weight: 'bold'
     };
 
-    const directions = two.makeText('Hallo welt', two.width / 2, two.height / 2, styles)
-    directions.rotation = 1.5708
+    //const directions = two.makeText('Hallo welt', two.width / 2, two.height / 2, styles)
+    //directions.rotation = 1.5708
 
     // Don’t forget to tell two to draw everything to the screen
     two.update();
