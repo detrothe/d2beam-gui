@@ -38,3 +38,18 @@ export function myFormat(wert: any, minDecimal: any, maxDecimal: any) {
 
     return new Intl.NumberFormat(navigator.language, { minimumFractionDigits: minDecimal, maximumFractionDigits: maxDecimal }).format(wert);
 }
+
+//------------------------------------------------------------------------------------------------
+export function set_info() {
+    //--------------------------------------------------------------------------------------------
+
+    let clientWidth = document.documentElement.clientWidth;
+    let clientHeight = document.documentElement.clientHeight;
+    let breite = Math.min(clientWidth, 760);
+    document.getElementById("id_doc")?.setAttribute("width", breite + "px");
+    document.getElementById("id_doc")?.setAttribute("height", clientHeight + "px");
+    let left = (clientWidth - breite) / 2
+    if (left < 0) left = 0;
+    (document.getElementById("id_doc_frame") as HTMLDivElement).style.left = left + 'px';
+    console.log("id_doc_frame", (clientWidth - breite) / 2)
+}

@@ -108,7 +108,7 @@ class DrTabelle extends HTMLElement {
             } else {
                //console.log('this.typs', '|' + this.typs[iSpalte] + '|');
                let el;
-               if (this.typs[iSpalte] === ' select') {
+               if (this.typs[iSpalte] === 'select') {
                   el = document.createElement('select');
                   el.style.width = '100%';   // 100px
                   console.log('CREATED SELECT');
@@ -121,7 +121,7 @@ class DrTabelle extends HTMLElement {
                   }
                } else {
                   el = document.createElement('input');
-                  if (this.typs[iSpalte] === " text") {
+                  if (this.typs[iSpalte] === "text") {
                      el.setAttribute('type', 'text');
                   } else {
                      el.setAttribute('type', 'number');
@@ -202,7 +202,7 @@ class DrTabelle extends HTMLElement {
             const myArray = myValue.split(',');
             //console.log('myArray', myArray[0], myArray[1], myArray[2]);
             for (let i = 0; i < myArray.length; i++) {
-               this.columns[i] = myArray[i].replace(/"/g, '');
+               this.columns[i] = myArray[i].replace(/"/g, '').trim();
             }
 
             //console.log('-- columns', this.columns[0], this.columns[1], this.columns[2], this.columns[3], this.columns[4], this.columns[5]);
@@ -216,7 +216,7 @@ class DrTabelle extends HTMLElement {
             //console.log('myArray', myArray[0], myArray[1], myArray[2]);
             let str=''
             for (let i = 0; i < myArray.length; i++) {
-               this.typs[i] = myArray[i].replace(/"/g, '');
+               this.typs[i] = myArray[i].replace(/"/g, '').trim();
                str = str + this.typs[i]
             }
             console.log("str",str)
@@ -227,7 +227,7 @@ class DrTabelle extends HTMLElement {
             myValue = myValue.slice(0, lastIndex);
             const myArray = myValue.split(',');
             for (let i = 0; i < myArray.length; i++) {
-               this.colWidth[i] = myArray[i].replace(/"/g, '');
+               this.colWidth[i] = myArray[i].replace(/"/g, '').trim();
             }
          } else if (name === 'coltext') {
             this.colText = newValue;
@@ -287,7 +287,7 @@ class DrTabelle extends HTMLElement {
             //console.log("row", row);
             for (let iSpalte = 1; iSpalte <= this.nSpalten; iSpalte++) {
 
-               if (this.typs[iSpalte] === ' select') {
+               if (this.typs[iSpalte] === 'select') {
                   const idstr = 'idtable-' + iZeile + '-' + iSpalte;
                   const el = this.shadow.getElementById(idstr)
                   //console.log("idstr", el)
@@ -318,7 +318,7 @@ class DrTabelle extends HTMLElement {
             //console.log("row", row);
             for (let iSpalte = 1; iSpalte <= this.nSpalten; iSpalte++) {
 
-               if (this.typs[iSpalte] === ' select') {
+               if (this.typs[iSpalte] === 'select') {
                   const idstr = 'idtable-' + iZeile + '-' + iSpalte;
                   const el = this.shadow.getElementById(idstr)
                   //console.log("idstr", el.children)
@@ -504,7 +504,7 @@ class DrTabelle extends HTMLElement {
                   newCell.appendChild(newText);
                } else {
                   let el;
-                  if (this.typs[iSpalte] === ' select') {
+                  if (this.typs[iSpalte] === 'select') {
                      el = document.createElement('select');
                      el.style.width = '100%';   // 100px
                      console.log('CREATED SELECT');

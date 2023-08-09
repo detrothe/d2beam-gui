@@ -60,7 +60,7 @@ export function myPanel() {
     //gui.domElement.classList.add('allow-touch-styles');
 
     gui.add(obj, 'Label').name(beschriftung).onChange(() => {
-        window.dispatchEvent(new Event("label_webgl"));
+        window.dispatchEvent(new Event("draw_label_grafik"));
     });
 
     gui.add(obj, 'systemlinie').name(systemlinien).onChange(() => {

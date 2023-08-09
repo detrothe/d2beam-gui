@@ -25,6 +25,7 @@ import "../components/dr-dialog-rechteckquerschnitt";
 
 import { addListener_filesave } from "./dateien";
 import { select_loadcase_changed, select_eigenvalue_changed } from "./grafik";
+import {set_info} from "./utility"
 
 import {
   rechnen,
@@ -116,6 +117,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
       <sl-tab slot="nav" panel="tab-ergebnisse">Ergebnisse</sl-tab>
       <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
       <sl-tab slot="nav" panel="tab-pro">Pro</sl-tab>
+      <sl-tab slot="nav" panel="tab-info">Info</sl-tab>
       <sl-tab slot="nav" panel="tab-menue3">ꔷꔷꔷ</sl-tab>
 
       <sl-tab-panel name="tab-querschnitte">
@@ -475,6 +477,21 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         </table>
       </sl-tab-panel>
 
+      <sl-tab-panel name="tab-info">
+        <div id="id_hilfe" class="c_hilfe">
+          <div id="id_doc_frame" style="position: relative; width: 760px; left:50%;">
+            <iframe
+              id="id_doc"
+              src="src/info/Kurzdokumentation_deutsch.html"
+              width="100%"
+              height="1500px"
+              style="border: none; overflow: scroll; background-color: white;"
+            >
+            </iframe>
+          </div>
+        </div>
+      </sl-tab-panel>
+
       <sl-tab-panel name="tab-menue3"
         ><p><b>Einstellungen</b><br /><br /></p>
         <div id="id_einstellungen">
@@ -573,6 +590,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
   addListener_filesave();
   add_listeners_einstellungen();
   readLocalStorage();
+  set_info();
 
   const el_select_loadcase = document.getElementById("id_select_loadcase");
   el_select_loadcase?.addEventListener("change", select_loadcase_changed);

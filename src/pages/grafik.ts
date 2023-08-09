@@ -1,13 +1,14 @@
 import Two from 'two.js'
 
 import { CTrans } from './trans';
-import { CTimoshenko_beam } from "./timoshenko_beam"
+import { myFormat } from './utility'
+//import { CTimoshenko_beam } from "./timoshenko_beam"
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen } from "./rechnen";
 import { el as element, node, nelem, nnodes } from "./rechnen";
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, THIIO_flag } from "./rechnen";
 //import { Pane } from 'tweakpane';
 import { myPanel } from './mypanelgui'
-import { colorToRgbNumber } from '@tweakpane/core';
+//import { colorToRgbNumber } from '@tweakpane/core';
 
 console.log("in grafik")
 
@@ -17,7 +18,7 @@ let draw_lastfall = 1
 let draw_eigenform = 1
 
 
-let show_webgl_label = false;
+let show_labels = false;
 let show_systemlinien = true;
 let show_verformungen = false;
 let show_eigenformen = false;
@@ -135,14 +136,14 @@ export function drawsystem() {
         //return;
     */
 
-        const style_txt = {
-            family: 'system-ui, sans-serif',
-            size: 14,
-            fill: 'red',
-            //opacity: 0.5,
-            //leading: 50
-            weight: 'bold'
-        };
+    const style_txt = {
+        family: 'system-ui, sans-serif',
+        size: 14,
+        fill: 'red',
+        //opacity: 0.5,
+        //leading: 50
+        weight: 'bold'
+    };
 
     var two = new Two(params).appendTo(elem);
 
@@ -206,6 +207,8 @@ export function drawsystem() {
         let dx: number, x: number, kappa: number, sl: number, nenner: number
         let Nu: number[] = Array(2), Nw: number[] = Array(4)
         let u: number, w: number, uG: number, wG: number
+        let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+        let xmem = 0.0, zmem = 0.0
 
         let edispL: number[] = new Array(6)
         let iLastfall = draw_lastfall
@@ -219,6 +222,8 @@ export function drawsystem() {
         console.log("scalefaktor", scalefactor, slmax, maxValue_lf[iLastfall - 1].disp)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+            maxU = 0.0
+
             x1 = Math.round(tr.xPix(element[ielem].x1));
             z1 = Math.round(tr.zPix(element[ielem].z1));
             x2 = Math.round(tr.xPix(element[ielem].x2));
@@ -255,9 +260,28 @@ export function drawsystem() {
                     let line = two.makeLine(xx1, zz1, xx2, zz2);
                     line.linewidth = 2;
                 }
+
+                dispG = Math.sqrt(uG * uG + wG * wG)
+                if (dispG > maxU) {
+                    maxU = dispG
+                    x_max = xx2
+                    z_max = zz2
+                    xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+                    zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+                }
+
                 x = x + dx
             }
 
+            if (show_labels && maxU > 0.0) {
+                const str = myFormat(maxU * 1000, 1, 1) + 'mm'
+                const txt = two.makeText(str, x_max, z_max, style_txt)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+
+                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                pfeil.stroke = '#D3D3D3'
+            }
         }
     }
 
@@ -273,14 +297,18 @@ export function drawsystem() {
         let u: number, w: number, uG: number, wG: number
         let edispL: number[] = new Array(6)
         let ikomb = draw_lastfall
-        let scalefactor = 0
+        let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+        let xmem = 0.0, zmem = 0.0
 
-        scalefactor = 0.1 * slmax / maxValue_eigv[ikomb - 1][draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
+
+        let scalefactor = 0.1 * slmax / maxValue_eigv[ikomb - 1][draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
 
         console.log("scalefaktor", scalefactor, slmax, maxValue_lf[draw_eigenform - 1].disp)
         console.log("draw_eigenform", draw_eigenform, ikomb)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+            maxU = 0.0
+
             x1 = Math.round(tr.xPix(element[ielem].x1));
             z1 = Math.round(tr.zPix(element[ielem].z1));
             x2 = Math.round(tr.xPix(element[ielem].x2));
@@ -318,7 +346,29 @@ export function drawsystem() {
                     let line = two.makeLine(xx1, zz1, xx2, zz2);
                     line.linewidth = 2;
                 }
+
+                dispG = Math.sqrt(uG * uG + wG * wG)
+
+                if (dispG > maxU) {
+                    maxU = dispG
+                    x_max = xx2
+                    z_max = zz2
+                    xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+                    zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+                }
+
                 x = x + dx
+            }
+
+            if (show_labels && maxU > 0.0) {
+                const str = myFormat(maxU, 1, 2)
+                const txt = two.makeText(str, x_max, z_max, style_txt)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+
+                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                pfeil.stroke = '#D3D3D3'
+
             }
 
         }
@@ -336,7 +386,8 @@ export function drawsystem() {
         let u: number, w: number, uG: number, wG: number
         let edispL: number[] = new Array(6)
         let ikomb = draw_lastfall
-        let maxU = 0.0, xx_max=0.0, zz_max=0.0, dispG:number
+        let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+        let xmem = 0.0, zmem = 0.0
 
         let scalefactor = 0.1 * slmax / maxValue_u0[ikomb - 1].u0
 
@@ -344,12 +395,14 @@ export function drawsystem() {
         console.log("draw_schiefstellung", ikomb)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+            maxU = 0.0
+
             x1 = Math.round(tr.xPix(element[ielem].x1));
             z1 = Math.round(tr.zPix(element[ielem].z1));
             x2 = Math.round(tr.xPix(element[ielem].x2));
             z2 = Math.round(tr.zPix(element[ielem].z2));
 
-            element[ielem].get_edispL_schiefstellung(edispL, ikomb-1)
+            element[ielem].get_edispL_schiefstellung(edispL, ikomb - 1)
 
             dx = element[ielem].sl / nelTeilungen
             kappa = element[ielem].kappa
@@ -383,20 +436,30 @@ export function drawsystem() {
                     line.linewidth = 2;
                 }
 
-                dispG=Math.sqrt(uG*uG+wG*wG)
-                if ( dispG > maxU) {
-                    maxU=dispG
-                    xx_max=xx2
-                    zz_max=zz2
+                dispG = Math.sqrt(uG * uG + wG * wG)
+
+                if (dispG > maxU) {
+                    maxU = dispG
+                    x_max = xx2
+                    z_max = zz2
+                    xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+                    zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+
                 }
+
                 x = x + dx
             }
 
-        }
+            if (show_labels && maxU > 0.0) {
+                const str = myFormat(maxU * 1000, 1, 1) + 'mm'
+                const txt = two.makeText(str, x_max, z_max, style_txt)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
 
-        if ( maxU > 0.0 ) {
-            const str=String(maxU*1000)+'mm'
-            const txt = two.makeText(str, xx_max, zz_max, style_txt)
+                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                pfeil.stroke = '#D3D3D3'
+
+            }
 
         }
     }
@@ -412,6 +475,8 @@ export function drawsystem() {
         let scalefactor = 0
         let Mx: number[] = new Array(nelTeilungen + 1)
         let poly: number[] = new Array(8)  // 2*(nelTeilungen+1+2)
+        let maxM = 0.0, x_max = 0.0, z_max = 0.0, x0 = 0.0, z0 = 0.0, xn = 0.0, zn = 0.0
+
 
         //if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] === 0.0) return
 
@@ -426,6 +491,7 @@ export function drawsystem() {
 
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+            maxM = 0.0
 
             element[ielem].get_elementSchnittgroesse_Moment(Mx, draw_lastfall - 1)
             console.log("GRAFIK  Mx", Mx)
@@ -460,9 +526,25 @@ export function drawsystem() {
                     //group.add(line)
                 }
                 */
+                if (i === 0) {
+                    maxM = Math.abs(Mx[i])
+                    x0 = xx2
+                    z0 = zz2
+                }
+                else if (Math.abs(Mx[i]) > maxM) {
+                    maxM = Math.abs(Mx[i])
+                    x_max = xx2
+                    z_max = zz2
+                }
+
+                if (i === nelTeilungen) {
+                    xn = xx2
+                    zn = zz2
+                }
+
                 x = x + dx
             }
-            vertices.push(new Two.Vector(x2, z2));
+            vertices.push(new Two.Anchor(x2, z2));
 
             // @ts-ignore
             let flaeche = two.makePath(vertices);
@@ -470,42 +552,29 @@ export function drawsystem() {
 
             //group.fill='#00AEFF'
             //group.closed=true
-            /*
-                        poly[0]=x1;poly[1]=z1
-                        poly[2]=x2;poly[3]=z2
-                        poly[4]=x2;poly[5]=z2 + Mx[nelTeilungen] * scalefactor
-                        poly[6]=x1;poly[7]=z1 + Mx[0] * scalefactor
-                        //let polygon =two.makePolygon(poly[0],poly[1],poly[0],5)
-                        //let a= new Two.Anchor(x1,z1)
-                        let polygon = two.makePoints(x1,z1,x2,z2,x2,z2 + Mx[nelTeilungen] * scalefactor)
-                        console.log("polygon",polygon)
-                        polygon.fill= '#00AEFF';
 
-                        var points;
+            if (show_labels) {
+                if (maxM > 0.0) {
+                    const str = myFormat(maxM, 1, 2) + 'kNm'
+                    const txt = two.makeText(str, x_max, z_max, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
+                if (Math.abs(Mx[0]) > 0.000001) {
+                    const str = myFormat(Math.abs(Mx[0]), 1, 2) + 'kNm'
+                    const txt = two.makeText(str, x0, z0, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
+                if (Math.abs(Mx[nelTeilungen]) > 0.000001) {
+                    const str = myFormat(Math.abs(Mx[nelTeilungen]), 1, 2) + 'kNm'
+                    const txt = two.makeText(str, xn, zn, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
 
-                        var vertices = [];
-                        for (var i = 0; i < 100; i++) {
-                            var xxx = Math.random() * two.width;
-                          var yyy = Math.random() * two.height;
-                            vertices.push(new Two.Vector(xxx, yyy));
-                        }
+            }
 
-                        points = two.makePath(vertices);
-                        points.size = 5;
-
-            let points = two.makePoints(
-                two.width / 2,
-                two.height / 2,
-                two.width / 2 + 20,
-                two.height / 2,
-                two.width / 2 + 40,
-                two.height / 2
-            );
-
-            //points.stroke()
-            points.fill = '#00AEFF';
-            points.size = 10;
-*/
 
         }
     }
@@ -820,6 +889,15 @@ function draw_gelenke(two: Two) {
 }
 
 //--------------------------------------------------------------------------------------------------------
+function draw_label_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_label_grafik");
+    show_labels = !show_labels;
+
+    drawsystem();
+}
+//--------------------------------------------------------------------------------------------------------
 function draw_systemlinien_grafik() {
     //----------------------------------------------------------------------------------------------------
 
@@ -905,6 +983,7 @@ function draw_schiefstellung_grafik() {
 
 //---------------------------------------------------------------------------------- a d d E v e n t L i s t e n e r
 
+window.addEventListener('draw_label_grafik', draw_label_grafik);
 window.addEventListener('draw_systemlinien_grafik', draw_systemlinien_grafik);
 window.addEventListener('draw_verformungen_grafik', draw_verformungen_grafik);
 window.addEventListener('draw_eigenformen_grafik', draw_eigenformen_grafik);
