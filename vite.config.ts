@@ -36,7 +36,7 @@ export default defineConfig({
         },
         {
           src: 'src/info/Kurzdokumentation_deutsch.html',
-          dest: './info'
+          dest: './src/info/'
         }
       ]
     })
