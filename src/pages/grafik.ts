@@ -485,8 +485,8 @@ export function drawsystem() {
         }
         else if (THIIO_flag === 1) {
             scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].My
+            //console.log("scalefaktor", scalefactor, slmax, maxValue_komb[iLastfall - 1].My)
         }
-        console.log("scalefaktor", scalefactor, slmax, maxValue_komb[iLastfall - 1].My)
 
 
 
@@ -598,8 +598,8 @@ export function drawsystem() {
         }
         else if (THIIO_flag === 1) {
             scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].Vz
+            //console.log("scalefaktor", scalefactor, slmax, maxValue_komb[iLastfall - 1].Vz)
         }
-        console.log("scalefaktor", scalefactor, slmax, maxValue_komb[iLastfall - 1].Vz)
 
 
 
@@ -666,8 +666,8 @@ export function drawsystem() {
         }
         else if (THIIO_flag === 1) {
             scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].N
+            //console.log("scalefaktor", scalefactor, slmax, maxValue_komb[iLastfall - 1].N)
         }
-        console.log("scalefaktor", scalefactor, slmax, maxValue_komb[iLastfall - 1].N)
 
 
 
