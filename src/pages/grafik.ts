@@ -3,8 +3,8 @@ import Two from 'two.js'
 import { CTrans } from './trans';
 import { myFormat } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
-import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen } from "./rechnen";
-import { el as element, node, nelem, nnodes } from "./rechnen";
+import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load } from "./rechnen";
+import { el as element, node, nelem, nnodes, nloads } from "./rechnen";
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, lagerkraefte, THIIO_flag } from "./rechnen";
 //import { Pane } from 'tweakpane';
 import { myPanel } from './mypanelgui'
@@ -43,17 +43,32 @@ const style_txt_lager = {
     fill: '#006666',
     weight: 'bold'
 };
+
+const style_txt_knotenlast = {
+    family: 'system-ui, sans-serif',
+    size: 14,
+    fill: '#006666',
+    weight: 'bold'
+};
 const style_pfeil = {
     b: 20,
     h: 10,
     linewidth: 2,
     color: '#000000'
 }
+
 const style_pfeil_lager = {
     b: 35,
     h: 16,
     linewidth: 7,
     color: '#006666'
+}
+
+const style_pfeil_knotenlast = {
+    b: 35,
+    h: 16,
+    linewidth: 7,
+    color: '#dc0000'
 }
 
 export function select_loadcase_changed() {
@@ -782,8 +797,10 @@ export function drawsystem() {
 
     draw_lager(two);
     draw_gelenke(two);
+   // draw_elementkraefte(two);
 
     draw_lagerkraefte(two);
+    draw_knotenkraefte(two);
 
     const styles = {
         family: 'system-ui, sans-serif',
@@ -809,11 +826,72 @@ export function drawsystem() {
 
 }
 
+/*
+//--------------------------------------------------------------------------------------------------------
+function draw_elementkraefte(two: Two) {
+    //----------------------------------------------------------------------------------------------------
+
+
+
+}
+*/
+//--------------------------------------------------------------------------------------------------------
+function draw_knotenkraefte(two: Two) {
+    //----------------------------------------------------------------------------------------------------
+
+    let plength = slmax / 20., delta = slmax / 200.0
+    let xpix: number, zpix: number
+    let wert: number
+
+    console.log("in draw_knotenkraefte, draw_lastfall", draw_lastfall)
+
+    for (let i = 0; i < nloads; i++) {
+        let inode = load[i].node
+        let x = node[inode].x;
+        let z = node[inode].z;
+        //console.log("load[i]", i, load)
+        if (load[i].p[0] != 0.0 && load[i].lf === draw_lastfall) {
+            //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+
+            wert = load[i].p[0]
+            if (wert > 0.0) {
+                draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
+            } else {
+                draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+            }
+            xpix = tr.xPix(x + delta + plength) + 5
+            zpix = tr.zPix(z) - 5
+            const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+            txt.alignment = 'left'
+            txt.baseline = 'top'
+        }
+        if (load[i].p[1] != 0.0 && load[i].lf === draw_lastfall) {
+            //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+
+            wert = load[i].p[1]
+            if (wert > 0.0) {
+                draw_arrow(two, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
+            } else {
+                draw_arrow(two, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
+            }
+
+            xpix = tr.xPix(x) + 5
+            zpix = tr.zPix(z - delta - plength) + 5
+            const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+            txt.alignment = 'left'
+            txt.baseline = 'top'
+        }
+
+    }
+}
+
 //--------------------------------------------------------------------------------------------------------
 function draw_lagerkraefte(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
-    let plength = slmax / 25., delta = slmax / 60.0
+    let plength = slmax / 25., delta = slmax / 100.0
     let xpix: number, zpix: number
 
     for (let i = 0; i < nnodes; i++) {
@@ -827,17 +905,18 @@ function draw_lagerkraefte(two: Two) {
             }
             else if (THIIO_flag === 1) {
             }
-            wert = Math.abs(lagerkraefte._(i, 0, draw_lastfall - 1))
-            console.log("wert", wert)
+            wert = lagerkraefte._(i, 0, draw_lastfall - 1)
+            console.log("wert", wert, draw_lastfall)
 
             if (wert >= 0.0) {
-                draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_lager)
-            } else {
                 draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_lager)
+            } else {
+                draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_lager)
             }
+
             xpix = tr.xPix(x + delta + plength) + 5
             zpix = tr.zPix(z) - 5
-            const str = myFormat(wert, 1, 2) + 'kN'
+            const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
             const txt = two.makeText(str, xpix, zpix, style_txt_lager)
             txt.alignment = 'left'
             txt.baseline = 'top'
@@ -845,26 +924,27 @@ function draw_lagerkraefte(two: Two) {
 
         if (node[i].L[1] === -1) {      // vertikales Lager
 
-            wert = Math.abs(lagerkraefte._(i, 1, draw_lastfall - 1))
+            wert = lagerkraefte._(i, 1, draw_lastfall - 1)
             console.log("wert", wert)
 
             if (wert >= 0.0) {
                 draw_arrow(two, x, z + delta + plength, x, z + delta, style_pfeil_lager)
-                xpix = tr.xPix(x) + 5
-                zpix = tr.zPix(z + delta + plength) + 5
-                const str = myFormat(wert, 1, 2) + 'kN'
-                const txt = two.makeText(str, xpix, zpix, style_txt_lager)
-                txt.alignment = 'left'
-                txt.baseline = 'top'
+                // xpix = tr.xPix(x) + 5
+                // zpix = tr.zPix(z + delta + plength) + 5
+                // const str = myFormat(wert, 1, 2) + 'kN'
+                // const txt = two.makeText(str, xpix, zpix, style_txt_lager)
+                // txt.alignment = 'left'
+                // txt.baseline = 'top'
             } else {
                 draw_arrow(two, x, z + delta, x, z + delta + plength, style_pfeil_lager)
-                xpix = tr.xPix(x) + 5
-                zpix = tr.zPix(z + delta + plength) + 5
-                const str = myFormat(wert, 1, 2) + 'kN'
-                const txt = two.makeText(str, xpix, zpix, style_txt_lager)
-                txt.alignment = 'left'
-                txt.baseline = 'top'
             }
+
+            xpix = tr.xPix(x) + 5
+            zpix = tr.zPix(z + delta + plength) + 5
+            const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+            const txt = two.makeText(str, xpix, zpix, style_txt_lager)
+            txt.alignment = 'left'
+            txt.baseline = 'top'
         }
     }
 }
