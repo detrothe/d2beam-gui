@@ -814,9 +814,9 @@ export function drawsystem() {
     //const directions = two.makeText('Hallo welt', two.width / 2, two.height / 2, styles)
     //directions.rotation = 1.5708
 
-    //draw_arrow(two, slmax / 10, slmax / 10, node[1].x, node[1].z, { linewidth: 10, b: 40, h: 20 })  // , style_pfeil
+    draw_arrow(two, slmax / 10, slmax / 10, node[1].x, node[1].z, { linewidth: 10, b: 40, h: 20 })  // , style_pfeil
 
-    //draw_arrow(two, 0, 0, node[1].x, node[1].z, style_pfeil_lager)  // , style_pfeil
+    draw_arrow(two, 0, 0, node[1].x, node[1].z, style_pfeil_lager)  // , style_pfeil
 
     // Don’t forget to tell two to draw everything to the screen
     two.update();
