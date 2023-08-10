@@ -147,6 +147,7 @@ export class TFArray3D {
 
         if (i < this.minRow || i > this.maxRow || j < this.minCol || j > this.maxCol || k < this.minTab || k > this.maxTab) {
             console.log("wrong index in get", i, j, k);
+            console.log("min,max, row,col,tab",this.minRow ,this.maxRow ,this.minCol ,this.maxCol,this.minTab ,this.maxTab)
             return Number.NaN;
         }
         return this.marray[j * this.nrow + i + this.rowcol * k + this.konstante];

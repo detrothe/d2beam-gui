@@ -19,9 +19,9 @@ export function myPanel() {
         schief: false,
         scale: 1.0,
         eigenform: false,
-        show_arrows: true,
+        show_loads: true,
         scale_arrows: 1.0,
-        show_sigma_frame: true,
+        show_support_forces: true,
         show_LR: false,
         Reset: function () {
             window.dispatchEvent(new Event("reset_webgl"));
@@ -35,9 +35,9 @@ export function myPanel() {
     let moment = 'Moment'
     let skalierung = 'Skalierung'
     let eigenformen = 'Eigenformen'
-    let pfeile_anzeigen = 'Pfeile anzeigen'
+    let lasten_anzeigen = 'Lasten anzeigen'
     let skalierung_pfeile = 'Skalierung Pfeile'
-    let sigma_flaeche = 'sigma Fläche'
+    let lager_kraefte = 'Lagerkräfte anzeigen'
     let rechts_links_anzeigen = 'rechts/links anzeigen'
     /*
         if (app.browserLanguage != 'de') {
@@ -97,8 +97,8 @@ export function myPanel() {
         window.dispatchEvent(new Event("scale_factor"));
     });
 
-    gui.add(obj, 'show_arrows').name(pfeile_anzeigen).onChange(() => {
-        window.dispatchEvent(new Event("show_arrows_webgl"));
+    gui.add(obj, 'show_loads').name(lasten_anzeigen).onChange(() => {
+        window.dispatchEvent(new Event("draw_lasten_grafik"));
     });
 
     gui.add(obj, 'scale_arrows', 0, 2, 0.1).name(skalierung_pfeile).onFinishChange((v: any) => {
@@ -107,8 +107,8 @@ export function myPanel() {
         window.dispatchEvent(new Event("scale_factor_arrows"));
     });
 
-    gui.add(obj, 'show_sigma_frame').name(sigma_flaeche).onChange(() => {
-        window.dispatchEvent(new Event("show_sigma_frame_webgl"));
+    gui.add(obj, 'show_support_forces').name(lager_kraefte).onChange(() => {
+        window.dispatchEvent(new Event("draw_lagerkraefte_grafik"));
     });
 
     gui.add(obj, 'show_LR').name(rechts_links_anzeigen).onChange(() => {

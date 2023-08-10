@@ -4,7 +4,7 @@ import { CTrans } from './trans';
 import { myFormat } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load } from "./rechnen";
-import { el as element, node, nelem, nnodes, nloads } from "./rechnen";
+import { el as element, node, nelem, nnodes, nloads, neloads, eload } from "./rechnen";
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, lagerkraefte, THIIO_flag } from "./rechnen";
 //import { Pane } from 'tweakpane';
 import { myPanel } from './mypanelgui'
@@ -13,6 +13,7 @@ import { myPanel } from './mypanelgui'
 console.log("in grafik")
 
 let tr: CTrans
+
 let drawPanel = 0
 let draw_lastfall = 1
 let draw_eigenform = 1
@@ -26,6 +27,8 @@ let show_momentenlinien = false;
 let show_querkraftlinien = false;
 let show_normalkraftlinien = false;
 let show_schiefstellung = false;
+let show_lasten = true;
+let show_lagerkraefte = true;
 
 
 const style_txt = {
@@ -106,6 +109,7 @@ export function init_grafik() {
     }
     //el.style.width = '100%';   // 100px
     console.log('CREATE SELECT', nlastfaelle, el_select);
+    draw_lastfall = 1
 
     const el_select_eigv = document.getElementById('id_select_eigenvalue') as HTMLSelectElement;
 
@@ -113,6 +117,7 @@ export function init_grafik() {
         // @ts-ignore
         el_select_eigv.removeChild(el_select_eigv?.lastChild);
     }
+    draw_eigenform = 1
 
     if (THIIO_flag === 0) {
 
@@ -797,10 +802,12 @@ export function drawsystem() {
 
     draw_lager(two);
     draw_gelenke(two);
-   // draw_elementkraefte(two);
 
-    draw_lagerkraefte(two);
-    draw_knotenkraefte(two);
+    if (show_lasten) {
+        draw_elementlasten(two);
+        draw_knotenkraefte(two);
+    }
+    if (show_lagerkraefte) draw_lagerkraefte(two);
 
     const styles = {
         family: 'system-ui, sans-serif',
@@ -814,9 +821,9 @@ export function drawsystem() {
     //const directions = two.makeText('Hallo welt', two.width / 2, two.height / 2, styles)
     //directions.rotation = 1.5708
 
-    draw_arrow(two, slmax / 10, slmax / 10, node[1].x, node[1].z, { linewidth: 10, b: 40, h: 20 })  // , style_pfeil
+    //draw_arrow(two, slmax / 10, slmax / 10, node[1].x, node[1].z, { linewidth: 10, b: 40, h: 20 })  // , style_pfeil
 
-    draw_arrow(two, 0, 0, node[1].x, node[1].z, style_pfeil_lager)  // , style_pfeil
+    //draw_arrow(two, 0, 0, node[1].x, node[1].z, style_pfeil_lager)  // , style_pfeil
 
     // Don’t forget to tell two to draw everything to the screen
     two.update();
@@ -826,15 +833,63 @@ export function drawsystem() {
 
 }
 
-/*
+
 //--------------------------------------------------------------------------------------------------------
-function draw_elementkraefte(two: Two) {
+function draw_elementlasten(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
+    let x1: number, x2: number, z1: number, z2: number, si: number, co: number, xi: number, zi: number
+    let a = slmax / 100.
+    let pL: number, pR: number
+    let x = Array(4), z = Array(4), xtr = Array(4), ztr = Array(4)
+
+    console.log("in draw_elementlasten", slmax, a)
+
+    let scalefactor = 0.1 * slmax / 5
+
+    for (let ielem = 0; ielem < nelem; ielem++) {
+
+        for (let ieload = 0; ieload < neloads; ieload++) {
+            console.log("ielem,draw_lastfall", ielem, eload[ieload].element, draw_lastfall, eload[ieload].lf)
+            if ((eload[ieload].element === ielem) && (eload[ieload].lf === draw_lastfall)) {
+
+                x1 = element[ielem].x1;
+                z1 = element[ielem].z1;
+                x2 = element[ielem].x2;
+                z2 = element[ielem].z2;
+                si = element[ielem].sinus
+                co = element[ielem].cosinus
+                pL = slmax / 20.
+                pR = slmax / 20.
+
+                x[0] = x1 + si * a; z[0] = z1 - co * a;
+                x[1] = x2 + si * a; z[1] = z2 - co * a;
+                x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
+                x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
+
+
+                console.log("pL...", pL, pR, x, z)
+
+                var vertices = [];
+                for (let i = 0; i < 4; i++) {
+                    xtr[i] = tr.xPix(x[i])
+                    ztr[i] = tr.zPix(z[i])
+                    console.log()
+                    vertices.push(new Two.Vector(xtr[i], ztr[i]));
+                }
+                // @ts-ignore
+                let flaeche = two.makePath(vertices);
+                flaeche.fill = '#eeeeee';
+
+                draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
+                draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+            }
+        }
+    }
 
 
 }
-*/
+
 //--------------------------------------------------------------------------------------------------------
 function draw_knotenkraefte(two: Two) {
     //----------------------------------------------------------------------------------------------------
@@ -1232,6 +1287,30 @@ function draw_schiefstellung_grafik() {
     drawsystem();
 }
 
+//--------------------------------------------------------------------------------------------------------
+function draw_lasten_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_lasten_grafik");
+    show_lasten = !show_lasten;
+
+    //if (Gesamt_ys === undefined || isNaN(yM)) return;
+
+    drawsystem();
+}
+
+//--------------------------------------------------------------------------------------------------------
+function draw_lagerkraefte_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_lagerkraefte_grafik");
+    show_lagerkraefte = !show_lagerkraefte;
+
+    //if (Gesamt_ys === undefined || isNaN(yM)) return;
+
+    drawsystem();
+}
+
 //---------------------------------------------------------------------------------- a d d E v e n t L i s t e n e r
 
 window.addEventListener('draw_label_grafik', draw_label_grafik);
@@ -1242,3 +1321,5 @@ window.addEventListener('draw_momentenlinien_grafik', draw_momentenlinien_grafik
 window.addEventListener('draw_querkraftlinien_grafik', draw_querkraftlinien_grafik);
 window.addEventListener('draw_normalkraftlinien_grafik', draw_normalkraftlinien_grafik);
 window.addEventListener('draw_schiefstellung_grafik', draw_schiefstellung_grafik);
+window.addEventListener('draw_lasten_grafik', draw_lasten_grafik);
+window.addEventListener('draw_lagerkraefte_grafik', draw_lagerkraefte_grafik);
