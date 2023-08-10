@@ -5,7 +5,7 @@ import { myFormat } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen } from "./rechnen";
 import { el as element, node, nelem, nnodes } from "./rechnen";
-import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, THIIO_flag } from "./rechnen";
+import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, lagerkraefte, THIIO_flag } from "./rechnen";
 //import { Pane } from 'tweakpane';
 import { myPanel } from './mypanelgui'
 //import { colorToRgbNumber } from '@tweakpane/core';
@@ -26,6 +26,35 @@ let show_momentenlinien = false;
 let show_querkraftlinien = false;
 let show_normalkraftlinien = false;
 let show_schiefstellung = false;
+
+
+const style_txt = {
+    family: 'system-ui, sans-serif',
+    size: 14,
+    fill: 'red',
+    //opacity: 0.5,
+    //leading: 50
+    weight: 'bold'
+};
+
+const style_txt_lager = {
+    family: 'system-ui, sans-serif',
+    size: 14,
+    fill: '#006666',
+    weight: 'bold'
+};
+const style_pfeil = {
+    b: 20,
+    h: 10,
+    linewidth: 2,
+    color: '#000000'
+}
+const style_pfeil_lager = {
+    b: 35,
+    h: 16,
+    linewidth: 7,
+    color: '#006666'
+}
 
 export function select_loadcase_changed() {
 
@@ -136,14 +165,6 @@ export function drawsystem() {
         //return;
     */
 
-    const style_txt = {
-        family: 'system-ui, sans-serif',
-        size: 14,
-        fill: 'red',
-        //opacity: 0.5,
-        //leading: 50
-        weight: 'bold'
-    };
 
     let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen);
 
@@ -762,6 +783,8 @@ export function drawsystem() {
     draw_lager(two);
     draw_gelenke(two);
 
+    draw_lagerkraefte(two);
+
     const styles = {
         family: 'system-ui, sans-serif',
         size: 50,
@@ -774,12 +797,76 @@ export function drawsystem() {
     //const directions = two.makeText('Hallo welt', two.width / 2, two.height / 2, styles)
     //directions.rotation = 1.5708
 
+    //draw_arrow(two, slmax / 10, slmax / 10, node[1].x, node[1].z, { linewidth: 10, b: 40, h: 20 })  // , style_pfeil
+
+    //draw_arrow(two, 0, 0, node[1].x, node[1].z, style_pfeil_lager)  // , style_pfeil
+
     // Don’t forget to tell two to draw everything to the screen
     two.update();
 
     //el = document.querySelector('.footer'); //.getElementById("container")
     //console.log("nach update container footer boundingRect", el?.getBoundingClientRect())
 
+}
+
+//--------------------------------------------------------------------------------------------------------
+function draw_lagerkraefte(two: Two) {
+    //----------------------------------------------------------------------------------------------------
+
+    let plength = slmax / 25., delta = slmax / 60.0
+    let xpix: number, zpix: number
+
+    for (let i = 0; i < nnodes; i++) {
+        let x = node[i].x;
+        let z = node[i].z;
+
+        let wert: number
+        if (node[i].L[0] === -1) {      // horizontales Lager
+
+            if (THIIO_flag === 0) {
+            }
+            else if (THIIO_flag === 1) {
+            }
+            wert = Math.abs(lagerkraefte._(i, 0, draw_lastfall - 1))
+            console.log("wert", wert)
+
+            if (wert >= 0.0) {
+                draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_lager)
+            } else {
+                draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_lager)
+            }
+            xpix = tr.xPix(x + delta + plength) + 5
+            zpix = tr.zPix(z) - 5
+            const str = myFormat(wert, 1, 2) + 'kN'
+            const txt = two.makeText(str, xpix, zpix, style_txt_lager)
+            txt.alignment = 'left'
+            txt.baseline = 'top'
+        }
+
+        if (node[i].L[1] === -1) {      // vertikales Lager
+
+            wert = Math.abs(lagerkraefte._(i, 1, draw_lastfall - 1))
+            console.log("wert", wert)
+
+            if (wert >= 0.0) {
+                draw_arrow(two, x, z + delta + plength, x, z + delta, style_pfeil_lager)
+                xpix = tr.xPix(x) + 5
+                zpix = tr.zPix(z + delta + plength) + 5
+                const str = myFormat(wert, 1, 2) + 'kN'
+                const txt = two.makeText(str, xpix, zpix, style_txt_lager)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+            } else {
+                draw_arrow(two, x, z + delta, x, z + delta + plength, style_pfeil_lager)
+                xpix = tr.xPix(x) + 5
+                zpix = tr.zPix(z + delta + plength) + 5
+                const str = myFormat(wert, 1, 2) + 'kN'
+                const txt = two.makeText(str, xpix, zpix, style_txt_lager)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+            }
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -921,6 +1008,55 @@ function draw_gelenke(two: Two) {
             }
         }
     }
+}
+
+//--------------------------------------------------------------------------------------------------------
+function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, styles?: any) {
+    //----------------------------------------------------------------------------------------------------
+
+    let b = 20, h = 10, linewidth = 2, color = '#000000'
+    if (styles) {
+        console.log("styles", styles)
+        if (styles.linewidth) linewidth = styles.linewidth
+        if (styles.b) b = styles.b
+        if (styles.h) h = styles.h
+        if (styles.color) color = styles.color
+    }
+
+    let dx = x2 - x1, dz = z2 - z1
+    let alpha = Math.atan2(dz, dx)
+
+    let sl = Math.sqrt(dx * dx + dz * dz)
+    console.log("sl", Math.round(tr.xPix(sl)));
+    console.log("0.0", Math.round(tr.xPix(0.0)));
+
+    let a = Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)) - b;
+
+    let x0 = Math.round(tr.xPix(x1));
+    let z0 = Math.round(tr.zPix(z1));
+
+    console.log("sl,a", sl, a, b, x0, z0)
+
+    let group = two.makeGroup();
+    let line = two.makeLine(0, 0, a, 0);
+    line.linewidth = linewidth;
+    line.stroke = color;
+
+    group.add(line)
+
+    var vertices = [];
+    vertices.push(new Two.Vector(a, -h / 2));
+    vertices.push(new Two.Vector(a + b, 0));
+    vertices.push(new Two.Vector(a, h / 2));
+    // @ts-ignore
+    let dreieck = two.makePath(vertices);
+    dreieck.fill = color;
+    dreieck.stroke = color;
+
+    group.add(dreieck)
+    group.rotation = alpha
+    group.translation.set(x0, z0)
+
 }
 
 //--------------------------------------------------------------------------------------------------------

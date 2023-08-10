@@ -24,6 +24,7 @@ export let neigv: number = 2;
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
 export let stabendkraefte: TFArray3D
+export let lagerkraefte: TFArray3D
 export let u_lf = [] as number[][]
 export let u0_komb = [] as number[][]   // berechnete Schiefstellung
 export let eigenform_container_node = [] as TFArray3D[]
@@ -814,6 +815,7 @@ function calculate() {
         disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nlastfaelle);   // nlastfaelle
         console.log("nlastfaelle", nlastfaelle)
         stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nlastfaelle);   // nlastfaelle
+        lagerkraefte = new TFArray3D(0, nnodes - 1, 0, 2, 0, nlastfaelle - 1);   //
         u_lf = Array.from(Array(neq), () => new Array(nlastfaelle).fill(0.0));
 
         for (let iLastfall = 1; iLastfall <= nlastfaelle; iLastfall++) {
@@ -929,6 +931,12 @@ function calculate() {
                 }
             }
 
+            for (let inode = 0; inode < nnodes; inode++) {
+                lagerkraefte.set(inode, 0, iLastfall - 1, lagerkraft[inode][0]);
+                lagerkraefte.set(inode, 1, iLastfall - 1, lagerkraft[inode][1]);
+                lagerkraefte.set(inode, 2, iLastfall - 1, lagerkraft[inode][2]);
+            }
+
             //for (i = 0; i < nnodesTotal; i++) {
             //    console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
             //}
@@ -955,6 +963,7 @@ function calculate() {
 
         //console.log("nkombinationen", nkombinationen)
         stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nkombinationen);
+        lagerkraefte = new TFArray3D(0, nnodes - 1, 0, 2, 0, nkombinationen - 1);
         eigenform_container_node.length = 0
         eigenform_container_u.length = 0
         for (let i = 0; i < nkombinationen; i++) {
@@ -1199,6 +1208,12 @@ function calculate() {
                 }
             }
 
+
+            for (let inode = 0; inode < nnodes; inode++) {
+                lagerkraefte.set(inode, 0, iKomb - 1, lagerkraft[inode][0]);
+                lagerkraefte.set(inode, 1, iKomb - 1, lagerkraft[inode][1]);
+                lagerkraefte.set(inode, 2, iKomb - 1, lagerkraft[inode][2]);
+            }
             //for (i = 0; i < nnodesTotal; i++) {
             //    console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
             //}
