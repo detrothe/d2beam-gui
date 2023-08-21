@@ -54,6 +54,7 @@ export let maxValue_lf = [] as TMaxValues[]
 export let maxValue_komb = [] as TMaxValues[]
 export let maxValue_eigv = [] as number[][]
 export let maxValue_u0 = [] as TMaxU0[]
+export let maxValue_eload = [] as number[]
 
 
 export let xmin = -50.0, zmin = -50.0, xmax = 50.0, zmax = 50.0, slmax = 0.0;
@@ -153,12 +154,14 @@ class TMaxValues {
     N = 0.0
     Vz = 0.0
     My = 0.0
+    eload = 0.0
 
     zero() {
         this.disp = 0.0
         this.N = 0.0
         this.Vz = 0.0
         this.My = 0.0
+        this.eload = 0.0
     }
 }
 
@@ -439,6 +442,21 @@ function read_element_loads() {
 
         console.log("eload", izeile, eload[izeile - 1])
     }
+
+    maxValue_eload = new Array(nlastfaelle).fill(0.0)
+
+    for (i = 0; i < neloads; i++) {
+        let lf = eload[i].lf - 1
+        let art = eload[i].art
+        console.log("art=",art, lf)
+        if (art === 0) {
+            if (Math.abs(eload[i].pL) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pL)
+            if (Math.abs(eload[i].pR) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pR)
+        }
+    }
+
+    //for (i = 0; i < nlastfaelle; i++) console.log('maxValue_eload', i, maxValue_eload[i])
+    console.log('maxValue_eload', maxValue_eload)
 }
 
 

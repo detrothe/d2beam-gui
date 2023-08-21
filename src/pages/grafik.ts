@@ -5,7 +5,7 @@ import { myFormat } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload } from "./rechnen";
-import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, lagerkraefte, THIIO_flag } from "./rechnen";
+import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, THIIO_flag } from "./rechnen";
 //import { Pane } from 'tweakpane';
 import { myPanel } from './mypanelgui'
 //import { colorToRgbNumber } from '@tweakpane/core';
@@ -18,6 +18,7 @@ let drawPanel = 0
 let draw_lastfall = 1
 let draw_eigenform = 1
 
+let devicePixelRatio = 1
 
 let show_labels = false;
 let show_systemlinien = true;
@@ -61,6 +62,7 @@ const style_pfeil = {
 }
 
 const style_pfeil_lager = {
+    a: 35,
     b: 35,
     h: 16,
     linewidth: 7,
@@ -68,6 +70,7 @@ const style_pfeil_lager = {
 }
 
 const style_pfeil_knotenlast = {
+    a: 35,
     b: 35,
     h: 16,
     linewidth: 7,
@@ -100,6 +103,9 @@ export function init_grafik() {
         myPanel();
         drawPanel = 1;
     }
+
+    devicePixelRatio = window.devicePixelRatio
+    write('devicePixelRatio =  ', devicePixelRatio)
 
     const el_select = document.getElementById('id_select_loadcase') as HTMLSelectElement;
 
@@ -763,8 +769,8 @@ export function drawsystem() {
             //console.log("x..", element[ielem].x1, element[ielem].z1, element[ielem].x2, element[ielem].z2)
             //console.log("elem", ielem, x1, z1, x2, z2)
             let line = two.makeLine(x1, z1, x2, z2);
-            if (onlyLabels) line.linewidth = 10;
-            else line.linewidth = 5;
+            if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
+            else line.linewidth = 5 / devicePixelRatio;
 
             if (show_labels && onlyLabels) {
 
@@ -785,8 +791,8 @@ export function drawsystem() {
         if (show_labels && onlyLabels) {
 
             for (let i = 0; i < nnodes; i++) {
-                x1 = Math.round(tr.xPix(node[i].x)) + 20;
-                z1 = Math.round(tr.zPix(node[i].z)) + 20;
+                x1 = Math.round(tr.xPix(node[i].x)) + 10 / devicePixelRatio + 12;
+                z1 = Math.round(tr.zPix(node[i].z)) + 10 / devicePixelRatio + 12;
 
                 let rect = two.makeRoundedRectangle(x1, z1, 25, 25, 4)
                 rect.fill = '#ffffff'
@@ -840,6 +846,7 @@ function draw_elementlasten(two: Two) {
 
     let x1: number, x2: number, z1: number, z2: number, si: number, co: number, xi: number, zi: number
     let a = slmax / 100.
+    let a_spalt=a
     let pL: number, pR: number
     let x = Array(4), z = Array(4), xtr = Array(4), ztr = Array(4)
 
@@ -853,36 +860,41 @@ function draw_elementlasten(two: Two) {
             console.log("ielem,draw_lastfall", ielem, eload[ieload].element, draw_lastfall, eload[ieload].lf)
             if ((eload[ieload].element === ielem) && (eload[ieload].lf === draw_lastfall)) {
 
-                x1 = element[ielem].x1;
-                z1 = element[ielem].z1;
-                x2 = element[ielem].x2;
-                z2 = element[ielem].z2;
-                si = element[ielem].sinus
-                co = element[ielem].cosinus
-                pL = slmax / 20.
-                pR = slmax / 20.
+                if (eload[ieload].art === 0) {
 
-                x[0] = x1 + si * a; z[0] = z1 - co * a;
-                x[1] = x2 + si * a; z[1] = z2 - co * a;
-                x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
-                x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
+                    x1 = element[ielem].x1;
+                    z1 = element[ielem].z1;
+                    x2 = element[ielem].x2;
+                    z2 = element[ielem].z2;
+                    si = element[ielem].sinus
+                    co = element[ielem].cosinus
+                    pL = eload[ieload].pL * slmax / 20 / maxValue_eload[draw_lastfall - 1]
+                    pR = eload[ieload].pR * slmax / 20 / maxValue_eload[draw_lastfall - 1]
+
+                    x[0] = x1 + si * a; z[0] = z1 - co * a;
+                    x[1] = x2 + si * a; z[1] = z2 - co * a;
+                    x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
+                    x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
 
 
-                console.log("pL...", pL, pR, x, z)
+                    console.log("pL...", pL, pR, x, z)
 
-                var vertices = [];
-                for (let i = 0; i < 4; i++) {
-                    xtr[i] = tr.xPix(x[i])
-                    ztr[i] = tr.zPix(z[i])
-                    console.log()
-                    vertices.push(new Two.Vector(xtr[i], ztr[i]));
+                    var vertices = [];
+                    for (let i = 0; i < 4; i++) {
+                        xtr[i] = tr.xPix(x[i])
+                        ztr[i] = tr.zPix(z[i])
+                        console.log()
+                        vertices.push(new Two.Vector(xtr[i], ztr[i]));
+                    }
+                    // @ts-ignore
+                    let flaeche = two.makePath(vertices);
+                    flaeche.fill = '#eeeeee';
+
+                    draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
+                    draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+
+                    a = a + Math.max(Math.abs(pL),Math.abs(pR))+ a_spalt
                 }
-                // @ts-ignore
-                let flaeche = two.makePath(vertices);
-                flaeche.fill = '#eeeeee';
-
-                draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
-                draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
             }
         }
     }
@@ -894,7 +906,7 @@ function draw_elementlasten(two: Two) {
 function draw_knotenkraefte(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
-    let plength = slmax / 20., delta = slmax / 200.0
+    let plength = 35 /*slmax / 20.*/, delta = 12 //slmax / 200.0
     let xpix: number, zpix: number
     let wert: number
 
@@ -903,7 +915,10 @@ function draw_knotenkraefte(two: Two) {
     if (out) {
         out.value += "plength= " + plength + "\n";
         out.scrollTop = element.scrollHeight; // focus on bottom
-     }
+    }
+
+    plength = tr.World0(2 * plength / devicePixelRatio)
+    delta = tr.World0(delta / devicePixelRatio)
 
     for (let i = 0; i < nloads; i++) {
         let inode = load[i].node
@@ -951,8 +966,11 @@ function draw_knotenkraefte(two: Two) {
 function draw_lagerkraefte(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
-    let plength = slmax / 25., delta = slmax / 100.0
+    let plength = 35 /*slmax / 25.*/, delta = 12 //slmax / 100.0
     let xpix: number, zpix: number
+
+    plength = tr.World0(2 * plength / devicePixelRatio)
+    delta = tr.World0(delta / devicePixelRatio)
 
     for (let i = 0; i < nnodes; i++) {
         let x = node[i].x;
@@ -1020,6 +1038,7 @@ function draw_lager(two: Two) {
         if ((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) {  // Volleinspannung
             let rechteck = two.makeRectangle(x1, z1, 20, 20)
             rechteck.fill = '#dddddd';
+            rechteck.scale = 1.0 / devicePixelRatio
         }
         else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in x-Richtung
 
@@ -1032,6 +1051,8 @@ function draw_lager(two: Two) {
             line.linewidth = 2;
 
             group.add(line)
+            group.scale = 1.0 / devicePixelRatio
+
             group.translation.set(x1, z1)
 
         }
@@ -1046,7 +1067,28 @@ function draw_lager(two: Two) {
             line.linewidth = 2;
 
             group.add(line)
+            group.scale = 1.0 / devicePixelRatio
             group.rotation = 1.5708
+            group.translation.set(x1, z1)
+
+        }
+        else if ((node[i].L[0] >= 0) && (node[i].L[1] >= 0) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in x-, z-Richtung
+
+            let group = two.makeGroup();
+            let rechteck = two.makeRectangle(0, 0, 20, 20)
+            rechteck.fill = '#dddddd';
+            group.add(rechteck)
+
+            let line = two.makeLine(-16, 15, 12, 15);
+            line.linewidth = 2;
+            group.add(line)
+
+            let line2 = two.makeLine(15, -16, 15, 12);
+            line2.linewidth = 2;
+            group.add(line2)
+
+            group.scale = 1.0 / devicePixelRatio
+
             group.translation.set(x1, z1)
 
         }
@@ -1067,6 +1109,8 @@ function draw_lager(two: Two) {
             line.linewidth = 2;
 
             group.add(line)
+            group.scale = 1.0 / devicePixelRatio
+
             group.translation.set(x1, z1)
 
         }
@@ -1087,6 +1131,8 @@ function draw_lager(two: Two) {
             line.linewidth = 2;
 
             group.add(line)
+            group.scale = 1.0 / devicePixelRatio
+
             group.translation.set(x1, z1)
 
         }
@@ -1107,6 +1153,8 @@ function draw_lager(two: Two) {
             line.linewidth = 2;
 
             group.add(line)
+            group.scale = 1.0 / devicePixelRatio
+
             group.rotation = -1.5708
             group.translation.set(x1, z1)
 
@@ -1121,7 +1169,7 @@ function draw_gelenke(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
     let x1: number, x2: number, z1: number, z2: number, dx: number, dz: number
-    let radius = 10, a = 10
+    let radius = 10 / devicePixelRatio, a = 10 / devicePixelRatio
 
     for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -1155,13 +1203,31 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
     //----------------------------------------------------------------------------------------------------
 
     let b = 20, h = 10, linewidth = 2, color = '#000000'
+    let a = 0.0, calc_a = true
+
     if (styles) {
         console.log("styles", styles)
         if (styles.linewidth) linewidth = styles.linewidth
+        if (styles.a) {
+            a = styles.a / devicePixelRatio;
+            calc_a = false
+        }
         if (styles.b) b = styles.b
         if (styles.h) h = styles.h
         if (styles.color) color = styles.color
     }
+
+    b = b / devicePixelRatio
+    h = h / devicePixelRatio
+    //b = slmax / 50.
+    //h = slmax / 100.
+    //linewidth = slmax / 400.
+
+    //b = tr.Pix0(b)
+    //h = tr.Pix0(h)
+    //linewidth = tr.Pix0(linewidth)
+    write('linewidth: ', linewidth)
+    linewidth = linewidth / devicePixelRatio
 
     let dx = x2 - x1, dz = z2 - z1
     let alpha = Math.atan2(dz, dx)
@@ -1170,7 +1236,12 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
     console.log("sl", Math.round(tr.xPix(sl)));
     console.log("0.0", Math.round(tr.xPix(0.0)));
 
-    let a = Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)) - b;
+    if (calc_a) a = Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)) - b;
+    write('sl : ', sl)
+    write('tr.Pix0 : ', tr.Pix0(sl))
+    write('div', Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)))
+    write('a: ', a)
+    write('b: ', b)
 
     let x0 = Math.round(tr.xPix(x1));
     let z0 = Math.round(tr.zPix(z1));
@@ -1192,11 +1263,23 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
     let dreieck = two.makePath(vertices);
     dreieck.fill = color;
     dreieck.stroke = color;
+    dreieck.linewidth = 1;
 
     group.add(dreieck)
     group.rotation = alpha
     group.translation.set(x0, z0)
 
+}
+
+//--------------------------------------------------------------------------------------------------------
+function write(str: string, wert: number) {
+    //----------------------------------------------------------------------------------------------------
+
+    const out = document.getElementById('output') as HTMLTextAreaElement;
+    if (out) {
+        out.value += str + wert + "\n";
+        out.scrollTop = element.scrollHeight; // focus on bottom
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------

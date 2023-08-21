@@ -41,7 +41,7 @@ class CTrans {
 
         //this.ratio_world = this.dx / this.dz;
 
-        console.log("dx,dz", this.dx, this.dz);
+        // console.log("dx,dz", this.dx, this.dz);
 
         this.height = clientHeight - 1; //  .getElementById("my-svg").clientHeight - 1;
         //this.width = document.getElementById("dataviz_area").clientWidth - 1;
@@ -67,6 +67,8 @@ class CTrans {
             this.dx = this.xmax - this.xmin;
             console.log("new x", delta_dx, this.xmin, this.xmax, this.dx);
         }
+        console.log("dx,dz", this.dx, this.dz);
+
     }
 
     xPix(x: number) {
@@ -87,6 +89,13 @@ class CTrans {
         return zPix * this.dz / this.height + this.zmin;
     }
 
+    Pix0(x: number) {
+        return x * this.width / this.dx;
+    }
+    World0(xPix: number) {
+        //return this.xmax - xPix * this.dx / this.width;
+        return xPix * this.dx / this.width;
+    }
 }
 
 
