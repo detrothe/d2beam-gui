@@ -899,6 +899,11 @@ function draw_knotenkraefte(two: Two) {
     let wert: number
 
     console.log("in draw_knotenkraefte, draw_lastfall", draw_lastfall)
+    const out = document.getElementById('output') as HTMLTextAreaElement;
+    if (out) {
+        out.value += "plength= " + plength + "\n";
+        out.scrollTop = element.scrollHeight; // focus on bottom
+     }
 
     for (let i = 0; i < nloads; i++) {
         let inode = load[i].node
