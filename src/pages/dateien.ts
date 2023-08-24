@@ -1,10 +1,14 @@
 //import './listener.js';
 
 import { drButtonPM } from "../components/dr-button-pm";
-import { app } from "./haupt";
+import { app, clearTables } from "./haupt";
 //import { testeZahl } from "./utility";
 import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
+
+import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length } from "./rechnen"
+import { add_rechteck_querschnitt } from './rechnen'
+
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
 
 
@@ -77,6 +81,7 @@ function handleFileSelect_read() {
                         el.setValue(jobj.ncombinations);
                     }
                     resizeTables();
+                    clearTables();
 
                     console.log("nach resize")
 
@@ -135,6 +140,19 @@ function handleFileSelect_read() {
                         for (j = 1; j < nSpalten; j++) {
                             let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
                             child.value = jobj.combination[i - 1][j - 1];
+                        }
+                    }
+
+                    let nQuerschnittSets = jobj.nquerschnittsets
+                    console.log('nQuerschnittSets', nQuerschnittSets)
+                    for (i = 0; i < nQuerschnittSets; i++) {
+                        let className = jobj.qsclassname[i]
+                        if (className === 'QuerschnittRechteck') {
+                            console.log('classname von Querschnitt ' + i + ' ist QuerschnittRechteck')
+                            //let wert = new Array(11)
+                            //for(j=0;j<11;j++)wert[i]=jobj.qswerte[i]
+                            //console.log('wert',jobj.qswerte[i])
+                            add_rechteck_querschnitt(jobj.qswerte[i])
                         }
                     }
 
@@ -245,6 +263,15 @@ async function handleFileSelect_save() {
             }
         }
 
+        let qsClassName = new Array(nQuerschnittSets)
+        let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(11));
+
+        for (i = 0; i < nQuerschnittSets; i++) {
+            console.log('get_querschnitt_length', get_querschnitt_length(i))
+            qsWerte[i] = get_querschnittRechteck(i)
+            qsClassName[i] = get_querschnitt_classname(i)
+        }
+
         let polyData = {
 
             'version': 0,
@@ -256,6 +283,7 @@ async function handleFileSelect_save() {
             'neloads': neloads,
             'nloadcases': nlastfaelle,
             'ncombinations': nkombinationen,
+            'nquerschnittsets': nQuerschnittSets,
             /*
             'Vy': document.getElementById('Vy').value,
             'Vz': document.getElementById('Vz').value,
@@ -275,7 +303,10 @@ async function handleFileSelect_save() {
             'nodalLoad': nodalload,
             'elemLoad': elemload,
             'combination': kombination,
+            'qsclassname': qsClassName,
+            'qswerte': qsWerte,
         };
+
 
 
         let jsonse = JSON.stringify(polyData);

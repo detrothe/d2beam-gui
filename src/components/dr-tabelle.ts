@@ -214,12 +214,12 @@ class DrTabelle extends HTMLElement {
             //console.log('myValue', myValue);
             const myArray = myValue.split(',');
             //console.log('myArray', myArray[0], myArray[1], myArray[2]);
-            let str=''
+            let str = ''
             for (let i = 0; i < myArray.length; i++) {
                this.typs[i] = myArray[i].replace(/"/g, '').trim();
                str = str + this.typs[i]
             }
-            console.log("str",str)
+            console.log("str", str)
 
          } else if (name === 'colwidth') {
             let myValue = newValue.replace('[', '');
@@ -352,6 +352,16 @@ class DrTabelle extends HTMLElement {
          for (let iSpalte = 1; iSpalte < nSpalten; iSpalte++) {
             let child = table.rows[iZeile].cells[iSpalte].firstElementChild as HTMLInputElement;
             child.value = "";
+            if (this.typs[iSpalte] === 'select') {
+               const idstr = 'idtable-' + iZeile + '-' + iSpalte;
+               const el = this.shadow.getElementById(idstr)
+               console.log("idstr", el)
+               //const index = nQuerschnittSets - 1;
+               //let option = document.createElement('option');
+
+               //option.value = option.textContent = get_querschnittRechteck_name(index);
+               for (let i = 0; i < nQuerschnittSets; i++) el.removeChild(el.lastChild);
+            }
          }
       }
 

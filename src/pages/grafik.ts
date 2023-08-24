@@ -530,10 +530,10 @@ export function drawsystem() {
         //if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] === 0.0) return
 
         if (THIIO_flag === 0) {
-            scalefactor = 0.1 * slmax / maxValue_lf[iLastfall - 1].My
+            scalefactor = 0.05 * slmax / maxValue_lf[iLastfall - 1].My
         }
         else if (THIIO_flag === 1) {
-            scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].My
+            scalefactor = 0.05 * slmax / maxValue_komb[iLastfall - 1].My
             //console.log("scalefaktor", scalefactor, slmax, maxValue_komb[iLastfall - 1].My)
         }
 
@@ -643,7 +643,7 @@ export function drawsystem() {
         //if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] === 0.0) return
 
         if (THIIO_flag === 0) {
-            scalefactor = 0.1 * slmax / maxValue_lf[iLastfall - 1].Vz
+            scalefactor = 0.05 * slmax / maxValue_lf[iLastfall - 1].Vz
         }
         else if (THIIO_flag === 1) {
             scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].Vz
@@ -711,7 +711,7 @@ export function drawsystem() {
         //if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] === 0.0) return
 
         if (THIIO_flag === 0) {
-            scalefactor = 0.1 * slmax / maxValue_lf[iLastfall - 1].N
+            scalefactor = 0.05 * slmax / maxValue_lf[iLastfall - 1].N
         }
         else if (THIIO_flag === 1) {
             scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].N

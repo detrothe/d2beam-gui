@@ -109,16 +109,16 @@ class TElement {
     x2: number = 0.0
     z1: number = 0.0
     z2: number = 0.0
-    sl: number = 0.0                                    // Stablänge
-    nod = [0, 0, 0, 0]                                   // globale Knotennummer der Stabenden
-    lm: number[] = []                          //  as number[]
+    sl: number = 0.0                    // Stablänge
+    nod = [0, 0, 0, 0]                  // globale Knotennummer der Stabenden
+    lm: number[] = []
     gelenk = [0, 0, 0, 0, 0, 0]
-    estiff: number[][] = []    // = [[0.0, 0.0], [0.0, 0.0]]
+    estiff: number[][] = []
     estm: number[][] = []
     ksig: number[][] = []
     trans: number[][] = []
-    F: number[] = Array(14)   // Stabendgrößen nach WGV im globalen Koordinatensystem
-    FL: number[] = Array(14)  // Stabendgrößen nach KGV im lokalen Koordinatensystem
+    F: number[] = Array(14)             // Stabendgrößen nach WGV im globalen Koordinatensystem
+    FL: number[] = Array(14)            // Stabendgrößen nach KGV im lokalen Koordinatensystem
     F34 = [0.0, 0.0]
     cosinus: number = 0.0
     sinus: number = 0.0
@@ -145,8 +145,8 @@ class TElLoads {
     art: number = 0
     pL: number = 0.0
     pR: number = 0.0
-    re: number[] = Array(6)                              // Elementlastvektor lokal
-    el_r: number[] = Array(6)                             // Elementlastvektor im globalen Koordinatensystem
+    re: number[] = Array(6)             // Elementlastvektor lokal
+    el_r: number[] = Array(6)           // Elementlastvektor im globalen Koordinatensystem
 }
 
 class TMaxValues {
@@ -173,11 +173,19 @@ class TMaxU0 {
 export function add_neq() {
     neq++;
 }
+
 //---------------------------------------------------------------------------------------------------------------
 export function incr_querschnittSets() {
     //-----------------------------------------------------------------------------------------------------------
     nQuerschnittSets++;
     querschnittset.push(new TQuerschnittRechteck())
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function del_last_querschnittSet() {
+    //-----------------------------------------------------------------------------------------------------------
+    nQuerschnittSets--;
+    querschnittset.pop();
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -322,6 +330,29 @@ export function get_querschnittRechteck_name(index: number) {
 }
 
 //---------------------------------------------------------------------------------------------------------------
+export function get_querschnitt_classname(index: number) {
+    //-----------------------------------------------------------------------------------------------------------
+
+    let name: string = 'error'
+
+    if (index >= 0) name = querschnittset[index].className;
+
+    return name;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function get_querschnitt_length(index: number) {
+    //-----------------------------------------------------------------------------------------------------------
+
+    let len = 0
+
+    if (index >= 0) len = Object.keys(querschnittset[index]).length;
+    console.log("get_querschnitt_length", querschnittset[index])
+
+    return len;
+}
+
+//---------------------------------------------------------------------------------------------------------------
 function read_nodes() {
     //-----------------------------------------------------------------------------------------------------------
 
@@ -448,7 +479,7 @@ function read_element_loads() {
     for (i = 0; i < neloads; i++) {
         let lf = eload[i].lf - 1
         let art = eload[i].art
-        console.log("art=",art, lf)
+        console.log("art=", art, lf)
         if (art === 0) {
             if (Math.abs(eload[i].pL) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pL)
             if (Math.abs(eload[i].pR) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pR)
@@ -576,8 +607,58 @@ function read_kombinationen() {
 
 
 //---------------------------------------------------------------------------------------------------------------
+export function add_rechteck_querschnitt(werte: any[]) {
+    //-----------------------------------------------------------------------------------------------------------
+    console.log('add_rechteck_querschnitt wert', werte)
+
+    incr_querschnittSets();
+
+    const qname = werte[0]
+    const id = werte[1]
+    const emodul = werte[2]
+    const Iy = werte[3]
+    const area = werte[4]
+    const height = werte[5]
+    const width = werte[6]
+    const defquerschnitt = werte[7]
+    const wichte = werte[8]
+    const schubfaktor = werte[9]
+    const querdehnzahl = werte[10]
+
+    set_querschnittRechteck(
+        qname,
+        id,
+        emodul,
+        Iy,
+        area,
+        height,
+        width,
+        defquerschnitt,
+        wichte,
+        schubfaktor,
+        querdehnzahl
+    );
+
+
+    var tag = document.createElement('sl-tree-item');
+    var text = document.createTextNode(qname);
+    tag.appendChild(text);
+    tag.addEventListener('click', opendialog);
+
+    tag.id = id;
+    var element = document.getElementById('id_tree_LQ');
+    element?.appendChild(tag);
+    //console.log('child appendchild', element);
+
+    const ele = document.getElementById('id_element_tabelle');
+    //console.log('ELE: >>', ele);
+    ele?.setAttribute('newselect', '4');
+
+}
+
+//---------------------------------------------------------------------------------------------------------------
 export function init_tabellen() {
-    //---------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------
 
     // Querschnitt hinzufügen
     {

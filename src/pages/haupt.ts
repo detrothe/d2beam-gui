@@ -35,6 +35,7 @@ import {
   get_querschnittRechteck,
   update_querschnittRechteck,
   init_tabellen,
+  del_last_querschnittSet
 } from "./rechnen";
 
 let dialog_querschnitt_new = true;
@@ -978,4 +979,10 @@ export function clearTables() {
 
   el = document.getElementById("id_elementlasten_tabelle");
   el?.setAttribute("clear", "0");
+
+  while (nQuerschnittSets > 0 ) {
+     del_last_querschnittSet();
+     let element = document.getElementById("id_tree_LQ") as any;
+     element?.removeChild(element?.lastChild)
+  }
 }
