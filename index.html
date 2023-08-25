@@ -54,18 +54,21 @@
       />
 
       <script>
+         console.log("in script")
          // make the whole serviceworker process into a promise so later on we can
          // listen to it and in case new content is available a toast will be shown
          window.isUpdateAvailable = new Promise(function (resolve, reject) {
             // lazy way of disabling service workers while developing
             if (
-               'serviceWorker' in navigator &&
-               ['localhost', '127'].indexOf(location.hostname) === -1
+               'serviceWorker' in navigator /*&&
+               ['localhost', '127'].indexOf(location.hostname) === -1 */
             ) {
+               console.log("service worker in navigator")
                // register service worker file
                navigator.serviceWorker
-                  .register('service-worker.js')
+                  .register('/sw.js')
                   .then((reg) => {
+                     console.log("service worker installed")
                      reg.onupdatefound = () => {
                         const installingWorker = reg.installing;
                         installingWorker.onstatechange = () => {
@@ -100,9 +103,9 @@
 
    <body>
       <script>
-         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js');
-         }
+         //if ('serviceWorker' in navigator) {
+         //   navigator.serviceWorker.register('/sw.js');
+         //}
 
          // listen to the service worker promise in index.html to see if there has been a new update.
          // condition: the service-worker.js needs to have some kind of change - e.g. increment CACHE_VERSION.
