@@ -52,7 +52,7 @@
          href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.73/dist/themes/dark.css"
          onload="document.documentElement.classList.add('sl-theme-dark');"
       />
-
+<!--
       <script>
          console.log('in script');
          // make the whole serviceworker process into a promise so later on we can
@@ -95,7 +95,7 @@
          // to avoid using the global namespace for such a thing.
          // because the registering of a service worker doesn't need to be executed on the first load of the page.
       </script>
-
+   -->
       <script src="d2beam_wasm.js"></script>
 
       <!--
@@ -113,6 +113,7 @@
 
          // listen to the service worker promise in index.html to see if there has been a new update.
          // condition: the service-worker.js needs to have some kind of change - e.g. increment CACHE_VERSION.
+         /*
          window['isUpdateAvailable'].then((isAvailable) => {
             if (isAvailable) {
                const toast = this.toastCtrl.create({
@@ -124,6 +125,7 @@
                toast.present();
             }
          });
+         */
       </script>
 
       <div id="container">
