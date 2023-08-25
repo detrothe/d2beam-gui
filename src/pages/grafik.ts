@@ -845,14 +845,17 @@ function draw_elementlasten(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
     let x1: number, x2: number, z1: number, z2: number, si: number, co: number, xi: number, zi: number
+    let dp: number, pMax: number, pMin: number
     let a = slmax / 100.
-    let a_spalt=a
+    let a_spalt = a
     let pL: number, pR: number
     let x = Array(4), z = Array(4), xtr = Array(4), ztr = Array(4)
 
+    let xpix: number, zpix: number
+
     console.log("in draw_elementlasten", slmax, a)
 
-    let scalefactor = 0.1 * slmax / 5
+    let scalefactor = slmax / 20 / maxValue_eload[draw_lastfall - 1]
 
     for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -868,8 +871,13 @@ function draw_elementlasten(two: Two) {
                     z2 = element[ielem].z2;
                     si = element[ielem].sinus
                     co = element[ielem].cosinus
-                    pL = eload[ieload].pL * slmax / 20 / maxValue_eload[draw_lastfall - 1]
-                    pR = eload[ieload].pR * slmax / 20 / maxValue_eload[draw_lastfall - 1]
+                    pL = eload[ieload].pL * scalefactor
+                    pR = eload[ieload].pR * scalefactor
+
+                    pMax = Math.max(0.0, pL, pR)
+                    pMin = Math.min(0.0, pL, pR)
+
+                    a += Math.abs(pMin)
 
                     x[0] = x1 + si * a; z[0] = z1 - co * a;
                     x[1] = x2 + si * a; z[1] = z2 - co * a;
@@ -893,7 +901,22 @@ function draw_elementlasten(two: Two) {
                     draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
                     draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
 
-                    a = a + Math.max(Math.abs(pL),Math.abs(pR))+ a_spalt
+                    xpix = xtr[3] + 5
+                    zpix = ztr[3] - 5
+                    let str = myFormat(Math.abs(eload[ieload].pL), 1, 2)
+                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+
+                    xpix = xtr[2] + 5
+                    zpix = ztr[2] - 5
+                    str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
+                    txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+
+                    dp = pMax // - pMin
+                    a = a + dp + a_spalt
                 }
             }
         }
