@@ -9,6 +9,8 @@ export function gauss(n, a, b) {
     let i, mem, iz, k, j;
     let c, aji;
 
+    if ( n === 0 ) return (0);
+
     //console.log("in GAUSS");
 
 //                   calculate solution vector b

@@ -480,7 +480,7 @@ function read_element_loads() {
         let lf = eload[i].lf - 1
         let art = eload[i].art
         console.log("art=", art, lf)
-        if (art === 0) {
+        if (art === 0 || art === 1 || art === 2) {
             if (Math.abs(eload[i].pL) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pL)
             if (Math.abs(eload[i].pR) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pR)
         }

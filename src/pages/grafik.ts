@@ -296,6 +296,9 @@ export function drawsystem() {
                 u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
                 w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
 
+                console.log("wx =", w, element[ielem].w_[iLastfall - 1][i])
+                w += element[ielem].w_[iLastfall - 1][i]  // Anteil aus Elementlasten im Starrsystem
+
                 uG = element[ielem].cosinus * u - element[ielem].sinus * w
                 wG = element[ielem].sinus * u + element[ielem].cosinus * w
 
@@ -528,12 +531,13 @@ export function drawsystem() {
 
 
         //if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] === 0.0) return
-
         if (THIIO_flag === 0) {
             scalefactor = 0.05 * slmax / maxValue_lf[iLastfall - 1].My
+            console.log("MAX VALUES", iLastfall, maxValue_lf[iLastfall - 1].My, slmax)
         }
         else if (THIIO_flag === 1) {
             scalefactor = 0.05 * slmax / maxValue_komb[iLastfall - 1].My
+            console.log("MAX VALUES", iLastfall, maxValue_komb[iLastfall - 1].My, slmax)
             //console.log("scalefaktor", scalefactor, slmax, maxValue_komb[iLastfall - 1].My)
         }
 
