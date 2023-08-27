@@ -1360,8 +1360,9 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
         if (styles.h) h = styles.h
         if (styles.color) color = styles.color
     }
-    b = b / devicePixelRatio
-    h = h / devicePixelRatio
+    b /= devicePixelRatio
+    h /= devicePixelRatio
+    linewidth /= devicePixelRatio
 
     let group = two.makeGroup();
 
