@@ -62,6 +62,7 @@ const style_pfeil = {
 }
 
 const style_pfeil_lager = {
+    radius: 50,
     a: 35,
     b: 25,
     h: 16,
@@ -78,7 +79,7 @@ const style_pfeil_knotenlast = {
 }
 
 const style_pfeil_moment = {
-    a: 35,
+    radius: 50,
     b: 25,
     h: 16,
     linewidth: 7,
@@ -1091,7 +1092,7 @@ function draw_lagerkraefte(two: Two) {
                 draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_lager)
             }
 
-            xpix = tr.xPix(x)  - 10 / devicePixelRatio
+            xpix = tr.xPix(x) - 10 / devicePixelRatio
             zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
             const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
             const txt = two.makeText(str, xpix, zpix, style_txt_lager)
@@ -1356,6 +1357,7 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
     if (styles) {
         console.log("styles", styles)
         if (styles.linewidth) linewidth = styles.linewidth
+        if (styles.radius) radius = styles.radius
         if (styles.b) b = styles.b
         if (styles.h) h = styles.h
         if (styles.color) color = styles.color
@@ -1363,6 +1365,9 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
     b /= devicePixelRatio
     h /= devicePixelRatio
     linewidth /= devicePixelRatio
+    radius /= devicePixelRatio
+
+    radius=tr.World0(radius)
 
     let group = two.makeGroup();
 
@@ -1372,7 +1377,7 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
 
         dalpha = Math.PI / (teilung + 1)
         alpha = 0.0
-        for (let i = 0; i < teilung-2; i++) {
+        for (let i = 0; i < teilung - 2; i++) {
             x = tr.Pix0(-radius * Math.sin(alpha))
             z = tr.Pix0(radius * Math.cos(alpha))
             vertices.push(new Two.Anchor(x, z));
@@ -1406,7 +1411,7 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
 
         dalpha = Math.PI / (teilung + 1)
         alpha = 0.0
-        for (let i = 0; i < teilung-2; i++) {
+        for (let i = 0; i < teilung - 2; i++) {
             x = tr.Pix0(-radius * Math.sin(alpha))
             z = tr.Pix0(-radius * Math.cos(alpha))
             vertices.push(new Two.Anchor(x, z));
