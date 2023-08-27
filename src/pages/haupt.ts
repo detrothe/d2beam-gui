@@ -25,7 +25,7 @@ import "../components/dr-dialog-rechteckquerschnitt";
 
 import { addListener_filesave } from "./dateien";
 import { select_loadcase_changed, select_eigenvalue_changed } from "./grafik";
-import {set_info} from "./utility"
+import { set_info } from "./utility";
 
 import {
   rechnen,
@@ -35,7 +35,7 @@ import {
   get_querschnittRechteck,
   update_querschnittRechteck,
   init_tabellen,
-  del_last_querschnittSet
+  del_last_querschnittSet,
 } from "./rechnen";
 
 let dialog_querschnitt_new = true;
@@ -48,6 +48,7 @@ export const nnodalloads_init = "1";
 export const nelemloads_init = "1";
 export const nlastfaelle_init = "2";
 export const nkombinationen_init = "2";
+export const nstabvorverfomungen_init = "0";
 export let column_string_kombitabelle: string;
 export let typs_string_kombitabelle: string;
 //export let column_width_elementtabelle: string;
@@ -114,6 +115,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
       <sl-tab slot="nav" panel="tab-elemente">Elemente</sl-tab>
       <sl-tab slot="nav" panel="tab-knotenlasten">Knotenlasten</sl-tab>
       <sl-tab slot="nav" panel="tab-elementlasten">Elementlasten</sl-tab>
+      <sl-tab slot="nav" panel="tab-stabvorverfomungen">Vorverformungen</sl-tab>
       <sl-tab slot="nav" panel="tab-kombinationen">Kombinationen</sl-tab>
       <sl-tab slot="nav" panel="tab-ergebnisse">Ergebnisse</sl-tab>
       <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
@@ -170,7 +172,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         <table id="querschnittwerte_table">
           <tbody>
             <tr>
-              <td>Anzahl Knoten :</td>
+              <td>Anzahl Knoten:</td>
               <td>
                 <dr-button-pm
                   id="id_button_nnodes"
@@ -193,7 +195,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
               </td>
             </tr>
             <tr>
-              <td>Anzahl Elemente :</td>
+              <td>Anzahl Elemente:</td>
               <td>
                 <dr-button-pm
                   id="id_button_nelem"
@@ -217,7 +219,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
               </td>
             </tr>
             <tr>
-              <td>Anzahl Knotenlasten :</td>
+              <td>Anzahl Knotenlasten:</td>
               <td>
                 <dr-button-pm
                   id="id_button_nnodalloads"
@@ -245,7 +247,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             </tr>
 
             <tr>
-              <td>Anzahl Elementlasten :</td>
+              <td>Anzahl Elementlasten:</td>
               <td>
                 <dr-button-pm
                   id="id_button_nelemloads"
@@ -268,7 +270,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
               </td>
             </tr>
             <tr>
-              <td>Anzahl Lastfälle :</td>
+              <td>Anzahl Lastfälle:</td>
               <td>
                 <dr-button-pm
                   id="id_button_nlastfaelle"
@@ -293,7 +295,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
               </td>
             </tr>
             <tr>
-              <td>Anzahl Kombinationen :</td>
+              <td>Anzahl Kombinationen:</td>
               <td>
                 <dr-button-pm
                   id="id_button_nkombinationen"
@@ -320,6 +322,16 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
               </td>
             </tr>
 
+            <tr>
+              <td>Anzahl Stabvorverformungen:</td>
+              <td>
+                <dr-button-pm
+                  id="id_button_nstabvorverformungen"
+                  nel="${nstabvorverfomungen_init}"
+                  inputid="nstabvorverformungen"
+                ></dr-button-pm>
+              </td>
+            </tr>
             <tr>
               <td></td>
               <td>
@@ -413,11 +425,24 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         ></dr-tabelle>
       </sl-tab-panel>
 
+      <!--------------------------------------------------------------------------------------->
+      <sl-tab-panel name="tab-stabvorverfomungen"
+        >Eingabe der Stabvorverfomungen für Theorie II. Ordnung
+        <dr-tabelle
+          id="id_stabvorverfomungen_tabelle"
+          nzeilen="${nstabvorverfomungen_init}"
+          nspalten="4"
+          columns='["No", "Element", "w<sub>0L</sub>", "w<sub>0M</sub>", "w<sub>0R</sub>"]'
+        ></dr-tabelle>
+      </sl-tab-panel>
+
+      <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-ergebnisse"
         >Ergebnisse
         <div id="id_results"></div>
       </sl-tab-panel>
 
+      <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-grafik">
         <div
           id="id_grafik"
@@ -435,6 +460,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         <!--  height: 100%; -->
       </sl-tab-panel>
 
+      <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-pro"
         >Einstellung D2beam Element
 
@@ -478,9 +504,13 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         </table>
       </sl-tab-panel>
 
+      <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-info">
         <div id="id_hilfe" class="c_hilfe">
-          <div id="id_doc_frame" style="position: relative; width: 760px; left:50%;">
+          <div
+            id="id_doc_frame"
+            style="position: relative; width: 760px; left:50%;"
+          >
             <iframe
               id="id_doc"
               src="src/info/Kurzdokumentation_deutsch.html"
@@ -493,6 +523,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         </div>
       </sl-tab-panel>
 
+      <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-menue3"
         ><p><b>Einstellungen</b><br /><br /></p>
         <div id="id_einstellungen">
@@ -565,6 +596,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
           </p>
         </div>
       </sl-tab-panel>
+
     </sl-tab-group>
 
     <!-- <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt> -->
@@ -944,6 +976,17 @@ export function resizeTables() {
   }
 
   {
+    const el_elemente = document.getElementById("id_button_nstabvorverformungen");
+    const nelem = (el_elemente?.shadowRoot?.getElementById(
+      "nstabvorverformungen"
+    ) as HTMLInputElement).value;
+
+    const el = document.getElementById("id_stabvorverfomungen_tabelle");
+    console.log("EL: >>", el);
+    el?.setAttribute("nzeilen", nelem);
+  }
+
+  {
     let el_elemente = document.getElementById("id_button_nkombinationen");
     let nelem = (el_elemente?.shadowRoot?.getElementById(
       "nkombinationen"
@@ -980,9 +1023,9 @@ export function clearTables() {
   el = document.getElementById("id_elementlasten_tabelle");
   el?.setAttribute("clear", "0");
 
-  while (nQuerschnittSets > 0 ) {
-     del_last_querschnittSet();
-     let element = document.getElementById("id_tree_LQ") as any;
-     element?.removeChild(element?.lastChild)
+  while (nQuerschnittSets > 0) {
+    del_last_querschnittSet();
+    let element = document.getElementById("id_tree_LQ") as any;
+    element?.removeChild(element?.lastChild);
   }
 }
