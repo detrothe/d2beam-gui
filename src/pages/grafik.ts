@@ -51,7 +51,7 @@ const style_txt_lager = {
 const style_txt_knotenlast = {
     family: 'system-ui, sans-serif',
     size: 14,
-    fill: '#006666',
+    fill: '#dc0000',
     weight: 'bold'
 };
 const style_pfeil = {
@@ -63,7 +63,7 @@ const style_pfeil = {
 
 const style_pfeil_lager = {
     a: 35,
-    b: 35,
+    b: 25,
     h: 16,
     linewidth: 7,
     color: '#006666'
@@ -71,12 +71,19 @@ const style_pfeil_lager = {
 
 const style_pfeil_knotenlast = {
     a: 35,
-    b: 35,
+    b: 25,
     h: 16,
     linewidth: 7,
     color: '#dc0000'
 }
 
+const style_pfeil_moment = {
+    a: 35,
+    b: 25,
+    h: 16,
+    linewidth: 7,
+    color: '#dc0000'
+}
 export function select_loadcase_changed() {
 
     //console.log("################################################ select_loadcase_changed")
@@ -985,6 +992,24 @@ function draw_knotenkraefte(two: Two) {
             txt.alignment = 'left'
             txt.baseline = 'top'
         }
+        if (load[i].p[2] != 0.0 && load[i].lf === draw_lastfall) {
+
+            wert = load[i].p[2]
+            let vorzeichen = Math.sign(wert)
+            console.log("Moment ", +inode + 1, wert)
+            if (wert > 0.0) {
+                draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_moment)
+            } else {
+                draw_moment_arrow(two, x, z, -1.0, slmax / 50, style_pfeil_moment)
+            }
+
+            xpix = tr.xPix(x) - 10 / devicePixelRatio
+            zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
+            const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+            txt.alignment = 'right'
+            //txt.baseline = 'bottom'
+        }
 
     }
 }
@@ -1050,6 +1075,28 @@ function draw_lagerkraefte(two: Two) {
             const txt = two.makeText(str, xpix, zpix, style_txt_lager)
             txt.alignment = 'left'
             txt.baseline = 'top'
+        }
+
+        if (node[i].L[2] === -1) {      // Einspannung
+
+            wert = lagerkraefte._(i, 2, draw_lastfall - 1)
+            console.log("wert", wert)
+            let vorzeichen = Math.sign(wert)
+
+            if (wert >= 0.0) {
+                draw_moment_arrow(two, x, z, -1.0, slmax / 50, style_pfeil_lager)
+                //draw_arrow(two, x, z + delta + plength, x, z + delta, style_pfeil_lager)
+            } else {
+                //draw_arrow(two, x, z + delta, x, z + delta + plength, style_pfeil_lager)
+                draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_lager)
+            }
+
+            xpix = tr.xPix(x)  - 10 / devicePixelRatio
+            zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
+            const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+            const txt = two.makeText(str, xpix, zpix, style_txt_lager)
+            txt.alignment = 'right'
+            //txt.baseline = 'top'
         }
     }
 }
@@ -1264,11 +1311,11 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
     console.log("0.0", Math.round(tr.xPix(0.0)));
 
     if (calc_a) a = Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)) - b;
-    write('sl : ', sl)
-    write('tr.Pix0 : ', tr.Pix0(sl))
-    write('div', Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)))
-    write('a: ', a)
-    write('b: ', b)
+    // write('sl : ', sl)
+    // write('tr.Pix0 : ', tr.Pix0(sl))
+    // write('div', Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)))
+    // write('a: ', a)
+    // write('b: ', b)
 
     let x0 = Math.round(tr.xPix(x1));
     let z0 = Math.round(tr.zPix(z1));
@@ -1296,6 +1343,97 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
     group.rotation = alpha
     group.translation.set(x0, z0)
 
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number, radius: number, styles?: any) {
+    //----------------------------------------------------------------------------------------------------
+    let b = 20, h = 10
+    let x = 0.0, z = 0.0, linewidth = 2, color = '#000000'
+    let alpha: number, dalpha: number, teilung = 12
+
+    if (styles) {
+        console.log("styles", styles)
+        if (styles.linewidth) linewidth = styles.linewidth
+        if (styles.b) b = styles.b
+        if (styles.h) h = styles.h
+        if (styles.color) color = styles.color
+    }
+    b = b / devicePixelRatio
+    h = h / devicePixelRatio
+
+    let group = two.makeGroup();
+
+    var vertices = [];
+
+    if (vorzeichen > 0) {
+
+        dalpha = Math.PI / (teilung + 1)
+        alpha = 0.0
+        for (let i = 0; i < teilung-2; i++) {
+            x = tr.Pix0(-radius * Math.sin(alpha))
+            z = tr.Pix0(radius * Math.cos(alpha))
+            vertices.push(new Two.Anchor(x, z));
+            alpha += dalpha
+        }
+
+
+        let curve = new Two.Path(vertices, false, true)
+        curve.linewidth = linewidth;
+        curve.stroke = color;
+        curve.noFill()
+
+        group.add(curve)
+
+        vertices.length = 0;
+        vertices.push(new Two.Vector(0, -h / 2 + tr.Pix0(radius)));
+        vertices.push(new Two.Vector(0 + b, tr.Pix0(radius)));
+        vertices.push(new Two.Vector(0, h / 2 + tr.Pix0(radius)));
+        // @ts-ignore
+        let dreieck = two.makePath(vertices);
+        dreieck.fill = color;
+        dreieck.stroke = color;
+        dreieck.linewidth = 1;
+        //    dreieck.translation.set(0.0,0.0) //tr.Pix0(radius))
+
+        group.add(dreieck)
+        group.rotation = Math.PI / 5
+        group.translation.set(tr.xPix(x0), tr.zPix(z0))
+
+    } else {
+
+        dalpha = Math.PI / (teilung + 1)
+        alpha = 0.0
+        for (let i = 0; i < teilung-2; i++) {
+            x = tr.Pix0(-radius * Math.sin(alpha))
+            z = tr.Pix0(-radius * Math.cos(alpha))
+            vertices.push(new Two.Anchor(x, z));
+            alpha += dalpha
+        }
+
+
+        let curve = new Two.Path(vertices, false, true)
+        curve.linewidth = linewidth;
+        curve.stroke = color;
+        curve.noFill()
+
+        group.add(curve)
+
+        vertices.length = 0;
+        vertices.push(new Two.Vector(0, -h / 2 - tr.Pix0(radius)));
+        vertices.push(new Two.Vector(0 + b, -tr.Pix0(radius)));
+        vertices.push(new Two.Vector(0, h / 2 - tr.Pix0(radius)));
+        // @ts-ignore
+        let dreieck = two.makePath(vertices);
+        dreieck.fill = color;
+        dreieck.stroke = color;
+        dreieck.linewidth = 1;
+
+        group.add(dreieck)
+        group.rotation = -Math.PI / 5
+        group.translation.set(tr.xPix(x0), tr.zPix(z0))
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
