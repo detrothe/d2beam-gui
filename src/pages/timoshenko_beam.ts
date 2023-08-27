@@ -2,12 +2,13 @@ import { CElement } from "./element"
 
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, add_neq, neq, u_lf, u0_komb, eigenform_container_u,
-    nelTeilungen, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf
+    nelTeilungen, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung
 } from "./rechnen"
 
 
 export class CTimoshenko_beam extends CElement {
 
+    ielem = -1
     nknoten = 2
     emodul = 0.0
     gmodul = 0.0
@@ -83,6 +84,8 @@ export class CTimoshenko_beam extends CElement {
         let x1, x2, z1, z2
 
         let n: number
+
+        this.ielem = ielem
 
         if (THIIO_flag === 0) n = nlastfaelle;
         else n = nkombinationen;
@@ -594,6 +597,7 @@ export class CTimoshenko_beam extends CElement {
         let sum: number
 
         let dispL = Array(6), dispG = Array(6), FeL = Array(6)
+        let v0 = Array(6).fill(0.0)
 
         for (j = 0; j < 6; j++) {                           // Stabverformungen
             ieq = this.lm[j]
@@ -621,6 +625,36 @@ export class CTimoshenko_beam extends CElement {
             }
             FeL[j] = sum     // lokal
         }
+
+        // jetzt noch die Anteile aus Stabvorverformungen
+
+        console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß   nstabvorverfomungen", nstabvorverfomungen)
+        for (i = 0; i < nstabvorverfomungen; i++) {
+            if (stabvorverformung[i].element === this.ielem) {
+                console.log("Element ", +i + 1, ' hat Stabvorverformungen')
+                v0[1] = stabvorverformung[i].p[0]
+                v0[4] = stabvorverformung[i].p[1]
+
+                v0[2] = -(v0[4] - v0[1] / this.sl)
+                v0[5] = v0[2]
+
+                let v0m = stabvorverformung[i].p[2]
+                v0[2] = v0[2] - 4.0 * v0m / this.sl
+                v0[5] = v0[5] + 4.0 * v0m / this.sl
+            }
+
+        }
+
+
+        for (j = 0; j < 6; j++) {
+            sum = 0.0
+            for (k = 0; k < 6; k++) {
+                sum += this.normalkraft * this.ksig[j][k] * v0[k]
+            }
+            FeL[j] += sum     // lokal
+        }
+
+
 
         for (i = 0; i < 6; i++) {
             sum = 0.0
@@ -787,11 +821,8 @@ export class CTimoshenko_beam extends CElement {
             ux = 0.0
             wx = 0.0
 
-            if (THIIO_flag === 0) {
-                // if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
-                // if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
-                // if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
-            } else {
+            if (THIIO_flag === 1) {
+
                 Nu[0] = (1.0 - x / sl);
                 Nu[1] = x / sl
                 Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x + sl ** 3 + 12 * kappa * sl) / nenner;
@@ -803,9 +834,18 @@ export class CTimoshenko_beam extends CElement {
 
                 Mx = Mx - this.NL * (w - wL)
 
-                // if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
-                // if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
-                // if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
+                for (let i = 0; i < nstabvorverfomungen; i++) {
+                    if (stabvorverformung[i].element === this.ielem) {
+                        //console.log("Element ", +i + 1, ' hat Stabvorverformungen')
+                        let w0a = stabvorverformung[i].p[0]
+                        let w0e = stabvorverformung[i].p[1]
+                        let v0m = stabvorverformung[i].p[2]
+                        let w0x = (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
+                        Mx = Mx - this.NL * w0x
+                    }
+
+                }
+
             }
 
             // normale Elementlasten hinzufügen

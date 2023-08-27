@@ -13,7 +13,7 @@ export let nnodes: number;
 export let nelem: number;
 export let nloads: number = 0;
 export let neloads: number = 0;
-export let nstabvorverfomungen=0;
+export let nstabvorverfomungen = 0;
 export let neq: number;
 export let nnodesTotal: number = 0;
 export let nlastfaelle: number = 0;
@@ -532,26 +532,26 @@ function read_stabvorverformungen() {
             wert = child.value;
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
             if (ispalte === 1) stabvorverformung[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) stabvorverformung[izeile - 1].p[0] = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) stabvorverformung[izeile - 1].p[1] = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) stabvorverformung[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 2) stabvorverformung[izeile - 1].p[0] = Number(testNumber(wert, izeile, ispalte, shad)) / 100.0;   // von cm in m
+            else if (ispalte === 3) stabvorverformung[izeile - 1].p[1] = Number(testNumber(wert, izeile, ispalte, shad)) / 100.0;
+            else if (ispalte === 4) stabvorverformung[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad)) / 100.0;
         }
 
         console.log("stabvorverfomung", izeile, stabvorverformung[izeile - 1])
     }
-/*
-    maxValue_eload = new Array(nlastfaelle).fill(0.0)
+    /*
+        maxValue_eload = new Array(nlastfaelle).fill(0.0)
 
-    for (i = 0; i < neloads; i++) {
-        let lf = eload[i].lf - 1
-        let art = eload[i].art
-        console.log("art=", art, lf)
-        if (art === 0 || art === 1 || art === 2) {
-            if (Math.abs(eload[i].pL) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pL)
-            if (Math.abs(eload[i].pR) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pR)
+        for (i = 0; i < neloads; i++) {
+            let lf = eload[i].lf - 1
+            let art = eload[i].art
+            console.log("art=", art, lf)
+            if (art === 0 || art === 1 || art === 2) {
+                if (Math.abs(eload[i].pL) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pL)
+                if (Math.abs(eload[i].pR) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pR)
+            }
         }
-    }
-*/
+    */
     //for (i = 0; i < nlastfaelle; i++) console.log('maxValue_eload', i, maxValue_eload[i])
     console.log('nstabvorverfomungen', nstabvorverfomungen)
 }
@@ -1307,7 +1307,7 @@ function calculate() {
                                 ieq = i;
                             }
                         }
-                        console.log("umax=", umax)
+                        console.log("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU umax=", umax)
 
                     } else {
                         ieq = node[maxU_node - 1].L[maxU_dir]
@@ -1318,9 +1318,10 @@ function calculate() {
                     let pg_max = 0.0
                     if (umax > 0.0) {
                         let vorzeichen_U = Math.sign(u_lf[ieq][iKomb - 1])
+                        if (vorzeichen_U === 0.0) vorzeichen_U = 1.0
                         let vorzeichen_umax = Math.sign(u[ieq])
                         let faktor = vorzeichen_U * vorzeichen_umax * maxU_schief / umax
-                        console.log("vorzeichen", vorzeichen_U, vorzeichen_umax)
+                        console.log("vorzeichen", vorzeichen_U, vorzeichen_umax, faktor)
                         for (i = 0; i < neq; i++) {
                             pg[i] = u[i] * faktor
                             if (Math.abs(pg[i]) > pg_max) pg_max = Math.abs(pg[i])

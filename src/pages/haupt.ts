@@ -432,7 +432,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
           id="id_stabvorverfomungen_tabelle"
           nzeilen="${nstabvorverfomungen_init}"
           nspalten="4"
-          columns='["No", "Element", "w<sub>0L</sub>", "w<sub>0M</sub>", "w<sub>0R</sub>"]'
+          columns='["No", "Element", "w<sub>0a</sub> [cm]", "w<sub>0e</sub> [cm]", "w<sub>0m</sub> [cm]"]'
         ></dr-tabelle>
       </sl-tab-panel>
 
@@ -1021,6 +1021,12 @@ export function clearTables() {
   el?.setAttribute("clear", "0");
 
   el = document.getElementById("id_elementlasten_tabelle");
+  el?.setAttribute("clear", "0");
+
+  el = document.getElementById("id_stabvorverfomungen_tabelle");
+  el?.setAttribute("clear", "0");
+
+  el = document.getElementById("id_kombinationen_tabelle");
   el?.setAttribute("clear", "0");
 
   while (nQuerschnittSets > 0) {

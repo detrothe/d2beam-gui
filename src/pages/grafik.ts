@@ -334,13 +334,15 @@ export function drawsystem() {
             }
 
             if (show_labels && maxU > 0.0) {
+
+                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                pfeil.stroke = '#D3D3D3'
+
                 const str = myFormat(maxU * 1000, 1, 1) + 'mm'
                 const txt = two.makeText(str, x_max, z_max, style_txt)
                 txt.alignment = 'left'
                 txt.baseline = 'top'
 
-                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
-                pfeil.stroke = '#D3D3D3'
             }
         }
     }
@@ -421,13 +423,14 @@ export function drawsystem() {
             }
 
             if (show_labels && maxU > 0.0) {
+
+                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                pfeil.stroke = '#D3D3D3'
+
                 const str = myFormat(maxU, 1, 2)
                 const txt = two.makeText(str, x_max, z_max, style_txt)
                 txt.alignment = 'left'
                 txt.baseline = 'top'
-
-                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
-                pfeil.stroke = '#D3D3D3'
 
             }
 
@@ -511,13 +514,14 @@ export function drawsystem() {
             }
 
             if (show_labels && maxU > 0.0) {
+
+                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                pfeil.stroke = '#D3D3D3'
+
                 const str = myFormat(maxU * 1000, 1, 1) + 'mm'
                 const txt = two.makeText(str, x_max, z_max, style_txt)
                 txt.alignment = 'left'
                 txt.baseline = 'top'
-
-                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
-                pfeil.stroke = '#D3D3D3'
 
             }
 
