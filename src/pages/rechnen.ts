@@ -13,6 +13,7 @@ export let nnodes: number;
 export let nelem: number;
 export let nloads: number = 0;
 export let neloads: number = 0;
+export let nstabvorverfomungen=0;
 export let neq: number;
 export let nnodesTotal: number = 0;
 export let nlastfaelle: number = 0;
@@ -33,6 +34,7 @@ export let node = [] as TNode[]
 export let element = [] as TElement[]
 export let load = [] as TLoads[]
 export let eload = [] as TElLoads[]
+export let stabvorverformung = [] as TStabvorverformung[]
 export let querschnittset = [] as any[]
 export let kombiTabelle = [] as number[][]
 export let alpha_cr = [] as number[][]
@@ -149,6 +151,12 @@ class TElLoads {
     el_r: number[] = Array(6)           // Elementlastvektor im globalen Koordinatensystem
 }
 
+
+class TStabvorverformung {
+    element: number = -1
+    p = [0.0, 0.0, 0.0]
+}
+
 class TMaxValues {
     disp = 0.0
     N = 0.0
@@ -206,6 +214,9 @@ export function rechnen() {
     el = document.getElementById('id_button_nelemloads') as any;
     neloads = Number(el.nel);
 
+    el = document.getElementById('id_button_nstabvorverformungen') as any;
+    nstabvorverfomungen = Number(el.nel);
+
     el = document.getElementById('id_button_nlastfaelle') as any;
     nlastfaelle = Number(el.nel);
 
@@ -244,6 +255,7 @@ export function rechnen() {
     read_elements();
     read_nodal_loads();
     read_element_loads();
+    read_stabvorverformungen();
     read_kombinationen();
 
     calculate();
@@ -490,6 +502,59 @@ function read_element_loads() {
     console.log('maxValue_eload', maxValue_eload)
 }
 
+
+//---------------------------------------------------------------------------------------------------------------
+function read_stabvorverformungen() {
+    //-----------------------------------------------------------------------------------------------------------
+
+    let i: number;
+
+    const el = document.getElementById('id_stabvorverfomungen_tabelle');
+    //console.log('EL: >>', el);
+    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+
+    const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    //console.log('nZeilen', table.rows.length);
+    //console.log('nSpalten', table.rows[0].cells.length);
+
+    for (i = 0; i < nstabvorverfomungen; i++) {
+        stabvorverformung.push(new TStabvorverformung())
+    }
+
+    let nRowTab = table.rows.length;
+    let nColTab = table.rows[0].cells.length;
+    let wert: any;
+    const shad = el?.shadowRoot?.getElementById('mytable')
+
+    for (let izeile = 1; izeile < nRowTab; izeile++) {
+        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+            wert = child.value;
+            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+            if (ispalte === 1) stabvorverformung[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) stabvorverformung[izeile - 1].p[0] = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) stabvorverformung[izeile - 1].p[1] = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) stabvorverformung[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad));
+        }
+
+        console.log("stabvorverfomung", izeile, stabvorverformung[izeile - 1])
+    }
+/*
+    maxValue_eload = new Array(nlastfaelle).fill(0.0)
+
+    for (i = 0; i < neloads; i++) {
+        let lf = eload[i].lf - 1
+        let art = eload[i].art
+        console.log("art=", art, lf)
+        if (art === 0 || art === 1 || art === 2) {
+            if (Math.abs(eload[i].pL) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pL)
+            if (Math.abs(eload[i].pR) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pR)
+        }
+    }
+*/
+    //for (i = 0; i < nlastfaelle; i++) console.log('maxValue_eload', i, maxValue_eload[i])
+    console.log('nstabvorverfomungen', nstabvorverfomungen)
+}
 
 //---------------------------------------------------------------------------------------------------------------
 function read_elements() {
