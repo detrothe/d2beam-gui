@@ -57,6 +57,7 @@ export let maxValue_komb = [] as TMaxValues[]
 export let maxValue_eigv = [] as number[][]
 export let maxValue_u0 = [] as TMaxU0[]
 export let maxValue_eload = [] as number[]
+export let maxValue_w0 = 0.0                // Stabvorverformung
 
 
 export let xmin = -50.0, zmin = -50.0, xmax = 50.0, zmax = 50.0, slmax = 0.0;
@@ -526,6 +527,8 @@ function read_stabvorverformungen() {
     let wert: any;
     const shad = el?.shadowRoot?.getElementById('mytable')
 
+    maxValue_w0 = 0.0
+
     for (let izeile = 1; izeile < nRowTab; izeile++) {
         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
@@ -537,23 +540,11 @@ function read_stabvorverformungen() {
             else if (ispalte === 4) stabvorverformung[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad)) / 100.0;
         }
 
+        maxValue_w0 = Math.max(maxValue_w0, Math.abs(stabvorverformung[izeile - 1].p[0]), Math.abs(stabvorverformung[izeile - 1].p[1]), Math.abs(stabvorverformung[izeile - 1].p[2]))
         console.log("stabvorverfomung", izeile, stabvorverformung[izeile - 1])
     }
-    /*
-        maxValue_eload = new Array(nlastfaelle).fill(0.0)
 
-        for (i = 0; i < neloads; i++) {
-            let lf = eload[i].lf - 1
-            let art = eload[i].art
-            console.log("art=", art, lf)
-            if (art === 0 || art === 1 || art === 2) {
-                if (Math.abs(eload[i].pL) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pL)
-                if (Math.abs(eload[i].pR) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pR)
-            }
-        }
-    */
-    //for (i = 0; i < nlastfaelle; i++) console.log('maxValue_eload', i, maxValue_eload[i])
-    console.log('nstabvorverfomungen', nstabvorverfomungen)
+    console.log('nstabvorverfomungen, maxValue_w0', nstabvorverfomungen, maxValue_w0)
 }
 
 //---------------------------------------------------------------------------------------------------------------

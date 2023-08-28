@@ -4,10 +4,10 @@ import { CTrans } from './trans';
 import { myFormat } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load } from "./rechnen";
-import { el as element, node, nelem, nnodes, nloads, neloads, eload } from "./rechnen";
-import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, THIIO_flag } from "./rechnen";
+import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
+import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, THIIO_flag, maxValue_w0 } from "./rechnen";
 //import { Pane } from 'tweakpane';
-import { myPanel } from './mypanelgui'
+import { myPanel, get_scale_factor } from './mypanelgui'
 //import { colorToRgbNumber } from '@tweakpane/core';
 
 console.log("in grafik")
@@ -20,6 +20,7 @@ let draw_eigenform = 1
 
 let devicePixelRatio = 1
 
+let scaleFactor_panel = 1.0
 let show_labels = false;
 let show_systemlinien = true;
 let show_verformungen = false;
@@ -30,6 +31,7 @@ let show_normalkraftlinien = false;
 let show_schiefstellung = false;
 let show_lasten = true;
 let show_lagerkraefte = true;
+let show_stabvorverformung = false;
 
 
 const style_txt = {
@@ -276,6 +278,9 @@ export function drawsystem() {
         else if (THIIO_flag === 1) {
             scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].disp * 1000.
         }
+
+        scalefactor *= scaleFactor_panel
+
         console.log("scalefaktor", scalefactor, slmax, maxValue_lf[iLastfall - 1].disp)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
@@ -364,6 +369,8 @@ export function drawsystem() {
 
 
         let scalefactor = 0.1 * slmax / maxValue_eigv[ikomb - 1][draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
+
+        scalefactor *= scaleFactor_panel
 
         console.log("scalefaktor", scalefactor, slmax, maxValue_lf[draw_eigenform - 1].disp)
         console.log("draw_eigenform", draw_eigenform, ikomb)
@@ -454,16 +461,18 @@ export function drawsystem() {
 
         let scalefactor = 0.1 * slmax / maxValue_u0[ikomb - 1].u0
 
+        scalefactor *= scaleFactor_panel
+
         console.log("scalefaktor", scalefactor, slmax, maxValue_u0[ikomb - 1].u0)
         console.log("draw_schiefstellung", ikomb)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
             maxU = 0.0
 
-            x1 = Math.round(tr.xPix(element[ielem].x1));
-            z1 = Math.round(tr.zPix(element[ielem].z1));
-            x2 = Math.round(tr.xPix(element[ielem].x2));
-            z2 = Math.round(tr.zPix(element[ielem].z2));
+            // x1 = Math.round(tr.xPix(element[ielem].x1));
+            // z1 = Math.round(tr.zPix(element[ielem].z1));
+            // x2 = Math.round(tr.xPix(element[ielem].x2));
+            // z2 = Math.round(tr.zPix(element[ielem].z2));
 
             element[ielem].get_edispL_schiefstellung(edispL, ikomb - 1)
 
@@ -528,6 +537,91 @@ export function drawsystem() {
         }
     }
 
+
+    // Stabvorverformung
+
+    if (show_stabvorverformung && maxValue_w0 > 0.0) {
+
+        let xx1, xx2, zz1, zz2
+        let dx: number, x: number, kappa: number, sl: number, nenner: number
+
+        let uG: number, wG: number
+        let ikomb = draw_lastfall
+        let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+        let xmem = 0.0, zmem = 0.0
+
+        let scalefactor = 0.05 * slmax / maxValue_w0
+
+        scalefactor *= scaleFactor_panel
+
+        console.log("scalefaktor", scalefactor, slmax, maxValue_w0)
+        console.log("draw_stabvorverformung", ikomb)
+
+        maxU = 0.0
+
+        for (let ielem = 0; ielem < nelem; ielem++) {
+            sl = element[ielem].sl
+
+            for (let i = 0; i < nstabvorverfomungen; i++) {
+                if (stabvorverformung[i].element === ielem) {
+                    //console.log("Element ", +i + 1, ' hat Stabvorverformungen')
+                    let w0a = stabvorverformung[i].p[0]
+                    let w0e = stabvorverformung[i].p[1]
+                    let v0m = stabvorverformung[i].p[2]
+
+                    dx = sl / nelTeilungen
+                    x = 0.0; xx2 = 0.0; zz2 = 0.0
+                    for (let iteil = 0; iteil <= nelTeilungen; iteil++) {
+
+
+                        let w0x = (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
+
+                        uG = -element[ielem].sinus * w0x
+                        wG = element[ielem].cosinus * w0x
+
+                        xx1 = xx2; zz1 = zz2;
+                        xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
+                        zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                        xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+                        //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
+                        if (iteil > 0) {
+                            //console.log("line", xx1, zz1, xx2, zz2)
+                            let line = two.makeLine(xx1, zz1, xx2, zz2);
+                            line.linewidth = 2;
+                        }
+
+                        dispG = Math.sqrt(uG * uG + wG * wG)
+
+                        if (dispG > maxU) {
+                            maxU = dispG
+                            x_max = xx2
+                            z_max = zz2
+                            xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+                            zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+
+                        }
+                        x = x + dx
+                    }
+                }
+
+            }
+
+
+            if (show_labels && maxU > 0.0) {
+
+                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                pfeil.stroke = '#D3D3D3'
+
+                const str = myFormat(maxU * 1000, 1, 1) + 'mm'
+                const txt = two.makeText(str, x_max, z_max, style_txt)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+
+            }
+
+        }
+    }
+
     // Momentenlinien
 
     if (show_momentenlinien) {
@@ -553,7 +647,7 @@ export function drawsystem() {
             //console.log("scalefaktor", scalefactor, slmax, maxValue_komb[iLastfall - 1].My)
         }
 
-
+        scalefactor *= scaleFactor_panel
 
         for (let ielem = 0; ielem < nelem; ielem++) {
             maxM = 0.0
@@ -666,7 +760,7 @@ export function drawsystem() {
             //console.log("scalefaktor", scalefactor, slmax, maxValue_komb[iLastfall - 1].Vz)
         }
 
-
+        scalefactor *= scaleFactor_panel
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -734,7 +828,7 @@ export function drawsystem() {
             //console.log("scalefaktor", scalefactor, slmax, maxValue_komb[iLastfall - 1].N)
         }
 
-
+        scalefactor *= scaleFactor_panel
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -1371,7 +1465,7 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
     linewidth /= devicePixelRatio
     radius /= devicePixelRatio
 
-    radius=tr.World0(radius)
+    radius = tr.World0(radius)
 
     let group = two.makeGroup();
 
@@ -1549,6 +1643,17 @@ function draw_schiefstellung_grafik() {
 
     drawsystem();
 }
+//--------------------------------------------------------------------------------------------------------
+function draw_stabvorverformung_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_stabvorverformung_grafik");
+    show_stabvorverformung = !show_stabvorverformung;
+
+    //if (Gesamt_ys === undefined || isNaN(yM)) return;
+
+    drawsystem();
+}
 
 //--------------------------------------------------------------------------------------------------------
 function draw_lasten_grafik() {
@@ -1574,6 +1679,14 @@ function draw_lagerkraefte_grafik() {
     drawsystem();
 }
 
+//--------------------------------------------------------------------------------------------------------
+function scale_factor() {
+    //--------------------------------------------------------------------------------------------------------
+
+    scaleFactor_panel = get_scale_factor();
+    console.log("stressFactor=", scaleFactor_panel)
+    drawsystem();
+}
 //---------------------------------------------------------------------------------- a d d E v e n t L i s t e n e r
 
 window.addEventListener('draw_label_grafik', draw_label_grafik);
@@ -1584,5 +1697,8 @@ window.addEventListener('draw_momentenlinien_grafik', draw_momentenlinien_grafik
 window.addEventListener('draw_querkraftlinien_grafik', draw_querkraftlinien_grafik);
 window.addEventListener('draw_normalkraftlinien_grafik', draw_normalkraftlinien_grafik);
 window.addEventListener('draw_schiefstellung_grafik', draw_schiefstellung_grafik);
+window.addEventListener('draw_stabvorverformung_grafik', draw_stabvorverformung_grafik);
 window.addEventListener('draw_lasten_grafik', draw_lasten_grafik);
 window.addEventListener('draw_lagerkraefte_grafik', draw_lagerkraefte_grafik);
+
+window.addEventListener('scale_factor', scale_factor);

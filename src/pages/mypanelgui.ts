@@ -17,6 +17,7 @@ export function myPanel() {
         querkraft: false,
         moment: false,
         schief: false,
+        stabvorverformung:false,
         scale: 1.0,
         eigenform: false,
         show_loads: true,
@@ -89,6 +90,10 @@ export function myPanel() {
 
     gui.add(obj, 'schief').name('Schiefstellung').onChange(() => {
         window.dispatchEvent(new Event("draw_schiefstellung_grafik"));
+    });
+
+    gui.add(obj, 'stabvorverformung').name('Stabvorverformung').onChange(() => {
+        window.dispatchEvent(new Event("draw_stabvorverformung_grafik"));
     });
 
     gui.add(obj, 'scale', 0, 2, 0.1).name(skalierung).onFinishChange((v: any) => {
