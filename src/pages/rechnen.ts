@@ -1147,7 +1147,7 @@ function calculate() {
 
             console.log("\n***************  K O M B I N A T I O N ", iKomb, "\n\n")
 
-            for (let iter = 0; iter < 2; iter++) {
+            for (let iter = 0; iter < 5; iter++) {
 
                 console.log("_________________  I T E R  = ", iter, " ___________________")
 

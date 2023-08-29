@@ -804,7 +804,7 @@ export class CTimoshenko_beam extends CElement {
 
         const kappa = this.kappa
         const sl = this.sl
-        const nenner = sl ** 3 + 12 * kappa * sl
+        const nenner = sl ** 3 + 12. * kappa * sl
 
         if (THIIO_flag > 0) {
             for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i] + this.edisp0[i]
@@ -825,10 +825,10 @@ export class CTimoshenko_beam extends CElement {
 
                 Nu[0] = (1.0 - x / sl);
                 Nu[1] = x / sl
-                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x + sl ** 3 + 12 * kappa * sl) / nenner;
-                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * kappa) * x ** 2 + (sl ** 3 + 6 * kappa * sl) * x) / nenner);
-                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x) / nenner);
-                Nw[3] = -((sl * x ** 3 + (6 * kappa - sl ** 2) * x ** 2 - 6 * kappa * sl * x) / nenner);
+                Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * kappa * x + sl ** 3 + 12. * kappa * sl) / nenner;
+                Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * kappa) * x ** 2 + (sl ** 3 + 6. * kappa * sl) * x) / nenner);
+                Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * kappa * x) / nenner);
+                Nw[3] = -((sl * x ** 3 + (6. * kappa - sl ** 2) * x ** 2 - 6. * kappa * sl * x) / nenner);
                 u = Nu[0] * edisp[0] + Nu[1] * edisp[3]
                 w = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
 
@@ -857,19 +857,19 @@ export class CTimoshenko_beam extends CElement {
 
                         if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
 
-                            const pL = eload[ieload].pR
+                            const pL = eload[ieload].pL
                             const pR = eload[ieload].pR
                             const dp = pR - pL
 
-                            Vx = Vx - pL * x - dp * x * x / 2.
-                            Mx = Mx - pL * x * x / 2 - dp * x * x * x / 6.
+                            Vx = Vx - pL * x - dp * x * x / sl / 2.
+                            Mx = Mx - pL * x * x / 2. - dp * x * x * x / sl / 6.
 
                             wx = pL / 24.0 * (x ** 4 - 2 * sl * x ** 3 + sl * sl * x * x) / EI
 
                         }
                         else if (eload[ieload].art === 1) {         // Trapezstreckenlast z-Richtung
 
-                            const pL = eload[ieload].pR
+                            const pL = eload[ieload].pL
                             const pR = eload[ieload].pR
 
                             let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
@@ -880,15 +880,15 @@ export class CTimoshenko_beam extends CElement {
                             const dpx = pxR - pxL
                             const dpz = pzR - pzL
 
-                            Nx = Nx - pxL * x - dpx * x * x / 2.
-                            Vx = Vx - pzL * x - dpz * x * x / 2.
-                            Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / 6.
+                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
+                            Vx = Vx - pzL * x - dpz * x * x / sl / 2.
+                            Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
                         }
                         else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
 
                             //console.log("Projektion",this.dx, sl)
-                            const pL = eload[ieload].pR * this.dx / sl
+                            const pL = eload[ieload].pL * this.dx / sl
                             const pR = eload[ieload].pR * this.dx / sl
 
                             let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
@@ -899,9 +899,9 @@ export class CTimoshenko_beam extends CElement {
                             const dpx = pxR - pxL
                             const dpz = pzR - pzL
 
-                            Nx = Nx - pxL * x - dpx * x * x / 2.
-                            Vx = Vx - pzL * x - dpz * x * x / 2.
-                            Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / 6.
+                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
+                            Vx = Vx - pzL * x - dpz * x * x / sl / 2.
+                            Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
                         }
                     }
@@ -926,17 +926,17 @@ export class CTimoshenko_beam extends CElement {
 
                             if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
 
-                                const pL = eload[ieload].pR * kombiTabelle[iLastf][index]
+                                const pL = eload[ieload].pL * kombiTabelle[iLastf][index]
                                 const pR = eload[ieload].pR * kombiTabelle[iLastf][index]
                                 const dp = pR - pL
 
-                                Vx = Vx - pL * x - dp * x * x / 2.
-                                Mx = Mx - pL * x * x / 2 - dp * x * x * x / 6.
+                                Vx = Vx - pL * x - dp * x * x / sl / 2.
+                                Mx = Mx - pL * x * x / 2 - dp * x * x * x / sl / 6.
 
                             }
                             else if (eload[ieload].art === 1) {         // Trapezstreckenlast z-Richtung
 
-                                const pL = eload[ieload].pR * kombiTabelle[iLastf][index]
+                                const pL = eload[ieload].pL * kombiTabelle[iLastf][index]
                                 const pR = eload[ieload].pR * kombiTabelle[iLastf][index]
 
                                 let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
@@ -947,14 +947,14 @@ export class CTimoshenko_beam extends CElement {
                                 const dpx = pxR - pxL
                                 const dpz = pzR - pzL
 
-                                Nx = Nx - pxL * x - dpx * x * x / 2.
-                                Vx = Vx - pzL * x - dpz * x * x / 2.
-                                Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / 6.
+                                Nx = Nx - pxL * x - dpx * x * x / sl / 2.
+                                Vx = Vx - pzL * x - dpz * x * x / sl / 2.
+                                Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
                             }
                             else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
 
-                                const pL = eload[ieload].pR * this.dx / sl * kombiTabelle[iLastf][index]
+                                const pL = eload[ieload].pL * this.dx / sl * kombiTabelle[iLastf][index]
                                 const pR = eload[ieload].pR * this.dx / sl * kombiTabelle[iLastf][index]
 
                                 let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
@@ -965,9 +965,9 @@ export class CTimoshenko_beam extends CElement {
                                 const dpx = pxR - pxL
                                 const dpz = pzR - pzL
 
-                                Nx = Nx - pxL * x - dpx * x * x / 2.
-                                Vx = Vx - pzL * x - dpz * x * x / 2.
-                                Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / 6.
+                                Nx = Nx - pxL * x - dpx * x * x / sl / 2.
+                                Vx = Vx - pzL * x - dpz * x * x / sl / 2.
+                                Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
                             }
 

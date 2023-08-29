@@ -12,6 +12,16 @@ import { myPanel, get_scale_factor } from './mypanelgui'
 
 console.log("in grafik")
 
+let domElement: any = null
+let wheel_factor = 1.0
+let mouseOffsetX = 0.0
+let mouseOffsetY = 0.0
+let mouseDx = 0.0
+let mouseDz = 0.0
+
+let xminw = 0.0, xmaxw = 0.0, zminw = 0.0, zmaxw = 0.0
+let xmint = 0.0, xmaxt = 0.0, zmint = 0.0, zmaxt = 0.0
+
 let tr: CTrans
 
 let drawPanel = 0
@@ -170,6 +180,79 @@ export function init_grafik() {
 
 }
 
+//--------------------------------------------------------------------------------------------------------
+function wheel(ev: WheelEvent) {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log('==========================in mousewheel', ev.deltaX, ev.deltaY, ev.offsetX, ev.offsetY)
+    ev.preventDefault()
+    if (ev.deltaY > 0) {
+        wheel_factor += 0.1;
+        if ( wheel_factor > 2) wheel_factor=2.0
+    }
+    else if (ev.deltaY < 0) {
+        wheel_factor -= 0.1;
+        if ( wheel_factor < 0.1) wheel_factor=0.1
+    }
+    //mouseOffsetX = ev.offsetX
+    //mouseOffsetY = ev.offsetY
+    mouseDx = 0.0
+    mouseDz = 0.0
+
+    drawsystem()
+}
+
+//--------------------------------------------------------------------------------------------------------
+function mousedown(ev: any) {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log('in mousedown', ev)
+    ev.preventDefault()
+    // if (ev.wheelDeltaY > 0) wheel_factor -= 0.1;
+    // else if (ev.wheelDeltaY < 0) wheel_factor += 0.1;
+    window.addEventListener('mousemove', mousemove, false);
+
+    mouseOffsetX = ev.offsetX
+    mouseOffsetY = ev.offsetY
+    //mouseDx = 0.0
+    //mouseDz = 0.0
+    //wheel_factor=1.0
+    //drawsystem()
+}
+
+//--------------------------------------------------------------------------------------------------------
+function mousemove(ev: MouseEvent) {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY)
+    ev.preventDefault()
+    // if (ev.wheelDeltaY > 0) wheel_factor -= 0.1;
+    // else if (ev.wheelDeltaY < 0) wheel_factor += 0.1;
+
+    //drawsystem()
+
+    console.log("word", tr.xWorld(ev.offsetX), tr.zWorld(ev.offsetY))
+
+    mouseDx += ev.offsetX - mouseOffsetX
+    mouseDz += ev.offsetY - mouseOffsetY
+    mouseOffsetX = ev.offsetX
+    mouseOffsetY = ev.offsetY
+    drawsystem()
+}
+
+//--------------------------------------------------------------------------------------------------------
+function mouseup(ev: any) {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log('in mouseup', ev)
+    ev.preventDefault()
+    // if (ev.wheelDeltaY > 0) wheel_factor -= 0.1;
+    // else if (ev.wheelDeltaY < 0) wheel_factor += 0.1;
+    window.removeEventListener('mousemove', mousemove, false);
+
+    //drawsystem()
+}
+
 //--------------------------------------------------------------------------------------------------- d r a w s y s t e m
 
 export function drawsystem() {
@@ -177,6 +260,15 @@ export function drawsystem() {
     var params = {
         fullscreen: false
     };
+
+
+    if (domElement != null) {
+        domElement.removeEventListener('wheel', wheel, false);
+        domElement.removeEventListener('mousedown', mousedown, false);
+        domElement.removeEventListener('mouseup', mousemove, false);
+
+    }
+
     const elem = document.getElementById('id_grafik') as any; //HTMLDivElement;
     console.log("childElementCount", elem.childElementCount)
 
@@ -202,20 +294,20 @@ export function drawsystem() {
     */
 
 
-    let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen);
+    let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen || show_stabvorverformung);
 
     const two = new Two(params).appendTo(elem);
 
 
-    console.log("document.documentElement", document.documentElement.clientHeight)
+    //console.log("document.documentElement", document.documentElement.clientHeight)
 
-    let ele = document.getElementById("id_tab_group") as any
+    //let ele = document.getElementById("id_tab_group") as any
     //let height = el.getBoundingClientRect().height
-    console.log("boundingRect", ele?.getBoundingClientRect().height)
+    //console.log("boundingRect", ele?.getBoundingClientRect().height)
     let height = document.documentElement.clientHeight //- el?.getBoundingClientRect()?.height;
     two.width = document.documentElement.clientWidth;
-    ele = document.querySelector('.footer'); //.getElementById("container")
-    console.log("container footer boundingRect", ele?.getBoundingClientRect())
+    //ele = document.querySelector('.footer'); //.getElementById("container")
+    //console.log("container footer boundingRect", ele?.getBoundingClientRect())
 
     //height= height - el?.getBoundingClientRect().height;
     two.height = height
@@ -248,11 +340,44 @@ export function drawsystem() {
     console.log("MAX", slmax, xmin, xmax, zmin, zmax)
     console.log('maxValue_lf(komb)', maxValue_lf, maxValue_komb)
 
+
+    // xminw = xmin * (1 + wheel_factor) / 2. + xmax * (1. - wheel_factor) / 2.
+    // xmaxw = xmin * (1 - wheel_factor) / 2. + xmax * (1. + wheel_factor) / 2.
+    // zminw = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
+    // zmaxw = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
+    if (tr === undefined) {
+
+        xminw = xmin
+        xmaxw = xmax
+        zminw = zmin
+        zmaxw = zmax
+    } else {
+        let ax = tr.xWorld(mouseOffsetX)
+        let az = tr.zWorld(mouseOffsetY)
+        let dx = tr.World0(mouseDx)
+        let dz = tr.World0(mouseDz)
+        console.log("======= dx,dz", ax, az, dx, dz)
+
+
+        xmint = xmin * (1 + wheel_factor) / 2. + xmax * (1. - wheel_factor) / 2.
+        xmaxt = xmin * (1 - wheel_factor) / 2. + xmax * (1. + wheel_factor) / 2.
+        zmint = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
+        zmaxt = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
+
+        xminw = xmint - dx
+        xmaxw = xmaxt - dx
+        zminw = zmint - dz
+        zmaxw = zmaxt - dz
+    }
+    //     xminw = ax - wheel_factor * (xmax - xmin)/2
+    //     xmaxw = ax + wheel_factor * (xmax - xmin)/2
+    // }
+
     if (tr === undefined) {
         console.log("in undefined")
-        tr = new CTrans(xmin, zmin, xmax, zmax, two.width, two.height)
+        tr = new CTrans(xminw, zminw, xmaxw, zmaxw, two.width, two.height)
     } else {
-        tr.init(xmin, zmin, xmax, zmax, two.width, two.height);
+        tr.init(xminw, zminw, xmaxw, zmaxw, two.width, two.height);
     }
 
     let x1: number, x2: number, z1: number, z2: number
@@ -947,8 +1072,15 @@ export function drawsystem() {
     //el = document.querySelector('.footer'); //.getElementById("container")
     //console.log("nach update container footer boundingRect", el?.getBoundingClientRect())
 
-}
+    domElement = two.renderer.domElement;
+    console.log("domElement", domElement)
+    //domElement.addEventListener('mousedown', mousedown, false);
+    domElement.addEventListener('wheel', wheel, false);
+    //domElement.addEventListener('wheel', mousewheel, false);
+    domElement.addEventListener('mousedown', mousedown, false);
+    domElement.addEventListener('mouseup', mouseup, false);
 
+}
 
 //--------------------------------------------------------------------------------------------------------
 function draw_elementlasten(two: Two) {
@@ -956,18 +1088,21 @@ function draw_elementlasten(two: Two) {
 
     let x1: number, x2: number, z1: number, z2: number, si: number, co: number, xi: number, zi: number
     let dp: number, pMax: number, pMin: number
-    let a = slmax / 100.
-    let a_spalt = a
+    let a:number
+    let a_spalt:number
     let pL: number, pR: number
     let x = Array(4), z = Array(4), xtr = Array(4), ztr = Array(4)
 
     let xpix: number, zpix: number
 
-    console.log("in draw_elementlasten", slmax, a)
+    console.log("in draw_elementlasten", slmax)
 
     let scalefactor = slmax / 20 / maxValue_eload[draw_lastfall - 1]
 
     for (let ielem = 0; ielem < nelem; ielem++) {
+
+        a = slmax / 100.
+        a_spalt = a
 
         for (let ieload = 0; ieload < neloads; ieload++) {
             console.log("ielem,draw_lastfall", ielem, eload[ieload].element, draw_lastfall, eload[ieload].lf)
