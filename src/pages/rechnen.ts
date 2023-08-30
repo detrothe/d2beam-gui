@@ -19,6 +19,7 @@ export let nnodesTotal: number = 0;
 export let nlastfaelle: number = 0;
 export let nkombinationen: number = 0;
 export let nelTeilungen = 10;
+export let n_iterationen=5;
 
 export let neigv: number = 2;
 
@@ -223,7 +224,7 @@ export function rechnen() {
 
     el = document.getElementById('id_button_nkombinationen') as any;
     nkombinationen = Number(el.nel);
-
+/*
     el = document.getElementById('id_ndivsl') as HTMLInputElement;
     ndivsl = Number(el.value);
 
@@ -232,7 +233,7 @@ export function rechnen() {
 
     el = document.getElementById('id_art') as HTMLSelectElement;
     art = Number(el.value);
-
+*/
     el = document.getElementById('id_THIIO') as HTMLSelectElement;
     THIIO_flag = Number(el.value);
 
@@ -248,7 +249,14 @@ export function rechnen() {
     el = document.getElementById('id_neigv') as HTMLSelectElement;
     neigv = Number(el.value);
 
-    console.log("THIIO_flag", THIIO_flag)
+    el = document.getElementById('id_button_nteilungen') as HTMLSelectElement;
+    nelTeilungen = Number(el.nel);
+
+    el = document.getElementById('id_button_niter') as HTMLSelectElement;
+    n_iterationen = Number(el.nel);
+
+    console.log("THIIO_flag", THIIO_flag,nelTeilungen,n_iterationen)
+
     console.log("intAt, art", intArt, art, ndivsl)
     console.log("maxU", maxU_node, maxU_dir, maxU_schief, neigv)
 
@@ -1147,7 +1155,7 @@ function calculate() {
 
             console.log("\n***************  K O M B I N A T I O N ", iKomb, "\n\n")
 
-            for (let iter = 0; iter < 5; iter++) {
+            for (let iter = 0; iter < n_iterationen; iter++) {
 
                 console.log("_________________  I T E R  = ", iter, " ___________________")
 
