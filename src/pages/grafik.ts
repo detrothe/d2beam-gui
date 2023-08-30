@@ -188,11 +188,11 @@ function wheel(ev: WheelEvent) {
     ev.preventDefault()
     if (ev.deltaY > 0) {
         wheel_factor += 0.1;
-        if ( wheel_factor > 2) wheel_factor=2.0
+        if (wheel_factor > 2) wheel_factor = 2.0
     }
     else if (ev.deltaY < 0) {
         wheel_factor -= 0.1;
-        if ( wheel_factor < 0.1) wheel_factor=0.1
+        if (wheel_factor < 0.1) wheel_factor = 0.1
     }
     //mouseOffsetX = ev.offsetX
     //mouseOffsetY = ev.offsetY
@@ -1088,8 +1088,8 @@ function draw_elementlasten(two: Two) {
 
     let x1: number, x2: number, z1: number, z2: number, si: number, co: number, xi: number, zi: number
     let dp: number, pMax: number, pMin: number
-    let a:number
-    let a_spalt:number
+    let a: number, a_projektion: number
+    let a_spalt: number
     let pL: number, pR: number
     let x = Array(4), z = Array(4), xtr = Array(4), ztr = Array(4)
 
@@ -1103,6 +1103,7 @@ function draw_elementlasten(two: Two) {
 
         a = slmax / 100.
         a_spalt = a
+        a_projektion = 0.0
 
         for (let ieload = 0; ieload < neloads; ieload++) {
             console.log("ielem,draw_lastfall", ielem, eload[ieload].element, draw_lastfall, eload[ieload].lf)
@@ -1143,8 +1144,8 @@ function draw_elementlasten(two: Two) {
                     let flaeche = two.makePath(vertices);
                     flaeche.fill = '#eeeeee';
 
-                    draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
-                    draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+                    if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
+                    if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
 
                     xpix = xtr[3] + 5
                     zpix = ztr[3] - 5
@@ -1162,6 +1163,120 @@ function draw_elementlasten(two: Two) {
 
                     dp = pMax // - pMin
                     a = a + dp + a_spalt
+                }
+
+                else if (eload[ieload].art === 1) {      // Streckenlast z-Richtung
+
+                    x1 = element[ielem].x1;
+                    z1 = element[ielem].z1;
+                    x2 = element[ielem].x2;
+                    z2 = element[ielem].z2;
+                    si = element[ielem].sinus
+                    co = element[ielem].cosinus
+                    pL = eload[ieload].pL * scalefactor
+                    pR = eload[ieload].pR * scalefactor
+
+                    pMax = Math.max(0.0, pL, pR)
+                    pMin = Math.min(0.0, pL, pR)
+
+                    a += Math.abs(pMin * co)
+
+                    x[0] = x1; z[0] = z1 - a / co;
+                    x[1] = x2; z[1] = z2 - a / co;
+                    x[2] = x[1]; z[2] = z[1] - pR;
+                    x[3] = x[0]; z[3] = z[0] - pL;
+
+
+                    console.log("pL...", pL, pR, x, z)
+
+                    var vertices = [];
+                    for (let i = 0; i < 4; i++) {
+                        xtr[i] = tr.xPix(x[i])
+                        ztr[i] = tr.zPix(z[i])
+                        console.log()
+                        vertices.push(new Two.Vector(xtr[i], ztr[i]));
+                    }
+                    // @ts-ignore
+                    let flaeche = two.makePath(vertices);
+                    flaeche.fill = '#eeeeee';
+
+                    if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
+                    if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+
+                    xpix = xtr[3] + 5
+                    zpix = ztr[3] - 5
+                    let str = myFormat(Math.abs(eload[ieload].pL), 1, 2)
+                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+
+                    xpix = xtr[2] + 5
+                    zpix = ztr[2] - 5
+                    str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
+                    txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+
+                    dp = pMax * co // - pMin
+                    a = a + dp + a_spalt
+                }
+
+                else if (eload[ieload].art === 2) {      // Streckenlast z-Richtung, Projektion
+
+                    x1 = element[ielem].x1;
+                    z1 = element[ielem].z1;
+                    x2 = element[ielem].x2;
+                    z2 = element[ielem].z2;
+                    si = element[ielem].sinus
+                    co = element[ielem].cosinus
+                    pL = eload[ieload].pL * scalefactor
+                    pR = eload[ieload].pR * scalefactor
+
+                    let zm = (z1 + z2) / 2
+
+                    pMax = Math.max(0.0, pL, pR)
+                    pMin = Math.min(0.0, pL, pR)
+
+                    a_projektion += Math.abs(pMin)
+
+                    x[0] = x1; z[0] = zm - a_projektion;
+                    x[1] = x2; z[1] = zm - a_projektion;
+                    x[2] = x[1]; z[2] = z[1] - pR;
+                    x[3] = x[0]; z[3] = z[0] - pL;
+
+
+                    console.log("pL...", pL, pR, x, z)
+
+                    var vertices = [];
+                    for (let i = 0; i < 4; i++) {
+                        xtr[i] = tr.xPix(x[i])
+                        ztr[i] = tr.zPix(z[i])
+                        console.log()
+                        vertices.push(new Two.Vector(xtr[i], ztr[i]));
+                    }
+                    // @ts-ignore
+                    let flaeche = two.makePath(vertices);
+                    flaeche.fill = '#eeeeee';
+
+                    if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
+                    if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+
+                    xpix = xtr[3] + 5
+                    zpix = ztr[3] - 5
+                    let str = myFormat(Math.abs(eload[ieload].pL), 1, 2)
+                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+
+                    xpix = xtr[2] + 5
+                    zpix = ztr[2] - 5
+                    str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
+                    txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+
+                    dp = pMax
+                    a_projektion += dp + a_spalt
                 }
             }
         }

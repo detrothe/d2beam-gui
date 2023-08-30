@@ -6,7 +6,7 @@ import { app, clearTables } from "./haupt";
 import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
 
-import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length } from "./rechnen"
+import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length, n_iterationen } from "./rechnen"
 import { add_rechteck_querschnitt } from './rechnen'
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
@@ -49,9 +49,9 @@ function handleFileSelect_read() {
                     // Render thumbnail.
 
 
-                    console.log("in result", e.target.result);
+                    //console.log("in result", e.target.result);
                     let jobj = JSON.parse(e.target.result);
-                    console.log("und zurück", jobj);
+                    //console.log("und zurück", jobj);
                     /*
                                             if (jobj.unit_length === undefined) {
                                                 console.log("#### jobj.unit_length ####", jobj.unit_length)
@@ -81,7 +81,38 @@ function handleFileSelect_read() {
                         el.setValue(jobj.ncombinations);
                         el = document.getElementById('id_button_nstabvorverformungen') as drButtonPM;
                         el.setValue(jobj.nstabvorverfomungen);
+
+                        el = document.getElementById('id_button_nteilungen') as drButtonPM;
+                        console.log("jobj.nelteilungen", jobj.nelteilungen)
+                        if (jobj.nelteilungen === undefined) el.setValue(10);
+                        else el.setValue(jobj.nelteilungen);
+
+                        el = document.getElementById('id_button_niter') as drButtonPM;
+                        if (jobj.n_iter === undefined) el.setValue(5);
+                        else el.setValue(jobj.n_iter);
+
+                        let els = document.getElementById('id_THIIO') as HTMLSelectElement;
+                        if (jobj.THIIO_flag !== undefined) {
+                            console.log("THIIO defined")
+                            els.options[jobj.THIIO_flag].selected = true;
+                        }
+
+                        els = document.getElementById('id_maxu_dir') as HTMLSelectElement;
+                        if (jobj.maxU_dir !== undefined) {
+                            console.log("maxU_dir defined")
+                            els.options[jobj.maxU_dir].selected = true;
+                        }
+
+                        let eli = document.getElementById('id_maxu_node') as HTMLInputElement;
+                        if (jobj.maxU_node !== undefined) eli.value=jobj.maxU_node
+
+                        eli = document.getElementById('id_maxu_schief') as HTMLInputElement;
+                        if (jobj.maxU_schief !== undefined) eli.value=jobj.maxU_schief
+
+                        eli = document.getElementById('id_neigv') as HTMLInputElement;
+                        if (jobj.neigv !== undefined) eli.value=jobj.neigv
                     }
+
                     resizeTables();
                     clearTables();
 
@@ -199,9 +230,31 @@ async function handleFileSelect_save() {
 
     if (elem) {
 
-        let i, j;
+        let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv;
 
-        let el = document.getElementById('id_knoten_tabelle') as HTMLElement;
+        let el = document.getElementById('id_button_nteilungen') as any;
+        nelTeilungen = el.nel;
+
+        el = document.getElementById('id_button_niter') as any;
+        n_iterationen = el.nel;
+
+        el = document.getElementById('id_THIIO') as HTMLSelectElement;
+        THIIO_flag = el.value;
+
+        el = document.getElementById('id_maxu_node') as HTMLSelectElement;
+        maxU_node = el.value;
+
+        el = document.getElementById('id_maxu_dir') as HTMLSelectElement;
+        maxU_dir = el.value;
+
+        el = document.getElementById('id_maxu_schief') as HTMLElement;
+        maxU_schief = el.value
+
+        el = document.getElementById('id_neigv') as HTMLSelectElement;
+        neigv = el.value;
+
+
+        el = document.getElementById('id_knoten_tabelle') as HTMLElement;
         let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
         console.log("knotentabelle", tabelle)
         let n_nodes = tabelle.rows.length - 1;
@@ -313,6 +366,13 @@ async function handleFileSelect_save() {
             'ncombinations': nkombinationen,
             'nquerschnittsets': nQuerschnittSets,
             'nstabvorverfomungen': nStabvorverfomungen,
+            'nelteilungen': nelTeilungen,
+            'n_iter': n_iterationen,
+            'THIIO_flag': THIIO_flag,
+            'maxU_node': maxU_node,
+            'maxU_dir': maxU_dir,
+            'maxU_schief': maxU_schief,
+            'neigv': neigv,
             /*
             'Vy': document.getElementById('Vy').value,
             'Vz': document.getElementById('Vz').value,
@@ -331,7 +391,7 @@ async function handleFileSelect_save() {
             'node': node,
             'nodalLoad': nodalload,
             'elemLoad': elemload,
-            'stabvorverformung':stabvorverformung,
+            'stabvorverformung': stabvorverformung,
             'combination': kombination,
             'qsclassname': qsClassName,
             'qswerte': qsWerte,

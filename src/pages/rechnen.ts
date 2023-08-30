@@ -5,7 +5,7 @@ import { TFVector, TFArray2D, TFArray3D } from "./TFArray"
 import { testNumber, myFormat } from './utility'
 //import {Module} from '../../d2beam_wasm.js'
 // @ts-ignore
-import { gauss } from "./gauss.js"
+import { gauss } from "./gauss"
 import { CTimoshenko_beam } from "./timoshenko_beam"
 import { init_grafik, drawsystem } from "./grafik";
 
@@ -249,10 +249,10 @@ export function rechnen() {
     el = document.getElementById('id_neigv') as HTMLSelectElement;
     neigv = Number(el.value);
 
-    el = document.getElementById('id_button_nteilungen') as HTMLSelectElement;
+    el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = Number(el.nel);
 
-    el = document.getElementById('id_button_niter') as HTMLSelectElement;
+    el = document.getElementById('id_button_niter') as any;
     n_iterationen = Number(el.nel);
 
     console.log("THIIO_flag", THIIO_flag,nelTeilungen,n_iterationen)

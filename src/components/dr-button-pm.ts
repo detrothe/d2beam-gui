@@ -92,7 +92,9 @@ export class drButtonPM extends LitElement {
 
    setValue(wert: number) {
       //console.log("in setValue", wert)
-      this.nel = wert;
+      if (typeof wert == 'number') this.nel = wert;
+      else this.nel = 0;
+
       const shadow = this.shadowRoot;
       if (shadow) {
          (shadow.getElementById(this.inputID) as HTMLInputElement).value =
