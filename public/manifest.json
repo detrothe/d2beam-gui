@@ -4,7 +4,7 @@
   "name": "PWA D2BEAM",
   "display": "standalone",
   "start_url": "/",
-  "short_name": "starter",
+  "short_name": "d2beam",
   "theme_color": "#E1477E",
   "description": "This is a PWA D2BEAM app",
   "orientation": "any",
