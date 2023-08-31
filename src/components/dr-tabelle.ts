@@ -23,6 +23,8 @@ class DrTabelle extends HTMLElement {
    cellCol = 0;
    cellTop = 0;
    cellLeft = 0;
+   cellRight = 0;
+   cellBottom = 0;
    cellId: string = '';
    offsetX: number = 0;
    offsetY: number = 0;
@@ -67,6 +69,9 @@ class DrTabelle extends HTMLElement {
       const table = document.createElement('table');
       this.shadow.appendChild(table);
       table.id = 'mytable';
+      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));
+      table.addEventListener('mouseleave', this.POINTER_LEAVE.bind(this));
+      table.addEventListener('pointerup', this.POINTER_UP.bind(this));
 
       let thead = table.createTHead();
       //console.log('thead', thead);
@@ -87,6 +92,7 @@ class DrTabelle extends HTMLElement {
       let id_table = 'idtable';
 
       let tbody = table.createTBody();
+      //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
 
       for (let iZeile = 1; iZeile < this.nTabRow; iZeile++) {
          let newRow = tbody.insertRow(-1);
@@ -158,7 +164,9 @@ class DrTabelle extends HTMLElement {
 
                newCell.appendChild(el);
 
-               el.addEventListener('pointerdown', this.POINTER_DOWN);
+               el.addEventListener('pointerdown', this.POINTER_DOWN.bind(this));
+               //el.addEventListener('mousemove', this.POINTER_MOVE);
+               //console.log("el.addEventlistener", el)
                //TODO el.addEventListener('pointermove', this.POINTER_MOVE);
                //console.log("rect", iZeile, iSpalte, el.getBoundingClientRect().x, newCell.getBoundingClientRect().y, newCell.getBoundingClientRect().width, newCell.getBoundingClientRect().height)
             }
@@ -562,6 +570,7 @@ class DrTabelle extends HTMLElement {
 
                   newCell.appendChild(el);
                   el.addEventListener('pointerdown', this.POINTER_DOWN);
+                  //el.addEventListener('mousemove', this.POINTER_MOVE);
                }
             }
          }
@@ -632,108 +641,125 @@ class DrTabelle extends HTMLElement {
    }
 
    //------------------------------------------------------------------------------------------------
+   POINTER_UP(ev: any) {
+      //---------------------------------------------------------------------------------------------
+      this.selectionMode = false;
+   }
+
+   //------------------------------------------------------------------------------------------------
+   POINTER_LEAVE(ev: any) {
+      //---------------------------------------------------------------------------------------------
+      this.selectionMode = false;
+
+      const tabelle = this.shadow.getElementById('mytable') as any;
+      //const tabelle = ev.target.offsetParent.offsetParent; //document.getElementById(tableId) as HTMLTableElement;
+      console.log("tabelle", ev)
+      //const nSpalten = tabelle.rows[0].cells.length - 1;
+      const nZeilen = this.nZeilen;
+      const nSpalten = this.nSpalten;
+
+      for (let i = 1; i <= nZeilen; i++) {
+         for (let j = 1; j < nSpalten; j++) {
+            //console.log("i,j", tabelle.rows[i].cells[j].firstElementChild)
+            if ( tabelle !== null ) tabelle.rows[i].cells[j].firstElementChild.className = 'input_normal';
+         }
+      }
+
+   }
+   //------------------------------------------------------------------------------------------------
    POINTER_DOWN(ev: any) {
-      // pointer move
-      //--------------------------------------------------------------------------------------------
+      //---------------------------------------------------------------------------------------------
 
       const tableId = ev.target.offsetParent.offsetParent.id;
       const inputId = ev.target.id;
-      console.log('tableID', ev.target);
+
+      console.log('tableID', ev.target, ev.target.id, ev.currentTarget);
       //const tableIndex = table_index(tableId)
 
       //TODO selectedCellPoly.tableId = tableId;
 
       //TODO const selectMode = this.selectionMode
-      const selectMode = false;
+      //const selectMode = true;
       //TODO toggleMenuOff()
+      console.log("this.selectionMode", this.selectionMode)
+
 
       //console.log("POINTERDOWN", ev)
-      console.log(
-         'POINTERDOWN',
-         selectMode,
-         ev.button,
-         tableId,
-         inputId,
-         ev.pageX,
-         ev.pageY,
-         ev.which,
-         ev.pointerType
-      );
+      console.log('POINTERDOWN', this.selectionMode, ev.button, tableId, inputId, ev.pageX, ev.pageY, ev.which, ev.pointerType);
 
       //infoBox.innerHTML += "<br>POINTERDOWN" + ' | ' + selectMode + ' | ' + ev.button + ' | ' + tableId + ' | ' + inputId + ' | ' + ev.pageX + ' | ' + ev.pageY + ' | ' + ev.which + ' | ' + ev.pointerType
       //const shadow = this.shadowRoot;
-      console.log('tableRoot:', this);
+      console.log('pointerdown THIS:', this);
       //if (shadow) {
       const myTable = ev.target.offsetParent.offsetParent as HTMLTableElement; //this.tableRoot.getElementById(tableId);
       console.log('myTable:', myTable);
-      if (selectMode || ev.pointerType === 'mouse') {
+
+      //myTable.addEventListener('mousemove', this.POINTER_MOVE);
+      if (this.selectionMode || ev.pointerType === 'mouse') {
          // bei Mouse immer select mode
-         console.log('select Mode = true', this);
-         this.addEventListener('pointermove', this.POINTER_MOVE); // , { passive: false }
+         console.log('select Mode = true', this.id, this.shadow, this.shadowRoot);
+         //const el=this.shadow.getElementById(this.id) as any
+         //console.log("el",el)
+         //ev.target.offsetParent.offsetParent.addEventListener('pointermove', this.POINTER_MOVE); // , { passive: false }  , { capture: true }
          //TODO myTable.addEventListener("pointerup", POINTER_UP);
       }
 
       const myArray = inputId.split('-');
       console.log('Array', myArray.length, myArray[0], myArray[1], myArray[2]);
-      const el = ev.target; // this.tableRoot.getElementById(inputId) as HTMLInputElement;
+      const el = ev.target;
 
-      this.offsetX = ev.pageX - ev.clientX;
-      this.offsetY = ev.pageY - ev.clientY;
+      //this.offsetX = ev.pageX - ev.clientX;
+      //this.offsetY = ev.pageY - ev.clientY;
 
-      //ev.pointerType,
-      this.cellLeft = el.getBoundingClientRect().x + this.offsetX;
-      this.cellTop = el.getBoundingClientRect().y + this.offsetY;
-      this.cellWidth = el.getBoundingClientRect().width;
-      this.cellHeight = el.getBoundingClientRect().height;
-      this.cellId = myArray[0];
-      this.cellRow = myArray[1];
-      this.cellCol = myArray[2];
-      console.log(
-         'MEMORY',
-         this.cellRow,
-         this.cellCol,
-         this.cellLeft,
-         this.cellTop,
-         this.cellWidth,
-         this.cellHeight,
-         this.offsetX,
-         this.offsetY
-      );
+      // this.cellLeft = el.getBoundingClientRect().x + this.offsetX;
+      // this.cellTop = el.getBoundingClientRect().y + this.offsetY;
+      // this.cellWidth = el.getBoundingClientRect().width;
+      // this.cellHeight = el.getBoundingClientRect().height;
+      // this.cellId = myArray[0];
+      // this.cellRow = myArray[1];
+      // this.cellCol = myArray[2];
+      // console.log('MEMORY', this.cellRow, this.cellCol, this.cellLeft, this.cellTop, this.cellWidth, this.cellHeight, this.offsetX, this.offsetY);
 
-      if (ev.which === 3) {
-         // rechte Maustaste
+      if (ev.which === 3) {                 // rechte Maustaste
          console.log('rechte Maustaste');
          ev.preventDefault();
-      } else if (ev.button === 0) {
-         // linke Maustaste
+      } else if (ev.button === 0) {         // linke Maustaste
 
-         //TODO remove_selected_Tabelle();
-         this.selected = false;
+         this.selectionMode = true;
 
          console.log('linke Maustaste');
+
+         this.cellLeft = myArray[1]
+         this.cellRight = myArray[1]
+         this.cellTop = myArray[2]
+         this.cellBottom = myArray[2]
+
+         this.startRowIndex = myArray[1];
+         this.startColIndex = myArray[2];
+
          //ev.preventDefault();
          //TODO const row = myArray[1];
          //TODO const col = myArray[2];
          /*
-    selectedCellPoly.row = row;
-    selectedCellPoly.col = col;
-    selectedCellPoly.wert = Number(el.value);
-    selectedCellPoly.activatedElement = el;
-    selectedCellPoly.isSelected = true;
-    selectedCellPoly.startRowIndex = row;
-    selectedCellPoly.startColIndex = col;
+            selectedCellPoly.row = row;
+            selectedCellPoly.col = col;
+            selectedCellPoly.wert = Number(el.value);
+            selectedCellPoly.activatedElement = el;
+            selectedCellPoly.isSelected = true;
+            selectedCellPoly.startRowIndex = row;
+            selectedCellPoly.startColIndex = col;
 
-    this.row = row;
-    this.col = col;
-    this.wert = Number(el.value);
-    this.activatedElement = el;
-    this.isSelected = true;
-    this.startRowIndex = row;
-    this.startColIndex = col;
-*/
+            this.row = row;
+            this.col = col;
+            this.wert = Number(el.value);
+            this.activatedElement = el;
+            this.isSelected = true;
+            this.startRowIndex = row;
+            this.startColIndex = col;
+         */
          //if (myTable ) myTable.rows[this.cellRow].cells[this.cellCol].firstElementChild.className = 'input_select';  // funktioniert
 
-         if (selectMode && ev.pointerType !== 'mouse') {
+         if (this.selectionMode && ev.pointerType !== 'mouse') {
             ev.preventDefault();
          }
          //console.log("selectedCellPoly", selectedCellPoly.row, selectedCellPoly.col, selectedCellPoly.wert, selectedCellPoly.activatedElement)
@@ -742,10 +768,14 @@ class DrTabelle extends HTMLElement {
 
    //------------------------------------------------------------------------------------------------
    POINTER_MOVE(ev: any) {
-      // pointer move
       //--------------------------------------------------------------------------------------------
-      console.log('POINTER MOVE', ev);
+      console.log('POINTER MOVE', ev.target.id, this.selectionMode);
+
+      if (!this.selectionMode) return;
+
+      console.log('POINTER MOVE ev', this);  // zeigt auf dr-table
       console.log('tagname', ev.target.tagName);
+
       ev.preventDefault();
 
       if (ev.target.tagName !== 'INPUT') return;
@@ -756,6 +786,60 @@ class DrTabelle extends HTMLElement {
       //console.log("tableId", tableId)
       if (tableId === '') return; // cursor steht auf irgendwas, aber nicht auf tag <input>
 
+      const text = ev.target.id;
+      if (text.length > 0) {
+         const myArray = text.split("-");
+         console.log("Array", tableId, myArray.length, myArray[0], myArray[1], myArray[2])
+         rowIndex = myArray[1];
+         colIndex = myArray[2];
+         let tabelle = ev.target.offsetParent.offsetParent;
+         tabelle.rows[rowIndex].cells[colIndex].firstElementChild.className = 'input_select';
+
+
+         // if (rowIndex > this.cellRight) this.cellRight = rowIndex;
+         // else if (rowIndex < this.cellLeft) this.cellLeft = rowIndex;
+
+         // if (colIndex > this.cellBottom) this.cellBottom = colIndex;
+         // else if (colIndex < this.cellTop) this.cellTop = colIndex;
+
+         let rowStart: number, rowEnd: number, colStart: number, colEnd: number;
+
+         if (rowIndex < this.startRowIndex) {
+            rowStart = rowIndex;
+            rowEnd = this.startRowIndex;
+         } else {
+            rowStart = this.startRowIndex;
+            rowEnd = rowIndex;
+         }
+
+         if (colIndex < this.startColIndex) {
+            colStart = colIndex;
+            colEnd = this.startColIndex;
+         } else {
+            colStart = this.startColIndex;
+            colEnd = colIndex;
+         }
+
+         console.log("selected Block", rowStart, colStart, rowEnd, colEnd)
+
+         //const tabelle = ev.target.offsetParent.offsetParent; //document.getElementById(tableId) as HTMLTableElement;
+         const nZeilen = this.nZeilen;
+         const nSpalten = this.nSpalten;
+
+         for (let i = 1; i <= nZeilen; i++) {
+            for (let j = 1; j <= nSpalten; j++) {
+               //console.log("i,j", tabelle.rows[i].cells[j].firstElementChild)
+               tabelle.rows[i].cells[j].firstElementChild.className = 'input_normal';
+            }
+         }
+
+         for (let i = rowStart; i <= rowEnd; i++) {
+            for (let j = colStart; j <= colEnd; j++) {
+               tabelle.rows[i].cells[j].firstElementChild.className = 'input_select';
+            }
+         }
+
+      }
       //    ev.preventDefault();
 
       // TODO const inputId = ev.target.id;
@@ -782,7 +866,8 @@ class DrTabelle extends HTMLElement {
       // TODO Nconst browser = "Chrome"; //Detect.browser;
 
       //if (ev.pointerType === 'touch' || ev.pointerType === 'pen' || browser === 'Firefox') {
-      {
+      /*
+       {
          //console.log("scrollLeft", document.body.scrollLeft, document.documentElement.scrollLeft, window.pageXOffset)
          let dx = ev.pageX - this.cellLeft; // + document.documentElement.scrollLeft;
          let dy = ev.pageY - this.cellTop; // + document.documentElement.scrollTop;
@@ -827,6 +912,8 @@ class DrTabelle extends HTMLElement {
          rowIndex = zeile;
          colIndex = spalte;
       }
+      */
+
       /* else {
       const text = ev.target.id;
       const myArray = text.split("-");
@@ -839,23 +926,7 @@ class DrTabelle extends HTMLElement {
       }
   }*/
 
-      let rowStart: number, rowEnd: number, colStart: number, colEnd: number;
 
-      if (rowIndex < this.startRowIndex) {
-         rowStart = rowIndex;
-         rowEnd = this.startRowIndex;
-      } else {
-         rowStart = this.startRowIndex;
-         rowEnd = rowIndex;
-      }
-
-      if (colIndex < this.startColIndex) {
-         colStart = colIndex;
-         colEnd = this.startColIndex;
-      } else {
-         colStart = this.startColIndex;
-         colEnd = colIndex;
-      }
       //console.log("startend", rowStart, rowEnd, colStart, colEnd);
 
       const tabelle = ev.target.offsetParent.offsetParent; //document.getElementById(tableId) as HTMLTableElement;
@@ -864,22 +935,21 @@ class DrTabelle extends HTMLElement {
       const nZeilen = this.nZeilen;
       const nSpalten = this.nSpalten;
 
-      for (let i = 1; i <= nZeilen; i++) {
-         for (let j = 1; j < nSpalten; j++) {
-            //console.log("i,j", tabelle.rows[i].cells[j].firstElementChild)
-            tabelle.rows[i].cells[j].firstElementChild.className =
-               'input_normal';
-         }
-      }
+      // for (let i = 1; i <= nZeilen; i++) {
+      //    for (let j = 1; j < nSpalten; j++) {
+      //       //console.log("i,j", tabelle.rows[i].cells[j].firstElementChild)
+      //       tabelle.rows[i].cells[j].firstElementChild.className = 'input_normal';
+      //    }
+      // }
 
-      for (let i = rowStart; i <= rowEnd; i++) {
-         for (let j = colStart; j <= colEnd; j++) {
-            // @ts-ignore
-            if (!tabelle.rows[i].cells[j].firstElementChild.hidden)
-               tabelle.rows[i].cells[j].firstElementChild.className =
-                  'input_select';
-         }
-      }
+      //console.log("rowStart...", rowStart, rowEnd, colStart, colEnd)
+      // for (let i = rowStart; i <= rowEnd; i++) {
+      //    for (let j = colStart; j <= colEnd; j++) {
+
+      //       if (!tabelle.rows[i].cells[j].firstElementChild.hidden)
+      //          tabelle.rows[i].cells[j].firstElementChild.className = 'input_select';
+      //    }
+      // }
    }
 }
 

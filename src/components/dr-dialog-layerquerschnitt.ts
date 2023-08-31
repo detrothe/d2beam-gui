@@ -51,7 +51,7 @@ export class drLayerQuerSchnitt extends LitElement {
          th {
             padding: 0px;
             margin: 0px;
-            width: 6em;
+            width: 10em;
          }
 
          table {

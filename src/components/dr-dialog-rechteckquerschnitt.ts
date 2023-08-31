@@ -54,7 +54,7 @@ export class drRechteckQuerSchnitt extends LitElement {
          th {
             padding: 2px;
             margin: 3px;
-            width: 6em;
+            /*width: 10em;*/
          }
 
          table {
@@ -207,6 +207,11 @@ export class drRechteckQuerSchnitt extends LitElement {
                   <td>Querdehnzahl:</td>
                   <td><input id="querdehnzahl" type="number" value="0.3" /></td>
                   <td>&nbsp;[-]</td>
+               </tr>
+               <tr>
+                  <td>Temp-Koeffizient &alpha;<sub>T</sub>:</td>
+                  <td><input id="alpha_t" type="number" value="1.e-5" /></td>
+                  <td>&nbsp;[1/K]</td>
                </tr>
             </tbody>
          </table>
