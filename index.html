@@ -30,7 +30,7 @@
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-title" content="PWA Starter" />
       <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-      <link rel="apple-touch-icon" href="/assets/icons/apple-512x512.png">
+      <link rel="apple-touch-icon" href="/assets/icons/apple-512x512.png" />
 
       <!-- This tag is used by the PWA D2BEAM CLI to identify template projects. Don't remove if you are using the CLI. -->
       <meta name="pwa-starter-template-identity" content="pwa-starter" />
@@ -53,7 +53,7 @@
          href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.73/dist/themes/dark.css"
          onload="document.documentElement.classList.add('sl-theme-dark');"
       />
-<!--
+      <!--
       <script>
          console.log('in script');
          // make the whole serviceworker process into a promise so later on we can
@@ -132,10 +132,53 @@
       <div id="container">
          <footer class="footer">
             2D structural analysis of frames using the d2beam element, V0,
-            31-August-2023,
+            1-September-2023,
             <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
          </footer>
       </div>
+
+      <nav id="context-menu" class="context-menu">
+         <ul class="context-menu__items">
+            <li class="context-menu__item">
+               <a href="#" class="context-menu__link" data-action="copyFirst"
+                  ><i class="fa fa-clone"></i> copy first cell value</a
+               >
+            </li>
+            <li class="context-menu__item">
+               <a href="#" class="context-menu__link" data-action="copyFirstRow"
+                  ><i class="fa fa-clone"></i> copy first row values</a
+               >
+            </li>
+            <li class="context-menu__item">
+               <a href="#" class="context-menu__link" data-action="increment_1"
+                  ><i class="fa fa-plus-square-o"></i> increment by 1</a
+               >
+            </li>
+            <li class="context-menu__item">
+               <a href="#"
+                  class="context-menu__link"
+                  data-action="increment_delta"
+                  ><i class="fa fa-plus-square-o"></i> increment by delta</a
+               >
+            </li>
+            <li class="context-menu__item">
+               <a href="#" class="context-menu__link" data-action="copy"
+                  ><i class="fa fa-clipboard"></i> copy to clipboard</a
+               >
+            </li>
+            <li class="context-menu__item">
+               <a href="#" class="context-menu__link" data-action="insert"
+                  ><i class="fa fa-clipboard"></i> insert from clipboard</a
+               >
+            </li>
+            <li class="context-menu__item">
+               <a href="#" class="context-menu__link" data-action="close"
+                  ><i class="fa fa-window-close"></i> close</a
+               >
+            </li>
+         </ul>
+      </nav>
+
    </body>
 </html>
 

@@ -4,6 +4,8 @@
 //import {html,render} from 'lit'
 
 import './styles/global.css';
+import './styles/contextMenu.css';
+
 
 import './pages/haupt';
 

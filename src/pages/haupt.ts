@@ -13,6 +13,7 @@ import '@shoelace-style/shoelace/dist/components/radio-button/radio-button.js';
 
 //import { styles } from '../styles/shared-styles';
 import './globals';
+
 import { add_listeners_einstellungen, readLocalStorage } from './einstellungen';
 
 import '../components/dr-button-pm';
@@ -23,9 +24,12 @@ import '../components/dr-dialog-rechteckquerschnitt';
 
 //import { testclass } from './element';
 
+import DetectOS from './detectos'
+
 import { addListener_filesave } from './dateien';
 import { select_loadcase_changed, select_eigenvalue_changed } from './grafik';
 import { set_info } from './utility';
+//import { init_contextmenu } from '../components/dr-tabelle';
 
 import {
    rechnen,
@@ -75,13 +79,16 @@ export const app = {
    isMac: navigator.userAgent.includes('Mac OS X'),
 };
 
+export const Detect = new DetectOS();
 {
-   let txt = navigator.language;
-   let txtArray = txt.split('-');
+    let txt = navigator.language
+    let txtArray = txt.split("-")
 
-   app.browserLanguage = txtArray[0];
-   console.log('app.browserLanguage', app.browserLanguage);
+    app.browserLanguage = txtArray[0]
+    console.log("app.browserLanguage", app.browserLanguage)
 }
+
+
 
 column_string_kombitabelle = '["Kombi", "Kommentar"';
 for (let i = 1; i <= Number(nlastfaelle_init); i++) {
@@ -671,7 +678,9 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
    // Tabellen sin jetzt da, Tabellen mit Voreinstellungen füllen
 
+
    init_tabellen();
+   //init_contextmenu();
 
    addListener_filesave();
    add_listeners_einstellungen();
