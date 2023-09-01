@@ -860,7 +860,7 @@ class DrTabelle extends HTMLElement {
 
          this.selectionMode = true;
 
-         console.log('linke Maustaste');
+         //console.log('linke Maustaste');
 
          this.cellLeft = myArray[1]
          this.cellRight = myArray[1]
@@ -906,12 +906,12 @@ class DrTabelle extends HTMLElement {
    //------------------------------------------------------------------------------------------------
    POINTER_MOVE(ev: any) {
       //--------------------------------------------------------------------------------------------
-      console.log('POINTER MOVE', ev.target.id, this.selectionMode);
+      //console.log('POINTER MOVE', ev.target.id, this.selectionMode);
 
       if (!this.selectionMode) return;
 
-      console.log('POINTER MOVE ev', this);  // zeigt auf dr-table
-      console.log('tagname', ev.target.tagName);
+      //console.log('POINTER MOVE ev', this);  // zeigt auf dr-table
+      //console.log('tagname', ev.target.tagName);
 
       ev.preventDefault();
 
@@ -926,7 +926,7 @@ class DrTabelle extends HTMLElement {
       const text = ev.target.id;
       if (text.length > 0) {
          const myArray = text.split("-");
-         console.log("Array", tableId, myArray.length, myArray[0], myArray[1], myArray[2])
+         //console.log("Array", tableId, myArray.length, myArray[0], myArray[1], myArray[2])
          rowIndex = myArray[1];
          colIndex = myArray[2];
          let tabelle = ev.target.offsetParent.offsetParent;
@@ -957,7 +957,7 @@ class DrTabelle extends HTMLElement {
             colEnd = colIndex;
          }
 
-         console.log("selected Block", rowStart, colStart, rowEnd, colEnd)
+         //console.log("selected Block", rowStart, colStart, rowEnd, colEnd)
 
          //const tabelle = ev.target.offsetParent.offsetParent; //document.getElementById(tableId) as HTMLTableElement;
          const nZeilen = this.nZeilen;
