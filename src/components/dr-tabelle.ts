@@ -183,9 +183,9 @@ class DrTabelle extends HTMLElement {
       const table = document.createElement('table');
       this.shadow.appendChild(table);
       table.id = 'mytable';
-      table.addEventListener('pointermove', this.POINTER_MOVE.bind(this));
-      table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
-      table.addEventListener('pointerup', this.POINTER_UP.bind(this));
+      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));
+      table.addEventListener('mouseleave', this.POINTER_LEAVE.bind(this));
+      table.addEventListener('mouseup', this.POINTER_UP.bind(this));
 
       let thead = table.createTHead();
       //console.log('thead', thead);
