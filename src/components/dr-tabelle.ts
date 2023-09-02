@@ -804,7 +804,7 @@ class DrTabelle extends HTMLElement {
       const tableId = ev.target.offsetParent.offsetParent.id;
       const inputId = ev.target.id;
 
-      console.log('tableID', ev.target, ev.target.id, ev.currentTarget);
+      //console.log('tableID', ev.target, ev.target.id, ev.currentTarget);
       //const tableIndex = table_index(tableId)
 
       //TODO selectedCellPoly.tableId = tableId;
@@ -812,24 +812,24 @@ class DrTabelle extends HTMLElement {
       //TODO const selectMode = this.selectionMode
       //const selectMode = true;
       //TODO toggleMenuOff()
-      console.log("this.selectionMode", this.selectionMode)
+      //console.log("this.selectionMode", this.selectionMode)
 
       toggleMenuOff();
 
       //console.log("POINTERDOWN", ev)
-      console.log('POINTERDOWN', this.selectionMode, ev.button, tableId, inputId, ev.pageX, ev.pageY, ev.which, ev.pointerType);
+      //console.log('POINTERDOWN', this.selectionMode, ev.button, tableId, inputId, ev.pageX, ev.pageY, ev.which, ev.pointerType);
 
       //infoBox.innerHTML += "<br>POINTERDOWN" + ' | ' + selectMode + ' | ' + ev.button + ' | ' + tableId + ' | ' + inputId + ' | ' + ev.pageX + ' | ' + ev.pageY + ' | ' + ev.which + ' | ' + ev.pointerType
       //const shadow = this.shadowRoot;
-      console.log('pointerdown THIS:', this);
+      //console.log('pointerdown THIS:', this);
       //if (shadow) {
       const myTable = ev.target.offsetParent.offsetParent as HTMLTableElement; //this.tableRoot.getElementById(tableId);
-      console.log('myTable:', myTable);
+      //console.log('myTable:', myTable);
 
       //myTable.addEventListener('mousemove', this.POINTER_MOVE);
       if (this.selectionMode || ev.pointerType === 'mouse') {
          // bei Mouse immer select mode
-         console.log('select Mode = true', this.id, this.shadow, this.shadowRoot);
+         //      console.log('select Mode = true', this.id, this.shadow, this.shadowRoot);
          //const el=this.shadow.getElementById(this.id) as any
          //console.log("el",el)
          //ev.target.offsetParent.offsetParent.addEventListener('pointermove', this.POINTER_MOVE); // , { passive: false }  , { capture: true }
@@ -837,8 +837,8 @@ class DrTabelle extends HTMLElement {
       }
 
       const myArray = inputId.split('-');
-      console.log('Array', myArray.length, myArray[0], myArray[1], myArray[2]);
-      console.log("WERT=", ev.target.value)
+      //console.log('Array', myArray.length, myArray[0], myArray[1], myArray[2]);
+      //console.log("WERT=", ev.target.value)
       this.firtstWert = ev.target.value;
 
       //this.offsetX = ev.pageX - ev.clientX;
@@ -896,9 +896,9 @@ class DrTabelle extends HTMLElement {
          */
          //if (myTable ) myTable.rows[this.cellRow].cells[this.cellCol].firstElementChild.className = 'input_select';  // funktioniert
 
-         if (this.selectionMode && ev.pointerType !== 'mouse') {
-            ev.preventDefault();
-         }
+         //   if (this.selectionMode && ev.pointerType !== 'mouse') {
+            //      ev.preventDefault();
+         //   }
          //console.log("selectedCellPoly", selectedCellPoly.row, selectedCellPoly.col, selectedCellPoly.wert, selectedCellPoly.activatedElement)
       }
    }
