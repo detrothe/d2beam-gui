@@ -85,32 +85,30 @@ function handleFileSelect_read() {
                         el = document.getElementById('id_button_nteilungen') as drButtonPM;
                         console.log("jobj.nelteilungen", jobj.nelteilungen)
                         if (jobj.nelteilungen === undefined) el.setValue(10);
-                        else el.setValue(jobj.nelteilungen);
+                        else el.setValue(Math.max(jobj.nelteilungen, 2));
 
                         el = document.getElementById('id_button_niter') as drButtonPM;
                         if (jobj.n_iter === undefined) el.setValue(5);
-                        else el.setValue(jobj.n_iter);
+                        else el.setValue(Math.max(jobj.n_iter, 2));
 
                         let els = document.getElementById('id_THIIO') as HTMLSelectElement;
                         if (jobj.THIIO_flag !== undefined) {
-                            console.log("THIIO defined")
                             els.options[jobj.THIIO_flag].selected = true;
                         }
 
                         els = document.getElementById('id_maxu_dir') as HTMLSelectElement;
                         if (jobj.maxU_dir !== undefined) {
-                            console.log("maxU_dir defined")
                             els.options[jobj.maxU_dir].selected = true;
                         }
 
                         let eli = document.getElementById('id_maxu_node') as HTMLInputElement;
-                        if (jobj.maxU_node !== undefined) eli.value=jobj.maxU_node
+                        if (jobj.maxU_node !== undefined) eli.value = jobj.maxU_node
 
                         eli = document.getElementById('id_maxu_schief') as HTMLInputElement;
-                        if (jobj.maxU_schief !== undefined) eli.value=jobj.maxU_schief
+                        if (jobj.maxU_schief !== undefined) eli.value = jobj.maxU_schief
 
                         eli = document.getElementById('id_neigv') as HTMLInputElement;
-                        if (jobj.neigv !== undefined) eli.value=jobj.neigv
+                        if (jobj.neigv !== undefined) eli.value = jobj.neigv
                     }
 
                     resizeTables();

@@ -130,8 +130,8 @@ class DrTabelle extends HTMLElement {
    cellCol = 0;
    cellTop = 0;
    cellLeft = 0;
-   cellRight = 0;
-   cellBottom = 0;
+   //cellRight = 0;
+   //cellBottom = 0;
    cellId: string = '';
    offsetX: number = 0;
    offsetY: number = 0;
@@ -163,6 +163,9 @@ class DrTabelle extends HTMLElement {
    //nZeilen = 0
    //nSpalten = 0
    selectionMode = false;
+
+   cellsLeft: number[] = [];
+   cellsWidth: number[] = [];
    /*
    connectedCallback() {
       this.textContent = 'Hello, World!';
@@ -183,9 +186,11 @@ class DrTabelle extends HTMLElement {
       const table = document.createElement('table');
       this.shadow.appendChild(table);
       table.id = 'mytable';
-      //table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));
-      //table.addEventListener('mouseleave', this.POINTER_LEAVE.bind(this));
-      //table.addEventListener('mouseup', this.POINTER_UP.bind(this));
+      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
+      table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
+      table.addEventListener('pointerup', this.POINTER_UP.bind(this));
+
+      table.addEventListener("contextmenu", e => e.preventDefault());
 
       let thead = table.createTHead();
       //console.log('thead', thead);
@@ -238,6 +243,7 @@ class DrTabelle extends HTMLElement {
                      option.value = option.textContent = 'Querschnitt lang ' + (i + 1);
 
                      el.appendChild(option);
+
                   }
                } else {
                   el = document.createElement('input');
@@ -278,7 +284,12 @@ class DrTabelle extends HTMLElement {
 
                newCell.appendChild(el);
 
+               //if (this.typs[iSpalte] === 'select') el.addEventListener('click', this.SELECT.bind(this));
+               //else
                el.addEventListener('pointerdown', this.POINTER_DOWN.bind(this));
+               //el.addEventListener('touchmove', this.TOUCH_MOVE.bind(this));
+
+
                //el.addEventListener('mousemove', this.POINTER_MOVE);
                //console.log("el.addEventlistener", el)
                //TODO el.addEventListener('pointermove', this.POINTER_MOVE);
@@ -286,6 +297,9 @@ class DrTabelle extends HTMLElement {
             }
          }
       }
+
+      this.cellsLeft = Array(this.nTabCol);
+      this.cellsWidth = Array(this.nTabCol);
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -599,14 +613,7 @@ class DrTabelle extends HTMLElement {
                         el.id = str;
                         el.className = 'input_normal';
                         el.addEventListener('keydown', this.KEYDOWN);
-                        //el.addEventListener('change', function () {
-                        //  berechnungErforderlich(true);
-                        //});
-                        //el.addEventListener("mousemove", newMOUSEMOVE);
 
-                        //console.log("el", el)
-                        //newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
-                        //newCell = newRow.insertCell()
                         newCell.style.width = '6em';
                         newCell.style.border = 'solid';
                         newCell.style.borderWidth = '1px';
@@ -620,7 +627,7 @@ class DrTabelle extends HTMLElement {
 
                         newCell.appendChild(el);
                         // el.addEventListener("pointermove", POINTERMOVE);
-                        el.addEventListener('pointerdown', this.POINTER_DOWN);
+                        el.addEventListener('pointerdown', this.POINTER_DOWN.bind(this));
                      }
                   }
                }
@@ -679,10 +686,6 @@ class DrTabelle extends HTMLElement {
                   el.id = str;
                   //el.className = 'input_normal';
                   el.addEventListener('keydown', this.KEYDOWN);
-                  //el.addEventListener('change', function () {
-                  //  berechnungErforderlich(true);
-                  //});
-                  //el.addEventListener("mousemove", newMOUSEMOVE);
 
                   newCell = newRow.insertCell();
                   //newCell.style.width = '6em';
@@ -700,7 +703,7 @@ class DrTabelle extends HTMLElement {
                   newCell.className = 'input_normal';
 
                   newCell.appendChild(el);
-                  el.addEventListener('pointerdown', this.POINTER_DOWN);
+                  el.addEventListener('pointerdown', this.POINTER_DOWN.bind(this));
                   //el.addEventListener('mousemove', this.POINTER_MOVE);
                }
             }
@@ -709,8 +712,8 @@ class DrTabelle extends HTMLElement {
 
       this.nSpalten = nColNew
       this.nZeilen = nRowNew
-      this.nTabRow = this.nZeilen + 1
-      this.nTabCol = this.nSpalten + 1
+      this.nTabRow = +this.nZeilen + 1
+      this.nTabCol = +this.nSpalten + 1
    }
 
    //----------------------------------------------------------------------------------------
@@ -773,6 +776,12 @@ class DrTabelle extends HTMLElement {
 
 
    //------------------------------------------------------------------------------------------------
+   SELECT(ev: any) {
+      //---------------------------------------------------------------------------------------------
+      console.log("---- SELECT ----")
+   }
+
+   //------------------------------------------------------------------------------------------------
    POINTER_UP(ev: any) {
       //---------------------------------------------------------------------------------------------
       console.log("---- POINTER_UP ----")
@@ -797,6 +806,114 @@ class DrTabelle extends HTMLElement {
       this.unselect_Tabelle();
 
    }
+
+   //------------------------------------------------------------------------------------------------
+   TOUCH_MOVE(ev: any) {
+      //---------------------------------------------------------------------------------------------
+
+      // if (ev.target.hasPointerCapture(ev.pointerId)) {
+      //    ev.target.releasePointerCapture(ev.pointerId);
+      // }
+      ev.preventDefault();
+      //console.log('TOUCH MOVE', ev.target, ev.target.id, this.selectionMode);
+
+      const text = ev.target?.id;
+      if (text.length > 0) {
+         let rowIndex: number, colIndex: number;
+         const myArray = text.split("-");
+         //console.log("Array", tableId, myArray.length, myArray[0], myArray[1], myArray[2])
+         rowIndex = myArray[1];
+         colIndex = myArray[2];
+         let tabelle = ev.target.offsetParent.offsetParent;
+         //console.log("TABELLE TOUCH MOVE",tabelle)
+         //tabelle.rows[rowIndex].cells[colIndex].firstElementChild.className = 'input_select';
+         //ev.target.className = 'input_select'
+
+         const touch = ev.changedTouches[0];
+         const actualTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+         //console.log("TOUCH MOVE", touch.clientX, touch.clientY)
+         //console.log("actualTarget", actualTarget)
+
+
+         let dy = touch.pageY - this.cellTop; // + document.documentElement.scrollTop;
+         let zeile: number, spalte: number = 1
+         let nx: number, ny: number, vorz: number, div: number
+
+         div = dy / this.cellHeight
+         vorz = Math.abs(div) / div
+         ny = Math.trunc(Math.abs(div)) * vorz
+         if (vorz < 0.0) ny = ny - 1
+         //ny = Number(Math.trunc(dy / cellHeight))
+         zeile = Number(this.startRowIndex) + 1 * ny
+         console.log("Zeile=", zeile, div, dy, vorz, ny, touch.pageY, this.cellTop, this.cellHeight, this.startRowIndex)
+         //console.log("::::", tableIndex, zeile, spalte)
+         if (zeile > this.nZeilen) return;    //zeile = tableInfo[tableIndex].nZeilen
+         if (zeile < 1) return;   // zeile = 1
+
+
+
+         let left = touch.clientX;
+         spalte = 1
+         for (let ispalte = 1; ispalte < this.nTabCol; ispalte++) {   // this.firstColIndex
+            if (left > this.cellsLeft[ispalte]) {
+               // let input_id = 'idtable' + '-' + zeile + '-' + ispalte;
+               // const el = this.shadow.getElementById(input_id) as HTMLInputElement;
+               // el.className = 'input_select'
+               // console.log("TOUCH MOVE", ispalte, this.cellLeft, left, this.cellsLeft[ispalte])
+               spalte = ispalte
+            }
+         }
+
+         {
+            rowIndex = zeile;
+            colIndex = spalte;
+            let tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;  //ev.target.offsetParent.offsetParent;
+            tabelle.rows[rowIndex].cells[colIndex].firstElementChild!.className = 'input_select';
+
+
+
+
+            let rowStart: number, rowEnd: number, colStart: number, colEnd: number;
+
+            if (rowIndex < this.startRowIndex) {
+               rowStart = rowIndex;
+               rowEnd = this.startRowIndex;
+            } else {
+               rowStart = this.startRowIndex;
+               rowEnd = rowIndex;
+            }
+
+            if (colIndex < this.startColIndex) {
+               colStart = colIndex;
+               colEnd = this.startColIndex;
+            } else {
+               colStart = this.startColIndex;
+               colEnd = colIndex;
+            }
+
+            //console.log("selected Block", rowStart, colStart, rowEnd, colEnd)
+
+            //const tabelle = ev.target.offsetParent.offsetParent; //document.getElementById(tableId) as HTMLTableElement;
+            const nZeilen = this.nZeilen;
+            const nSpalten = this.nSpalten;
+
+            for (let i = 1; i <= nZeilen; i++) {
+               for (let j = 1; j <= nSpalten; j++) {
+                  //console.log("i,j", tabelle.rows[i].cells[j].firstElementChild)
+                  tabelle.rows[i].cells[j].firstElementChild!.className = 'input_normal';
+               }
+            }
+
+            for (let i = rowStart; i <= rowEnd; i++) {
+               for (let j = colStart; j <= colEnd; j++) {
+                  tabelle.rows[i].cells[j].firstElementChild!.className = 'input_select';
+               }
+            }
+         }
+
+
+      }
+   }
    //------------------------------------------------------------------------------------------------
    POINTER_DOWN(ev: any) {
       //---------------------------------------------------------------------------------------------
@@ -804,6 +921,7 @@ class DrTabelle extends HTMLElement {
       const tableId = ev.target.offsetParent.offsetParent.id;
       const inputId = ev.target.id;
 
+      console.log("INFO POINTER DOWN", inputId)
       //console.log('tableID', ev.target, ev.target.id, ev.currentTarget);
       //const tableIndex = table_index(tableId)
 
@@ -816,6 +934,23 @@ class DrTabelle extends HTMLElement {
 
       toggleMenuOff();
 
+      if (this.cellsLeft.length !== this.nTabCol) {
+         this.cellsLeft = Array(this.nTabCol);
+         this.cellsWidth = Array(this.nTabCol);
+      }
+
+      for (let ispalte = 1; ispalte < this.nTabCol; ispalte++) {
+         let input_id = 'idtable' + '-1' + '-' + ispalte;
+         const el = this.shadow.getElementById(input_id) as HTMLInputElement;
+         //console.log("getBoundingClientRect", ispalte, this.cellsLeft.length,this.nTabCol, el)
+         let cellLeft = this.cellsLeft[ispalte] = el.getBoundingClientRect().x;
+         let cellWidth = this.cellsWidth[ispalte] = el.getBoundingClientRect().width;
+
+         //console.log("Zell Info", input_id, cellLeft, cellWidth)
+      }
+      //    if (ev.target.hasPointerCapture(ev.pointerId)) {
+      // ev.target.releasePointerCapture(ev.pointerId);
+      //   }
       //console.log("POINTERDOWN", ev)
       //console.log('POINTERDOWN', this.selectionMode, ev.button, tableId, inputId, ev.pageX, ev.pageY, ev.which, ev.pointerType);
 
@@ -832,12 +967,12 @@ class DrTabelle extends HTMLElement {
          //      console.log('select Mode = true', this.id, this.shadow, this.shadowRoot);
          //const el=this.shadow.getElementById(this.id) as any
          //console.log("el",el)
-         //ev.target.offsetParent.offsetParent.addEventListener('pointermove', this.POINTER_MOVE); // , { passive: false }  , { capture: true }
+         //   this.addEventListener('touchmove', this.TOUCH_MOVE.bind(this)); // , { passive: false }  , { capture: true }
          //TODO myTable.addEventListener("pointerup", POINTER_UP);
       }
 
       const myArray = inputId.split('-');
-      //console.log('Array', myArray.length, myArray[0], myArray[1], myArray[2]);
+      console.log('Array', myArray.length, myArray[0], myArray[1], myArray[2]);
       //console.log("WERT=", ev.target.value)
       this.firtstWert = ev.target.value;
 
@@ -847,25 +982,44 @@ class DrTabelle extends HTMLElement {
       // this.cellLeft = el.getBoundingClientRect().x + this.offsetX;
       // this.cellTop = el.getBoundingClientRect().y + this.offsetY;
       // this.cellWidth = el.getBoundingClientRect().width;
-      // this.cellHeight = el.getBoundingClientRect().height;
+
       // this.cellId = myArray[0];
       // this.cellRow = myArray[1];
       // this.cellCol = myArray[2];
       // console.log('MEMORY', this.cellRow, this.cellCol, this.cellLeft, this.cellTop, this.cellWidth, this.cellHeight, this.offsetX, this.offsetY);
+      if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
+         this.addEventListener('touchmove', this.TOUCH_MOVE.bind(this)); // , { passive: false }  , { capture: true }
+         this.selectionMode = true;
+
+         this.offsetX = ev.pageX - ev.clientX
+         this.offsetY = ev.pageY - ev.clientY
+
+         const el = this.shadow.getElementById(inputId) as HTMLInputElement;
+         this.cellLeft = el.getBoundingClientRect().x + this.offsetX
+         this.cellTop = el.getBoundingClientRect().y + this.offsetY
+         this.cellHeight = el.getBoundingClientRect().height;
+
+         //this.cellLeft = myArray[1]
+         //this.cellRight = myArray[1]
+         //this.cellTop = myArray[2]
+         //this.cellBottom = myArray[2]
+         console.log("??????????? ", this.cellLeft, this.cellTop, this.cellHeight)
+      }
 
       if (ev.which === 3) {                 // rechte Maustaste
          console.log('rechte Maustaste');
-         ev.preventDefault();
-      } else if (ev.button === 0) {         // linke Maustaste
+         // ev.preventDefault();
+      }
+       if (ev.button === 0 || ev.which === 3) {         // linke Maustaste
 
          this.selectionMode = true;
 
-         //console.log('linke Maustaste');
+         console.log('linke Maustaste');
 
-         this.cellLeft = myArray[1]
-         this.cellRight = myArray[1]
-         this.cellTop = myArray[2]
-         this.cellBottom = myArray[2]
+         //this.cellLeft = myArray[1]
+         //this.cellRight = myArray[1]
+         //this.cellTop = myArray[2]
+         //this.cellBottom = myArray[2]
 
          this.startRowIndex = myArray[1];
          this.startColIndex = myArray[2];
@@ -874,46 +1028,22 @@ class DrTabelle extends HTMLElement {
          this.firstColIndex = myArray[2];
 
 
-         //ev.preventDefault();
-         //TODO const row = myArray[1];
-         //TODO const col = myArray[2];
-         /*
-            selectedCellPoly.row = row;
-            selectedCellPoly.col = col;
-            selectedCellPoly.wert = Number(el.value);
-            selectedCellPoly.activatedElement = el;
-            selectedCellPoly.isSelected = true;
-            selectedCellPoly.startRowIndex = row;
-            selectedCellPoly.startColIndex = col;
-
-            this.row = row;
-            this.col = col;
-            this.wert = Number(el.value);
-            this.activatedElement = el;
-            this.isSelected = true;
-            this.startRowIndex = row;
-            this.startColIndex = col;
-         */
-         //if (myTable ) myTable.rows[this.cellRow].cells[this.cellCol].firstElementChild.className = 'input_select';  // funktioniert
-
-         //   if (this.selectionMode && ev.pointerType !== 'mouse') {
-            //      ev.preventDefault();
-         //   }
-         //console.log("selectedCellPoly", selectedCellPoly.row, selectedCellPoly.col, selectedCellPoly.wert, selectedCellPoly.activatedElement)
       }
    }
 
    //------------------------------------------------------------------------------------------------
    POINTER_MOVE(ev: any) {
       //--------------------------------------------------------------------------------------------
-      //console.log('POINTER MOVE', ev.target.id, this.selectionMode);
+      console.log('POINTER MOVE', ev.target.id, this.selectionMode);
+      ev.preventDefault();
 
       if (!this.selectionMode) return;
 
       //console.log('POINTER MOVE ev', this);  // zeigt auf dr-table
       //console.log('tagname', ev.target.tagName);
+      //console.log("POINTER MOVE vor prevent")
 
-      ev.preventDefault();
+      //ev.preventDefault();
 
       if (ev.target.tagName !== 'INPUT') return;
 
