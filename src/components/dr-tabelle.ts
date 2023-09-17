@@ -820,14 +820,9 @@ class DrTabelle extends HTMLElement {
       const text = ev.target?.id;
       if (text.length > 0) {
          let rowIndex: number, colIndex: number;
-         const myArray = text.split("-");
-         //console.log("Array", tableId, myArray.length, myArray[0], myArray[1], myArray[2])
-         rowIndex = myArray[1];
-         colIndex = myArray[2];
+
          let tabelle = ev.target.offsetParent.offsetParent;
          //console.log("TABELLE TOUCH MOVE",tabelle)
-         //tabelle.rows[rowIndex].cells[colIndex].firstElementChild.className = 'input_select';
-         //ev.target.className = 'input_select'
 
          const touch = ev.changedTouches[0];
          const actualTarget = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -854,7 +849,7 @@ class DrTabelle extends HTMLElement {
 
          let left = touch.clientX;
          spalte = 1
-         for (let ispalte = 1; ispalte < this.nTabCol; ispalte++) {   // this.firstColIndex
+         for (let ispalte = 1; ispalte < this.nTabCol; ispalte++) {
             if (left > this.cellsLeft[ispalte]) {
                // let input_id = 'idtable' + '-' + zeile + '-' + ispalte;
                // const el = this.shadow.getElementById(input_id) as HTMLInputElement;
@@ -867,6 +862,12 @@ class DrTabelle extends HTMLElement {
          {
             rowIndex = zeile;
             colIndex = spalte;
+console.log("TOUCH MOVE rowIndex",rowIndex,colIndex,this.firstRowIndex,this.firstColIndex);
+            if ( rowIndex === this.firstRowIndex && colIndex === this.firstColIndex ) { // Bewegung innerhalb erstgepickter Zelle
+               return;
+            }
+            this.firstRowIndex=-1;
+
             let tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;  //ev.target.offsetParent.offsetParent;
             tabelle.rows[rowIndex].cells[colIndex].firstElementChild!.className = 'input_select';
 
@@ -976,6 +977,9 @@ class DrTabelle extends HTMLElement {
       //console.log("WERT=", ev.target.value)
       this.firtstWert = ev.target.value;
 
+      this.firstRowIndex = Number(myArray[1]);
+      this.firstColIndex = Number(myArray[2]);
+
       //this.offsetX = ev.pageX - ev.clientX;
       //this.offsetY = ev.pageY - ev.clientY;
 
@@ -999,10 +1003,6 @@ class DrTabelle extends HTMLElement {
          this.cellTop = el.getBoundingClientRect().y + this.offsetY
          this.cellHeight = el.getBoundingClientRect().height;
 
-         //this.cellLeft = myArray[1]
-         //this.cellRight = myArray[1]
-         //this.cellTop = myArray[2]
-         //this.cellBottom = myArray[2]
          console.log("??????????? ", this.cellLeft, this.cellTop, this.cellHeight)
       }
 
@@ -1016,17 +1016,8 @@ class DrTabelle extends HTMLElement {
 
          console.log('linke Maustaste');
 
-         //this.cellLeft = myArray[1]
-         //this.cellRight = myArray[1]
-         //this.cellTop = myArray[2]
-         //this.cellBottom = myArray[2]
-
-         this.startRowIndex = myArray[1];
-         this.startColIndex = myArray[2];
-
-         this.firstRowIndex = myArray[1];
-         this.firstColIndex = myArray[2];
-
+         this.startRowIndex = Number(myArray[1]);
+         this.startColIndex = Number(myArray[2]);
 
       }
    }
@@ -1057,8 +1048,14 @@ class DrTabelle extends HTMLElement {
       if (text.length > 0) {
          const myArray = text.split("-");
          //console.log("Array", tableId, myArray.length, myArray[0], myArray[1], myArray[2])
-         rowIndex = myArray[1];
-         colIndex = myArray[2];
+         rowIndex = Number(myArray[1]);
+         colIndex = Number(myArray[2]);
+
+         if ( rowIndex === this.firstRowIndex && colIndex === this.firstColIndex ) { // Bewegung innerhalb erstgepickter Zelle
+            return;
+         }
+         this.firstRowIndex=-1;
+
          let tabelle = ev.target.offsetParent.offsetParent;
          tabelle.rows[rowIndex].cells[colIndex].firstElementChild.className = 'input_select';
 
