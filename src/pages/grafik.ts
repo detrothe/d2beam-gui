@@ -1,3 +1,4 @@
+// ts-nocheck
 import Two from 'two.js'
 
 import { CTrans } from './trans';
@@ -1732,14 +1733,14 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
             alpha += dalpha
         }
 
-
+/*
         let curve = new Two.Path(vertices, false, true)
         curve.linewidth = linewidth;
         curve.stroke = color;
         curve.noFill()
 
         group.add(curve)
-
+*/
         vertices.length = 0;
         vertices.push(new Two.Vector(0, -h / 2 + tr.Pix0(radius)));
         vertices.push(new Two.Vector(0 + b, tr.Pix0(radius)));
@@ -1766,14 +1767,14 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
             alpha += dalpha
         }
 
-
+/*
         let curve = new Two.Path(vertices, false, true)
         curve.linewidth = linewidth;
         curve.stroke = color;
         curve.noFill()
 
         group.add(curve)
-
+*/
         vertices.length = 0;
         vertices.push(new Two.Vector(0, -h / 2 - tr.Pix0(radius)));
         vertices.push(new Two.Vector(0 + b, -tr.Pix0(radius)));

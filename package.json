@@ -22,7 +22,7 @@
     "lit": "^2.7.6",
     "npm-check-updates": "^16.10.17",
     "tweakpane": "^3.1.10",
-    "two.js": "^0.8.10",
+    "two.js": "0.8.10",
     "urlpattern-polyfill": "^9.0.0",
     "workbox-build": "^7.0.0",
     "workbox-core": "^7.0.0",
