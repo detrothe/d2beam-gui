@@ -18,6 +18,9 @@ export class CTimoshenko_beam extends CElement {
     ks = 0.0
     Iy = 0.0
     area = 0.0
+    zso = 0.0
+    alphaT = 0.0
+    h = 0.0
     psi = 0.0
     kappa = 0.0
     nod1 = -1
@@ -67,7 +70,7 @@ export class CTimoshenko_beam extends CElement {
 
 
     //---------------------------------------------------------------------------------------------
-    setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number) {
+    setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number, height: number, zso: number) {
 
         this.emodul = emodul
         this.Iy = Iy
@@ -76,6 +79,8 @@ export class CTimoshenko_beam extends CElement {
         this.ks = ks
         this.querdehnzahl = querdehnzahl
         this.schubfaktor = schubfaktor
+        this.h=height
+        this.zso=zso
     }
 
     //---------------------------------------------------------------------------------------------
@@ -584,7 +589,20 @@ export class CTimoshenko_beam extends CElement {
             eload[ieload].re[2] = -5.0 * sl * p1 + sl * this.psi * p2
             eload[ieload].re[5] = 5.0 * sl * p1 + sl * this.psi * p2
         }
+        else if (eload[ieload].art === 5) {              // Temperatur
 
+            eload[ieload].kappa_dT = this.alphaT * (eload[ieload].Tu - eload[ieload].To) / this.h
+            eload[ieload].eps_Ts = this.alphaT * ((eload[ieload].Tu - eload[ieload].To) * this.zso / this.h + eload[ieload].To)
+
+            eload[ieload].re[0] = this.emodul * this.area * eload[ieload].eps_Ts
+            eload[ieload].re[3] = -this.emodul * this.area * eload[ieload].eps_Ts
+
+            eload[ieload].re[1] =0.0
+            eload[ieload].re[4] = 0.0
+
+            eload[ieload].re[2] = this.emodul * Iy * eload[ieload].kappa_dT
+            eload[ieload].re[5] = -this.emodul * Iy * eload[ieload].kappa_dT
+        }
 
         eload[ieload].el_r[0] = this.trans[0][0] * eload[ieload].re[0] + this.trans[1][0] * eload[ieload].re[1] // !! mit [T]^T multiplizieren
         eload[ieload].el_r[1] = this.trans[0][1] * eload[ieload].re[0] + this.trans[1][1] * eload[ieload].re[1]

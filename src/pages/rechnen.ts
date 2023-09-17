@@ -153,8 +153,10 @@ class TElLoads {
     x: number = 0.0
     P: number = 0.0
     M: number = 0.0
-    tu: number = 0.0
-    to: number = 0.0
+    Tu: number = 0.0
+    To: number = 0.0
+    kappa_dT: number = 0.0
+    eps_Ts: number = 0.0
     C1: number = 0.0                    // Integrationskonstante C1 für beidseitig eingespannt
     C2: number = 0.0                    // Integrationskonstante C2 für beidseitig eingespannt
     re: number[] = Array(6)             // Elementlastvektor lokal
@@ -973,7 +975,7 @@ function calculate() {
     console.log("Anzahl Gleichungen: ", neq)
 
     let emodul: number = 0.0, ks: number = 0.0, wichte: number = 0.0, definedQuerschnitt = 1
-    let querdehnzahl: number = 0.3, schubfaktor: number = 0.833
+    let querdehnzahl: number = 0.3, schubfaktor: number = 0.833, zso:number = 0.0
     let nfiber: number = 2, maxfiber: number = 5, offset_abstand: number = 0.0, height: number = 0.0, width = 0.0
     let Iy: number = 0.0, area: number = 0.0, b: number;
     let lmj: number = 0, nod1: number, nodi: number
@@ -1009,6 +1011,7 @@ function calculate() {
             definedQuerschnitt = querschnittset[index].definedQuerschnitt
             querdehnzahl = querschnittset[index].querdehnzahl
             schubfaktor = querschnittset[index].schubfaktor
+            zso = querschnittset[index].zso
 
             nfiber = 2
             maxfiber = 3 * (nfiber - 1)
@@ -1034,7 +1037,7 @@ function calculate() {
         }
 
         el.push(new CTimoshenko_beam())
-        el[ielem].setQuerschnittsdaten(emodul, Iy, area, wichte, ks, querdehnzahl, schubfaktor)
+        el[ielem].setQuerschnittsdaten(emodul, Iy, area, wichte, ks, querdehnzahl, schubfaktor, height, zso)
         el[ielem].initialisiereElementdaten(ielem)
     }
 
