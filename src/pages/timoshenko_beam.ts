@@ -600,8 +600,8 @@ export class CTimoshenko_beam extends CElement {
             eload[ieload].re[1] =0.0
             eload[ieload].re[4] = 0.0
 
-            eload[ieload].re[2] = this.emodul * Iy * eload[ieload].kappa_dT
-            eload[ieload].re[5] = -this.emodul * Iy * eload[ieload].kappa_dT
+            eload[ieload].re[2] = this.emodul * this.Iy * eload[ieload].kappa_dT
+            eload[ieload].re[5] = -this.emodul * this.Iy * eload[ieload].kappa_dT
         }
 
         eload[ieload].el_r[0] = this.trans[0][0] * eload[ieload].re[0] + this.trans[1][0] * eload[ieload].re[1] // !! mit [T]^T multiplizieren
