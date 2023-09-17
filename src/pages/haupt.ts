@@ -55,6 +55,8 @@ export const ntemperaturlasten_init = '0';
 export const nlastfaelle_init = '2';
 export const nkombinationen_init = '2';
 export const nstabvorverfomungen_init = '0';
+export const nvorspannungen_init = '0';
+export const nspannschloesser_init = '0';
 export let column_string_kombitabelle: string;
 export let typs_string_kombitabelle: string;
 //export let column_width_elementtabelle: string;
@@ -518,6 +520,58 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                nspalten="4"
                columns='["No", "Element", "Lastfall", "t<sub>u</sub> [°]", "t<sub>o</sub> [°]"]'
             ></dr-tabelle>
+            <!-- neu -->
+
+            <p>
+               <br />
+               <b>Eingabe der zentrischen Vorspannung</b><br /><br />
+            </p>
+            <p>
+               Anzahl der Vorspannungen:
+               <dr-button-pm
+                  id="id_button_nvorspannungen"
+                  nel="${nvorspannungen_init}"
+                  inputid="nvorspannungen"
+                  onchange="berechnungErforderlich()"
+               ></dr-button-pm>
+               <sl-button id="resize" value="resize" @click="${resizeTables}"
+                  >Resize Tabelle</sl-button
+               >
+            </p>
+
+            <dr-tabelle
+               id="id_vorspannungen_tabelle"
+               nzeilen="${nvorspannungen_init}"
+               nspalten="3"
+               columns='["No", "Element", "Lastfall", "&sigma;<sub>v</sub> [N/mm²]"]'
+            ></dr-tabelle>
+<!-- neu -->
+
+
+<p>
+               <br />
+               <b>Eingabe der Spannschlösser</b><br /><br />
+            </p>
+            <p>
+               Anzahl Temperaturlasten:
+               <dr-button-pm
+                  id="id_button_nspannschloesser"
+                  nel="${nspannschloesser_init}"
+                  inputid="nspannschloesser"
+                  onchange="berechnungErforderlich()"
+               ></dr-button-pm>
+               <sl-button id="resize" value="resize" @click="${resizeTables}"
+                  >Resize Tabelle</sl-button
+               >
+            </p>
+
+            <dr-tabelle
+               id="id_spannschloesser_tabelle"
+               nzeilen="${nspannschloesser_init}"
+               nspalten="3"
+               columns='["No", "Element", "Lastfall", "&Delta;s [mm]"]'
+            ></dr-tabelle>
+
          </sl-tab-panel>
 
          <!--------------------------------------------------------------------------------------->
@@ -1182,6 +1236,36 @@ export function resizeTables() {
    }
 
    {
+      const el_elemente = document.getElementById(
+         'id_button_nvorspannungen'
+      );
+      const nelem = (
+         el_elemente?.shadowRoot?.getElementById(
+            'nvorspannungen'
+         ) as HTMLInputElement
+      ).value;
+
+      const el = document.getElementById('id_vorspannungen_tabelle');
+      console.log('EL: >>', el);
+      el?.setAttribute('nzeilen', nelem);
+   }
+
+   {
+      const el_elemente = document.getElementById(
+         'id_button_nspannschloesser'
+      );
+      const nelem = (
+         el_elemente?.shadowRoot?.getElementById(
+            'nspannschloesser'
+         ) as HTMLInputElement
+      ).value;
+
+      const el = document.getElementById('id_spannschloesser_tabelle');
+      console.log('EL: >>', el);
+      el?.setAttribute('nzeilen', nelem);
+   }
+
+   {
       let el_elemente = document.getElementById('id_button_nkombinationen');
       let nelem = (
          el_elemente?.shadowRoot?.getElementById(
@@ -1229,6 +1313,12 @@ export function clearTables() {
    el?.setAttribute('clear', '0');
 
    el = document.getElementById('id_stabvorverfomungen_tabelle');
+   el?.setAttribute('clear', '0');
+
+   el = document.getElementById('id_vorspannungen_tabelle');
+   el?.setAttribute('clear', '0');
+
+   el = document.getElementById('id_spannschloesser_tabelle');
    el?.setAttribute('clear', '0');
 
    el = document.getElementById('id_kombinationen_tabelle');

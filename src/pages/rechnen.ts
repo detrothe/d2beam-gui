@@ -157,6 +157,8 @@ class TElLoads {
     To: number = 0.0
     kappa_dT: number = 0.0
     eps_Ts: number = 0.0
+    sigmaV: number = 0.0
+    delta_s: number = 0.0
     C1: number = 0.0                    // Integrationskonstante C1 für beidseitig eingespannt
     C2: number = 0.0                    // Integrationskonstante C2 für beidseitig eingespannt
     re: number[] = Array(6)             // Elementlastvektor lokal
@@ -192,8 +194,8 @@ class TMaxU0 {
 
 //---------------------------------------------------------------------------------------------------------------
 export function add_neq() {
-//---------------------------------------------------------------------------------------------------------------
-neq++;
+    //---------------------------------------------------------------------------------------------------------------
+    neq++;
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -975,7 +977,7 @@ function calculate() {
     console.log("Anzahl Gleichungen: ", neq)
 
     let emodul: number = 0.0, ks: number = 0.0, wichte: number = 0.0, definedQuerschnitt = 1
-    let querdehnzahl: number = 0.3, schubfaktor: number = 0.833, zso:number = 0.0
+    let querdehnzahl: number = 0.3, schubfaktor: number = 0.833, zso: number = 0.0
     let nfiber: number = 2, maxfiber: number = 5, offset_abstand: number = 0.0, height: number = 0.0, width = 0.0
     let Iy: number = 0.0, area: number = 0.0, b: number;
     let lmj: number = 0, nod1: number, nodi: number

@@ -79,8 +79,8 @@ export class CTimoshenko_beam extends CElement {
         this.ks = ks
         this.querdehnzahl = querdehnzahl
         this.schubfaktor = schubfaktor
-        this.h=height
-        this.zso=zso
+        this.h = height
+        this.zso = zso
     }
 
     //---------------------------------------------------------------------------------------------
@@ -597,11 +597,31 @@ export class CTimoshenko_beam extends CElement {
             eload[ieload].re[0] = this.emodul * this.area * eload[ieload].eps_Ts
             eload[ieload].re[3] = -this.emodul * this.area * eload[ieload].eps_Ts
 
-            eload[ieload].re[1] =0.0
+            eload[ieload].re[1] = 0.0
             eload[ieload].re[4] = 0.0
 
             eload[ieload].re[2] = this.emodul * this.Iy * eload[ieload].kappa_dT
             eload[ieload].re[5] = -this.emodul * this.Iy * eload[ieload].kappa_dT
+        }
+        else if (eload[ieload].art === 9) {              // zentrische Vorspannung
+
+            eload[ieload].re[0] = -this.area * eload[ieload].sigmaV
+            eload[ieload].re[3] = this.area * eload[ieload].sigmaV
+
+            eload[ieload].re[1] = 0.0
+            eload[ieload].re[4] = 0.0
+            eload[ieload].re[2] = 0.0
+            eload[ieload].re[5] = 0.0
+        }
+        else if (eload[ieload].art === 10) {              // Spannschloss
+
+            eload[ieload].re[0] = -this.emodul * this.area * eload[ieload].delta_s / sl
+            eload[ieload].re[3] = this.emodul * this.area * eload[ieload].delta_s / sl
+
+            eload[ieload].re[1] = 0.0
+            eload[ieload].re[4] = 0.0
+            eload[ieload].re[2] = 0.0
+            eload[ieload].re[5] = 0.0
         }
 
         eload[ieload].el_r[0] = this.trans[0][0] * eload[ieload].re[0] + this.trans[1][0] * eload[ieload].re[1] // !! mit [T]^T multiplizieren
