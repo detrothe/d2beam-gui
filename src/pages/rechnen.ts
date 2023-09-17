@@ -578,8 +578,8 @@ function read_element_loads() {
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
             if (ispalte === 1) eload[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte === 2) eload[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[izeile - 1].tu = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) eload[izeile - 1].to = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[izeile - 1].Tu = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) eload[izeile - 1].To = Number(testNumber(wert, izeile, ispalte, shad));
             eload[izeile - 1].art = 5;
         }
         if (eload[izeile - 1].lf > nlastfaelle) nlastfaelle = eload[izeile - 1].lf
