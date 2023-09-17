@@ -532,6 +532,13 @@ export class CTimoshenko_beam extends CElement {
 
             eload[ieload].re[2] = -5.0 * sl * p1 + sl * this.psi * p2
             eload[ieload].re[5] = 5.0 * sl * p1 + sl * this.psi * p2
+
+            let qL = eload[ieload].pL
+            let mq = (eload[ieload].pR - eload[ieload].pL) / sl;
+            let psi = this.kappa
+            eload[ieload].C1 = ((120 * sl * psi + 10 * sl ** 3) * qL + 40 * sl ** 2 * mq * psi + 3 * sl ** 4 * mq) / (240 * psi + 20 * sl ** 2);
+            eload[ieload].C2 = -((60 * sl ** 2 * psi + 5 * sl ** 4) * qL + 30 * sl ** 3 * mq * psi + 2 * sl ** 5 * mq) / (720 * psi + 60 * sl ** 2);
+
         }
         else if (eload[ieload].art === 1) {              // Trapezstreckenlast z-Richtung
 
@@ -864,8 +871,10 @@ export class CTimoshenko_beam extends CElement {
                             Vx = Vx - pL * x - dp * x * x / sl / 2.
                             Mx = Mx - pL * x * x / 2. - dp * x * x * x / sl / 6.
 
-                            wx = pL / 24.0 * (x ** 4 - 2 * sl * x ** 3 + sl * sl * x * x) / EI
-
+                            //wx += pL / 24.0 * (x ** 4 - 2 * sl * x ** 3 + sl * sl * x * x) / EI
+                            let temp = pL / 24.0 * x ** 4 + dp / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                            temp += this.kappa * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * x)
+                            wx = wx + temp / EI
                         }
                         else if (eload[ieload].art === 1) {         // Trapezstreckenlast z-Richtung
 
@@ -933,6 +942,13 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pL * x - dp * x * x / sl / 2.
                                 Mx = Mx - pL * x * x / 2 - dp * x * x * x / sl / 6.
 
+                                let wl = pL / 24.0 * x ** 4 + dp / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                                wl = (wl + this.kappa * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
+                                Mx = Mx - this.NL * wl
+
+                                wx += wl
+
                             }
                             else if (eload[ieload].art === 1) {         // Trapezstreckenlast z-Richtung
 
@@ -951,6 +967,13 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
+                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                                wl = (wl + this.kappa * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
+                                Mx = Mx - this.NL * wl
+
+                                wx += wl
+
                             }
                             else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
 
@@ -968,6 +991,13 @@ export class CTimoshenko_beam extends CElement {
                                 Nx = Nx - pxL * x - dpx * x * x / sl / 2.
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
+
+                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                                wl = (wl + this.kappa * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
+                                Mx = Mx - this.NL * wl
+
+                                wx += wl
 
                             }
 

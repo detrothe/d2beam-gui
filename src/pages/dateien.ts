@@ -72,7 +72,7 @@ function handleFileSelect_read() {
                         el.setValue(jobj.nelem);
                         el = document.getElementById('id_button_nnodalloads') as drButtonPM;
                         el.setValue(jobj.nloads);
-                        el = document.getElementById('id_button_nelemloads') as drButtonPM;
+                        el = document.getElementById('id_button_nstreckenlasten') as drButtonPM;
                         el.setValue(jobj.neloads);
 
                         el = document.getElementById('id_button_nlastfaelle') as drButtonPM;
@@ -150,7 +150,7 @@ function handleFileSelect_read() {
                         }
                     }
 
-                    el = document.getElementById('id_elementlasten_tabelle') as HTMLElement;
+                    el = document.getElementById('id_streckenlasten_tabelle') as HTMLElement;
                     tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
                     nSpalten = tabelle.rows[0].cells.length;
@@ -299,11 +299,11 @@ async function handleFileSelect_save() {
             }
         }
 
-        el = document.getElementById('id_elementlasten_tabelle') as HTMLElement;
+        el = document.getElementById('id_streckenlasten_tabelle') as HTMLElement;
         tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
         nZeilen = tabelle.rows.length - 1;
         nSpalten = tabelle.rows[0].cells.length - 1;
-        const neloads = nZeilen
+        const nstreckenlasten = nZeilen
         const elemload = Array.from(Array(nZeilen), () => new Array(nSpalten));
 
         for (i = 0; i < nZeilen; i++) {
@@ -343,7 +343,7 @@ async function handleFileSelect_save() {
         }
 
         let qsClassName = new Array(nQuerschnittSets)
-        let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(11));
+        let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(12));
 
         for (i = 0; i < nQuerschnittSets; i++) {
             console.log('get_querschnitt_length', get_querschnitt_length(i))
@@ -359,7 +359,7 @@ async function handleFileSelect_save() {
             'nnodes': n_nodes,
             'nelem': n_elem,
             'nloads': nloads,
-            'neloads': neloads,
+            'nstreckenlasten': nstreckenlasten,
             'nloadcases': nlastfaelle,
             'ncombinations': nkombinationen,
             'nquerschnittsets': nQuerschnittSets,
@@ -388,7 +388,7 @@ async function handleFileSelect_save() {
             'elem': elem,
             'node': node,
             'nodalLoad': nodalload,
-            'elemLoad': elemload,
+            'streckenlasten': elemload,
             'stabvorverformung': stabvorverformung,
             'combination': kombination,
             'qsclassname': qsClassName,

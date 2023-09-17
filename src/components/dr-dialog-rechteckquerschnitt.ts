@@ -185,6 +185,17 @@ export class drRechteckQuerSchnitt extends LitElement {
                   </td>
                   <td>&nbsp;[cm²]</td>
                </tr>
+               <tr>
+                  <td title='Abstand Oberkante Querschnitt zum Schwerpunkt (positiver Wert), wird nur für Temperaturberechnung benötigt'>
+                     <span id="id_row_zso" disabled style="visibility:hidden"
+                        >z<sub>so</sub>:</span
+                     >
+                  </td>
+                  <td>
+                     <input id="zso" type="number" value="0" disabled />
+                  </td>
+                  <td>&nbsp;[cm]</td>
+               </tr>
 
                <tr>
                   <td>E-Modul:</td>
@@ -271,6 +282,10 @@ export class drRechteckQuerSchnitt extends LitElement {
          (
             shadow?.getElementById('id_row_width') as HTMLSpanElement
          ).style.visibility = 'visible';
+         (
+            shadow?.getElementById('id_row_zso') as HTMLSpanElement
+         ).style.visibility = 'hidden';
+         (shadow?.getElementById('zso') as HTMLInputElement).disabled = true;
       }
    }
 
@@ -291,6 +306,10 @@ export class drRechteckQuerSchnitt extends LitElement {
             shadow?.getElementById('id_row_area') as HTMLSpanElement
          ).style.visibility = 'visible';
          (shadow?.getElementById('area') as HTMLInputElement).disabled = false;
+         (
+            shadow?.getElementById('id_row_zso') as HTMLSpanElement
+         ).style.visibility = 'visible';
+         (shadow?.getElementById('zso') as HTMLInputElement).disabled = false;
       }
    }
 }

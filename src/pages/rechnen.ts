@@ -19,7 +19,7 @@ export let nnodesTotal: number = 0;
 export let nlastfaelle: number = 0;
 export let nkombinationen: number = 0;
 export let nelTeilungen = 10;
-export let n_iterationen=5;
+export let n_iterationen = 5;
 
 export let neigv: number = 2;
 
@@ -93,6 +93,7 @@ class TQuerschnittRechteck {
     emodul: number = 30000.0
     Iy: number = 160000.0
     area: number = 1200.0
+    zso: number = 0.2;
     height: number = 0.4
     width: number = 0.3
     wichte: number = 0.0
@@ -149,6 +150,13 @@ class TElLoads {
     art: number = 0
     pL: number = 0.0
     pR: number = 0.0
+    x: number = 0.0
+    P: number = 0.0
+    M: number = 0.0
+    tu: number = 0.0
+    to: number = 0.0
+    C1: number = 0.0                    // Integrationskonstante C1 für beidseitig eingespannt
+    C2: number = 0.0                    // Integrationskonstante C2 für beidseitig eingespannt
     re: number[] = Array(6)             // Elementlastvektor lokal
     el_r: number[] = Array(6)           // Elementlastvektor im globalen Koordinatensystem
 }
@@ -180,8 +188,10 @@ class TMaxU0 {
     u0 = 0.0
 }
 
+//---------------------------------------------------------------------------------------------------------------
 export function add_neq() {
-    neq++;
+//---------------------------------------------------------------------------------------------------------------
+neq++;
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -213,9 +223,6 @@ export function rechnen() {
     el = document.getElementById('id_button_nnodalloads') as any;
     nloads = Number(el.nel);
 
-    el = document.getElementById('id_button_nelemloads') as any;
-    neloads = Number(el.nel);
-
     el = document.getElementById('id_button_nstabvorverformungen') as any;
     nstabvorverfomungen = Number(el.nel);
 
@@ -224,16 +231,16 @@ export function rechnen() {
 
     el = document.getElementById('id_button_nkombinationen') as any;
     nkombinationen = Number(el.nel);
-/*
-    el = document.getElementById('id_ndivsl') as HTMLInputElement;
-    ndivsl = Number(el.value);
+    /*
+        el = document.getElementById('id_ndivsl') as HTMLInputElement;
+        ndivsl = Number(el.value);
 
-    el = document.getElementById('id_intart') as HTMLSelectElement;
-    intArt = Number(el.value);
+        el = document.getElementById('id_intart') as HTMLSelectElement;
+        intArt = Number(el.value);
 
-    el = document.getElementById('id_art') as HTMLSelectElement;
-    art = Number(el.value);
-*/
+        el = document.getElementById('id_art') as HTMLSelectElement;
+        art = Number(el.value);
+    */
     el = document.getElementById('id_THIIO') as HTMLSelectElement;
     THIIO_flag = Number(el.value);
 
@@ -255,7 +262,7 @@ export function rechnen() {
     el = document.getElementById('id_button_niter') as any;
     n_iterationen = Number(el.nel);
 
-    console.log("THIIO_flag", THIIO_flag,nelTeilungen,n_iterationen)
+    console.log("THIIO_flag", THIIO_flag, nelTeilungen, n_iterationen)
 
     console.log("intAt, art", intArt, art, ndivsl)
     console.log("maxU", maxU_node, maxU_dir, maxU_schief, neigv)
@@ -273,7 +280,7 @@ export function rechnen() {
 
 //---------------------------------------------------------------------------------------------------------------
 export function set_querschnittRechteck(name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number,
-    definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number) {
+    definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number) {
     //-----------------------------------------------------------------------------------------------------------
 
     const index = nQuerschnittSets - 1;
@@ -289,13 +296,14 @@ export function set_querschnittRechteck(name: string, id: string, emodul: number
     querschnittset[index].wichte = wichte;
     querschnittset[index].schubfaktor = schubfaktor;
     querschnittset[index].querdehnzahl = querdehnzahl;
+    querschnittset[index].zso = zso;
     console.log("set_querschnittRechteck", index, emodul)
 }
 
 
 //---------------------------------------------------------------------------------------------------------------
 export function update_querschnittRechteck(index: number, name: string, id: string, emodul: number, Iy: number, area: number,
-    height: number, width: number, definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number) {
+    height: number, width: number, definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number) {
     //-----------------------------------------------------------------------------------------------------------
 
     querschnittset[index].name = name;
@@ -309,6 +317,7 @@ export function update_querschnittRechteck(index: number, name: string, id: stri
     querschnittset[index].wichte = wichte;
     querschnittset[index].schubfaktor = schubfaktor;
     querschnittset[index].querdehnzahl = querdehnzahl;
+    querschnittset[index].zso = zso;
 
     console.log("update_querschnittRechteck", index, emodul)
 }
@@ -318,7 +327,7 @@ export function get_querschnittRechteck(index: number) {
     //-----------------------------------------------------------------------------------------------------------
 
     let name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number, definedQuerschnitt: number, wichte: number
-    let schubfaktor: number, querdehnzahl: number
+    let schubfaktor: number, querdehnzahl: number, zso: number
 
     console.log("index", index)
     name = querschnittset[index].name;
@@ -332,10 +341,11 @@ export function get_querschnittRechteck(index: number) {
     wichte = querschnittset[index].wichte;
     schubfaktor = querschnittset[index].schubfaktor;
     querdehnzahl = querschnittset[index].querdehnzahl;
+    zso = querschnittset[index].zso;
 
     console.log("get_querschnittRechteck", index, emodul)
 
-    return [name, id, emodul, Iy, area, height, width, definedQuerschnitt, wichte, schubfaktor, querdehnzahl]
+    return [name, id, emodul, Iy, area, height, width, definedQuerschnitt, wichte, schubfaktor, querdehnzahl, zso]
 }
 
 
@@ -462,22 +472,36 @@ function read_element_loads() {
 
     let i: number;
 
-    const el = document.getElementById('id_elementlasten_tabelle');
-    //console.log('EL: >>', el);
-    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
-    const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    //console.log('nZeilen', table.rows.length);
-    //console.log('nSpalten', table.rows[0].cells.length);
+    let el = document.getElementById('id_button_nstreckenlasten') as any;
+    const nstreckenlasten = Number(el.nel);
+
+    el = document.getElementById('id_button_neinzellasten') as any;
+    const neinzellasten = Number(el.nel);
+
+    el = document.getElementById('id_button_ntemperaturlasten') as any;
+    const ntemperaturlasten = Number(el.nel);
+
+    neloads = nstreckenlasten + neinzellasten + ntemperaturlasten
 
     for (i = 0; i < neloads; i++) {
         eload.push(new TElLoads())
     }
 
+    // Streckenlasten
+
+    el = document.getElementById('id_streckenlasten_tabelle');
+    //console.log('EL: >>', el);
+    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+
+    let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    //console.log('nZeilen', table.rows.length);
+    //console.log('nSpalten', table.rows[0].cells.length);
+
     let nRowTab = table.rows.length;
     let nColTab = table.rows[0].cells.length;
     let wert: any;
-    const shad = el?.shadowRoot?.getElementById('mytable')
+    let shad = el?.shadowRoot?.getElementById('mytable')
 
     for (let izeile = 1; izeile < nRowTab; izeile++) {
         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
@@ -505,6 +529,60 @@ function read_element_loads() {
             if (Math.abs(eload[i].pL) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pL)
             if (Math.abs(eload[i].pR) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pR)
         }
+    }
+
+
+    // Einzellasten
+
+    el = document.getElementById('id_einzellasten_tabelle');
+
+    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nRowTab = table.rows.length;
+    nColTab = table.rows[0].cells.length;
+    shad = el?.shadowRoot?.getElementById('mytable')
+
+    for (let izeile = 1; izeile < nRowTab; izeile++) {
+        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+            wert = child.value;
+            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+            if (ispalte === 1) eload[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) eload[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[izeile - 1].x = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) eload[izeile - 1].P = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 5) eload[izeile - 1].M = Number(testNumber(wert, izeile, ispalte, shad));
+            eload[izeile - 1].art = 6;
+        }
+        if (eload[izeile - 1].lf > nlastfaelle) nlastfaelle = eload[izeile - 1].lf
+
+        console.log("eload", izeile, eload[izeile - 1])
+    }
+
+    // Temperatur
+
+    el = document.getElementById('id_temperaturlasten_tabelle');
+
+    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nRowTab = table.rows.length;
+    nColTab = table.rows[0].cells.length;
+    shad = el?.shadowRoot?.getElementById('mytable')
+
+    for (let izeile = 1; izeile < nRowTab; izeile++) {
+        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+            wert = child.value;
+            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+            if (ispalte === 1) eload[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) eload[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[izeile - 1].tu = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) eload[izeile - 1].to = Number(testNumber(wert, izeile, ispalte, shad));
+            eload[izeile - 1].art = 5;
+        }
+        if (eload[izeile - 1].lf > nlastfaelle) nlastfaelle = eload[izeile - 1].lf
+
+        console.log("eload", izeile, eload[izeile - 1])
     }
 
     //for (i = 0; i < nlastfaelle; i++) console.log('maxValue_eload', i, maxValue_eload[i])
@@ -688,6 +766,7 @@ export function add_rechteck_querschnitt(werte: any[]) {
     const wichte = werte[8]
     const schubfaktor = werte[9]
     const querdehnzahl = werte[10]
+    const zso = werte[11]
 
     set_querschnittRechteck(
         qname,
@@ -700,7 +779,8 @@ export function add_rechteck_querschnitt(werte: any[]) {
         defquerschnitt,
         wichte,
         schubfaktor,
-        querdehnzahl
+        querdehnzahl,
+        zso
     );
 
 
@@ -740,6 +820,7 @@ export function init_tabellen() {
         const wichte = 0.0
         const schubfaktor = 0.0
         const querdehnzahl = 0.2
+        const zso = 20.0;
 
         set_querschnittRechteck(
             qname,
@@ -752,7 +833,8 @@ export function init_tabellen() {
             defquerschnitt,
             wichte,
             schubfaktor,
-            querdehnzahl
+            querdehnzahl,
+            zso
         );
 
         /*
@@ -812,7 +894,7 @@ export function init_tabellen() {
     (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '50';
 
 
-    el = document.getElementById('id_elementlasten_tabelle');
+    el = document.getElementById('id_streckenlasten_tabelle');
 
     table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 

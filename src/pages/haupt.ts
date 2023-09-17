@@ -24,7 +24,7 @@ import '../components/dr-dialog-rechteckquerschnitt';
 
 //import { testclass } from './element';
 
-import DetectOS from './detectos'
+import DetectOS from './detectos';
 
 import { addListener_filesave } from './dateien';
 import { select_loadcase_changed, select_eigenvalue_changed } from './grafik';
@@ -49,7 +49,9 @@ let dialog_querschnitt_item_id = '';
 export const nnodes_init = '2';
 export const nelem_init = '1';
 export const nnodalloads_init = '1';
-export const nelemloads_init = '1';
+export const nstreckenlasten_init = '1';
+export const neinzellasten_init = '0';
+export const ntemperaturlasten_init = '0';
 export const nlastfaelle_init = '2';
 export const nkombinationen_init = '2';
 export const nstabvorverfomungen_init = '0';
@@ -81,14 +83,12 @@ export const app = {
 
 export const Detect = new DetectOS();
 {
-    let txt = navigator.language
-    let txtArray = txt.split("-")
+   let txt = navigator.language;
+   let txtArray = txt.split('-');
 
-    app.browserLanguage = txtArray[0]
-    console.log("app.browserLanguage", app.browserLanguage)
+   app.browserLanguage = txtArray[0];
+   console.log('app.browserLanguage', app.browserLanguage);
 }
-
-
 
 column_string_kombitabelle = '["Kombi", "Kommentar"';
 for (let i = 1; i <= Number(nlastfaelle_init); i++) {
@@ -238,14 +238,8 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                      </td>
                   </tr>
                   <tr>
-                     <td>Anzahl Knotenlasten:</td>
-                     <td>
-                        <dr-button-pm
-                           id="id_button_nnodalloads"
-                           nel="${nnodalloads_init}"
-                           inputid="nnodalloads"
-                        ></dr-button-pm>
-                     </td>
+                     <td></td>
+                     <td></td>
                      <td
                         title="0=automatische Skalierung auf den Größtwert aus der Eigenwertberechnung"
                      >
@@ -266,15 +260,8 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                   </tr>
 
                   <tr>
-                     <td>Anzahl Elementlasten:</td>
-                     <td>
-                        <dr-button-pm
-                           id="id_button_nelemloads"
-                           nel="${nelemloads_init}"
-                           inputid="nelemloads"
-                           onchange="berechnungErforderlich()"
-                        ></dr-button-pm>
-                     </td>
+                     <td></td>
+                     <td></td>
                      <td>Richtung :</td>
                      <td>
                         <select
@@ -409,18 +396,38 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
          <!--------------------------------------------------------------------------------------->
          <sl-tab-panel name="tab-knoten"
-            >Eingabe der Knotenkoordinaten und Lager
+            ><p>
+               <b>Eingabe der Knotenkoordinaten und Lager</b><br /><br />
+               -1 = starre Lagerung<br />
+               0 oder leere Zelle = frei beweglich<br />
+               > 0 = Federsteifigkeit in kN/m bzw. kNm/rad<br />
+               <br />
+               Drehung des Lagers im Gegenuhrzeigersinn positiv<br /><br />
+            </p>
             <dr-tabelle
                id="id_knoten_tabelle"
                nzeilen="${nnodes_init}"
-               nspalten="5"
-               columns='["No", "x [m]", "z [m]", "L<sub>x</sub>", "L<sub>z</sub>", "L<sub>&phi;</sub>"]'
+               nspalten="6"
+               columns='["No", "x [m]", "z [m]", "L<sub>x</sub>", "L<sub>z</sub>", "L<sub>&phi;</sub>", "Winkel [°]"]'
             ></dr-tabelle>
          </sl-tab-panel>
 
          <!--------------------------------------------------------------------------------------->
          <sl-tab-panel name="tab-knotenlasten"
-            >Eingabe der Knotenlasten
+            ><p><b>Eingabe der Knotenlasten</b><br /><br /></p>
+            <p>
+               Anzahl Knotenlasten:
+
+               <dr-button-pm
+                  id="id_button_nnodalloads"
+                  nel="${nnodalloads_init}"
+                  inputid="nnodalloads"
+               ></dr-button-pm>
+               <sl-button id="resize" value="resize" @click="${resizeTables}"
+                  >Resize Tabelle</sl-button
+               >
+               <br /><br>
+            </p>
             <dr-tabelle
                id="id_knotenlasten_tabelle"
                nzeilen="${nnodalloads_init}"
@@ -431,12 +438,85 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
          <!--------------------------------------------------------------------------------------->
          <sl-tab-panel name="tab-elementlasten"
-            >Eingabe der Elementlasten
+            ><p>
+               <b>Eingabe der Streckenlasten</b><br /><br />
+               Lastarten<br /><br />
+               0 = Trapezstreckenlast senkrecht auf Stab<br />
+               1 = Trapezstreckenlast in globaler z-Richtung<br />
+               2 = Trapezstreckenlast in globaler z-Richtung, Projektion<br />
+               3 = Trapezstreckenlast in globaler x-Richtung, TODO<br />
+               4 = Trapezstreckenlast in globaler x-Richtung, Projektion,
+               TODO<br />
+            </p>
+            <p>
+               Anzahl Streckenlasten:
+               <dr-button-pm
+                  id="id_button_nstreckenlasten"
+                  nel="${nstreckenlasten_init}"
+                  inputid="nelemloads"
+                  onchange="berechnungErforderlich()"
+               ></dr-button-pm>
+               <sl-button id="resize" value="resize" @click="${resizeTables}"
+                  >Resize Tabelle</sl-button
+               >
+            </p>
             <dr-tabelle
-               id="id_elementlasten_tabelle"
-               nzeilen="${nelemloads_init}"
+               id="id_streckenlasten_tabelle"
+               nzeilen="${nstreckenlasten_init}"
                nspalten="5"
                columns='["No", "Element", "Lastfall", "Art", "p<sub>links</sub><br> [kN/m]", "p<sub>rechts</sub><br> [kN/m]"]'
+            ></dr-tabelle>
+
+            <p>
+               <br>
+               <b>Eingabe der Einzellasten</b><br /><br />
+               Einzellast P wirkt senkrecht auf Stab<br />
+            </p>
+            <p>
+               <br />
+               Anzahl Einzellasten:
+               <dr-button-pm
+                  id="id_button_neinzellasten"
+                  nel="${neinzellasten_init}"
+                  inputid="nelemloads"
+                  onchange="berechnungErforderlich()"
+               ></dr-button-pm>
+               <sl-button id="resize" value="resize" @click="${resizeTables}"
+                  >Resize Tabelle</sl-button
+               >
+            </p>
+
+            <dr-tabelle
+               id="id_einzellasten_tabelle"
+               nzeilen="${neinzellasten_init}"
+               nspalten="5"
+               columns='["No", "Element", "Lastfall", "x [m]", "P [kN]", "M [kNm]"]'
+            ></dr-tabelle>
+
+            <p>
+               <br />
+               <b>Eingabe der Temperaturlasten</b><br /><br />
+               t<sub>u</sub> Temperatur Unterseite (gestrichelte Faser)<br />
+               t<sub>o</sub> Temperatur Oberseite<br />
+            </p>
+            <p>
+               Anzahl Temperaturlasten:
+               <dr-button-pm
+                  id="id_button_ntemperaturlasten"
+                  nel="${ntemperaturlasten_init}"
+                  inputid="nelemloads"
+                  onchange="berechnungErforderlich()"
+               ></dr-button-pm>
+               <sl-button id="resize" value="resize" @click="${resizeTables}"
+                  >Resize Tabelle</sl-button
+               >
+            </p>
+
+            <dr-tabelle
+               id="id_temperaturlasten_tabelle"
+               nzeilen="${ntemperaturlasten_init}"
+               nspalten="4"
+               columns='["No", "Element", "Lastfall", "t<sub>u</sub> [°]", "t<sub>o</sub> [°]"]'
             ></dr-tabelle>
          </sl-tab-panel>
 
@@ -678,7 +758,6 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
    // Tabellen sin jetzt da, Tabellen mit Voreinstellungen füllen
 
-
    init_tabellen();
    //init_contextmenu();
 
@@ -841,6 +920,8 @@ function dialog_closed(e: any) {
          const querdehnzahl = +elem.value;
          elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
          const wichte = +elem.value;
+         elem = el?.shadowRoot?.getElementById('zso') as HTMLInputElement;
+         const zso = +elem.value;
 
          if (dialog_querschnitt_new) {
             incr_querschnittSets();
@@ -856,7 +937,8 @@ function dialog_closed(e: any) {
                defquerschnitt,
                wichte,
                schubfaktor,
-               querdehnzahl
+               querdehnzahl,
+               zso
             );
          } else {
             update_querschnittRechteck(
@@ -871,7 +953,8 @@ function dialog_closed(e: any) {
                defquerschnitt,
                wichte,
                schubfaktor,
-               querdehnzahl
+               querdehnzahl,
+               zso
             );
 
             //console.log("UPDATE", this)
@@ -951,6 +1034,7 @@ export function opendialog(ev: any) {
          wichte,
          schubfaktor,
          querdehnzahl,
+         zso
       ] = get_querschnittRechteck(index);
 
       if (id0 !== id) console.log('BIG Problem in opendialog');
@@ -982,6 +1066,8 @@ export function opendialog(ev: any) {
       elem.value = String(schubfaktor);
       elem = el?.shadowRoot?.getElementById('querdehnzahl') as HTMLInputElement;
       elem.value = String(querdehnzahl);
+      elem = el?.shadowRoot?.getElementById('zso') as HTMLInputElement;
+      elem.value = String(zso);
    }
 
    //const el=document.getElementById(id);
@@ -1040,14 +1126,42 @@ export function resizeTables() {
    }
 
    {
-      const el_elemente = document.getElementById('id_button_nelemloads');
+      const el_elemente = document.getElementById('id_button_nstreckenlasten');
       const nelem = (
          el_elemente?.shadowRoot?.getElementById(
             'nelemloads'
          ) as HTMLInputElement
       ).value;
 
-      const el = document.getElementById('id_elementlasten_tabelle');
+      const el = document.getElementById('id_streckenlasten_tabelle');
+      console.log('EL: >>', el);
+      el?.setAttribute('nzeilen', nelem);
+   }
+
+   {
+      const el_elemente = document.getElementById('id_button_neinzellasten');
+      const nelem = (
+         el_elemente?.shadowRoot?.getElementById(
+            'nelemloads'
+         ) as HTMLInputElement
+      ).value;
+
+      const el = document.getElementById('id_einzellasten_tabelle');
+      console.log('EL: >>', el);
+      el?.setAttribute('nzeilen', nelem);
+   }
+
+   {
+      const el_elemente = document.getElementById(
+         'id_button_ntemperaturlasten'
+      );
+      const nelem = (
+         el_elemente?.shadowRoot?.getElementById(
+            'nelemloads'
+         ) as HTMLInputElement
+      ).value;
+
+      const el = document.getElementById('id_temperaturlasten_tabelle');
       console.log('EL: >>', el);
       el?.setAttribute('nzeilen', nelem);
    }
@@ -1105,7 +1219,13 @@ export function clearTables() {
    el = document.getElementById('id_knotenlasten_tabelle');
    el?.setAttribute('clear', '0');
 
-   el = document.getElementById('id_elementlasten_tabelle');
+   el = document.getElementById('id_streckenlasten_tabelle');
+   el?.setAttribute('clear', '0');
+
+   el = document.getElementById('id_einzellasten_tabelle');
+   el?.setAttribute('clear', '0');
+
+   el = document.getElementById('id_temperaturlasten_tabelle');
    el?.setAttribute('clear', '0');
 
    el = document.getElementById('id_stabvorverfomungen_tabelle');
