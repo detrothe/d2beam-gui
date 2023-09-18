@@ -12,7 +12,7 @@ This is a simple 2D frame analysis app. It can solve linear elastic systems on y
 - line loads, nodal loads, temperature, and more
 - load cases and combinations with (safety) factors
 
-![Screenshot](https://github.com/detrothe/d2beam/public/assets/screenshots/screen.png)
+![Screenshot](/public/assets/screenshots/screen.png)
 
 ## Try it
 
