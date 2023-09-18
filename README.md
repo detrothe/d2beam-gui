@@ -1,7 +1,7 @@
 
 # Information
 
-This is a simple 2D frame analysis app. It can solve linear elastic systems on your smart phone, tablet or PC. It supports a mouse, but can also be used solely with a finger an a smart phone or tablet.
+This is a simple 2D frame analysis app. It can solve linear elastic systems on your smart phone, tablet or PC. It supports a mouse, but can also be used entirely with a finger on a smart phone or tablet.
 
 ## Features
 

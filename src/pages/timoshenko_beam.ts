@@ -70,7 +70,8 @@ export class CTimoshenko_beam extends CElement {
 
 
     //---------------------------------------------------------------------------------------------
-    setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number, height: number, zso: number) {
+    setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number,
+        height: number, zso: number, alphaT: number) {
 
         this.emodul = emodul
         this.Iy = Iy
@@ -81,6 +82,7 @@ export class CTimoshenko_beam extends CElement {
         this.schubfaktor = schubfaktor
         this.h = height
         this.zso = zso
+        this.alphaT = alphaT
     }
 
     //---------------------------------------------------------------------------------------------
@@ -593,6 +595,7 @@ export class CTimoshenko_beam extends CElement {
 
             eload[ieload].kappa_dT = this.alphaT * (eload[ieload].Tu - eload[ieload].To) / this.h
             eload[ieload].eps_Ts = this.alphaT * ((eload[ieload].Tu - eload[ieload].To) * this.zso / this.h + eload[ieload].To)
+            console.log("Temperatur", this.alphaT, eload[ieload].Tu, eload[ieload].To, this.h, this.emodul * this.area)
 
             eload[ieload].re[0] = this.emodul * this.area * eload[ieload].eps_Ts
             eload[ieload].re[3] = -this.emodul * this.area * eload[ieload].eps_Ts

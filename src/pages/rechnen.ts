@@ -97,6 +97,7 @@ class TQuerschnittRechteck {
     height: number = 0.4
     width: number = 0.3
     wichte: number = 0.0
+    alphaT: number = 0.0
     definedQuerschnitt: number = 1
 }
 
@@ -284,7 +285,7 @@ export function rechnen() {
 
 //---------------------------------------------------------------------------------------------------------------
 export function set_querschnittRechteck(name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number,
-    definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number) {
+    definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number) {
     //-----------------------------------------------------------------------------------------------------------
 
     const index = nQuerschnittSets - 1;
@@ -301,13 +302,14 @@ export function set_querschnittRechteck(name: string, id: string, emodul: number
     querschnittset[index].schubfaktor = schubfaktor;
     querschnittset[index].querdehnzahl = querdehnzahl;
     querschnittset[index].zso = zso;
+    querschnittset[index].alphaT = alphaT;
     console.log("set_querschnittRechteck", index, emodul)
 }
 
 
 //---------------------------------------------------------------------------------------------------------------
 export function update_querschnittRechteck(index: number, name: string, id: string, emodul: number, Iy: number, area: number,
-    height: number, width: number, definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number) {
+    height: number, width: number, definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number) {
     //-----------------------------------------------------------------------------------------------------------
 
     querschnittset[index].name = name;
@@ -322,6 +324,7 @@ export function update_querschnittRechteck(index: number, name: string, id: stri
     querschnittset[index].schubfaktor = schubfaktor;
     querschnittset[index].querdehnzahl = querdehnzahl;
     querschnittset[index].zso = zso;
+    querschnittset[index].alphaT = alphaT;
 
     console.log("update_querschnittRechteck", index, emodul)
 }
@@ -331,7 +334,7 @@ export function get_querschnittRechteck(index: number) {
     //-----------------------------------------------------------------------------------------------------------
 
     let name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number, definedQuerschnitt: number, wichte: number
-    let schubfaktor: number, querdehnzahl: number, zso: number
+    let schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number
 
     console.log("index", index)
     name = querschnittset[index].name;
@@ -346,10 +349,11 @@ export function get_querschnittRechteck(index: number) {
     schubfaktor = querschnittset[index].schubfaktor;
     querdehnzahl = querschnittset[index].querdehnzahl;
     zso = querschnittset[index].zso;
+    alphaT = querschnittset[index].alphaT;
 
     console.log("get_querschnittRechteck", index, emodul)
 
-    return [name, id, emodul, Iy, area, height, width, definedQuerschnitt, wichte, schubfaktor, querdehnzahl, zso]
+    return [name, id, emodul, Iy, area, height, width, definedQuerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT]
 }
 
 
@@ -614,7 +618,6 @@ function read_element_loads() {
         console.log("eload", izeile, eload[izeile - 1])
     }
 
-
     // Spannschloss
 
     el = document.getElementById('id_spannschloesser_tabelle');
@@ -822,6 +825,7 @@ export function add_rechteck_querschnitt(werte: any[]) {
     const schubfaktor = werte[9]
     const querdehnzahl = werte[10]
     const zso = werte[11]
+    const alphaT = werte[12]
 
     set_querschnittRechteck(
         qname,
@@ -835,7 +839,8 @@ export function add_rechteck_querschnitt(werte: any[]) {
         wichte,
         schubfaktor,
         querdehnzahl,
-        zso
+        zso,
+        alphaT
     );
 
 
@@ -876,6 +881,7 @@ export function init_tabellen() {
         const schubfaktor = 0.0
         const querdehnzahl = 0.2
         const zso = 20.0;
+        const alphaT = 1.e-5
 
         set_querschnittRechteck(
             qname,
@@ -889,7 +895,8 @@ export function init_tabellen() {
             wichte,
             schubfaktor,
             querdehnzahl,
-            zso
+            zso,
+            alphaT
         );
 
         /*
@@ -1028,7 +1035,7 @@ function calculate() {
     console.log("Anzahl Gleichungen: ", neq)
 
     let emodul: number = 0.0, ks: number = 0.0, wichte: number = 0.0, definedQuerschnitt = 1
-    let querdehnzahl: number = 0.3, schubfaktor: number = 0.833, zso: number = 0.0
+    let querdehnzahl: number = 0.3, schubfaktor: number = 0.833, zso: number = 0.0, alphaT = 0.0
     let nfiber: number = 2, maxfiber: number = 5, offset_abstand: number = 0.0, height: number = 0.0, width = 0.0
     let Iy: number = 0.0, area: number = 0.0, b: number;
     let lmj: number = 0, nod1: number, nodi: number
@@ -1064,7 +1071,8 @@ function calculate() {
             definedQuerschnitt = querschnittset[index].definedQuerschnitt
             querdehnzahl = querschnittset[index].querdehnzahl
             schubfaktor = querschnittset[index].schubfaktor
-            zso = querschnittset[index].zso
+            zso = querschnittset[index].zso/100.0   // von cm in m
+            alphaT = querschnittset[index].alphaT
 
             nfiber = 2
             maxfiber = 3 * (nfiber - 1)
@@ -1090,7 +1098,7 @@ function calculate() {
         }
 
         el.push(new CTimoshenko_beam())
-        el[ielem].setQuerschnittsdaten(emodul, Iy, area, wichte, ks, querdehnzahl, schubfaktor, height, zso)
+        el[ielem].setQuerschnittsdaten(emodul, Iy, area, wichte, ks, querdehnzahl, schubfaktor, height, zso, alphaT)
         el[ielem].initialisiereElementdaten(ielem)
     }
 

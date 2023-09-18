@@ -73,7 +73,9 @@ function handleFileSelect_read() {
                         el = document.getElementById('id_button_nnodalloads') as drButtonPM;
                         el.setValue(jobj.nloads);
                         el = document.getElementById('id_button_nstreckenlasten') as drButtonPM;
-                        el.setValue(jobj.neloads);
+                        el.setValue(jobj.nstreckenlasten);
+                        el = document.getElementById('id_button_ntemperaturlasten') as drButtonPM;
+                        el.setValue(jobj.ntempload);
 
                         el = document.getElementById('id_button_nlastfaelle') as drButtonPM;
                         el.setValue(jobj.nloadcases);
@@ -158,7 +160,19 @@ function handleFileSelect_read() {
                     for (i = 1; i < tabelle.rows.length; i++) {
                         for (j = 1; j < nSpalten; j++) {
                             let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                            child.value = jobj.elemLoad[i - 1][j - 1];
+                            child.value = jobj.streckenlasten[i - 1][j - 1];
+                        }
+                    }
+
+                    el = document.getElementById('id_temperaturlasten_tabelle') as HTMLElement;
+                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+                    nSpalten = tabelle.rows[0].cells.length;
+
+                    for (i = 1; i < tabelle.rows.length; i++) {
+                        for (j = 1; j < nSpalten; j++) {
+                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+                            child.value = jobj.tempLoad[i - 1][j - 1];
                         }
                     }
 
@@ -304,12 +318,26 @@ async function handleFileSelect_save() {
         nZeilen = tabelle.rows.length - 1;
         nSpalten = tabelle.rows[0].cells.length - 1;
         const nstreckenlasten = nZeilen
-        const elemload = Array.from(Array(nZeilen), () => new Array(nSpalten));
+        const linload = Array.from(Array(nZeilen), () => new Array(nSpalten));
 
         for (i = 0; i < nZeilen; i++) {
             for (j = 0; j < nSpalten; j++) {
                 let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                elemload[i][j] = child.value
+                linload[i][j] = child.value
+            }
+        }
+
+        el = document.getElementById('id_temperaturlasten_tabelle') as HTMLElement;
+        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+        nZeilen = tabelle.rows.length - 1;
+        nSpalten = tabelle.rows[0].cells.length - 1;
+        const ntemperaturlasten = nZeilen
+        const tempload = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+        for (i = 0; i < nZeilen; i++) {
+            for (j = 0; j < nSpalten; j++) {
+                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+                tempload[i][j] = child.value
             }
         }
 
@@ -360,6 +388,7 @@ async function handleFileSelect_save() {
             'nelem': n_elem,
             'nloads': nloads,
             'nstreckenlasten': nstreckenlasten,
+            'ntempload': ntemperaturlasten,
             'nloadcases': nlastfaelle,
             'ncombinations': nkombinationen,
             'nquerschnittsets': nQuerschnittSets,
@@ -388,7 +417,8 @@ async function handleFileSelect_save() {
             'elem': elem,
             'node': node,
             'nodalLoad': nodalload,
-            'streckenlasten': elemload,
+            'streckenlasten': linload,
+            'tempLoad': tempload,
             'stabvorverformung': stabvorverformung,
             'combination': kombination,
             'qsclassname': qsClassName,
