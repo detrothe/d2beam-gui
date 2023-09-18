@@ -589,6 +589,57 @@ function read_element_loads() {
         console.log("eload", izeile, eload[izeile - 1])
     }
 
+    // Vorspannung
+
+    el = document.getElementById('id_vorspannungen_tabelle');
+
+    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nRowTab = table.rows.length;
+    nColTab = table.rows[0].cells.length;
+    shad = el?.shadowRoot?.getElementById('mytable')
+
+    for (let izeile = 1; izeile < nRowTab; izeile++) {
+        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+            wert = child.value;
+            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+            if (ispalte === 1) eload[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) eload[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[izeile - 1].sigmaV = Number(testNumber(wert, izeile, ispalte, shad));
+            eload[izeile - 1].art = 9;
+        }
+        if (eload[izeile - 1].lf > nlastfaelle) nlastfaelle = eload[izeile - 1].lf
+
+        console.log("eload", izeile, eload[izeile - 1])
+    }
+
+
+    // Spannschloss
+
+    el = document.getElementById('id_spannschloesser_tabelle');
+
+    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nRowTab = table.rows.length;
+    nColTab = table.rows[0].cells.length;
+    shad = el?.shadowRoot?.getElementById('mytable')
+
+    for (let izeile = 1; izeile < nRowTab; izeile++) {
+        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+            wert = child.value;
+            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+            if (ispalte === 1) eload[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) eload[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[izeile - 1].delta_s = Number(testNumber(wert, izeile, ispalte, shad));
+            eload[izeile - 1].art = 10;
+        }
+        if (eload[izeile - 1].lf > nlastfaelle) nlastfaelle = eload[izeile - 1].lf
+
+        console.log("eload", izeile, eload[izeile - 1])
+    }
+
     //for (i = 0; i < nlastfaelle; i++) console.log('maxValue_eload', i, maxValue_eload[i])
     console.log('maxValue_eload', maxValue_eload)
 }
