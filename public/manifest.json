@@ -64,12 +64,12 @@
       "tag": "starterWidget",
       "ms_ac_template": "widget/ac.json",
       "data": "widget/data.json",
-      "description": "A simple widget example from pwa-starter.",
+      "description": "A 2D frame analysis app.",
       "screenshots": [
         {
           "src": "assets/screenshots/widget-screen.png",
-          "sizes": "500x500",
-          "label": "Widget screenshot"
+          "sizes": "446x491",
+          "label": "cross section dialog"
         }
       ],
       "icons": [
