@@ -389,7 +389,7 @@ export function drawsystem() {
     if (show_verformungen) {
 
         let xx1, xx2, zz1, zz2
-        let dx: number, x: number, kappa: number, sl: number, nenner: number
+        let dx: number, x: number, eta: number, sl: number, nenner: number
         let Nu: number[] = Array(2), Nw: number[] = Array(4)
         let u: number, w: number, uG: number, wG: number
         let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
@@ -420,18 +420,18 @@ export function drawsystem() {
             element[ielem].get_edispL(edispL, iLastfall - 1)
 
             dx = element[ielem].sl / nelTeilungen
-            kappa = element[ielem].kappa
+            eta = element[ielem].eta
             sl = element[ielem].sl
-            nenner = sl ** 3 + 12 * kappa * sl
+            nenner = sl ** 3 + 12 * eta * sl
 
             x = 0.0; xx2 = 0.0; zz2 = 0.0
             for (let i = 0; i <= nelTeilungen; i++) {
                 Nu[0] = (1.0 - x / sl);
                 Nu[1] = x / sl
-                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x + sl ** 3 + 12 * kappa * sl) / nenner;
-                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * kappa) * x ** 2 + (sl ** 3 + 6 * kappa * sl) * x) / nenner);
-                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x) / nenner);
-                Nw[3] = -((sl * x ** 3 + (6 * kappa - sl ** 2) * x ** 2 - 6 * kappa * sl * x) / nenner);
+                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
                 u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
                 w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
 
@@ -484,7 +484,7 @@ export function drawsystem() {
     if (show_eigenformen && (maxValue_eigv[draw_lastfall - 1][draw_eigenform - 1] > 0.0)) {
 
         let xx1, xx2, zz1, zz2
-        let dx: number, x: number, kappa: number, sl: number, nenner: number
+        let dx: number, x: number, eta: number, sl: number, nenner: number
         let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
 
         let u: number, w: number, uG: number, wG: number
@@ -512,18 +512,18 @@ export function drawsystem() {
             element[ielem].get_edispL_eigenform(edispL, ikomb, draw_eigenform)
 
             dx = element[ielem].sl / nelTeilungen
-            kappa = element[ielem].kappa
+            eta = element[ielem].eta
             sl = element[ielem].sl
-            nenner = sl ** 3 + 12 * kappa * sl
+            nenner = sl ** 3 + 12 * eta * sl
 
             x = 0.0; xx2 = 0.0; zz2 = 0.0
             for (let i = 0; i <= nelTeilungen; i++) {
                 Nu[0] = (1.0 - x / sl);
                 Nu[1] = x / sl
-                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x + sl ** 3 + 12 * kappa * sl) / nenner;
-                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * kappa) * x ** 2 + (sl ** 3 + 6 * kappa * sl) * x) / nenner);
-                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x) / nenner);
-                Nw[3] = -((sl * x ** 3 + (6 * kappa - sl ** 2) * x ** 2 - 6 * kappa * sl * x) / nenner);
+                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
                 u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
                 w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
 
@@ -576,7 +576,7 @@ export function drawsystem() {
     if (show_schiefstellung && (maxValue_u0[draw_lastfall - 1].u0 > 0.0)) {
 
         let xx1, xx2, zz1, zz2
-        let dx: number, x: number, kappa: number, sl: number, nenner: number
+        let dx: number, x: number, eta: number, sl: number, nenner: number
         let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
 
         let u: number, w: number, uG: number, wG: number
@@ -603,18 +603,18 @@ export function drawsystem() {
             element[ielem].get_edispL_schiefstellung(edispL, ikomb - 1)
 
             dx = element[ielem].sl / nelTeilungen
-            kappa = element[ielem].kappa
+            eta = element[ielem].eta
             sl = element[ielem].sl
-            nenner = sl ** 3 + 12 * kappa * sl
+            nenner = sl ** 3 + 12 * eta * sl
 
             x = 0.0; xx2 = 0.0; zz2 = 0.0
             for (let i = 0; i <= nelTeilungen; i++) {
                 Nu[0] = (1.0 - x / sl);
                 Nu[1] = x / sl
-                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x + sl ** 3 + 12 * kappa * sl) / nenner;
-                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * kappa) * x ** 2 + (sl ** 3 + 6 * kappa * sl) * x) / nenner);
-                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * kappa * x) / nenner);
-                Nw[3] = -((sl * x ** 3 + (6 * kappa - sl ** 2) * x ** 2 - 6 * kappa * sl * x) / nenner);
+                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
                 u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
                 w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
 
@@ -669,7 +669,7 @@ export function drawsystem() {
     if (show_stabvorverformung && maxValue_w0 > 0.0) {
 
         let xx1, xx2, zz1, zz2
-        let dx: number, x: number, kappa: number, sl: number, nenner: number
+        let dx: number, x: number, sl: number, nenner: number
 
         let uG: number, wG: number
         let ikomb = draw_lastfall
@@ -753,7 +753,7 @@ export function drawsystem() {
     if (show_momentenlinien) {
 
         let xx1, xx2, zz1, zz2
-        let dx: number, x: number, kappa: number, sl: number, nenner: number
+        let dx: number, x: number, sl: number, nenner: number
 
         let iLastfall = draw_lastfall
         let scalefactor = 0
@@ -870,7 +870,7 @@ export function drawsystem() {
     if (show_querkraftlinien) {
 
         let xx1, xx2, zz1, zz2
-        let dx: number, x: number, kappa: number, sl: number, nenner: number
+        let dx: number, x: number, sl: number, nenner: number
 
         let iLastfall = draw_lastfall
         let scalefactor = 0
@@ -938,7 +938,7 @@ export function drawsystem() {
     if (show_normalkraftlinien) {
 
         let xx1, xx2, zz1, zz2
-        let dx: number, x: number, kappa: number, sl: number, nenner: number
+        let dx: number, x: number, sl: number, nenner: number
 
         let iLastfall = draw_lastfall
         let scalefactor = 0

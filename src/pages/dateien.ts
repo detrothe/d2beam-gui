@@ -74,6 +74,11 @@ function handleFileSelect_read() {
                         el.setValue(jobj.nloads);
                         el = document.getElementById('id_button_nstreckenlasten') as drButtonPM;
                         el.setValue(jobj.nstreckenlasten);
+
+                        el = document.getElementById('id_button_neinzellasten') as drButtonPM;
+                        if (jobj.neinzellasten === undefined) el.setValue(0);
+                        else el.setValue(jobj.neinzellasten);
+
                         el = document.getElementById('id_button_ntemperaturlasten') as drButtonPM;
                         el.setValue(jobj.ntempload);
 
@@ -161,6 +166,18 @@ function handleFileSelect_read() {
                         for (j = 1; j < nSpalten; j++) {
                             let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
                             child.value = jobj.streckenlasten[i - 1][j - 1];
+                        }
+                    }
+
+                    el = document.getElementById('id_einzellasten_tabelle') as HTMLElement;
+                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+                    nSpalten = tabelle.rows[0].cells.length;
+
+                    for (i = 1; i < tabelle.rows.length; i++) {
+                        for (j = 1; j < nSpalten; j++) {
+                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+                            child.value = jobj.einzellasten[i - 1][j - 1];
                         }
                     }
 
@@ -327,6 +344,20 @@ async function handleFileSelect_save() {
             }
         }
 
+        el = document.getElementById('id_einzellasten_tabelle') as HTMLElement;
+        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+        nZeilen = tabelle.rows.length - 1;
+        nSpalten = tabelle.rows[0].cells.length - 1;
+        const neinzellasten = nZeilen
+        const pointload = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+        for (i = 0; i < nZeilen; i++) {
+            for (j = 0; j < nSpalten; j++) {
+                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+                pointload[i][j] = child.value
+            }
+        }
+
         el = document.getElementById('id_temperaturlasten_tabelle') as HTMLElement;
         tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
         nZeilen = tabelle.rows.length - 1;
@@ -388,6 +419,7 @@ async function handleFileSelect_save() {
             'nelem': n_elem,
             'nloads': nloads,
             'nstreckenlasten': nstreckenlasten,
+            'neinzellasten': neinzellasten,
             'ntempload': ntemperaturlasten,
             'nloadcases': nlastfaelle,
             'ncombinations': nkombinationen,
@@ -418,6 +450,7 @@ async function handleFileSelect_save() {
             'node': node,
             'nodalLoad': nodalload,
             'streckenlasten': linload,
+            'einzellasten': pointload,
             'tempLoad': tempload,
             'stabvorverformung': stabvorverformung,
             'combination': kombination,

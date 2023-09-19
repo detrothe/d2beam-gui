@@ -22,7 +22,7 @@ export class CTimoshenko_beam extends CElement {
     alphaT = 0.0
     h = 0.0
     psi = 0.0
-    kappa = 0.0
+    eta = 0.0
     nod1 = -1
     nod2 = -1
     nod = [0, 0]
@@ -184,11 +184,11 @@ export class CTimoshenko_beam extends CElement {
         if (this.schubfaktor === 0.0) {  // schubstarr
             area_s = this.area
             this.psi = 1.0
-            this.kappa = 0.0
+            this.eta = 0.0
         } else {
             area_s = this.schubfaktor * this.area
             this.psi = 1.0 / (1.0 + 12.0 * EI / this.gmodul / area_s / L2)
-            this.kappa = EI / this.gmodul / area_s
+            this.eta = EI / this.gmodul / area_s
         }
         const psi = this.psi
 
@@ -526,6 +526,8 @@ export class CTimoshenko_beam extends CElement {
     berechneElementlasten(ieload: number) {
 
         const sl = this.sl
+        const sl2 = sl * sl
+        const sl3 = sl2 * sl
 
         if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
 
@@ -542,7 +544,7 @@ export class CTimoshenko_beam extends CElement {
 
             let qL = eload[ieload].pL
             let mq = (eload[ieload].pR - eload[ieload].pL) / sl;
-            let psi = this.kappa
+            let psi = this.eta
             eload[ieload].C1 = ((120 * sl * psi + 10 * sl ** 3) * qL + 40 * sl ** 2 * mq * psi + 3 * sl ** 4 * mq) / (240 * psi + 20 * sl ** 2);
             eload[ieload].C2 = -((60 * sl ** 2 * psi + 5 * sl ** 4) * qL + 30 * sl ** 3 * mq * psi + 2 * sl ** 5 * mq) / (720 * psi + 60 * sl ** 2);
 
@@ -605,6 +607,29 @@ export class CTimoshenko_beam extends CElement {
 
             eload[ieload].re[2] = this.emodul * this.Iy * eload[ieload].kappa_dT
             eload[ieload].re[5] = -this.emodul * this.Iy * eload[ieload].kappa_dT
+        }
+        else if (eload[ieload].art === 6) {              // Einzellast ooder Moment
+
+            const x = eload[ieload].x
+            const P = eload[ieload].P
+            const M = eload[ieload].M
+            const eta = this.eta
+            const EI = this.emodul * this.Iy
+            console.log("Einzellast", x, P, M)
+
+            eload[ieload].CwP = -((36 * x ** 2 - 36 * sl * x) * P * eta ** 2 + (-3 * x ** 4 + 6 * sl * x ** 3 - 3 * sl3 * x) * P * eta + (x ** 6 - 3 * sl * x ** 5 + 3 * sl2 * x ** 4 - sl3 * x ** 3) * P) / (36 * sl * eta + 3 * sl3) / EI;
+            eload[ieload].CphiP = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * P) / (24 * sl * eta + 2 * sl3) / EI;
+            console.log("EINZELLAST P, C1, C2 in [mm, mrad]", eload[ieload].CwP * 1000., eload[ieload].CphiP * 1000.)
+
+            eload[ieload].re[0] = 0.0
+            eload[ieload].re[3] = 0.0
+
+            eload[ieload].re[1] = (12 * (x - sl) * P * eta + (-2 * x ** 3 + 3 * sl * x ** 2 - sl3) * P) / (12 * sl * eta + sl3)
+            eload[ieload].re[4] = -eload[ieload].re[1] - P
+
+            eload[ieload].re[2] = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / (12 * sl * eta + sl3)
+            eload[ieload].re[5] = eload[ieload].re[4] * sl + P * x - eload[ieload].re[2]
+            console.log("EINZELLAST", eload[ieload].re[1], eload[ieload].re[4], eload[ieload].re[2], eload[ieload].re[5])
         }
         else if (eload[ieload].art === 9) {              // zentrische Vorspannung
 
@@ -850,9 +875,9 @@ export class CTimoshenko_beam extends CElement {
 
         console.log("class element: berechneElementSchnittgroessen von ", iLastf)
 
-        const kappa = this.kappa
+        const eta = this.eta
         const sl = this.sl
-        const nenner = sl ** 3 + 12. * kappa * sl
+        const nenner = sl ** 3 + 12. * eta * sl
 
         if (THIIO_flag > 0) {
             for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i] + this.edisp0[i]
@@ -873,10 +898,10 @@ export class CTimoshenko_beam extends CElement {
 
                 Nu[0] = (1.0 - x / sl);
                 Nu[1] = x / sl
-                Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * kappa * x + sl ** 3 + 12. * kappa * sl) / nenner;
-                Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * kappa) * x ** 2 + (sl ** 3 + 6. * kappa * sl) * x) / nenner);
-                Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * kappa * x) / nenner);
-                Nw[3] = -((sl * x ** 3 + (6. * kappa - sl ** 2) * x ** 2 - 6. * kappa * sl * x) / nenner);
+                Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+                Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+                Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+                Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
                 u = Nu[0] * edisp[0] + Nu[1] * edisp[3]
                 w = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
 
@@ -914,7 +939,7 @@ export class CTimoshenko_beam extends CElement {
 
                             //wx += pL / 24.0 * (x ** 4 - 2 * sl * x ** 3 + sl * sl * x * x) / EI
                             let temp = pL / 24.0 * x ** 4 + dp / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                            temp += this.kappa * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * x)
+                            temp += this.eta * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * x)
                             wx = wx + temp / EI
                         }
                         else if (eload[ieload].art === 1) {         // Trapezstreckenlast z-Richtung
@@ -954,6 +979,38 @@ export class CTimoshenko_beam extends CElement {
                             Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
                         }
+                        else if (eload[ieload].art === 6) {         // Einzellast oder Moment
+                            const xP = eload[ieload].x
+                            const P = eload[ieload].P
+                            const M = eload[ieload].M
+                            let edisp = Array(6).fill(0.0);
+
+                            if (x >= xP) {
+                                Vx = Vx - P
+                                Mx = Mx - M + P * (xP - x)
+                                edisp[1] = eload[ieload].CwP; edisp[2] = eload[ieload].CphiP;
+
+                                const xx = x - xP;
+                                const sl = this.sl - xP
+                                const nenner = sl ** 3 + 12. * eta * sl
+                                Nw[0] = (2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx + sl ** 3 + 12. * eta * sl) / nenner;
+                                Nw[1] = -((sl * xx ** 3 + (-2. * sl ** 2 - 6. * eta) * xx ** 2 + (sl ** 3 + 6. * eta * sl) * xx) / nenner);
+                                Nw[2] = -((2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx) / nenner);
+                                Nw[3] = -((sl * xx ** 3 + (6. * eta - sl ** 2) * xx ** 2 - 6. * eta * sl * xx) / nenner);
+                                wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                                console.log("Nw,edisp", wx, edisp, Nw)
+                            } else {
+                                edisp[4] = eload[ieload].CwP; edisp[5] = eload[ieload].CphiP;
+                                const sl = xP
+                                const nenner = sl ** 3 + 12. * eta * sl
+                                Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+                                Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+                                Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+                                Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+                                wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                                console.log("Nw,edisp", wx, edisp, Nw)
+                            }
+                        }
                     }
                 }
 
@@ -984,7 +1041,7 @@ export class CTimoshenko_beam extends CElement {
                                 Mx = Mx - pL * x * x / 2 - dp * x * x * x / sl / 6.
 
                                 let wl = pL / 24.0 * x ** 4 + dp / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                                wl = (wl + this.kappa * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                wl = (wl + this.eta * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
                                 //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
                                 Mx = Mx - this.NL * wl
 
@@ -1009,7 +1066,7 @@ export class CTimoshenko_beam extends CElement {
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
                                 let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                                wl = (wl + this.kappa * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
                                 //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
                                 Mx = Mx - this.NL * wl
 
@@ -1034,7 +1091,7 @@ export class CTimoshenko_beam extends CElement {
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
                                 let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                                wl = (wl + this.kappa * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
                                 //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
                                 Mx = Mx - this.NL * wl
 
