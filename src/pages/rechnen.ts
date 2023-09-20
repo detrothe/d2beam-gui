@@ -497,9 +497,12 @@ function read_element_loads() {
 
     neloads = nstreckenlasten + neinzellasten + ntemperaturlasten
 
+    console.log("NELOADS", neloads, nstreckenlasten, neinzellasten, ntemperaturlasten)
+
     for (i = 0; i < neloads; i++) {
         eload.push(new TElLoads())
     }
+let ieload = 0
 
     // Streckenlasten
 
@@ -521,20 +524,21 @@ function read_element_loads() {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
             wert = child.value;
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) eload[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) eload[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[izeile - 1].art = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) eload[izeile - 1].pL = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 5) eload[izeile - 1].pR = Number(testNumber(wert, izeile, ispalte, shad));
+            if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[ieload].art = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) eload[ieload].pL = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 5) eload[ieload].pR = Number(testNumber(wert, izeile, ispalte, shad));
         }
-        if (eload[izeile - 1].lf > nlastfaelle) nlastfaelle = eload[izeile - 1].lf
+        if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
 
-        console.log("eload", izeile, eload[izeile - 1])
+        console.log("eload", izeile, eload[ieload])
+        ieload++;
     }
 
     maxValue_eload = new Array(nlastfaelle).fill(0.0)
 
-    for (i = 0; i < neloads; i++) {
+    for (i = 0; i < ieload; i++) {
         let lf = eload[i].lf - 1
         let art = eload[i].art
         console.log("art=", art, lf)
@@ -560,16 +564,18 @@ function read_element_loads() {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
             wert = child.value;
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) eload[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) eload[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[izeile - 1].x = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) eload[izeile - 1].P = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 5) eload[izeile - 1].M = Number(testNumber(wert, izeile, ispalte, shad));
-            eload[izeile - 1].art = 6;
+            if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[ieload].x = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) eload[ieload].P = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 5) eload[ieload].M = Number(testNumber(wert, izeile, ispalte, shad));
+            eload[ieload].art = 6;
         }
-        if (eload[izeile - 1].lf > nlastfaelle) nlastfaelle = eload[izeile - 1].lf
+        if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
 
-        console.log("eload", izeile, eload[izeile - 1])
+        console.log("eload", izeile, eload[ieload])
+        ieload++;
+
     }
 
     // Temperatur
@@ -587,15 +593,17 @@ function read_element_loads() {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
             wert = child.value;
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) eload[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) eload[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[izeile - 1].Tu = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) eload[izeile - 1].To = Number(testNumber(wert, izeile, ispalte, shad));
-            eload[izeile - 1].art = 5;
+            if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[ieload].Tu = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) eload[ieload].To = Number(testNumber(wert, izeile, ispalte, shad));
+            eload[ieload].art = 5;
         }
-        if (eload[izeile - 1].lf > nlastfaelle) nlastfaelle = eload[izeile - 1].lf
+        if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
 
-        console.log("eload", izeile, eload[izeile - 1])
+        console.log("eload", izeile, eload[ieload])
+        ieload++;
+
     }
 
     // Vorspannung
@@ -613,14 +621,16 @@ function read_element_loads() {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
             wert = child.value;
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) eload[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) eload[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[izeile - 1].sigmaV = Number(testNumber(wert, izeile, ispalte, shad));
-            eload[izeile - 1].art = 9;
+            if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[ieload].sigmaV = Number(testNumber(wert, izeile, ispalte, shad));
+            eload[ieload].art = 9;
         }
-        if (eload[izeile - 1].lf > nlastfaelle) nlastfaelle = eload[izeile - 1].lf
+        if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
 
-        console.log("eload", izeile, eload[izeile - 1])
+        console.log("eload", izeile, eload[ieload])
+        ieload++;
+
     }
 
     // Spannschloss
@@ -638,14 +648,16 @@ function read_element_loads() {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
             wert = child.value;
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) eload[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) eload[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[izeile - 1].delta_s = Number(testNumber(wert, izeile, ispalte, shad));
-            eload[izeile - 1].art = 10;
+            if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[ieload].delta_s = Number(testNumber(wert, izeile, ispalte, shad));
+            eload[ieload].art = 10;
         }
-        if (eload[izeile - 1].lf > nlastfaelle) nlastfaelle = eload[izeile - 1].lf
+        if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
 
-        console.log("eload", izeile, eload[izeile - 1])
+        console.log("eload", izeile, eload[ieload])
+        ieload++;
+
     }
 
     //for (i = 0; i < nlastfaelle; i++) console.log('maxValue_eload', i, maxValue_eload[i])

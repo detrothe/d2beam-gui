@@ -1279,6 +1279,35 @@ function draw_elementlasten(two: Two) {
                     dp = pMax
                     a_projektion += dp + a_spalt
                 }
+                else if (eload[ieload].art === 6) {      // Einzellast oder/und Moment
+
+                    si = element[ielem].sinus
+                    co = element[ielem].cosinus
+                    x1 = element[ielem].x1;
+                    z1 = element[ielem].z1;
+
+                    let plength = 35, delta = 12
+
+                    plength = tr.World0(2 * plength / devicePixelRatio)
+                    delta = tr.World0(delta / devicePixelRatio)
+
+                    let dpx = si * plength, dpz = co * plength
+                    let ddx = si * delta, ddz = co * delta
+                    let wert = eload[ieload].P
+                    let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
+                    console.log("GRAFIK Einzellast", xl, zl, wert)
+                    if (wert < 0.0) {
+                        draw_arrow(two, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast)
+                    } else {
+                        draw_arrow(two, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast)
+                    }
+                    xpix = tr.xPix(xl + ddx + dpx) + 4
+                    zpix = tr.zPix(zl - ddz - dpz) - 4
+                    const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+                    const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
             }
         }
     }
@@ -1650,7 +1679,7 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
     //b = tr.Pix0(b)
     //h = tr.Pix0(h)
     //linewidth = tr.Pix0(linewidth)
-    write('linewidth: ', linewidth)
+    //write('linewidth: ', linewidth)
     linewidth = linewidth / devicePixelRatio
 
     let dx = x2 - x1, dz = z2 - z1

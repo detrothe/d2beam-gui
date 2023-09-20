@@ -531,6 +531,7 @@ export class CTimoshenko_beam extends CElement {
 
         if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
 
+            console.log("STRECKENLAST SENKRECHT")
             const p1 = -sl * (eload[ieload].pR + eload[ieload].pL) / 2.0 / 60.0
             const p2 = -sl * (eload[ieload].pR - eload[ieload].pL) / 2.0 / 60.0
             eload[ieload].re[0] = 0
@@ -998,7 +999,7 @@ export class CTimoshenko_beam extends CElement {
                                 Nw[2] = -((2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx) / nenner);
                                 Nw[3] = -((sl * xx ** 3 + (6. * eta - sl ** 2) * xx ** 2 - 6. * eta * sl * xx) / nenner);
                                 wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
-                                console.log("Nw,edisp", wx, edisp, Nw)
+                                //console.log("Nw,edisp", wx, edisp, Nw)
                             } else {
                                 edisp[4] = eload[ieload].CwP; edisp[5] = eload[ieload].CphiP;
                                 const sl = xP
@@ -1008,7 +1009,7 @@ export class CTimoshenko_beam extends CElement {
                                 Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
                                 Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
                                 wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
-                                console.log("Nw,edisp", wx, edisp, Nw)
+                                //console.log("Nw,edisp", wx, edisp, Nw)
                             }
                         }
                     }
