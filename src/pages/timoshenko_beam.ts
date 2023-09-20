@@ -616,21 +616,48 @@ export class CTimoshenko_beam extends CElement {
             const M = eload[ieload].M
             const eta = this.eta
             const EI = this.emodul * this.Iy
+            const alf = 12 * sl * eta + sl3
             console.log("Einzellast", x, P, M)
 
-            eload[ieload].CwP = -((36 * x ** 2 - 36 * sl * x) * P * eta ** 2 + (-3 * x ** 4 + 6 * sl * x ** 3 - 3 * sl3 * x) * P * eta + (x ** 6 - 3 * sl * x ** 5 + 3 * sl2 * x ** 4 - sl3 * x ** 3) * P) / (36 * sl * eta + 3 * sl3) / EI;
-            eload[ieload].CphiP = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * P) / (24 * sl * eta + 2 * sl3) / EI;
+            eload[ieload].CwP = -((36 * x ** 2 - 36 * sl * x) * P * eta ** 2 + (-3 * x ** 4 + 6 * sl * x ** 3 - 3 * sl3 * x) * P * eta + (x ** 6 - 3 * sl * x ** 5 + 3 * sl2 * x ** 4 - sl3 * x ** 3) * P) / 3 / alf / EI;
+            eload[ieload].CphiP = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * P) / 2 / alf / EI;
             console.log("EINZELLAST P, C1, C2 in [mm, mrad]", eload[ieload].CwP * 1000., eload[ieload].CphiP * 1000.)
+            eload[ieload].CwM = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * M) / 2 / alf / EI
+            eload[ieload].CphiM = -((12 * x ** 2 - 12 * sl * x) * M * eta + (3 * x ** 4 - 6 * sl * x ** 3 + 4 * sl2 * x ** 2 - sl3 * x) * M) / alf / EI
+            console.log("EINZELMOMENT M, C1, C2 in [mm, mrad]", eload[ieload].CwM * 1000., eload[ieload].CphiM * 1000.)
 
             eload[ieload].re[0] = 0.0
             eload[ieload].re[3] = 0.0
 
-            eload[ieload].re[1] = (12 * (x - sl) * P * eta + (-2 * x ** 3 + 3 * sl * x ** 2 - sl3) * P) / (12 * sl * eta + sl3)
-            eload[ieload].re[4] = -eload[ieload].re[1] - P
 
-            eload[ieload].re[2] = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / (12 * sl * eta + sl3)
-            eload[ieload].re[5] = eload[ieload].re[4] * sl + P * x - eload[ieload].re[2]
-            console.log("EINZELLAST", eload[ieload].re[1], eload[ieload].re[4], eload[ieload].re[2], eload[ieload].re[5])
+            //eload[ieload].re[1] = (12 * (x - sl) * P * eta + (-2 * x ** 3 + 3 * sl * x ** 2 - sl3) * P) / alf
+            //eload[ieload].re[4] = -eload[ieload].re[1] - P
+
+            //eload[ieload].re[2] = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / alf
+            //eload[ieload].re[5] = eload[ieload].re[4] * sl + P * x - eload[ieload].re[2]
+
+            const VL_P = (12 * (x - sl) * P * eta + (-2 * x ** 3 + 3 * sl * x ** 2 - sl3) * P) / alf
+            const VR_P = -VL_P - P
+
+            const ML_P = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / alf
+            const MR_P = VL_P * sl + P * x - ML_P
+
+            console.log("EINZELLAST", VL_P, VR_P, ML_P, MR_P)
+
+            const VL_M = (6 * (x ** 2 - sl * x) * M) / alf
+            const VR_M = -VL_M
+
+            const ML_M = (12 * (x - sl) * M * eta + (-3 * sl * x ** 2 + 4 * sl2 * x - sl3) * M) / alf
+            const MR_M = -ML_M - M - VL_M * sl
+            console.log("EINZELMOMENT", VL_M, VR_M, ML_M, MR_M)
+
+            eload[ieload].re[1] = VL_P + VL_M
+            eload[ieload].re[4] = VR_P + VR_M
+
+            eload[ieload].re[2] = ML_P + ML_M
+            eload[ieload].re[5] = MR_P + MR_M
+
+            console.log("EINZELLAST + MOMENT", eload[ieload].re[1], eload[ieload].re[4], eload[ieload].re[2], eload[ieload].re[5])
         }
         else if (eload[ieload].art === 9) {              // zentrische Vorspannung
 
@@ -989,7 +1016,7 @@ export class CTimoshenko_beam extends CElement {
                             if (x >= xP) {
                                 Vx = Vx - P
                                 Mx = Mx - M + P * (xP - x)
-                                edisp[1] = eload[ieload].CwP; edisp[2] = eload[ieload].CphiP;
+                                edisp[1] = eload[ieload].CwP + eload[ieload].CwM; edisp[2] = eload[ieload].CphiP + eload[ieload].CphiM;
 
                                 const xx = x - xP;
                                 const sl = this.sl - xP
@@ -1001,7 +1028,7 @@ export class CTimoshenko_beam extends CElement {
                                 wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
                                 //console.log("Nw,edisp", wx, edisp, Nw)
                             } else {
-                                edisp[4] = eload[ieload].CwP; edisp[5] = eload[ieload].CphiP;
+                                edisp[4] = eload[ieload].CwP + eload[ieload].CwM; edisp[5] = eload[ieload].CphiP + eload[ieload].CphiM;
                                 const sl = xP
                                 const nenner = sl ** 3 + 12. * eta * sl
                                 Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
