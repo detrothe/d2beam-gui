@@ -757,8 +757,7 @@ export function drawsystem() {
 
         let iLastfall = draw_lastfall
         let scalefactor = 0
-        let Mx: number[] = new Array(nelTeilungen + 1)
-        let poly: number[] = new Array(8)  // 2*(nelTeilungen+1+2)
+        let poly: number[] = new Array(8)
         let maxM = 0.0, x_max = 0.0, z_max = 0.0, x0 = 0.0, z0 = 0.0, xn = 0.0, zn = 0.0
 
 
@@ -777,9 +776,11 @@ export function drawsystem() {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
             maxM = 0.0
+            const nelTeilungen = element[ielem].nTeilungen
+            let Mx: number[] = new Array(nelTeilungen)
 
             element[ielem].get_elementSchnittgroesse_Moment(Mx, draw_lastfall - 1)
-            console.log("GRAFIK  Mx", Mx)
+            console.log("GRAFIK  Mx", nelTeilungen, Mx)
 
             x1 = Math.round(tr.xPix(element[ielem].x1));
             z1 = Math.round(tr.zPix(element[ielem].z1));
@@ -787,16 +788,17 @@ export function drawsystem() {
             z2 = Math.round(tr.zPix(element[ielem].z2));
 
 
-            dx = element[ielem].sl / nelTeilungen
+            //dx = element[ielem].sl / nelTeilungen
             sl = element[ielem].sl
 
             //let group = two.makeGroup();
             var vertices = [];
             vertices.push(new Two.Vector(x1, z1));
 
-            x = 0.0; xx2 = 0.0; zz2 = 0.0
-            for (let i = 0; i <= nelTeilungen; i++) {
+            xx2 = 0.0; zz2 = 0.0
+            for (let i = 0; i <nelTeilungen; i++) {
 
+                x = element[ielem].x_[i]
                 xx1 = xx2; zz1 = zz2;
                 xx2 = element[ielem].x1 + x * element[ielem].cosinus - element[ielem].sinus * Mx[i] * scalefactor
                 zz2 = element[ielem].z1 + x * element[ielem].sinus + element[ielem].cosinus * Mx[i] * scalefactor
@@ -822,12 +824,12 @@ export function drawsystem() {
                     z_max = zz2
                 }
 
-                if (i === nelTeilungen) {
+                if (i === nelTeilungen-1) {
                     xn = xx2
                     zn = zz2
                 }
 
-                x = x + dx
+                //x = x + dx
             }
             vertices.push(new Two.Anchor(x2, z2));
 
@@ -851,8 +853,8 @@ export function drawsystem() {
                     txt.alignment = 'left'
                     txt.baseline = 'top'
                 }
-                if (Math.abs(Mx[nelTeilungen]) > 0.000001) {
-                    const str = myFormat(Math.abs(Mx[nelTeilungen]), 1, 2) + 'kNm'
+                if (Math.abs(Mx[nelTeilungen-1]) > 0.000001) {
+                    const str = myFormat(Math.abs(Mx[nelTeilungen-1]), 1, 2) + 'kNm'
                     const txt = two.makeText(str, xn, zn, style_txt)
                     txt.alignment = 'left'
                     txt.baseline = 'top'
@@ -874,7 +876,6 @@ export function drawsystem() {
 
         let iLastfall = draw_lastfall
         let scalefactor = 0
-        let Vx: number[] = new Array(nelTeilungen + 1)
 
         //if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] === 0.0) return
 
@@ -889,6 +890,8 @@ export function drawsystem() {
         scalefactor *= scaleFactor_panel
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+            const nelTeilungen = element[ielem].nTeilungen
+            let Vx: number[] = new Array(nelTeilungen )
 
             element[ielem].get_elementSchnittgroesse_Querkraft(Vx, draw_lastfall - 1)
             console.log("GRAFIK  Vx", Vx)
@@ -905,22 +908,16 @@ export function drawsystem() {
             var vertices = [];
             vertices.push(new Two.Vector(x1, z1));
 
-            x = 0.0; xx2 = 0.0; zz2 = 0.0
-            for (let i = 0; i <= nelTeilungen; i++) {
-
+            xx2 = 0.0; zz2 = 0.0
+            for (let i = 0; i < nelTeilungen; i++) {
+                x = element[ielem].x_[i]
                 //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
                 xx1 = xx2; zz1 = zz2;
                 xx2 = element[ielem].x1 + x * element[ielem].cosinus - element[ielem].sinus * Vx[i] * scalefactor
                 zz2 = element[ielem].z1 + x * element[ielem].sinus + element[ielem].cosinus * Vx[i] * scalefactor
                 xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
                 vertices.push(new Two.Anchor(xx2, zz2));
-                /*
-                                if (i > 0) {
-                                    //console.log("line", xx1, zz1, xx2, zz2)
-                                    let line = two.makeLine(xx1, zz1, xx2, zz2);
-                                    line.linewidth = 2;
-                                }
-                                */
+
                 x = x + dx
             }
             vertices.push(new Two.Vector(x2, z2));
@@ -1291,22 +1288,42 @@ function draw_elementlasten(two: Two) {
                     plength = tr.World0(2 * plength / devicePixelRatio)
                     delta = tr.World0(delta / devicePixelRatio)
 
-                    let dpx = si * plength, dpz = co * plength
-                    let ddx = si * delta, ddz = co * delta
-                    let wert = eload[ieload].P
-                    let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
-                    console.log("GRAFIK Einzellast", xl, zl, wert)
-                    if (wert < 0.0) {
-                        draw_arrow(two, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast)
-                    } else {
-                        draw_arrow(two, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast)
+                    if (eload[ieload].P != 0.0) {
+                        let dpx = si * plength, dpz = co * plength
+                        let ddx = si * delta, ddz = co * delta
+                        let wert = eload[ieload].P
+                        let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
+                        console.log("GRAFIK Einzellast", xl, zl, wert)
+                        if (wert < 0.0) {
+                            draw_arrow(two, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast)
+                        } else {
+                            draw_arrow(two, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast)
+                        }
+                        xpix = tr.xPix(xl + ddx + dpx) + 4
+                        zpix = tr.zPix(zl - ddz - dpz) - 4
+                        const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+                        const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
                     }
-                    xpix = tr.xPix(xl + ddx + dpx) + 4
-                    zpix = tr.zPix(zl - ddz - dpz) - 4
-                    const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
-                    const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
+                    if (eload[ieload].M != 0.0) {
+                        let wert = eload[ieload].M
+                        let vorzeichen = Math.sign(wert)
+                        let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
+                        let radius = style_pfeil_moment.radius;
+                        console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
+                        if (wert > 0.0) {
+                            draw_moment_arrow(two, xl, zl, 1.0, radius, style_pfeil_moment)
+                        } else {
+                            draw_moment_arrow(two, xl, zl, -1.0, radius, style_pfeil_moment)
+                        }
+
+                        xpix = tr.xPix(xl) - 10 / devicePixelRatio
+                        zpix = tr.zPix(zl) + vorzeichen * radius + 15 * vorzeichen / devicePixelRatio
+                        const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+                        const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'right'
+                    }
                 }
             }
         }
@@ -1461,17 +1478,18 @@ function draw_lagerkraefte(two: Two) {
             wert = lagerkraefte._(i, 2, draw_lastfall - 1)
             console.log("wert", wert)
             let vorzeichen = Math.sign(wert)
+            let radius = style_pfeil_lager.radius;
 
             if (wert >= 0.0) {
-                draw_moment_arrow(two, x, z, -1.0, slmax / 50, style_pfeil_lager)
+                draw_moment_arrow(two, x, z, -1.0, radius, style_pfeil_lager)
                 //draw_arrow(two, x, z + delta + plength, x, z + delta, style_pfeil_lager)
             } else {
                 //draw_arrow(two, x, z + delta, x, z + delta + plength, style_pfeil_lager)
-                draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_lager)
+                draw_moment_arrow(two, x, z, 1.0, radius, style_pfeil_lager)
             }
 
             xpix = tr.xPix(x) - 10 / devicePixelRatio
-            zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
+            zpix = tr.zPix(z) + vorzeichen * radius + 15 * vorzeichen / devicePixelRatio
             const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
             const txt = two.makeText(str, xpix, zpix, style_txt_lager)
             txt.alignment = 'right'
@@ -1746,6 +1764,7 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
     radius /= devicePixelRatio
 
     radius = tr.World0(radius)
+    console.log('draw_moment_arrow, radius', radius, tr.Pix0(radius))
 
     let group = two.makeGroup();
 

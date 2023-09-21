@@ -2,9 +2,10 @@ import { CElement } from "./element"
 
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, add_neq, neq, u_lf, u0_komb, eigenform_container_u,
-    nelTeilungen, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung
+    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung
 } from "./rechnen"
 
+import { BubbleSort } from "./lib"
 
 export class CTimoshenko_beam extends CElement {
 
@@ -67,6 +68,9 @@ export class CTimoshenko_beam extends CElement {
     wL: number = 0.0
     phiL: number = 0.0
 
+    nTeilungen = 10;
+    x_: number[] = []
+
 
 
     //---------------------------------------------------------------------------------------------
@@ -96,12 +100,6 @@ export class CTimoshenko_beam extends CElement {
 
         if (THIIO_flag === 0) n = nlastfaelle;
         else n = nkombinationen;
-
-        this.N_ = Array.from(Array(n), () => new Array(nelTeilungen + 1).fill(0.0));
-        this.V_ = Array.from(Array(n), () => new Array(nelTeilungen + 1).fill(0.0));
-        this.M_ = Array.from(Array(n), () => new Array(nelTeilungen + 1).fill(0.0));
-        this.u_ = Array.from(Array(n), () => new Array(nelTeilungen + 1).fill(0.0));
-        this.w_ = Array.from(Array(n), () => new Array(nelTeilungen + 1).fill(0.0));
 
         this.nod1 = element[ielem].nod[0];
         this.nod2 = element[ielem].nod[1];
@@ -165,6 +163,72 @@ export class CTimoshenko_beam extends CElement {
         this.trans[4][3] = -this.sinus
         this.trans[4][4] = this.cosinus
         this.trans[5][5] = 1.0
+
+
+        this.nTeilungen = nelTeilungen    // übernahme der Voreinstellung
+
+        this.x_ = Array(this.nTeilungen + 1)
+
+        const delta_x = this.sl / this.nTeilungen                    //erstmal normal mit nTeilungen Stab teilen
+        let xx = 0.0
+        let j = 1
+        for (let i = 0; i <= this.nTeilungen; i++) {
+            this.x_[i] = xx
+            xx = xx + delta_x
+        }
+
+        let sort = 0
+        let nelTeilungenNeu = this.nTeilungen + 1
+        for (let ieload = 0; ieload < ntotalEloads; ieload++) {                   //jetzt zusaetzliche Teilungspunkte fuer die jeweilige Einzellast, falls xP in x_ nicht enthalten ist
+            if (eload[ieload].element === ielem && (eload[ieload].art === 6)) {
+
+                if (Math.abs(this.x_[0] - eload[ieload].x) < 0.0000001) continue;  // nichts zu tun wenn Last am Anfang oder Ende des Stabs angreift
+                if (Math.abs(this.x_[this.nTeilungen] - eload[ieload].x) < 0.0000001) continue;
+
+                let nn = 0
+                for (j = 0; j < nelTeilungenNeu; j++) {     // bei erster und letzter Stelle braucht nichts eingefügt zu werden
+                    if (Math.abs(this.x_[j] - eload[ieload].x) < 0.0000001) { //xP schon in x_ enthalten, also xP nur 1mal hinzufuegen
+                        nn = 1
+                    }
+                }
+
+                if (nn === 1) {
+                    for (j = this.nTeilungen; j < nelTeilungenNeu; j++) {
+                        if (Math.abs(this.x_[j] - eload[ieload].x) < 0.0000001) { //xP schon 2mal in x_ enthalten
+                            nn = 0
+                        }
+                    }
+                    if (nn === 1) {
+                        nelTeilungenNeu++;
+                        this.x_.push(eload[ieload].x)
+                        sort = 1
+                    }
+                }
+                else if (nn === 0) {                   //xP war nicht enthalten,deshalb jetzt xP 2mal zu x_ dazu fuegen
+                    nn = 2
+                    nelTeilungenNeu += 2
+                    this.x_.push(eload[ieload].x)
+                    this.x_.push(eload[ieload].x)
+                    sort = 1
+                }
+
+            }
+        }
+        console.log("vor BUBBLESORT", this.x_)
+
+        if (sort > 0) BubbleSort(this.x_);
+
+        console.log("nach BUBBLESORT", this.x_)
+
+        this.nTeilungen = nelTeilungenNeu
+
+
+        this.N_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+        this.V_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+        this.M_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+        this.u_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+        this.w_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+
 
         this.berechneLokaleElementsteifigkeitmatrix()
     }
@@ -912,10 +976,11 @@ export class CTimoshenko_beam extends CElement {
             wL = this.wL + this.edisp0[1]
         }
 
-        let d_x = this.sl / (nelTeilungen)
+        //let d_x = this.sl / (nelTeilungen)
         let x = 0.0
 
-        for (let iteil = 0; iteil <= nelTeilungen; iteil++) {
+        for (let iteil = 0; iteil <= this.nTeilungen; iteil++) {
+            x = this.x_[iteil]
             Mx = this.ML + this.VL * x
             Vx = this.VL
             Nx = this.NL
@@ -1008,35 +1073,49 @@ export class CTimoshenko_beam extends CElement {
 
                         }
                         else if (eload[ieload].art === 6) {         // Einzellast oder Moment
+
                             const xP = eload[ieload].x
                             const P = eload[ieload].P
                             const M = eload[ieload].M
                             let edisp = Array(6).fill(0.0);
 
-                            if (x >= xP) {
-                                Vx = Vx - P
-                                Mx = Mx - M + P * (xP - x)
-                                edisp[1] = eload[ieload].CwP + eload[ieload].CwM; edisp[2] = eload[ieload].CphiP + eload[ieload].CphiM;
+                            if (iteil > 0) {
+                                let xxx = Math.abs(x - this.x_[iteil - 1])
+                                let xxxx = Math.abs(x - eload[ieload].x)
+                                //If (x > eload(ieload).xP) Or (x = x_(j - 1) And x = eload(ieload).xP) Then
+                                if ((x > xP) || (xxx < 0.000000000001 && xxxx < 0.000000000001)) {
 
-                                const xx = x - xP;
-                                const sl = this.sl - xP
-                                const nenner = sl ** 3 + 12. * eta * sl
-                                Nw[0] = (2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx + sl ** 3 + 12. * eta * sl) / nenner;
-                                Nw[1] = -((sl * xx ** 3 + (-2. * sl ** 2 - 6. * eta) * xx ** 2 + (sl ** 3 + 6. * eta * sl) * xx) / nenner);
-                                Nw[2] = -((2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx) / nenner);
-                                Nw[3] = -((sl * xx ** 3 + (6. * eta - sl ** 2) * xx ** 2 - 6. * eta * sl * xx) / nenner);
-                                wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
-                                //console.log("Nw,edisp", wx, edisp, Nw)
-                            } else {
-                                edisp[4] = eload[ieload].CwP + eload[ieload].CwM; edisp[5] = eload[ieload].CphiP + eload[ieload].CphiM;
-                                const sl = xP
-                                const nenner = sl ** 3 + 12. * eta * sl
-                                Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
-                                Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
-                                Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
-                                Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-                                wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
-                                //console.log("Nw,edisp", wx, edisp, Nw)
+                                    Vx = Vx - P
+                                    Mx = Mx - M + P * (xP - x)
+                                    edisp[1] = eload[ieload].CwP + eload[ieload].CwM; edisp[2] = eload[ieload].CphiP + eload[ieload].CphiM;
+
+                                    const xx = x - xP;
+                                    const sl = this.sl - xP
+                                    const nenner = sl ** 3 + 12. * eta * sl
+                                    Nw[0] = (2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx + sl ** 3 + 12. * eta * sl) / nenner;
+                                    Nw[1] = -((sl * xx ** 3 + (-2. * sl ** 2 - 6. * eta) * xx ** 2 + (sl ** 3 + 6. * eta * sl) * xx) / nenner);
+                                    Nw[2] = -((2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx) / nenner);
+                                    Nw[3] = -((sl * xx ** 3 + (6. * eta - sl ** 2) * xx ** 2 - 6. * eta * sl * xx) / nenner);
+                                    wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                                    //console.log("Nw,edisp", wx, edisp, Nw)
+                                } else {
+                                    edisp[4] = eload[ieload].CwP + eload[ieload].CwM; edisp[5] = eload[ieload].CphiP + eload[ieload].CphiM;
+                                    const sl = xP
+                                    const nenner = sl ** 3 + 12. * eta * sl
+                                    Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+                                    Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+                                    Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+                                    Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+                                    wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                                    //console.log("Nw,edisp", wx, edisp, Nw)
+                                }
+
+                            }
+                            else {
+                                if (Math.abs(x - xP) < 0.000000000001) {
+                                    Vx = Vx - P
+                                    Mx = Mx - M
+                                }
                             }
                         }
                     }
@@ -1146,7 +1225,7 @@ export class CTimoshenko_beam extends CElement {
             this.N_[iLastf][iteil] = Nx
             this.u_[iLastf][iteil] = ux
             this.w_[iLastf][iteil] = wx
-            x += d_x
+            //x += d_x
         }
 
     }
@@ -1154,7 +1233,7 @@ export class CTimoshenko_beam extends CElement {
     //---------------------------------------------------------------------------------------------
     get_elementSchnittgroesse_Moment(Mx: number[], iLastf: number) {
 
-        for (let i = 0; i <= nelTeilungen; i++) {
+        for (let i = 0; i < this.nTeilungen; i++) {
             Mx[i] = this.M_[iLastf][i]
         }
     }
@@ -1162,7 +1241,7 @@ export class CTimoshenko_beam extends CElement {
     //---------------------------------------------------------------------------------------------
     get_elementSchnittgroesse_Querkraft(Vx: number[], iLastf: number) {
 
-        for (let i = 0; i <= nelTeilungen; i++) {
+        for (let i = 0; i < this.nTeilungen; i++) {
             Vx[i] = this.V_[iLastf][i]
         }
     }
@@ -1170,7 +1249,7 @@ export class CTimoshenko_beam extends CElement {
     //---------------------------------------------------------------------------------------------
     get_elementSchnittgroesse_Normalkraft(Nx: number[], iLastf: number) {
 
-        for (let i = 0; i <= nelTeilungen; i++) {
+        for (let i = 0; i < this.nTeilungen; i++) {
             Nx[i] = this.N_[iLastf][i]
         }
     }

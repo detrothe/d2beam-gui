@@ -13,6 +13,7 @@ export let nnodes: number;
 export let nelem: number;
 export let nloads: number = 0;
 export let neloads: number = 0;
+export let ntotalEloads: number = 0;
 export let nstabvorverfomungen = 0;
 export let neq: number;
 export let nnodesTotal: number = 0;
@@ -495,7 +496,7 @@ function read_element_loads() {
     el = document.getElementById('id_button_ntemperaturlasten') as any;
     const ntemperaturlasten = Number(el.nel);
 
-    neloads = nstreckenlasten + neinzellasten + ntemperaturlasten
+    ntotalEloads = neloads = nstreckenlasten + neinzellasten + ntemperaturlasten
 
     console.log("NELOADS", neloads, nstreckenlasten, neinzellasten, ntemperaturlasten)
 
