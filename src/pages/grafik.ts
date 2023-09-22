@@ -776,6 +776,9 @@ export function drawsystem() {
         scalefactor *= scaleFactor_panel
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+
+            if ( scalefactor === Infinity ) break;
+
             const nelTeilungen = element[ielem].nTeilungen
             let Mx: number[] = new Array(nelTeilungen)
 
@@ -812,7 +815,7 @@ export function drawsystem() {
                 sgR = Mx[i]
                 console.log("sigL und R", sgL, sgR)
 
-                if (sgL >= 0.0 && sgR >= 0.0) {
+                if (sgL >= 0.0 && sgR > 0.0) {
                     vertices.push(new Two.Anchor(xx1, zz1));
                     vorzeichen = 1
                     sgArea += (sgL + sgR) * dx / 2.
@@ -939,8 +942,11 @@ export function drawsystem() {
         }
 
         scalefactor *= scaleFactor_panel
+        //console.log("scalefaktor",scalefactor)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+
+            if ( scalefactor === Infinity ) break;
 
             const nelTeilungen = element[ielem].nTeilungen
             let Vx: number[] = new Array(nelTeilungen)
@@ -975,7 +981,7 @@ export function drawsystem() {
                 dx = x - xL
                 sgR = Vx[i]
                 console.log("Schnittgrößen rechts/links", sgL, sgR,sgArea)
-                if (sgL >= 0.0 && sgR >= 0.0) {
+                if (sgL >= 0.0 && sgR > 0.0) {
                     vertices.push(new Two.Anchor(xx1, zz1));
                     vorzeichen = 1
                     sgArea += (sgL + sgR) * dx / 2.
@@ -1100,6 +1106,9 @@ export function drawsystem() {
         scalefactor *= scaleFactor_panel
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+
+            if ( scalefactor === Infinity ) break;
+
             maxN = 0.0
             const nelTeilungen = element[ielem].nTeilungen
             let Nx: number[] = new Array(nelTeilungen + 1)
