@@ -752,13 +752,14 @@ export function drawsystem() {
 
     if (show_momentenlinien) {
 
-        let xx1, xx2, zz1, zz2
-        let dx: number, x: number, sl: number, nenner: number
+        let xx1: number, zz1: number, xx2: number, zz2: number
+        let dx: number, x: number, sl: number, vorzeichen: number, sgArea = 0.0
+        let sgL: number, sgR: number, xL: number
 
         let iLastfall = draw_lastfall
         let scalefactor = 0
-        let poly: number[] = new Array(8)
-        let maxM = 0.0, x_max = 0.0, z_max = 0.0, x0 = 0.0, z0 = 0.0, xn = 0.0, zn = 0.0
+        //let poly: number[] = new Array(8)
+        let maxM = 0.0, minM = 0.0, x_max = 0.0, z_max = 0.0, x0 = 0.0, z0 = 0.0, xn = 0.0, zn = 0.0, x_min = 0.0, z_min = 0.0
 
 
         //if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] === 0.0) return
@@ -775,7 +776,6 @@ export function drawsystem() {
         scalefactor *= scaleFactor_panel
 
         for (let ielem = 0; ielem < nelem; ielem++) {
-            maxM = 0.0
             const nelTeilungen = element[ielem].nTeilungen
             let Mx: number[] = new Array(nelTeilungen)
 
@@ -787,8 +787,6 @@ export function drawsystem() {
             x2 = Math.round(tr.xPix(element[ielem].x2));
             z2 = Math.round(tr.zPix(element[ielem].z2));
 
-
-            //dx = element[ielem].sl / nelTeilungen
             sl = element[ielem].sl
 
             //let group = two.makeGroup();
@@ -796,49 +794,92 @@ export function drawsystem() {
             vertices.push(new Two.Vector(x1, z1));
 
             xx2 = 0.0; zz2 = 0.0
-            for (let i = 0; i <nelTeilungen; i++) {
+            sgL = Mx[0]
+            xx1 = tr.xPix(element[ielem].x1 - element[ielem].sinus * Mx[0] * scalefactor)
+            zz1 = tr.zPix(element[ielem].z1 + element[ielem].cosinus * Mx[0] * scalefactor)
+            x0 = xx1
+            z0 = zz1
+            maxM = Mx[0]
+            minM = Mx[0]
+            vorzeichen = 1
+            sgArea = 0.0
+
+            for (let i = 1; i < nelTeilungen; i++) {
 
                 x = element[ielem].x_[i]
-                xx1 = xx2; zz1 = zz2;
+                xL = element[ielem].x_[i - 1]
+                dx = x - xL
+                sgR = Mx[i]
+                console.log("sigL und R", sgL, sgR)
+
+                if (sgL >= 0.0 && sgR >= 0.0) {
+                    vertices.push(new Two.Anchor(xx1, zz1));
+                    vorzeichen = 1
+                    sgArea += (sgL + sgR) * dx / 2.
+                } else if (sgL <= 0.0 && sgR < 0.0) {
+                    vertices.push(new Two.Anchor(xx1, zz1));
+                    vorzeichen = -1
+                    sgArea += (sgL + sgR) * dx / 2.
+                } else {   // Vorzeichenwechsel
+                    console.log("Vorzeichenwechsel", sgL, sgR)
+
+                    let dx0 = -sgL * dx / (sgR - sgL)
+                    let xx0 = tr.xPix(element[ielem].x1 + (xL + dx0) * element[ielem].cosinus)
+                    let zz0 = tr.zPix(element[ielem].z1 + (xL + dx0) * element[ielem].sinus)
+                    vertices.push(new Two.Anchor(xx1, zz1));
+                    console.log("dx0=", dx0, xx0, zz0)
+                    vertices.push(new Two.Anchor(xx0, zz0));
+
+                    // @ts-ignore
+                    let flaeche = two.makePath(vertices);
+                    if (sgArea > 0.0) flaeche.fill = '#00AEFF';
+                    else flaeche.fill = '#AE0000';
+                    vertices.length = 0
+                    sgArea = 0.0
+                    sgL = 0.0
+                    vertices.push(new Two.Anchor(xx0, zz0));
+                }
                 xx2 = element[ielem].x1 + x * element[ielem].cosinus - element[ielem].sinus * Mx[i] * scalefactor
                 zz2 = element[ielem].z1 + x * element[ielem].sinus + element[ielem].cosinus * Mx[i] * scalefactor
                 xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+
+
                 //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
-                vertices.push(new Two.Anchor(xx2, zz2));
-                /*
-                if (i > 0) {
-                    //console.log("line", xx1, zz1, xx2, zz2)
-                    let line = two.makeLine(xx1, zz1, xx2, zz2);
-                    line.linewidth = 2;
-                    //group.add(line)
-                }
-                */
+
+
                 if (i === 0) {
-                    maxM = Math.abs(Mx[i])
+                    maxM = Mx[i]
+                    minM = Mx[i]
                     x0 = xx2
                     z0 = zz2
                 }
-                else if (Math.abs(Mx[i]) > maxM) {
-                    maxM = Math.abs(Mx[i])
-                    x_max = xx2
-                    z_max = zz2
+                else {
+                    if (Mx[i] > maxM) {
+                        maxM = Mx[i]
+                        x_max = xx2
+                        z_max = zz2
+                    }
+                    if (Mx[i] < minM) {
+                        minM = Mx[i]
+                        x_min = xx2
+                        z_min = zz2
+                    }
                 }
-
-                if (i === nelTeilungen-1) {
+                if (i === nelTeilungen - 1) {
                     xn = xx2
                     zn = zz2
                 }
-
-                //x = x + dx
+                xx1 = xx2
+                zz1 = zz2
+                sgL = sgR
             }
+            vertices.push(new Two.Anchor(xx2, zz2));
             vertices.push(new Two.Anchor(x2, z2));
 
             // @ts-ignore
             let flaeche = two.makePath(vertices);
-            flaeche.fill = '#00AEFF';
-
-            //group.fill='#00AEFF'
-            //group.closed=true
+            if (sgArea > 0.0) flaeche.fill = '#00AEFF';
+            else flaeche.fill = '#AE0000';
 
             if (show_labels) {
                 if (maxM > 0.0) {
@@ -847,14 +888,21 @@ export function drawsystem() {
                     txt.alignment = 'left'
                     txt.baseline = 'top'
                 }
+                if (minM < 0.0) {
+                    const str = myFormat(minM, 1, 2) + 'kNm'
+                    const txt = two.makeText(str, x_min, z_min, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
+
                 if (Math.abs(Mx[0]) > 0.000001) {
-                    const str = myFormat(Math.abs(Mx[0]), 1, 2) + 'kNm'
+                    const str = myFormat(Mx[0], 1, 2) + 'kNm'
                     const txt = two.makeText(str, x0, z0, style_txt)
                     txt.alignment = 'left'
                     txt.baseline = 'top'
                 }
-                if (Math.abs(Mx[nelTeilungen-1]) > 0.000001) {
-                    const str = myFormat(Math.abs(Mx[nelTeilungen-1]), 1, 2) + 'kNm'
+                if (Math.abs(Mx[nelTeilungen - 1]) > 0.000001) {
+                    const str = myFormat(Mx[nelTeilungen - 1], 1, 2) + 'kNm'
                     const txt = two.makeText(str, xn, zn, style_txt)
                     txt.alignment = 'left'
                     txt.baseline = 'top'
@@ -872,10 +920,13 @@ export function drawsystem() {
     if (show_querkraftlinien) {
 
         let xx1, xx2, zz1, zz2
-        let dx: number, x: number, sl: number, nenner: number
+        let dx: number, x: number, sl: number, vorzeichen: number, sgArea = 0.0
+        let sgL: number, sgR: number, xL: number
+
 
         let iLastfall = draw_lastfall
         let scalefactor = 0
+        let maxV = 0.0, minV = 0.0, x_max = 0.0, z_max = 0.0, x0 = 0.0, z0 = 0.0, xn = 0.0, zn = 0.0, x_min = 0.0, z_min = 0.0
 
         //if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] === 0.0) return
 
@@ -890,8 +941,9 @@ export function drawsystem() {
         scalefactor *= scaleFactor_panel
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+
             const nelTeilungen = element[ielem].nTeilungen
-            let Vx: number[] = new Array(nelTeilungen )
+            let Vx: number[] = new Array(nelTeilungen)
 
             element[ielem].get_elementSchnittgroesse_Querkraft(Vx, draw_lastfall - 1)
             console.log("GRAFIK  Vx", Vx)
@@ -901,30 +953,124 @@ export function drawsystem() {
             x2 = Math.round(tr.xPix(element[ielem].x2));
             z2 = Math.round(tr.zPix(element[ielem].z2));
 
-
-            dx = element[ielem].sl / nelTeilungen
             sl = element[ielem].sl
 
             var vertices = [];
             vertices.push(new Two.Vector(x1, z1));
 
             xx2 = 0.0; zz2 = 0.0
-            for (let i = 0; i < nelTeilungen; i++) {
+            sgL = Vx[0]
+            xx1 = tr.xPix(element[ielem].x1 - element[ielem].sinus * Vx[0] * scalefactor)
+            zz1 = tr.zPix(element[ielem].z1 + element[ielem].cosinus * Vx[0] * scalefactor)
+            x0 = xx1
+            z0 = zz1
+            maxV = Vx[0]
+            minV = Vx[0]
+            vorzeichen = 1
+            sgArea = 0.0
+
+            for (let i = 1; i < nelTeilungen; i++) {
                 x = element[ielem].x_[i]
-                //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
-                xx1 = xx2; zz1 = zz2;
+                xL = element[ielem].x_[i - 1]
+                dx = x - xL
+                sgR = Vx[i]
+                console.log("Schnittgrößen rechts/links", sgL, sgR,sgArea)
+                if (sgL >= 0.0 && sgR >= 0.0) {
+                    vertices.push(new Two.Anchor(xx1, zz1));
+                    vorzeichen = 1
+                    sgArea += (sgL + sgR) * dx / 2.
+                } else if (sgL <= 0.0 && sgR < 0.0) {
+                    vertices.push(new Two.Anchor(xx1, zz1));
+                    vorzeichen = -1
+                    sgArea += (sgL + sgR) * dx / 2.
+                } else {   // Vorzeichenwechsel
+                    console.log("Vorzeichenwechsel", sgL, sgR)
+
+                    let dx0 = -sgL * dx / (sgR - sgL)
+                    let xx0 = tr.xPix(element[ielem].x1 + (xL + dx0) * element[ielem].cosinus)
+                    let zz0 = tr.zPix(element[ielem].z1 + (xL + dx0) * element[ielem].sinus)
+                    vertices.push(new Two.Anchor(xx1, zz1));
+                    console.log("dx0=", dx0, xx0, zz0)
+                    vertices.push(new Two.Anchor(xx0, zz0));
+
+                    // @ts-ignore
+                    let flaeche = two.makePath(vertices);
+                    if (sgArea > 0.0) flaeche.fill = '#00AEFF';
+                    else flaeche.fill = '#AE0000';
+                    vertices.length = 0
+                    sgArea = 0.0
+                    sgL = 0.0
+                    vertices.push(new Two.Anchor(xx0, zz0));
+                }
+
                 xx2 = element[ielem].x1 + x * element[ielem].cosinus - element[ielem].sinus * Vx[i] * scalefactor
                 zz2 = element[ielem].z1 + x * element[ielem].sinus + element[ielem].cosinus * Vx[i] * scalefactor
                 xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
-                vertices.push(new Two.Anchor(xx2, zz2));
 
-                x = x + dx
+                if (i === 0) {
+                    maxV = Math.abs(Vx[i])
+                    x0 = xx2
+                    z0 = zz2
+                }
+                else {
+                    if (Vx[i] > maxV) {
+                        maxV = Vx[i]
+                        x_max = xx2
+                        z_max = zz2
+                    }
+                    if (Vx[i] < minV) {
+                        minV = Vx[i]
+                        x_min = xx2
+                        z_min = zz2
+                    }
+                }
+                if (i === nelTeilungen - 1) {
+                    xn = xx2
+                    zn = zz2
+                }
+                xx1 = xx2
+                zz1 = zz2
+                sgL = sgR
+
             }
+            vertices.push(new Two.Anchor(xx2, zz2));
             vertices.push(new Two.Vector(x2, z2));
 
             // @ts-ignore
             let flaeche = two.makePath(vertices);
-            flaeche.fill = '#00AEFF';
+            if (sgArea > 0.0) flaeche.fill = '#00AEFF';
+            else flaeche.fill = '#AE0000';
+
+
+
+            if (show_labels) {
+                if (maxV > 0.0) {
+                    const str = myFormat(maxV, 1, 2) + 'kN'
+                    const txt = two.makeText(str, x_max, z_max, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
+                if (minV < 0.0) {
+                    const str = myFormat(minV, 1, 2) + 'kNm'
+                    const txt = two.makeText(str, x_min, z_min, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
+                if (Math.abs(Vx[0]) > 0.000001) {
+                    const str = myFormat(Math.abs(Vx[0]), 1, 2) + 'kN'
+                    const txt = two.makeText(str, x0, z0, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
+                if (Math.abs(Vx[nelTeilungen - 1]) > 0.000001) {
+                    const str = myFormat(Math.abs(Vx[nelTeilungen - 1]), 1, 2) + 'kN'
+                    const txt = two.makeText(str, xn, zn, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
+
+            }
+
 
         }
     }
@@ -939,7 +1085,7 @@ export function drawsystem() {
 
         let iLastfall = draw_lastfall
         let scalefactor = 0
-        let Nx: number[] = new Array(nelTeilungen + 1)
+        let maxN = 0.0, x_max = 0.0, z_max = 0.0, x0 = 0.0, z0 = 0.0, xn = 0.0, zn = 0.0
 
         //if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] === 0.0) return
 
@@ -954,6 +1100,9 @@ export function drawsystem() {
         scalefactor *= scaleFactor_panel
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+            maxN = 0.0
+            const nelTeilungen = element[ielem].nTeilungen
+            let Nx: number[] = new Array(nelTeilungen + 1)
 
             element[ielem].get_elementSchnittgroesse_Normalkraft(Nx, draw_lastfall - 1)
             console.log("GRAFIK  Nx", Nx)
@@ -967,25 +1116,63 @@ export function drawsystem() {
             dx = element[ielem].sl / nelTeilungen
             sl = element[ielem].sl
 
-            var vertices = [];
-            vertices.push(new Two.Vector(x1, z1));
+            let vertices = [];
+            vertices.push(new Two.Anchor(x1, z1));
 
-            x = 0.0; xx2 = 0.0; zz2 = 0.0
-            for (let i = 0; i <= nelTeilungen; i++) {
+            xx2 = 0.0; zz2 = 0.0
+            for (let i = 0; i < nelTeilungen; i++) {
 
+                x = element[ielem].x_[i]
+                console.log("x", i, x, ielem)
                 xx1 = xx2; zz1 = zz2;
                 xx2 = element[ielem].x1 + x * element[ielem].cosinus - element[ielem].sinus * Nx[i] * scalefactor
                 zz2 = element[ielem].z1 + x * element[ielem].sinus + element[ielem].cosinus * Nx[i] * scalefactor
                 xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
-                vertices.push(new Two.Vector(xx2, zz2));
+                vertices.push(new Two.Anchor(xx2, zz2));
 
-                x = x + dx
+                if (i === 0) {
+                    maxN = Math.abs(Nx[i])
+                    x0 = xx2
+                    z0 = zz2
+                }
+                else if (Math.abs(Nx[i]) > maxN) {
+                    maxN = Math.abs(Nx[i])
+                    x_max = xx2
+                    z_max = zz2
+                }
+
+                if (i === nelTeilungen - 1) {
+                    xn = xx2
+                    zn = zz2
+                }
+
             }
             vertices.push(new Two.Anchor(x2, z2));
 
             // @ts-ignore
             let flaeche = two.makePath(vertices);
             flaeche.fill = '#00AEDD';
+
+            if (show_labels) {
+                if (maxN > 0.0) {
+                    const str = myFormat(maxN, 1, 2) + 'kN'
+                    const txt = two.makeText(str, x_max, z_max, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
+                if (Math.abs(Nx[0]) > 0.000001) {
+                    const str = myFormat(Math.abs(Nx[0]), 1, 2) + 'kN'
+                    const txt = two.makeText(str, x0, z0, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
+                if (Math.abs(Nx[nelTeilungen - 1]) > 0.000001) {
+                    const str = myFormat(Math.abs(Nx[nelTeilungen - 1]), 1, 2) + 'kN'
+                    const txt = two.makeText(str, xn, zn, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+                }
+            }
 
         }
     }
