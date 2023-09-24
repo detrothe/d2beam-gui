@@ -777,7 +777,7 @@ export function drawsystem() {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if ( scalefactor === Infinity ) break;
+            if (scalefactor === Infinity) break;
 
             const nelTeilungen = element[ielem].nTeilungen
             let Mx: number[] = new Array(nelTeilungen)
@@ -946,7 +946,7 @@ export function drawsystem() {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if ( scalefactor === Infinity ) break;
+            if (scalefactor === Infinity) break;
 
             const nelTeilungen = element[ielem].nTeilungen
             let Vx: number[] = new Array(nelTeilungen)
@@ -980,7 +980,7 @@ export function drawsystem() {
                 xL = element[ielem].x_[i - 1]
                 dx = x - xL
                 sgR = Vx[i]
-                console.log("Schnittgrößen rechts/links", sgL, sgR,sgArea)
+                console.log("Schnittgrößen rechts/links", sgL, sgR, sgArea)
                 if (sgL >= 0.0 && sgR > 0.0) {
                     vertices.push(new Two.Anchor(xx1, zz1));
                     vorzeichen = 1
@@ -1107,7 +1107,7 @@ export function drawsystem() {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if ( scalefactor === Infinity ) break;
+            if (scalefactor === Infinity) break;
 
             maxN = 0.0
             const nelTeilungen = element[ielem].nTeilungen
@@ -1621,7 +1621,7 @@ function draw_lagerkraefte(two: Two) {
         let z = node[i].z;
 
         let wert: number
-        if (node[i].L[0] === -1) {      // horizontales Lager
+        if (node[i].L[0] === -1 || node[i].kx > 0.0) {      // horizontales Lager
 
             if (THIIO_flag === 0) {
             }
@@ -1644,7 +1644,7 @@ function draw_lagerkraefte(two: Two) {
             txt.baseline = 'top'
         }
 
-        if (node[i].L[1] === -1) {      // vertikales Lager
+        if (node[i].L[1] === -1 || node[i].kz > 0.0) {      // vertikales Lager
 
             wert = lagerkraefte._(i, 1, draw_lastfall - 1)
             console.log("wert", wert)
@@ -1669,7 +1669,7 @@ function draw_lagerkraefte(two: Two) {
             txt.baseline = 'top'
         }
 
-        if (node[i].L[2] === -1) {      // Einspannung
+        if (node[i].L[2] === -1 || node[i].kphi > 0.0) {      // Einspannung
 
             wert = lagerkraefte._(i, 2, draw_lastfall - 1)
             console.log("wert", wert)
@@ -1699,13 +1699,16 @@ function draw_lager(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
     for (let i = 0; i < nnodes; i++) {
+
         let x1 = Math.round(tr.xPix(node[i].x));
         let z1 = Math.round(tr.zPix(node[i].z));
+        let phi = -node[i].phi * Math.PI / 180
 
         if ((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) {  // Volleinspannung
             let rechteck = two.makeRectangle(x1, z1, 20, 20)
             rechteck.fill = '#dddddd';
             rechteck.scale = 1.0 / devicePixelRatio
+            rechteck.rotation = phi
         }
         else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in x-Richtung
 
@@ -1719,6 +1722,8 @@ function draw_lager(two: Two) {
 
             group.add(line)
             group.scale = 1.0 / devicePixelRatio
+
+            group.rotation = phi
 
             group.translation.set(x1, z1)
 
@@ -1735,7 +1740,7 @@ function draw_lager(two: Two) {
 
             group.add(line)
             group.scale = 1.0 / devicePixelRatio
-            group.rotation = 1.5708
+            group.rotation = 1.5708 + phi
             group.translation.set(x1, z1)
 
         }
@@ -1756,12 +1761,14 @@ function draw_lager(two: Two) {
 
             group.scale = 1.0 / devicePixelRatio
 
+            group.rotation = phi
+
             group.translation.set(x1, z1)
 
         }
         else if ((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // zweiwertiges Lager
             let group = two.makeGroup();
-            console.log("in zweiwertig")
+            console.log("in zweiwertiges Lager")
             var vertices = [];
             vertices.push(new Two.Vector(0, 0));
             vertices.push(new Two.Vector(-12, 20));
@@ -1778,12 +1785,14 @@ function draw_lager(two: Two) {
             group.add(line)
             group.scale = 1.0 / devicePixelRatio
 
+            group.rotation = phi
+
             group.translation.set(x1, z1)
 
         }
-        else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // einwertiges horizintales Lager
+        else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // einwertiges horizontal verschieblisches Lager
             let group = two.makeGroup();
-            console.log("in zweiwertig")
+            console.log("in einwertiges horizontal verschieblisches Lager")
             var vertices = [];
             vertices.push(new Two.Vector(0, 0));
             vertices.push(new Two.Vector(-12, 20));
@@ -1800,12 +1809,14 @@ function draw_lager(two: Two) {
             group.add(line)
             group.scale = 1.0 / devicePixelRatio
 
+            group.rotation = phi
+
             group.translation.set(x1, z1)
 
         }
-        else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0) && (node[i].L[2] >= 0)) { // einwertiges vertikales Lager
+        else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0) && (node[i].L[2] >= 0)) { // einwertiges vertikal verschieblisches Lager
             let group = two.makeGroup();
-            console.log("in zweiwertig")
+            console.log("in einwertiges vertikales Lager")
             var vertices = [];
             vertices.push(new Two.Vector(0, 0));
             vertices.push(new Two.Vector(-12, 20));
@@ -1822,7 +1833,8 @@ function draw_lager(two: Two) {
             group.add(line)
             group.scale = 1.0 / devicePixelRatio
 
-            group.rotation = -1.5708
+
+            group.rotation = -1.5708 + phi
             group.translation.set(x1, z1)
 
         }
@@ -2033,6 +2045,57 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
         group.rotation = -Math.PI / 5
         group.translation.set(tr.xPix(x0), tr.zPix(z0))
     }
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+function draw_feder(two: Two, x0: number, z0: number, alpha: number) {
+    //----------------------------------------------------------------------------------------------------
+    let x = Array(7)
+    let z = Array(7)
+
+    let a = 5
+    let b = 3
+    let c = 5
+
+    let h_2 = 2 * b + a                              // halbe Höhe des Federsymbols
+    let b_2 = c                                      // halbe breite des Federsymbols
+
+    x[0] = 0.0
+    z[0] = 0.0
+    x[1] = x[0]
+    z[1] = z[0] + a
+    x[2] = x[1] + c
+    z[2] = z[1] + b
+    x[3] = x[2] + -2 * c
+    z[3] = z[2] + b
+    x[4] = x[3] + 2 * c
+    z[4] = z[3] + b
+    x[5] = x[4] - c
+    z[5] = z[4] + b
+    x[6] = x[5]
+    z[6] = z[5] + a
+    let x8 = x[6] + c
+    let z8 = z[6]
+    let x9 = x[6] - c
+    let z9 = z[6]
+
+    let group = two.makeGroup();
+
+    var vertices = [];
+    for (let i = 0; i < 7; i++) {
+        vertices.push(new Two.Vector(x[i], z[i]));
+    }
+    // @ts-ignore
+    let spring = two.makePath(vertices);
+    //dreieck.fill = color;
+    //dreieck.stroke = color;
+    spring.linewidth = 1;
+
+    group.add(spring)
+    group.rotation = alpha
+    group.translation.set(tr.xPix(x0), tr.zPix(z0))
+
 }
 
 //--------------------------------------------------------------------------------------------------------

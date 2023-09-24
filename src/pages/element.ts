@@ -4,9 +4,10 @@ export class CElement {
         console.log("in element")
     }
 
-    liesElementdaten() {
+    liesElementdaten() { }
 
-    }
+    ich_bin(ielem: number) { console.log("Ich bin ein unbekanntes Element , No ", ielem) }
+
     // @ts-ignore
     initialisiereElementdaten(ielem: number) {
 

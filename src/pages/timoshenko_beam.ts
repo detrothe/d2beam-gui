@@ -9,6 +9,8 @@ import { BubbleSort } from "./lib"
 
 export class CTimoshenko_beam extends CElement {
 
+    neqe = 6
+
     ielem = -1
     nknoten = 2
     emodul = 0.0
@@ -47,17 +49,17 @@ export class CTimoshenko_beam extends CElement {
     estm: number[][] = []
     ksig: number[][] = []
     trans: number[][] = []
-    u: number[] = Array(6)   // Verformungen global
+    u: number[] = Array(6)        // Verformungen global
     edispL: number[] = Array(6)   // Verformungen lokal
     edisp0: number[] = Array(6)   // Vorverformungren
-    F: number[] = Array(6)   // Stabendgrößen nach WGV im globalen Koordinatensystem
-    FL: number[] = Array(6)  // Stabendgrößen nach KGV im lokalen Koordinatensystem
-    Fe: number[] = Array(6)  // Vorverformungen aus Schiefstellung
+    F: number[] = Array(6)        // Stabendgrößen nach WGV im globalen Koordinatensystem
+    FL: number[] = Array(6)       // Stabendgrößen nach KGV im lokalen Koordinatensystem
+    Fe: number[] = Array(6)       // Vorverformungen aus Schiefstellung
 
-    N_ = [] as number[][]  // Schnittgrößen entlang Stab, lokal
+    N_ = [] as number[][]         // Schnittgrößen entlang Stab, lokal
     V_ = [] as number[][]
     M_ = [] as number[][]
-    u_ = [] as number[][]  // Verformungen entlang Stab, lokale Richtung
+    u_ = [] as number[][]         // Verformungen entlang Stab, lokale Richtung
     w_ = [] as number[][]
     phi_ = [] as number[][]
 
@@ -71,6 +73,10 @@ export class CTimoshenko_beam extends CElement {
     nTeilungen = 10;
     x_: number[] = []
 
+
+    ich_bin(ielem: number) {
+        console.log("Ich bin ein Timoshenko Element , No ", ielem)
+    }
 
 
     //---------------------------------------------------------------------------------------------
@@ -152,16 +158,25 @@ export class CTimoshenko_beam extends CElement {
         this.estiff = Array.from(Array(6), () => new Array(6));
         this.estiff_sig = Array.from(Array(6), () => new Array(6));
 
-        this.trans[0][0] = this.cosinus
-        this.trans[0][1] = this.sinus
-        this.trans[1][0] = -this.sinus
-        this.trans[1][1] = this.cosinus
+        // Drehung der Lager berücksichtigen
+
+        let cophi = node[this.nod1].co
+        let siphi = node[this.nod1].si
+
+        this.trans[0][0] = this.cosinus * cophi - this.sinus * siphi    //this.cosinus
+        this.trans[0][1] = this.sinus * cophi + this.cosinus * siphi    //this.sinus
+        this.trans[1][0] = -this.trans[0][1]
+        this.trans[1][1] = this.trans[0][0]
         this.trans[2][2] = 1.0
 
-        this.trans[3][3] = this.cosinus
-        this.trans[3][4] = this.sinus
-        this.trans[4][3] = -this.sinus
-        this.trans[4][4] = this.cosinus
+
+        cophi = node[this.nod2].co
+        siphi = node[this.nod2].si
+
+        this.trans[3][3] = this.cosinus * cophi - this.sinus * siphi   //this.cosinus
+        this.trans[3][4] = this.sinus * cophi + this.cosinus * siphi   //this.sinus
+        this.trans[4][3] = -this.trans[3][4]
+        this.trans[4][4] = this.trans[3][3]
         this.trans[5][5] = 1.0
 
 
@@ -540,6 +555,8 @@ export class CTimoshenko_beam extends CElement {
         }
 
         console.log("element F global ", this.F)
+
+        // TODO ?? Bei gedrehten Lagern erst ins x,z Koordinatensystem zurückdrehen, siehe Excel ab Zeile 434
 
         for (i = 0; i < 6; i++) {
             sum = 0.0

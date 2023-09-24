@@ -7,6 +7,7 @@ import { testNumber, myFormat } from './utility'
 // @ts-ignore
 import { gauss } from "./gauss"
 import { CTimoshenko_beam } from "./timoshenko_beam"
+import { CSpring } from "./feder"
 import { init_grafik, drawsystem } from "./grafik";
 
 export let nnodes: number;
@@ -17,12 +18,14 @@ export let ntotalEloads: number = 0;
 export let nstabvorverfomungen = 0;
 export let neq: number;
 export let nnodesTotal: number = 0;
+export let nelemTotal: number = 0;
 export let nlastfaelle: number = 0;
 export let nkombinationen: number = 0;
 export let nelTeilungen = 10;
 export let n_iterationen = 5;
 
 export let neigv: number = 2;
+export let nfedern = 0;
 
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
@@ -34,6 +37,7 @@ export let eigenform_container_node = [] as TFArray3D[]
 export let eigenform_container_u = [] as TFArray2D[]
 export let node = [] as TNode[]
 export let element = [] as TElement[]
+export let feder = [] as TSpring[]
 export let load = [] as TLoads[]
 export let eload = [] as TElLoads[]
 export let stabvorverformung = [] as TStabvorverformung[]
@@ -83,7 +87,24 @@ class TNode {
     z: number = 1.0
 
     L = [0, 0, 0]                                   // Lagerbedingung  bei Eingabe: 0=frei, 1=fest, später enthält L() die Gleichungsnummern
+    kx = 0.0
+    kz = 0.0
+    kphi = 0.0
     nel: number = 0                                 // Anzahl der Elemente, die an dem Knoten hängen
+
+    phi = 0.0                                       // Drehung des Lagers im Gegenuhrzeigersinn
+    co = 1.0
+    si = 0.0
+    show_phi = true
+}
+
+
+class TNodeDisp {                                   // Knotenzwangsverformungen, analog zu Knotenkräften
+    node = 0                                        // werden aber mit TElDisp0 wie Elementlasten verarbeitet
+    lastfall = 0
+    disp0 = [0.0, 0.0, 0.0]                         // Knotenvorverformungen gedreht in Richtung eines gedrehten Lagers
+    ux = 0.0                                        // Knotenvorverformungen in globale x-Richtung
+    uz = 0.0                                        // Knotenvorverformungen in globale z-Richtung
 }
 
 class TQuerschnittRechteck {
@@ -139,10 +160,32 @@ class TElement {
 
 }
 
+class TSpring {
+    nod = -1
+    kx = 0.0
+    kz = 0.0
+    kphi = 0.0
+
+    constructor(node: number, kx: number, kz: number, kphi: number) {
+
+        this.nod = node
+        this.kx = kx
+        this.kz = kz
+        this.kphi = kphi
+    }
+    getNode() { return this.nod }
+    getKx() { return this.kx }
+    getKz() { return this.kz }
+    getKphi() { return this.kphi }
+
+}
+
 class TLoads {
     node: number = -1
     lf: number = -1
     p = [0.0, 0.0, 0.0]
+    Px = 0.0                                 // Last in globale x-Richtung
+    Pz = 0.0                                 // Last in globale z-Richtung
 }
 
 class TElLoads {
@@ -422,15 +465,18 @@ function read_nodes() {
     const shad = el?.shadowRoot?.getElementById('mytable')
 
     for (let izeile = 1; izeile < nRowTab; izeile++) {
+        let iz = izeile - 1
         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
             wert = child.value;
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) node[izeile - 1].x = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 2) node[izeile - 1].z = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) node[izeile - 1].L[0] = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) node[izeile - 1].L[1] = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 5) node[izeile - 1].L[2] = Number(testNumber(wert, izeile, ispalte, shad));
+            if (ispalte === 1) node[iz].x = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 2) node[iz].z = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) node[iz].L[0] = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) node[iz].L[1] = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 5) node[iz].L[2] = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 6) node[iz].phi = Number(testNumber(wert, izeile, ispalte, shad));
+
 
         }
     }
@@ -470,8 +516,8 @@ function read_nodal_loads() {
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
             if (ispalte === 1) load[izeile - 1].node = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte === 2) load[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) load[izeile - 1].p[0] = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) load[izeile - 1].p[1] = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) load[izeile - 1].Px = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) load[izeile - 1].Pz = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 5) load[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad));
         }
         if (load[izeile - 1].lf > nlastfaelle) nlastfaelle = load[izeile - 1].lf
@@ -503,7 +549,7 @@ function read_element_loads() {
     for (i = 0; i < neloads; i++) {
         eload.push(new TElLoads())
     }
-let ieload = 0
+    let ieload = 0
 
     // Streckenlasten
 
@@ -723,9 +769,11 @@ function read_elements() {
     //console.log('nZeilen', table.rows.length);
     //console.log('nSpalten', table.rows[0].cells.length);
 
+    element.length = 0
     for (i = 0; i < nelem; i++) {
         element.push(new TElement())
     }
+    nelemTotal = nelem
 
     let nRowTab = table.rows.length;
     let nColTab = table.rows[0].cells.length;
@@ -994,8 +1042,12 @@ export function init_tabellen() {
 }
 
 //---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+
 function calculate() {
-    //---------------------------------------------------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------
 
     let i: number, j: number
 
@@ -1003,23 +1055,60 @@ function calculate() {
 
     (document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
 
-    // Berechnung der Gleichungsnummern
+    el.length = 0
 
+    // Berechnung der Gleichungsnummern bestimmen der Federn
+
+    nfedern = 0
     neq = 0;
     for (i = 0; i < nnodesTotal; i++) {
+
+        let kx = 0.0, kz = 0.0, kphi = 0.0
+        if (node[i].L[0] > 1.0) kx = node[i].L[0];
+        if (node[i].L[1] > 1.0) kz = node[i].L[1];
+        if (node[i].L[2] > 1.0) kphi = node[i].L[2];
+
+        node[i].kx = kx
+        node[i].kz = kz
+        node[i].kphi = kphi
+
         for (j = 0; j < 3; j++) {
-            if (node[i].L[j] > 0) {
+            if (node[i].L[j] === 1) {
                 node[i].L[j] = -1;
             } else {
                 node[i].L[j] = neq;
                 neq = neq + 1;
             }
         }
+
+        let phi = node[i].phi * Math.PI / 180.0
+        node[i].co = Math.cos(phi)
+        node[i].si = Math.sin(phi)
+
+
+        if (kx > 1.0 || kz > 1.0 || kphi > 1.0) {
+            // neue feder einführen
+            console.log("neue Feder gefunden", i, node[i].L)
+
+            feder.push(new TSpring(i, kx, kz, kphi))
+            nelemTotal++;
+            nfedern++;
+        }
     }
 
-    for (ielem = 0; ielem < nelem; ielem++) {
 
+
+    // Knotenlasten wirken in globalen Richtungen, auch bei gedrehten Lagern
+
+    for (i = 0; i < nloads; i++) {
+        let kn = load[i].node
+        if (kn < nnodes) {
+            load[i].p[0] = node[kn].co * load[i].Px - node[kn].si * load[i].Pz
+            load[i].p[1] = node[kn].si * load[i].Px + node[kn].co * load[i].Pz
+        }
     }
+
+
     // für die Grafik
 
     xmin = 1.e30
@@ -1120,6 +1209,17 @@ function calculate() {
         el[ielem].initialisiereElementdaten(ielem)
     }
 
+    // Federn addieren
+
+    for (let ifeder = 0; ifeder < nfedern; ifeder++) {
+        el.push(new CSpring(feder[ifeder].getNode(), feder[ifeder].getKx(), feder[ifeder].getKz(), feder[ifeder].getKphi()))
+        el[ifeder + nelem].initialisiereElementdaten(ielem)
+    }
+
+    console.log("TOTALS,nelemTotal,nnodesTotal ", nelemTotal, nnodesTotal)
+    for (ielem = 0; ielem < el.length; ielem++) {
+        el[ielem].ich_bin(ielem);
+    }
 
     const stiff = Array.from(Array(neq), () => new Array(neq).fill(0.0));
     const R = Array(neq);
@@ -1141,7 +1241,7 @@ function calculate() {
 
         disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nlastfaelle);   // nlastfaelle
         console.log("nlastfaelle", nlastfaelle)
-        stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nlastfaelle);   // nlastfaelle
+        stabendkraefte = new TFArray3D(1, 6, 1, nelemTotal, 1, nlastfaelle);   // nlastfaelle
         lagerkraefte = new TFArray3D(0, nnodes - 1, 0, 2, 0, nlastfaelle - 1);   //
         u_lf = Array.from(Array(neq), () => new Array(nlastfaelle).fill(0.0));
 
@@ -1153,7 +1253,7 @@ function calculate() {
             u.fill(0.0);
             for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0)
 
-            for (ielem = 0; ielem < nelem; ielem++) {
+            for (ielem = 0; ielem < nelemTotal; ielem++) {
 
                 el[ielem].berechneElementsteifigkeitsmatrix(0);
                 el[ielem].addiereElementsteifigkeitmatrix(stiff)
@@ -1224,10 +1324,10 @@ function calculate() {
 
             let force: number[] = Array(6)
 
-            for (ielem = 0; ielem < nelem; ielem++) {
+            for (ielem = 0; ielem < nelemTotal; ielem++) {
                 force = el[ielem].berechneInterneKraefte(ielem, iLastfall, 0, u);
-                console.log("force", force)
-                for (i = 0; i < 6; i++) stabendkraefte.set(i + 1, ielem + 1, iLastfall, force[i]);
+                console.log("force", el[ielem].neqe, force)
+                for (i = 0; i < el[ielem].neqe; i++) stabendkraefte.set(i + 1, ielem + 1, iLastfall, force[i]);
 
                 el[ielem].berechneLagerkraefte();
             }
@@ -1289,7 +1389,7 @@ function calculate() {
         u0_komb = Array.from(Array(neq), () => new Array(nkombinationen).fill(0.0));
 
         //console.log("nkombinationen", nkombinationen)
-        stabendkraefte = new TFArray3D(1, 6, 1, nelem, 1, nkombinationen);
+        stabendkraefte = new TFArray3D(1, 6, 1, nelemTotal, 1, nkombinationen);
         lagerkraefte = new TFArray3D(0, nnodes - 1, 0, 2, 0, nkombinationen - 1);
         eigenform_container_node.length = 0
         eigenform_container_u.length = 0
@@ -1329,7 +1429,7 @@ function calculate() {
                 R.fill(0.0);
                 u.fill(0.0);
 
-                for (ielem = 0; ielem < nelem; ielem++) {
+                for (ielem = 0; ielem < nelemTotal; ielem++) {
 
                     el[ielem].berechneElementsteifigkeitsmatrix(iter);
                     el[ielem].addiereElementsteifigkeitmatrix(stiff)
@@ -1431,7 +1531,7 @@ function calculate() {
 
                 let force: number[] = Array(6)
 
-                for (ielem = 0; ielem < nelem; ielem++) {
+                for (ielem = 0; ielem < nelemTotal; ielem++) {
                     force = el[ielem].berechneInterneKraefte(ielem, iKomb, iter, u);
                     console.log("force", force)
                     for (i = 0; i < 6; i++) stabendkraefte.set(i + 1, ielem + 1, iKomb, force[i]);
@@ -1902,7 +2002,7 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         th6.setAttribute("class", "table_cell_center");
         row.appendChild(th6);
 
-        for (i = 0; i < nelem; i++) {
+        for (i = 0; i < nelemTotal; i++) {
 
             let newRow = table.insertRow(-1);
             let newCell, newText
@@ -1912,7 +2012,7 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
             newCell.appendChild(newText);
             newCell.setAttribute("class", "table_cell_center");
 
-            for (j = 1; j <= 6; j++) {
+            for (j = 1; j <= el[i].neqe; j++) {
                 newCell = newRow.insertCell(j);  // Insert a cell in the row at index 1
                 newText = document.createTextNode(myFormat(stabendkraefte._(j, i + 1, iLastfall), 2, 2));  // Append a text node to the cell
                 newCell.appendChild(newText);
