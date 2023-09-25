@@ -1685,7 +1685,7 @@ function draw_lagerkraefte(two: Two) {
             }
 
             xpix = tr.xPix(x) - 10 / devicePixelRatio
-            zpix = tr.zPix(z) + vorzeichen * radius + 15 * vorzeichen / devicePixelRatio
+            zpix = tr.zPix(z) + vorzeichen * (radius + 15) / devicePixelRatio
             const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
             const txt = two.makeText(str, xpix, zpix, style_txt_lager)
             txt.alignment = 'right'
@@ -1704,7 +1704,8 @@ function draw_lager(two: Two) {
         let z1 = Math.round(tr.zPix(node[i].z));
         let phi = -node[i].phi * Math.PI / 180
 
-        if ((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) {  // Volleinspannung
+        if (((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) ||
+            ((node[i].kx > 0.0) && (node[i].kz > 0.0) && (node[i].L[2] === -1))) {  // Volleinspannung oder mit zwei Translkationsfedern
             let rechteck = two.makeRectangle(x1, z1, 20, 20)
             rechteck.fill = '#dddddd';
             rechteck.scale = 1.0 / devicePixelRatio
@@ -1837,6 +1838,18 @@ function draw_lager(two: Two) {
             group.rotation = -1.5708 + phi
             group.translation.set(x1, z1)
 
+        }
+
+        if (node[i].kx > 0.0) {
+            draw_feder(two, node[i].x, node[i].z, -1.5707963 + phi)
+        }
+
+        if (node[i].kz > 0.0) {
+            draw_feder(two, node[i].x, node[i].z, phi)
+        }
+
+        if (node[i].kphi > 0.0) {
+            draw_drehfeder(two, node[i].x, node[i].z)
         }
 
     }
@@ -2054,17 +2067,16 @@ function draw_feder(two: Two, x0: number, z0: number, alpha: number) {
     let x = Array(7)
     let z = Array(7)
 
-    let a = 5
-    let b = 3
-    let c = 5
+    let a = 6
+    let b = 4
+    let c = 6
+    let d = 10
 
-    let h_2 = 2 * b + a                              // halbe Höhe des Federsymbols
-    let b_2 = c                                      // halbe breite des Federsymbols
 
     x[0] = 0.0
     z[0] = 0.0
     x[1] = x[0]
-    z[1] = z[0] + a
+    z[1] = z[0] + d
     x[2] = x[1] + c
     z[2] = z[1] + b
     x[3] = x[2] + -2 * c
@@ -2075,9 +2087,9 @@ function draw_feder(two: Two, x0: number, z0: number, alpha: number) {
     z[5] = z[4] + b
     x[6] = x[5]
     z[6] = z[5] + a
-    let x8 = x[6] + c
+    let x8 = x[6] + 2 * c
     let z8 = z[6]
-    let x9 = x[6] - c
+    let x9 = x[6] - 2 * c
     let z9 = z[6]
 
     let group = two.makeGroup();
@@ -2088,15 +2100,69 @@ function draw_feder(two: Two, x0: number, z0: number, alpha: number) {
     }
     // @ts-ignore
     let spring = two.makePath(vertices);
+    spring.closed = false
     //dreieck.fill = color;
     //dreieck.stroke = color;
-    spring.linewidth = 1;
+    spring.linewidth = 2;
 
     group.add(spring)
+
+    let line = two.makeLine(x8, z8, x9, z9);
+    line.linewidth = 2;
+
+    group.add(line)
+    group.scale = 1.0 / devicePixelRatio
     group.rotation = alpha
     group.translation.set(tr.xPix(x0), tr.zPix(z0))
 
 }
+
+//--------------------------------------------------------------------------------------------------------
+function draw_drehfeder(two: Two, x0: number, z0: number) {
+    //----------------------------------------------------------------------------------------------------
+
+    let alpha: number, dalpha: number, teilung = 12
+    let linewidth = 2
+    let radius = 25 // devicePixelRatio
+    let x: number, z: number
+
+    let radiusW = tr.World0(radius)
+
+    let group = two.makeGroup();
+
+    var vertices = [];
+
+    console.log("in draw_drehfeder", radius, x0, z0)
+
+    dalpha = Math.PI / (teilung)
+    alpha = 0.0
+    for (let i = 0; i <= teilung; i++) {
+        x = tr.Pix0(-radiusW * Math.sin(alpha))
+        z = tr.Pix0(radiusW * Math.cos(alpha))
+        console.log("DREHFEDER x,z ", x, z)
+        vertices.push(new Two.Anchor(x, z));
+        alpha += dalpha
+    }
+
+
+    let curve = new Two.Path(vertices, false, true)
+    curve.linewidth = linewidth;
+    //curve.stroke = color;
+    curve.noFill()
+
+    group.add(curve)
+
+    let z1 = (25 - 8) // devicePixelRatio
+    let z2 = (25 + 8) // devicePixelRatio
+    let line = two.makeLine(0, z1, 0, z2);
+    line.linewidth = linewidth;
+
+    group.add(line)
+
+    group.scale = 1.0 / devicePixelRatio
+    group.translation.set(tr.xPix(x0), tr.zPix(z0 + radiusW / devicePixelRatio))
+}
+
 
 //--------------------------------------------------------------------------------------------------------
 function write(str: string, wert: number) {
