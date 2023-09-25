@@ -2002,7 +2002,7 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         th6.setAttribute("class", "table_cell_center");
         row.appendChild(th6);
 
-        for (i = 0; i < nelemTotal; i++) {
+        for (i = 0; i < nelem; i++) {
 
             let newRow = table.insertRow(-1);
             let newCell, newText
