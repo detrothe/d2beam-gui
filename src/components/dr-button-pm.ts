@@ -138,6 +138,18 @@ export class drButtonPM extends LitElement {
    }
 
    //----------------------------------------------------------------------------------------------
+   _valueChanged() {
+
+      const shadow = this.shadowRoot;
+      if (shadow) {
+         let value = (shadow.getElementById(this.inputID) as HTMLInputElement).value
+         console.log("VALUE  CHANGED", value)
+         this.nel = Number(value);
+      }
+
+      //set_InfosNeueBerechnungErforderlich()
+   }
+   //----------------------------------------------------------------------------------------------
 
    render() {
       return html`
@@ -156,6 +168,7 @@ export class drButtonPM extends LitElement {
             name="nnodes"
             class="input_int"
             value="${this.nel}"
+            @change="${this._valueChanged}"
          /><button
             id="id_input_node_incr"
             class="spinner increment"

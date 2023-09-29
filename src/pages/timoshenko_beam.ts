@@ -1170,7 +1170,9 @@ export class CTimoshenko_beam extends CElement {
                             }
                         }
                         else if (eload[ieload].art === 8) {         // Knotenverformung
+
                             for (let i = 0; i < 6; i++) edisp[i] = eload[ieload].dispL0[i];
+
                             Nu[0] = (1.0 - x / sl);
                             Nu[1] = x / sl
                             Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
