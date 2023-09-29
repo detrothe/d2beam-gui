@@ -12,6 +12,7 @@ import { init_grafik, drawsystem } from "./grafik";
 
 export let nnodes: number;
 export let nelem: number;
+export let nelem_Balken = 0;
 export let nloads: number = 0;
 export let neloads: number = 0;
 export let ntotalEloads: number = 0;
@@ -26,6 +27,7 @@ export let n_iterationen = 5;
 
 export let neigv: number = 2;
 export let nfedern = 0;
+export let nNodeDisps = 0;
 
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
@@ -38,6 +40,7 @@ export let eigenform_container_u = [] as TFArray2D[]
 export let node = [] as TNode[]
 export let element = [] as TElement[]
 export let feder = [] as TSpring[]
+export let nodeDisp0 = [] as TNodeDisp[]
 export let load = [] as TLoads[]
 export let eload = [] as TElLoads[]
 export let stabvorverformung = [] as TStabvorverformung[]
@@ -101,8 +104,10 @@ class TNode {
 
 class TNodeDisp {                                   // Knotenzwangsverformungen, analog zu Knotenkräften
     node = 0                                        // werden aber mit TElDisp0 wie Elementlasten verarbeitet
-    lastfall = 0
-    disp0 = [0.0, 0.0, 0.0]                         // Knotenvorverformungen gedreht in Richtung eines gedrehten Lagers
+    lf = 0
+    dispx0 = 0.0                                    // Knotenvorverformungen gedreht in Richtung eines gedrehten Lagers
+    dispz0 = 0.0
+    phi0 = 0.0
     ux = 0.0                                        // Knotenvorverformungen in globale x-Richtung
     uz = 0.0                                        // Knotenvorverformungen in globale z-Richtung
 }
@@ -203,6 +208,11 @@ class TElLoads {
     eps_Ts: number = 0.0
     sigmaV: number = 0.0
     delta_s: number = 0.0
+    dispx0 = 0.0
+    dispz0 = 0.0
+    phi0 = 0.0
+    node0 = 0
+    dispL0: number[] = Array(6)
 
     C1: number = 0.0                    // Integrationskonstante C1 für beidseitig eingespannt
     C2: number = 0.0                    // Integrationskonstante C2 für beidseitig eingespannt
@@ -273,12 +283,16 @@ export function rechnen() {
 
     el = document.getElementById('id_button_nelem') as any;
     nelem = Number(el.nel);
+    nelem_Balken = nelem;
 
     el = document.getElementById('id_button_nnodalloads') as any;
     nloads = Number(el.nel);
 
     el = document.getElementById('id_button_nstabvorverformungen') as any;
     nstabvorverfomungen = Number(el.nel);
+
+    el = document.getElementById('id_button_nnodedisps') as any;
+    nNodeDisps = Number(el.nel);
 
     el = document.getElementById('id_button_nlastfaelle') as any;
     nlastfaelle = Number(el.nel);
@@ -446,11 +460,11 @@ function read_nodes() {
 
     let i: number;
 
-    const el = document.getElementById('id_knoten_tabelle');
+    let el = document.getElementById('id_knoten_tabelle');
     //console.log('EL: >>', el);
     //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
-    const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
     //console.log('nZeilen', table.rows.length);
     //console.log('nSpalten', table.rows[0].cells.length);
 
@@ -462,7 +476,7 @@ function read_nodes() {
     let nRowTab = table.rows.length;
     let nColTab = table.rows[0].cells.length;
     let wert: any;
-    const shad = el?.shadowRoot?.getElementById('mytable')
+    let shad = el?.shadowRoot?.getElementById('mytable')
 
     for (let izeile = 1; izeile < nRowTab; izeile++) {
         let iz = izeile - 1
@@ -477,11 +491,40 @@ function read_nodes() {
             else if (ispalte === 5) node[iz].L[2] = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 6) node[iz].phi = Number(testNumber(wert, izeile, ispalte, shad));
 
-
         }
     }
 
     nnodesTotal = nnodes;
+
+    // definierte Knotenverformungen
+
+    for (i = 0; i < nNodeDisps; i++) {
+        nodeDisp0.push(new TNodeDisp)
+    }
+
+    el = document.getElementById('id_nnodedisps_tabelle');
+    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nRowTab = table.rows.length;
+    nColTab = table.rows[0].cells.length;
+
+    shad = el?.shadowRoot?.getElementById('mytable')
+
+    for (let izeile = 1; izeile < nRowTab; izeile++) {
+        let iz = izeile - 1
+        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+            wert = child.value;
+            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+            if (ispalte === 1) nodeDisp0[iz].node = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) nodeDisp0[iz].lf = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) nodeDisp0[iz].dispx0 = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 4) nodeDisp0[iz].dispz0 = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 5) nodeDisp0[iz].phi0 = Number(testNumber(wert, izeile, ispalte, shad));
+
+        }
+    }
+
 }
 
 
@@ -1107,6 +1150,29 @@ function calculate() {
             load[i].p[1] = node[kn].si * load[i].Px + node[kn].co * load[i].Pz
         }
     }
+
+    // vorgegebene Knotenverformungen den Elementlasten zuordnen
+
+    let nElNodeDisps = 0
+    for (i = 0; i < nNodeDisps; i++) {
+        for (j = 0; j < nelem_Balken; j++) {
+            if (nodeDisp0[i].node === element[j].nod[0] || nodeDisp0[i].node === element[j].nod[1]) {
+                nElNodeDisps = nElNodeDisps + 1
+                eload.push(new TElLoads())
+                eload[ntotalEloads].art = 8
+                eload[ntotalEloads].element = j
+                eload[ntotalEloads].dispx0 = nodeDisp0[i].dispx0 / 1000.0   // von mm in m
+                eload[ntotalEloads].dispz0 = nodeDisp0[i].dispz0 / 1000.0
+                eload[ntotalEloads].phi0 = nodeDisp0[i].phi0 / 1000.0       // von mrad in rad
+                eload[ntotalEloads].node0 = nodeDisp0[i].node
+                eload[ntotalEloads].lf = nodeDisp0[i].lf
+                ntotalEloads++;
+            }
+        }
+    }
+
+    neloads = ntotalEloads;
+
 
 
     // für die Grafik

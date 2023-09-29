@@ -61,6 +61,7 @@ export let column_string_kombitabelle: string;
 export let typs_string_kombitabelle: string;
 //export let column_width_elementtabelle: string;
 const nkombiSpalten_init = "3"; // immer 1 mehr als nlastfaelle_init
+const nnodedisps_init = "0";
 
 export const app = {
   appName: "d2beam",
@@ -220,7 +221,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
               <td>
                 <input
                   type="number"
-                  step='any'
+                  step="any"
                   id="id_maxu_schief"
                   name="maxu_schief"
                   class="input_tab"
@@ -375,12 +376,13 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
+
       <sl-tab-panel name="tab-knoten"
         ><p>
           <b>Eingabe der Knotenkoordinaten und Lager</b><br /><br />
-          -1 = starre Lagerung<br />
+          1 = starre Lagerung<br />
           0 oder leere Zelle = frei beweglich<br />
-          > 0 = Federsteifigkeit in kN/m bzw. kNm/rad<br />
+          > 1 = Federsteifigkeit in kN/m bzw. kNm/rad<br />
           <br />
           Drehung des Lagers im Gegenuhrzeigersinn positiv<br /><br />
         </p>
@@ -401,9 +403,36 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
           nspalten="6"
           columns='["No", "x [m]", "z [m]", "L<sub>x</sub>", "L<sub>z</sub>", "L<sub>&phi;</sub>", "Winkel [°]"]'
         ></dr-tabelle>
+
+        <p><br /><b>Knotenverformungen</b><br /></p>
+        <p>zum Beispiel für Stützensenkungen</p>
+        <p>Die Richtungen stimmen mit den Richtungen des zugehörigen gedrehten Lagerknotens überein.
+          <br>
+          Die vorgegebenen Verformungen müssen in der Knotentabelle (oben) als <b>starr</b> gelagert
+          markiert sein! <br>Es sind nur die Werte in den Tabellenzellen einzugeben, für die definierte Verformungen gewünscht werden.<br>
+          Nur Werte ungleich 0 werden berücksichtigt.
+        </p>
+        <p>
+          Anzahl Knoten mit <br>vorgebenenen Verformungen:
+          <dr-button-pm
+            id="id_button_nnodedisps"
+            nel="${nnodedisps_init}"
+            inputid="nnodedisps"
+          ></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}"
+            >Resize Tabelle</sl-button
+          >
+        </p>
+        <dr-tabelle
+          id="id_nnodedisps_tabelle"
+          nzeilen="${nnodedisps_init}"
+          nspalten="5"
+          columns='["No", "Knoten", "Lastfall", "u<sub>x&prime;0</sub> [mm]", "u<sub>z&prime;0</sub> [mm]", "&phi;<sub>0</sub> [mrad]"]'
+        ></dr-tabelle>
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
+
       <sl-tab-panel name="tab-knotenlasten"
         ><p><b>Eingabe der Knotenlasten</b><br /><br /></p>
         <p>
@@ -579,9 +608,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
               </td>
             </tr>
             <tr>
-              <td>
-                Anzahl Kombinationen:
-              </td>
+              <td>Anzahl Kombinationen:</td>
               <td>
                 <dr-button-pm
                   id="id_button_nkombinationen"
@@ -1168,6 +1195,16 @@ export function resizeTables() {
     el?.setAttribute("nzeilen", nnodes);
   }
   {
+    const el_knoten = document.getElementById("id_button_nnodedisps");
+    const nnodes = (el_knoten?.shadowRoot?.getElementById(
+      "nnodedisps"
+    ) as HTMLInputElement).value;
+
+    const el = document.getElementById("id_nnodedisps_tabelle");
+    console.log("EL: >>", el);
+    el?.setAttribute("nzeilen", nnodes);
+  }
+  {
     const el_elemente = document.getElementById("id_button_nelem");
     const nelem = (el_elemente?.shadowRoot?.getElementById(
       "nelem"
@@ -1283,6 +1320,9 @@ export function clearTables() {
   //------------------------------------------------------------------------------------------------------------
 
   let el = document.getElementById("id_knoten_tabelle");
+  el?.setAttribute("clear", "0");
+
+  el = document.getElementById("id_nnodedisps_tabelle");
   el?.setAttribute("clear", "0");
 
   el = document.getElementById("id_element_tabelle");

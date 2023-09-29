@@ -47,6 +47,7 @@ export class CTimoshenko_beam extends CElement {
     estiff_sig: number[][] = []
     estiff_sig_global: number[][] = []
     estm: number[][] = []
+    estmL2: number[][] = []       // lokale Elementsteifigkeitsmatrix incl. TH.II.O., für Lastvektor von Knotenverformungen
     ksig: number[][] = []
     trans: number[][] = []
     u: number[] = Array(6)        // Verformungen global
@@ -153,6 +154,7 @@ export class CTimoshenko_beam extends CElement {
         }
 
         this.estm = Array.from(Array(6), () => new Array(6));
+        this.estmL2 = Array.from(Array(6), () => new Array(6));
         this.ksig = Array.from(Array(6), () => new Array(6));
         this.trans = Array.from(Array(6), () => new Array(6).fill(0.0));
         this.estiff = Array.from(Array(6), () => new Array(6));
@@ -384,10 +386,13 @@ export class CTimoshenko_beam extends CElement {
                     sum = 0.0
                     for (let l = 0; l < 6; l++) {
                         sum = sum + this.estm[j][l] * this.trans[l][k]
+
                     }
                     help[j][k] = sum
                 }
             }
+
+            this.estmL2 = this.estm
 
         } else {
 
@@ -395,7 +400,7 @@ export class CTimoshenko_beam extends CElement {
 
             for (j = 0; j < 6; j++) {
                 for (k = 0; k < 6; k++) {
-                    estm[j][k] = this.estm[j][k] + this.normalkraft * this.ksig[j][k]
+                    this.estmL2[j][k] = this.estm[j][k] + this.normalkraft * this.ksig[j][k]
                 }
             }
 
@@ -403,7 +408,7 @@ export class CTimoshenko_beam extends CElement {
                 for (k = 0; k < 6; k++) {
                     sum = 0.0
                     for (let l = 0; l < 6; l++) {
-                        sum = sum + estm[j][l] * this.trans[l][k]
+                        sum = sum + this.estmL2[j][l] * this.trans[l][k]
                     }
                     help[j][k] = sum
                 }
@@ -740,6 +745,35 @@ export class CTimoshenko_beam extends CElement {
 
             console.log("EINZELLAST + MOMENT", eload[ieload].re[1], eload[ieload].re[4], eload[ieload].re[2], eload[ieload].re[5])
         }
+
+        else if (eload[ieload].art === 8) {              // Knotenverformungen
+
+            if (eload[ieload].node0 === this.nod1) {
+                eload[ieload].dispL0[0] = this.trans[0][0] * eload[ieload].dispx0 + this.trans[0][1] * eload[ieload].dispz0
+                eload[ieload].dispL0[1] = this.trans[1][0] * eload[ieload].dispx0 + this.trans[1][1] * eload[ieload].dispz0
+                eload[ieload].dispL0[2] = eload[ieload].phi0
+                eload[ieload].dispL0[3] = 0.0
+                eload[ieload].dispL0[4] = 0.0
+                eload[ieload].dispL0[5] = 0.0
+            } else {
+                eload[ieload].dispL0[0] = 0.0
+                eload[ieload].dispL0[1] = 0.0
+                eload[ieload].dispL0[2] = 0.0
+                eload[ieload].dispL0[3] = this.trans[3][3] * eload[ieload].dispx0 + this.trans[3][4] * eload[ieload].dispz0
+                eload[ieload].dispL0[4] = this.trans[4][3] * eload[ieload].dispx0 + this.trans[4][4] * eload[ieload].dispz0
+                eload[ieload].dispL0[5] = eload[ieload].phi0
+
+            }
+            for (let j = 0; j < 6; j++) {
+                let sum = 0.0
+                for (let k = 0; k < 6; k++) {
+                    sum += this.estmL2[j][k] * eload[ieload].dispL0[k]
+                }
+                eload[ieload].re[j] = sum
+            }
+            console.log("LASTVEKTOR 8 ", eload[ieload].re)
+        }
+
         else if (eload[ieload].art === 9) {              // zentrische Vorspannung
 
             eload[ieload].re[0] = -this.area * eload[ieload].sigmaV
@@ -1134,6 +1168,17 @@ export class CTimoshenko_beam extends CElement {
                                     Mx = Mx - M
                                 }
                             }
+                        }
+                        else if (eload[ieload].art === 8) {         // Knotenverformung
+                            for (let i = 0; i < 6; i++) edisp[i] = eload[ieload].dispL0[i];
+                            Nu[0] = (1.0 - x / sl);
+                            Nu[1] = x / sl
+                            Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+                            Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+                            Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+                            Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+                            ux += Nu[0] * edisp[0] + Nu[1] * edisp[3]
+                            wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
                         }
                     }
                 }

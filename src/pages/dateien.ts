@@ -98,6 +98,10 @@ function handleFileSelect_read() {
                         if (jobj.n_iter === undefined) el.setValue(5);
                         else el.setValue(Math.max(jobj.n_iter, 2));
 
+                        el = document.getElementById('id_button_nnodedisps') as drButtonPM;
+                        if (jobj.nNodeDisps === undefined) el.setValue(0);
+                        else el.setValue(jobj.nNodeDisps);
+
                         let els = document.getElementById('id_THIIO') as HTMLSelectElement;
                         if (jobj.THIIO_flag !== undefined) {
                             els.options[jobj.THIIO_flag].selected = true;
@@ -204,6 +208,20 @@ function handleFileSelect_read() {
                             child.value = jobj.stabvorverformung[i - 1][j - 1];
                         }
                     }
+
+                    el = document.getElementById('id_nnodedisps_tabelle') as HTMLElement;
+                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+                    nSpalten = tabelle.rows[0].cells.length;
+
+                    for (i = 1; i < tabelle.rows.length; i++) {
+                        for (j = 1; j < nSpalten; j++) {
+                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+                            child.value = jobj.nodeDisp0[i - 1][j - 1];
+                        }
+                    }
+
+
 
                     el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
                     tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
@@ -401,6 +419,22 @@ async function handleFileSelect_save() {
             }
         }
 
+
+        el = document.getElementById('id_nnodedisps_tabelle') as HTMLElement;
+        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+        nZeilen = tabelle.rows.length - 1;
+        nSpalten = tabelle.rows[0].cells.length - 1;
+        const nNodeDisps = nZeilen
+        const nodeDisp0 = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+        for (i = 0; i < nZeilen; i++) {
+            for (j = 0; j < nSpalten; j++) {
+                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+                nodeDisp0[i][j] = child.value
+            }
+        }
+
+
         let qsClassName = new Array(nQuerschnittSets)
         let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(12));
 
@@ -432,20 +466,9 @@ async function handleFileSelect_save() {
             'maxU_dir': maxU_dir,
             'maxU_schief': maxU_schief,
             'neigv': neigv,
-            /*
-            'Vy': document.getElementById('Vy').value,
-            'Vz': document.getElementById('Vz').value,
-            'Nx': document.getElementById('Nx').value,
-            'Mxp': document.getElementById('Mxp').value,
-            'Mxs': document.getElementById('Mxs').value,
-            'Momega': document.getElementById('Momega').value,
-            'My': document.getElementById('My').value,
-            'Mz': document.getElementById('Mz').value,
+            'nNodeDisps': nNodeDisps,
 
-            'fyRd': document.getElementById('fyRd').value,
-            'EMod_ref': document.getElementById('EMod_ref').value,
-            'mue_ref': document.getElementById('mue_ref').value,
-*/
+
             'elem': elem,
             'node': node,
             'nodalLoad': nodalload,
@@ -456,6 +479,7 @@ async function handleFileSelect_save() {
             'combination': kombination,
             'qsclassname': qsClassName,
             'qswerte': qsWerte,
+            'nodeDisp0':nodeDisp0
         };
 
 
