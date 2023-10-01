@@ -1610,34 +1610,33 @@ function draw_knotenkraefte(two: Two) {
 function draw_lagerkraefte(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
-    let plength = 35 /*slmax / 25.*/, delta = 12 //slmax / 100.0
+    let plength = 35, delta = 30
     let xpix: number, zpix: number
 
-    plength = tr.World0(2 * plength / devicePixelRatio)
+    plength = tr.World0((style_pfeil_lager.a + style_pfeil_lager.b ) / devicePixelRatio)
     delta = tr.World0(delta / devicePixelRatio)
 
     for (let i = 0; i < nnodes; i++) {
         let x = node[i].x;
         let z = node[i].z;
+        let alpha = node[i].phi * Math.PI / 180.0
 
         let wert: number
         if (node[i].L[0] === -1 || node[i].kx > 0.0) {      // horizontales Lager
 
-            if (THIIO_flag === 0) {
-            }
-            else if (THIIO_flag === 1) {
-            }
             wert = lagerkraefte._(i, 0, draw_lastfall - 1)
             console.log("wert", wert, draw_lastfall)
 
             if (wert >= 0.0) {
-                draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_lager)
+                //                draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_lager)
+                draw_arrow_alpha(two, x + delta * Math.cos(-alpha), z + delta * Math.sin(-alpha), -alpha, 1.0, style_pfeil_lager)
             } else {
-                draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_lager)
+                //                draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_lager)
+                draw_arrow_alpha(two, x + delta * Math.cos(-alpha), z + delta * Math.sin(-alpha), -alpha, -1.0, style_pfeil_lager)
             }
 
-            xpix = tr.xPix(x + delta + plength) + 5
-            zpix = tr.zPix(z) - 5
+            xpix = tr.xPix(x + (delta + plength) * Math.cos(-alpha)) + 5
+            zpix = tr.zPix(z + (delta + plength) * Math.sin(-alpha)) - 5
             const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
             const txt = two.makeText(str, xpix, zpix, style_txt_lager)
             txt.alignment = 'left'
@@ -1650,19 +1649,16 @@ function draw_lagerkraefte(two: Two) {
             console.log("wert", wert)
 
             if (wert >= 0.0) {
-                draw_arrow(two, x, z + delta + plength, x, z + delta, style_pfeil_lager)
-                // xpix = tr.xPix(x) + 5
-                // zpix = tr.zPix(z + delta + plength) + 5
-                // const str = myFormat(wert, 1, 2) + 'kN'
-                // const txt = two.makeText(str, xpix, zpix, style_txt_lager)
-                // txt.alignment = 'left'
-                // txt.baseline = 'top'
+                //                draw_arrow(two, x, z + delta + plength, x, z + delta, style_pfeil_lager)
+                draw_arrow_alpha(two, x + delta * Math.cos(-alpha + 1.5707963), z + delta * Math.sin(-alpha + 1.5707963), -alpha + 1.5707963, 1.0, style_pfeil_lager)
+
             } else {
-                draw_arrow(two, x, z + delta, x, z + delta + plength, style_pfeil_lager)
+                //                draw_arrow(two, x, z + delta, x, z + delta + plength, style_pfeil_lager)
+                draw_arrow_alpha(two, x + delta * Math.cos(-alpha + 1.5707963), z + delta * Math.sin(-alpha + 1.5707963), -alpha + 1.5707963, -1.0, style_pfeil_lager)
             }
 
-            xpix = tr.xPix(x) + 5
-            zpix = tr.zPix(z + delta + plength) + 5
+            xpix = tr.xPix(x + (delta + plength) * Math.cos(-alpha + 1.5707963)) + 5
+            zpix = tr.zPix(z + (delta + plength) * Math.sin(-alpha + 1.5707963)) + 5
             const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
             const txt = two.makeText(str, xpix, zpix, style_txt_lager)
             txt.alignment = 'left'
@@ -1678,9 +1674,7 @@ function draw_lagerkraefte(two: Two) {
 
             if (wert >= 0.0) {
                 draw_moment_arrow(two, x, z, -1.0, radius, style_pfeil_lager)
-                //draw_arrow(two, x, z + delta + plength, x, z + delta, style_pfeil_lager)
             } else {
-                //draw_arrow(two, x, z + delta, x, z + delta + plength, style_pfeil_lager)
                 draw_moment_arrow(two, x, z, 1.0, radius, style_pfeil_lager)
             }
 
@@ -1962,6 +1956,68 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
     group.translation.set(x0, z0)
 
 }
+
+//--------------------------------------------------------------------------------------------------------
+function draw_arrow_alpha(two: Two, x1: number, z1: number, alpha: number, vorzeichen: number, styles?: any) {
+    //----------------------------------------------------------------------------------------------------
+
+    let b = 25, h = 16, linewidth = 2, color = '#000000'
+    let a = 35.0
+
+    if (styles) {
+        console.log("styles", styles)
+        if (styles.linewidth) linewidth = styles.linewidth
+        if (styles.a) a = styles.a
+        if (styles.b) b = styles.b
+        if (styles.h) h = styles.h
+        if (styles.color) color = styles.color
+    }
+
+    b = b / devicePixelRatio
+    h = h / devicePixelRatio
+    a = a / devicePixelRatio;
+
+    linewidth = linewidth / devicePixelRatio
+
+    //alpha = alpha * Math.PI / 180.0
+
+    let x0 = Math.round(tr.xPix(x1));
+    let z0 = Math.round(tr.zPix(z1));
+
+    let group = two.makeGroup();
+    var vertices = [];
+    let line: any
+    if (vorzeichen === -1.0) {
+        line = two.makeLine(0, 0, a, 0);
+    } else {
+        line = two.makeLine(b, 0, a + b, 0);
+    }
+    line.linewidth = linewidth;
+    line.stroke = color;
+
+    group.add(line)
+
+    if (vorzeichen === -1.0) {
+        vertices.push(new Two.Vector(a, -h / 2));
+        vertices.push(new Two.Vector(a + b, 0));
+        vertices.push(new Two.Vector(a, h / 2));
+    } else {
+        vertices.push(new Two.Vector(b, -h / 2));
+        vertices.push(new Two.Vector(0, 0));
+        vertices.push(new Two.Vector(b, h / 2));
+    }
+    // @ts-ignore
+    let dreieck = two.makePath(vertices);
+    dreieck.fill = color;
+    dreieck.stroke = color;
+    dreieck.linewidth = 1;
+
+    group.add(dreieck)
+    group.rotation = alpha
+    group.translation.set(x0, z0)
+
+}
+
 
 
 //--------------------------------------------------------------------------------------------------------
