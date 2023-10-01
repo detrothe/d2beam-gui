@@ -1197,9 +1197,26 @@ export function drawsystem() {
             z2 = Math.round(tr.zPix(element[ielem].z2));
             //console.log("x..", element[ielem].x1, element[ielem].z1, element[ielem].x2, element[ielem].z2)
             //console.log("elem", ielem, x1, z1, x2, z2)
+
             let line = two.makeLine(x1, z1, x2, z2);
             if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
             else line.linewidth = 5 / devicePixelRatio;
+
+            // gestrichelte Faser
+
+            let dx = (element[ielem].x2 - element[ielem].x1) / 3
+            let dz = (element[ielem].z2 - element[ielem].z1) / 3
+
+            let abstand = 10 / devicePixelRatio
+            let tmpX1 = tr.xPix(element[ielem].x1 + dx) - element[ielem].sinus * abstand
+            let tmpZ1 = tr.zPix(element[ielem].z1 + dz) + element[ielem].cosinus * abstand
+            let tmpX2 = tr.xPix(element[ielem].x2 - dx) - element[ielem].sinus * abstand
+            let tmpZ2 = tr.zPix(element[ielem].z2 - dz) + element[ielem].cosinus * abstand
+            //console.log("tmp", tmpX1, tmpZ1, tmpX2, tmpZ2)
+
+            let line1 = two.makeLine(tmpX1, tmpZ1, tmpX2, tmpZ2);
+            line1.linewidth = 1 / devicePixelRatio;
+            line1.dashes = [5, 3]
 
             if (show_labels && onlyLabels) {
 
@@ -1613,7 +1630,7 @@ function draw_lagerkraefte(two: Two) {
     let plength = 35, delta = 30
     let xpix: number, zpix: number
 
-    plength = tr.World0((style_pfeil_lager.a + style_pfeil_lager.b ) / devicePixelRatio)
+    plength = tr.World0((style_pfeil_lager.a + style_pfeil_lager.b) / devicePixelRatio)
     delta = tr.World0(delta / devicePixelRatio)
 
     for (let i = 0; i < nnodes; i++) {
@@ -1994,6 +2011,7 @@ function draw_arrow_alpha(two: Two, x1: number, z1: number, alpha: number, vorze
     }
     line.linewidth = linewidth;
     line.stroke = color;
+    //line.dashes = [4,2]
 
     group.add(line)
 
