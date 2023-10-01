@@ -585,9 +585,15 @@ function read_element_loads() {
     el = document.getElementById('id_button_ntemperaturlasten') as any;
     const ntemperaturlasten = Number(el.nel);
 
-    ntotalEloads = neloads = nstreckenlasten + neinzellasten + ntemperaturlasten
+    el = document.getElementById('id_button_nvorspannungen') as any;
+    const nvorspannungen = Number(el.nel);
 
-    console.log("NELOADS", neloads, nstreckenlasten, neinzellasten, ntemperaturlasten)
+    el = document.getElementById('id_button_nspannschloesser') as any;
+    const nspannschloesser = Number(el.nel);
+
+    ntotalEloads = neloads = nstreckenlasten + neinzellasten + ntemperaturlasten + nvorspannungen + nspannschloesser
+
+    console.log("NELOADS", neloads, nstreckenlasten, neinzellasten, ntemperaturlasten, nvorspannungen, nspannschloesser)
 
     for (i = 0; i < neloads; i++) {
         eload.push(new TElLoads())
@@ -713,7 +719,7 @@ function read_element_loads() {
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
             if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[ieload].sigmaV = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[ieload].sigmaV = Number(testNumber(wert, izeile, ispalte, shad))*1000.0; //von MN/m² in kN/m²
             eload[ieload].art = 9;
         }
         if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
@@ -740,7 +746,7 @@ function read_element_loads() {
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
             if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[ieload].delta_s = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) eload[ieload].delta_s = Number(testNumber(wert, izeile, ispalte, shad))/1000.;  // von mm in m
             eload[ieload].art = 10;
         }
         if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
