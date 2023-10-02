@@ -399,10 +399,10 @@ export function drawsystem() {
         let iLastfall = draw_lastfall
         let scalefactor = 0
         if (THIIO_flag === 0) {
-            scalefactor = 0.1 * slmax / maxValue_lf[iLastfall - 1].disp * 1000.
+            if (maxValue_lf[iLastfall - 1].disp != 0.0 ) scalefactor = 0.1 * slmax / maxValue_lf[iLastfall - 1].disp * 1000.
         }
         else if (THIIO_flag === 1) {
-            scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].disp * 1000.
+            if (  maxValue_komb[iLastfall - 1].disp != 0.0 ) scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].disp * 1000.
         }
 
         scalefactor *= scaleFactor_panel
