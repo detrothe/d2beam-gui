@@ -208,11 +208,13 @@ class TElLoads {
     eps_Ts: number = 0.0
     sigmaV: number = 0.0
     delta_s: number = 0.0
+
     dispx0 = 0.0
     dispz0 = 0.0
     phi0 = 0.0
     node0 = 0
     dispL0: number[] = Array(6)
+    ieq0 = [-1, -1, -1]                   // Gleichungsnummern für vordefinierte Knotenverformungen
 
     C1: number = 0.0                    // Integrationskonstante C1 für beidseitig eingespannt
     C2: number = 0.0                    // Integrationskonstante C2 für beidseitig eingespannt
@@ -719,7 +721,7 @@ function read_element_loads() {
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
             if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[ieload].sigmaV = Number(testNumber(wert, izeile, ispalte, shad))*1000.0; //von MN/m² in kN/m²
+            else if (ispalte === 3) eload[ieload].sigmaV = Number(testNumber(wert, izeile, ispalte, shad)) * 1000.0; //von MN/m² in kN/m²
             eload[ieload].art = 9;
         }
         if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
@@ -746,7 +748,7 @@ function read_element_loads() {
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
             if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[ieload].delta_s = Number(testNumber(wert, izeile, ispalte, shad))/1000.;  // von mm in m
+            else if (ispalte === 3) eload[ieload].delta_s = Number(testNumber(wert, izeile, ispalte, shad)) / 1000.;  // von mm in m
             eload[ieload].art = 10;
         }
         if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
@@ -1172,6 +1174,11 @@ function calculate() {
                 eload[ntotalEloads].phi0 = nodeDisp0[i].phi0 / 1000.0       // von mrad in rad
                 eload[ntotalEloads].node0 = nodeDisp0[i].node
                 eload[ntotalEloads].lf = nodeDisp0[i].lf
+
+                if (nodeDisp0[i].dispx0 !== 0) eload[ntotalEloads].ieq0[0] = node[nodeDisp0[i].node].L[0];
+                if (nodeDisp0[i].dispz0 !== 0) eload[ntotalEloads].ieq0[1] = node[nodeDisp0[i].node].L[1];
+                if (nodeDisp0[i].phi0 !== 0) eload[ntotalEloads].ieq0[2] = node[nodeDisp0[i].node].L[2];
+
                 ntotalEloads++;
             }
         }
@@ -1371,6 +1378,14 @@ function calculate() {
                     }
                 }
 
+            }
+
+            // wenn mindestens eine vorgegebenen Knotenverschiebung im Lastfall vorhanden ist, dann für diese Freiheitsgrade Zeilen und Spalten bearbeiten
+
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                if ((eload[ieload].art === 8) && (eload[ieload].lf === iLastfall)) {
+                    console.log("VORDEFINIERTE VERFORMUNGEN", eload[ieload].ieq0)
+                }
             }
 
             for (i = 0; i < neq; i++) {
