@@ -530,9 +530,11 @@ export class CTimoshenko_beam extends CElement {
 
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastf)) {
-                    for (i = 0; i < 6; i++) {
-                        this.F[i] = this.F[i] + eload[ieload].el_r[i]
-                    }
+                    //if (eload[ieload].art !== 8) {
+                        for (i = 0; i < 6; i++) {
+                            this.F[i] = this.F[i] + eload[ieload].el_r[i]
+                        }
+                    //}
                 }
             }
         }

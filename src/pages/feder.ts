@@ -119,6 +119,7 @@ export class CSpring extends CElement {
             this.Fi[j] = sum
         }
 
+        console.log("INTERNE KRAFT FEDER", this.Fi)
 
         return this.Fi;
 
@@ -128,12 +129,37 @@ export class CSpring extends CElement {
     //---------------------------------------------------------------------------------------------
     berechneLagerkraefte() {
 
-        // let nodi: number
+        let nodi: number
 
-        // nodi = this.nod
-        // lagerkraft[nodi][0] = lagerkraft[nodi][0] - this.Fi[0]
-        // lagerkraft[nodi][1] = lagerkraft[nodi][1] - this.Fi[1]
-        // lagerkraft[nodi][2] = lagerkraft[nodi][2] - this.Fi[2]
+        nodi = this.nod
+        lagerkraft[nodi][0] = lagerkraft[nodi][0] - this.Fi[0]
+        lagerkraft[nodi][1] = lagerkraft[nodi][1] - this.Fi[1]
+        lagerkraft[nodi][2] = lagerkraft[nodi][2] - this.Fi[2]
 
+    }
+
+
+    //---------------------------------------------------------------------------------------------
+    berechneElementlasten(ieload: number) {
+
+        console.log("in FEDER berechneElementlasten")
+
+        if (eload[ieload].art === 8) {              // Knotenverformungen
+
+            if (eload[ieload].node0 === this.nod) {
+                eload[ieload].dispL0[0] = eload[ieload].dispx0
+                eload[ieload].dispL0[1] = eload[ieload].dispz0
+                eload[ieload].dispL0[2] = eload[ieload].phi0
+            }
+
+            for (let j = 0; j < 3; j++) {
+                let sum = 0.0
+                for (let k = 0; k < 3; k++) {
+                    sum += this.estm[j][k] * eload[ieload].dispL0[k]
+                }
+                eload[ieload].el_r[j] = sum
+            }
+            console.log("FEDER LASTVEKTOR 8 ", eload[ieload].el_r)
+        }
     }
 }

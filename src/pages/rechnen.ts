@@ -31,6 +31,7 @@ export let nNodeDisps = 0;
 
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
+export let disp_print: TFArray3D;
 export let stabendkraefte: TFArray3D
 export let lagerkraefte: TFArray3D
 export let u_lf = [] as number[][]
@@ -1163,12 +1164,33 @@ function calculate() {
 
     let nElNodeDisps = 0
     for (i = 0; i < nNodeDisps; i++) {
-        for (j = 0; j < nelem_Balken; j++) {
+        for (j = 0; j < nelem; j++) {
             if (nodeDisp0[i].node === element[j].nod[0] || nodeDisp0[i].node === element[j].nod[1]) {
                 nElNodeDisps = nElNodeDisps + 1
                 eload.push(new TElLoads())
                 eload[ntotalEloads].art = 8
                 eload[ntotalEloads].element = j
+                eload[ntotalEloads].dispx0 = nodeDisp0[i].dispx0 / 1000.0   // von mm in m
+                eload[ntotalEloads].dispz0 = nodeDisp0[i].dispz0 / 1000.0
+                eload[ntotalEloads].phi0 = nodeDisp0[i].phi0 / 1000.0       // von mrad in rad
+                eload[ntotalEloads].node0 = nodeDisp0[i].node
+                eload[ntotalEloads].lf = nodeDisp0[i].lf
+
+                if (nodeDisp0[i].dispx0 !== 0) eload[ntotalEloads].ieq0[0] = node[nodeDisp0[i].node].L[0];
+                if (nodeDisp0[i].dispz0 !== 0) eload[ntotalEloads].ieq0[1] = node[nodeDisp0[i].node].L[1];
+                if (nodeDisp0[i].phi0 !== 0) eload[ntotalEloads].ieq0[2] = node[nodeDisp0[i].node].L[2];
+
+                ntotalEloads++;
+            }
+        }
+    }
+    for (i = 0; i < nNodeDisps; i++) {
+        for (j = 0; j < nfedern; j++) {
+            if (nodeDisp0[i].node === feder[j].nod) {
+                nElNodeDisps = nElNodeDisps + 1
+                eload.push(new TElLoads())
+                eload[ntotalEloads].art = 8
+                eload[ntotalEloads].element = j + nelem
                 eload[ntotalEloads].dispx0 = nodeDisp0[i].dispx0 / 1000.0   // von mm in m
                 eload[ntotalEloads].dispz0 = nodeDisp0[i].dispz0 / 1000.0
                 eload[ntotalEloads].phi0 = nodeDisp0[i].phi0 / 1000.0       // von mrad in rad
@@ -1319,6 +1341,7 @@ function calculate() {
     if (THIIO_flag === 0) { // Theorie I.Ordnung
 
         disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nlastfaelle);   // nlastfaelle
+        disp_print = new TFArray3D(1, nnodesTotal, 1, 3, 1, nlastfaelle);   // nlastfaelle
         console.log("nlastfaelle", nlastfaelle)
         stabendkraefte = new TFArray3D(1, 6, 1, nelemTotal, 1, nlastfaelle);   // nlastfaelle
         lagerkraefte = new TFArray3D(0, nnodes - 1, 0, 2, 0, nlastfaelle - 1);   //
@@ -1338,15 +1361,16 @@ function calculate() {
                 el[ielem].addiereElementsteifigkeitmatrix(stiff)
 
                 for (let ieload = 0; ieload < neloads; ieload++) {
+                    console.log("********************************", ielem, ieload, eload[ieload].element)
                     if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastfall)) {
                         el[ielem].berechneElementlasten(ieload)
                     }
                 }
             }
 
-            for (j = 0; j < neq; j++) {
-                console.log('stiff[]', stiff[j])
-            }
+            // for (j = 0; j < neq; j++) {
+            //     console.log('stiff[]', stiff[j])
+            // }
 
             // Aufstellen der rechte Seite, Einzellasten
 
@@ -1380,12 +1404,32 @@ function calculate() {
 
             }
 
-            // wenn mindestens eine vorgegebenen Knotenverschiebung im Lastfall vorhanden ist, dann für diese Freiheitsgrade Zeilen und Spalten bearbeiten
+            // wenn mindestens eine vorgegebenen Knotenverschiebung im Lastfall vorhanden ist,
+            // dann für diese Freiheitsgrade Zeilen und Spalten bearbeiten
 
             for (let ieload = 0; ieload < neloads; ieload++) {
+
                 if ((eload[ieload].art === 8) && (eload[ieload].lf === iLastfall)) {
                     console.log("VORDEFINIERTE VERFORMUNGEN", eload[ieload].ieq0)
+
+                    for (let k = 0; k < 3; k++) {
+
+                        if (eload[ieload].ieq0[k] >= 0) {
+                            let ieq = eload[ieload].ieq0[k]
+                            console.log("I E Q ", ieq)
+                            for (i = 0; i < neq; i++) {
+                                stiff[i][ieq] = 0.0   // Spalte streichen
+                                stiff[ieq][i] = 0.0   // Zeile streichen
+                            }
+                            stiff[ieq][ieq] = 1000.0
+                            R[ieq] = 0.0
+                        }
+                    }
                 }
+            }
+
+            for (j = 0; j < neq; j++) {
+                console.log('stiff[]', stiff[j])
             }
 
             for (i = 0; i < neq; i++) {
@@ -1407,7 +1451,8 @@ function calculate() {
                 u_lf[i][iLastfall - 1] = u[i]
             }
 
-            // Rückrechnung
+            // ----------- R ü c k r e c h n u n g -----------
+
 
             let force: number[] = Array(6)
 
@@ -1419,7 +1464,7 @@ function calculate() {
                 el[ielem].berechneLagerkraefte();
             }
 
-            let disp = [3]
+            let disp = Array(3)
             for (i = 0; i < nnodes; i++) {                      // Ausgabe der Verschiebungen der einzelnen Knoten im gedrehten Koordinatensystem
                 for (j = 0; j < 3; j++) {
                     let ieq = node[i].L[j]
@@ -1434,6 +1479,26 @@ function calculate() {
                     disp_lf.set(i + 1, j + 1, iLastfall, disp[j])
                     if (Math.abs(disp[j]) > maxValue_lf[iLastfall - 1].disp) maxValue_lf[iLastfall - 1].disp = Math.abs(disp[j])
                 }
+
+                // Knotenverformungen wieder einarbeiten
+
+                for (j = 0; j < nNodeDisps; j++) {
+                    if (nodeDisp0[j].node === i && nodeDisp0[j].lf === iLastfall) {
+                        console.log("<<<<<<<<<<<<<<< nNodeDisps >>>>>>>>>>>>>", i, nodeDisp0[j].lf, iLastfall)
+                        if (nodeDisp0[j].dispx0 !== 0) {
+                            disp[0] = nodeDisp0[j].dispx0 // 1000.0
+                        }
+                        if (nodeDisp0[j].dispz0 !== 0) {
+                            disp[1] = nodeDisp0[j].dispz0 // 1000.0
+                        }
+                        if (nodeDisp0[j].phi0 !== 0) {
+                            disp[2] = nodeDisp0[j].phi0   // 1000.
+                        }
+
+                    }
+                }
+                for (j = 0; j < 3; j++) disp_print.set(i + 1, j + 1, iLastfall, disp[j])
+
             }
 
             for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
@@ -1472,6 +1537,7 @@ function calculate() {
         const stiff_sig = Array.from(Array(neq), () => new Array(neq).fill(0.0));
 
         disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);
+        disp_print = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);
         u_lf = Array.from(Array(neq), () => new Array(nkombinationen).fill(0.0));
         u0_komb = Array.from(Array(neq), () => new Array(nkombinationen).fill(0.0));
 
@@ -1939,17 +2005,17 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
             newCell.setAttribute("class", "table_cell_center");
 
             newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
-            newText = document.createTextNode(myFormat(disp_lf._(i + 1, 1, iLastfall), 2, 2));  // Append a text node to the cell
+            newText = document.createTextNode(myFormat(disp_print._(i + 1, 1, iLastfall), 2, 2));  // Append a text node to the cell
             newCell.appendChild(newText);
             newCell.setAttribute("class", "table_cell_right");
 
             newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
-            newText = document.createTextNode(myFormat(disp_lf._(i + 1, 2, iLastfall), 2, 2));  // Append a text node to the cell
+            newText = document.createTextNode(myFormat(disp_print._(i + 1, 2, iLastfall), 2, 2));  // Append a text node to the cell
             newCell.appendChild(newText);
             newCell.setAttribute("class", "table_cell_right");
 
             newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
-            newText = document.createTextNode(myFormat(disp_lf._(i + 1, 3, iLastfall), 2, 2));  // Append a text node to the cell
+            newText = document.createTextNode(myFormat(disp_print._(i + 1, 3, iLastfall), 2, 2));  // Append a text node to the cell
             newCell.appendChild(newText);
             newCell.setAttribute("class", "table_cell_right");
         }
