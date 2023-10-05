@@ -1025,7 +1025,7 @@ export class CTimoshenko_beam extends CElement {
         if (THIIO_flag > 0) {
 
             for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i] + this.edisp0[i]  // Verformung + Schiefstellung
-            console.log(" 1 edisp", edisp)
+            //console.log(" 1 edisp", edisp)
 
             wL = this.wL + this.edisp0[1]
 
@@ -1043,10 +1043,10 @@ export class CTimoshenko_beam extends CElement {
                 }
             }
 
-            console.log("wL = ", wL)
-            console.log("edisp", edisp)
-            console.log("edispL", this.edispL)
-            console.log("edisp0", this.edisp0)
+            // console.log("wL = ", wL)
+            // console.log("edisp", edisp)
+            // console.log("edispL", this.edispL)
+            // console.log("edisp0", this.edisp0)
         }
 
         //let d_x = this.sl / (nelTeilungen)
@@ -1084,10 +1084,10 @@ export class CTimoshenko_beam extends CElement {
                     }
 
                 }
-console.log("Nw",Nw)
-console.log("edisp", edisp)
+                //console.log("Nw", Nw)
+                //console.log("edisp", edisp)
 
-                console.log("ANFANG, Mx", iteil, x, Mx, this.ML, u, w, wL)
+                //console.log("ANFANG, Mx", iteil, x, Mx, this.ML, u, w, wL)
 
             }
 
@@ -1299,9 +1299,7 @@ console.log("edisp", edisp)
                             else if (eload[ieload].art === 8) {         // Knotenverformung
                                 let edisp0 = Array(6)
                                 for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
-                                console.log("ART=8,edisp0", edisp0)
-                                //let wL0 = eload[ieload].dispL0[1] * kombiTabelle[iLastf][index];
-                                //let wR0 = eload[ieload].dispL0[4] * kombiTabelle[iLastf][index];
+                                //console.log("ART=8,edisp0", edisp0)
 
                                 Nu[0] = (1.0 - x / sl);
                                 Nu[1] = x / sl
