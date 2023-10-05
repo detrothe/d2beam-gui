@@ -52,7 +52,7 @@ export class CTimoshenko_beam extends CElement {
     trans: number[][] = []
     u: number[] = Array(6)        // Verformungen global
     edispL: number[] = Array(6)   // Verformungen lokal
-    edisp0: number[] = Array(6)   // Vorverformungren
+    edisp0: number[] = Array(6).fill(0.0)   // Vorverformungen
     F: number[] = Array(6)        // Stabendgrößen nach WGV im globalen Koordinatensystem
     FL: number[] = Array(6)       // Stabendgrößen nach KGV im lokalen Koordinatensystem
     Fe: number[] = Array(6)       // Vorverformungen aus Schiefstellung
@@ -354,19 +354,7 @@ export class CTimoshenko_beam extends CElement {
         this.ksig[5][4] = 6. * psi2 * fact * sl
         this.ksig[5][5] = (5. + 3. * psi2) * fact * L2
 
-        /*
-                for (let zeile = 0; zeile < 6; zeile++) {
-                    if (this.gelenk[zeile] > 0) {
-                        this.stmglenk(this.estm, zeile)
-                    }
-                }
 
-                for (let zeile = 0; zeile < 6; zeile++) {
-                    if (this.gelenk[zeile] > 0) {
-                        this.stmglenk(this.ksig, zeile)
-                    }
-                }
-        */
     }
 
 
@@ -392,17 +380,24 @@ export class CTimoshenko_beam extends CElement {
                 }
             }
 
-            this.estmL2 = this.estm
+
+            for (j = 0; j < 6; j++) {
+                for (k = 0; k < 6; k++) {
+                    this.estmL2[j][k] = this.estm[j][k]
+                }
+            }
 
         } else {
 
-            const estm = Array.from(Array(6), () => new Array(6));
+            //const estm = Array.from(Array(6), () => new Array(6));
 
             for (j = 0; j < 6; j++) {
                 for (k = 0; k < 6; k++) {
                     this.estmL2[j][k] = this.estm[j][k] + this.normalkraft * this.ksig[j][k]
                 }
             }
+
+            //for (j = 0; j < 6; j++) console.log('this.estmL2[]', this.estm[j]);
 
             for (j = 0; j < 6; j++) {
                 for (k = 0; k < 6; k++) {
@@ -531,9 +526,9 @@ export class CTimoshenko_beam extends CElement {
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastf)) {
                     //if (eload[ieload].art !== 8) {
-                        for (i = 0; i < 6; i++) {
-                            this.F[i] = this.F[i] + eload[ieload].el_r[i]
-                        }
+                    for (i = 0; i < 6; i++) {
+                        this.F[i] = this.F[i] + eload[ieload].el_r[i]
+                    }
                     //}
                 }
             }
@@ -577,6 +572,7 @@ export class CTimoshenko_beam extends CElement {
         for (i = 0; i < 3; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
 
         this.normalkraft = (this.FL[0] + this.FL[3]) / 2.0
+        console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
 
         for (i = 0; i < 6; i++) { // Verformungen lokal
             sum = 0.0
@@ -774,6 +770,7 @@ export class CTimoshenko_beam extends CElement {
                 eload[ieload].re[j] = sum
             }
             console.log("LASTVEKTOR 8 ", eload[ieload].re)
+            console.log("dispL0", eload[ieload].dispL0)
         }
 
         else if (eload[ieload].art === 9) {              // zentrische Vorspannung
@@ -1018,24 +1015,47 @@ export class CTimoshenko_beam extends CElement {
 
         let EI = this.emodul * this.Iy
 
-        console.log("class element: berechneElementSchnittgroessen von ", iLastf)
+        console.log("____________________________________________________________________________________")
+        console.log("class element: berechneElementSchnittgroessen von ", ielem, iLastf)
 
         const eta = this.eta
         const sl = this.sl
         const nenner = sl ** 3 + 12. * eta * sl
 
         if (THIIO_flag > 0) {
-            for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i] + this.edisp0[i]
+
+            for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i] + this.edisp0[i]  // Verformung + Schiefstellung
+            console.log(" 1 edisp", edisp)
+
             wL = this.wL + this.edisp0[1]
+
+            for (let ieload = 0; ieload < neloads; ieload++) {
+
+                if (eload[ieload].element === ielem) {
+                    const index = eload[ieload].lf - 1
+                    if (kombiTabelle[iLastf][index] !== 0.0) {
+
+                        if (eload[ieload].art === 8) {         // Knotenverformung
+                            wL += eload[ieload].dispL0[1] * kombiTabelle[iLastf][index];
+                            for (let i = 0; i < 6; i++)  edisp[i] += eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
+                        }
+                    }
+                }
+            }
+
+            console.log("wL = ", wL)
+            console.log("edisp", edisp)
+            console.log("edispL", this.edispL)
+            console.log("edisp0", this.edisp0)
         }
 
         //let d_x = this.sl / (nelTeilungen)
         let x = 0.0
 
-        for (let iteil = 0; iteil <= this.nTeilungen; iteil++) {
+        for (let iteil = 0; iteil < this.nTeilungen; iteil++) {
             x = this.x_[iteil]
-            Mx = this.ML + this.VL * x
             Vx = this.VL
+            Mx = this.ML + Vx * x
             Nx = this.NL
             ux = 0.0
             wx = 0.0
@@ -1064,6 +1084,10 @@ export class CTimoshenko_beam extends CElement {
                     }
 
                 }
+console.log("Nw",Nw)
+console.log("edisp", edisp)
+
+                console.log("ANFANG, Mx", iteil, x, Mx, this.ML, u, w, wL)
 
             }
 
@@ -1173,7 +1197,8 @@ export class CTimoshenko_beam extends CElement {
                         }
                         else if (eload[ieload].art === 8) {         // Knotenverformung
 
-                            for (let i = 0; i < 6; i++) edisp[i] = eload[ieload].dispL0[i];
+                            let edisp0 = Array(6)
+                            for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i];
 
                             Nu[0] = (1.0 - x / sl);
                             Nu[1] = x / sl
@@ -1181,8 +1206,8 @@ export class CTimoshenko_beam extends CElement {
                             Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
                             Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
                             Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-                            ux += Nu[0] * edisp[0] + Nu[1] * edisp[3]
-                            wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                            ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[3]
+                            wx += Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
                         }
                     }
                 }
@@ -1271,7 +1296,24 @@ export class CTimoshenko_beam extends CElement {
                                 wx += wl
 
                             }
+                            else if (eload[ieload].art === 8) {         // Knotenverformung
+                                let edisp0 = Array(6)
+                                for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
+                                console.log("ART=8,edisp0", edisp0)
+                                //let wL0 = eload[ieload].dispL0[1] * kombiTabelle[iLastf][index];
+                                //let wR0 = eload[ieload].dispL0[4] * kombiTabelle[iLastf][index];
 
+                                Nu[0] = (1.0 - x / sl);
+                                Nu[1] = x / sl
+                                Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+                                Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+                                Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+                                Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+                                ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[3]
+                                let wx0 = Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
+                                //Mx = Mx - this.NL * (wx0 - wL)
+                                wx += wx0
+                            }
                         }
                     }
                 }
@@ -1283,7 +1325,7 @@ export class CTimoshenko_beam extends CElement {
                 if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
                 if (disp > maxValue_komb[iLastf].disp) maxValue_komb[iLastf].disp = disp
 
-            }
+            }  // ende TH II Ordnung
 
             console.log("x, Vx, Mx", x, Vx, Mx, wx)
             this.M_[iLastf][iteil] = Mx

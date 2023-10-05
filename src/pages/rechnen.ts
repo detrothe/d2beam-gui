@@ -1530,6 +1530,7 @@ function calculate() {
         }   //ende iLastfall
 
     }
+
     // -------------------------------------------------------------------------------------------------------  T H  II.  O R D N U N G
 
     else if (THIIO_flag === 1) {
@@ -1558,7 +1559,7 @@ function calculate() {
         for (ielem = 0; ielem < nelem; ielem++) {
 
             for (let ieload = 0; ieload < neloads; ieload++) {
-                el[ielem].berechneElementlasten(ieload)
+                if ((eload[ieload].element === ielem) && (eload[ieload].art !== 8)) el[ielem].berechneElementlasten(ieload)
             }
         }
 
@@ -1575,6 +1576,8 @@ function calculate() {
             for (let iter = 0; iter < n_iterationen; iter++) {
 
                 console.log("_________________  I T E R  = ", iter, " ___________________")
+
+                console.log("^^^^^^^^^^^^ P G ",pg)
 
                 for (i = 0; i < neq; i++) stiff[i].fill(0.0);
                 for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0)
@@ -1625,6 +1628,9 @@ function calculate() {
                             const index = eload[ieload].lf - 1
                             console.log("elem kombi index", index, kombiTabelle[iKomb - 1][index])
                             if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+
+                                if (eload[ieload].art === 8) el[ielem].berechneElementlasten(ieload)
+
                                 for (j = 0; j < 6; j++) {
                                     lmj = el[ielem].lm[j]
                                     if (lmj >= 0) {
@@ -1642,7 +1648,7 @@ function calculate() {
 
                 if (iter > 0) {
 
-                    let pel = new Array(6)
+                    let pel = new Array(6).fill(0.0)
 
                     for (ielem = 0; ielem < nelem; ielem++) {
 
@@ -1658,6 +1664,32 @@ function calculate() {
                     }
                 }
 
+
+                // wenn mindestens eine vorgegebenen Knotenverschiebung im der Kombination vorhanden ist,
+                // dann für diese Freiheitsgrade Zeilen und Spalten bearbeiten
+
+                for (let ieload = 0; ieload < neloads; ieload++) {
+                    const index = eload[ieload].lf - 1
+                    if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                        if ((eload[ieload].art === 8)) {         // && (eload[ieload].lf === iLastfall)
+                            console.log("VORDEFINIERTE VERFORMUNGEN", eload[ieload].ieq0)
+
+                            for (let k = 0; k < 3; k++) {
+
+                                if (eload[ieload].ieq0[k] >= 0) {
+                                    let ieq = eload[ieload].ieq0[k]
+                                    console.log("I E Q ", ieq)
+                                    for (i = 0; i < neq; i++) {
+                                        stiff[i][ieq] = 0.0   // Spalte streichen
+                                        stiff[ieq][i] = 0.0   // Zeile streichen
+                                    }
+                                    stiff[ieq][ieq] = 1000.0
+                                    R[ieq] = 0.0
+                                }
+                            }
+                        }
+                    }
+                }
 
 
 
@@ -1692,7 +1724,7 @@ function calculate() {
                     el[ielem].berechneLagerkraefte();
                 }
 
-                if (iter > 0) {
+                if (iter === n_iterationen - 1) {
                     let disp = [3]
                     for (i = 0; i < nnodes; i++) {                      // Ausgabe der Verschiebungen der einzelnen Knoten im gedrehten Koordinatensystem
                         for (j = 0; j < 3; j++) {
@@ -1708,6 +1740,31 @@ function calculate() {
                             disp_lf.set(i + 1, j + 1, iKomb, disp[j])
                             if (Math.abs(disp[j]) > maxValue_komb[iKomb - 1].disp) maxValue_komb[iKomb - 1].disp = Math.abs(disp[j])
                         }
+
+                        // Knotenverformungen wieder einarbeiten
+
+                        for (j = 0; j < nNodeDisps; j++) {
+                            for (let ieload = 0; ieload < neloads; ieload++) {
+                                const index = eload[ieload].lf - 1
+                                if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                                    if (nodeDisp0[j].node === i) {
+                                        console.log("<<<<<<<<<<<<<<< nNodeDisps >>>>>>>>>>>>>", i, nodeDisp0[j].lf, iKomb)
+                                        if (nodeDisp0[j].dispx0 !== 0) {
+                                            disp[0] = nodeDisp0[j].dispx0 * kombiTabelle[iKomb - 1][index]
+                                        }
+                                        if (nodeDisp0[j].dispz0 !== 0) {
+                                            disp[1] = nodeDisp0[j].dispz0 * kombiTabelle[iKomb - 1][index]
+                                        }
+                                        if (nodeDisp0[j].phi0 !== 0) {
+                                            disp[2] = nodeDisp0[j].phi0 * kombiTabelle[iKomb - 1][index]
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                        for (j = 0; j < 3; j++) disp_print.set(i + 1, j + 1, iKomb, disp[j])
+
                     }
                 }
                 if (iter === 0) {     // Schiefstellung

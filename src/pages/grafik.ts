@@ -270,6 +270,7 @@ export function drawsystem() {
 
     }
 
+    console.log("__________________________________  G R A F I K  ___________")
     const elem = document.getElementById('id_grafik') as any; //HTMLDivElement;
     console.log("childElementCount", elem.childElementCount)
 
