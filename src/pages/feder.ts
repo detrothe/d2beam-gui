@@ -97,10 +97,12 @@ export class CSpring extends CElement {
     }
 
     //---------------------------------------------------------------------------------------------
-    berechneInterneKraefte(_ielem: number, _iLastf: number, _iter: number, u: number[]) {
+    berechneInterneKraefte(ielem: number, iLastf: number, _iter: number, u: number[]) {
 
         let ieq: number, i: number, j: number, k: number
         let sum: number
+
+        this.Fi.fill(0.0)
 
         for (j = 0; j < 3; j++) {                           // Stabverformungen
             ieq = this.lm[j]
@@ -119,6 +121,41 @@ export class CSpring extends CElement {
             this.Fi[j] = sum
         }
 
+
+        // normale Elementlasten hinzufügen
+
+        if (THIIO_flag === 0) {
+
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastf)) {
+                    for (i = 0; i < 3; i++) {
+                        this.Fi[i] = this.Fi[i] + eload[ieload].el_r[i]
+                    }
+                }
+            }
+        }
+        else if (THIIO_flag === 1) { // ikomb=iLastf
+
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                if (eload[ieload].element === ielem) {
+                    const index = eload[ieload].lf - 1
+                    console.log("elem kombi index", index, kombiTabelle[iLastf - 1][index])
+                    if (kombiTabelle[iLastf - 1][index] !== 0.0) {
+
+                        for (i = 0; i < 3; i++) {
+                            this.Fi[i] = this.Fi[i] + eload[ieload].el_r[i] * kombiTabelle[iLastf - 1][index]
+                        }
+                    }
+                }
+            }
+
+            // if (iter > 0) {
+            //     for (i = 0; i < 3; i++) {                            // Schiefstellung
+            //         this.Fi[i] = this.Fi[i] + this.Fe[i]
+            //     }
+            // }
+
+        }
         console.log("INTERNE KRAFT FEDER", this.Fi)
 
         return this.Fi;

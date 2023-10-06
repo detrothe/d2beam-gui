@@ -99,6 +99,8 @@ select {
 .output_table td,
 .output_table th {
   padding: 0px;
+  padding-top: 3px;
+  padding-bottom: 3px;
   margin: 0px;
   width: 6em;
 }

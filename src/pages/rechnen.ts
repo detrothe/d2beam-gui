@@ -13,6 +13,7 @@ import { init_grafik, drawsystem } from "./grafik";
 export let nnodes: number;
 export let nelem: number;
 export let nelem_Balken = 0;
+export let nelem_Federn = 0;
 export let nloads: number = 0;
 export let neloads: number = 0;
 export let ntotalEloads: number = 0;
@@ -26,7 +27,6 @@ export let nelTeilungen = 10;
 export let n_iterationen = 5;
 
 export let neigv: number = 2;
-export let nfedern = 0;
 export let nNodeDisps = 0;
 
 export let lagerkraft = [] as number[][];
@@ -215,7 +215,7 @@ class TElLoads {
     phi0 = 0.0
     node0 = 0
     dispL0: number[] = Array(6)
-    ieq0 = [-1, -1, -1]                   // Gleichungsnummern für vordefinierte Knotenverformungen
+    ieq0 = [-1, -1, -1]                 // Gleichungsnummern für vordefinierte Knotenverformungen
 
     C1: number = 0.0                    // Integrationskonstante C1 für beidseitig eingespannt
     C2: number = 0.0                    // Integrationskonstante C2 für beidseitig eingespannt
@@ -1111,7 +1111,7 @@ function calculate() {
 
     // Berechnung der Gleichungsnummern bestimmen der Federn
 
-    nfedern = 0
+    nelem_Federn = 0
     neq = 0;
     for (i = 0; i < nnodesTotal; i++) {
 
@@ -1144,7 +1144,7 @@ function calculate() {
 
             feder.push(new TSpring(i, kx, kz, kphi))
             nelemTotal++;
-            nfedern++;
+            nelem_Federn++;
         }
     }
 
@@ -1185,7 +1185,7 @@ function calculate() {
         }
     }
     for (i = 0; i < nNodeDisps; i++) {
-        for (j = 0; j < nfedern; j++) {
+        for (j = 0; j < nelem_Federn; j++) {
             if (nodeDisp0[i].node === feder[j].nod) {
                 nElNodeDisps = nElNodeDisps + 1
                 eload.push(new TElLoads())
@@ -1312,7 +1312,7 @@ function calculate() {
 
     // Federn addieren
 
-    for (let ifeder = 0; ifeder < nfedern; ifeder++) {
+    for (let ifeder = 0; ifeder < nelem_Federn; ifeder++) {
         el.push(new CSpring(feder[ifeder].getNode(), feder[ifeder].getKx(), feder[ifeder].getKz(), feder[ifeder].getKphi()))
         el[ifeder + nelem].initialisiereElementdaten(ielem)
     }
@@ -1577,7 +1577,7 @@ function calculate() {
 
                 console.log("_________________  I T E R  = ", iter, " ___________________")
 
-                console.log("^^^^^^^^^^^^ P G ",pg)
+                console.log("^^^^^^^^^^^^ P G ", pg)
 
                 for (i = 0; i < neq; i++) stiff[i].fill(0.0);
                 for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0)
@@ -2225,6 +2225,74 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
             for (j = 1; j <= el[i].neqe; j++) {
                 newCell = newRow.insertCell(j);  // Insert a cell in the row at index 1
                 newText = document.createTextNode(myFormat(stabendkraefte._(j, i + 1, iLastfall), 2, 2));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+            }
+        }
+
+    }
+
+    // Federkräfte
+
+    if (nelem_Federn > 0) {
+
+        tag = document.createElement("p"); // <p></p>
+        text = document.createTextNode("xxx");
+        tag.appendChild(text);
+        tag.innerHTML = "<b>Federkräfte/-momente</b>"
+
+        newDiv?.appendChild(tag);
+
+        const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+        table.setAttribute("id", "id_table_federkraefte");
+        table.setAttribute("class", "output_table");
+
+        table.style.border = 'none';
+        newDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+
+        const thead = table.createTHead();
+        const row = thead.insertRow();
+
+        // @ts-ignore
+        const th0 = table.tHead.appendChild(document.createElement("th"));
+        th0.innerHTML = "Node";
+        th0.title = "Knoten, an dem die Feder befeestigt ist"
+        th0.setAttribute("class", "table_cell_center");
+        row.appendChild(th0);
+        // @ts-ignore
+        const th1 = table.tHead.appendChild(document.createElement("th"));
+        th1.innerHTML = "F<sub>x</sub> &nbsp;[kN]";
+        th1.title = "Federktaft Fx, positiv als Zugktaft"
+        th1.setAttribute("class", "table_cell_center");
+        row.appendChild(th1);
+        // @ts-ignore
+        const th2 = table.tHead.appendChild(document.createElement("th"));
+        th2.innerHTML = "F<sub>z</sub>&nbsp;[kN]";
+        th2.title = "Federkraft Fz, positiv als Zugkraft "
+        th2.setAttribute("class", "table_cell_center");
+        row.appendChild(th2);
+        // @ts-ignore
+        const th3 = table.tHead.appendChild(document.createElement("th"));
+        th3.innerHTML = "M<sub>&phi;</sub>&nbsp;[kNm]";
+        th3.title = "Federmoment, positiv im Uhrzeigersinn"
+        th3.setAttribute("class", "table_cell_center");
+        row.appendChild(th3);
+
+
+        for (i = 0; i < nelem_Federn; i++) {
+
+            let iFeder = i + nelem_Balken
+            let newRow = table.insertRow(-1);
+            let newCell, newText
+            newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+            newText = document.createTextNode(String(el[iFeder].nod + 1));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_center");
+
+            for (j = 1; j <= el[iFeder].neqe; j++) {
+                newCell = newRow.insertCell(j);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(stabendkraefte._(j, iFeder + 1, iLastfall), 2, 2));  // Append a text node to the cell
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_right");
             }
