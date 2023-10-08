@@ -10,10 +10,15 @@ import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload,
 //import { Pane } from 'tweakpane';
 import { myPanel, get_scale_factor } from './mypanelgui'
 //import { colorToRgbNumber } from '@tweakpane/core';
+import { app } from "./haupt";
+import { saveAs } from 'file-saver';
+
 
 console.log("in grafik")
 
+//let two: Two
 let domElement: any = null
+let svgElement: any = null;
 let wheel_factor = 1.0
 let mouseOffsetX = 0.0
 let mouseOffsetY = 0.0
@@ -270,11 +275,17 @@ export function drawsystem() {
 
     }
 
+    // for (let i = 0; i < two.scene.children.length; i++) {
+    //     let child = two.scene.children[i];
+    //     two.scene.remove(child);
+    //     Two.Utils.dispose(child);
+    // }
+
     console.log("__________________________________  G R A F I K  ___________")
-    const elem = document.getElementById('id_grafik') as any; //HTMLDivElement;
+    const elem = document.getElementById('artboard') as any; //HTMLDivElement;
     console.log("childElementCount", elem.childElementCount)
 
-    if (elem.childElementCount > 2) elem.removeChild(elem?.lastChild);
+    if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
     /*
         while (elem.hasChildNodes()) {  // alte Zeichnungen entfernen
             elem.removeChild(elem?.lastChild);  //   ?.firstChild);
@@ -295,10 +306,13 @@ export function drawsystem() {
         //return;
     */
 
+    let opacity = 0.5
 
     let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen || show_stabvorverformung);
 
-    const two = new Two(params).appendTo(elem);
+    const artboard = document.getElementById("artboard") as any;
+    console.log("artboard", artboard)
+    let two = new Two(params).appendTo(artboard);
 
 
     //console.log("document.documentElement", document.documentElement.clientHeight)
@@ -795,7 +809,7 @@ export function drawsystem() {
 
             //let group = two.makeGroup();
             var vertices = [];
-            vertices.push(new Two.Vector(x1, z1));
+            vertices.push(new Two.Anchor(x1, z1));
 
             xx2 = 0.0; zz2 = 0.0
             sgL = Mx[0]
@@ -838,6 +852,8 @@ export function drawsystem() {
                     let flaeche = two.makePath(vertices);
                     if (sgArea > 0.0) flaeche.fill = '#00AEFF';
                     else flaeche.fill = '#AE0000';
+                    flaeche.opacity = opacity
+
                     vertices.length = 0
                     sgArea = 0.0
                     sgL = 0.0
@@ -880,33 +896,34 @@ export function drawsystem() {
             vertices.push(new Two.Anchor(xx2, zz2));
             vertices.push(new Two.Anchor(x2, z2));
 
-            // @ts-ignore
+
             let flaeche = two.makePath(vertices);
             if (sgArea > 0.0) flaeche.fill = '#00AEFF';
             else flaeche.fill = '#AE0000';
+            flaeche.opacity = opacity
 
             if (show_labels) {
                 if (maxM > 0.0) {
-                    const str = myFormat(maxM, 1, 2) + 'kNm'
+                    const str = myFormat(Math.abs(maxM), 1, 2) + 'kNm'
                     const txt = two.makeText(str, x_max, z_max, style_txt)
                     txt.alignment = 'left'
                     txt.baseline = 'top'
                 }
                 if (minM < 0.0) {
-                    const str = myFormat(minM, 1, 2) + 'kNm'
+                    const str = myFormat(Math.abs(minM), 1, 2) + 'kNm'
                     const txt = two.makeText(str, x_min, z_min, style_txt)
                     txt.alignment = 'left'
                     txt.baseline = 'top'
                 }
 
                 if (Math.abs(Mx[0]) > 0.000001) {
-                    const str = myFormat(Mx[0], 1, 2) + 'kNm'
+                    const str = myFormat(Math.abs(Mx[0]), 1, 2) + 'kNm'
                     const txt = two.makeText(str, x0, z0, style_txt)
                     txt.alignment = 'left'
                     txt.baseline = 'top'
                 }
                 if (Math.abs(Mx[nelTeilungen - 1]) > 0.000001) {
-                    const str = myFormat(Mx[nelTeilungen - 1], 1, 2) + 'kNm'
+                    const str = myFormat(Math.abs(Mx[nelTeilungen - 1]), 1, 2) + 'kNm'
                     const txt = two.makeText(str, xn, zn, style_txt)
                     txt.alignment = 'left'
                     txt.baseline = 'top'
@@ -981,7 +998,7 @@ export function drawsystem() {
                 xL = element[ielem].x_[i - 1]
                 dx = x - xL
                 sgR = Vx[i]
-                console.log("Schnittgrößen rechts/links", sgL, sgR, sgArea)
+                // console.log("Schnittgrößen rechts/links", sgL, sgR, sgArea)
                 if (sgL >= 0.0 && sgR > 0.0) {
                     vertices.push(new Two.Anchor(xx1, zz1));
                     vorzeichen = 1
@@ -991,7 +1008,7 @@ export function drawsystem() {
                     vorzeichen = -1
                     sgArea += (sgL + sgR) * dx / 2.
                 } else {   // Vorzeichenwechsel
-                    console.log("Vorzeichenwechsel", sgL, sgR)
+                    // console.log("Vorzeichenwechsel", sgL, sgR)
 
                     let dx0 = -sgL * dx / (sgR - sgL)
                     let xx0 = tr.xPix(element[ielem].x1 + (xL + dx0) * element[ielem].cosinus)
@@ -1004,6 +1021,8 @@ export function drawsystem() {
                     let flaeche = two.makePath(vertices);
                     if (sgArea > 0.0) flaeche.fill = '#00AEFF';
                     else flaeche.fill = '#AE0000';
+                    flaeche.opacity = opacity
+
                     vertices.length = 0
                     sgArea = 0.0
                     sgL = 0.0
@@ -1046,6 +1065,7 @@ export function drawsystem() {
             let flaeche = two.makePath(vertices);
             if (sgArea > 0.0) flaeche.fill = '#00AEFF';
             else flaeche.fill = '#AE0000';
+            flaeche.opacity = opacity
 
 
 
@@ -1057,7 +1077,7 @@ export function drawsystem() {
                     txt.baseline = 'top'
                 }
                 if (minV < 0.0) {
-                    const str = myFormat(minV, 1, 2) + 'kNm'
+                    const str = myFormat(Math.abs(minV), 1, 2) + 'kNm'
                     const txt = two.makeText(str, x_min, z_min, style_txt)
                     txt.alignment = 'left'
                     txt.baseline = 'top'
@@ -1197,6 +1217,8 @@ export function drawsystem() {
                     let flaeche = two.makePath(vertices);
                     if (sgArea > 0.0) flaeche.fill = '#00AEFF';
                     else flaeche.fill = '#AE0000';
+                    flaeche.opacity = opacity
+
                     vertices.length = 0
                     sgArea = 0.0
                     sgL = 0.0
@@ -1239,7 +1261,7 @@ export function drawsystem() {
             let flaeche = two.makePath(vertices);
             if (sgArea > 0.0) flaeche.fill = '#00AEFF';
             else flaeche.fill = '#AE0000';
-
+            flaeche.opacity = opacity
 
             if (show_labels) {
                 if (maxN > 0.0) {
@@ -1249,7 +1271,7 @@ export function drawsystem() {
                     txt.baseline = 'top'
                 }
                 if (minN < 0.0) {
-                    const str = myFormat(minN, 1, 2) + 'kNm'
+                    const str = myFormat(Math.abs(minN), 1, 2) + 'kNm'
                     const txt = two.makeText(str, x_min, z_min, style_txt)
                     txt.alignment = 'left'
                     txt.baseline = 'top'
@@ -1369,7 +1391,8 @@ export function drawsystem() {
     //console.log("nach update container footer boundingRect", el?.getBoundingClientRect())
 
     domElement = two.renderer.domElement;
-    console.log("domElement", domElement)
+    //svgElement = two.render
+    //console.log("domElement", domElement)
     //domElement.addEventListener('mousedown', mousedown, false);
     domElement.addEventListener('wheel', wheel, false);
     //domElement.addEventListener('wheel', mousewheel, false);
@@ -1434,9 +1457,9 @@ function draw_elementlasten(two: Two) {
                         xtr[i] = tr.xPix(x[i])
                         ztr[i] = tr.zPix(z[i])
                         console.log()
-                        vertices.push(new Two.Vector(xtr[i], ztr[i]));
+                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
                     }
-                    // @ts-ignore
+
                     let flaeche = two.makePath(vertices);
                     flaeche.fill = '#eeeeee';
 
@@ -1490,9 +1513,9 @@ function draw_elementlasten(two: Two) {
                         xtr[i] = tr.xPix(x[i])
                         ztr[i] = tr.zPix(z[i])
                         console.log()
-                        vertices.push(new Two.Vector(xtr[i], ztr[i]));
+                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
                     }
-                    // @ts-ignore
+
                     let flaeche = two.makePath(vertices);
                     flaeche.fill = '#eeeeee';
 
@@ -1548,9 +1571,9 @@ function draw_elementlasten(two: Two) {
                         xtr[i] = tr.xPix(x[i])
                         ztr[i] = tr.zPix(z[i])
                         console.log()
-                        vertices.push(new Two.Vector(xtr[i], ztr[i]));
+                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
                     }
-                    // @ts-ignore
+
                     let flaeche = two.makePath(vertices);
                     flaeche.fill = '#eeeeee';
 
@@ -2165,7 +2188,10 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
         let curve = new Two.Path(vertices, false, true)
         curve.linewidth = linewidth;
         curve.stroke = color;
+        //curve.fill = '#ffffff';
+        //curve.opacity = 0;
         curve.noFill()
+        //curve.fillOpacity=0.25
 
         group.add(curve)
 
@@ -2485,3 +2511,69 @@ window.addEventListener('draw_lasten_grafik', draw_lasten_grafik);
 window.addEventListener('draw_lagerkraefte_grafik', draw_lagerkraefte_grafik);
 
 window.addEventListener('scale_factor', scale_factor);
+
+
+//---------------------------------------------------------------------------------------------------
+export async function copy_svg() {
+    //-----------------------------------------------------------------------------------------------
+
+    //let svg = svgElement;
+    //console.log("svg", svg)
+    const elem = document.getElementById('artboard') as any;
+
+    if (elem) {
+        // svg = svg.replace(/\r?\n|\r/g, "").trim();
+        // svg = svg.substring(0, svg.indexOf("</svg>")) + "</svg>";
+        // // @ts-ignore
+        // svg = svg.replaceAll("  ", "");
+
+        // const preface = '<?xml version="1.0" standalone="no"?>\r\n';
+        // const svgBlob = new Blob([preface, svg], { type: "image/svg+xml;charset=utf-8" });
+
+        const svgBlob = new Blob([elem.innerHTML], { type: "image/svg+xml;charset=utf-8" });
+
+        let filename: any = 'd2beam.svg'
+
+        if (app.hasFSAccess && app.isMac) {
+
+            filename = window.prompt(
+                "Name der Datei mit Extension, z.B. duennqs.svg\nDie Datei wird im Default Download Ordner gespeichert", 'd2beam.svg'
+            );
+        }
+        else if (app.hasFSAccess) {
+
+            try {
+                // @ts-ignore
+                const fileHandle = await window.showSaveFilePicker({
+                    types: [{
+                        description: "Text file",
+                        accept: { "text/plain": [".svg"] }
+                    }]
+                });
+                //console.log("fileHandle",fileHandle)
+
+                const fileStream = await fileHandle.createWritable();
+                //console.log("fileStream=",fileStream);
+
+                // (C) WRITE FILE
+                await fileStream.write(svgBlob);
+                await fileStream.close();
+
+            } catch (error: any) {
+                //alert(error.name);
+                alert(error.message);
+            }
+
+            return
+        }
+
+        // für den Rest des Feldes
+
+        try {
+            saveAs(svgBlob, filename);
+        } catch (error: any) {
+            alert(error.message);
+        }
+    }
+
+}

@@ -27,7 +27,7 @@ import "../components/dr-dialog-rechteckquerschnitt";
 import DetectOS from "./detectos";
 
 import { addListener_filesave } from "./dateien";
-import { select_loadcase_changed, select_eigenvalue_changed } from "./grafik";
+import { select_loadcase_changed, select_eigenvalue_changed,copy_svg } from "./grafik";
 import { set_info } from "./utility";
 //import { init_contextmenu } from '../components/dr-tabelle';
 
@@ -295,6 +295,8 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
           <div id="id_div_select_eigv">
             <select id="id_select_eigenvalue" on></select>
           </div>
+          <button id="id_button_copy_svg">copy</button>
+          <div id="artboard"></div>
         </div>
         <!--  height: 100%; -->
       </sl-tab-panel>
@@ -861,6 +863,9 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
   el_select_loadcase?.addEventListener("change", select_loadcase_changed);
   const el_select_eigenvalue = document.getElementById("id_select_eigenvalue");
   el_select_eigenvalue?.addEventListener("change", select_eigenvalue_changed);
+
+  document?.getElementById('id_button_copy_svg')?.addEventListener('click', copy_svg, false);
+
 }
 
 //---------------------------------------------------------------------------------------------------------------
