@@ -151,9 +151,9 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                   Daten einlesen
                </button>
             </p>
-            <br />
+
             <hr />
-            <br /><br />
+            <br />
 
             <table id="querschnittwerte_table">
                <tbody>
@@ -293,7 +293,9 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                </tbody>
             </table>
 
-            <textarea id="output" rows="40" cols="8"></textarea>
+            <div class="output_container">
+            <textarea id="output" rows="40" ></textarea>  <!-- rows="40" cols="8"  -->
+            </div>
          </sl-tab-panel>
 
          <!--------------------------------------------------------------------------------------->
