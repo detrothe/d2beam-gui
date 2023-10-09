@@ -2,7 +2,7 @@ declare let Module: any;
 import { app, nlastfaelle_init, opendialog } from "./haupt"
 import { TFVector, TFArray2D, TFArray3D } from "./TFArray"
 
-import { testNumber, myFormat } from './utility'
+import { testNumber, myFormat, write } from './utility'
 //import {Module} from '../../d2beam_wasm.js'
 // @ts-ignore
 import { gauss } from "./gauss"
@@ -1873,6 +1873,8 @@ function calculate() {
 
     init_grafik();
     drawsystem();
+
+    write ('Berechnung erfolgreich beendet')
 
     return 0;
 }
