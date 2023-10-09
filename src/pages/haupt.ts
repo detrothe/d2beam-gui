@@ -416,7 +416,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                id="id_knoten_tabelle"
                nzeilen="${nnodes_init}"
                nspalten="6"
-               columns='["No", "x [m]", "z [m]", "L<sub>x</sub>", "L<sub>z</sub>", "L<sub>&phi;</sub>", "Winkel [°]"]'
+               columns='["No", "x [m]", "z [m]", "L<sub>x</sub>&nbsp;(kN/m)", "L<sub>z</sub>&nbsp;(kN/m)", "L<sub>&phi;</sub>&nbsp;(kNm/rad)", "Winkel [°]"]'
             ></dr-tabelle>
 
             <p><br /><b>Knotenverformungen</b><br /></p>
@@ -425,14 +425,13 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                Die Richtungen stimmen mit den Richtungen des zugehörigen
                gedrehten Lagerknotens überein.
                <br />
-               Die vorgegebenen Verformungen müssen in der Knotentabelle (oben)
-               als <b>starr</b> gelagert markiert sein! <br />Es sind nur die
+               Es sind nur die
                Werte in den Tabellenzellen einzugeben, für die definierte
                Verformungen gewünscht werden.<br />
                Nur Werte ungleich 0 werden berücksichtigt.
             </p>
             <p>
-               Anzahl Knoten mit <br />vorgebenenen Verformungen:
+               Anzahl Knoten mit<br />vorgebenenen Verformungen:
                <dr-button-pm
                   id="id_button_nnodedisps"
                   nel="${nnodedisps_init}"
