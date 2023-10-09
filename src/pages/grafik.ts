@@ -482,7 +482,7 @@ export function drawsystem() {
             if (show_labels && maxU > 0.0) {
 
                 const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
-                pfeil.stroke = '#D3D3D3'
+                pfeil.stroke = '#111111'     //'#D3D3D3'
 
                 const str = myFormat(maxU * 1000, 1, 1) + 'mm'
                 const txt = two.makeText(str, x_max, z_max, style_txt)
@@ -2188,7 +2188,7 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
         let curve = new Two.Path(vertices, false, true)
         curve.linewidth = linewidth;
         curve.stroke = color;
-        //curve.fill = '#ffffff';
+        //curve.fill = '#00ffffff';
         //curve.opacity = 0;
         curve.noFill()
         //curve.fillOpacity=0.25
