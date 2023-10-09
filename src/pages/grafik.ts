@@ -2333,7 +2333,8 @@ function draw_drehfeder(two: Two, x0: number, z0: number) {
     let curve = new Two.Path(vertices, false, true)
     curve.linewidth = linewidth;
     //curve.stroke = color;
-    curve.noFill()
+    //curve.noFill()
+    curve.fill="none"
 
     group.add(curve)
 

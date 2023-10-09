@@ -1874,6 +1874,7 @@ function calculate() {
     init_grafik();
     drawsystem();
 
+    write ('______________________________')
     write ('Berechnung erfolgreich beendet')
 
     return 0;
