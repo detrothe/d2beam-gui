@@ -64,6 +64,13 @@ export class CTimoshenko_beam extends CElement {
     w_ = [] as number[][]
     phi_ = [] as number[][]
 
+    N_komb = [] as number[][]         // Schnittgrößen entlang Stab, lokal, aus Kombinationen
+    V_komb = [] as number[][]
+    M_komb = [] as number[][]
+    u_komb = [] as number[][]         // Verformungen entlang Stab, lokale Richtung
+    w_komb = [] as number[][]
+    phi_komb = [] as number[][]
+
     NL: number = 0.0
     VL: number = 0.0
     ML: number = 0.0
@@ -239,13 +246,21 @@ export class CTimoshenko_beam extends CElement {
 
         this.nTeilungen = nelTeilungenNeu
 
+        if (THIIO_flag === 0) {
+            this.N_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+            this.V_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+            this.M_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+            this.u_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+            this.w_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+        }
 
-        this.N_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
-        this.V_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
-        this.M_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
-        this.u_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
-        this.w_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
-
+        if (nkombinationen > 0) {
+            this.N_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
+            this.V_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
+            this.M_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
+            this.u_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
+            this.w_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
+        }
 
         this.berechneLokaleElementsteifigkeitmatrix()
     }
@@ -1219,6 +1234,12 @@ export class CTimoshenko_beam extends CElement {
                 if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
                 if (disp > maxValue_lf[iLastf].disp) maxValue_lf[iLastf].disp = disp
 
+                this.M_[iLastf][iteil] = Mx
+                this.V_[iLastf][iteil] = Vx
+                this.N_[iLastf][iteil] = Nx
+                this.u_[iLastf][iteil] = ux
+                this.w_[iLastf][iteil] = wx
+
             }
             else if (THIIO_flag === 1) { // ikomb=iLastf
 
@@ -1323,14 +1344,15 @@ export class CTimoshenko_beam extends CElement {
                 if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
                 if (disp > maxValue_komb[iLastf].disp) maxValue_komb[iLastf].disp = disp
 
+                this.M_komb[iLastf][iteil] = Mx
+                this.V_komb[iLastf][iteil] = Vx
+                this.N_komb[iLastf][iteil] = Nx
+                this.u_komb[iLastf][iteil] = ux
+                this.w_komb[iLastf][iteil] = wx
+
             }  // ende TH II Ordnung
 
             console.log("x, Vx, Mx", x, Vx, Mx, wx)
-            this.M_[iLastf][iteil] = Mx
-            this.V_[iLastf][iteil] = Vx
-            this.N_[iLastf][iteil] = Nx
-            this.u_[iLastf][iteil] = ux
-            this.w_[iLastf][iteil] = wx
             //x += d_x
         }
 
@@ -1339,8 +1361,15 @@ export class CTimoshenko_beam extends CElement {
     //---------------------------------------------------------------------------------------------
     get_elementSchnittgroesse_Moment(Mx: number[], iLastf: number) {
 
-        for (let i = 0; i < this.nTeilungen; i++) {
-            Mx[i] = this.M_[iLastf][i]
+        if (THIIO_flag === 0) {
+            if (iLastf < nlastfaelle) {
+                for (let i = 0; i < this.nTeilungen; i++)  Mx[i] = this.M_[iLastf][i]
+
+            } else {
+                for (let i = 0; i < this.nTeilungen; i++)  Mx[i] = this.M_komb[iLastf - nlastfaelle][i]
+            }
+        } else {
+            for (let i = 0; i < this.nTeilungen; i++) Mx[i] = this.M_komb[iLastf][i]
         }
     }
 

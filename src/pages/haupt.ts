@@ -312,7 +312,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                <div id="id_div_select_eigv">
                   <select id="id_select_eigenvalue" on></select>
                </div>
-               <button id="id_button_copy_svg">copy</button>
+               <button id="id_button_copy_svg">save svg</button>
                <div id="artboard"></div>
             </div>
             <!--  height: 100%; -->

@@ -69,6 +69,13 @@ export let maxValue_u0 = [] as TMaxU0[]
 export let maxValue_eload = [] as number[]
 export let maxValue_w0 = 0.0                // Stabvorverformung
 
+export let max_S_kombi = [] as number[][] //  (3, nKombi)
+export let max_disp_kombi = [] as number[]  //(nKombi)
+
+export let maxM_all = 0.0
+export let maxV_all = 0.0
+export let maxN_all = 0.0
+export let maxdisp_all = 0.0
 
 export let xmin = -50.0, zmin = -50.0, xmax = 50.0, zmax = 50.0, slmax = 0.0;
 
@@ -1238,7 +1245,7 @@ function calculate() {
     }
 
     console.log("N E I G V", neigv)
-    maxValue_eigv = Array.from(Array(nkombinationen), () => new Array(neigv).fill(0.0));
+    if (nkombinationen > 0) maxValue_eigv = Array.from(Array(nkombinationen), () => new Array(neigv).fill(0.0));
 
     console.log("Anzahl Gleichungen: ", neq)
 
@@ -1327,6 +1334,10 @@ function calculate() {
     const u = Array(neq);
 
     lagerkraft = Array.from(Array(nnodesTotal), () => new Array(3).fill(0.0));
+
+
+    if (nkombinationen > 0) max_S_kombi = Array.from(Array(3), () => new Array(nkombinationen).fill(0.0));
+    if (nkombinationen > 0) max_disp_kombi = Array(nkombinationen).fill(0.0)
 
     //------------------------------------------------------------------------   alte Ausgabe löschen
     let elem = document.getElementById('id_newDiv');
@@ -1529,6 +1540,7 @@ function calculate() {
 
         }   //ende iLastfall
 
+        if (nkombinationen > 0) berechne_kombinationen();
     }
 
     // -------------------------------------------------------------------------------------------------------  T H  II.  O R D N U N G
@@ -1874,8 +1886,8 @@ function calculate() {
     init_grafik();
     drawsystem();
 
-    write ('______________________________')
-    write ('Berechnung erfolgreich beendet')
+    write('______________________________')
+    write('Berechnung erfolgreich beendet')
 
     return 0;
 }
@@ -2316,4 +2328,75 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
     }
 
+}
+
+//--------------------------------------------------------------------------------------------
+//------------------------------- K O M B I N A T I O N E N ---------------------------------
+//--------------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------------------------------
+function berechne_kombinationen() {
+    //-----------------------------------------------------------------------------------------------------------
+
+    console.log("++++   in berechne_kombinationen   ++++")
+
+    let mom = 0.0
+    let quer = 0.0
+    let norm = 0.0
+    let ug = 0.0
+    let wg = 0.0
+
+    let delta = 0.0
+
+    console.log("...", nkombinationen, nelem_Balken, nlastfaelle)
+
+    for (let i = 0; i < 3; i++) max_S_kombi[i].fill(0.0);
+    max_disp_kombi.fill(0.0)
+
+    for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
+
+        for (let ielem = 0; ielem < nelem_Balken; ielem++) {
+            //console.log("nTeilungen", el[ielem].nTeilungen)
+            for (let iteil = 0; iteil < el[ielem].nTeilungen; iteil++) {
+
+                mom = 0.0
+                quer = 0.0
+                norm = 0.0
+                ug = 0.0
+                wg = 0.0
+
+                for (let iLastfall = 0; iLastfall < nlastfaelle; iLastfall++) {
+
+                    mom += el[ielem].M_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                    quer += el[ielem].V_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                    norm += el[ielem].N_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                    ug += el[ielem].u_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                    wg += el[ielem].w_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                    console.log("mom...", iteil, iLastfall, mom, quer, norm)
+                }
+
+                maxM_all = Math.max(Math.abs(mom), maxM_all)
+                maxV_all = Math.max(Math.abs(quer), maxV_all)
+                maxN_all = Math.max(Math.abs(norm), maxN_all)
+                delta = Math.sqrt(ug * ug + wg * wg)
+                maxdisp_all = Math.max(Math.abs(delta), maxdisp_all)
+
+                el[ielem].M_komb[iKomb][iteil] = mom
+                el[ielem].V_komb[iKomb][iteil] = quer
+                el[ielem].N_komb[iKomb][iteil] = norm
+                el[ielem].u_komb[iKomb][iteil] = ug
+                el[ielem].w_komb[iKomb][iteil] = wg
+
+                max_S_kombi[0][iKomb] = Math.max(Math.abs(mom), max_S_kombi[0][iKomb])
+                max_S_kombi[1][iKomb] = Math.max(Math.abs(quer), max_S_kombi[1][iKomb])
+                max_S_kombi[2][iKomb] = Math.max(Math.abs(norm), max_S_kombi[2][iKomb])
+                max_disp_kombi[iKomb] = Math.max(Math.abs(delta), max_disp_kombi[iKomb])
+            }
+
+        }
+
+        console.log("max_S_kombi", iKomb, max_S_kombi[0][iKomb], max_S_kombi[1][iKomb], max_S_kombi[2][iKomb], max_disp_kombi[iKomb])
+    }
+
+    console.log("MAX", maxM_all, maxV_all, maxN_all, maxdisp_all)
 }

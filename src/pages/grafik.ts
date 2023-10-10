@@ -7,6 +7,8 @@ import { myFormat, write } from './utility'
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, THIIO_flag, maxValue_w0 } from "./rechnen";
+import {max_S_kombi} from "./rechnen";
+
 //import { Pane } from 'tweakpane';
 import { myPanel, get_scale_factor } from './mypanelgui'
 //import { colorToRgbNumber } from '@tweakpane/core';
@@ -107,7 +109,7 @@ export function select_loadcase_changed() {
 
     //console.log("################################################ select_loadcase_changed")
     const el_select_loadcase = document.getElementById("id_select_loadcase") as HTMLSelectElement
-    //console.log("option", el_select_loadcase.value)
+    console.log("select_loadcase_changed option", el_select_loadcase.value)
     draw_lastfall = Number(el_select_loadcase.value)
     drawsystem();
 }
@@ -153,8 +155,9 @@ export function init_grafik() {
 
     if (THIIO_flag === 0) {
 
+        let option: any
         for (let i = 0; i < nlastfaelle; i++) {
-            let option = document.createElement('option');
+            option = document.createElement('option');
 
             option.value = String(+i + 1)
             option.textContent = 'Lastfall ' + (+i + 1);
@@ -162,6 +165,14 @@ export function init_grafik() {
             el_select.appendChild(option);
         }
 
+        for (let i = 0; i < nkombinationen; i++) {
+            option = document.createElement('option');
+
+            option.value = String(+i + 1 + nlastfaelle)
+            option.textContent = 'Kombination ' + (+i + 1);
+
+            el_select.appendChild(option);
+        }
     } else if (THIIO_flag === 1) {
 
         for (let i = 0; i < nkombinationen; i++) {
@@ -773,14 +784,20 @@ export function drawsystem() {
 
         let iLastfall = draw_lastfall
         let scalefactor = 0
-        //let poly: number[] = new Array(8)
         let maxM = 0.0, minM = 0.0, x_max = 0.0, z_max = 0.0, x0 = 0.0, z0 = 0.0, xn = 0.0, zn = 0.0, x_min = 0.0, z_min = 0.0
 
 
         //if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] === 0.0) return
         if (THIIO_flag === 0) {
+            if ( iLastfall <= nlastfaelle ) {
             scalefactor = 0.05 * slmax / maxValue_lf[iLastfall - 1].My
             console.log("MAX VALUES", iLastfall, maxValue_lf[iLastfall - 1].My, slmax)
+            } else {
+                let ikomb = iLastfall-1-nlastfaelle
+                scalefactor = 0.05 * slmax / max_S_kombi[0][ikomb]
+                console.log("MAX VALUES KOMBINATION ", iLastfall,  max_S_kombi[0][ikomb], slmax)
+
+            }
         }
         else if (THIIO_flag === 1) {
             scalefactor = 0.05 * slmax / maxValue_komb[iLastfall - 1].My
@@ -1368,14 +1385,14 @@ export function drawsystem() {
     }
     if (show_lagerkraefte) draw_lagerkraefte(two);
 
-    const styles = {
-        family: 'system-ui, sans-serif',
-        size: 50,
-        fill: 'red',
-        opacity: 0.33,
-        //leading: 50
-        weight: 'bold'
-    };
+    // const styles = {
+    //     family: 'system-ui, sans-serif',
+    //     size: 50,
+    //     fill: 'red',
+    //     opacity: 0.33,
+    //     //leading: 50
+    //     weight: 'bold'
+    // };
 
     //const directions = two.makeText('Hallo welt', two.width / 2, two.height / 2, styles)
     //directions.rotation = 1.5708
@@ -2192,7 +2209,7 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
         //curve.opacity = 0;
         //curve.noFill()
         //curve.fillOpacity=0.25
-        curve.fill="none"
+        curve.fill = "none"
         //curve.fill="rgba(0,0,0,0)"
 
 

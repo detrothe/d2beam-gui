@@ -7,6 +7,7 @@ export default defineConfig({
   base: "/",
   build: {
     sourcemap: true,
+    chunkSizeWarningLimit:1000,
     assetsDir: "code",
     target: ["esnext", "edge100", "firefox100", "chrome100", "safari18"],
   },
