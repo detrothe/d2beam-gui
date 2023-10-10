@@ -2190,8 +2190,10 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
         curve.stroke = color;
         //curve.fill = '#00ffffff';
         //curve.opacity = 0;
-        curve.noFill()
+        //curve.noFill()
         //curve.fillOpacity=0.25
+        curve.fill="none"
+
 
         group.add(curve)
 
@@ -2333,8 +2335,8 @@ function draw_drehfeder(two: Two, x0: number, z0: number) {
     let curve = new Two.Path(vertices, false, true)
     curve.linewidth = linewidth;
     //curve.stroke = color;
-    //curve.noFill()
-    curve.fill="none"
+    curve.noFill()
+    //curve.fill="rgba(255,0,0,50);"
 
     group.add(curve)
 
