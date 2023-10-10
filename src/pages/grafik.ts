@@ -2193,6 +2193,7 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
         //curve.noFill()
         //curve.fillOpacity=0.25
         curve.fill="none"
+        //curve.fill="rgba(0,0,0,0)"
 
 
         group.add(curve)
