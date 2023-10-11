@@ -2395,8 +2395,8 @@ function berechne_kombinationen() {
 
         }
 
-        console.log("max_S_kombi", iKomb, max_S_kombi[0][iKomb], max_S_kombi[1][iKomb], max_S_kombi[2][iKomb], max_disp_kombi[iKomb])
+        console.log("max_S_kombi, iKomb=", iKomb, max_S_kombi[0][iKomb], max_S_kombi[1][iKomb], max_S_kombi[2][iKomb], max_disp_kombi[iKomb])
     }
 
-    console.log("MAX", maxM_all, maxV_all, maxN_all, maxdisp_all)
+    console.log("MAX_ALL", maxM_all, maxV_all, maxN_all, maxdisp_all)
 }

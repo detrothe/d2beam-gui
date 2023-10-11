@@ -302,7 +302,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
          <sl-tab-panel name="tab-grafik">
             <div
                id="id_grafik"
-               style=" background-color:#fffaed;margin:0;padding:0"
+               style=" background-color:#ffffff;margin:0;padding:0"
             >
                <!-- width:100vw; ;width:300px;height:300px; -->
                <div id="panel_gui"></div>

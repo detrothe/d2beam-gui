@@ -1376,16 +1376,32 @@ export class CTimoshenko_beam extends CElement {
     //---------------------------------------------------------------------------------------------
     get_elementSchnittgroesse_Querkraft(Vx: number[], iLastf: number) {
 
-        for (let i = 0; i < this.nTeilungen; i++) {
-            Vx[i] = this.V_[iLastf][i]
+
+        if (THIIO_flag === 0) {
+            if (iLastf < nlastfaelle) {
+                for (let i = 0; i < this.nTeilungen; i++)  Vx[i] = this.V_[iLastf][i]
+
+            } else {
+                for (let i = 0; i < this.nTeilungen; i++)  Vx[i] = this.V_komb[iLastf - nlastfaelle][i]
+            }
+        } else {
+            for (let i = 0; i < this.nTeilungen; i++) Vx[i] = this.V_komb[iLastf][i]
         }
     }
 
     //---------------------------------------------------------------------------------------------
     get_elementSchnittgroesse_Normalkraft(Nx: number[], iLastf: number) {
 
-        for (let i = 0; i < this.nTeilungen; i++) {
-            Nx[i] = this.N_[iLastf][i]
+
+        if (THIIO_flag === 0) {
+            if (iLastf < nlastfaelle) {
+                for (let i = 0; i < this.nTeilungen; i++)  Nx[i] = this.N_[iLastf][i]
+
+            } else {
+                for (let i = 0; i < this.nTeilungen; i++)  Nx[i] = this.N_komb[iLastf - nlastfaelle][i]
+            }
+        } else {
+            for (let i = 0; i < this.nTeilungen; i++) Nx[i] = this.N_komb[iLastf][i]
         }
     }
 
