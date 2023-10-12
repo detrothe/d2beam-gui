@@ -21,6 +21,9 @@ import '../components/dr-button-pm';
 import '../components/dr-tabelle';
 import '../components/dr-dialog-layerquerschnitt';
 import '../components/dr-dialog-rechteckquerschnitt';
+import '../components/dr-dialog_neue_eingabe';
+
+import { drButtonPM } from "../components/dr-button-pm";
 
 //import { testclass } from './element';
 
@@ -162,7 +165,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                         <sl-button
                            id="clear"
                            value="clear"
-                           @click="${clearTables}"
+                           @click="${handleClick_neue_eingabe}"
                            >neue Eingabe beginnen</sl-button
                         >
                      </td>
@@ -279,8 +282,6 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                      <td></td>
                   </tr>
                   <tr>
-
-
                      <td>
                         <sl-button
                            id="rechnen"
@@ -294,8 +295,14 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
             </table>
 
             <div class="output_container">
-            <textarea id="output" rows="40" ></textarea>  <!-- rows="40" cols="8"  -->
+               <textarea id="output" rows="40"></textarea>
+               <!-- rows="40" cols="8"  -->
             </div>
+
+            <dr-dialog_neue_eingabe
+               id="id_dialog_neue_eingabe"
+            ></dr-dialog_neue_eingabe>
+
          </sl-tab-panel>
 
          <!--------------------------------------------------------------------------------------->
@@ -425,9 +432,8 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                Die Richtungen stimmen mit den Richtungen des zugehörigen
                gedrehten Lagerknotens überein.
                <br />
-               Es sind nur die
-               Werte in den Tabellenzellen einzugeben, für die definierte
-               Verformungen gewünscht werden.<br />
+               Es sind nur die Werte in den Tabellenzellen einzugeben, für die
+               definierte Verformungen gewünscht werden.<br />
                Nur Werte ungleich 0 werden berücksichtigt.
             </p>
             <p>
@@ -611,7 +617,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
          <!--------------------------------------------------------------------------------------->
          <sl-tab-panel name="tab-kombinationen">
             <p>
-               <b> Eingabe der Kombinationen</b>
+               <b> Eingabe der Lastfälle und Kombinationen</b>
             </p>
 
             <table>
@@ -911,6 +917,7 @@ function handleClick() {
    //(shadow.getElementById('dialog') as HTMLDialogElement).showModal();
    //}
 }
+
 //---------------------------------------------------------------------------------------------------------------
 
 function handleClick_rechteck() {
@@ -975,7 +982,7 @@ function neuZeilen() {
 */
 //---------------------------------------------------------------------------------------------------------------
 function handleClick_rechteck_dialog(ev: any) {
-   //---------------------------------------------------------------------------------------------------------------
+   //------------------------------------------------------------------------------------------------------------
    console.log('handleClick_LD()', ev);
    /*
  const el = document.getElementById('id_dialog');
@@ -987,7 +994,7 @@ function handleClick_rechteck_dialog(ev: any) {
 
 //---------------------------------------------------------------------------------------------------------------
 function calculate() {
-   //---------------------------------------------------------------------------------------------------------------
+   //------------------------------------------------------------------------------------------------------------
    //console.log('calculate');
    rechnen();
 
@@ -996,7 +1003,7 @@ function calculate() {
 
 //---------------------------------------------------------------------------------------------------------------
 function dialog_closed(e: any) {
-   //---------------------------------------------------------------------------------------------------------------
+   //------------------------------------------------------------------------------------------------------------
    console.log('Event dialog closed', e);
    const el = document.getElementById(
       'id_dialog_rechteck'
@@ -1117,13 +1124,13 @@ function dialog_closed(e: any) {
             el?.shadowRoot?.getElementById('qname') as HTMLInputElement
          ).value;
          console.log('NAME', qName);
-         var tag = document.createElement('sl-tree-item');
-         var text = document.createTextNode(qName);
+         const tag = document.createElement('sl-tree-item');
+         const text = document.createTextNode(qName);
          tag.appendChild(text);
          tag.addEventListener('click', opendialog);
 
          tag.id = id;
-         var element = document.getElementById('id_tree_LQ');
+         const element = document.getElementById('id_tree_LQ');
          element?.appendChild(tag);
          console.log('child appendchild', element);
 
@@ -1422,3 +1429,74 @@ export function clearTables() {
    }
 }
 
+//---------------------------------------------------------------------------------------------------------------
+
+function handleClick_neue_eingabe() {
+   //------------------------------------------------------------------------------------------------------------
+   console.log('handleClick_neue_eingabe()');
+
+   const el = document.getElementById('id_dialog_neue_eingabe');
+   console.log('id_dialog_neue_eingabe', el);
+   console.log(
+      'QUERY Dialog',
+      el?.shadowRoot?.getElementById('dialog_neue_eingabe')
+   );
+
+   (
+      el?.shadowRoot?.getElementById('dialog_neue_eingabe') as HTMLDialogElement
+   ).addEventListener('close', dialog_neue_eingabe_closed);
+
+   (
+      el?.shadowRoot?.getElementById('dialog_neue_eingabe') as HTMLDialogElement
+   ).showModal();
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_neue_eingabe_closed(this: any, e: any) {
+   //------------------------------------------------------------------------------------------------------------
+   console.log('Event dialog closed', e);
+   console.log("this", this)
+   const el = document.getElementById(
+      'id_dialog_neue_eingabe'
+   ) as HTMLDialogElement;
+
+   // ts-ignore
+   const returnValue = this.returnValue;
+
+   (
+      el?.shadowRoot?.getElementById('dialog_neue_eingabe') as HTMLDialogElement
+   ).removeEventListener('close', dialog_closed);
+
+   if (returnValue === 'ok') {
+      console.log("Dialog neue Eingabe mit ok geschlossen")
+
+      let el = document.getElementById('id_button_nnodes') as drButtonPM;
+      console.log("el id_button_nnodes", el)
+      el.setValue(2);
+
+      el = document.getElementById('id_button_nelem') as drButtonPM;
+      el.setValue(1);
+      el = document.getElementById('id_button_nnodalloads') as drButtonPM;
+      el.setValue(0);
+      el = document.getElementById('id_button_nstreckenlasten') as drButtonPM;
+      el.setValue(0);
+
+      el = document.getElementById('id_button_neinzellasten') as drButtonPM;
+      el.setValue(0);
+
+      el = document.getElementById('id_button_ntemperaturlasten') as drButtonPM;
+      el.setValue(0);
+
+      el = document.getElementById('id_button_nlastfaelle') as drButtonPM;
+      el.setValue(1);
+      el = document.getElementById('id_button_nkombinationen') as drButtonPM;
+      el.setValue(0);
+      el = document.getElementById('id_button_nstabvorverformungen') as drButtonPM;
+      el.setValue(0);
+
+      resizeTables();
+      clearTables();
+
+   }
+}

@@ -17,6 +17,8 @@ export let draw_group = false;
 export function myPanel() {
     //--------------------------------------------------------------------------------------------------------
 
+    let controller_M: any, controller_V: any, controller_N: any
+
     let obj = {
         Label: false,
         systemlinie: true,
@@ -80,14 +82,14 @@ export function myPanel() {
         window.dispatchEvent(new Event("draw_verformungen_grafik"));
     });
 
-    gui.add(obj, 'normalkraft').name(normalkraft).onChange((value: any) => {
+    controller_N = gui.add(obj, 'normalkraft').name(normalkraft).onChange((value: any) => {
         if (draw_group) {
             draw_sg.N = false;
-             window.dispatchEvent(new Event("draw_normalkraftlinien_grafik"));
+            window.dispatchEvent(new Event("draw_normalkraftlinien_grafik"));
         } else {
             draw_group = true;
-            gui.controllers[4].setValue(false);
-            gui.controllers[5].setValue(false);
+            controller_V.setValue(false);   // gui.controllers[4]
+            controller_M.setValue(false);   //gui.controllers[5]
             draw_group = false;
             draw_sg.N = value;
             window.dispatchEvent(new Event("draw_normalkraftlinien_grafik"));
@@ -95,14 +97,14 @@ export function myPanel() {
 
     });
 
-    gui.add(obj, 'querkraft').name(querkraft).onChange((value: any) => {
+    controller_V = gui.add(obj, 'querkraft').name(querkraft).onChange((value: any) => {
         if (draw_group) {
             draw_sg.Vz = false;
             window.dispatchEvent(new Event("draw_querkraftlinien_grafik"));
         } else {
             draw_group = true;
-            gui.controllers[3].setValue(false);
-            gui.controllers[5].setValue(false);
+            controller_N.setValue(false);  // gui.controllers[3]
+            controller_M.setValue(false);  // gui.controllers[5]
             draw_group = false;
             draw_sg.Vz = value;
             window.dispatchEvent(new Event("draw_querkraftlinien_grafik"));
@@ -111,7 +113,7 @@ export function myPanel() {
         // console.log("in querkraft",gui.controllers)
     });
 
-    let controller_M = gui.add(obj, 'moment').name(moment).onChange((value: any) => {
+    controller_M = gui.add(obj, 'moment').name(moment).onChange((value: any) => {
         console.log("value", value)
         console.log("Boolean(gui.controllers[5].getValue)", gui.controllers[5])
         if (draw_group) {
@@ -119,15 +121,13 @@ export function myPanel() {
             window.dispatchEvent(new Event("draw_momentenlinien_grafik"));
         } else {
             draw_group = true;
-            gui.controllers[3].setValue(false);
-            gui.controllers[4].setValue(false);
+            controller_N.setValue(false);  //gui.controllers[3]
+            controller_V.setValue(false);  //gui.controllers[4]
             draw_group = false;
             draw_sg.My = value;
             window.dispatchEvent(new Event("draw_momentenlinien_grafik"));
         }
 
-        // draw_sg.My = true; draw_sg.Vz = false; draw_sg.N = false;
-        // draw_sg.My = true; draw_sg.Vz = true; draw_sg.N = true;
     });
 
     gui.add(obj, 'eigenform').name(eigenformen).onChange(() => {
