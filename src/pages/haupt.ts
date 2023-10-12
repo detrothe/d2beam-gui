@@ -534,8 +534,8 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
             <p>
                <br />
                <b>Eingabe der Temperaturlasten</b><br /><br />
-               t<sub>u</sub> Temperatur Unterseite (gestrichelte Faser)<br />
-               t<sub>o</sub> Temperatur Oberseite<br />
+               T<sub>u</sub> Temperatur Unterseite (gestrichelte Faser)<br />
+               T<sub>o</sub> Temperatur Oberseite<br />
             </p>
             <p>
                Anzahl Temperaturlasten:
@@ -554,7 +554,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                id="id_temperaturlasten_tabelle"
                nzeilen="${ntemperaturlasten_init}"
                nspalten="4"
-               columns='["No", "Element", "Lastfall", "t<sub>u</sub> [°]", "t<sub>o</sub> [°]"]'
+               columns='["No", "Element", "Lastfall", "T<sub>u</sub> [°]", "T<sub>o</sub> [°]"]'
             ></dr-tabelle>
             <!-- neu -->
 

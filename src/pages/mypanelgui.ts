@@ -4,6 +4,14 @@ import GUI from 'lil-gui';
 let scale_factor = 1.0;
 let scale_factor_arrows = 1.0;
 
+export const draw_sg = {
+    My: true,
+    Vz: true,
+    N: true
+}
+
+export let draw_group = false;
+
 
 //--------------------------------------------------------------------------------------------------------
 export function myPanel() {
@@ -17,7 +25,7 @@ export function myPanel() {
         querkraft: false,
         moment: false,
         schief: false,
-        stabvorverformung:false,
+        stabvorverformung: false,
         scale: 1.0,
         eigenform: false,
         show_loads: true,
@@ -72,16 +80,54 @@ export function myPanel() {
         window.dispatchEvent(new Event("draw_verformungen_grafik"));
     });
 
-    gui.add(obj, 'normalkraft').name(normalkraft).onChange(() => {
-        window.dispatchEvent(new Event("draw_normalkraftlinien_grafik"));
+    gui.add(obj, 'normalkraft').name(normalkraft).onChange((value: any) => {
+        if (draw_group) {
+            draw_sg.N = false;
+             window.dispatchEvent(new Event("draw_normalkraftlinien_grafik"));
+        } else {
+            draw_group = true;
+            gui.controllers[4].setValue(false);
+            gui.controllers[5].setValue(false);
+            draw_group = false;
+            draw_sg.N = value;
+            window.dispatchEvent(new Event("draw_normalkraftlinien_grafik"));
+        }
+
     });
 
-    gui.add(obj, 'querkraft').name(querkraft).onChange(() => {
-        window.dispatchEvent(new Event("draw_querkraftlinien_grafik"));
+    gui.add(obj, 'querkraft').name(querkraft).onChange((value: any) => {
+        if (draw_group) {
+            draw_sg.Vz = false;
+            window.dispatchEvent(new Event("draw_querkraftlinien_grafik"));
+        } else {
+            draw_group = true;
+            gui.controllers[3].setValue(false);
+            gui.controllers[5].setValue(false);
+            draw_group = false;
+            draw_sg.Vz = value;
+            window.dispatchEvent(new Event("draw_querkraftlinien_grafik"));
+        }
+
+        // console.log("in querkraft",gui.controllers)
     });
 
-    gui.add(obj, 'moment').name(moment).onChange(() => {
-        window.dispatchEvent(new Event("draw_momentenlinien_grafik"));
+    let controller_M = gui.add(obj, 'moment').name(moment).onChange((value: any) => {
+        console.log("value", value)
+        console.log("Boolean(gui.controllers[5].getValue)", gui.controllers[5])
+        if (draw_group) {
+            draw_sg.My = false;
+            window.dispatchEvent(new Event("draw_momentenlinien_grafik"));
+        } else {
+            draw_group = true;
+            gui.controllers[3].setValue(false);
+            gui.controllers[4].setValue(false);
+            draw_group = false;
+            draw_sg.My = value;
+            window.dispatchEvent(new Event("draw_momentenlinien_grafik"));
+        }
+
+        // draw_sg.My = true; draw_sg.Vz = false; draw_sg.N = false;
+        // draw_sg.My = true; draw_sg.Vz = true; draw_sg.N = true;
     });
 
     gui.add(obj, 'eigenform').name(eigenformen).onChange(() => {

@@ -2348,6 +2348,8 @@ function berechne_kombinationen() {
 
     let delta = 0.0
 
+    maxM_all = 0.0; maxV_all = 0.0; maxN_all = 0.0; maxdisp_all = 0.0;
+
     console.log("...", nkombinationen, nelem_Balken, nlastfaelle)
 
     for (let i = 0; i < 3; i++) max_S_kombi[i].fill(0.0);
