@@ -1,7 +1,7 @@
 //import './listener.js';
 
 import { drButtonPM } from "../components/dr-button-pm";
-import { app, clearTables } from "./haupt";
+import { app, clearTables, set_current_filename } from "./haupt";
 //import { testeZahl } from "./utility";
 import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
@@ -269,6 +269,7 @@ function handleFileSelect_read() {
             reader.readAsText(f);
             //console.log("f", reader);
 
+            set_current_filename(files[0].name);
 
         }
     }

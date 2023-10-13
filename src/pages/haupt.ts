@@ -70,6 +70,8 @@ export let typs_string_kombitabelle: string;
 const nkombiSpalten_init = '3'; // immer 1 mehr als nlastfaelle_init
 const nnodedisps_init = '0';
 
+export let currentFilename = 'empty'
+
 export const app = {
    appName: 'd2beam',
    browserLanguage: 'de',
@@ -128,7 +130,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
       <sl-tab-group>
          <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">Haupt</sl-tab>
          <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
-         <sl-tab slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
+         <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
          <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>
          <sl-tab slot="nav" panel="tab-elemente">Elemente</sl-tab>
          <sl-tab slot="nav" panel="tab-knotenlasten">Knotenlasten</sl-tab>
@@ -145,6 +147,8 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
          <!--------------------------------------------------------------------------------------->
 
          <sl-tab-panel name="tab-haupt">
+            <p id="id_current_filename">filename: ${currentFilename}</p>
+
             <p>
                <br />
                <button type="button" id="saveFile" style="min-width:8em;">
@@ -326,7 +330,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
          <!--------------------------------------------------------------------------------------->
 
-         <sl-tab-panel name="tab-querschnitte">
+         <sl-tab-panel id = "id_tab_querschnitt" name="tab-querschnitte">
             <!--
         <sl-button id="open-dialog" @click="${handleClick}"
           >neuer allgemeiner Querschnitt</sl-button
@@ -1540,5 +1544,18 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
       resizeTables();
       clearTables();
    }
+
+   let element = document.getElementById("id_quer");  // id_eingabe
+   element?.click();
+
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function set_current_filename(name: string) {
+   //------------------------------------------------------------------------------------------------------------
+   currentFilename = name;
+   console.log("file name", name)
+   const el = document.getElementById('id_current_filename') as HTMLElement
+   el.innerText = "filename: " + currentFilename
 }
 
