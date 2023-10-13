@@ -221,7 +221,21 @@ function handleFileSelect_read() {
                         }
                     }
 
+                    console.log("loadcases", jobj.loadcases)
+                    if (jobj.loadcases !== undefined) {
+                        console.log("in loadcases")
+                        el = document.getElementById('id_lastfaelle_tabelle') as HTMLElement;
+                        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
+                        nSpalten = tabelle.rows[0].cells.length;
+
+                        for (i = 1; i < tabelle.rows.length; i++) {
+                            for (j = 1; j < nSpalten; j++) {
+                                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+                                child.value = jobj.loadcases[i - 1][j - 1];
+                            }
+                        }
+                    }
 
                     el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
                     tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
@@ -404,12 +418,25 @@ async function handleFileSelect_save() {
             }
         }
 
+        el = document.getElementById('id_lastfaelle_tabelle') as HTMLElement;
+        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+        nZeilen = tabelle.rows.length - 1;
+        nSpalten = tabelle.rows[0].cells.length - 1;
+        const nlastfaelle = nZeilen
+        const lastfaelle = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+        for (i = 0; i < nZeilen; i++) {
+            for (j = 0; j < nSpalten; j++) {
+                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+                lastfaelle[i][j] = child.value
+            }
+        }
+
         el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
         tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
         nZeilen = tabelle.rows.length - 1;
         nSpalten = tabelle.rows[0].cells.length - 1;
         const nkombinationen = nZeilen
-        const nlastfaelle = nSpalten - 1
         const kombination = Array.from(Array(nZeilen), () => new Array(nSpalten));
 
         for (i = 0; i < nZeilen; i++) {
@@ -418,7 +445,6 @@ async function handleFileSelect_save() {
                 kombination[i][j] = child.value
             }
         }
-
 
         el = document.getElementById('id_nnodedisps_tabelle') as HTMLElement;
         tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
@@ -476,10 +502,11 @@ async function handleFileSelect_save() {
             'einzellasten': pointload,
             'tempLoad': tempload,
             'stabvorverformung': stabvorverformung,
+            'loadcases': lastfaelle,
             'combination': kombination,
             'qsclassname': qsClassName,
             'qswerte': qsWerte,
-            'nodeDisp0':nodeDisp0
+            'nodeDisp0': nodeDisp0
         };
 
 

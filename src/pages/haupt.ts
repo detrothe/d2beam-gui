@@ -23,7 +23,7 @@ import '../components/dr-dialog-layerquerschnitt';
 import '../components/dr-dialog-rechteckquerschnitt';
 import '../components/dr-dialog_neue_eingabe';
 
-import { drButtonPM } from "../components/dr-button-pm";
+import { drButtonPM } from '../components/dr-button-pm';
 
 //import { testclass } from './element';
 
@@ -302,7 +302,6 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
             <dr-dialog_neue_eingabe
                id="id_dialog_neue_eingabe"
             ></dr-dialog_neue_eingabe>
-
          </sl-tab-panel>
 
          <!--------------------------------------------------------------------------------------->
@@ -374,7 +373,24 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
          <sl-tab-panel name="tab-elemente">
             <p><b>Eingabe der Elemente</b> <br /></p>
-
+            <p>
+               a = Element<b>a</b>nfang <br />
+               e = Element<b>e</b>nde<br />
+            </p>
+            <p>
+               Typ = Elementtyp<br>
+                0 = Timoshenko Element mit konstantem Querschnitt, nichts oder 0 eingeben<br />
+               1 = TODO
+            </p>
+            <p>
+               N = Normalkraftgelenk, V = Querkraftgelenk, M =
+               Momentengelenk,<br />
+               für ein Gelenk ist jeweils eine 1 einzugeben
+            </p>
+            <p>
+               nod a = globale Knotennummer am Elementanfang <br />
+               nod e = globale Knotennummer am Elementende
+            </p>
             <p>
                Anzahl Elemente:
 
@@ -391,7 +407,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                id="id_element_tabelle"
                nzeilen="${nelem_init}"
                nspalten="10"
-               columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>L</sub>", "V<sub>L</sub>", "M<sub>L</sub>", "N<sub>R</sub>", "V<sub>R</sub>", "M<sub>R</sub>"]'
+               columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>"]'
                typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
                colwidth='["4","8","3","3","3","3","3","3","3","3","3"]'
             ></dr-tabelle>
@@ -619,39 +635,37 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
             <p>
                <b> Eingabe der Lastfälle und Kombinationen</b>
             </p>
+            <p>
+               Anzahl Lastfälle:
+               <dr-button-pm
+                  id="id_button_nlastfaelle"
+                  nel="${nlastfaelle_init}"
+                  inputid="nlastfaelle"
+               ></dr-button-pm>
+               <sl-button id="resize" value="resize" @click="${resizeTables}"
+                  >Resize Tabelle</sl-button
+               >
+            </p>
+            <dr-tabelle
+               id="id_lastfaelle_tabelle"
+               nzeilen="${nlastfaelle_init}"
+               nspalten="1"
+               columns='["Lastfall", "Bezeichnung (optional)"'
+               colwidth='["10","20"]'
+               typs='["-", "text"]'
+            ></dr-tabelle>
 
-            <table>
-               <tbody>
-                  <tr>
-                     <td>Anzahl Lastfälle:</td>
-                     <td>
-                        <dr-button-pm
-                           id="id_button_nlastfaelle"
-                           nel="${nlastfaelle_init}"
-                           inputid="nlastfaelle"
-                        ></dr-button-pm>
-                     </td>
-                  </tr>
-                  <tr>
-                     <td>Anzahl Kombinationen:</td>
-                     <td>
-                        <dr-button-pm
-                           id="id_button_nkombinationen"
-                           nel="${nkombinationen_init}"
-                           inputid="nkombinationen"
-                        ></dr-button-pm>
-                     </td>
-                     <td>
-                        <sl-button
-                           id="resize"
-                           value="resize"
-                           @click="${resizeTables}"
-                           >Resize Tabelle</sl-button
-                        >
-                     </td>
-                  </tr>
-               </tbody>
-            </table>
+            <p>
+               Anzahl Kombinationen:
+               <dr-button-pm
+                  id="id_button_nkombinationen"
+                  nel="${nkombinationen_init}"
+                  inputid="nkombinationen"
+               ></dr-button-pm>
+               <sl-button id="resize" value="resize" @click="${resizeTables}"
+                  >Resize Tabelle</sl-button
+               >
+            </p>
 
             <dr-tabelle
                id="id_kombinationen_tabelle"
@@ -668,6 +682,17 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
             <p>
                <b> Eingabe der Stabvorverfomungen für Theorie II. Ordnung</b>
             </p>
+            <p>
+               w<sub>0a</sub> = Vorverformung am Stabanfang, senkrecht zur
+               Stabachse<br />
+               w<sub>0e</sub> = Vorverformung am Stabende, senkrecht zur
+               Stabachse<br />
+               w<sub>0m</sub> = Stich in Stabmitte, w<sub>0m,gesamt</sub> =w<sub
+                  >0m</sub
+               >
+               +(w<sub>0a</sub>+w<sub>0e</sub>)/2
+            </p>
+
             <p>
                Anzahl Stabvorverformungen:
                <dr-button-pm
@@ -1361,6 +1386,19 @@ export function resizeTables() {
    }
 
    {
+      const el_elemente = document.getElementById('id_button_nlastfaelle');
+      const nelem = (
+         el_elemente?.shadowRoot?.getElementById(
+            'nlastfaelle'
+         ) as HTMLInputElement
+      ).value;
+
+      const el = document.getElementById('id_lastfaelle_tabelle');
+      console.log('EL: >>', el);
+      el?.setAttribute('nzeilen', nelem);
+   }
+
+   {
       let el_elemente = document.getElementById('id_button_nkombinationen');
       let nelem = (
          el_elemente?.shadowRoot?.getElementById(
@@ -1419,6 +1457,9 @@ export function clearTables() {
    el = document.getElementById('id_spannschloesser_tabelle');
    el?.setAttribute('clear', '0');
 
+   el = document.getElementById('id_lastfaelle_tabelle');
+   el?.setAttribute('clear', '0');
+
    el = document.getElementById('id_kombinationen_tabelle');
    el?.setAttribute('clear', '0');
 
@@ -1451,12 +1492,11 @@ function handleClick_neue_eingabe() {
    ).showModal();
 }
 
-
 //---------------------------------------------------------------------------------------------------------------
 function dialog_neue_eingabe_closed(this: any, e: any) {
    //------------------------------------------------------------------------------------------------------------
    console.log('Event dialog closed', e);
-   console.log("this", this)
+   console.log('this', this);
    const el = document.getElementById(
       'id_dialog_neue_eingabe'
    ) as HTMLDialogElement;
@@ -1469,10 +1509,10 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
    ).removeEventListener('close', dialog_closed);
 
    if (returnValue === 'ok') {
-      console.log("Dialog neue Eingabe mit ok geschlossen")
+      console.log('Dialog neue Eingabe mit ok geschlossen');
 
       let el = document.getElementById('id_button_nnodes') as drButtonPM;
-      console.log("el id_button_nnodes", el)
+      console.log('el id_button_nnodes', el);
       el.setValue(2);
 
       el = document.getElementById('id_button_nelem') as drButtonPM;
@@ -1492,11 +1532,13 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
       el.setValue(1);
       el = document.getElementById('id_button_nkombinationen') as drButtonPM;
       el.setValue(0);
-      el = document.getElementById('id_button_nstabvorverformungen') as drButtonPM;
+      el = document.getElementById(
+         'id_button_nstabvorverformungen'
+      ) as drButtonPM;
       el.setValue(0);
 
       resizeTables();
       clearTables();
-
    }
 }
+

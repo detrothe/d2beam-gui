@@ -362,6 +362,7 @@ class DrTabelle extends HTMLElement {
             const lastIndex = myValue.lastIndexOf(']');
             myValue = myValue.slice(0, lastIndex);
             const myArray = myValue.split(',');
+            console.log("°°°°°°°°°°°°°°°° colwidth",myValue,myArray.length,myArray)
             for (let i = 0; i < myArray.length; i++) {
                this.colWidth[i] = myArray[i].replace(/"/g, '').trim();
             }
@@ -862,7 +863,7 @@ class DrTabelle extends HTMLElement {
          {
             rowIndex = zeile;
             colIndex = spalte;
-console.log("TOUCH MOVE rowIndex",rowIndex,colIndex,this.firstRowIndex,this.firstColIndex);
+// console.log("TOUCH MOVE rowIndex",rowIndex,colIndex,this.firstRowIndex,this.firstColIndex);
             if ( rowIndex === this.firstRowIndex && colIndex === this.firstColIndex ) { // Bewegung innerhalb erstgepickter Zelle
                return;
             }

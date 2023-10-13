@@ -144,7 +144,7 @@
 				Verschiebung ohne Angabe des Knotens (Eingabe 0). Die Richtung der Schiefstellung wird gleich angesetzt
 				wie die vorhandene Verschiebung des zugehörigen Freiheitsgrades aus der vorausgehenden Berechnung nach
 				Theorie I.Ordnung, die auch zur Bestimmung der Normalkräfte benötigt wird.<br>
-				Bei unverschiebnlichen System entspricht die 1.Eigenform einher Stabvorverformung und kann entsprechend
+				Bei einfachen unverschiebnlichen System entspricht die 1.Eigenform einer Stabvorverformung und kann entsprechend
 				verwendet werden.<br>
 				Die vom Programm berechnete Vorverformung kann in der grafischen Darstellung überprüft werden. Sollte
 				des Ergebnis nicht passen, dann ist der gewünschte Knoten mit Richtung in der Eingabe vorzugeben.
@@ -156,10 +156,7 @@
 			</p>
 
 
-		<li>
-			<p>
-				Zur Zeit sind Knotenlasten und linear veränderliche Streckenlasten (senkrecht auf Stab) möglich.
-			</p>
+
 
 	</ul>
 	<p>
@@ -173,27 +170,9 @@
 	<h1 class="western" id="beispiel">
 		<a href="#">Beispiel</a>
 	</h1>
-	<h2 class="western"> Einzelliger Hohlkastenquerschnitt </h2>
+	<h2 class="western"> Kragarm </h2>
 	<p>
-		Dieses Beispiel wurde in [2] behandelt. Die Querschnittsdaten wurden beim Programmstart automatisch geladen.
-	</p>
-
-
-
-	<p>
-		Schnittgrößen:
-	</p>
-	<p>
-		M<sub>xp</sub> = 250 kNm; M<sub>xs</sub> = 150 kNm; M<sub>ω</sub> = 10 kNm²
-	</p>
-	<p>
-		V<sub>y</sub> = 1000 kN; V<sub>z</sub> = 500 kN
-	</p>
-	<p>
-		Material:
-	</p>
-	<p>
-		E = 21.000 kN/cm²; ν = 0,3
+		Beim Programmstart wird ein einfaches System automatisch geladen und kann nach Anklicken des Buttons <i>Rechnen</i> untersucht werden.
 	</p>
 
 	<p>
@@ -350,12 +329,12 @@
 
 	<h2 class="western" id="kompatibilitaet"><a href="#">Kompatibilität und Probleme</a></h2>
 
-	<p>Es wurden folgenden Betriebssysteme getestet: Windows 10↑, macOS Catalina 10.15.7↑, Ubuntu 22.04↑, Android 9-13,
+	<p>Es wurden folgenden Betriebssysteme getestet: Windows 10↑, macOS Catalina 10.15.7↑, Ubuntu 22.04↑, Android 9-14,
 		iOS 15.7.3↑. </p>
 	<p>Es wurden folgende Browser in der aktuellsten Version getestet: Chrome, Chromium, Edge, Safari, Firefox.
 		Nur die aktuellen Versionen werden getestet und unterstützt.
 	</p>
-	<p>Probleme: Unter Android Firefox funktioniert die Selektion der Zellen in den Tabellen nicht.</p>
+	<!--  <p>Probleme: Unter Android Firefox funktioniert die Selektion der Zellen in den Tabellen nicht.</p>  -->
 
 	<h2 class="western" id="tastatur"><a href="#">Virtuelle Tastatur</a></h2>
 	<p>Auf manchen Android Geräten, besonders von Samsung, enthält die numerische Tastatur keine Taste für ein negatives
