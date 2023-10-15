@@ -32,7 +32,7 @@ export class drButtonPM extends LitElement {
             border-width: 1px;
             border-color: #303030;
             color: #444;
-            padding: 0.2em;
+            padding: 0.2em; /* 0.2em;*/
          }
 
          button:active {
@@ -52,7 +52,7 @@ export class drButtonPM extends LitElement {
          .input_int {
             width: 3.125em;
             margin: 0;
-            padding: 1px;
+            padding: 0.625rem; /*1px;*/
             border-top: 1px solid #444;
             border-bottom: 1px solid #444;
             border-left: 0;

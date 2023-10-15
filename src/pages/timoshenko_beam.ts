@@ -1022,10 +1022,11 @@ export class CTimoshenko_beam extends CElement {
     //---------------------------------------------------------------------------------------------
 
     berechneElementSchnittgroessen(ielem: number, iLastf: number) {
+        //-----------------------------------------------------------------------------------------
 
         let Mx: number, Vx: number, Nx: number, ux: number, wx: number
         let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
-        let u: number, w: number, wL: number = 0.0, disp = 0.0
+        let u: number, wL: number = 0.0, disp = 0.0
         let edisp: number[] = Array(6)
 
         let EI = this.emodul * this.Iy
@@ -1037,7 +1038,10 @@ export class CTimoshenko_beam extends CElement {
         const sl = this.sl
         const nenner = sl ** 3 + 12. * eta * sl
 
-        if (THIIO_flag > 0) {
+        if (THIIO_flag === 0) {      // Theorie I. Ordnung
+            for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i]
+        }
+        else {      // Theorie II. Ordnung
 
             for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i] + this.edisp0[i]  // Verformung + Schiefstellung
             //console.log(" 1 edisp", edisp)
@@ -1075,18 +1079,18 @@ export class CTimoshenko_beam extends CElement {
             ux = 0.0
             wx = 0.0
 
+            Nu[0] = (1.0 - x / sl);
+            Nu[1] = x / sl
+            Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+            Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+            Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+            Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+            u = Nu[0] * edisp[0] + Nu[1] * edisp[3]
+            wx = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+
             if (THIIO_flag === 1) {
 
-                Nu[0] = (1.0 - x / sl);
-                Nu[1] = x / sl
-                Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
-                Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
-                Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
-                Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-                u = Nu[0] * edisp[0] + Nu[1] * edisp[3]
-                w = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
-
-                Mx = Mx - this.NL * (w - wL)
+                Mx = Mx - this.NL * (wx - wL)
 
                 for (let i = 0; i < nstabvorverfomungen; i++) {
                     if (stabvorverformung[i].element === this.ielem) {
@@ -1402,6 +1406,30 @@ export class CTimoshenko_beam extends CElement {
             }
         } else {
             for (let i = 0; i < this.nTeilungen; i++) Nx[i] = this.N_komb[iLastf][i]
+        }
+    }
+
+    //---------------------------------------------------------------------------------------------
+    get_elementSchnittgroesse_u_w(ux: number[], wx: number[], iLastf: number) {
+
+
+        if (THIIO_flag === 0) {
+            if (iLastf < nlastfaelle) {
+                for (let i = 0; i < this.nTeilungen; i++) {
+                    ux[i] = this.u_[iLastf][i]
+                    wx[i] = this.w_[iLastf][i]
+                }
+            } else {
+                for (let i = 0; i < this.nTeilungen; i++) {
+                    ux[i] = this.u_komb[iLastf - nlastfaelle][i]
+                    wx[i] = this.w_komb[iLastf - nlastfaelle][i]
+                }
+            }
+        } else {
+            for (let i = 0; i < this.nTeilungen; i++) {
+                ux[i] = this.u_komb[iLastf][i]
+                wx[i] = this.w_komb[iLastf][i]
+            }
         }
     }
 

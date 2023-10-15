@@ -7,10 +7,10 @@ import { myFormat, write } from './utility'
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, THIIO_flag, maxValue_w0 } from "./rechnen";
-import { max_S_kombi, maxM_all, maxV_all, maxN_all } from "./rechnen";
+import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all } from "./rechnen";
 
 //import { Pane } from 'tweakpane';
-import { myPanel, get_scale_factor, draw_sg,draw_group } from './mypanelgui'
+import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
 //import { colorToRgbNumber } from '@tweakpane/core';
 import { app } from "./haupt";
 import { saveAs } from 'file-saver';
@@ -427,78 +427,109 @@ export function drawsystem() {
 
         let xx1, xx2, zz1, zz2
         let dx: number, x: number, eta: number, sl: number, nenner: number
-        let Nu: number[] = Array(2), Nw: number[] = Array(4)
-        let u: number, w: number, uG: number, wG: number
+        //let Nu: number[] = Array(2), Nw: number[] = Array(4)
+        let uG: number, wG: number
+        let nLoop = 1, lf_index = 0
         let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
         let xmem = 0.0, zmem = 0.0
 
         let edispL: number[] = new Array(6)
         let iLastfall = draw_lastfall
         let scalefactor = 0
+
         if (THIIO_flag === 0) {
-            if (maxValue_lf[iLastfall - 1].disp != 0.0) scalefactor = 0.1 * slmax / maxValue_lf[iLastfall - 1].disp * 1000.
+            if (iLastfall <= nlastfaelle) {
+                lf_index = iLastfall - 1
+                if (maxValue_lf[iLastfall - 1].disp != 0.0) scalefactor = 0.1 * slmax / maxValue_lf[iLastfall - 1].disp * 1000.
+            } else if (iLastfall <= nlastfaelle + nkombinationen) {
+                lf_index = iLastfall - 1
+                let ikomb = iLastfall - 1 - nlastfaelle
+                scalefactor = 0.1 * slmax / max_disp_kombi[ikomb]
+            } else {
+                nLoop = nkombinationen
+                lf_index = nlastfaelle
+                scalefactor = 0.1 * slmax / maxdisp_all
+            }
         }
         else if (THIIO_flag === 1) {
-            if (maxValue_komb[iLastfall - 1].disp != 0.0) scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].disp * 1000.
+            if (iLastfall <= nkombinationen) {
+                lf_index = iLastfall - 1
+                if (maxValue_komb[iLastfall - 1].disp != 0.0) scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].disp * 1000.
+            } else {
+                nLoop = nkombinationen
+                lf_index = 0
+                scalefactor = 0.05 * slmax / maxdisp_all
+            }
         }
 
         scalefactor *= scaleFactor_panel
 
-        console.log("scalefaktor", scalefactor, slmax, maxValue_lf[iLastfall - 1].disp)
+        //console.log("scalefaktor", scalefactor, slmax, maxValue_lf[iLastfall - 1].disp)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
             maxU = 0.0
+
+            const nelTeilungen = element[ielem].nTeilungen
+            let uL: number[] = new Array(nelTeilungen)
+            let wL: number[] = new Array(nelTeilungen)
 
             x1 = Math.round(tr.xPix(element[ielem].x1));
             z1 = Math.round(tr.zPix(element[ielem].z1));
             x2 = Math.round(tr.xPix(element[ielem].x2));
             z2 = Math.round(tr.zPix(element[ielem].z2));
 
-            element[ielem].get_edispL(edispL, iLastfall - 1)
 
             dx = element[ielem].sl / nelTeilungen
             eta = element[ielem].eta
             sl = element[ielem].sl
             nenner = sl ** 3 + 12 * eta * sl
 
-            x = 0.0; xx2 = 0.0; zz2 = 0.0
-            for (let i = 0; i <= nelTeilungen; i++) {
-                Nu[0] = (1.0 - x / sl);
-                Nu[1] = x / sl
-                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
-                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
-                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
-                Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
-                u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+            for (let loop = 0; loop < nLoop; loop++) {
 
-                console.log("wx =", w, element[ielem].w_[iLastfall - 1][i])
-                w += element[ielem].w_[iLastfall - 1][i]  // Anteil aus Elementlasten im Starrsystem
+                element[ielem].get_elementSchnittgroesse_u_w(uL, wL, lf_index + loop);
 
-                uG = element[ielem].cosinus * u - element[ielem].sinus * w
-                wG = element[ielem].sinus * u + element[ielem].cosinus * w
 
-                xx1 = xx2; zz1 = zz2;
-                xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
-                zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
-                xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+                xx2 = 0.0; zz2 = 0.0
+                for (let i = 0; i <= nelTeilungen; i++) {
+                    // Nu[0] = (1.0 - x / sl);
+                    // Nu[1] = x / sl
+                    // Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                    // Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                    // Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                    // Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                    // u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                    // w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
 
-                if (i > 0) {
-                    //console.log("line", xx1, zz1, xx2, zz2)
-                    let line = two.makeLine(xx1, zz1, xx2, zz2);
-                    line.linewidth = 2;
+                    // //console.log("wx =", w, element[ielem].w_[iLastfall - 1][i])
+                    // w += element[ielem].w_[iLastfall - 1][i]  // Anteil aus Elementlasten im Starrsystem
+
+                    x = element[ielem].x_[i]
+
+                    uG = element[ielem].cosinus * uL[i] - element[ielem].sinus * wL[i]
+                    wG = element[ielem].sinus * uL[i] + element[ielem].cosinus * wL[i]
+
+                    xx1 = xx2; zz1 = zz2;
+                    xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
+                    zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                    xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+
+                    if (i > 0) {
+                        //console.log("line", xx1, zz1, xx2, zz2)
+                        let line = two.makeLine(xx1, zz1, xx2, zz2);
+                        line.linewidth = 2;
+                    }
+
+                    dispG = Math.sqrt(uG * uG + wG * wG)
+                    if (dispG > maxU) {
+                        maxU = dispG
+                        x_max = xx2
+                        z_max = zz2
+                        xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+                        zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+                    }
+
+                    x = x + dx
                 }
-
-                dispG = Math.sqrt(uG * uG + wG * wG)
-                if (dispG > maxU) {
-                    maxU = dispG
-                    x_max = xx2
-                    z_max = zz2
-                    xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
-                    zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
-                }
-
-                x = x + dx
             }
 
             if (show_labels && maxU > 0.0) {
@@ -507,7 +538,7 @@ export function drawsystem() {
                 pfeil.stroke = '#111111'     //'#D3D3D3'
 
                 const str = myFormat(maxU * 1000, 1, 1) + 'mm'
-                const txt = two.makeText(str, x_max, z_max, style_txt)
+                const txt = two.makeText(str, x_max+3, z_max, style_txt)
                 txt.alignment = 'left'
                 txt.baseline = 'top'
 

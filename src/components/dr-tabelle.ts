@@ -271,7 +271,8 @@ class DrTabelle extends HTMLElement {
 
                newCell = newRow.insertCell();
                if (this.colWidth.length === 0) newCell.style.width = '6em';
-               else newCell.style.width = this.colWidth[iSpalte] + 'em';
+               else newCell.style.width = this.colWidth[Math.min(iSpalte, this.colWidth.length - 1)]+ 'em';
+
                newCell.style.border = 'solid';
                newCell.style.borderWidth = '1px';
                newCell.style.padding = '0px';
@@ -362,7 +363,7 @@ class DrTabelle extends HTMLElement {
             const lastIndex = myValue.lastIndexOf(']');
             myValue = myValue.slice(0, lastIndex);
             const myArray = myValue.split(',');
-            console.log("°°°°°°°°°°°°°°°° colwidth",myValue,myArray.length,myArray)
+            console.log("°°°°°°°°°°°°°°°° colwidth", myValue, myArray.length, myArray)
             for (let i = 0; i < myArray.length; i++) {
                this.colWidth[i] = myArray[i].replace(/"/g, '').trim();
             }
@@ -615,7 +616,11 @@ class DrTabelle extends HTMLElement {
                         el.className = 'input_normal';
                         el.addEventListener('keydown', this.KEYDOWN);
 
-                        newCell.style.width = '6em';
+                        //newCell.style.width = '6em';
+                        //console.log("§§§§§§§§§ colwidth",this.colWidth.length,this.colWidth[this.colWidth.length-1])
+                        if (this.colWidth.length === 0) newCell.style.width = '6em';
+                        else newCell.style.width = this.colWidth[this.colWidth.length - 1] + 'em';
+
                         newCell.style.border = 'solid';
                         newCell.style.borderWidth = '1px';
                         newCell.style.padding = '0px';
@@ -863,11 +868,11 @@ class DrTabelle extends HTMLElement {
          {
             rowIndex = zeile;
             colIndex = spalte;
-// console.log("TOUCH MOVE rowIndex",rowIndex,colIndex,this.firstRowIndex,this.firstColIndex);
-            if ( rowIndex === this.firstRowIndex && colIndex === this.firstColIndex ) { // Bewegung innerhalb erstgepickter Zelle
+            // console.log("TOUCH MOVE rowIndex",rowIndex,colIndex,this.firstRowIndex,this.firstColIndex);
+            if (rowIndex === this.firstRowIndex && colIndex === this.firstColIndex) { // Bewegung innerhalb erstgepickter Zelle
                return;
             }
-            this.firstRowIndex=-1;
+            this.firstRowIndex = -1;
 
             let tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;  //ev.target.offsetParent.offsetParent;
             tabelle.rows[rowIndex].cells[colIndex].firstElementChild!.className = 'input_select';
@@ -1011,7 +1016,7 @@ class DrTabelle extends HTMLElement {
          console.log('rechte Maustaste');
          // ev.preventDefault();
       }
-       if (ev.button === 0 || ev.which === 3) {         // linke Maustaste
+      if (ev.button === 0 || ev.which === 3) {         // linke Maustaste
 
          this.selectionMode = true;
 
@@ -1052,10 +1057,10 @@ class DrTabelle extends HTMLElement {
          rowIndex = Number(myArray[1]);
          colIndex = Number(myArray[2]);
 
-         if ( rowIndex === this.firstRowIndex && colIndex === this.firstColIndex ) { // Bewegung innerhalb erstgepickter Zelle
+         if (rowIndex === this.firstRowIndex && colIndex === this.firstColIndex) { // Bewegung innerhalb erstgepickter Zelle
             return;
          }
-         this.firstRowIndex=-1;
+         this.firstRowIndex = -1;
 
          let tabelle = ev.target.offsetParent.offsetParent;
          tabelle.rows[rowIndex].cells[colIndex].firstElementChild.className = 'input_select';

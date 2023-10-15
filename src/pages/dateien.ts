@@ -1,7 +1,7 @@
 //import './listener.js';
 
 import { drButtonPM } from "../components/dr-button-pm";
-import { app, clearTables, set_current_filename } from "./haupt";
+import { app, clearTables, currentFilename, set_current_filename } from "./haupt";
 //import { testeZahl } from "./utility";
 import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
@@ -11,6 +11,7 @@ import { add_rechteck_querschnitt } from './rechnen'
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
 
+let lastFileHandle = 'documents';
 
 //------------------------------------------------------------------------------------------------
 function handleFileSelect_read() {
@@ -529,12 +530,15 @@ async function handleFileSelect_save() {
                 // (B) FILE HANDLER & FILE STREAM
                 // @ts-ignore
                 const fileHandle = await window.showSaveFilePicker({
+                    suggestedName: currentFilename,
+                    startIn: lastFileHandle,
                     types: [{
                         description: "Text file",
                         accept: { "text/plain": [".txt"] }
                     }]
                 });
-                //console.log("fileHandle",fileHandle)
+                console.log("fileHandle",fileHandle)
+                lastFileHandle=fileHandle
 
                 const fileStream = await fileHandle.createWritable();
                 //console.log("fileStream=",fileStream);

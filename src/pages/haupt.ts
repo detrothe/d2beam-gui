@@ -413,7 +413,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                nspalten="10"
                columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>"]'
                typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
-               colwidth='["4","8","3","3","3","3","3","3","3","3","3"]'
+               colwidth='["4","8","2","3","3","2","2","2","2","2","2"]'
             ></dr-tabelle>
          </sl-tab-panel>
 
@@ -678,6 +678,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
                columns="${column_string_kombitabelle}"
                typs="${typs_string_kombitabelle}"
                coltext="Lf"
+               colwidth='["4","8","3"]'
             ></dr-tabelle>
          </sl-tab-panel>
 
@@ -928,6 +929,13 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
    document
       ?.getElementById('id_button_copy_svg')
       ?.addEventListener('click', copy_svg, false);
+
+      console.log("id_button_copy_svg", getComputedStyle(document?.getElementById('id_button_copy_svg')!).height);
+      console.log("rechnen", getComputedStyle(document?.getElementById('rechnen')!).width);
+
+   let ELEMENT = document?.querySelector('.output_container')
+   console.log("ELEMENT",ELEMENT)
+   console.log("ELEMENT", getComputedStyle(ELEMENT!).width);
 }
 
 //---------------------------------------------------------------------------------------------------------------

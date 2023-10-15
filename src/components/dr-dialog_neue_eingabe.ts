@@ -20,7 +20,7 @@ export class drDialogNeueEingabe extends LitElement {
             border-width: 1px;
             border-color: #303030;
             color: #444;
-            padding: 0.2em;
+            padding: 1rem;  /*0.2em;*/
          }
 
          button:active {
