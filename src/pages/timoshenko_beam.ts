@@ -1076,8 +1076,8 @@ export class CTimoshenko_beam extends CElement {
             Vx = this.VL
             Mx = this.ML + Vx * x
             Nx = this.NL
-            ux = 0.0
-            wx = 0.0
+            //ux = 0.0
+            //wx = 0.0
 
             Nu[0] = (1.0 - x / sl);
             Nu[1] = x / sl
@@ -1085,7 +1085,7 @@ export class CTimoshenko_beam extends CElement {
             Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
             Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
             Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-            u = Nu[0] * edisp[0] + Nu[1] * edisp[3]
+            ux = Nu[0] * edisp[0] + Nu[1] * edisp[3]
             wx = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
 
             if (THIIO_flag === 1) {

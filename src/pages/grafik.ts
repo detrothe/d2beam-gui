@@ -15,6 +15,8 @@ import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
 import { app } from "./haupt";
 import { saveAs } from 'file-saver';
 
+let lastFileHandleSVG = 'documents';
+let currentFilenameSVG = 'd2beam.svg'
 
 console.log("in grafik")
 
@@ -76,11 +78,18 @@ const style_txt_knotenlast = {
     fill: '#dc0000',
     weight: 'bold'
 };
+
 const style_pfeil = {
     b: 20,
     h: 10,
     linewidth: 2,
     color: '#000000'
+}
+const style_pfeil_pix = {
+    b: 15,
+    h: 6,
+    linewidth: 1,
+    color: '#999999'
 }
 
 const style_pfeil_lager = {
@@ -487,7 +496,8 @@ export function drawsystem() {
             for (let loop = 0; loop < nLoop; loop++) {
 
                 element[ielem].get_elementSchnittgroesse_u_w(uL, wL, lf_index + loop);
-
+                console.log("uL",uL)
+                console.log("wL",wL)
 
                 xx2 = 0.0; zz2 = 0.0
                 for (let i = 0; i <= nelTeilungen; i++) {
@@ -534,11 +544,12 @@ export function drawsystem() {
 
             if (show_labels && maxU > 0.0) {
 
-                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
-                pfeil.stroke = '#111111'     //'#D3D3D3'
+                //const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                //pfeil.stroke = '#111111'     //'#D3D3D3'
+                draw_arrowPix(two,xmem, zmem, x_max, z_max, style_pfeil_pix)
 
                 const str = myFormat(maxU * 1000, 1, 1) + 'mm'
-                const txt = two.makeText(str, x_max+3, z_max, style_txt)
+                const txt = two.makeText(str, x_max+5, z_max, style_txt)
                 txt.alignment = 'left'
                 txt.baseline = 'top'
 
@@ -2411,6 +2422,72 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
 
 
 //--------------------------------------------------------------------------------------------------------
+function draw_arrowPix(two: Two, x1: number, z1: number, x2: number, z2: number, styles?: any) {
+    //----------------------------------------------------------------------------------------------------
+
+    let b = 20, h = 10, linewidth = 1, color = '#000000'
+    let a = 0.0, calc_a = true
+
+    if (styles) {
+        console.log("draw_arrowPix, styles", styles)
+        if (styles.linewidth) linewidth = styles.linewidth
+        if (styles.a) {
+            a = styles.a / devicePixelRatio;
+            calc_a = false
+        }
+        if (styles.b) b = styles.b
+        if (styles.h) h = styles.h
+        if (styles.color) color = styles.color
+    }
+
+    b = b / devicePixelRatio
+    h = h / devicePixelRatio
+
+    linewidth = linewidth / devicePixelRatio
+
+    let dx = x2 - x1, dz = z2 - z1
+    let alpha = Math.atan2(dz, dx)
+
+    let sl = Math.sqrt(dx * dx + dz * dz)
+    console.log("sl", sl, calc_a);
+    console.log("0.0", Math.round(tr.xPix(0.0)));
+
+    if (calc_a) a = sl - b;
+    // write('sl : ', sl)
+    // write('tr.Pix0 : ', tr.Pix0(sl))
+    // write('div', Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)))
+    // write('a: ', a)
+    // write('b: ', b)
+
+    let x0 = x1;
+    let z0 = z1;
+
+    console.log("sl,a", sl, a, b, x0, z0)
+
+    let group = two.makeGroup();
+    let line = two.makeLine(0, 0, a, 0);
+    line.linewidth = linewidth;
+    line.stroke = color;
+
+    group.add(line)
+
+    var vertices = [];
+    vertices.push(new Two.Vector(a, -h / 2));
+    vertices.push(new Two.Vector(a + b, 0));
+    vertices.push(new Two.Vector(a, h / 2));
+    // @ts-ignore
+    let dreieck = two.makePath(vertices);
+    dreieck.fill = color;
+    dreieck.stroke = color;
+    dreieck.linewidth = 1;
+
+    group.add(dreieck)
+    group.rotation = alpha
+    group.translation.set(x0, z0)
+
+}
+
+//--------------------------------------------------------------------------------------------------------
 function draw_feder(two: Two, x0: number, z0: number, alpha: number) {
     //----------------------------------------------------------------------------------------------------
     let x = Array(7)
@@ -2685,7 +2762,11 @@ export async function copy_svg() {
         // const preface = '<?xml version="1.0" standalone="no"?>\r\n';
         // const svgBlob = new Blob([preface, svg], { type: "image/svg+xml;charset=utf-8" });
 
-        const svgBlob = new Blob([elem.innerHTML], { type: "image/svg+xml;charset=utf-8" });
+        const svgBlob = new Blob([elem.innerHTML], { type: "image/svg+xml;charset=utf-8" });  //
+
+        console.log("svgBlob.type",svgBlob.type)
+
+        navigator.clipboard.writeText(elem.innerHTML)   // für inkscape
 
         let filename: any = 'd2beam.svg'
 
@@ -2700,12 +2781,16 @@ export async function copy_svg() {
             try {
                 // @ts-ignore
                 const fileHandle = await window.showSaveFilePicker({
+                    suggestedName: currentFilenameSVG,
+                    startIn: lastFileHandleSVG,
                     types: [{
                         description: "Text file",
                         accept: { "text/plain": [".svg"] }
                     }]
                 });
-                //console.log("fileHandle",fileHandle)
+                console.log("fileHandle SVG",fileHandle)
+                lastFileHandleSVG=fileHandle
+                currentFilenameSVG = fileHandle.name
 
                 const fileStream = await fileHandle.createWritable();
                 //console.log("fileStream=",fileStream);
