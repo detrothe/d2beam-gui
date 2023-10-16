@@ -32,7 +32,7 @@ export class drButtonPM extends LitElement {
             border-width: 1px;
             border-color: #303030;
             color: #444;
-            padding: 0.2em; /* 0.2em;*/
+            padding: 0em; /* 0.2em;*/
          }
 
          button:active {
@@ -64,8 +64,8 @@ export class drButtonPM extends LitElement {
          .spinner {
             border: solid 1px #444;
             margin: 0;
-            padding: 1px;
-            width: 1em;
+            padding: 0.625rem; /*1px;*/
+            width: 2.25em;  /* 1em;*/
          }
 
          .spinner:hover {

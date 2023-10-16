@@ -147,10 +147,9 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
          <!--------------------------------------------------------------------------------------->
 
          <sl-tab-panel name="tab-haupt">
-            <p id="id_current_filename">filename: ${currentFilename}</p>
+            <div id="id_current_filename">&nbsp;&nbsp;filename: ${currentFilename}<br></div>
 
             <p>
-               <br />
                <button type="button" id="saveFile" style="min-width:8em;">
                   Daten speichern
                </button>
