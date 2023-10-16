@@ -17,10 +17,14 @@ export class drButtonPM extends LitElement {
    nel = 0;
    @property({ type: String }) inputID = '';
    @property({ type: String }) txt = '';
-   @property({ type: String }) minValue = 0;
+   @property({ type: Number }) minValue = 0;
 
    static get styles() {
       return css`
+         :host {
+            --dr-pad: 0rem;
+         }
+
          input,
          label {
             font-size: 1em;
@@ -52,20 +56,21 @@ export class drButtonPM extends LitElement {
          .input_int {
             width: 3.125em;
             margin: 0;
-            padding: 0.625rem; /*1px;*/
+            padding: var(--dr-pad); /*1px;*/
             border-top: 1px solid #444;
             border-bottom: 1px solid #444;
             border-left: 0;
             border-right: 0;
             border-radius: 0;
             text-align: center;
+            line-height: calc(38px);
          }
 
          .spinner {
             border: solid 1px #444;
             margin: 0;
-            padding: 0.625rem; /*1px;*/
-            width: 2.25em;  /* 1em;*/
+            padding: var(--dr-pad); /*1px;*/
+            width: calc(var(--dr-pad)*2+1em); /* 1em;*/
          }
 
          .spinner:hover {
@@ -139,11 +144,11 @@ export class drButtonPM extends LitElement {
 
    //----------------------------------------------------------------------------------------------
    _valueChanged() {
-
       const shadow = this.shadowRoot;
       if (shadow) {
-         let value = (shadow.getElementById(this.inputID) as HTMLInputElement).value
-         console.log("VALUE  CHANGED", value)
+         let value = (shadow.getElementById(this.inputID) as HTMLInputElement)
+            .value;
+         console.log('VALUE  CHANGED', value);
          this.nel = Number(value);
       }
 
@@ -179,6 +184,4 @@ export class drButtonPM extends LitElement {
       `;
    }
 }
-
-
 
