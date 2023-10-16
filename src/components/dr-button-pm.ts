@@ -64,7 +64,8 @@ export class drButtonPM extends LitElement {
             border-right: 0;
             border-radius: 0;
             text-align: center;
-            line-height: calc(2.5rem - 4px);
+            line-height: calc(2.5rem - 2px);
+            vertical-align: middle;
          }
 
          .spinner {
@@ -72,7 +73,8 @@ export class drButtonPM extends LitElement {
             margin: 0;
             padding: var(--dr-pad); /*1px;*/
             width: 1.25rem; /* 1em;*/
-            line-height: calc(2.5rem - 4px);
+            line-height: calc(2.5rem - 2px);
+            vertical-align: middle;
          }
 
          .spinner:hover {
