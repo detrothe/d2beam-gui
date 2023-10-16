@@ -22,7 +22,8 @@ export class drButtonPM extends LitElement {
    static get styles() {
       return css`
          :host {
-            --dr-pad: 0rem;
+            --dr-pad: 0;
+            --color-border: #d4d4d8;
          }
 
          input,
@@ -56,21 +57,22 @@ export class drButtonPM extends LitElement {
          .input_int {
             width: 3.125em;
             margin: 0;
-            padding: var(--dr-pad); /*1px;*/
-            border-top: 1px solid #444;
-            border-bottom: 1px solid #444;
+            padding: 0; /*1px;*/
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
             border-left: 0;
             border-right: 0;
             border-radius: 0;
             text-align: center;
-            line-height: calc(38px);
+            line-height: calc(2.5rem - 4px);
          }
 
          .spinner {
-            border: solid 1px #444;
+            border: solid 1px var(--color-border);
             margin: 0;
             padding: var(--dr-pad); /*1px;*/
-            width: calc(var(--dr-pad)*2+1em); /* 1em;*/
+            width: 1.25rem; /* 1em;*/
+            line-height: calc(2.5rem - 4px);
          }
 
          .spinner:hover {
