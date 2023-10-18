@@ -243,7 +243,6 @@ class DrTabelle extends HTMLElement {
                      option.value = option.textContent = 'Querschnitt lang ' + (i + 1);
 
                      el.appendChild(option);
-
                   }
                } else {
                   el = document.createElement('input');
@@ -271,7 +270,7 @@ class DrTabelle extends HTMLElement {
 
                newCell = newRow.insertCell();
                if (this.colWidth.length === 0) newCell.style.width = '6em';
-               else newCell.style.width = this.colWidth[Math.min(iSpalte, this.colWidth.length - 1)]+ 'em';
+               else newCell.style.width = this.colWidth[Math.min(iSpalte, this.colWidth.length - 1)] + 'em';
 
                newCell.style.border = 'solid';
                newCell.style.borderWidth = '1px';
@@ -677,6 +676,7 @@ class DrTabelle extends HTMLElement {
 
                         el.appendChild(option);
                      }
+                     //el.style.width = 'inherit'; //'6em';
                   } else {
                      el = document.createElement('input');
                      el.setAttribute('type', 'number');
@@ -695,9 +695,16 @@ class DrTabelle extends HTMLElement {
 
                   newCell = newRow.insertCell();
                   //newCell.style.width = '6em';
+                  // if (this.colWidth.length === 0) newCell.style.width = '6em';
+                  // else newCell.style.width = this.colWidth[iSpalte] + 'em';
+                  // if (this.colWidth.length === 0) newCell.style.width = '6em';
+                  // else newCell.style.width = this.colWidth[this.colWidth.length - 1] + 'em';
                   if (this.colWidth.length === 0) newCell.style.width = '6em';
-                  else newCell.style.width = this.colWidth[iSpalte] + 'em';
-
+                  else if (iSpalte < this.colWidth.length) {
+                     newCell.style.width = this.colWidth[iSpalte] + 'em';
+                  } else {
+                     newCell.style.width = this.colWidth[this.colWidth.length - 1] + 'em';
+                  }
                   newCell.style.border = 'solid';
                   newCell.style.borderWidth = '1px';
                   newCell.style.padding = '0px';
