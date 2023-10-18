@@ -24,12 +24,14 @@ export class drButtonPM extends LitElement {
          :host {
             --dr-pad: 0;
             --color-border: #d4d4d8;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
          }
 
          input,
          label {
-            font-size: 1em;
-         }
+            font-size: 0.875rem;       }
 
          button {
             font-size: 1em;
