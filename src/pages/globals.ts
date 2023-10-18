@@ -1,5 +1,6 @@
 export let berechnung_erfolgreich = false;
 export let berechnung_erforderlich = true;
+
 let txt_berechnung = "Neue Berechnung erforderlich"
 
 export function berechnungErfolgreich(wert:any) {

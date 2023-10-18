@@ -64,7 +64,7 @@ export class drButtonPM extends LitElement {
             border-right: 0;
             border-radius: 0;
             text-align: center;
-            line-height: calc(2.5rem - 2px);
+            line-height: calc(var(--sl-input-height-medium) - 2px);
             vertical-align: middle;
          }
 
@@ -73,7 +73,7 @@ export class drButtonPM extends LitElement {
             margin: 0;
             padding: var(--dr-pad); /*1px;*/
             width: 1.25rem; /* 1em;*/
-            line-height: calc(2.5rem - 2px);
+            line-height: calc(var(--sl-input-height-medium) - 2px);
             vertical-align: middle;
          }
 
@@ -83,13 +83,13 @@ export class drButtonPM extends LitElement {
 
          .decrement {
             /*.decrement*/
-            border-radius: 3px 0px 0px 3px;
+            border-radius: 4px 0px 0px 4px;
             color: #000000;
          }
 
          .increment {
             /*.increment*/
-            border-radius: 0px 3px 3px 0px;
+            border-radius: 0px 4px 4px 0px;
             color: #000000;
          }
       `;
