@@ -34,6 +34,7 @@ export let disp_lf: TFArray3D;
 export let disp_print: TFArray3D;
 export let stabendkraefte: TFArray3D
 export let lagerkraefte: TFArray3D
+export let lagerkraefte_kombi: TFArray3D
 export let u_lf = [] as number[][]
 export let u0_komb = [] as number[][]   // berechnete Schiefstellung
 export let eigenform_container_node = [] as TFArray3D[]
@@ -1540,7 +1541,10 @@ function calculate() {
 
         }   //ende iLastfall
 
-        if (nkombinationen > 0) berechne_kombinationen();
+        if (nkombinationen > 0) {
+            lagerkraefte_kombi = new TFArray3D(0, nnodes - 1, 0, 2, 0, nkombinationen - 1);   //
+            berechne_kombinationen();
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------  T H  II.  O R D N U N G
@@ -2401,4 +2405,24 @@ function berechne_kombinationen() {
     }
 
     console.log("MAX_ALL", maxM_all, maxV_all, maxN_all, maxdisp_all)
+
+
+    // jetzt die Auflagerkombinationen
+
+    for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
+        for (let inode = 0; inode < nnodes; inode++) {
+            let Ax = 0.0
+            let Az = 0.0
+            let My = 0.0
+            for (let iLastfall = 0; iLastfall < nlastfaelle; iLastfall++) {
+                Ax += lagerkraefte._(inode, 0, iLastfall) * kombiTabelle[iKomb][iLastfall]
+                Az += lagerkraefte._(inode, 1, iLastfall) * kombiTabelle[iKomb][iLastfall]
+                My += lagerkraefte._(inode, 2, iLastfall) * kombiTabelle[iKomb][iLastfall]
+            }
+            lagerkraefte_kombi.set(inode, 0, iKomb, Ax);
+            lagerkraefte_kombi.set(inode, 1, iKomb, Az);
+            lagerkraefte_kombi.set(inode, 2, iKomb, My);
+
+        }
+    }
 }

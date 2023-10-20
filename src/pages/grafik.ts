@@ -6,7 +6,7 @@ import { myFormat, write } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
-import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, THIIO_flag, maxValue_w0 } from "./rechnen";
+import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
 import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all } from "./rechnen";
 
 //import { Pane } from 'tweakpane';
@@ -496,8 +496,8 @@ export function drawsystem() {
             for (let loop = 0; loop < nLoop; loop++) {
 
                 element[ielem].get_elementSchnittgroesse_u_w(uL, wL, lf_index + loop);
-                console.log("uL",uL)
-                console.log("wL",wL)
+                console.log("uL", uL)
+                console.log("wL", wL)
 
                 xx2 = 0.0; zz2 = 0.0
                 for (let i = 0; i <= nelTeilungen; i++) {
@@ -546,10 +546,10 @@ export function drawsystem() {
 
                 //const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
                 //pfeil.stroke = '#111111'     //'#D3D3D3'
-                draw_arrowPix(two,xmem, zmem, x_max, z_max, style_pfeil_pix)
+                draw_arrowPix(two, xmem, zmem, x_max, z_max, style_pfeil_pix)
 
                 const str = myFormat(maxU * 1000, 1, 1) + 'mm'
-                const txt = two.makeText(str, x_max+5, z_max, style_txt)
+                const txt = two.makeText(str, x_max + 5, z_max, style_txt)
                 txt.alignment = 'left'
                 txt.baseline = 'top'
 
@@ -1918,11 +1918,20 @@ function draw_lagerkraefte(two: Two) {
         let z = node[i].z;
         let alpha = node[i].phi * Math.PI / 180.0
 
-        let wert: number
+        let wert = 0.0
         if (node[i].L[0] === -1 || node[i].kx > 0.0) {      // horizontales Lager
 
-            wert = lagerkraefte._(i, 0, draw_lastfall - 1)
-            console.log("wert", wert, draw_lastfall)
+            if (THIIO_flag === 0) {
+                if (draw_lastfall <= nlastfaelle) {
+                    wert = lagerkraefte._(i, 0, draw_lastfall - 1)
+                } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
+                    wert = lagerkraefte_kombi._(i, 0, draw_lastfall - 1 - nlastfaelle)
+                } else return;  // keine Lagerkraefte bei überlagerung
+
+            } else {
+                wert = lagerkraefte._(i, 0, draw_lastfall - 1)
+            }
+            console.log("draw_lagerkraefte wert", wert, draw_lastfall)
 
             if (wert >= 0.0) {
                 //                draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_lager)
@@ -1941,9 +1950,18 @@ function draw_lagerkraefte(two: Two) {
         }
 
         if (node[i].L[1] === -1 || node[i].kz > 0.0) {      // vertikales Lager
-
-            wert = lagerkraefte._(i, 1, draw_lastfall - 1)
-            console.log("wert", wert)
+            if (THIIO_flag === 0) {
+                if (draw_lastfall <= nlastfaelle) {
+                    wert = lagerkraefte._(i, 1, draw_lastfall - 1)
+                } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
+                    wert = lagerkraefte_kombi._(i, 1, draw_lastfall - 1 - nlastfaelle)
+                    console.log("draw_lagerkraefte wert kombi", wert,draw_lastfall - 1 - nlastfaelle)
+                }
+            } else {
+                wert = lagerkraefte._(i, 1, draw_lastfall - 1)
+            }
+            //wert = lagerkraefte._(i, 1, draw_lastfall - 1)
+            console.log("draw_lagerkraefte wert", wert)
 
             if (wert >= 0.0) {
                 //                draw_arrow(two, x, z + delta + plength, x, z + delta, style_pfeil_lager)
@@ -1964,8 +1982,18 @@ function draw_lagerkraefte(two: Two) {
 
         if (node[i].L[2] === -1 || node[i].kphi > 0.0) {      // Einspannung
 
-            wert = lagerkraefte._(i, 2, draw_lastfall - 1)
-            console.log("wert", wert)
+            if (THIIO_flag === 0) {
+                if (draw_lastfall <= nlastfaelle) {
+                    wert = lagerkraefte._(i, 2, draw_lastfall - 1)
+                } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
+                    wert = lagerkraefte_kombi._(i, 2, draw_lastfall - 1 - nlastfaelle)
+                }
+            } else {
+                wert = lagerkraefte._(i, 2, draw_lastfall - 1)
+            }
+            // wert = lagerkraefte._(i, 2, draw_lastfall - 1)
+            console.log("draw_lagerkraefte wert", wert)
+
             let vorzeichen = Math.sign(wert)
             let radius = style_pfeil_lager.radius;
 
@@ -2764,7 +2792,7 @@ export async function copy_svg() {
 
         const svgBlob = new Blob([elem.innerHTML], { type: "image/svg+xml;charset=utf-8" });  //
 
-        console.log("svgBlob.type",svgBlob.type)
+        console.log("svgBlob.type", svgBlob.type)
 
         navigator.clipboard.writeText(elem.innerHTML)   // für inkscape
 
@@ -2788,8 +2816,8 @@ export async function copy_svg() {
                         accept: { "text/plain": [".svg"] }
                     }]
                 });
-                console.log("fileHandle SVG",fileHandle)
-                lastFileHandleSVG=fileHandle
+                console.log("fileHandle SVG", fileHandle)
+                lastFileHandleSVG = fileHandle
                 currentFilenameSVG = fileHandle.name
 
                 const fileStream = await fileHandle.createWritable();
