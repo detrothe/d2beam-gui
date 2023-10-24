@@ -36,6 +36,7 @@ export class CSpring extends CElement {
         this.kx = kx
         this.kz = kz
         this.kphi = kphi
+        console.log("CONSTRUCTOR FEDER",node, kx, kz, kphi)
 
     }
 

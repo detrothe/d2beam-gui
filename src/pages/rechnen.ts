@@ -1,6 +1,6 @@
 declare let Module: any;
 import { app, nlastfaelle_init, opendialog } from "./haupt"
-import { TFVector, TFArray2D, TFArray3D } from "./TFArray"
+import { TFVector, TFArray2D, TFArray3D, TFArray3D_0 } from "./TFArray"
 
 import { testNumber, myFormat, write } from './utility'
 //import {Module} from '../../d2beam_wasm.js'
@@ -34,6 +34,7 @@ export let disp_lf: TFArray3D;
 export let disp_print: TFArray3D;
 export let stabendkraefte: TFArray3D
 export let lagerkraefte: TFArray3D
+export let nodeDisp0Force: TFArray3D_0
 export let lagerkraefte_kombi: TFArray3D
 export let u_lf = [] as number[][]
 export let u0_komb = [] as number[][]   // berechnete Schiefstellung
@@ -108,6 +109,7 @@ class TNode {
     co = 1.0
     si = 0.0
     show_phi = true
+    spring_index = -1                               // interne Federnummer , index in el[]
 }
 
 
@@ -119,6 +121,9 @@ class TNodeDisp {                                   // Knotenzwangsverformungen,
     phi0 = 0.0
     ux = 0.0                                        // Knotenvorverformungen in globale x-Richtung
     uz = 0.0                                        // Knotenvorverformungen in globale z-Richtung
+    dispxL = false                                  // leere Zellen enthalten keine vorverformungen
+    dispzL = false
+    phiL = false
 }
 
 class TQuerschnittRechteck {
@@ -479,7 +484,7 @@ function read_nodes() {
     //console.log('nZeilen', table.rows.length);
     //console.log('nSpalten', table.rows[0].cells.length);
 
-
+    node.length = 0
     for (i = 0; i < nnodes; i++) {
         node.push(new TNode())
     }
@@ -526,11 +531,17 @@ function read_nodes() {
         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
             wert = child.value;
-            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+            console.log('NODE Knotenverformungen i:1', nnodes, izeile, ispalte, wert, wert.length);
             if (ispalte === 1) nodeDisp0[iz].node = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte === 2) nodeDisp0[iz].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) nodeDisp0[iz].dispx0 = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) nodeDisp0[iz].dispz0 = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) {
+                if (wert.length === 0) nodeDisp0[iz].dispxL = false; else nodeDisp0[iz].dispxL = true;     // true=definierte Knotenverformung
+                nodeDisp0[iz].dispx0 = Number(testNumber(wert, izeile, ispalte, shad));
+            }
+            else if (ispalte === 4) {
+                if (wert.length === 0) nodeDisp0[iz].dispzL = false; else nodeDisp0[iz].dispzL = true;
+                nodeDisp0[iz].dispz0 = Number(testNumber(wert, izeile, ispalte, shad));
+            }
             else if (ispalte === 5) nodeDisp0[iz].phi0 = Number(testNumber(wert, izeile, ispalte, shad));
 
         }
@@ -553,7 +564,7 @@ function read_nodal_loads() {
     //console.log('nZeilen', table.rows.length);
     //console.log('nSpalten', table.rows[0].cells.length);
 
-
+    load.length = 0
     for (i = 0; i < nloads; i++) {
         load.push(new TLoads())
     }
@@ -606,6 +617,7 @@ function read_element_loads() {
 
     console.log("NELOADS", neloads, nstreckenlasten, neinzellasten, ntemperaturlasten, nvorspannungen, nspannschloesser)
 
+    eload.length = 0
     for (i = 0; i < neloads; i++) {
         eload.push(new TElLoads())
     }
@@ -786,6 +798,7 @@ function read_stabvorverformungen() {
     //console.log('nZeilen', table.rows.length);
     //console.log('nSpalten', table.rows[0].cells.length);
 
+    stabvorverformung.length = 0
     for (i = 0; i < nstabvorverfomungen; i++) {
         stabvorverformung.push(new TStabvorverformung())
     }
@@ -1116,6 +1129,7 @@ function calculate() {
     (document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
 
     el.length = 0
+    feder.length = 0
 
     // Berechnung der Gleichungsnummern bestimmen der Federn
 
@@ -1148,11 +1162,13 @@ function calculate() {
 
         if (kx > 1.0 || kz > 1.0 || kphi > 1.0) {
             // neue feder einführen
-            console.log("neue Feder gefunden", i, node[i].L)
+            console.log("neue Feder gefunden", i, node[i].L, kx, kz, kphi)
 
             feder.push(new TSpring(i, kx, kz, kphi))
+            node[i].spring_index = nelem + nelem_Federn;                  // index in el[]
             nelemTotal++;
             nelem_Federn++;
+
         }
     }
 
@@ -1356,7 +1372,8 @@ function calculate() {
         disp_print = new TFArray3D(1, nnodesTotal, 1, 3, 1, nlastfaelle);   // nlastfaelle
         console.log("nlastfaelle", nlastfaelle)
         stabendkraefte = new TFArray3D(1, 6, 1, nelemTotal, 1, nlastfaelle);   // nlastfaelle
-        lagerkraefte = new TFArray3D(0, nnodes - 1, 0, 2, 0, nlastfaelle - 1);   //
+        lagerkraefte = new TFArray3D(0, nnodes - 1, 0, 2, 0, nlastfaelle - 1);
+        if (nNodeDisps > 0) nodeDisp0Force = new TFArray3D_0(nNodeDisps, 3, nlastfaelle);
         u_lf = Array.from(Array(neq), () => new Array(nlastfaelle).fill(0.0));
 
         for (let iLastfall = 1; iLastfall <= nlastfaelle; iLastfall++) {
@@ -1522,6 +1539,26 @@ function calculate() {
                 }
             }
 
+            if (nelem_Federn > 0) {                        // Federkraefte in lagerkraft[] Tabelle eintragen
+                for (i = 0; i < nelem_Federn; i++) {
+
+                    let iFeder = i + nelem_Balken
+                    console.log("FEDER hängt an Knoten", el[iFeder].nod)
+                    nodi = el[iFeder].nod
+                    for (let j = 0; j < 3; j++) {
+                        if (nNodeDisps > 0) {
+                            for (let k = 0; k < nNodeDisps; k++) {
+                                if (nodeDisp0[k].node === nodi && nodeDisp0[k].lf === iLastfall) {
+                                    console.log("nodeDisp0Force", k, j, iLastfall, lagerkraft[nodi][j])
+                                    nodeDisp0Force.set(k, j, iLastfall - 1, -lagerkraft[nodi][j]);
+                                }
+                            }
+                        }
+                        lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iLastfall)
+                    }
+                }
+            }
+
             for (let inode = 0; inode < nnodes; inode++) {
                 lagerkraefte.set(inode, 0, iLastfall - 1, lagerkraft[inode][0]);
                 lagerkraefte.set(inode, 1, iLastfall - 1, lagerkraft[inode][1]);
@@ -1561,6 +1598,7 @@ function calculate() {
         //console.log("nkombinationen", nkombinationen)
         stabendkraefte = new TFArray3D(1, 6, 1, nelemTotal, 1, nkombinationen);
         lagerkraefte = new TFArray3D(0, nnodes - 1, 0, 2, 0, nkombinationen - 1);
+        if (nNodeDisps > 0) nodeDisp0Force = new TFArray3D_0(nNodeDisps, 3, nkombinationen);
         eigenform_container_node.length = 0
         eigenform_container_u.length = 0
         for (let i = 0; i < nkombinationen; i++) {
@@ -2312,6 +2350,75 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
             for (j = 1; j <= el[iFeder].neqe; j++) {
                 newCell = newRow.insertCell(j);  // Insert a cell in the row at index 1
                 newText = document.createTextNode(myFormat(stabendkraefte._(j, iFeder + 1, iLastfall), 2, 2));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+            }
+        }
+
+    }
+
+
+    // Knotenvorverformung
+
+    if (nNodeDisps > 0) {
+
+        tag = document.createElement("p"); // <p></p>
+        text = document.createTextNode("xxx");
+        tag.appendChild(text);
+        tag.innerHTML = "<b>erforderliche Knotenkräfte/-momente für vorgegebene Knotenverformungen</b>"
+
+        newDiv?.appendChild(tag);
+
+        const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+        table.setAttribute("id", "id_table_knotenvorverformung");
+        table.setAttribute("class", "output_table");
+
+        table.style.border = 'none';
+        newDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+
+        const thead = table.createTHead();
+        const row = thead.insertRow();
+
+        // @ts-ignore
+        const th0 = table.tHead.appendChild(document.createElement("th"));
+        th0.innerHTML = "Node";
+        th0.title = "Knoten, an dem die Feder befeestigt ist"
+        th0.setAttribute("class", "table_cell_center");
+        row.appendChild(th0);
+        // @ts-ignore
+        const th1 = table.tHead.appendChild(document.createElement("th"));
+        th1.innerHTML = "F<sub>x</sub> &nbsp;[kN]";
+        th1.title = "Federktaft Fx, positiv als Zugktaft"
+        th1.setAttribute("class", "table_cell_center");
+        row.appendChild(th1);
+        // @ts-ignore
+        const th2 = table.tHead.appendChild(document.createElement("th"));
+        th2.innerHTML = "F<sub>z</sub>&nbsp;[kN]";
+        th2.title = "Federkraft Fz, positiv als Zugkraft "
+        th2.setAttribute("class", "table_cell_center");
+        row.appendChild(th2);
+        // @ts-ignore
+        const th3 = table.tHead.appendChild(document.createElement("th"));
+        th3.innerHTML = "M<sub>&phi;</sub>&nbsp;[kNm]";
+        th3.title = "Federmoment, positiv im Uhrzeigersinn"
+        th3.setAttribute("class", "table_cell_center");
+        row.appendChild(th3);
+
+
+        for (i = 0; i < nNodeDisps; i++) {
+
+            let inode = nodeDisp0[i].node
+            let newRow = table.insertRow(-1);
+            let newCell, newText
+            newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+            newText = document.createTextNode(String(inode + 1));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_center");
+
+            for (j = 0; j < 3; j++) {
+                newCell = newRow.insertCell(j + 1);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(nodeDisp0Force._(i, j, iLastfall - 1), 2, 2));  // Append a text node to the cell
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_right");
             }

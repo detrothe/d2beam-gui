@@ -37,7 +37,7 @@ export class TFArray2D {
 
         if (i < this.minRow || i > this.maxRow || j < this.minCol || j > this.maxCol) {
             console.log("wrong index in set", i, j);
-            console.log("min,max, row,col",this.minRow ,this.maxRow ,this.minCol ,this.maxCol)
+            console.log("min,max, row,col", this.minRow, this.maxRow, this.minCol, this.maxCol)
             return Number.NaN;
         }
         this.marray[j * this.nrow + i + this.konstante] = wert;
@@ -147,7 +147,7 @@ export class TFArray3D {
 
         if (i < this.minRow || i > this.maxRow || j < this.minCol || j > this.maxCol || k < this.minTab || k > this.maxTab) {
             console.log("wrong index in get", i, j, k);
-            console.log("min,max, row,col,tab",this.minRow ,this.maxRow ,this.minCol ,this.maxCol,this.minTab ,this.maxTab)
+            console.log("min,max, row,col,tab", this.minRow, this.maxRow, this.minCol, this.maxCol, this.minTab, this.maxTab)
             return Number.NaN;
         }
         return this.marray[j * this.nrow + i + this.rowcol * k + this.konstante];
@@ -175,4 +175,70 @@ export class TFArray3D {
     }
 }
 
+
+export class TFArray3D_0 {
+
+    length: number
+    nrow: number
+    ncol: number
+    ntab: number
+    minRow: number
+    maxRow: number
+    minCol: number
+    maxCol: number
+    minTab: number
+    maxTab: number
+    //konstante: number
+    rowcol: number
+    marray: number[]
+
+
+    constructor(nRow: number, nCol: number, nTab: number) {
+
+        this.nrow = nRow;
+        this.ncol = nCol;
+        this.ntab = nTab;
+        this.minRow = 0;
+        this.maxRow = nRow - 1;
+        this.minCol = 0;
+        this.maxCol = nCol - 1;
+        this.minTab = 0;
+        this.maxTab = nTab - 1;
+        //this.konstante = -this.minCol * this.nrow - this.minRow - this.nrow * this.ncol * this.minTab;
+        this.rowcol = this.nrow * this.ncol
+        this.length = this.nrow * this.ncol * this.ntab;
+        this.marray = Array(this.length);
+    }
+
+    _(i: number, j: number, k: number) {                          // get value
+
+        if (i < this.minRow || i > this.maxRow || j < this.minCol || j > this.maxCol || k < this.minTab || k > this.maxTab) {
+            console.log("wrong index in get", i, j, k);
+            console.log("min,max, row,col,tab", this.minRow, this.maxRow, this.minCol, this.maxCol, this.minTab, this.maxTab)
+            return Number.NaN;
+        }
+        return this.marray[j * this.nrow + i + this.rowcol * k];  // + this.konstante
+    }
+
+    set(i: number, j: number, k: number, wert: number) {
+
+        if (i < this.minRow || i > this.maxRow || j < this.minCol || j > this.maxCol || k < this.minTab || k > this.maxTab) {
+            console.log("wrong index in set", i, j, k);
+            return Number.NaN;
+        }
+        this.marray[j * this.nrow + i + this.rowcol * k] = wert;   // + this.konstante
+        return
+    }
+
+    initV(a: number[]) {
+
+        for (let i = 0; i < this.length; i++) {
+            this.marray[i] = a[i];
+        }
+    }
+
+    zero() {
+        this.marray.fill(0.0)
+    }
+}
 
