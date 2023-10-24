@@ -52,6 +52,7 @@ let show_schiefstellung = false;
 let show_lasten = true;
 let show_lagerkraefte = true;
 let show_stabvorverformung = false;
+let show_umriss = false;
 
 let show_lasten_temp = true;
 
@@ -430,7 +431,7 @@ export function drawsystem() {
     let x1: number, x2: number, z1: number, z2: number
 
 
-    // Verformungen
+    //                              Verformungen   Verformungen   Verformungen   Verformungen
 
     if (show_verformungen) {
 
@@ -1468,34 +1469,53 @@ export function drawsystem() {
 
     if (show_systemlinien) {
 
+
         for (let ielem = 0; ielem < nelem; ielem++) {
-            //console.log("element",ielem,element)
+
             x1 = Math.round(tr.xPix(element[ielem].x1));
             z1 = Math.round(tr.zPix(element[ielem].z1));
             x2 = Math.round(tr.xPix(element[ielem].x2));
             z2 = Math.round(tr.zPix(element[ielem].z2));
-            //console.log("x..", element[ielem].x1, element[ielem].z1, element[ielem].x2, element[ielem].z2)
-            //console.log("elem", ielem, x1, z1, x2, z2)
 
-            let line = two.makeLine(x1, z1, x2, z2);
-            if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
-            else line.linewidth = 5 / devicePixelRatio;
+            if (show_umriss) {
+                let h = element[ielem].h / 2.
+                console.log("HHHHHHHH", h)
+                let si = element[ielem].sinus
+                let co = element[ielem].cosinus
+                var vertices = [];
+                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x1 + si * h), tr.zPix(element[ielem].z1 - co * h)));
+                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x2 + si * h), tr.zPix(element[ielem].z2 - co * h)));
+                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x2 - si * h), tr.zPix(element[ielem].z2 + co * h)));
+                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x1 - si * h), tr.zPix(element[ielem].z1 + co * h)));
 
-            // gestrichelte Faser
+                let flaeche = two.makePath(vertices);
+                flaeche.fill = '#dddddd';
+                flaeche.opacity = opacity;
+            } else {
+                //console.log("element",ielem,element)
+                //console.log("x..", element[ielem].x1, element[ielem].z1, element[ielem].x2, element[ielem].z2)
+                //console.log("elem", ielem, x1, z1, x2, z2)
 
-            let dx = (element[ielem].x2 - element[ielem].x1) / 3
-            let dz = (element[ielem].z2 - element[ielem].z1) / 3
+                let line = two.makeLine(x1, z1, x2, z2);
+                if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
+                else line.linewidth = 5 / devicePixelRatio;
 
-            let abstand = 10 / devicePixelRatio
-            let tmpX1 = tr.xPix(element[ielem].x1 + dx) - element[ielem].sinus * abstand
-            let tmpZ1 = tr.zPix(element[ielem].z1 + dz) + element[ielem].cosinus * abstand
-            let tmpX2 = tr.xPix(element[ielem].x2 - dx) - element[ielem].sinus * abstand
-            let tmpZ2 = tr.zPix(element[ielem].z2 - dz) + element[ielem].cosinus * abstand
-            //console.log("tmp", tmpX1, tmpZ1, tmpX2, tmpZ2)
+                // gestrichelte Faser
 
-            let line1 = two.makeLine(tmpX1, tmpZ1, tmpX2, tmpZ2);
-            line1.linewidth = 1 / devicePixelRatio;
-            line1.dashes = [5, 3]
+                let dx = (element[ielem].x2 - element[ielem].x1) / 3
+                let dz = (element[ielem].z2 - element[ielem].z1) / 3
+
+                let abstand = 10 / devicePixelRatio
+                let tmpX1 = tr.xPix(element[ielem].x1 + dx) - element[ielem].sinus * abstand
+                let tmpZ1 = tr.zPix(element[ielem].z1 + dz) + element[ielem].cosinus * abstand
+                let tmpX2 = tr.xPix(element[ielem].x2 - dx) - element[ielem].sinus * abstand
+                let tmpZ2 = tr.zPix(element[ielem].z2 - dz) + element[ielem].cosinus * abstand
+                //console.log("tmp", tmpX1, tmpZ1, tmpX2, tmpZ2)
+
+                let line1 = two.makeLine(tmpX1, tmpZ1, tmpX2, tmpZ2);
+                line1.linewidth = 1 / devicePixelRatio;
+                line1.dashes = [5, 3]
+            }
 
             if (show_labels && onlyLabels) {
 
@@ -1511,6 +1531,7 @@ export function drawsystem() {
                 //txt.alignment = 'left'
                 //txt.baseline = 'top'
             }
+
         }
 
         if (show_labels && onlyLabels) {
@@ -1955,7 +1976,7 @@ function draw_lagerkraefte(two: Two) {
                     wert = lagerkraefte._(i, 1, draw_lastfall - 1)
                 } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
                     wert = lagerkraefte_kombi._(i, 1, draw_lastfall - 1 - nlastfaelle)
-                    console.log("draw_lagerkraefte wert kombi", wert,draw_lastfall - 1 - nlastfaelle)
+                    console.log("draw_lagerkraefte wert kombi", wert, draw_lastfall - 1 - nlastfaelle)
                 }
             } else {
                 wert = lagerkraefte._(i, 1, draw_lastfall - 1)
@@ -2090,11 +2111,10 @@ function draw_lager(two: Two) {
             let group = two.makeGroup();
             console.log("in zweiwertiges Lager")
             var vertices = [];
-            vertices.push(new Two.Vector(0, 0));
-            vertices.push(new Two.Vector(-12, 20));
-            vertices.push(new Two.Vector(12, 20));
+            vertices.push(new Two.Anchor(0, 0));
+            vertices.push(new Two.Anchor(-12, 20));
+            vertices.push(new Two.Anchor(12, 20));
 
-            // @ts-ignore
             let flaeche = two.makePath(vertices);
             flaeche.fill = '#dddddd';
             group.add(flaeche)
@@ -2114,11 +2134,10 @@ function draw_lager(two: Two) {
             let group = two.makeGroup();
             console.log("in einwertiges horizontal verschieblisches Lager")
             var vertices = [];
-            vertices.push(new Two.Vector(0, 0));
-            vertices.push(new Two.Vector(-12, 20));
-            vertices.push(new Two.Vector(12, 20));
+            vertices.push(new Two.Anchor(0, 0));
+            vertices.push(new Two.Anchor(-12, 20));
+            vertices.push(new Two.Anchor(12, 20));
 
-            // @ts-ignore
             let flaeche = two.makePath(vertices);
             flaeche.fill = '#dddddd';
             group.add(flaeche)
@@ -2138,11 +2157,10 @@ function draw_lager(two: Two) {
             let group = two.makeGroup();
             console.log("in einwertiges vertikales Lager")
             var vertices = [];
-            vertices.push(new Two.Vector(0, 0));
-            vertices.push(new Two.Vector(-12, 20));
-            vertices.push(new Two.Vector(12, 20));
+            vertices.push(new Two.Anchor(0, 0));
+            vertices.push(new Two.Anchor(-12, 20));
+            vertices.push(new Two.Anchor(12, 20));
 
-            // @ts-ignore
             let flaeche = two.makePath(vertices);
             flaeche.fill = '#dddddd';
             group.add(flaeche)
@@ -2749,6 +2767,18 @@ function draw_lagerkraefte_grafik() {
 }
 
 //--------------------------------------------------------------------------------------------------------
+function draw_umriss_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_umriss_grafik");
+    show_umriss = !show_umriss;
+
+    //if (Gesamt_ys === undefined || isNaN(yM)) return;
+
+    drawsystem();
+}
+
+//--------------------------------------------------------------------------------------------------------
 function scale_factor() {
     //--------------------------------------------------------------------------------------------------------
 
@@ -2769,6 +2799,7 @@ window.addEventListener('draw_schiefstellung_grafik', draw_schiefstellung_grafik
 window.addEventListener('draw_stabvorverformung_grafik', draw_stabvorverformung_grafik);
 window.addEventListener('draw_lasten_grafik', draw_lasten_grafik);
 window.addEventListener('draw_lagerkraefte_grafik', draw_lagerkraefte_grafik);
+window.addEventListener('draw_umriss_grafik', draw_umriss_grafik);
 
 window.addEventListener('scale_factor', scale_factor);
 

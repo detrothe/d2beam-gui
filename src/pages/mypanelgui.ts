@@ -33,7 +33,7 @@ export function myPanel() {
         show_loads: true,
         scale_arrows: 1.0,
         show_support_forces: true,
-        show_LR: false,
+        show_umriss: false,
         Reset: function () {
             window.dispatchEvent(new Event("reset_webgl"));
         }
@@ -49,7 +49,7 @@ export function myPanel() {
     let lasten_anzeigen = 'Lasten anzeigen'
     let skalierung_pfeile = 'Skalierung Pfeile'
     let lager_kraefte = 'Lagerkräfte anzeigen'
-    let rechts_links_anzeigen = 'rechts/links anzeigen'
+    let umriss_anzeigen = 'Umriss anzeigen'
     /*
         if (app.browserLanguage != 'de') {
             beschriftung = 'Label'
@@ -162,8 +162,8 @@ export function myPanel() {
         window.dispatchEvent(new Event("draw_lagerkraefte_grafik"));
     });
 
-    gui.add(obj, 'show_LR').name(rechts_links_anzeigen).onChange(() => {
-        window.dispatchEvent(new Event("show_LR_webgl"));
+    gui.add(obj, 'show_umriss').name(umriss_anzeigen).onChange(() => {
+        window.dispatchEvent(new Event("draw_umriss_grafik"));
     });
     gui.add(obj, 'Reset')
 

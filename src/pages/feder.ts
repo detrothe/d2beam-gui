@@ -114,6 +114,9 @@ export class CSpring extends CElement {
             }
         }
 
+        console.log("FEDER, u",u)
+        console.log("edisp",this.edisp)
+
         for (j = 0; j < 3; j++) {
             sum = 0.0
             for (k = 0; k < 3; k++) {
@@ -140,7 +143,7 @@ export class CSpring extends CElement {
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if (eload[ieload].element === ielem) {
                     const index = eload[ieload].lf - 1
-                    console.log("elem kombi index", index, kombiTabelle[iLastf - 1][index])
+                    console.log("elem kombi index", index, kombiTabelle[iLastf - 1][index], eload[ieload].el_r)
                     if (kombiTabelle[iLastf - 1][index] !== 0.0) {
 
                         for (i = 0; i < 3; i++) {

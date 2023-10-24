@@ -1433,7 +1433,7 @@ function calculate() {
 
             }
 
-            // wenn mindestens eine vorgegebenen Knotenverschiebung im Lastfall vorhanden ist,
+            // wenn mindestens eine vorgegebene Knotenverschiebung im Lastfall vorhanden ist,
             // dann für diese Freiheitsgrade Zeilen und Spalten bearbeiten
 
             for (let ieload = 0; ieload < neloads; ieload++) {
@@ -1675,17 +1675,17 @@ function calculate() {
 
                 //  und jetzt noch die normalen Elementlasten
 
-                for (ielem = 0; ielem < nelem; ielem++) {
-
+                for (ielem = 0; ielem < nelemTotal; ielem++) {
+console.log("ELEMENTLASTEN,ielem",ielem)
                     for (let ieload = 0; ieload < neloads; ieload++) {
                         if (eload[ieload].element === ielem) {
                             const index = eload[ieload].lf - 1
-                            console.log("elem kombi index", index, kombiTabelle[iKomb - 1][index])
+                            console.log("elem kombi index,art", index, kombiTabelle[iKomb - 1][index],eload[ieload].art)
                             if (kombiTabelle[iKomb - 1][index] !== 0.0) {
 
                                 if (eload[ieload].art === 8) el[ielem].berechneElementlasten(ieload)
 
-                                for (j = 0; j < 6; j++) {
+                                for (j = 0; j < el[ielem].neqe; j++) {
                                     lmj = el[ielem].lm[j]
                                     if (lmj >= 0) {
                                         R[lmj] = R[lmj] - eload[ieload].el_r[j] * kombiTabelle[iKomb - 1][index]
@@ -1865,16 +1865,6 @@ function calculate() {
 
                     //console.log("pg", pg)
 
-                    /*
-                                        for (i = 0; i < neq; i++) {
-                                            let sum = 0.0
-                                            for (j = 0; j < neq; j++) {
-                                                sum += stiff_sig[i][j] * u[j] * maxU_schief / umax
-                                            }
-                                            pg[i] = sum
-                                        }
-                                        console.log("pg", pg)
-                    */
 
                 }
 
@@ -1897,6 +1887,27 @@ function calculate() {
                     lagerkraft[nodi][0] = lagerkraft[nodi][0] + load[i].p[0] * kombiTabelle[iKomb - 1][index]
                     lagerkraft[nodi][1] = lagerkraft[nodi][1] + load[i].p[1] * kombiTabelle[iKomb - 1][index]
                     lagerkraft[nodi][2] = lagerkraft[nodi][2] + load[i].p[2] * kombiTabelle[iKomb - 1][index]
+                }
+            }
+
+
+            if (nelem_Federn > 0) {                        // Federkraefte in lagerkraft[] Tabelle eintragen
+                for (i = 0; i < nelem_Federn; i++) {
+
+                    let iFeder = i + nelem_Balken
+                    console.log("FEDER hängt an Knoten", el[iFeder].nod)
+                    nodi = el[iFeder].nod
+                    for (let j = 0; j < 3; j++) {
+                        if (nNodeDisps > 0) {
+                            for (let k = 0; k < nNodeDisps; k++) {
+                                if (nodeDisp0[k].node === nodi && nodeDisp0[k].lf === iKomb) {
+                                    console.log("nodeDisp0Force", k, j, iKomb, lagerkraft[nodi][j])
+                                    nodeDisp0Force.set(k, j, iKomb - 1, -lagerkraft[nodi][j]);
+                                }
+                            }
+                        }
+                        //lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iKomb)
+                    }
                 }
             }
 
