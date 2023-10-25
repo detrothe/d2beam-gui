@@ -435,7 +435,7 @@ export function drawsystem() {
 
     if (show_verformungen) {
 
-        let xx1, xx2, zz1, zz2
+        let xx1, xx2, zz1, zz2, xp1, xp2, zp1, zp2
         let dx: number, x: number, eta: number, sl: number, nenner: number
         //let Nu: number[] = Array(2), Nw: number[] = Array(4)
         let uG: number, wG: number
@@ -480,14 +480,19 @@ export function drawsystem() {
             maxU = 0.0
 
             const nelTeilungen = element[ielem].nTeilungen
-            let uL: number[] = new Array(nelTeilungen)
+            let uL: number[] = new Array(nelTeilungen)   // L = Verformung lokal
             let wL: number[] = new Array(nelTeilungen)
+            let phiL: number[] = new Array(nelTeilungen)
+
+            let umriss_x: number[] = new Array(2 * nelTeilungen)
+            let umriss_z: number[] = new Array(2 * nelTeilungen)
 
             x1 = Math.round(tr.xPix(element[ielem].x1));
             z1 = Math.round(tr.zPix(element[ielem].z1));
             x2 = Math.round(tr.xPix(element[ielem].x2));
             z2 = Math.round(tr.zPix(element[ielem].z2));
 
+            let h = element[ielem].h / 2.
 
             dx = element[ielem].sl / nelTeilungen
             eta = element[ielem].eta
@@ -496,12 +501,13 @@ export function drawsystem() {
 
             for (let loop = 0; loop < nLoop; loop++) {
 
-                element[ielem].get_elementSchnittgroesse_u_w(uL, wL, lf_index + loop);
+                element[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index + loop);
                 console.log("uL", uL)
                 console.log("wL", wL)
+                console.log("phiL", phiL)
 
                 xx2 = 0.0; zz2 = 0.0
-                for (let i = 0; i <= nelTeilungen; i++) {
+                for (let i = 0; i < nelTeilungen; i++) {
                     // Nu[0] = (1.0 - x / sl);
                     // Nu[1] = x / sl
                     // Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
@@ -522,10 +528,48 @@ export function drawsystem() {
                     xx1 = xx2; zz1 = zz2;
                     xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
                     zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                    if (show_umriss) {
+                        const phi =  phiL[i]
+
+                        // oben
+                        let uoben = uL[i] + Math.sin(phi) * h
+                        let woben = wL[i] //- Math.cos(phi) * h
+
+                        let uobenG = element[ielem].cosinus * uoben - element[ielem].sinus * woben
+                        let wobenG = element[ielem].sinus * uoben + element[ielem].cosinus * woben
+
+                        let xoben2 = element[ielem].x1 + x * element[ielem].cosinus + element[ielem].sinus * h + uobenG * scalefactor
+                        let zoben2 = element[ielem].z1 + x * element[ielem].sinus - element[ielem].cosinus * h + wobenG * scalefactor
+                        // console.log("NEU OBEN", x, uoben, woben, uobenG, wobenG, xoben2, zoben2)
+
+                        umriss_x[i] = xp1 = tr.xPix(xoben2)
+                        umriss_z[i] = zp1 = tr.zPix(zoben2)
+
+                        let uunten = uL[i] - Math.sin(phi) * h
+                        let wunten = wL[i] //- Math.cos(phi) * h
+
+                        let uuntenG = element[ielem].cosinus * uunten - element[ielem].sinus * wunten
+                        let wuntenG = element[ielem].sinus * uunten + element[ielem].cosinus * wunten
+
+                        let xunten2 = element[ielem].x1 + x * element[ielem].cosinus - element[ielem].sinus * h + uuntenG * scalefactor
+                        let zunten2 = element[ielem].z1 + x * element[ielem].sinus + element[ielem].cosinus * h + wuntenG * scalefactor
+                        umriss_x[2 * nelTeilungen - 1 - i] = xp2 = tr.xPix(xunten2)
+                        umriss_z[2 * nelTeilungen - 1 - i] = zp2 = tr.zPix(zunten2)
+
+                        //                        const phi = element[ielem].alpha - phiL[i] * scalefactor          // phiL im Gegenuhrzeigersinn positiv
+                        //const phi = - phiL[i] * scalefactor          // phiL im Gegenuhrzeigersinn positiv
+                        // console.log("p h i ", x, phi, phiL[i])
+                        // umriss_x[i] = xp1 = tr.xPix(xx2 + phi * h)
+                        // umriss_z[i] = zp1 = tr.zPix(zz2 - h)
+                        // umriss_x[2 * nelTeilungen - 1 - i] = xp2 = tr.xPix(xx2 - phi * h)
+                        // umriss_z[2 * nelTeilungen - 1 - i] = zp2 = tr.zPix(zz2 + h)
+
+                         let line1 = two.makeLine(xp1, zp1, xp2, zp2);
+                         line1.linewidth = 1;
+                    }
                     xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
 
                     if (i > 0) {
-                        //console.log("line", xx1, zz1, xx2, zz2)
                         let line = two.makeLine(xx1, zz1, xx2, zz2);
                         line.linewidth = 2;
                     }
@@ -541,6 +585,18 @@ export function drawsystem() {
 
                     x = x + dx
                 }
+
+                if (show_umriss) {
+                    var vertices = [];
+                    for (let i = 0; i < 2 * nelTeilungen; i++) {
+                        vertices.push(new Two.Anchor(umriss_x[i], umriss_z[i]));
+                    }
+                    let umriss = two.makePath(vertices);
+                    umriss.linewidth = 1;
+                    umriss.fill = '#006600'
+                    umriss.opacity = opacity
+                }
+
             }
 
             if (show_labels && maxU > 0.0) {
@@ -1477,7 +1533,7 @@ export function drawsystem() {
             x2 = Math.round(tr.xPix(element[ielem].x2));
             z2 = Math.round(tr.zPix(element[ielem].z2));
 
-            if (show_umriss) {
+            if (show_umriss && !show_verformungen) {
                 let h = element[ielem].h / 2.
                 console.log("HHHHHHHH", h)
                 let si = element[ielem].sinus

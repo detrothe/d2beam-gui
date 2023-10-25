@@ -252,6 +252,7 @@ export class CTimoshenko_beam extends CElement {
             this.M_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
             this.u_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
             this.w_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+            this.phi_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
         }
 
         if (nkombinationen > 0) {
@@ -260,6 +261,7 @@ export class CTimoshenko_beam extends CElement {
             this.M_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.u_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.w_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
+            this.phi_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
         }
 
         this.berechneLokaleElementsteifigkeitmatrix()
@@ -1024,8 +1026,8 @@ export class CTimoshenko_beam extends CElement {
     berechneElementSchnittgroessen(ielem: number, iLastf: number) {
         //-----------------------------------------------------------------------------------------
 
-        let Mx: number, Vx: number, Nx: number, ux: number, wx: number
-        let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
+        let Mx: number, Vx: number, Nx: number, ux: number, wx: number, phix: number
+        let Nu: number[] = new Array(2), Nw: number[] = new Array(4), Nphi: number[] = new Array(4)
         let u: number, wL: number = 0.0, disp = 0.0
         let edisp: number[] = Array(6)
 
@@ -1036,7 +1038,11 @@ export class CTimoshenko_beam extends CElement {
 
         const eta = this.eta
         const sl = this.sl
-        const nenner = sl ** 3 + 12. * eta * sl
+        const sl2 = sl * sl
+        const sl3 = sl2 * sl
+        const nenner = sl3 + 12. * eta * sl
+
+        console.log("ETA", eta)
 
         if (THIIO_flag === 0) {      // Theorie I. Ordnung
             for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i]
@@ -1073,6 +1079,8 @@ export class CTimoshenko_beam extends CElement {
 
         for (let iteil = 0; iteil < this.nTeilungen; iteil++) {
             x = this.x_[iteil]
+            const x2 = x * x
+            const x3 = x2 * x
             Vx = this.VL
             Mx = this.ML + Vx * x
             Nx = this.NL
@@ -1081,12 +1089,18 @@ export class CTimoshenko_beam extends CElement {
 
             Nu[0] = (1.0 - x / sl);
             Nu[1] = x / sl
-            Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
-            Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
-            Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
-            Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+            Nw[0] = (2. * x3 - 3. * sl * x2 - 12. * eta * x + sl3 + 12. * eta * sl) / nenner;
+            Nw[1] = -((sl * x3 + (-2. * sl2 - 6. * eta) * x2 + (sl3 + 6. * eta * sl) * x) / nenner);
+            Nw[2] = -((2. * x3 - 3. * sl * x2 - 12. * eta * x) / nenner);
+            Nw[3] = -((sl * x3 + (6. * eta - sl2) * x2 - 6. * eta * sl * x) / nenner);
+            Nphi[0] = 6.0 * (sl * x - x2) / nenner
+            Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl3) / nenner
+            Nphi[2] = -6.0 * (sl * x - x2) / nenner
+            Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
             ux = Nu[0] * edisp[0] + Nu[1] * edisp[3]
             wx = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+            phix = -(Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5]);  // im Uhrzeigersinn
+            console.log("phix", x, phix)
 
             if (THIIO_flag === 1) {
 
@@ -1130,6 +1144,8 @@ export class CTimoshenko_beam extends CElement {
                             let temp = pL / 24.0 * x ** 4 + dp / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
                             temp += this.eta * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * x)
                             wx = wx + temp / EI
+                            temp = pL / 6.0 * x ** 3 + dp / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x
+                            phix = phix + temp / EI
                         }
                         else if (eload[ieload].art === 1) {         // Trapezstreckenlast z-Richtung
 
@@ -1186,6 +1202,7 @@ export class CTimoshenko_beam extends CElement {
                                     edisp[1] = eload[ieload].CwP + eload[ieload].CwM; edisp[2] = eload[ieload].CphiP + eload[ieload].CphiM;
 
                                     const xx = x - xP;
+                                    const xx2 = xx * xx
                                     const sl = this.sl - xP
                                     const nenner = sl ** 3 + 12. * eta * sl
                                     Nw[0] = (2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx + sl ** 3 + 12. * eta * sl) / nenner;
@@ -1193,10 +1210,17 @@ export class CTimoshenko_beam extends CElement {
                                     Nw[2] = -((2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx) / nenner);
                                     Nw[3] = -((sl * xx ** 3 + (6. * eta - sl ** 2) * xx ** 2 - 6. * eta * sl * xx) / nenner);
                                     wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                                    Nphi[0] = 6.0 * (sl * xx - xx2) / nenner
+                                    Nphi[1] = (3 * sl * xx2 + (-12 * eta - 4 * sl ** 2) * xx + 12 * sl * eta + sl ** 3) / nenner
+                                    Nphi[2] = -6.0 * (sl * xx - xx2) / nenner
+                                    Nphi[3] = (3 * sl * xx2 + (12 * eta - 2 * sl ** 2) * xx) / nenner
+                                    phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
+
                                     //console.log("Nw,edisp", wx, edisp, Nw)
                                 } else {
                                     edisp[4] = eload[ieload].CwP + eload[ieload].CwM; edisp[5] = eload[ieload].CphiP + eload[ieload].CphiM;
                                     const sl = xP
+                                    const sl2=sl*sl
                                     const nenner = sl ** 3 + 12. * eta * sl
                                     Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
                                     Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
@@ -1204,6 +1228,12 @@ export class CTimoshenko_beam extends CElement {
                                     Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
                                     wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
                                     //console.log("Nw,edisp", wx, edisp, Nw)
+                                    Nphi[0] = 6.0 * (sl * x - x2) / nenner
+                                    Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl2*sl) / nenner
+                                    Nphi[2] = -6.0 * (sl * x - x2) / nenner
+                                    Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
+                                    phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
+
                                 }
 
                             }
@@ -1243,6 +1273,7 @@ export class CTimoshenko_beam extends CElement {
                 this.N_[iLastf][iteil] = Nx
                 this.u_[iLastf][iteil] = ux
                 this.w_[iLastf][iteil] = wx
+                this.phi_[iLastf][iteil] = phix
 
             }
             else if (THIIO_flag === 1) { // ikomb=iLastf
@@ -1353,10 +1384,11 @@ export class CTimoshenko_beam extends CElement {
                 this.N_komb[iLastf][iteil] = Nx
                 this.u_komb[iLastf][iteil] = ux
                 this.w_komb[iLastf][iteil] = wx
+                this.phi_komb[iLastf][iteil] = phix
 
             }  // ende TH II Ordnung
 
-            console.log("x, Vx, Mx", x, Vx, Mx, wx)
+            console.log("x, Vx, Mx", x, Vx, Mx, wx, phix)
             //x += d_x
         }
 
@@ -1410,7 +1442,7 @@ export class CTimoshenko_beam extends CElement {
     }
 
     //---------------------------------------------------------------------------------------------
-    get_elementSchnittgroesse_u_w(ux: number[], wx: number[], iLastf: number) {
+    get_elementSchnittgroesse_u_w_phi(ux: number[], wx: number[], phix: number[], iLastf: number) {
 
 
         if (THIIO_flag === 0) {
@@ -1418,17 +1450,20 @@ export class CTimoshenko_beam extends CElement {
                 for (let i = 0; i < this.nTeilungen; i++) {
                     ux[i] = this.u_[iLastf][i]
                     wx[i] = this.w_[iLastf][i]
+                    phix[i] = this.phi_[iLastf][i]
                 }
             } else {
                 for (let i = 0; i < this.nTeilungen; i++) {
                     ux[i] = this.u_komb[iLastf - nlastfaelle][i]
                     wx[i] = this.w_komb[iLastf - nlastfaelle][i]
+                    phix[i] = this.phi_komb[iLastf - nlastfaelle][i]
                 }
             }
         } else {
             for (let i = 0; i < this.nTeilungen; i++) {
                 ux[i] = this.u_komb[iLastf][i]
                 wx[i] = this.w_komb[iLastf][i]
+                phix[i] = this.phi_komb[iLastf][i]
             }
         }
     }

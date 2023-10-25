@@ -6,12 +6,13 @@
   --font-family: sans-serif;
   font-size: 1em;
 }
+/*
 :root,
 :host,
 .sl-theme-light::part() {
   --sl-line-height-normal: 1.0;
 }
-
+*/
 html,
 body {
   /*font-family: var(--font-family); */

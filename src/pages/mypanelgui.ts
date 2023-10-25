@@ -47,25 +47,10 @@ export function myPanel() {
     let skalierung = 'Skalierung'
     let eigenformen = 'Eigenformen'
     let lasten_anzeigen = 'Lasten anzeigen'
-    let skalierung_pfeile = 'Skalierung Pfeile'
+    let skalierung_pfeile = '-'
     let lager_kraefte = 'Lagerkräfte anzeigen'
     let umriss_anzeigen = 'Umriss anzeigen'
-    /*
-        if (app.browserLanguage != 'de') {
-            beschriftung = 'Label'
-            schubspannung = 'Shear stress'
-            normalspannung = 'Normal stress'
-            vergleichsspannung = 'Equivalent stress'
-            fyRd_anzeigen = 'display fyRd'
-            verformung_u = 'displacement u'
-            skalierung = 'Scaling'
-            seiten_anzeigen = 'Show sides'
-            pfeile_anzeigen = 'Show arrows'
-            skalierung_pfeile = 'Scale arrows'
-            sigma_flaeche = 'sigma area'
-            rechts_links_anzeigen = 'show right/left'
-        }
-    */
+
     // @ts-ignore
     const gui = new GUI({ container: document.getElementById('panel_gui'), width: 230 }); // , touchStyles: true
     //gui.domElement.classList.add('allow-touch-styles');
