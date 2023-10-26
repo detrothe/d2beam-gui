@@ -672,6 +672,13 @@ export class CTimoshenko_beam extends CElement {
 
             eload[ieload].re[2] = -5.0 * sl * p1 + sl * this.psi * p2
             eload[ieload].re[5] = 5.0 * sl * p1 + sl * this.psi * p2
+
+            let qL = pzL
+            let mq = (pzR - pzL) / sl;
+            let psi = this.eta
+            eload[ieload].C1 = ((120 * sl * psi + 10 * sl ** 3) * qL + 40 * sl ** 2 * mq * psi + 3 * sl ** 4 * mq) / (240 * psi + 20 * sl ** 2);
+            eload[ieload].C2 = -((60 * sl ** 2 * psi + 5 * sl ** 4) * qL + 30 * sl ** 3 * mq * psi + 2 * sl ** 5 * mq) / (720 * psi + 60 * sl ** 2);
+
         }
         else if (eload[ieload].art === 2) {              // Trapezstreckenlast z-Richtung, Projektion
 
@@ -694,6 +701,13 @@ export class CTimoshenko_beam extends CElement {
 
             eload[ieload].re[2] = -5.0 * sl * p1 + sl * this.psi * p2
             eload[ieload].re[5] = 5.0 * sl * p1 + sl * this.psi * p2
+
+            let qL = pzL
+            let mq = (pzR - pzL) / sl;
+            let psi = this.eta
+            eload[ieload].C1 = ((120 * sl * psi + 10 * sl ** 3) * qL + 40 * sl ** 2 * mq * psi + 3 * sl ** 4 * mq) / (240 * psi + 20 * sl ** 2);
+            eload[ieload].C2 = -((60 * sl ** 2 * psi + 5 * sl ** 4) * qL + 30 * sl ** 3 * mq * psi + 2 * sl ** 5 * mq) / (720 * psi + 60 * sl ** 2);
+
         }
         else if (eload[ieload].art === 5) {              // Temperatur
 
@@ -1032,6 +1046,7 @@ export class CTimoshenko_beam extends CElement {
         let edisp: number[] = Array(6)
 
         let EI = this.emodul * this.Iy
+        let EA = this.emodul * this.area
 
         console.log("____________________________________________________________________________________")
         console.log("class element: berechneElementSchnittgroessen von ", ielem, iLastf)
@@ -1164,6 +1179,16 @@ export class CTimoshenko_beam extends CElement {
                             Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                             Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
+                            ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+
+                            let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                            wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                            //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
+                            // if (THIIO_flag === 1) Mx = Mx - this.NL * wl
+
+                            wx += wl
+                            phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
+
                         }
                         else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
 
@@ -1182,6 +1207,13 @@ export class CTimoshenko_beam extends CElement {
                             Nx = Nx - pxL * x - dpx * x * x / sl / 2.
                             Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                             Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
+
+                            ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+
+                            let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                            wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                            wx += wl
+                            phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
 
                         }
                         else if (eload[ieload].art === 6) {         // Einzellast oder Moment
@@ -1220,7 +1252,7 @@ export class CTimoshenko_beam extends CElement {
                                 } else {
                                     edisp[4] = eload[ieload].CwP + eload[ieload].CwM; edisp[5] = eload[ieload].CphiP + eload[ieload].CphiM;
                                     const sl = xP
-                                    const sl2=sl*sl
+                                    const sl2 = sl * sl
                                     const nenner = sl ** 3 + 12. * eta * sl
                                     Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
                                     Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
@@ -1229,7 +1261,7 @@ export class CTimoshenko_beam extends CElement {
                                     wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
                                     //console.log("Nw,edisp", wx, edisp, Nw)
                                     Nphi[0] = 6.0 * (sl * x - x2) / nenner
-                                    Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl2*sl) / nenner
+                                    Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl2 * sl) / nenner
                                     Nphi[2] = -6.0 * (sl * x - x2) / nenner
                                     Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
                                     phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
@@ -1325,6 +1357,7 @@ export class CTimoshenko_beam extends CElement {
                                 Mx = Mx - this.NL * wl
 
                                 wx += wl
+                                phix += (pzL / 6.0 * x ** 3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x) / EI
 
                             }
                             else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
@@ -1350,6 +1383,7 @@ export class CTimoshenko_beam extends CElement {
                                 Mx = Mx - this.NL * wl
 
                                 wx += wl
+                                phix += (pzL / 6.0 * x ** 3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x) / EI
 
                             }
                             // else if (eload[ieload].art === 8) {         // Knotenverformung

@@ -106,7 +106,7 @@ export class drDialogNeueEingabe extends LitElement {
          <h2>neue Eingabe</h2>
 
          <p>Hinweis: Alle Eingaben werden gelöscht.</p>
-         <p>Die Tabellengrößen können später jederzeit mit den Buttons, sie sich oberhalb der Tabellen befinden, geändert werden.<br>
+         <p>Die Tabellengrößen können später jederzeit mit den Buttons, die sich oberhalb der Tabellen befinden, geändert werden.<br>
          Nach den Änderungen ist eine Neuberechnung erforderlich</p>
 
          <form method="dialog">
