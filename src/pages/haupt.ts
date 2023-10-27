@@ -166,9 +166,19 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         <table id="querschnittwerte_table">
           <tbody>
             <tr>
+              <td>&nbsp;&nbsp; Berechnungsart :</td>
+              <td>
+                <select name="stadyn" id="id_stadyn" style="min-width:100%;">
+                  <option value="0" selected>statisch</option>
+                  <option value="1">dynamisch TODO</option>
+                </select>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
               <td>&nbsp;&nbsp; Berechnung nach :</td>
               <td>
-                <select name="THIIO" id="id_THIIO">
+                <select name="THIIO" id="id_THIIO" style="min-width:100%;">
                   <option value="0" selected>Th. I. Ordnung</option>
                   <option value="1">Th. II. Ordnung</option>
                 </select>
@@ -190,7 +200,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             <tr>
               <td></td>
               <td>
-                <sl-button id="rechnen" value="Rechnen" @click="${calculate}"
+                <sl-button id="rechnen" value="Rechnen" @click="${calculate}"  style="min-width:100%;"
                   >Rechnen</sl-button
                 >
               </td>
