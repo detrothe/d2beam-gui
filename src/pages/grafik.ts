@@ -56,6 +56,7 @@ let show_umriss = false;
 
 let show_lasten_temp = true;
 
+let opacity = 0.5
 
 const style_txt = {
     family: 'system-ui, sans-serif',
@@ -337,7 +338,6 @@ export function drawsystem() {
         //return;
     */
 
-    let opacity = 0.5
 
     let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen || show_stabvorverformung);
 
@@ -529,7 +529,7 @@ export function drawsystem() {
                     xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
                     zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
                     if (show_umriss) {
-                        const phi =  phiL[i]
+                        const phi = phiL[i]
 
                         // oben
                         let uoben = uL[i] + Math.sin(phi) * h
@@ -564,8 +564,8 @@ export function drawsystem() {
                         // umriss_x[2 * nelTeilungen - 1 - i] = xp2 = tr.xPix(xx2 - phi * h)
                         // umriss_z[2 * nelTeilungen - 1 - i] = zp2 = tr.zPix(zz2 + h)
 
-                         let line1 = two.makeLine(xp1, zp1, xp2, zp2);
-                         line1.linewidth = 1;
+                        let line1 = two.makeLine(xp1, zp1, xp2, zp2);
+                        line1.linewidth = 1;
                     }
                     xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
 
@@ -1536,13 +1536,13 @@ export function drawsystem() {
             if (show_umriss && !show_verformungen) {
                 let h = element[ielem].h / 2.
                 console.log("HHHHHHHH", h)
-                let si = element[ielem].sinus
-                let co = element[ielem].cosinus
+                let sih = element[ielem].sinus * h
+                let coh = element[ielem].cosinus * h
                 var vertices = [];
-                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x1 + si * h), tr.zPix(element[ielem].z1 - co * h)));
-                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x2 + si * h), tr.zPix(element[ielem].z2 - co * h)));
-                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x2 - si * h), tr.zPix(element[ielem].z2 + co * h)));
-                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x1 - si * h), tr.zPix(element[ielem].z1 + co * h)));
+                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x1 + sih), tr.zPix(element[ielem].z1 - coh)));
+                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x2 + sih), tr.zPix(element[ielem].z2 - coh)));
+                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x2 - sih), tr.zPix(element[ielem].z2 + coh)));
+                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x1 - sih), tr.zPix(element[ielem].z1 + coh)));
 
                 let flaeche = two.makePath(vertices);
                 flaeche.fill = '#dddddd';
@@ -1673,18 +1673,19 @@ function draw_elementlasten(two: Two) {
         a_spalt = a
         a_projektion = 0.0
 
+        x1 = element[ielem].x1;
+        z1 = element[ielem].z1;
+        x2 = element[ielem].x2;
+        z2 = element[ielem].z2;
+        si = element[ielem].sinus
+        co = element[ielem].cosinus
+
         for (let ieload = 0; ieload < neloads; ieload++) {
             console.log("ielem,draw_lastfall", ielem, eload[ieload].element, draw_lastfall, eload[ieload].lf)
             if ((eload[ieload].element === ielem) && (eload[ieload].lf === draw_lastfall)) {
 
                 if (eload[ieload].art === 0) {
 
-                    x1 = element[ielem].x1;
-                    z1 = element[ielem].z1;
-                    x2 = element[ielem].x2;
-                    z2 = element[ielem].z2;
-                    si = element[ielem].sinus
-                    co = element[ielem].cosinus
                     pL = eload[ieload].pL * scalefactor
                     pR = eload[ieload].pR * scalefactor
 
@@ -1735,12 +1736,6 @@ function draw_elementlasten(two: Two) {
 
                 else if (eload[ieload].art === 1) {      // Streckenlast z-Richtung
 
-                    x1 = element[ielem].x1;
-                    z1 = element[ielem].z1;
-                    x2 = element[ielem].x2;
-                    z2 = element[ielem].z2;
-                    si = element[ielem].sinus
-                    co = element[ielem].cosinus
                     pL = eload[ieload].pL * scalefactor
                     pR = eload[ieload].pR * scalefactor
 
@@ -1791,12 +1786,6 @@ function draw_elementlasten(two: Two) {
 
                 else if (eload[ieload].art === 2) {      // Streckenlast z-Richtung, Projektion
 
-                    x1 = element[ielem].x1;
-                    z1 = element[ielem].z1;
-                    x2 = element[ielem].x2;
-                    z2 = element[ielem].z2;
-                    si = element[ielem].sinus
-                    co = element[ielem].cosinus
                     pL = eload[ieload].pL * scalefactor
                     pR = eload[ieload].pR * scalefactor
 
@@ -1846,12 +1835,51 @@ function draw_elementlasten(two: Two) {
                     dp = pMax
                     a_projektion += dp + a_spalt
                 }
-                else if (eload[ieload].art === 6) {      // Einzellast oder/und Moment
+                else if (eload[ieload].art === 5 || eload[ieload].art === 9 || eload[ieload].art === 10) {      // Temperatur, Vorspannung, Spannschloss
 
-                    si = element[ielem].sinus
-                    co = element[ielem].cosinus
-                    x1 = element[ielem].x1;
-                    z1 = element[ielem].z1;
+                    pL = slmax / 20.
+                    pR = slmax / 20.
+
+                    pMax = Math.max(0.0, pL, pR)
+                    pMin = Math.min(0.0, pL, pR)
+
+                    a += Math.abs(pMin)
+
+                    x[0] = x1 + si * a; z[0] = z1 - co * a;
+                    x[1] = x2 + si * a; z[1] = z2 - co * a;
+                    x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
+                    x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
+
+                    //console.log("pL TEMP ...", pL, pR, x, z)
+
+                    var vertices = [];
+                    for (let i = 0; i < 4; i++) {
+                        xtr[i] = tr.xPix(x[i])
+                        ztr[i] = tr.zPix(z[i])
+                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                    }
+
+                    let flaeche = two.makePath(vertices);
+                    flaeche.fill = '#eeeeee';
+                    flaeche.opacity = opacity;
+
+
+                    xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4.
+                    zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4.
+                    let str: string;
+                    if (eload[ieload].art === 5) str = "Tu= " + eload[ieload].Tu + "°/To= " + eload[ieload].To + "°";
+                    else if (eload[ieload].art === 9) str = "σv= " + eload[ieload].sigmaV / 1000 + " N/mm²";
+                    else str = "Δs= " + eload[ieload].delta_s * 1000 + " mm";
+                    //str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
+                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'center'
+                    txt.baseline = 'middle'
+                    txt.rotation = element[ielem].alpha
+
+                    dp = pMax // - pMin
+                    a = a + dp + a_spalt
+                }
+                else if (eload[ieload].art === 6) {      // Einzellast oder/und Moment
 
                     let plength = 35, delta = 12
 
