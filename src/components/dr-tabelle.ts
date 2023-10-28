@@ -319,8 +319,8 @@ class DrTabelle extends HTMLElement {
       //------------------------------------------------------------------------------------------------------------
       //console.log('Custom square element attributes changed.', name, oldValue, newValue);
 
-      if (name === 'newselect') {
-         this.update_select_options();
+      if (name === 'add_new_option') {
+         this.add_new_select_option();
 
       } else if (name === 'namechanged') {
          this.update_select_options_name(Number(newValue));
@@ -395,7 +395,7 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    static get observedAttributes() {
       //------------------------------------------------------------------------------------------------------------
-      return ['nzeilen', 'nspalten', 'columns', 'typs', 'newselect', 'namechanged', 'clear', 'colwidth', 'coltext'];
+      return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext'];
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -410,9 +410,9 @@ class DrTabelle extends HTMLElement {
       }
    */
    //---------------------------------------------------------------------------------------------------------------
-   update_select_options() {
+   add_new_select_option() {
       //------------------------------------------------------------------------------------------------------------
-      console.log('in update_select_options');
+      console.log('in add_new_select_option');
 
       const table = this.shadow.getElementById('mytable') as HTMLTableElement;
 
@@ -492,7 +492,7 @@ class DrTabelle extends HTMLElement {
             if (this.typs[iSpalte] === 'select') {
                const idstr = 'idtable-' + iZeile + '-' + iSpalte;
                const el = this.shadow.getElementById(idstr)
-               console.log("idstr", el)
+               //console.log("idstr", el)
                //const index = nQuerschnittSets - 1;
                //let option = document.createElement('option');
 

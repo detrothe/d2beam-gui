@@ -948,6 +948,8 @@ function read_kombinationen() {
 //---------------------------------------------------------------------------------------------------------------
 export function add_rechteck_querschnitt(werte: any[]) {
     //-----------------------------------------------------------------------------------------------------------
+    // Diese Methode darf nur von dateien.ts beim Einlesen aus Datei verwendet werden
+
     console.log('add_rechteck_querschnitt wert', werte)
 
     incr_querschnittSets();
@@ -995,7 +997,7 @@ export function add_rechteck_querschnitt(werte: any[]) {
 
     const ele = document.getElementById('id_element_tabelle');
     //console.log('ELE: >>', ele);
-    ele?.setAttribute('newselect', '4');
+    ele?.setAttribute('add_new_option', '4');
 
 }
 
@@ -1058,7 +1060,7 @@ export function init_tabellen() {
 
         const ele = document.getElementById('id_element_tabelle');
         //console.log('ELE: >>', ele);
-        ele?.setAttribute('newselect', '4');
+        ele?.setAttribute('add_new_option', '4');
     }
 
     let el = document.getElementById('id_element_tabelle');

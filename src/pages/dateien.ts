@@ -128,6 +128,20 @@ function handleFileSelect_read() {
 
                     console.log("nach resize")
 
+
+                    let nQuerschnittSets = jobj.nquerschnittsets
+                    console.log('nQuerschnittSets', nQuerschnittSets)
+                    for (i = 0; i < nQuerschnittSets; i++) {
+                        let className = jobj.qsclassname[i]
+                        if (className === 'QuerschnittRechteck') {
+                            console.log('classname von Querschnitt ' + i + ' ist QuerschnittRechteck')
+                            //let wert = new Array(11)
+                            //for(j=0;j<11;j++)wert[i]=jobj.qswerte[i]
+                            //console.log('wert',jobj.qswerte[i])
+                            add_rechteck_querschnitt(jobj.qswerte[i])
+                        }
+                    }
+
                     let el = document.getElementById('id_knoten_tabelle') as HTMLElement;
                     let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
                     let nSpalten = tabelle.rows[0].cells.length;
@@ -147,6 +161,7 @@ function handleFileSelect_read() {
                         for (j = 1; j < nSpalten; j++) {
                             let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
                             child.value = jobj.elem[i - 1][j - 1];
+                            //console.log("Element Table ", jobj.elem[i - 1][j - 1])
                         }
                     }
 
@@ -250,18 +265,6 @@ function handleFileSelect_read() {
                         }
                     }
 
-                    let nQuerschnittSets = jobj.nquerschnittsets
-                    console.log('nQuerschnittSets', nQuerschnittSets)
-                    for (i = 0; i < nQuerschnittSets; i++) {
-                        let className = jobj.qsclassname[i]
-                        if (className === 'QuerschnittRechteck') {
-                            console.log('classname von Querschnitt ' + i + ' ist QuerschnittRechteck')
-                            //let wert = new Array(11)
-                            //for(j=0;j<11;j++)wert[i]=jobj.qswerte[i]
-                            //console.log('wert',jobj.qswerte[i])
-                            add_rechteck_querschnitt(jobj.qswerte[i])
-                        }
-                    }
 
                 };
             })(f);
@@ -537,8 +540,8 @@ async function handleFileSelect_save() {
                         accept: { "text/plain": [".txt"] }
                     }]
                 });
-                console.log("fileHandle",fileHandle)
-                lastFileHandle=fileHandle
+                console.log("fileHandle", fileHandle)
+                lastFileHandle = fileHandle
 
                 const fileStream = await fileHandle.createWritable();
                 //console.log("fileStream=",fileStream);
