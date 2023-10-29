@@ -1590,6 +1590,15 @@ function calculate() {
 
     else if (THIIO_flag === 1) {
 
+        if (nkombinationen < 1) {
+            window.alert("Es muss mindestens eine Kombination definiert sein");
+
+            let element = document.getElementById("id_tab_kombi"); // id_eingabe
+            element?.click();
+
+            return 1;
+        }
+
         const stiff_sig = Array.from(Array(neq), () => new Array(neq).fill(0.0));
 
         disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);
@@ -1678,11 +1687,11 @@ function calculate() {
                 //  und jetzt noch die normalen Elementlasten
 
                 for (ielem = 0; ielem < nelemTotal; ielem++) {
-console.log("ELEMENTLASTEN,ielem",ielem)
+                    console.log("ELEMENTLASTEN,ielem", ielem)
                     for (let ieload = 0; ieload < neloads; ieload++) {
                         if (eload[ieload].element === ielem) {
                             const index = eload[ieload].lf - 1
-                            console.log("elem kombi index,art", index, kombiTabelle[iKomb - 1][index],eload[ieload].art)
+                            console.log("elem kombi index,art", index, kombiTabelle[iKomb - 1][index], eload[ieload].art)
                             if (kombiTabelle[iKomb - 1][index] !== 0.0) {
 
                                 if (eload[ieload].art === 8) el[ielem].berechneElementlasten(ieload)

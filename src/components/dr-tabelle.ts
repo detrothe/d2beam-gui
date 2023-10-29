@@ -265,7 +265,7 @@ class DrTabelle extends HTMLElement {
                el.id = str;
                //el.value = str;
                //el.className = 'input_normal';
-               el.addEventListener('keydown', this.KEYDOWN);
+               el.addEventListener('keydown', this.KEYDOWN.bind(this));
                //el.addEventListener("change", function () { berechnungErforderlich(true); });
 
                newCell = newRow.insertCell();
@@ -613,7 +613,7 @@ class DrTabelle extends HTMLElement {
                         const str = id_table + '-' + iZeile + '-' + iSpalte;
                         el.id = str;
                         el.className = 'input_normal';
-                        el.addEventListener('keydown', this.KEYDOWN);
+                        el.addEventListener('keydown', this.KEYDOWN.bind(this));
 
                         //newCell.style.width = '6em';
                         //console.log("§§§§§§§§§ colwidth",this.colWidth.length,this.colWidth[this.colWidth.length-1])
@@ -691,7 +691,7 @@ class DrTabelle extends HTMLElement {
                   const str = id_table + '-' + iZeile + '-' + iSpalte;
                   el.id = str;
                   //el.className = 'input_normal';
-                  el.addEventListener('keydown', this.KEYDOWN);
+                  el.addEventListener('keydown', this.KEYDOWN.bind(this));
 
                   newCell = newRow.insertCell();
                   //newCell.style.width = '6em';
@@ -773,18 +773,86 @@ class DrTabelle extends HTMLElement {
          ev.preventDefault();
          return;
       }
-      if (ev.target.type === 'text') return;
 
-      if (ev.keyCode > 47 && ev.keyCode < 58) return; // Ziffern 0-9
-      if (ev.keyCode > 95 && ev.keyCode < 111) return; // Ziffern 0-9, +, - vom numpad
-      if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) return; // e .  ,
-      if (ev.keyCode === 13 || ev.keyCode === 8 || ev.keyCode === 46) return; // return, del, entfernen
-      if (ev.keyCode === 37 || ev.keyCode === 39 || ev.keyCode === 189) return; // rechts links -
-      if (ev.keyCode === 9 || ev.keyCode === 27) return; // Tab, ESC
-      if (ev.keyCode === 173) return; // - Zeichen bei Firefox
-      if (ev.keyCode === 0) return; // - Zeichen bei Android Firefox
+      if (ev.keyCode === 13) {  // return-Taste
+         ev.preventDefault();
+         const inputId = ev.target.id;
+         const myArray = inputId.split('-');
+         console.log('RETURN Taste in Zelle', myArray.length, myArray[0], myArray[1], myArray[2], this.nTabRow);
+         let zeile = +myArray[1] + 1;
+         console.log("zeile", zeile, this.nTabRow)
+         if (zeile < this.nTabRow) {
+            console.log("springe jetzt in Zeile ", zeile)
+            let spalte: number;
+            if (this.typs[1] === 'select') {
+               spalte = 2;                        // select option bisher nur in Spalte 1
+            } else spalte = 1;
+            let str = 'idtable-' + zeile + '-' + spalte;
+            const elemNeu = this.shadow.getElementById(str) as HTMLInputElement;
+            console.log("elemNeu", str, elemNeu)
+            //elemNeu.innerText = "";
+            elemNeu.focus();
+            const evt = new Event("mousedown", { "bubbles": true, "cancelable": false }) as any;
+            evt.button = 0;     // linke Maustaste
+            elemNeu.dispatchEvent(evt);
+         }
 
-      ev.preventDefault();
+      } else if (ev.key === 'ArrowDown' || ev.key === 'PageDown') {
+         console.log("ArrowDown")
+         ev.preventDefault();
+         const inputId = ev.target.id;
+         const myArray = inputId.split('-');
+         //console.log('ArrowDown Taste in Zelle', myArray.length, myArray[0], myArray[1], myArray[2], inputId.selectionStart);
+         let zeile = +myArray[1] + 1;
+         //console.log("zeile", zeile, this.nTabRow)
+         if (zeile < this.nTabRow) {
+            console.log("springe jetzt in Zeile ", zeile)
+            let spalte = myArray[2];
+            let str = 'idtable-' + zeile + '-' + spalte;
+            const elemNeu = this.shadow.getElementById(str) as HTMLInputElement;
+            console.log("elemNeu", str, elemNeu)
+            elemNeu.focus();
+            const evt = new Event("mousedown", { "bubbles": true, "cancelable": false }) as any;
+            evt.button = 0;     // linke Maustaste
+            elemNeu.dispatchEvent(evt);
+         }
+
+      } else if (ev.key === 'ArrowUp' || ev.key === 'PageUp') {
+         console.log("ArrowUp")
+         ev.preventDefault();
+         const inputId = ev.target.id;
+         const myArray = inputId.split('-');
+         //console.log('RETURN Taste in Zelle', myArray.length, myArray[0], myArray[1], myArray[2], this.nTabRow);
+         let zeile = +myArray[1] - 1;
+         //console.log("zeile", zeile, this.nTabRow)
+         if (zeile > 0) {
+            console.log("springe jetzt in Zeile ", zeile)
+            let spalte = myArray[2];
+            let str = 'idtable-' + zeile + '-' + spalte;
+            const elemNeu = this.shadow.getElementById(str) as HTMLInputElement;
+            console.log("elemNeu", str, elemNeu)
+            elemNeu.focus();
+            const evt = new Event("mousedown", { "bubbles": true, "cancelable": false }) as any;
+            evt.button = 0;     // linke Maustaste
+            elemNeu.dispatchEvent(evt);
+         }
+
+      }
+      else if (ev.target.type === 'text') {
+         return;
+      }
+      else {
+         if (ev.keyCode > 47 && ev.keyCode < 58) return;                            // Ziffern 0-9
+         if (ev.keyCode > 95 && ev.keyCode < 111) return;                           // Ziffern 0-9, +, - vom numpad
+         if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) return; // e .  ,
+         if (ev.keyCode === 8 || ev.keyCode === 46) return;                         //  del, entfernen
+         if (ev.keyCode === 37 || ev.keyCode === 39 || ev.keyCode === 189) return;  // rechts links -
+         if (ev.keyCode === 9 || ev.keyCode === 27) return;                         // Tab, ESC
+         if (ev.keyCode === 173) return;                                            // - Zeichen bei Firefox
+         if (ev.keyCode === 0) return;                                              // - Zeichen bei Android Firefox
+
+         ev.preventDefault();
+      }
    }
 
 
