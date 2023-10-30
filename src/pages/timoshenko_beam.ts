@@ -630,7 +630,7 @@ export class CTimoshenko_beam extends CElement {
         const sl2 = sl * sl
         const sl3 = sl2 * sl
 
-        if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
+        if (eload[ieload].art === 0) {                          // Trapezstreckenlast senkrecht auf Stab
 
             console.log("STRECKENLAST SENKRECHT")
             const p1 = -sl * (eload[ieload].pR + eload[ieload].pL) / 2.0 / 60.0
@@ -651,14 +651,14 @@ export class CTimoshenko_beam extends CElement {
             eload[ieload].C2 = -((60 * sl ** 2 * psi + 5 * sl ** 4) * qL + 30 * sl ** 3 * mq * psi + 2 * sl ** 5 * mq) / (720 * psi + 60 * sl ** 2);
 
         }
-        else if (eload[ieload].art === 1) {              // Trapezstreckenlast z-Richtung
+        else if (eload[ieload].art === 1) {                     // Trapezstreckenlast z-Richtung
 
             let pL = eload[ieload].pL
             let pR = eload[ieload].pR
 
-            let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
+            let pzL = this.cosinus * pL                         // Lastanteil senkrecht auf Stab
             let pzR = this.cosinus * pR
-            let pxL = this.sinus * pL                             // Lastanteil parallel zum Stab
+            let pxL = this.sinus * pL                           // Lastanteil parallel zum Stab
             let pxR = this.sinus * pR
 
             const p1 = -sl * (pzR + pzL) / 2.0 / 60.0
@@ -680,15 +680,73 @@ export class CTimoshenko_beam extends CElement {
             eload[ieload].C2 = -((60 * sl ** 2 * psi + 5 * sl ** 4) * qL + 30 * sl ** 3 * mq * psi + 2 * sl ** 5 * mq) / (720 * psi + 60 * sl ** 2);
 
         }
-        else if (eload[ieload].art === 2) {              // Trapezstreckenlast z-Richtung, Projektion
+        else if (eload[ieload].art === 2) {                     // Trapezstreckenlast z-Richtung, Projektion
 
             let pL = eload[ieload].pL * this.dx / sl
             let pR = eload[ieload].pR * this.dx / sl
 
-            let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
+            let pzL = this.cosinus * pL                         // Lastanteil senkrecht auf Stab
             let pzR = this.cosinus * pR
-            let pxL = this.sinus * pL                             // Lastanteil parallel zum Stab
+            let pxL = this.sinus * pL                           // Lastanteil parallel zum Stab
             let pxR = this.sinus * pR
+
+            const p1 = -sl * (pzR + pzL) / 2.0 / 60.0
+            const p2 = -sl * (pzR - pzL) / 2.0 / 60.0
+
+            eload[ieload].re[0] = -sl * (2 * pxL + pxR) / 6
+            eload[ieload].re[3] = -sl * (pxL + 2 * pxR) / 6
+
+            eload[ieload].re[1] = 30.0 * p1 - (10.0 + 2.0 * this.psi) * p2 // VL
+            eload[ieload].re[4] = 30.0 * p1 + (10.0 + 2.0 * this.psi) * p2 // VR
+
+            eload[ieload].re[2] = -5.0 * sl * p1 + sl * this.psi * p2
+            eload[ieload].re[5] = 5.0 * sl * p1 + sl * this.psi * p2
+
+            let qL = pzL
+            let mq = (pzR - pzL) / sl;
+            let psi = this.eta
+            eload[ieload].C1 = ((120 * sl * psi + 10 * sl ** 3) * qL + 40 * sl ** 2 * mq * psi + 3 * sl ** 4 * mq) / (240 * psi + 20 * sl ** 2);
+            eload[ieload].C2 = -((60 * sl ** 2 * psi + 5 * sl ** 4) * qL + 30 * sl ** 3 * mq * psi + 2 * sl ** 5 * mq) / (720 * psi + 60 * sl ** 2);
+
+        }
+        else if (eload[ieload].art === 3) {                     // Trapezstreckenlast x-Richtung
+
+            let pL = eload[ieload].pL
+            let pR = eload[ieload].pR
+
+            let pzL = -this.sinus * pL                          // Lastanteil senkrecht auf Stab
+            let pzR = -this.sinus * pR
+            let pxL = this.cosinus * pL                         // Lastanteil parallel zum Stab
+            let pxR = this.cosinus * pR
+
+            const p1 = -sl * (pzR + pzL) / 2.0 / 60.0
+            const p2 = -sl * (pzR - pzL) / 2.0 / 60.0
+
+            eload[ieload].re[0] = -sl * (2 * pxL + pxR) / 6
+            eload[ieload].re[3] = -sl * (pxL + 2 * pxR) / 6
+
+            eload[ieload].re[1] = 30.0 * p1 - (10.0 + 2.0 * this.psi) * p2 // VL
+            eload[ieload].re[4] = 30.0 * p1 + (10.0 + 2.0 * this.psi) * p2 // VR
+
+            eload[ieload].re[2] = -5.0 * sl * p1 + sl * this.psi * p2
+            eload[ieload].re[5] = 5.0 * sl * p1 + sl * this.psi * p2
+
+            let qL = pzL
+            let mq = (pzR - pzL) / sl;
+            let psi = this.eta
+            eload[ieload].C1 = ((120 * sl * psi + 10 * sl ** 3) * qL + 40 * sl ** 2 * mq * psi + 3 * sl ** 4 * mq) / (240 * psi + 20 * sl ** 2);
+            eload[ieload].C2 = -((60 * sl ** 2 * psi + 5 * sl ** 4) * qL + 30 * sl ** 3 * mq * psi + 2 * sl ** 5 * mq) / (720 * psi + 60 * sl ** 2);
+
+        }
+        else if (eload[ieload].art === 4) {                     // Trapezstreckenlast x-Richtung, Projektion
+
+            let pL = eload[ieload].pL * this.dz / sl
+            let pR = eload[ieload].pR * this.dz / sl
+
+            let pzL = -this.sinus * pL                          // Lastanteil senkrecht auf Stab
+            let pzR = -this.sinus * pR
+            let pxL = this.cosinus * pL                         // Lastanteil parallel zum Stab
+            let pxR = this.cosinus * pR
 
             const p1 = -sl * (pzR + pzL) / 2.0 / 60.0
             const p2 = -sl * (pzR - pzL) / 2.0 / 60.0
@@ -1146,7 +1204,7 @@ export class CTimoshenko_beam extends CElement {
                 for (let ieload = 0; ieload < neloads; ieload++) {
                     if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === iLastf)) {
 
-                        if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
+                        if (eload[ieload].art === 0) {                            // Trapezstreckenlast senkrecht auf Stab
 
                             const pL = eload[ieload].pL
                             const pR = eload[ieload].pR
@@ -1162,7 +1220,7 @@ export class CTimoshenko_beam extends CElement {
                             temp = pL / 6.0 * x ** 3 + dp / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x
                             phix = phix + temp / EI
                         }
-                        else if (eload[ieload].art === 1) {         // Trapezstreckenlast z-Richtung
+                        else if (eload[ieload].art === 1) {                       // Trapezstreckenlast z-Richtung
 
                             const pL = eload[ieload].pL
                             const pR = eload[ieload].pR
@@ -1190,7 +1248,7 @@ export class CTimoshenko_beam extends CElement {
                             phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
 
                         }
-                        else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
+                        else if (eload[ieload].art === 2) {                       // Trapezstreckenlast z-Richtung, Projektion
 
                             //console.log("Projektion",this.dx, sl)
                             const pL = eload[ieload].pL * this.dx / sl
@@ -1216,6 +1274,61 @@ export class CTimoshenko_beam extends CElement {
                             phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
 
                         }
+                        else if (eload[ieload].art === 3) {                         // Trapezstreckenlast x-Richtung
+
+                            const pL = eload[ieload].pL
+                            const pR = eload[ieload].pR
+
+                            let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
+                            let pzR = -this.sinus * pR
+                            let pxL = this.cosinus * pL                             // Lastanteil parallel zum Stab
+                            let pxR = this.cosinus * pR
+
+                            const dpx = pxR - pxL
+                            const dpz = pzR - pzL
+
+                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
+                            Vx = Vx - pzL * x - dpz * x * x / sl / 2.
+                            Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
+
+                            ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+
+                            let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                            wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                            //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
+                            // if (THIIO_flag === 1) Mx = Mx - this.NL * wl
+
+                            wx += wl
+                            phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
+
+                        }
+                        else if (eload[ieload].art === 4) {                         // Trapezstreckenlast x-Richtung, Projektion
+
+                            //console.log("Projektion",this.dx, sl)
+                            const pL = eload[ieload].pL * this.dz / sl
+                            const pR = eload[ieload].pR * this.dz / sl
+
+                            let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
+                            let pzR = -this.sinus * pR
+                            let pxL = this.cosinus * pL                             // Lastanteil parallel zum Stab
+                            let pxR = this.cosinus * pR
+
+                            const dpx = pxR - pxL
+                            const dpz = pzR - pzL
+
+                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
+                            Vx = Vx - pzL * x - dpz * x * x / sl / 2.
+                            Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
+
+                            ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+
+                            let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                            wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                            wx += wl
+                            phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
+
+                        }
+
                         else if (eload[ieload].art === 6) {         // Einzellast oder Moment
 
                             const xP = eload[ieload].x

@@ -416,8 +416,8 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
           0 = Trapezstreckenlast senkrecht auf Stab<br />
           1 = Trapezstreckenlast in globaler z-Richtung<br />
           2 = Trapezstreckenlast in globaler z-Richtung, Projektion<br />
-          3 = Trapezstreckenlast in globaler x-Richtung, TODO<br />
-          4 = Trapezstreckenlast in globaler x-Richtung, Projektion, TODO<br />
+          3 = Trapezstreckenlast in globaler x-Richtung<br />
+          4 = Trapezstreckenlast in globaler x-Richtung, Projektion<br />
         </p>
         <p>
           Anzahl Streckenlasten:

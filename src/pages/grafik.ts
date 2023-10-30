@@ -1656,14 +1656,14 @@ function draw_elementlasten(two: Two) {
 
     let x1: number, x2: number, z1: number, z2: number, si: number, co: number, xi: number, zi: number
     let dp: number, pMax: number, pMin: number
-    let a: number, a_projektion: number
+    let a: number, ax_projektion: number, az_projektion: number
     let a_spalt: number
     let pL: number, pR: number
     let x = Array(4), z = Array(4), xtr = Array(4), ztr = Array(4)
 
     let xpix: number, zpix: number
 
-    console.log("in draw_elementlasten", slmax)
+    console.log("in draw_elementlasten", slmax,maxValue_eload[draw_lastfall - 1])
 
     let scalefactor = slmax / 20 / maxValue_eload[draw_lastfall - 1]
 
@@ -1671,7 +1671,8 @@ function draw_elementlasten(two: Two) {
 
         a = slmax / 100.
         a_spalt = a
-        a_projektion = 0.0
+        ax_projektion = 0.0
+        az_projektion = 0.0
 
         x1 = element[ielem].x1;
         z1 = element[ielem].z1;
@@ -1794,10 +1795,10 @@ function draw_elementlasten(two: Two) {
                     pMax = Math.max(0.0, pL, pR)
                     pMin = Math.min(0.0, pL, pR)
 
-                    a_projektion += Math.abs(pMin)
+                    az_projektion += Math.abs(pMin)
 
-                    x[0] = x1; z[0] = zm - a_projektion;
-                    x[1] = x2; z[1] = zm - a_projektion;
+                    x[0] = x1; z[0] = zm - az_projektion;
+                    x[1] = x2; z[1] = zm - az_projektion;
                     x[2] = x[1]; z[2] = z[1] - pR;
                     x[3] = x[0]; z[3] = z[0] - pL;
 
@@ -1833,8 +1834,61 @@ function draw_elementlasten(two: Two) {
                     txt.baseline = 'top'
 
                     dp = pMax
-                    a_projektion += dp + a_spalt
+                    az_projektion += dp + a_spalt
                 }
+
+                else if (eload[ieload].art === 4) {      // Streckenlast x-Richtung, Projektion
+
+                    pL = eload[ieload].pL * scalefactor
+                    pR = eload[ieload].pR * scalefactor
+
+                    let xm = (x1 + x2) / 2
+
+                    pMax = Math.max(0.0, pL, pR)
+                    pMin = Math.min(0.0, pL, pR)
+
+                    ax_projektion += Math.abs(pMin)
+
+                    x[0] = xm + ax_projektion; z[0] = z1;
+                    x[1] = xm + ax_projektion; z[1] = z2;
+                    x[2] = x[1] + pR; z[2] = z[1];
+                    x[3] = x[0] + pL; z[3] = z[0];
+
+
+                    console.log("pL4...",ieload, pL, pR, scalefactor, x, z)
+
+                    var vertices = [];
+                    for (let i = 0; i < 4; i++) {
+                        xtr[i] = tr.xPix(x[i])
+                        ztr[i] = tr.zPix(z[i])
+                        console.log()
+                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                    }
+
+                    let flaeche = two.makePath(vertices);
+                    flaeche.fill = '#eeeeee';
+
+                    if (Math.abs(pL) > 0.0) draw_arrow(two, x[0], z[0], x[3], z[3], style_pfeil)
+                    if (Math.abs(pR) > 0.0) draw_arrow(two, x[1], z[1], x[2], z[2], style_pfeil)
+
+                    xpix = xtr[3] + 5
+                    zpix = ztr[3] - 5
+                    let str = myFormat(Math.abs(eload[ieload].pL), 1, 2)
+                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+
+                    xpix = xtr[2] + 5
+                    zpix = ztr[2] - 5
+                    str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
+                    txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+
+                    dp = pMax
+                    ax_projektion += dp + a_spalt
+                }
+
                 else if (eload[ieload].art === 5 || eload[ieload].art === 9 || eload[ieload].art === 10) {      // Temperatur, Vorspannung, Spannschloss
 
                     pL = slmax / 20.

@@ -802,7 +802,7 @@ class DrTabelle extends HTMLElement {
          ev.preventDefault();
          const inputId = ev.target.id;
          const myArray = inputId.split('-');
-         //console.log('ArrowDown Taste in Zelle', myArray.length, myArray[0], myArray[1], myArray[2], inputId.selectionStart);
+         console.log('ArrowDown Taste in Zelle', myArray.length, myArray[0], myArray[1], myArray[2], ev.target.selectionStart); //Cursorposition: selectionStart nur bei Text
          let zeile = +myArray[1] + 1;
          //console.log("zeile", zeile, this.nTabRow)
          if (zeile < this.nTabRow) {
