@@ -1663,7 +1663,7 @@ function draw_elementlasten(two: Two) {
 
     let xpix: number, zpix: number
 
-    console.log("in draw_elementlasten", slmax,maxValue_eload[draw_lastfall - 1])
+    console.log("in draw_elementlasten", slmax, maxValue_eload[draw_lastfall - 1])
 
     let scalefactor = slmax / 20 / maxValue_eload[draw_lastfall - 1]
 
@@ -1743,10 +1743,10 @@ function draw_elementlasten(two: Two) {
                     pMax = Math.max(0.0, pL, pR)
                     pMin = Math.min(0.0, pL, pR)
 
-                    a += Math.abs(pMin * co)
+                    a += Math.abs(pMin )   //* co
 
-                    x[0] = x1; z[0] = z1 - a / co;
-                    x[1] = x2; z[1] = z2 - a / co;
+                    x[0] = x1 + si * a; z[0] = z1 - a * co;    // /
+                    x[1] = x2 + si * a; z[1] = z2 - a * co;
                     x[2] = x[1]; z[2] = z[1] - pR;
                     x[3] = x[0]; z[3] = z[0] - pL;
 
@@ -1837,6 +1837,56 @@ function draw_elementlasten(two: Two) {
                     az_projektion += dp + a_spalt
                 }
 
+                else if (eload[ieload].art === 3) {      // Streckenlast x-Richtung
+
+                    pL = eload[ieload].pL * scalefactor
+                    pR = eload[ieload].pR * scalefactor
+
+                    pMax = Math.max(0.0, pL, pR)
+                    pMin = Math.min(0.0, pL, pR)
+
+                    a += Math.abs(pMin * si)
+
+                    x[0] = x1 + a / si; z[0] = z1;
+                    x[1] = x2 + a / si; z[1] = z2;
+                    x[2] = x[1] + pR; z[2] = z[1];
+                    x[3] = x[0] + pL; z[3] = z[0];
+
+
+                    console.log("pL...", pL, pR, x, z)
+
+                    const vertices = [];
+                    for (let i = 0; i < 4; i++) {
+                        xtr[i] = tr.xPix(x[i])
+                        ztr[i] = tr.zPix(z[i])
+                        console.log()
+                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                    }
+
+                    let flaeche = two.makePath(vertices);
+                    flaeche.fill = '#eeeeee';
+
+                    if (Math.abs(pL) > 0.0) draw_arrow(two, x[0], z[0], x[3], z[3], style_pfeil)
+                    if (Math.abs(pR) > 0.0) draw_arrow(two, x[1], z[1], x[2], z[2], style_pfeil)
+
+                    xpix = xtr[3] + 5
+                    zpix = ztr[3] - 5
+                    let str = myFormat(Math.abs(eload[ieload].pL), 1, 2)
+                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+
+                    xpix = xtr[2] + 5
+                    zpix = ztr[2] - 5
+                    str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
+                    txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+
+                    dp = pMax * si // - pMin
+                    a = a + dp + a_spalt
+                }
+
                 else if (eload[ieload].art === 4) {      // Streckenlast x-Richtung, Projektion
 
                     pL = eload[ieload].pL * scalefactor
@@ -1855,9 +1905,9 @@ function draw_elementlasten(two: Two) {
                     x[3] = x[0] + pL; z[3] = z[0];
 
 
-                    console.log("pL4...",ieload, pL, pR, scalefactor, x, z)
+                    console.log("pL4...", ieload, pL, pR, scalefactor, x, z)
 
-                    var vertices = [];
+                    const vertices = [];
                     for (let i = 0; i < 4; i++) {
                         xtr[i] = tr.xPix(x[i])
                         ztr[i] = tr.zPix(z[i])
@@ -1906,7 +1956,7 @@ function draw_elementlasten(two: Two) {
 
                     //console.log("pL TEMP ...", pL, pR, x, z)
 
-                    var vertices = [];
+                    const vertices = [];
                     for (let i = 0; i < 4; i++) {
                         xtr[i] = tr.xPix(x[i])
                         ztr[i] = tr.zPix(z[i])
