@@ -2461,6 +2461,85 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
     }
 
+    // Schnittgrößen und Verformungen entlang Stabachse
+    {
+        tag = document.createElement("p"); // <p></p>
+        text = document.createTextNode("xxx");
+        tag.appendChild(text);
+        tag.innerHTML = "<b>Stabschnittgrößen und Verformungen</b>"
+
+        newDiv?.appendChild(tag);
+
+
+        for (i = 0; i < nelem; i++) {
+
+            tag = document.createElement("p"); // <p></p>
+            text = document.createTextNode("xxx");
+            tag.appendChild(text);
+            tag.innerHTML = "<b>Element " + (+i+1) +"</b>"
+
+            newDiv?.appendChild(tag);
+
+            const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+            table.setAttribute("id", "id_table_schnittgroessen");
+            table.setAttribute("class", "output_table");
+
+            table.style.border = 'none';
+            newDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+
+            const thead = table.createTHead();
+            const row = thead.insertRow();
+
+
+            const th0 = table!.tHead!.appendChild(document.createElement("th"));
+            th0.innerHTML = "x &nbsp;[m]";
+            th0.title = "Stelle x"
+            th0.setAttribute("class", "table_cell_center");
+            row.appendChild(th0);
+
+            // @ts-ignore
+            const th1 = table.tHead.appendChild(document.createElement("th"));
+            th1.innerHTML = "N &nbsp;[kN]";
+            th1.title = "Normalkraft N, positiv als Zugktaft"
+            th1.setAttribute("class", "table_cell_center");
+            row.appendChild(th1);
+
+            // @ts-ignore
+            const th2 = table.tHead.appendChild(document.createElement("th"));
+            th2.innerHTML = "V<sub>z</sub>&nbsp;[kN]";
+            th2.title = "Querkraft Vz, positiv in negativer z-Richtung am negativen Schnittufer"
+            th2.setAttribute("class", "table_cell_center");
+            row.appendChild(th2);
+            // @ts-ignore
+            const th3 = table.tHead.appendChild(document.createElement("th"));
+            th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+            th3.title = "Biegemoment, positiv im Uhrzeigersinn am negativen Schnittufer"
+            th3.setAttribute("class", "table_cell_center");
+            row.appendChild(th3);
+
+            // @ts-ignore
+            const th4 = table.tHead.appendChild(document.createElement("th"));
+            th4.innerHTML = "u<sub>x</sub> &nbsp;[mm]";
+            th4.title = "lokale Verschiebung in Stabrichtung, positiv in lokaler x-Richtung"
+            th4.setAttribute("class", "table_cell_center");
+            row.appendChild(th4);
+            // @ts-ignore
+            const th5 = table.tHead.appendChild(document.createElement("th"));
+            th5.innerHTML = "w<sub>z</sub>&nbsp;[mm]";
+            th5.title = "lokale Verschiebung in senkrecht zur Stabrichtung, positiv in lokaler z-Richtung"
+            th5.setAttribute("class", "table_cell_center");
+            row.appendChild(th5);
+            // @ts-ignore
+            const th6 = table.tHead.appendChild(document.createElement("th"));
+            th6.innerHTML = "&phi; &nbsp;[mrad]";
+            th6.title = "Rotation der Querschnittsebene, positiv im Uhrzeigersinn"
+            th6.setAttribute("class", "table_cell_center");
+            row.appendChild(th6);
+
+        }
+
+    }
+
 }
 
 //--------------------------------------------------------------------------------------------

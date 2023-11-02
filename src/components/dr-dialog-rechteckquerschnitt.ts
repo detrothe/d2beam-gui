@@ -487,7 +487,6 @@ export class drRechteckQuerSchnitt extends LitElement {
          if (uebernehmen) {
             (shadow?.getElementById("qname") as HTMLInputElement).value = wahl;
          }
-         (shadow?.getElementById("qname") as HTMLInputElement).value = wahl;
 
          let index: number
          for (index = 0; index < PROFIL.length; index++) {
