@@ -30,11 +30,7 @@ import { drButtonPM } from "../components/dr-button-pm";
 import DetectOS from "./detectos";
 
 import { addListener_filesave } from "./dateien";
-import {
-  select_loadcase_changed,
-  select_eigenvalue_changed,
-  copy_svg,
-} from "./grafik";
+import { select_loadcase_changed, select_eigenvalue_changed, copy_svg } from "./grafik";
 import { set_info } from "./utility";
 //import { init_contextmenu } from '../components/dr-tabelle';
 
@@ -86,10 +82,7 @@ export const app = {
     monoSpace: false,
     wordWrap: true,
   },
-  hasFSAccess:
-    "chooseFileSystemEntries" in window ||
-    "showOpenFilePicker" in window ||
-    "showSaveFilePicker" in window,
+  hasFSAccess: "chooseFileSystemEntries" in window || "showOpenFilePicker" in window || "showSaveFilePicker" in window,
   isMac: navigator.userAgent.includes("Mac OS X"),
 };
 
@@ -130,9 +123,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
     <sl-tab-group>
       <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">Haupt</sl-tab>
       <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
-      <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte"
-        >Querschnitte</sl-tab
-      >
+      <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
       <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>
       <sl-tab slot="nav" panel="tab-elemente">Elemente</sl-tab>
       <sl-tab slot="nav" panel="tab-knotenlasten">Knotenlasten</sl-tab>
@@ -147,9 +138,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
       <!--------------------------------------------------------------------------------------->
 
       <sl-tab-panel name="tab-haupt">
-        <div id="id_current_filename">
-          &nbsp;&nbsp;aktueller Dateiname: ${currentFilename}<br />
-        </div>
+        <div id="id_current_filename">&nbsp;&nbsp;aktueller Dateiname: ${currentFilename}<br /></div>
 
         <p>
           <button type="button" id="saveFile" style="min-width:8em;">
@@ -188,21 +177,14 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             <tr>
               <td></td>
               <td>
-                <sl-button
-                  id="clear"
-                  value="clear"
-                  @click="${handleClick_neue_eingabe}"
-                  >neue Eingabe beginnen</sl-button
-                >
+                <sl-button id="clear" value="clear" @click="${handleClick_neue_eingabe}">neue Eingabe beginnen</sl-button>
               </td>
             </tr>
 
             <tr>
               <td></td>
               <td>
-                <sl-button id="rechnen" value="Rechnen" @click="${calculate}"  style="min-width:100%;"
-                  >Rechnen</sl-button
-                >
+                <sl-button id="rechnen" value="Rechnen" @click="${calculate}" style="min-width:100%;">Rechnen</sl-button>
               </td>
             </tr>
           </tbody>
@@ -213,17 +195,12 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
           <!-- rows="40" cols="8"  -->
         </div>
 
-        <dr-dialog_neue_eingabe
-          id="id_dialog_neue_eingabe"
-        ></dr-dialog_neue_eingabe>
+        <dr-dialog_neue_eingabe id="id_dialog_neue_eingabe"></dr-dialog_neue_eingabe>
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-grafik">
-        <div
-          id="id_grafik"
-          style=" background-color:#ffffff;margin:0;padding:0"
-        >
+        <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0">
           <!-- width:100vw; ;width:300px;height:300px; -->
           <div id="panel_gui"></div>
           <div id="id_div_select_lc">
@@ -247,20 +224,14 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         >
         -->
         <br />
-        <sl-button id="open-dialog_rechteck" @click="${handleClick_rechteck}"
-          >neuer Querschnitt</sl-button
-        >
+        <sl-button id="open-dialog_rechteck" @click="${handleClick_rechteck}">neuer Querschnitt</sl-button>
         <br /><br />
         <sl-tree class="custom-icons">
           <!--
                <sl-icon name="plus-square" slot="expand-icon"></sl-icon>
                <sl-icon name="dash-square" slot="collapse-icon"></sl-icon>
            -->
-          <sl-tree-item
-            id="id_tree_LQ"
-            @click="${handleClick_rechteck_dialog}"
-            expanded
-          >
+          <sl-tree-item id="id_tree_LQ" @click="${handleClick_rechteck_dialog}" expanded>
             Linear elastisch Querschnittswerte
             <!-- <sl-tree-item>Birch</sl-tree-item>
 
@@ -276,9 +247,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         </sl-tree>
 
         <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt>
-        <dr-rechteckquerschnitt
-          id="id_dialog_rechteck"
-        ></dr-rechteckquerschnitt>
+        <dr-rechteckquerschnitt id="id_dialog_rechteck"></dr-rechteckquerschnitt>
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
@@ -291,8 +260,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         </p>
         <p>
           Typ = Elementtyp<br />
-          0 = Timoshenko Element mit konstantem Querschnitt, nichts oder 0
-          eingeben<br />
+          0 = Timoshenko Element mit konstantem Querschnitt, nichts oder 0 eingeben<br />
           1 = TODO
         </p>
         <p>
@@ -306,14 +274,8 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         <p>
           Anzahl Elemente:
 
-          <dr-button-pm
-            id="id_button_nelem"
-            nel="${nelem_init}"
-            inputid="nelem"
-          ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <dr-button-pm id="id_button_nelem" nel="${nelem_init}" inputid="nelem"></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
         <dr-tabelle
           id="id_element_tabelle"
@@ -338,14 +300,8 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         </p>
         <p>
           Anzahl Knoten:
-          <dr-button-pm
-            id="id_button_nnodes"
-            nel="${nnodes_init}"
-            inputid="nnodes"
-          ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <dr-button-pm id="id_button_nnodes" nel="${nnodes_init}" inputid="nnodes"></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
         <dr-tabelle
           id="id_knoten_tabelle"
@@ -357,23 +313,15 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         <p><br /><b>Knotenverformungen</b><br /></p>
         <p>zum Beispiel für Stützensenkungen</p>
         <p>
-          Die Richtungen stimmen mit den Richtungen des zugehörigen gedrehten
-          Lagerknotens überein.
+          Die Richtungen stimmen mit den Richtungen des zugehörigen gedrehten Lagerknotens überein.
           <br />
-          Es sind nur die Werte in den Tabellenzellen einzugeben, für die
-          definierte Verformungen gewünscht werden.<br />
+          Es sind nur die Werte in den Tabellenzellen einzugeben, für die definierte Verformungen gewünscht werden.<br />
           Nur Werte ungleich 0 werden berücksichtigt.
         </p>
         <p>
           Anzahl Knoten mit<br />vorgebenenen Verformungen:
-          <dr-button-pm
-            id="id_button_nnodedisps"
-            nel="${nnodedisps_init}"
-            inputid="nnodedisps"
-          ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <dr-button-pm id="id_button_nnodedisps" nel="${nnodedisps_init}" inputid="nnodedisps"></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
         <dr-tabelle
           id="id_nnodedisps_tabelle"
@@ -390,14 +338,8 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         <p>
           Anzahl Knotenlasten:
 
-          <dr-button-pm
-            id="id_button_nnodalloads"
-            nel="${nnodalloads_init}"
-            inputid="nnodalloads"
-          ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <dr-button-pm id="id_button_nnodalloads" nel="${nnodalloads_init}" inputid="nnodalloads"></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
           <br /><br />
         </p>
         <dr-tabelle
@@ -427,9 +369,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             inputid="nelemloads"
             onchange="berechnungErforderlich()"
           ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
         <dr-tabelle
           id="id_streckenlasten_tabelle"
@@ -452,9 +392,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             inputid="nelemloads"
             onchange="berechnungErforderlich()"
           ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
 
         <dr-tabelle
@@ -478,9 +416,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             inputid="nelemloads"
             onchange="berechnungErforderlich()"
           ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
 
         <dr-tabelle
@@ -503,9 +439,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             inputid="nvorspannungen"
             onchange="berechnungErforderlich()"
           ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
 
         <dr-tabelle
@@ -528,9 +462,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             inputid="nspannschloesser"
             onchange="berechnungErforderlich()"
           ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
 
         <dr-tabelle
@@ -548,14 +480,8 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         </p>
         <p>
           Anzahl Lastfälle:
-          <dr-button-pm
-            id="id_button_nlastfaelle"
-            nel="${nlastfaelle_init}"
-            inputid="nlastfaelle"
-          ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <dr-button-pm id="id_button_nlastfaelle" nel="${nlastfaelle_init}" inputid="nlastfaelle"></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
         <dr-tabelle
           id="id_lastfaelle_tabelle"
@@ -568,14 +494,8 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
 
         <p>
           Anzahl Kombinationen:
-          <dr-button-pm
-            id="id_button_nkombinationen"
-            nel="${nkombinationen_init}"
-            inputid="nkombinationen"
-          ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <dr-button-pm id="id_button_nkombinationen" nel="${nkombinationen_init}" inputid="nkombinationen"></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
 
         <dr-tabelle
@@ -592,26 +512,17 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-stabvorverfomungen">
         <p>
-          <b>
-            Folgende Eingaben werden nur bei Berechnungen nach Theorie II.
-            Ordnung berücksichtigt</b
-          >
+          <b> Folgende Eingaben werden nur bei Berechnungen nach Theorie II. Ordnung berücksichtigt</b>
         </p>
         <br />
         <p>
-          <b
-            >- Schiefstellung des gesamten Systems mithilfe der ersten
-            Eigenform</b
-          >
+          <b>- Schiefstellung des gesamten Systems mithilfe der ersten Eigenform</b>
         </p>
-
 
         <table id="schiefstellung_table">
           <tbody>
             <tr>
-              <td
-                title="0 oder leer = automatische Skalierung auf den Größtwert aus der Eigenwertberechnung"
-              >
+              <td title="0 oder leer = automatische Skalierung auf den Größtwert aus der Eigenwertberechnung">
                 Knoten :
               </td>
               <td>
@@ -630,11 +541,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             <tr>
               <td>Richtung :</td>
               <td>
-                <select
-                  name="maxu_dir"
-                  id="id_maxu_dir"
-                  style="min-width: 100%;"
-                >
+                <select name="maxu_dir" id="id_maxu_dir" style="min-width: 100%;">
                   <option value="0">x (u)</option>
                   <option value="1" selected>z (w)</option>
                   <option value="2">&phi;</option>
@@ -659,9 +566,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
               </td>
             </tr>
             <tr>
-              <td
-                title="Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet"
-              >
+              <td title="Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet">
                 Anzahl Eigenwerte :
               </td>
               <td>
@@ -686,25 +591,16 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
           <b>- Eingabe der Stabvorverfomungen</b>
         </p>
         <p>
-          w<sub>0a</sub> = Vorverformung am Stabanfang, senkrecht zur
-          Stabachse<br />
+          w<sub>0a</sub> = Vorverformung am Stabanfang, senkrecht zur Stabachse<br />
           w<sub>0e</sub> = Vorverformung am Stabende, senkrecht zur Stabachse<br />
-          w<sub>0m</sub> = Stich in Stabmitte, w<sub>0m,gesamt</sub> =w<sub
-            >0m</sub
-          >
+          w<sub>0m</sub> = Stich in Stabmitte, w<sub>0m,gesamt</sub> =w<sub>0m</sub>
           +(w<sub>0a</sub>+w<sub>0e</sub>)/2
         </p>
 
         <p>
           Anzahl Stabvorverformungen:
-          <dr-button-pm
-            id="id_button_nstabvorverformungen"
-            nel="${nstabvorverfomungen_init}"
-            inputid="nstabvorverformungen"
-          ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}"
-            >Resize Tabelle</sl-button
-          >
+          <dr-button-pm id="id_button_nstabvorverformungen" nel="${nstabvorverfomungen_init}" inputid="nstabvorverformungen"></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
         <dr-tabelle
           id="id_stabvorverfomungen_tabelle"
@@ -729,21 +625,13 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             <tr>
               <td id="id_nteilungen">Teilungen Ausgabe:</td>
               <td>
-                <dr-button-pm
-                  id="id_button_nteilungen"
-                  nel="10"
-                  inputid="nteilungen"
-                ></dr-button-pm>
+                <dr-button-pm id="id_button_nteilungen" nel="10" inputid="nteilungen"></dr-button-pm>
               </td>
             </tr>
             <tr>
               <td id="id_niter">Anzahl Iterationen:</td>
               <td>
-                <dr-button-pm
-                  id="id_button_niter"
-                  nel="5"
-                  inputid="niter"
-                ></dr-button-pm>
+                <dr-button-pm id="id_button_niter" nel="5" inputid="niter"></dr-button-pm>
               </td>
             </tr>
           </tbody>
@@ -794,10 +682,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-info">
         <div id="id_hilfe" class="c_hilfe">
-          <div
-            id="id_doc_frame"
-            style="position: relative; width: 760px; left:50%;"
-          >
+          <div id="id_doc_frame" style="position: relative; width: 760px; left:50%;">
             <iframe
               id="id_doc"
               src="src/info/Kurzdokumentation_deutsch.html"
@@ -820,11 +705,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
               <tr>
                 <td id="lab_font_size">Schriftgröße:</td>
                 <td>
-                  <select
-                    name="fontSize"
-                    id="id_fontsize"
-                    style="width: 150px;"
-                  >
+                  <select name="fontSize" id="id_fontsize" style="width: 150px;">
                     <option value="0.5em">8</option>
                     <option value="0.5625em">9</option>
                     <option value="0.625em">10</option>
@@ -917,18 +798,10 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
   const el_select_eigenvalue = document.getElementById("id_select_eigenvalue");
   el_select_eigenvalue?.addEventListener("change", select_eigenvalue_changed);
 
-  document
-    ?.getElementById("id_button_copy_svg")
-    ?.addEventListener("click", copy_svg, false);
+  document?.getElementById("id_button_copy_svg")?.addEventListener("click", copy_svg, false);
 
-  console.log(
-    "id_button_copy_svg",
-    getComputedStyle(document?.getElementById("id_button_copy_svg")!).height
-  );
-  console.log(
-    "rechnen",
-    getComputedStyle(document?.getElementById("rechnen")!).width
-  );
+  console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
+  console.log("rechnen", getComputedStyle(document?.getElementById("rechnen")!).width);
 
   let ELEMENT = document?.querySelector(".output_container");
   console.log("ELEMENT", ELEMENT);
@@ -960,20 +833,13 @@ function handleClick_rechteck() {
 
   const el = document.getElementById("id_dialog_rechteck");
   console.log("id_dialog_rechteck", el);
-  console.log(
-    "QUERY Dialog",
-    el?.shadowRoot?.getElementById("dialog_rechteck")
-  );
+  console.log("QUERY Dialog", el?.shadowRoot?.getElementById("dialog_rechteck"));
 
-  (el?.shadowRoot?.getElementById(
-    "dialog_rechteck"
-  ) as HTMLDialogElement).addEventListener("close", dialog_closed);
+  (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).addEventListener("close", dialog_closed);
 
   dialog_querschnitt_new = true;
 
-  (el?.shadowRoot?.getElementById(
-    "dialog_rechteck"
-  ) as HTMLDialogElement).showModal();
+  (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).showModal();
   //(shadow.getElementById('dialog') as HTMLDialogElement).showModal();
   //}
   /*
@@ -1044,9 +910,7 @@ function dialog_closed(e: any) {
   // @ts-ignore
   const returnValue = this.returnValue;
 
-  (el?.shadowRoot?.getElementById(
-    "dialog_rechteck"
-  ) as HTMLDialogElement).removeEventListener("close", dialog_closed);
+  (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).removeEventListener("close", dialog_closed);
 
   if (returnValue === "ok") {
     let id: string;
@@ -1090,21 +954,7 @@ function dialog_closed(e: any) {
       if (dialog_querschnitt_new) {
         incr_querschnittSets();
 
-        set_querschnittRechteck(
-          qname,
-          id,
-          emodul,
-          Iy,
-          area,
-          height,
-          width,
-          defquerschnitt,
-          wichte,
-          schubfaktor,
-          querdehnzahl,
-          zso,
-          alphaT
-        );
+        set_querschnittRechteck(qname, id, emodul, Iy, area, height, width, defquerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT);
       } else {
         update_querschnittRechteck(
           dialog_querschnitt_index,
@@ -1124,15 +974,8 @@ function dialog_closed(e: any) {
         );
 
         //console.log("UPDATE", this)
-        const el = document.getElementById(
-          dialog_querschnitt_item_id
-        ) as HTMLElement;
-        console.log(
-          "dialog_querschnitt_item_id",
-          dialog_querschnitt_index,
-          qname,
-          el.innerHTML
-        );
+        const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
+        console.log("dialog_querschnitt_item_id", dialog_querschnitt_index, qname, el.innerHTML);
         if (el.innerHTML !== qname) {
           el.innerHTML = qname;
           const ele = document.getElementById("id_element_tabelle");
@@ -1143,9 +986,7 @@ function dialog_closed(e: any) {
     }
 
     if (dialog_querschnitt_new) {
-      const qName = (el?.shadowRoot?.getElementById(
-        "qname"
-      ) as HTMLInputElement).value;
+      const qName = (el?.shadowRoot?.getElementById("qname") as HTMLInputElement).value;
       console.log("NAME", qName);
       const tag = document.createElement("sl-tree-item");
       const text = document.createTextNode(qName);
@@ -1203,9 +1044,7 @@ export function opendialog(ev: any) {
 
     if (id0 !== id) console.log("BIG Problem in opendialog");
 
-    const el = document.getElementById(
-      "id_dialog_rechteck"
-    ) as HTMLDialogElement;
+    const el = document.getElementById("id_dialog_rechteck") as HTMLDialogElement;
 
     let elem = el?.shadowRoot?.getElementById("emodul") as HTMLInputElement;
     console.log("set emodul=", elem.value, emodul);
@@ -1220,9 +1059,7 @@ export function opendialog(ev: any) {
     elem.value = String(height);
     elem = el?.shadowRoot?.getElementById("width") as HTMLInputElement;
     elem.value = String(width);
-    elem = el?.shadowRoot?.getElementById(
-      "id_defquerschnitt"
-    ) as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("id_defquerschnitt") as HTMLInputElement;
     elem.value = String(definedQuerschnitt);
     elem = el?.shadowRoot?.getElementById("wichte") as HTMLInputElement;
     elem.value = String(wichte);
@@ -1239,9 +1076,7 @@ export function opendialog(ev: any) {
   //const el=document.getElementById(id);
   const el = document.getElementById("id_dialog_rechteck");
 
-  (el?.shadowRoot?.getElementById(
-    "dialog_rechteck"
-  ) as HTMLDialogElement).addEventListener("close", dialog_closed);
+  (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).addEventListener("close", dialog_closed);
 
   dialog_querschnitt_new = false;
   dialog_querschnitt_index = index;
@@ -1249,9 +1084,7 @@ export function opendialog(ev: any) {
 
   //console.log('id_dialog', el);
   //console.log('QUERY Dialog', el?.shadowRoot?.getElementById('dialog'));
-  (el?.shadowRoot?.getElementById(
-    "dialog_rechteck"
-  ) as HTMLDialogElement).showModal();
+  (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).showModal();
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1259,9 +1092,7 @@ export function resizeTables() {
   //---------------------------------------------------------------------------------------------------------------
   {
     const el_knoten = document.getElementById("id_button_nnodes");
-    const nnodes = (el_knoten?.shadowRoot?.getElementById(
-      "nnodes"
-    ) as HTMLInputElement).value;
+    const nnodes = (el_knoten?.shadowRoot?.getElementById("nnodes") as HTMLInputElement).value;
 
     const el = document.getElementById("id_knoten_tabelle");
     //console.log("EL: >>", el);
@@ -1269,9 +1100,7 @@ export function resizeTables() {
   }
   {
     const el_knoten = document.getElementById("id_button_nnodedisps");
-    const nnodes = (el_knoten?.shadowRoot?.getElementById(
-      "nnodedisps"
-    ) as HTMLInputElement).value;
+    const nnodes = (el_knoten?.shadowRoot?.getElementById("nnodedisps") as HTMLInputElement).value;
 
     const el = document.getElementById("id_nnodedisps_tabelle");
     //console.log("EL: >>", el);
@@ -1279,9 +1108,7 @@ export function resizeTables() {
   }
   {
     const el_elemente = document.getElementById("id_button_nelem");
-    const nelem = (el_elemente?.shadowRoot?.getElementById(
-      "nelem"
-    ) as HTMLInputElement).value;
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nelem") as HTMLInputElement).value;
 
     const el = document.getElementById("id_element_tabelle");
     //console.log("EL: >>", el);
@@ -1290,9 +1117,7 @@ export function resizeTables() {
 
   {
     const el_elemente = document.getElementById("id_button_nnodalloads");
-    const nelem = (el_elemente?.shadowRoot?.getElementById(
-      "nnodalloads"
-    ) as HTMLInputElement).value;
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nnodalloads") as HTMLInputElement).value;
 
     const el = document.getElementById("id_knotenlasten_tabelle");
     //console.log("EL: >>", el);
@@ -1301,9 +1126,7 @@ export function resizeTables() {
 
   {
     const el_elemente = document.getElementById("id_button_nstreckenlasten");
-    const nelem = (el_elemente?.shadowRoot?.getElementById(
-      "nelemloads"
-    ) as HTMLInputElement).value;
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nelemloads") as HTMLInputElement).value;
 
     const el = document.getElementById("id_streckenlasten_tabelle");
     //console.log("EL: >>", el);
@@ -1312,9 +1135,7 @@ export function resizeTables() {
 
   {
     const el_elemente = document.getElementById("id_button_neinzellasten");
-    const nelem = (el_elemente?.shadowRoot?.getElementById(
-      "nelemloads"
-    ) as HTMLInputElement).value;
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nelemloads") as HTMLInputElement).value;
 
     const el = document.getElementById("id_einzellasten_tabelle");
     //console.log("EL: >>", el);
@@ -1323,9 +1144,7 @@ export function resizeTables() {
 
   {
     const el_elemente = document.getElementById("id_button_ntemperaturlasten");
-    const nelem = (el_elemente?.shadowRoot?.getElementById(
-      "nelemloads"
-    ) as HTMLInputElement).value;
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nelemloads") as HTMLInputElement).value;
 
     const el = document.getElementById("id_temperaturlasten_tabelle");
     //console.log("EL: >>", el);
@@ -1333,12 +1152,8 @@ export function resizeTables() {
   }
 
   {
-    const el_elemente = document.getElementById(
-      "id_button_nstabvorverformungen"
-    );
-    const nelem = (el_elemente?.shadowRoot?.getElementById(
-      "nstabvorverformungen"
-    ) as HTMLInputElement).value;
+    const el_elemente = document.getElementById("id_button_nstabvorverformungen");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nstabvorverformungen") as HTMLInputElement).value;
 
     const el = document.getElementById("id_stabvorverfomungen_tabelle");
     //console.log("EL: >>", el);
@@ -1347,9 +1162,7 @@ export function resizeTables() {
 
   {
     const el_elemente = document.getElementById("id_button_nvorspannungen");
-    const nelem = (el_elemente?.shadowRoot?.getElementById(
-      "nvorspannungen"
-    ) as HTMLInputElement).value;
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nvorspannungen") as HTMLInputElement).value;
 
     const el = document.getElementById("id_vorspannungen_tabelle");
     //console.log("EL: >>", el);
@@ -1358,9 +1171,7 @@ export function resizeTables() {
 
   {
     const el_elemente = document.getElementById("id_button_nspannschloesser");
-    const nelem = (el_elemente?.shadowRoot?.getElementById(
-      "nspannschloesser"
-    ) as HTMLInputElement).value;
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nspannschloesser") as HTMLInputElement).value;
 
     const el = document.getElementById("id_spannschloesser_tabelle");
     //console.log("EL: >>", el);
@@ -1369,9 +1180,7 @@ export function resizeTables() {
 
   {
     const el_elemente = document.getElementById("id_button_nlastfaelle");
-    const nelem = (el_elemente?.shadowRoot?.getElementById(
-      "nlastfaelle"
-    ) as HTMLInputElement).value;
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nlastfaelle") as HTMLInputElement).value;
 
     const el = document.getElementById("id_lastfaelle_tabelle");
     //console.log("EL: >>", el);
@@ -1380,18 +1189,14 @@ export function resizeTables() {
 
   {
     let el_elemente = document.getElementById("id_button_nkombinationen");
-    let nelem = (el_elemente?.shadowRoot?.getElementById(
-      "nkombinationen"
-    ) as HTMLInputElement).value;
+    let nelem = (el_elemente?.shadowRoot?.getElementById("nkombinationen") as HTMLInputElement).value;
 
     let el = document.getElementById("id_kombinationen_tabelle");
     //console.log("EL nzeilen: >>", nelem);
     el?.setAttribute("nzeilen", nelem);
     //---------------------------------------
     el_elemente = document.getElementById("id_button_nlastfaelle");
-    nelem = (el_elemente?.shadowRoot?.getElementById(
-      "nlastfaelle"
-    ) as HTMLInputElement).value;
+    nelem = (el_elemente?.shadowRoot?.getElementById("nlastfaelle") as HTMLInputElement).value;
 
     el = document.getElementById("id_kombinationen_tabelle");
     //console.log("EL nspalten: >>", nelem);
@@ -1454,18 +1259,11 @@ function handleClick_neue_eingabe() {
 
   const el = document.getElementById("id_dialog_neue_eingabe");
   console.log("id_dialog_neue_eingabe", el);
-  console.log(
-    "QUERY Dialog",
-    el?.shadowRoot?.getElementById("dialog_neue_eingabe")
-  );
+  console.log("QUERY Dialog", el?.shadowRoot?.getElementById("dialog_neue_eingabe"));
 
-  (el?.shadowRoot?.getElementById(
-    "dialog_neue_eingabe"
-  ) as HTMLDialogElement).addEventListener("close", dialog_neue_eingabe_closed);
+  (el?.shadowRoot?.getElementById("dialog_neue_eingabe") as HTMLDialogElement).addEventListener("close", dialog_neue_eingabe_closed);
 
-  (el?.shadowRoot?.getElementById(
-    "dialog_neue_eingabe"
-  ) as HTMLDialogElement).showModal();
+  (el?.shadowRoot?.getElementById("dialog_neue_eingabe") as HTMLDialogElement).showModal();
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1473,16 +1271,12 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
   //------------------------------------------------------------------------------------------------------------
   console.log("Event dialog closed", e);
   console.log("this", this);
-  const el = document.getElementById(
-    "id_dialog_neue_eingabe"
-  ) as HTMLDialogElement;
+  const el = document.getElementById("id_dialog_neue_eingabe") as HTMLDialogElement;
 
   // ts-ignore
   const returnValue = this.returnValue;
 
-  (el?.shadowRoot?.getElementById(
-    "dialog_neue_eingabe"
-  ) as HTMLDialogElement).removeEventListener("close", dialog_closed);
+  (el?.shadowRoot?.getElementById("dialog_neue_eingabe") as HTMLDialogElement).removeEventListener("close", dialog_closed);
 
   if (returnValue === "ok") {
     console.log("Dialog neue Eingabe mit ok geschlossen");
@@ -1508,9 +1302,7 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     el.setValue(1);
     el = document.getElementById("id_button_nkombinationen") as drButtonPM;
     el.setValue(0);
-    el = document.getElementById(
-      "id_button_nstabvorverformungen"
-    ) as drButtonPM;
+    el = document.getElementById("id_button_nstabvorverformungen") as drButtonPM;
     el.setValue(0);
 
     resizeTables();
