@@ -2471,12 +2471,12 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         newDiv?.appendChild(tag);
 
 
-        for (i = 0; i < nelem; i++) {
+        for (let ielem = 0; ielem < nelem; ielem++) {
 
             tag = document.createElement("p"); // <p></p>
             text = document.createTextNode("xxx");
             tag.appendChild(text);
-            tag.innerHTML = "<b>Element " + (+i+1) +"</b>"
+            tag.innerHTML = "<b>Element " + (+ielem + 1) + "</b>"
 
             newDiv?.appendChild(tag);
 
@@ -2519,23 +2519,62 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
             // @ts-ignore
             const th4 = table.tHead.appendChild(document.createElement("th"));
-            th4.innerHTML = "u<sub>x</sub> &nbsp;[mm]";
+            th4.innerHTML = "u<sub>xL</sub> &nbsp;[mm]";
             th4.title = "lokale Verschiebung in Stabrichtung, positiv in lokaler x-Richtung"
             th4.setAttribute("class", "table_cell_center");
             row.appendChild(th4);
             // @ts-ignore
             const th5 = table.tHead.appendChild(document.createElement("th"));
-            th5.innerHTML = "w<sub>z</sub>&nbsp;[mm]";
+            th5.innerHTML = "w<sub>zL</sub>&nbsp;[mm]";
             th5.title = "lokale Verschiebung in senkrecht zur Stabrichtung, positiv in lokaler z-Richtung"
             th5.setAttribute("class", "table_cell_center");
             row.appendChild(th5);
             // @ts-ignore
             const th6 = table.tHead.appendChild(document.createElement("th"));
-            th6.innerHTML = "&phi; &nbsp;[mrad]";
-            th6.title = "Rotation der Querschnittsebene, positiv im Uhrzeigersinn"
+            th6.innerHTML = "&beta; &nbsp;[mrad]";
+            th6.title = "Rotation der Querschnittsebene, positiv im Uhrzeigersinn, bei schubstarr: ß = w'"
             th6.setAttribute("class", "table_cell_center");
             row.appendChild(th6);
 
+            const nelTeilungen = el[ielem].nTeilungen
+            let sg_M: number[] = new Array(nelTeilungen)
+            let sg_V: number[] = new Array(nelTeilungen)
+            let sg_N: number[] = new Array(nelTeilungen)
+
+            let uL: number[] = new Array(nelTeilungen)   // L = Verformung lokal
+            let wL: number[] = new Array(nelTeilungen)
+            let phiL: number[] = new Array(nelTeilungen)
+
+            const lf_index = iLastfall - 1
+            el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
+            el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index);
+            el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index);
+            el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index);
+
+            for (i = 0; i < nelTeilungen; i++) {
+
+                let newRow = table.insertRow(-1);
+                let newCell, newText
+                newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+                newText = document.createTextNode(myFormat(el[ielem].x_[i], 2, 2));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_center");
+
+
+                for (j = 1; j <= 6; j++) {
+                    newCell = newRow.insertCell(j);
+                    if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
+                    else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i], 2, 2));
+                    else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i], 2, 2));
+                    else if (j === 4) newText = document.createTextNode(myFormat(uL[i], 3, 3));
+                    else if (j === 5) newText = document.createTextNode(myFormat(wL[i], 3, 3));
+                    else if (j === 6) newText = document.createTextNode(myFormat(phiL[i], 3, 3));
+                    newCell.appendChild(newText);
+                    newCell.setAttribute("class", "table_cell_right");
+                }
+
+            }
         }
 
     }
