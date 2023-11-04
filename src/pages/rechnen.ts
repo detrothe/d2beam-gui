@@ -2567,9 +2567,9 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                     if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
                     else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i], 2, 2));
                     else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i], 2, 2));
-                    else if (j === 4) newText = document.createTextNode(myFormat(uL[i], 3, 3));
-                    else if (j === 5) newText = document.createTextNode(myFormat(wL[i], 3, 3));
-                    else if (j === 6) newText = document.createTextNode(myFormat(phiL[i], 3, 3));
+                    else if (j === 4) newText = document.createTextNode(myFormat(uL[i] * 1000., 3, 3));
+                    else if (j === 5) newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
+                    else if (j === 6) newText = document.createTextNode(myFormat(phiL[i] * 1000., 3, 3));
                     newCell.appendChild(newText);
                     newCell.setAttribute("class", "table_cell_right");
                 }

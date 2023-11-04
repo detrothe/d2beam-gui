@@ -51,7 +51,7 @@ export function set_info() {
     let left = (clientWidth - breite) / 2
     if (left < 0) left = 0;
     (document.getElementById("id_doc_frame") as HTMLDivElement).style.left = left + 'px';
-    console.log("id_doc_frame", (clientWidth - breite) / 2)
+    //console.log("id_doc_frame", (clientWidth - breite) / 2)
 }
 
 
@@ -61,7 +61,7 @@ export function write(str: string, wert?: number) {
 
     const out = document.getElementById('output') as HTMLTextAreaElement;
     if (out) {
-        if ( wert) out.value += str + wert + "\n";
+        if (wert) out.value += str + wert + "\n";
         else out.value += str + "\n";
 
         out.scrollTop = out.scrollHeight; // focus on bottom

@@ -943,10 +943,11 @@ export function drawsystem() {
         }
 
         scalefactor *= scaleFactor_panel
+        console.log("SCALEFACTOR",1./scalefactor)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if (scalefactor === Infinity) break;
+            if (scalefactor === Infinity || scalefactor > 1.e14 ) break;
 
             const nelTeilungen = element[ielem].nTeilungen
             let sg: number[] = new Array(nelTeilungen)
@@ -1095,14 +1096,14 @@ export function drawsystem() {
 
                 console.log("show_labels", foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
                 let zp: number
-                if (foundPos && Math.abs(maxValuePos) > 0.00001) {
+                if (foundPos && (Math.abs(maxValuePos) > 0.00001) && (maxValuePos > valueRightPos)) {
                     const str = myFormat(Math.abs(maxValuePos), 1, 2) + unit
                     if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                     const txt = two.makeText(str, x_max, z_max + zp, style_txt)
                     txt.alignment = 'left'
                     txt.baseline = 'top'
                 }
-                if (foundNeg && Math.abs(maxValueNeg) > 0.00001) {
+                if (foundNeg && (Math.abs(maxValueNeg) > 0.00001) && (maxValueNeg < valueRightNeg)) {
                     const str = myFormat(Math.abs(maxValueNeg), 1, 2) + unit
                     if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                     const txt = two.makeText(str, x_min, z_min + zp, style_txt)
@@ -1743,7 +1744,7 @@ function draw_elementlasten(two: Two) {
                     pMax = Math.max(0.0, pL, pR)
                     pMin = Math.min(0.0, pL, pR)
 
-                    a += Math.abs(pMin )   //* co
+                    a += Math.abs(pMin)   //* co
 
                     x[0] = x1 + si * a; z[0] = z1 - a * co;    // /
                     x[1] = x2 + si * a; z[1] = z2 - a * co;

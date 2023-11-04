@@ -813,7 +813,7 @@ export class CTimoshenko_beam extends CElement {
             const VR_P = -VL_P - P
 
             const ML_P = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / alf
-            const MR_P = VL_P * sl + P * x - ML_P
+            const MR_P = VR_P * sl + P * x - ML_P
 
             console.log("EINZELLAST", VL_P, VR_P, ML_P, MR_P)
 
@@ -1340,7 +1340,7 @@ export class CTimoshenko_beam extends CElement {
                                 if ((x > xP) || (xxx < 0.000000000001 && xxxx < 0.000000000001)) {
 
                                     Vx = Vx - P
-                                    Mx = Mx - M + P * (xP - x)
+                                    Mx = Mx - M - P * (x - xP)
                                     edisp[1] = eload[ieload].CwP + eload[ieload].CwM; edisp[2] = eload[ieload].CphiP + eload[ieload].CphiM;
 
                                     const xx = x - xP;
@@ -1552,6 +1552,67 @@ export class CTimoshenko_beam extends CElement {
                                 phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
 
                                 Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
+                            }
+                            else if (eload[ieload].art === 6) {         // Einzellast oder Moment
+
+                                const xP = eload[ieload].x
+                                const P = eload[ieload].P
+                                const M = eload[ieload].M
+                                let edisp = Array(6).fill(0.0);
+                                let wl = 0.0
+
+                                if (iteil > 0) {
+                                    let xxx = Math.abs(x - this.x_[iteil - 1])
+                                    let xxxx = Math.abs(x - eload[ieload].x)
+                                    //If (x > eload(ieload).xP) Or (x = x_(j - 1) And x = eload(ieload).xP) Then
+                                    if ((x > xP) || (xxx < 0.000000000001 && xxxx < 0.000000000001)) {
+
+                                        Vx = Vx - P
+                                        Mx = Mx - M - P * (x - xP)
+                                        edisp[1] = eload[ieload].CwP + eload[ieload].CwM; edisp[2] = eload[ieload].CphiP + eload[ieload].CphiM;
+
+                                        const xx = x - xP;
+                                        const xx2 = xx * xx
+                                        const sl = this.sl - xP
+                                        const nenner = sl ** 3 + 12. * eta * sl
+                                        Nw[0] = (2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx + sl ** 3 + 12. * eta * sl) / nenner;
+                                        Nw[1] = -((sl * xx ** 3 + (-2. * sl ** 2 - 6. * eta) * xx ** 2 + (sl ** 3 + 6. * eta * sl) * xx) / nenner);
+                                        Nw[2] = -((2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx) / nenner);
+                                        Nw[3] = -((sl * xx ** 3 + (6. * eta - sl ** 2) * xx ** 2 - 6. * eta * sl * xx) / nenner);
+                                        wx += wl = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                                        Nphi[0] = 6.0 * (sl * xx - xx2) / nenner
+                                        Nphi[1] = (3 * sl * xx2 + (-12 * eta - 4 * sl ** 2) * xx + 12 * sl * eta + sl ** 3) / nenner
+                                        Nphi[2] = -6.0 * (sl * xx - xx2) / nenner
+                                        Nphi[3] = (3 * sl * xx2 + (12 * eta - 2 * sl ** 2) * xx) / nenner
+                                        phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
+
+                                        //console.log("Nw,edisp", wx, edisp, Nw)
+                                    } else {
+                                        edisp[4] = eload[ieload].CwP + eload[ieload].CwM; edisp[5] = eload[ieload].CphiP + eload[ieload].CphiM;
+                                        const sl = xP
+                                        const sl2 = sl * sl
+                                        const nenner = sl ** 3 + 12. * eta * sl
+                                        Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+                                        Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+                                        Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+                                        Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+                                        wx += wl = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                                        //console.log("Nw,edisp", wx, edisp, Nw)
+                                        Nphi[0] = 6.0 * (sl * x - x2) / nenner
+                                        Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl2 * sl) / nenner
+                                        Nphi[2] = -6.0 * (sl * x - x2) / nenner
+                                        Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
+                                        phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
+
+                                    }
+                                    Mx = Mx - this.NL * wl
+                                }
+                                else {
+                                    if (Math.abs(x - xP) < 0.000000000001) {
+                                        Vx = Vx - P
+                                        Mx = Mx - M
+                                    }
+                                }
                             }
                             // else if (eload[ieload].art === 8) {         // Knotenverformung
                             //     let edisp0 = Array(6)

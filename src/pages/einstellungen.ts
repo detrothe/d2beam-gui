@@ -1,8 +1,8 @@
 //import { set_myScreen, app } from "./index.js";
-console.log("enter einstellungen")
+//console.log("enter einstellungen")
 import { testeZahl } from "./utility.js";
 
-console.log("vor getElementId")
+//console.log("vor getElementId")
 //document.getElementById("unitLength")?.addEventListener('change', einstellungen);
 //document.getElementById("id_body_width")?.addEventListener('change', set_body_width);
 
@@ -15,7 +15,7 @@ export let color_table_out = '#CFD915'
 export let color_table_in = '#b3ae00'
 
 let old_unit_length = 'cm'
-console.log("vor readLocalStorage")
+//console.log("vor readLocalStorage")
 
 //readLocalStorage();
 
