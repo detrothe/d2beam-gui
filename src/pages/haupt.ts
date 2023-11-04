@@ -560,7 +560,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
                   name="maxu_schief"
                   class="input_tab"
                   pattern="[0-9.,eE+-]*"
-                  value="20"
+                  value=""
                   onchange="berechnungErforderlich()"
                 />
               </td>
