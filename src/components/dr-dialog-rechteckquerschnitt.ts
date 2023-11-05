@@ -7,6 +7,8 @@ import "@shoelace-style/shoelace/dist/components/radio-group/radio-group.js";
 import "@shoelace-style/shoelace/dist/components/radio/radio.js";
 import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 
+import {check_if_name_exists} from "../pages/rechnen"
+
 // Profilename, E-Modul, A, Iy, Iz, Wichte, h, b, kappa_Vz, kappa_Vy
 
 const PROFIL = Array(
@@ -377,6 +379,11 @@ export class drRechteckQuerSchnitt extends LitElement {
       //   'email: ',
       //   (shadow.getElementById('email') as HTMLInputElement).value
       //);
+      let qname = (shadow.getElementById("qname") as HTMLInputElement).value;
+      if (check_if_name_exists(qname)) {
+        window.alert("Name für Querschnitt schon vergeben");
+        return;
+      }
 
       (shadow.getElementById("dialog_rechteck") as HTMLDialogElement).close("ok");
     }
@@ -451,6 +458,12 @@ export class drRechteckQuerSchnitt extends LitElement {
       console.log("achse", achse);
 
       if (uebernehmen) {
+        console.log("uebernehmen",check_if_name_exists(wahl))
+        if (check_if_name_exists(wahl)) {
+          window.alert("Name für Querschnitt schon vergeben");
+          return;
+        }
+
         (shadow?.getElementById("qname") as HTMLInputElement).value = wahl;
       }
 

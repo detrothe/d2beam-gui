@@ -993,6 +993,10 @@ function dialog_closed(e: any) {
       const text = document.createTextNode(qName);
       tag.appendChild(text);
       tag.addEventListener("click", opendialog);
+      tag.addEventListener('contextmenu', function(e) {
+        alert("You've tried to open context menu"); //here you draw your own menu
+        e.preventDefault();
+      }, false);
 
       tag.id = id;
       const element = document.getElementById("id_tree_LQ");

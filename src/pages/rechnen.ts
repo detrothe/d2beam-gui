@@ -2,7 +2,7 @@ declare let Module: any;
 import { app, nlastfaelle_init, opendialog } from "./haupt"
 import { TFVector, TFArray2D, TFArray3D, TFArray3D_0 } from "./TFArray"
 
-import {berechnungErfolgreich} from './globals'
+import { berechnungErfolgreich } from './globals'
 
 import { testNumber, myFormat, write } from './utility'
 //import {Module} from '../../d2beam_wasm.js'
@@ -272,8 +272,19 @@ class TMaxU0 {
 
 //---------------------------------------------------------------------------------------------------------------
 export function add_neq() {
-    //---------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------
     neq++;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function check_if_name_exists(name: string) {
+    //-----------------------------------------------------------------------------------------------------------
+    for (let i = 0; i < nQuerschnittSets; i++) {
+        console.log("check_if_name_exists", i, name, querschnittset[i].name)
+        if (name === querschnittset[i].name) return true;
+    }
+    console.log("exit check_if_name_exists")
+    return false;
 }
 
 //---------------------------------------------------------------------------------------------------------------
