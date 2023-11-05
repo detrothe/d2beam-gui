@@ -25,6 +25,7 @@ import "../components/dr-dialog-rechteckquerschnitt";
 import "../components/dr-dialog_neue_eingabe";
 
 import { drButtonPM } from "../components/dr-button-pm";
+import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt"
 
 //import { testclass } from './element';
 
@@ -832,27 +833,19 @@ function handleClick_rechteck() {
   //---------------------------------------------------------------------------------------------------------------
   console.log("handleClick_rechteck()");
 
-  const el = document.getElementById("id_dialog_rechteck");
-  console.log("id_dialog_rechteck", el);
-  console.log("QUERY Dialog", el?.shadowRoot?.getElementById("dialog_rechteck"));
+  const el = document.getElementById("id_dialog_rechteck")as drRechteckQuerSchnitt;
+
+  el.init_name_changed(true);
+
+  // console.log("id_dialog_rechteck", el);
+  // console.log("QUERY Dialog", el?.shadowRoot?.getElementById("dialog_rechteck"));
 
   (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).addEventListener("close", dialog_closed);
 
   dialog_querschnitt_new = true;
 
   (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).showModal();
-  //(shadow.getElementById('dialog') as HTMLDialogElement).showModal();
-  //}
-  /*
- console.log('NAME', el?.shadowRoot?.getElementById('qname'));
- var tag = document.createElement('sl-tree-item');
- var text = document.createTextNode(
-    'Tutorix is the best e-learning platform'
- );
- tag.appendChild(text);
- var element = document.getElementById('id_tree_LQ');
- element?.appendChild(tag);
- */
+
 }
 /*
 //---------------------------------------------------------------------------------------------------------------
@@ -993,7 +986,7 @@ function dialog_closed(e: any) {
       const text = document.createTextNode(qName);
       tag.appendChild(text);
       tag.addEventListener("click", opendialog);
-      tag.addEventListener('contextmenu', function(e) {
+      tag.addEventListener('contextmenu', function (e) {
         alert("You've tried to open context menu"); //here you draw your own menu
         e.preventDefault();
       }, false);
@@ -1079,7 +1072,9 @@ export function opendialog(ev: any) {
   }
 
   //const el=document.getElementById(id);
-  const el = document.getElementById("id_dialog_rechteck");
+  const el = document.getElementById("id_dialog_rechteck") as drRechteckQuerSchnitt;
+
+  el.init_name_changed(false);
 
   (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).addEventListener("close", dialog_closed);
 
@@ -1087,8 +1082,6 @@ export function opendialog(ev: any) {
   dialog_querschnitt_index = index;
   dialog_querschnitt_item_id = id;
 
-  //console.log('id_dialog', el);
-  //console.log('QUERY Dialog', el?.shadowRoot?.getElementById('dialog'));
   (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).showModal();
 }
 
@@ -1316,8 +1309,8 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     berechnungErforderlich(true);
 
 
-  let element = document.getElementById("id_quer"); // id_eingabe
-  element?.click();
+    let element = document.getElementById("id_quer"); // id_eingabe
+    element?.click();
 
   }
 }
