@@ -5,14 +5,16 @@ let txt_berechnung = "Neue Berechnung erforderlich"
 
 export function berechnungErfolgreich(wert:any) {
     berechnung_erfolgreich = wert;
-    document.getElementById("resize")?.setAttribute('disabled', 'true')
-    //document.getElementById("rechnen").style.color = "#000000"
+    //document.getElementById("resize")?.setAttribute('disabled', 'true')
+//    document.getElementById("rechnen")!.style.color = "#000000"
+    document.getElementById("rechnen")!.setAttribute("variant","default")
 }
-export function berechnungErforderlich(wert = true) {
-    berechnung_erforderlich = wert;
-    document.getElementById("resize")?.setAttribute('disabled', 'true')
-    //document.getElementById("rechnen").style.color = "#dd0000"
-    //document.getElementById("rechnen").disabled = false
+export function berechnungErforderlich(ev:any) {
+    console.log("in berechnungErforderlich",ev)
+    berechnung_erforderlich = true;
+    //document.getElementById("resize")?.setAttribute('disabled', 'true')
+    document.getElementById("rechnen")!.setAttribute("variant","primary")   //style.color = "#dd0000"
+    //document.getElementById("rechnen")!.disabled = false
     //document.getElementById("info_berechnung").innerText = txt_berechnung
 }
 

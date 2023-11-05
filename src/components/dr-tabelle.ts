@@ -526,10 +526,10 @@ class DrTabelle extends HTMLElement {
       //------------------------------------------------------------------------------------------------------------
       let id_table = 'idtable';
 
-      console.info('in resize', idTable);
+      //console.info('in resize', idTable);
 
       const table = this.shadow.getElementById(idTable) as HTMLTableElement;
-      console.log('spalten', table);
+      //console.log('spalten', table);
       let nZeilen = table.rows.length - 1; // header abziehen
       let nSpalten = table.rows[0].cells.length - 1;
 
@@ -537,7 +537,7 @@ class DrTabelle extends HTMLElement {
       //tableInfo[tableIndex].nZeilen = nRowNew;
       //tableInfo[tableIndex].nSpalten = nColNew + 1;
 
-      console.log('nRowNew', nRowNew, nColNew, nZeilen, nSpalten);
+      //console.log('nRowNew', nRowNew, nColNew, nZeilen, nSpalten);
 
       if (nSpalten > nColNew) {
          for (let i = 1; i <= nSpalten - nColNew; i++) {
@@ -580,7 +580,7 @@ class DrTabelle extends HTMLElement {
                      newCell.appendChild(newText);
                   } else {
                      if (iZeile === 0) {
-                        console.log("THEAD", table.rows.item(0)?.childElementCount)
+                        // console.log("THEAD", table.rows.item(0)?.childElementCount)
                         /*
                                                 const th0 = table.tHead?.appendChild(document.createElement('th')) as any;
                                                 th0.innerHTML = "Test";
@@ -668,7 +668,7 @@ class DrTabelle extends HTMLElement {
                   if (this.typs[iSpalte] === 'select') {
                      el = document.createElement('select');
                      el.style.width = '100%';   // 100px
-                     console.log('CREATED SELECT');
+                     //console.log('CREATED SELECT');
                      for (let i = 0; i < nQuerschnittSets; i++) {
                         let option = document.createElement('option');
 

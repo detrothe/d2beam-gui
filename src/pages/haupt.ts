@@ -13,6 +13,7 @@ import "@shoelace-style/shoelace/dist/components/radio-button/radio-button.js";
 
 //import { styles } from '../styles/shared-styles';
 import "./globals";
+import { berechnungErforderlich } from "./globals";
 
 import { add_listeners_einstellungen, readLocalStorage } from "./einstellungen";
 
@@ -367,7 +368,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             id="id_button_nstreckenlasten"
             nel="${nstreckenlasten_init}"
             inputid="nelemloads"
-            onchange="berechnungErforderlich()"
+            @change=${berechnungErforderlich}
           ></dr-button-pm>
           <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
@@ -390,7 +391,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             id="id_button_neinzellasten"
             nel="${neinzellasten_init}"
             inputid="nelemloads"
-            onchange="berechnungErforderlich()"
+            @change=${berechnungErforderlich}
           ></dr-button-pm>
           <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
@@ -414,7 +415,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             id="id_button_ntemperaturlasten"
             nel="${ntemperaturlasten_init}"
             inputid="nelemloads"
-            onchange="berechnungErforderlich()"
+            @change=${berechnungErforderlich}
           ></dr-button-pm>
           <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
@@ -437,7 +438,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             id="id_button_nvorspannungen"
             nel="${nvorspannungen_init}"
             inputid="nvorspannungen"
-            onchange="berechnungErforderlich()"
+            @change=${berechnungErforderlich}
           ></dr-button-pm>
           <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
@@ -460,7 +461,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
             id="id_button_nspannschloesser"
             nel="${nspannschloesser_init}"
             inputid="nspannschloesser"
-            onchange="berechnungErforderlich()"
+            @change=${berechnungErforderlich}
           ></dr-button-pm>
           <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
@@ -534,7 +535,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
                   class="input_tab"
                   pattern="[0-9.,eE+-]*"
                   value=""
-                  onchange="berechnungErforderlich()"
+                  @change=${berechnungErforderlich}
                 />
               </td>
             </tr>
@@ -561,7 +562,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
                   class="input_tab"
                   pattern="[0-9.,eE+-]*"
                   value=""
-                  onchange="berechnungErforderlich()"
+                  @change=${berechnungErforderlich}
                 />
               </td>
             </tr>
@@ -579,7 +580,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
                   class="input_tab"
                   pattern="[0-9.,eE+-]*"
                   value="2"
-                  onchange="berechnungErforderlich()"
+                  @change=${berechnungErforderlich}
                 />
               </td>
             </tr>
@@ -651,7 +652,7 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
                   class="input_tab"
                   pattern="[0-9.,eE+-]*"
                   value="7"
-                  onchange="berechnungErforderlich()"
+                  @change=${berechnungErforderlich}
                 />
               </td>
             </tr>
@@ -1307,10 +1308,14 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     resizeTables();
     clearTables();
-  }
+
+    berechnungErforderlich(true);
+
 
   let element = document.getElementById("id_quer"); // id_eingabe
   element?.click();
+
+  }
 }
 
 //---------------------------------------------------------------------------------------------------------------
