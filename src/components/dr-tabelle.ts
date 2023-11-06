@@ -328,7 +328,11 @@ class DrTabelle extends HTMLElement {
       } else if (name === 'clear') {
          this.clear_Tabelle('mytable');
 
-      } else if (oldValue === null) {                         // Initialisierungsphase
+      } else if (name === 'option_deleted') {
+         this.del_select_options(newValue);
+
+      }
+      else if (oldValue === null) {                         // Initialisierungsphase
          //console.log('1', newValue.length);
          if (name === 'columns') {
             let myValue = newValue.replace('[', '');
@@ -395,7 +399,7 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    static get observedAttributes() {
       //------------------------------------------------------------------------------------------------------------
-      return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext'];
+      return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext', 'option_deleted'];
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -464,6 +468,39 @@ class DrTabelle extends HTMLElement {
                      if (i === index) {
                         el.children.item(i).innerHTML = get_querschnittRechteck_name(index);
                         el.children.item(i).value = get_querschnittRechteck_name(index);
+                     }
+                  }
+
+               }
+            }
+         }
+      }
+   }
+
+
+   //---------------------------------------------------------------------------------------------------------------
+   del_select_options(qname: string) {
+      //------------------------------------------------------------------------------------------------------------
+
+      const table = this.shadow.getElementById('mytable') as HTMLTableElement;
+
+      for (let iZeile = 1; iZeile <= this.nZeilen; iZeile++) {
+         // Spalten addieren
+         let row = table.rows.item(iZeile);
+         if (row) {
+            //console.log("row", row);
+            for (let iSpalte = 1; iSpalte <= this.nSpalten; iSpalte++) {
+
+               if (this.typs[iSpalte] === 'select') {
+                  const idstr = 'idtable-' + iZeile + '-' + iSpalte;
+                  const el = this.shadow.getElementById(idstr)
+                  console.log("el.children.length", el.children.length)
+                  let n = el.children.length
+                  for (let i = 0; i < n; i++) {
+                     if (qname === String(el.children.item(i).value)) {
+                        console.log("i", i, el.children.item(i).value)
+                        el.removeChild(el.children.item(i));
+                        break;
                      }
                   }
 

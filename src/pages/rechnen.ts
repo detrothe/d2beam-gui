@@ -1,5 +1,5 @@
 declare let Module: any;
-import { app, nlastfaelle_init, opendialog } from "./haupt"
+import { app, nlastfaelle_init, opendialog, contextmenu_querschnitt } from "./haupt"
 import { TFVector, TFArray2D, TFArray3D, TFArray3D_0 } from "./TFArray"
 
 import { berechnungErfolgreich } from './globals'
@@ -11,6 +11,8 @@ import { gauss } from "./gauss"
 import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CSpring } from "./feder"
 import { init_grafik, drawsystem } from "./grafik";
+
+
 
 export let nnodes: number;
 export let nelem: number;
@@ -302,7 +304,48 @@ export function del_last_querschnittSet() {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-export function rechnen() {
+export function del_querschnittSet(qname: string) {
+    //-----------------------------------------------------------------------------------------------------------
+
+    for (let i = 0; i < nQuerschnittSets; i++) {
+        if (qname === querschnittset[i].name) {
+            console.log("lösche jetzt", i, qname)
+            querschnittset.splice(i, 1);
+            nQuerschnittSets--;
+            break;
+        }
+    }
+
+    let ele = document.getElementById("id_element_tabelle");
+    ele?.setAttribute("option_deleted", qname);
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+export function find_querschnittSet(qname: string) {
+    //-----------------------------------------------------------------------------------------------------------
+
+    let anzahl = 0;
+
+    const el = document.getElementById('id_element_tabelle');
+    const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    let nRowTab = table.rows.length;
+
+    for (let izeile = 1; izeile < nRowTab; izeile++) {
+        let qsname = (table.rows[izeile].cells[1].firstElementChild as HTMLSelectElement).value;
+
+        if (qname === qsname) {
+            console.log("find_querschnittSet, gefunden", izeile, qname)
+            anzahl++;
+            break;
+        }
+    }
+    return anzahl;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function rechnen(flag = 1) {
     //-----------------------------------------------------------------------------------------------------------
 
     console.log("in rechnen");
@@ -371,7 +414,38 @@ export function rechnen() {
     read_stabvorverformungen();
     read_kombinationen();
 
-    calculate();
+    if (flag === 1) {
+        calculate();
+    } else {
+        let fehler = 0;
+
+        (document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
+
+        if (nQuerschnittSets === 0) { write('Es muss mindestens 1 Querschnitt definiert sein'); fehler++; }
+        if (nelem < 1) { write('Es muss mindestens 1 Element definiert sein'); fehler++; }
+        if (nnodes < 2) { write('Es müssen mindestens 2 Knoten definiert sein'); fehler++; }
+
+        if ( THIIO_flag === 1 ) {
+            if ( nkombinationen < 1) {write('Es muss mindestens 1 Kombination definiert sein'); fehler++; }
+        }
+
+        for (let ielem=0;ielem<nelem_Balken;ielem++) {
+            if (element[ielem].qname === "" ) {write('Dem Element ' + (+ielem+1) + ' ist kein Querschnitt zugeordnet'); fehler++;}
+            if (element[ielem].nod[0] < 0 ) {write('Element ' + (+ielem+1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++;}
+            if (element[ielem].nod[1] < 0 ) {write('Element ' + (+ielem+1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++;}
+            if (element[ielem].nod[0] > (nnodes-1) ) {write('Element ' + (+ielem+1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++;}
+            if (element[ielem].nod[1] > (nnodes-1) ) {write('Element ' + (+ielem+1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++;}
+
+            for (let i=0;i<6;i++) {
+                if ( !(element[ielem].gelenk[i] === 0 || element[ielem].gelenk[i] === 1) ) {
+                    write('Element ' + (+ielem+1) + ': für Gelenke nur 1 zulässig, kein Gelenk: 0 oder leere Zelle'); fehler++;
+                }
+            }
+
+        }
+        write('_________________________________________________________')
+        write ('Es sind '+ fehler + ' Eingabefehler gefunden worden');
+    }
 
 }
 
@@ -481,6 +555,19 @@ export function get_querschnitt_length(index: number) {
     console.log("get_querschnitt_length", querschnittset[index])
 
     return len;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function get_querschnitt_index(qname: string) {
+    //-----------------------------------------------------------------------------------------------------------
+
+    for (let index = 0; index < querschnittset.length; index++) {
+        if (qname === querschnittset[index].name) {
+            return index;
+            break;
+        }
+    }
+    return -1;
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1002,6 +1089,7 @@ export function add_rechteck_querschnitt(werte: any[]) {
     var text = document.createTextNode(qname);
     tag.appendChild(text);
     tag.addEventListener('click', opendialog);
+    tag.addEventListener("contextmenu", contextmenu_querschnitt);
 
     tag.id = id;
     var element = document.getElementById('id_tree_LQ');
@@ -1065,6 +1153,7 @@ export function init_tabellen() {
         var text = document.createTextNode(qname);
         tag.appendChild(text);
         tag.addEventListener('click', opendialog);
+        tag.addEventListener("contextmenu", contextmenu_querschnitt);
 
         tag.id = id;
         var element = document.getElementById('id_tree_LQ');

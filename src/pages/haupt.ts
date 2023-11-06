@@ -25,7 +25,7 @@ import "../components/dr-dialog-rechteckquerschnitt";
 import "../components/dr-dialog_neue_eingabe";
 
 import { drButtonPM } from "../components/dr-button-pm";
-import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt"
+import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt";
 
 //import { testclass } from './element';
 
@@ -45,6 +45,9 @@ import {
   update_querschnittRechteck,
   init_tabellen,
   del_last_querschnittSet,
+  del_querschnittSet,
+  get_querschnitt_index,
+  find_querschnittSet,
 } from "./rechnen";
 
 let dialog_querschnitt_new = true;
@@ -181,6 +184,9 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
               <td>
                 <sl-button id="clear" value="clear" @click="${handleClick_neue_eingabe}">neue Eingabe beginnen</sl-button>
               </td>
+              <td>
+                <sl-button id="id_check" value="check" @click="${handleClick_eingabe_ueberpruefen}">Eingabe prüfen</sl-button>
+              </td>
             </tr>
 
             <tr>
@@ -221,31 +227,34 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
 
       <sl-tab-panel id="id_tab_querschnitt" name="tab-querschnitte">
         <!--
-        <sl-button id="open-dialog" @click="${handleClick}"
+        <sl-button id="open-dialog" @click="${handleClick_allgeiner_querschnitt}"
           >neuer allgemeiner Querschnitt</sl-button
         >
         -->
-        <br />
-        <sl-button id="open-dialog_rechteck" @click="${handleClick_rechteck}">neuer Querschnitt</sl-button>
-        <br /><br />
+        <p>
+          <br />
+          <sl-button id="open-dialog_rechteck" @click="${click_neuer_querschnitt_rechteck}">&nbsp;&nbsp;neuer Querschnitt</sl-button>
+          <br /><br />
+        </p>
         <sl-tree class="custom-icons">
           <!--
                <sl-icon name="plus-square" slot="expand-icon"></sl-icon>
                <sl-icon name="dash-square" slot="collapse-icon"></sl-icon>
            -->
-          <sl-tree-item id="id_tree_LQ" @click="${handleClick_rechteck_dialog}" expanded>
+          <sl-tree-item id="id_tree_LQ" expanded>
             Linear elastisch Querschnittswerte
             <!-- <sl-tree-item>Birch</sl-tree-item>
 
                   <sl-tree-item>Oak</sl-tree-item> -->
           </sl-tree-item>
-
+          <!--
           <sl-tree-item>
             Linear elastisch allgemein
             <sl-tree-item>nix 1</sl-tree-item>
             <sl-tree-item>nix 2</sl-tree-item>
             <sl-tree-item>nix 3</sl-tree-item>
           </sl-tree-item>
+           -->
         </sl-tree>
 
         <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt>
@@ -812,28 +821,22 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
 
 //---------------------------------------------------------------------------------------------------------------
 
-function handleClick() {
-  console.log("handleClick()");
-  //console.log(this._root.querySelector('#dialog'));
-  //const shadow = this.shadowRoot;
-  //if (shadow) {
-  //console.log(shadow.getElementById('dialog'));
-  //console.log(shadow.getElementById('Anmeldung'));
+function handleClick_allgeiner_querschnitt() {
+  console.log("handleClick_allgeiner_querschnitt()");
+
   const el = document.getElementById("id_dialog");
   console.log("id_dialog", el);
   console.log("QUERY Dialog", el?.shadowRoot?.getElementById("dialog"));
   (el?.shadowRoot?.getElementById("dialog") as HTMLDialogElement).showModal();
-  //(shadow.getElementById('dialog') as HTMLDialogElement).showModal();
-  //}
 }
 
 //---------------------------------------------------------------------------------------------------------------
 
-function handleClick_rechteck() {
+function click_neuer_querschnitt_rechteck() {
   //---------------------------------------------------------------------------------------------------------------
-  console.log("handleClick_rechteck()");
+  console.log("click_neuer_querschnitt_rechteck()");
 
-  const el = document.getElementById("id_dialog_rechteck")as drRechteckQuerSchnitt;
+  const el = document.getElementById("id_dialog_rechteck") as drRechteckQuerSchnitt;
 
   el.init_name_changed(true);
 
@@ -845,7 +848,6 @@ function handleClick_rechteck() {
   dialog_querschnitt_new = true;
 
   (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).showModal();
-
 }
 /*
 //---------------------------------------------------------------------------------------------------------------
@@ -874,23 +876,24 @@ function neuZeilen() {
    }
 }
 */
+/*
 //---------------------------------------------------------------------------------------------------------------
 function handleClick_rechteck_dialog(ev: any) {
   //------------------------------------------------------------------------------------------------------------
   console.log("handleClick_LD()", ev);
-  /*
+
  const el = document.getElementById('id_dialog');
  console.log('id_dialog', el);
  console.log('QUERY Dialog', el?.shadowRoot?.getElementById('dialog'));
  (el?.shadowRoot?.getElementById('dialog') as HTMLDialogElement).showModal();
-*/
 }
+*/
 
 //---------------------------------------------------------------------------------------------------------------
 function calculate() {
   //------------------------------------------------------------------------------------------------------------
   //console.log('calculate');
-  rechnen();
+  rechnen(1);
 
   //testclass();
 }
@@ -986,10 +989,13 @@ function dialog_closed(e: any) {
       const text = document.createTextNode(qName);
       tag.appendChild(text);
       tag.addEventListener("click", opendialog);
-      tag.addEventListener('contextmenu', function (e) {
-        alert("You've tried to open context menu"); //here you draw your own menu
-        e.preventDefault();
-      }, false);
+      tag.addEventListener("contextmenu", contextmenu_querschnitt);
+      // function (e) {
+      //   alert("You've tried to open context menu"); //here you draw your own menu
+      //   e.preventDefault();
+      // },
+      // false
+      //);
 
       tag.id = id;
       const element = document.getElementById("id_tree_LQ");
@@ -999,6 +1005,29 @@ function dialog_closed(e: any) {
       const ele = document.getElementById("id_element_tabelle");
       //console.log("ELE: >>", ele);
       ele?.setAttribute("add_new_option", "4");
+    }
+  }
+}
+//---------------------------------------------------------------------------------------------------------------
+export function contextmenu_querschnitt(ev: any) {
+  //---------------------------------------------------------------------------------------------------------------
+
+  ev.preventDefault();
+
+  // @ts-ignore
+  const el = this;
+  const qname = el.textContent;
+  console.log("qname", el.innerText, el.textContent);
+
+  if (window.confirm("Lösche Querschnitt: " + qname)) {
+    const anzahl = find_querschnittSet(qname);
+    if (anzahl === 0) {
+      del_querschnittSet(qname);
+
+      let element = document.getElementById("id_tree_LQ") as any;
+      element?.removeChild(el);
+    } else {
+      alert("Es gibt mindestens ein Element, das den Querschnitt verwendet");
     }
   }
 }
@@ -1014,12 +1043,24 @@ export function opendialog(ev: any) {
   // @ts-ignore
   const id = this.id;
 
-  console.log("id", document.getElementById(id));
+  // console.log("id", document.getElementById(id));
 
-  const myArray = id.split("-");
-  console.log("Array", myArray.length, myArray[0], myArray[1]);
+  // const myArray = id.split("-");
+  // console.log("Array", myArray.length, myArray[0], myArray[1]);
 
-  const index = Number(myArray[1]);
+  // const index = Number(myArray[1]);
+
+  // @ts-ignore
+  const ele = this;
+  const qname = ele.textContent;
+  console.log("opendialog, qname", ele.innerText, ele.textContent);
+  const index = get_querschnitt_index(qname);
+
+  if (index < 0) {
+    alert("BIG Problem in opendialog, contact developer");
+    return;
+  }
+
   {
     //let qname: string = '', id0: string = ''
     //let emodul: number = 0, Iy: number = 0, area: number = 0, height: number = 0, bettung: number = 0, wichte: number = 0;
@@ -1040,7 +1081,7 @@ export function opendialog(ev: any) {
       alphaT,
     ] = get_querschnittRechteck(index);
 
-    if (id0 !== id) console.log("BIG Problem in opendialog");
+    //if (id0 !== id) console.log("BIG Problem in opendialog");
 
     const el = document.getElementById("id_dialog_rechteck") as HTMLDialogElement;
 
@@ -1308,18 +1349,24 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     berechnungErforderlich(true);
 
-
     let element = document.getElementById("id_quer"); // id_eingabe
     element?.click();
-
   }
 }
 
 //---------------------------------------------------------------------------------------------------------------
 export function set_current_filename(name: string) {
-  //------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------
   currentFilename = name;
   console.log("file name", name);
   const el = document.getElementById("id_current_filename") as HTMLElement;
   el.innerText = "filename: " + currentFilename;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function handleClick_eingabe_ueberpruefen() {
+  //-------------------------------------------------------------------------------------------------------------
+  console.log("handleClick_eingabe_ueberpruefen()");
+
+  rechnen(0);
 }
