@@ -12,7 +12,7 @@ import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CSpring } from "./feder"
 import { init_grafik, drawsystem } from "./grafik";
 
-
+let fatal_error = false;
 
 export let nnodes: number;
 export let nelem: number;
@@ -29,6 +29,7 @@ export let nlastfaelle: number = 0;
 export let nkombinationen: number = 0;
 export let nelTeilungen = 10;
 export let n_iterationen = 5;
+
 
 export let neigv: number = 2;
 export let nNodeDisps = 0;
@@ -85,6 +86,11 @@ export let maxdisp_all = 0.0
 
 export let xmin = -50.0, zmin = -50.0, xmax = 50.0, zmax = 50.0, slmax = 0.0;
 
+let nstreckenlasten = 0;
+let neinzellasten = 0;
+let ntemperaturlasten = 0;
+let nvorspannungen = 0;
+let nspannschloesser = 0;
 
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
@@ -350,6 +356,10 @@ export function rechnen(flag = 1) {
 
     console.log("in rechnen");
 
+    (document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
+
+    fatal_error = false;
+
     let el = document.getElementById('id_button_nnodes') as any;
     nnodes = Number(el.nel);
 
@@ -415,36 +425,102 @@ export function rechnen(flag = 1) {
     read_kombinationen();
 
     if (flag === 1) {
-        calculate();
+        if (!fatal_error) calculate();
+
     } else {
+
+        calc_neq_and_springs();
+
         let fehler = 0;
 
-        (document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
-
-        if (nQuerschnittSets === 0) { write('Es muss mindestens 1 Querschnitt definiert sein'); fehler++; }
+        if (nQuerschnittSets === 0) { write('Es muss mindestens 1 Querschnitt definiert sein\n'); fehler++; }
         if (nelem < 1) { write('Es muss mindestens 1 Element definiert sein'); fehler++; }
         if (nnodes < 2) { write('Es müssen mindestens 2 Knoten definiert sein'); fehler++; }
 
-        if ( THIIO_flag === 1 ) {
-            if ( nkombinationen < 1) {write('Es muss mindestens 1 Kombination definiert sein'); fehler++; }
+        if (THIIO_flag === 1) {
+            if (nkombinationen < 1) { write('Es muss mindestens 1 Kombination definiert sein'); fehler++; }
         }
 
-        for (let ielem=0;ielem<nelem_Balken;ielem++) {
-            if (element[ielem].qname === "" ) {write('Dem Element ' + (+ielem+1) + ' ist kein Querschnitt zugeordnet'); fehler++;}
-            if (element[ielem].nod[0] < 0 ) {write('Element ' + (+ielem+1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++;}
-            if (element[ielem].nod[1] < 0 ) {write('Element ' + (+ielem+1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++;}
-            if (element[ielem].nod[0] > (nnodes-1) ) {write('Element ' + (+ielem+1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++;}
-            if (element[ielem].nod[1] > (nnodes-1) ) {write('Element ' + (+ielem+1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++;}
+        write(' ')
+        for (let ielem = 0; ielem < nelem_Balken; ielem++) {
+            if (element[ielem].qname === "") { write('Dem Element ' + (+ielem + 1) + ' ist kein Querschnitt zugeordnet'); fehler++; }
+            // if (element[ielem].nod[0] < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
+            // if (element[ielem].nod[1] < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
+            // if (element[ielem].nod[0] > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
+            // if (element[ielem].nod[1] > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++; }
+            // if (element[ielem].nod[0] === element[ielem].nod[1]) { write('Element ' + (+ielem + 1) + ': Knoteninzidenzen für (nod a) und (nod e) muessen unterschiedlich sein'); fehler++; }
 
-            for (let i=0;i<6;i++) {
-                if ( !(element[ielem].gelenk[i] === 0 || element[ielem].gelenk[i] === 1) ) {
-                    write('Element ' + (+ielem+1) + ': für Gelenke nur 1 zulässig, kein Gelenk: 0 oder leere Zelle'); fehler++;
+            for (let i = 0; i < 6; i++) {
+                if (!(element[ielem].gelenk[i] === 0 || element[ielem].gelenk[i] === 1)) {
+                    write('Element ' + (+ielem + 1) + ': für Gelenke nur 1 zulässig, kein Gelenk: 0 oder leere Zelle'); fehler++;
                 }
             }
-
         }
+        write(' ')
+
+        for (let i = 0; i < nloads; i++) {
+            if (load[i].node < 0) { write('Knotenlast ' + (+i + 1) + ' Knotennummer muss größer 0 sein'); fehler++; }
+            if (load[i].node > (nnodes - 1)) { write('Knotenlast ' + (+i + 1) + ' Knotennummer muss <= Anzahl Knoten sein'); fehler++; }
+            if (load[i].lf < 1) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss größer 1 sein'); fehler++; }
+            if (load[i].lf > nlastfaelle) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
+        }
+        write(' ')
+
+        for (let i = 0; i < nstreckenlasten; i++) {
+            if (eload[i].art < 0 || eload[i].art > 4) { write('Streckenlast ' + (+i + 1) + ' Lastart muss zwischen 0 und 4 sein'); fehler++; }
+        }
+        write(' ')
+
+        for (let i = 0; i < neloads; i++) {
+            if (eload[i].element < 0) { write('Elementlast ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++; }
+            if (eload[i].element > (nelem - 1)) { write('Elementlast ' + (+i + 1) + ': Knotennummer muss <= Anzahl Elemente sein'); fehler++; }
+            if (eload[i].lf < 1) { write('Elementlast ' + (+i + 1) + ': Nummer des Lastfalls muss größer 1 sein'); fehler++; }
+            if (eload[i].lf > nlastfaelle) { write('Elementlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
+        }
+
+        write(' ')
+
+        for (let i = 0; i < nkombinationen; i++) {
+            let anzahl = 0
+            for (let j = 0; j < nlastfaelle; j++) {
+                if (kombiTabelle[i][j] != 0.0) anzahl++;
+            }
+            if (anzahl === 0) { write('An Kombination ' + (+i + 1) + ' ist kein Lastfall beteiligt'); fehler++; }
+        }
+
+        if (maxU_node < 0) { write('Tab Vorverformungen, Schiefstellung: Knotennummer muss >= 0 sein') }
+        if (maxU_node > nnodes) { write('Tab Vorverformungen, Schiefstellung: Knotennummer muss <= Anzahl Knoten sein') }
+
+        for (let i = 0; i < nstabvorverfomungen; i++) {
+            if (stabvorverformung[i].element < 0 ) {write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++;}
+            if (stabvorverformung[i].element  > (nelem - 1) ) {write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss  <= Anzahl Elemente sein'); fehler++;}
+        }
+
         write('_________________________________________________________')
-        write ('Es sind '+ fehler + ' Eingabefehler gefunden worden');
+        write('Es sind ' + fehler + ' Eingabefehler gefunden worden');
+
+        if (fatal_error) return;
+
+        // für die Grafik
+
+        xmin = 1.e30
+        zmin = 1.e30
+        xmax = -1.e30
+        zmax = -1.e30
+
+        for (let i = 0; i < nnodes; i++) {
+            if (node[i].x < xmin) xmin = node[i].x;
+            if (node[i].z < zmin) zmin = node[i].z;
+            if (node[i].x > xmax) xmax = node[i].x;
+            if (node[i].z > zmax) zmax = node[i].z;
+        }
+
+        slmax = Math.sqrt((xmax - xmin) ** 2 + (zmax - zmin) ** 2)
+
+        init_grafik(0);
+        drawsystem();
+
+        write('Im Tab Grafik wurde das System soweit möglich gezeichnet');
     }
 
 }
@@ -699,19 +775,19 @@ function read_element_loads() {
 
 
     let el = document.getElementById('id_button_nstreckenlasten') as any;
-    const nstreckenlasten = Number(el.nel);
+    nstreckenlasten = Number(el.nel);
 
     el = document.getElementById('id_button_neinzellasten') as any;
-    const neinzellasten = Number(el.nel);
+    neinzellasten = Number(el.nel);
 
     el = document.getElementById('id_button_ntemperaturlasten') as any;
-    const ntemperaturlasten = Number(el.nel);
+    ntemperaturlasten = Number(el.nel);
 
     el = document.getElementById('id_button_nvorspannungen') as any;
-    const nvorspannungen = Number(el.nel);
+    nvorspannungen = Number(el.nel);
 
     el = document.getElementById('id_button_nspannschloesser') as any;
-    const nspannschloesser = Number(el.nel);
+    nspannschloesser = Number(el.nel);
 
     ntotalEloads = neloads = nstreckenlasten + neinzellasten + ntemperaturlasten + nvorspannungen + nspannschloesser
 
@@ -932,7 +1008,7 @@ function read_stabvorverformungen() {
 function read_elements() {
     //-----------------------------------------------------------------------------------------------------------
 
-    let i: number, ielem: number;
+    let i: number, ielem: number, nod1: number, nod2: number, dx: number, dz: number;
 
     const el = document.getElementById('id_element_tabelle');
     //console.log('EL: >>', el);
@@ -974,6 +1050,43 @@ function read_elements() {
         console.log("element", izeile, element[izeile - 1].qname, element[izeile - 1].nod[0], element[izeile - 1].nod[1])
 
         ielem = izeile - 1
+
+        nod1 = element[ielem].nod[0];
+        nod2 = element[ielem].nod[1];
+
+        let fehler = 0;
+        if (nod1 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
+        if (nod2 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
+        if (nod1 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
+        if (nod2 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++; }
+        if (nod1 === nod2) { write('Element ' + (+ielem + 1) + ': Knoteninzidenzen für (nod a) und (nod e) muessen unterschiedlich sein'); fehler++; }
+
+        if (fehler > 0) {
+            fatal_error = true;
+            write('Fataler Eingabefehler für Element ' + (+ielem + 1) + ', bitte als Erstes beheben\n')
+            continue;
+        }
+
+        element[ielem].x1 = node[nod1].x;
+        element[ielem].x2 = node[nod2].x;
+        element[ielem].z1 = node[nod1].z;
+        element[ielem].z2 = node[nod2].z;
+
+
+        const dx = element[ielem].x2 - element[ielem].x1;
+        const dz = element[ielem].z2 - element[ielem].z1;
+        element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Stablänge
+
+        if (element[ielem].sl < 1e-12) {
+            write("Länge von Element " + String(ielem + 1) + " ist null")
+            element[ielem].cosinus = 1.0
+            element[ielem].sinus = 0.0
+            element[ielem].alpha = 0.0
+        } else {
+            element[ielem].cosinus = dx / element[ielem].sl
+            element[ielem].sinus = dz / element[ielem].sl
+            element[ielem].alpha = Math.atan2(dz, dx)
+        }
 
         if (element[ielem].nodeTyp === 3) {
 
@@ -1219,18 +1332,12 @@ export function init_tabellen() {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------------------------
 
-function calculate() {
+function calc_neq_and_springs() {
 
-    //-----------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------
 
     let i: number, j: number
-
-    let ielem: number
-
-    (document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
 
     el.length = 0
     feder.length = 0
@@ -1277,7 +1384,6 @@ function calculate() {
     }
 
 
-
     // Knotenlasten wirken in globalen Richtungen, auch bei gedrehten Lagern
 
     for (i = 0; i < nloads; i++) {
@@ -1287,6 +1393,26 @@ function calculate() {
             load[i].p[1] = node[kn].si * load[i].Px + node[kn].co * load[i].Pz
         }
     }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+
+function calculate() {
+
+    //-----------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------
+
+    let i: number, j: number
+
+    let ielem: number
+
+    //(document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
+
+    calc_neq_and_springs();
+
+
 
     // vorgegebene Knotenverformungen den Elementlasten zuordnen
 
@@ -2049,7 +2175,7 @@ function calculate() {
 
     }
 
-    init_grafik();
+    init_grafik(1);
     drawsystem();
 
     write('______________________________')

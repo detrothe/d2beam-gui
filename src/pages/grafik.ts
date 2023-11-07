@@ -6,6 +6,7 @@ import { myFormat, write } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
+import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
 import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all } from "./rechnen";
 
@@ -37,6 +38,8 @@ let tr: CTrans
 let drawPanel = 0
 let draw_lastfall = 1
 let draw_eigenform = 1
+
+let flag_eingabe = 1
 
 let devicePixelRatio = 1
 
@@ -138,7 +141,9 @@ export function select_eigenvalue_changed() {
 
 //--------------------------------------------------------------------------------------------------- i n i t _ g r a f i k
 
-export function init_grafik() {
+export function init_grafik(flag = 1) {
+
+    flag_eingabe = flag;   // 0 = Eingabe überprüfen
 
     if (drawPanel === 0) {
         myPanel();
@@ -943,11 +948,11 @@ export function drawsystem() {
         }
 
         scalefactor *= scaleFactor_panel
-        console.log("SCALEFACTOR",1./scalefactor)
+        console.log("SCALEFACTOR", 1. / scalefactor)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if (scalefactor === Infinity || scalefactor > 1.e14 ) break;
+            if (scalefactor === Infinity || scalefactor > 1.e14) break;
 
             const nelTeilungen = element[ielem].nTeilungen
             let sg: number[] = new Array(nelTeilungen)
@@ -1529,55 +1534,86 @@ export function drawsystem() {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            x1 = Math.round(tr.xPix(element[ielem].x1));
-            z1 = Math.round(tr.zPix(element[ielem].z1));
-            x2 = Math.round(tr.xPix(element[ielem].x2));
-            z2 = Math.round(tr.zPix(element[ielem].z2));
+            if (flag_eingabe === 0) {
+                x1 = Math.round(tr.xPix(stab[ielem].x1));
+                z1 = Math.round(tr.zPix(stab[ielem].z1));
+                x2 = Math.round(tr.xPix(stab[ielem].x2));
+                z2 = Math.round(tr.zPix(stab[ielem].z2));
 
-            if (show_umriss && !show_verformungen) {
-                let h = element[ielem].h / 2.
-                console.log("HHHHHHHH", h)
-                let sih = element[ielem].sinus * h
-                let coh = element[ielem].cosinus * h
-                var vertices = [];
-                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x1 + sih), tr.zPix(element[ielem].z1 - coh)));
-                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x2 + sih), tr.zPix(element[ielem].z2 - coh)));
-                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x2 - sih), tr.zPix(element[ielem].z2 + coh)));
-                vertices.push(new Two.Anchor(tr.xPix(element[ielem].x1 - sih), tr.zPix(element[ielem].z1 + coh)));
-
-                let flaeche = two.makePath(vertices);
-                flaeche.fill = '#dddddd';
-                flaeche.opacity = opacity;
-            } else {
-                //console.log("element",ielem,element)
-                //console.log("x..", element[ielem].x1, element[ielem].z1, element[ielem].x2, element[ielem].z2)
-                //console.log("elem", ielem, x1, z1, x2, z2)
-
+                console.log("STAB x,z", x1, x2, z1, z2)
                 let line = two.makeLine(x1, z1, x2, z2);
                 if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
                 else line.linewidth = 5 / devicePixelRatio;
 
                 // gestrichelte Faser
 
-                let dx = (element[ielem].x2 - element[ielem].x1) / 3
-                let dz = (element[ielem].z2 - element[ielem].z1) / 3
+                let dx = (stab[ielem].x2 - stab[ielem].x1) / 3
+                let dz = (stab[ielem].z2 - stab[ielem].z1) / 3
 
                 let abstand = 10 / devicePixelRatio
-                let tmpX1 = tr.xPix(element[ielem].x1 + dx) - element[ielem].sinus * abstand
-                let tmpZ1 = tr.zPix(element[ielem].z1 + dz) + element[ielem].cosinus * abstand
-                let tmpX2 = tr.xPix(element[ielem].x2 - dx) - element[ielem].sinus * abstand
-                let tmpZ2 = tr.zPix(element[ielem].z2 - dz) + element[ielem].cosinus * abstand
-                //console.log("tmp", tmpX1, tmpZ1, tmpX2, tmpZ2)
+                let tmpX1 = tr.xPix(stab[ielem].x1 + dx) - stab[ielem].sinus * abstand
+                let tmpZ1 = tr.zPix(stab[ielem].z1 + dz) + stab[ielem].cosinus * abstand
+                let tmpX2 = tr.xPix(stab[ielem].x2 - dx) - stab[ielem].sinus * abstand
+                let tmpZ2 = tr.zPix(stab[ielem].z2 - dz) + stab[ielem].cosinus * abstand
+                console.log("tmp", tmpX1, tmpZ1, tmpX2, tmpZ2)
 
-                let line1 = two.makeLine(tmpX1, tmpZ1, tmpX2, tmpZ2);
-                line1.linewidth = 1 / devicePixelRatio;
-                line1.dashes = [5, 3]
+                // let line1 = two.makeLine(tmpX1, tmpZ1, tmpX2, tmpZ2);
+                // line1.linewidth = 1 / devicePixelRatio;
+                // line1.dashes = [5, 3]
+
+            } else {
+
+                x1 = Math.round(tr.xPix(element[ielem].x1));
+                z1 = Math.round(tr.zPix(element[ielem].z1));
+                x2 = Math.round(tr.xPix(element[ielem].x2));
+                z2 = Math.round(tr.zPix(element[ielem].z2));
+
+
+                if (show_umriss && !show_verformungen) {
+                    let h = element[ielem].h / 2.
+                    //console.log("HHHHHHHH", h)
+                    let sih = element[ielem].sinus * h
+                    let coh = element[ielem].cosinus * h
+                    var vertices = [];
+                    vertices.push(new Two.Anchor(tr.xPix(element[ielem].x1 + sih), tr.zPix(element[ielem].z1 - coh)));
+                    vertices.push(new Two.Anchor(tr.xPix(element[ielem].x2 + sih), tr.zPix(element[ielem].z2 - coh)));
+                    vertices.push(new Two.Anchor(tr.xPix(element[ielem].x2 - sih), tr.zPix(element[ielem].z2 + coh)));
+                    vertices.push(new Two.Anchor(tr.xPix(element[ielem].x1 - sih), tr.zPix(element[ielem].z1 + coh)));
+
+                    let flaeche = two.makePath(vertices);
+                    flaeche.fill = '#dddddd';
+                    flaeche.opacity = opacity;
+                } else {
+                    //console.log("element",ielem,element)
+                    //console.log("x..", element[ielem].x1, element[ielem].z1, element[ielem].x2, element[ielem].z2)
+                    //console.log("elem", ielem, x1, z1, x2, z2)
+
+                    let line = two.makeLine(x1, z1, x2, z2);
+                    if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
+                    else line.linewidth = 5 / devicePixelRatio;
+
+                    // gestrichelte Faser
+
+                    let dx = (element[ielem].x2 - element[ielem].x1) / 3
+                    let dz = (element[ielem].z2 - element[ielem].z1) / 3
+
+                    let abstand = 10 / devicePixelRatio
+                    let tmpX1 = tr.xPix(element[ielem].x1 + dx) - element[ielem].sinus * abstand
+                    let tmpZ1 = tr.zPix(element[ielem].z1 + dz) + element[ielem].cosinus * abstand
+                    let tmpX2 = tr.xPix(element[ielem].x2 - dx) - element[ielem].sinus * abstand
+                    let tmpZ2 = tr.zPix(element[ielem].z2 - dz) + element[ielem].cosinus * abstand
+                    //console.log("tmp", tmpX1, tmpZ1, tmpX2, tmpZ2)
+
+                    let line1 = two.makeLine(tmpX1, tmpZ1, tmpX2, tmpZ2);
+                    line1.linewidth = 1 / devicePixelRatio;
+                    line1.dashes = [5, 3]
+                }
             }
 
             if (show_labels && onlyLabels) {
 
-                let xm = (x1 + x2) / 2. + element[ielem].sinus * 7
-                let zm = (z1 + z2) / 2. - element[ielem].cosinus * 7
+                let xm = (x1 + x2) / 2. + stab[ielem].sinus * 7
+                let zm = (z1 + z2) / 2. - stab[ielem].cosinus * 7
 
                 let circle = two.makeCircle(xm, zm, 14, 20)
                 circle.fill = '#ffffff'
@@ -1610,31 +1646,18 @@ export function drawsystem() {
     }
 
     draw_lager(two);
-    draw_gelenke(two);
+    if (flag_eingabe != 0) draw_gelenke(two);
 
     if (show_lasten_temp) {
         draw_elementlasten(two);
         draw_knotenkraefte(two);
     }
-    if (show_lagerkraefte) draw_lagerkraefte(two);
+    if (show_lagerkraefte && flag_eingabe === 1) draw_lagerkraefte(two);
 
-    // const styles = {
-    //     family: 'system-ui, sans-serif',
-    //     size: 50,
-    //     fill: 'red',
-    //     opacity: 0.33,
-    //     //leading: 50
-    //     weight: 'bold'
-    // };
 
-    //const directions = two.makeText('Hallo welt', two.width / 2, two.height / 2, styles)
-    //directions.rotation = 1.5708
-
-    //draw_arrow(two, slmax / 10, slmax / 10, node[1].x, node[1].z, { linewidth: 10, b: 40, h: 20 })  // , style_pfeil
-
-    //draw_arrow(two, 0, 0, node[1].x, node[1].z, style_pfeil_lager)  // , style_pfeil
 
     // Don’t forget to tell two to draw everything to the screen
+
     two.update();
 
     //el = document.querySelector('.footer'); //.getElementById("container")
@@ -1675,12 +1698,12 @@ function draw_elementlasten(two: Two) {
         ax_projektion = 0.0
         az_projektion = 0.0
 
-        x1 = element[ielem].x1;
-        z1 = element[ielem].z1;
-        x2 = element[ielem].x2;
-        z2 = element[ielem].z2;
-        si = element[ielem].sinus
-        co = element[ielem].cosinus
+        x1 = stab[ielem].x1;
+        z1 = stab[ielem].z1;
+        x2 = stab[ielem].x2;
+        z2 = stab[ielem].z2;
+        si = stab[ielem].sinus
+        co = stab[ielem].cosinus
 
         for (let ieload = 0; ieload < neloads; ieload++) {
             console.log("ielem,draw_lastfall", ielem, eload[ieload].element, draw_lastfall, eload[ieload].lf)
@@ -2043,7 +2066,7 @@ function draw_knotenkraefte(two: Two) {
     let xpix: number, zpix: number
     let wert: number
 
-    console.log("in draw_knotenkraefte, draw_lastfall", draw_lastfall)
+    console.log("in draw_knotenkraefte, draw_lastfall", draw_lastfall, nloads)
     // const out = document.getElementById('output') as HTMLTextAreaElement;
     // if (out) {
     //     out.value += "plength= " + plength + "\n";
@@ -2057,9 +2080,9 @@ function draw_knotenkraefte(two: Two) {
         let inode = load[i].node
         let x = node[inode].x;
         let z = node[inode].z;
-        //console.log("load[i]", i, load)
+        console.log("load[i]", i, load)
         if (load[i].p[0] != 0.0 && load[i].lf === draw_lastfall) {
-            //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+            console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
 
             wert = load[i].p[0]
             if (wert > 0.0) {

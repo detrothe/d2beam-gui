@@ -50,6 +50,8 @@ import {
   find_querschnittSet,
 } from "./rechnen";
 
+import { ConfirmDialog } from "./confirm_dialog"
+
 let dialog_querschnitt_new = true;
 let dialog_querschnitt_index = 0;
 let dialog_querschnitt_item_id = "";
@@ -893,6 +895,8 @@ function handleClick_rechteck_dialog(ev: any) {
 function calculate() {
   //------------------------------------------------------------------------------------------------------------
   //console.log('calculate');
+
+  resizeTables();
   rechnen(1);
 
   //testclass();
@@ -1009,7 +1013,7 @@ function dialog_closed(e: any) {
   }
 }
 //---------------------------------------------------------------------------------------------------------------
-export function contextmenu_querschnitt(ev: any) {
+export async function contextmenu_querschnitt(ev: any) {
   //---------------------------------------------------------------------------------------------------------------
 
   ev.preventDefault();
@@ -1019,7 +1023,20 @@ export function contextmenu_querschnitt(ev: any) {
   const qname = el.textContent;
   console.log("qname", el.innerText, el.textContent);
 
-  if (window.confirm("Lösche Querschnitt: " + qname)) {
+
+  //async () => {
+  const dialog = new ConfirmDialog({
+    trueButton_Text: "ja",
+    falseButton_Text: "nein",
+    question_Text: "Lösche Querschnitt: " + qname
+  });
+  const loesche = await dialog.confirm();
+  console.log('loesche', loesche)
+  //}
+
+
+  if (loesche) {                            // window.confirm("Lösche Querschnitt: " + qname)
+
     const anzahl = find_querschnittSet(qname);
     if (anzahl === 0) {
       del_querschnittSet(qname);
@@ -1368,5 +1385,6 @@ function handleClick_eingabe_ueberpruefen() {
   //-------------------------------------------------------------------------------------------------------------
   console.log("handleClick_eingabe_ueberpruefen()");
 
+  resizeTables();
   rechnen(0);
 }
