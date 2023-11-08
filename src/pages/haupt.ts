@@ -50,7 +50,7 @@ import {
   find_querschnittSet,
 } from "./rechnen";
 
-import { ConfirmDialog } from "./confirm_dialog"
+import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 
 let dialog_querschnitt_new = true;
 let dialog_querschnitt_index = 0;
@@ -778,17 +778,6 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
         </div>
       </sl-tab-panel>
     </sl-tab-group>
-
-    <!-- <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt> -->
-    <!--
-      <div id="container">
-         <footer  class="footer">
-            2D structural analysis of frames using the d2beam element,
-            29-Juli-2023,
-            <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
-         </footer>
-      </div>
-      -->
   `;
 
   const container = document.getElementById("container") as HTMLDivElement;
@@ -1024,18 +1013,17 @@ export async function contextmenu_querschnitt(ev: any) {
   console.log("qname", el.innerText, el.textContent);
 
 
-  //async () => {
   const dialog = new ConfirmDialog({
     trueButton_Text: "ja",
     falseButton_Text: "nein",
-    question_Text: "Lösche Querschnitt: " + qname
+    question_Text: "Lösche Querschnitt: " + qname,
   });
   const loesche = await dialog.confirm();
-  console.log('loesche', loesche)
-  //}
+  console.log("loesche", loesche);
 
 
-  if (loesche) {                            // window.confirm("Lösche Querschnitt: " + qname)
+  if (loesche) {
+    // window.confirm("Lösche Querschnitt: " + qname)
 
     const anzahl = find_querschnittSet(qname);
     if (anzahl === 0) {
@@ -1044,7 +1032,12 @@ export async function contextmenu_querschnitt(ev: any) {
       let element = document.getElementById("id_tree_LQ") as any;
       element?.removeChild(el);
     } else {
-      alert("Es gibt mindestens ein Element, das den Querschnitt verwendet");
+      const dialogAlert = new AlertDialog({
+        trueButton_Text: "ok",
+        question_Text: "Es gibt mindestens ein Element, das den Querschnitt verwendet",
+      });
+      await dialogAlert.confirm();
+      //window.alert("Lösche Querschnitt: ")
     }
   }
 }

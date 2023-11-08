@@ -9,6 +9,8 @@ import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkb
 
 import { check_if_name_exists } from "../pages/rechnen"
 
+import {  AlertDialog } from "../pages/confirm_dialog";
+
 // Profilename, E-Modul, A, Iy, Iz, Wichte, h, b, kappa_Vz, kappa_Vy
 
 const PROFIL = Array(
@@ -208,6 +210,7 @@ export class drRechteckQuerSchnitt extends LitElement {
         width: 30em;
         background: #fffbf0;
         border: thin solid #e7c157;
+        border-radius: 6px;
         margin: 4em auto;
       }
 
@@ -387,7 +390,7 @@ export class drRechteckQuerSchnitt extends LitElement {
     `;
   }
 
-  _dialog_ok() {
+  async _dialog_ok() {
     console.log("dialog_ok");
     const shadow = this.shadowRoot;
     if (shadow) {
@@ -398,7 +401,12 @@ export class drRechteckQuerSchnitt extends LitElement {
       if (this.name_changed) {
         let qname = (shadow.getElementById("qname") as HTMLInputElement).value;
         if (check_if_name_exists(qname)) {
-          window.alert("Name für Querschnitt schon vergeben");
+          //window.alert("Name für Querschnitt schon vergeben");
+          const dialogAlert = new AlertDialog({
+            trueButton_Text: "ok",
+            question_Text: "Name für Querschnitt schon vergeben",
+          });
+          await dialogAlert.confirm();
           return;
         }
       }
@@ -464,7 +472,7 @@ export class drRechteckQuerSchnitt extends LitElement {
   }
 
 
-  _dialog_profil_ok() {
+  async _dialog_profil_ok() {
     console.log("_dialog_profil_ok");
     const shadow = this.shadowRoot;
     if (shadow) {
@@ -478,7 +486,12 @@ export class drRechteckQuerSchnitt extends LitElement {
       if (uebernehmen) {
         console.log("uebernehmen", check_if_name_exists(wahl))
         if (check_if_name_exists(wahl)) {
-          window.alert("Name für Querschnitt schon vergeben");
+          //window.alert("Name für Querschnitt schon vergeben");
+          const dialogAlert = new AlertDialog({
+            trueButton_Text: "ok",
+            question_Text: "Name für Querschnitt schon vergeben",
+          });
+          await dialogAlert.confirm();
           return;
         }
 
