@@ -968,7 +968,7 @@ function dialog_closed(e: any) {
 
         // Name des Querschnitts in Querschnitts-tree (tab Querschnitte) ändern
         const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
-        console.log("dialog_querschnitt_item_id",dialog_querschnitt_item_id)
+        console.log("dialog_querschnitt_item_id", dialog_querschnitt_item_id)
         console.log("dialog_querschnitt_index, qname", dialog_querschnitt_index, qname);  // , el.textContent
 
         if (el.textContent !== qname) {   // innerHTML
@@ -1034,14 +1034,16 @@ export function add_new_cross_section(qName: string, id: string) {
 export async function contextmenu_querschnitt(ev: any) {
   //-------------------------------------------------------------------------------------------------------------
 
+  let qname = "";
+
   ev.preventDefault();
 
   // @ts-ignore
   const el = this;
   //console.log("el,this",ev.offsetParent)
   const id_button = el.value  // button
-  const ele =  document.getElementById(id_button) as SlButton;
-  const qname = ele.textContent;
+  const ele = document.getElementById(id_button) as SlButton;
+  if ( ele != null) qname = ele.textContent!;
   //console.log("contextmenu_querschnitt, qname", el.innerText, el.textContent, '|', el.value);
 
   const dialog = new ConfirmDialog({
@@ -1060,8 +1062,8 @@ export async function contextmenu_querschnitt(ev: any) {
       del_querschnittSet(qname);
 
       let element = document.getElementById("id_tree_LQ") as any;
-      console.log("element",element.children)
-      console.log("el",el.parentNode,el.parentElement)
+      console.log("element", element.children)
+      console.log("el", el.parentNode, el.parentElement)
       element?.removeChild(el.parentElement);
     } else {
       const dialogAlert = new AlertDialog({
