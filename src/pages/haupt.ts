@@ -18,7 +18,7 @@ import { berechnungErforderlich } from "./globals";
 import { add_listeners_einstellungen, readLocalStorage } from "./einstellungen";
 
 import "../components/dr-button-pm";
-//import '../components/dr-table';
+
 import "../components/dr-tabelle";
 import "../components/dr-dialog-layerquerschnitt";
 import "../components/dr-dialog-rechteckquerschnitt";
@@ -53,7 +53,8 @@ import {
 } from "./rechnen";
 
 import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
-import { Children } from "two.js/src/children";
+import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
+//import { Children } from "two.js/src/children";
 
 let dialog_querschnitt_new = true;
 let dialog_querschnitt_index = 0;
@@ -941,7 +942,7 @@ function dialog_closed(e: any) {
       elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
       const alphaT = +elem.value;
 
-      console.log("ALPHA T = ", alphaT);
+      //console.log("ALPHA T = ", alphaT);
 
       if (dialog_querschnitt_new) {
         incr_querschnittSets();
@@ -965,12 +966,13 @@ function dialog_closed(e: any) {
           alphaT
         );
 
-        //console.log("UPDATE", this)
+        // Name des Querschnitts in Querschnitts-tree (tab Querschnitte) ändern
         const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
         console.log("dialog_querschnitt_item_id",dialog_querschnitt_item_id)
         console.log("dialog_querschnitt_index, qname", dialog_querschnitt_index, qname);  // , el.textContent
-        if (el.innerHTML !== qname) {
-          el.innerHTML = qname;
+
+        if (el.textContent !== qname) {   // innerHTML
+          el.textContent = qname;
           const ele = document.getElementById("id_element_tabelle");
           //console.log('ELE: >>', ele);
           ele?.setAttribute("namechanged", String(dialog_querschnitt_index));
@@ -1009,7 +1011,7 @@ export function add_new_cross_section(qName: string, id: string) {
 
   const delete_button = document.createElement("button");
   //delete_button.textContent = "delete";
-  delete_button.value = qName
+  delete_button.value = id
   delete_button.className = 'btn'
   delete_button.innerHTML = '<i class = "fa fa-trash"></i>';
   delete_button.addEventListener("click", contextmenu_querschnitt);
@@ -1037,7 +1039,9 @@ export async function contextmenu_querschnitt(ev: any) {
   // @ts-ignore
   const el = this;
   //console.log("el,this",ev.offsetParent)
-  const qname = el.value;
+  const id_button = el.value  // button
+  const ele =  document.getElementById(id_button) as SlButton;
+  const qname = ele.textContent;
   //console.log("contextmenu_querschnitt, qname", el.innerText, el.textContent, '|', el.value);
 
   const dialog = new ConfirmDialog({
