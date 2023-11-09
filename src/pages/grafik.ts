@@ -1540,7 +1540,7 @@ export function drawsystem() {
                 x2 = Math.round(tr.xPix(stab[ielem].x2));
                 z2 = Math.round(tr.zPix(stab[ielem].z2));
 
-                console.log("STAB x,z", x1, x2, z1, z2)
+                //console.log("STAB x,z", x1, x2, z1, z2)
                 let line = two.makeLine(x1, z1, x2, z2);
                 if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
                 else line.linewidth = 5 / devicePixelRatio;
@@ -1555,11 +1555,11 @@ export function drawsystem() {
                 let tmpZ1 = tr.zPix(stab[ielem].z1 + dz) + stab[ielem].cosinus * abstand
                 let tmpX2 = tr.xPix(stab[ielem].x2 - dx) - stab[ielem].sinus * abstand
                 let tmpZ2 = tr.zPix(stab[ielem].z2 - dz) + stab[ielem].cosinus * abstand
-                console.log("tmp", tmpX1, tmpZ1, tmpX2, tmpZ2)
+                //console.log("tmp", tmpX1, tmpZ1, tmpX2, tmpZ2)
 
-                // let line1 = two.makeLine(tmpX1, tmpZ1, tmpX2, tmpZ2);
-                // line1.linewidth = 1 / devicePixelRatio;
-                // line1.dashes = [5, 3]
+                let line1 = two.makeLine(tmpX1, tmpZ1, tmpX2, tmpZ2);
+                line1.linewidth = 2 / devicePixelRatio;
+                line1.dashes = [10, 4]
 
             } else {
 

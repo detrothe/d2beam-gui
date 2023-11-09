@@ -290,3 +290,21 @@ select {
 .confirm-dialog:not([open]) {
   display: none;
 }
+
+.btn {
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 0.4375rem 0.75rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 1rem;
+  margin-bottom: 0.1875rem;
+  margin-top: 0.1875rem;
+  border-radius: 3px;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: RoyalBlue;
+}

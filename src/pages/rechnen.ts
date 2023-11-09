@@ -1,5 +1,5 @@
 declare let Module: any;
-import { app, nlastfaelle_init, opendialog, contextmenu_querschnitt } from "./haupt"
+import { app, nlastfaelle_init, opendialog, contextmenu_querschnitt, add_new_cross_section } from "./haupt"
 import { TFVector, TFArray2D, TFArray3D, TFArray3D_0 } from "./TFArray"
 
 import { berechnungErfolgreich } from './globals'
@@ -61,6 +61,7 @@ export let maxU_node = -1
 export let maxU_dir = 1
 
 export let nQuerschnittSets = 0
+export let querschnitts_zaehler = -1
 
 export let ndivsl = 3;
 export let art = 1;
@@ -279,9 +280,28 @@ class TMaxU0 {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-export function add_neq() {
+export function incr_neq() {
     //-----------------------------------------------------------------------------------------------------------
     neq++;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function incr_querschnitts_zaehler() {
+    //-----------------------------------------------------------------------------------------------------------
+    querschnitts_zaehler++;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function set_querschnittszaehler() {
+    //-----------------------------------------------------------------------------------------------------------
+
+    for (let i = 0; i < nQuerschnittSets; i++) {
+        let id = querschnittset[i].id
+        let txtArray = id.split("-");
+        console.log("txtArray", txtArray)
+        if (Number(txtArray[1]) > querschnitts_zaehler) querschnitts_zaehler = Number(txtArray[1])
+    }
+    console.log("querschnitts_zaehler", querschnitts_zaehler)
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -492,8 +512,8 @@ export function rechnen(flag = 1) {
         if (maxU_node > nnodes) { write('Tab Vorverformungen, Schiefstellung: Knotennummer muss <= Anzahl Knoten sein') }
 
         for (let i = 0; i < nstabvorverfomungen; i++) {
-            if (stabvorverformung[i].element < 0 ) {write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++;}
-            if (stabvorverformung[i].element  > (nelem - 1) ) {write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss  <= Anzahl Elemente sein'); fehler++;}
+            if (stabvorverformung[i].element < 0) { write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++; }
+            if (stabvorverformung[i].element > (nelem - 1)) { write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss  <= Anzahl Elemente sein'); fehler++; }
         }
 
         write('_________________________________________________________')
@@ -1197,21 +1217,22 @@ export function add_rechteck_querschnitt(werte: any[]) {
         alphaT
     );
 
+    add_new_cross_section(qname, id);
 
-    var tag = document.createElement('sl-tree-item');
-    var text = document.createTextNode(qname);
-    tag.appendChild(text);
-    tag.addEventListener('click', opendialog);
-    tag.addEventListener("contextmenu", contextmenu_querschnitt);
+    // var tag = document.createElement('sl-tree-item');
+    // var text = document.createTextNode(qname);
+    // tag.appendChild(text);
+    // tag.addEventListener('click', opendialog);
+    // tag.addEventListener("contextmenu", contextmenu_querschnitt);
 
-    tag.id = id;
-    var element = document.getElementById('id_tree_LQ');
-    element?.appendChild(tag);
-    //console.log('child appendchild', element);
+    // tag.id = id;
+    // var element = document.getElementById('id_tree_LQ');
+    // element?.appendChild(tag);
+    // //console.log('child appendchild', element);
 
-    const ele = document.getElementById('id_element_tabelle');
-    //console.log('ELE: >>', ele);
-    ele?.setAttribute('add_new_option', '4');
+    // const ele = document.getElementById('id_element_tabelle');
+    // //console.log('ELE: >>', ele);
+    // ele?.setAttribute('add_new_option', '4');
 
 }
 
@@ -1223,9 +1244,10 @@ export function init_tabellen() {
     {
 
         incr_querschnittSets();
+        querschnitts_zaehler=0;
 
         const qname = 'R 40x30'
-        const id = 'mat-0';
+        const id = 'mat-' + querschnitts_zaehler;
         const emodul = 30000.
         const Iy = 160000.
         const area = 1200.
@@ -1254,28 +1276,22 @@ export function init_tabellen() {
             alphaT
         );
 
-        /*
-        const el = document.getElementById('id_dialog_rechteck') as HTMLDialogElement;
+        add_new_cross_section(qname, id);
 
-        const qName = (
-            el?.shadowRoot?.getElementById('qname') as HTMLInputElement
-        ).value;
-        console.log('NAME', qName);
-        */
-        var tag = document.createElement('sl-tree-item');
-        var text = document.createTextNode(qname);
-        tag.appendChild(text);
-        tag.addEventListener('click', opendialog);
-        tag.addEventListener("contextmenu", contextmenu_querschnitt);
+        // var tag = document.createElement('sl-tree-item');
+        // var text = document.createTextNode(qname);
+        // tag.appendChild(text);
+        // tag.addEventListener('click', opendialog);
+        // tag.addEventListener("contextmenu", contextmenu_querschnitt);
 
-        tag.id = id;
-        var element = document.getElementById('id_tree_LQ');
-        element?.appendChild(tag);
-        //console.log('child appendchild', element);
+        // tag.id = id;
+        // var element = document.getElementById('id_tree_LQ');
+        // element?.appendChild(tag);
+        // //console.log('child appendchild', element);
 
-        const ele = document.getElementById('id_element_tabelle');
-        //console.log('ELE: >>', ele);
-        ele?.setAttribute('add_new_option', '4');
+        // const ele = document.getElementById('id_element_tabelle');
+        // //console.log('ELE: >>', ele);
+        // ele?.setAttribute('add_new_option', '4');
     }
 
     let el = document.getElementById('id_element_tabelle');

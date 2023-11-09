@@ -6,7 +6,7 @@ import { app, clearTables, currentFilename, set_current_filename } from "./haupt
 import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
 
-import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length, n_iterationen } from "./rechnen"
+import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length, set_querschnittszaehler } from "./rechnen"
 import { add_rechteck_querschnitt } from './rechnen'
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
@@ -141,6 +141,7 @@ function handleFileSelect_read() {
                             add_rechteck_querschnitt(jobj.qswerte[i])
                         }
                     }
+                    set_querschnittszaehler();
 
                     let el = document.getElementById('id_knoten_tabelle') as HTMLElement;
                     let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;

@@ -39,6 +39,7 @@ import { set_info } from "./utility";
 import {
   rechnen,
   nQuerschnittSets,
+  querschnitts_zaehler,
   incr_querschnittSets,
   set_querschnittRechteck,
   get_querschnittRechteck,
@@ -48,9 +49,11 @@ import {
   del_querschnittSet,
   get_querschnitt_index,
   find_querschnittSet,
+  incr_querschnitts_zaehler
 } from "./rechnen";
 
 import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
+import { Children } from "two.js/src/children";
 
 let dialog_querschnitt_new = true;
 let dialog_querschnitt_index = 0;
@@ -245,18 +248,16 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
            -->
           <sl-tree-item id="id_tree_LQ" expanded>
             Linear elastisch Querschnittswerte
-            <!-- <sl-tree-item>Birch</sl-tree-item>
 
-                  <sl-tree-item>Oak</sl-tree-item> -->
           </sl-tree-item>
           <!--
           <sl-tree-item>
             Linear elastisch allgemein
-            <sl-tree-item>nix 1</sl-tree-item>
+            <sl-tree-item><button>button 1</button><button>button 2</button></sl-tree-item>
             <sl-tree-item>nix 2</sl-tree-item>
             <sl-tree-item>nix 3</sl-tree-item>
           </sl-tree-item>
-           -->
+          -->
         </sl-tree>
 
         <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt>
@@ -905,7 +906,8 @@ function dialog_closed(e: any) {
   if (returnValue === "ok") {
     let id: string;
     if (dialog_querschnitt_new) {
-      id = "mat-" + nQuerschnittSets;
+      incr_querschnitts_zaehler();
+      id = "mat-" + querschnitts_zaehler;
     } else {
       id = "mat-" + dialog_querschnitt_index;
     }
@@ -965,7 +967,8 @@ function dialog_closed(e: any) {
 
         //console.log("UPDATE", this)
         const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
-        console.log("dialog_querschnitt_item_id", dialog_querschnitt_index, qname, el.innerHTML);
+        console.log("dialog_querschnitt_item_id",dialog_querschnitt_item_id)
+        console.log("dialog_querschnitt_index, qname", dialog_querschnitt_index, qname);  // , el.textContent
         if (el.innerHTML !== qname) {
           el.innerHTML = qname;
           const ele = document.getElementById("id_element_tabelle");
@@ -978,40 +981,64 @@ function dialog_closed(e: any) {
     if (dialog_querschnitt_new) {
       const qName = (el?.shadowRoot?.getElementById("qname") as HTMLInputElement).value;
       console.log("NAME", qName);
-      const tag = document.createElement("sl-tree-item");
-      const text = document.createTextNode(qName);
-      tag.appendChild(text);
-      tag.addEventListener("click", opendialog);
-      tag.addEventListener("contextmenu", contextmenu_querschnitt);
-      // function (e) {
-      //   alert("You've tried to open context menu"); //here you draw your own menu
-      //   e.preventDefault();
-      // },
-      // false
-      //);
 
-      tag.id = id;
-      const element = document.getElementById("id_tree_LQ");
-      element?.appendChild(tag);
-      console.log("child appendchild", element);
-
-      const ele = document.getElementById("id_element_tabelle");
-      //console.log("ELE: >>", ele);
-      ele?.setAttribute("add_new_option", "4");
+      add_new_cross_section(qName, id);
     }
   }
 }
+
+
+
+//---------------------------------------------------------------------------------------------------------------
+export function add_new_cross_section(qName: string, id: string) {
+  //-------------------------------------------------------------------------------------------------------------
+
+  const tag = document.createElement("sl-tree-item");
+  // tag.textContent = qName
+  //const text = document.createTextNode(qName);
+  //tag.appendChild(text);
+
+
+
+  const quer_button = document.createElement("sl-button");
+  quer_button.textContent = qName;
+  quer_button.style.minWidth = '8rem';
+  quer_button.addEventListener("click", opendialog);
+  quer_button.title = 'click to modify'
+  quer_button.id = id;
+
+  const delete_button = document.createElement("button");
+  //delete_button.textContent = "delete";
+  delete_button.value = qName
+  delete_button.className = 'btn'
+  delete_button.innerHTML = '<i class = "fa fa-trash"></i>';
+  delete_button.addEventListener("click", contextmenu_querschnitt);
+  delete_button.title = 'delete Querschnitt'
+
+  tag.appendChild(quer_button);
+  tag.appendChild(delete_button);
+
+  const element = document.getElementById("id_tree_LQ");
+  element?.appendChild(tag);
+  console.log("child appendchild", element);
+
+  const ele = document.getElementById("id_element_tabelle");
+  //console.log("ELE: >>", ele);
+  ele?.setAttribute("add_new_option", "4");
+
+}
+
 //---------------------------------------------------------------------------------------------------------------
 export async function contextmenu_querschnitt(ev: any) {
-  //---------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------
 
   ev.preventDefault();
 
   // @ts-ignore
   const el = this;
-  const qname = el.textContent;
-  console.log("qname", el.innerText, el.textContent);
-
+  //console.log("el,this",ev.offsetParent)
+  const qname = el.value;
+  //console.log("contextmenu_querschnitt, qname", el.innerText, el.textContent, '|', el.value);
 
   const dialog = new ConfirmDialog({
     trueButton_Text: "ja",
@@ -1021,7 +1048,6 @@ export async function contextmenu_querschnitt(ev: any) {
   const loesche = await dialog.confirm();
   console.log("loesche", loesche);
 
-
   if (loesche) {
     // window.confirm("Lösche Querschnitt: " + qname)
 
@@ -1030,7 +1056,9 @@ export async function contextmenu_querschnitt(ev: any) {
       del_querschnittSet(qname);
 
       let element = document.getElementById("id_tree_LQ") as any;
-      element?.removeChild(el);
+      console.log("element",element.children)
+      console.log("el",el.parentNode,el.parentElement)
+      element?.removeChild(el.parentElement);
     } else {
       const dialogAlert = new AlertDialog({
         trueButton_Text: "ok",
@@ -1044,7 +1072,7 @@ export async function contextmenu_querschnitt(ev: any) {
 
 //---------------------------------------------------------------------------------------------------------------
 export function opendialog(ev: any) {
-  //---------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------
 
   // @ts-ignore
   console.log("opendialog geht", this);
@@ -1063,7 +1091,7 @@ export function opendialog(ev: any) {
   // @ts-ignore
   const ele = this;
   const qname = ele.textContent;
-  console.log("opendialog, qname", ele.innerText, ele.textContent);
+  console.log("opendialog, qname", ele.innerText, "|", ele.textContent, ele.id);
   const index = get_querschnitt_index(qname);
 
   if (index < 0) {
