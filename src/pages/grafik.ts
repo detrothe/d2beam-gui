@@ -2409,8 +2409,9 @@ function draw_lager(two: Two) {
 function draw_gelenke(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
-    let x1: number, x2: number, z1: number, z2: number, dx: number, dz: number
-    let radius = 10 / devicePixelRatio, a = 10 / devicePixelRatio
+    let x1: number, x2: number, z1: number, z2: number, dx: number, dz: number, si: number, co: number
+    let xp1: number, zp1: number, xp2: number, zp2: number, dist: number, aa: number
+    let radius = 8 / devicePixelRatio, a = 10 / devicePixelRatio
 
     for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -2421,9 +2422,12 @@ function draw_gelenke(two: Two) {
             x2 = Math.round(tr.xPix(element[ielem].x2));
             z2 = Math.round(tr.zPix(element[ielem].z2));
 
+            si = element[ielem].sinus
+            co = element[ielem].cosinus
+
             if (element[ielem].gelenk[2] > 0) {                         // Momentengelenk links
-                dx = element[ielem].cosinus * (a + radius)
-                dz = element[ielem].sinus * (a + radius)
+                dx = co * (a + radius)
+                dz = si * (a + radius)
                 let kreis = two.makeCircle(x1 + dx, z1 + dz, radius, 10)
                 kreis.fill = '#ffffff';
 
@@ -2434,6 +2438,129 @@ function draw_gelenke(two: Two) {
                 let kreis = two.makeCircle(x2 - dx, z2 - dz, radius, 10)
                 kreis.fill = '#ffffff';
 
+            }
+            if (element[ielem].gelenk[1] > 0) {                  // Querkraftgelenk links
+                dist = 2 * radius + a + 3
+                dx = co * dist
+                dz = si * dist
+
+                aa = 16
+                xp1 = x1 + aa * si + dx
+                zp1 = z1 - aa * co + dz
+                xp2 = x1 - aa * si + dx
+                zp2 = z1 + aa * co + dz
+                let line = two.makeLine(xp1, zp1, xp2, zp2);
+                line.linewidth = 4;
+                line.stroke = '#ffffff';
+
+                dist = 2 * radius + a
+                dx = co * dist
+                dz = si * dist
+
+                aa = 16
+                xp1 = x1 + aa * si + dx
+                zp1 = z1 - aa * co + dz
+                xp2 = x1 - aa * si + dx
+                zp2 = z1 + aa * co + dz
+                let line2 = two.makeLine(xp1, zp1, xp2, zp2);
+                line2.linewidth = 2;
+                line2.stroke = '#000000';
+
+
+                dist = 2 * radius + a + 4
+                dx = co * dist
+                dz = si * dist
+
+                aa = 16
+                xp1 = x1 + aa * si + dx
+                zp1 = z1 - aa * co + dz
+                xp2 = x1 - aa * si + dx
+                zp2 = z1 + aa * co + dz
+                let line3 = two.makeLine(xp1, zp1, xp2, zp2);
+                line3.linewidth = 2;
+                line3.stroke = '#000000';
+            }
+            if (element[ielem].gelenk[4] > 0) {                  // Querkraftgelenk rechts
+                dist = 2 * radius + a + 3
+                dx = co * dist
+                dz = si * dist
+
+                aa = 16
+                xp1 = x2 + aa * si - dx
+                zp1 = z2 - aa * co - dz
+                xp2 = x2 - aa * si - dx
+                zp2 = z2 + aa * co - dz
+                let line = two.makeLine(xp1, zp1, xp2, zp2);
+                line.linewidth = 4;
+                line.stroke = '#ffffff';
+
+                dist = 2 * radius + a
+                dx = co * dist
+                dz = si * dist
+
+                aa = 16
+                xp1 = x2 + aa * si - dx
+                zp1 = z2 - aa * co - dz
+                xp2 = x2 - aa * si - dx
+                zp2 = z2 + aa * co - dz
+                let line2 = two.makeLine(xp1, zp1, xp2, zp2);
+                line2.linewidth = 2;
+                line2.stroke = '#000000';
+
+
+                dist = 2 * radius + a + 4
+                dx = co * dist
+                dz = si * dist
+
+                aa = 16
+                xp1 = x2 + aa * si - dx
+                zp1 = z2 - aa * co - dz
+                xp2 = x2 - aa * si - dx
+                zp2 = z2 + aa * co - dz
+                let line3 = two.makeLine(xp1, zp1, xp2, zp2);
+                line3.linewidth = 2;
+                line3.stroke = '#000000';
+            }
+            if (element[ielem].gelenk[0] > 0) {                  // Normalkraftgelenk links
+                dist = 2 * radius + a + 6
+                dx = co * dist
+                dz = si * dist
+
+                aa = 0
+                xp1 = x1 + aa * si + dx
+                zp1 = z1 - aa * co + dz
+                xp2 = x1 + aa * si + 1.5 * dx
+                zp2 = z1 - aa * co + 1.5 * dz
+                let line = two.makeLine(xp1, zp1, xp2, zp2);
+                line.linewidth = 10;
+                line.stroke = '#ffffff';
+
+                //dist = 2 * radius + a
+                dx = co * dist
+                dz = si * dist
+
+                aa = 8
+                xp1 = x1 + aa * si + dx
+                zp1 = z1 - aa * co + dz
+                xp2 = x1 + aa * si + 2 * dx
+                zp2 = z1 - aa * co + 2 * dz
+                let line2 = two.makeLine(xp1, zp1, xp2, zp2);
+                line2.linewidth = 6;
+                line2.stroke = '#000000';
+
+
+                //dist = 2 * radius + a
+                dx = co * dist
+                dz = si * dist
+
+                //aa = 16
+                xp1 = x1 - aa * si + dx
+                zp1 = z1 + aa * co + dz
+                xp2 = x1 - aa * si + 2 * dx
+                zp2 = z1 + aa * co + 2 * dz
+                let line3 = two.makeLine(xp1, zp1, xp2, zp2);
+                line3.linewidth = 6;
+                line3.stroke = '#000000';
             }
         }
     }
