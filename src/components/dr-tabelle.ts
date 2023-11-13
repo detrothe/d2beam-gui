@@ -236,6 +236,7 @@ class DrTabelle extends HTMLElement {
                if (this.typs[iSpalte] === 'select') {
                   el = document.createElement('select');
                   el.style.width = '100%';   // 100px
+                  el.style.backgroundColor = 'rgb(255,255,255)';
                   console.log('CREATED SELECT');
                   for (let i = 0; i < nQuerschnittSets; i++) {
                      let option = document.createElement('option');
@@ -276,7 +277,7 @@ class DrTabelle extends HTMLElement {
                newCell.style.borderWidth = '1px';
                newCell.style.padding = '0px';
                newCell.style.margin = '0px';
-               newCell.style.backgroundColor = 'rgb(200,200,200)';
+               newCell.style.backgroundColor = 'rgb(255,255,255)';
                newCell.style.touchAction = 'auto';
                const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
                newCell.id = str1;
@@ -661,7 +662,7 @@ class DrTabelle extends HTMLElement {
                         newCell.style.borderWidth = '1px';
                         newCell.style.padding = '0px';
                         newCell.style.margin = '0px';
-                        newCell.style.backgroundColor = 'rgb(200,200,200)';
+                        newCell.style.backgroundColor = 'rgb(255,255,255)';
                         newCell.style.touchAction = 'auto';
                         const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
                         newCell.id = str1;
@@ -705,6 +706,7 @@ class DrTabelle extends HTMLElement {
                   if (this.typs[iSpalte] === 'select') {
                      el = document.createElement('select');
                      el.style.width = '100%';   // 100px
+                     el.style.backgroundColor = 'rgb(255,255,255)';
                      //console.log('CREATED SELECT');
                      for (let i = 0; i < nQuerschnittSets; i++) {
                         let option = document.createElement('option');
@@ -746,7 +748,7 @@ class DrTabelle extends HTMLElement {
                   newCell.style.borderWidth = '1px';
                   newCell.style.padding = '0px';
                   newCell.style.margin = '0px';
-                  newCell.style.backgroundColor = 'rgb(200,200,200)';
+                  newCell.style.backgroundColor = 'rgb(255,255,255)';
                   newCell.style.touchAction = 'auto';
                   const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
                   newCell.id = str1;
