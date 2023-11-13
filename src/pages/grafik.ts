@@ -2410,12 +2410,14 @@ function draw_gelenke(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
     let x1: number, x2: number, z1: number, z2: number, dx: number, dz: number, si: number, co: number
-    let xp1: number, zp1: number, xp2: number, zp2: number, dist: number, aa: number
-    let radius = 8 / devicePixelRatio, a = 10 / devicePixelRatio
+    let xp1: number, zp1: number, xp2: number, zp2: number, dist: number, aa: number, distL: number
+    let radius = 8 / devicePixelRatio, a = 10 / devicePixelRatio, l_n = 20 / devicePixelRatio
 
     for (let ielem = 0; ielem < nelem; ielem++) {
 
         if (element[ielem].nGelenke > 0) {
+
+            distL = a + radius
 
             x1 = Math.round(tr.xPix(element[ielem].x1));
             z1 = Math.round(tr.zPix(element[ielem].z1));
@@ -2430,6 +2432,7 @@ function draw_gelenke(two: Two) {
                 dz = si * (a + radius)
                 let kreis = two.makeCircle(x1 + dx, z1 + dz, radius, 10)
                 kreis.fill = '#ffffff';
+                distL += radius
 
             }
             if (element[ielem].gelenk[5] > 0) {                         // Momentengelenk rechts
@@ -2440,48 +2443,50 @@ function draw_gelenke(two: Two) {
 
             }
             if (element[ielem].gelenk[1] > 0) {                  // Querkraftgelenk links
-                dist = 2 * radius + a + 3
+                dist = distL + 3 / devicePixelRatio
                 dx = co * dist
                 dz = si * dist
 
-                aa = 16
+                aa = 16 / devicePixelRatio
                 xp1 = x1 + aa * si + dx
                 zp1 = z1 - aa * co + dz
                 xp2 = x1 - aa * si + dx
                 zp2 = z1 + aa * co + dz
                 let line = two.makeLine(xp1, zp1, xp2, zp2);
                 line.linewidth = 4;
-                line.stroke = '#ffffff';
+                line.stroke = '#ffffff';               // weißer Strich Mitte
 
-                dist = 2 * radius + a
+                dist = distL
                 dx = co * dist
                 dz = si * dist
 
-                aa = 16
+                aa = 16 / devicePixelRatio
                 xp1 = x1 + aa * si + dx
                 zp1 = z1 - aa * co + dz
                 xp2 = x1 - aa * si + dx
                 zp2 = z1 + aa * co + dz
                 let line2 = two.makeLine(xp1, zp1, xp2, zp2);
                 line2.linewidth = 2;
-                line2.stroke = '#000000';
+                line2.stroke = '#000000';         // schwarzer Strich links
 
 
-                dist = 2 * radius + a + 4
+                dist = distL + 4 / devicePixelRatio
                 dx = co * dist
                 dz = si * dist
 
-                aa = 16
+                aa = 16 / devicePixelRatio
                 xp1 = x1 + aa * si + dx
                 zp1 = z1 - aa * co + dz
                 xp2 = x1 - aa * si + dx
                 zp2 = z1 + aa * co + dz
                 let line3 = two.makeLine(xp1, zp1, xp2, zp2);
                 line3.linewidth = 2;
-                line3.stroke = '#000000';
+                line3.stroke = '#000000';        // schwarzer Strich rechts
+
+                distL += 6 / devicePixelRatio
             }
             if (element[ielem].gelenk[4] > 0) {                  // Querkraftgelenk rechts
-                dist = 2 * radius + a + 3
+                dist = 2 * radius + a + 3 / devicePixelRatio
                 dx = co * dist
                 dz = si * dist
 
@@ -2498,7 +2503,7 @@ function draw_gelenke(two: Two) {
                 dx = co * dist
                 dz = si * dist
 
-                aa = 16
+                aa = 16 / devicePixelRatio
                 xp1 = x2 + aa * si - dx
                 zp1 = z2 - aa * co - dz
                 xp2 = x2 - aa * si - dx
@@ -2508,11 +2513,11 @@ function draw_gelenke(two: Two) {
                 line2.stroke = '#000000';
 
 
-                dist = 2 * radius + a + 4
+                dist = 2 * radius + a + 4 / devicePixelRatio
                 dx = co * dist
                 dz = si * dist
 
-                aa = 16
+                aa = 16 / devicePixelRatio
                 xp1 = x2 + aa * si - dx
                 zp1 = z2 - aa * co - dz
                 xp2 = x2 - aa * si - dx
@@ -2520,30 +2525,49 @@ function draw_gelenke(two: Two) {
                 let line3 = two.makeLine(xp1, zp1, xp2, zp2);
                 line3.linewidth = 2;
                 line3.stroke = '#000000';
+
+
             }
             if (element[ielem].gelenk[0] > 0) {                  // Normalkraftgelenk links
-                dist = 2 * radius + a + 6
+                dist = distL //+ 6 / devicePixelRatio
                 dx = co * dist
                 dz = si * dist
 
                 aa = 0
                 xp1 = x1 + aa * si + dx
                 zp1 = z1 - aa * co + dz
-                xp2 = x1 + aa * si + 1.5 * dx
-                zp2 = z1 - aa * co + 1.5 * dz
+                xp2 = x1 + aa * si + dx + l_n * co
+                zp2 = z1 - aa * co + dz + l_n * si
+                let line0 = two.makeLine(xp1, zp1, xp2, zp2);
+                line0.linewidth = 10;
+                line0.stroke = '#000000';    //schwarz
+
+                xp1 = x1 + aa * si + dx
+                zp1 = z1 - aa * co + dz
+                xp2 = x1 + aa * si + dx + 0.8 * l_n * co
+                zp2 = z1 - aa * co + dz + 0.8 * l_n * si
                 let line = two.makeLine(xp1, zp1, xp2, zp2);
                 line.linewidth = 10;
-                line.stroke = '#ffffff';
+                line.stroke = '#ffffff';    //weiss
+
+                xp1 = x1 + aa * si + dx
+                zp1 = z1 - aa * co + dz
+                xp2 = x1 + aa * si + dx + 0.5 * l_n * co
+                zp2 = z1 - aa * co + dz + 0.5 * l_n * si
+                let line4 = two.makeLine(xp1, zp1, xp2, zp2);
+                line4.linewidth = 5;
+                line4.stroke = '#000000';    //schwarz
+
 
                 //dist = 2 * radius + a
                 dx = co * dist
                 dz = si * dist
 
-                aa = 8
+                aa = 8 / devicePixelRatio
                 xp1 = x1 + aa * si + dx
                 zp1 = z1 - aa * co + dz
-                xp2 = x1 + aa * si + 2 * dx
-                zp2 = z1 - aa * co + 2 * dz
+                xp2 = x1 + aa * si + dx + l_n * co
+                zp2 = z1 - aa * co + dz + l_n * si
                 let line2 = two.makeLine(xp1, zp1, xp2, zp2);
                 line2.linewidth = 6;
                 line2.stroke = '#000000';
@@ -2556,8 +2580,8 @@ function draw_gelenke(two: Two) {
                 //aa = 16
                 xp1 = x1 - aa * si + dx
                 zp1 = z1 + aa * co + dz
-                xp2 = x1 - aa * si + 2 * dx
-                zp2 = z1 + aa * co + 2 * dz
+                xp2 = x1 - aa * si + dx + l_n * co
+                zp2 = z1 + aa * co + dz + l_n * si
                 let line3 = two.makeLine(xp1, zp1, xp2, zp2);
                 line3.linewidth = 6;
                 line3.stroke = '#000000';
