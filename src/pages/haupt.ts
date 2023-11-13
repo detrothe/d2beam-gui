@@ -804,12 +804,14 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
 
   document?.getElementById("id_button_copy_svg")?.addEventListener("click", copy_svg, false);
 
-  console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
-  console.log("rechnen", getComputedStyle(document?.getElementById("rechnen")!).width);
+  // console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
+  // console.log("rechnen", getComputedStyle(document?.getElementById("rechnen")!).width);
 
-  let ELEMENT = document?.querySelector(".output_container");
-  console.log("ELEMENT", ELEMENT);
-  console.log("ELEMENT", getComputedStyle(ELEMENT!).width);
+  // let ELEMENT = document?.querySelector(".output_container");
+  // console.log("ELEMENT", ELEMENT);
+  // console.log("ELEMENT", getComputedStyle(ELEMENT!).width);
+
+  rechnen(1);
 }
 
 //---------------------------------------------------------------------------------------------------------------
