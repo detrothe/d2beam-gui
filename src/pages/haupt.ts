@@ -32,7 +32,7 @@ import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschni
 import DetectOS from "./detectos";
 
 import { addListener_filesave } from "./dateien";
-import { select_loadcase_changed, select_eigenvalue_changed, copy_svg } from "./grafik";
+import { select_loadcase_changed, select_eigenvalue_changed, copy_svg, drawsystem } from "./grafik";
 import { set_info } from "./utility";
 //import { init_contextmenu } from '../components/dr-tabelle';
 
@@ -111,14 +111,29 @@ for (let i = 1; i <= Number(nlastfaelle_init); i++) {
   column_string_kombitabelle = column_string_kombitabelle + ', "Lf ' + i + '"';
 }
 column_string_kombitabelle = column_string_kombitabelle + "]";
-console.log("column_string_kombitabelle", column_string_kombitabelle);
+//console.log("column_string_kombitabelle", column_string_kombitabelle);
 
 typs_string_kombitabelle = '["-", "text"';
 for (let i = 1; i <= Number(nlastfaelle_init); i++) {
   typs_string_kombitabelle = typs_string_kombitabelle + ', "number"';
 }
 typs_string_kombitabelle = typs_string_kombitabelle + "]";
-console.log("typs_string_kombitabelle", typs_string_kombitabelle);
+//console.log("typs_string_kombitabelle", typs_string_kombitabelle);
+
+
+const portrait = window.matchMedia("(orientation: portrait)");
+
+portrait.addEventListener("change", function (e) {
+  if (e.matches) {
+    // Portrait mode
+    //write("portrait mode")
+    drawsystem();
+  } else {
+    // Landscape
+    //write("landscape mode")
+    drawsystem();
+  }
+})
 
 {
   //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
@@ -811,6 +826,8 @@ console.log("typs_string_kombitabelle", typs_string_kombitabelle);
   // console.log("ELEMENT", ELEMENT);
   // console.log("ELEMENT", getComputedStyle(ELEMENT!).width);
 
+
+
   rechnen(1);
 }
 
@@ -1045,7 +1062,7 @@ export async function contextmenu_querschnitt(ev: any) {
   //console.log("el,this",ev.offsetParent)
   const id_button = el.value  // button
   const ele = document.getElementById(id_button) as SlButton;
-  if ( ele != null) qname = ele.textContent!;
+  if (ele != null) qname = ele.textContent!;
   //console.log("contextmenu_querschnitt, qname", el.innerText, el.textContent, '|', el.value);
 
   const dialog = new ConfirmDialog({

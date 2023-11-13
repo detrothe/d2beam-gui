@@ -151,7 +151,7 @@ export function init_grafik(flag = 1) {
     }
 
     devicePixelRatio = window.devicePixelRatio
-    write('devicePixelRatio =  ', devicePixelRatio)
+    console.log('devicePixelRatio =  ', devicePixelRatio)
 
     const el_select = document.getElementById('id_select_loadcase') as HTMLSelectElement;
 
