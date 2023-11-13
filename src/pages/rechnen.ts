@@ -11,6 +11,7 @@ import { gauss } from "./gauss"
 import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CSpring } from "./feder"
 import { init_grafik, drawsystem } from "./grafik";
+import { show_controller_THIIO, show_controller_results } from "./mypanelgui"
 
 let fatal_error = false;
 
@@ -446,8 +447,13 @@ export function rechnen(flag = 1) {
 
     if (flag === 1) {
         if (!fatal_error) calculate();
-
+        if (THIIO_flag === 0) show_controller_THIIO(false);
+        else show_controller_THIIO(true);
+        show_controller_results(true);
     } else {
+
+        show_controller_THIIO(false);
+        show_controller_results(false);
 
         calc_neq_and_springs();
 
@@ -1244,7 +1250,7 @@ export function init_tabellen() {
     {
 
         incr_querschnittSets();
-        querschnitts_zaehler=0;
+        querschnitts_zaehler = 0;
 
         const qname = 'R 40x30'
         const id = 'mat-' + querschnitts_zaehler;

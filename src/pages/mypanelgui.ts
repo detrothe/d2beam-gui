@@ -12,12 +12,19 @@ export const draw_sg = {
 
 export let draw_group = false;
 
+let controller_eigenformen: any
+let controller_schief: any
+let controller_stabvorverformung: any
+let controller_N: any
+let controller_V: any
+let controller_M: any
+let controller_disp: any
 
 //--------------------------------------------------------------------------------------------------------
 export function myPanel() {
     //--------------------------------------------------------------------------------------------------------
 
-    let controller_M: any, controller_V: any, controller_N: any
+   // let controller_M: any, controller_V: any, controller_N: any
 
     let obj = {
         Label: false,
@@ -47,7 +54,7 @@ export function myPanel() {
     let skalierung = 'Skalierung'
     let eigenformen = 'Eigenformen'
     let lasten_anzeigen = 'Lasten anzeigen'
-    let skalierung_pfeile = '-'
+    // let skalierung_pfeile = '-'
     let lager_kraefte = 'Lagerkräfte anzeigen'
     let umriss_anzeigen = 'Umriss anzeigen'
 
@@ -63,7 +70,7 @@ export function myPanel() {
         window.dispatchEvent(new Event("draw_systemlinien_grafik"));
     });
 
-    gui.add(obj, 'verformung').name(verformungen).onChange(() => {
+    controller_disp = gui.add(obj, 'verformung').name(verformungen).onChange(() => {
         window.dispatchEvent(new Event("draw_verformungen_grafik"));
     });
 
@@ -115,15 +122,15 @@ export function myPanel() {
 
     });
 
-    gui.add(obj, 'eigenform').name(eigenformen).onChange(() => {
+    controller_eigenformen = gui.add(obj, 'eigenform').name(eigenformen).onChange(() => {
         window.dispatchEvent(new Event("draw_eigenformen_grafik"));
     });
 
-    gui.add(obj, 'schief').name('Schiefstellung').onChange(() => {
+    controller_schief = gui.add(obj, 'schief').name('Schiefstellung').onChange(() => {
         window.dispatchEvent(new Event("draw_schiefstellung_grafik"));
     });
 
-    gui.add(obj, 'stabvorverformung').name('Stabvorverformung').onChange(() => {
+    controller_stabvorverformung = gui.add(obj, 'stabvorverformung').name('Stabvorverformung').onChange(() => {
         window.dispatchEvent(new Event("draw_stabvorverformung_grafik"));
     });
 
@@ -137,11 +144,11 @@ export function myPanel() {
         window.dispatchEvent(new Event("draw_lasten_grafik"));
     });
 
-    gui.add(obj, 'scale_arrows', 0, 2, 0.1).name(skalierung_pfeile).onFinishChange((v: any) => {
-        //console.log("skalierung Pfeile", v)
-        scale_factor_arrows = v;
-        window.dispatchEvent(new Event("scale_factor_arrows"));
-    });
+    // gui.add(obj, 'scale_arrows', 0, 2, 0.1).name(skalierung_pfeile).onFinishChange((v: any) => {
+    //     //console.log("skalierung Pfeile", v)
+    //     scale_factor_arrows = v;
+    //     window.dispatchEvent(new Event("scale_factor_arrows"));
+    // });
 
     gui.add(obj, 'show_support_forces').name(lager_kraefte).onChange(() => {
         window.dispatchEvent(new Event("draw_lagerkraefte_grafik"));
@@ -158,14 +165,31 @@ export function myPanel() {
 
 //--------------------------------------------------------------------------------------------------------
 export function get_scale_factor() {
-    //--------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
     return scale_factor;
 
 }
 
 //--------------------------------------------------------------------------------------------------------
 export function get_scale_factor_arrows() {
-    //--------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
     return scale_factor_arrows;
 
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function show_controller_THIIO(wert: boolean) {
+    //----------------------------------------------------------------------------------------------------
+    controller_eigenformen.show(wert);
+    controller_schief.show(wert);
+    controller_stabvorverformung.show(wert);
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function show_controller_results(wert: boolean) {
+    //----------------------------------------------------------------------------------------------------
+    controller_N.show(wert);
+    controller_V.show(wert);
+    controller_M.show(wert);
+    controller_disp.show(wert);
 }
