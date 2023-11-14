@@ -96,6 +96,10 @@ class CTrans {
         //return this.xmax - xPix * this.dx / this.width;
         return xPix * this.dx / this.width;
     }
+
+    getMinMax() {
+        return { xmin: this.xmin, xmax: this.xmax, zmin: this.zmin, zmax: this.zmax }
+    }
 }
 
 

@@ -121,6 +121,17 @@ const style_pfeil_moment = {
     linewidth: 7,
     color: '#dc0000'
 }
+
+
+const style_pfeil_koord = {
+    a: 35,
+    b: 25,
+    h: 16,
+    linewidth: 4,
+    color: '#006666'
+}
+
+
 export function select_loadcase_changed() {
 
     //console.log("################################################ select_loadcase_changed")
@@ -345,6 +356,8 @@ export function drawsystem() {
 
 
     let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen || show_stabvorverformung);
+
+    console.log("O N L Y  L A B E L S", onlyLabels)
 
     const artboard = document.getElementById("artboard") as any;
     console.log("artboard", artboard)
@@ -952,7 +965,7 @@ export function drawsystem() {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if (scalefactor === Infinity || scalefactor > 1.e14) break;
+            if (scalefactor === Infinity || scalefactor > 1.e13) break;
 
             const nelTeilungen = element[ielem].nTeilungen
             let sg: number[] = new Array(nelTeilungen)
@@ -1265,8 +1278,8 @@ export function drawsystem() {
         if (show_labels && onlyLabels) {
 
             for (let i = 0; i < nnodes; i++) {
-                x1 = Math.round(tr.xPix(node[i].x)) + 10 / devicePixelRatio + 12 ;
-                z1 = Math.round(tr.zPix(node[i].z)) + 10 / devicePixelRatio + 12 ;
+                x1 = Math.round(tr.xPix(node[i].x)) + 10 / devicePixelRatio + 12;
+                z1 = Math.round(tr.zPix(node[i].z)) + 10 / devicePixelRatio + 12;
 
                 let rect = two.makeRoundedRectangle(x1, z1, 25, 25, 4)
                 rect.fill = '#ffffff'
@@ -1276,8 +1289,40 @@ export function drawsystem() {
                 const txt = two.makeText(str, x1, z1, style_txt)
                 txt.fill = '#000000'
             }
+
+            // Koordinatenursprung darstellen
+
+            draw_arrow_alpha(two, 0.0, 0.0, 0.0, -1.0, { a: 55, b: 25, h: 12, linewidth: 4, color: '#ff0000' })
+            let txt = two.makeText('x', tr.xPix(0.0) + 80 / devicePixelRatio, tr.zPix(0.0) - 10 / devicePixelRatio, style_txt)
+            txt.fill = '#ff0000'
+            draw_arrow_alpha(two, 0.0, 0.0, Math.PI / 2.0, -1.0, { a: 55, b: 25, h: 12, linewidth: 4, color: '#0000ff' })
+            txt = two.makeText('z', tr.xPix(0.0) + 10 / devicePixelRatio, tr.zPix(0.0) + 80 / devicePixelRatio, style_txt)
+            txt.fill = '#0000ff'
+
         }
 
+
+        {
+            //let xmin = 0.0, xmax = 0.0, zmin = 0.0, zmax = 0.0
+
+            const { xmin, xmax, zmin, zmax } = tr.getMinMax();
+
+            let dx = xmax - xmin
+            let dz = zmax - zmin
+            //console.log("min max", xmin, xmax, zmin, zmax, dx, dz)
+            //console.log("LINKS", tr.xPix(xmin + dx * 0.1), tr.zPix(zmin + dz * 0.1), tr.xPix(xmin + dx * 0.1), tr.zPix(zmax - dz * 0.1))
+            let line1 = two.makeLine(tr.xPix(xmin + dx * 0.05), tr.zPix(zmin + dz * 0.1), tr.xPix(xmin + dx * 0.05), tr.zPix(zmax - dz * 0.1));
+            line1.linewidth = 1;
+            let line2 = two.makeLine(tr.xPix(xmin + dx * 0.04), tr.zPix(0.0), tr.xPix(xmin + dx * 0.06), tr.zPix(0.0));
+            line2.linewidth = 1;
+
+            let line3 = two.makeLine(tr.xPix(xmin + dx * 0.05), tr.zPix(zmax - dz * 0.1), tr.xPix(xmax - dx * 0.05), tr.zPix(zmax - dz * 0.1));
+            line3.linewidth = 1;
+            let line4 = two.makeLine(tr.xPix(0.0), tr.zPix(zmax - dz * 0.11), tr.xPix(0.0), tr.zPix(zmax - dz * 0.09));
+            line4.linewidth = 1;
+
+
+        }
     }
 
     draw_lager(two);
@@ -1287,8 +1332,9 @@ export function drawsystem() {
         draw_elementlasten(two);
         draw_knotenkraefte(two);
     }
-    if (show_lagerkraefte && flag_eingabe === 1) draw_lagerkraefte(two);
-
+    if (!(show_labels && onlyLabels)) {
+        if (show_lagerkraefte && flag_eingabe === 1) draw_lagerkraefte(two);
+    }
 
 
     // Don’t forget to tell two to draw everything to the screen
