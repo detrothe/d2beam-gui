@@ -147,8 +147,8 @@ portrait.addEventListener("change", function (e) {
     </style>
 
     <sl-tab-group>
-      <sl-tab  slot="nav" panel="tab-haupt">Haupt</sl-tab>
-      <sl-tab  id="id_tab_group" slot="nav" panel="tab-grafik">Grafik</sl-tab>
+      <sl-tab  id="id_tab_group" slot="nav" panel="tab-haupt">Haupt</sl-tab>
+      <sl-tab  slot="nav" panel="tab-grafik">Grafik</sl-tab>
       <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
       <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>
       <sl-tab slot="nav" panel="tab-elemente">Elemente</sl-tab>
@@ -163,7 +163,7 @@ portrait.addEventListener("change", function (e) {
 
       <!--------------------------------------------------------------------------------------->
 
-      <sl-tab-panel name="tab-haupt">
+      <sl-tab-panel name="tab-haupt" >
         <div id="id_current_filename">&nbsp;&nbsp;aktueller Dateiname: ${currentFilename}<br /></div>
 
         <p>

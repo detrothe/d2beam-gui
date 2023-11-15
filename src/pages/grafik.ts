@@ -364,13 +364,15 @@ export function drawsystem() {
     let two = new Two(params).appendTo(artboard);
 
 
-    let el1 = document.getElementById("container") as any   // id_tab_group
-    console.log("HEIGHT id_tab_group boundingRect", el1.getBoundingClientRect());
+    //let el1 = document.getElementById("id_tab_group") as any   // id_tab_group
+    //console.log("HEIGHT id_tab_group boundingRect", el1, el1.getBoundingClientRect());
+    //write("height id_tab_group: ", el1.getBoundingClientRect().height)
 
     let ele = document.getElementById("id_grafik") as any
     let grafik_top = ele.getBoundingClientRect().top
     console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
     write("grafik top: " + grafik_top)
+    if (grafik_top === 0) grafik_top = 69
     let height = document.documentElement.clientHeight - grafik_top - 1 //- el?.getBoundingClientRect()?.height;
 
     two.width = document.documentElement.clientWidth;
