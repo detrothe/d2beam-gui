@@ -147,8 +147,8 @@ portrait.addEventListener("change", function (e) {
     </style>
 
     <sl-tab-group>
-      <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">Haupt</sl-tab>
-      <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
+      <sl-tab  slot="nav" panel="tab-haupt">Haupt</sl-tab>
+      <sl-tab  id="id_tab_group" slot="nav" panel="tab-grafik">Grafik</sl-tab>
       <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
       <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>
       <sl-tab slot="nav" panel="tab-elemente">Elemente</sl-tab>
@@ -221,7 +221,6 @@ portrait.addEventListener("change", function (e) {
 
         <div class="output_container">
           <textarea id="output" rows="40"></textarea>
-          <!-- rows="40" cols="8"  -->
         </div>
 
         <dr-dialog_neue_eingabe id="id_dialog_neue_eingabe"></dr-dialog_neue_eingabe>
@@ -241,7 +240,6 @@ portrait.addEventListener("change", function (e) {
           <button id="id_button_copy_svg">save svg</button>
           <div id="artboard"></div>
         </div>
-        <!--  height: 100%; -->
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->

@@ -364,41 +364,17 @@ export function drawsystem() {
     let two = new Two(params).appendTo(artboard);
 
 
-    //console.log("document.documentElement", document.documentElement.clientHeight)
+    let el1 = document.getElementById("container") as any   // id_tab_group
+    console.log("HEIGHT id_tab_group boundingRect", el1.getBoundingClientRect());
 
-    //let ele = document.getElementById("id_tab_group") as any
-    //let height = el.getBoundingClientRect().height
-    //console.log("boundingRect", ele?.getBoundingClientRect().height)
-    let height = document.documentElement.clientHeight //- el?.getBoundingClientRect()?.height;
+    let ele = document.getElementById("id_grafik") as any
+    let grafik_top = ele.getBoundingClientRect().top
+    console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
+    write("grafik top: " + grafik_top)
+    let height = document.documentElement.clientHeight - grafik_top - 1 //- el?.getBoundingClientRect()?.height;
+
     two.width = document.documentElement.clientWidth;
-    //ele = document.querySelector('.footer'); //.getElementById("container")
-    //console.log("container footer boundingRect", ele?.getBoundingClientRect())
-
-    //height= height - el?.getBoundingClientRect().height;
     two.height = height
-    /*
-        // Two.js has convenient methods to make shapes and insert them into the scene.
-        var radius = 50;
-        var x = two.width * 0.5;
-        var y = two.height * 0.5 - radius * 1.25;
-        var circle = two.makeCircle(x, y, radius);
-
-        y = two.height * 0.5 + radius * 1.25;
-        var width = 100;
-        height = 100;
-        var rect = two.makeRectangle(x, y, width, height);
-
-        // The object returned has many stylable properties:
-        circle.fill = '#FF8000';
-        // And accepts all valid CSS color:
-        circle.stroke = 'orangered';
-        circle.linewidth = 5;
-
-        rect.fill = 'rgb(0, 200, 255)';
-        rect.opacity = 0.75;
-        rect.noStroke();
-*/
-    //two.makeLine(0, 0, two.width, two.height)
 
     show_lasten_temp = show_lasten;    // Bei Schnittgrößen werden Lasten temporär nicht gezeichnet
 
@@ -1305,21 +1281,41 @@ export function drawsystem() {
         {
             //let xmin = 0.0, xmax = 0.0, zmin = 0.0, zmax = 0.0
 
-            const { xmin, xmax, zmin, zmax } = tr.getMinMax();
+            const [x_min, x_max, z_min, z_max] = tr.getMinMax();
 
-            let dx = xmax - xmin
-            let dz = zmax - zmin
-            //console.log("min max", xmin, xmax, zmin, zmax, dx, dz)
-            //console.log("LINKS", tr.xPix(xmin + dx * 0.1), tr.zPix(zmin + dz * 0.1), tr.xPix(xmin + dx * 0.1), tr.zPix(zmax - dz * 0.1))
-            let line1 = two.makeLine(tr.xPix(xmin + dx * 0.05), tr.zPix(zmin + dz * 0.1), tr.xPix(xmin + dx * 0.05), tr.zPix(zmax - dz * 0.1));
+            let dx = x_max - x_min
+            let dz = z_max - z_min
+            //console.log("min max", x_min, x_max, z_min, z_max, dx, dz)
+            //console.log("LINKS", tr.xPix(x_min + dx * 0.1), tr.zPix(z_min + dz * 0.1), tr.xPix(x_min + dx * 0.1), tr.zPix(z_max - dz * 0.1))
+            // linke Linie
+            let rand = tr.World0(20 / devicePixelRatio)
+            let xl = x_min + rand //dx * 0.05
+            let zl = z_max - rand
+            let line1 = two.makeLine(tr.xPix(xl), tr.zPix(z_min + dz * 0.05), tr.xPix(xl), tr.zPix(z_max - dz * 0.05));
             line1.linewidth = 1;
-            let line2 = two.makeLine(tr.xPix(xmin + dx * 0.04), tr.zPix(0.0), tr.xPix(xmin + dx * 0.06), tr.zPix(0.0));
+            let line2 = two.makeLine(tr.xPix(x_min), tr.zPix(0.0), tr.xPix(x_min + 2 * rand), tr.zPix(0.0));
             line2.linewidth = 1;
+            let txt = two.makeText('0', tr.xPix(x_min + 2 * rand) + 4 / devicePixelRatio, tr.zPix(0.0), style_txt)
+            txt.fill = '#000000'
+            txt.baseline = 'middle'
+            txt.alignment = 'left'
 
-            let line3 = two.makeLine(tr.xPix(xmin + dx * 0.05), tr.zPix(zmax - dz * 0.1), tr.xPix(xmax - dx * 0.05), tr.zPix(zmax - dz * 0.1));
+            let line3 = two.makeLine(tr.xPix(x_min + dx * 0.05), tr.zPix(zl), tr.xPix(x_max - dx * 0.05), tr.zPix(zl));
             line3.linewidth = 1;
-            let line4 = two.makeLine(tr.xPix(0.0), tr.zPix(zmax - dz * 0.11), tr.xPix(0.0), tr.zPix(zmax - dz * 0.09));
+            let line4 = two.makeLine(tr.xPix(0.0), tr.zPix(z_max), tr.xPix(0.0), tr.zPix(z_max - 2 * rand));
             line4.linewidth = 1;
+            let txt1 = two.makeText('0', tr.xPix(0.0), tr.zPix(z_max - 2 * rand) - 4 / devicePixelRatio, style_txt)
+            txt1.fill = '#000000'
+            txt1.baseline = 'baseline'
+            txt1.alignment = 'center'
+
+            let line5 = two.makeLine(tr.xPix(xmax), tr.zPix(z_max), tr.xPix(xmax), tr.zPix(z_max - 2 * rand));
+            line5.linewidth = 1;
+
+            txt1 = two.makeText(myFormat(xmax, 1, 2), tr.xPix(xmax), tr.zPix(z_max - 2 * rand) - 4 / devicePixelRatio, style_txt)
+            txt1.fill = '#000000'
+            txt1.baseline = 'baseline'
+            txt1.alignment = 'center'
 
 
         }

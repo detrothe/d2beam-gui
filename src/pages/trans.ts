@@ -98,7 +98,7 @@ class CTrans {
     }
 
     getMinMax() {
-        return { xmin: this.xmin, xmax: this.xmax, zmin: this.zmin, zmax: this.zmax }
+        return [this.xmin, this.xmax, this.zmin, this.zmax]
     }
 }
 
