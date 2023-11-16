@@ -1,52 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="utf-8" />
-      <title>PWA D2BEAM</title>
+  <head>
+    <meta charset="utf-8" />
+    <title>PWA D2BEAM</title>
 
-      <base href="/" />
+    <base href="/" />
 
-      <!-- This meta viewport ensures the webpage's dimensions change according to the device it's on. This is called Responsive Web Design.-->
-      <meta
-         name="viewport"
-         content="width=device-width, initial-scale=1, maximum-scale=5, minimal-ui"
-      />
-      <!-- content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" -->
+    <!-- This meta viewport ensures the webpage's dimensions change according to the device it's on. This is called Responsive Web Design.-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimal-ui" />
+    <!-- content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" -->
 
-      <meta
-         name="description"
-         content="This is a beam Finite Element Analysis app"
-      />
+    <meta name="description" content="This is a beam Finite Element Analysis app" />
 
-      <meta
-         name="theme-color"
-         media="(prefers-color-scheme: dark)"
-         content="#181818"
-      />
-      <meta
-         name="theme-color"
-         media="(prefers-color-scheme: light)"
-         content="#f3f3f3"
-      />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f3f3" />
 
-      <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-title" content="PWA Starter" />
-      <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-      <link rel="apple-touch-icon" href="/assets/icons/apple-512x512.png" />
+    <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="PWA Starter" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-512x512.png" />
 
-      <!-- This tag is used by the PWA D2BEAM CLI to identify template projects. Don't remove if you are using the CLI. -->
-      <meta name="pwa-starter-template-identity" content="pwa-starter" />
+    <!-- This tag is used by the PWA D2BEAM CLI to identify template projects. Don't remove if you are using the CLI. -->
+    <meta name="pwa-starter-template-identity" content="pwa-starter" />
 
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
-      <!-- Imports an icon to represent the document. -->
-      <link rel="icon" href="/assets/icons/icon_24.png" type="image/png" />
+    <!-- Imports an icon to represent the document. -->
+    <link rel="icon" href="/assets/icons/icon_24.png" type="image/png" />
 
-      <!-- Imports the manifest to represent the web application. A web app must have a manifest to be a PWA. -->
-      <link rel="manifest" href="/manifest.json" />
+    <!-- Imports the manifest to represent the web application. A web app must have a manifest to be a PWA. -->
+    <link rel="manifest" href="/manifest.json" />
 
-      <!-- light mode and dark mode CSS
+    <!-- light mode and dark mode CSS
       <link
          rel="stylesheet"
          media="(prefers-color-scheme:light)"
@@ -59,13 +45,9 @@
          onload="document.documentElement.classList.add('sl-theme-dark');"
       />
  -->
-      <link
-         rel="stylesheet"
-         media="(prefers-color-scheme:light)"
-         href="./src/styles/light.css"
-      />
+    <link rel="stylesheet" media="(prefers-color-scheme:light)" href="./src/styles/light.css" />
 
-      <!--
+    <!--
       <script>
          console.log('in script');
          // make the whole serviceworker process into a promise so later on we can
@@ -109,24 +91,24 @@
          // because the registering of a service worker doesn't need to be executed on the first load of the page.
       </script>
    -->
-      <script src="d2beam_wasm.js"></script>
+    <script src="d2beam_wasm.js"></script>
 
-      <!--
+    <!--
        <script>navigator.serviceWorker.register("dist/sw.js")</script>
        <script>navigator.serviceWorker.register("public/sw.js")</script>
       -->
-      <script type="module" src="/src/index.ts"></script>
-   </head>
+    <script type="module" src="/src/index.ts"></script>
+  </head>
 
-   <body>
-      <script>
-         //if ('serviceWorker' in navigator) {
-         //   navigator.serviceWorker.register('/sw.js');
-         //}
+  <body>
+    <script>
+      //if ('serviceWorker' in navigator) {
+      //   navigator.serviceWorker.register('/sw.js');
+      //}
 
-         // listen to the service worker promise in index.html to see if there has been a new update.
-         // condition: the service-worker.js needs to have some kind of change - e.g. increment CACHE_VERSION.
-         /*
+      // listen to the service worker promise in index.html to see if there has been a new update.
+      // condition: the service-worker.js needs to have some kind of change - e.g. increment CACHE_VERSION.
+      /*
          window['isUpdateAvailable'].then((isAvailable) => {
             if (isAvailable) {
                const toast = this.toastCtrl.create({
@@ -139,58 +121,39 @@
             }
          });
          */
-      </script>
+    </script>
 
-      <div id="container">
-         <footer class="footer">
-            2D structural analysis of frames using the d2beam element, v0.6.4,
-            16-November-2023,
-            <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
-         </footer>
-      </div>
+    <div id="container">
+      <footer class="footer">
+        2D structural analysis of frames using the d2beam element, v0.6.4, 16-November-2023,
+        <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
+      </footer>
+    </div>
 
-      <nav id="context-menu" class="context-menu">
-         <ul class="context-menu__items">
-            <li class="context-menu__item">
-               <a href="#" class="context-menu__link" data-action="copyFirst"
-                  ><i class="fa fa-clone"></i> copy first cell value</a
-               >
-            </li>
-            <li class="context-menu__item">
-               <a href="#" class="context-menu__link" data-action="copyFirstRow"
-                  ><i class="fa fa-clone"></i> copy first row values</a
-               >
-            </li>
-            <li class="context-menu__item">
-               <a href="#" class="context-menu__link" data-action="increment_1"
-                  ><i class="fa fa-plus-square-o"></i> increment by 1</a
-               >
-            </li>
-            <li class="context-menu__item">
-               <a
-                  href="#"
-                  class="context-menu__link"
-                  data-action="increment_delta"
-                  ><i class="fa fa-plus-square-o"></i> increment by delta</a
-               >
-            </li>
-            <li class="context-menu__item">
-               <a href="#" class="context-menu__link" data-action="copy"
-                  ><i class="fa fa-clipboard"></i> copy to clipboard</a
-               >
-            </li>
-            <li class="context-menu__item">
-               <a href="#" class="context-menu__link" data-action="insert"
-                  ><i class="fa fa-clipboard"></i> insert from clipboard</a
-               >
-            </li>
-            <li class="context-menu__item">
-               <a href="#" class="context-menu__link" data-action="close"
-                  ><i class="fa fa-window-close"></i> close</a
-               >
-            </li>
-         </ul>
-      </nav>
-   </body>
+    <nav id="context-menu" class="context-menu">
+      <ul class="context-menu__items">
+        <li class="context-menu__item">
+          <a href="#" class="context-menu__link" data-action="copyFirst"><i class="fa fa-clone"></i> copy first cell value</a>
+        </li>
+        <li class="context-menu__item">
+          <a href="#" class="context-menu__link" data-action="copyFirstRow"><i class="fa fa-clone"></i> copy first row values</a>
+        </li>
+        <li class="context-menu__item">
+          <a href="#" class="context-menu__link" data-action="increment_1"><i class="fa fa-plus-square-o"></i> increment by 1</a>
+        </li>
+        <li class="context-menu__item">
+          <a href="#" class="context-menu__link" data-action="increment_delta"><i class="fa fa-plus-square-o"></i> increment by delta</a>
+        </li>
+        <li class="context-menu__item">
+          <a href="#" class="context-menu__link" data-action="copy"><i class="fa fa-clipboard"></i> copy to clipboard</a>
+        </li>
+        <li class="context-menu__item">
+          <a href="#" class="context-menu__link" data-action="insert"><i class="fa fa-clipboard"></i> insert from clipboard</a>
+        </li>
+        <li class="context-menu__item">
+          <a href="#" class="context-menu__link" data-action="close"><i class="fa fa-window-close"></i> close</a>
+        </li>
+      </ul>
+    </nav>
+  </body>
 </html>
-

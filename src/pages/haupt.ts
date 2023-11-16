@@ -230,15 +230,18 @@ portrait.addEventListener("change", function (e) {
         <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:absolute;top:0">
           <!-- width:100vw; ;width:300px;height:300px; -->
           <div id="panel_gui" style="margin:0;padding:0;"></div>
-          <div id="id_div_select_lc">
-            <select id="id_select_loadcase" on></select>
+          <div id="id_grafik_group">
+            <div id="id_div_select_lc">
+              <select id="id_select_loadcase" on></select>
+              <button id="id_button_copy_svg">save svg</button>
+            </div>
+            <div id="id_div_select_eigv">
+              <select id="id_select_eigenvalue" on></select>
+            </div>
           </div>
-          <div id="id_div_select_eigv">
-            <select id="id_select_eigenvalue" on></select>
-          </div>
-          <button id="id_button_copy_svg">save svg</button>
           <button id="id_button_zurueck_grafik">zurück</button>
-          <div id="artboard"  style="margin:0;padding:0;"></div>
+
+          <div id="artboard" style="margin:0;padding:0;"></div>
         </div>
       </sl-tab-panel>
 
@@ -801,7 +804,8 @@ portrait.addEventListener("change", function (e) {
   const container = document.getElementById("container") as HTMLDivElement;
   const renderBefore = container?.querySelector("footer");
   render(template(), container, { renderBefore });
-  //render( template, document.body);
+
+  // render( template(), document.body);
 
   // Tabellen sin jetzt da, Tabellen mit Voreinstellungen füllen
 

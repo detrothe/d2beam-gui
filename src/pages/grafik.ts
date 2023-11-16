@@ -417,7 +417,7 @@ export function drawsystem() {
     } else {
         let grafik_top = ele.getBoundingClientRect().top
         console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
-        write("grafik top: " + grafik_top)
+        //write("grafik top: " + grafik_top)
         if (grafik_top === 0) grafik_top = 69
         height = document.documentElement.clientHeight - grafik_top - 1 //- el?.getBoundingClientRect()?.height;
     }

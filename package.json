@@ -1,6 +1,6 @@
 {
   "name": "pwa-d2beam",
-  "version": "0.0.1",
+  "version": "0.6",
   "description": "A layered beam analysis PWA",
   "main": "index.js",
   "scripts": {
