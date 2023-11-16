@@ -2507,39 +2507,39 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         row.appendChild(th0);
         // @ts-ignore
         const th1 = table.tHead.appendChild(document.createElement("th"));
-        th1.innerHTML = "N<sub>L</sub> &nbsp;[kN]";
-        th1.title = "Normalkraft N, positiv als Zugktaft"
+        th1.innerHTML = "N<sub>a</sub> &nbsp;[kN]";
+        th1.title = "Normalkraft N am Stabanfang, positiv als Zugktaft"
         th1.setAttribute("class", "table_cell_center");
         row.appendChild(th1);
         // @ts-ignore
         const th2 = table.tHead.appendChild(document.createElement("th"));
-        th2.innerHTML = "V<sub>Lz</sub>&nbsp;[kN]";
-        th2.title = "Querkraft Vz, positiv in negativer z-Richtung am negativen Schnittufer"
+        th2.innerHTML = "V<sub>az</sub>&nbsp;[kN]";
+        th2.title = "Querkraft Vz am Stabanfang, positiv in negativer z-Richtung am negativen Schnittufer"
         th2.setAttribute("class", "table_cell_center");
         row.appendChild(th2);
         // @ts-ignore
         const th3 = table.tHead.appendChild(document.createElement("th"));
-        th3.innerHTML = "M<sub>Ly</sub>&nbsp;[kNm]";
-        th3.title = "Biegemoment, positiv im Uhrzeigersinn am negativen Schnittufer"
+        th3.innerHTML = "M<sub>ay</sub>&nbsp;[kNm]";
+        th3.title = "Biegemoment am Stabanfang, positiv im Uhrzeigersinn am negativen Schnittufer"
         th3.setAttribute("class", "table_cell_center");
         row.appendChild(th3);
 
         // @ts-ignore
         const th4 = table.tHead.appendChild(document.createElement("th"));
-        th4.innerHTML = "N<sub>R</sub> &nbsp;[kN]";
-        th4.title = "Normalkraft N, positiv als Zugktaft"
+        th4.innerHTML = "N<sub>e</sub> &nbsp;[kN]";
+        th4.title = "Normalkraft N am Stabende, positiv als Zugktaft"
         th4.setAttribute("class", "table_cell_center");
         row.appendChild(th4);
         // @ts-ignore
         const th5 = table.tHead.appendChild(document.createElement("th"));
-        th5.innerHTML = "V<sub>Rz</sub>&nbsp;[kN]";
-        th5.title = "Querkraft Vz, positiv in z-Richtung am positiven Schnittufer"
+        th5.innerHTML = "V<sub>ez</sub>&nbsp;[kN]";
+        th5.title = "Querkraft Vz am Stabende, positiv in z-Richtung am positiven Schnittufer"
         th5.setAttribute("class", "table_cell_center");
         row.appendChild(th5);
         // @ts-ignore
         const th6 = table.tHead.appendChild(document.createElement("th"));
-        th6.innerHTML = "M<sub>Ry</sub>&nbsp;[kNm]";
-        th6.title = "Biegemoment, positiv im Gegenuhrzeigersinn am positiven Schnittufer"
+        th6.innerHTML = "M<sub>ey</sub>&nbsp;[kNm]";
+        th6.title = "Biegemoment am Stabende, positiv im Gegenuhrzeigersinn am positiven Schnittufer"
         th6.setAttribute("class", "table_cell_center");
         row.appendChild(th6);
 

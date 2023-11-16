@@ -24,6 +24,7 @@ console.log("in grafik")
 //let two: Two
 let domElement: any = null
 let svgElement: any = null;
+let fullscreen = true;
 let wheel_factor = 1.0
 let mouseOffsetX = 0.0
 let mouseOffsetY = 0.0
@@ -132,7 +133,9 @@ const style_pfeil_koord = {
 }
 
 
+//--------------------------------------------------------------------------------------------------------
 export function select_loadcase_changed() {
+    //----------------------------------------------------------------------------------------------------
 
     //console.log("################################################ select_loadcase_changed")
     const el_select_loadcase = document.getElementById("id_select_loadcase") as HTMLSelectElement
@@ -141,7 +144,9 @@ export function select_loadcase_changed() {
     drawsystem();
 }
 
+//--------------------------------------------------------------------------------------------------------
 export function select_eigenvalue_changed() {
+    //----------------------------------------------------------------------------------------------------
 
     //console.log("################################################ select_eigenvalue_changed")
     const el_select_eigenvalue = document.getElementById("id_select_eigenvalue") as HTMLSelectElement
@@ -150,6 +155,37 @@ export function select_eigenvalue_changed() {
     drawsystem();
 }
 
+//--------------------------------------------------------------------------------------------------------
+export function click_zurueck_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    let elb = document.getElementById("id_button_zurueck_grafik") as HTMLButtonElement
+    let ele = document.getElementById("id_grafik") as HTMLDivElement
+
+    if (fullscreen) {
+        console.log("click_zurueck_grafik")
+        let ele1 = document.getElementById("id_tab_group") as any
+        console.log("HEIGHT id_tab_group boundingRect", ele1.getBoundingClientRect(), '|', ele1);
+
+        ele.style.position = 'relative'
+        fullscreen = false
+
+        elb.innerHTML = "Fullscreen"
+    }
+    else {
+        console.log("fullscreen")
+        ele.style.position = 'absolute'
+        fullscreen = true
+
+        elb.innerHTML = "zurück"
+    }
+
+    elb.style.width = 'fit-content'
+
+    drawsystem();
+
+
+}
 //--------------------------------------------------------------------------------------------------- i n i t _ g r a f i k
 
 export function init_grafik(flag = 1) {
@@ -311,6 +347,8 @@ function mouseup(ev: any) {
 
 export function drawsystem() {
 
+    let height = 0
+
     var params = {
         fullscreen: false
     };
@@ -322,6 +360,9 @@ export function drawsystem() {
         domElement.removeEventListener('mouseup', mousemove, false);
 
     }
+
+    // const tab_group = document.getElementById('container') as any;
+    // tab_group.hidden=true
 
     // for (let i = 0; i < two.scene.children.length; i++) {
     //     let child = two.scene.children[i];
@@ -360,21 +401,26 @@ export function drawsystem() {
     console.log("O N L Y  L A B E L S", onlyLabels)
 
     const artboard = document.getElementById("artboard") as any;
-    console.log("artboard", artboard)
+    // console.log("artboard", artboard)
     let two = new Two(params).appendTo(artboard);
 
+    console.log("width,height from two.js ", two.width, two.height)
 
     //let el1 = document.getElementById("id_tab_group") as any   // id_tab_group
     //console.log("HEIGHT id_tab_group boundingRect", el1, el1.getBoundingClientRect());
     //write("height id_tab_group: ", el1.getBoundingClientRect().height)
 
     let ele = document.getElementById("id_grafik") as any
-    let grafik_top = ele.getBoundingClientRect().top
-    console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
-    write("grafik top: " + grafik_top)
-    if (grafik_top === 0) grafik_top = 69
-    let height = document.documentElement.clientHeight - grafik_top - 1 //- el?.getBoundingClientRect()?.height;
-
+    if (fullscreen) {
+        ele.style.position = 'absolute'
+        height = document.documentElement.clientHeight - 4;
+    } else {
+        let grafik_top = ele.getBoundingClientRect().top
+        console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
+        write("grafik top: " + grafik_top)
+        if (grafik_top === 0) grafik_top = 69
+        height = document.documentElement.clientHeight - grafik_top - 1 //- el?.getBoundingClientRect()?.height;
+    }
     two.width = document.documentElement.clientWidth;
     two.height = height
 

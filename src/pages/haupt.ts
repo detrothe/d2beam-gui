@@ -32,7 +32,7 @@ import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschni
 import DetectOS from "./detectos";
 
 import { addListener_filesave } from "./dateien";
-import { select_loadcase_changed, select_eigenvalue_changed, copy_svg, drawsystem } from "./grafik";
+import { select_loadcase_changed, select_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik } from "./grafik";
 import { set_info } from "./utility";
 //import { init_contextmenu } from '../components/dr-tabelle';
 
@@ -49,7 +49,7 @@ import {
   del_querschnittSet,
   get_querschnitt_index,
   find_querschnittSet,
-  incr_querschnitts_zaehler
+  incr_querschnitts_zaehler,
 } from "./rechnen";
 
 import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
@@ -120,7 +120,6 @@ for (let i = 1; i <= Number(nlastfaelle_init); i++) {
 typs_string_kombitabelle = typs_string_kombitabelle + "]";
 //console.log("typs_string_kombitabelle", typs_string_kombitabelle);
 
-
 const portrait = window.matchMedia("(orientation: portrait)");
 
 portrait.addEventListener("change", function (e) {
@@ -133,7 +132,7 @@ portrait.addEventListener("change", function (e) {
     //write("landscape mode")
     drawsystem();
   }
-})
+});
 
 {
   //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
@@ -146,9 +145,9 @@ portrait.addEventListener("change", function (e) {
       }
     </style>
 
-    <sl-tab-group>
-      <sl-tab  id="id_tab_group" slot="nav" panel="tab-haupt">Haupt</sl-tab>
-      <sl-tab  slot="nav" panel="tab-grafik">Grafik</sl-tab>
+    <sl-tab-group id="id_sl_tab_group">
+      <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">Haupt</sl-tab>
+      <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
       <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
       <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>
       <sl-tab slot="nav" panel="tab-elemente">Elemente</sl-tab>
@@ -163,7 +162,7 @@ portrait.addEventListener("change", function (e) {
 
       <!--------------------------------------------------------------------------------------->
 
-      <sl-tab-panel name="tab-haupt" >
+      <sl-tab-panel name="tab-haupt">
         <div id="id_current_filename">&nbsp;&nbsp;aktueller Dateiname: ${currentFilename}<br /></div>
 
         <p>
@@ -228,9 +227,9 @@ portrait.addEventListener("change", function (e) {
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-grafik">
-        <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0">
+        <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:absolute;top:0">
           <!-- width:100vw; ;width:300px;height:300px; -->
-          <div id="panel_gui"></div>
+          <div id="panel_gui" style="margin:0;padding:0;"></div>
           <div id="id_div_select_lc">
             <select id="id_select_loadcase" on></select>
           </div>
@@ -238,7 +237,8 @@ portrait.addEventListener("change", function (e) {
             <select id="id_select_eigenvalue" on></select>
           </div>
           <button id="id_button_copy_svg">save svg</button>
-          <div id="artboard"></div>
+          <button id="id_button_zurueck_grafik">zurück</button>
+          <div id="artboard"  style="margin:0;padding:0;"></div>
         </div>
       </sl-tab-panel>
 
@@ -262,7 +262,6 @@ portrait.addEventListener("change", function (e) {
            -->
           <sl-tree-item id="id_tree_LQ" expanded>
             Linear elastisch Querschnittswerte
-
           </sl-tree-item>
           <!--
           <sl-tree-item>
@@ -390,6 +389,10 @@ portrait.addEventListener("change", function (e) {
           4 = Trapezstreckenlast in globaler x-Richtung, Projektion<br />
         </p>
         <p>
+          p<sub>a</sub> = Streckenlast am Stabanfang<br />
+          p<sub>e</sub> = Streckenlast am Stabende
+        </p>
+        <p>
           Anzahl Streckenlasten:
           <dr-button-pm
             id="id_button_nstreckenlasten"
@@ -403,7 +406,7 @@ portrait.addEventListener("change", function (e) {
           id="id_streckenlasten_tabelle"
           nzeilen="${nstreckenlasten_init}"
           nspalten="5"
-          columns='["No", "Element", "Lastfall", "Art", "p<sub>links</sub><br> [kN/m]", "p<sub>rechts</sub><br> [kN/m]"]'
+          columns='["No", "Element", "Lastfall", "Art", "p<sub>a</sub><br> [kN/m]", "p<sub>e</sub><br> [kN/m]"]'
         ></dr-tabelle>
 
         <p>
@@ -814,6 +817,8 @@ portrait.addEventListener("change", function (e) {
   el_select_loadcase?.addEventListener("change", select_loadcase_changed);
   const el_select_eigenvalue = document.getElementById("id_select_eigenvalue");
   el_select_eigenvalue?.addEventListener("change", select_eigenvalue_changed);
+  const el_zurueck_grafik = document.getElementById("id_button_zurueck_grafik");
+  el_zurueck_grafik?.addEventListener("click", click_zurueck_grafik);
 
   document?.getElementById("id_button_copy_svg")?.addEventListener("click", copy_svg, false);
 
@@ -823,8 +828,6 @@ portrait.addEventListener("change", function (e) {
   // let ELEMENT = document?.querySelector(".output_container");
   // console.log("ELEMENT", ELEMENT);
   // console.log("ELEMENT", getComputedStyle(ELEMENT!).width);
-
-
 
   rechnen(1);
 }
@@ -985,10 +988,11 @@ function dialog_closed(e: any) {
 
         // Name des Querschnitts in Querschnitts-tree (tab Querschnitte) ändern
         const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
-        console.log("dialog_querschnitt_item_id", dialog_querschnitt_item_id)
-        console.log("dialog_querschnitt_index, qname", dialog_querschnitt_index, qname);  // , el.textContent
+        console.log("dialog_querschnitt_item_id", dialog_querschnitt_item_id);
+        console.log("dialog_querschnitt_index, qname", dialog_querschnitt_index, qname); // , el.textContent
 
-        if (el.textContent !== qname) {   // innerHTML
+        if (el.textContent !== qname) {
+          // innerHTML
           el.textContent = qname;
           const ele = document.getElementById("id_element_tabelle");
           //console.log('ELE: >>', ele);
@@ -1006,8 +1010,6 @@ function dialog_closed(e: any) {
   }
 }
 
-
-
 //---------------------------------------------------------------------------------------------------------------
 export function add_new_cross_section(qName: string, id: string) {
   //-------------------------------------------------------------------------------------------------------------
@@ -1017,22 +1019,20 @@ export function add_new_cross_section(qName: string, id: string) {
   //const text = document.createTextNode(qName);
   //tag.appendChild(text);
 
-
-
   const quer_button = document.createElement("sl-button");
   quer_button.textContent = qName;
-  quer_button.style.minWidth = '8rem';
+  quer_button.style.minWidth = "8rem";
   quer_button.addEventListener("click", opendialog);
-  quer_button.title = 'click to modify'
+  quer_button.title = "click to modify";
   quer_button.id = id;
 
   const delete_button = document.createElement("button");
   //delete_button.textContent = "delete";
-  delete_button.value = id
-  delete_button.className = 'btn'
+  delete_button.value = id;
+  delete_button.className = "btn";
   delete_button.innerHTML = '<i class = "fa fa-trash"></i>';
   delete_button.addEventListener("click", contextmenu_querschnitt);
-  delete_button.title = 'delete Querschnitt'
+  delete_button.title = "delete Querschnitt";
 
   tag.appendChild(quer_button);
   tag.appendChild(delete_button);
@@ -1044,7 +1044,6 @@ export function add_new_cross_section(qName: string, id: string) {
   const ele = document.getElementById("id_element_tabelle");
   //console.log("ELE: >>", ele);
   ele?.setAttribute("add_new_option", "4");
-
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1058,7 +1057,7 @@ export async function contextmenu_querschnitt(ev: any) {
   // @ts-ignore
   const el = this;
   //console.log("el,this",ev.offsetParent)
-  const id_button = el.value  // button
+  const id_button = el.value; // button
   const ele = document.getElementById(id_button) as SlButton;
   if (ele != null) qname = ele.textContent!;
   //console.log("contextmenu_querschnitt, qname", el.innerText, el.textContent, '|', el.value);
@@ -1079,8 +1078,8 @@ export async function contextmenu_querschnitt(ev: any) {
       del_querschnittSet(qname);
 
       let element = document.getElementById("id_tree_LQ") as any;
-      console.log("element", element.children)
-      console.log("el", el.parentNode, el.parentElement)
+      console.log("element", element.children);
+      console.log("el", el.parentNode, el.parentElement);
       element?.removeChild(el.parentElement);
     } else {
       const dialogAlert = new AlertDialog({

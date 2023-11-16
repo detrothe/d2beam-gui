@@ -3,7 +3,7 @@ import styles from './dr-tabelle.css?raw';
 import { nQuerschnittSets, get_querschnittRechteck_name } from '../pages/rechnen';
 import { Detect } from '../pages/haupt';
 
-//import { show_contextMenu, toggleMenuOff } from '../pages/contextMenu.js';
+import { berechnungErforderlich } from "../pages/globals";
 
 const contextMenuLinkClassName = "context-menu__link";
 const contextMenuActive = "context-menu--active";
@@ -328,6 +328,7 @@ class DrTabelle extends HTMLElement {
 
       } else if (name === 'clear') {
          this.clear_Tabelle('mytable');
+         berechnungErforderlich(true);
 
       } else if (name === 'option_deleted') {
          this.del_select_options(newValue);
@@ -394,6 +395,7 @@ class DrTabelle extends HTMLElement {
             this.nTabCol = Number(this.nSpalten) + 1; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
             this.resize_Tabelle('mytable', this.nZeilen, newValue);
          }
+         berechnungErforderlich(true);
       }
    }
 
@@ -878,17 +880,19 @@ class DrTabelle extends HTMLElement {
 
       }
       else if (ev.target.type === 'text') {
+         berechnungErforderlich(true);
          return;
       }
       else {
-         if (ev.keyCode > 47 && ev.keyCode < 58) return;                            // Ziffern 0-9
-         if (ev.keyCode > 95 && ev.keyCode < 111) return;                           // Ziffern 0-9, +, - vom numpad
-         if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) return; // e .  ,
-         if (ev.keyCode === 8 || ev.keyCode === 46) return;                         //  del, entfernen
-         if (ev.keyCode === 37 || ev.keyCode === 39 || ev.keyCode === 189) return;  // rechts links -
-         if (ev.keyCode === 9 || ev.keyCode === 27) return;                         // Tab, ESC
-         if (ev.keyCode === 173) return;                                            // - Zeichen bei Firefox
-         if (ev.keyCode === 0) return;                                              // - Zeichen bei Android Firefox
+
+         if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
+         if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad
+         if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) { berechnungErforderlich(true); return; } // e .  ,
+         if (ev.keyCode === 8 || ev.keyCode === 46) { berechnungErforderlich(true); return; }                         //  del, entfernen
+         if (ev.keyCode === 37 || ev.keyCode === 39 || ev.keyCode === 189) { berechnungErforderlich(true); return; }  // rechts links -
+         if (ev.keyCode === 9 || ev.keyCode === 27) { berechnungErforderlich(true); return; }                         // Tab, ESC
+         if (ev.keyCode === 173) { berechnungErforderlich(true); return; }                                            // - Zeichen bei Firefox
+         if (ev.keyCode === 0) { berechnungErforderlich(true); return; }                                              // - Zeichen bei Android Firefox
 
          ev.preventDefault();
       }
@@ -1367,7 +1371,9 @@ class DrTabelle extends HTMLElement {
                }
             }
          }
-      } else if (link.getAttribute("data-action") === "copyFirstRow") {
+         berechnungErforderlich(true);
+      }
+      else if (link.getAttribute("data-action") === "copyFirstRow") {
 
          let i, j;
          console.log("copyFirstRow")
@@ -1398,8 +1404,9 @@ class DrTabelle extends HTMLElement {
                }
             }
          }
-
-      } else if (link.getAttribute("data-action") === "increment_1") {
+         berechnungErforderlich(true);
+      }
+      else if (link.getAttribute("data-action") === "increment_1") {
 
          let i, j;
 
@@ -1430,8 +1437,9 @@ class DrTabelle extends HTMLElement {
                }
             }
          }
-
-      } else if (link.getAttribute("data-action") === "increment_delta") {
+         berechnungErforderlich(true);
+      }
+      else if (link.getAttribute("data-action") === "increment_delta") {
 
          let i, j;
 
@@ -1476,7 +1484,9 @@ class DrTabelle extends HTMLElement {
                }
             }
          }
-      } else if (link.getAttribute("data-action") === "copy") {
+         berechnungErforderlich(true);
+      }
+      else if (link.getAttribute("data-action") === "copy") {
 
          let newClip = "";
          let wertInSpalte1 = false;
@@ -1571,6 +1581,7 @@ class DrTabelle extends HTMLElement {
             }
 
          });
+         berechnungErforderlich(true);
       }
       else if (link.getAttribute("data-action") === "close") {
       }
