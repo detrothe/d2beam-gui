@@ -76,6 +76,7 @@ export let maxValue_komb = [] as TMaxValues[]
 export let maxValue_eigv = [] as number[][]
 export let maxValue_u0 = [] as TMaxU0[]
 export let maxValue_eload = [] as number[]
+export let maxValue_eload_komb = [] as number[]
 export let maxValue_w0 = 0.0                // Stabvorverformung
 
 export let max_S_kombi = [] as number[][] //  (3, nKombi)
@@ -440,10 +441,11 @@ export function rechnen(flag = 1) {
 
     read_nodes();
     read_elements();
+    read_kombinationen();
+
     read_nodal_loads();
     read_element_loads();
     read_stabvorverformungen();
-    read_kombinationen();
 
     if (flag === 1) {
         if (!fatal_error) calculate();
@@ -869,6 +871,31 @@ function read_element_loads() {
         }
     }
 
+
+    // jetzt die max. Streckenlasten bei Kombinationen bestimmen
+
+    if (nkombinationen > 0) maxValue_eload_komb = new Array(nkombinationen).fill(0.0)
+
+    for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
+        for (let ilastf = 0; ilastf < nlastfaelle; ilastf++) {
+            if (kombiTabelle[iKomb][ilastf] !== 0.0) {
+                let fact = kombiTabelle[iKomb][ilastf];
+                for (let i = 0; i < neloads; i++) {
+                    let lf = eload[i].lf - 1
+                    if (lf === ilastf) {
+
+                        let art = eload[i].art
+                        //console.log("art=", art, lf)
+                        if (art >= 0 && art <= 4) {
+                            if (Math.abs(eload[i].pL * fact) > maxValue_eload_komb[iKomb]) maxValue_eload_komb[iKomb] = Math.abs(eload[i].pL * fact)
+                            if (Math.abs(eload[i].pR * fact) > maxValue_eload_komb[iKomb]) maxValue_eload_komb[iKomb] = Math.abs(eload[i].pR * fact)
+                        }
+                    }
+                }
+            }
+        }
+        console.log("@@@@   @@@ maxValue_eload_komb: ", iKomb, maxValue_eload_komb[iKomb])
+    }
 
     // Einzellasten
 
@@ -2924,4 +2951,7 @@ function berechne_kombinationen() {
 
         }
     }
+
+
+
 }

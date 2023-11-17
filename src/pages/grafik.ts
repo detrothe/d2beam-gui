@@ -4,11 +4,11 @@ import Two from 'two.js'
 import { CTrans } from './trans';
 import { myFormat, write } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
-import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load } from "./rechnen";
+import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
-import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all } from "./rechnen";
+import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all, kombiTabelle } from "./rechnen";
 
 //import { Pane } from 'tweakpane';
 import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
@@ -1372,6 +1372,7 @@ export function drawsystem() {
     draw_lager(two);
     if (flag_eingabe != 0) draw_gelenke(two);
 
+    console.log("++++ show_lasten_temp", show_lasten_temp)
     if (show_lasten_temp) {
         draw_elementlasten(two);
         draw_knotenkraefte(two);
@@ -1410,11 +1411,67 @@ function draw_elementlasten(two: Two) {
     let pL: number, pR: number
     let x = Array(4), z = Array(4), xtr = Array(4), ztr = Array(4)
 
-    let xpix: number, zpix: number
+    let xpix: number, zpix: number, scalefactor = 1.0, nLoop = 0   //  lf_index = 0
+    let iLastfall = draw_lastfall
+    let fact = Array(nlastfaelle)
+    let lf_show = Array(nlastfaelle)
 
-    console.log("in draw_elementlasten", slmax, maxValue_eload[draw_lastfall - 1])
+    if (THIIO_flag === 0) {
+        if (iLastfall <= nlastfaelle) {
+            //lf_index = iLastfall - 1
+            nLoop = 1
+            fact[0] = 1.0
+            lf_show[0] = draw_lastfall - 1
+            scalefactor = slmax / 20 / maxValue_eload[draw_lastfall - 1]
 
-    let scalefactor = slmax / 20 / maxValue_eload[draw_lastfall - 1]
+        } else if (iLastfall <= nlastfaelle + nkombinationen) {
+            //lf_index = iLastfall - 1
+            let ikomb = iLastfall - 1 - nlastfaelle
+            console.log("Kombination THIO, ikomb: ", ikomb, maxValue_eload_komb[ikomb])
+            scalefactor = slmax / 20 / maxValue_eload_komb[ikomb]
+            nLoop = 0
+
+            for (let i = 0; i < nlastfaelle; i++) {
+                if (kombiTabelle[ikomb][i] !== 0.0) {
+                    console.log("kombitabelle", i, ikomb, kombiTabelle[ikomb][i])
+                    fact[nLoop] = kombiTabelle[ikomb][i];
+                    lf_show[nLoop] = i
+                    nLoop++;
+                }
+            }
+        } else {
+            nLoop = 0
+        }
+    }
+    else if (THIIO_flag === 1) {
+
+        if (iLastfall <= nkombinationen) {
+            //lf_index = iLastfall - 1
+            let ikomb = iLastfall - 1
+            scalefactor = slmax / 20 / maxValue_eload_komb[ikomb]
+            nLoop = 0
+
+            for (let i = 0; i < nlastfaelle; i++) {
+                if (kombiTabelle[ikomb][i] !== 0.0) {
+                    fact[i] = kombiTabelle[ikomb][i];
+                    lf_show[nLoop] = i
+                    nLoop++;
+                }
+            }
+
+        } else {
+            nLoop = 0
+        }
+    }
+
+    for (let i = 0; i < nLoop; i++) {
+        console.log("°°°°°°° lf_show,fact", i, lf_show[i], fact[i])
+    }
+
+
+
+    console.log("++++ in draw_elementlasten", slmax, draw_lastfall)
+
 
     for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -1430,350 +1487,351 @@ function draw_elementlasten(two: Two) {
         si = stab[ielem].sinus
         co = stab[ielem].cosinus
 
-        for (let ieload = 0; ieload < neloads; ieload++) {
-            console.log("ielem,draw_lastfall", ielem, eload[ieload].element, draw_lastfall, eload[ieload].lf)
-            if ((eload[ieload].element === ielem) && (eload[ieload].lf === draw_lastfall)) {
+        for (let iLoop = 0; iLoop < nLoop; iLoop++) {
+            console.log("iLoop: ", iLoop)
 
-                if (eload[ieload].art === 0) {
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                console.log("ieload:", ieload)
+                console.log("ielem,draw_lastfall", ielem, eload[ieload].element, draw_lastfall, eload[ieload].lf - 1, lf_show[iLoop])
 
-                    pL = eload[ieload].pL * scalefactor
-                    pR = eload[ieload].pR * scalefactor
+                if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === lf_show[iLoop])) {
 
-                    pMax = Math.max(0.0, pL, pR)
-                    pMin = Math.min(0.0, pL, pR)
+                    if (eload[ieload].art === 0) {
 
-                    a += Math.abs(pMin)
+                        pL = eload[ieload].pL * scalefactor * fact[iLoop]
+                        pR = eload[ieload].pR * scalefactor * fact[iLoop]
 
-                    x[0] = x1 + si * a; z[0] = z1 - co * a;
-                    x[1] = x2 + si * a; z[1] = z2 - co * a;
-                    x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
-                    x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
+                        pMax = Math.max(0.0, pL, pR)
+                        pMin = Math.min(0.0, pL, pR)
 
+                        a += Math.abs(pMin)
 
-                    console.log("pL...", pL, pR, x, z)
+                        x[0] = x1 + si * a; z[0] = z1 - co * a;
+                        x[1] = x2 + si * a; z[1] = z2 - co * a;
+                        x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
+                        x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
 
-                    var vertices = [];
-                    for (let i = 0; i < 4; i++) {
-                        xtr[i] = tr.xPix(x[i])
-                        ztr[i] = tr.zPix(z[i])
-                        console.log()
-                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
-                    }
 
-                    let flaeche = two.makePath(vertices);
-                    flaeche.fill = '#eeeeee';
+                        console.log("pL...", pL, pR, x, z)
 
-                    if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
-                    if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
-
-                    xpix = xtr[3] + 5
-                    zpix = ztr[3] - 5
-                    let str = myFormat(Math.abs(eload[ieload].pL), 1, 2)
-                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-
-                    xpix = xtr[2] + 5
-                    zpix = ztr[2] - 5
-                    str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
-                    txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-
-                    dp = pMax // - pMin
-                    a = a + dp + a_spalt
-                }
-
-                else if (eload[ieload].art === 1) {      // Streckenlast z-Richtung
-
-                    pL = eload[ieload].pL * scalefactor
-                    pR = eload[ieload].pR * scalefactor
-
-                    pMax = Math.max(0.0, pL, pR)
-                    pMin = Math.min(0.0, pL, pR)
-
-                    a += Math.abs(pMin)   //* co
-
-                    x[0] = x1 + si * a; z[0] = z1 - a * co;    // /
-                    x[1] = x2 + si * a; z[1] = z2 - a * co;
-                    x[2] = x[1]; z[2] = z[1] - pR;
-                    x[3] = x[0]; z[3] = z[0] - pL;
-
-
-                    console.log("pL...", pL, pR, x, z)
-
-                    var vertices = [];
-                    for (let i = 0; i < 4; i++) {
-                        xtr[i] = tr.xPix(x[i])
-                        ztr[i] = tr.zPix(z[i])
-                        console.log()
-                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
-                    }
-
-                    let flaeche = two.makePath(vertices);
-                    flaeche.fill = '#eeeeee';
-
-                    if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
-                    if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
-
-                    xpix = xtr[3] + 5
-                    zpix = ztr[3] - 5
-                    let str = myFormat(Math.abs(eload[ieload].pL), 1, 2)
-                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-
-                    xpix = xtr[2] + 5
-                    zpix = ztr[2] - 5
-                    str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
-                    txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-
-                    dp = pMax * co // - pMin
-                    a = a + dp + a_spalt
-                }
-
-                else if (eload[ieload].art === 2) {      // Streckenlast z-Richtung, Projektion
-
-                    pL = eload[ieload].pL * scalefactor
-                    pR = eload[ieload].pR * scalefactor
-
-                    let zm = (z1 + z2) / 2
-
-                    pMax = Math.max(0.0, pL, pR)
-                    pMin = Math.min(0.0, pL, pR)
-
-                    az_projektion += Math.abs(pMin)
-
-                    x[0] = x1; z[0] = zm - az_projektion;
-                    x[1] = x2; z[1] = zm - az_projektion;
-                    x[2] = x[1]; z[2] = z[1] - pR;
-                    x[3] = x[0]; z[3] = z[0] - pL;
-
-
-                    console.log("pL...", pL, pR, x, z)
-
-                    var vertices = [];
-                    for (let i = 0; i < 4; i++) {
-                        xtr[i] = tr.xPix(x[i])
-                        ztr[i] = tr.zPix(z[i])
-                        console.log()
-                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
-                    }
-
-                    let flaeche = two.makePath(vertices);
-                    flaeche.fill = '#eeeeee';
-
-                    if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
-                    if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
-
-                    xpix = xtr[3] + 5
-                    zpix = ztr[3] - 5
-                    let str = myFormat(Math.abs(eload[ieload].pL), 1, 2)
-                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-
-                    xpix = xtr[2] + 5
-                    zpix = ztr[2] - 5
-                    str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
-                    txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-
-                    dp = pMax
-                    az_projektion += dp + a_spalt
-                }
-
-                else if (eload[ieload].art === 3) {      // Streckenlast x-Richtung
-
-                    pL = eload[ieload].pL * scalefactor
-                    pR = eload[ieload].pR * scalefactor
-
-                    pMax = Math.max(0.0, pL, pR)
-                    pMin = Math.min(0.0, pL, pR)
-
-                    a += Math.abs(pMin * si)
-
-                    x[0] = x1 + a / si; z[0] = z1;
-                    x[1] = x2 + a / si; z[1] = z2;
-                    x[2] = x[1] + pR; z[2] = z[1];
-                    x[3] = x[0] + pL; z[3] = z[0];
-
-
-                    console.log("pL...", pL, pR, x, z)
-
-                    const vertices = [];
-                    for (let i = 0; i < 4; i++) {
-                        xtr[i] = tr.xPix(x[i])
-                        ztr[i] = tr.zPix(z[i])
-                        console.log()
-                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
-                    }
-
-                    let flaeche = two.makePath(vertices);
-                    flaeche.fill = '#eeeeee';
-
-                    if (Math.abs(pL) > 0.0) draw_arrow(two, x[0], z[0], x[3], z[3], style_pfeil)
-                    if (Math.abs(pR) > 0.0) draw_arrow(two, x[1], z[1], x[2], z[2], style_pfeil)
-
-                    xpix = xtr[3] + 5
-                    zpix = ztr[3] - 5
-                    let str = myFormat(Math.abs(eload[ieload].pL), 1, 2)
-                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-
-                    xpix = xtr[2] + 5
-                    zpix = ztr[2] - 5
-                    str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
-                    txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-
-                    dp = pMax * si // - pMin
-                    a = a + dp + a_spalt
-                }
-
-                else if (eload[ieload].art === 4) {      // Streckenlast x-Richtung, Projektion
-
-                    pL = eload[ieload].pL * scalefactor
-                    pR = eload[ieload].pR * scalefactor
-
-                    let xm = (x1 + x2) / 2
-
-                    pMax = Math.max(0.0, pL, pR)
-                    pMin = Math.min(0.0, pL, pR)
-
-                    ax_projektion += Math.abs(pMin)
-
-                    x[0] = xm + ax_projektion; z[0] = z1;
-                    x[1] = xm + ax_projektion; z[1] = z2;
-                    x[2] = x[1] + pR; z[2] = z[1];
-                    x[3] = x[0] + pL; z[3] = z[0];
-
-
-                    console.log("pL4...", ieload, pL, pR, scalefactor, x, z)
-
-                    const vertices = [];
-                    for (let i = 0; i < 4; i++) {
-                        xtr[i] = tr.xPix(x[i])
-                        ztr[i] = tr.zPix(z[i])
-                        console.log()
-                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
-                    }
-
-                    let flaeche = two.makePath(vertices);
-                    flaeche.fill = '#eeeeee';
-
-                    if (Math.abs(pL) > 0.0) draw_arrow(two, x[0], z[0], x[3], z[3], style_pfeil)
-                    if (Math.abs(pR) > 0.0) draw_arrow(two, x[1], z[1], x[2], z[2], style_pfeil)
-
-                    xpix = xtr[3] + 5
-                    zpix = ztr[3] - 5
-                    let str = myFormat(Math.abs(eload[ieload].pL), 1, 2)
-                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-
-                    xpix = xtr[2] + 5
-                    zpix = ztr[2] - 5
-                    str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
-                    txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-
-                    dp = pMax
-                    ax_projektion += dp + a_spalt
-                }
-
-                else if (eload[ieload].art === 5 || eload[ieload].art === 9 || eload[ieload].art === 10) {      // Temperatur, Vorspannung, Spannschloss
-
-                    pL = slmax / 20.
-                    pR = slmax / 20.
-
-                    pMax = Math.max(0.0, pL, pR)
-                    pMin = Math.min(0.0, pL, pR)
-
-                    a += Math.abs(pMin)
-
-                    x[0] = x1 + si * a; z[0] = z1 - co * a;
-                    x[1] = x2 + si * a; z[1] = z2 - co * a;
-                    x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
-                    x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
-
-                    //console.log("pL TEMP ...", pL, pR, x, z)
-
-                    const vertices = [];
-                    for (let i = 0; i < 4; i++) {
-                        xtr[i] = tr.xPix(x[i])
-                        ztr[i] = tr.zPix(z[i])
-                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
-                    }
-
-                    let flaeche = two.makePath(vertices);
-                    flaeche.fill = '#eeeeee';
-                    flaeche.opacity = opacity;
-
-
-                    xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4.
-                    zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4.
-                    let str: string;
-                    if (eload[ieload].art === 5) str = "Tu= " + eload[ieload].Tu + "°/To= " + eload[ieload].To + "°";
-                    else if (eload[ieload].art === 9) str = "σv= " + eload[ieload].sigmaV / 1000 + " N/mm²";
-                    else str = "Δs= " + eload[ieload].delta_s * 1000 + " mm";
-                    //str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
-                    let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                    txt.alignment = 'center'
-                    txt.baseline = 'middle'
-                    txt.rotation = element[ielem].alpha
-
-                    dp = pMax // - pMin
-                    a = a + dp + a_spalt
-                }
-                else if (eload[ieload].art === 6) {      // Einzellast oder/und Moment
-
-                    let plength = 35, delta = 12
-
-                    plength = tr.World0(2 * plength / devicePixelRatio)
-                    delta = tr.World0(delta / devicePixelRatio)
-
-                    if (eload[ieload].P != 0.0) {
-                        let dpx = si * plength, dpz = co * plength
-                        let ddx = si * delta, ddz = co * delta
-                        let wert = eload[ieload].P
-                        let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
-                        console.log("GRAFIK Einzellast", xl, zl, wert)
-                        if (wert < 0.0) {
-                            draw_arrow(two, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast)
-                        } else {
-                            draw_arrow(two, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast)
+                        var vertices = [];
+                        for (let i = 0; i < 4; i++) {
+                            xtr[i] = tr.xPix(x[i])
+                            ztr[i] = tr.zPix(z[i])
+                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
                         }
-                        xpix = tr.xPix(xl + ddx + dpx) + 4
-                        zpix = tr.zPix(zl - ddz - dpz) - 4
-                        const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
-                        const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+
+                        let flaeche = two.makePath(vertices);
+                        flaeche.fill = '#eeeeee';
+
+                        if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
+                        if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+
+                        xpix = xtr[3] + 5
+                        zpix = ztr[3] - 5
+                        let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                         txt.alignment = 'left'
                         txt.baseline = 'top'
+
+                        xpix = xtr[2] + 5
+                        zpix = ztr[2] - 5
+                        str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                        txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+
+                        dp = pMax // - pMin
+                        a = a + dp + a_spalt
                     }
-                    if (eload[ieload].M != 0.0) {
-                        let wert = eload[ieload].M
-                        let vorzeichen = Math.sign(wert)
-                        let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
-                        let radius = style_pfeil_moment.radius;
-                        console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
-                        if (wert > 0.0) {
-                            draw_moment_arrow(two, xl, zl, 1.0, radius, style_pfeil_moment)
-                        } else {
-                            draw_moment_arrow(two, xl, zl, -1.0, radius, style_pfeil_moment)
+
+                    else if (eload[ieload].art === 1) {      // Streckenlast z-Richtung
+
+                        pL = eload[ieload].pL * scalefactor * fact[iLoop]
+                        pR = eload[ieload].pR * scalefactor * fact[iLoop]
+
+                        pMax = Math.max(0.0, pL, pR)
+                        pMin = Math.min(0.0, pL, pR)
+
+                        a += Math.abs(pMin)   //* co
+
+                        x[0] = x1 + si * a; z[0] = z1 - a * co;    // /
+                        x[1] = x2 + si * a; z[1] = z2 - a * co;
+                        x[2] = x[1]; z[2] = z[1] - pR;
+                        x[3] = x[0]; z[3] = z[0] - pL;
+
+
+                        console.log("pL...", pL, pR, x, z)
+
+                        var vertices = [];
+                        for (let i = 0; i < 4; i++) {
+                            xtr[i] = tr.xPix(x[i])
+                            ztr[i] = tr.zPix(z[i])
+                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
                         }
 
-                        xpix = tr.xPix(xl) - 10 / devicePixelRatio
-                        zpix = tr.zPix(zl) + vorzeichen * radius + 15 * vorzeichen / devicePixelRatio
-                        const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
-                        const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'right'
+                        let flaeche = two.makePath(vertices);
+                        flaeche.fill = '#eeeeee';
+
+                        if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
+                        if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+
+                        xpix = xtr[3] + 5
+                        zpix = ztr[3] - 5
+                        let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+
+                        xpix = xtr[2] + 5
+                        zpix = ztr[2] - 5
+                        str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                        txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+
+                        dp = pMax * co // - pMin
+                        a = a + dp + a_spalt
+                    }
+
+                    else if (eload[ieload].art === 2) {      // Streckenlast z-Richtung, Projektion
+
+                        pL = eload[ieload].pL * scalefactor * fact[iLoop]
+                        pR = eload[ieload].pR * scalefactor * fact[iLoop]
+
+                        let zm = (z1 + z2) / 2
+
+                        pMax = Math.max(0.0, pL, pR)
+                        pMin = Math.min(0.0, pL, pR)
+
+                        az_projektion += Math.abs(pMin)
+
+                        x[0] = x1; z[0] = zm - az_projektion;
+                        x[1] = x2; z[1] = zm - az_projektion;
+                        x[2] = x[1]; z[2] = z[1] - pR;
+                        x[3] = x[0]; z[3] = z[0] - pL;
+
+
+                        console.log("pL...", pL, pR, x, z)
+
+                        var vertices = [];
+                        for (let i = 0; i < 4; i++) {
+                            xtr[i] = tr.xPix(x[i])
+                            ztr[i] = tr.zPix(z[i])
+                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                        }
+
+                        let flaeche = two.makePath(vertices);
+                        flaeche.fill = '#eeeeee';
+
+                        if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
+                        if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+
+                        xpix = xtr[3] + 5
+                        zpix = ztr[3] - 5
+                        let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+
+                        xpix = xtr[2] + 5
+                        zpix = ztr[2] - 5
+                        str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                        txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+
+                        dp = pMax
+                        az_projektion += dp + a_spalt
+                    }
+
+                    else if (eload[ieload].art === 3) {      // Streckenlast x-Richtung
+
+                        pL = eload[ieload].pL * scalefactor * fact[iLoop]
+                        pR = eload[ieload].pR * scalefactor * fact[iLoop]
+
+                        pMax = Math.max(0.0, pL, pR)
+                        pMin = Math.min(0.0, pL, pR)
+
+                        a += Math.abs(pMin * si)
+
+                        x[0] = x1 + a / si; z[0] = z1;
+                        x[1] = x2 + a / si; z[1] = z2;
+                        x[2] = x[1] + pR; z[2] = z[1];
+                        x[3] = x[0] + pL; z[3] = z[0];
+
+
+                        console.log("pL...", pL, pR, x, z)
+
+                        const vertices = [];
+                        for (let i = 0; i < 4; i++) {
+                            xtr[i] = tr.xPix(x[i])
+                            ztr[i] = tr.zPix(z[i])
+                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                        }
+
+                        let flaeche = two.makePath(vertices);
+                        flaeche.fill = '#eeeeee';
+
+                        if (Math.abs(pL) > 0.0) draw_arrow(two, x[0], z[0], x[3], z[3], style_pfeil)
+                        if (Math.abs(pR) > 0.0) draw_arrow(two, x[1], z[1], x[2], z[2], style_pfeil)
+
+                        xpix = xtr[3] + 5
+                        zpix = ztr[3] - 5
+                        let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+
+                        xpix = xtr[2] + 5
+                        zpix = ztr[2] - 5
+                        str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                        txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+
+                        dp = pMax * si // - pMin
+                        a = a + dp + a_spalt
+                    }
+
+                    else if (eload[ieload].art === 4) {      // Streckenlast x-Richtung, Projektion
+
+                        pL = eload[ieload].pL * scalefactor * fact[iLoop]
+                        pR = eload[ieload].pR * scalefactor * fact[iLoop]
+
+                        let xm = (x1 + x2) / 2
+
+                        pMax = Math.max(0.0, pL, pR)
+                        pMin = Math.min(0.0, pL, pR)
+
+                        ax_projektion += Math.abs(pMin)
+
+                        x[0] = xm + ax_projektion; z[0] = z1;
+                        x[1] = xm + ax_projektion; z[1] = z2;
+                        x[2] = x[1] + pR; z[2] = z[1];
+                        x[3] = x[0] + pL; z[3] = z[0];
+
+
+                        console.log("pL4...", ieload, pL, pR, scalefactor, x, z)
+
+                        const vertices = [];
+                        for (let i = 0; i < 4; i++) {
+                            xtr[i] = tr.xPix(x[i])
+                            ztr[i] = tr.zPix(z[i])
+                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                        }
+
+                        let flaeche = two.makePath(vertices);
+                        flaeche.fill = '#eeeeee';
+
+                        if (Math.abs(pL) > 0.0) draw_arrow(two, x[0], z[0], x[3], z[3], style_pfeil)
+                        if (Math.abs(pR) > 0.0) draw_arrow(two, x[1], z[1], x[2], z[2], style_pfeil)
+
+                        xpix = xtr[3] + 5
+                        zpix = ztr[3] - 5
+                        let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+
+                        xpix = xtr[2] + 5
+                        zpix = ztr[2] - 5
+                        str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                        txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+
+                        dp = pMax
+                        ax_projektion += dp + a_spalt
+                    }
+
+                    else if (eload[ieload].art === 5 || eload[ieload].art === 9 || eload[ieload].art === 10) {      // Temperatur, Vorspannung, Spannschloss
+
+                        pL = slmax / 20.
+                        pR = slmax / 20.
+
+                        pMax = Math.max(0.0, pL, pR)
+                        pMin = Math.min(0.0, pL, pR)
+
+                        a += Math.abs(pMin)
+
+                        x[0] = x1 + si * a; z[0] = z1 - co * a;
+                        x[1] = x2 + si * a; z[1] = z2 - co * a;
+                        x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
+                        x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
+
+                        //console.log("pL TEMP ...", pL, pR, x, z)
+
+                        const vertices = [];
+                        for (let i = 0; i < 4; i++) {
+                            xtr[i] = tr.xPix(x[i])
+                            ztr[i] = tr.zPix(z[i])
+                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                        }
+
+                        let flaeche = two.makePath(vertices);
+                        flaeche.fill = '#eeeeee';
+                        flaeche.opacity = opacity;
+
+
+                        xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4.
+                        zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4.
+                        let str: string;
+                        if (eload[ieload].art === 5) str = "Tu= " + eload[ieload].Tu + "°/To= " + eload[ieload].To + "°";
+                        else if (eload[ieload].art === 9) str = "σv= " + eload[ieload].sigmaV / 1000 + " N/mm²";
+                        else str = "Δs= " + eload[ieload].delta_s * 1000 + " mm";
+                        //str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
+                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt.alignment = 'center'
+                        txt.baseline = 'middle'
+                        txt.rotation = element[ielem].alpha
+
+                        dp = pMax // - pMin
+                        a = a + dp + a_spalt
+                    }
+                    else if (eload[ieload].art === 6) {      // Einzellast oder/und Moment
+
+                        let plength = 35, delta = 12
+
+                        plength = tr.World0(2 * plength / devicePixelRatio)
+                        delta = tr.World0(delta / devicePixelRatio)
+
+                        if (eload[ieload].P != 0.0) {
+                            let dpx = si * plength, dpz = co * plength
+                            let ddx = si * delta, ddz = co * delta
+                            let wert = eload[ieload].P
+                            let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
+                            console.log("GRAFIK Einzellast", xl, zl, wert)
+                            if (wert < 0.0) {
+                                draw_arrow(two, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast)
+                            } else {
+                                draw_arrow(two, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast)
+                            }
+                            xpix = tr.xPix(xl + ddx + dpx) + 4
+                            zpix = tr.zPix(zl - ddz - dpz) - 4
+                            const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+                            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
+                        if (eload[ieload].M != 0.0) {
+                            let wert = eload[ieload].M
+                            let vorzeichen = Math.sign(wert)
+                            let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
+                            let radius = style_pfeil_moment.radius;
+                            console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
+                            if (wert > 0.0) {
+                                draw_moment_arrow(two, xl, zl, 1.0, radius, style_pfeil_moment)
+                            } else {
+                                draw_moment_arrow(two, xl, zl, -1.0, radius, style_pfeil_moment)
+                            }
+
+                            xpix = tr.xPix(xl) - 10 / devicePixelRatio
+                            zpix = tr.zPix(zl) + vorzeichen * radius + 15 * vorzeichen / devicePixelRatio
+                            const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+                            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'right'
+                        }
                     }
                 }
             }
@@ -1790,6 +1848,10 @@ function draw_knotenkraefte(two: Two) {
     let plength = 35 /*slmax / 20.*/, delta = 12 //slmax / 200.0
     let xpix: number, zpix: number
     let wert: number
+    let nLoop = 0
+
+    let fact = Array(nlastfaelle)
+    let lf_show = Array(nlastfaelle)
 
     console.log("in draw_knotenkraefte, draw_lastfall", draw_lastfall, nloads)
     // const out = document.getElementById('output') as HTMLTextAreaElement;
@@ -1801,63 +1863,121 @@ function draw_knotenkraefte(two: Two) {
     plength = tr.World0(2 * plength / devicePixelRatio)
     delta = tr.World0(delta / devicePixelRatio)
 
-    for (let i = 0; i < nloads; i++) {
-        let inode = load[i].node
-        let x = node[inode].x;
-        let z = node[inode].z;
-        console.log("load[i]", i, load)
-        if (load[i].p[0] != 0.0 && load[i].lf === draw_lastfall) {
-            console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+    let iLastfall = draw_lastfall
 
-            wert = load[i].p[0]
-            if (wert > 0.0) {
-                draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
-            } else {
-                draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+    if (THIIO_flag === 0) {
+        if (iLastfall <= nlastfaelle) {
+            //lf_index = iLastfall - 1
+            nLoop = 1
+            fact[0] = 1.0
+            lf_show[0] = draw_lastfall - 1
+            //scalefactor = slmax / 20 / maxValue_eload[draw_lastfall - 1]
+
+        } else if (iLastfall <= nlastfaelle + nkombinationen) {
+            //lf_index = iLastfall - 1
+            let ikomb = iLastfall - 1 - nlastfaelle
+            console.log("Kombination THIO, ikomb: ", ikomb, maxValue_eload_komb[ikomb])
+            //scalefactor = slmax / 20 / maxValue_eload_komb[ikomb]
+            nLoop = 0
+
+            for (let i = 0; i < nlastfaelle; i++) {
+                if (kombiTabelle[ikomb][i] !== 0.0) {
+                    console.log("kombitabelle", i, ikomb, kombiTabelle[ikomb][i])
+                    fact[nLoop] = kombiTabelle[ikomb][i];
+                    lf_show[nLoop] = i
+                    nLoop++;
+                }
             }
-            xpix = tr.xPix(x + delta + plength) + 5
-            zpix = tr.zPix(z) - 5
-            const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
-            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-            txt.alignment = 'left'
-            txt.baseline = 'top'
+        } else {
+            nLoop = 0
         }
-        if (load[i].p[1] != 0.0 && load[i].lf === draw_lastfall) {
-            //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+    }
+    else if (THIIO_flag === 1) {
 
-            wert = load[i].p[1]
-            if (wert > 0.0) {
-                draw_arrow(two, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
-            } else {
-                draw_arrow(two, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
-            }
+        if (iLastfall <= nkombinationen) {
+            //lf_index = iLastfall - 1
+            let ikomb = iLastfall - 1
+            //scalefactor = slmax / 20 / maxValue_eload_komb[ikomb]
+            nLoop = 0
 
-            xpix = tr.xPix(x) + 5
-            zpix = tr.zPix(z - delta - plength) + 5
-            const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
-            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-            txt.alignment = 'left'
-            txt.baseline = 'top'
-        }
-        if (load[i].p[2] != 0.0 && load[i].lf === draw_lastfall) {
-
-            wert = load[i].p[2]
-            let vorzeichen = Math.sign(wert)
-            console.log("Moment ", +inode + 1, wert)
-            if (wert > 0.0) {
-                draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_moment)
-            } else {
-                draw_moment_arrow(two, x, z, -1.0, slmax / 50, style_pfeil_moment)
+            for (let i = 0; i < nlastfaelle; i++) {
+                if (kombiTabelle[ikomb][i] !== 0.0) {
+                    fact[i] = kombiTabelle[ikomb][i];
+                    lf_show[nLoop] = i
+                    nLoop++;
+                }
             }
 
-            xpix = tr.xPix(x) - 10 / devicePixelRatio
-            zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
-            const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
-            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-            txt.alignment = 'right'
-            //txt.baseline = 'bottom'
+        } else {
+            nLoop = 0
         }
+    }
 
+    for (let i = 0; i < nLoop; i++) {
+        console.log("°°°°°°° lf_show,fact", i, lf_show[i], fact[i])
+    }
+
+    for (let iLoop = 0; iLoop < nLoop; iLoop++) {
+        console.log("iLoop: ", iLoop)
+
+        for (let i = 0; i < nloads; i++) {
+            let inode = load[i].node
+            let x = node[inode].x;
+            let z = node[inode].z;
+            console.log("load[i]", i, load)
+            if (load[i].p[0] != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
+                console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+
+                wert = load[i].p[0] * fact[iLoop]
+                if (wert > 0.0) {
+                    draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
+                } else {
+                    draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+                }
+                xpix = tr.xPix(x + delta + plength) + 5
+                zpix = tr.zPix(z) - 5
+                const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+                const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+            }
+            if (load[i].p[1] != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
+                //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+
+                wert = load[i].p[1] * fact[iLoop]
+                if (wert > 0.0) {
+                    draw_arrow(two, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
+                } else {
+                    draw_arrow(two, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
+                }
+
+                xpix = tr.xPix(x) + 5
+                zpix = tr.zPix(z - delta - plength) + 5
+                const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+                const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+            }
+            if (load[i].p[2] != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
+
+                wert = load[i].p[2] * fact[iLoop]
+                let vorzeichen = Math.sign(wert)
+                console.log("Moment ", +inode + 1, wert)
+                if (wert > 0.0) {
+                    draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_moment)
+                } else {
+                    draw_moment_arrow(two, x, z, -1.0, slmax / 50, style_pfeil_moment)
+                }
+
+                xpix = tr.xPix(x) - 10 / devicePixelRatio
+                zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
+                const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+                const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                txt.alignment = 'right'
+                //txt.baseline = 'bottom'
+            }
+
+        }
     }
 }
 

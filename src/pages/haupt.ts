@@ -192,7 +192,7 @@ portrait.addEventListener("change", function (e) {
             <tr>
               <td>&nbsp;&nbsp; Berechnung nach :</td>
               <td>
-                <select name="THIIO" id="id_THIIO" style="min-width:100%;">
+                <select name="THIIO" id="id_THIIO" style="min-width:100%;" onchange='berechnungErforderlich()'>
                   <option value="0" selected>Th. I. Ordnung</option>
                   <option value="1">Th. II. Ordnung</option>
                 </select>

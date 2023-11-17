@@ -1427,6 +1427,8 @@ export class CTimoshenko_beam extends CElement {
                         //console.log("elem kombi index", index, kombiTabelle[iLastf][index])
                         if (kombiTabelle[iLastf][index] !== 0.0) {
 
+                            let fact = kombiTabelle[iLastf][index]
+
                             if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
 
                                 const pL = eload[ieload].pL * kombiTabelle[iLastf][index]
@@ -1436,8 +1438,8 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pL * x - dp * x * x / sl / 2.
                                 Mx = Mx - pL * x * x / 2 - dp * x * x * x / sl / 6.
 
-                                let wl = pL / 24.0 * x ** 4 + dp / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                                wl = (wl + this.eta * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                let wl = pL / 24.0 * x ** 4 + dp / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
+                                wl = (wl + this.eta * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
                                 console.log("wl0", THIIO_flag, ielem, ieload, wl, - this.NL * wl, Mx, Mx - this.NL * wl)
                                 Mx = Mx - this.NL * wl
 
@@ -1461,8 +1463,8 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
-                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
+                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
                                 Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
                                 console.log("wl1", ielem, x, ieload, wl, - this.NL * wl, Mx)
 
@@ -1488,8 +1490,8 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                 Mx = Mx - pzL * x * x / 2. - dpz * x * x * x / sl / 6.
 
-                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
+                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
                                 console.log("wl2", THIIO_flag, ielem, ieload, wl, - this.NL * wl, Mx, Mx - Nx * wl)
                                 Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
 
@@ -1516,8 +1518,8 @@ export class CTimoshenko_beam extends CElement {
 
                                 ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
 
-                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
+                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
                                 //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
                                 Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
                                 console.log("Mx3", ielem, x, Mx)
@@ -1546,8 +1548,8 @@ export class CTimoshenko_beam extends CElement {
 
                                 ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
 
-                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
+                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
                                 wx += wl
                                 phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
 
@@ -1556,8 +1558,8 @@ export class CTimoshenko_beam extends CElement {
                             else if (eload[ieload].art === 6) {         // Einzellast oder Moment
 
                                 const xP = eload[ieload].x
-                                const P = eload[ieload].P
-                                const M = eload[ieload].M
+                                const P = eload[ieload].P * fact
+                                const M = eload[ieload].M * fact
                                 let edisp = Array(6).fill(0.0);
                                 let wl = 0.0
 
@@ -1569,7 +1571,7 @@ export class CTimoshenko_beam extends CElement {
 
                                         Vx = Vx - P
                                         Mx = Mx - M - P * (x - xP)
-                                        edisp[1] = eload[ieload].CwP + eload[ieload].CwM; edisp[2] = eload[ieload].CphiP + eload[ieload].CphiM;
+                                        edisp[1] = fact * (eload[ieload].CwP + eload[ieload].CwM); edisp[2] = fact * (eload[ieload].CphiP + eload[ieload].CphiM);
 
                                         const xx = x - xP;
                                         const xx2 = xx * xx
@@ -1588,7 +1590,7 @@ export class CTimoshenko_beam extends CElement {
 
                                         //console.log("Nw,edisp", wx, edisp, Nw)
                                     } else {
-                                        edisp[4] = eload[ieload].CwP + eload[ieload].CwM; edisp[5] = eload[ieload].CphiP + eload[ieload].CphiM;
+                                        edisp[4] = fact * (eload[ieload].CwP + eload[ieload].CwM); edisp[5] = fact * (eload[ieload].CphiP + eload[ieload].CphiM);
                                         const sl = xP
                                         const sl2 = sl * sl
                                         const nenner = sl ** 3 + 12. * eta * sl
