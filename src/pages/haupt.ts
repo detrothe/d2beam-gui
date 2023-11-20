@@ -227,7 +227,7 @@ portrait.addEventListener("change", function (e) {
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-grafik">
-        <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:absolute;top:0">
+        <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0">
           <!-- width:100vw; ;width:300px;height:300px; -->
           <div id="panel_gui" style="margin:0;padding:0;"></div>
           <div id="id_grafik_group">
@@ -239,7 +239,7 @@ portrait.addEventListener("change", function (e) {
               <select id="id_select_eigenvalue" on></select>
             </div>
           </div>
-          <button id="id_button_zurueck_grafik">zurück</button>
+          <button id="id_button_zurueck_grafik">Fullscreen</button>
 
           <div id="artboard" style="margin:0;padding:0;"></div>
         </div>
@@ -612,7 +612,7 @@ portrait.addEventListener("change", function (e) {
                   name="neigv"
                   class="input_tab"
                   pattern="[0-9.,eE+-]*"
-                  value="2"
+                  value="1"
                   @change=${berechnungErforderlich}
                 />
               </td>

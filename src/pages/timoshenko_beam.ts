@@ -589,6 +589,8 @@ export class CTimoshenko_beam extends CElement {
         for (i = 0; i < 3; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
 
         this.normalkraft = (this.FL[0] + this.FL[3]) / 2.0
+        if (this.normalkraft > 0.0) this.normalkraft = 0.0           // keine Zugversteifung
+
         console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
 
         for (i = 0; i < 6; i++) { // Verformungen lokal

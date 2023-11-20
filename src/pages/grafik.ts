@@ -24,7 +24,7 @@ console.log("in grafik")
 //let two: Two
 let domElement: any = null
 let svgElement: any = null;
-let fullscreen = true;
+let fullscreen = false;
 let wheel_factor = 1.0
 let mouseOffsetX = 0.0
 let mouseOffsetY = 0.0
@@ -613,7 +613,7 @@ export function drawsystem() {
 
                     if (i > 0) {
                         let line = two.makeLine(xx1, zz1, xx2, zz2);
-                        line.linewidth = 2;
+                        line.linewidth = 5;
                     }
 
                     dispG = Math.sqrt(uG * uG + wG * wG)
@@ -717,7 +717,7 @@ export function drawsystem() {
                 if (i > 0) {
                     //console.log("line", xx1, zz1, xx2, zz2)
                     let line = two.makeLine(xx1, zz1, xx2, zz2);
-                    line.linewidth = 2;
+                    line.linewidth = 5;
                 }
 
                 dispG = Math.sqrt(uG * uG + wG * wG)
@@ -809,7 +809,7 @@ export function drawsystem() {
                 if (i > 0) {
                     //console.log("line", xx1, zz1, xx2, zz2)
                     let line = two.makeLine(xx1, zz1, xx2, zz2);
-                    line.linewidth = 2;
+                    line.linewidth = 5;
                 }
 
                 dispG = Math.sqrt(uG * uG + wG * wG)
@@ -891,7 +891,7 @@ export function drawsystem() {
                         if (iteil > 0) {
                             //console.log("line", xx1, zz1, xx2, zz2)
                             let line = two.makeLine(xx1, zz1, xx2, zz2);
-                            line.linewidth = 2;
+                            line.linewidth = 5;
                         }
 
                         dispG = Math.sqrt(uG * uG + wG * wG)
@@ -989,7 +989,7 @@ export function drawsystem() {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if (scalefactor === Infinity || scalefactor > 1.e13) break;
+            if (scalefactor === Infinity || scalefactor > 1.e12) break;
 
             const nelTeilungen = element[ielem].nTeilungen
             let sg: number[] = new Array(nelTeilungen)
@@ -1252,6 +1252,7 @@ export function drawsystem() {
 
                     let line = two.makeLine(x1, z1, x2, z2);
                     if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
+                    else if ( show_verformungen || show_eigenformen || show_schiefstellung || show_stabvorverformung) line.linewidth = 2 / devicePixelRatio;
                     else line.linewidth = 5 / devicePixelRatio;
 
                     // gestrichelte Faser
@@ -1335,37 +1336,68 @@ export function drawsystem() {
             let dz = z_max - z_min
             //console.log("min max", x_min, x_max, z_min, z_max, dx, dz)
             //console.log("LINKS", tr.xPix(x_min + dx * 0.1), tr.zPix(z_min + dz * 0.1), tr.xPix(x_min + dx * 0.1), tr.zPix(z_max - dz * 0.1))
+
             // linke Linie
             let rand = tr.World0(20 / devicePixelRatio)
             let xl = x_min + rand //dx * 0.05
             let zl = z_max - rand
             let line1 = two.makeLine(tr.xPix(xl), tr.zPix(z_min + dz * 0.05), tr.xPix(xl), tr.zPix(z_max - dz * 0.05));
             line1.linewidth = 1;
-            let line2 = two.makeLine(tr.xPix(x_min), tr.zPix(0.0), tr.xPix(x_min + 2 * rand), tr.zPix(0.0));
+
+            let line2 = two.makeLine(tr.xPix(x_min), tr.zPix(0.0), tr.xPix(x_min + rand), tr.zPix(0.0));
             line2.linewidth = 1;
-            let txt = two.makeText('0', tr.xPix(x_min + 2 * rand) + 4 / devicePixelRatio, tr.zPix(0.0), style_txt)
+            let txt = two.makeText('0', tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(0.0), style_txt)
             txt.fill = '#000000'
             txt.baseline = 'middle'
             txt.alignment = 'left'
 
+            //console.log('MYFORMAT',myFormat(zmin, 1, 2),myFormat(zmax, 1, 2))
+            if (myFormat(zmin, 1, 2) !== myFormat(0.0, 1, 2)) {
+                line2 = two.makeLine(tr.xPix(x_min), tr.zPix(zmin), tr.xPix(x_min + rand), tr.zPix(zmin));
+                line2.linewidth = 1;
+                txt = two.makeText(myFormat(zmin, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(zmin), style_txt)
+                txt.fill = '#000000'
+                txt.baseline = 'middle'
+                txt.alignment = 'left'
+            }
+
+            if (myFormat(zmax, 1, 2) != myFormat(0.0, 1, 2)) {
+                line2 = two.makeLine(tr.xPix(x_min), tr.zPix(zmax), tr.xPix(x_min + rand), tr.zPix(zmax));
+                line2.linewidth = 1;
+                txt = two.makeText(myFormat(zmax, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(zmax), style_txt)
+                txt.fill = '#000000'
+                txt.baseline = 'middle'
+                txt.alignment = 'left'
+            }
+
+            //unten
+
             let line3 = two.makeLine(tr.xPix(x_min + dx * 0.05), tr.zPix(zl), tr.xPix(x_max - dx * 0.05), tr.zPix(zl));
             line3.linewidth = 1;
-            let line4 = two.makeLine(tr.xPix(0.0), tr.zPix(z_max), tr.xPix(0.0), tr.zPix(z_max - 2 * rand));
+            let line4 = two.makeLine(tr.xPix(0.0), tr.zPix(z_max), tr.xPix(0.0), tr.zPix(z_max - rand));
             line4.linewidth = 1;
-            let txt1 = two.makeText('0', tr.xPix(0.0), tr.zPix(z_max - 2 * rand) - 4 / devicePixelRatio, style_txt)
+            let txt1 = two.makeText('0', tr.xPix(0.0), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
             txt1.fill = '#000000'
             txt1.baseline = 'baseline'
             txt1.alignment = 'center'
 
-            let line5 = two.makeLine(tr.xPix(xmax), tr.zPix(z_max), tr.xPix(xmax), tr.zPix(z_max - 2 * rand));
-            line5.linewidth = 1;
+            if (myFormat(xmax, 1, 2) != myFormat(0.0, 1, 2)) {
+                let line5 = two.makeLine(tr.xPix(xmax), tr.zPix(z_max), tr.xPix(xmax), tr.zPix(z_max - rand));
+                line5.linewidth = 1;
+                txt1 = two.makeText(myFormat(xmax, 1, 2), tr.xPix(xmax), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
+                txt1.fill = '#000000'
+                txt1.baseline = 'baseline'
+                txt1.alignment = 'center'
+            }
 
-            txt1 = two.makeText(myFormat(xmax, 1, 2), tr.xPix(xmax), tr.zPix(z_max - 2 * rand) - 4 / devicePixelRatio, style_txt)
-            txt1.fill = '#000000'
-            txt1.baseline = 'baseline'
-            txt1.alignment = 'center'
-
-
+            if (myFormat(xmin, 1, 2) != myFormat(0.0, 1, 2)) {
+                let line5 = two.makeLine(tr.xPix(xmin), tr.zPix(z_max), tr.xPix(xmin), tr.zPix(z_max - rand));
+                line5.linewidth = 1;
+                txt1 = two.makeText(myFormat(xmin, 1, 2), tr.xPix(xmin), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
+                txt1.fill = '#000000'
+                txt1.baseline = 'baseline'
+                txt1.alignment = 'center'
+            }
         }
     }
 
@@ -1453,7 +1485,7 @@ function draw_elementlasten(two: Two) {
 
             for (let i = 0; i < nlastfaelle; i++) {
                 if (kombiTabelle[ikomb][i] !== 0.0) {
-                    fact[i] = kombiTabelle[ikomb][i];
+                    fact[nLoop] = kombiTabelle[ikomb][i];
                     lf_show[nLoop] = i
                     nLoop++;
                 }
@@ -1777,9 +1809,9 @@ function draw_elementlasten(two: Two) {
                         xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4.
                         zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4.
                         let str: string;
-                        if (eload[ieload].art === 5) str = "Tu= " + eload[ieload].Tu + "°/To= " + eload[ieload].To + "°";
-                        else if (eload[ieload].art === 9) str = "σv= " + eload[ieload].sigmaV / 1000 + " N/mm²";
-                        else str = "Δs= " + eload[ieload].delta_s * 1000 + " mm";
+                        if (eload[ieload].art === 5) str = "Tu= " + eload[ieload].Tu * fact[iLoop] + "°/To= " + eload[ieload].To * fact[iLoop] + "°";
+                        else if (eload[ieload].art === 9) str = "σv= " + eload[ieload].sigmaV * fact[iLoop] / 1000 + " N/mm²";
+                        else str = "Δs= " + eload[ieload].delta_s * fact[iLoop] * 1000 + " mm";
                         //str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
                         let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                         txt.alignment = 'center'
@@ -1799,7 +1831,7 @@ function draw_elementlasten(two: Two) {
                         if (eload[ieload].P != 0.0) {
                             let dpx = si * plength, dpz = co * plength
                             let ddx = si * delta, ddz = co * delta
-                            let wert = eload[ieload].P
+                            let wert = eload[ieload].P * fact[iLoop]
                             let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
                             console.log("GRAFIK Einzellast", xl, zl, wert)
                             if (wert < 0.0) {
@@ -1815,7 +1847,7 @@ function draw_elementlasten(two: Two) {
                             txt.baseline = 'top'
                         }
                         if (eload[ieload].M != 0.0) {
-                            let wert = eload[ieload].M
+                            let wert = eload[ieload].M * fact[iLoop]
                             let vorzeichen = Math.sign(wert)
                             let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
                             let radius = style_pfeil_moment.radius;
@@ -1882,7 +1914,7 @@ function draw_knotenkraefte(two: Two) {
 
             for (let i = 0; i < nlastfaelle; i++) {
                 if (kombiTabelle[ikomb][i] !== 0.0) {
-                    console.log("kombitabelle", i, ikomb, kombiTabelle[ikomb][i])
+                    //console.log("kombitabelle", i, ikomb, kombiTabelle[ikomb][i])
                     fact[nLoop] = kombiTabelle[ikomb][i];
                     lf_show[nLoop] = i
                     nLoop++;
@@ -1902,7 +1934,7 @@ function draw_knotenkraefte(two: Two) {
 
             for (let i = 0; i < nlastfaelle; i++) {
                 if (kombiTabelle[ikomb][i] !== 0.0) {
-                    fact[i] = kombiTabelle[ikomb][i];
+                    fact[nLoop] = kombiTabelle[ikomb][i];
                     lf_show[nLoop] = i
                     nLoop++;
                 }
