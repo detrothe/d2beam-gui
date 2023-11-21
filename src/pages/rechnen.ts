@@ -13,6 +13,8 @@ import { CSpring } from "./feder"
 import { init_grafik, drawsystem } from "./grafik";
 import { show_controller_THIIO, show_controller_results } from "./mypanelgui"
 
+import { prot_eingabe } from "./prot_eingabe"
+
 let fatal_error = false;
 
 export let nnodes: number;
@@ -449,12 +451,12 @@ export function rechnen(flag = 1) {
 
     if (flag === 1) {
         if (fatal_error) {
-            write ('\nEingabefehler bitte erst beheben')
+            write('\nEingabefehler bitte erst beheben')
         } else {
             calculate();
-        if (THIIO_flag === 0) show_controller_THIIO(false);
-        else show_controller_THIIO(true);
-        show_controller_results(true);
+            if (THIIO_flag === 0) show_controller_THIIO(false);
+            else show_controller_THIIO(true);
+            show_controller_results(true);
         }
     } else {
 
@@ -793,11 +795,11 @@ function read_nodal_loads() {
             else if (ispalte === 4) load[izeile - 1].Pz = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 5) load[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad));
         }
-         if (load[izeile - 1].lf > nlastfaelle) {
+        if (load[izeile - 1].lf > nlastfaelle) {
             fatal_error = true;
             write('Knotenlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
             //nlastfaelle = load[izeile - 1].lf
-         }
+        }
 
         console.log("R", izeile, load[izeile - 1])
     }
@@ -2380,9 +2382,18 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
     let i: number, j: number
 
-    let tag = document.createElement("p"); // <p></p>
+
+    newDiv = prot_eingabe(iLastfall, newDiv);
+
+    let tag = document.createElement("p");
+    let text = document.createTextNode("Ergebnisse");
+    tag.appendChild(text);
+    tag.innerHTML = "<b>Ergebnisse</b>"
+    newDiv?.appendChild(tag);
+
+    tag = document.createElement("p");
     tag.setAttribute("id", "id_ergebnisse");
-    let text = document.createTextNode("xxx");
+    text = document.createTextNode("xxx");
     tag.appendChild(text);
     if (app.browserLanguage == 'de') {
         if (THIIO_flag === 0) tag.innerHTML = "<b>Lastfall " + iLastfall + '</b>';

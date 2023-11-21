@@ -667,7 +667,7 @@ portrait.addEventListener("change", function (e) {
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-ergebnisse"
-        >Ergebnisse
+        >Eingabeprotokoll
         <div id="id_results"></div>
       </sl-tab-panel>
 

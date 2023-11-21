@@ -342,3 +342,23 @@ select {
 .btn:hover {
   background-color: RoyalBlue;
 }
+
+
+.output_table_ein td,
+.output_table_ein th {
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin: 0px;
+}
+
+.table_ein_cell_center {
+  text-align: center;
+  background-color: rgb(255, 229, 80);
+}
+
+.table_ein_cell_right {
+  text-align: right;
+  padding-right: 1em;
+}
