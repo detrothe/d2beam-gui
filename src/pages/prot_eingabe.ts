@@ -8,6 +8,8 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
 
     console.log("----------------- in prot_eingabe --------------------")
 
+    if ( iLastfall > 1) return;
+
     let tag = document.createElement("p"); // <p></p>
     let text = document.createTextNode("xxx");
     tag.appendChild(text);

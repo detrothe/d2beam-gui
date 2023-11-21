@@ -2383,7 +2383,7 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
     let i: number, j: number
 
 
-    newDiv = prot_eingabe(iLastfall, newDiv);
+    newDiv = prot_eingabe(iLastfall, newDiv)!;
 
     let tag = document.createElement("p");
     let text = document.createTextNode("Ergebnisse");
