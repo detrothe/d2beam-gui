@@ -448,10 +448,14 @@ export function rechnen(flag = 1) {
     read_stabvorverformungen();
 
     if (flag === 1) {
-        if (!fatal_error) calculate();
+        if (fatal_error) {
+            write ('\nEingabefehler bitte erst beheben')
+        } else {
+            calculate();
         if (THIIO_flag === 0) show_controller_THIIO(false);
         else show_controller_THIIO(true);
         show_controller_results(true);
+        }
     } else {
 
         show_controller_THIIO(false);
@@ -789,7 +793,11 @@ function read_nodal_loads() {
             else if (ispalte === 4) load[izeile - 1].Pz = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 5) load[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad));
         }
-        if (load[izeile - 1].lf > nlastfaelle) nlastfaelle = load[izeile - 1].lf
+         if (load[izeile - 1].lf > nlastfaelle) {
+            fatal_error = true;
+            write('Knotenlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+            //nlastfaelle = load[izeile - 1].lf
+         }
 
         console.log("R", izeile, load[izeile - 1])
     }
@@ -853,7 +861,10 @@ function read_element_loads() {
             else if (ispalte === 4) eload[ieload].pL = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 5) eload[ieload].pR = Number(testNumber(wert, izeile, ispalte, shad));
         }
-        if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+        if (eload[ieload].lf > nlastfaelle) {
+            fatal_error = true;
+            write('Elementstreckenlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+        }
 
         console.log("eload", izeile, eload[ieload])
         ieload++;
@@ -919,7 +930,11 @@ function read_element_loads() {
             else if (ispalte === 5) eload[ieload].M = Number(testNumber(wert, izeile, ispalte, shad));
             eload[ieload].art = 6;
         }
-        if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+        // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+        if (eload[ieload].lf > nlastfaelle) {
+            fatal_error = true;
+            write('Elementeinzellast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+        }
 
         console.log("eload", izeile, eload[ieload])
         ieload++;
@@ -947,7 +962,11 @@ function read_element_loads() {
             else if (ispalte === 4) eload[ieload].To = Number(testNumber(wert, izeile, ispalte, shad));
             eload[ieload].art = 5;
         }
-        if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+        // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+        if (eload[ieload].lf > nlastfaelle) {
+            fatal_error = true;
+            write('Elementtemperaturlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+        }
 
         console.log("eload", izeile, eload[ieload])
         ieload++;
@@ -974,7 +993,11 @@ function read_element_loads() {
             else if (ispalte === 3) eload[ieload].sigmaV = Number(testNumber(wert, izeile, ispalte, shad)) * 1000.0; //von MN/m² in kN/m²
             eload[ieload].art = 9;
         }
-        if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+        // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+        if (eload[ieload].lf > nlastfaelle) {
+            fatal_error = true;
+            write('Elementtemperaturlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+        }
 
         console.log("eload", izeile, eload[ieload])
         ieload++;
@@ -1001,7 +1024,11 @@ function read_element_loads() {
             else if (ispalte === 3) eload[ieload].delta_s = Number(testNumber(wert, izeile, ispalte, shad)) / 1000.;  // von mm in m
             eload[ieload].art = 10;
         }
-        if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+        // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+        if (eload[ieload].lf > nlastfaelle) {
+            fatal_error = true;
+            write('Elementspannschlosslast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+        }
 
         console.log("eload", izeile, eload[ieload])
         ieload++;

@@ -192,7 +192,7 @@ portrait.addEventListener("change", function (e) {
             <tr>
               <td>&nbsp;&nbsp; Berechnung nach :</td>
               <td>
-                <select name="THIIO" id="id_THIIO" style="min-width:100%;" onchange='berechnungErforderlich()'>
+                <select name="THIIO" id="id_THIIO" style="min-width:100%;" onchange="berechnungErforderlich()">
                   <option value="0" selected>Th. I. Ordnung</option>
                   <option value="1">Th. II. Ordnung</option>
                 </select>
@@ -319,26 +319,46 @@ portrait.addEventListener("change", function (e) {
 
       <!--------------------------------------------------------------------------------------->
 
-      <sl-tab-panel name="tab-knoten"
-        ><p>
-          <b>Eingabe der Knotenkoordinaten und Lager</b><br /><br />
-          1 = starre Lagerung<br />
-          0 oder leere Zelle = frei beweglich<br />
-          > 1 = Federsteifigkeit in kN/m bzw. kNm/rad<br />
-          <br />
-          Drehung des Lagers im Gegenuhrzeigersinn positiv<br /><br />
-        </p>
-        <p>
-          Anzahl Knoten:
-          <dr-button-pm id="id_button_nnodes" nel="${nnodes_init}" inputid="nnodes"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
-        </p>
-        <dr-tabelle
-          id="id_knoten_tabelle"
-          nzeilen="${nnodes_init}"
-          nspalten="6"
-          columns='["No", "x [m]", "z [m]", "L<sub>x</sub>&nbsp;(kN/m)", "L<sub>z</sub>&nbsp;(kN/m)", "L<sub>&phi;</sub>&nbsp;(kNm/rad)", "Winkel [°]"]'
-        ></dr-tabelle>
+      <sl-tab-panel name="tab-knoten">
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <p>
+                  <b>Eingabe der Knotenkoordinaten und Lager</b><br /><br />
+                  1 = starre Lagerung<br />
+                  0 oder leere Zelle = frei beweglich<br />
+                  > 1 = Federsteifigkeit in kN/m bzw. kNm/rad<br />
+                  <br />
+                  Drehung des Lagers im Gegenuhrzeigersinn positiv<br /><br />
+                </p>
+                <p>
+                  Anzahl Knoten:
+                  <dr-button-pm id="id_button_nnodes" nel="${nnodes_init}" inputid="nnodes"></dr-button-pm>
+                  <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
+                </p>
+              </td>
+              <td>
+                <img
+                  src="/assets/gedrehtes_lager.png"
+                  name="gedrehtes_lager"
+                  title="gedrehtes Lager"
+                  style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <dr-tabelle
+                  id="id_knoten_tabelle"
+                  nzeilen="${nnodes_init}"
+                  nspalten="6"
+                  columns='["No", "x [m]", "z [m]", "L<sub>x</sub>&nbsp;(kN/m)", "L<sub>z</sub>&nbsp;(kN/m)", "L<sub>&phi;</sub>&nbsp;(kNm/rad)", "Winkel [°]"]'
+                ></dr-tabelle>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <p><br /><b>Knotenverformungen</b><br /></p>
         <p>zum Beispiel für Stützensenkungen</p>
@@ -353,6 +373,7 @@ portrait.addEventListener("change", function (e) {
           <dr-button-pm id="id_button_nnodedisps" nel="${nnodedisps_init}" inputid="nnodedisps"></dr-button-pm>
           <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
         </p>
+
         <dr-tabelle
           id="id_nnodedisps_tabelle"
           nzeilen="${nnodedisps_init}"

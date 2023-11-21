@@ -242,6 +242,9 @@ export function init_grafik(flag = 1) {
             option.textContent = 'alle Kombinationen';
             el_select.appendChild(option);
         }
+
+        el_select_eigv.style.display="none"
+
     } else if (THIIO_flag === 1) {
 
         let option: any
@@ -259,6 +262,8 @@ export function init_grafik(flag = 1) {
             option.textContent = 'alle Kombinationen';
             el_select.appendChild(option);
         }
+
+        el_select_eigv.style.display="block"
 
         for (let i = 0; i < neigv; i++) {
             let option = document.createElement('option');
