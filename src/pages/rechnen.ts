@@ -451,7 +451,8 @@ export function rechnen(flag = 1) {
     read_stabvorverformungen();
 
     if (flag === 1) {
-        if (fatal_error) {
+        let fehler = check_input();
+        if (fatal_error || fehler > 0) {
             write('\nEingabefehler bitte erst beheben')
         } else {
             calculate();
@@ -466,75 +467,9 @@ export function rechnen(flag = 1) {
 
         calc_neq_and_springs();
 
-        let fehler = 0;
+        let fehler = check_input();
 
-        if (nQuerschnittSets === 0) { write('Es muss mindestens 1 Querschnitt definiert sein\n'); fehler++; }
-        if (nelem < 1) { write('Es muss mindestens 1 Element definiert sein'); fehler++; }
-        if (nnodes < 2) { write('Es müssen mindestens 2 Knoten definiert sein'); fehler++; }
-
-        if (THIIO_flag === 1) {
-            if (nkombinationen < 1) { write('Es muss mindestens 1 Kombination definiert sein'); fehler++; }
-        }
-
-        write(' ')
-        for (let ielem = 0; ielem < nelem_Balken; ielem++) {
-            if (element[ielem].qname === "") { write('Dem Element ' + (+ielem + 1) + ' ist kein Querschnitt zugeordnet'); fehler++; }
-            // if (element[ielem].nod[0] < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
-            // if (element[ielem].nod[1] < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
-            // if (element[ielem].nod[0] > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
-            // if (element[ielem].nod[1] > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++; }
-            // if (element[ielem].nod[0] === element[ielem].nod[1]) { write('Element ' + (+ielem + 1) + ': Knoteninzidenzen für (nod a) und (nod e) muessen unterschiedlich sein'); fehler++; }
-
-            for (let i = 0; i < 6; i++) {
-                if (!(element[ielem].gelenk[i] === 0 || element[ielem].gelenk[i] === 1)) {
-                    write('Element ' + (+ielem + 1) + ': für Gelenke nur 1 zulässig, kein Gelenk: 0 oder leere Zelle'); fehler++;
-                }
-            }
-        }
-        write(' ')
-
-        for (let i = 0; i < nloads; i++) {
-            if (load[i].node < 0) { write('Knotenlast ' + (+i + 1) + ' Knotennummer muss größer 0 sein'); fehler++; }
-            if (load[i].node > (nnodes - 1)) { write('Knotenlast ' + (+i + 1) + ' Knotennummer muss <= Anzahl Knoten sein'); fehler++; }
-            if (load[i].lf < 1) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss größer 1 sein'); fehler++; }
-            if (load[i].lf > nlastfaelle) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
-        }
-        write(' ')
-
-        for (let i = 0; i < nstreckenlasten; i++) {
-            if (eload[i].art < 0 || eload[i].art > 4) { write('Streckenlast ' + (+i + 1) + ' Lastart muss zwischen 0 und 4 sein'); fehler++; }
-        }
-        write(' ')
-
-        for (let i = 0; i < neloads; i++) {
-            if (eload[i].element < 0) { write('Elementlast ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++; }
-            if (eload[i].element > (nelem - 1)) { write('Elementlast ' + (+i + 1) + ': Knotennummer muss <= Anzahl Elemente sein'); fehler++; }
-            if (eload[i].lf < 1) { write('Elementlast ' + (+i + 1) + ': Nummer des Lastfalls muss größer 1 sein'); fehler++; }
-            if (eload[i].lf > nlastfaelle) { write('Elementlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
-        }
-
-        write(' ')
-
-        for (let i = 0; i < nkombinationen; i++) {
-            let anzahl = 0
-            for (let j = 0; j < nlastfaelle; j++) {
-                if (kombiTabelle[i][j] != 0.0) anzahl++;
-            }
-            if (anzahl === 0) { write('An Kombination ' + (+i + 1) + ' ist kein Lastfall beteiligt'); fehler++; }
-        }
-
-        if (maxU_node < 0) { write('Tab Vorverformungen, Schiefstellung: Knotennummer muss >= 0 sein') }
-        if (maxU_node > nnodes) { write('Tab Vorverformungen, Schiefstellung: Knotennummer muss <= Anzahl Knoten sein') }
-
-        for (let i = 0; i < nstabvorverfomungen; i++) {
-            if (stabvorverformung[i].element < 0) { write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++; }
-            if (stabvorverformung[i].element > (nelem - 1)) { write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss  <= Anzahl Elemente sein'); fehler++; }
-        }
-
-        write('_________________________________________________________')
-        write('Es sind ' + fehler + ' Eingabefehler gefunden worden');
-
-        if (fatal_error) return;
+        if (fatal_error || fehler > 0) return;
 
         // für die Grafik
 
@@ -557,6 +492,90 @@ export function rechnen(flag = 1) {
 
         write('Im Tab Grafik wurde das System soweit möglich gezeichnet');
     }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function check_input() {
+    //---------------------------------------------------------------------------------------------------------------
+
+
+    let fehler = 0;
+
+    if (nQuerschnittSets === 0) { write('Es muss mindestens 1 Querschnitt definiert sein\n'); fehler++; }
+    if (nelem < 1) { write('Es muss mindestens 1 Element definiert sein'); fehler++; }
+    if (nnodes < 2) { write('Es müssen mindestens 2 Knoten definiert sein'); fehler++; }
+
+    if (THIIO_flag === 1) {
+        if (nkombinationen < 1) { write('Es muss mindestens 1 Kombination definiert sein'); fehler++; }
+    }
+
+    if ( fehler > 0 ) write(' ')
+    for (let ielem = 0; ielem < nelem_Balken; ielem++) {
+        if (element[ielem].qname === "") { write('Dem Element ' + (+ielem + 1) + ' ist kein Querschnitt zugeordnet'); fehler++; }
+        // if (element[ielem].nod[0] < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
+        // if (element[ielem].nod[1] < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
+        // if (element[ielem].nod[0] > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
+        // if (element[ielem].nod[1] > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++; }
+        // if (element[ielem].nod[0] === element[ielem].nod[1]) { write('Element ' + (+ielem + 1) + ': Knoteninzidenzen für (nod a) und (nod e) muessen unterschiedlich sein'); fehler++; }
+
+        for (let i = 0; i < 6; i++) {
+            if (!(element[ielem].gelenk[i] === 0 || element[ielem].gelenk[i] === 1)) {
+                write('Element ' + (+ielem + 1) + ': für Gelenke nur 1 zulässig, kein Gelenk: 0 oder leere Zelle'); fehler++;
+            }
+        }
+    }
+    if ( fehler > 0 ) write(' ')
+
+    for (let i = 0; i < nloads; i++) {
+        if (load[i].node < 0) { write('Knotenlast ' + (+i + 1) + ' Knotennummer muss größer 0 sein'); fehler++; }
+        if (load[i].node > (nnodes - 1)) { write('Knotenlast ' + (+i + 1) + ' Knotennummer muss <= Anzahl Knoten sein'); fehler++; }
+        if (load[i].lf < 1) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss größer 1 sein'); fehler++; }
+        if (load[i].lf > nlastfaelle) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
+    }
+    if ( fehler > 0 )  write(' ')
+
+    for (let i = 0; i < nstreckenlasten; i++) {
+        if (eload[i].art < 0 || eload[i].art > 4) { write('Streckenlast ' + (+i + 1) + ' Lastart muss zwischen 0 und 4 sein'); fehler++; }
+    }
+    if ( fehler > 0 ) write(' ')
+
+    for (let i = 0; i < neloads; i++) {
+        if (eload[i].element < 0) { write('Elementlast ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++; }
+        if (eload[i].element > (nelem - 1)) { write('Elementlast ' + (+i + 1) + ': Knotennummer muss <= Anzahl Elemente sein'); fehler++; }
+        if (eload[i].lf < 1) { write('Elementlast ' + (+i + 1) + ': Nummer des Lastfalls muss größer 1 sein'); fehler++; }
+        if (eload[i].lf > nlastfaelle) { write('Elementlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
+    }
+
+    if ( fehler > 0 ) write(' ')
+
+    for (let i = 0; i < nkombinationen; i++) {
+        let anzahl = 0
+        for (let j = 0; j < nlastfaelle; j++) {
+            if (kombiTabelle[i][j] != 0.0) anzahl++;
+        }
+        if (anzahl === 0) { write('An Kombination ' + (+i + 1) + ' ist kein Lastfall beteiligt'); fehler++; }
+    }
+
+    if (maxU_node < 0) { write('Tab Vorverformungen, Schiefstellung: Knotennummer muss >= 0 sein') }
+    if (maxU_node > nnodes) { write('Tab Vorverformungen, Schiefstellung: Knotennummer muss <= Anzahl Knoten sein') }
+
+    for (let i = 0; i < nstabvorverfomungen; i++) {
+        if (stabvorverformung[i].element < 0) { write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++; }
+        if (stabvorverformung[i].element > (nelem - 1)) { write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss  <= Anzahl Elemente sein'); fehler++; }
+    }
+
+    for (let i = 0; i < nNodeDisps; i++) {
+        if (nodeDisp0[i].node < 0) { write('(Tab Knoten) Knotenverformung ' + (+i + 1) + ': Knotennummer muss größer 0 sein'); fehler++; }
+        if (nodeDisp0[i].node > (nnodes - 1)) { write('(Tab Knoten) Knotenvorverformung ' + (+i + 1) + ': Knotennummer muss  <= Anzahl Elemente sein'); fehler++; }
+        if (nodeDisp0[i].lf < 1) { write('(Tab Knoten) Knotenverformung ' + (+i + 1) + ': Nummer des Lastfalls muss größer 1 sein'); fehler++; }
+        if (nodeDisp0[i].lf > nlastfaelle) { write('(Tab Knoten) Knotenverformung ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
+    }
+
+    write('_________________________________________________________')
+    write('Es sind ' + fehler + ' Eingabefehler gefunden worden');
+
+    return fehler;
 
 }
 
@@ -717,9 +736,9 @@ function read_nodes() {
             else if (ispalte === 4) node[iz].L[1] = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 5) node[iz].L[2] = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 6) node[iz].phi = Number(testNumber(wert, izeile, ispalte, shad));
-            node[iz].L_org[0] =node[iz].L[0]
-            node[iz].L_org[1] =node[iz].L[1]
-            node[iz].L_org[2] =node[iz].L[2]
+            node[iz].L_org[0] = node[iz].L[0]
+            node[iz].L_org[1] = node[iz].L[1]
+            node[iz].L_org[2] = node[iz].L[2]
         }
     }
 
@@ -2701,6 +2720,8 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
 
     // Knotenvorverformung
+
+    //console.log("BBBBBBBBBBBBBBBBBBBB  nNodeDisps",nNodeDisps)
 
     if (nNodeDisps > 0) {
 

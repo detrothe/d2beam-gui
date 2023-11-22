@@ -33,10 +33,14 @@ export function testNumber(wert: any, zeile: number, spalte: number, id: any) {
 }
 
 //------------------------------------------------------------------------------------------------
-export function myFormat(wert: any, minDecimal: any, maxDecimal: any) {
+export function myFormat(wert: any, minDecimal: any, maxDecimal: any, notation = 0) {
     //--------------------------------------------------------------------------------------------
+    if (notation === 0) {
+        return new Intl.NumberFormat(navigator.language, { minimumFractionDigits: minDecimal, maximumFractionDigits: maxDecimal }).format(wert);
+    } else {
+        return new Intl.NumberFormat(navigator.language, { notation: "scientific", minimumFractionDigits: minDecimal, maximumFractionDigits: maxDecimal }).format(wert);
 
-    return new Intl.NumberFormat(navigator.language, { minimumFractionDigits: minDecimal, maximumFractionDigits: maxDecimal }).format(wert);
+    }
 }
 
 //------------------------------------------------------------------------------------------------
