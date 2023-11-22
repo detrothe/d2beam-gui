@@ -115,6 +115,7 @@ class TNode {
     z: number = 1.0
 
     L = [0, 0, 0]                                   // Lagerbedingung  bei Eingabe: 0=frei, 1=fest, später enthält L() die Gleichungsnummern
+    L_org = [0, 0, 0]                               // Lagerbedingung  bei Eingabe unverändert
     kx = 0.0
     kz = 0.0
     kphi = 0.0
@@ -716,7 +717,9 @@ function read_nodes() {
             else if (ispalte === 4) node[iz].L[1] = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 5) node[iz].L[2] = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 6) node[iz].phi = Number(testNumber(wert, izeile, ispalte, shad));
-
+            node[iz].L_org[0] =node[iz].L[0]
+            node[iz].L_org[1] =node[iz].L[1]
+            node[iz].L_org[2] =node[iz].L[2]
         }
     }
 
