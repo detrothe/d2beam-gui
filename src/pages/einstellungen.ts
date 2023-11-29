@@ -6,7 +6,7 @@ import { testeZahl } from "./utility.js";
 //document.getElementById("unitLength")?.addEventListener('change', einstellungen);
 //document.getElementById("id_body_width")?.addEventListener('change', set_body_width);
 
-export let current_unit_length = 'cm'
+export let current_unit_length = 'm'
 export let current_unit_stress = 'kN/cm²'
 export let unit_length_factor = 1               // Multiplikator von cm nach neuer Einheit
 export let unit_stress_factor = 1               // Multiplikator von kN/cm² nach neuer Einheit

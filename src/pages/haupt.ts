@@ -34,6 +34,9 @@ import DetectOS from "./detectos";
 import { addListener_filesave } from "./dateien";
 import { select_loadcase_changed, select_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik } from "./grafik";
 import { set_info } from "./utility";
+
+import { my_jspdf } from "./mypdf"
+
 //import { init_contextmenu } from '../components/dr-tabelle';
 
 import {
@@ -167,10 +170,10 @@ portrait.addEventListener("change", function (e) {
 
         <p>
           <button type="button" id="saveFile" style="min-width:8em;">
-            Daten speichern
+            Objektdaten speichern
           </button>
           <button type="button" id="readFile" style="min-width:8em;">
-            Daten einlesen
+            Objektdaten einlesen
           </button>
         </p>
 
@@ -667,7 +670,8 @@ portrait.addEventListener("change", function (e) {
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-ergebnisse"
-        ><b>&nbsp;Eingabeprotokoll</b>
+        ><p><sl-button id="id_create_pdf"  @click="${create_pdf}">create pdf</sl-button></p>
+        <b>&nbsp;Eingabeprotokoll</b>
         <div id="id_results"></div>
       </sl-tab-panel>
 
@@ -1455,4 +1459,10 @@ function handleClick_eingabe_ueberpruefen() {
 
   resizeTables();
   rechnen(0);
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function create_pdf() {
+  //-------------------------------------------------------------------------------------------------------------
+  my_jspdf();
 }
