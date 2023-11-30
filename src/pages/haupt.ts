@@ -670,7 +670,7 @@ portrait.addEventListener("change", function (e) {
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-ergebnisse"
-        ><p><sl-button id="id_create_pdf"  @click="${create_pdf}">create pdf</sl-button></p>
+        ><p><sl-button id="id_create_pdf"  @click="${create_pdf}">erstelle pdf-Datei</sl-button></p>
         <b>&nbsp;Eingabeprotokoll</b>
         <div id="id_results"></div>
       </sl-tab-panel>

@@ -1,4 +1,4 @@
-import { el, element as stab, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung, nelem_Balken, nQuerschnittSets } from "./rechnen";
+import { el, element as stab, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung, nelem_Balken, nQuerschnittSets, querschnittset } from "./rechnen";
 
 import { testNumber, myFormat, write } from './utility'
 
@@ -155,15 +155,15 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
 
             for (let ispalte = 1; ispalte <= 8; ispalte++) {
                 newCell = newRow.insertCell(ispalte);
-                if (ispalte === 1) newText = document.createTextNode(stab[i].qname);
-                else if (ispalte === 2) { newText = document.createTextNode(myFormat(el[i].area * 10000., 1, 2)); newCell.style.minWidth = '4rem'; }
-                else if (ispalte === 3) { newText = document.createTextNode(myFormat(el[i].Iy * 100000000., 1, 1)); newCell.style.minWidth = '4rem'; }
-                else if (ispalte === 4) { newText = document.createTextNode(myFormat(el[i].emodul / 1000., 1, 1)); newCell.style.minWidth = '4rem'; }
-                else if (ispalte === 5) { newText = document.createTextNode(myFormat(el[i].querdehnzahl, 1, 2)); newCell.style.minWidth = '4rem'; }
-                else if (ispalte === 6) { newText = document.createTextNode(myFormat(el[i].schubfaktor, 0, 3)); newCell.style.minWidth = '4rem'; }
-                else if (ispalte === 7) { newText = document.createTextNode(myFormat(el[i].alphaT,1,2,1)); newCell.style.minWidth = '4rem'; }
+                if (ispalte === 1) newText = document.createTextNode(querschnittset[i].name);
+                else if (ispalte === 2) { newText = document.createTextNode(myFormat(querschnittset[i].area, 1, 2)); newCell.style.minWidth = '4rem'; }
+                else if (ispalte === 3) { newText = document.createTextNode(myFormat(querschnittset[i].Iy, 1, 1)); newCell.style.minWidth = '4rem'; }
+                else if (ispalte === 4) { newText = document.createTextNode(myFormat(querschnittset[i].emodul, 1, 1)); newCell.style.minWidth = '4rem'; }
+                else if (ispalte === 5) { newText = document.createTextNode(myFormat(querschnittset[i].querdehnzahl, 1, 2)); newCell.style.minWidth = '4rem'; }
+                else if (ispalte === 6) { newText = document.createTextNode(myFormat(querschnittset[i].schubfaktor, 0, 3)); newCell.style.minWidth = '4rem'; }
+                else if (ispalte === 7) { newText = document.createTextNode(myFormat(querschnittset[i].alphaT, 1, 2, 1)); newCell.style.minWidth = '4rem'; }
                 //else if (ispalte === 7) { newText = document.createTextNode(String(Number.parseFloat(el[i].alphaT).toExponential())); newCell.style.minWidth = '4rem'; }
-                else if (ispalte === 8) { newText = document.createTextNode(myFormat(el[i].wichte, 1, 2)); newCell.style.minWidth = '4rem'; }
+                else if (ispalte === 8) { newText = document.createTextNode(myFormat(querschnittset[i].wichte, 1, 2)); newCell.style.minWidth = '4rem'; }
                 else { }
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_right");

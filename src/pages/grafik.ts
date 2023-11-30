@@ -3153,8 +3153,8 @@ export async function copy_svg() {
                     suggestedName: currentFilenameSVG,
                     startIn: lastFileHandleSVG,
                     types: [{
-                        description: "Text file",
-                        accept: { "text/plain": [".svg"] }
+                        description: "svg file",
+                        accept: { "text/plain": [".svg"] }   //   image/svg+xml (.svg)
                     }]
                 });
                 console.log("fileHandle SVG", fileHandle)

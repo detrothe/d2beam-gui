@@ -720,7 +720,11 @@ class DrTabelle extends HTMLElement {
                      //el.style.width = 'inherit'; //'6em';
                   } else {
                      el = document.createElement('input');
-                     el.setAttribute('type', 'number');
+                     if (this.typs[iSpalte] === "text") {
+                        el.setAttribute('type', 'text');
+                     } else {
+                        el.setAttribute('type', 'number');
+                     }
                      el.style.width = 'inherit'; //'6em';
                   }
 
@@ -810,10 +814,10 @@ class DrTabelle extends HTMLElement {
 
       //ev.target.style.backgroundColor = 'rgb(210,00,00)';
 
-      if (ev.shiftKey) {
-         ev.preventDefault();
-         return;
-      }
+      // if (ev.shiftKey) {
+      //    ev.preventDefault();
+      //    return;
+      // }
 
       if (ev.keyCode === 13) {  // return-Taste
          ev.preventDefault();
@@ -880,11 +884,12 @@ class DrTabelle extends HTMLElement {
 
       }
       else if (ev.target.type === 'text') {
+         console.log("in text eingabe")
          berechnungErforderlich(true);
          return;
       }
       else {
-
+         console.log("in sonst",ev.keycode)
          if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
          if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad
          if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) { berechnungErforderlich(true); return; } // e .  ,

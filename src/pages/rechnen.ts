@@ -57,6 +57,7 @@ export let eload = [] as TElLoads[]
 export let stabvorverformung = [] as TStabvorverformung[]
 export let querschnittset = [] as any[]
 export let kombiTabelle = [] as number[][]
+export let lastfall_bezeichnung = [] as string[]
 export let alpha_cr = [] as number[][]
 
 export let maxU_schief = 0.03
@@ -155,6 +156,8 @@ class TQuerschnittRechteck {
     width: number = 0.3
     wichte: number = 0.0
     alphaT: number = 0.0
+    querdehnzahl: number = 0.0
+    schubfaktor: number = 0.0
     definedQuerschnitt: number = 1
 }
 
@@ -510,7 +513,7 @@ function check_input() {
         if (nkombinationen < 1) { write('Es muss mindestens 1 Kombination definiert sein'); fehler++; }
     }
 
-    if ( fehler > 0 ) write(' ')
+    if (fehler > 0) write(' ')
     for (let ielem = 0; ielem < nelem_Balken; ielem++) {
         if (element[ielem].qname === "") { write('Dem Element ' + (+ielem + 1) + ' ist kein Querschnitt zugeordnet'); fehler++; }
         // if (element[ielem].nod[0] < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
@@ -525,7 +528,7 @@ function check_input() {
             }
         }
     }
-    if ( fehler > 0 ) write(' ')
+    if (fehler > 0) write(' ')
 
     for (let i = 0; i < nloads; i++) {
         if (load[i].node < 0) { write('Knotenlast ' + (+i + 1) + ' Knotennummer muss größer 0 sein'); fehler++; }
@@ -533,12 +536,12 @@ function check_input() {
         if (load[i].lf < 1) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss größer 1 sein'); fehler++; }
         if (load[i].lf > nlastfaelle) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
     }
-    if ( fehler > 0 )  write(' ')
+    if (fehler > 0) write(' ')
 
     for (let i = 0; i < nstreckenlasten; i++) {
         if (eload[i].art < 0 || eload[i].art > 4) { write('Streckenlast ' + (+i + 1) + ' Lastart muss zwischen 0 und 4 sein'); fehler++; }
     }
-    if ( fehler > 0 ) write(' ')
+    if (fehler > 0) write(' ')
 
     for (let i = 0; i < neloads; i++) {
         if (eload[i].element < 0) { write('Elementlast ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++; }
@@ -547,7 +550,7 @@ function check_input() {
         if (eload[i].lf > nlastfaelle) { write('Elementlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
     }
 
-    if ( fehler > 0 ) write(' ')
+    if (fehler > 0) write(' ')
 
     for (let i = 0; i < nkombinationen; i++) {
         let anzahl = 0
@@ -1250,14 +1253,36 @@ function read_kombinationen() {
     const shad = el?.shadowRoot?.getElementById('mytable')
 
     for (let izeile = 1; izeile < nRowTab; izeile++) {
-        for (let ispalte = 2; ispalte < nColTab; ispalte++) {
+        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
             wert = child.value;
-            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            kombiTabelle[izeile - 1][ispalte - 2] = Number(testNumber(wert, izeile, ispalte, shad));
+            if (ispalte === 1) kombiTabelle[izeile - 1][ispalte - 2] = wert;
+            else kombiTabelle[izeile - 1][ispalte - 2] = Number(testNumber(wert, izeile, ispalte, shad));
         }
 
         console.log("kombiTabelle", izeile, kombiTabelle[izeile - 1])
+    }
+
+    lastfall_bezeichnung = new Array(nlastfaelle);
+
+    {
+        const el = document.getElementById('id_lastfaelle_tabelle');
+        const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+        let nRowTab = table.rows.length;
+        let nColTab = table.rows[0].cells.length;
+        let wert: any;
+        const shad = el?.shadowRoot?.getElementById('mytable')
+
+        for (let izeile = 1; izeile < nRowTab; izeile++) {
+            for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+                let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+                wert = child.value;
+                lastfall_bezeichnung[izeile - 1] = wert;
+            }
+
+            console.log("lastfaelle_tabelle", izeile, lastfall_bezeichnung[izeile - 1])
+        }
     }
 }
 

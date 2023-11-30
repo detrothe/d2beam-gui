@@ -12,10 +12,18 @@ import htmlToPdfmake from "html-to-pdfmake"
 //import { tabQWerte, schnittgroesse, bezugswerte } from "./duennQ"
 
 import { nnodes, nelem } from "./rechnen"
-import { el, element as stab, node, nlastfaelle, nkombinationen, THIIO_flag, disp_print,lagerkraefte, lagerkraefte_kombi } from "./rechnen"
+import {
+  el, element as stab, node, nlastfaelle, nkombinationen, nQuerschnittSets, neigv, THIIO_flag, disp_print, lagerkraefte,
+  lagerkraefte_kombi, querschnittset, alpha_cr, lastfall_bezeichnung, kombiTabelle
+} from "./rechnen"
+
 import { myFormat } from './utility';
 import { app } from './haupt';
 import { current_unit_stress, unit_stress_factor, unit_length_factor, current_unit_length } from "./einstellungen"
+
+
+let lastFileHandlePDF = 'documents';
+let currentFilenamePDF = 'd2beam.pdf'
 
 const zeilenAbstand = 1.15
 let Seite = 'Seite'
@@ -243,7 +251,7 @@ export async function my_jspdf() {
 
   //const txtarea = document.getElementById("freetext") as HTMLTextAreaElement
   const txtarea = document.createElement("textarea")
-  txtarea.value = 'Eingabeprotokoll'
+  txtarea.value = 'Bauvorhaben <b>In den Statikwiesen 1A</b>'
 
   console.log("textarea", txtarea.value)
   const txt = txtarea.value
@@ -304,58 +312,19 @@ export async function my_jspdf() {
   doc.setFontSize(fs1)
 
   if (app.browserLanguage == 'de') {
-    doc.text("Ebenes Stabwerk", links, yy);
+    doc.text("Ebenes Stabwerk d2beam", links, yy);
   } else {
     doc.text("2D frame analysis", links, yy);
   }
 
   doc.setFontSize(fs); // in points
+  doc.setFont("freesans_bold");
+
+  yy = neueZeile(yy, fs, 2)
+  doc.text('Eingabeprotokoll', links, yy);
+
+  yy = neueZeile(yy, fs1, 1)
   doc.setFont("freesans_normal");
-
-  // Schnittgrößen drucken
-
-  yy = neueZeile(yy, fs, 2)
-
-  if (app.browserLanguage == 'de') {
-    doc.text("Schnittgrößen", links, yy)
-  } else {
-    doc.text("Internal forces", links, yy)
-  }
-  yy = neueZeile(yy, fs, 2)
-
-  // htmlText("V<sub>y</sub> = " + myFormat(schnittgroesse.Vy, 2, 2) + " kN", links, yy)
-  // htmlText("M<sub>xp</sub> = " + myFormat(schnittgroesse.Mxp, 2, 2) + " kNm", links + 40, yy)
-  // htmlText("N = " + myFormat(schnittgroesse.N, 2, 2) + " kN", links + 90, yy)
-
-  // yy = neueZeile(yy, fs1, 1)
-
-  // htmlText("V<sub>z</sub> = " + myFormat(schnittgroesse.Vz, 2, 2) + " kN", links, yy)
-  // htmlText("M<sub>xs</sub> = " + myFormat(schnittgroesse.Mxs, 2, 2) + " kNm", links + 40, yy)
-  // htmlText("M<sub>y</sub> = " + myFormat(schnittgroesse.My, 2, 2) + " kNm", links + 90, yy)
-
-  // yy = neueZeile(yy, fs1, 1)
-
-  // htmlText("M<sub>ω</sub> = " + myFormat(schnittgroesse.M_omega, 2, 2) + " kNm²", links + 40, yy)
-  // htmlText("M<sub>z</sub> = " + myFormat(schnittgroesse.Mz, 2, 2) + " kNm", links + 90, yy)
-
-  // yy = neueZeile(yy, fs, 2)
-
-  // if (app.browserLanguage == 'de') {
-  //   doc.text("Bezugswerte", links, yy)
-  // } else {
-  //   doc.text("Reference values", links, yy)
-  // }
-  // yy = neueZeile(yy, fs, 2)
-
-  // doc.text("E-Modul = " + myFormat(bezugswerte.emodul * unit_stress_factor, 1, 1) + " " + current_unit_stress, links, yy)
-
-  // if (app.browserLanguage == 'de') {
-  //   doc.text("Querdehnung ν = " + myFormat(bezugswerte.mue, 1, 2), links + 70, yy)
-  // } else {
-  //   doc.text("Poisson's ratio ν = " + myFormat(bezugswerte.mue, 1, 2), links + 70, yy)
-  // }
-  // yy = neueZeile(yy, fs, 1)
-
 
 
   {
@@ -371,9 +340,6 @@ export async function my_jspdf() {
     doc.setFontSize(fs)
     doc.setFont("freesans_bold");
     yy = neueZeile(yy, fs1, 2)
-
-
-
 
     let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 23, 23, 23, 25])
 
@@ -413,6 +379,82 @@ export async function my_jspdf() {
 
       yy = neueZeile(yy, fs1, 1)
     }
+
+  }
+
+
+  {
+    const nzeilen = nQuerschnittSets                             // Querschnitte
+
+    yy = testSeite(yy, fs1, 1, 4 + nzeilen)
+    if (app.browserLanguage == 'de') {
+      doc.text("Querschnitte", links, yy)
+    } else {
+      doc.text("Cross sections", links, yy)
+    }
+
+
+    doc.setFontSize(fs)
+    doc.setFont("freesans_bold");
+    yy = neueZeile(yy, fs1, 2)
+
+    let el_table_nodes = new pdf_table(doc, links, [5, 30, 20, 25, 20, 15, 15, 20, 20])
+
+
+    el_table_nodes.htmlText("", 0, 'left', yy)
+    el_table_nodes.htmlText("", 1, 'center', yy)
+    el_table_nodes.htmlText("A", 2, 'center', yy)
+    el_table_nodes.htmlText("I<sub>y</sub>", 3, 'center', yy)
+    el_table_nodes.htmlText("E-Modul", 4, 'center', yy)
+    el_table_nodes.htmlText("ν", 5, 'center', yy)
+    el_table_nodes.htmlText("κ<sub>τ</sub>", 6, 'center', yy)
+    el_table_nodes.htmlText("α<sub>T</sub>", 7, 'center', yy)
+    el_table_nodes.htmlText("Wichte", 8, 'center', yy)
+    yy = neueZeile(yy, fs, 1)
+
+
+    el_table_nodes.htmlText("No", 0, 'left', yy)
+    el_table_nodes.htmlText("Name", 1, 'center', yy)
+    el_table_nodes.htmlText("[cm<sup>2</sup>]", 2, 'center', yy)
+    el_table_nodes.htmlText("[cm<sup>4</sup>]", 3, 'center', yy)
+    el_table_nodes.htmlText("[N/mm<sup>2</sup>]", 4, 'center', yy)
+    el_table_nodes.htmlText("-", 5, 'center', yy)
+    el_table_nodes.htmlText("-", 6, 'center', yy)
+    el_table_nodes.htmlText("[1/K]", 7, 'center', yy)
+    el_table_nodes.htmlText("[kN/m<sup>3</sup>]", 8, 'center', yy)
+
+    doc.setFontSize(fs)
+    doc.setFont("freesans_normal");
+    yy = neueZeile(yy, fs1, 1)
+
+    for (let i = 0; i < nzeilen; i++) {
+      el_table_nodes.htmlText(String(+i + 1), 0, 'center', yy)
+      el_table_nodes.htmlText(querschnittset[i].name, 1, 'center', yy)
+
+      str = myFormat(querschnittset[i].area, 1, 2)
+      el_table_nodes.htmlText(str, 2, 'right', yy, 5)
+
+      str = myFormat(querschnittset[i].Iy, 1, 1)
+      el_table_nodes.htmlText(str, 3, 'right', yy, 5)
+
+      str = myFormat(querschnittset[i].emodul, 1, 1)
+      el_table_nodes.htmlText(str, 4, 'right', yy, 2)
+
+      str = myFormat(querschnittset[i].querdehnzahl, 1, 2)
+      el_table_nodes.htmlText(str, 5, 'right', yy, 5)
+
+      str = myFormat(querschnittset[i].schubfaktor, 0, 3)
+      el_table_nodes.htmlText(str, 6, 'right', yy, 5)
+
+      str = myFormat(querschnittset[i].alphaT, 1, 2, 1)
+      el_table_nodes.htmlText(str, 7, 'right', yy, 5)
+
+      str = myFormat(querschnittset[i].wichte, 1, 2)
+      el_table_nodes.htmlText(str, 8, 'right', yy, 5)
+
+      yy = neueZeile(yy, fs1, 1)
+    }
+
   }
 
 
@@ -469,6 +511,23 @@ export async function my_jspdf() {
     }
   }
 
+  {
+    let nBezeichnungen = 0
+    for (let i = 0; i < nlastfaelle; i++) {
+      if (lastfall_bezeichnung[i].length > 0) nBezeichnungen++;
+    }
+    console.log("Anzahl Lastfall-Bezeichnugen", nBezeichnungen)
+
+    if ( nBezeichnungen > 0 ) {
+
+
+    }
+
+  }
+
+
+
+  // Schnittgrößen ausdrucken
 
   doc.line(links, yy, 200, yy, "S");
   //  yy = neueZeile(yy, fs1, 2)
@@ -485,18 +544,18 @@ export async function my_jspdf() {
   doc.setFont("freesans_normal");
 
   //yy = neueZeile(yy, fs, 2)
+  yy = neueZeile(yy, fs1, 1)
 
   let text: string
   let nLoop = 0
   if (THIIO_flag === 0) { // Theorie I.Ordnung
     nLoop = nlastfaelle
-    // for (let iLastfall = 1; iLastfall <= nlastfaelle; iLastfall++) {
-    // }
+    doc.text('Berechnung nach Theorie I. Ordnung', links, yy)
   } else {
     nLoop = nkombinationen
-    // for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
-    // }
+    doc.text('Berechnung nach Theorie II. Ordnung', links, yy)
   }
+  yy = neueZeile(yy, fs, 1)
 
   console.log("Ausgabe pdf", nLoop, nlastfaelle, nkombinationen)
 
@@ -510,12 +569,14 @@ export async function my_jspdf() {
 
     doc.line(links, yy, 200, yy, "S");
 
-    yy = neueZeile(yy, fs, 1)
+    //yy = neueZeile(yy, fs, 1)
+    yy = testSeite(yy, fs, 1, 8)
     doc.text(text, links, yy)
-    yy = neueZeile(yy, fs1, 1)
+    yy = neueZeile(yy, fs, 1)
 
     //   Verformungen
     {
+      yy = testSeite(yy, fs, 1, 5)
       doc.setFont("freesans_bold");
       doc.text('Knotenverformungen', links, yy)
       //yy = neueZeile(yy, fs, 1)
@@ -544,7 +605,8 @@ export async function my_jspdf() {
 
     //   Lagerkräfte
     {
-      yy = neueZeile(yy, fs, 1)
+      //yy = neueZeile(yy, fs, 1)
+      yy = testSeite(yy, fs, 1, 5)
       doc.setFont("freesans_bold");
       doc.text('Lagerreaktionen', links, yy)
       //yy = neueZeile(yy, fs, 1)
@@ -569,6 +631,71 @@ export async function my_jspdf() {
       }
 
     }
+
+    {
+      if (THIIO_flag === 1) {
+        yy = neueZeile(yy, fs, 1)
+        for (let i = 0; i < neigv; i++) {
+          htmlText("α<sub>cr</sub>[Eigenwert " + (+i + 1) + "] = " + myFormat(alpha_cr[iLastfall - 1][i], 2, 2), links, yy);
+          yy = neueZeile(yy, fs, 1)
+        }
+      }
+
+    }
+
+    //   Schnittgrößen
+    {
+      yy = testSeite(yy, fs, 1, 5)
+      doc.setFont("freesans_bold");
+      doc.text('Stabschnittgrößen und Verformungen', links, yy)
+      yy = neueZeile(yy, fs, 1)
+
+      for (let ielem = 0; ielem < nelem; ielem++) {
+        yy = neueZeile(yy, fs, 1)
+        doc.setFont("freesans_bold");
+        doc.text('Element ' + (+ielem + 1), links, yy)
+        yy = neueZeile(yy, fs, 1)
+
+        let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 20, 20, 20])
+        el_table.htmlText("x [m]", 0, 'center', yy)
+        el_table.htmlText("N [kN]", 1, 'center', yy)
+        el_table.htmlText("V<sub>z</sub> [kN]", 2, 'center', yy)
+        el_table.htmlText("M<sub>y</sub> [kNm]", 3, 'center', yy)
+        el_table.htmlText("u<sub>xL</sub> [mm]", 4, 'center', yy)
+        el_table.htmlText("w<sub>zL</sub> [mm]", 5, 'center', yy)
+        el_table.htmlText("ß [mrad]", 6, 'center', yy)
+
+        doc.setFontSize(fs); doc.setFont("freesans_normal");
+        yy = neueZeile(yy, fs, 1)
+
+        const nelTeilungen = el[ielem].nTeilungen
+        let sg_M: number[] = new Array(nelTeilungen)
+        let sg_V: number[] = new Array(nelTeilungen)
+        let sg_N: number[] = new Array(nelTeilungen)
+
+        let uL: number[] = new Array(nelTeilungen)   // L = Verformung lokal
+        let wL: number[] = new Array(nelTeilungen)
+        let phiL: number[] = new Array(nelTeilungen)
+
+        const lf_index = iLastfall - 1
+        el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
+        el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index);
+        el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index);
+        el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index);
+
+        for (let i = 0; i < nelTeilungen; i++) {
+          el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, 'center', yy)
+          el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, 'right', yy, 5)
+          el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, 'right', yy, 5)
+          el_table.htmlText(myFormat(sg_M[i], 2, 2), 3, 'right', yy, 5)
+          el_table.htmlText(myFormat(uL[i] * 1000., 3, 3), 4, 'right', yy, 5)
+          el_table.htmlText(myFormat(wL[i] * 1000., 3, 3), 5, 'right', yy, 5)
+          el_table.htmlText(myFormat(phiL[i] * 1000., 3, 3), 6, 'right', yy, 5)
+          yy = neueZeile(yy, fs, 1)
+        }
+      }
+    }
+
   }
 
 
@@ -627,6 +754,38 @@ export async function my_jspdf() {
     filename = window.prompt(
       "Name der Datei mit Extension, z.B. d2beam.pdf\nDie Datei wird im Default Download Ordner gespeichert", 'd2beam.pdf'
     );
+
+    // try {
+    //   // @ts-ignore
+    //   const fileHandle = await window.showSaveFilePicker({
+    //     suggestedName: currentFilenamePDF,
+    //     startIn: lastFileHandlePDF,
+    //     types: [{
+    //       description: "pdf file",
+    //       accept: { "application/pdf": [".pdf"] }
+    //     }]
+    //   });
+    //   //console.log("fileHandle PDF", fileHandle)
+    //   lastFileHandlePDF = fileHandle
+    //   currentFilenamePDF = fileHandle.name
+
+    //   const fileStream = await fileHandle.createWritable();
+    //   //console.log("fileStream=",fileStream);
+
+    //   let blobPDF = new Blob([doc.output('blob')],{type:'application/pdf'});
+
+
+    //   //  WRITE FILE
+    //   await fileStream.write(blobPDF);
+    //   await fileStream.close();
+
+    // } catch (error: any) {
+    //   //alert(error.name);
+    //   alert(error.message);
+    // }
+
+    // return
+
   }
 
   try {
