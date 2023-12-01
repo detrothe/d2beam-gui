@@ -57,6 +57,7 @@ export let eload = [] as TElLoads[]
 export let stabvorverformung = [] as TStabvorverformung[]
 export let querschnittset = [] as any[]
 export let kombiTabelle = [] as number[][]
+export let kombiTabelle_txt = [] as string[]
 export let lastfall_bezeichnung = [] as string[]
 export let alpha_cr = [] as number[][]
 
@@ -92,11 +93,11 @@ export let maxdisp_all = 0.0
 
 export let xmin = -50.0, zmin = -50.0, xmax = 50.0, zmax = 50.0, slmax = 0.0;
 
-let nstreckenlasten = 0;
-let neinzellasten = 0;
-let ntemperaturlasten = 0;
-let nvorspannungen = 0;
-let nspannschloesser = 0;
+export let nstreckenlasten = 0;
+export let neinzellasten = 0;
+export let ntemperaturlasten = 0;
+export let nvorspannungen = 0;
+export let nspannschloesser = 0;
 
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
@@ -1246,6 +1247,7 @@ function read_kombinationen() {
     //console.log('nSpalten', table.rows[0].cells.length);
 
     kombiTabelle = Array.from(Array(nkombinationen), () => new Array(nlastfaelle).fill(0.0));
+    kombiTabelle_txt = Array(nkombinationen);
 
     let nRowTab = table.rows.length;
     let nColTab = table.rows[0].cells.length;
@@ -1256,7 +1258,7 @@ function read_kombinationen() {
         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
             wert = child.value;
-            if (ispalte === 1) kombiTabelle[izeile - 1][ispalte - 2] = wert;
+            if (ispalte === 1) kombiTabelle_txt[izeile - 1] = wert;
             else kombiTabelle[izeile - 1][ispalte - 2] = Number(testNumber(wert, izeile, ispalte, shad));
         }
 
@@ -2967,7 +2969,7 @@ function berechne_kombinationen() {
 
     maxM_all = 0.0; maxV_all = 0.0; maxN_all = 0.0; maxdisp_all = 0.0;
 
-    console.log("...", nkombinationen, nelem_Balken, nlastfaelle)
+    //console.log("...", nkombinationen, nelem_Balken, nlastfaelle)
 
     for (let i = 0; i < 3; i++) max_S_kombi[i].fill(0.0);
     max_disp_kombi.fill(0.0)
@@ -2991,7 +2993,7 @@ function berechne_kombinationen() {
                     norm += el[ielem].N_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                     ug += el[ielem].u_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                     wg += el[ielem].w_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
-                    console.log("mom...", iteil, iLastfall, mom, quer, norm)
+                    //console.log("mom...", iteil, iLastfall, mom, quer, norm)
                 }
 
                 maxM_all = Math.max(Math.abs(mom), maxM_all)

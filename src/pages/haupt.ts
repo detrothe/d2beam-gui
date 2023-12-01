@@ -1036,6 +1036,8 @@ function dialog_closed(e: any) {
 
       add_new_cross_section(qName, id);
     }
+
+    berechnungErforderlich(true);
   }
 }
 

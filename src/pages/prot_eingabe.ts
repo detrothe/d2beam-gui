@@ -328,9 +328,13 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
 
             for (let j = 1; j <= 6; j++) {
                 newCell = newRow.insertCell(j + 3);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(String(stab[i].gelenk[j - 1]));  // Append a text node to the cell
+                if (stab[i].gelenk[j-1] === 0) {
+                    newText = document.createTextNode('-');
+                } else {
+                    newText = document.createTextNode('ʘ');
+                }
                 newCell.appendChild(newText);
-                newCell.setAttribute("class", "table_cell_right");
+                newCell.setAttribute("class", "table_cell_mitte");
             }
             ispalte = 10
             newCell = newRow.insertCell(ispalte);

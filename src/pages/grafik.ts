@@ -1528,8 +1528,8 @@ function draw_elementlasten(two: Two) {
             console.log("iLoop: ", iLoop)
 
             for (let ieload = 0; ieload < neloads; ieload++) {
-                console.log("ieload:", ieload)
-                console.log("ielem,draw_lastfall", ielem, eload[ieload].element, draw_lastfall, eload[ieload].lf - 1, lf_show[iLoop])
+                //console.log("ieload:", ieload)
+                //console.log("ielem,draw_lastfall", ielem, eload[ieload].element, draw_lastfall, eload[ieload].lf - 1, lf_show[iLoop])
 
                 if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === lf_show[iLoop])) {
 

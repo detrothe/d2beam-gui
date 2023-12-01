@@ -134,6 +134,11 @@ select {
   padding-right: 1em;
 }
 
+.table_cell_mitte {
+  text-align: center;
+  padding-right: 1em;
+}
+
 
 #id_grafik_group {
   position: absolute;
