@@ -112,11 +112,11 @@ export class drButtonPM extends LitElement {
     }
   }
 
-  async firstUpdated() {
-    //console.log("inputID", this.inputID);
-    //document.getElementById('id_input_node_incr').addEventListener('click', increment_nnodes, false);
-    //document.getElementById('id_input_node_dec').addEventListener('click', decrement_nnodes, false);
-  }
+  // async firstUpdated() {
+  //   console.log("firstUpdated inputID", this.inputID,this.nel);
+  //   //document.getElementById('id_input_node_incr').addEventListener('click', increment_nnodes, false);
+  //   //document.getElementById('id_input_node_dec').addEventListener('click', decrement_nnodes, false);
+  // }
 
   //----------------------------------------------------------------------------------------------
 

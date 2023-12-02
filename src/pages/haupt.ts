@@ -140,6 +140,8 @@ portrait.addEventListener("change", function (e) {
 {
   //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
 
+  console.log("vor template")
+
   const template = () => html`
     <style>
       .custom-icons sl-tree-item::part(expand-button) {
@@ -439,7 +441,7 @@ portrait.addEventListener("change", function (e) {
         <p>
           <br />
           <b>Eingabe der Einzellasten</b><br /><br />
-          Einzellast P wirkt senkrecht auf Stab<br />
+          Einzellast P wirkt senkrecht auf Stab!<br />
         </p>
         <p>
           <br />
@@ -513,7 +515,7 @@ portrait.addEventListener("change", function (e) {
           <b>Eingabe der Spannschlösser</b><br /><br />
         </p>
         <p>
-          Anzahl Temperaturlasten:
+          Anzahl Spannschlösser:
           <dr-button-pm
             id="id_button_nspannschloesser"
             nel="${nspannschloesser_init}"
@@ -830,11 +832,16 @@ portrait.addEventListener("change", function (e) {
   const renderBefore = container?.querySelector("footer");
   render(template(), container, { renderBefore });
 
+  setTimeout(function(){
+             console.log("Executed after 1 second");
+         }, 1000);
+
   // render( template(), document.body);
 
   // Tabellen sin jetzt da, Tabellen mit Voreinstellungen füllen
 
   init_tabellen();
+
   //init_contextmenu();
 
   addListener_filesave();

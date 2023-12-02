@@ -31,7 +31,7 @@ import {
   kombiTabelle_txt,
   nloads,
   load,
-  nstreckenlasten,
+  nstreckenlasten, ntemperaturlasten, neinzellasten, nvorspannungen, nspannschloesser,
   eload,
 } from "./rechnen";
 
@@ -518,11 +518,9 @@ export async function my_jspdf() {
     }
   }
 
-  {
-    const nspalten = 7,
-      nzeilen = nloads; // Knotenlasten
+  if (nloads > 0) {   // Knotenlasten
 
-    yy = testSeite(yy, fs1, 1, 4 + nzeilen);
+    yy = testSeite(yy, fs1, 1, 5);
     if (app.browserLanguage == "de") {
       doc.text("Knotenlasten", links, yy);
     } else {
@@ -546,7 +544,7 @@ export async function my_jspdf() {
     doc.setFont("freesans_normal");
     yy = neueZeile(yy, fs1, 1);
 
-    for (let i = 0; i < nzeilen; i++) {
+    for (let i = 0; i < nloads; i++) {
       el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
       el_table_nodes.htmlText(String(load[i].node), 1, "center", yy);
       el_table_nodes.htmlText(String(load[i].lf), 2, "center", yy);
@@ -564,8 +562,7 @@ export async function my_jspdf() {
     }
   }
 
-  {
-    const nzeilen = nstreckenlasten; // Trapezstreckenlasten
+  if (nstreckenlasten > 0) {     // Trapezstreckenlasten
 
     yy = testSeite(yy, fs1, 1, 10);
     if (app.browserLanguage == "de") {
@@ -599,7 +596,7 @@ export async function my_jspdf() {
     doc.setFont("freesans_normal");
     yy = neueZeile(yy, fs1, 1);
 
-    for (let i = 0; i < nzeilen; i++) {
+    for (let i = 0; i < nstreckenlasten; i++) {
       el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
       el_table_nodes.htmlText(String(+eload[i].element + 1), 1, "center", yy);
       el_table_nodes.htmlText(String(eload[i].lf), 2, "center", yy);
@@ -610,6 +607,169 @@ export async function my_jspdf() {
 
       str = myFormat(eload[i].pR, 1, 3);
       el_table_nodes.htmlText(str, 5, "right", yy, 5);
+
+      yy = neueZeile(yy, fs, 1);
+    }
+  }
+
+
+  if (neinzellasten > 0) {    // Einzellasten auf Element
+
+    yy = testSeite(yy, fs1, 1, 10);
+    if (app.browserLanguage == "de") {
+      doc.text("Einzellasten", links, yy);
+    } else {
+      doc.text("Element loads P, M", links, yy);
+    }
+    yy = neueZeile(yy, fs, 2);
+    doc.setFont("freesans_bold");
+    doc.setFontSize(fs);
+
+    let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20, 20, 20]);
+
+    el_table_nodes.htmlText("No", 0, "left", yy);
+    el_table_nodes.htmlText("Element", 1, "center", yy);
+    el_table_nodes.htmlText("Lastfall", 2, "center", yy);
+    el_table_nodes.htmlText("x [m]", 3, "center", yy);
+    el_table_nodes.htmlText("P [kN]", 4, "center", yy);
+    el_table_nodes.htmlText("M [kNm]", 5, "center", yy);
+
+    doc.setFontSize(fs);
+    doc.setFont("freesans_normal");
+    yy = neueZeile(yy, fs1, 1);
+
+    for (let i = 0; i < neinzellasten; i++) {
+      let index = i + nstreckenlasten
+
+      el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
+      el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
+      el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
+
+      str = myFormat(eload[index].x, 1, 3);
+      el_table_nodes.htmlText(str, 3, "right", yy, 5);
+
+      str = myFormat(eload[index].P, 1, 3);
+      el_table_nodes.htmlText(str, 4, "right", yy, 5);
+
+      str = myFormat(eload[index].M, 1, 3);
+      el_table_nodes.htmlText(str, 5, "right", yy, 5);
+
+      yy = neueZeile(yy, fs, 1);
+    }
+  }
+
+
+  if (ntemperaturlasten > 0) {    // Temperaturlasten
+
+    yy = testSeite(yy, fs1, 1, 10);
+    if (app.browserLanguage == "de") {
+      doc.text("Temperaturlasten", links, yy);
+    } else {
+      doc.text("Element loads temperature", links, yy);
+    }
+    yy = neueZeile(yy, fs, 2);
+    doc.setFont("freesans_bold");
+    doc.setFontSize(fs);
+
+    let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20, 20]);
+
+    el_table_nodes.htmlText("No", 0, "left", yy);
+    el_table_nodes.htmlText("Element", 1, "center", yy);
+    el_table_nodes.htmlText("Lastfall", 2, "center", yy);
+    el_table_nodes.htmlText("T<sub>u</sub> [°]", 3, "center", yy);
+    el_table_nodes.htmlText("T<sub>o</sub> [°]", 4, "center", yy);
+
+    doc.setFontSize(fs);
+    doc.setFont("freesans_normal");
+    yy = neueZeile(yy, fs1, 1);
+
+    for (let i = 0; i < ntemperaturlasten; i++) {
+      let index = i + nstreckenlasten + neinzellasten
+
+      el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
+      el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
+      el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
+
+      str = myFormat(eload[index].Tu, 1, 3);
+      el_table_nodes.htmlText(str, 3, "right", yy, 5);
+
+      str = myFormat(eload[index].To, 1, 3);
+      el_table_nodes.htmlText(str, 4, "right", yy, 5);
+
+      yy = neueZeile(yy, fs, 1);
+    }
+  }
+
+  if (nvorspannungen > 0) {    // Vorspannung
+
+    yy = testSeite(yy, fs1, 1, 10);
+    if (app.browserLanguage == "de") {
+      doc.text("Vorspannung", links, yy);
+    } else {
+      doc.text("Element loads prestress", links, yy);
+    }
+    yy = neueZeile(yy, fs, 2);
+    doc.setFont("freesans_bold");
+    doc.setFontSize(fs);
+
+    let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20]);
+
+    el_table_nodes.htmlText("No", 0, "left", yy);
+    el_table_nodes.htmlText("Element", 1, "center", yy);
+    el_table_nodes.htmlText("Lastfall", 2, "center", yy);
+    el_table_nodes.htmlText("σ<sub>v</sub> [N/mm²]", 3, "center", yy);
+
+    doc.setFontSize(fs);
+    doc.setFont("freesans_normal");
+    yy = neueZeile(yy, fs1, 1);
+
+    for (let i = 0; i < nvorspannungen; i++) {
+      let index = i + nstreckenlasten + neinzellasten + ntemperaturlasten
+
+      el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
+      el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
+      el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
+
+      str = myFormat(eload[index].sigmaV / 1000., 1, 3);
+      el_table_nodes.htmlText(str, 3, "right", yy, 5);
+
+      yy = neueZeile(yy, fs, 1);
+    }
+  }
+
+
+  if (nspannschloesser > 0) {    // Spannschloss
+
+    yy = testSeite(yy, fs1, 1, 10);
+    if (app.browserLanguage == "de") {
+      doc.text("Spannschloss", links, yy);
+    } else {
+      doc.text("Element loads lock", links, yy);
+    }
+    yy = neueZeile(yy, fs, 2);
+    doc.setFont("freesans_bold");
+    doc.setFontSize(fs);
+
+    let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20]);
+
+    el_table_nodes.htmlText("No", 0, "left", yy);
+    el_table_nodes.htmlText("Element", 1, "center", yy);
+    el_table_nodes.htmlText("Lastfall", 2, "center", yy);
+    el_table_nodes.htmlText("Δs [mm]", 3, "center", yy);
+
+    doc.setFontSize(fs);
+    doc.setFont("freesans_normal");
+    yy = neueZeile(yy, fs1, 1);
+
+    for (let i = 0; i < nspannschloesser; i++) {
+      let index = i + nstreckenlasten + neinzellasten + ntemperaturlasten + nvorspannungen
+
+      el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
+      el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
+      el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
+
+      str = myFormat(eload[index].delta_s*1000., 1, 3);
+      el_table_nodes.htmlText(str, 3, "right", yy, 5);
 
       yy = neueZeile(yy, fs, 1);
     }
@@ -951,7 +1111,7 @@ export async function my_jspdf() {
 
   try {
     doc.save(filename);
-  } catch (error:any) {
+  } catch (error: any) {
     alert(error.message);
   }
 

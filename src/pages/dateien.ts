@@ -14,6 +14,253 @@ import { add_rechteck_querschnitt } from './rechnen'
 let lastFileHandle = 'documents';
 
 //------------------------------------------------------------------------------------------------
+export function read_daten(eingabedaten: string) {
+    //------------------------------------------------------------------------------------------------
+
+    let i, j;
+
+    console.log("in result", eingabedaten);
+    let jobj = JSON.parse(eingabedaten);
+    console.log("und zurück", jobj);
+
+
+    // in Tabelle schreiben
+    {
+        let el = document.getElementById('id_button_nnodes') as drButtonPM;
+        console.log("el",el)
+        console.log("nnodes",jobj.nnodes)
+        el.setValue(jobj.nnodes);
+
+        el = document.getElementById('id_button_nelem') as drButtonPM;
+        el.setValue(jobj.nelem);
+        el = document.getElementById('id_button_nnodalloads') as drButtonPM;
+        el.setValue(jobj.nloads);
+        el = document.getElementById('id_button_nstreckenlasten') as drButtonPM;
+        el.setValue(jobj.nstreckenlasten);
+
+        el = document.getElementById('id_button_neinzellasten') as drButtonPM;
+        if (jobj.neinzellasten === undefined) el.setValue(0);
+        else el.setValue(jobj.neinzellasten);
+
+        el = document.getElementById('id_button_ntemperaturlasten') as drButtonPM;
+        el.setValue(jobj.ntempload);
+
+        el = document.getElementById('id_button_nvorspannungen') as drButtonPM;
+        el.setValue(jobj.nvorspannungen);
+
+        el = document.getElementById('id_button_nspannschloesser') as drButtonPM;
+        el.setValue(jobj.nspannschloesser);
+
+        el = document.getElementById('id_button_nlastfaelle') as drButtonPM;
+        el.setValue(jobj.nloadcases);
+        el = document.getElementById('id_button_nkombinationen') as drButtonPM;
+        el.setValue(jobj.ncombinations);
+        el = document.getElementById('id_button_nstabvorverformungen') as drButtonPM;
+        el.setValue(jobj.nstabvorverfomungen);
+
+        el = document.getElementById('id_button_nteilungen') as drButtonPM;
+        console.log("jobj.nelteilungen", jobj.nelteilungen)
+        if (jobj.nelteilungen === undefined) el.setValue(10);
+        else el.setValue(Math.max(jobj.nelteilungen, 2));
+
+        el = document.getElementById('id_button_niter') as drButtonPM;
+        if (jobj.n_iter === undefined) el.setValue(5);
+        else el.setValue(Math.max(jobj.n_iter, 2));
+
+        el = document.getElementById('id_button_nnodedisps') as drButtonPM;
+        if (jobj.nNodeDisps === undefined) el.setValue(0);
+        else el.setValue(jobj.nNodeDisps);
+
+        let els = document.getElementById('id_THIIO') as HTMLSelectElement;
+        if (jobj.THIIO_flag !== undefined) {
+            els.options[jobj.THIIO_flag].selected = true;
+        }
+
+        els = document.getElementById('id_maxu_dir') as HTMLSelectElement;
+        if (jobj.maxU_dir !== undefined) {
+            els.options[jobj.maxU_dir].selected = true;
+        }
+
+        let eli = document.getElementById('id_maxu_node') as HTMLInputElement;
+        if (jobj.maxU_node !== undefined) eli.value = jobj.maxU_node
+
+        eli = document.getElementById('id_maxu_schief') as HTMLInputElement;
+        if (jobj.maxU_schief !== undefined) eli.value = jobj.maxU_schief
+
+        eli = document.getElementById('id_neigv') as HTMLInputElement;
+        if (jobj.neigv !== undefined) eli.value = jobj.neigv
+    }
+
+    resizeTables();
+    clearTables();
+
+    console.log("nach resize")
+
+
+    let nQuerschnittSets = jobj.nquerschnittsets
+    console.log('nQuerschnittSets', nQuerschnittSets)
+    for (i = 0; i < nQuerschnittSets; i++) {
+        let className = jobj.qsclassname[i]
+        if (className === 'QuerschnittRechteck') {
+            console.log('classname von Querschnitt ' + i + ' ist QuerschnittRechteck')
+            //let wert = new Array(11)
+            //for(j=0;j<11;j++)wert[i]=jobj.qswerte[i]
+            //console.log('wert',jobj.qswerte[i])
+            add_rechteck_querschnitt(jobj.qswerte[i])
+        }
+    }
+    set_querschnittszaehler();
+
+    let el = document.getElementById('id_knoten_tabelle') as HTMLElement;
+    let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    let nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.node[i - 1][j - 1];
+        }
+    }
+
+    el = document.getElementById('id_element_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.elem[i - 1][j - 1];
+            //console.log("Element Table ", jobj.elem[i - 1][j - 1])
+        }
+    }
+
+    el = document.getElementById('id_knotenlasten_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.nodalLoad[i - 1][j - 1];
+        }
+    }
+
+    el = document.getElementById('id_streckenlasten_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.streckenlasten[i - 1][j - 1];
+        }
+    }
+
+    el = document.getElementById('id_einzellasten_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.einzellasten[i - 1][j - 1];
+        }
+    }
+
+    el = document.getElementById('id_temperaturlasten_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.tempLoad[i - 1][j - 1];
+        }
+    }
+
+    el = document.getElementById('id_vorspannungen_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.sigvload[i - 1][j - 1];
+        }
+    }
+
+    el = document.getElementById('id_spannschloesser_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.spannload[i - 1][j - 1];
+        }
+    }
+
+    el = document.getElementById('id_stabvorverfomungen_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.stabvorverformung[i - 1][j - 1];
+        }
+    }
+
+    el = document.getElementById('id_nnodedisps_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.nodeDisp0[i - 1][j - 1];
+        }
+    }
+
+    console.log("loadcases", jobj.loadcases)
+    if (jobj.loadcases !== undefined) {
+        console.log("in loadcases")
+        el = document.getElementById('id_lastfaelle_tabelle') as HTMLElement;
+        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+        nSpalten = tabelle.rows[0].cells.length;
+
+        for (i = 1; i < tabelle.rows.length; i++) {
+            for (j = 1; j < nSpalten; j++) {
+                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+                child.value = jobj.loadcases[i - 1][j - 1];
+            }
+        }
+    }
+
+    el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.combination[i - 1][j - 1];
+        }
+    }
+
+}
+
+//------------------------------------------------------------------------------------------------
 function handleFileSelect_read() {
     //--------------------------------------------------------------------------------------------
 
@@ -49,224 +296,8 @@ function handleFileSelect_read() {
                 return function (e: any) {
                     // Render thumbnail.
 
-
-                    //console.log("in result", e.target.result);
-                    let jobj = JSON.parse(e.target.result);
-                    //console.log("und zurück", jobj);
-                    /*
-                                            if (jobj.unit_length === undefined) {
-                                                console.log("#### jobj.unit_length ####", jobj.unit_length)
-                                                set_current_unit_length("cm")
-                                            } else {
-                                                set_current_unit_length(jobj.unit_length)
-                                            }
-                    */
-
-                    // in Tabelle schreiben
-                    {
-                        let el = document.getElementById('id_button_nnodes') as drButtonPM;
-                        el.setValue(jobj.nnodes);
-                        //let elem = el?.shadowRoot?.getElementById('nnodes') as HTMLInputElement;   // geht auch
-                        //elem.value = jobj.nnodes;
-
-                        el = document.getElementById('id_button_nelem') as drButtonPM;
-                        el.setValue(jobj.nelem);
-                        el = document.getElementById('id_button_nnodalloads') as drButtonPM;
-                        el.setValue(jobj.nloads);
-                        el = document.getElementById('id_button_nstreckenlasten') as drButtonPM;
-                        el.setValue(jobj.nstreckenlasten);
-
-                        el = document.getElementById('id_button_neinzellasten') as drButtonPM;
-                        if (jobj.neinzellasten === undefined) el.setValue(0);
-                        else el.setValue(jobj.neinzellasten);
-
-                        el = document.getElementById('id_button_ntemperaturlasten') as drButtonPM;
-                        el.setValue(jobj.ntempload);
-
-                        el = document.getElementById('id_button_nlastfaelle') as drButtonPM;
-                        el.setValue(jobj.nloadcases);
-                        el = document.getElementById('id_button_nkombinationen') as drButtonPM;
-                        el.setValue(jobj.ncombinations);
-                        el = document.getElementById('id_button_nstabvorverformungen') as drButtonPM;
-                        el.setValue(jobj.nstabvorverfomungen);
-
-                        el = document.getElementById('id_button_nteilungen') as drButtonPM;
-                        console.log("jobj.nelteilungen", jobj.nelteilungen)
-                        if (jobj.nelteilungen === undefined) el.setValue(10);
-                        else el.setValue(Math.max(jobj.nelteilungen, 2));
-
-                        el = document.getElementById('id_button_niter') as drButtonPM;
-                        if (jobj.n_iter === undefined) el.setValue(5);
-                        else el.setValue(Math.max(jobj.n_iter, 2));
-
-                        el = document.getElementById('id_button_nnodedisps') as drButtonPM;
-                        if (jobj.nNodeDisps === undefined) el.setValue(0);
-                        else el.setValue(jobj.nNodeDisps);
-
-                        let els = document.getElementById('id_THIIO') as HTMLSelectElement;
-                        if (jobj.THIIO_flag !== undefined) {
-                            els.options[jobj.THIIO_flag].selected = true;
-                        }
-
-                        els = document.getElementById('id_maxu_dir') as HTMLSelectElement;
-                        if (jobj.maxU_dir !== undefined) {
-                            els.options[jobj.maxU_dir].selected = true;
-                        }
-
-                        let eli = document.getElementById('id_maxu_node') as HTMLInputElement;
-                        if (jobj.maxU_node !== undefined) eli.value = jobj.maxU_node
-
-                        eli = document.getElementById('id_maxu_schief') as HTMLInputElement;
-                        if (jobj.maxU_schief !== undefined) eli.value = jobj.maxU_schief
-
-                        eli = document.getElementById('id_neigv') as HTMLInputElement;
-                        if (jobj.neigv !== undefined) eli.value = jobj.neigv
-                    }
-
-                    resizeTables();
-                    clearTables();
-
-                    console.log("nach resize")
-
-
-                    let nQuerschnittSets = jobj.nquerschnittsets
-                    console.log('nQuerschnittSets', nQuerschnittSets)
-                    for (i = 0; i < nQuerschnittSets; i++) {
-                        let className = jobj.qsclassname[i]
-                        if (className === 'QuerschnittRechteck') {
-                            console.log('classname von Querschnitt ' + i + ' ist QuerschnittRechteck')
-                            //let wert = new Array(11)
-                            //for(j=0;j<11;j++)wert[i]=jobj.qswerte[i]
-                            //console.log('wert',jobj.qswerte[i])
-                            add_rechteck_querschnitt(jobj.qswerte[i])
-                        }
-                    }
-                    set_querschnittszaehler();
-
-                    let el = document.getElementById('id_knoten_tabelle') as HTMLElement;
-                    let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-                    let nSpalten = tabelle.rows[0].cells.length;
-
-                    for (i = 1; i < tabelle.rows.length; i++) {
-                        for (j = 1; j < nSpalten; j++) {
-                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                            child.value = jobj.node[i - 1][j - 1];
-                        }
-                    }
-
-                    el = document.getElementById('id_element_tabelle') as HTMLElement;
-                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-                    nSpalten = tabelle.rows[0].cells.length;
-
-                    for (i = 1; i < tabelle.rows.length; i++) {
-                        for (j = 1; j < nSpalten; j++) {
-                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                            child.value = jobj.elem[i - 1][j - 1];
-                            //console.log("Element Table ", jobj.elem[i - 1][j - 1])
-                        }
-                    }
-
-                    el = document.getElementById('id_knotenlasten_tabelle') as HTMLElement;
-                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-                    nSpalten = tabelle.rows[0].cells.length;
-
-                    for (i = 1; i < tabelle.rows.length; i++) {
-                        for (j = 1; j < nSpalten; j++) {
-                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                            child.value = jobj.nodalLoad[i - 1][j - 1];
-                        }
-                    }
-
-                    el = document.getElementById('id_streckenlasten_tabelle') as HTMLElement;
-                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-                    nSpalten = tabelle.rows[0].cells.length;
-
-                    for (i = 1; i < tabelle.rows.length; i++) {
-                        for (j = 1; j < nSpalten; j++) {
-                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                            child.value = jobj.streckenlasten[i - 1][j - 1];
-                        }
-                    }
-
-                    el = document.getElementById('id_einzellasten_tabelle') as HTMLElement;
-                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-                    nSpalten = tabelle.rows[0].cells.length;
-
-                    for (i = 1; i < tabelle.rows.length; i++) {
-                        for (j = 1; j < nSpalten; j++) {
-                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                            child.value = jobj.einzellasten[i - 1][j - 1];
-                        }
-                    }
-
-                    el = document.getElementById('id_temperaturlasten_tabelle') as HTMLElement;
-                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-                    nSpalten = tabelle.rows[0].cells.length;
-
-                    for (i = 1; i < tabelle.rows.length; i++) {
-                        for (j = 1; j < nSpalten; j++) {
-                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                            child.value = jobj.tempLoad[i - 1][j - 1];
-                        }
-                    }
-
-                    el = document.getElementById('id_stabvorverfomungen_tabelle') as HTMLElement;
-                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-                    nSpalten = tabelle.rows[0].cells.length;
-
-                    for (i = 1; i < tabelle.rows.length; i++) {
-                        for (j = 1; j < nSpalten; j++) {
-                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                            child.value = jobj.stabvorverformung[i - 1][j - 1];
-                        }
-                    }
-
-                    el = document.getElementById('id_nnodedisps_tabelle') as HTMLElement;
-                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-                    nSpalten = tabelle.rows[0].cells.length;
-
-                    for (i = 1; i < tabelle.rows.length; i++) {
-                        for (j = 1; j < nSpalten; j++) {
-                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                            child.value = jobj.nodeDisp0[i - 1][j - 1];
-                        }
-                    }
-
-                    console.log("loadcases", jobj.loadcases)
-                    if (jobj.loadcases !== undefined) {
-                        console.log("in loadcases")
-                        el = document.getElementById('id_lastfaelle_tabelle') as HTMLElement;
-                        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-                        nSpalten = tabelle.rows[0].cells.length;
-
-                        for (i = 1; i < tabelle.rows.length; i++) {
-                            for (j = 1; j < nSpalten; j++) {
-                                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                                child.value = jobj.loadcases[i - 1][j - 1];
-                            }
-                        }
-                    }
-
-                    el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
-                    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-                    nSpalten = tabelle.rows[0].cells.length;
-
-                    for (i = 1; i < tabelle.rows.length; i++) {
-                        for (j = 1; j < nSpalten; j++) {
-                            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                            child.value = jobj.combination[i - 1][j - 1];
-                        }
-                    }
-
-
+                    //let jobj = JSON.parse(e.target.result);
+                    read_daten(e.target.result)
                 };
             })(f);
 
@@ -410,6 +441,34 @@ async function handleFileSelect_save() {
             }
         }
 
+        el = document.getElementById('id_vorspannungen_tabelle') as HTMLElement;
+        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+        nZeilen = tabelle.rows.length - 1;
+        nSpalten = tabelle.rows[0].cells.length - 1;
+        const nvorspannungen = nZeilen
+        const sigvload = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+        for (i = 0; i < nZeilen; i++) {
+            for (j = 0; j < nSpalten; j++) {
+                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+                sigvload[i][j] = child.value
+            }
+        }
+
+        el = document.getElementById('id_spannschloesser_tabelle') as HTMLElement;
+        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+        nZeilen = tabelle.rows.length - 1;
+        nSpalten = tabelle.rows[0].cells.length - 1;
+        const nspannschloesser = nZeilen
+        const spannload = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+        for (i = 0; i < nZeilen; i++) {
+            for (j = 0; j < nSpalten; j++) {
+                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+                spannload[i][j] = child.value
+            }
+        }
+
         el = document.getElementById('id_stabvorverfomungen_tabelle') as HTMLElement;
         tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
         nZeilen = tabelle.rows.length - 1;
@@ -487,6 +546,8 @@ async function handleFileSelect_save() {
             'nstreckenlasten': nstreckenlasten,
             'neinzellasten': neinzellasten,
             'ntempload': ntemperaturlasten,
+            'nvorspannungen': nvorspannungen,
+            'nspannschloesser': nspannschloesser,
             'nloadcases': nlastfaelle,
             'ncombinations': nkombinationen,
             'nquerschnittsets': nQuerschnittSets,
@@ -507,6 +568,8 @@ async function handleFileSelect_save() {
             'streckenlasten': linload,
             'einzellasten': pointload,
             'tempLoad': tempload,
+            'sigvload': sigvload,
+            'spannload': spannload,
             'stabvorverformung': stabvorverformung,
             'loadcases': lastfaelle,
             'combination': kombination,

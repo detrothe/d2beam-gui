@@ -9,9 +9,12 @@ import './styles/contextMenu.css';
 
 import './pages/haupt';
 
-/*
-const name = 'world';
-const sayHi = html`<h1>Hello ${name}</h1>`;
+// import {
+//     init_tabellen  } from "./pages/rechnen";
 
-render(sayHi, document.body);
-*/
+//     setTimeout(function(){
+//         console.log("Executed after 1 second");
+//     }, 1000);
+// init_tabellen();
+
+

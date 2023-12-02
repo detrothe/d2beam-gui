@@ -14,6 +14,7 @@ import { init_grafik, drawsystem } from "./grafik";
 import { show_controller_THIIO, show_controller_results } from "./mypanelgui"
 
 import { prot_eingabe } from "./prot_eingabe"
+import { read_daten } from "./dateien"
 
 let fatal_error = false;
 
@@ -1351,6 +1352,8 @@ export function add_rechteck_querschnitt(werte: any[]) {
 export function init_tabellen() {
     //-----------------------------------------------------------------------------------------------------------
 
+
+
     // Querschnitt hinzufügen
     {
 
@@ -1389,20 +1392,6 @@ export function init_tabellen() {
 
         add_new_cross_section(qname, id);
 
-        // var tag = document.createElement('sl-tree-item');
-        // var text = document.createTextNode(qname);
-        // tag.appendChild(text);
-        // tag.addEventListener('click', opendialog);
-        // tag.addEventListener("contextmenu", contextmenu_querschnitt);
-
-        // tag.id = id;
-        // var element = document.getElementById('id_tree_LQ');
-        // element?.appendChild(tag);
-        // //console.log('child appendchild', element);
-
-        // const ele = document.getElementById('id_element_tabelle');
-        // //console.log('ELE: >>', ele);
-        // ele?.setAttribute('add_new_option', '4');
     }
 
     let el = document.getElementById('id_element_tabelle');
@@ -1456,6 +1445,11 @@ export function init_tabellen() {
         (table.rows[i].cells[i + 1].firstElementChild as HTMLInputElement).value = '1';
 
     }
+
+
+
+    // const eingabedaten = '{"version":0,"nnodes":5,"nelem":4,"nloads":1,"nstreckenlasten":3,"neinzellasten":1,"ntempload":0,"nloadcases":4,"ncombinations":1,"nquerschnittsets":1,"nstabvorverfomungen":0,"nelteilungen":10,"n_iter":11,"THIIO_flag":"1","maxU_node":"","maxU_dir":"1","maxU_schief":"","neigv":"1","nNodeDisps":0,"elem":[["IPE 400","","1","2","","","","","",""],["IPE 400","","2","3","","","","","","1"],["IPE 400","","3","4","","","","","",""],["IPE 400","","4","5","","","","","",""]],"node":[["-1","2","1","1","",""],["","-5","","","",""],["4","-6","","","",""],["8","-5","","","",""],["8","","1","1","",""]],"nodalLoad":[["2","1","50","500",""]],"streckenlasten":[["1","3","","5","5"],["2","2","2","6","5"],["3","2","2","5","6"]],"einzellasten":[["4","4","3","50",""]],"tempLoad":[],"stabvorverformung":[],"loadcases":[["Knotenlasten"],["Streckenlasten Projektion"],["Streckenlasten senkrecht"],["Elementeinzellast"]],"combination":[["","2","2","2","3"]],"qsclassname":["QuerschnittRechteck"],"qswerte":[["IPE 400","mat-0",210000,23130,84.5,40,18,3,78.5,0.4,0.3,20,0.0000012]],"nodeDisp0":[]}'
+    // read_daten(eingabedaten);
 }
 
 //---------------------------------------------------------------------------------------------------------------
