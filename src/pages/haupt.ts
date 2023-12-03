@@ -33,7 +33,7 @@ import DetectOS from "./detectos";
 
 import { addListener_filesave } from "./dateien";
 import { select_loadcase_changed, select_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik } from "./grafik";
-import { set_info } from "./utility";
+import { set_info, write } from "./utility";
 
 import { my_jspdf } from "./mypdf"
 
@@ -870,13 +870,14 @@ portrait.addEventListener("change", function (e) {
 
   let time = 0
   //while (document.readyState != 'complete') {
-    setTimeout(function () {
-      console.log("in setTimeout document.readyState", document.readyState)
-      if (document.readyState === 'complete') init_tabellen();
-      console.log("Executed after 0.1 second");
-    }, 100);
-    time = time + 100
-    console.log("time used ", time)
+  setTimeout(function () {
+    write("in setTimeout document.readyState " + document.readyState)
+    if (document.readyState === 'complete') init_tabellen();
+    console.log("Executed after 0.1 second");
+  }, 500);
+  time = time + 500
+  console.log("time used ", time)
+  write('document.readyState ' + document.readyState)
   //}
 
   //rechnen(1);
