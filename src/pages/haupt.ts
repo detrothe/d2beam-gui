@@ -137,6 +137,20 @@ portrait.addEventListener("change", function (e) {
   }
 });
 
+const sleepNow = (delay:any) => new Promise((resolve) => setTimeout(resolve, delay));
+
+async function repeatedGreetingsLoop() {
+  for (let i = 1; i <= 15; i++) {
+    await sleepNow(50)
+    if (document.readyState === 'complete') {
+       init_tabellen();
+       write(`document.readyState = complete after ${i*50} msec`)
+       break;
+    }
+    console.log(`Hello #${i*50}`)
+  }
+}
+
 {
   //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
 
@@ -868,20 +882,24 @@ portrait.addEventListener("change", function (e) {
 
   console.log("document.readyState", document.readyState)
 
-  let time = 0
-  //while (document.readyState != 'complete') {
-  setTimeout(function () {
-    write("in setTimeout document.readyState " + document.readyState)
-    if (document.readyState === 'complete') init_tabellen();
-    console.log("Executed after 0.1 second");
-  }, 500);
-  time = time + 500
-  console.log("time used ", time)
-  write('document.readyState ' + document.readyState)
+  // let time = 0
+  // //while (document.readyState != 'complete') {
+  // setTimeout(function () {
+  //   write("in setTimeout document.readyState " + document.readyState)
+  //   if (document.readyState === 'complete') init_tabellen();
+  //   console.log("Executed after 0.1 second");
+  // }, 500);
+  // time = time + 500
+  // console.log("time used ", time)
+  // write('document.readyState ' + document.readyState)
   //}
+
+  repeatedGreetingsLoop();
 
   //rechnen(1);
 }
+
+
 
 //---------------------------------------------------------------------------------------------------------------
 
