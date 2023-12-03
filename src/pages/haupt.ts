@@ -832,15 +832,16 @@ portrait.addEventListener("change", function (e) {
   const renderBefore = container?.querySelector("footer");
   render(template(), container, { renderBefore });
 
-  setTimeout(function(){
-             console.log("Executed after 1 second");
-         }, 1000);
+  // setTimeout(function(){
+  //   console.log("in setTimeout document.readyState",document.readyState)
+  //            console.log("Executed after 1 second");
+  //        }, 500);
 
   // render( template(), document.body);
 
   // Tabellen sin jetzt da, Tabellen mit Voreinstellungen füllen
 
-  init_tabellen();
+  // init_tabellen();
 
   //init_contextmenu();
 
@@ -865,7 +866,20 @@ portrait.addEventListener("change", function (e) {
   // console.log("ELEMENT", ELEMENT);
   // console.log("ELEMENT", getComputedStyle(ELEMENT!).width);
 
-  rechnen(1);
+  console.log("document.readyState", document.readyState)
+
+  let time = 0
+  //while (document.readyState != 'complete') {
+    setTimeout(function () {
+      console.log("in setTimeout document.readyState", document.readyState)
+      if (document.readyState === 'complete') init_tabellen();
+      console.log("Executed after 0.1 second");
+    }, 100);
+    time = time + 100
+    console.log("time used ", time)
+  //}
+
+  //rechnen(1);
 }
 
 //---------------------------------------------------------------------------------------------------------------

@@ -517,10 +517,10 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    clear_Tabelle(idTable: any) {
       //------------------------------------------------------------------------------------------------------------
-      console.info('in clear_Tabelle');
+      //console.info('in clear_Tabelle');
 
       const table = this.shadow.getElementById(idTable) as HTMLTableElement;
-      console.log('spalten', table);
+      //console.log('spalten', table);
       let nZeilen = table.rows.length
       let nSpalten = table.rows[0].cells.length
 
