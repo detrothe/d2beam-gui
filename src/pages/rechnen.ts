@@ -467,8 +467,6 @@ export function rechnen(flag = 1) {
         }
     } else {
 
-        show_controller_THIIO(false);
-        show_controller_results(false);
 
         calc_neq_and_springs();
 
@@ -493,6 +491,10 @@ export function rechnen(flag = 1) {
         slmax = Math.sqrt((xmax - xmin) ** 2 + (zmax - zmin) ** 2)
 
         init_grafik(0);
+
+        show_controller_THIIO(false);
+        show_controller_results(false);
+
         drawsystem();
 
         write('Im Tab Grafik wurde das System soweit möglich gezeichnet');
