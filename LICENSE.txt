@@ -1,4 +1,4 @@
-ManifoldJS
+
 
 Copyright (c) statikverstehen.de
 

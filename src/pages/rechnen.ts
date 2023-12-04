@@ -1450,8 +1450,8 @@ export function init_tabellen() {
 
 
 
-     const eingabedaten = '{"version":0,"nnodes":5,"nelem":4,"nloads":1,"nstreckenlasten":3,"neinzellasten":1,"ntempload":0,"nloadcases":4,"ncombinations":1,"nquerschnittsets":1,"nstabvorverfomungen":0,"nelteilungen":10,"n_iter":11,"THIIO_flag":"1","maxU_node":"","maxU_dir":"1","maxU_schief":"","neigv":"1","nNodeDisps":0,"elem":[["IPE 400","","1","2","","","","","",""],["IPE 400","","2","3","","","","","","1"],["IPE 400","","3","4","","","","","",""],["IPE 400","","4","5","","","","","",""]],"node":[["-1","2","1","1","",""],["","-5","","","",""],["4","-6","","","",""],["8","-5","","","",""],["8","","1","1","",""]],"nodalLoad":[["2","1","50","500",""]],"streckenlasten":[["1","3","","5","5"],["2","2","2","6","5"],["3","2","2","5","6"]],"einzellasten":[["4","4","3","50",""]],"tempLoad":[],"stabvorverformung":[],"loadcases":[["Knotenlasten"],["Streckenlasten Projektion"],["Streckenlasten senkrecht"],["Elementeinzellast"]],"combination":[["","2","2","2","3"]],"qsclassname":["QuerschnittRechteck"],"qswerte":[["IPE 400","mat-0",210000,23130,84.5,40,18,3,78.5,0.4,0.3,20,0.0000012]],"nodeDisp0":[]}'
-     read_daten(eingabedaten);
+    //  const eingabedaten = '{"version":0,"nnodes":5,"nelem":4,"nloads":1,"nstreckenlasten":3,"neinzellasten":1,"ntempload":0,"nloadcases":4,"ncombinations":1,"nquerschnittsets":1,"nstabvorverfomungen":0,"nelteilungen":10,"n_iter":11,"THIIO_flag":"1","maxU_node":"","maxU_dir":"1","maxU_schief":"","neigv":"1","nNodeDisps":0,"elem":[["IPE 400","","1","2","","","","","",""],["IPE 400","","2","3","","","","","","1"],["IPE 400","","3","4","","","","","",""],["IPE 400","","4","5","","","","","",""]],"node":[["-1","2","1","1","",""],["","-5","","","",""],["4","-6","","","",""],["8","-5","","","",""],["8","","1","1","",""]],"nodalLoad":[["2","1","50","500",""]],"streckenlasten":[["1","3","","5","5"],["2","2","2","6","5"],["3","2","2","5","6"]],"einzellasten":[["4","4","3","50",""]],"tempLoad":[],"stabvorverformung":[],"loadcases":[["Knotenlasten"],["Streckenlasten Projektion"],["Streckenlasten senkrecht"],["Elementeinzellast"]],"combination":[["","2","2","2","3"]],"qsclassname":["QuerschnittRechteck"],"qswerte":[["IPE 400","mat-0",210000,23130,84.5,40,18,3,78.5,0.4,0.3,20,0.0000012]],"nodeDisp0":[]}'
+    //  read_daten(eingabedaten);
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1726,7 +1726,7 @@ function calculate() {
         console.log("nlastfaelle", nlastfaelle)
         stabendkraefte = new TFArray3D(1, 6, 1, nelemTotal, 1, nlastfaelle);   // nlastfaelle
         lagerkraefte = new TFArray3D(0, nnodes - 1, 0, 2, 0, nlastfaelle - 1);
-        if (nNodeDisps > 0) nodeDisp0Force = new TFArray3D_0(nNodeDisps, 3, nlastfaelle);
+        if (nNodeDisps > 0) { nodeDisp0Force = new TFArray3D_0(nNodeDisps, 3, nlastfaelle); nodeDisp0Force.zero(); }
         u_lf = Array.from(Array(neq), () => new Array(nlastfaelle).fill(0.0));
 
         for (let iLastfall = 1; iLastfall <= nlastfaelle; iLastfall++) {
@@ -1837,6 +1837,7 @@ function calculate() {
 
 
             let force: number[] = Array(6)
+            //console.log("LAGERKRAFT 0 rechnen", lagerkraft)
 
             for (ielem = 0; ielem < nelemTotal; ielem++) {
                 force = el[ielem].berechneInterneKraefte(ielem, iLastfall, 0, u);
@@ -1844,6 +1845,8 @@ function calculate() {
                 for (i = 0; i < el[ielem].neqe; i++) stabendkraefte.set(i + 1, ielem + 1, iLastfall, force[i]);
 
                 el[ielem].berechneLagerkraefte();
+                //console.log("LAGERKRAFT rechnen", lagerkraft)
+                //for (i = 0; i < nnodes; i++) console.log("LAger", lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
             }
 
             let disp = Array(3)
@@ -1907,7 +1910,10 @@ function calculate() {
                                 }
                             }
                         }
-                        lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iLastfall)
+                        // Federkräfte in Lagerkraft[] eintragen
+                        if (node[nodi].L_org[j] > 1) {
+                            lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iLastfall)
+                        }
                     }
                 }
             }
@@ -1960,7 +1966,7 @@ function calculate() {
         //console.log("nkombinationen", nkombinationen)
         stabendkraefte = new TFArray3D(1, 6, 1, nelemTotal, 1, nkombinationen);
         lagerkraefte = new TFArray3D(0, nnodes - 1, 0, 2, 0, nkombinationen - 1);
-        if (nNodeDisps > 0) nodeDisp0Force = new TFArray3D_0(nNodeDisps, 3, nkombinationen);
+        if (nNodeDisps > 0) { nodeDisp0Force = new TFArray3D_0(nNodeDisps, 3, nkombinationen); nodeDisp0Force.zero(); }
         eigenform_container_node.length = 0
         eigenform_container_u.length = 0
         for (let i = 0; i < nkombinationen; i++) {
@@ -2268,7 +2274,7 @@ function calculate() {
                                 }
                             }
                         }
-                        //lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iKomb)
+                        if (node[nodi].L_org[j] > 1) lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iKomb);
                     }
                 }
             }
@@ -2323,7 +2329,7 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
         //u.fill(0.0);
         //const help = Array.from(Array(6), () => new Array(6));
 
-        for (ielem = 0; ielem < nelem; ielem++) {
+        for (ielem = 0; ielem < nelemTotal; ielem++) {
 
             el[ielem].berechneElementsteifigkeitsmatrix(0);
             el[ielem].addiereElementsteifigkeitmatrix(stiff)

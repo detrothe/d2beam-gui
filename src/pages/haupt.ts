@@ -139,11 +139,13 @@ portrait.addEventListener("change", function (e) {
 
 const sleepNow = (delay:any) => new Promise((resolve) => setTimeout(resolve, delay));
 
-async function repeatedGreetingsLoop() {
-  for (let i = 1; i <= 15; i++) {
+async function initTabellenLoop() {
+  for (let i = 1; i <= 25; i++) {
     await sleepNow(50)
     if (document.readyState === 'complete') {
        init_tabellen();
+       rechnen(1);
+
        write(`document.readyState = complete after ${i*50} msec`)
        break;
     }
@@ -894,7 +896,7 @@ async function repeatedGreetingsLoop() {
   // write('document.readyState ' + document.readyState)
   //}
 
-  repeatedGreetingsLoop();
+  initTabellenLoop();
 
   //rechnen(1);
 }

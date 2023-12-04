@@ -25,6 +25,11 @@ export class CElement {
         console.log("class element: addiereElementsteifigkeitmatrix", stiff[0][0])
     }
 
+    // @ts-ignore
+    addiereElementsteifigkeitmatrix_ksig(stiff: number[][]) {
+    }
+
+    berechneElementsteifigkeitsmatrix_Ksig() {}
 
     berechneInterneKraefte(ielem: number, iLastf: number, iter: number, u: number[]) {
         console.log("class element: berechneInterneKraefte", ielem, iLastf, iter, u[0])

@@ -1085,7 +1085,7 @@ export function drawsystem() {
 
                         let flaeche = two.makePath(vertices);
                         if (sgArea > 0.0) flaeche.fill = '#00AEFF';
-                        else flaeche.fill = '#AE0000';
+                        else flaeche.fill = '#FF0000';
                         flaeche.opacity = opacity
 
                         vertices.length = 0
@@ -1134,7 +1134,7 @@ export function drawsystem() {
 
                 let flaeche = two.makePath(vertices);
                 if (sgArea > 0.0) flaeche.fill = '#00AEFF';
-                else flaeche.fill = '#AE0000';
+                else flaeche.fill = '#FF0000';
                 flaeche.opacity = opacity
 
             }
@@ -2914,14 +2914,14 @@ function draw_drehfeder(two: Two, x0: number, z0: number) {
 
     var vertices = [];
 
-    console.log("in draw_drehfeder", radius, x0, z0)
+    //console.log("in draw_drehfeder", radius, x0, z0)
 
     dalpha = Math.PI / (teilung)
     alpha = 0.0
     for (let i = 0; i <= teilung; i++) {
         x = tr.Pix0(-radiusW * Math.sin(alpha))
         z = tr.Pix0(radiusW * Math.cos(alpha))
-        console.log("DREHFEDER x,z ", x, z)
+        //console.log("DREHFEDER x,z ", x, z)
         vertices.push(new Two.Anchor(x, z));
         alpha += dalpha
     }

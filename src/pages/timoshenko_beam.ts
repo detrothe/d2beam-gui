@@ -616,8 +616,11 @@ export class CTimoshenko_beam extends CElement {
 
         let nodi: number
 
+        //console.log("Lagerkräfte d2beam",this.F)
+
         for (let i = 0; i < 2; i++) {
             nodi = this.nod[i]
+            console.log("nodi",i,nodi)
             lagerkraft[nodi][0] = lagerkraft[nodi][0] - this.F[3 * i]
             lagerkraft[nodi][1] = lagerkraft[nodi][1] - this.F[3 * i + 1]
             lagerkraft[nodi][2] = lagerkraft[nodi][2] - this.F[3 * i + 2]
@@ -1175,7 +1178,7 @@ export class CTimoshenko_beam extends CElement {
             ux = Nu[0] * edisp[0] + Nu[1] * edisp[3]
             wx = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
             phix = -(Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5]);  // im Uhrzeigersinn
-            console.log("phix", x, phix)
+            //console.log("phix", x, phix)
 
             if (THIIO_flag === 1) {
 
@@ -1654,7 +1657,7 @@ export class CTimoshenko_beam extends CElement {
 
             }  // ende TH II Ordnung
 
-            console.log("x, Vx, Mx", x, Vx, Mx, wx, phix)
+            // console.log("x, Vx, Mx", x, Vx, Mx, wx, phix)
             //x += d_x
         }
 

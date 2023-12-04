@@ -19,16 +19,16 @@ export function read_daten(eingabedaten: string) {
 
     let i, j;
 
-    console.log("in result", eingabedaten);
+    //console.log("in result", eingabedaten);
     let jobj = JSON.parse(eingabedaten);
-    console.log("und zurück", jobj);
+    //console.log("und zurück", jobj);
 
 
     // in Tabelle schreiben
     {
         let el = document.getElementById('id_button_nnodes') as drButtonPM;
-        console.log("el",el)
-        console.log("nnodes",jobj.nnodes)
+        //console.log("el",el)
+        //console.log("nnodes",jobj.nnodes)
         el.setValue(jobj.nnodes);
 
         el = document.getElementById('id_button_nelem') as drButtonPM;
