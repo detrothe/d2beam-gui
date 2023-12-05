@@ -781,7 +781,10 @@ function read_nodes() {
                 if (wert.length === 0) nodeDisp0[iz].dispzL = false; else nodeDisp0[iz].dispzL = true;
                 nodeDisp0[iz].dispz0 = Number(testNumber(wert, izeile, ispalte, shad));
             }
-            else if (ispalte === 5) nodeDisp0[iz].phi0 = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 5) {
+                if (wert.length === 0) nodeDisp0[iz].phiL = false; else nodeDisp0[iz].phiL = true;
+                nodeDisp0[iz].phi0 = Number(testNumber(wert, izeile, ispalte, shad));
+            }
 
         }
     }
@@ -2836,7 +2839,7 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Stabschnittgrößen und Verformungen</b>"
+        tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
 
         newDiv?.appendChild(tag);
 

@@ -8,7 +8,7 @@ import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelT
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
-import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all, kombiTabelle } from "./rechnen";
+import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all, kombiTabelle, nNodeDisps, nodeDisp0 } from "./rechnen";
 
 //import { Pane } from 'tweakpane';
 import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
@@ -243,7 +243,7 @@ export function init_grafik(flag = 1) {
             el_select.appendChild(option);
         }
 
-        el_select_eigv.style.display="none"
+        el_select_eigv.style.display = "none"
 
     } else if (THIIO_flag === 1) {
 
@@ -263,7 +263,7 @@ export function init_grafik(flag = 1) {
             el_select.appendChild(option);
         }
 
-        el_select_eigv.style.display="block"
+        el_select_eigv.style.display = "block"
 
         for (let i = 0; i < neigv; i++) {
             let option = document.createElement('option');
@@ -990,7 +990,7 @@ export function drawsystem() {
         }
 
         scalefactor *= scaleFactor_panel
-        console.log("SCALEFACTOR", 1. / scalefactor)
+        //console.log("SCALEFACTOR", 1. / scalefactor)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -1021,7 +1021,7 @@ export function drawsystem() {
                 if (show_momentenlinien) element[ielem].get_elementSchnittgroesse_Moment(sg, lf_index + loop);
                 else if (show_querkraftlinien) element[ielem].get_elementSchnittgroesse_Querkraft(sg, lf_index + loop);
                 else if (show_normalkraftlinien) element[ielem].get_elementSchnittgroesse_Normalkraft(sg, lf_index + loop);
-                console.log("GRAFIK  Mx,Vx or N", nelTeilungen, sg)
+                //console.log("GRAFIK  Mx,Vx or N", nelTeilungen, sg)
 
                 //let group = two.makeGroup();
                 let vertices = [];
@@ -1062,7 +1062,7 @@ export function drawsystem() {
                     xL = element[ielem].x_[i - 1]
                     dx = x - xL
                     sgR = sg[i]
-                    console.log("sigL und R", sgL, sgR)
+                    //console.log("sigL und R", sgL, sgR)
 
                     if (sgL === 0.0 && sgR === 0.0) {
                     } else if (sgL >= 0.0 && sgR > 0.0) {
@@ -1074,13 +1074,13 @@ export function drawsystem() {
                         vorzeichen = -1
                         sgArea += (sgL + sgR) * dx / 2.
                     } else {   // Vorzeichenwechsel
-                        console.log("Vorzeichenwechsel", sgL, sgR)
+                        //console.log("Vorzeichenwechsel", sgL, sgR)
 
                         let dx0 = -sgL * dx / (sgR - sgL)
                         let xx0 = tr.xPix(element[ielem].x1 + (xL + dx0) * element[ielem].cosinus)
                         let zz0 = tr.zPix(element[ielem].z1 + (xL + dx0) * element[ielem].sinus)
                         vertices.push(new Two.Anchor(xx1, zz1));
-                        console.log("dx0=", dx0, xx0, zz0)
+                        //console.log("dx0=", dx0, xx0, zz0)
                         vertices.push(new Two.Anchor(xx0, zz0));
 
                         let flaeche = two.makePath(vertices);
@@ -1257,7 +1257,7 @@ export function drawsystem() {
 
                     let line = two.makeLine(x1, z1, x2, z2);
                     if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
-                    else if ( show_verformungen || show_eigenformen || show_schiefstellung || show_stabvorverformung) line.linewidth = 2 / devicePixelRatio;
+                    else if (show_verformungen || show_eigenformen || show_schiefstellung || show_stabvorverformung) line.linewidth = 2 / devicePixelRatio;
                     else line.linewidth = 5 / devicePixelRatio;
 
                     // gestrichelte Faser
@@ -1413,6 +1413,7 @@ export function drawsystem() {
     if (show_lasten_temp) {
         draw_elementlasten(two);
         draw_knotenkraefte(two);
+        if (nNodeDisps > 0) draw_knotenverformungen(two);
     }
     if (!(show_labels && onlyLabels)) {
         if (show_lagerkraefte && flag_eingabe === 1) draw_lagerkraefte(two);
@@ -1452,6 +1453,8 @@ function draw_elementlasten(two: Two) {
     let iLastfall = draw_lastfall
     let fact = Array(nlastfaelle)
     let lf_show = Array(nlastfaelle)
+
+    const color_load = '#9ba4d0';
 
     if (THIIO_flag === 0) {
         if (iLastfall <= nlastfaelle) {
@@ -1549,7 +1552,7 @@ function draw_elementlasten(two: Two) {
                         x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
 
 
-                        console.log("pL...", pL, pR, x, z)
+                        //console.log("pL...", pL, pR, x, z)
 
                         var vertices = [];
                         for (let i = 0; i < 4; i++) {
@@ -1559,24 +1562,34 @@ function draw_elementlasten(two: Two) {
                         }
 
                         let flaeche = two.makePath(vertices);
-                        flaeche.fill = '#eeeeee';
+                        flaeche.fill = color_load;
+                        flaeche.opacity = opacity
 
                         if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
                         if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
 
-                        xpix = xtr[3] + 5
-                        zpix = ztr[3] - 5
-                        let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
+                        if (eload[ieload].pL === eload[ieload].pR) {
+                            xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+                            zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        } else {
+                            xpix = xtr[3] + 5
+                            zpix = ztr[3] - 5
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
 
-                        xpix = xtr[2] + 5
-                        zpix = ztr[2] - 5
-                        str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
-                        txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
+                            xpix = xtr[2] + 5
+                            zpix = ztr[2] - 5
+                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                            txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
 
                         dp = pMax // - pMin
                         a = a + dp + a_spalt
@@ -1598,7 +1611,7 @@ function draw_elementlasten(two: Two) {
                         x[3] = x[0]; z[3] = z[0] - pL;
 
 
-                        console.log("pL...", pL, pR, x, z)
+                        //console.log("pL...", pL, pR, x, z)
 
                         var vertices = [];
                         for (let i = 0; i < 4; i++) {
@@ -1608,24 +1621,34 @@ function draw_elementlasten(two: Two) {
                         }
 
                         let flaeche = two.makePath(vertices);
-                        flaeche.fill = '#eeeeee';
+                        flaeche.fill = color_load;
+                        flaeche.opacity = opacity
 
                         if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
                         if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
 
-                        xpix = xtr[3] + 5
-                        zpix = ztr[3] - 5
-                        let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
+                        if (eload[ieload].pL === eload[ieload].pR) {
+                            xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+                            zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        } else {
+                            xpix = xtr[3] + 5
+                            zpix = ztr[3] - 5
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
 
-                        xpix = xtr[2] + 5
-                        zpix = ztr[2] - 5
-                        str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
-                        txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
+                            xpix = xtr[2] + 5
+                            zpix = ztr[2] - 5
+                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                            txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
 
                         dp = pMax * co // - pMin
                         a = a + dp + a_spalt
@@ -1649,7 +1672,7 @@ function draw_elementlasten(two: Two) {
                         x[3] = x[0]; z[3] = z[0] - pL;
 
 
-                        console.log("pL...", pL, pR, x, z)
+                        //console.log("pL...", pL, pR, x, z)
 
                         var vertices = [];
                         for (let i = 0; i < 4; i++) {
@@ -1659,24 +1682,34 @@ function draw_elementlasten(two: Two) {
                         }
 
                         let flaeche = two.makePath(vertices);
-                        flaeche.fill = '#eeeeee';
+                        flaeche.fill = color_load;
+                        flaeche.opacity = opacity
 
                         if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
                         if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
 
-                        xpix = xtr[3] + 5
-                        zpix = ztr[3] - 5
-                        let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
+                        if (eload[ieload].pL === eload[ieload].pR) {
+                            xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+                            zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        } else {
+                            xpix = xtr[3] + 5
+                            zpix = ztr[3] - 5
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
 
-                        xpix = xtr[2] + 5
-                        zpix = ztr[2] - 5
-                        str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
-                        txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
+                            xpix = xtr[2] + 5
+                            zpix = ztr[2] - 5
+                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                            txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
 
                         dp = pMax
                         az_projektion += dp + a_spalt
@@ -1698,7 +1731,7 @@ function draw_elementlasten(two: Two) {
                         x[3] = x[0] + pL; z[3] = z[0];
 
 
-                        console.log("pL...", pL, pR, x, z)
+                        //console.log("pL...", pL, pR, x, z)
 
                         const vertices = [];
                         for (let i = 0; i < 4; i++) {
@@ -1708,24 +1741,34 @@ function draw_elementlasten(two: Two) {
                         }
 
                         let flaeche = two.makePath(vertices);
-                        flaeche.fill = '#eeeeee';
+                        flaeche.fill = color_load;
+                        flaeche.opacity = opacity
 
                         if (Math.abs(pL) > 0.0) draw_arrow(two, x[0], z[0], x[3], z[3], style_pfeil)
                         if (Math.abs(pR) > 0.0) draw_arrow(two, x[1], z[1], x[2], z[2], style_pfeil)
 
-                        xpix = xtr[3] + 5
-                        zpix = ztr[3] - 5
-                        let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
+                        if (eload[ieload].pL === eload[ieload].pR) {
+                            xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+                            zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        } else {
+                            xpix = xtr[3] + 5
+                            zpix = ztr[3] - 5
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
 
-                        xpix = xtr[2] + 5
-                        zpix = ztr[2] - 5
-                        str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
-                        txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
+                            xpix = xtr[2] + 5
+                            zpix = ztr[2] - 5
+                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                            txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
 
                         dp = pMax * si // - pMin
                         a = a + dp + a_spalt
@@ -1749,7 +1792,7 @@ function draw_elementlasten(two: Two) {
                         x[3] = x[0] + pL; z[3] = z[0];
 
 
-                        console.log("pL4...", ieload, pL, pR, scalefactor, x, z)
+                        //console.log("pL4...", ieload, pL, pR, scalefactor, x, z)
 
                         const vertices = [];
                         for (let i = 0; i < 4; i++) {
@@ -1759,24 +1802,34 @@ function draw_elementlasten(two: Two) {
                         }
 
                         let flaeche = two.makePath(vertices);
-                        flaeche.fill = '#eeeeee';
+                        flaeche.fill = color_load;
+                        flaeche.opacity = opacity
 
                         if (Math.abs(pL) > 0.0) draw_arrow(two, x[0], z[0], x[3], z[3], style_pfeil)
                         if (Math.abs(pR) > 0.0) draw_arrow(two, x[1], z[1], x[2], z[2], style_pfeil)
 
-                        xpix = xtr[3] + 5
-                        zpix = ztr[3] - 5
-                        let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
+                        if (eload[ieload].pL === eload[ieload].pR) {
+                            xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+                            zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        } else {
+                            xpix = xtr[3] + 5
+                            zpix = ztr[3] - 5
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
 
-                        xpix = xtr[2] + 5
-                        zpix = ztr[2] - 5
-                        str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
-                        txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
+                            xpix = xtr[2] + 5
+                            zpix = ztr[2] - 5
+                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                            txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
 
                         dp = pMax
                         ax_projektion += dp + a_spalt
@@ -1807,7 +1860,7 @@ function draw_elementlasten(two: Two) {
                         }
 
                         let flaeche = two.makePath(vertices);
-                        flaeche.fill = '#eeeeee';
+                        flaeche.fill = color_load;
                         flaeche.opacity = opacity;
 
 
@@ -2018,6 +2071,146 @@ function draw_knotenkraefte(two: Two) {
     }
 }
 
+
+//--------------------------------------------------------------------------------------------------------
+function draw_knotenverformungen(two: Two) {
+    //----------------------------------------------------------------------------------------------------
+
+    let plength = 35 /*slmax / 20.*/, delta = 12 //slmax / 200.0
+    let xpix: number, zpix: number
+    let wert: number
+    let nLoop = 0
+
+    let fact = Array(nlastfaelle)
+    let lf_show = Array(nlastfaelle)
+
+    console.log("in draw_knotenverformungen, draw_lastfall, nNodeDisps", draw_lastfall, nNodeDisps)
+    // const out = document.getElementById('output') as HTMLTextAreaElement;
+    // if (out) {
+    //     out.value += "plength= " + plength + "\n";
+    //     out.scrollTop = element.scrollHeight; // focus on bottom
+    // }
+
+    plength = tr.World0(2 * plength / devicePixelRatio)
+    delta = tr.World0(delta / devicePixelRatio)
+
+    let iLastfall = draw_lastfall
+
+    if (THIIO_flag === 0) {
+        if (iLastfall <= nlastfaelle) {
+            //lf_index = iLastfall - 1
+            nLoop = 1
+            fact[0] = 1.0
+            lf_show[0] = draw_lastfall - 1
+            //scalefactor = slmax / 20 / maxValue_eload[draw_lastfall - 1]
+
+        } else if (iLastfall <= nlastfaelle + nkombinationen) {
+            //lf_index = iLastfall - 1
+            let ikomb = iLastfall - 1 - nlastfaelle
+            console.log("Kombination THIO, ikomb: ", ikomb, maxValue_eload_komb[ikomb])
+            //scalefactor = slmax / 20 / maxValue_eload_komb[ikomb]
+            nLoop = 0
+
+            for (let i = 0; i < nlastfaelle; i++) {
+                if (kombiTabelle[ikomb][i] !== 0.0) {
+                    //console.log("kombitabelle", i, ikomb, kombiTabelle[ikomb][i])
+                    fact[nLoop] = kombiTabelle[ikomb][i];
+                    lf_show[nLoop] = i
+                    nLoop++;
+                }
+            }
+        } else {
+            nLoop = 0
+        }
+    }
+    else if (THIIO_flag === 1) {
+
+        if (iLastfall <= nkombinationen) {
+            //lf_index = iLastfall - 1
+            let ikomb = iLastfall - 1
+            //scalefactor = slmax / 20 / maxValue_eload_komb[ikomb]
+            nLoop = 0
+
+            for (let i = 0; i < nlastfaelle; i++) {
+                if (kombiTabelle[ikomb][i] !== 0.0) {
+                    fact[nLoop] = kombiTabelle[ikomb][i];
+                    lf_show[nLoop] = i
+                    nLoop++;
+                }
+            }
+
+        } else {
+            nLoop = 0
+        }
+    }
+
+    for (let i = 0; i < nLoop; i++) {
+        console.log("°°°°°°° lf_show,fact", i, lf_show[i], fact[i])
+    }
+
+    for (let iLoop = 0; iLoop < nLoop; iLoop++) {
+        console.log("iLoop: ", iLoop)
+
+        for (let i = 0; i < nNodeDisps; i++) {
+            let inode = nodeDisp0[i].node
+            let x = node[inode].x;
+            let z = node[inode].z;
+            console.log("nodeDisp0[i]", i, nodeDisp0)
+            if (nodeDisp0[i].dispxL && nodeDisp0[i].lf - 1 === lf_show[iLoop]) {
+                console.log("Knotenverformung zu zeichnen am Knoten ", +inode + 1)
+
+                wert = nodeDisp0[i].dispx0 * fact[iLoop]
+                if (wert > 0.0) {
+                    draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
+                } else {
+                    draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+                }
+                xpix = tr.xPix(x + delta + plength) + 5
+                zpix = tr.zPix(z) - 5
+                const str = myFormat(Math.abs(wert), 1, 2) + 'mm'
+                const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+            }
+            if (nodeDisp0[i].dispzL && nodeDisp0[i].lf - 1 === lf_show[iLoop]) {
+                //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+
+                wert = nodeDisp0[i].dispz0 * fact[iLoop]
+                if (wert > 0.0) {
+                    draw_arrow(two, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
+                } else {
+                    draw_arrow(two, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
+                }
+
+                xpix = tr.xPix(x) + 5
+                zpix = tr.zPix(z - delta - plength) + 5
+                const str = myFormat(Math.abs(wert), 1, 2) + 'mm'
+                const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+            }
+            if (nodeDisp0[i].phiL && nodeDisp0[i].lf - 1 === lf_show[iLoop]) {
+
+                wert = nodeDisp0[i].phi0 * fact[iLoop]
+                let vorzeichen = Math.sign(wert)
+                console.log("phi0 ", +inode + 1, wert)
+                if (wert > 0.0) {
+                    draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_moment)
+                } else {
+                    draw_moment_arrow(two, x, z, -1.0, slmax / 50, style_pfeil_moment)
+                }
+
+                xpix = tr.xPix(x) - 10 / devicePixelRatio
+                zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
+                const str = myFormat(Math.abs(wert), 1, 2) + 'mrad'
+                const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                txt.alignment = 'right'
+                //txt.baseline = 'bottom'
+            }
+
+        }
+    }
+}
 //--------------------------------------------------------------------------------------------------------
 function draw_lagerkraefte(two: Two) {
     //----------------------------------------------------------------------------------------------------

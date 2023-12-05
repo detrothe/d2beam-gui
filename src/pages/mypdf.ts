@@ -976,7 +976,7 @@ export async function my_jspdf() {
     {
       yy = testSeite(yy, fs, 1, 5);
       doc.setFont("freesans_bold");
-      doc.text("Stabschnittgrößen und Verformungen", links, yy);
+      doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
       yy = neueZeile(yy, fs, 1);
 
       for (let ielem = 0; ielem < nelem; ielem++) {

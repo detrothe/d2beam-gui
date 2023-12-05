@@ -132,11 +132,13 @@ select {
 .table_cell_right {
   text-align: right;
   padding-right: 1em;
+  background-color:  #cbcbcf80;
 }
 
 .table_cell_mitte {
   text-align: center;
   padding-right: 1em;
+  background-color:  #cbcbcf80;
 }
 
 
