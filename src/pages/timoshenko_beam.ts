@@ -1111,8 +1111,8 @@ export class CTimoshenko_beam extends CElement {
         let EI = this.emodul * this.Iy
         let EA = this.emodul * this.area
 
-        console.log("____________________________________________________________________________________")
-        console.log("class element: berechneElementSchnittgroessen von ", ielem, iLastf)
+        //console.log("________________________________________________________________")
+        //console.log("class element: berechneElementSchnittgroessen von ", ielem, iLastf)
 
         const eta = this.eta
         const sl = this.sl
@@ -1120,7 +1120,7 @@ export class CTimoshenko_beam extends CElement {
         const sl3 = sl2 * sl
         const nenner = sl3 + 12. * eta * sl
 
-        console.log("ETA", eta)
+        //console.log("ETA", eta)
 
         if (THIIO_flag === 0) {      // Theorie I. Ordnung
             for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i]

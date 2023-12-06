@@ -2156,7 +2156,7 @@ function draw_knotenverformungen(two: Two) {
             let x = node[inode].x;
             let z = node[inode].z;
             console.log("nodeDisp0[i]", i, nodeDisp0)
-            if (nodeDisp0[i].dispxL && nodeDisp0[i].lf - 1 === lf_show[iLoop]) {
+            if (nodeDisp0[i].dispL[0] && nodeDisp0[i].lf - 1 === lf_show[iLoop]) {
                 console.log("Knotenverformung zu zeichnen am Knoten ", +inode + 1)
 
                 wert = nodeDisp0[i].dispx0 * fact[iLoop]
@@ -2172,7 +2172,7 @@ function draw_knotenverformungen(two: Two) {
                 txt.alignment = 'left'
                 txt.baseline = 'top'
             }
-            if (nodeDisp0[i].dispzL && nodeDisp0[i].lf - 1 === lf_show[iLoop]) {
+            if (nodeDisp0[i].dispL[1] && nodeDisp0[i].lf - 1 === lf_show[iLoop]) {
                 //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
 
                 wert = nodeDisp0[i].dispz0 * fact[iLoop]
@@ -2189,7 +2189,7 @@ function draw_knotenverformungen(two: Two) {
                 txt.alignment = 'left'
                 txt.baseline = 'top'
             }
-            if (nodeDisp0[i].phiL && nodeDisp0[i].lf - 1 === lf_show[iLoop]) {
+            if (nodeDisp0[i].dispL[2] && nodeDisp0[i].lf - 1 === lf_show[iLoop]) {
 
                 wert = nodeDisp0[i].phi0 * fact[iLoop]
                 let vorzeichen = Math.sign(wert)

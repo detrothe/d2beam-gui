@@ -140,9 +140,9 @@ class TNodeDisp {                                   // Knotenzwangsverformungen,
     phi0 = 0.0
     ux = 0.0                                        // Knotenvorverformungen in globale x-Richtung
     uz = 0.0                                        // Knotenvorverformungen in globale z-Richtung
-    dispxL = false                                  // leere Zellen enthalten keine vorverformungen
-    dispzL = false
-    phiL = false
+    dispL = [false, false, false]                   // leere Zellen enthalten keine vorverformungen
+    //dispzL = false
+    //phiL = false
 }
 
 class TQuerschnittRechteck {
@@ -774,15 +774,15 @@ function read_nodes() {
             if (ispalte === 1) nodeDisp0[iz].node = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte === 2) nodeDisp0[iz].lf = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 3) {
-                if (wert.length === 0) nodeDisp0[iz].dispxL = false; else nodeDisp0[iz].dispxL = true;     // true=definierte Knotenverformung
+                if (wert.length === 0) nodeDisp0[iz].dispL[0] = false; else nodeDisp0[iz].dispL[0] = true;     // true=definierte Knotenverformung
                 nodeDisp0[iz].dispx0 = Number(testNumber(wert, izeile, ispalte, shad));
             }
             else if (ispalte === 4) {
-                if (wert.length === 0) nodeDisp0[iz].dispzL = false; else nodeDisp0[iz].dispzL = true;
+                if (wert.length === 0) nodeDisp0[iz].dispL[1] = false; else nodeDisp0[iz].dispL[1] = true;
                 nodeDisp0[iz].dispz0 = Number(testNumber(wert, izeile, ispalte, shad));
             }
             else if (ispalte === 5) {
-                if (wert.length === 0) nodeDisp0[iz].phiL = false; else nodeDisp0[iz].phiL = true;
+                if (wert.length === 0) nodeDisp0[iz].dispL[2] = false; else nodeDisp0[iz].dispL[2] = true;
                 nodeDisp0[iz].phi0 = Number(testNumber(wert, izeile, ispalte, shad));
             }
 
@@ -1746,7 +1746,7 @@ function calculate() {
                 el[ielem].addiereElementsteifigkeitmatrix(stiff)
 
                 for (let ieload = 0; ieload < neloads; ieload++) {
-                    console.log("********************************", ielem, ieload, eload[ieload].element)
+                    //console.log("********************************", ielem, ieload, eload[ieload].element)
                     if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastfall)) {
                         el[ielem].berechneElementlasten(ieload)
                     }
@@ -1889,14 +1889,33 @@ function calculate() {
 
             }
 
+            for (i = 0; i < nnodes; i++) {
+                console.log("lagerkraft", lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
+            }
+
             for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
-                if ((i + 1) === iLastfall) {
+                if (load[i].lf === iLastfall) {
                     nodi = load[i].node
                     lagerkraft[nodi][0] = lagerkraft[nodi][0] + load[i].p[0]
                     lagerkraft[nodi][1] = lagerkraft[nodi][1] + load[i].p[1]
                     lagerkraft[nodi][2] = lagerkraft[nodi][2] + load[i].p[2]
                 }
             }
+
+            if (nNodeDisps > 0) {
+                for (let k = 0; k < nNodeDisps; k++) {
+                    for (let j = 0; j < 3; j++) {
+                        if (nodeDisp0[k].dispL[j] && nodeDisp0[k].lf === iLastfall) {
+                            nodi = nodeDisp0[k].node
+                            console.log("~~~~~ nodeDisp0Force", k, j, iLastfall, nodi, lagerkraft[nodi][j])
+                            nodeDisp0Force.set(k, j, iLastfall - 1, -lagerkraft[nodi][j]);
+                            if (node[nodi].L_org[j] !== 1) lagerkraft[nodi][j] = 0.0   // kein starres Lager
+                        }
+                    }
+                }
+
+            }
+
 
             if (nelem_Federn > 0) {                        // Federkraefte in lagerkraft[] Tabelle eintragen
                 for (i = 0; i < nelem_Federn; i++) {
@@ -1905,14 +1924,14 @@ function calculate() {
                     console.log("FEDER hängt an Knoten", el[iFeder].nod)
                     nodi = el[iFeder].nod
                     for (let j = 0; j < 3; j++) {
-                        if (nNodeDisps > 0) {
-                            for (let k = 0; k < nNodeDisps; k++) {
-                                if (nodeDisp0[k].node === nodi && nodeDisp0[k].lf === iLastfall) {
-                                    console.log("nodeDisp0Force", k, j, iLastfall, lagerkraft[nodi][j])
-                                    nodeDisp0Force.set(k, j, iLastfall - 1, -lagerkraft[nodi][j]);
-                                }
-                            }
-                        }
+                        // if (nNodeDisps > 0) {
+                        //     for (let k = 0; k < nNodeDisps; k++) {
+                        //         if (nodeDisp0[k].node === nodi && nodeDisp0[k].lf === iLastfall) {
+                        //             console.log("nodeDisp0Force", k, j, iLastfall, lagerkraft[nodi][j])
+                        //             nodeDisp0Force.set(k, j, iLastfall - 1, -lagerkraft[nodi][j]);
+                        //         }
+                        //     }
+                        // }
                         // Federkräfte in Lagerkraft[] eintragen
                         if (node[nodi].L_org[j] > 1) {
                             lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iLastfall)
@@ -2002,7 +2021,7 @@ function calculate() {
 
                 console.log("_________________  I T E R  = ", iter, " ___________________")
 
-                console.log("^^^^^^^^^^^^ P G ", pg)
+                //console.log("^^^^^^^^^^^^ P G ", pg)
 
                 for (i = 0; i < neq; i++) stiff[i].fill(0.0);
                 for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0)
@@ -2261,6 +2280,22 @@ function calculate() {
                 }
             }
 
+            if (nNodeDisps > 0) {
+                for (let k = 0; k < nNodeDisps; k++) {
+                    let index = nodeDisp0[k].lf - 1
+                    console.log("nodeDisp0 index", k, index, iKomb, kombiTabelle[iKomb - 1][index])
+                    if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                        for (let j = 0; j < 3; j++) {
+                            if (nodeDisp0[k].dispL[j]) {
+                                nodi = nodeDisp0[k].node
+                                console.log("nodeDisp0Force", k, j, iKomb, lagerkraft[nodi][j])
+                                nodeDisp0Force.set(k, j, iKomb - 1, -lagerkraft[nodi][j]);
+                                if (node[nodi].L_org[j] !== 1) lagerkraft[nodi][j] = 0.0   // kein starres Lager
+                            }
+                        }
+                    }
+                }
+            }
 
             if (nelem_Federn > 0) {                        // Federkraefte in lagerkraft[] Tabelle eintragen
                 for (i = 0; i < nelem_Federn; i++) {
@@ -2269,14 +2304,14 @@ function calculate() {
                     console.log("FEDER hängt an Knoten", el[iFeder].nod)
                     nodi = el[iFeder].nod
                     for (let j = 0; j < 3; j++) {
-                        if (nNodeDisps > 0) {
-                            for (let k = 0; k < nNodeDisps; k++) {
-                                if (nodeDisp0[k].node === nodi && nodeDisp0[k].lf === iKomb) {
-                                    console.log("nodeDisp0Force", k, j, iKomb, lagerkraft[nodi][j])
-                                    nodeDisp0Force.set(k, j, iKomb - 1, -lagerkraft[nodi][j]);
-                                }
-                            }
-                        }
+                        // if (nNodeDisps > 0) {
+                        //     for (let k = 0; k < nNodeDisps; k++) {
+                        //         if (nodeDisp0[k].node === nodi && nodeDisp0[k].lf === iKomb) {
+                        //             console.log("nodeDisp0Force", k, j, iKomb, lagerkraft[nodi][j])
+                        //             nodeDisp0Force.set(k, j, iKomb - 1, -lagerkraft[nodi][j]);
+                        //         }
+                        //     }
+                        // }
                         if (node[nodi].L_org[j] > 1) lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iKomb);
                     }
                 }
@@ -2775,27 +2810,35 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         const row = thead.insertRow();
 
         // @ts-ignore
+        const th = table.tHead.appendChild(document.createElement("th"));
+        th.innerHTML = "No";
+        th.title = "Nummer der definierten Verformung"
+        th.setAttribute("class", "table_cell_center");
+        row.appendChild(th);
+
+        // @ts-ignore
         const th0 = table.tHead.appendChild(document.createElement("th"));
         th0.innerHTML = "Node";
-        th0.title = "Knoten, an dem die Feder befeestigt ist"
+        th0.title = "Knoten, für den die Verformungen definiert sind"
         th0.setAttribute("class", "table_cell_center");
         row.appendChild(th0);
+
         // @ts-ignore
         const th1 = table.tHead.appendChild(document.createElement("th"));
         th1.innerHTML = "F<sub>x</sub> &nbsp;[kN]";
-        th1.title = "Federktaft Fx, positiv als Zugktaft"
+        th1.title = "erforderliche Kraft, positiv in positiver x-Richtung"
         th1.setAttribute("class", "table_cell_center");
         row.appendChild(th1);
         // @ts-ignore
         const th2 = table.tHead.appendChild(document.createElement("th"));
         th2.innerHTML = "F<sub>z</sub>&nbsp;[kN]";
-        th2.title = "Federkraft Fz, positiv als Zugkraft "
+        th2.title = "erforderliche Kraft, positiv in positiver z-Richtung "
         th2.setAttribute("class", "table_cell_center");
         row.appendChild(th2);
         // @ts-ignore
         const th3 = table.tHead.appendChild(document.createElement("th"));
         th3.innerHTML = "M<sub>&phi;</sub>&nbsp;[kNm]";
-        th3.title = "Federmoment, positiv im Uhrzeigersinn"
+        th3.title = "erforderliches Moment, positiv im Gegenuhrzeigersinn"
         th3.setAttribute("class", "table_cell_center");
         row.appendChild(th3);
 
@@ -2807,12 +2850,17 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
             let newCell, newText
             newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
 
-            newText = document.createTextNode(String(inode + 1));  // Append a text node to the cell
+            newText = document.createTextNode(String(+i + 1));  // Append a text node to the cell
             newCell.appendChild(newText);
             newCell.setAttribute("class", "table_cell_center");
 
+            newCell = newRow.insertCell(1);
+            newText = document.createTextNode(String(+inode + 1));  // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_cell_mitte");
+
             for (j = 0; j < 3; j++) {
-                newCell = newRow.insertCell(j + 1);  // Insert a cell in the row at index 1
+                newCell = newRow.insertCell(j + 2);  // Insert a cell in the row at index 1
                 newText = document.createTextNode(myFormat(nodeDisp0Force._(i, j, iLastfall - 1), 2, 2));  // Append a text node to the cell
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_right");
