@@ -388,7 +388,8 @@ async function initTabellenLoop() {
         <p>
           Die Richtungen stimmen mit den Richtungen des zugehörigen gedrehten Lagerknotens überein.
           <br />
-          Es sind nur in den Tabellenzellen Werte einzugeben, für die definierte Verformungen gewünscht werden.
+          Es sind nur in den Tabellenzellen Werte einzugeben, für die definierte Verformungen gewünscht werden.<br>
+          Die Zahl 0 entspricht einer starren Lagerung!
         </p>
         <p>
           Anzahl Knoten mit<br />vorgebenenen Verformungen:
