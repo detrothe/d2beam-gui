@@ -80,7 +80,7 @@ export let typs_string_kombitabelle: string;
 const nkombiSpalten_init = "3"; // immer 1 mehr als nlastfaelle_init
 const nnodedisps_init = "0";
 
-let width_lager = 175 / window.devicePixelRatio;
+let width_lager = 175; // / window.devicePixelRatio;
 
 export let currentFilename = "empty";
 
@@ -366,7 +366,7 @@ async function initTabellenLoop() {
                   src="/assets/gedrehtes_lager.png"
                   name="gedrehtes_lager"
                   title="gedrehtes Lager"
-                  style="max-width:100%; width:${width_lager}px; height:auto; border:0px; margin: auto; display: block;"
+                  style="max-width:80%; width:${width_lager}px; height:auto; border:0px; margin: auto; display: block;"
                 />
               </td>
             </tr>
