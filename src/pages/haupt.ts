@@ -80,7 +80,7 @@ export let typs_string_kombitabelle: string;
 const nkombiSpalten_init = "3"; // immer 1 mehr als nlastfaelle_init
 const nnodedisps_init = "0";
 
-let width_lager = 175; // / window.devicePixelRatio;
+let width_lager = 175; // /window.devicePixelRatio;
 
 export let currentFilename = "empty";
 
@@ -388,8 +388,7 @@ async function initTabellenLoop() {
         <p>
           Die Richtungen stimmen mit den Richtungen des zugehörigen gedrehten Lagerknotens überein.
           <br />
-          Es sind nur die Werte in den Tabellenzellen einzugeben, für die definierte Verformungen gewünscht werden.<br />
-          Nur Werte ungleich 0 werden berücksichtigt.
+          Es sind nur in den Tabellenzellen Werte einzugeben, für die definierte Verformungen gewünscht werden.
         </p>
         <p>
           Anzahl Knoten mit<br />vorgebenenen Verformungen:
