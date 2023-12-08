@@ -883,7 +883,7 @@ export function drawsystem() {
                     for (let iteil = 0; iteil <= nelTeilungen; iteil++) {
 
 
-                        let w0x = (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
+                        let w0x = w0a + (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
 
                         uG = -element[ielem].sinus * w0x
                         wG = element[ielem].cosinus * w0x

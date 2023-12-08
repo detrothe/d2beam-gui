@@ -1193,6 +1193,7 @@ export class CTimoshenko_beam extends CElement {
                         let v0m = stabvorverformung[i].p[2]
                         let w0x = (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
                         if (this.NL < 0.0) Mx = Mx - this.NL * w0x
+                        wx += w0x
                     }
 
                 }
