@@ -57,6 +57,7 @@ let show_lasten = true;
 let show_lagerkraefte = true;
 let show_stabvorverformung = false;
 let show_umriss = false;
+let show_gesamtverformung = false;
 
 let show_lasten_temp = true;
 
@@ -548,7 +549,7 @@ export function drawsystem() {
 
             for (let loop = 0; loop < nLoop; loop++) {
 
-                element[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index + loop);
+                element[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index + loop, show_gesamtverformung);
                 console.log("uL", uL)
                 console.log("wL", wL)
                 console.log("phiL", phiL)
@@ -3282,6 +3283,17 @@ function draw_umriss_grafik() {
 }
 
 //--------------------------------------------------------------------------------------------------------
+function draw_gesamtverformung_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_gesamtverformung_grafik");
+    show_gesamtverformung = !show_gesamtverformung;
+
+    //if (Gesamt_ys === undefined || isNaN(yM)) return;
+
+    drawsystem();
+}
+//--------------------------------------------------------------------------------------------------------
 function scale_factor() {
     //--------------------------------------------------------------------------------------------------------
 
@@ -3303,6 +3315,7 @@ window.addEventListener('draw_stabvorverformung_grafik', draw_stabvorverformung_
 window.addEventListener('draw_lasten_grafik', draw_lasten_grafik);
 window.addEventListener('draw_lagerkraefte_grafik', draw_lagerkraefte_grafik);
 window.addEventListener('draw_umriss_grafik', draw_umriss_grafik);
+window.addEventListener('draw_gesamtverformung_grafik', draw_gesamtverformung_grafik);
 
 window.addEventListener('scale_factor', scale_factor);
 

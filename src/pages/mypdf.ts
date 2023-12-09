@@ -1011,7 +1011,7 @@ export async function my_jspdf() {
         el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
         el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index);
         el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index);
-        el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index);
+        el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index,false);
 
         for (let i = 0; i < nelTeilungen; i++) {
           el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);

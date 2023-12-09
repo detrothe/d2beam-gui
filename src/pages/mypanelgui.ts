@@ -24,7 +24,7 @@ let controller_disp: any
 export function myPanel() {
     //--------------------------------------------------------------------------------------------------------
 
-   // let controller_M: any, controller_V: any, controller_N: any
+    // let controller_M: any, controller_V: any, controller_N: any
 
     let obj = {
         Label: false,
@@ -41,6 +41,8 @@ export function myPanel() {
         scale_arrows: 1.0,
         show_support_forces: true,
         show_umriss: false,
+        Gesamtverformung: false,
+
         Reset: function () {
             window.dispatchEvent(new Event("reset_webgl"));
         }
@@ -157,6 +159,16 @@ export function myPanel() {
     gui.add(obj, 'show_umriss').name(umriss_anzeigen).onChange(() => {
         window.dispatchEvent(new Event("draw_umriss_grafik"));
     });
+
+
+    // nested controllers
+    const folder = gui.addFolder('Optionen');
+    folder.add(obj, 'Gesamtverformung').onChange(() => {
+        window.dispatchEvent(new Event("draw_gesamtverformung_grafik"));
+    });
+    //folder.add( obj, 'y' );
+    //folder.add( obj, 'z' );
+
     gui.add(obj, 'Reset')
 
     gui.close();
