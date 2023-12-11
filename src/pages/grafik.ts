@@ -1724,10 +1724,12 @@ function draw_elementlasten(two: Two) {
                         pMax = Math.max(0.0, pL, pR)
                         pMin = Math.min(0.0, pL, pR)
 
-                        a += Math.abs(pMin * si)
+                        console.log("S I N U S ", si)
+                        if (si < 0.0) a += Math.abs(pMax * si);
+                        else a += Math.abs(pMin * si);   //  * si
 
-                        x[0] = x1 + a / si; z[0] = z1;
-                        x[1] = x2 + a / si; z[1] = z2;
+                        x[0] = x1 + a * si; z[0] = z1 - co * a;  // / si
+                        x[1] = x2 + a * si; z[1] = z2 - co * a;
                         x[2] = x[1] + pR; z[2] = z[1];
                         x[3] = x[0] + pL; z[3] = z[0];
 
@@ -1744,6 +1746,9 @@ function draw_elementlasten(two: Two) {
                         let flaeche = two.makePath(vertices);
                         flaeche.fill = color_load;
                         flaeche.opacity = opacity
+
+                        let line = two.makeLine(xtr[0], ztr[0], xtr[1], ztr[1]);
+                        line.linewidth = 2;
 
                         if (Math.abs(pL) > 0.0) draw_arrow(two, x[0], z[0], x[3], z[3], style_pfeil)
                         if (Math.abs(pR) > 0.0) draw_arrow(two, x[1], z[1], x[2], z[2], style_pfeil)
@@ -1771,7 +1776,8 @@ function draw_elementlasten(two: Two) {
                             txt.baseline = 'top'
                         }
 
-                        dp = pMax * si // - pMin
+                        if (si < 0.0) dp = pMin * si;
+                        else dp = pMax * si;
                         a = a + dp + a_spalt
                     }
 

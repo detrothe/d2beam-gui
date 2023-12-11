@@ -1111,7 +1111,7 @@ export class CTimoshenko_beam extends CElement {
 
         let Mx: number, Vx: number, Nx: number, ux: number, wx: number, phix: number, phixG: number
         let Nu: number[] = new Array(2), Nw: number[] = new Array(4), Nphi: number[] = new Array(4)
-        let u: number, wL: number = 0.0, wLG = 0.0, disp = 0.0, dwx = 0.0, wxG = 0.0, uxG = 0.0
+        let u: number, wL: number = 0.0, wLG = 0.0, disp = 0.0, dwx = 0.0, wxG = 0.0, uxG = 0.0, dwxG=0.0
         let Nm = 0.0
         let edisp: number[] = Array(6)
         let edispG: number[] = Array(6).fill(0.0)
@@ -1198,7 +1198,8 @@ export class CTimoshenko_beam extends CElement {
 
             if (THIIO_flag === 1) {
 
-                dwx = wx - wL
+                dwx = wxG - wLG
+                dwxG = wxG - wLG
                 if (this.NL < 0.0) Mx = Mx - this.NL * (wxG - wLG)  //?
                 //if (Nm < 0.0) Mx = Mx - Nm * (wxG - wLG)  //?
 
@@ -1561,7 +1562,7 @@ export class CTimoshenko_beam extends CElement {
                                 let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
                                 wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
                                 //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
-                                if (this.NL < 0.0) Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
+                                if (this.NL < 0.0) Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwxG
                                 //console.log("Mx3", ielem, x, Mx)
 
                                 wx += wl
