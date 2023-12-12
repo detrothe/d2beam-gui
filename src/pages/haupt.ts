@@ -10,6 +10,7 @@ import "@shoelace-style/shoelace/dist/components/tree/tree.js";
 import "@shoelace-style/shoelace/dist/components/icon/icon.js";
 import "@shoelace-style/shoelace/dist/components/radio-group/radio-group.js";
 import "@shoelace-style/shoelace/dist/components/radio-button/radio-button.js";
+import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 
 //import { styles } from '../styles/shared-styles';
 import "./globals";
@@ -53,6 +54,7 @@ import {
   get_querschnitt_index,
   find_querschnittSet,
   incr_querschnitts_zaehler,
+  show_gleichungssystem,
 } from "./rechnen";
 
 import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
@@ -139,19 +141,19 @@ portrait.addEventListener("change", function (e) {
   }
 });
 
-const sleepNow = (delay:any) => new Promise((resolve) => setTimeout(resolve, delay));
+const sleepNow = (delay: any) => new Promise((resolve) => setTimeout(resolve, delay));
 
 async function initTabellenLoop() {
   for (let i = 1; i <= 25; i++) {
     await sleepNow(50)
     if (document.readyState === 'complete') {
-       init_tabellen();
-       rechnen(1);
+      init_tabellen();
+      rechnen(1);
 
-       write(`document.readyState = complete after ${i*50} msec`)
-       break;
+      write(`document.readyState = complete after ${i * 50} msec`)
+      break;
     }
-    console.log(`Hello #${i*50}`)
+    console.log(`Hello #${i * 50}`)
   }
 }
 
@@ -716,6 +718,12 @@ async function initTabellenLoop() {
           </tbody>
         </table>
 
+        <p>
+        <input type="checkbox" id ="id_glsystem_darstellen" >Gleichungssystem darstellen
+         <!--  @click="${gleichungssystem_darstellen}" -->
+    </p>
+
+    <div id="id_gleichungssystem">Gleichungssystem</div>
         <!--
         <table id="querschnittwerte_table">
           <tbody>
@@ -876,6 +884,19 @@ async function initTabellenLoop() {
   el_zurueck_grafik?.addEventListener("click", click_zurueck_grafik);
 
   document?.getElementById("id_button_copy_svg")?.addEventListener("click", copy_svg, false);
+
+  const checkbox = document.getElementById('id_glsystem_darstellen')
+
+  console.log("ttttttttttttttttttttttttttttttt checkbox", checkbox)
+  checkbox!.addEventListener('change', (event) => {
+    // @ts-ignore
+    if (event.currentTarget.checked) {
+      gleichungssystem_darstellen(true)
+    } else {
+      gleichungssystem_darstellen(false)
+    }
+  })
+
 
   // console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
   // console.log("rechnen", getComputedStyle(document?.getElementById("rechnen")!).width);
@@ -1511,4 +1532,11 @@ function handleClick_eingabe_ueberpruefen() {
 function create_pdf() {
   //-------------------------------------------------------------------------------------------------------------
   my_jspdf();
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function gleichungssystem_darstellen(check: boolean) {
+  //-------------------------------------------------------------------------------------------------------------
+  console.log("in gleichungssystem_darstellen", check)
+  show_gleichungssystem(check);
 }

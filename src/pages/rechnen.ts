@@ -100,6 +100,8 @@ export let ntemperaturlasten = 0;
 export let nvorspannungen = 0;
 export let nspannschloesser = 0;
 
+export let stm = [] as number[][];
+
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
 //console.log("CMULT-------------", cmult)
@@ -1703,6 +1705,7 @@ function calculate() {
     }
 
     const stiff = Array.from(Array(neq), () => new Array(neq).fill(0.0));
+    stm = Array.from(Array(neq), () => new Array(neq));    // Gleichungssystem für Ausdruck
     const R = Array(neq);
     const u = Array(neq);
 
@@ -1816,6 +1819,12 @@ function calculate() {
             for (j = 0; j < neq; j++) {
                 console.log('stiff[]', stiff[j])
             }
+            for (i = 0; i < neq; i++) {
+                for (j = 0; j < neq; j++) {
+                    stm[i][j] = stiff[i][j]
+                }
+            }
+
 
             for (i = 0; i < neq; i++) {
                 console.log("R", i, R[i])
@@ -3095,5 +3104,60 @@ function berechne_kombinationen() {
     }
 
 
+
+}
+
+export function show_gleichungssystem(checked: boolean) {
+
+    const eq_div = document.getElementById('id_gleichungssystem') as HTMLDivElement
+
+    while (eq_div.hasChildNodes()) {  // alte Tabellen entfernen
+        // @ts-ignore
+        eq_div.removeChild(eq_div?.lastChild);
+    }
+
+    if (checked) {
+        console.log("show_gleichungssystem")
+
+        const table = document.createElement('table');
+        eq_div.appendChild(table);
+        table.id = 'equation_table';
+
+        let thead = table.createTHead();
+        //console.log('thead', thead);
+        let row = thead.insertRow();
+        for (let i = 0; i <= neq; i++) {
+            if (table.tHead) {
+                const th0 = table.tHead.appendChild(document.createElement('th'));
+                th0.innerHTML = String(i);
+                //th0.title = "Elementnummer"
+                th0.style.padding = '5px';
+                th0.style.margin = '0px';
+                th0.style.textAlign = 'center';
+                //th0.setAttribute('title', 'Hilfe')
+                row.appendChild(th0);
+            }
+        }
+
+        let tbody = table.createTBody();
+        //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
+
+        for (let iZeile = 1; iZeile <= neq; iZeile++) {
+            let newRow = tbody.insertRow(-1);
+
+            for (let iSpalte = 0; iSpalte <= neq; iSpalte++) {
+                let newCell, newText;
+
+                newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
+                if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
+                else newText = document.createTextNode(myFormat(stm[iZeile - 1][iSpalte - 1], 0, 2));
+                newCell.style.textAlign = 'center';
+                //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
+                newCell.style.padding = '5px';
+                newCell.style.margin = '0px';
+                newCell.appendChild(newText);
+            }
+        }
+    }
 
 }
