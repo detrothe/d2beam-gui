@@ -101,6 +101,8 @@ export let nvorspannungen = 0;
 export let nspannschloesser = 0;
 
 export let stm = [] as number[][];
+export let U_ = [] as number[];
+export let R_ = [] as number[];
 
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
@@ -1722,6 +1724,9 @@ function calculate() {
 
     const stiff = Array.from(Array(neq), () => new Array(neq).fill(0.0));
     stm = Array.from(Array(neq), () => new Array(neq));    // Gleichungssystem für Ausdruck
+    R_ = Array(neq);
+    U_ = Array(neq);
+
     const R = Array(neq);
     const u = Array(neq);
 
@@ -1844,6 +1849,7 @@ function calculate() {
 
             for (i = 0; i < neq; i++) {
                 console.log("R", i, R[i])
+                R_[i] = R[i];
             }
 
             // Gleichungssystem lösen
@@ -1855,6 +1861,7 @@ function calculate() {
             }
 
             for (i = 0; i < neq; i++) u[i] = R[i];
+            for (i = 0; i < neq; i++) U_[i] = R[i];
 
             for (i = 0; i < neq; i++) {
                 console.log("U", i, u[i] * 1000.0)    // in mm, mrad
@@ -2164,6 +2171,7 @@ function calculate() {
 
                 for (i = 0; i < neq; i++) {
                     console.log("R", i, R[i])
+                    R_[i] = R[i];
                 }
 
                 for (i = 0; i < neq; i++) {
@@ -2181,6 +2189,7 @@ function calculate() {
                 }
 
                 for (i = 0; i < neq; i++) u[i] = R[i];
+                for (i = 0; i < neq; i++) U_[i] = R[i];
 
                 for (i = 0; i < neq; i++) {
                     console.log("U", i, u[i] * 1000.0)    // in mm, mrad
@@ -2375,6 +2384,9 @@ function calculate() {
 
     init_grafik(1);
     drawsystem();
+
+    const checkbox = document.getElementById("id_glsystem_darstellen") as HTMLInputElement;
+    if (checkbox.checked) show_gleichungssystem(true);
 
     write('______________________________')
     write('Berechnung erfolgreich beendet')
@@ -3157,7 +3169,7 @@ export function show_gleichungssystem(checked: boolean) {
         let tag = document.createElement("p");
         let text = document.createTextNode("Elementsteifigkeitsmatrix");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Elementsteifigkeitsmatrix im globalen Koordinatensystem für Element " + (+draw_element+1) + "</b>"
+        tag.innerHTML = "<b>Elementsteifigkeitsmatrix im globalen Koordinatensystem für Element " + (+draw_element + 1) + "</b>"
         eq_div?.appendChild(tag);
 
         {
@@ -3221,11 +3233,15 @@ export function show_gleichungssystem(checked: boolean) {
 
         }
 
+        //                                                              Gesamtsteifigkeit
+
+        console.log("U_",U_)
+        console.log("R_",R_)
 
         tag = document.createElement("p");
         text = document.createTextNode("Gesamtsteifigkeitsmatrix");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Gesamtsteifigkeitsmatrix</b>"
+        tag.innerHTML = "<b>Gesamtsteifigkeitsbeziehung [K]*{U}={R}</b>"
         eq_div?.appendChild(tag);
 
         {
@@ -3236,11 +3252,13 @@ export function show_gleichungssystem(checked: boolean) {
             let thead = table.createTHead();
             //console.log('thead', thead);
             let row = thead.insertRow();
-            for (let i = 0; i <= neq; i++) {
+            for (let i = 0; i <= neq + 2; i++) {
                 if (table.tHead) {
                     const th0 = table.tHead.appendChild(document.createElement('th'));
-                    if (i === 0) th0.innerHTML = '';
-                    else th0.innerHTML = String(i);
+                    if (i === 0) th0.innerHTML = '[K]';
+                    else if (i <= neq) th0.innerHTML = String(i);
+                    else if (i === neq + 1) th0.innerHTML = '{U}';
+                    else th0.innerHTML = '{R}';
                     //th0.title = "Elementnummer"
                     th0.style.padding = '5px';
                     th0.style.margin = '0px';
@@ -3256,12 +3274,14 @@ export function show_gleichungssystem(checked: boolean) {
             for (let iZeile = 1; iZeile <= neq; iZeile++) {
                 let newRow = tbody.insertRow(-1);
 
-                for (let iSpalte = 0; iSpalte <= neq; iSpalte++) {
+                for (let iSpalte = 0; iSpalte <= +neq + 2; iSpalte++) {
                     let newCell, newText;
 
                     newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
                     if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
-                    else newText = document.createTextNode(myFormat(stm[iZeile - 1][iSpalte - 1], 0, 2));
+                    else if (iSpalte <= neq) newText = document.createTextNode(myFormat(stm[iZeile - 1][iSpalte - 1], 0, 2));
+                    else if (iSpalte === +neq + 1) newText = document.createTextNode(myFormat(U_[iZeile - 1], 0, 5));
+                    else newText = document.createTextNode(myFormat(R_[iZeile - 1], 0, 3));
                     newCell.style.textAlign = 'center';
                     //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
                     newCell.style.padding = '5px';
