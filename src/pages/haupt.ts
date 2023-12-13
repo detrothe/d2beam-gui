@@ -721,9 +721,10 @@ async function initTabellenLoop() {
         <p>
           <input type="checkbox" id="id_glsystem_darstellen" />Gleichungssystem darstellen
           <br /><br>
-          Zeige : <select id="id_element_darstellen" on></select>
+          Zeige : <select id="id_element_darstellen" on ></select>
         </p>
 
+        <div id="id_elementsteifigkeit">Elementstefigkeitsmatrix</div>
         <div id="id_gleichungssystem">Gleichungssystem</div>
 
         <!--
@@ -898,6 +899,16 @@ async function initTabellenLoop() {
       gleichungssystem_darstellen(false);
     }
   });
+
+
+  const elem_select = document.getElementById("id_element_darstellen");
+
+  console.log("ttttttttttttttttttttttttttttttt elem_select", elem_select);
+  elem_select!.addEventListener("change", () => {
+    // @ts-ignore
+    elem_select_changed();
+  });
+
 
   // console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
   // console.log("rechnen", getComputedStyle(document?.getElementById("rechnen")!).width);
@@ -1538,4 +1549,13 @@ function gleichungssystem_darstellen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
   console.log("in gleichungssystem_darstellen", check);
   show_gleichungssystem(check);
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function elem_select_changed() {
+  //-------------------------------------------------------------------------------------------------------------
+  console.log("elem_select_changed")
+  const checkbox = document.getElementById("id_glsystem_darstellen") as HTMLInputElement;
+  console.log("checkbox", checkbox.checked)
+  if (checkbox.checked) show_gleichungssystem(true);
 }
