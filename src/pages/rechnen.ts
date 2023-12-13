@@ -1538,6 +1538,21 @@ function calculate() {
 
     //(document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
 
+    const elem_darstellen = document.getElementById('id_element_darstellen') as HTMLSelectElement;
+
+    while (elem_darstellen.hasChildNodes()) {  // alte Optionen entfernen
+        // @ts-ignore
+        elem_darstellen.removeChild(elem_darstellen?.lastChild);
+    }
+
+    let option: any
+    for (let i = 0; i < nelem; i++) {
+        option = document.createElement('option');
+        option.value = String(i)
+        option.textContent = 'Element ' + (+i + 1);
+        elem_darstellen.appendChild(option);
+    }
+
     calc_neq_and_springs();
 
 
@@ -2148,6 +2163,12 @@ function calculate() {
 
                 for (i = 0; i < neq; i++) {
                     console.log("R", i, R[i])
+                }
+
+                for (i = 0; i < neq; i++) {
+                    for (j = 0; j < neq; j++) {
+                        stm[i][j] = stiff[i][j]
+                    }
                 }
 
                 // Gleichungssystem lösen
@@ -3109,6 +3130,10 @@ function berechne_kombinationen() {
 
 export function show_gleichungssystem(checked: boolean) {
 
+    const elem_darstellen = document.getElementById('id_element_darstellen') as HTMLSelectElement;
+    let draw_element = Number(elem_darstellen.value)
+    console.log("§§§§§§§§§§§§§§§ draw_element", draw_element)
+
     const eq_div = document.getElementById('id_gleichungssystem') as HTMLDivElement
 
     while (eq_div.hasChildNodes()) {  // alte Tabellen entfernen
@@ -3129,7 +3154,8 @@ export function show_gleichungssystem(checked: boolean) {
         for (let i = 0; i <= neq; i++) {
             if (table.tHead) {
                 const th0 = table.tHead.appendChild(document.createElement('th'));
-                th0.innerHTML = String(i);
+                if ( i === 0) th0.innerHTML = '';
+                else th0.innerHTML = String(i);
                 //th0.title = "Elementnummer"
                 th0.style.padding = '5px';
                 th0.style.margin = '0px';
@@ -3155,7 +3181,24 @@ export function show_gleichungssystem(checked: boolean) {
                 //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
                 newCell.style.padding = '5px';
                 newCell.style.margin = '0px';
+                if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
                 newCell.appendChild(newText);
+            }
+        }
+
+        for (let iZeile = 0; iZeile < 6; iZeile++) {
+
+            let lmi = el[draw_element].lm[iZeile]
+            if (lmi >= 0) {
+                for (let iSpalte = 0; iSpalte < 6; iSpalte++) {
+                    let lmj = el[draw_element].lm[iSpalte]
+                    if (lmj >= 0) {
+                        let cell = table.rows[+lmi+1].cells[+lmj+1]
+                        console.log("child", cell.innerText)
+                        cell.style.fontWeight = 'bold'
+                        cell.style.color ='blue'
+                    }
+                }
             }
         }
     }

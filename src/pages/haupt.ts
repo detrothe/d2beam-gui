@@ -36,7 +36,7 @@ import { addListener_filesave } from "./dateien";
 import { select_loadcase_changed, select_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik } from "./grafik";
 import { set_info, write } from "./utility";
 
-import { my_jspdf } from "./mypdf"
+import { my_jspdf } from "./mypdf";
 
 //import { init_contextmenu } from '../components/dr-tabelle';
 
@@ -145,22 +145,22 @@ const sleepNow = (delay: any) => new Promise((resolve) => setTimeout(resolve, de
 
 async function initTabellenLoop() {
   for (let i = 1; i <= 25; i++) {
-    await sleepNow(50)
-    if (document.readyState === 'complete') {
+    await sleepNow(50);
+    if (document.readyState === "complete") {
       init_tabellen();
       rechnen(1);
 
-      write(`document.readyState = complete after ${i * 50} msec`)
+      write(`document.readyState = complete after ${i * 50} msec`);
       break;
     }
-    console.log(`Hello #${i * 50}`)
+    console.log(`Hello #${i * 50}`);
   }
 }
 
 {
   //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
 
-  console.log("vor template")
+  console.log("vor template");
 
   const template = () => html`
     <style>
@@ -390,7 +390,7 @@ async function initTabellenLoop() {
         <p>
           Die Richtungen stimmen mit den Richtungen des zugehörigen gedrehten Lagerknotens überein.
           <br />
-          Es sind nur in den Tabellenzellen Werte einzugeben, für die definierte Verformungen gewünscht werden.<br>
+          Es sind nur in den Tabellenzellen Werte einzugeben, für die definierte Verformungen gewünscht werden.<br />
           Die Zahl 0 entspricht einer starren Lagerung!
         </p>
         <p>
@@ -692,7 +692,7 @@ async function initTabellenLoop() {
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-ergebnisse"
-        ><p><sl-button id="id_create_pdf"  @click="${create_pdf}">erstelle pdf-Datei</sl-button></p>
+        ><p><sl-button id="id_create_pdf" @click="${create_pdf}">erstelle pdf-Datei</sl-button></p>
         <b>&nbsp;Eingabeprotokoll</b>
         <div id="id_results"></div>
       </sl-tab-panel>
@@ -719,11 +719,13 @@ async function initTabellenLoop() {
         </table>
 
         <p>
-        <input type="checkbox" id ="id_glsystem_darstellen" >Gleichungssystem darstellen
-         <!--  @click="${gleichungssystem_darstellen}" -->
-    </p>
+          <input type="checkbox" id="id_glsystem_darstellen" />Gleichungssystem darstellen
+          <br /><br>
+          Zeige : <select id="id_element_darstellen" on></select>
+        </p>
 
-    <div id="id_gleichungssystem">Gleichungssystem</div>
+        <div id="id_gleichungssystem">Gleichungssystem</div>
+
         <!--
         <table id="querschnittwerte_table">
           <tbody>
@@ -885,18 +887,17 @@ async function initTabellenLoop() {
 
   document?.getElementById("id_button_copy_svg")?.addEventListener("click", copy_svg, false);
 
-  const checkbox = document.getElementById('id_glsystem_darstellen')
+  const checkbox = document.getElementById("id_glsystem_darstellen");
 
-  console.log("ttttttttttttttttttttttttttttttt checkbox", checkbox)
-  checkbox!.addEventListener('change', (event) => {
+  console.log("ttttttttttttttttttttttttttttttt checkbox", checkbox);
+  checkbox!.addEventListener("change", (event) => {
     // @ts-ignore
     if (event.currentTarget.checked) {
-      gleichungssystem_darstellen(true)
+      gleichungssystem_darstellen(true);
     } else {
-      gleichungssystem_darstellen(false)
+      gleichungssystem_darstellen(false);
     }
-  })
-
+  });
 
   // console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
   // console.log("rechnen", getComputedStyle(document?.getElementById("rechnen")!).width);
@@ -905,7 +906,7 @@ async function initTabellenLoop() {
   // console.log("ELEMENT", ELEMENT);
   // console.log("ELEMENT", getComputedStyle(ELEMENT!).width);
 
-  console.log("document.readyState", document.readyState)
+  console.log("document.readyState", document.readyState);
 
   // let time = 0
   // //while (document.readyState != 'complete') {
@@ -923,8 +924,6 @@ async function initTabellenLoop() {
 
   //rechnen(1);
 }
-
-
 
 //---------------------------------------------------------------------------------------------------------------
 
@@ -1537,6 +1536,6 @@ function create_pdf() {
 //---------------------------------------------------------------------------------------------------------------
 function gleichungssystem_darstellen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
-  console.log("in gleichungssystem_darstellen", check)
+  console.log("in gleichungssystem_darstellen", check);
   show_gleichungssystem(check);
 }
