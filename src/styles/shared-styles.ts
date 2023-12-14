@@ -12,8 +12,9 @@ export const styles = css`
   main {
     margin-top: 10px;
   }
-  .custom-icons sl-tree-item::part(expand-button) {
-    /* Disable the expand/collapse animation */
+
+   .custom-icons sl-tree-item::part(expand-button) {
+     /* Disable the expand/collapse animation */
     rotate: none;
   }
 `;

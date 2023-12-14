@@ -7,6 +7,7 @@ import "@shoelace-style/shoelace/dist/components/tab/tab.js";
 import "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 import "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import "@shoelace-style/shoelace/dist/components/tree/tree.js";
+import "@shoelace-style/shoelace/dist/components/tree-item/tree-item.js";
 import "@shoelace-style/shoelace/dist/components/icon/icon.js";
 import "@shoelace-style/shoelace/dist/components/radio-group/radio-group.js";
 import "@shoelace-style/shoelace/dist/components/radio-button/radio-button.js";
@@ -291,6 +292,7 @@ async function initTabellenLoop() {
           <sl-tree-item id="id_tree_LQ" expanded>
             Linear elastisch Querschnittswerte
           </sl-tree-item>
+
           <!--
           <sl-tree-item>
             Linear elastisch allgemein
@@ -299,6 +301,7 @@ async function initTabellenLoop() {
             <sl-tree-item>nix 3</sl-tree-item>
           </sl-tree-item>
           -->
+
         </sl-tree>
 
         <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt>
@@ -698,19 +701,19 @@ async function initTabellenLoop() {
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
-      <sl-tab-panel name="tab-pro"
-        ><b>Einstellungen D2beam Element</b><br /><br /><br />
+      <sl-tab-panel name="tab-pro">
+        <p><b>Einstellungen D2beam Element</b><br /><br /></p>
 
         <table>
           <tbody>
             <tr>
-              <td id="id_nteilungen">Teilungen Ausgabe:</td>
+              <td id="id_nteilungen" title="Stabteilungen für Ausgabe der Schnittgrößen">&nbsp;Teilungen Ausgabe:</td>
               <td>
                 <dr-button-pm id="id_button_nteilungen" nel="10" inputid="nteilungen"></dr-button-pm>
               </td>
             </tr>
             <tr>
-              <td id="id_niter">Anzahl Iterationen:</td>
+              <td id="id_niter" title="Anzahl Iterationen bei Th. II. Ordnung">&nbsp;Anzahl Iterationen:</td>
               <td>
                 <dr-button-pm id="id_button_niter" nel="5" inputid="niter"></dr-button-pm>
               </td>
@@ -718,14 +721,17 @@ async function initTabellenLoop() {
           </tbody>
         </table>
 
+        <hr />
         <p>
-          <input type="checkbox" id="id_glsystem_darstellen" />Gleichungssystem darstellen
-          <br /><br>
-          Zeige : <select id="id_element_darstellen" on ></select>
+          <!-- <input type="checkbox" id="id_glsystem_darstellen" />Gleichungssystem darstellen  -->
+          <sl-checkbox id="id_glsystem_darstellen">Gleichungssystem darstellen</sl-checkbox>
+          <br /><br />
+          &nbsp;&nbsp;Zeige :
+          <select id="id_element_darstellen" on></select>
         </p>
 
-        <div id="id_elementsteifigkeit">Elementstefigkeitsmatrix</div>
-        <div id="id_gleichungssystem">Gleichungssystem</div>
+        <div id="id_elementsteifigkeit"></div>
+        <div id="id_gleichungssystem"></div>
 
         <!--
         <table id="querschnittwerte_table">
@@ -891,7 +897,7 @@ async function initTabellenLoop() {
   const checkbox = document.getElementById("id_glsystem_darstellen");
 
   console.log("ttttttttttttttttttttttttttttttt checkbox", checkbox);
-  checkbox!.addEventListener("change", (event) => {
+  checkbox!.addEventListener("sl-change", (event) => {
     // @ts-ignore
     if (event.currentTarget.checked) {
       gleichungssystem_darstellen(true);
@@ -900,7 +906,6 @@ async function initTabellenLoop() {
     }
   });
 
-
   const elem_select = document.getElementById("id_element_darstellen");
 
   console.log("ttttttttttttttttttttttttttttttt elem_select", elem_select);
@@ -908,7 +913,6 @@ async function initTabellenLoop() {
     // @ts-ignore
     elem_select_changed();
   });
-
 
   // console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
   // console.log("rechnen", getComputedStyle(document?.getElementById("rechnen")!).width);
@@ -1131,6 +1135,8 @@ export function add_new_cross_section(qName: string, id: string) {
   quer_button.addEventListener("click", opendialog);
   quer_button.title = "click to modify";
   quer_button.id = id;
+  //quer_button.style.margin='0';
+  //quer_button.style.padding='0';
 
   const delete_button = document.createElement("button");
   //delete_button.textContent = "delete";
@@ -1139,9 +1145,19 @@ export function add_new_cross_section(qName: string, id: string) {
   delete_button.innerHTML = '<i class = "fa fa-trash"></i>';
   delete_button.addEventListener("click", contextmenu_querschnitt);
   delete_button.title = "delete Querschnitt";
+  //delete_button.style.margin='0';
+  //delete_button.style.padding='auto'
 
-  tag.appendChild(quer_button);
-  tag.appendChild(delete_button);
+  //  var br = document.createElement("br");
+  //  tag.appendChild(br);
+  var div = document.createElement("div");
+  div.style.display = "flex";
+  div.style.alignItems = "center";
+
+  div.appendChild(quer_button);
+  div.appendChild(delete_button);
+
+  tag.appendChild(div);
 
   const element = document.getElementById("id_tree_LQ");
   element?.appendChild(tag);
@@ -1174,7 +1190,7 @@ export async function contextmenu_querschnitt(ev: any) {
     question_Text: "Lösche Querschnitt: " + qname,
   });
   const loesche = await dialog.confirm();
-  console.log("loesche", loesche);
+  //console.log("loesche", loesche);
 
   if (loesche) {
     // window.confirm("Lösche Querschnitt: " + qname)
@@ -1184,9 +1200,10 @@ export async function contextmenu_querschnitt(ev: any) {
       del_querschnittSet(qname);
 
       let element = document.getElementById("id_tree_LQ") as any;
-      console.log("element", element.children);
-      console.log("el", el.parentNode, el.parentElement);
-      element?.removeChild(el.parentElement);
+      //console.log("element.children", element.children);
+      //console.log("el.parentNode", el.parentNode.parentNode);
+      //console.log("el.parentElement", el.parentElement.parentElement);
+      element?.removeChild(el.parentElement.parentElement);
     } else {
       const dialogAlert = new AlertDialog({
         trueButton_Text: "ok",
@@ -1554,8 +1571,8 @@ function gleichungssystem_darstellen(check: boolean) {
 //---------------------------------------------------------------------------------------------------------------
 function elem_select_changed() {
   //-------------------------------------------------------------------------------------------------------------
-  console.log("elem_select_changed")
+  console.log("elem_select_changed");
   const checkbox = document.getElementById("id_glsystem_darstellen") as HTMLInputElement;
-  console.log("checkbox", checkbox.checked)
+  console.log("checkbox", checkbox.checked);
   if (checkbox.checked) show_gleichungssystem(true);
 }

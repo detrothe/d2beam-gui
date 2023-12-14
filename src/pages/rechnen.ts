@@ -3169,6 +3169,60 @@ export function show_gleichungssystem(checked: boolean) {
         let tag = document.createElement("p");
         let text = document.createTextNode("Elementsteifigkeitsmatrix");
         tag.appendChild(text);
+        tag.innerHTML = "<b>Elementsteifigkeitsmatrix im lokalen Koordinatensystem, nur Anteil Th. I. Ordnung, für Element " + (+draw_element + 1) + "</b>"
+        eq_div?.appendChild(tag);
+
+        {
+            const table = document.createElement('table');
+            eq_div.appendChild(table);
+            table.id = 'element_table';
+
+            let thead = table.createTHead();
+            //console.log('thead', thead);
+            let row = thead.insertRow();
+            for (let i = 0; i <= 6; i++) {
+                if (table.tHead) {
+                    const th0 = table.tHead.appendChild(document.createElement('th'));
+                    if (i === 0) th0.innerHTML = '';
+                    else if ( i === 1) th0.innerHTML = 'u<sub>a</sub>';
+                    else if ( i === 2) th0.innerHTML = 'w<sub>a</sub>';
+                    else if ( i === 3) th0.innerHTML = 'φ<sub>a</sub>';
+                    else if ( i === 4) th0.innerHTML = 'u<sub>e</sub>';
+                    else if ( i === 5) th0.innerHTML = 'w<sub>e</sub>';
+                    else if ( i === 6) th0.innerHTML = 'φ<sub>e</sub>';
+                    th0.style.padding = '5px';
+                    th0.style.margin = '0px';
+                    th0.style.textAlign = 'center';
+                    //th0.setAttribute('title', 'Hilfe')
+                    row.appendChild(th0);
+                }
+            }
+
+            let tbody = table.createTBody();
+
+            for (let iZeile = 1; iZeile <= 6; iZeile++) {
+                let newRow = tbody.insertRow(-1);
+
+                for (let iSpalte = 0; iSpalte <= 6; iSpalte++) {
+                    let newCell, newText;
+
+                    newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
+                    if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
+                    else newText = document.createTextNode(myFormat(el[draw_element].estm[iZeile - 1][iSpalte - 1], 0, 2));
+                    newCell.style.textAlign = 'center';
+                    //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
+                    newCell.style.padding = '5px';
+                    newCell.style.margin = '0px';
+                    if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
+                    newCell.appendChild(newText);
+                }
+            }
+        }
+
+
+        tag = document.createElement("p");
+        text = document.createTextNode("Elementsteifigkeitsmatrix");
+        tag.appendChild(text);
         tag.innerHTML = "<b>Elementsteifigkeitsmatrix im globalen Koordinatensystem für Element " + (+draw_element + 1) + "</b>"
         eq_div?.appendChild(tag);
 
@@ -3235,8 +3289,8 @@ export function show_gleichungssystem(checked: boolean) {
 
         //                                                              Gesamtsteifigkeit
 
-        console.log("U_",U_)
-        console.log("R_",R_)
+        //console.log("U_",U_)
+        //console.log("R_",R_)
 
         tag = document.createElement("p");
         text = document.createTextNode("Gesamtsteifigkeitsmatrix");
