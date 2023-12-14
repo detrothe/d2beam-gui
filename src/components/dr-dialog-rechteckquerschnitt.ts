@@ -134,18 +134,18 @@ export class drRechteckQuerSchnitt extends LitElement {
     return css`
       input,
       label {
-        font-size: 1em;
-        width: 6em;
+        font-size: 1rem;
+        width: 6rem;
       }
 
       button,
       select {
-        font-size: 1em;
+        font-size: 1rem;
         border-radius: 3px;
         border-width: 1px;
         border-color: #303030;
         color: #444;
-        padding: 0.2em;
+        padding: 0.2rem;
       }
 
       button:active {
@@ -163,7 +163,7 @@ export class drRechteckQuerSchnitt extends LitElement {
       }
 
       .input_int {
-        width: 3.125em;
+        width: 3.125rem;
         margin: 0;
         padding: 1px;
         border-top: 1px solid #444;
@@ -207,11 +207,11 @@ export class drRechteckQuerSchnitt extends LitElement {
 
       /*Styling der geöffneten Popup-Box*/
       dialog[open] {
-        width: 30em;
+        width: 30rem;
         background: #fffbf0;
         border: thin solid #e7c157;
         border-radius: 6px;
-        margin: 4em auto;
+        margin: 4rem auto;
       }
 
       dialog::backdrop {

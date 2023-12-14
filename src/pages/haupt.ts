@@ -1566,6 +1566,8 @@ function gleichungssystem_darstellen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
   console.log("in gleichungssystem_darstellen", check);
   show_gleichungssystem(check);
+  //myFunction_get();
+  //myFunction_set();
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1575,4 +1577,7 @@ function elem_select_changed() {
   const checkbox = document.getElementById("id_glsystem_darstellen") as HTMLInputElement;
   console.log("checkbox", checkbox.checked);
   if (checkbox.checked) show_gleichungssystem(true);
+
+
+
 }

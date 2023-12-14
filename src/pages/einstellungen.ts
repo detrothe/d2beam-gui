@@ -56,6 +56,7 @@ function set_font_size() {
     my_fontsize = el.value
     //console.log("my_fontsize", my_fontsize)
     document.body.style.fontSize = my_fontsize
+    set_font_size_root(my_fontsize);
 
     let elements: any
     elements = document.getElementsByClassName("allow-touch-styles");
@@ -424,4 +425,30 @@ export function deleteLocalStorage() {
     window.localStorage.clear()
 }
 
+
+
+
+// Create a function for getting a variable value
+function get_font_size_root() {
+    // Get the root element
+    let r = document.querySelector(':root');
+    // Get the styles (properties and values) for the root
+    //@ts-ignore
+    var rs = getComputedStyle(r);
+    // Alert the value of the --blue variable
+    alert("The value of --blue is: " + rs.getPropertyValue('--fsize'));
+}
+
+// Create a function for setting a variable value
+function set_font_size_root(em: string) {
+    // Get the root element
+    let r = document.querySelector(':root');
+    //@ts-ignore
+    r.style.setProperty('--fsize', em);
+    //@ts-ignore
+    //r.style.setProperty('--sl-line-height-normal', '14px');
+}
+
+
 console.log("exit einstellungen")
+

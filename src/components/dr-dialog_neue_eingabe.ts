@@ -10,12 +10,12 @@ export class drDialogNeueEingabe extends LitElement {
       return css`
          input,
          label {
-            font-size: 1em;
-            width: 6em;
+            font-size: 1rem;
+            width: 6rem;
          }
 
          button {
-            font-size: 1em;
+            font-size: 1rem;
             border-radius: 3px;
             border-width: 1px;
             border-color: #303030;
@@ -38,7 +38,7 @@ export class drDialogNeueEingabe extends LitElement {
          }
 
          .input_int {
-            width: 3.125em;
+            width: 3.125rem;
             margin: 0;
             padding: 1px;
             border-top: 1px solid #444;
@@ -82,10 +82,10 @@ export class drDialogNeueEingabe extends LitElement {
 
          /* Styling der geöffneten Popup-Box */
          dialog[open] {
-            width: 30em;
+            width: 30rem;
             background: #fffbf0;
             border: thin solid #e7c157;
-            margin: 5em auto;
+            margin: 5rem auto;
          }
 
          dialog::backdrop {

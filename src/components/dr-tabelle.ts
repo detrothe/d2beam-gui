@@ -258,7 +258,7 @@ class DrTabelle extends HTMLElement {
                //el.style.backgroundColor = 'rgb(200,200,200)';
                el.style.border = 'none';
                el.style.borderWidth = '0px';
-               el.style.padding = '5px';
+               el.style.padding = '0.3125rem';   // 5px
                el.style.margin = '0px';
                el.style.borderRadius = '0px';
 
@@ -270,8 +270,8 @@ class DrTabelle extends HTMLElement {
                //el.addEventListener("change", function () { berechnungErforderlich(true); });
 
                newCell = newRow.insertCell();
-               if (this.colWidth.length === 0) newCell.style.width = '6em';
-               else newCell.style.width = this.colWidth[Math.min(iSpalte, this.colWidth.length - 1)] + 'em';
+               if (this.colWidth.length === 0) newCell.style.width = '6rem';
+               else newCell.style.width = this.colWidth[Math.min(iSpalte, this.colWidth.length - 1)] + 'rem';
 
                newCell.style.border = 'solid';
                newCell.style.borderWidth = '1px';
