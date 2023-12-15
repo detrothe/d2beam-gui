@@ -261,6 +261,7 @@ class DrTabelle extends HTMLElement {
                el.style.padding = '0.3125rem';   // 5px
                el.style.margin = '0px';
                el.style.borderRadius = '0px';
+               el.style.fontSize = '1rem';
 
                const str = id_table + '-' + iZeile + '-' + iSpalte;
                el.id = str;
@@ -282,6 +283,7 @@ class DrTabelle extends HTMLElement {
                const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
                newCell.id = str1;
                newCell.className = 'input_normal';
+               newCell.style.fontSize = '1rem';
 
                newCell.appendChild(el);
 
@@ -889,7 +891,7 @@ class DrTabelle extends HTMLElement {
          return;
       }
       else {
-         console.log("in sonst",ev.keycode)
+         console.log("in sonst", ev.keycode)
          if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
          if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad
          if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) { berechnungErforderlich(true); return; } // e .  ,

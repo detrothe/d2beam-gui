@@ -60,5 +60,6 @@ td.highlight {
   color: rgb(0, 0, 0);
   /*font-variant-numeric: oldstyle-nums tabular-nums;
   touch-action: none;*/
+  font-size: 1rem;
 }
 

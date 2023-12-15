@@ -329,6 +329,7 @@ export function readLocalStorage() {
             // set css variable
             const root = document.querySelector(':root') as HTMLElement;
             root?.style.setProperty('size-size', my_fontsize);
+            set_font_size_root(my_fontsize);
         }
     } else {
         const width = Math.min(document.documentElement.clientWidth, document.documentElement.clientHeight)

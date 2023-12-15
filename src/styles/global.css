@@ -245,7 +245,7 @@ select {
   --name-width: 60%;
   --slider-input-width: 1%;
   /* Zahleneingabe */
-  --slider-input-min-width: 30px;
+  --slider-input-min-width: 1.875rem;  /*30px */
   /*--background-color: #1f1f1f47;*/
   --title-background-color: #b3ae00;
   /* #8e9ca7;
@@ -255,7 +255,8 @@ select {
 }
 
 .lil-gui.allow-touch-styles {
-  --widget-height: 28px;
+  --widget-height: 1.75rem;  /* 28px */
+  --widget-width: 2rem;  /* ??? */
   --padding: 2px;
   --spacing: 2px;
   --font-size: 0.875rem;  /*14px*/
