@@ -156,20 +156,20 @@ export function myPanel() {
         window.dispatchEvent(new Event("draw_lagerkraefte_grafik"));
     });
 
-    gui.add(obj, 'show_umriss').name(umriss_anzeigen).onChange(() => {
-        window.dispatchEvent(new Event("draw_umriss_grafik"));
-    });
-
 
     // nested controllers
     const folder = gui.addFolder('Optionen');
+    folder.open(false);
+
+    folder.add(obj, 'show_umriss').name(umriss_anzeigen).onChange(() => {
+        window.dispatchEvent(new Event("draw_umriss_grafik"));
+    });
+
     folder.add(obj, 'Gesamtverformung').onChange(() => {
         window.dispatchEvent(new Event("draw_gesamtverformung_grafik"));
     });
-    //folder.add( obj, 'y' );
-    //folder.add( obj, 'z' );
 
-    gui.add(obj, 'Reset')
+    folder.add(obj, 'Reset')
 
     gui.close();
 
