@@ -249,7 +249,8 @@ select {
 
 .lil-gui {
   --width: 15rem;
-  --font-size: 0.875rem;
+  --widget-height: 1.75rem;
+  --font-size: 1rem;
   /*14px;*/
   --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
     sans-serif, Verdana, Arial, Helvetica, sans-serif;
@@ -257,12 +258,13 @@ select {
   --padding: 0.125em;
   --spacing: 4px;
   */
-  margin:0;
-  padding:0;
+  --margin:0;
+  --padding:0;
+  --spacing: 0.125rem;
   --name-width: 65%;
-  --slider-input-width: 35%;
+  --slider-input-width: 1.3rem;
   /* Zahleneingabe */
-  --slider-input-min-width: 30%;  /*30px */
+  --slider-input-min-width: 1.3rem; /*30px */
   /*--background-color: #1f1f1f47;*/
   --title-background-color: #b3ae00;
   /* #8e9ca7;
@@ -273,11 +275,14 @@ select {
 
 .lil-gui.allow-touch-styles {
   --widget-height: 1.75rem;  /* 28px */
-  --widget-width: 2rem;  /* ??? */
-  --padding: 2px;
-  --spacing: 2px;
-  --font-size: 0.875rem;  /*14px*/
+/*  --widget-width: 2rem;   */
+  --padding: 0px;
+  --spacing: 0.125rem;
+  --margin: 0;
+  --font-size: 1rem;  /*14px*/
   --input-font-size: 0.75rem; /*12px;*/
+  --slider-input-width: 1.4rem;
+  --slider-input-min-width: 1.4rem;
 }
 
 #id_einstellungen {
