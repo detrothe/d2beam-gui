@@ -259,10 +259,10 @@ select {
   */
   margin:0;
   padding:0;
-  --name-width: 60%;
-  --slider-input-width: 1%;
+  --name-width: 65%;
+  --slider-input-width: 35%;
   /* Zahleneingabe */
-  --slider-input-min-width: 1.875rem;  /*30px */
+  --slider-input-min-width: 30%;  /*30px */
   /*--background-color: #1f1f1f47;*/
   --title-background-color: #b3ae00;
   /* #8e9ca7;
