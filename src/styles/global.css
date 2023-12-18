@@ -131,7 +131,7 @@ select {
 }
 
 button:active {
-  background-color: rgb(251, 148, 23);
+  background-color:  hsl(198.4 93.2% 59.6%);
 }
 
 .output_table td,
