@@ -619,6 +619,7 @@ class DrTabelle extends HTMLElement {
                      //TODO newCell.style.backgroundColor = color_table_in; //'#b3ae00'  //'rgb(150,180, 180)';
                      newCell.style.padding = '0px';
                      newCell.style.margin = '0px';
+                     newCell.style.fontSize = '1rem';
                      newCell.appendChild(newText);
                   } else {
                      if (iZeile === 0) {
@@ -636,6 +637,7 @@ class DrTabelle extends HTMLElement {
                         newCell.style.padding = '5px';
                         newCell.style.margin = '0px';
                         newCell.style.textAlign = 'center';
+                        newCell.style.fontSize = '1rem';
                         //th0.setAttribute('title', 'Hilfe')
                         //row.appendChild(newCell);
 
@@ -652,6 +654,7 @@ class DrTabelle extends HTMLElement {
                         el.style.padding = '5px';
                         el.style.margin = '0px';
                         el.style.borderRadius = '0px';
+                        el.style.fontSize = '1rem';
                         const str = id_table + '-' + iZeile + '-' + iSpalte;
                         el.id = str;
                         el.className = 'input_normal';
@@ -671,6 +674,7 @@ class DrTabelle extends HTMLElement {
                         const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
                         newCell.id = str1;
                         newCell.className = 'input_normal';
+                        newCell.style.fontSize = '1rem';
 
                         newCell.appendChild(el);
                         // el.addEventListener("pointermove", POINTERMOVE);
@@ -704,6 +708,7 @@ class DrTabelle extends HTMLElement {
                   //TODO newCell.style.backgroundColor = color_table_in; //'#b3ae00'  //'rgb(150,180, 180)';
                   newCell.style.padding = '0px';
                   newCell.style.margin = '0px';
+                  newCell.style.fontSize = '1rem';
                   newCell.appendChild(newText);
                } else {
                   let el;
@@ -735,6 +740,7 @@ class DrTabelle extends HTMLElement {
                   el.style.padding = '5px';
                   el.style.margin = '0px';
                   el.style.borderRadius = '0px';
+                  el.style.fontSize = '1rem';
                   const str = id_table + '-' + iZeile + '-' + iSpalte;
                   el.id = str;
                   //el.className = 'input_normal';
@@ -761,6 +767,7 @@ class DrTabelle extends HTMLElement {
                   const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
                   newCell.id = str1;
                   newCell.className = 'input_normal';
+                  newCell.style.fontSize = '1rem';
 
                   newCell.appendChild(el);
                   el.addEventListener('pointerdown', this.POINTER_DOWN.bind(this));

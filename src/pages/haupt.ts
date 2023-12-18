@@ -189,8 +189,8 @@ async function initTabellenLoop() {
       <!--------------------------------------------------------------------------------------->
 
       <sl-tab-panel name="tab-haupt">
-        <div id="id_current_filename">&nbsp;&nbsp;aktueller Dateiname: ${currentFilename}<br /></div>
-
+        <p><div id="id_current_filename">&nbsp;&nbsp;aktueller Dateiname: ${currentFilename}<br /></div>
+        </p>
         <p>
           <button type="button" id="saveFile" style="min-width:8em;">
             Objektdaten speichern
@@ -255,7 +255,7 @@ async function initTabellenLoop() {
       <sl-tab-panel name="tab-grafik">
         <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0">
           <!-- width:100vw; ;width:300px;height:300px; -->
-          <div id="panel_gui" style="margin:0;padding:0;"></div>
+          <div id="panel_gui"></div>
           <div id="id_grafik_group">
             <div id="id_div_select_lc">
               <select id="id_select_loadcase" on></select>
@@ -1577,7 +1577,4 @@ function elem_select_changed() {
   const checkbox = document.getElementById("id_glsystem_darstellen") as HTMLInputElement;
   console.log("checkbox", checkbox.checked);
   if (checkbox.checked) show_gleichungssystem(true);
-
-
-
 }
