@@ -61,7 +61,7 @@ export function myPanel() {
     let umriss_anzeigen = 'Umriss anzeigen'
 
     // @ts-ignore
-    const gui = new GUI({ container: document.getElementById('panel_gui')}); // , touchStyles: true  , width: 230
+    const gui = new GUI({ container: document.getElementById('panel_gui'), touchStyles: false}); // , touchStyles: true  , width: 230
     //gui.domElement.classList.add('allow-touch-styles');
 
     gui.add(obj, 'Label').name(beschriftung).onChange(() => {
