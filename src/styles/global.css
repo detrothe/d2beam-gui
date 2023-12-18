@@ -264,6 +264,7 @@ select {
   --title-background-color: #b3ae00;
   --title-text-color: #fefffa;
   --folder-indent: 0.625rem;
+  --input-font-size: 0.75rem;
 }
 
 .lil-gui.allow-touch-styles {
