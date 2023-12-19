@@ -1337,10 +1337,10 @@ export function resizeTables() {
     el?.setAttribute("nzeilen", nelem);
 
 
-    el?.setAttribute("hide_column", String(9));
-    el?.setAttribute("hide_column", String(8));
-    el?.setAttribute("hide_column", String(6));
-    el?.setAttribute("hide_column", String(5));
+    // el?.setAttribute("hide_column", String(9));
+    // el?.setAttribute("hide_column", String(8));
+    // el?.setAttribute("hide_column", String(6));
+    // el?.setAttribute("hide_column", String(5));
 
   }
 

@@ -11,6 +11,8 @@ export class CTimoshenko_beam extends CElement {
 
     neqe = 6
 
+    neqeG = 6
+
     ielem = -1
     nknoten = 2
     emodul = 0.0
@@ -37,7 +39,7 @@ export class CTimoshenko_beam extends CElement {
     dx = 0.0
     dz = 0.0
     normalkraft = 0.0
-    lm: number[] = Array(6)
+    lm: number[] = Array(10).fill(-2)
     gelenk: number[] = [0, 0, 0, 0, 0, 0]
     nGelenke = 0
     cosinus = 0.0
@@ -50,10 +52,16 @@ export class CTimoshenko_beam extends CElement {
     estmL2: number[][] = []       // lokale Elementsteifigkeitsmatrix incl. TH.II.O., für Lastvektor von Knotenverformungen
     ksig: number[][] = []
     trans: number[][] = []
-    u: number[] = Array(6)        // Verformungen global
+
+    transU: number[][] = []       // Transformation von global nach lokal
+    transF: number[][] = []       // Transformation von lokal nach global
+    estiffG: number[][] = []      // globale Elementsteigkeitsmatrix mit Berücksichtigung der Gelenke
+
+
+    u: number[] = Array(10)        // Verformungen global
     edispL: number[] = Array(6)   // Verformungen lokal
     edisp0: number[] = Array(6).fill(0.0)   // Vorverformungen
-    F: number[] = Array(6)        // Stabendgrößen nach WGV im globalen Koordinatensystem
+    F: number[] = Array(10)        // Stabendgrößen nach WGV im globalen Koordinatensystem
     FL: number[] = Array(6)       // Stabendgrößen nach KGV im lokalen Koordinatensystem
     Fe: number[] = Array(6)       // Vorverformungen aus Schiefstellung
 
@@ -154,14 +162,23 @@ export class CTimoshenko_beam extends CElement {
         this.lm[5] = node[this.nod2].L[2];
 
         this.nGelenke = 0
+        let ind = 0;
         for (let i = 0; i < 6; i++) {
             this.gelenk[i] = element[ielem].gelenk[i]
             if (this.gelenk[i] > 0) {
                 this.nGelenke++;
-                this.lm[i] = neq;
+                if (i === 2 || i === 5) { this.lm[i] = neq; }
+                else {
+                    ind++;
+                    this.neqeG++;
+                    this.lm[ind + 5] = neq;
+                }
                 incr_neq();
             }
         }
+
+        console.log("neqeG ", this.neqeG)
+        console.log("lm() von Element ", ielem, this.lm)
 
         this.estm = Array.from(Array(6), () => new Array(6));
         this.estmL2 = Array.from(Array(6), () => new Array(6));
@@ -169,6 +186,84 @@ export class CTimoshenko_beam extends CElement {
         this.trans = Array.from(Array(6), () => new Array(6).fill(0.0));
         this.estiff = Array.from(Array(6), () => new Array(6));
         this.estiff_sig = Array.from(Array(6), () => new Array(6));
+
+        this.transU = Array.from(Array(6), () => new Array(this.neqeG).fill(0.0));
+        this.transF = Array.from(Array(this.neqeG), () => new Array(6).fill(0.0));
+        this.estiffG = Array.from(Array(this.neqeG), () => new Array(this.neqeG));
+
+        ind = 5;
+        if (this.gelenk[0] > 0) {
+            ind++;
+            this.transU[0][ind] = 1.0
+        } else {
+            this.transU[0][0] = this.cosinus
+            this.transU[0][1] = this.sinus
+        }
+        if (this.gelenk[1] > 0) {
+            ind++;
+            this.transU[1][ind] = 1.0
+        } else {
+            this.transU[1][0] = -this.sinus
+            this.transU[1][1] = this.cosinus
+        }
+        this.transU[2][2] = 1.0
+
+        if (this.gelenk[3] > 0) {
+            ind++;
+            this.transU[3][ind] = 1.0
+        } else {
+            this.transU[3][3] = this.cosinus
+            this.transU[3][4] = this.sinus
+        }
+        if (this.gelenk[4] > 0) {
+            ind++;
+            this.transU[4][ind] = 1.0
+        } else {
+            this.transU[4][3] = -this.sinus
+            this.transU[4][4] = this.cosinus
+        }
+        this.transU[5][5] = 1.0
+
+        for (let j = 0; j < 6; j++) {
+            console.log("this.transU", this.transU[j])
+        }
+
+        ind = 5;
+        if (this.gelenk[0] > 0) {
+            ind++;
+            this.transF[ind][0] = 1.0
+        } else {
+            this.transF[0][0] = this.cosinus
+            this.transF[1][0] = this.sinus
+        }
+        if (this.gelenk[1] > 0) {
+            ind++;
+            this.transF[ind][1] = 1.0
+        } else {
+            this.transF[0][1] = -this.sinus
+            this.transF[1][1] = this.cosinus
+        }
+        this.transF[2][2] = 1.0
+
+        if (this.gelenk[3] > 0) {
+            ind++;
+            this.transF[ind][3] = 1.0
+        } else {
+            this.transF[3][3] = this.cosinus
+            this.transF[4][3] = this.sinus
+        }
+        if (this.gelenk[4] > 0) {
+            ind++;
+            this.transF[ind][4] = 1.0
+        } else {
+            this.transF[3][4] = -this.sinus
+            this.transF[4][4] = this.cosinus
+        }
+        this.transF[5][5] = 1.0
+
+        for (let j = 0; j < this.neqeG; j++) {
+            console.log("this.transF", this.transF[j])
+        }
 
         // Drehung der Lager berücksichtigen
 
@@ -385,17 +480,18 @@ export class CTimoshenko_beam extends CElement {
 
         let sum: number
         let j: number, k: number
-        const help = Array.from(Array(6), () => new Array(6));
+        const help = Array.from(Array(6), () => new Array(this.neqeG));
 
         console.log("berechneElementsteifigkeitsmatrix", theorie, this.normalkraft)
 
         if (theorie === 0) {
 
             for (j = 0; j < 6; j++) {
-                for (k = 0; k < 6; k++) {
+                for (k = 0; k < this.neqeG; k++) {
                     sum = 0.0
                     for (let l = 0; l < 6; l++) {
-                        sum = sum + this.estm[j][l] * this.trans[l][k]
+                        // sum = sum + this.estm[j][l] * this.trans[l][k]
+                        sum = sum + this.estm[j][l] * this.transU[l][k]
 
                     }
                     help[j][k] = sum
@@ -433,16 +529,21 @@ export class CTimoshenko_beam extends CElement {
 
         }
 
-        for (j = 0; j < 6; j++) {
-            for (k = 0; k < 6; k++) {
+        for (j = 0; j < this.neqeG; j++) {
+            for (k = 0; k < this.neqeG; k++) {
                 sum = 0.0
                 for (let l = 0; l < 6; l++) {
-                    sum = sum + this.trans[l][j] * help[l][k]
+                    // sum = sum + this.trans[l][j] * help[l][k]
+                    sum = sum + this.transF[j][l] * help[l][k]
                 }
-                this.estiff[j][k] = sum
+                // this.estiff[j][k] = sum
+                this.estiffG[j][k] = sum
             }
         }
 
+        for (j = 0; j < this.neqeG; j++) {
+            console.log("this.estiffG", this.estiffG[j])
+        }
     }
 
     //---------------------------------------------------------------------------------------------
@@ -452,13 +553,14 @@ export class CTimoshenko_beam extends CElement {
         let lmi: number, lmj: number
 
 
-        for (i = 0; i < 6; i++) {
+        for (i = 0; i < this.neqeG; i++) {
             lmi = this.lm[i];
             if (lmi >= 0) {
-                for (j = 0; j < 6; j++) {
+                for (j = 0; j < this.neqeG; j++) {
                     lmj = this.lm[j];
                     if (lmj >= 0) {
-                        stiff[lmi][lmj] = stiff[lmi][lmj] + this.estiff[i][j];
+                        // stiff[lmi][lmj] = stiff[lmi][lmj] + this.estiff[i][j];
+                        stiff[lmi][lmj] = stiff[lmi][lmj] + this.estiffG[i][j];
                     }
                 }
             }
@@ -524,7 +626,7 @@ export class CTimoshenko_beam extends CElement {
         let ieq: number, i: number, j: number, k: number
         let sum: number
 
-        for (j = 0; j < 6; j++) {                           // Stabverformungen
+        for (j = 0; j < this.neqeG; j++) {                           // Stabverformungen
             ieq = this.lm[j]
             if (ieq === -1) {
                 this.u[j] = 0
@@ -533,13 +635,17 @@ export class CTimoshenko_beam extends CElement {
             }
         }
 
-        for (j = 0; j < 6; j++) {
+        console.log("this.u[]", this.u)
+
+        for (j = 0; j < this.neqeG; j++) {
             sum = 0.0
-            for (k = 0; k < 6; k++) {
-                sum += this.estiff[j][k] * this.u[k]
+            for (k = 0; k < this.neqeG; k++) {
+                sum += this.estiffG[j][k] * this.u[k]
             }
             this.F[j] = sum
         }
+
+        console.log("this.F[]", this.F)
 
         // normale Elementlasten hinzufügen
 
@@ -584,8 +690,8 @@ export class CTimoshenko_beam extends CElement {
 
         for (i = 0; i < 6; i++) {
             sum = 0.0
-            for (j = 0; j < 6; j++) {
-                sum += this.trans[i][j] * this.F[j]
+            for (j = 0; j < this.neqeG; j++) {
+                sum += this.transU[i][j] * this.F[j]
             }
             this.FL[i] = sum
         }
@@ -600,8 +706,8 @@ export class CTimoshenko_beam extends CElement {
 
         for (i = 0; i < 6; i++) { // Verformungen lokal
             sum = 0.0
-            for (j = 0; j < 6; j++) {
-                sum += this.trans[i][j] * this.u[j]
+            for (j = 0; j < this.neqeG; j++) {
+                sum += this.transU[i][j] * this.u[j]
             }
             this.edispL[i] = sum
         }
@@ -1111,7 +1217,7 @@ export class CTimoshenko_beam extends CElement {
 
         let Mx: number, Vx: number, Nx: number, ux: number, wx: number, phix: number, phixG: number
         let Nu: number[] = new Array(2), Nw: number[] = new Array(4), Nphi: number[] = new Array(4)
-        let u: number, wL: number = 0.0, wLG = 0.0, disp = 0.0, dwx = 0.0, wxG = 0.0, uxG = 0.0, dwxG=0.0
+        let u: number, wL: number = 0.0, wLG = 0.0, disp = 0.0, dwx = 0.0, wxG = 0.0, uxG = 0.0, dwxG = 0.0
         let Nm = 0.0
         let edisp: number[] = Array(6)
         let edispG: number[] = Array(6).fill(0.0)
@@ -1141,7 +1247,7 @@ export class CTimoshenko_beam extends CElement {
 
             wL = this.wL
             wLG = this.wL + this.edisp0[1]
-            Nm = (this.NL+this.NR)/2
+            Nm = (this.NL + this.NR) / 2
 
             for (let ieload = 0; ieload < neloads; ieload++) {
 
