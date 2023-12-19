@@ -335,6 +335,9 @@ class DrTabelle extends HTMLElement {
       } else if (name === 'option_deleted') {
          this.del_select_options(newValue);
 
+      } else if (name === 'hide_column') {
+         this.hide_column(newValue);
+
       }
       else if (oldValue === null) {                         // Initialisierungsphase
          //console.log('1', newValue.length);
@@ -404,7 +407,7 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    static get observedAttributes() {
       //------------------------------------------------------------------------------------------------------------
-      return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext', 'option_deleted'];
+      return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext', 'option_deleted', 'hide_column'];
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -418,6 +421,24 @@ class DrTabelle extends HTMLElement {
          console.log("IN T E S T #######################################")
       }
    */
+
+
+   //---------------------------------------------------------------------------------------------------------------
+   hide_column(iSpalte: number) {
+      //------------------------------------------------------------------------------------------------------------
+
+      console.info('in hide_column');
+
+      const tabelle = this.shadow.getElementById('mytable') as any;
+      const nZeilen = this.nZeilen;
+      const nSpalten = this.nSpalten;
+
+      for (let i = 0; i <= nZeilen; i++) {
+         tabelle.rows[i].cells[iSpalte].style.display = 'none'
+      }
+
+   }
+
    //---------------------------------------------------------------------------------------------------------------
    add_new_select_option() {
       //------------------------------------------------------------------------------------------------------------

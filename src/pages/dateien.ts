@@ -134,6 +134,11 @@ export function read_daten(eingabedaten: string) {
         }
     }
 
+    el?.setAttribute("hide_column", String(9));  // N und V Gelenke entfernen
+    el?.setAttribute("hide_column", String(8));
+    el?.setAttribute("hide_column", String(6));
+    el?.setAttribute("hide_column", String(5));
+
     el = document.getElementById('id_knotenlasten_tabelle') as HTMLElement;
     tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 

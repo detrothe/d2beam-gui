@@ -1411,6 +1411,10 @@ export function init_tabellen() {
     (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '1';
     (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '2';
 
+    el?.setAttribute("hide_column", String(9));
+    el?.setAttribute("hide_column", String(8));
+    el?.setAttribute("hide_column", String(6));
+    el?.setAttribute("hide_column", String(5));
 
     //(table.rows[2].cells[3].firstElementChild as HTMLInputElement).value = '2';
     //(table.rows[2].cells[4].firstElementChild as HTMLInputElement).value = '3';

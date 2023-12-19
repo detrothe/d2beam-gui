@@ -1335,6 +1335,13 @@ export function resizeTables() {
     const el = document.getElementById("id_element_tabelle");
     //console.log("EL: >>", el);
     el?.setAttribute("nzeilen", nelem);
+
+
+    el?.setAttribute("hide_column", String(9));
+    el?.setAttribute("hide_column", String(8));
+    el?.setAttribute("hide_column", String(6));
+    el?.setAttribute("hide_column", String(5));
+
   }
 
   {
