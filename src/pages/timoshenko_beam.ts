@@ -45,13 +45,13 @@ export class CTimoshenko_beam extends CElement {
     cosinus = 0.0
     sinus = 0.0
     alpha = 0.0
-    estiff: number[][] = []
+    //estiff: number[][] = []
     estiff_sig: number[][] = []
     estiff_sig_global: number[][] = []
     estm: number[][] = []
     estmL2: number[][] = []       // lokale Elementsteifigkeitsmatrix incl. TH.II.O., für Lastvektor von Knotenverformungen
     ksig: number[][] = []
-    trans: number[][] = []
+    //trans: number[][] = []
 
     transU: number[][] = []       // Transformation von global nach lokal
     transF: number[][] = []       // Transformation von lokal nach global
@@ -183,8 +183,8 @@ export class CTimoshenko_beam extends CElement {
         this.estm = Array.from(Array(6), () => new Array(6));
         this.estmL2 = Array.from(Array(6), () => new Array(6));
         this.ksig = Array.from(Array(6), () => new Array(6));
-        this.trans = Array.from(Array(6), () => new Array(6).fill(0.0));
-        this.estiff = Array.from(Array(6), () => new Array(6));
+        //this.trans = Array.from(Array(6), () => new Array(6).fill(0.0));
+        //this.estiff = Array.from(Array(6), () => new Array(6));
         this.estiff_sig = Array.from(Array(this.neqeG), () => new Array(this.neqeG));
 
         this.transU = Array.from(Array(6), () => new Array(this.neqeG).fill(0.0));
@@ -267,24 +267,24 @@ export class CTimoshenko_beam extends CElement {
 
         // Drehung der Lager berücksichtigen
 
-        let cophi = node[this.nod1].co
-        let siphi = node[this.nod1].si
+        // let cophi = node[this.nod1].co
+        // let siphi = node[this.nod1].si
 
-        this.trans[0][0] = this.cosinus * cophi - this.sinus * siphi    //this.cosinus
-        this.trans[0][1] = this.sinus * cophi + this.cosinus * siphi    //this.sinus
-        this.trans[1][0] = -this.trans[0][1]
-        this.trans[1][1] = this.trans[0][0]
-        this.trans[2][2] = 1.0
+        // this.trans[0][0] = this.cosinus * cophi - this.sinus * siphi    //this.cosinus
+        // this.trans[0][1] = this.sinus * cophi + this.cosinus * siphi    //this.sinus
+        // this.trans[1][0] = -this.trans[0][1]
+        // this.trans[1][1] = this.trans[0][0]
+        // this.trans[2][2] = 1.0
 
 
-        cophi = node[this.nod2].co
-        siphi = node[this.nod2].si
+        // cophi = node[this.nod2].co
+        // siphi = node[this.nod2].si
 
-        this.trans[3][3] = this.cosinus * cophi - this.sinus * siphi   //this.cosinus
-        this.trans[3][4] = this.sinus * cophi + this.cosinus * siphi   //this.sinus
-        this.trans[4][3] = -this.trans[3][4]
-        this.trans[4][4] = this.trans[3][3]
-        this.trans[5][5] = 1.0
+        // this.trans[3][3] = this.cosinus * cophi - this.sinus * siphi   //this.cosinus
+        // this.trans[3][4] = this.sinus * cophi + this.cosinus * siphi   //this.sinus
+        // this.trans[4][3] = -this.trans[3][4]
+        // this.trans[4][4] = this.trans[3][3]
+        // this.trans[5][5] = 1.0
 
 
         this.nTeilungen = nelTeilungen    // übernahme der Voreinstellung
