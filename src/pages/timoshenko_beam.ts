@@ -63,7 +63,7 @@ export class CTimoshenko_beam extends CElement {
     edisp0: number[] = Array(6).fill(0.0)   // Vorverformungen
     F: number[] = Array(10)        // Stabendgrößen nach WGV im globalen Koordinatensystem
     FL: number[] = Array(6)       // Stabendgrößen nach KGV im lokalen Koordinatensystem
-    Fe: number[] = Array(6)       // Vorverformungen aus Schiefstellung
+    Fe: number[] = Array(10)       // Vorverformungen aus Schiefstellung
 
     N_ = [] as number[][]         // Schnittgrößen entlang Stab, lokal
     V_ = [] as number[][]
@@ -185,7 +185,7 @@ export class CTimoshenko_beam extends CElement {
         this.ksig = Array.from(Array(6), () => new Array(6));
         this.trans = Array.from(Array(6), () => new Array(6).fill(0.0));
         this.estiff = Array.from(Array(6), () => new Array(6));
-        this.estiff_sig = Array.from(Array(6), () => new Array(6));
+        this.estiff_sig = Array.from(Array(this.neqeG), () => new Array(this.neqeG));
 
         this.transU = Array.from(Array(6), () => new Array(this.neqeG).fill(0.0));
         this.transF = Array.from(Array(this.neqeG), () => new Array(6).fill(0.0));
@@ -518,10 +518,11 @@ export class CTimoshenko_beam extends CElement {
             //for (j = 0; j < 6; j++) console.log('this.estmL2[]', this.estm[j]);
 
             for (j = 0; j < 6; j++) {
-                for (k = 0; k < 6; k++) {
+                for (k = 0; k < this.neqeG; k++) {
                     sum = 0.0
                     for (let l = 0; l < 6; l++) {
-                        sum = sum + this.estmL2[j][l] * this.trans[l][k]
+                        // sum = sum + this.estmL2[j][l] * this.trans[l][k]
+                        sum = sum + this.estmL2[j][l] * this.transU[l][k]
                     }
                     help[j][k] = sum
                 }
@@ -574,24 +575,25 @@ export class CTimoshenko_beam extends CElement {
 
         let sum: number
         let j: number, k: number
-        const help = Array.from(Array(6), () => new Array(6));
+        const help = Array.from(Array(6), () => new Array(this.neqeG));
 
         for (j = 0; j < 6; j++) {
-            for (k = 0; k < 6; k++) {
+            for (k = 0; k < this.neqeG; k++) {
                 sum = 0.0
                 for (let l = 0; l < 6; l++) {
-                    sum = sum + this.ksig[j][l] * this.trans[l][k]
+                    sum = sum + this.ksig[j][l] * this.transU[l][k]
                 }
                 help[j][k] = sum
             }
         }
 
 
-        for (j = 0; j < 6; j++) {
-            for (k = 0; k < 6; k++) {
+        for (j = 0; j < this.neqeG; j++) {
+            for (k = 0; k < this.neqeG; k++) {
                 sum = 0.0
                 for (let l = 0; l < 6; l++) {
-                    sum = sum + this.trans[l][j] * help[l][k]
+                    // sum = sum + this.trans[l][j] * help[l][k]
+                    sum = sum + this.transF[j][l] * help[l][k]
                 }
                 this.estiff_sig[j][k] = -sum * this.normalkraft
             }
@@ -606,10 +608,10 @@ export class CTimoshenko_beam extends CElement {
         let lmi: number, lmj: number
 
 
-        for (i = 0; i < 6; i++) {
+        for (i = 0; i < this.neqeG; i++) {
             lmi = this.lm[i];
             if (lmi >= 0) {
-                for (j = 0; j < 6; j++) {
+                for (j = 0; j < this.neqeG; j++) {
                     lmj = this.lm[j];
                     if (lmj >= 0) {
                         stiff[lmi][lmj] = stiff[lmi][lmj] + this.estiff_sig[i][j];
@@ -654,7 +656,7 @@ export class CTimoshenko_beam extends CElement {
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastf)) {
                     //if (eload[ieload].art !== 8) {
-                    for (i = 0; i < 6; i++) {
+                    for (i = 0; i < this.neqeG; i++) {
                         this.F[i] = this.F[i] + eload[ieload].el_r[i]
                     }
                     //}
@@ -669,7 +671,7 @@ export class CTimoshenko_beam extends CElement {
                     console.log("elem kombi index", index, kombiTabelle[iLastf - 1][index])
                     if (kombiTabelle[iLastf - 1][index] !== 0.0) {
 
-                        for (i = 0; i < 6; i++) {
+                        for (i = 0; i < this.neqeG; i++) {
                             this.F[i] = this.F[i] + eload[ieload].el_r[i] * kombiTabelle[iLastf - 1][index]
                         }
                     }
@@ -677,7 +679,7 @@ export class CTimoshenko_beam extends CElement {
             }
 
             if (iter > 0) {
-                for (i = 0; i < 6; i++) {                            // Schiefstellung
+                for (i = 0; i < this.neqeG; i++) {                            // Schiefstellung
                     this.F[i] = this.F[i] + this.Fe[i]
                 }
             }
@@ -953,8 +955,8 @@ export class CTimoshenko_beam extends CElement {
         else if (eload[ieload].art === 8) {              // Knotenverformungen
 
             if (eload[ieload].node0 === this.nod1) {
-                eload[ieload].dispL0[0] = this.trans[0][0] * eload[ieload].dispx0 + this.trans[0][1] * eload[ieload].dispz0
-                eload[ieload].dispL0[1] = this.trans[1][0] * eload[ieload].dispx0 + this.trans[1][1] * eload[ieload].dispz0
+                eload[ieload].dispL0[0] = this.transU[0][0] * eload[ieload].dispx0 + this.transU[0][1] * eload[ieload].dispz0
+                eload[ieload].dispL0[1] = this.transU[1][0] * eload[ieload].dispx0 + this.transU[1][1] * eload[ieload].dispz0
                 eload[ieload].dispL0[2] = eload[ieload].phi0
                 eload[ieload].dispL0[3] = 0.0
                 eload[ieload].dispL0[4] = 0.0
@@ -963,8 +965,8 @@ export class CTimoshenko_beam extends CElement {
                 eload[ieload].dispL0[0] = 0.0
                 eload[ieload].dispL0[1] = 0.0
                 eload[ieload].dispL0[2] = 0.0
-                eload[ieload].dispL0[3] = this.trans[3][3] * eload[ieload].dispx0 + this.trans[3][4] * eload[ieload].dispz0
-                eload[ieload].dispL0[4] = this.trans[4][3] * eload[ieload].dispx0 + this.trans[4][4] * eload[ieload].dispz0
+                eload[ieload].dispL0[3] = this.transU[3][3] * eload[ieload].dispx0 + this.transU[3][4] * eload[ieload].dispz0
+                eload[ieload].dispL0[4] = this.transU[4][3] * eload[ieload].dispx0 + this.transU[4][4] * eload[ieload].dispz0
                 eload[ieload].dispL0[5] = eload[ieload].phi0
 
             }
@@ -1000,12 +1002,21 @@ export class CTimoshenko_beam extends CElement {
             eload[ieload].re[5] = 0.0
         }
 
-        eload[ieload].el_r[0] = this.trans[0][0] * eload[ieload].re[0] + this.trans[1][0] * eload[ieload].re[1] // !! mit [T]^T multiplizieren
-        eload[ieload].el_r[1] = this.trans[0][1] * eload[ieload].re[0] + this.trans[1][1] * eload[ieload].re[1]
-        eload[ieload].el_r[2] = eload[ieload].re[2]
-        eload[ieload].el_r[3] = this.trans[3][3] * eload[ieload].re[3] + this.trans[4][3] * eload[ieload].re[4]
-        eload[ieload].el_r[4] = this.trans[3][4] * eload[ieload].re[3] + this.trans[4][4] * eload[ieload].re[4]
-        eload[ieload].el_r[5] = eload[ieload].re[5]
+        // eload[ieload].el_r[0] = this.trans[0][0] * eload[ieload].re[0] + this.trans[1][0] * eload[ieload].re[1] // !! mit [T]^T multiplizieren
+        // eload[ieload].el_r[1] = this.trans[0][1] * eload[ieload].re[0] + this.trans[1][1] * eload[ieload].re[1]
+        // eload[ieload].el_r[2] = eload[ieload].re[2]
+        // eload[ieload].el_r[3] = this.trans[3][3] * eload[ieload].re[3] + this.trans[4][3] * eload[ieload].re[4]
+        // eload[ieload].el_r[4] = this.trans[3][4] * eload[ieload].re[3] + this.trans[4][4] * eload[ieload].re[4]
+        // eload[ieload].el_r[5] = eload[ieload].re[5]
+
+
+        for (let j = 0; j < this.neqeG; j++) {
+            let sum = 0.0
+            for (let k = 0; k < 6; k++) {
+                sum += this.transF[j][k] * eload[ieload].re[k]
+            }
+            eload[ieload].el_r[j] = sum
+        }
 
         console.log("elementload global ", eload[ieload].el_r)
 
@@ -1017,10 +1028,10 @@ export class CTimoshenko_beam extends CElement {
         let ieq: number, i: number, j: number, k: number
         let sum: number
 
-        let dispL = Array(6), dispG = Array(6), FeL = Array(6)
+        let dispL = Array(6), dispG = Array(10), FeL = Array(6)
         let v0 = Array(6).fill(0.0)
 
-        for (j = 0; j < 6; j++) {                           // Stabverformungen
+        for (j = 0; j < this.neqeG; j++) {                           // Stabverformungen
             ieq = this.lm[j]
             if (ieq === -1) {
                 dispG[j] = 0
@@ -1033,8 +1044,8 @@ export class CTimoshenko_beam extends CElement {
 
         for (i = 0; i < 6; i++) {
             sum = 0.0
-            for (j = 0; j < 6; j++) {
-                sum += this.trans[i][j] * dispG[j]
+            for (j = 0; j < this.neqeG; j++) {
+                sum += this.transU[i][j] * dispG[j]
             }
             this.edisp0[i] = sum
         }
@@ -1077,10 +1088,11 @@ export class CTimoshenko_beam extends CElement {
 
 
 
-        for (i = 0; i < 6; i++) {
+        for (i = 0; i < this.neqeG; i++) {
             sum = 0.0
             for (j = 0; j < 6; j++) {
-                sum += this.trans[j][i] * FeL[j]
+                //sum += this.trans[j][i] * FeL[j]
+                sum += this.transF[i][j] * FeL[j]
             }
             this.Fe[i] = Fe[i] = sum          // global
         }
@@ -1133,23 +1145,23 @@ export class CTimoshenko_beam extends CElement {
     //---------------------------------------------------------------------------------------------
     get_edispL(edispL: number[], iLastfall: number) {
 
-        let edisp: number[] = new Array(6)
+        let edisp: number[] = new Array(10)
 
 
-        for (let j = 0; j < 6; j++) {
+        for (let j = 0; j < this.neqeG; j++) {
             let ieq = this.lm[j]
-            if (ieq === -1) {
-                edisp[j] = 0.0
-            } else {
+            if (ieq >= 0) {
                 edisp[j] = u_lf[ieq][iLastfall]              // in m, rad
+            } else {
+                edisp[j] = 0.0
             }
         }
         console.log("disp", edisp)
 
         for (let i = 0; i < 6; i++) {
             let sum = 0.0
-            for (let j = 0; j < 6; j++) {
-                sum += this.trans[i][j] * edisp[j]
+            for (let j = 0; j < this.neqeG; j++) {
+                sum += this.transU[i][j] * edisp[j]
             }
             edispL[i] = sum
         }
@@ -1160,23 +1172,23 @@ export class CTimoshenko_beam extends CElement {
     //---------------------------------------------------------------------------------------------
     get_edispL_schiefstellung(edispL: number[], iKomb: number) {
 
-        let edisp: number[] = new Array(6)
+        let edisp: number[] = new Array(10)
 
 
-        for (let j = 0; j < 6; j++) {
+        for (let j = 0; j < this.neqeG; j++) {
             let ieq = this.lm[j]
-            if (ieq === -1) {
-                edisp[j] = 0.0
-            } else {
+            if (ieq >= 0) {
                 edisp[j] = u0_komb[ieq][iKomb]
+            } else {
+                edisp[j] = 0.0
             }
         }
         console.log("disp", edisp)
 
         for (let i = 0; i < 6; i++) {
             let sum = 0.0
-            for (let j = 0; j < 6; j++) {
-                sum += this.trans[i][j] * edisp[j]
+            for (let j = 0; j < this.neqeG; j++) {
+                sum += this.transU[i][j] * edisp[j]
             }
             edispL[i] = sum
         }
@@ -1186,23 +1198,23 @@ export class CTimoshenko_beam extends CElement {
     //---------------------------------------------------------------------------------------------
     get_edispL_eigenform(edispL: number[], iKomb: number, ieigv: number) {
 
-        let edisp: number[] = new Array(6)
+        let edisp: number[] = new Array(10)
 
 
-        for (let j = 0; j < 6; j++) {
+        for (let j = 0; j < this.neqeG; j++) {
             let ieq = this.lm[j]
-            if (ieq === -1) {
-                edisp[j] = 0.0
-            } else {
+            if (ieq >= 0) {
                 edisp[j] = eigenform_container_u[iKomb - 1]._(ieq, ieigv)
+            } else {
+                edisp[j] = 0.0
             }
         }
         console.log("eigen, disp", edisp)
 
         for (let i = 0; i < 6; i++) {
             let sum = 0.0
-            for (let j = 0; j < 6; j++) {
-                sum += this.trans[i][j] * edisp[j]
+            for (let j = 0; j < this.neqeG; j++) {
+                sum += this.transU[i][j] * edisp[j]
             }
             edispL[i] = sum
         }

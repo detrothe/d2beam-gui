@@ -263,7 +263,7 @@ class TElLoads {
     CphiM: number = 0.0                 // Verdrehung phi infolge M beidseitig eingespannter Balken
 
     re: number[] = Array(6)             // Elementlastvektor lokal
-    el_r: number[] = Array(6)           // Elementlastvektor im globalen Koordinatensystem
+    el_r: number[] = Array(10)          // Elementlastvektor im globalen Koordinatensystem, enthält Gelenke
 }
 
 
@@ -1806,7 +1806,7 @@ function calculate() {
 
                 for (let ieload = 0; ieload < neloads; ieload++) {
                     if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastfall)) {
-                        for (j = 0; j < 6; j++) {
+                        for (j = 0; j < el[ielem].neqeG; j++) {
                             lmj = el[ielem].lm[j]
                             if (lmj >= 0) {
                                 R[lmj] = R[lmj] - eload[ieload].el_r[j]
@@ -2111,7 +2111,7 @@ function calculate() {
 
                                 if (eload[ieload].art === 8) el[ielem].berechneElementlasten(ieload)
 
-                                for (j = 0; j < el[ielem].neqe; j++) {
+                                for (j = 0; j < el[ielem].neqeG; j++) {
                                     lmj = el[ielem].lm[j]
                                     if (lmj >= 0) {
                                         R[lmj] = R[lmj] - eload[ieload].el_r[j] * kombiTabelle[iKomb - 1][index]
@@ -2128,14 +2128,14 @@ function calculate() {
 
                 if (iter > 0) {
 
-                    let pel = new Array(6).fill(0.0)
+                    let pel = new Array(10).fill(0.0)
 
                     for (ielem = 0; ielem < nelem; ielem++) {
 
                         el[ielem].berechneElementlasten_Vorverformung(pel, pg)
                         console.log("P E L", ielem, pel)
 
-                        for (j = 0; j < 6; j++) {
+                        for (j = 0; j < el[ielem].neqeG; j++) {
                             lmj = el[ielem].lm[j]
                             if (lmj >= 0) {
                                 R[lmj] = R[lmj] - pel[j]
@@ -3238,7 +3238,7 @@ export function show_gleichungssystem(checked: boolean) {
             let thead = table.createTHead();
             //console.log('thead', thead);
             let row = thead.insertRow();
-            for (let i = 0; i <= 6; i++) {
+            for (let i = 0; i <= el[draw_element].neqeG; i++) {
                 if (table.tHead) {
                     const th0 = table.tHead.appendChild(document.createElement('th'));
                     if (i === 0) th0.innerHTML = 'lm';
@@ -3255,15 +3255,15 @@ export function show_gleichungssystem(checked: boolean) {
             let tbody = table.createTBody();
             //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
 
-            for (let iZeile = 1; iZeile <= 6; iZeile++) {
+            for (let iZeile = 1; iZeile <= el[draw_element].neqeG; iZeile++) {
                 let newRow = tbody.insertRow(-1);
 
-                for (let iSpalte = 0; iSpalte <= 6; iSpalte++) {
+                for (let iSpalte = 0; iSpalte <= el[draw_element].neqeG; iSpalte++) {
                     let newCell, newText;
 
                     newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
                     if (iSpalte === 0) newText = document.createTextNode(String(+el[draw_element].lm[iZeile - 1] + 1));
-                    else newText = document.createTextNode(myFormat(el[draw_element].estiff[iZeile - 1][iSpalte - 1], 0, 2));
+                    else newText = document.createTextNode(myFormat(el[draw_element].estiffG[iZeile - 1][iSpalte - 1], 0, 2));
                     newCell.style.textAlign = 'center';
                     //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
                     newCell.style.padding = '5px';
@@ -3273,11 +3273,11 @@ export function show_gleichungssystem(checked: boolean) {
                 }
             }
 
-            for (let iZeile = 0; iZeile < 6; iZeile++) {
+            for (let iZeile = 0; iZeile < el[draw_element].neqeG; iZeile++) {
 
                 let lmi = el[draw_element].lm[iZeile]
                 if (lmi >= 0) {
-                    for (let iSpalte = 0; iSpalte < 6; iSpalte++) {
+                    for (let iSpalte = 0; iSpalte < el[draw_element].neqeG; iSpalte++) {
                         let lmj = el[draw_element].lm[iSpalte]
                         if (lmj >= 0) {
                             let cell = table.rows[+iZeile + 1].cells[+iSpalte + 1]
@@ -3349,11 +3349,11 @@ export function show_gleichungssystem(checked: boolean) {
                 }
             }
 
-            for (let iZeile = 0; iZeile < 6; iZeile++) {
+            for (let iZeile = 0; iZeile < el[draw_element].neqeG; iZeile++) {
 
                 let lmi = el[draw_element].lm[iZeile]
                 if (lmi >= 0) {
-                    for (let iSpalte = 0; iSpalte < 6; iSpalte++) {
+                    for (let iSpalte = 0; iSpalte < el[draw_element].neqeG; iSpalte++) {
                         let lmj = el[draw_element].lm[iSpalte]
                         if (lmj >= 0) {
                             let cell = table.rows[+lmi + 1].cells[+lmj + 1]
