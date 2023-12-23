@@ -991,11 +991,11 @@ export function drawsystem() {
         }
 
         scalefactor *= scaleFactor_panel
-        //console.log("SCALEFACTOR", 1. / scalefactor)
+        console.log("SCALEFACTOR", 1./scalefactor)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if (scalefactor === Infinity || scalefactor > 1.e12) break;
+            if (scalefactor === Infinity || scalefactor > 1.e10) break;
 
             const nelTeilungen = element[ielem].nTeilungen
             let sg: number[] = new Array(nelTeilungen)

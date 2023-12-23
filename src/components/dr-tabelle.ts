@@ -1184,7 +1184,7 @@ class DrTabelle extends HTMLElement {
    //------------------------------------------------------------------------------------------------
    POINTER_MOVE(ev: any) {
       //--------------------------------------------------------------------------------------------
-      console.log('POINTER MOVE', ev.target.id, this.selectionMode);
+      //console.log('POINTER MOVE', ev.target.id, this.selectionMode);
       ev.preventDefault();
 
       if (!this.selectionMode) return;
