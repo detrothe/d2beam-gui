@@ -191,79 +191,113 @@ export class CTimoshenko_beam extends CElement {
         this.transF = Array.from(Array(this.neqeG), () => new Array(6).fill(0.0));
         this.estiffG = Array.from(Array(this.neqeG), () => new Array(this.neqeG));
 
+        let cophi = node[this.nod1].co
+        let siphi = node[this.nod1].si
+
+        let t00 = this.cosinus * cophi - this.sinus * siphi    //this.cosinus
+        let t01 = this.sinus * cophi + this.cosinus * siphi    //this.sinus
+        let t10 = -t01
+        let t11 = t00
+
         ind = 5;
         if (this.gelenk[0] > 0) {
             ind++;
             this.transU[0][ind] = 1.0
+            this.transF[ind][0] = 1.0
         } else {
-            this.transU[0][0] = this.cosinus
-            this.transU[0][1] = this.sinus
+            this.transU[0][0] = t00 // this.cosinus
+            this.transU[0][1] = t01 // this.sinus
+            this.transF[0][0] = t00 // this.cosinus
+            this.transF[1][0] = t01 // this.sinus
         }
         if (this.gelenk[1] > 0) {
             ind++;
             this.transU[1][ind] = 1.0
+            this.transF[ind][1] = 1.0
         } else {
-            this.transU[1][0] = -this.sinus
-            this.transU[1][1] = this.cosinus
+            this.transU[1][0] = t10  // -this.sinus
+            this.transU[1][1] = t11  // this.cosinus
+            this.transF[0][1] = t10  // -this.sinus
+            this.transF[1][1] = t11  // this.cosinus
         }
         this.transU[2][2] = 1.0
+        this.transF[2][2] = 1.0
+
+
+        cophi = node[this.nod2].co
+        siphi = node[this.nod2].si
+
+        let t33 = this.cosinus * cophi - this.sinus * siphi    //this.cosinus
+        let t34 = this.sinus * cophi + this.cosinus * siphi    //this.sinus
+        let t43 = -t34
+        let t44 = t33
+
 
         if (this.gelenk[3] > 0) {
             ind++;
             this.transU[3][ind] = 1.0
+            this.transF[ind][3] = 1.0
         } else {
-            this.transU[3][3] = this.cosinus
-            this.transU[3][4] = this.sinus
+            this.transU[3][3] = t33  // this.cosinus
+            this.transU[3][4] = t34  // this.sinus
+            this.transF[3][3] = t33  // this.cosinus
+            this.transF[4][3] = t34  // this.sinus
         }
         if (this.gelenk[4] > 0) {
             ind++;
             this.transU[4][ind] = 1.0
+            this.transF[ind][4] = 1.0
+
         } else {
-            this.transU[4][3] = -this.sinus
-            this.transU[4][4] = this.cosinus
+            this.transU[4][3] = t43  // -this.sinus
+            this.transU[4][4] = t44  // this.cosinus
+            this.transF[3][4] = t43  // -this.sinus
+            this.transF[4][4] = t44  // this.cosinus
+
         }
         this.transU[5][5] = 1.0
+        this.transF[5][5] = 1.0
 
         for (let j = 0; j < 6; j++) {
             console.log("this.transU", this.transU[j])
         }
 
-        ind = 5;
-        if (this.gelenk[0] > 0) {
-            ind++;
-            this.transF[ind][0] = 1.0
-        } else {
-            this.transF[0][0] = this.cosinus
-            this.transF[1][0] = this.sinus
-        }
-        if (this.gelenk[1] > 0) {
-            ind++;
-            this.transF[ind][1] = 1.0
-        } else {
-            this.transF[0][1] = -this.sinus
-            this.transF[1][1] = this.cosinus
-        }
-        this.transF[2][2] = 1.0
+        // ind = 5;
+        // if (this.gelenk[0] > 0) {
+        //     ind++;
+        //     this.transF[ind][0] = 1.0
+        // } else {
+        //     this.transF[0][0] = this.cosinus
+        //     this.transF[1][0] = this.sinus
+        // }
+        // if (this.gelenk[1] > 0) {
+        //     ind++;
+        //     this.transF[ind][1] = 1.0
+        // } else {
+        //     this.transF[0][1] = -this.sinus
+        //     this.transF[1][1] = this.cosinus
+        // }
+        // this.transF[2][2] = 1.0
 
-        if (this.gelenk[3] > 0) {
-            ind++;
-            this.transF[ind][3] = 1.0
-        } else {
-            this.transF[3][3] = this.cosinus
-            this.transF[4][3] = this.sinus
-        }
-        if (this.gelenk[4] > 0) {
-            ind++;
-            this.transF[ind][4] = 1.0
-        } else {
-            this.transF[3][4] = -this.sinus
-            this.transF[4][4] = this.cosinus
-        }
-        this.transF[5][5] = 1.0
+        // if (this.gelenk[3] > 0) {
+        //     ind++;
+        //     this.transF[ind][3] = 1.0
+        // } else {
+        //     this.transF[3][3] = this.cosinus
+        //     this.transF[4][3] = this.sinus
+        // }
+        // if (this.gelenk[4] > 0) {
+        //     ind++;
+        //     this.transF[ind][4] = 1.0
+        // } else {
+        //     this.transF[3][4] = -this.sinus
+        //     this.transF[4][4] = this.cosinus
+        // }
+        // this.transF[5][5] = 1.0
 
-        for (let j = 0; j < this.neqeG; j++) {
-            console.log("this.transF", this.transF[j])
-        }
+        // for (let j = 0; j < this.neqeG; j++) {
+        //     console.log("this.transF", this.transF[j])
+        // }
 
         // Drehung der Lager berücksichtigen
 

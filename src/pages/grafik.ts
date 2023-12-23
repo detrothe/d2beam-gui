@@ -1110,13 +1110,13 @@ export function drawsystem() {
                             zn_min = zz2
                         }
                     } else {
-                        if ((sgR > maxValuePos) && (Math.abs(sgR) > Math.abs(valueLeftPos))) {
+                        if ((sgR > maxValuePos) && (sgR > valueLeftPos)) {  // (Math.abs(sgR) > Math.abs(valueLeftPos))
                             foundPos = true
                             maxValuePos = sgR
                             x_max = xx2
                             z_max = zz2
                         }
-                        if ((sgR < maxValueNeg) && (Math.abs(sgR) < Math.abs(valueLeftNeg))) {
+                        if ((sgR < maxValueNeg) && (sgR < valueLeftNeg)) {   //(Math.abs(sgR) < Math.abs(valueLeftNeg))
                             console.log("maxValueNeg", sgR, maxValueNeg, valueLeftNeg)
                             foundNeg = true
                             maxValueNeg = sgR
@@ -1142,7 +1142,7 @@ export function drawsystem() {
 
             if (show_labels) {
 
-                console.log("show_labels", foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
+                console.log("show_labels", ielem, foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
                 let zp: number
                 if (foundPos && (Math.abs(maxValuePos) > 0.00001) && (maxValuePos > valueRightPos)) {
                     const str = myFormat(Math.abs(maxValuePos), 1, 2) + unit
