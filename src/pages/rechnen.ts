@@ -863,7 +863,7 @@ function read_element_loads() {
     el = document.getElementById('id_button_nspannschloesser') as any;
     nspannschloesser = Number(el.nel);
 
-    ntotalEloads = neloads = nstreckenlasten + neinzellasten + ntemperaturlasten + nvorspannungen + nspannschloesser
+    ntotalEloads = neloads = nstreckenlasten + neinzellasten + ntemperaturlasten + nvorspannungen + nspannschloesser + nelem_Balken
 
     console.log("NELOADS", neloads, nstreckenlasten, neinzellasten, ntemperaturlasten, nvorspannungen, nspannschloesser)
 
@@ -872,6 +872,17 @@ function read_element_loads() {
         eload.push(new TElLoads())
     }
     let ieload = 0
+
+    // Eigengewicht
+
+    for (let ielem = 0; ielem < nelem_Balken; ielem++) {
+        eload[ieload].element = ielem
+        eload[ieload].lf = 1
+        eload[ieload].art = 1
+        eload[ieload].pL = 0.0   // richtige Werte werden in initialisiereElementdaten() gesetzt
+        eload[ieload].pR = 0.0
+        ieload++;
+    }
 
     // Streckenlasten
 
@@ -3188,12 +3199,12 @@ export function show_gleichungssystem(checked: boolean) {
                 if (table.tHead) {
                     const th0 = table.tHead.appendChild(document.createElement('th'));
                     if (i === 0) th0.innerHTML = '';
-                    else if ( i === 1) th0.innerHTML = 'u<sub>a</sub>';
-                    else if ( i === 2) th0.innerHTML = 'w<sub>a</sub>';
-                    else if ( i === 3) th0.innerHTML = 'φ<sub>a</sub>';
-                    else if ( i === 4) th0.innerHTML = 'u<sub>e</sub>';
-                    else if ( i === 5) th0.innerHTML = 'w<sub>e</sub>';
-                    else if ( i === 6) th0.innerHTML = 'φ<sub>e</sub>';
+                    else if (i === 1) th0.innerHTML = 'u<sub>a</sub>';
+                    else if (i === 2) th0.innerHTML = 'w<sub>a</sub>';
+                    else if (i === 3) th0.innerHTML = 'φ<sub>a</sub>';
+                    else if (i === 4) th0.innerHTML = 'u<sub>e</sub>';
+                    else if (i === 5) th0.innerHTML = 'w<sub>e</sub>';
+                    else if (i === 6) th0.innerHTML = 'φ<sub>e</sub>';
                     th0.style.padding = '5px';
                     th0.style.margin = '0px';
                     th0.style.textAlign = 'center';

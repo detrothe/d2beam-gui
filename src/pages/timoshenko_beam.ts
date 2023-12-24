@@ -20,6 +20,7 @@ export class CTimoshenko_beam extends CElement {
     querdehnzahl = 0.0
     schubfaktor = 0.0
     wichte = 0.0
+    stabgewicht = 0.0   // Area * Wichte
     ks = 0.0
     Iy = 0.0
     area = 0.0
@@ -59,16 +60,16 @@ export class CTimoshenko_beam extends CElement {
 
 
     u: number[] = Array(10)        // Verformungen global
-    edispL: number[] = Array(6)   // Verformungen lokal
+    edispL: number[] = Array(6)    // Verformungen lokal
     edisp0: number[] = Array(6).fill(0.0)   // Vorverformungen
     F: number[] = Array(10)        // Stabendgrößen nach WGV im globalen Koordinatensystem
-    FL: number[] = Array(6)       // Stabendgrößen nach KGV im lokalen Koordinatensystem
+    FL: number[] = Array(6)        // Stabendgrößen nach KGV im lokalen Koordinatensystem
     Fe: number[] = Array(10)       // Vorverformungen aus Schiefstellung
 
-    N_ = [] as number[][]         // Schnittgrößen entlang Stab, lokal
+    N_ = [] as number[][]          // Schnittgrößen entlang Stab, lokal
     V_ = [] as number[][]
     M_ = [] as number[][]
-    u_ = [] as number[][]         // Verformungen entlang Stab, lokale Richtung
+    u_ = [] as number[][]          // Verformungen entlang Stab, lokale Richtung
     w_ = [] as number[][]
     phi_ = [] as number[][]
 
@@ -150,7 +151,7 @@ export class CTimoshenko_beam extends CElement {
         this.sinus = this.dz / this.sl
 
         this.alpha = Math.atan2(this.dz, this.dx) // *180.0/Math.PI
-        console.log("sl=", ielem, this.sl, this.alpha)
+        //console.log("sl=", ielem, this.sl, this.alpha)
 
         this.normalkraft = 0.0
 
@@ -399,7 +400,16 @@ export class CTimoshenko_beam extends CElement {
         }
 
         this.berechneLokaleElementsteifigkeitmatrix()
+
+        // Eigengewicht
+        this.stabgewicht = this.area * this.wichte
+        eload[ielem].pL = this.stabgewicht
+        eload[ielem].pR = this.stabgewicht
+
+
     }
+
+
 
     //---------------------------------------------------------------------------------------------
     berechneLokaleElementsteifigkeitmatrix() {
