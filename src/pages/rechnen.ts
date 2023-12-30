@@ -181,6 +181,8 @@ class TElement {
     z1: number = 0.0
     z2: number = 0.0
     sl: number = 0.0                    // Stablänge
+    aL= 0.0                             // starres Stabende limks (Stabanfang)
+    aR = 0.0                            // starres Stabende rechts
     nod = [0, 0, 0, 0]                  // globale Knotennummer der Stabenden
     lm: number[] = []
     gelenk = [0, 0, 0, 0, 0, 0]
@@ -1175,6 +1177,8 @@ function read_elements() {
             else if (ispalte > 4 && ispalte <= 10) {
                 element[izeile - 1].gelenk[ispalte - 5] = Number(testNumber(wert, izeile, ispalte, shad));
             }
+            else if (ispalte === 11) element[izeile - 1].aL = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 12) element[izeile - 1].aR = Number(testNumber(wert, izeile, ispalte, shad));
         }
         console.log("element", izeile, element[izeile - 1].qname, element[izeile - 1].nod[0], element[izeile - 1].nod[1])
 

@@ -535,10 +535,23 @@ export function drawsystem() {
             let umriss_x: number[] = new Array(2 * nelTeilungen)
             let umriss_z: number[] = new Array(2 * nelTeilungen)
 
-            x1 = Math.round(tr.xPix(element[ielem].x1));
-            z1 = Math.round(tr.zPix(element[ielem].z1));
-            x2 = Math.round(tr.xPix(element[ielem].x2));
-            z2 = Math.round(tr.zPix(element[ielem].z2));
+
+            let aL = stab[ielem].aL
+            let aR = stab[ielem].aR
+
+            let si = stab[ielem].sinus
+            let co = stab[ielem].cosinus
+
+
+            let xs1 = stab[ielem].x1 + co * aL;
+            let zs1 = stab[ielem].z1 + si * aL;
+            let xs2 = stab[ielem].x2 - co * aR;
+            let zs2 = stab[ielem].z2 - si * aR;
+
+            x1 = Math.round(tr.xPix(xs1));
+            z1 = Math.round(tr.zPix(zs1));
+            x2 = Math.round(tr.xPix(xs2));
+            z2 = Math.round(tr.zPix(zs2));
 
             let h = element[ielem].h / 2.
 
@@ -574,8 +587,8 @@ export function drawsystem() {
                     wG = element[ielem].sinus * uL[i] + element[ielem].cosinus * wL[i]
 
                     xx1 = xx2; zz1 = zz2;
-                    xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
-                    zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                    xx2 = xs1 + x * element[ielem].cosinus + uG * scalefactor
+                    zz2 = zs1 + x * element[ielem].sinus + wG * scalefactor
                     if (show_umriss) {
                         const phi = phiL[i]
 
@@ -586,8 +599,8 @@ export function drawsystem() {
                         let uobenG = element[ielem].cosinus * uoben - element[ielem].sinus * woben
                         let wobenG = element[ielem].sinus * uoben + element[ielem].cosinus * woben
 
-                        let xoben2 = element[ielem].x1 + x * element[ielem].cosinus + element[ielem].sinus * h + uobenG * scalefactor
-                        let zoben2 = element[ielem].z1 + x * element[ielem].sinus - element[ielem].cosinus * h + wobenG * scalefactor
+                        let xoben2 = xs1 + x * element[ielem].cosinus + element[ielem].sinus * h + uobenG * scalefactor
+                        let zoben2 = zs1 + x * element[ielem].sinus - element[ielem].cosinus * h + wobenG * scalefactor
                         // console.log("NEU OBEN", x, uoben, woben, uobenG, wobenG, xoben2, zoben2)
 
                         umriss_x[i] = xp1 = tr.xPix(xoben2)
@@ -599,8 +612,8 @@ export function drawsystem() {
                         let uuntenG = element[ielem].cosinus * uunten - element[ielem].sinus * wunten
                         let wuntenG = element[ielem].sinus * uunten + element[ielem].cosinus * wunten
 
-                        let xunten2 = element[ielem].x1 + x * element[ielem].cosinus - element[ielem].sinus * h + uuntenG * scalefactor
-                        let zunten2 = element[ielem].z1 + x * element[ielem].sinus + element[ielem].cosinus * h + wuntenG * scalefactor
+                        let xunten2 = xs1 + x * element[ielem].cosinus - element[ielem].sinus * h + uuntenG * scalefactor
+                        let zunten2 = zs1 + x * element[ielem].sinus + element[ielem].cosinus * h + wuntenG * scalefactor
                         umriss_x[2 * nelTeilungen - 1 - i] = xp2 = tr.xPix(xunten2)
                         umriss_z[2 * nelTeilungen - 1 - i] = zp2 = tr.zPix(zunten2)
 
@@ -627,8 +640,8 @@ export function drawsystem() {
                         maxU = dispG
                         x_max = xx2
                         z_max = zz2
-                        xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
-                        zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+                        xmem = tr.xPix(xs1 + x * element[ielem].cosinus)
+                        zmem = tr.zPix(zs1 + x * element[ielem].sinus)
                     }
 
                     x = x + dx
@@ -941,6 +954,7 @@ export function drawsystem() {
         let xx1: number, zz1: number, xx2: number, zz2: number
         let dx: number, x: number, sl: number, vorzeichen: number, sgArea = 0.0
         let sgL: number, sgR: number, xL: number, index_sg = 0, max_all = 0.0
+        let aL: number, aR: number
 
         let iLastfall = draw_lastfall
         let scalefactor = 0
@@ -991,7 +1005,7 @@ export function drawsystem() {
         }
 
         scalefactor *= scaleFactor_panel
-        console.log("SCALEFACTOR", 1./scalefactor)
+        console.log("SCALEFACTOR", 1. / scalefactor)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -1000,10 +1014,23 @@ export function drawsystem() {
             const nelTeilungen = element[ielem].nTeilungen
             let sg: number[] = new Array(nelTeilungen)
 
-            x1 = Math.round(tr.xPix(element[ielem].x1));
-            z1 = Math.round(tr.zPix(element[ielem].z1));
-            x2 = Math.round(tr.xPix(element[ielem].x2));
-            z2 = Math.round(tr.zPix(element[ielem].z2));
+
+            aL = stab[ielem].aL
+            aR = stab[ielem].aR
+
+            let si = stab[ielem].sinus
+            let co = stab[ielem].cosinus
+
+
+            let xs1 = stab[ielem].x1 + co * aL;
+            let zs1 = stab[ielem].z1 + si * aL;
+            let xs2 = stab[ielem].x2 - co * aR;
+            let zs2 = stab[ielem].z2 - si * aR;
+
+            x1 = Math.round(tr.xPix(xs1));
+            z1 = Math.round(tr.zPix(zs1));
+            x2 = Math.round(tr.xPix(xs2));
+            z2 = Math.round(tr.zPix(zs2));
 
             sl = element[ielem].sl
 
@@ -1030,8 +1057,8 @@ export function drawsystem() {
 
                 xx2 = 0.0; zz2 = 0.0
                 sgL = sg[0]
-                xx1 = tr.xPix(element[ielem].x1 - element[ielem].sinus * sg[0] * scalefactor)
-                zz1 = tr.zPix(element[ielem].z1 + element[ielem].cosinus * sg[0] * scalefactor)
+                xx1 = tr.xPix(xs1 - element[ielem].sinus * sg[0] * scalefactor)
+                zz1 = tr.zPix(zs1 + element[ielem].cosinus * sg[0] * scalefactor)
 
                 if (sgL > valueLeftPos) {
                     valueLeftPos = sgL
@@ -1078,8 +1105,8 @@ export function drawsystem() {
                         //console.log("Vorzeichenwechsel", sgL, sgR)
 
                         let dx0 = -sgL * dx / (sgR - sgL)
-                        let xx0 = tr.xPix(element[ielem].x1 + (xL + dx0) * element[ielem].cosinus)
-                        let zz0 = tr.zPix(element[ielem].z1 + (xL + dx0) * element[ielem].sinus)
+                        let xx0 = tr.xPix(xs1 + (xL + dx0) * element[ielem].cosinus)
+                        let zz0 = tr.zPix(zs1 + (xL + dx0) * element[ielem].sinus)
                         vertices.push(new Two.Anchor(xx1, zz1));
                         //console.log("dx0=", dx0, xx0, zz0)
                         vertices.push(new Two.Anchor(xx0, zz0));
@@ -1094,8 +1121,8 @@ export function drawsystem() {
                         sgL = 0.0
                         vertices.push(new Two.Anchor(xx0, zz0));
                     }
-                    xx2 = element[ielem].x1 + x * element[ielem].cosinus - element[ielem].sinus * sg[i] * scalefactor
-                    zz2 = element[ielem].z1 + x * element[ielem].sinus + element[ielem].cosinus * sg[i] * scalefactor
+                    xx2 = xs1 + x * element[ielem].cosinus - element[ielem].sinus * sg[i] * scalefactor
+                    zz2 = zs1 + x * element[ielem].sinus + element[ielem].cosinus * sg[i] * scalefactor
                     xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
 
                     if (i === nelTeilungen - 1) {
@@ -1446,6 +1473,7 @@ function draw_elementlasten(two: Two) {
     let x1: number, x2: number, z1: number, z2: number, si: number, co: number, xi: number, zi: number
     let dp: number, pMax: number, pMin: number
     let a: number, ax_projektion: number, az_projektion: number
+    let aL: number, aR: number
     let a_spalt: number
     let pL: number, pR: number
     let x = Array(4), z = Array(4), xtr = Array(4), ztr = Array(4)
@@ -1521,12 +1549,16 @@ function draw_elementlasten(two: Two) {
         ax_projektion = 0.0
         az_projektion = 0.0
 
-        x1 = stab[ielem].x1;
-        z1 = stab[ielem].z1;
-        x2 = stab[ielem].x2;
-        z2 = stab[ielem].z2;
+        aL = stab[ielem].aL
+        aR = stab[ielem].aR
+
         si = stab[ielem].sinus
         co = stab[ielem].cosinus
+
+        x1 = stab[ielem].x1 + co * aL;
+        z1 = stab[ielem].z1 + si * aL;
+        x2 = stab[ielem].x2 - co * aR;
+        z2 = stab[ielem].z2 - si * aR;
 
         for (let iLoop = 0; iLoop < nLoop; iLoop++) {
             console.log("iLoop: ", iLoop)
@@ -2499,20 +2531,26 @@ function draw_gelenke(two: Two) {
 
         if (element[ielem].nGelenke > 0) {
 
-            distL = a + radius
-            distR = a + radius
+            let aL = element[ielem].aL
+            let aR = element[ielem].aR
 
-            x1 = Math.round(tr.xPix(element[ielem].x1));
-            z1 = Math.round(tr.zPix(element[ielem].z1));
-            x2 = Math.round(tr.xPix(element[ielem].x2));
-            z2 = Math.round(tr.zPix(element[ielem].z2));
+            if (aL > 0.0) distL = radius;
+            else distL = a + radius;
+            if (aR > 0.0) distR = radius;
+            else distR = a + radius;
+
 
             si = element[ielem].sinus
             co = element[ielem].cosinus
 
+            x1 = Math.round(tr.xPix(element[ielem].x1 + co * aL));
+            z1 = Math.round(tr.zPix(element[ielem].z1 + si * aL));
+            x2 = Math.round(tr.xPix(element[ielem].x2 - co * aR));
+            z2 = Math.round(tr.zPix(element[ielem].z2 - si * aR));
+
             if (element[ielem].gelenk[2] > 0) {                         // Momentengelenk links
-                dx = co * (a + radius)
-                dz = si * (a + radius)
+                dx = co * distL; //(a + radius)
+                dz = si * distL; //(a + radius)
                 let kreis = two.makeCircle(x1 + dx, z1 + dz, radius, 10)
                 kreis.fill = '#ffffff';
                 kreis.linewidth = 2 / devicePixelRatio;
@@ -2520,8 +2558,8 @@ function draw_gelenke(two: Two) {
 
             }
             if (element[ielem].gelenk[5] > 0) {                         // Momentengelenk rechts
-                dx = element[ielem].cosinus * (a + radius)
-                dz = element[ielem].sinus * (a + radius)
+                dx = element[ielem].cosinus * distR; //(a + radius)
+                dz = element[ielem].sinus * distR; //(a + radius)
                 let kreis = two.makeCircle(x2 - dx, z2 - dz, radius, 10)
                 kreis.fill = '#ffffff';
                 kreis.linewidth = 2 / devicePixelRatio;

@@ -37,6 +37,9 @@ export class CTimoshenko_beam extends CElement {
     z1 = 0.0
     z2 = 0.0
     sl = 0.0
+    sl0 = 0.0   // Stablänge gesamt mit starren Enden
+    aL = 0.0   // starres Ende Links
+    aR = 0.0   // starres Ende rechts
     dx = 0.0
     dz = 0.0
     normalkraft = 0.0
@@ -56,6 +59,8 @@ export class CTimoshenko_beam extends CElement {
 
     transU: number[][] = []       // Transformation von global nach lokal
     transF: number[][] = []       // Transformation von lokal nach global
+    TfG2L: number[][] = []        // Transformation der Kraefte von global nach lokal
+
     estiffG: number[][] = []      // globale Elementsteigkeitsmatrix mit Berücksichtigung der Gelenke
 
 
@@ -137,9 +142,13 @@ export class CTimoshenko_beam extends CElement {
         this.z1 = z1 = node[this.nod1].z;
         this.z2 = z2 = node[this.nod2].z;
 
+        this.aL = element[ielem].aL
+        this.aR = element[ielem].aR
+
         this.dx = x2 - x1;
         this.dz = z2 - z1;
-        this.sl = Math.sqrt(this.dx * this.dx + this.dz * this.dz);      // Stablänge
+        this.sl0 = Math.sqrt(this.dx * this.dx + this.dz * this.dz)
+        this.sl = Math.sqrt(this.dx * this.dx + this.dz * this.dz) - this.aL - this.aR;      // elastische Stablänge
 
         if (this.sl < 1e-12) {
             alert("Länge von Element " + String(ielem + 1) + " ist null")
@@ -147,11 +156,11 @@ export class CTimoshenko_beam extends CElement {
         }
 
 
-        this.cosinus = this.dx / this.sl
-        this.sinus = this.dz / this.sl
+        this.cosinus = this.dx / this.sl0
+        this.sinus = this.dz / this.sl0
 
         this.alpha = Math.atan2(this.dz, this.dx) // *180.0/Math.PI
-        //console.log("sl=", ielem, this.sl, this.alpha)
+        console.log("sl = ", ielem, this.sl, this.alpha)
 
         this.normalkraft = 0.0
 
@@ -168,12 +177,12 @@ export class CTimoshenko_beam extends CElement {
             this.gelenk[i] = element[ielem].gelenk[i]
             if (this.gelenk[i] > 0) {
                 this.nGelenke++;
-                if (i === 2 || i === 5) { this.lm[i] = neq; }
-                else {
-                    ind++;
-                    this.neqeG++;
-                    this.lm[ind + 5] = neq;
-                }
+                // if (i === 2 || i === 5) { this.lm[i] = neq; }
+                // else {
+                ind++;
+                this.neqeG++;
+                this.lm[ind + 5] = neq;
+                // }
                 incr_neq();
             }
         }
@@ -190,6 +199,8 @@ export class CTimoshenko_beam extends CElement {
 
         this.transU = Array.from(Array(6), () => new Array(this.neqeG).fill(0.0));
         this.transF = Array.from(Array(this.neqeG), () => new Array(6).fill(0.0));
+        this.TfG2L = Array.from(Array(6), () => new Array(this.neqeG).fill(0.0));
+
         this.estiffG = Array.from(Array(this.neqeG), () => new Array(this.neqeG));
 
         let cophi = node[this.nod1].co
@@ -210,6 +221,9 @@ export class CTimoshenko_beam extends CElement {
             this.transU[0][1] = t01 // this.sinus
             this.transF[0][0] = t00 // this.cosinus
             this.transF[1][0] = t01 // this.sinus
+            this.TfG2L[0][0] = t00
+            this.TfG2L[1][0] = t10
+            this.TfG2L[2][0] = this.aL * t10
         }
         if (this.gelenk[1] > 0) {
             ind++;
@@ -220,9 +234,28 @@ export class CTimoshenko_beam extends CElement {
             this.transU[1][1] = t11  // this.cosinus
             this.transF[0][1] = t10  // -this.sinus
             this.transF[1][1] = t11  // this.cosinus
+            this.transU[1][2] = -this.aL
+            this.transF[2][1] = -this.aL
+            this.TfG2L[0][1] = t01
+            this.TfG2L[1][1] = t11
+            this.TfG2L[2][1] = this.aL * t11
         }
-        this.transU[2][2] = 1.0
-        this.transF[2][2] = 1.0
+        if (this.gelenk[2] > 0) {
+            ind++;
+            this.transU[2][ind] = 1.0
+            this.transF[ind][2] = 1.0
+            // this.transU[1][2] = -this.aL
+            // this.transF[2][1] = -this.aL
+            this.TfG2L[2][2] = 1.0
+        } else {
+            this.transU[2][2] = 1.0
+            // this.transU[1][2] = -this.aL
+            this.transF[2][2] = 1.0
+            // this.transF[2][1] = -this.aL
+            this.TfG2L[2][2] = 1.0
+        }
+        // this.transU[2][2] = 1.0
+        // this.transF[2][2] = 1.0
 
 
         cophi = node[this.nod2].co
@@ -243,6 +276,9 @@ export class CTimoshenko_beam extends CElement {
             this.transU[3][4] = t34  // this.sinus
             this.transF[3][3] = t33  // this.cosinus
             this.transF[4][3] = t34  // this.sinus
+            this.TfG2L[3][3] = t33
+            this.TfG2L[4][3] = t43
+            this.TfG2L[5][3] = -this.aR * t43
         }
         if (this.gelenk[4] > 0) {
             ind++;
@@ -254,13 +290,33 @@ export class CTimoshenko_beam extends CElement {
             this.transU[4][4] = t44  // this.cosinus
             this.transF[3][4] = t43  // -this.sinus
             this.transF[4][4] = t44  // this.cosinus
+            this.transU[4][5] = this.aR
+            this.transF[5][4] = this.aR
+            this.TfG2L[3][4] = t34
+            this.TfG2L[4][4] = t44
+            this.TfG2L[5][4] = -this.aR * t44
 
         }
-        this.transU[5][5] = 1.0
-        this.transF[5][5] = 1.0
+        if (this.gelenk[5] > 0) {
+            ind++;
+            this.transU[5][ind] = 1.0
+            this.transF[ind][5] = 1.0
+            // this.transU[4][5] = this.aR
+            // this.transF[5][4] = this.aR
+            this.TfG2L[5][5] = 1.0
+        } else {
+            this.transU[5][5] = 1.0
+            // this.transU[4][5] = this.aR
+            this.transF[5][5] = 1.0
+            // this.transF[5][4] = this.aR
+            this.TfG2L[5][5] = 1.0
+        }
+        // this.transU[5][5] = 1.0
+        // this.transF[5][5] = 1.0
 
         for (let j = 0; j < 6; j++) {
-            console.log("this.transU", this.transU[j])
+            //console.log("this.transU", this.transU[j])
+            console.log("this.TfG2L. ielem", (ielem+1),this.TfG2L[j])
         }
 
         // ind = 5;
@@ -681,7 +737,7 @@ export class CTimoshenko_beam extends CElement {
             }
         }
 
-        console.log("this.u[]", this.u)
+        console.log("this.u[]",this.neqeG, this.u)
 
         for (j = 0; j < this.neqeG; j++) {
             sum = 0.0
@@ -737,7 +793,7 @@ export class CTimoshenko_beam extends CElement {
         for (i = 0; i < 6; i++) {
             sum = 0.0
             for (j = 0; j < this.neqeG; j++) {
-                sum += this.transU[i][j] * this.F[j]
+                sum += this.TfG2L[i][j] * this.F[j]   // transU
             }
             this.FL[i] = sum
         }
@@ -845,8 +901,8 @@ export class CTimoshenko_beam extends CElement {
         }
         else if (eload[ieload].art === 2) {                     // Trapezstreckenlast z-Richtung, Projektion
 
-            let pL = eload[ieload].pL * this.dx / sl
-            let pR = eload[ieload].pR * this.dx / sl
+            let pL = eload[ieload].pL * this.dx / this.sl0
+            let pR = eload[ieload].pR * this.dx / this.sl0
 
             let pzL = this.cosinus * pL                         // Lastanteil senkrecht auf Stab
             let pzR = this.cosinus * pR
@@ -1434,8 +1490,8 @@ export class CTimoshenko_beam extends CElement {
                         else if (eload[ieload].art === 2) {                       // Trapezstreckenlast z-Richtung, Projektion
 
                             //console.log("Projektion",this.dx, sl)
-                            const pL = eload[ieload].pL * this.dx / sl
-                            const pR = eload[ieload].pR * this.dx / sl
+                            const pL = eload[ieload].pL * this.dx / this.sl0
+                            const pR = eload[ieload].pR * this.dx / this.sl0
 
                             let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
                             let pzR = this.cosinus * pR
@@ -1668,8 +1724,8 @@ export class CTimoshenko_beam extends CElement {
                             }
                             else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
 
-                                const pL = eload[ieload].pL * this.dx / sl * kombiTabelle[iLastf][index]
-                                const pR = eload[ieload].pR * this.dx / sl * kombiTabelle[iLastf][index]
+                                const pL = eload[ieload].pL * this.dx / this.sl0 * kombiTabelle[iLastf][index]
+                                const pR = eload[ieload].pR * this.dx / this.sl0 * kombiTabelle[iLastf][index]
 
                                 let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
                                 let pzR = this.cosinus * pR

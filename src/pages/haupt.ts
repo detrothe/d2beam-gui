@@ -330,6 +330,10 @@ async function initTabellenLoop() {
           nod e = globale Knotennummer am Elementende
         </p>
         <p>
+          starr a = starres Stabende am Elementanfang in Meter<br />
+          starr e = starres Stabende am Elementende in Meter
+        </p>
+        <p>
           Anzahl Elemente:
 
           <dr-button-pm id="id_button_nelem" nel="${nelem_init}" inputid="nelem"></dr-button-pm>
@@ -338,10 +342,10 @@ async function initTabellenLoop() {
         <dr-tabelle
           id="id_element_tabelle"
           nzeilen="${nelem_init}"
-          nspalten="10"
-          columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>"]'
-          typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
-          colwidth='["4","8","2","3","3","2","2","2","2","2","2"]'
+          nspalten="12"
+          columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a", "starr e"]'
+          typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
+          colwidth='["4","8","2","3","3","2","2","2","2","2","2","3","3"]'
         ></dr-tabelle>
       </sl-tab-panel>
 
