@@ -9,12 +9,13 @@ import { testNumber, myFormat, write } from './utility'
 // @ts-ignore
 import { gauss } from "./gauss"
 import { CTimoshenko_beam } from "./timoshenko_beam"
+import { CTruss } from "./truss"
 import { CSpring } from "./feder"
 import { init_grafik, drawsystem } from "./grafik";
 import { show_controller_THIIO, show_controller_results } from "./mypanelgui"
 
 import { prot_eingabe } from "./prot_eingabe"
-import { read_daten } from "./dateien"
+// import { read_daten } from "./dateien"
 
 let fatal_error = false;
 
@@ -73,6 +74,7 @@ export let ndivsl = 3;
 export let art = 1;
 export let intArt = 2;
 export let THIIO_flag = 0;
+export let System = 0;        // Stabwerk = 0, Fachwerk = 1
 
 export let el = [] as any
 
@@ -114,6 +116,9 @@ let c_simvektoriteration = Module.cwrap("c_simvektoriteration", null, ["number",
 
 const bytes_8 = 8;
 const bytes_4 = 4;
+
+export const STABWERK = 0;
+export const FACHWERK = 1;
 
 //__________________________________________________________________________________________________
 
@@ -181,7 +186,7 @@ class TElement {
     z1: number = 0.0
     z2: number = 0.0
     sl: number = 0.0                    // Stablänge
-    aL= 0.0                             // starres Stabende limks (Stabanfang)
+    aL = 0.0                             // starres Stabende limks (Stabanfang)
     aR = 0.0                            // starres Stabende rechts
     nod = [0, 0, 0, 0]                  // globale Knotennummer der Stabenden
     lm: number[] = []
@@ -293,6 +298,11 @@ class TMaxValues {
 class TMaxU0 {
     ieq = -1
     u0 = 0.0
+}
+//---------------------------------------------------------------------------------------------------------------
+export function setSystem(system: number) {
+    //-----------------------------------------------------------------------------------------------------------
+    System = system;
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -749,11 +759,16 @@ function read_nodes() {
             else if (ispalte === 4) node[iz].L[1] = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 5) node[iz].L[2] = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 6) node[iz].phi = Number(testNumber(wert, izeile, ispalte, shad));
+
+            if ( System === FACHWERK) node[iz].L[2] = 1;   // Drehfreiheitsgrad festhalten
+
             node[iz].L_org[0] = node[iz].L[0]
             node[iz].L_org[1] = node[iz].L[1]
             node[iz].L_org[2] = node[iz].L[2]
         }
     }
+
+
 
     nnodesTotal = nnodes;
 
@@ -1724,7 +1739,9 @@ function calculate() {
 
         }
 
-        el.push(new CTimoshenko_beam())
+        if (System === STABWERK) el.push(new CTimoshenko_beam());
+        else el.push(new CTruss());
+
         el[ielem].setQuerschnittsdaten(emodul, Iy, area, wichte, ks, querdehnzahl, schubfaktor, height, zso, alphaT)
         el[ielem].initialisiereElementdaten(ielem)
     }

@@ -8,7 +8,7 @@ import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelT
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
-import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all, kombiTabelle, nNodeDisps, nodeDisp0 } from "./rechnen";
+import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all, kombiTabelle, nNodeDisps, nodeDisp0, System, STABWERK, FACHWERK } from "./rechnen";
 
 //import { Pane } from 'tweakpane';
 import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
@@ -2327,35 +2327,37 @@ function draw_lagerkraefte(two: Two) {
             txt.baseline = 'top'
         }
 
-        if (node[i].L[2] === -1 || node[i].kphi > 0.0) {      // Einspannung
+        if (System === STABWERK) {
+            if (node[i].L[2] === -1 || node[i].kphi > 0.0) {      // Einspannung
 
-            if (THIIO_flag === 0) {
-                if (draw_lastfall <= nlastfaelle) {
+                if (THIIO_flag === 0) {
+                    if (draw_lastfall <= nlastfaelle) {
+                        wert = lagerkraefte._(i, 2, draw_lastfall - 1)
+                    } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
+                        wert = lagerkraefte_kombi._(i, 2, draw_lastfall - 1 - nlastfaelle)
+                    }
+                } else {
                     wert = lagerkraefte._(i, 2, draw_lastfall - 1)
-                } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
-                    wert = lagerkraefte_kombi._(i, 2, draw_lastfall - 1 - nlastfaelle)
                 }
-            } else {
-                wert = lagerkraefte._(i, 2, draw_lastfall - 1)
+                // wert = lagerkraefte._(i, 2, draw_lastfall - 1)
+                console.log("draw_lagerkraefte wert", wert)
+
+                let vorzeichen = Math.sign(wert)
+                let radius = style_pfeil_lager.radius;
+
+                if (wert >= 0.0) {
+                    draw_moment_arrow(two, x, z, -1.0, radius, style_pfeil_lager)
+                } else {
+                    draw_moment_arrow(two, x, z, 1.0, radius, style_pfeil_lager)
+                }
+
+                xpix = tr.xPix(x) - 10 / devicePixelRatio
+                zpix = tr.zPix(z) + vorzeichen * (radius + 15) / devicePixelRatio
+                const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+                const txt = two.makeText(str, xpix, zpix, style_txt_lager)
+                txt.alignment = 'right'
+                //txt.baseline = 'top'
             }
-            // wert = lagerkraefte._(i, 2, draw_lastfall - 1)
-            console.log("draw_lagerkraefte wert", wert)
-
-            let vorzeichen = Math.sign(wert)
-            let radius = style_pfeil_lager.radius;
-
-            if (wert >= 0.0) {
-                draw_moment_arrow(two, x, z, -1.0, radius, style_pfeil_lager)
-            } else {
-                draw_moment_arrow(two, x, z, 1.0, radius, style_pfeil_lager)
-            }
-
-            xpix = tr.xPix(x) - 10 / devicePixelRatio
-            zpix = tr.zPix(z) + vorzeichen * (radius + 15) / devicePixelRatio
-            const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
-            const txt = two.makeText(str, xpix, zpix, style_txt_lager)
-            txt.alignment = 'right'
-            //txt.baseline = 'top'
         }
     }
 }
@@ -2370,136 +2372,209 @@ function draw_lager(two: Two) {
         let z1 = Math.round(tr.zPix(node[i].z));
         let phi = -node[i].phi * Math.PI / 180
 
-        if (((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) ||
-            ((node[i].kx > 0.0) && (node[i].kz > 0.0) && (node[i].L[2] === -1))) {  // Volleinspannung oder mit zwei Translkationsfedern
-            let rechteck = two.makeRectangle(x1, z1, 20, 20)
-            rechteck.fill = '#dddddd';
-            rechteck.scale = 1.0 / devicePixelRatio
-            rechteck.rotation = phi
-        }
-        else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in x-Richtung
+        if (System === STABWERK) {
+            if (((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) ||
+                ((node[i].kx > 0.0) && (node[i].kz > 0.0) && (node[i].L[2] === -1))) {  // Volleinspannung oder mit zwei Translkationsfedern
+                let rechteck = two.makeRectangle(x1, z1, 20, 20)
+                rechteck.fill = '#dddddd';
+                rechteck.scale = 1.0 / devicePixelRatio
+                rechteck.rotation = phi
+            }
+            else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in x-Richtung
 
-            let group = two.makeGroup();
-            let rechteck = two.makeRectangle(0, 0, 20, 20)
-            rechteck.fill = '#dddddd';
-            group.add(rechteck)
+                let group = two.makeGroup();
+                let rechteck = two.makeRectangle(0, 0, 20, 20)
+                rechteck.fill = '#dddddd';
+                group.add(rechteck)
 
-            let line = two.makeLine(-16, 15, 16, 15);
-            line.linewidth = 2;
+                let line = two.makeLine(-16, 15, 16, 15);
+                line.linewidth = 2;
 
-            group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+                group.add(line)
+                group.scale = 1.0 / devicePixelRatio
 
-            group.rotation = phi
+                group.rotation = phi
 
-            group.translation.set(x1, z1)
+                group.translation.set(x1, z1)
 
-        }
-        else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in z-Richtung
+            }
+            else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in z-Richtung
 
-            let group = two.makeGroup();
-            let rechteck = two.makeRectangle(0, 0, 20, 20)
-            rechteck.fill = '#dddddd';
-            group.add(rechteck)
+                let group = two.makeGroup();
+                let rechteck = two.makeRectangle(0, 0, 20, 20)
+                rechteck.fill = '#dddddd';
+                group.add(rechteck)
 
-            let line = two.makeLine(-16, 15, 16, 15);
-            line.linewidth = 2;
+                let line = two.makeLine(-16, 15, 16, 15);
+                line.linewidth = 2;
 
-            group.add(line)
-            group.scale = 1.0 / devicePixelRatio
-            group.rotation = 1.5708 + phi
-            group.translation.set(x1, z1)
+                group.add(line)
+                group.scale = 1.0 / devicePixelRatio
+                group.rotation = 1.5708 + phi
+                group.translation.set(x1, z1)
 
-        }
-        else if ((node[i].L[0] >= 0) && (node[i].L[1] >= 0) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in x-, z-Richtung
+            }
+            else if ((node[i].L[0] >= 0) && (node[i].L[1] >= 0) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in x-, z-Richtung
 
-            let group = two.makeGroup();
-            let rechteck = two.makeRectangle(0, 0, 20, 20)
-            rechteck.fill = '#dddddd';
-            group.add(rechteck)
+                let group = two.makeGroup();
+                let rechteck = two.makeRectangle(0, 0, 20, 20)
+                rechteck.fill = '#dddddd';
+                group.add(rechteck)
 
-            let line = two.makeLine(-16, 15, 12, 15);
-            line.linewidth = 2;
-            group.add(line)
+                let line = two.makeLine(-16, 15, 12, 15);
+                line.linewidth = 2;
+                group.add(line)
 
-            let line2 = two.makeLine(15, -16, 15, 12);
-            line2.linewidth = 2;
-            group.add(line2)
+                let line2 = two.makeLine(15, -16, 15, 12);
+                line2.linewidth = 2;
+                group.add(line2)
 
-            group.scale = 1.0 / devicePixelRatio
+                group.scale = 1.0 / devicePixelRatio
 
-            group.rotation = phi
+                group.rotation = phi
 
-            group.translation.set(x1, z1)
+                group.translation.set(x1, z1)
 
-        }
-        else if ((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // zweiwertiges Lager
-            let group = two.makeGroup();
-            console.log("in zweiwertiges Lager")
-            var vertices = [];
-            vertices.push(new Two.Anchor(0, 0));
-            vertices.push(new Two.Anchor(-12, 20));
-            vertices.push(new Two.Anchor(12, 20));
+            }
+            else if ((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // zweiwertiges Lager
+                let group = two.makeGroup();
+                console.log("in zweiwertiges Lager")
+                var vertices = [];
+                vertices.push(new Two.Anchor(0, 0));
+                vertices.push(new Two.Anchor(-12, 20));
+                vertices.push(new Two.Anchor(12, 20));
 
-            let flaeche = two.makePath(vertices);
-            flaeche.fill = '#dddddd';
-            group.add(flaeche)
+                let flaeche = two.makePath(vertices);
+                flaeche.fill = '#dddddd';
+                group.add(flaeche)
 
-            let line = two.makeLine(-18, 20, 18, 20);
-            line.linewidth = 2;
+                let line = two.makeLine(-18, 20, 18, 20);
+                line.linewidth = 2;
 
-            group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+                group.add(line)
+                group.scale = 1.0 / devicePixelRatio
 
-            group.rotation = phi
+                group.rotation = phi
 
-            group.translation.set(x1, z1)
+                group.translation.set(x1, z1)
 
-        }
-        else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // einwertiges horizontal verschieblisches Lager
-            let group = two.makeGroup();
-            console.log("in einwertiges horizontal verschieblisches Lager")
-            var vertices = [];
-            vertices.push(new Two.Anchor(0, 0));
-            vertices.push(new Two.Anchor(-12, 20));
-            vertices.push(new Two.Anchor(12, 20));
+            }
+            else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // einwertiges horizontal verschieblisches Lager
+                let group = two.makeGroup();
+                console.log("in einwertiges horizontal verschieblisches Lager")
+                var vertices = [];
+                vertices.push(new Two.Anchor(0, 0));
+                vertices.push(new Two.Anchor(-12, 20));
+                vertices.push(new Two.Anchor(12, 20));
 
-            let flaeche = two.makePath(vertices);
-            flaeche.fill = '#dddddd';
-            group.add(flaeche)
+                let flaeche = two.makePath(vertices);
+                flaeche.fill = '#dddddd';
+                group.add(flaeche)
 
-            let line = two.makeLine(-18, 25, 18, 25);
-            line.linewidth = 2;
+                let line = two.makeLine(-18, 25, 18, 25);
+                line.linewidth = 2;
 
-            group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+                group.add(line)
+                group.scale = 1.0 / devicePixelRatio
 
-            group.rotation = phi
+                group.rotation = phi
 
-            group.translation.set(x1, z1)
+                group.translation.set(x1, z1)
 
-        }
-        else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0) && (node[i].L[2] >= 0)) { // einwertiges vertikal verschieblisches Lager
-            let group = two.makeGroup();
-            console.log("in einwertiges vertikales Lager")
-            var vertices = [];
-            vertices.push(new Two.Anchor(0, 0));
-            vertices.push(new Two.Anchor(-12, 20));
-            vertices.push(new Two.Anchor(12, 20));
+            }
+            else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0) && (node[i].L[2] >= 0)) { // einwertiges vertikal verschieblisches Lager
+                let group = two.makeGroup();
+                console.log("in einwertiges vertikales Lager")
+                var vertices = [];
+                vertices.push(new Two.Anchor(0, 0));
+                vertices.push(new Two.Anchor(-12, 20));
+                vertices.push(new Two.Anchor(12, 20));
 
-            let flaeche = two.makePath(vertices);
-            flaeche.fill = '#dddddd';
-            group.add(flaeche)
+                let flaeche = two.makePath(vertices);
+                flaeche.fill = '#dddddd';
+                group.add(flaeche)
 
-            let line = two.makeLine(-18, 25, 18, 25);
-            line.linewidth = 2;
+                let line = two.makeLine(-18, 25, 18, 25);
+                line.linewidth = 2;
 
-            group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+                group.add(line)
+                group.scale = 1.0 / devicePixelRatio
 
 
-            group.rotation = -1.5708 + phi
-            group.translation.set(x1, z1)
+                group.rotation = -1.5708 + phi
+                group.translation.set(x1, z1)
+
+            }
+        } else {
+            if ((node[i].L[0] === -1) && (node[i].L[1] === -1)) { // zweiwertiges Lager
+                let group = two.makeGroup();
+                console.log("in zweiwertiges Lager")
+                var vertices = [];
+                vertices.push(new Two.Anchor(0, 0));
+                vertices.push(new Two.Anchor(-12, 20));
+                vertices.push(new Two.Anchor(12, 20));
+
+                let flaeche = two.makePath(vertices);
+                flaeche.fill = '#dddddd';
+                group.add(flaeche)
+
+                let line = two.makeLine(-18, 20, 18, 20);
+                line.linewidth = 2;
+
+                group.add(line)
+                group.scale = 1.0 / devicePixelRatio
+
+                group.rotation = phi
+
+                group.translation.set(x1, z1)
+
+            }
+            else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1)) { // einwertiges horizontal verschieblisches Lager
+                let group = two.makeGroup();
+                console.log("in einwertiges horizontal verschieblisches Lager")
+                var vertices = [];
+                vertices.push(new Two.Anchor(0, 0));
+                vertices.push(new Two.Anchor(-12, 20));
+                vertices.push(new Two.Anchor(12, 20));
+
+                let flaeche = two.makePath(vertices);
+                flaeche.fill = '#dddddd';
+                group.add(flaeche)
+
+                let line = two.makeLine(-18, 25, 18, 25);
+                line.linewidth = 2;
+
+                group.add(line)
+                group.scale = 1.0 / devicePixelRatio
+
+                group.rotation = phi
+
+                group.translation.set(x1, z1)
+
+            }
+            else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0)) { // einwertiges vertikal verschieblisches Lager
+                let group = two.makeGroup();
+                console.log("in einwertiges vertikales Lager")
+                var vertices = [];
+                vertices.push(new Two.Anchor(0, 0));
+                vertices.push(new Two.Anchor(-12, 20));
+                vertices.push(new Two.Anchor(12, 20));
+
+                let flaeche = two.makePath(vertices);
+                flaeche.fill = '#dddddd';
+                group.add(flaeche)
+
+                let line = two.makeLine(-18, 25, 18, 25);
+                line.linewidth = 2;
+
+                group.add(line)
+                group.scale = 1.0 / devicePixelRatio
+
+
+                group.rotation = -1.5708 + phi
+                group.translation.set(x1, z1)
+
+            }
 
         }
 
@@ -2511,8 +2586,10 @@ function draw_lager(two: Two) {
             draw_feder(two, node[i].x, node[i].z, phi)
         }
 
-        if (node[i].kphi > 0.0) {
-            draw_drehfeder(two, node[i].x, node[i].z)
+        if (System === STABWERK) {
+            if (node[i].kphi > 0.0) {
+                draw_drehfeder(two, node[i].x, node[i].z)
+            }
         }
 
     }

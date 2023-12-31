@@ -5,13 +5,13 @@ import {
     nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung
 } from "./rechnen"
 
-import { BubbleSort } from "./lib"
+//import { BubbleSort } from "./lib"
 
-export class CTimoshenko_beam extends CElement {
+export class CTruss extends CElement {
 
-    neqe = 6
+    neqe = 4
 
-    neqeG = 6
+    neqeG = 4
 
     ielem = -1
     nknoten = 2
@@ -37,14 +37,11 @@ export class CTimoshenko_beam extends CElement {
     z1 = 0.0
     z2 = 0.0
     sl = 0.0
-    sl0 = 0.0   // Stablänge gesamt mit starren Enden
-    aL = 0.0   // starres Ende Links
-    aR = 0.0   // starres Ende rechts
     dx = 0.0
     dz = 0.0
     normalkraft = 0.0
-    lm: number[] = Array(10).fill(-2)
-    gelenk: number[] = [0, 0, 0, 0, 0, 0]
+    lm: number[] = Array(4).fill(-2)
+    //gelenk: number[] = [0, 0, 0, 0, 0, 0]
     nGelenke = 0
     cosinus = 0.0
     sinus = 0.0
@@ -58,18 +55,18 @@ export class CTimoshenko_beam extends CElement {
     //trans: number[][] = []
 
     transU: number[][] = []       // Transformation von global nach lokal
-    transF: number[][] = []       // Transformation von lokal nach global = transU ^T
+    //transF: number[][] = []       // Transformation von lokal nach global = transU ^T
     TfG2L: number[][] = []        // Transformation der Kraefte von global nach lokal
 
     estiffG: number[][] = []      // globale Elementsteigkeitsmatrix mit Berücksichtigung der Gelenke
 
 
-    u: number[] = Array(10)        // Verformungen global
-    edispL: number[] = Array(6)    // Verformungen lokal
-    edisp0: number[] = Array(6).fill(0.0)   // Vorverformungen
-    F: number[] = Array(10)        // Stabendgrößen nach WGV im globalen Koordinatensystem
-    FL: number[] = Array(6)        // Stabendgrößen nach KGV im lokalen Koordinatensystem
-    Fe: number[] = Array(10)       // Vorverformungen aus Schiefstellung
+    u: number[] = Array(4)        // Verformungen global
+    edispL: number[] = Array(4)    // Verformungen lokal
+    edisp0: number[] = Array(4).fill(0.0)   // Vorverformungen
+    F: number[] = Array(4)        // Stabendgrößen nach WGV im globalen Koordinatensystem
+    FL: number[] = Array(4)        // Stabendgrößen nach KGV im lokalen Koordinatensystem
+    Fe: number[] = Array(4)       // Vorverformungen aus Schiefstellung
 
     N_ = [] as number[][]          // Schnittgrößen entlang Stab, lokal
     V_ = [] as number[][]
@@ -95,7 +92,7 @@ export class CTimoshenko_beam extends CElement {
     phiL: number = 0.0
     NR = 0.0
 
-    nTeilungen = 10;
+    nTeilungen = 1;
     x_: number[] = []
 
 
@@ -142,13 +139,10 @@ export class CTimoshenko_beam extends CElement {
         this.z1 = z1 = node[this.nod1].z;
         this.z2 = z2 = node[this.nod2].z;
 
-        this.aL = element[ielem].aL
-        this.aR = element[ielem].aR
 
         this.dx = x2 - x1;
         this.dz = z2 - z1;
-        this.sl0 = Math.sqrt(this.dx * this.dx + this.dz * this.dz)
-        this.sl = Math.sqrt(this.dx * this.dx + this.dz * this.dz) - this.aL - this.aR;      // elastische Stablänge
+        this.sl = Math.sqrt(this.dx * this.dx + this.dz * this.dz);      // elastische Stablänge
 
         if (this.sl < 1e-12) {
             alert("Länge von Element " + String(ielem + 1) + " ist null")
@@ -156,8 +150,8 @@ export class CTimoshenko_beam extends CElement {
         }
 
 
-        this.cosinus = this.dx / this.sl0
-        this.sinus = this.dz / this.sl0
+        this.cosinus = this.dx / this.sl
+        this.sinus = this.dz / this.sl
 
         this.alpha = Math.atan2(this.dz, this.dx) // *180.0/Math.PI
         console.log("sl = ", ielem, this.sl, this.alpha)
@@ -166,42 +160,27 @@ export class CTimoshenko_beam extends CElement {
 
         this.lm[0] = node[this.nod1].L[0];
         this.lm[1] = node[this.nod1].L[1];
-        this.lm[2] = node[this.nod1].L[2];
-        this.lm[3] = node[this.nod2].L[0];
-        this.lm[4] = node[this.nod2].L[1];
-        this.lm[5] = node[this.nod2].L[2];
+        this.lm[2] = node[this.nod2].L[0];
+        this.lm[3] = node[this.nod2].L[1];
 
         this.nGelenke = 0
-        let ind = 0;
-        for (let i = 0; i < 6; i++) {
-            this.gelenk[i] = element[ielem].gelenk[i]
-            if (this.gelenk[i] > 0) {
-                this.nGelenke++;
-                // if (i === 2 || i === 5) { this.lm[i] = neq; }
-                // else {
-                ind++;
-                this.neqeG++;
-                this.lm[ind + 5] = neq;
-                // }
-                incr_neq();
-            }
-        }
+
 
         console.log("neqeG ", this.neqeG)
         console.log("lm() von Element ", ielem, this.lm)
 
-        this.estm = Array.from(Array(6), () => new Array(6));
-        this.estmL2 = Array.from(Array(6), () => new Array(6));
-        this.ksig = Array.from(Array(6), () => new Array(6));
+        this.estm = Array.from(Array(4), () => new Array(4));
+        this.estmL2 = Array.from(Array(4), () => new Array(4));
+        this.ksig = Array.from(Array(4), () => new Array(4));
         //this.trans = Array.from(Array(6), () => new Array(6).fill(0.0));
         //this.estiff = Array.from(Array(6), () => new Array(6));
-        this.estiff_sig = Array.from(Array(this.neqeG), () => new Array(this.neqeG));
+        this.estiff_sig = Array.from(Array(4), () => new Array(4));
 
-        this.transU = Array.from(Array(6), () => new Array(this.neqeG).fill(0.0));
-        this.transF = Array.from(Array(this.neqeG), () => new Array(6).fill(0.0));
-        this.TfG2L = Array.from(Array(6), () => new Array(this.neqe).fill(0.0));
+        this.transU = Array.from(Array(4), () => new Array(4).fill(0.0));
+        //this.transF = Array.from(Array(4), () => new Array(4).fill(0.0));
+        this.TfG2L = Array.from(Array(4), () => new Array(4).fill(0.0));
 
-        this.estiffG = Array.from(Array(this.neqeG), () => new Array(this.neqeG));
+        this.estiffG = Array.from(Array(4), () => new Array(4));
 
         let cophi = node[this.nod1].co
         let siphi = node[this.nod1].si
@@ -211,113 +190,131 @@ export class CTimoshenko_beam extends CElement {
         let t10 = -t01
         let t11 = t00
 
-        ind = 5;
-        if (this.gelenk[0] > 0) {
-            ind++;
-            this.transU[0][ind] = 1.0
-            this.transF[ind][0] = 1.0
-        } else {
-            this.transU[0][0] = t00 // this.cosinus
-            this.transU[0][1] = t01 // this.sinus
-            this.transF[0][0] = t00 // this.cosinus
-            this.transF[1][0] = t01 // this.sinus
-            this.TfG2L[0][0] = t00
-            this.TfG2L[1][0] = t10
-            this.TfG2L[2][0] = this.aL * t10
-        }
-        if (this.gelenk[1] > 0) {
-            ind++;
-            this.transU[1][ind] = 1.0
-            this.transF[ind][1] = 1.0
-        } else {
-            this.transU[1][0] = t10  // -this.sinus
-            this.transU[1][1] = t11  // this.cosinus
-            this.transF[0][1] = t10  // -this.sinus
-            this.transF[1][1] = t11  // this.cosinus
-            this.transU[1][2] = -this.aL
-            this.transF[2][1] = -this.aL
-            this.TfG2L[0][1] = t01
-            this.TfG2L[1][1] = t11
-            this.TfG2L[2][1] = this.aL * t11
-        }
-        if (this.gelenk[2] > 0) {
-            ind++;
-            this.transU[2][ind] = 1.0
-            this.transF[ind][2] = 1.0
-            // this.transU[1][2] = -this.aL
-            // this.transF[2][1] = -this.aL
-            this.TfG2L[2][2] = 1.0
-        } else {
-            this.transU[2][2] = 1.0
-            // this.transU[1][2] = -this.aL
-            this.transF[2][2] = 1.0
-            // this.transF[2][1] = -this.aL
-            this.TfG2L[2][2] = 1.0
-        }
-        // this.transU[2][2] = 1.0
-        // this.transF[2][2] = 1.0
-
+        this.transU[0][0] = t00
+        this.transU[0][1] = t01
+        this.transU[1][0] = t10
+        this.transU[1][1] = t11
 
         cophi = node[this.nod2].co
         siphi = node[this.nod2].si
 
-        let t33 = this.cosinus * cophi - this.sinus * siphi    //this.cosinus
-        let t34 = this.sinus * cophi + this.cosinus * siphi    //this.sinus
-        let t43 = -t34
-        let t44 = t33
+        let t22 = this.cosinus * cophi - this.sinus * siphi    //this.cosinus
+        let t23 = this.sinus * cophi + this.cosinus * siphi    //this.sinus
+        let t32 = -t23
+        let t33 = t22
+
+        this.transU[2][2] = t22
+        this.transU[2][3] = t23
+        this.transU[3][2] = t32
+        this.transU[3][3] = t33
+
+        // ind = 5;
+        // if (this.gelenk[0] > 0) {
+        //     ind++;
+        //     this.transU[0][ind] = 1.0
+        //     this.transF[ind][0] = 1.0
+        // } else {
+        //     this.transU[0][0] = t00 // this.cosinus
+        //     this.transU[0][1] = t01 // this.sinus
+        //     this.transF[0][0] = t00 // this.cosinus
+        //     this.transF[1][0] = t01 // this.sinus
+        //     this.TfG2L[0][0] = t00
+        //     this.TfG2L[1][0] = t10
+        //     this.TfG2L[2][0] = this.aL * t10
+        // }
+        // if (this.gelenk[1] > 0) {
+        //     ind++;
+        //     this.transU[1][ind] = 1.0
+        //     this.transF[ind][1] = 1.0
+        // } else {
+        //     this.transU[1][0] = t10  // -this.sinus
+        //     this.transU[1][1] = t11  // this.cosinus
+        //     this.transF[0][1] = t10  // -this.sinus
+        //     this.transF[1][1] = t11  // this.cosinus
+        //     this.transU[1][2] = -this.aL
+        //     this.transF[2][1] = -this.aL
+        //     this.TfG2L[0][1] = t01
+        //     this.TfG2L[1][1] = t11
+        //     this.TfG2L[2][1] = this.aL * t11
+        // }
+        // if (this.gelenk[2] > 0) {
+        //     ind++;
+        //     this.transU[2][ind] = 1.0
+        //     this.transF[ind][2] = 1.0
+        //     // this.transU[1][2] = -this.aL
+        //     // this.transF[2][1] = -this.aL
+        //     this.TfG2L[2][2] = 1.0
+        // } else {
+        //     this.transU[2][2] = 1.0
+        //     // this.transU[1][2] = -this.aL
+        //     this.transF[2][2] = 1.0
+        //     // this.transF[2][1] = -this.aL
+        //     this.TfG2L[2][2] = 1.0
+        // }
+        // // this.transU[2][2] = 1.0
+        // // this.transF[2][2] = 1.0
 
 
-        if (this.gelenk[3] > 0) {
-            ind++;
-            this.transU[3][ind] = 1.0
-            this.transF[ind][3] = 1.0
-        } else {
-            this.transU[3][3] = t33  // this.cosinus
-            this.transU[3][4] = t34  // this.sinus
-            this.transF[3][3] = t33  // this.cosinus
-            this.transF[4][3] = t34  // this.sinus
-            this.TfG2L[3][3] = t33
-            this.TfG2L[4][3] = t43
-            this.TfG2L[5][3] = -this.aR * t43
-        }
-        if (this.gelenk[4] > 0) {
-            ind++;
-            this.transU[4][ind] = 1.0
-            this.transF[ind][4] = 1.0
+        // cophi = node[this.nod2].co
+        // siphi = node[this.nod2].si
 
-        } else {
-            this.transU[4][3] = t43  // -this.sinus
-            this.transU[4][4] = t44  // this.cosinus
-            this.transF[3][4] = t43  // -this.sinus
-            this.transF[4][4] = t44  // this.cosinus
-            this.transU[4][5] = this.aR
-            this.transF[5][4] = this.aR
-            this.TfG2L[3][4] = t34
-            this.TfG2L[4][4] = t44
-            this.TfG2L[5][4] = -this.aR * t44
+        // let t33 = this.cosinus * cophi - this.sinus * siphi    //this.cosinus
+        // let t34 = this.sinus * cophi + this.cosinus * siphi    //this.sinus
+        // let t43 = -t34
+        // let t44 = t33
 
-        }
-        if (this.gelenk[5] > 0) {
-            ind++;
-            this.transU[5][ind] = 1.0
-            this.transF[ind][5] = 1.0
-            // this.transU[4][5] = this.aR
-            // this.transF[5][4] = this.aR
-            this.TfG2L[5][5] = 1.0
-        } else {
-            this.transU[5][5] = 1.0
-            // this.transU[4][5] = this.aR
-            this.transF[5][5] = 1.0
-            // this.transF[5][4] = this.aR
-            this.TfG2L[5][5] = 1.0
-        }
-        // this.transU[5][5] = 1.0
-        // this.transF[5][5] = 1.0
 
-        for (let j = 0; j < 6; j++) {
-            console.log("this.transU", (ielem + 1), this.transU[j])
-            //console.log("this.TfG2L. ielem", (ielem + 1), this.TfG2L[j])
-        }
+        // if (this.gelenk[3] > 0) {
+        //     ind++;
+        //     this.transU[3][ind] = 1.0
+        //     this.transF[ind][3] = 1.0
+        // } else {
+        //     this.transU[3][3] = t33  // this.cosinus
+        //     this.transU[3][4] = t34  // this.sinus
+        //     this.transF[3][3] = t33  // this.cosinus
+        //     this.transF[4][3] = t34  // this.sinus
+        //     this.TfG2L[3][3] = t33
+        //     this.TfG2L[4][3] = t43
+        //     this.TfG2L[5][3] = -this.aR * t43
+        // }
+        // if (this.gelenk[4] > 0) {
+        //     ind++;
+        //     this.transU[4][ind] = 1.0
+        //     this.transF[ind][4] = 1.0
+
+        // } else {
+        //     this.transU[4][3] = t43  // -this.sinus
+        //     this.transU[4][4] = t44  // this.cosinus
+        //     this.transF[3][4] = t43  // -this.sinus
+        //     this.transF[4][4] = t44  // this.cosinus
+        //     this.transU[4][5] = this.aR
+        //     this.transF[5][4] = this.aR
+        //     this.TfG2L[3][4] = t34
+        //     this.TfG2L[4][4] = t44
+        //     this.TfG2L[5][4] = -this.aR * t44
+
+        // }
+        // if (this.gelenk[5] > 0) {
+        //     ind++;
+        //     this.transU[5][ind] = 1.0
+        //     this.transF[ind][5] = 1.0
+        //     // this.transU[4][5] = this.aR
+        //     // this.transF[5][4] = this.aR
+        //     this.TfG2L[5][5] = 1.0
+        // } else {
+        //     this.transU[5][5] = 1.0
+        //     // this.transU[4][5] = this.aR
+        //     this.transF[5][5] = 1.0
+        //     // this.transF[5][4] = this.aR
+        //     this.TfG2L[5][5] = 1.0
+        // }
+        // // this.transU[5][5] = 1.0
+        // // this.transF[5][5] = 1.0
+
+        // for (let j = 0; j < 6; j++) {
+        //     console.log("this.transU", (ielem + 1), this.transU[j])
+        //     //console.log("this.TfG2L. ielem", (ielem + 1), this.TfG2L[j])
+        // }
 
         // ind = 5;
         // if (this.gelenk[0] > 0) {
@@ -390,50 +387,50 @@ export class CTimoshenko_beam extends CElement {
             xx = xx + delta_x
         }
 
-        let sort = 0
-        let nelTeilungenNeu = this.nTeilungen + 1
-        for (let ieload = 0; ieload < ntotalEloads; ieload++) {                   //jetzt zusaetzliche Teilungspunkte fuer die jeweilige Einzellast, falls xP in x_ nicht enthalten ist
-            if (eload[ieload].element === ielem && (eload[ieload].art === 6)) {
+        // let sort = 0
+        // let nelTeilungenNeu = this.nTeilungen + 1
+        // for (let ieload = 0; ieload < ntotalEloads; ieload++) {                   //jetzt zusaetzliche Teilungspunkte fuer die jeweilige Einzellast, falls xP in x_ nicht enthalten ist
+        //     if (eload[ieload].element === ielem && (eload[ieload].art === 6)) {
 
-                if (Math.abs(this.x_[0] - eload[ieload].x) < 0.0000001) continue;  // nichts zu tun wenn Last am Anfang oder Ende des Stabs angreift
-                if (Math.abs(this.x_[this.nTeilungen] - eload[ieload].x) < 0.0000001) continue;
+        //         if (Math.abs(this.x_[0] - eload[ieload].x) < 0.0000001) continue;  // nichts zu tun wenn Last am Anfang oder Ende des Stabs angreift
+        //         if (Math.abs(this.x_[this.nTeilungen] - eload[ieload].x) < 0.0000001) continue;
 
-                let nn = 0
-                for (j = 0; j < nelTeilungenNeu; j++) {     // bei erster und letzter Stelle braucht nichts eingefügt zu werden
-                    if (Math.abs(this.x_[j] - eload[ieload].x) < 0.0000001) { //xP schon in x_ enthalten, also xP nur 1mal hinzufuegen
-                        nn = 1
-                    }
-                }
+        //         let nn = 0
+        //         for (j = 0; j < nelTeilungenNeu; j++) {     // bei erster und letzter Stelle braucht nichts eingefügt zu werden
+        //             if (Math.abs(this.x_[j] - eload[ieload].x) < 0.0000001) { //xP schon in x_ enthalten, also xP nur 1mal hinzufuegen
+        //                 nn = 1
+        //             }
+        //         }
 
-                if (nn === 1) {
-                    for (j = this.nTeilungen; j < nelTeilungenNeu; j++) {
-                        if (Math.abs(this.x_[j] - eload[ieload].x) < 0.0000001) { //xP schon 2mal in x_ enthalten
-                            nn = 0
-                        }
-                    }
-                    if (nn === 1) {
-                        nelTeilungenNeu++;
-                        this.x_.push(eload[ieload].x)
-                        sort = 1
-                    }
-                }
-                else if (nn === 0) {                   //xP war nicht enthalten,deshalb jetzt xP 2mal zu x_ dazu fuegen
-                    nn = 2
-                    nelTeilungenNeu += 2
-                    this.x_.push(eload[ieload].x)
-                    this.x_.push(eload[ieload].x)
-                    sort = 1
-                }
+        //         if (nn === 1) {
+        //             for (j = this.nTeilungen; j < nelTeilungenNeu; j++) {
+        //                 if (Math.abs(this.x_[j] - eload[ieload].x) < 0.0000001) { //xP schon 2mal in x_ enthalten
+        //                     nn = 0
+        //                 }
+        //             }
+        //             if (nn === 1) {
+        //                 nelTeilungenNeu++;
+        //                 this.x_.push(eload[ieload].x)
+        //                 sort = 1
+        //             }
+        //         }
+        //         else if (nn === 0) {                   //xP war nicht enthalten,deshalb jetzt xP 2mal zu x_ dazu fuegen
+        //             nn = 2
+        //             nelTeilungenNeu += 2
+        //             this.x_.push(eload[ieload].x)
+        //             this.x_.push(eload[ieload].x)
+        //             sort = 1
+        //         }
 
-            }
-        }
-        console.log("vor BUBBLESORT", this.x_)
+        //     }
+        // }
+        // console.log("vor BUBBLESORT", this.x_)
 
-        if (sort > 0) BubbleSort(this.x_);
+        // if (sort > 0) BubbleSort(this.x_);
 
-        console.log("nach BUBBLESORT", this.x_)
+        // console.log("nach BUBBLESORT", this.x_)
 
-        this.nTeilungen = nelTeilungenNeu
+        // this.nTeilungen = nelTeilungenNeu
 
         if (THIIO_flag === 0) {
             this.N_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
@@ -472,105 +469,50 @@ export class CTimoshenko_beam extends CElement {
 
         const sl = this.sl
         const L2 = sl * sl
-        const L3 = L2 * sl
 
-        let area_s: number
+
+
         let EAL = this.emodul * this.area / sl
-        const EI = this.emodul * this.Iy
-        this.gmodul = this.emodul / 2.0 / (1.0 + this.querdehnzahl)
-
-        if (this.schubfaktor === 0.0) {  // schubstarr
-            area_s = this.area
-            this.psi = 1.0
-            this.eta = 0.0
-        } else {
-            area_s = this.schubfaktor * this.area
-            this.psi = 1.0 / (1.0 + 12.0 * EI / this.gmodul / area_s / L2)
-            this.eta = EI / this.gmodul / area_s
-        }
-        const psi = this.psi
-
-        console.log("psi", this.psi)
 
         this.estm[0][0] = EAL
         this.estm[0][1] = 0.0
-        this.estm[0][2] = 0.0
-        this.estm[0][3] = -EAL
-        this.estm[0][4] = 0.0
-        this.estm[0][5] = 0.0
+        this.estm[0][2] = -EAL
+        this.estm[0][3] = 0.0
         this.estm[1][0] = 0.0
-        this.estm[1][1] = 12 * EI * psi / L3
-        this.estm[1][2] = -6 * EI * psi / L2
+        this.estm[1][1] = 0.0
+        this.estm[1][2] = 0.0
         this.estm[1][3] = 0.0
-        this.estm[1][4] = -12 * EI * psi / L3
-        this.estm[1][5] = -6 * EI * psi / L2
-        this.estm[2][0] = 0.0
-        this.estm[2][1] = -6 * EI * psi / L2
-        this.estm[2][2] = (1.0 + 3.0 * psi) * EI / sl
+        this.estm[2][0] = -EAL
+        this.estm[2][1] = 0.0
+        this.estm[2][2] = EAL
         this.estm[2][3] = 0.0
-        this.estm[2][4] = 6 * EI * psi / L2
-        this.estm[2][5] = (3.0 * psi - 1.0) * EI / sl
-        this.estm[3][0] = -EAL
+        this.estm[3][0] = 0.0
         this.estm[3][1] = 0.0
         this.estm[3][2] = 0.0
-        this.estm[3][3] = EAL
-        this.estm[3][4] = 0.0
-        this.estm[3][5] = 0.0
-        this.estm[4][0] = 0.0
-        this.estm[4][1] = -12 * EI * psi / L3
-        this.estm[4][2] = 6 * EI * psi / L2
-        this.estm[4][3] = 0.0
-        this.estm[4][4] = 12 * EI * psi / L3
-        this.estm[4][5] = 6 * EI * psi / L2
-        this.estm[5][0] = 0.0
-        this.estm[5][1] = -6 * EI * psi / L2
-        this.estm[5][2] = (3.0 * psi - 1.0) * EI / sl
-        this.estm[5][3] = 0.0
-        this.estm[5][4] = 6 * EI * psi / L2
-        this.estm[5][5] = (1.0 + 3.0 * psi) * EI / sl
+        this.estm[3][3] = 0.0
 
 
         EAL = 0.0
-        const fact = 1.0 / 60.0 / sl
-        const psi2 = psi * psi
 
         this.ksig[0][0] = EAL
         this.ksig[0][1] = 0.0
         this.ksig[0][2] = 0.0
         this.ksig[0][3] = -EAL
-        this.ksig[0][4] = 0.0
-        this.ksig[0][5] = 0.0
+
         this.ksig[1][0] = 0.0
-        this.ksig[1][1] = (60.0 + 12.0 * psi2) * fact
-        this.ksig[1][2] = -6. * psi2 * fact * sl
+        this.ksig[1][1] = 0.0
+        this.ksig[1][2] = 0.0
         this.ksig[1][3] = 0.0
-        this.ksig[1][4] = -(60. + 12. * psi2) * fact
-        this.ksig[1][5] = -6. * psi2 * fact * sl
+
         this.ksig[2][0] = 0.0
-        this.ksig[2][1] = -6. * psi2 * fact * sl
-        this.ksig[2][2] = (5. + 3. * psi2) * fact * L2
+        this.ksig[2][1] = 0.0
+        this.ksig[2][2] = 0.0
         this.ksig[2][3] = 0.0
-        this.ksig[2][4] = 6. * psi2 * fact * sl
-        this.ksig[2][5] = (3. * psi2 - 5.) * fact * L2
+
         this.ksig[3][0] = -EAL
         this.ksig[3][1] = 0.0
         this.ksig[3][2] = 0.0
         this.ksig[3][3] = EAL
-        this.ksig[3][4] = 0.0
-        this.ksig[3][5] = 0.0
-        this.ksig[4][0] = 0.0
-        this.ksig[4][1] = -(60.0 + 12.0 * psi2) * fact
-        this.ksig[4][2] = 6. * psi2 * fact * sl
-        this.ksig[4][3] = 0.0
-        this.ksig[4][4] = (60.0 + 12.0 * psi2) * fact
-        this.ksig[4][5] = 6. * psi2 * fact * sl
-        this.ksig[5][0] = 0.0
-        this.ksig[5][1] = -6. * psi2 * fact * sl
-        this.ksig[5][2] = (3. * psi2 - 5.) * fact * L2
-        this.ksig[5][3] = 0.0
-        this.ksig[5][4] = 6. * psi2 * fact * sl
-        this.ksig[5][5] = (5. + 3. * psi2) * fact * L2
-
 
     }
 
@@ -586,41 +528,58 @@ export class CTimoshenko_beam extends CElement {
 
         if (theorie === 0) {
 
-            for (j = 0; j < 6; j++) {
-                for (k = 0; k < this.neqeG; k++) {
-                    sum = 0.0
-                    for (let l = 0; l < 6; l++) {
-                        // sum = sum + this.estm[j][l] * this.trans[l][k]
-                        sum = sum + this.estm[j][l] * this.transU[l][k]
+            // for (j = 0; j < 6; j++) {
+            //     for (k = 0; k < this.neqeG; k++) {
+            //         sum = 0.0
+            //         for (let l = 0; l < 6; l++) {
+            //             // sum = sum + this.estm[j][l] * this.trans[l][k]
+            //             sum = sum + this.estm[j][l] * this.transU[l][k]
 
-                    }
-                    help[j][k] = sum
-                }
-            }
+            //         }
+            //         help[j][k] = sum
+            //     }
+            // }
 
+            let EAL = this.emodul * this.area / this.sl
+            const sico = EAL * this.sinus * this.cosinus
+            const co2 = EAL * this.cosinus * this.cosinus
+            const si2 = EAL * this.sinus * this.sinus
 
-            for (j = 0; j < 6; j++) {
-                for (k = 0; k < 6; k++) {
+            this.estiffG[0][0] = co2
+            this.estiffG[0][1] = sico
+            this.estiffG[0][2] = -co2
+            this.estiffG[0][3] = -sico
+            this.estiffG[1][0] = sico
+            this.estiffG[1][1] = si2
+            this.estiffG[1][2] = -sico
+            this.estiffG[1][3] = -si2
+            this.estiffG[2][0] = -co2
+            this.estiffG[2][1] = -sico
+            this.estiffG[2][2] = co2
+            this.estiffG[2][3] = sico
+            this.estiffG[3][0] = -sico
+            this.estiffG[3][1] = -si2
+            this.estiffG[3][2] = sico
+            this.estiffG[3][3] = si2
+
+            for (j = 0; j < 4; j++) {
+                for (k = 0; k < 4; k++) {
                     this.estmL2[j][k] = this.estm[j][k]
                 }
             }
 
         } else {
 
-            //const estm = Array.from(Array(6), () => new Array(6));
-
-            for (j = 0; j < 6; j++) {
-                for (k = 0; k < 6; k++) {
+            for (j = 0; j < 4; j++) {
+                for (k = 0; k < 4; k++) {
                     this.estmL2[j][k] = this.estm[j][k] + this.normalkraft * this.ksig[j][k]
                 }
             }
 
-            //for (j = 0; j < 6; j++) console.log('this.estmL2[]', this.estm[j]);
-
-            for (j = 0; j < 6; j++) {
-                for (k = 0; k < this.neqeG; k++) {
+            for (j = 0; j < 4; j++) {
+                for (k = 0; k < 4; k++) {
                     sum = 0.0
-                    for (let l = 0; l < 6; l++) {
+                    for (let l = 0; l < 4; l++) {
                         // sum = sum + this.estmL2[j][l] * this.trans[l][k]
                         sum = sum + this.estmL2[j][l] * this.transU[l][k]
                     }
@@ -628,21 +587,21 @@ export class CTimoshenko_beam extends CElement {
                 }
             }
 
-        }
-
-        for (j = 0; j < this.neqeG; j++) {
-            for (k = 0; k < this.neqeG; k++) {
-                sum = 0.0
-                for (let l = 0; l < 6; l++) {
-                    sum = sum + this.transU[l][j] * help[l][k]   // 31.12.
-                    //sum = sum + this.transF[j][l] * help[l][k]
+            for (j = 0; j < 4; j++) {
+                for (k = 0; k < 4; k++) {
+                    sum = 0.0
+                    for (let l = 0; l < 4; l++) {
+                        sum = sum + this.transU[l][j] * help[l][k]   // 31.12.
+                        //sum = sum + this.transF[j][l] * help[l][k]
+                    }
+                    this.estiffG[j][k] = sum
                 }
-                // this.estiff[j][k] = sum
-                this.estiffG[j][k] = sum
             }
+
         }
 
-        for (j = 0; j < this.neqeG; j++) {
+
+        for (j = 0; j < 4; j++) {
             console.log("this.estiffG", this.estiffG[j])
         }
     }
@@ -654,10 +613,10 @@ export class CTimoshenko_beam extends CElement {
         let lmi: number, lmj: number
 
 
-        for (i = 0; i < this.neqeG; i++) {
+        for (i = 0; i < 4; i++) {
             lmi = this.lm[i];
             if (lmi >= 0) {
-                for (j = 0; j < this.neqeG; j++) {
+                for (j = 0; j < 4; j++) {
                     lmj = this.lm[j];
                     if (lmj >= 0) {
                         // stiff[lmi][lmj] = stiff[lmi][lmj] + this.estiff[i][j];
@@ -675,12 +634,12 @@ export class CTimoshenko_beam extends CElement {
 
         let sum: number
         let j: number, k: number
-        const help = Array.from(Array(6), () => new Array(this.neqeG));
+        const help = Array.from(Array(4), () => new Array(4));
 
-        for (j = 0; j < 6; j++) {
-            for (k = 0; k < this.neqeG; k++) {
+        for (j = 0; j < 4; j++) {
+            for (k = 0; k < 4; k++) {
                 sum = 0.0
-                for (let l = 0; l < 6; l++) {
+                for (let l = 0; l < 4; l++) {
                     sum = sum + this.ksig[j][l] * this.transU[l][k]
                 }
                 help[j][k] = sum
@@ -688,11 +647,11 @@ export class CTimoshenko_beam extends CElement {
         }
 
 
-        for (j = 0; j < this.neqeG; j++) {
-            for (k = 0; k < this.neqeG; k++) {
+        for (j = 0; j < 4; j++) {
+            for (k = 0; k < 4; k++) {
                 sum = 0.0
-                for (let l = 0; l < 6; l++) {
-                     sum = sum + this.transU[l][j] * help[l][k]
+                for (let l = 0; l < 4; l++) {
+                    sum = sum + this.transU[l][j] * help[l][k]
                     // sum = sum + this.transF[j][l] * help[l][k]
                 }
                 this.estiff_sig[j][k] = -sum * this.normalkraft
@@ -790,11 +749,11 @@ export class CTimoshenko_beam extends CElement {
 
         // TODO ?? Bei gedrehten Lagern erst ins x,z Koordinatensystem zurückdrehen, siehe Excel ab Zeile 434
 
-        for (i = 0; i < 6; i++) {
+        for (i = 0; i < 4; i++) {
             sum = 0.0
             for (j = 0; j < this.neqe; j++) {
                 // sum += this.transU[i][j] * this.F[j]   // falsch
-                   sum += this.TfG2L[i][j] * this.F[j]
+                sum += this.TfG2L[i][j] * this.F[j]
             }
             this.FL[i] = sum
         }
@@ -802,12 +761,12 @@ export class CTimoshenko_beam extends CElement {
 
         for (i = 0; i < 3; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
 
-        this.normalkraft = (this.FL[0] + this.FL[3]) / 2.0
+        this.normalkraft = this.FL[0]
         if (this.normalkraft > 0.0) this.normalkraft = 0.0           // keine Zugversteifung
 
         console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
 
-        for (i = 0; i < 6; i++) { // Verformungen lokal
+        for (i = 0; i < 4; i++) { // Verformungen lokal
             sum = 0.0
             for (j = 0; j < this.neqeG; j++) {
                 sum += this.transU[i][j] * this.u[j]
@@ -836,9 +795,8 @@ export class CTimoshenko_beam extends CElement {
         for (let i = 0; i < 2; i++) {
             nodi = this.nod[i]
             console.log("nodi", i, nodi)
-            lagerkraft[nodi][0] = lagerkraft[nodi][0] - this.F[3 * i]
-            lagerkraft[nodi][1] = lagerkraft[nodi][1] - this.F[3 * i + 1]
-            lagerkraft[nodi][2] = lagerkraft[nodi][2] - this.F[3 * i + 2]
+            lagerkraft[nodi][0] = lagerkraft[nodi][0] - this.F[2 * i]
+            lagerkraft[nodi][1] = lagerkraft[nodi][1] - this.F[2 * i + 1]
         }
 
     }
@@ -902,8 +860,8 @@ export class CTimoshenko_beam extends CElement {
         }
         else if (eload[ieload].art === 2) {                     // Trapezstreckenlast z-Richtung, Projektion
 
-            let pL = eload[ieload].pL * this.dx / this.sl0
-            let pR = eload[ieload].pR * this.dx / this.sl0
+            let pL = eload[ieload].pL * this.dx / this.sl
+            let pR = eload[ieload].pR * this.dx / this.sl
 
             let pzL = this.cosinus * pL                         // Lastanteil senkrecht auf Stab
             let pzR = this.cosinus * pR
@@ -1113,7 +1071,7 @@ export class CTimoshenko_beam extends CElement {
 
         for (let j = 0; j < this.neqeG; j++) {
             let sum = 0.0
-            for (let k = 0; k < 6; k++) {
+            for (let k = 0; k < 4; k++) {
                 // sum += this.transF[j][k] * eload[ieload].re[k]
                 sum += this.transU[k][j] * eload[ieload].re[k]
             }
@@ -1492,8 +1450,8 @@ export class CTimoshenko_beam extends CElement {
                         else if (eload[ieload].art === 2) {                       // Trapezstreckenlast z-Richtung, Projektion
 
                             //console.log("Projektion",this.dx, sl)
-                            const pL = eload[ieload].pL * this.dx / this.sl0
-                            const pR = eload[ieload].pR * this.dx / this.sl0
+                            const pL = eload[ieload].pL * this.dx / this.sl
+                            const pR = eload[ieload].pR * this.dx / this.sl
 
                             let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
                             let pzR = this.cosinus * pR
@@ -1726,8 +1684,8 @@ export class CTimoshenko_beam extends CElement {
                             }
                             else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
 
-                                const pL = eload[ieload].pL * this.dx / this.sl0 * kombiTabelle[iLastf][index]
-                                const pR = eload[ieload].pR * this.dx / this.sl0 * kombiTabelle[iLastf][index]
+                                const pL = eload[ieload].pL * this.dx / this.sl * kombiTabelle[iLastf][index]
+                                const pR = eload[ieload].pR * this.dx / this.sl * kombiTabelle[iLastf][index]
 
                                 let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
                                 let pzR = this.cosinus * pR

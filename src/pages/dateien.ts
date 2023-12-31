@@ -7,7 +7,7 @@ import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
 
 import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length, set_querschnittszaehler } from "./rechnen"
-import { add_rechteck_querschnitt } from './rechnen'
+import { add_rechteck_querschnitt, setSystem } from './rechnen'
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
 
@@ -26,6 +26,11 @@ export function read_daten(eingabedaten: string) {
 
     // in Tabelle schreiben
     {
+
+        let ele = document.getElementById('id_dialog_neue_eingabe') as HTMLElement;
+        (ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value = jobj.system;
+        setSystem(Number(jobj.system));
+
         let el = document.getElementById('id_button_nnodes') as drButtonPM;
         //console.log("el",el)
         //console.log("nnodes",jobj.nnodes)
@@ -95,6 +100,16 @@ export function read_daten(eingabedaten: string) {
     clearTables();
 
     console.log("nach resize")
+
+    if (jobj.system === 1) {
+        let el = document.getElementById("id_knoten_tabelle");
+        el?.setAttribute("hide_column", String(5));
+        el = document.getElementById("id_element_tabelle");
+        for (let i = 5; i <= 12; i++)el?.setAttribute("hide_column", String(i));
+        el?.setAttribute("hide_column", String(2));
+        el = document.getElementById("id_knotenlasten_tabelle");
+        el?.setAttribute("hide_column", String(5));
+      }
 
 
     let nQuerschnittSets = jobj.nquerschnittsets
@@ -356,6 +371,8 @@ async function handleFileSelect_save() {
         el = document.getElementById('id_neigv') as HTMLSelectElement;
         neigv = el.value;
 
+        el = document.getElementById('id_dialog_neue_eingabe') as HTMLElement;
+        let system = Number((el.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
 
         el = document.getElementById('id_knoten_tabelle') as HTMLElement;
         let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
@@ -542,9 +559,10 @@ async function handleFileSelect_save() {
 
         let polyData = {
 
-            'version': 0,
+            'version': 1,
 
             // 'unit_length': current_unit_length,
+            'system': system,
             'nnodes': n_nodes,
             'nelem': n_elem,
             'nloads': nloads,
