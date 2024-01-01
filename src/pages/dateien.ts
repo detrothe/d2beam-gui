@@ -7,7 +7,7 @@ import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
 
 import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length, set_querschnittszaehler } from "./rechnen"
-import { add_rechteck_querschnitt, setSystem } from './rechnen'
+import { add_rechteck_querschnitt, setSystem, hideColumnsForFachwerk } from './rechnen'
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
 
@@ -101,15 +101,16 @@ export function read_daten(eingabedaten: string) {
 
     console.log("nach resize")
 
-    if (jobj.system === 1) {
-        let el = document.getElementById("id_knoten_tabelle");
-        el?.setAttribute("hide_column", String(5));
-        el = document.getElementById("id_element_tabelle");
-        for (let i = 5; i <= 12; i++)el?.setAttribute("hide_column", String(i));
-        el?.setAttribute("hide_column", String(2));
-        el = document.getElementById("id_knotenlasten_tabelle");
-        el?.setAttribute("hide_column", String(5));
-      }
+    //if (jobj.system === 1) {
+        //hideColumnsForFachwerk();
+        // let el = document.getElementById("id_knoten_tabelle");
+        // el?.setAttribute("hide_column", String(5));
+        // el = document.getElementById("id_element_tabelle");
+        // for (let i = 5; i <= 12; i++)el?.setAttribute("hide_column", String(i));
+        // el?.setAttribute("hide_column", String(2));
+        // el = document.getElementById("id_knotenlasten_tabelle");
+        // el?.setAttribute("hide_column", String(5));
+      //}
 
 
     let nQuerschnittSets = jobj.nquerschnittsets

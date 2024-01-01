@@ -305,6 +305,16 @@ export function setSystem(system: number) {
     System = system;
 }
 
+export function hideColumnsForFachwerk() {
+    let el = document.getElementById("id_knoten_tabelle");
+    el?.setAttribute("hide_column", String(5));
+    el = document.getElementById("id_element_tabelle");
+    for (let i = 5; i <= 12; i++)el?.setAttribute("hide_column", String(i));
+    el?.setAttribute("hide_column", String(2));
+    el = document.getElementById("id_knotenlasten_tabelle");
+    el?.setAttribute("hide_column", String(5));
+}
+
 //---------------------------------------------------------------------------------------------------------------
 export function incr_neq() {
     //-----------------------------------------------------------------------------------------------------------
@@ -760,7 +770,7 @@ function read_nodes() {
             else if (ispalte === 5) node[iz].L[2] = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 6) node[iz].phi = Number(testNumber(wert, izeile, ispalte, shad));
 
-            if ( System === FACHWERK) node[iz].L[2] = 1;   // Drehfreiheitsgrad festhalten
+            if (System === FACHWERK) node[iz].L[2] = 1;   // Drehfreiheitsgrad festhalten
 
             node[iz].L_org[0] = node[iz].L[0]
             node[iz].L_org[1] = node[iz].L[1]
@@ -2608,12 +2618,14 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         th2.title = "Verschiebung w, positiv in positiver z-Richtung"
         th2.setAttribute("class", "table_cell_center");
         row.appendChild(th2);
-        // @ts-ignore
-        const th3 = table.tHead.appendChild(document.createElement("th"));
-        th3.innerHTML = "&phi; &nbsp;[mrad]";
-        th3.title = "Verdrehung &phi;, positiv im Gegenuhrzeigersinn"
-        th3.setAttribute("class", "table_cell_center");
-        row.appendChild(th3);
+        if (System === 0) {
+            // @ts-ignore
+            const th3 = table.tHead.appendChild(document.createElement("th"));
+            th3.innerHTML = "&phi; &nbsp;[mrad]";
+            th3.title = "Verdrehung &phi;, positiv im Gegenuhrzeigersinn"
+            th3.setAttribute("class", "table_cell_center");
+            row.appendChild(th3);
+        }
 
         for (i = 0; i < nnodes; i++) {
 
@@ -2635,10 +2647,12 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
             newCell.appendChild(newText);
             newCell.setAttribute("class", "table_cell_right");
 
-            newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
-            newText = document.createTextNode(myFormat(disp_print._(i + 1, 3, iLastfall), 2, 2));  // Append a text node to the cell
-            newCell.appendChild(newText);
-            newCell.setAttribute("class", "table_cell_right");
+            if (System === 0) {
+                newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(disp_print._(i + 1, 3, iLastfall), 2, 2));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+            }
         }
     }
 
@@ -2679,12 +2693,14 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         th2.title = "Auflagerkraft Az, positiv in negativer z-Richtung"
         th2.setAttribute("class", "table_cell_center");
         row.appendChild(th2);
-        // @ts-ignore
-        const th3 = table.tHead.appendChild(document.createElement("th"));
-        th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
-        th3.title = "Einspannmoment, positiv im Uhrzeigersinn"
-        th3.setAttribute("class", "table_cell_center");
-        row.appendChild(th3);
+        if (System === 0) {
+            // @ts-ignore
+            const th3 = table.tHead.appendChild(document.createElement("th"));
+            th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+            th3.title = "Einspannmoment, positiv im Uhrzeigersinn"
+            th3.setAttribute("class", "table_cell_center");
+            row.appendChild(th3);
+        }
 
         for (i = 0; i < nnodes; i++) {
 
@@ -2706,10 +2722,12 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
             newCell.appendChild(newText);
             newCell.setAttribute("class", "table_cell_right");
 
-            newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
-            newText = document.createTextNode(myFormat(lagerkraft[i][2], 2, 2));  // Append a text node to the cell
-            newCell.appendChild(newText);
-            newCell.setAttribute("class", "table_cell_right");
+            if (System === 0) {
+                newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(lagerkraft[i][2], 2, 2));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+            }
         }
     }
 
@@ -2750,13 +2768,14 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         th2.title = "Querkraft Vz am Stabanfang, positiv in negativer z-Richtung am negativen Schnittufer"
         th2.setAttribute("class", "table_cell_center");
         row.appendChild(th2);
-        // @ts-ignore
-        const th3 = table.tHead.appendChild(document.createElement("th"));
-        th3.innerHTML = "M<sub>ay</sub>&nbsp;[kNm]";
-        th3.title = "Biegemoment am Stabanfang, positiv im Uhrzeigersinn am negativen Schnittufer"
-        th3.setAttribute("class", "table_cell_center");
-        row.appendChild(th3);
-
+        if (System === 0) {
+            // @ts-ignore
+            const th3 = table.tHead.appendChild(document.createElement("th"));
+            th3.innerHTML = "M<sub>ay</sub>&nbsp;[kNm]";
+            th3.title = "Biegemoment am Stabanfang, positiv im Uhrzeigersinn am negativen Schnittufer"
+            th3.setAttribute("class", "table_cell_center");
+            row.appendChild(th3);
+        }
         // @ts-ignore
         const th4 = table.tHead.appendChild(document.createElement("th"));
         th4.innerHTML = "N<sub>e</sub> &nbsp;[kN]";
@@ -2769,12 +2788,14 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         th5.title = "Querkraft Vz am Stabende, positiv in z-Richtung am positiven Schnittufer"
         th5.setAttribute("class", "table_cell_center");
         row.appendChild(th5);
-        // @ts-ignore
-        const th6 = table.tHead.appendChild(document.createElement("th"));
-        th6.innerHTML = "M<sub>ey</sub>&nbsp;[kNm]";
-        th6.title = "Biegemoment am Stabende, positiv im Gegenuhrzeigersinn am positiven Schnittufer"
-        th6.setAttribute("class", "table_cell_center");
-        row.appendChild(th6);
+        if (System === 0) {
+            // @ts-ignore
+            const th6 = table.tHead.appendChild(document.createElement("th"));
+            th6.innerHTML = "M<sub>ey</sub>&nbsp;[kNm]";
+            th6.title = "Biegemoment am Stabende, positiv im Gegenuhrzeigersinn am positiven Schnittufer"
+            th6.setAttribute("class", "table_cell_center");
+            row.appendChild(th6);
+        }
 
         for (i = 0; i < nelem; i++) {
 
@@ -3004,18 +3025,20 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
             th1.setAttribute("class", "table_cell_center");
             row.appendChild(th1);
 
-            // @ts-ignore
-            const th2 = table.tHead.appendChild(document.createElement("th"));
-            th2.innerHTML = "V<sub>z</sub>&nbsp;[kN]";
-            th2.title = "Querkraft Vz, positiv in negativer z-Richtung am negativen Schnittufer"
-            th2.setAttribute("class", "table_cell_center");
-            row.appendChild(th2);
-            // @ts-ignore
-            const th3 = table.tHead.appendChild(document.createElement("th"));
-            th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
-            th3.title = "Biegemoment, positiv im Uhrzeigersinn am negativen Schnittufer"
-            th3.setAttribute("class", "table_cell_center");
-            row.appendChild(th3);
+            if (System === 0) {
+                // @ts-ignore
+                const th2 = table.tHead.appendChild(document.createElement("th"));
+                th2.innerHTML = "V<sub>z</sub>&nbsp;[kN]";
+                th2.title = "Querkraft Vz, positiv in negativer z-Richtung am negativen Schnittufer"
+                th2.setAttribute("class", "table_cell_center");
+                row.appendChild(th2);
+                // @ts-ignore
+                const th3 = table.tHead.appendChild(document.createElement("th"));
+                th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+                th3.title = "Biegemoment, positiv im Uhrzeigersinn am negativen Schnittufer"
+                th3.setAttribute("class", "table_cell_center");
+                row.appendChild(th3);
+            }
 
             // @ts-ignore
             const th4 = table.tHead.appendChild(document.createElement("th"));
@@ -3029,12 +3052,14 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
             th5.title = "lokale Verschiebung in senkrecht zur Stabrichtung, positiv in lokaler z-Richtung"
             th5.setAttribute("class", "table_cell_center");
             row.appendChild(th5);
-            // @ts-ignore
-            const th6 = table.tHead.appendChild(document.createElement("th"));
-            th6.innerHTML = "&beta; &nbsp;[mrad]";
-            th6.title = "Rotation der Querschnittsebene, positiv im Uhrzeigersinn, bei schubstarr: ß = w'"
-            th6.setAttribute("class", "table_cell_center");
-            row.appendChild(th6);
+            if (System === 0) {
+                // @ts-ignore
+                const th6 = table.tHead.appendChild(document.createElement("th"));
+                th6.innerHTML = "&beta; &nbsp;[mrad]";
+                th6.title = "Rotation der Querschnittsebene, positiv im Uhrzeigersinn, bei schubstarr: ß = w'"
+                th6.setAttribute("class", "table_cell_center");
+                row.appendChild(th6);
+            }
 
             const nelTeilungen = el[ielem].nTeilungen
             let sg_M: number[] = new Array(nelTeilungen)
@@ -3061,23 +3086,40 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_center");
 
+                if (System === 0) {
+                    for (j = 1; j <= 6; j++) {
+                        newCell = newRow.insertCell(j);
+                        if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
+                        else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i], 2, 2));
+                        else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i], 2, 2));
+                        else if (j === 4) newText = document.createTextNode(myFormat(uL[i] * 1000., 3, 3));
+                        else if (j === 5) newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
+                        else if (j === 6) newText = document.createTextNode(myFormat(phiL[i] * 1000., 3, 3));
+                        newCell.appendChild(newText);
+                        newCell.setAttribute("class", "table_cell_right");
+                    }
+                }
+                else {
+                    newCell = newRow.insertCell(1);
+                    newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
+                    newCell.appendChild(newText);
+                    newCell.setAttribute("class", "table_cell_right");
 
-                for (j = 1; j <= 6; j++) {
-                    newCell = newRow.insertCell(j);
-                    if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
-                    else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i], 2, 2));
-                    else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i], 2, 2));
-                    else if (j === 4) newText = document.createTextNode(myFormat(uL[i] * 1000., 3, 3));
-                    else if (j === 5) newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
-                    else if (j === 6) newText = document.createTextNode(myFormat(phiL[i] * 1000., 3, 3));
+                    newCell = newRow.insertCell(2);
+                    newText = document.createTextNode(myFormat(uL[i] * 1000., 3, 3));
+                    newCell.appendChild(newText);
+                    newCell.setAttribute("class", "table_cell_right");
+
+                    newCell = newRow.insertCell(3);
+                    newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
                     newCell.appendChild(newText);
                     newCell.setAttribute("class", "table_cell_right");
                 }
-
             }
         }
-
     }
+
+
 
 }
 

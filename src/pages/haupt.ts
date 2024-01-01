@@ -57,6 +57,8 @@ import {
   incr_querschnitts_zaehler,
   show_gleichungssystem,
   setSystem,
+  System,
+  hideColumnsForFachwerk,
 } from "./rechnen";
 
 import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
@@ -1436,6 +1438,8 @@ export function resizeTables() {
     //console.log("EL nspalten: >>", nelem);
     el?.setAttribute("nspalten", String(Number(nelem) + 1)); // +1 wegen Kommentarspalte
   }
+
+  if (System === 1)  hideColumnsForFachwerk();
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1546,15 +1550,7 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     resizeTables();
     clearTables();
-    if (system === 1) {
-      let el = document.getElementById("id_knoten_tabelle");
-      el?.setAttribute("hide_column", String(5));
-      el = document.getElementById("id_element_tabelle");
-      for (let i = 5; i <= 12; i++)el?.setAttribute("hide_column", String(i));
-      el?.setAttribute("hide_column", String(2));
-      el = document.getElementById("id_knotenlasten_tabelle");
-      el?.setAttribute("hide_column", String(5));
-    }
+    if (system === 1) hideColumnsForFachwerk();
 
     berechnungErforderlich(true);
 

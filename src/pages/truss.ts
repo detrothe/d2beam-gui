@@ -468,9 +468,6 @@ export class CTruss extends CElement {
     berechneLokaleElementsteifigkeitmatrix() {
 
         const sl = this.sl
-        const L2 = sl * sl
-
-
 
         let EAL = this.emodul * this.area / sl
 
@@ -478,39 +475,42 @@ export class CTruss extends CElement {
         this.estm[0][1] = 0.0
         this.estm[0][2] = -EAL
         this.estm[0][3] = 0.0
+
         this.estm[1][0] = 0.0
         this.estm[1][1] = 0.0
         this.estm[1][2] = 0.0
         this.estm[1][3] = 0.0
+
         this.estm[2][0] = -EAL
         this.estm[2][1] = 0.0
         this.estm[2][2] = EAL
         this.estm[2][3] = 0.0
+
         this.estm[3][0] = 0.0
         this.estm[3][1] = 0.0
         this.estm[3][2] = 0.0
         this.estm[3][3] = 0.0
 
 
-        EAL = 0.0
+        EAL = 1.0 / sl
 
-        this.ksig[0][0] = EAL
+        this.ksig[0][0] = 0.0
         this.ksig[0][1] = 0.0
         this.ksig[0][2] = 0.0
-        this.ksig[0][3] = -EAL
+        this.ksig[0][3] = 0.0
 
         this.ksig[1][0] = 0.0
-        this.ksig[1][1] = 0.0
+        this.ksig[1][1] = EAL
         this.ksig[1][2] = 0.0
-        this.ksig[1][3] = 0.0
+        this.ksig[1][3] = -EAL
 
         this.ksig[2][0] = 0.0
         this.ksig[2][1] = 0.0
         this.ksig[2][2] = 0.0
         this.ksig[2][3] = 0.0
 
-        this.ksig[3][0] = -EAL
-        this.ksig[3][1] = 0.0
+        this.ksig[3][0] = 0.0
+        this.ksig[3][1] = -EAL
         this.ksig[3][2] = 0.0
         this.ksig[3][3] = EAL
 
@@ -528,39 +528,38 @@ export class CTruss extends CElement {
 
         if (theorie === 0) {
 
-            // for (j = 0; j < 6; j++) {
-            //     for (k = 0; k < this.neqeG; k++) {
-            //         sum = 0.0
-            //         for (let l = 0; l < 6; l++) {
-            //             // sum = sum + this.estm[j][l] * this.trans[l][k]
-            //             sum = sum + this.estm[j][l] * this.transU[l][k]
+            for (j = 0; j < 4; j++) {
+                for (k = 0; k < this.neqeG; k++) {
+                    sum = 0.0
+                    for (let l = 0; l < 4; l++) {
+                        sum = sum + this.estm[j][l] * this.transU[l][k]
 
-            //         }
-            //         help[j][k] = sum
-            //     }
-            // }
+                    }
+                    help[j][k] = sum
+                }
+            }
 
-            let EAL = this.emodul * this.area / this.sl
-            const sico = EAL * this.sinus * this.cosinus
-            const co2 = EAL * this.cosinus * this.cosinus
-            const si2 = EAL * this.sinus * this.sinus
+            // let EAL = this.emodul * this.area / this.sl
+            // const sico = EAL * this.sinus * this.cosinus
+            // const co2 = EAL * this.cosinus * this.cosinus
+            // const si2 = EAL * this.sinus * this.sinus
 
-            this.estiffG[0][0] = co2
-            this.estiffG[0][1] = sico
-            this.estiffG[0][2] = -co2
-            this.estiffG[0][3] = -sico
-            this.estiffG[1][0] = sico
-            this.estiffG[1][1] = si2
-            this.estiffG[1][2] = -sico
-            this.estiffG[1][3] = -si2
-            this.estiffG[2][0] = -co2
-            this.estiffG[2][1] = -sico
-            this.estiffG[2][2] = co2
-            this.estiffG[2][3] = sico
-            this.estiffG[3][0] = -sico
-            this.estiffG[3][1] = -si2
-            this.estiffG[3][2] = sico
-            this.estiffG[3][3] = si2
+            // this.estiffG[0][0] = co2
+            // this.estiffG[0][1] = sico
+            // this.estiffG[0][2] = -co2
+            // this.estiffG[0][3] = -sico
+            // this.estiffG[1][0] = sico
+            // this.estiffG[1][1] = si2
+            // this.estiffG[1][2] = -sico
+            // this.estiffG[1][3] = -si2
+            // this.estiffG[2][0] = -co2
+            // this.estiffG[2][1] = -sico
+            // this.estiffG[2][2] = co2
+            // this.estiffG[2][3] = sico
+            // this.estiffG[3][0] = -sico
+            // this.estiffG[3][1] = -si2
+            // this.estiffG[3][2] = sico
+            // this.estiffG[3][3] = si2
 
             for (j = 0; j < 4; j++) {
                 for (k = 0; k < 4; k++) {
@@ -587,19 +586,17 @@ export class CTruss extends CElement {
                 }
             }
 
-            for (j = 0; j < 4; j++) {
-                for (k = 0; k < 4; k++) {
-                    sum = 0.0
-                    for (let l = 0; l < 4; l++) {
-                        sum = sum + this.transU[l][j] * help[l][k]   // 31.12.
-                        //sum = sum + this.transF[j][l] * help[l][k]
-                    }
-                    this.estiffG[j][k] = sum
-                }
-            }
-
         }
 
+        for (j = 0; j < 4; j++) {
+            for (k = 0; k < 4; k++) {
+                sum = 0.0
+                for (let l = 0; l < 4; l++) {
+                    sum = sum + this.transU[l][j] * help[l][k]
+                }
+                this.estiffG[j][k] = sum
+            }
+        }
 
         for (j = 0; j < 4; j++) {
             console.log("this.estiffG", this.estiffG[j])
@@ -761,7 +758,7 @@ export class CTruss extends CElement {
 
         for (i = 0; i < 3; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
 
-        console.log('lokale Schnittgrößen, Element',(ielem+1),this.FL)
+        console.log('lokale Schnittgrößen, Element', (ielem + 1), this.FL)
 
         this.normalkraft = this.FL[0]
         if (this.normalkraft > 0.0) this.normalkraft = 0.0           // keine Zugversteifung
@@ -844,20 +841,17 @@ export class CTruss extends CElement {
             const p1 = -sl * (pzR + pzL) / 2.0 / 60.0
             const p2 = -sl * (pzR - pzL) / 2.0 / 60.0
 
-            eload[ieload].re[0] = -sl * (2 * pxL + pxR) / 6
-            eload[ieload].re[3] = -sl * (pxL + 2 * pxR) / 6
+            eload[ieload].re[0] = -sl * pxL / 2
+            eload[ieload].re[2] = -sl * pxL / 2
 
-            eload[ieload].re[1] = 30.0 * p1 - (10.0 + 2.0 * this.psi) * p2 // VL
-            eload[ieload].re[4] = 30.0 * p1 + (10.0 + 2.0 * this.psi) * p2 // VR
+            eload[ieload].re[1] = -sl * pzL / 2
+            eload[ieload].re[3] = -sl * pzL / 2
 
-            eload[ieload].re[2] = -5.0 * sl * p1 + sl * this.psi * p2
-            eload[ieload].re[5] = 5.0 * sl * p1 + sl * this.psi * p2
+            eload[ieload].re[4] = 0.0
+            eload[ieload].re[5] = 0.0
 
-            let qL = pzL
-            let mq = (pzR - pzL) / sl;
-            let psi = this.eta
-            eload[ieload].C1 = ((120 * sl * psi + 10 * sl ** 3) * qL + 40 * sl ** 2 * mq * psi + 3 * sl ** 4 * mq) / (240 * psi + 20 * sl ** 2);
-            eload[ieload].C2 = -((60 * sl ** 2 * psi + 5 * sl ** 4) * qL + 30 * sl ** 3 * mq * psi + 2 * sl ** 5 * mq) / (720 * psi + 60 * sl ** 2);
+            eload[ieload].C1 = 0.0
+            eload[ieload].C2 = 0.0
 
         }
         else if (eload[ieload].art === 2) {                     // Trapezstreckenlast z-Richtung, Projektion
@@ -1372,7 +1366,7 @@ export class CTruss extends CElement {
             wx = Nu[0] * edisp[1] + Nu[1] * edisp[3];
             uxG = Nu[0] * edispG[0] + Nu[1] * edispG[2]
             wxG = Nu[0] * edispG[1] + Nu[1] * edispG[3];
-            phix=0.0
+            phix = 0.0
             //phixG = -(Nphi[0] * edispG[1] + Nphi[1] * edispG[2] + Nphi[2] * edispG[4] + Nphi[3] * edispG[5]);  // im Uhrzeigersinn
             //console.log("phix", x, phix)
 
