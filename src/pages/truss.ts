@@ -388,7 +388,7 @@ export class CTruss extends CElement {
         }
 
         // let sort = 0
-        // let nelTeilungenNeu = this.nTeilungen + 1
+        let nelTeilungenNeu = this.nTeilungen + 1
         // for (let ieload = 0; ieload < ntotalEloads; ieload++) {                   //jetzt zusaetzliche Teilungspunkte fuer die jeweilige Einzellast, falls xP in x_ nicht enthalten ist
         //     if (eload[ieload].element === ielem && (eload[ieload].art === 6)) {
 
@@ -430,7 +430,7 @@ export class CTruss extends CElement {
 
         // console.log("nach BUBBLESORT", this.x_)
 
-        // this.nTeilungen = nelTeilungenNeu
+        this.nTeilungen = nelTeilungenNeu
 
         if (THIIO_flag === 0) {
             this.N_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
@@ -752,14 +752,16 @@ export class CTruss extends CElement {
         for (i = 0; i < 4; i++) {
             sum = 0.0
             for (j = 0; j < this.neqe; j++) {
-                // sum += this.transU[i][j] * this.F[j]   // falsch
-                sum += this.TfG2L[i][j] * this.F[j]
+                sum += this.transU[i][j] * this.F[j]
+                //sum += this.TfG2L[i][j] * this.F[j]
             }
             this.FL[i] = sum
         }
 
 
         for (i = 0; i < 3; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
+
+        console.log('lokale Schnittgrößen, Element',(ielem+1),this.FL)
 
         this.normalkraft = this.FL[0]
         if (this.normalkraft > 0.0) this.normalkraft = 0.0           // keine Zugversteifung
@@ -776,11 +778,11 @@ export class CTruss extends CElement {
 
         this.NL = this.FL[0]                               // Verformungen, Schnittgrößen am Stabanfang für Zustandslinien
         this.VL = this.FL[1]
-        this.ML = this.FL[2]
+        this.ML = 0.0
         this.uL = this.edispL[0]
         this.wL = this.edispL[1]
-        this.phiL = this.edispL[2]
-        this.NR = this.FL[3]
+        this.phiL = 0.0
+        this.NR = this.FL[0]
 
         return this.FL;
     }
@@ -1088,7 +1090,7 @@ export class CTruss extends CElement {
         let ieq: number, i: number, j: number, k: number
         let sum: number
 
-        let dispL = Array(6), dispG = Array(10), FeL = Array(6)
+        let dispL = Array(4), dispG = Array(4), FeL = Array(4)
         let v0 = Array(6).fill(0.0)
 
         for (j = 0; j < this.neqeG; j++) {                           // Stabverformungen
@@ -1102,7 +1104,7 @@ export class CTruss extends CElement {
 
         console.log("dispG", dispG)
 
-        for (i = 0; i < 6; i++) {
+        for (i = 0; i < 4; i++) {
             sum = 0.0
             for (j = 0; j < this.neqeG; j++) {
                 sum += this.transU[i][j] * dispG[j]
@@ -1110,9 +1112,9 @@ export class CTruss extends CElement {
             this.edisp0[i] = sum
         }
 
-        for (j = 0; j < 6; j++) {
+        for (j = 0; j < 4; j++) {
             sum = 0.0
-            for (k = 0; k < 6; k++) {
+            for (k = 0; k < 4; k++) {
                 sum += this.normalkraft * this.ksig[j][k] * this.edisp0[k]    // this.normalkraft *
             }
             FeL[j] = sum     // lokal
@@ -1138,9 +1140,9 @@ export class CTruss extends CElement {
         }
 
 
-        for (j = 0; j < 6; j++) {
+        for (j = 0; j < 4; j++) {
             sum = 0.0
-            for (k = 0; k < 6; k++) {
+            for (k = 0; k < 4; k++) {
                 sum += this.normalkraft * this.ksig[j][k] * v0[k]
             }
             FeL[j] += sum     // lokal
@@ -1150,7 +1152,7 @@ export class CTruss extends CElement {
 
         for (i = 0; i < this.neqeG; i++) {
             sum = 0.0
-            for (j = 0; j < 6; j++) {
+            for (j = 0; j < 4; j++) {
                 sum += this.transU[j][i] * FeL[j]
                 //sum += this.transF[i][j] * FeL[j]
             }
@@ -1205,7 +1207,7 @@ export class CTruss extends CElement {
     //---------------------------------------------------------------------------------------------
     get_edispL(edispL: number[], iLastfall: number) {
 
-        let edisp: number[] = new Array(10)
+        let edisp: number[] = new Array(4)
 
 
         for (let j = 0; j < this.neqeG; j++) {
@@ -1218,7 +1220,7 @@ export class CTruss extends CElement {
         }
         console.log("disp", edisp)
 
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 4; i++) {
             let sum = 0.0
             for (let j = 0; j < this.neqeG; j++) {
                 sum += this.transU[i][j] * edisp[j]
@@ -1232,7 +1234,7 @@ export class CTruss extends CElement {
     //---------------------------------------------------------------------------------------------
     get_edispL_schiefstellung(edispL: number[], iKomb: number) {
 
-        let edisp: number[] = new Array(10)
+        let edisp: number[] = new Array(4)
 
 
         for (let j = 0; j < this.neqeG; j++) {
@@ -1245,7 +1247,7 @@ export class CTruss extends CElement {
         }
         console.log("disp", edisp)
 
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 4; i++) {
             let sum = 0.0
             for (let j = 0; j < this.neqeG; j++) {
                 sum += this.transU[i][j] * edisp[j]
@@ -1258,7 +1260,7 @@ export class CTruss extends CElement {
     //---------------------------------------------------------------------------------------------
     get_edispL_eigenform(edispL: number[], iKomb: number, ieigv: number) {
 
-        let edisp: number[] = new Array(10)
+        let edisp: number[] = new Array(4)
 
 
         for (let j = 0; j < this.neqeG; j++) {
@@ -1271,7 +1273,7 @@ export class CTruss extends CElement {
         }
         console.log("eigen, disp", edisp)
 
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 4; i++) {
             let sum = 0.0
             for (let j = 0; j < this.neqeG; j++) {
                 sum += this.transU[i][j] * edisp[j]
@@ -1291,8 +1293,8 @@ export class CTruss extends CElement {
         let Nu: number[] = new Array(2), Nw: number[] = new Array(4), Nphi: number[] = new Array(4)
         let u: number, wL: number = 0.0, wLG = 0.0, disp = 0.0, dwx = 0.0, wxG = 0.0, uxG = 0.0, dwxG = 0.0
         let Nm = 0.0
-        let edisp: number[] = Array(6)
-        let edispG: number[] = Array(6).fill(0.0)
+        let edisp: number[] = Array(4)
+        let edispG: number[] = Array(4).fill(0.0)
 
         let EI = this.emodul * this.Iy
         let EA = this.emodul * this.area
@@ -1309,12 +1311,12 @@ export class CTruss extends CElement {
         //console.log("ETA", eta)
 
         if (THIIO_flag === 0) {      // Theorie I. Ordnung
-            for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i]
+            for (let i = 0; i < 4; i++) edisp[i] = this.edispL[i]
         }
         else {      // Theorie II. Ordnung
 
-            for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i] // Verformung
-            for (let i = 0; i < 6; i++) edispG[i] = this.edispL[i] + this.edisp0[i]  // Verformung + Schiefstellung
+            for (let i = 0; i < 4; i++) edisp[i] = this.edispL[i] // Verformung
+            for (let i = 0; i < 4; i++) edispG[i] = this.edispL[i] + this.edisp0[i]  // Verformung + Schiefstellung
             //console.log(" 1 edisp", edisp)
 
             wL = this.wL
@@ -1350,8 +1352,8 @@ export class CTruss extends CElement {
             x = this.x_[iteil]
             const x2 = x * x
             const x3 = x2 * x
-            Vx = this.VL
-            Mx = this.ML + Vx * x
+            Vx = 0.0
+            Mx = 0.0
             Nx = this.NL
             //ux = 0.0
             //wx = 0.0
@@ -1366,12 +1368,12 @@ export class CTruss extends CElement {
             Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl3) / nenner
             Nphi[2] = -6.0 * (sl * x - x2) / nenner
             Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
-            ux = Nu[0] * edisp[0] + Nu[1] * edisp[3]
-            wx = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
-            uxG = Nu[0] * edispG[0] + Nu[1] * edispG[3]
-            wxG = Nw[0] * edispG[1] + Nw[1] * edispG[2] + Nw[2] * edispG[4] + Nw[3] * edispG[5];
-            phix = -(Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5]);  // im Uhrzeigersinn
-            phixG = -(Nphi[0] * edispG[1] + Nphi[1] * edispG[2] + Nphi[2] * edispG[4] + Nphi[3] * edispG[5]);  // im Uhrzeigersinn
+            ux = Nu[0] * edisp[0] + Nu[1] * edisp[2]
+            wx = Nu[0] * edisp[1] + Nu[1] * edisp[3];
+            uxG = Nu[0] * edispG[0] + Nu[1] * edispG[2]
+            wxG = Nu[0] * edispG[1] + Nu[1] * edispG[3];
+            phix=0.0
+            //phixG = -(Nphi[0] * edispG[1] + Nphi[1] * edispG[2] + Nphi[2] * edispG[4] + Nphi[3] * edispG[5]);  // im Uhrzeigersinn
             //console.log("phix", x, phix)
 
             if (THIIO_flag === 1) {

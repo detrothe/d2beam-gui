@@ -66,7 +66,7 @@ export function read_daten(eingabedaten: string) {
         el = document.getElementById('id_button_nteilungen') as drButtonPM;
         console.log("jobj.nelteilungen", jobj.nelteilungen)
         if (jobj.nelteilungen === undefined) el.setValue(10);
-        else el.setValue(Math.max(jobj.nelteilungen, 2));
+        else el.setValue(Math.max(jobj.nelteilungen, 1));
 
         el = document.getElementById('id_button_niter') as drButtonPM;
         if (jobj.n_iter === undefined) el.setValue(5);
