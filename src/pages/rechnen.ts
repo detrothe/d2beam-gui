@@ -869,6 +869,47 @@ function read_nodal_loads() {
 }
 
 //---------------------------------------------------------------------------------------------------------------
+function find_maxValues_eloads(ieload: number) {
+    //-----------------------------------------------------------------------------------------------------------
+
+    for (let i = 0; i < ieload; i++) {
+        let lf = eload[i].lf - 1
+        let art = eload[i].art
+        console.log("art=", art, lf)
+        if (art >= 0 && art <= 4) {
+            if (Math.abs(eload[i].pL) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pL)
+            if (Math.abs(eload[i].pR) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pR)
+        }
+    }
+
+
+    // jetzt die max. Streckenlasten bei Kombinationen bestimmen
+
+    if (nkombinationen > 0) maxValue_eload_komb = new Array(nkombinationen).fill(0.0)
+
+    for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
+        for (let ilastf = 0; ilastf < nlastfaelle; ilastf++) {
+            if (kombiTabelle[iKomb][ilastf] !== 0.0) {
+                let fact = kombiTabelle[iKomb][ilastf];
+                for (let i = 0; i < neloads; i++) {
+                    let lf = eload[i].lf - 1
+                    if (lf === ilastf) {
+
+                        let art = eload[i].art
+                        //console.log("art=", art, lf)
+                        if (art >= 0 && art <= 4) {
+                            if (Math.abs(eload[i].pL * fact) > maxValue_eload_komb[iKomb]) maxValue_eload_komb[iKomb] = Math.abs(eload[i].pL * fact)
+                            if (Math.abs(eload[i].pR * fact) > maxValue_eload_komb[iKomb]) maxValue_eload_komb[iKomb] = Math.abs(eload[i].pR * fact)
+                        }
+                    }
+                }
+            }
+        }
+        console.log("@@@@   @@@ maxValue_eload_komb: ", iKomb, maxValue_eload_komb[iKomb])
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------
 function read_element_loads() {
     //-----------------------------------------------------------------------------------------------------------
 
@@ -906,8 +947,8 @@ function read_element_loads() {
         eload[ieload].element = ielem
         eload[ieload].lf = 1
         eload[ieload].art = 1
-        eload[ieload].pL = 0.0   // richtige Werte werden in initialisiereElementdaten() gesetzt
-        eload[ieload].pR = 0.0
+        eload[ieload].pL = 0.01   // richtige Werte werden in initialisiereElementdaten() gesetzt
+        eload[ieload].pR = 0.01
         ieload++;
     }
 
@@ -948,41 +989,11 @@ function read_element_loads() {
 
     maxValue_eload = new Array(nlastfaelle).fill(0.0)
 
-    for (i = 0; i < ieload; i++) {
-        let lf = eload[i].lf - 1
-        let art = eload[i].art
-        console.log("art=", art, lf)
-        if (art >= 0 && art <= 4) {
-            if (Math.abs(eload[i].pL) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pL)
-            if (Math.abs(eload[i].pR) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pR)
-        }
-    }
-
-
     // jetzt die max. Streckenlasten bei Kombinationen bestimmen
 
     if (nkombinationen > 0) maxValue_eload_komb = new Array(nkombinationen).fill(0.0)
 
-    for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
-        for (let ilastf = 0; ilastf < nlastfaelle; ilastf++) {
-            if (kombiTabelle[iKomb][ilastf] !== 0.0) {
-                let fact = kombiTabelle[iKomb][ilastf];
-                for (let i = 0; i < neloads; i++) {
-                    let lf = eload[i].lf - 1
-                    if (lf === ilastf) {
-
-                        let art = eload[i].art
-                        //console.log("art=", art, lf)
-                        if (art >= 0 && art <= 4) {
-                            if (Math.abs(eload[i].pL * fact) > maxValue_eload_komb[iKomb]) maxValue_eload_komb[iKomb] = Math.abs(eload[i].pL * fact)
-                            if (Math.abs(eload[i].pR * fact) > maxValue_eload_komb[iKomb]) maxValue_eload_komb[iKomb] = Math.abs(eload[i].pR * fact)
-                        }
-                    }
-                }
-            }
-        }
-        console.log("@@@@   @@@ maxValue_eload_komb: ", iKomb, maxValue_eload_komb[iKomb])
-    }
+    find_maxValues_eloads(ieload);
 
     // Einzellasten
 
@@ -1755,6 +1766,8 @@ function calculate() {
         el[ielem].setQuerschnittsdaten(emodul, Iy, area, wichte, ks, querdehnzahl, schubfaktor, height, zso, alphaT)
         el[ielem].initialisiereElementdaten(ielem)
     }
+
+    find_maxValues_eloads(neloads);  // Skalierung für grafiache Darstellung der Streckenlasten, jetzt mit Eigengewicht
 
     // Federn addieren
 
@@ -3247,7 +3260,7 @@ export function show_gleichungssystem(checked: boolean) {
         let tag = document.createElement("p");
         let text = document.createTextNode("Elementsteifigkeitsmatrix");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Elementsteifigkeitsmatrix im lokalen Koordinatensystem, nur Anteil Th. I. Ordnung, für Element " + (+draw_element + 1) + "</b>"
+        tag.innerHTML = "<b>Elementsteifigkeitsmatrix [k] im lokalen Koordinatensystem, nur Anteil Th. I. Ordnung, für Element " + (+draw_element + 1) + "</b>"
         eq_div?.appendChild(tag);
 
         {
@@ -3258,7 +3271,8 @@ export function show_gleichungssystem(checked: boolean) {
             let thead = table.createTHead();
             //console.log('thead', thead);
             let row = thead.insertRow();
-            for (let i = 0; i <= 6; i++) {
+            for (let i = 0; i <= el[draw_element].neqe; i++) {
+                if ( System === 0) {
                 if (table.tHead) {
                     const th0 = table.tHead.appendChild(document.createElement('th'));
                     if (i === 0) th0.innerHTML = '';
@@ -3274,14 +3288,29 @@ export function show_gleichungssystem(checked: boolean) {
                     //th0.setAttribute('title', 'Hilfe')
                     row.appendChild(th0);
                 }
+            } else {
+                if (table.tHead) {
+                    const th0 = table.tHead.appendChild(document.createElement('th'));
+                    if (i === 0) th0.innerHTML = '';
+                    else if (i === 1) th0.innerHTML = 'u<sub>a</sub>';
+                    else if (i === 2) th0.innerHTML = 'w<sub>a</sub>';
+                    else if (i === 3) th0.innerHTML = 'u<sub>e</sub>';
+                    else if (i === 4) th0.innerHTML = 'w<sub>e</sub>';
+                    th0.style.padding = '5px';
+                    th0.style.margin = '0px';
+                    th0.style.textAlign = 'center';
+                    //th0.setAttribute('title', 'Hilfe')
+                    row.appendChild(th0);
+                }
+            }
             }
 
             let tbody = table.createTBody();
 
-            for (let iZeile = 1; iZeile <= 6; iZeile++) {
+            for (let iZeile = 1; iZeile <= el[draw_element].neqe ; iZeile++) {
                 let newRow = tbody.insertRow(-1);
 
-                for (let iSpalte = 0; iSpalte <= 6; iSpalte++) {
+                for (let iSpalte = 0; iSpalte <= el[draw_element].neqe; iSpalte++) {
                     let newCell, newText;
 
                     newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
@@ -3299,9 +3328,64 @@ export function show_gleichungssystem(checked: boolean) {
 
 
         tag = document.createElement("p");
+        text = document.createTextNode("Transformationsmatrix");
+        tag.appendChild(text);
+        tag.innerHTML = "<b>Transformationsmatrix T, von global nach lokal ( {u}=[T]*{U} ) für Element " + (+draw_element + 1) + "</b>"
+        eq_div?.appendChild(tag);
+
+
+        {
+            const table = document.createElement('table');
+            eq_div.appendChild(table);
+            table.id = 'element_table';
+
+            let thead = table.createTHead();
+            //console.log('thead', thead);
+            let row = thead.insertRow();
+            for (let i = 0; i <= el[draw_element].neqeG; i++) {
+                if (table.tHead) {
+                    const th0 = table.tHead.appendChild(document.createElement('th'));
+                    if (i === 0) th0.innerHTML = 'lm';
+                    else th0.innerHTML = String(+el[draw_element].lm[i - 1] + 1);
+                    //th0.title = "Elementnummer"
+                    th0.style.padding = '5px';
+                    th0.style.margin = '0px';
+                    th0.style.textAlign = 'center';
+                    //th0.setAttribute('title', 'Hilfe')
+                    row.appendChild(th0);
+                }
+            }
+
+            let tbody = table.createTBody();
+            //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
+
+            for (let iZeile = 1; iZeile <= el[draw_element].neqe; iZeile++) {
+                let newRow = tbody.insertRow(-1);
+
+                for (let iSpalte = 0; iSpalte <= el[draw_element].neqeG; iSpalte++) {
+                    let newCell, newText;
+
+                    newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
+                    if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
+                    else newText = document.createTextNode(myFormat(el[draw_element].transU[iZeile - 1][iSpalte - 1], 0, 2));
+                    newCell.style.textAlign = 'center';
+                    //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
+                    newCell.style.padding = '5px';
+                    newCell.style.margin = '0px';
+                    if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
+                    newCell.appendChild(newText);
+                }
+            }
+
+        }
+
+
+
+
+        tag = document.createElement("p");
         text = document.createTextNode("Elementsteifigkeitsmatrix");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Elementsteifigkeitsmatrix im globalen Koordinatensystem für Element " + (+draw_element + 1) + "</b>"
+        tag.innerHTML = "<b>Elementsteifigkeitsmatrix [k]<sub>G</sub>=[T]<sup>T</sup>*[k]*[T] im globalen Koordinatensystem für Element " + (+draw_element + 1) + "</b>"
         eq_div?.appendChild(tag);
 
         {

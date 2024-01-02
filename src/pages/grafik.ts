@@ -955,6 +955,7 @@ export function drawsystem() {
         let dx: number, x: number, sl: number, vorzeichen: number, sgArea = 0.0
         let sgL: number, sgR: number, xL: number, index_sg = 0, max_all = 0.0
         let aL: number, aR: number
+        let x3 = 0.0, x4 = 0.0, z3 = 0.0, z4 = 0.0
 
         let iLastfall = draw_lastfall
         let scalefactor = 0
@@ -1059,6 +1060,8 @@ export function drawsystem() {
                 sgL = sg[0]
                 xx1 = tr.xPix(xs1 - element[ielem].sinus * sg[0] * scalefactor)
                 zz1 = tr.zPix(zs1 + element[ielem].cosinus * sg[0] * scalefactor)
+                x3 = xx1   // nur für Bechriftung
+                z3 = zz1
 
                 if (sgL > valueLeftPos) {
                     valueLeftPos = sgL
@@ -1158,7 +1161,8 @@ export function drawsystem() {
                 }
                 vertices.push(new Two.Anchor(xx2, zz2));
                 vertices.push(new Two.Anchor(x2, z2));
-
+                x4 = xx2
+                z4 = zz2
 
                 let flaeche = two.makePath(vertices);
                 if (sgArea > 0.0) flaeche.fill = '#00AEFF';
@@ -1171,49 +1175,59 @@ export function drawsystem() {
 
                 console.log("show_labels", ielem, foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
                 let zp: number
-                if (foundPos && (Math.abs(maxValuePos) > 0.00001) && (maxValuePos > valueRightPos)) {
-                    const str = myFormat(Math.abs(maxValuePos), 1, 2) + unit
-                    if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                    const txt = two.makeText(str, x_max, z_max + zp, style_txt)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-                }
-                if (foundNeg && (Math.abs(maxValueNeg) > 0.00001) && (maxValueNeg < valueRightNeg)) {
-                    const str = myFormat(Math.abs(maxValueNeg), 1, 2) + unit
-                    if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                    const txt = two.makeText(str, x_min, z_min + zp, style_txt)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-                }
-
-                if (Math.abs(valueLeftPos) > 0.00001) {
+                if (!foundNeg && !foundPos && Math.abs(valueLeftPos - valueRightPos) < 0.0001) {
+                    let xpix = (x1 + x2 + x3 + x4) / 4
+                    let zpix = (z1 + z2 + z3 + z4) / 4
                     const str = myFormat(Math.abs(valueLeftPos), 1, 2) + unit
-                    if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                    const txt = two.makeText(str, x0_max, z0_max + zp, style_txt)
+                    let txt = two.makeText(str, xpix, zpix, style_txt)
                     txt.alignment = 'left'
                     txt.baseline = 'top'
-                }
-                if (Math.abs(valueRightPos) > 0.00001) {
-                    const str = myFormat(Math.abs(valueRightPos), 1, 2) + unit
-                    if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                    const txt = two.makeText(str, xn_max, zn_max + zp, style_txt)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-                }
+                    txt.rotation = element[ielem].alpha
+                } else {
+                    if (foundPos && (Math.abs(maxValuePos) > 0.00001) && (maxValuePos > valueRightPos)) {
+                        const str = myFormat(Math.abs(maxValuePos), 1, 2) + unit
+                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                        const txt = two.makeText(str, x_max, z_max + zp, style_txt)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+                    }
+                    if (foundNeg && (Math.abs(maxValueNeg) > 0.00001) && (maxValueNeg < valueRightNeg)) {
+                        const str = myFormat(Math.abs(maxValueNeg), 1, 2) + unit
+                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                        const txt = two.makeText(str, x_min, z_min + zp, style_txt)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+                    }
 
-                if (Math.abs(valueLeftNeg) > 0.00001) {
-                    const str = myFormat(Math.abs(valueLeftNeg), 1, 2) + unit
-                    if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                    const txt = two.makeText(str, x0_min, z0_min + zp, style_txt)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-                }
-                if (Math.abs(valueRightNeg) > 0.00001) {
-                    const str = myFormat(Math.abs(valueRightNeg), 1, 2) + unit
-                    if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                    const txt = two.makeText(str, xn_min, zn_min + zp, style_txt)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
+                    if (Math.abs(valueLeftPos) > 0.00001) {
+                        const str = myFormat(Math.abs(valueLeftPos), 1, 2) + unit
+                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                        const txt = two.makeText(str, x0_max, z0_max + zp, style_txt)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+                    }
+                    if (Math.abs(valueRightPos) > 0.00001) {
+                        const str = myFormat(Math.abs(valueRightPos), 1, 2) + unit
+                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                        const txt = two.makeText(str, xn_max, zn_max + zp, style_txt)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+                    }
+
+                    if (Math.abs(valueLeftNeg) > 0.00001) {
+                        const str = myFormat(Math.abs(valueLeftNeg), 1, 2) + unit
+                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                        const txt = two.makeText(str, x0_min, z0_min + zp, style_txt)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+                    }
+                    if (Math.abs(valueRightNeg) > 0.00001) {
+                        const str = myFormat(Math.abs(valueRightNeg), 1, 2) + unit
+                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                        const txt = two.makeText(str, xn_min, zn_min + zp, style_txt)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+                    }
                 }
 
             }
@@ -1447,6 +1461,7 @@ export function drawsystem() {
         if (show_lagerkraefte && flag_eingabe === 1) draw_lagerkraefte(two);
     }
 
+    console.log("vor update")
 
     // Don’t forget to tell two to draw everything to the screen
 
@@ -1552,6 +1567,8 @@ function draw_elementlasten(two: Two) {
         aL = stab[ielem].aL
         aR = stab[ielem].aR
 
+        console.log("aL,aR", aL, aR)
+
         si = stab[ielem].sinus
         co = stab[ielem].cosinus
 
@@ -1629,62 +1646,66 @@ function draw_elementlasten(two: Two) {
                     }
 
                     else if (eload[ieload].art === 1) {      // Streckenlast z-Richtung
+                        console.log('Streckenlast in z-Richtung', eload[ieload].pL, eload[ieload].pL, scalefactor, fact[iLoop])
 
                         pL = eload[ieload].pL * scalefactor * fact[iLoop]
                         pR = eload[ieload].pR * scalefactor * fact[iLoop]
 
-                        pMax = Math.max(0.0, pL, pR)
-                        pMin = Math.min(0.0, pL, pR)
+                        if (!(eload[ieload].lf === 1 && pL === 0.0 && pR === 0.0)) {
 
-                        a += Math.abs(pMin)   //* co
+                            pMax = Math.max(0.0, pL, pR)
+                            pMin = Math.min(0.0, pL, pR)
 
-                        x[0] = x1 + si * a; z[0] = z1 - a * co;    // /
-                        x[1] = x2 + si * a; z[1] = z2 - a * co;
-                        x[2] = x[1]; z[2] = z[1] - pR;
-                        x[3] = x[0]; z[3] = z[0] - pL;
+                            a += Math.abs(pMin)   //* co
+
+                            x[0] = x1 + si * a; z[0] = z1 - a * co;    // /
+                            x[1] = x2 + si * a; z[1] = z2 - a * co;
+                            x[2] = x[1]; z[2] = z[1] - pR;
+                            x[3] = x[0]; z[3] = z[0] - pL;
 
 
-                        //console.log("pL...", pL, pR, x, z)
+                            console.log("pL...", pL, pR, pMax, pMin, x, z)
 
-                        var vertices = [];
-                        for (let i = 0; i < 4; i++) {
-                            xtr[i] = tr.xPix(x[i])
-                            ztr[i] = tr.zPix(z[i])
-                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                            var vertices = [];
+                            for (let i = 0; i < 4; i++) {
+                                xtr[i] = tr.xPix(x[i])
+                                ztr[i] = tr.zPix(z[i])
+                                vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                            }
+
+                            let flaeche = two.makePath(vertices);
+                            flaeche.fill = color_load;
+                            flaeche.opacity = opacity
+
+                            if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
+                            if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+
+                            if (eload[ieload].pL === eload[ieload].pR) {
+                                xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+                                zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+                                let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                                let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                                txt.alignment = 'left'
+                                txt.baseline = 'top'
+                            } else {
+                                xpix = xtr[3] + 5
+                                zpix = ztr[3] - 5
+                                let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                                let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                                txt.alignment = 'left'
+                                txt.baseline = 'top'
+
+                                xpix = xtr[2] + 5
+                                zpix = ztr[2] - 5
+                                str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                                txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                                txt.alignment = 'left'
+                                txt.baseline = 'top'
+                            }
+
+                            dp = pMax * co // - pMin
+                            a = a + dp + a_spalt
                         }
-
-                        let flaeche = two.makePath(vertices);
-                        flaeche.fill = color_load;
-                        flaeche.opacity = opacity
-
-                        if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
-                        if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
-
-                        if (eload[ieload].pL === eload[ieload].pR) {
-                            xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
-                            zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
-                        } else {
-                            xpix = xtr[3] + 5
-                            zpix = ztr[3] - 5
-                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                            let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
-
-                            xpix = xtr[2] + 5
-                            zpix = ztr[2] - 5
-                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
-                            txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
-                        }
-
-                        dp = pMax * co // - pMin
-                        a = a + dp + a_spalt
                     }
 
                     else if (eload[ieload].art === 2) {      // Streckenlast z-Richtung, Projektion
