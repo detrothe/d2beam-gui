@@ -948,86 +948,80 @@ export class CTruss extends CElement {
             console.log("Temperatur", this.alphaT, eload[ieload].Tu, eload[ieload].To, this.h, this.emodul * this.area)
 
             eload[ieload].re[0] = this.emodul * this.area * eload[ieload].eps_Ts
-            eload[ieload].re[3] = -this.emodul * this.area * eload[ieload].eps_Ts
+            eload[ieload].re[2] = -this.emodul * this.area * eload[ieload].eps_Ts
 
             eload[ieload].re[1] = 0.0
-            eload[ieload].re[4] = 0.0
-
-            eload[ieload].re[2] = this.emodul * this.Iy * eload[ieload].kappa_dT
-            eload[ieload].re[5] = -this.emodul * this.Iy * eload[ieload].kappa_dT
-        }
-        else if (eload[ieload].art === 6) {              // Einzellast ooder Moment
-
-            const x = eload[ieload].x
-            const P = eload[ieload].P
-            const M = eload[ieload].M
-            const eta = this.eta
-            const EI = this.emodul * this.Iy
-            const alf = 12 * sl * eta + sl3
-            console.log("Einzellast", x, P, M)
-
-            eload[ieload].CwP = -((36 * x ** 2 - 36 * sl * x) * P * eta ** 2 + (-3 * x ** 4 + 6 * sl * x ** 3 - 3 * sl3 * x) * P * eta + (x ** 6 - 3 * sl * x ** 5 + 3 * sl2 * x ** 4 - sl3 * x ** 3) * P) / 3 / alf / EI;
-            eload[ieload].CphiP = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * P) / 2 / alf / EI;
-            console.log("EINZELLAST P, C1, C2 in [mm, mrad]", eload[ieload].CwP * 1000., eload[ieload].CphiP * 1000.)
-            eload[ieload].CwM = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * M) / 2 / alf / EI
-            eload[ieload].CphiM = -((12 * x ** 2 - 12 * sl * x) * M * eta + (3 * x ** 4 - 6 * sl * x ** 3 + 4 * sl2 * x ** 2 - sl3 * x) * M) / alf / EI
-            console.log("EINZELMOMENT M, C1, C2 in [mm, mrad]", eload[ieload].CwM * 1000., eload[ieload].CphiM * 1000.)
-
-            eload[ieload].re[0] = 0.0
             eload[ieload].re[3] = 0.0
 
-
-            //eload[ieload].re[1] = (12 * (x - sl) * P * eta + (-2 * x ** 3 + 3 * sl * x ** 2 - sl3) * P) / alf
-            //eload[ieload].re[4] = -eload[ieload].re[1] - P
-
-            //eload[ieload].re[2] = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / alf
-            //eload[ieload].re[5] = eload[ieload].re[4] * sl + P * x - eload[ieload].re[2]
-
-            const VL_P = (12 * (x - sl) * P * eta + (-2 * x ** 3 + 3 * sl * x ** 2 - sl3) * P) / alf
-            const VR_P = -VL_P - P
-
-            const ML_P = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / alf
-            const MR_P = VR_P * sl + P * x - ML_P
-
-            console.log("EINZELLAST", VL_P, VR_P, ML_P, MR_P)
-
-            const VL_M = (6 * (x ** 2 - sl * x) * M) / alf
-            const VR_M = -VL_M
-
-            const ML_M = (12 * (x - sl) * M * eta + (-3 * sl * x ** 2 + 4 * sl2 * x - sl3) * M) / alf
-            const MR_M = -ML_M - M - VL_M * sl
-            console.log("EINZELMOMENT", VL_M, VR_M, ML_M, MR_M)
-
-            eload[ieload].re[1] = VL_P + VL_M
-            eload[ieload].re[4] = VR_P + VR_M
-
-            eload[ieload].re[2] = ML_P + ML_M
-            eload[ieload].re[5] = MR_P + MR_M
-
-            console.log("EINZELLAST + MOMENT", eload[ieload].re[1], eload[ieload].re[4], eload[ieload].re[2], eload[ieload].re[5])
         }
+        // else if (eload[ieload].art === 6) {              // Einzellast ooder Moment
+
+        //     const x = eload[ieload].x
+        //     const P = eload[ieload].P
+        //     const M = eload[ieload].M
+        //     const eta = this.eta
+        //     const EI = this.emodul * this.Iy
+        //     const alf = 12 * sl * eta + sl3
+        //     console.log("Einzellast", x, P, M)
+
+        //     eload[ieload].CwP = -((36 * x ** 2 - 36 * sl * x) * P * eta ** 2 + (-3 * x ** 4 + 6 * sl * x ** 3 - 3 * sl3 * x) * P * eta + (x ** 6 - 3 * sl * x ** 5 + 3 * sl2 * x ** 4 - sl3 * x ** 3) * P) / 3 / alf / EI;
+        //     eload[ieload].CphiP = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * P) / 2 / alf / EI;
+        //     console.log("EINZELLAST P, C1, C2 in [mm, mrad]", eload[ieload].CwP * 1000., eload[ieload].CphiP * 1000.)
+        //     eload[ieload].CwM = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * M) / 2 / alf / EI
+        //     eload[ieload].CphiM = -((12 * x ** 2 - 12 * sl * x) * M * eta + (3 * x ** 4 - 6 * sl * x ** 3 + 4 * sl2 * x ** 2 - sl3 * x) * M) / alf / EI
+        //     console.log("EINZELMOMENT M, C1, C2 in [mm, mrad]", eload[ieload].CwM * 1000., eload[ieload].CphiM * 1000.)
+
+        //     eload[ieload].re[0] = 0.0
+        //     eload[ieload].re[3] = 0.0
+
+
+        //     //eload[ieload].re[1] = (12 * (x - sl) * P * eta + (-2 * x ** 3 + 3 * sl * x ** 2 - sl3) * P) / alf
+        //     //eload[ieload].re[4] = -eload[ieload].re[1] - P
+
+        //     //eload[ieload].re[2] = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / alf
+        //     //eload[ieload].re[5] = eload[ieload].re[4] * sl + P * x - eload[ieload].re[2]
+
+        //     const VL_P = (12 * (x - sl) * P * eta + (-2 * x ** 3 + 3 * sl * x ** 2 - sl3) * P) / alf
+        //     const VR_P = -VL_P - P
+
+        //     const ML_P = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / alf
+        //     const MR_P = VR_P * sl + P * x - ML_P
+
+        //     console.log("EINZELLAST", VL_P, VR_P, ML_P, MR_P)
+
+        //     const VL_M = (6 * (x ** 2 - sl * x) * M) / alf
+        //     const VR_M = -VL_M
+
+        //     const ML_M = (12 * (x - sl) * M * eta + (-3 * sl * x ** 2 + 4 * sl2 * x - sl3) * M) / alf
+        //     const MR_M = -ML_M - M - VL_M * sl
+        //     console.log("EINZELMOMENT", VL_M, VR_M, ML_M, MR_M)
+
+        //     eload[ieload].re[1] = VL_P + VL_M
+        //     eload[ieload].re[4] = VR_P + VR_M
+
+        //     eload[ieload].re[2] = ML_P + ML_M
+        //     eload[ieload].re[5] = MR_P + MR_M
+
+        //     console.log("EINZELLAST + MOMENT", eload[ieload].re[1], eload[ieload].re[4], eload[ieload].re[2], eload[ieload].re[5])
+        // }
 
         else if (eload[ieload].art === 8) {              // Knotenverformungen
 
             if (eload[ieload].node0 === this.nod1) {
                 eload[ieload].dispL0[0] = this.transU[0][0] * eload[ieload].dispx0 + this.transU[0][1] * eload[ieload].dispz0
                 eload[ieload].dispL0[1] = this.transU[1][0] * eload[ieload].dispx0 + this.transU[1][1] * eload[ieload].dispz0
-                eload[ieload].dispL0[2] = eload[ieload].phi0
+                eload[ieload].dispL0[2] = 0.0
                 eload[ieload].dispL0[3] = 0.0
-                eload[ieload].dispL0[4] = 0.0
-                eload[ieload].dispL0[5] = 0.0
             } else {
                 eload[ieload].dispL0[0] = 0.0
                 eload[ieload].dispL0[1] = 0.0
-                eload[ieload].dispL0[2] = 0.0
-                eload[ieload].dispL0[3] = this.transU[3][3] * eload[ieload].dispx0 + this.transU[3][4] * eload[ieload].dispz0
-                eload[ieload].dispL0[4] = this.transU[4][3] * eload[ieload].dispx0 + this.transU[4][4] * eload[ieload].dispz0
-                eload[ieload].dispL0[5] = eload[ieload].phi0
+                eload[ieload].dispL0[2] = this.transU[2][2] * eload[ieload].dispx0 + this.transU[2][3] * eload[ieload].dispz0
+                eload[ieload].dispL0[3] = this.transU[3][2] * eload[ieload].dispx0 + this.transU[3][3] * eload[ieload].dispz0
 
             }
-            for (let j = 0; j < 6; j++) {
+            for (let j = 0; j < 4; j++) {
                 let sum = 0.0
-                for (let k = 0; k < 6; k++) {
+                for (let k = 0; k < 4; k++) {
                     sum += this.estmL2[j][k] * eload[ieload].dispL0[k]
                 }
                 eload[ieload].re[j] = sum
@@ -1039,22 +1033,18 @@ export class CTruss extends CElement {
         else if (eload[ieload].art === 9) {              // zentrische Vorspannung
 
             eload[ieload].re[0] = -this.area * eload[ieload].sigmaV
-            eload[ieload].re[3] = this.area * eload[ieload].sigmaV
+            eload[ieload].re[2] = this.area * eload[ieload].sigmaV
 
             eload[ieload].re[1] = 0.0
-            eload[ieload].re[4] = 0.0
-            eload[ieload].re[2] = 0.0
-            eload[ieload].re[5] = 0.0
+            eload[ieload].re[3] = 0.0
         }
         else if (eload[ieload].art === 10) {              // Spannschloss
 
             eload[ieload].re[0] = -this.emodul * this.area * eload[ieload].delta_s / sl
-            eload[ieload].re[3] = this.emodul * this.area * eload[ieload].delta_s / sl
+            eload[ieload].re[2] = this.emodul * this.area * eload[ieload].delta_s / sl
 
             eload[ieload].re[1] = 0.0
-            eload[ieload].re[4] = 0.0
-            eload[ieload].re[2] = 0.0
-            eload[ieload].re[5] = 0.0
+            eload[ieload].re[3] = 0.0
         }
 
         // eload[ieload].el_r[0] = this.trans[0][0] * eload[ieload].re[0] + this.trans[1][0] * eload[ieload].re[1] // !! mit [T]^T multiplizieren
@@ -1604,16 +1594,16 @@ export class CTruss extends CElement {
                 disp = Math.sqrt(ux * ux + wx * wx) * 1000.0      // in mm
 
                 if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
-                if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
-                if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
+                // if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
+                // if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
                 if (disp > maxValue_lf[iLastf].disp) maxValue_lf[iLastf].disp = disp
 
-                this.M_[iLastf][iteil] = Mx
-                this.V_[iLastf][iteil] = Vx
+                this.M_[iLastf][iteil] = 0.0  //Mx
+                this.V_[iLastf][iteil] = 0.0  //Vx
                 this.N_[iLastf][iteil] = Nx
                 this.u_[iLastf][iteil] = ux
                 this.w_[iLastf][iteil] = wx
-                this.phi_[iLastf][iteil] = phix
+                this.phi_[iLastf][iteil] = 0.0  //phix
 
             }
             else if (THIIO_flag === 1) { // ikomb=iLastf
@@ -1862,18 +1852,18 @@ export class CTruss extends CElement {
                 disp = Math.sqrt(ux * ux + wx * wx) * 1000.0
 
                 if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
-                if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
-                if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
+                //if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
+                //if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
                 if (disp > maxValue_komb[iLastf].disp) maxValue_komb[iLastf].disp = disp
 
-                this.M_komb[iLastf][iteil] = Mx
-                this.V_komb[iLastf][iteil] = Vx
+                this.M_komb[iLastf][iteil] = 0.0  // Mx
+                this.V_komb[iLastf][iteil] = 0.0  //Vx
                 this.N_komb[iLastf][iteil] = Nx
                 this.u_komb[iLastf][iteil] = ux
                 this.uG_komb[iLastf][iteil] = uxG
                 this.w_komb[iLastf][iteil] = wx
                 this.wG_komb[iLastf][iteil] = wxG
-                this.phi_komb[iLastf][iteil] = phix
+                this.phi_komb[iLastf][iteil] = 0.0  // phix
 
             }  // ende TH II Ordnung
 

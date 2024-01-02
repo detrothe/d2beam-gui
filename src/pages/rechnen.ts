@@ -12,7 +12,7 @@ import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CTruss } from "./truss"
 import { CSpring } from "./feder"
 import { init_grafik, drawsystem } from "./grafik";
-import { show_controller_THIIO, show_controller_results } from "./mypanelgui"
+import { show_controller_THIIO, show_controller_results,show_controller_truss } from "./mypanelgui"
 
 import { prot_eingabe } from "./prot_eingabe"
 // import { read_daten } from "./dateien"
@@ -303,6 +303,9 @@ class TMaxU0 {
 export function setSystem(system: number) {
     //-----------------------------------------------------------------------------------------------------------
     System = system;
+
+    if ( system === 0 ) show_controller_truss(true);
+    else show_controller_truss(false);
 }
 
 export function hideColumnsForFachwerk() {
@@ -313,6 +316,7 @@ export function hideColumnsForFachwerk() {
     el?.setAttribute("hide_column", String(2));
     el = document.getElementById("id_knotenlasten_tabelle");
     el?.setAttribute("hide_column", String(5));
+
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -3330,7 +3334,7 @@ export function show_gleichungssystem(checked: boolean) {
         tag = document.createElement("p");
         text = document.createTextNode("Transformationsmatrix");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Transformationsmatrix T, von global nach lokal ( {u}=[T]*{U} ) für Element " + (+draw_element + 1) + "</b>"
+        tag.innerHTML = "<b>Transformationsmatrix T, von global nach lokal ( {u}=[T]∙{U} ) für Element " + (+draw_element + 1) + "</b>"
         eq_div?.appendChild(tag);
 
 
@@ -3385,7 +3389,7 @@ export function show_gleichungssystem(checked: boolean) {
         tag = document.createElement("p");
         text = document.createTextNode("Elementsteifigkeitsmatrix");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Elementsteifigkeitsmatrix [k]<sub>G</sub>=[T]<sup>T</sup>*[k]*[T] im globalen Koordinatensystem für Element " + (+draw_element + 1) + "</b>"
+        tag.innerHTML = "<b>Elementsteifigkeitsmatrix [k]<sub>G</sub>=[T]<sup>T</sup>∙[k]∙[T] im globalen Koordinatensystem für Element " + (+draw_element + 1) + "</b>"
         eq_div?.appendChild(tag);
 
         {

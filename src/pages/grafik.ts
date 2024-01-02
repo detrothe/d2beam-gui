@@ -715,15 +715,21 @@ export function drawsystem() {
 
             x = 0.0; xx2 = 0.0; zz2 = 0.0
             for (let i = 0; i <= nelTeilungen; i++) {
-                Nu[0] = (1.0 - x / sl);
-                Nu[1] = x / sl
-                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
-                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
-                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
-                Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
-                u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
-
+                if (System === 0) {
+                    Nu[0] = (1.0 - x / sl);
+                    Nu[1] = x / sl
+                    Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                    Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                    Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                    Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                    u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                    w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                } else {
+                    Nu[0] = (1.0 - x / sl);
+                    Nu[1] = x / sl
+                    u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                    w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+                }
                 uG = element[ielem].cosinus * u - element[ielem].sinus * w
                 wG = element[ielem].sinus * u + element[ielem].cosinus * w
 
@@ -806,15 +812,21 @@ export function drawsystem() {
 
             x = 0.0; xx2 = 0.0; zz2 = 0.0
             for (let i = 0; i <= nelTeilungen; i++) {
-                Nu[0] = (1.0 - x / sl);
-                Nu[1] = x / sl
-                Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
-                Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
-                Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
-                Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
-                u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
-
+                if (System === 0) {
+                    Nu[0] = (1.0 - x / sl);
+                    Nu[1] = x / sl
+                    Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                    Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                    Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                    Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                    u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                    w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                } else {
+                    Nu[0] = (1.0 - x / sl);
+                    Nu[1] = x / sl
+                    u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                    w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+                }
                 uG = element[ielem].cosinus * u - element[ielem].sinus * w
                 wG = element[ielem].sinus * u + element[ielem].cosinus * w
 
@@ -1651,7 +1663,7 @@ function draw_elementlasten(two: Two) {
                         pL = eload[ieload].pL * scalefactor * fact[iLoop]
                         pR = eload[ieload].pR * scalefactor * fact[iLoop]
 
-                        if (!(eload[ieload].lf === 1 && pL === 0.0 && pR === 0.0)) {
+                        if (!(eload[ieload].lf === 1 && eload[ieload].pL === 0.0 && eload[ieload].pR === 0.0)) {
 
                             pMax = Math.max(0.0, pL, pR)
                             pMin = Math.min(0.0, pL, pR)

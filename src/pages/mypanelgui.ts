@@ -1,5 +1,5 @@
 import GUI from 'lil-gui';
-//import { app } from "./index.js";
+import { System } from './rechnen'
 
 let scale_factor = 1.0;
 let scale_factor_arrows = 1.0;
@@ -61,7 +61,7 @@ export function myPanel() {
     let umriss_anzeigen = 'Umriss anzeigen'
 
     // @ts-ignore
-    const gui = new GUI({ container: document.getElementById('panel_gui'), touchStyles: false}); // , touchStyles: true  , width: 230
+    const gui = new GUI({ container: document.getElementById('panel_gui'), touchStyles: false }); // , touchStyles: true  , width: 230
     //gui.domElement.classList.add('allow-touch-styles');
 
     gui.add(obj, 'Label').name(beschriftung).onChange(() => {
@@ -201,7 +201,17 @@ export function show_controller_THIIO(wert: boolean) {
 export function show_controller_results(wert: boolean) {
     //----------------------------------------------------------------------------------------------------
     controller_N.show(wert);
+    if (System === 0) {
+        controller_V.show(wert);
+        controller_M.show(wert);
+    }
+    controller_disp.show(wert);
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function show_controller_truss(wert: boolean) {
+    //----------------------------------------------------------------------------------------------------
     controller_V.show(wert);
     controller_M.show(wert);
-    controller_disp.show(wert);
 }
