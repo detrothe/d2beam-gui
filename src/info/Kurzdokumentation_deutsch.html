@@ -106,12 +106,17 @@
 		<a href="#">Übersicht</a>
 	</h1>
 	<p>
-		Mit dieser Webanwendung können ebene Rahmensysteme nach Theorie I. und II. Ordnung berechnet werden. Es wird die
-		Finite Element Methode verwendet, [1], [2], [3]. Zur Zeit ist ein Element (Typ = 0) implementiert, welches
+		Mit dieser Webanwendung können ebene Rahmen- und Fachwerksysteme nach Theorie I. und II. Ordnung berechnet werden. Es wird die
+		Finite Element Methode verwendet, [1], [2], [3]. Zur Zeit ist ein Stabelement (Typ = 0) implementiert, welches
 		Schubverformungen nach Timoshenko berücksichtigen kann. Ausgangspunkt ist ein 4-knotiges gerades schubweiches
 		Balkenelement [1], dessen innere Knoten kondensiert werden, so dass der Anwender mit einem 2-knotigem Element
 		arbeitet. Für Berechnungen nach Theorie I.Ordnung entsprechen die Elementmatrizen der Lösung, die man auch mit
 		der Differentialgleichung für den Timoshenkobalken erhält. Die Ergebnisse sind in diesem Fall also exakt.
+	</p>
+	<p>Nach Klicken des Buttons 'neue Eingabe beginnen' besteht die Auswahl zwischen der Berechnung eines Stabwerks oder reinen Fachwerks.
+		 Der Fachwerkstab ist ein  klassisches 2-knotiges Element mit konstantem Querschnitt. Die Wahl Fachwerk vereinfacht die Eingabe
+		 bei Fachwerken. Natürlich können mit den Stabwerkselementen auch Fachwerke berechnet werden, wenn man Momemntengelenke für die
+		 Stäbe eingibt.
 
 		<br> Die Elemente haben einen Anfangs- und Endknoten, die mit a und e, bzw. 1 und 2 bezeichnet werden.
 	</p>
