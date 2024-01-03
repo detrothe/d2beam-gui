@@ -59,6 +59,7 @@ import {
   setSystem,
   System,
   hideColumnsForFachwerk,
+  showColumnsForStabwerk,
 } from "./rechnen";
 
 import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
@@ -684,7 +685,7 @@ async function initTabellenLoop() {
           w<sub>0a</sub> = Vorverformung am Stabanfang, senkrecht zur Stabachse<br />
           w<sub>0e</sub> = Vorverformung am Stabende, senkrecht zur Stabachse<br />
           w<sub>0m</sub> = Stich in Stabmitte, w<sub>0m,gesamt</sub> =w<sub>0m</sub>
-          +(w<sub>0a</sub>+w<sub>0e</sub>)/2
+          +(w<sub>0a</sub>+w<sub>0e</sub>)/2  &nbsp;(nicht bei Fachwerk)
         </p>
 
         <p>
@@ -1439,7 +1440,8 @@ export function resizeTables() {
     el?.setAttribute("nspalten", String(Number(nelem) + 1)); // +1 wegen Kommentarspalte
   }
 
-  if (System === 1)  hideColumnsForFachwerk();
+  if (System === 0) showColumnsForStabwerk();
+  else  hideColumnsForFachwerk();
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1550,7 +1552,14 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     resizeTables();
     clearTables();
-    if (system === 1) hideColumnsForFachwerk();
+
+    if (system === 1) {
+      el = document.getElementById('id_button_nteilungen') as drButtonPM;
+      el.setValue(1);
+    } else {
+      el = document.getElementById('id_button_nteilungen') as drButtonPM;
+      el.setValue(10);
+    }
 
     berechnungErforderlich(true);
 

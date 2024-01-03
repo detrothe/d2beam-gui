@@ -12,7 +12,7 @@ import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CTruss } from "./truss"
 import { CSpring } from "./feder"
 import { init_grafik, drawsystem } from "./grafik";
-import { show_controller_THIIO, show_controller_results,show_controller_truss } from "./mypanelgui"
+import { show_controller_THIIO, show_controller_results, show_controller_truss } from "./mypanelgui"
 
 import { prot_eingabe } from "./prot_eingabe"
 // import { read_daten } from "./dateien"
@@ -299,16 +299,20 @@ class TMaxU0 {
     ieq = -1
     u0 = 0.0
 }
+
 //---------------------------------------------------------------------------------------------------------------
 export function setSystem(system: number) {
     //-----------------------------------------------------------------------------------------------------------
     System = system;
 
-    if ( system === 0 ) show_controller_truss(true);
+    if (system === 0)  show_controller_truss(true);
     else show_controller_truss(false);
 }
 
+//---------------------------------------------------------------------------------------------------------------
 export function hideColumnsForFachwerk() {
+    //---------------------------------------------------------------------------------------------------------------
+
     let el = document.getElementById("id_knoten_tabelle");
     el?.setAttribute("hide_column", String(5));
     el = document.getElementById("id_element_tabelle");
@@ -316,6 +320,29 @@ export function hideColumnsForFachwerk() {
     el?.setAttribute("hide_column", String(2));
     el = document.getElementById("id_knotenlasten_tabelle");
     el?.setAttribute("hide_column", String(5));
+
+    el = document.getElementById("id_stabvorverfomungen_tabelle");
+    el?.setAttribute("hide_column", String(4));
+    el = document.getElementById("id_nnodedisps_tabelle");
+    el?.setAttribute("hide_column", String(5));
+
+}
+//---------------------------------------------------------------------------------------------------------------
+export function showColumnsForStabwerk() {
+    //---------------------------------------------------------------------------------------------------------------
+
+    let el = document.getElementById("id_knoten_tabelle");
+    el?.setAttribute("show_column", String(5));
+    el = document.getElementById("id_element_tabelle");
+    for (let i = 5; i <= 12; i++)el?.setAttribute("hide_column", String(i));
+    el?.setAttribute("show_column", String(2));
+    el = document.getElementById("id_knotenlasten_tabelle");
+    el?.setAttribute("show_column", String(5));
+
+    el = document.getElementById("id_stabvorverfomungen_tabelle");
+    el?.setAttribute("show_column", String(4));
+    el = document.getElementById("id_nnodedisps_tabelle");
+    el?.setAttribute("show_column", String(5));
 
 }
 
@@ -3276,42 +3303,42 @@ export function show_gleichungssystem(checked: boolean) {
             //console.log('thead', thead);
             let row = thead.insertRow();
             for (let i = 0; i <= el[draw_element].neqe; i++) {
-                if ( System === 0) {
-                if (table.tHead) {
-                    const th0 = table.tHead.appendChild(document.createElement('th'));
-                    if (i === 0) th0.innerHTML = '';
-                    else if (i === 1) th0.innerHTML = 'u<sub>a</sub>';
-                    else if (i === 2) th0.innerHTML = 'w<sub>a</sub>';
-                    else if (i === 3) th0.innerHTML = 'φ<sub>a</sub>';
-                    else if (i === 4) th0.innerHTML = 'u<sub>e</sub>';
-                    else if (i === 5) th0.innerHTML = 'w<sub>e</sub>';
-                    else if (i === 6) th0.innerHTML = 'φ<sub>e</sub>';
-                    th0.style.padding = '5px';
-                    th0.style.margin = '0px';
-                    th0.style.textAlign = 'center';
-                    //th0.setAttribute('title', 'Hilfe')
-                    row.appendChild(th0);
+                if (System === 0) {
+                    if (table.tHead) {
+                        const th0 = table.tHead.appendChild(document.createElement('th'));
+                        if (i === 0) th0.innerHTML = '';
+                        else if (i === 1) th0.innerHTML = 'u<sub>a</sub>';
+                        else if (i === 2) th0.innerHTML = 'w<sub>a</sub>';
+                        else if (i === 3) th0.innerHTML = 'φ<sub>a</sub>';
+                        else if (i === 4) th0.innerHTML = 'u<sub>e</sub>';
+                        else if (i === 5) th0.innerHTML = 'w<sub>e</sub>';
+                        else if (i === 6) th0.innerHTML = 'φ<sub>e</sub>';
+                        th0.style.padding = '5px';
+                        th0.style.margin = '0px';
+                        th0.style.textAlign = 'center';
+                        //th0.setAttribute('title', 'Hilfe')
+                        row.appendChild(th0);
+                    }
+                } else {
+                    if (table.tHead) {
+                        const th0 = table.tHead.appendChild(document.createElement('th'));
+                        if (i === 0) th0.innerHTML = '';
+                        else if (i === 1) th0.innerHTML = 'u<sub>a</sub>';
+                        else if (i === 2) th0.innerHTML = 'w<sub>a</sub>';
+                        else if (i === 3) th0.innerHTML = 'u<sub>e</sub>';
+                        else if (i === 4) th0.innerHTML = 'w<sub>e</sub>';
+                        th0.style.padding = '5px';
+                        th0.style.margin = '0px';
+                        th0.style.textAlign = 'center';
+                        //th0.setAttribute('title', 'Hilfe')
+                        row.appendChild(th0);
+                    }
                 }
-            } else {
-                if (table.tHead) {
-                    const th0 = table.tHead.appendChild(document.createElement('th'));
-                    if (i === 0) th0.innerHTML = '';
-                    else if (i === 1) th0.innerHTML = 'u<sub>a</sub>';
-                    else if (i === 2) th0.innerHTML = 'w<sub>a</sub>';
-                    else if (i === 3) th0.innerHTML = 'u<sub>e</sub>';
-                    else if (i === 4) th0.innerHTML = 'w<sub>e</sub>';
-                    th0.style.padding = '5px';
-                    th0.style.margin = '0px';
-                    th0.style.textAlign = 'center';
-                    //th0.setAttribute('title', 'Hilfe')
-                    row.appendChild(th0);
-                }
-            }
             }
 
             let tbody = table.createTBody();
 
-            for (let iZeile = 1; iZeile <= el[draw_element].neqe ; iZeile++) {
+            for (let iZeile = 1; iZeile <= el[draw_element].neqe; iZeile++) {
                 let newRow = tbody.insertRow(-1);
 
                 for (let iSpalte = 0; iSpalte <= el[draw_element].neqe; iSpalte++) {
