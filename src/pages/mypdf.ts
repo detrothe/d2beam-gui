@@ -11,7 +11,7 @@ import { fontBold } from "../fonts/FreeSans-bold.js";
 import htmlToPdfmake from "html-to-pdfmake";
 //import { tabQWerte, schnittgroesse, bezugswerte } from "./duennQ"
 
-import { nnodes, nelem } from "./rechnen";
+import { nnodes, nelem, System } from "./rechnen";
 import {
   el,
   element as stab,
@@ -359,8 +359,12 @@ export async function my_jspdf() {
     el_table_nodes.htmlText("z [" + current_unit_length + "]", 2, "center", yy);
     el_table_nodes.htmlText("L<sub>x</sub> (kN/m)", 3, "center", yy);
     el_table_nodes.htmlText("L<sub>z</sub> (kN/m)", 4, "center", yy);
-    el_table_nodes.htmlText("L<sub>φ</sub> (kNm/m)", 5, "center", yy);
-    el_table_nodes.htmlText("Winkel [°]", 6, "center", yy);
+    if (System === 0) {
+      el_table_nodes.htmlText("L<sub>φ</sub> (kNm/m)", 5, "center", yy);
+      el_table_nodes.htmlText("Winkel [°]", 6, "center", yy);
+    } else {
+      el_table_nodes.htmlText("Winkel [°]", 5, "center", yy);
+    }
 
     doc.setFontSize(fs);
     doc.setFont("freesans_normal");
@@ -375,17 +379,30 @@ export async function my_jspdf() {
       str = myFormat(node[i].z * unit_length_factor, 2, 2);
       el_table_nodes.htmlText(str, 2, "right", yy, 5);
 
-      for (let j = 0; j < 3; j++) {
-        if (node[i].L_org[j] === 1) str = "starr";
-        else if (node[i].L_org[j] === 0) str = "-";
-        else str = myFormat(node[i].L_org[j], 0, 1);
+      if (System === 0) {
+        for (let j = 0; j < 3; j++) {
+          if (node[i].L_org[j] === 1) str = "starr";
+          else if (node[i].L_org[j] === 0) str = "-";
+          else str = myFormat(node[i].L_org[j], 0, 1);
 
-        el_table_nodes.htmlText(str, 3 + j, "center", yy);
+          el_table_nodes.htmlText(str, 3 + j, "center", yy);
+        }
+
+        str = myFormat(node[i].phi, 1, 2);
+        el_table_nodes.htmlText(str, 6, "center", yy);
+      } else {
+        for (let j = 0; j < 2; j++) {
+          if (node[i].L_org[j] === 1) str = "starr";
+          else if (node[i].L_org[j] === 0) str = "-";
+          else str = myFormat(node[i].L_org[j], 0, 1);
+
+          el_table_nodes.htmlText(str, 3 + j, "center", yy);
+        }
+
+        str = myFormat(node[i].phi, 1, 2);
+        el_table_nodes.htmlText(str, 5, "center", yy);
+
       }
-
-      str = myFormat(node[i].phi, 1, 2);
-      el_table_nodes.htmlText(str, 6, "center", yy);
-
       yy = neueZeile(yy, fs1, 1);
     }
   }
@@ -478,9 +495,11 @@ export async function my_jspdf() {
     doc.setFont("freesans_bold");
     yy = neueZeile(yy, fs, 2);
 
-    texWid = doc.getTextWidth("Gelenke");
-    doc.text("Gelenke", links + 70 + 30 - texWid / 2, yy);
-    yy = neueZeile(yy, fs, 1);
+    if (System === 0) {
+      texWid = doc.getTextWidth("Gelenke");
+      doc.text("Gelenke", links + 70 + 30 - texWid / 2, yy);
+      yy = neueZeile(yy, fs, 1);
+    }
 
     let el_table = new pdf_table(doc, links, [10, 30, 15, 15, 10, 10, 10, 10, 10, 10]);
     console.log("el_table", el_table);
@@ -489,13 +508,14 @@ export async function my_jspdf() {
     el_table.htmlText("Querschnitt", 1, "center", yy);
     el_table.htmlText("nod a", 2, "center", yy);
     el_table.htmlText("nod e", 3, "center", yy);
-    el_table.htmlText("Na", 4, "center", yy);
-    el_table.htmlText("Va", 5, "center", yy);
-    el_table.htmlText("Ma", 6, "center", yy);
-    el_table.htmlText("Ne", 7, "center", yy);
-    el_table.htmlText("Ve", 8, "center", yy);
-    el_table.htmlText("Me", 9, "center", yy);
-
+    if (System === 0) {
+      el_table.htmlText("Na", 4, "center", yy);
+      el_table.htmlText("Va", 5, "center", yy);
+      el_table.htmlText("Ma", 6, "center", yy);
+      el_table.htmlText("Ne", 7, "center", yy);
+      el_table.htmlText("Ve", 8, "center", yy);
+      el_table.htmlText("Me", 9, "center", yy);
+    }
     doc.setFontSize(fs);
     doc.setFont("freesans_normal");
     yy = neueZeile(yy, fs, 1);
@@ -506,16 +526,19 @@ export async function my_jspdf() {
       el_table.htmlText(String(+stab[i].nod[0] + 1), 2, "center", yy);
       el_table.htmlText(String(+stab[i].nod[1] + 1), 3, "center", yy);
 
-      for (let j = 0; j < 6; j++) {
-        if (stab[i].gelenk[j] === 0) {
-          el_table.htmlText("-", j + 4, "center", yy);
-        } else {
-          el_table.htmlText("ʘ", j + 4, "center", yy);
+      if (System === 0) {
+        for (let j = 0; j < 6; j++) {
+          if (stab[i].gelenk[j] === 0) {
+            el_table.htmlText("-", j + 4, "center", yy);
+          } else {
+            el_table.htmlText("ʘ", j + 4, "center", yy);
+          }
         }
       }
 
       yy = neueZeile(yy, fs1, 1);
     }
+
   }
 
   if (nloads > 0) {   // Knotenlasten
@@ -538,7 +561,7 @@ export async function my_jspdf() {
     el_table_nodes.htmlText("Lastfall", 2, "center", yy);
     el_table_nodes.htmlText("P<sub>x</sub> [kN]", 3, "center", yy);
     el_table_nodes.htmlText("P<sub>z</sub> [kN]", 4, "center", yy);
-    el_table_nodes.htmlText("M<sub>y</sub> [kNm]", 5, "center", yy);
+    if (System === 0) el_table_nodes.htmlText("M<sub>y</sub> [kNm]", 5, "center", yy);
 
     doc.setFontSize(fs);
     doc.setFont("freesans_normal");
@@ -555,9 +578,10 @@ export async function my_jspdf() {
       str = myFormat(load[i].Pz, 1, 3);
       el_table_nodes.htmlText(str, 4, "right", yy, 5);
 
-      str = myFormat(load[i].p[2], 1, 3);
-      el_table_nodes.htmlText(str, 5, "right", yy, 5);
-
+      if (System === 0) {
+        str = myFormat(load[i].p[2], 1, 3);
+        el_table_nodes.htmlText(str, 5, "right", yy, 5);
+      }
       yy = neueZeile(yy, fs, 1);
     }
   }
@@ -768,7 +792,7 @@ export async function my_jspdf() {
       el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
       el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
 
-      str = myFormat(eload[index].delta_s*1000., 1, 3);
+      str = myFormat(eload[index].delta_s * 1000., 1, 3);
       el_table_nodes.htmlText(str, 3, "right", yy, 5);
 
       yy = neueZeile(yy, fs, 1);
@@ -917,7 +941,7 @@ export async function my_jspdf() {
       el_table.htmlText("Node No", 0, "left", yy);
       el_table.htmlText("u [mm]", 1, "center", yy);
       el_table.htmlText("w [mm]", 2, "center", yy);
-      el_table.htmlText("φ [mrad]", 3, "center", yy);
+      if (System === 0) el_table.htmlText("φ [mrad]", 3, "center", yy);
 
       doc.setFontSize(fs);
       doc.setFont("freesans_normal");
@@ -927,7 +951,7 @@ export async function my_jspdf() {
         el_table.htmlText(String(+i + 1), 0, "center", yy);
         el_table.htmlText(myFormat(disp_print._(i + 1, 1, iLastfall), 2, 2), 1, "right", yy, 5);
         el_table.htmlText(myFormat(disp_print._(i + 1, 2, iLastfall), 2, 2), 2, "right", yy, 5);
-        el_table.htmlText(myFormat(disp_print._(i + 1, 3, iLastfall), 2, 2), 3, "right", yy, 5);
+        if (System === 0) el_table.htmlText(myFormat(disp_print._(i + 1, 3, iLastfall), 2, 2), 3, "right", yy, 5);
         yy = neueZeile(yy, fs, 1);
       }
     }
@@ -947,7 +971,7 @@ export async function my_jspdf() {
       el_table.htmlText("Node No", 0, "left", yy);
       el_table.htmlText("A<sub>x</sub> [kN]", 1, "center", yy);
       el_table.htmlText("A<sub>z</sub> [kN]", 2, "center", yy);
-      el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
+      if (System === 0) el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
 
       doc.setFontSize(fs);
       doc.setFont("freesans_normal");
@@ -957,7 +981,7 @@ export async function my_jspdf() {
         el_table.htmlText(String(+i + 1), 0, "center", yy);
         el_table.htmlText(myFormat(lagerkraefte._(i, 0, iLastfall - 1), 2, 2), 1, "right", yy, 5);
         el_table.htmlText(myFormat(lagerkraefte._(i, 1, iLastfall - 1), 2, 2), 2, "right", yy, 5);
-        el_table.htmlText(myFormat(lagerkraefte._(i, 2, iLastfall - 1), 2, 2), 3, "right", yy, 5);
+        if (System === 0) el_table.htmlText(myFormat(lagerkraefte._(i, 2, iLastfall - 1), 2, 2), 3, "right", yy, 5);
         yy = neueZeile(yy, fs, 1);
       }
     }
@@ -986,14 +1010,22 @@ export async function my_jspdf() {
         yy = neueZeile(yy, fs, 1);
 
         let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 20, 20, 20]);
-        el_table.htmlText("x [m]", 0, "center", yy);
-        el_table.htmlText("N [kN]", 1, "center", yy);
-        el_table.htmlText("V<sub>z</sub> [kN]", 2, "center", yy);
-        el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
-        el_table.htmlText("u<sub>xL</sub> [mm]", 4, "center", yy);
-        el_table.htmlText("w<sub>zL</sub> [mm]", 5, "center", yy);
-        el_table.htmlText("ß [mrad]", 6, "center", yy);
+        if (System === 0) {
+          el_table.htmlText("x [m]", 0, "center", yy);
+          el_table.htmlText("N [kN]", 1, "center", yy);
+          el_table.htmlText("V<sub>z</sub> [kN]", 2, "center", yy);
+          el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
+          el_table.htmlText("u<sub>xL</sub> [mm]", 4, "center", yy);
+          el_table.htmlText("w<sub>zL</sub> [mm]", 5, "center", yy);
+          el_table.htmlText("ß [mrad]", 6, "center", yy);
+        } else {
+          el_table.htmlText("x [m]", 0, "center", yy);
+          el_table.htmlText("N [kN]", 1, "center", yy);
+          el_table.htmlText("V<sub>z</sub> [kN]", 2, "center", yy);
+          el_table.htmlText("u<sub>xL</sub> [mm]", 3, "center", yy);
+          el_table.htmlText("w<sub>zL</sub> [mm]", 4, "center", yy);
 
+        }
         doc.setFontSize(fs);
         doc.setFont("freesans_normal");
         yy = neueZeile(yy, fs, 1);
@@ -1011,16 +1043,24 @@ export async function my_jspdf() {
         el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
         el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index);
         el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index);
-        el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index,false);
+        el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index, false);
 
         for (let i = 0; i < nelTeilungen; i++) {
-          el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
-          el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
-          el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
-          el_table.htmlText(myFormat(sg_M[i], 2, 2), 3, "right", yy, 5);
-          el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 4, "right", yy, 5);
-          el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 5, "right", yy, 5);
-          el_table.htmlText(myFormat(phiL[i] * 1000, 3, 3), 6, "right", yy, 5);
+          if (System === 0) {
+            el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
+            el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
+            el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
+            el_table.htmlText(myFormat(sg_M[i], 2, 2), 3, "right", yy, 5);
+            el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 4, "right", yy, 5);
+            el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 5, "right", yy, 5);
+            el_table.htmlText(myFormat(phiL[i] * 1000, 3, 3), 6, "right", yy, 5);
+          } else {
+            el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
+            el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
+            el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
+            el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 3, "right", yy, 5);
+            el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 4, "right", yy, 5);
+          }
           yy = neueZeile(yy, fs, 1);
         }
       }

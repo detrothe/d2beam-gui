@@ -756,7 +756,7 @@ export class CTruss extends CElement {
         }
 
 
-        for (i = 0; i < 3; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
+        for (i = 0; i < 2; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
 
         console.log('lokale Schnittgrößen, Element', (ielem + 1), this.FL)
 
