@@ -334,7 +334,7 @@ export function showColumnsForStabwerk() {
     let el = document.getElementById("id_knoten_tabelle");
     el?.setAttribute("show_column", String(5));
     el = document.getElementById("id_element_tabelle");
-    for (let i = 5; i <= 12; i++)el?.setAttribute("hide_column", String(i));
+    for (let i = 12; i >= 5; i--)el?.setAttribute("show_column", String(i));
     el?.setAttribute("show_column", String(2));
     el = document.getElementById("id_knotenlasten_tabelle");
     el?.setAttribute("show_column", String(5));

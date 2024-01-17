@@ -452,7 +452,7 @@ class DrTabelle extends HTMLElement {
       const nSpalten = this.nSpalten;
 
       for (let i = 0; i <= nZeilen; i++) {
-         tabelle.rows[i].cells[iSpalte].style.display = 'block'
+         tabelle.rows[i].cells[iSpalte].style.display = 'table-cell'
       }
 
    }

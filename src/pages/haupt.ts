@@ -209,6 +209,20 @@ async function initTabellenLoop() {
 
         <table id="querschnittwerte_table">
           <tbody>
+          <tr>
+              <td></td>
+              <td>
+                <sl-button id="clear" value="clear" @click="${handleClick_neue_eingabe}">neue Eingabe beginnen</sl-button>
+              </td>
+              <td>
+                <sl-button id="id_check" value="check" @click="${handleClick_eingabe_ueberpruefen}">Eingabe prüfen</sl-button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+               &nbsp;
+              </td>
+            </tr>
             <tr>
               <td>&nbsp;&nbsp; Berechnungsart :</td>
               <td>
@@ -229,13 +243,10 @@ async function initTabellenLoop() {
               </td>
               <td></td>
             </tr>
+
             <tr>
-              <td></td>
               <td>
-                <sl-button id="clear" value="clear" @click="${handleClick_neue_eingabe}">neue Eingabe beginnen</sl-button>
-              </td>
-              <td>
-                <sl-button id="id_check" value="check" @click="${handleClick_eingabe_ueberpruefen}">Eingabe prüfen</sl-button>
+               &nbsp;
               </td>
             </tr>
 
@@ -347,7 +358,7 @@ async function initTabellenLoop() {
           id="id_element_tabelle"
           nzeilen="${nelem_init}"
           nspalten="12"
-          columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a", "starr e"]'
+          columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a<br>[m]", "starr e<br>[m]"]'
           typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
           colwidth='["4","8","2","3","3","2","2","2","2","2","2","3","3"]'
         ></dr-tabelle>
