@@ -598,9 +598,9 @@ export class CTruss extends CElement {
             }
         }
 
-        for (j = 0; j < 4; j++) {
-            console.log("this.estiffG", this.estiffG[j])
-        }
+        // for (j = 0; j < 4; j++) {
+        //     console.log("this.estiffG", this.estiffG[j])
+        // }
     }
 
     //---------------------------------------------------------------------------------------------
@@ -778,9 +778,12 @@ export class CTruss extends CElement {
         this.ML = 0.0
         this.uL = this.edispL[0]
         this.wL = this.edispL[1]
-        this.phiL = 0.0
+        this.phiL = (this.edispL[3] - this.edispL[1]) / this.sl   // Stabdrehung
         this.NR = this.FL[0]
 
+        //this.FL[1] = this.FL[1] - this.normalkraft * this.phiL
+
+        //console.log("--- Bemessungsquerkraft",(ielem+1),this.VL,this.FL[0] * this.phiL, this.phiL)
         return this.FL;
     }
 
@@ -793,7 +796,7 @@ export class CTruss extends CElement {
 
         for (let i = 0; i < 2; i++) {
             nodi = this.nod[i]
-            console.log("nodi", i, nodi)
+            //console.log("nodi", i, nodi)
             lagerkraft[nodi][0] = lagerkraft[nodi][0] - this.F[2 * i]
             lagerkraft[nodi][1] = lagerkraft[nodi][1] - this.F[2 * i + 1]
         }
@@ -1388,7 +1391,7 @@ export class CTruss extends CElement {
                             const dpx = pxR - pxL
                             //const dpz = pzR - pzL
 
-                             Nx = Nx - pxL * x - dpx * x * x / sl / 2.
+                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
                             // Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                             // Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 

@@ -1579,7 +1579,7 @@ function draw_elementlasten(two: Two) {
         aL = stab[ielem].aL
         aR = stab[ielem].aR
 
-        console.log("aL,aR", aL, aR)
+        //console.log("aL,aR", aL, aR)
 
         si = stab[ielem].sinus
         co = stab[ielem].cosinus
@@ -1658,7 +1658,7 @@ function draw_elementlasten(two: Two) {
                     }
 
                     else if (eload[ieload].art === 1) {      // Streckenlast z-Richtung
-                        console.log('Streckenlast in z-Richtung', eload[ieload].pL, eload[ieload].pL, scalefactor, fact[iLoop])
+                        //console.log('Streckenlast in z-Richtung', eload[ieload].pL, eload[ieload].pL, scalefactor, fact[iLoop])
 
                         pL = eload[ieload].pL * scalefactor * fact[iLoop]
                         pR = eload[ieload].pR * scalefactor * fact[iLoop]
@@ -1676,7 +1676,7 @@ function draw_elementlasten(two: Two) {
                             x[3] = x[0]; z[3] = z[0] - pL;
 
 
-                            console.log("pL...", pL, pR, pMax, pMin, x, z)
+                            //console.log("pL...", pL, pR, pMax, pMin, x, z)
 
                             var vertices = [];
                             for (let i = 0; i < 4; i++) {

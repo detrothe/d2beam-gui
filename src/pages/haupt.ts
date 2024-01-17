@@ -1585,7 +1585,7 @@ export function set_current_filename(name: string) {
   currentFilename = name;
   console.log("file name", name);
   const el = document.getElementById("id_current_filename") as HTMLElement;
-  el.innerText = "filename: " + currentFilename;
+  el.innerHTML = "&nbsp;&nbsp;aktueller Dateiname: " + currentFilename;
 }
 
 //---------------------------------------------------------------------------------------------------------------

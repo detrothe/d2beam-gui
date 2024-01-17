@@ -2510,9 +2510,9 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
 
         }
 
-        for (i = 0; i < neq; i++) {
-            console.log("stiff_sig", stiff_sig[i])
-        }
+        // for (i = 0; i < neq; i++) {
+        //     console.log("stiff_sig", stiff_sig[i])
+        // }
 
         let kstiff_array = new Float64Array(neq * neq);
         let k = 0
@@ -2780,7 +2780,7 @@ function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Stabendkräfte/-momente</b>"
+        tag.innerHTML = "<b>Stabendkräfte/-momente</b> (Gleichgewichtsschnittgrößen)"
 
         newDiv?.appendChild(tag);
 

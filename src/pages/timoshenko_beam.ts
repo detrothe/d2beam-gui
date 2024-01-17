@@ -737,7 +737,7 @@ export class CTimoshenko_beam extends CElement {
             }
         }
 
-        console.log("this.u[]", this.neqeG, this.u)
+        //console.log("this.u[]", this.neqeG, this.u)
 
         for (j = 0; j < this.neqeG; j++) {
             sum = 0.0
@@ -747,7 +747,7 @@ export class CTimoshenko_beam extends CElement {
             this.F[j] = sum
         }
 
-        console.log("this.F[]", this.F)
+        //console.log("this.F[]", this.F)
 
         // normale Elementlasten hinzufügen
 
