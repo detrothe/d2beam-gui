@@ -2299,7 +2299,7 @@ function draw_lagerkraefte(two: Two) {
         let alpha = node[i].phi * Math.PI / 180.0
 
         let wert = 0.0
-        if (node[i].L[0] === -1 || node[i].kx > 0.0) {      // horizontales Lager
+        if (node[i].L_org[0] === 1 || node[i].kx > 0.0) {      // horizontales Lager
 
             if (THIIO_flag === 0) {
                 if (draw_lastfall <= nlastfaelle) {
@@ -2329,7 +2329,7 @@ function draw_lagerkraefte(two: Two) {
             txt.baseline = 'top'
         }
 
-        if (node[i].L[1] === -1 || node[i].kz > 0.0) {      // vertikales Lager
+        if (node[i].L_org[1] === 1 || node[i].kz > 0.0) {      // vertikales Lager
             if (THIIO_flag === 0) {
                 if (draw_lastfall <= nlastfaelle) {
                     wert = lagerkraefte._(i, 1, draw_lastfall - 1)
@@ -2361,7 +2361,7 @@ function draw_lagerkraefte(two: Two) {
         }
 
         if (System === STABWERK) {
-            if (node[i].L[2] === -1 || node[i].kphi > 0.0) {      // Einspannung
+            if (node[i].L_org[2] === 1 || node[i].kphi > 0.0) {      // Einspannung
 
                 if (THIIO_flag === 0) {
                     if (draw_lastfall <= nlastfaelle) {
@@ -2406,14 +2406,14 @@ function draw_lager(two: Two) {
         let phi = -node[i].phi * Math.PI / 180
 
         if (System === STABWERK) {
-            if (((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) ||
+            if (((node[i].L_org[0] === 1) && (node[i].L_org[1] === 1) && (node[i].L_org[2] === 1)) ||
                 ((node[i].kx > 0.0) && (node[i].kz > 0.0) && (node[i].L[2] === -1))) {  // Volleinspannung oder mit zwei Translkationsfedern
                 let rechteck = two.makeRectangle(x1, z1, 20, 20)
                 rechteck.fill = '#dddddd';
                 rechteck.scale = 1.0 / devicePixelRatio
                 rechteck.rotation = phi
             }
-            else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in x-Richtung
+            else if ((node[i].L[0] >= 0 || node[i].L_org[0] === -1) && (node[i].L_org[1] === 1) && (node[i].L_org[2] === 1)) {  // Einspannung, verschieblich in x-Richtung
 
                 let group = two.makeGroup();
                 let rechteck = two.makeRectangle(0, 0, 20, 20)
@@ -2431,7 +2431,7 @@ function draw_lager(two: Two) {
                 group.translation.set(x1, z1)
 
             }
-            else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in z-Richtung
+            else if ((node[i].L_org[0] === 1) && (node[i].L[1] >= 0 || node[i].L_org[1] === -1) && (node[i].L_org[2] === 1)) {  // Einspannung, verschieblich in z-Richtung
 
                 let group = two.makeGroup();
                 let rechteck = two.makeRectangle(0, 0, 20, 20)
@@ -2447,7 +2447,7 @@ function draw_lager(two: Two) {
                 group.translation.set(x1, z1)
 
             }
-            else if ((node[i].L[0] >= 0) && (node[i].L[1] >= 0) && (node[i].L[2] === -1)) {  // Einspannung, verschieblich in x-, z-Richtung
+            else if ((node[i].L[0] >= 0 || node[i].L_org[0] === -1) && (node[i].L[1] >= 0 || node[i].L_org[1] === -1) && (node[i].L_org[2] === 1)) {  // Einspannung, verschieblich in x-, z-Richtung
 
                 let group = two.makeGroup();
                 let rechteck = two.makeRectangle(0, 0, 20, 20)
@@ -2469,7 +2469,7 @@ function draw_lager(two: Two) {
                 group.translation.set(x1, z1)
 
             }
-            else if ((node[i].L[0] === -1) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // zweiwertiges Lager
+            else if ((node[i].L_org[0] === 1) && (node[i].L_org[1] === 1) && (node[i].L_org[2] === -1 || node[i].L[2] >= 0)) { // zweiwertiges Lager
                 let group = two.makeGroup();
                 console.log("in zweiwertiges Lager")
                 var vertices = [];
@@ -2492,7 +2492,7 @@ function draw_lager(two: Two) {
                 group.translation.set(x1, z1)
 
             }
-            else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1) && (node[i].L[2] >= 0)) { // einwertiges horizontal verschieblisches Lager
+            else if ((node[i].L[0] >= 0 || node[i].L_org[0] === -1) && (node[i].L_org[1] === 1) && (node[i].L[2] >= 0 || node[i].L_org[2] === -1)) { // einwertiges horizontal verschieblisches Lager
                 let group = two.makeGroup();
                 console.log("in einwertiges horizontal verschieblisches Lager")
                 var vertices = [];
@@ -2515,9 +2515,9 @@ function draw_lager(two: Two) {
                 group.translation.set(x1, z1)
 
             }
-            else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0) && (node[i].L[2] >= 0)) { // einwertiges vertikal verschieblisches Lager
+            else if ((node[i].L_org[0] === 1) && (node[i].L[1] >= 0 || node[i].L_org[1] === -1) && (node[i].L[2] >= 0 || node[i].L_org[2] === -1)) { // einwertiges vertikal verschieblisches Lager
                 let group = two.makeGroup();
-                console.log("in einwertiges vertikales Lager")
+                console.log("in einwertiges vertikales verschieblisches Lager")
                 var vertices = [];
                 vertices.push(new Two.Anchor(0, 0));
                 vertices.push(new Two.Anchor(-12, 20));
@@ -2538,7 +2538,7 @@ function draw_lager(two: Two) {
                 group.translation.set(x1, z1)
 
             }
-        } else {
+        } else {                     // Fachwerk
             if ((node[i].L[0] === -1) && (node[i].L[1] === -1)) { // zweiwertiges Lager
                 let group = two.makeGroup();
                 console.log("in zweiwertiges Lager")

@@ -1337,18 +1337,17 @@ export class CTruss extends CElement {
 
                 dwx = wxG - wLG
                 dwxG = wxG - wLG
-                if (this.NL < 0.0) Mx = Mx - this.NL * (wxG - wLG)  //?
-                //if (Nm < 0.0) Mx = Mx - Nm * (wxG - wLG)  //?
+                //if (this.NL < 0.0) Mx = Mx - this.NL * (wxG - wLG)  //?
 
                 for (let i = 0; i < nstabvorverfomungen; i++) {
                     if (stabvorverformung[i].element === this.ielem) {
                         //console.log("Element ", +i + 1, ' hat Stabvorverformungen')
                         let w0a = stabvorverformung[i].p[0]
                         let w0e = stabvorverformung[i].p[1]
-                        let v0m = stabvorverformung[i].p[2]
-                        let w0x = (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
-                        if (this.NL < 0.0) Mx = Mx - this.NL * w0x
-                        wxG += w0x
+                        //let v0m = stabvorverformung[i].p[2]
+                        let w0x = (w0e - w0a) * x / sl // + 4.0 * v0m * x / sl * (1.0 - x / sl)
+                        // if (this.NL < 0.0) Mx = Mx - this.NL * w0x
+                        wxG += w0x + w0a;
                     }
 
                 }

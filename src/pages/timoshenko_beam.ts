@@ -67,6 +67,8 @@ export class CTimoshenko_beam extends CElement {
     u: number[] = Array(10)        // Verformungen global
     edispL: number[] = Array(6)    // Verformungen lokal
     edisp0: number[] = Array(6).fill(0.0)   // Vorverformungen
+    edispv0: number[] = Array(6).fill(0.0)   // Stabvorverformungen
+
     F: number[] = Array(10)        // Stabendgrößen nach WGV im globalen Koordinatensystem
     FL: number[] = Array(6)        // Stabendgrößen nach KGV im lokalen Koordinatensystem
     Fe: number[] = Array(10)       // Vorverformungen aus Schiefstellung
@@ -86,6 +88,9 @@ export class CTimoshenko_beam extends CElement {
     w_komb = [] as number[][]
     wG_komb = [] as number[][]
     phi_komb = [] as number[][]
+
+    Nb_komb = [] as number[][]         // Bemessungs(Nachweis)-Schnittgrößen entlang Stab, lokal, aus Kombinationen
+    Vb_komb = [] as number[][]
 
     NL: number = 0.0
     VL: number = 0.0
@@ -453,6 +458,9 @@ export class CTimoshenko_beam extends CElement {
             this.w_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.wG_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.phi_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
+
+            this.Nb_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
+            this.Vb_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
         }
 
         this.berechneLokaleElementsteifigkeitmatrix()
@@ -692,7 +700,7 @@ export class CTimoshenko_beam extends CElement {
             for (k = 0; k < this.neqeG; k++) {
                 sum = 0.0
                 for (let l = 0; l < 6; l++) {
-                     sum = sum + this.transU[l][j] * help[l][k]
+                    sum = sum + this.transU[l][j] * help[l][k]
                     // sum = sum + this.transF[j][l] * help[l][k]
                 }
                 this.estiff_sig[j][k] = -sum * this.normalkraft
@@ -794,7 +802,7 @@ export class CTimoshenko_beam extends CElement {
             sum = 0.0
             for (j = 0; j < this.neqe; j++) {
                 // sum += this.transU[i][j] * this.F[j]   // falsch
-                   sum += this.TfG2L[i][j] * this.F[j]
+                sum += this.TfG2L[i][j] * this.F[j]
             }
             this.FL[i] = sum
         }
@@ -1163,9 +1171,13 @@ export class CTimoshenko_beam extends CElement {
         // jetzt noch die Anteile aus Stabvorverformungen
 
         console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß   nstabvorverfomungen", nstabvorverfomungen)
+
         for (i = 0; i < nstabvorverfomungen; i++) {
+
             if (stabvorverformung[i].element === this.ielem) {
                 console.log("Element ", +i + 1, ' hat Stabvorverformungen')
+                v0.fill(0.0)
+
                 v0[1] = stabvorverformung[i].p[0]
                 v0[4] = stabvorverformung[i].p[1]
 
@@ -1175,17 +1187,17 @@ export class CTimoshenko_beam extends CElement {
                 let v0m = stabvorverformung[i].p[2]
                 v0[2] = v0[2] - 4.0 * v0m / this.sl
                 v0[5] = v0[5] + 4.0 * v0m / this.sl
+
+                for (j = 0; j < 6; j++) {
+                    sum = 0.0
+                    for (k = 0; k < 6; k++) {
+                        sum += this.normalkraft * this.ksig[j][k] * v0[k]
+                    }
+                    FeL[j] += sum     // lokal
+                }
+
+                for (j = 0; j < 6; j++) this.edispv0[j] += v0[j];
             }
-
-        }
-
-
-        for (j = 0; j < 6; j++) {
-            sum = 0.0
-            for (k = 0; k < 6; k++) {
-                sum += this.normalkraft * this.ksig[j][k] * v0[k]
-            }
-            FeL[j] += sum     // lokal
         }
 
 
@@ -1430,8 +1442,10 @@ export class CTimoshenko_beam extends CElement {
                         let w0e = stabvorverformung[i].p[1]
                         let v0m = stabvorverformung[i].p[2]
                         let w0x = (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
+                        let phi0x = (w0e - w0a) / sl + 4.0 * v0m / sl * (1.0 - 2 * x / sl)
                         if (this.NL < 0.0) Mx = Mx - this.NL * w0x
-                        wxG += w0x
+                        wxG += w0x + w0a;
+                        phixG += phi0x;
                     }
 
                 }
@@ -1907,6 +1921,7 @@ export class CTimoshenko_beam extends CElement {
 
                 disp = Math.sqrt(ux * ux + wx * wx) * 1000.0
 
+
                 if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
                 if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
                 if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
@@ -1921,6 +1936,17 @@ export class CTimoshenko_beam extends CElement {
                 this.wG_komb[iLastf][iteil] = wxG
                 this.phi_komb[iLastf][iteil] = phix
 
+                if (this.normalkraft >= 0.0) {
+                    this.Vb_komb[iLastf][iteil] = Vx
+                    this.Nb_komb[iLastf][iteil] = Nx
+                } else {
+                    let Nb = Nx + Vx * phixG
+                    let Vb = Vx - Nx * phixG
+                    this.Vb_komb[iLastf][iteil] = Vb
+                    this.Nb_komb[iLastf][iteil] = Nb
+                    if (Math.abs(Vb) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vb)
+                    if (Math.abs(Nb) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nb)
+                }
             }  // ende TH II Ordnung
 
             // console.log("x, Vx, Mx", x, Vx, Mx, wx, phix)
@@ -1956,7 +1982,7 @@ export class CTimoshenko_beam extends CElement {
                 for (let i = 0; i < this.nTeilungen; i++)  Vx[i] = this.V_komb[iLastf - nlastfaelle][i]
             }
         } else {
-            for (let i = 0; i < this.nTeilungen; i++) Vx[i] = this.V_komb[iLastf][i]
+            for (let i = 0; i < this.nTeilungen; i++) Vx[i] = this.Vb_komb[iLastf][i]
         }
     }
 
@@ -1972,7 +1998,7 @@ export class CTimoshenko_beam extends CElement {
                 for (let i = 0; i < this.nTeilungen; i++)  Nx[i] = this.N_komb[iLastf - nlastfaelle][i]
             }
         } else {
-            for (let i = 0; i < this.nTeilungen; i++) Nx[i] = this.N_komb[iLastf][i]
+            for (let i = 0; i < this.nTeilungen; i++) Nx[i] = this.Nb_komb[iLastf][i]
         }
     }
 
