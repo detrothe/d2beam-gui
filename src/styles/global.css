@@ -28,8 +28,29 @@ body {
 @media (prefers-color-scheme: dark) {
   html,
   body {
+    /*
     background-color: #181818;
     color: white;
+*/
+    background-color: #f5f5f5;
+    color: black;
+
+    font-size: 1rem;
+  }
+
+  button,
+  select {
+    font-size: 0.875rem;
+    /*1rem;*/
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: #303030;
+    color: #f4efef;
+    padding: 0.2rem;
+  }
+
+  button:active {
+    background-color: hsl(198.4 93.2% 59.6%);
   }
 }
 
@@ -39,6 +60,21 @@ body {
     background-color: #f5f5f5;
     color: black;
     font-size: 1rem;
+  }
+
+  button,
+  select {
+    font-size: 0.875rem;
+    /*1rem;*/
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: #303030;
+    color: #444;
+    padding: 0.2rem;
+  }
+
+  button:active {
+    background-color: hsl(198.4 93.2% 59.6%);
   }
 }
 
@@ -51,12 +87,12 @@ div {
   font-size: 1rem;
 }
 
-select {
+/* select {
   font-size: 1rem;
-  /*min-width: 100%;*/
+
   margin: 0;
   padding: 1px;
-}
+} */
 
 table {
   border: none;
@@ -117,21 +153,6 @@ input[type="number"] {
   padding: 0px;
   padding-left: 0px;
   border-width: 0;
-}
-
-button,
-select {
-  font-size: 1rem;
-  /*1rem;*/
-  border-radius: 3px;
-  border-width: 1px;
-  border-color: #303030;
-  color: #444;
-  padding: 0.2rem;
-}
-
-button:active {
-  background-color:  hsl(198.4 93.2% 59.6%);
 }
 
 .output_table td,

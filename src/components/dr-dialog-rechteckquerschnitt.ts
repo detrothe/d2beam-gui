@@ -189,6 +189,7 @@ export class drRechteckQuerSchnitt extends LitElement {
         background-color: rgb(207, 217, 21);
         border-radius: 5px;
         font-size: 1rem;
+        color: black;
       }
 
       td.selected {
@@ -199,6 +200,10 @@ export class drRechteckQuerSchnitt extends LitElement {
       td.highlight {
         background-color: orange;
         color: darkslateblue;
+      }
+
+      dialog {
+        color: black;
       }
 
       /*Festlegung im Default-Stylesheet der Browser*/

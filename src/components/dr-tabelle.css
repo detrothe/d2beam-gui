@@ -19,6 +19,13 @@ input[type='number'] {
   border-right: 0;
   border-radius: 0;
   text-align: center;
+  background-color: #f5f5f5;
+  color: black;
+}
+
+input {
+  background-color: #f5f5f5;
+  color: black;
 }
 
 td,
@@ -27,6 +34,8 @@ th {
   margin: 0px;
   /*width: 6em;*/
   font-size: 1rem;
+  /*background-color: #f5f5f5;*/
+  color: black;
 }
 
 table {
@@ -37,6 +46,7 @@ table {
   background-color: rgb(207, 217, 21);
   border-radius: 5px;
   font-size: 1rem;
+  color: black;
 }
 
 td.selected {
