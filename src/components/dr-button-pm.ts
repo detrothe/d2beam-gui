@@ -24,44 +24,40 @@ export class drButtonPM extends LitElement {
          :host {
             --dr-pad: 0;
             /* --color-border: #f6d818; */
-            /* @media (prefers-color-scheme: light) {
-               --color-border: #d4d4d8;
-            } */
+
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
                Helvetica, Arial, sans-serif, 'Apple Color Emoji',
                'Segoe UI Emoji', 'Segoe UI Symbol';
-            /* @media (prefers-color-scheme: dark) {
-               --color-border: #f6d818;
-            } */
          }
 
          @media (prefers-color-scheme: dark) {
-
-          .spinner {
-            border: solid 1px #f6d818;
-          }
-          .input_int {
-            border-top: 1px solid  #f6d818;
-            border-bottom: 1px solid  #f6d818;
-          }
+            .spinner {
+               border: solid 1px  #43434a;
+            }
+            .input_int {
+               border-top: 1px solid  #43434a;
+               border-bottom: 1px solid  #43434a;
+               color: #b6b6be;
+            }
             button {
                font-size: 1em;
                border-radius: 3px;
                border-width: 1px;
-               border-color: #cb2f2f;
-               color: #df3131;
+               border-color: #43434a;
+               color: #b6b6be;
+               background-color: #1a1a1e;
                padding: 0em; /* 0.2em;*/
             }
          }
 
          @media (prefers-color-scheme: light) {
-          .spinner {
-            border: solid 1px #d4d4d8;
-          }
-          .input_int {
-            border-top: 1px solid  #d4d4d8;
-            border-bottom: 1px solid  #d4d4d8;
-          }
+            .spinner {
+               border: solid 1px #d4d4d8;
+            }
+            .input_int {
+               border-top: 1px solid #d4d4d8;
+               border-bottom: 1px solid #d4d4d8;
+            }
             button {
                font-size: 1em;
                border-radius: 3px;
