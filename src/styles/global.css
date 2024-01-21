@@ -56,6 +56,14 @@ body {
    button:active {
       background-color: hsl(198.4 93.2% 59.6%);
    }
+
+   #id_color_table_in,
+   #id_color_table_out,
+   #id_fontsize {
+      border-color: #43434a;
+      color: #b6b6be;
+      background-color: #1a1a1e;
+   }
 }
 
 @media (prefers-color-scheme: light) {
@@ -81,6 +89,14 @@ body {
    button:active {
       background-color: hsl(198.4 93.2% 59.6%);
    }
+
+   #id_color_table_in,
+   #id_color_table_out,
+   #id_fontsize {
+      border-color: #d4d4d8;
+      color: #444;
+      background-color: #ffffff;
+   }
 }
 
 p {
@@ -92,12 +108,15 @@ div {
    font-size: 1rem;
 }
 
-/* select {
-  font-size: 1rem;
-
-  margin: 0;
-  padding: 1px;
-} */
+#id_color_table_in,
+#id_color_table_out,
+#id_fontsize {
+   font-size: 0.875rem;
+   border-radius: 4px;
+   border-width: 1px;
+   padding: 0.4rem;
+   min-width: 100%;
+}
 
 table {
    border: none;
@@ -337,6 +356,7 @@ input[type='number'] {
 
 .confirm-dialog-button {
    background-color: rgb(234, 231, 231);
+   color: #1a1a1e;
    border: 1px solid #444;
    border-radius: 6px;
    cursor: pointer;
@@ -352,6 +372,7 @@ input[type='number'] {
    border: 2px solid #444;
    border-radius: 6px;
    background: rgba(255, 251, 240);
+   color: #1a1a1e;
 
    &::backdrop {
       background-color: rgba(0, 0, 0, 0.3);
@@ -362,6 +383,7 @@ input[type='number'] {
    font-size: 1rem;
    font-style: italic;
    font-weight: 600;
+   color: #1a1a1e;
 }
 
 .confirm-dialog-button-group {
@@ -425,3 +447,17 @@ input[type='number'] {
    padding-right: 1rem;
 }
 
+#div_add_cross_section {
+   /* display: 'flex'; */
+   align-items: 'center';
+   background-color: '#ff0000';
+   color: '#ff0000';
+   border: '0px';
+}
+
+#div_add_cross_section:focus {
+   background-color: '#ff0000';
+}
+#div_add_cross_section:active {
+   background-color: '#ff0000';
+}

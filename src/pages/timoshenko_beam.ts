@@ -88,6 +88,7 @@ export class CTimoshenko_beam extends CElement {
     w_komb = [] as number[][]
     wG_komb = [] as number[][]
     phi_komb = [] as number[][]
+    phiG_komb = [] as number[][]
 
     Nb_komb = [] as number[][]         // Bemessungs(Nachweis)-Schnittgrößen entlang Stab, lokal, aus Kombinationen
     Vb_komb = [] as number[][]
@@ -458,6 +459,7 @@ export class CTimoshenko_beam extends CElement {
             this.w_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.wG_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.phi_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
+            this.phiG_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
 
             this.Nb_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.Vb_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
@@ -1935,6 +1937,7 @@ export class CTimoshenko_beam extends CElement {
                 this.w_komb[iLastf][iteil] = wx
                 this.wG_komb[iLastf][iteil] = wxG
                 this.phi_komb[iLastf][iteil] = phix
+                this.phiG_komb[iLastf][iteil] = phixG
 
                 if (this.normalkraft >= 0.0) {
                     this.Vb_komb[iLastf][iteil] = Vx
@@ -2025,11 +2028,12 @@ export class CTimoshenko_beam extends CElement {
                 if (gesamt) {
                     ux[i] = this.uG_komb[iLastf][i]
                     wx[i] = this.wG_komb[iLastf][i];
+                    phix[i] = this.phiG_komb[iLastf][i]
                 } else {
                     ux[i] = this.u_komb[iLastf][i]
                     wx[i] = this.w_komb[iLastf][i];
+                    phix[i] = this.phi_komb[iLastf][i]
                 }
-                phix[i] = this.phi_komb[iLastf][i]
             }
         }
     }

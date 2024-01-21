@@ -262,6 +262,7 @@ class DrTabelle extends HTMLElement {
                el.style.margin = '0px';
                el.style.borderRadius = '0px';
                el.style.fontSize = '1rem';
+               el.style.color = 'rgb(0,0,0)';
 
                const str = id_table + '-' + iZeile + '-' + iSpalte;
                el.id = str;
@@ -780,6 +781,7 @@ class DrTabelle extends HTMLElement {
                   el.style.margin = '0px';
                   el.style.borderRadius = '0px';
                   el.style.fontSize = '1rem';
+                  el.style.color = 'rgb(0,0,0)';
                   const str = id_table + '-' + iZeile + '-' + iSpalte;
                   el.id = str;
                   //el.className = 'input_normal';

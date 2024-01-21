@@ -820,7 +820,7 @@ async function initTabellenLoop() {
               <tr>
                 <td id="lab_font_size">Schriftgröße:</td>
                 <td>
-                  <select name="fontSize" id="id_fontsize" style="width: 150px;">
+                  <select name="fontSize" id="id_fontsize">
                     <option value="0.5em">8</option>
                     <option value="0.5625em">9</option>
                     <option value="0.625em">10</option>
@@ -838,28 +838,24 @@ async function initTabellenLoop() {
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td style="white-space:nowrap" id="lab_tableColor_outside">
+                <td style="white-space:nowrap">
                   Tabellenfarbe außen: &nbsp;
                 </td>
                 <td>
                   <input
                     id="id_color_table_out"
                     value="#CFD915"
-                    style="width: 150px; border-radius: 3px; border-width: 1px;"
-                    data-jscolor="{ preset: 'dark', closeButton: true, closeText: 'OK' }"
                   />
                 </td>
               </tr>
               <tr>
-                <td style="white-space:nowrap" id="lab_tableColor_inside">
+                <td style="white-space:nowrap">
                   Tabellenfarbe innen: &nbsp;
                 </td>
                 <td>
                   <input
                     id="id_color_table_in"
                     value="#b3ae00"
-                    style="width: 150px; border-radius: 3px; border-width: 1px;"
-                    data-jscolor="{ preset: 'dark', closeButton: true, closeText: 'OK' }"
                   />
                 </td>
               </tr>
@@ -1170,11 +1166,15 @@ export function add_new_cross_section(qName: string, id: string) {
   //  var br = document.createElement("br");
   //  tag.appendChild(br);
   var div = document.createElement("div");
+  //div.id='div_add_cross_section'
   div.style.display = "flex";
   div.style.alignItems = "center";
+  div.style.backgroundColor = "#f5f5f5";
+  div.style.border = "0px";
 
   div.appendChild(quer_button);
   div.appendChild(delete_button);
+
 
   tag.appendChild(div);
 

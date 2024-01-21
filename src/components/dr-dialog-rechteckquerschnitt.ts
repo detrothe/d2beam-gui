@@ -136,16 +136,16 @@ export class drRechteckQuerSchnitt extends LitElement {
       label {
         font-size: 1rem;
         width: 6rem;
+        border-radius: 4px;
       }
 
       button,
       select {
         font-size: 1rem;
-        border-radius: 3px;
+        border-radius: 4px;
         border-width: 1px;
-        border-color: #303030;
-        color: #444;
-        padding: 0.2rem;
+
+        padding: 0.4rem;
       }
 
       button:active {
@@ -162,7 +162,7 @@ export class drRechteckQuerSchnitt extends LitElement {
         -moz-appearance: textfield;
       }
 
-      .input_int {
+      /* .input_int {
         width: 3.125rem;
         margin: 0;
         padding: 1px;
@@ -172,7 +172,7 @@ export class drRechteckQuerSchnitt extends LitElement {
         border-right: 0;
         border-radius: 0;
         text-align: center;
-      }
+      } */
 
       td,
       th {

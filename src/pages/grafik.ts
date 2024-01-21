@@ -1009,7 +1009,7 @@ export function drawsystem() {
                 if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].My;
                 else if (show_querkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].Vz;
                 else if (show_normalkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].N;
-                //console.log("MAX VALUES", iLastfall, maxValue_komb[lf_index].My)
+                console.log("MAX VALUES, maxValue_komb.Vz.My", iLastfall, maxValue_komb[lf_index].Vz, maxValue_komb[lf_index].My)
             } else {
                 nLoop = nkombinationen
                 lf_index = 0
@@ -1159,7 +1159,7 @@ export function drawsystem() {
                             z_max = zz2
                         }
                         if ((sgR < maxValueNeg) && (sgR < valueLeftNeg)) {   //(Math.abs(sgR) < Math.abs(valueLeftNeg))
-                            console.log("maxValueNeg", sgR, maxValueNeg, valueLeftNeg)
+                            //console.log("maxValueNeg", sgR, maxValueNeg, valueLeftNeg)
                             foundNeg = true
                             maxValueNeg = sgR
                             x_min = xx2
