@@ -463,8 +463,12 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         if (THIIO_flag === 0) {
             tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
         } else {
+            if ( ausgabe_gleichgewichtSG ) {
+                tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
+            } else {
             tag.innerHTML = "<b>Nachweisschnittgrößen und lokale Verformungen</b>"
             tag.title = "Nachweisschnittgrößen berücksichtigen die Rotation des Querschnitts und sind für die Bemessung zu verwenden"
+            }
         }
         newDiv?.appendChild(tag);
 
