@@ -42,6 +42,7 @@ export function myPanel() {
         show_support_forces: true,
         show_umriss: false,
         Gesamtverformung: false,
+        Gleichgewicht_SG: true,
 
         Reset: function () {
             window.dispatchEvent(new Event("reset_webgl"));
@@ -168,6 +169,12 @@ export function myPanel() {
     folder.add(obj, 'Gesamtverformung').onChange(() => {
         window.dispatchEvent(new Event("draw_gesamtverformung_grafik"));
     });
+
+    folder.add(obj, 'Gleichgewicht_SG')
+        .name('Gleichgewicht SG')
+        .onChange(() => {
+            window.dispatchEvent(new Event("draw_gleichgewicht_SG_grafik"));
+        });
 
     folder.add(obj, 'Reset')
 

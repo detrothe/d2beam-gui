@@ -12,6 +12,8 @@ import "@shoelace-style/shoelace/dist/components/icon/icon.js";
 import "@shoelace-style/shoelace/dist/components/radio-group/radio-group.js";
 import "@shoelace-style/shoelace/dist/components/radio-button/radio-button.js";
 import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
+import "@shoelace-style/shoelace/dist/components/select/select.js";
+import "@shoelace-style/shoelace/dist/components/option/option.js";
 
 //import { styles } from '../styles/shared-styles';
 import "./globals";
@@ -643,7 +645,7 @@ async function initTabellenLoop() {
             <tr>
               <td>Richtung :</td>
               <td>
-                <select name="maxu_dir" id="id_maxu_dir" style="min-width: 100%;">
+                <select name="maxu_dir" id="id_maxu_dir" style="min-width: 100%;"  onchange="berechnungErforderlich()">
                   <option value="0">x (u)</option>
                   <option value="1" selected>z (w)</option>
                   <option value="2">&phi;</option>
@@ -663,7 +665,7 @@ async function initTabellenLoop() {
                   class="input_tab"
                   pattern="[0-9.,eE+-]*"
                   value=""
-                  @change=${berechnungErforderlich}
+                  onchange="berechnungErforderlich()"
                 />
               </td>
             </tr>
@@ -735,6 +737,15 @@ async function initTabellenLoop() {
               <td id="id_niter" title="Anzahl Iterationen bei Th. II. Ordnung">&nbsp;Anzahl Iterationen:</td>
               <td>
                 <dr-button-pm id="id_button_niter" nel="5" inputid="niter"></dr-button-pm>
+              </td>
+            </tr>
+            <tr>
+              <td id="id_ausgabe_SG" title="Ausgabe Schnittgrößen in Tab Ergebnisse und pdf-Datei, Neuberechnung erforderlich">&nbsp;Ausgabe Schnittgrößen:</td>
+              <td>
+              <sl-select  value="true" id="id_ausgabe_SG_option" >
+                 <sl-option value='true' @click=${berechnungErforderlich} > Gleichgewichtsschnittgrößen </sl-option>
+                 <sl-option value='false' @click=${berechnungErforderlich} >Nachweisschnittgrößen</sl-option>
+              </sl-select>
               </td>
             </tr>
           </tbody>
@@ -1175,7 +1186,6 @@ export function add_new_cross_section(qName: string, id: string) {
   div.appendChild(quer_button);
   div.appendChild(delete_button);
 
-
   tag.appendChild(div);
 
   const element = document.getElementById("id_tree_LQ");
@@ -1355,12 +1365,10 @@ export function resizeTables() {
     //console.log("EL: >>", el);
     el?.setAttribute("nzeilen", nelem);
 
-
     // el?.setAttribute("hide_column", String(9));
     // el?.setAttribute("hide_column", String(8));
     // el?.setAttribute("hide_column", String(6));
     // el?.setAttribute("hide_column", String(5));
-
   }
 
   {
@@ -1452,7 +1460,7 @@ export function resizeTables() {
   }
 
   if (System === 0) showColumnsForStabwerk();
-  else  hideColumnsForFachwerk();
+  else hideColumnsForFachwerk();
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1530,7 +1538,6 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
   (ele?.shadowRoot?.getElementById("dialog_neue_eingabe") as HTMLDialogElement).removeEventListener("close", dialog_closed);
 
   if (returnValue === "ok") {
-
     let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
 
     setSystem(system);
@@ -1565,10 +1572,10 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     clearTables();
 
     if (system === 1) {
-      el = document.getElementById('id_button_nteilungen') as drButtonPM;
+      el = document.getElementById("id_button_nteilungen") as drButtonPM;
       el.setValue(1);
     } else {
-      el = document.getElementById('id_button_nteilungen') as drButtonPM;
+      el = document.getElementById("id_button_nteilungen") as drButtonPM;
       el.setValue(10);
     }
 

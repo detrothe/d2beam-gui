@@ -13,7 +13,7 @@ import { CTruss } from "./truss"
 import { CSpring } from "./feder"
 import { init_grafik, drawsystem } from "./grafik";
 import { show_controller_THIIO, show_controller_results, show_controller_truss } from "./mypanelgui"
-import {ausgabe} from "./ausgabe"
+import { ausgabe } from "./ausgabe"
 
 // import { read_daten } from "./dateien"
 
@@ -34,6 +34,7 @@ export let nlastfaelle: number = 0;
 export let nkombinationen: number = 0;
 export let nelTeilungen = 10;
 export let n_iterationen = 5;
+export let ausgabe_gleichgewichtSG = true      // Ausgabe der Gleichgewichtsschnittgrößen
 
 
 export let neigv: number = 2;
@@ -305,7 +306,7 @@ export function setSystem(system: number) {
     //-----------------------------------------------------------------------------------------------------------
     System = system;
 
-    if (system === 0)  show_controller_truss(true);
+    if (system === 0) show_controller_truss(true);
     else show_controller_truss(false);
 }
 
@@ -499,10 +500,15 @@ export function rechnen(flag = 1) {
     el = document.getElementById('id_button_niter') as any;
     n_iterationen = Number(el.nel);
 
-    console.log("THIIO_flag", THIIO_flag, nelTeilungen, n_iterationen)
+    el = document.getElementById('id_ausgabe_SG_option') as any;
+    if (el.value === 'true') ausgabe_gleichgewichtSG = true;
+    else ausgabe_gleichgewichtSG = false;
+    console.log("== ausgabe_gleichgewichtSG =",ausgabe_gleichgewichtSG)
 
-    console.log("intAt, art", intArt, art, ndivsl)
-    console.log("maxU", maxU_node, maxU_dir, maxU_schief, neigv)
+    console.log("== THIIO_flag", THIIO_flag, nelTeilungen, n_iterationen)
+
+    console.log("== intAt, art", intArt, art, ndivsl)
+    console.log("== maxU", maxU_node, maxU_dir, maxU_schief, neigv)
 
     read_nodes();
     read_elements();

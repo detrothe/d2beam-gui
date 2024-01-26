@@ -33,6 +33,7 @@ import {
   load,
   nstreckenlasten, ntemperaturlasten, neinzellasten, nvorspannungen, nspannschloesser,
   eload,
+  ausgabe_gleichgewichtSG,
 } from "./rechnen";
 
 import { myFormat } from "./utility";
@@ -1041,8 +1042,8 @@ export async function my_jspdf() {
 
         const lf_index = iLastfall - 1;
         el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
-        el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index);
-        el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index);
+        el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index,ausgabe_gleichgewichtSG);
+        el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index,ausgabe_gleichgewichtSG);
         el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index, false);
 
         for (let i = 0; i < nelTeilungen; i++) {

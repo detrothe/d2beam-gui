@@ -60,6 +60,7 @@ let show_umriss = false;
 let show_gesamtverformung = false;
 
 let show_lasten_temp = true;
+let show_gleichgewichtSG = true;
 
 let opacity = 0.5
 
@@ -1060,8 +1061,8 @@ export function drawsystem() {
             for (let loop = 0; loop < nLoop; loop++) {
 
                 if (show_momentenlinien) element[ielem].get_elementSchnittgroesse_Moment(sg, lf_index + loop);
-                else if (show_querkraftlinien) element[ielem].get_elementSchnittgroesse_Querkraft(sg, lf_index + loop);
-                else if (show_normalkraftlinien) element[ielem].get_elementSchnittgroesse_Normalkraft(sg, lf_index + loop);
+                else if (show_querkraftlinien) element[ielem].get_elementSchnittgroesse_Querkraft(sg, lf_index + loop, show_gleichgewichtSG);
+                else if (show_normalkraftlinien) element[ielem].get_elementSchnittgroesse_Normalkraft(sg, lf_index + loop, show_gleichgewichtSG);
                 //console.log("GRAFIK  Mx,Vx or N", nelTeilungen, sg)
 
                 //let group = two.makeGroup();
@@ -3447,6 +3448,19 @@ function draw_gesamtverformung_grafik() {
 
     drawsystem();
 }
+
+//--------------------------------------------------------------------------------------------------------
+function draw_gleichgewicht_SG_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_gleichgewicht_SG_grafik");
+    show_gleichgewichtSG = !show_gleichgewichtSG;
+
+    //if (Gesamt_ys === undefined || isNaN(yM)) return;
+
+    drawsystem();
+}
+
 //--------------------------------------------------------------------------------------------------------
 function scale_factor() {
     //--------------------------------------------------------------------------------------------------------
@@ -3470,6 +3484,7 @@ window.addEventListener('draw_lasten_grafik', draw_lasten_grafik);
 window.addEventListener('draw_lagerkraefte_grafik', draw_lagerkraefte_grafik);
 window.addEventListener('draw_umriss_grafik', draw_umriss_grafik);
 window.addEventListener('draw_gesamtverformung_grafik', draw_gesamtverformung_grafik);
+window.addEventListener('draw_gleichgewicht_SG_grafik', draw_gleichgewicht_SG_grafik);
 
 window.addEventListener('scale_factor', scale_factor);
 

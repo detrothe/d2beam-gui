@@ -17,6 +17,7 @@ import {
     nNodeDisps,
     System,
     alpha_cr,
+    ausgabe_gleichgewichtSG,
 } from "./rechnen";
 
 import { prot_eingabe } from "./prot_eingabe"
@@ -548,8 +549,8 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
             const lf_index = iLastfall - 1
             el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
-            el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index);
-            el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index);
+            el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index,ausgabe_gleichgewichtSG);
+            el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index,ausgabe_gleichgewichtSG);
             el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index);
 
             for (i = 0; i < nelTeilungen; i++) {

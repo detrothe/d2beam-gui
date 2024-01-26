@@ -1974,7 +1974,7 @@ export class CTimoshenko_beam extends CElement {
     }
 
     //---------------------------------------------------------------------------------------------
-    get_elementSchnittgroesse_Querkraft(Vx: number[], iLastf: number) {
+    get_elementSchnittgroesse_Querkraft(Vx: number[], iLastf: number, use_gleichgewichtSG: boolean) {
 
 
         if (THIIO_flag === 0) {
@@ -1985,12 +1985,16 @@ export class CTimoshenko_beam extends CElement {
                 for (let i = 0; i < this.nTeilungen; i++)  Vx[i] = this.V_komb[iLastf - nlastfaelle][i]
             }
         } else {
-            for (let i = 0; i < this.nTeilungen; i++) Vx[i] = this.Vb_komb[iLastf][i]
+            if (use_gleichgewichtSG) {
+                for (let i = 0; i < this.nTeilungen; i++) Vx[i] = this.V_komb[iLastf][i]
+            } else {
+                for (let i = 0; i < this.nTeilungen; i++) Vx[i] = this.Vb_komb[iLastf][i]
+            }
         }
     }
 
     //---------------------------------------------------------------------------------------------
-    get_elementSchnittgroesse_Normalkraft(Nx: number[], iLastf: number) {
+    get_elementSchnittgroesse_Normalkraft(Nx: number[], iLastf: number, use_gleichgewichtSG: boolean) {
 
 
         if (THIIO_flag === 0) {
@@ -2001,7 +2005,11 @@ export class CTimoshenko_beam extends CElement {
                 for (let i = 0; i < this.nTeilungen; i++)  Nx[i] = this.N_komb[iLastf - nlastfaelle][i]
             }
         } else {
-            for (let i = 0; i < this.nTeilungen; i++) Nx[i] = this.Nb_komb[iLastf][i]
+            if (use_gleichgewichtSG) {
+                for (let i = 0; i < this.nTeilungen; i++) Nx[i] = this.N_komb[iLastf][i]
+            } else {
+                for (let i = 0; i < this.nTeilungen; i++) Nx[i] = this.Nb_komb[iLastf][i]
+            }
         }
     }
 

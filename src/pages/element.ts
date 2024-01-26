@@ -29,7 +29,7 @@ export class CElement {
     addiereElementsteifigkeitmatrix_ksig(stiff: number[][]) {
     }
 
-    berechneElementsteifigkeitsmatrix_Ksig() {}
+    berechneElementsteifigkeitsmatrix_Ksig() { }
 
     berechneInterneKraefte(ielem: number, iLastf: number, iter: number, u: number[]) {
         console.log("class element: berechneInterneKraefte", ielem, iLastf, iter, u[0])
@@ -62,12 +62,12 @@ export class CElement {
         console.log("class element: get_elementSchnittgroesse_Moment", iLastf, Mx[0])
     }
 
-    get_elementSchnittgroesse_Querkraft(Vx: number[], iLastf: number) {
-        console.log("class element: get_elementSchnittgroesse_Querkraft", iLastf, Vx[0])
+    get_elementSchnittgroesse_Querkraft(Vx: number[], iLastf: number, use_gleichgewichtSG: boolean) {
+        console.log("class element: get_elementSchnittgroesse_Querkraft", iLastf, Vx[0], use_gleichgewichtSG)
     }
 
-    get_elementSchnittgroesse_Normalkraft(Nx: number[], iLastf: number) {
-        console.log("class element: get_elementSchnittgroesse_Normalkraft", iLastf, Nx[0])
+    get_elementSchnittgroesse_Normalkraft(Nx: number[], iLastf: number, use_gleichgewichtSG: boolean) {
+        console.log("class element: get_elementSchnittgroesse_Normalkraft", iLastf, Nx[0], use_gleichgewichtSG)
     }
 }
 
