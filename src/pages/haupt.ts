@@ -730,13 +730,13 @@ async function initTabellenLoop() {
             <tr>
               <td id="id_nteilungen" title="Stabteilungen für Ausgabe der Schnittgrößen">&nbsp;Teilungen Ausgabe:</td>
               <td>
-                <dr-button-pm id="id_button_nteilungen" nel="10" inputid="nteilungen"></dr-button-pm>
+                <dr-button-pm id="id_button_nteilungen" nel="10" inputid="nteilungen"  @change=${berechnungErforderlich}></dr-button-pm>
               </td>
             </tr>
             <tr>
               <td id="id_niter" title="Anzahl Iterationen bei Th. II. Ordnung">&nbsp;Anzahl Iterationen:</td>
               <td>
-                <dr-button-pm id="id_button_niter" nel="5" inputid="niter"></dr-button-pm>
+                <dr-button-pm id="id_button_niter" nel="5" inputid="niter"  @change=${berechnungErforderlich}></dr-button-pm>
               </td>
             </tr>
             <tr>
