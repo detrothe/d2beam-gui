@@ -206,6 +206,17 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
     // Stabendkräfte/-momente
     {
+        let str_Vz_a = "V<sub>az</sub>&nbsp;[kN]"
+        let str_Vz_e = "V<sub>ez</sub>&nbsp;[kN]"
+        let str_Vz_title_a = "Querkraft am Stabanfang, positiv in negativer z-Richtung am negativen Schnittufer"
+        let str_Vz_title_e = "Querkraft am Stabende, positiv in z-Richtung am positiven Schnittufer"
+        if (THIIO_flag === 1) {
+            str_Vz_a = "T<sub>az</sub>&nbsp;[kN]"
+            str_Vz_e = "T<sub>ez</sub>&nbsp;[kN]"
+            str_Vz_title_a = "Transversalkraft am Stabanfang, positiv in negativer z-Richtung am negativen Schnittufer"
+            str_Vz_title_e = "Transversalkraft am Stabende, positiv in z-Richtung am positiven Schnittufer"
+        }
+
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
@@ -232,13 +243,13 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         // @ts-ignore
         const th1 = table.tHead.appendChild(document.createElement("th"));
         th1.innerHTML = "N<sub>a</sub> &nbsp;[kN]";
-        th1.title = "Normalkraft N am Stabanfang, positiv als Zugktaft"
+        th1.title = "Normalkraft N am Stabanfang, positiv als Zugkraft"
         th1.setAttribute("class", "table_cell_center");
         row.appendChild(th1);
         // @ts-ignore
         const th2 = table.tHead.appendChild(document.createElement("th"));
-        th2.innerHTML = "V<sub>az</sub>&nbsp;[kN]";
-        th2.title = "Querkraft Vz am Stabanfang, positiv in negativer z-Richtung am negativen Schnittufer"
+        th2.innerHTML = str_Vz_a;
+        th2.title = str_Vz_title_a
         th2.setAttribute("class", "table_cell_center");
         row.appendChild(th2);
         if (System === 0) {
@@ -252,13 +263,13 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         // @ts-ignore
         const th4 = table.tHead.appendChild(document.createElement("th"));
         th4.innerHTML = "N<sub>e</sub> &nbsp;[kN]";
-        th4.title = "Normalkraft N am Stabende, positiv als Zugktaft"
+        th4.title = "Normalkraft N am Stabende, positiv als Zugkraft"
         th4.setAttribute("class", "table_cell_center");
         row.appendChild(th4);
         // @ts-ignore
         const th5 = table.tHead.appendChild(document.createElement("th"));
-        th5.innerHTML = "V<sub>ez</sub>&nbsp;[kN]";
-        th5.title = "Querkraft Vz am Stabende, positiv in z-Richtung am positiven Schnittufer"
+        th5.innerHTML = str_Vz_e;
+        th5.title = str_Vz_title_e
         th5.setAttribute("class", "table_cell_center");
         row.appendChild(th5);
         if (System === 0) {
@@ -320,7 +331,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         // @ts-ignore
         const th1 = table.tHead.appendChild(document.createElement("th"));
         th1.innerHTML = "F<sub>x</sub> &nbsp;[kN]";
-        th1.title = "Federktaft Fx, positiv als Zugktaft"
+        th1.title = "Federktaft Fx, positiv als Zugkraft"
         th1.setAttribute("class", "table_cell_center");
         row.appendChild(th1);
         // @ts-ignore
@@ -457,17 +468,23 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
     // Schnittgrößen und Verformungen entlang Stabachse
     {
+        let str_Vz = "V<sub>z</sub>&nbsp;[kN]"
+        let str_Vz_title = "Querkraft Vz, positiv in positiver z-Richtung am positiven Schnittufer"
+
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
         if (THIIO_flag === 0) {
             tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
         } else {
-            if ( ausgabe_gleichgewichtSG ) {
+            if (ausgabe_gleichgewichtSG) {
                 tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
+                str_Vz = "T<sub>z</sub>&nbsp;[kN]"
+                str_Vz_title = "Transversalkraft Tz, positiv in positiver z-Richtung am positiven Schnittufer"
             } else {
-            tag.innerHTML = "<b>Nachweisschnittgrößen und lokale Verformungen</b>"
-            tag.title = "Nachweisschnittgrößen berücksichtigen die Rotation des Querschnitts und sind für die Bemessung zu verwenden"
+                tag.innerHTML = "<b>Nachweisschnittgrößen und lokale Verformungen</b>"
+                tag.title = "Nachweisschnittgrößen berücksichtigen die Rotation des Querschnitts und sind für die Bemessung zu verwenden"
+                str_Vz_title = "Querkraft Vz, positiv in positiver z(φ)-Richtung am positiven Schnittufer"
             }
         }
         newDiv?.appendChild(tag);
@@ -502,15 +519,15 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
             // @ts-ignore
             const th1 = table.tHead.appendChild(document.createElement("th"));
             th1.innerHTML = "N &nbsp;[kN]";
-            th1.title = "Normalkraft N, positiv als Zugktaft"
+            th1.title = "Normalkraft N, positiv als Zugkraft"
             th1.setAttribute("class", "table_cell_center");
             row.appendChild(th1);
 
             if (System === 0) {
                 // @ts-ignore
                 const th2 = table.tHead.appendChild(document.createElement("th"));
-                th2.innerHTML = "V<sub>z</sub>&nbsp;[kN]";
-                th2.title = "Querkraft Vz, positiv in negativer z-Richtung am negativen Schnittufer"
+                th2.innerHTML = str_Vz;
+                th2.title = str_Vz_title
                 th2.setAttribute("class", "table_cell_center");
                 row.appendChild(th2);
                 // @ts-ignore
@@ -553,8 +570,8 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
             const lf_index = iLastfall - 1
             el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
-            el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index,ausgabe_gleichgewichtSG);
-            el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index,ausgabe_gleichgewichtSG);
+            el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
+            el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
             el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index);
 
             for (i = 0; i < nelTeilungen; i++) {
