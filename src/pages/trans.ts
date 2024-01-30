@@ -37,7 +37,7 @@ class CTrans {
         this.dx = this.xmax - this.xmin;
         this.dz = this.zmax - this.zmin;
 
-        console.log("Grenzen", this.xmin, this.xmax, this.zmin, this.zmax);
+        //console.log("Grenzen", this.xmin, this.xmax, this.zmin, this.zmax);
 
         //this.ratio_world = this.dx / this.dz;
 
@@ -50,24 +50,24 @@ class CTrans {
         console.log("width,height", this.width, this.height)
 
         dz = this.dx * this.height / this.width;
-        console.log("dz", dz, this.dz);
+        //console.log("dz", dz, this.dz);
         dx = this.dz * this.width / this.height;
-        console.log("dx", dx, this.dx);
+        //console.log("dx", dx, this.dx);
 
         if (dz >= this.dz) {
             const delta_dz = (dz - this.dz) / 2;
             this.zmin = this.zmin - delta_dz;
             this.zmax = this.zmax + delta_dz;
             this.dz = this.zmax - this.zmin;
-            console.log("new z", delta_dz, this.zmin, this.zmax, this.dz);
+            //console.log("new z", delta_dz, this.zmin, this.zmax, this.dz);
         } else if (dx >= this.dx) {
             const delta_dx = (dx - this.dx) / 2;
             this.xmin = this.xmin - delta_dx;
             this.xmax = this.xmax + delta_dx;
             this.dx = this.xmax - this.xmin;
-            console.log("new x", delta_dx, this.xmin, this.xmax, this.dx);
+            //console.log("new x", delta_dx, this.xmin, this.xmax, this.dx);
         }
-        console.log("dx,dz", this.dx, this.dz);
+        //console.log("dx,dz", this.dx, this.dz);
 
     }
 

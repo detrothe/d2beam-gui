@@ -321,7 +321,10 @@ function mousedown(ev: any) {
 function mousemove(ev: MouseEvent) {
     //----------------------------------------------------------------------------------------------------
 
+    console.log('**********************************')
     console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY)
+    console.log('**********************************')
+
     ev.preventDefault()
     // if (ev.wheelDeltaY > 0) wheel_factor -= 0.1;
     // else if (ev.wheelDeltaY < 0) wheel_factor += 0.1;
@@ -405,7 +408,7 @@ export function drawsystem() {
 
     let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen || show_stabvorverformung);
 
-    console.log("O N L Y  L A B E L S", onlyLabels)
+    //console.log("O N L Y  L A B E L S", onlyLabels)
 
     const artboard = document.getElementById("artboard") as any;
     // console.log("artboard", artboard)
@@ -1464,7 +1467,7 @@ export function drawsystem() {
     draw_lager(two);
     if (flag_eingabe != 0) draw_gelenke(two);
 
-    console.log("++++ show_lasten_temp", show_lasten_temp)
+    //console.log("++++ show_lasten_temp", show_lasten_temp)
     if (show_lasten_temp) {
         draw_elementlasten(two);
         draw_knotenkraefte(two);
@@ -1474,7 +1477,7 @@ export function drawsystem() {
         if (show_lagerkraefte && flag_eingabe === 1) draw_lagerkraefte(two);
     }
 
-    console.log("vor update")
+    //console.log("vor update")
 
     // Don’t forget to tell two to draw everything to the screen
 
@@ -1567,7 +1570,7 @@ function draw_elementlasten(two: Two) {
 
 
 
-    console.log("++++ in draw_elementlasten", slmax, draw_lastfall)
+    //console.log("++++ in draw_elementlasten", slmax, draw_lastfall)
 
 
     for (let ielem = 0; ielem < nelem; ielem++) {
@@ -2016,7 +2019,7 @@ function draw_knotenkraefte(two: Two) {
     let fact = Array(nlastfaelle)
     let lf_show = Array(nlastfaelle)
 
-    console.log("in draw_knotenkraefte, draw_lastfall", draw_lastfall, nloads)
+    //console.log("in draw_knotenkraefte, draw_lastfall", draw_lastfall, nloads)
     // const out = document.getElementById('output') as HTMLTextAreaElement;
     // if (out) {
     //     out.value += "plength= " + plength + "\n";
@@ -2076,20 +2079,20 @@ function draw_knotenkraefte(two: Two) {
         }
     }
 
-    for (let i = 0; i < nLoop; i++) {
-        console.log("°°°°°°° lf_show,fact", i, lf_show[i], fact[i])
-    }
+    // for (let i = 0; i < nLoop; i++) {
+    //     console.log("°°°°°°° lf_show,fact", i, lf_show[i], fact[i])
+    // }
 
     for (let iLoop = 0; iLoop < nLoop; iLoop++) {
-        console.log("iLoop: ", iLoop)
+        //console.log("iLoop: ", iLoop)
 
         for (let i = 0; i < nloads; i++) {
             let inode = load[i].node
             let x = node[inode].x;
             let z = node[inode].z;
-            console.log("load[i]", i, load)
+            //console.log("load[i]", i, load)
             if (load[i].p[0] != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
-                console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+                //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
 
                 wert = load[i].p[0] * fact[iLoop]
                 if (wert > 0.0) {
@@ -2125,7 +2128,7 @@ function draw_knotenkraefte(two: Two) {
 
                 wert = load[i].p[2] * fact[iLoop]
                 let vorzeichen = Math.sign(wert)
-                console.log("Moment ", +inode + 1, wert)
+                //console.log("Moment ", +inode + 1, wert)
                 if (wert > 0.0) {
                     draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_moment)
                 } else {
@@ -2312,7 +2315,7 @@ function draw_lagerkraefte(two: Two) {
             } else {
                 wert = lagerkraefte._(i, 0, draw_lastfall - 1)
             }
-            console.log("draw_lagerkraefte wert", wert, draw_lastfall)
+            //console.log("draw_lagerkraefte wert", wert, draw_lastfall)
 
             if (wert >= 0.0) {
                 //                draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_lager)
@@ -2336,13 +2339,13 @@ function draw_lagerkraefte(two: Two) {
                     wert = lagerkraefte._(i, 1, draw_lastfall - 1)
                 } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
                     wert = lagerkraefte_kombi._(i, 1, draw_lastfall - 1 - nlastfaelle)
-                    console.log("draw_lagerkraefte wert kombi", wert, draw_lastfall - 1 - nlastfaelle)
+                    //console.log("draw_lagerkraefte wert kombi", wert, draw_lastfall - 1 - nlastfaelle)
                 }
             } else {
                 wert = lagerkraefte._(i, 1, draw_lastfall - 1)
             }
             //wert = lagerkraefte._(i, 1, draw_lastfall - 1)
-            console.log("draw_lagerkraefte wert", wert)
+            //console.log("draw_lagerkraefte wert", wert)
 
             if (wert >= 0.0) {
                 //                draw_arrow(two, x, z + delta + plength, x, z + delta, style_pfeil_lager)
@@ -2374,7 +2377,7 @@ function draw_lagerkraefte(two: Two) {
                     wert = lagerkraefte._(i, 2, draw_lastfall - 1)
                 }
                 // wert = lagerkraefte._(i, 2, draw_lastfall - 1)
-                console.log("draw_lagerkraefte wert", wert)
+                //console.log("draw_lagerkraefte wert", wert)
 
                 let vorzeichen = Math.sign(wert)
                 let radius = style_pfeil_lager.radius;
@@ -2894,7 +2897,7 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
     let a = 0.0, calc_a = true
 
     if (styles) {
-        console.log("styles", styles)
+        //console.log("styles", styles)
         if (styles.linewidth) linewidth = styles.linewidth
         if (styles.a) {
             a = styles.a / devicePixelRatio;
@@ -2921,8 +2924,8 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
     let alpha = Math.atan2(dz, dx)
 
     let sl = Math.sqrt(dx * dx + dz * dz)
-    console.log("sl", Math.round(tr.xPix(sl)));
-    console.log("0.0", Math.round(tr.xPix(0.0)));
+    //console.log("sl", Math.round(tr.xPix(sl)));
+    //console.log("0.0", Math.round(tr.xPix(0.0)));
 
     if (calc_a) a = Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)) - b;
     // write('sl : ', sl)
@@ -2934,7 +2937,7 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
     let x0 = Math.round(tr.xPix(x1));
     let z0 = Math.round(tr.zPix(z1));
 
-    console.log("sl,a", sl, a, b, x0, z0)
+    //console.log("sl,a", sl, a, b, x0, z0)
 
     let group = two.makeGroup();
     let line = two.makeLine(0, 0, a, 0);
@@ -2967,7 +2970,7 @@ function draw_arrow_alpha(two: Two, x1: number, z1: number, alpha: number, vorze
     let a = 35.0
 
     if (styles) {
-        console.log("styles", styles)
+        //console.log("styles", styles)
         if (styles.linewidth) linewidth = styles.linewidth
         if (styles.a) a = styles.a
         if (styles.b) b = styles.b
@@ -3031,7 +3034,7 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
     let alpha: number, dalpha: number, teilung = 12
 
     if (styles) {
-        console.log("styles", styles)
+        //console.log("styles", styles)
         if (styles.linewidth) linewidth = styles.linewidth
         if (styles.radius) radius = styles.radius
         if (styles.b) b = styles.b
@@ -3044,7 +3047,7 @@ function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number,
     radius /= devicePixelRatio
 
     radius = tr.World0(radius)
-    console.log('draw_moment_arrow, radius', radius, tr.Pix0(radius))
+    //console.log('draw_moment_arrow, radius', radius, tr.Pix0(radius))
 
     let group = two.makeGroup();
 
@@ -3134,7 +3137,7 @@ function draw_arrowPix(two: Two, x1: number, z1: number, x2: number, z2: number,
     let a = 0.0, calc_a = true
 
     if (styles) {
-        console.log("draw_arrowPix, styles", styles)
+        //console.log("draw_arrowPix, styles", styles)
         if (styles.linewidth) linewidth = styles.linewidth
         if (styles.a) {
             a = styles.a / devicePixelRatio;
@@ -3154,8 +3157,8 @@ function draw_arrowPix(two: Two, x1: number, z1: number, x2: number, z2: number,
     let alpha = Math.atan2(dz, dx)
 
     let sl = Math.sqrt(dx * dx + dz * dz)
-    console.log("sl", sl, calc_a);
-    console.log("0.0", Math.round(tr.xPix(0.0)));
+    //console.log("sl", sl, calc_a);
+    //console.log("0.0", Math.round(tr.xPix(0.0)));
 
     if (calc_a) a = sl - b;
     // write('sl : ', sl)
@@ -3167,7 +3170,7 @@ function draw_arrowPix(two: Two, x1: number, z1: number, x2: number, z2: number,
     let x0 = x1;
     let z0 = z1;
 
-    console.log("sl,a", sl, a, b, x0, z0)
+    //console.log("sl,a", sl, a, b, x0, z0)
 
     let group = two.makeGroup();
     let line = two.makeLine(0, 0, a, 0);

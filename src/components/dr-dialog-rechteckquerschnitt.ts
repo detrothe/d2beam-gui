@@ -8,8 +8,8 @@ import "@shoelace-style/shoelace/dist/components/radio/radio.js";
 import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 
 import { check_if_name_exists } from "../pages/rechnen"
-
-import {  AlertDialog } from "../pages/confirm_dialog";
+import { myFormat_en } from '../pages/utility'
+import { AlertDialog } from "../pages/confirm_dialog";
 
 // Profilename, E-Modul, A, Iy, Iz, Wichte, h, b, kappa_Vz, kappa_Vy
 
@@ -248,7 +248,7 @@ export class drRechteckQuerSchnitt extends LitElement {
   }
 
   //----------------------------------------------------------------------------------------------
-  init_name_changed(wert:boolean) {
+  init_name_changed(wert: boolean) {
     console.log("in init_name_changed");
     this.name_changed = wert;
   }
@@ -404,6 +404,17 @@ export class drRechteckQuerSchnitt extends LitElement {
       //   'email: ',
       //   (shadow.getElementById('email') as HTMLInputElement).value
       //);
+
+      let defined_querschnitt = Number((shadow?.getElementById("id_defquerschnitt") as HTMLInputElement).value)
+      if (defined_querschnitt === 1) {  // Rechteck
+        let h = Number((shadow?.getElementById("height") as HTMLInputElement).value)
+        let b = Number((shadow?.getElementById("width") as HTMLInputElement).value)
+        console.log("Es handelt sich um einen Rechteckquerschnitt", h, b);
+        (shadow?.getElementById("area") as HTMLInputElement).value = myFormat_en(b * h, 1, 2);
+        (shadow?.getElementById("traeg_y") as HTMLInputElement).value = myFormat_en(b * h * h * h / 12, 1, 2);
+        (shadow?.getElementById("zso") as HTMLInputElement).value = myFormat_en(h / 2, 1, 2);
+      }
+
       if (this.name_changed) {
         let qname = (shadow.getElementById("qname") as HTMLInputElement).value;
         if (check_if_name_exists(qname)) {

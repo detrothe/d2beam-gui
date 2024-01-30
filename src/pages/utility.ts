@@ -43,6 +43,18 @@ export function myFormat(wert: any, minDecimal: any, maxDecimal: any, notation =
     }
 }
 
+// mit Dezimalpunkt , Tausendertrennzeichen entfernt, Anwendung für input-Felder
+//------------------------------------------------------------------------------------------------
+export function myFormat_en(wert: any, minDecimal: any, maxDecimal: any, notation = 0) {
+    //--------------------------------------------------------------------------------------------
+    if (notation === 0) {
+        return (new Intl.NumberFormat('en', { minimumFractionDigits: minDecimal, maximumFractionDigits: maxDecimal }).format(wert)).replace(/,/g, '');
+    } else {
+        return (new Intl.NumberFormat('en', { notation: "scientific", minimumFractionDigits: minDecimal, maximumFractionDigits: maxDecimal }).format(wert)).replace(/,/g, '');
+
+    }
+}
+
 //------------------------------------------------------------------------------------------------
 export function set_info() {
     //--------------------------------------------------------------------------------------------
