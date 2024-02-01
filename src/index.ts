@@ -1,7 +1,3 @@
-//import { LitElement, css } from 'lit';
-//import { customElement } from 'lit/decorators.js';
-
-//import {html,render} from 'lit'
 
 import './styles/global.css';
 import './styles/contextMenu.css';
@@ -10,22 +6,11 @@ import './styles/contextMenu.css';
 import './pages/haupt';
 
 
-//import { ConfirmDialog, AlertDialog } from "./pages/confirm_dialog";
-
-
+// Damit man nicht versehentlich das Browserfenster löscht und Eingaben verliert
 
 window.addEventListener('beforeunload', function(event) {
     event.preventDefault();
+    // Google Chrome requires returnValue to be set.
+    event.returnValue = '';
     console.log("beforeunload", event)
-    //ttt();
-    //event.returnValue = "Nicht gespeicherte Eingabedaten gehen gehen beim Verlassen der Seite verloren"
   });
-
-//   async function ttt() {
-//     const dialog = new ConfirmDialog({
-//         trueButton_Text: "ja",
-//         falseButton_Text: "nein",
-//         question_Text: "Lösche Querschnitt: " ,
-//       });
-//       const loesche = await dialog.confirm();
-//   }
