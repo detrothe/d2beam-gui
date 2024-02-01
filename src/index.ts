@@ -9,17 +9,23 @@ import './styles/contextMenu.css';
 
 import './pages/haupt';
 
-// import {
-//     init_tabellen  } from "./pages/rechnen";
 
-//     setTimeout(function(){
-//         console.log("Executed after 1 second");
-//     }, 1000);
-// init_tabellen();
+//import { ConfirmDialog, AlertDialog } from "./pages/confirm_dialog";
+
+
 
 window.addEventListener('beforeunload', function(event) {
-    console.log("beforeunload", event)
-    //event.returnValue = "Nicht gespeicherte Eingabedaten gehen gehen beim Verlassen der Seite verloren"
     event.preventDefault();
+    console.log("beforeunload", event)
+    //ttt();
+    //event.returnValue = "Nicht gespeicherte Eingabedaten gehen gehen beim Verlassen der Seite verloren"
   });
 
+//   async function ttt() {
+//     const dialog = new ConfirmDialog({
+//         trueButton_Text: "ja",
+//         falseButton_Text: "nein",
+//         question_Text: "Lösche Querschnitt: " ,
+//       });
+//       const loesche = await dialog.confirm();
+//   }
