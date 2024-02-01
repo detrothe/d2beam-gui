@@ -17,4 +17,9 @@ import './pages/haupt';
 //     }, 1000);
 // init_tabellen();
 
+window.addEventListener('beforeunload', function(event) {
+    console.log("beforeunload", event)
+    //event.returnValue = "Nicht gespeicherte Eingabedaten gehen gehen beim Verlassen der Seite verloren"
+    event.preventDefault();
+  });
 
