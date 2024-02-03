@@ -281,7 +281,6 @@ export function init_grafik(flag = 1) {
 function wheel(ev: WheelEvent) {
     //----------------------------------------------------------------------------------------------------
 
-    console.log('==========================in mousewheel', ev.deltaX, ev.deltaY, ev.offsetX, ev.offsetY)
     ev.preventDefault()
     if (ev.deltaY > 0) {
         wheel_factor += 0.1;
@@ -289,12 +288,22 @@ function wheel(ev: WheelEvent) {
     }
     else if (ev.deltaY < 0) {
         wheel_factor -= 0.1;
-        if (wheel_factor < 0.1) wheel_factor = 0.1
+        if (wheel_factor < 0.5) wheel_factor = 0.5
     }
     //mouseOffsetX = ev.offsetX
     //mouseOffsetY = ev.offsetY
-    mouseDx = 0.0
-    mouseDz = 0.0
+    //mouseDx = 0 //-(ev.offsetX - document.documentElement.clientWidth / 2) //*(1+wheel_factor)/2
+    //mouseDz = 0 //ev.offsetY - document.documentElement.clientHeight / 2
+    console.log('==========================in mousewheel', ev.deltaX, ev.deltaY, ev.offsetX, ev.offsetY, mouseDx, mouseDz)
+
+    // mouseDx = ev.offsetX - mouseOffsetX
+    // mouseDz = ev.offsetY - mouseOffsetY
+    // mouseOffsetX = ev.offsetX
+    // mouseOffsetY = ev.offsetY
+
+
+    drawsystem()
+
 
     drawsystem()
 }
@@ -452,17 +461,19 @@ export function drawsystem() {
         zminw = zmin
         zmaxw = zmax
     } else {
-        let ax = tr.xWorld(mouseOffsetX)
-        let az = tr.zWorld(mouseOffsetY)
+        // let ax = tr.xWorld(mouseOffsetX)
+        // let az = tr.zWorld(mouseOffsetY)
         let dx = tr.World0(mouseDx)
         let dz = tr.World0(mouseDz)
-        console.log("======= dx,dz", ax, az, dx, dz)
+        console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
 
 
         xmint = xmin * (1 + wheel_factor) / 2. + xmax * (1. - wheel_factor) / 2.
         xmaxt = xmin * (1 - wheel_factor) / 2. + xmax * (1. + wheel_factor) / 2.
         zmint = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
         zmaxt = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
+
+        console.log("xmint", wheel_factor, xmint, xmaxt, zmint, zmaxt)
 
         xminw = xmint - dx
         xmaxw = xmaxt - dx
@@ -3472,6 +3483,17 @@ function scale_factor() {
     console.log("stressFactor=", scaleFactor_panel)
     drawsystem();
 }
+//--------------------------------------------------------------------------------------------------------
+function reset_grafik() {
+    //--------------------------------------------------------------------------------------------------------
+
+    mouseDx = 0.0
+    mouseDz = 0.0
+    wheel_factor = 1.0
+
+    console.log("reset_grafik=")
+    drawsystem();
+}
 //---------------------------------------------------------------------------------- a d d E v e n t L i s t e n e r
 
 window.addEventListener('draw_label_grafik', draw_label_grafik);
@@ -3490,6 +3512,7 @@ window.addEventListener('draw_gesamtverformung_grafik', draw_gesamtverformung_gr
 window.addEventListener('draw_gleichgewicht_SG_grafik', draw_gleichgewicht_SG_grafik);
 
 window.addEventListener('scale_factor', scale_factor);
+window.addEventListener('reset_webgl', reset_grafik);
 
 
 //---------------------------------------------------------------------------------------------------
