@@ -435,8 +435,18 @@ export function drawsystem(svg_id = 'artboard') {
         if (grafik_top === 0) grafik_top = 69
         height = document.documentElement.clientHeight - grafik_top - 1 //- el?.getBoundingClientRect()?.height;
     }
-    two.width = document.documentElement.clientWidth;
-    two.height = height
+
+    let breite: number
+    let hoehe: number
+    if (show_selection) {
+        two.width = document.documentElement.clientWidth;
+        two.height = height
+        breite = two.width;
+        hoehe = two.height;
+    } else {
+        two.width = breite = 2000;
+        two.height = hoehe = 2000;
+    }
 
     show_lasten_temp = show_lasten;    // Bei Schnittgrößen werden Lasten temporär nicht gezeichnet
 
@@ -479,11 +489,12 @@ export function drawsystem(svg_id = 'artboard') {
     //     xmaxw = ax + wheel_factor * (xmax - xmin)/2
     // }
 
+
     if (tr === undefined) {
         console.log("in undefined")
-        tr = new CTrans(xminw, zminw, xmaxw, zmaxw, two.width, two.height)
+        tr = new CTrans(xminw, zminw, xmaxw, zmaxw, breite, hoehe)
     } else {
-        tr.init(xminw, zminw, xmaxw, zmaxw, two.width, two.height);
+        tr.init(xminw, zminw, xmaxw, zmaxw, breite, hoehe);
     }
 
     { // für Ausdruck des Systems in pdf-Datei
@@ -1348,7 +1359,7 @@ export function drawsystem(svg_id = 'artboard') {
                 }
             }
 
-            if (show_labels && onlyLabels) {
+            if ((show_labels && onlyLabels) || !show_selection) {
 
                 let xm = (x1 + x2) / 2. + stab[ielem].sinus * 7 / devicePixelRatio
                 let zm = (z1 + z2) / 2. - stab[ielem].cosinus * 7 / devicePixelRatio
@@ -1375,7 +1386,7 @@ export function drawsystem(svg_id = 'artboard') {
 
         }
 
-        if (show_labels && onlyLabels) {
+        if ((show_labels && onlyLabels) || !show_selection) {
 
             for (let i = 0; i < nnodes; i++) {
                 x1 = Math.round(tr.xPix(node[i].x)) + 10 / devicePixelRatio + 12;

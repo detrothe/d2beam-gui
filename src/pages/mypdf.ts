@@ -1280,11 +1280,12 @@ export async function my_jspdf() {
         doc.text('System', links, yy)
       }
 
-      if (svg_pdf_ratio > 1.0) {
-        doc.addImage(imgData, "PNG", 5, yy, 200, 200 / svg_pdf_ratio);
-      } else {
-        doc.addImage(imgData, "PNG", 5, yy, 200 * svg_pdf_ratio, 200);
-      }
+      // if (svg_pdf_ratio > 1.0) {
+      //   doc.addImage(imgData, "PNG", 5, yy, 200, 200 / svg_pdf_ratio);
+      // } else {
+      //   doc.addImage(imgData, "PNG", 5, yy, 200 * svg_pdf_ratio, 200);
+      // }
+      doc.addImage(imgData, "PNG", 5, yy, 200, 200);
 
       letzteSeite();
     }
