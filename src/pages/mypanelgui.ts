@@ -176,7 +176,7 @@ export function myPanel() {
             window.dispatchEvent(new Event("draw_gleichgewicht_SG_grafik"));
         });
 
-    folder.add(obj, 'Reset').name('Reset Grafik')
+    gui.add(obj, 'Reset').name('Reset Grafik')
 
     gui.close();
 

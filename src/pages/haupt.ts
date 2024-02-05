@@ -285,6 +285,7 @@ async function initTabellenLoop() {
           <button id="id_button_zurueck_grafik">Fullscreen</button>
 
           <div id="artboard" style="margin:0;padding:0;"></div>
+          <div id="svg_artboard" style="margin:0;padding:0;display:none"></div>
         </div>
       </sl-tab-panel>
 

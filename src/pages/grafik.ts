@@ -16,6 +16,8 @@ import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
 import { app } from "./haupt";
 import { saveAs } from 'file-saver';
 
+export let svg_pdf_ratio = 1.0
+
 let lastFileHandleSVG = 'documents';
 let currentFilenameSVG = 'd2beam.svg'
 
@@ -290,19 +292,9 @@ function wheel(ev: WheelEvent) {
         wheel_factor -= 0.1;
         if (wheel_factor < 0.5) wheel_factor = 0.5
     }
-    //mouseOffsetX = ev.offsetX
-    //mouseOffsetY = ev.offsetY
-    //mouseDx = 0 //-(ev.offsetX - document.documentElement.clientWidth / 2) //*(1+wheel_factor)/2
-    //mouseDz = 0 //ev.offsetY - document.documentElement.clientHeight / 2
-    console.log('==========================in mousewheel', ev.deltaX, ev.deltaY, ev.offsetX, ev.offsetY, mouseDx, mouseDz)
+    // console.log('==========================in mousewheel', ev.deltaX, ev.deltaY, ev.offsetX, ev.offsetY, mouseDx, mouseDz)
 
-    // mouseDx = ev.offsetX - mouseOffsetX
-    // mouseDz = ev.offsetY - mouseOffsetY
-    // mouseOffsetX = ev.offsetX
-    // mouseOffsetY = ev.offsetY
-
-
-    drawsystem()
+    //    drawsystem()
 
 
     drawsystem()
@@ -364,7 +356,10 @@ function mouseup(ev: any) {
 
 //--------------------------------------------------------------------------------------------------- d r a w s y s t e m
 
-export function drawsystem() {
+export function drawsystem(svg_id = 'artboard') {
+
+    let show_selection = true;
+    if (svg_id != 'artboard') show_selection = false;  // nur System für pdf-Ausgabe erzeugen
 
     let height = 0
 
@@ -390,7 +385,7 @@ export function drawsystem() {
     // }
 
     console.log("__________________________________  G R A F I K  ___________")
-    const elem = document.getElementById('artboard') as any; //HTMLDivElement;
+    const elem = document.getElementById(svg_id) as any; //HTMLDivElement;
     console.log("childElementCount", elem.childElementCount)
 
     if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
@@ -419,7 +414,7 @@ export function drawsystem() {
 
     //console.log("O N L Y  L A B E L S", onlyLabels)
 
-    const artboard = document.getElementById("artboard") as any;
+    const artboard = document.getElementById(svg_id) as any;
     // console.log("artboard", artboard)
     let two = new Two(params).appendTo(artboard);
 
@@ -491,12 +486,17 @@ export function drawsystem() {
         tr.init(xminw, zminw, xmaxw, zmaxw, two.width, two.height);
     }
 
+    { // für Ausdruck des Systems in pdf-Datei
+        const [x_min, x_max, z_min, z_max] = tr.getMinMax();
+        svg_pdf_ratio = (x_max - x_min) / (z_max - z_min)
+    }
+
     let x1: number, x2: number, z1: number, z2: number
 
 
     //                              Verformungen   Verformungen   Verformungen   Verformungen
 
-    if (show_verformungen) {
+    if (show_verformungen && show_selection) {
 
         let xx1, xx2, zz1, zz2, xp1, xp2, zp1, zp2
         let dx: number, x: number, eta: number, sl: number, nenner: number
@@ -693,7 +693,7 @@ export function drawsystem() {
 
     // Eigenformen
 
-    if (show_eigenformen && (maxValue_eigv[draw_lastfall - 1][draw_eigenform - 1] > 0.0)) {
+    if (show_eigenformen && show_selection && (maxValue_eigv[draw_lastfall - 1][draw_eigenform - 1] > 0.0)) {
 
         let xx1, xx2, zz1, zz2
         let dx: number, x: number, eta: number, sl: number, nenner: number
@@ -791,7 +791,7 @@ export function drawsystem() {
 
     // Schiefstellung
 
-    if (show_schiefstellung && (maxValue_u0[draw_lastfall - 1].u0 > 0.0)) {
+    if (show_schiefstellung && show_selection && (maxValue_u0[draw_lastfall - 1].u0 > 0.0)) {
 
         let xx1, xx2, zz1, zz2
         let dx: number, x: number, eta: number, sl: number, nenner: number
@@ -890,7 +890,7 @@ export function drawsystem() {
 
     // Stabvorverformung
 
-    if (show_stabvorverformung && maxValue_w0 > 0.0) {
+    if (show_stabvorverformung && show_selection && maxValue_w0 > 0.0) {
 
         let xx1, xx2, zz1, zz2
         let dx: number, x: number, sl: number, nenner: number
@@ -974,298 +974,299 @@ export function drawsystem() {
 
     // Zustandslinien
 
-    if (show_momentenlinien || show_querkraftlinien || show_normalkraftlinien) {
+    if (show_selection) {
+        if (show_momentenlinien || show_querkraftlinien || show_normalkraftlinien) {
 
-        show_lasten_temp = false
+            show_lasten_temp = false
 
-        let xx1: number, zz1: number, xx2: number, zz2: number
-        let dx: number, x: number, sl: number, vorzeichen: number, sgArea = 0.0
-        let sgL: number, sgR: number, xL: number, index_sg = 0, max_all = 0.0
-        let aL: number, aR: number
-        let x3 = 0.0, x4 = 0.0, z3 = 0.0, z4 = 0.0
+            let xx1: number, zz1: number, xx2: number, zz2: number
+            let dx: number, x: number, sl: number, vorzeichen: number, sgArea = 0.0
+            let sgL: number, sgR: number, xL: number, index_sg = 0, max_all = 0.0
+            let aL: number, aR: number
+            let x3 = 0.0, x4 = 0.0, z3 = 0.0, z4 = 0.0
 
-        let iLastfall = draw_lastfall
-        let scalefactor = 0
-        let x_max = 0.0, z_max = 0.0, x_min = 0.0, z_min = 0.0
-        let x0_min = 0.0, z0_min = 0.0, xn_min = 0.0, zn_min = 0.0, x0_max = 0.0, z0_max = 0.0, xn_max = 0.0, zn_max = 0.0
+            let iLastfall = draw_lastfall
+            let scalefactor = 0
+            let x_max = 0.0, z_max = 0.0, x_min = 0.0, z_min = 0.0
+            let x0_min = 0.0, z0_min = 0.0, xn_min = 0.0, zn_min = 0.0, x0_max = 0.0, z0_max = 0.0, xn_max = 0.0, zn_max = 0.0
 
-        let nLoop = 1, lf_index = 0
+            let nLoop = 1, lf_index = 0
 
-        let unit: string
-        if (show_momentenlinien) unit = 'kNm';
-        else unit = 'kN';
+            let unit: string
+            if (show_momentenlinien) unit = 'kNm';
+            else unit = 'kN';
 
-        if (show_momentenlinien) { index_sg = 0; max_all = maxM_all; }
-        else if (show_querkraftlinien) { index_sg = 1; max_all = maxV_all; }
-        else if (show_normalkraftlinien) { index_sg = 2; max_all = maxN_all; }
+            if (show_momentenlinien) { index_sg = 0; max_all = maxM_all; }
+            else if (show_querkraftlinien) { index_sg = 1; max_all = maxV_all; }
+            else if (show_normalkraftlinien) { index_sg = 2; max_all = maxN_all; }
 
-        if (THIIO_flag === 0) {
-            if (iLastfall <= nlastfaelle) {
-                lf_index = iLastfall - 1
-                if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].My;
-                else if (show_querkraftlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].Vz;
-                else if (show_normalkraftlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].N;
-                //console.log("MAX VALUES, Lastfall=", iLastfall, maxValue_lf[lf_index].My)
-            } else if (iLastfall <= nlastfaelle + nkombinationen) {
-                lf_index = iLastfall - 1
-                let ikomb = iLastfall - 1 - nlastfaelle
-                scalefactor = 0.05 * slmax / max_S_kombi[index_sg][ikomb]
-                //console.log("MAX VALUES KOMBINATION ", iLastfall, max_S_kombi[index_sg][ikomb])
+            if (THIIO_flag === 0) {
+                if (iLastfall <= nlastfaelle) {
+                    lf_index = iLastfall - 1
+                    if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].My;
+                    else if (show_querkraftlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].Vz;
+                    else if (show_normalkraftlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].N;
+                    //console.log("MAX VALUES, Lastfall=", iLastfall, maxValue_lf[lf_index].My)
+                } else if (iLastfall <= nlastfaelle + nkombinationen) {
+                    lf_index = iLastfall - 1
+                    let ikomb = iLastfall - 1 - nlastfaelle
+                    scalefactor = 0.05 * slmax / max_S_kombi[index_sg][ikomb]
+                    //console.log("MAX VALUES KOMBINATION ", iLastfall, max_S_kombi[index_sg][ikomb])
 
-            } else {
-                nLoop = nkombinationen
-                lf_index = nlastfaelle
-                scalefactor = 0.05 * slmax / max_all
+                } else {
+                    nLoop = nkombinationen
+                    lf_index = nlastfaelle
+                    scalefactor = 0.05 * slmax / max_all
+                }
             }
-        }
-        else if (THIIO_flag === 1) {
-            if (iLastfall <= nkombinationen) {
-                lf_index = iLastfall - 1
-                if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].My;
-                else if (show_querkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].Vz;
-                else if (show_normalkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].N;
-                console.log("MAX VALUES, maxValue_komb.Vz.My", iLastfall, maxValue_komb[lf_index].Vz, maxValue_komb[lf_index].My)
-            } else {
-                nLoop = nkombinationen
-                lf_index = 0
-                scalefactor = 0.05 * slmax / max_all
+            else if (THIIO_flag === 1) {
+                if (iLastfall <= nkombinationen) {
+                    lf_index = iLastfall - 1
+                    if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].My;
+                    else if (show_querkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].Vz;
+                    else if (show_normalkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].N;
+                    console.log("MAX VALUES, maxValue_komb.Vz.My", iLastfall, maxValue_komb[lf_index].Vz, maxValue_komb[lf_index].My)
+                } else {
+                    nLoop = nkombinationen
+                    lf_index = 0
+                    scalefactor = 0.05 * slmax / max_all
+                }
             }
-        }
 
-        scalefactor *= scaleFactor_panel
-        console.log("SCALEFACTOR", 1. / scalefactor)
+            scalefactor *= scaleFactor_panel
+            console.log("SCALEFACTOR", 1. / scalefactor)
 
-        for (let ielem = 0; ielem < nelem; ielem++) {
+            for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if (scalefactor === Infinity || scalefactor > 1.e10) break;
+                if (scalefactor === Infinity || scalefactor > 1.e10) break;
 
-            const nelTeilungen = element[ielem].nTeilungen
-            let sg: number[] = new Array(nelTeilungen)
-
-
-            aL = stab[ielem].aL
-            aR = stab[ielem].aR
-
-            let si = stab[ielem].sinus
-            let co = stab[ielem].cosinus
+                const nelTeilungen = element[ielem].nTeilungen
+                let sg: number[] = new Array(nelTeilungen)
 
 
-            let xs1 = stab[ielem].x1 + co * aL;
-            let zs1 = stab[ielem].z1 + si * aL;
-            let xs2 = stab[ielem].x2 - co * aR;
-            let zs2 = stab[ielem].z2 - si * aR;
+                aL = stab[ielem].aL
+                aR = stab[ielem].aR
 
-            x1 = Math.round(tr.xPix(xs1));
-            z1 = Math.round(tr.zPix(zs1));
-            x2 = Math.round(tr.xPix(xs2));
-            z2 = Math.round(tr.zPix(zs2));
+                let si = stab[ielem].sinus
+                let co = stab[ielem].cosinus
 
-            sl = element[ielem].sl
 
-            let maxValuePos = -1e+30
-            let maxValueNeg = 1e+30
-            let valueLeftPos = -1e+30
-            let valueRightPos = -1e+30
-            let valueLeftNeg = 1e+30
-            let valueRightNeg = 1e+30
+                let xs1 = stab[ielem].x1 + co * aL;
+                let zs1 = stab[ielem].z1 + si * aL;
+                let xs2 = stab[ielem].x2 - co * aR;
+                let zs2 = stab[ielem].z2 - si * aR;
 
-            let foundPos = false
-            let foundNeg = false
+                x1 = Math.round(tr.xPix(xs1));
+                z1 = Math.round(tr.zPix(zs1));
+                x2 = Math.round(tr.xPix(xs2));
+                z2 = Math.round(tr.zPix(zs2));
 
-            for (let loop = 0; loop < nLoop; loop++) {
+                sl = element[ielem].sl
 
-                if (show_momentenlinien) element[ielem].get_elementSchnittgroesse_Moment(sg, lf_index + loop);
-                else if (show_querkraftlinien) element[ielem].get_elementSchnittgroesse_Querkraft(sg, lf_index + loop, show_gleichgewichtSG);
-                else if (show_normalkraftlinien) element[ielem].get_elementSchnittgroesse_Normalkraft(sg, lf_index + loop, show_gleichgewichtSG);
-                //console.log("GRAFIK  Mx,Vx or N", nelTeilungen, sg)
+                let maxValuePos = -1e+30
+                let maxValueNeg = 1e+30
+                let valueLeftPos = -1e+30
+                let valueRightPos = -1e+30
+                let valueLeftNeg = 1e+30
+                let valueRightNeg = 1e+30
 
-                //let group = two.makeGroup();
-                let vertices = [];
-                vertices.push(new Two.Anchor(x1, z1));
+                let foundPos = false
+                let foundNeg = false
 
-                xx2 = 0.0; zz2 = 0.0
-                sgL = sg[0]
-                xx1 = tr.xPix(xs1 - element[ielem].sinus * sg[0] * scalefactor)
-                zz1 = tr.zPix(zs1 + element[ielem].cosinus * sg[0] * scalefactor)
-                x3 = xx1   // nur für Bechriftung
-                z3 = zz1
+                for (let loop = 0; loop < nLoop; loop++) {
 
-                if (sgL > valueLeftPos) {
-                    valueLeftPos = sgL
-                    x0_max = xx1
-                    z0_max = zz1
-                    if (sgL > maxValuePos) {
-                        maxValuePos = sgL
+                    if (show_momentenlinien) element[ielem].get_elementSchnittgroesse_Moment(sg, lf_index + loop);
+                    else if (show_querkraftlinien) element[ielem].get_elementSchnittgroesse_Querkraft(sg, lf_index + loop, show_gleichgewichtSG);
+                    else if (show_normalkraftlinien) element[ielem].get_elementSchnittgroesse_Normalkraft(sg, lf_index + loop, show_gleichgewichtSG);
+                    //console.log("GRAFIK  Mx,Vx or N", nelTeilungen, sg)
+
+                    //let group = two.makeGroup();
+                    let vertices = [];
+                    vertices.push(new Two.Anchor(x1, z1));
+
+                    xx2 = 0.0; zz2 = 0.0
+                    sgL = sg[0]
+                    xx1 = tr.xPix(xs1 - element[ielem].sinus * sg[0] * scalefactor)
+                    zz1 = tr.zPix(zs1 + element[ielem].cosinus * sg[0] * scalefactor)
+                    x3 = xx1   // nur für Bechriftung
+                    z3 = zz1
+
+                    if (sgL > valueLeftPos) {
+                        valueLeftPos = sgL
                         x0_max = xx1
                         z0_max = zz1
+                        if (sgL > maxValuePos) {
+                            maxValuePos = sgL
+                            x0_max = xx1
+                            z0_max = zz1
+                        }
                     }
-                }
-                if (sgL < valueLeftNeg) {
-                    valueLeftNeg = sgL
-                    x0_min = xx1
-                    z0_min = zz1
-                    if (sgL < maxValueNeg) {
-                        maxValueNeg = sgL
+                    if (sgL < valueLeftNeg) {
+                        valueLeftNeg = sgL
                         x0_min = xx1
                         z0_min = zz1
+                        if (sgL < maxValueNeg) {
+                            maxValueNeg = sgL
+                            x0_min = xx1
+                            z0_min = zz1
+                        }
                     }
+
+                    vorzeichen = 1
+                    sgArea = 0.0
+
+                    for (let i = 1; i < nelTeilungen; i++) {
+
+                        x = element[ielem].x_[i]
+                        xL = element[ielem].x_[i - 1]
+                        dx = x - xL
+                        sgR = sg[i]
+                        //console.log("sigL und R", sgL, sgR)
+
+                        if (sgL === 0.0 && sgR === 0.0) {
+                        } else if (sgL >= 0.0 && sgR > 0.0) {
+                            vertices.push(new Two.Anchor(xx1, zz1));
+                            vorzeichen = 1
+                            sgArea += (sgL + sgR) * dx / 2.
+                        } else if (sgL <= 0.0 && sgR < 0.0) {
+                            vertices.push(new Two.Anchor(xx1, zz1));
+                            vorzeichen = -1
+                            sgArea += (sgL + sgR) * dx / 2.
+                        } else {   // Vorzeichenwechsel
+                            //console.log("Vorzeichenwechsel", sgL, sgR)
+
+                            let dx0 = -sgL * dx / (sgR - sgL)
+                            let xx0 = tr.xPix(xs1 + (xL + dx0) * element[ielem].cosinus)
+                            let zz0 = tr.zPix(zs1 + (xL + dx0) * element[ielem].sinus)
+                            vertices.push(new Two.Anchor(xx1, zz1));
+                            //console.log("dx0=", dx0, xx0, zz0)
+                            vertices.push(new Two.Anchor(xx0, zz0));
+
+                            let flaeche = two.makePath(vertices);
+                            if (sgArea > 0.0) flaeche.fill = '#00AEFF';
+                            else flaeche.fill = '#FF0000';
+                            flaeche.opacity = opacity
+
+                            vertices.length = 0
+                            sgArea = 0.0
+                            sgL = 0.0
+                            vertices.push(new Two.Anchor(xx0, zz0));
+                        }
+                        xx2 = xs1 + x * element[ielem].cosinus - element[ielem].sinus * sg[i] * scalefactor
+                        zz2 = zs1 + x * element[ielem].sinus + element[ielem].cosinus * sg[i] * scalefactor
+                        xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+
+                        if (i === nelTeilungen - 1) {
+                            if (sgR > valueRightPos) {
+                                valueRightPos = sgR
+                                xn_max = xx2
+                                zn_max = zz2
+                            }
+                            if (sgR < valueRightNeg) {
+                                valueRightNeg = sgR
+                                xn_min = xx2
+                                zn_min = zz2
+                            }
+                        } else {
+                            if ((sgR > maxValuePos) && (sgR > valueLeftPos)) {  // (Math.abs(sgR) > Math.abs(valueLeftPos))
+                                foundPos = true
+                                maxValuePos = sgR
+                                x_max = xx2
+                                z_max = zz2
+                            }
+                            if ((sgR < maxValueNeg) && (sgR < valueLeftNeg)) {   //(Math.abs(sgR) < Math.abs(valueLeftNeg))
+                                //console.log("maxValueNeg", sgR, maxValueNeg, valueLeftNeg)
+                                foundNeg = true
+                                maxValueNeg = sgR
+                                x_min = xx2
+                                z_min = zz2
+                            }
+                        }
+
+                        xx1 = xx2
+                        zz1 = zz2
+                        sgL = sgR
+                    }
+                    vertices.push(new Two.Anchor(xx2, zz2));
+                    vertices.push(new Two.Anchor(x2, z2));
+                    x4 = xx2
+                    z4 = zz2
+
+                    let flaeche = two.makePath(vertices);
+                    if (sgArea > 0.0) flaeche.fill = '#00AEFF';
+                    else flaeche.fill = '#FF0000';
+                    flaeche.opacity = opacity
+
                 }
 
-                vorzeichen = 1
-                sgArea = 0.0
+                if (show_labels) {
 
-                for (let i = 1; i < nelTeilungen; i++) {
-
-                    x = element[ielem].x_[i]
-                    xL = element[ielem].x_[i - 1]
-                    dx = x - xL
-                    sgR = sg[i]
-                    //console.log("sigL und R", sgL, sgR)
-
-                    if (sgL === 0.0 && sgR === 0.0) {
-                    } else if (sgL >= 0.0 && sgR > 0.0) {
-                        vertices.push(new Two.Anchor(xx1, zz1));
-                        vorzeichen = 1
-                        sgArea += (sgL + sgR) * dx / 2.
-                    } else if (sgL <= 0.0 && sgR < 0.0) {
-                        vertices.push(new Two.Anchor(xx1, zz1));
-                        vorzeichen = -1
-                        sgArea += (sgL + sgR) * dx / 2.
-                    } else {   // Vorzeichenwechsel
-                        //console.log("Vorzeichenwechsel", sgL, sgR)
-
-                        let dx0 = -sgL * dx / (sgR - sgL)
-                        let xx0 = tr.xPix(xs1 + (xL + dx0) * element[ielem].cosinus)
-                        let zz0 = tr.zPix(zs1 + (xL + dx0) * element[ielem].sinus)
-                        vertices.push(new Two.Anchor(xx1, zz1));
-                        //console.log("dx0=", dx0, xx0, zz0)
-                        vertices.push(new Two.Anchor(xx0, zz0));
-
-                        let flaeche = two.makePath(vertices);
-                        if (sgArea > 0.0) flaeche.fill = '#00AEFF';
-                        else flaeche.fill = '#FF0000';
-                        flaeche.opacity = opacity
-
-                        vertices.length = 0
-                        sgArea = 0.0
-                        sgL = 0.0
-                        vertices.push(new Two.Anchor(xx0, zz0));
-                    }
-                    xx2 = xs1 + x * element[ielem].cosinus - element[ielem].sinus * sg[i] * scalefactor
-                    zz2 = zs1 + x * element[ielem].sinus + element[ielem].cosinus * sg[i] * scalefactor
-                    xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
-
-                    if (i === nelTeilungen - 1) {
-                        if (sgR > valueRightPos) {
-                            valueRightPos = sgR
-                            xn_max = xx2
-                            zn_max = zz2
-                        }
-                        if (sgR < valueRightNeg) {
-                            valueRightNeg = sgR
-                            xn_min = xx2
-                            zn_min = zz2
-                        }
-                    } else {
-                        if ((sgR > maxValuePos) && (sgR > valueLeftPos)) {  // (Math.abs(sgR) > Math.abs(valueLeftPos))
-                            foundPos = true
-                            maxValuePos = sgR
-                            x_max = xx2
-                            z_max = zz2
-                        }
-                        if ((sgR < maxValueNeg) && (sgR < valueLeftNeg)) {   //(Math.abs(sgR) < Math.abs(valueLeftNeg))
-                            //console.log("maxValueNeg", sgR, maxValueNeg, valueLeftNeg)
-                            foundNeg = true
-                            maxValueNeg = sgR
-                            x_min = xx2
-                            z_min = zz2
-                        }
-                    }
-
-                    xx1 = xx2
-                    zz1 = zz2
-                    sgL = sgR
-                }
-                vertices.push(new Two.Anchor(xx2, zz2));
-                vertices.push(new Two.Anchor(x2, z2));
-                x4 = xx2
-                z4 = zz2
-
-                let flaeche = two.makePath(vertices);
-                if (sgArea > 0.0) flaeche.fill = '#00AEFF';
-                else flaeche.fill = '#FF0000';
-                flaeche.opacity = opacity
-
-            }
-
-            if (show_labels) {
-
-                console.log("show_labels", ielem, foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
-                let zp: number
-                if (!foundNeg && !foundPos && Math.abs(valueLeftPos - valueRightPos) < 0.0001) {
-                    let xpix = (x1 + x2 + x3 + x4) / 4
-                    let zpix = (z1 + z2 + z3 + z4) / 4
-                    const str = myFormat(Math.abs(valueLeftPos), 1, 2) + unit
-                    let txt = two.makeText(str, xpix, zpix, style_txt)
-                    txt.alignment = 'left'
-                    txt.baseline = 'top'
-                    txt.rotation = element[ielem].alpha
-                } else {
-                    if (foundPos && (Math.abs(maxValuePos) > 0.00001) && (maxValuePos > valueRightPos)) {
-                        const str = myFormat(Math.abs(maxValuePos), 1, 2) + unit
-                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                        const txt = two.makeText(str, x_max, z_max + zp, style_txt)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
-                    }
-                    if (foundNeg && (Math.abs(maxValueNeg) > 0.00001) && (maxValueNeg < valueRightNeg)) {
-                        const str = myFormat(Math.abs(maxValueNeg), 1, 2) + unit
-                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                        const txt = two.makeText(str, x_min, z_min + zp, style_txt)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
-                    }
-
-                    if (Math.abs(valueLeftPos) > 0.00001) {
+                    console.log("show_labels", ielem, foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
+                    let zp: number
+                    if (!foundNeg && !foundPos && Math.abs(valueLeftPos - valueRightPos) < 0.0001) {
+                        let xpix = (x1 + x2 + x3 + x4) / 4
+                        let zpix = (z1 + z2 + z3 + z4) / 4
                         const str = myFormat(Math.abs(valueLeftPos), 1, 2) + unit
-                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                        const txt = two.makeText(str, x0_max, z0_max + zp, style_txt)
+                        let txt = two.makeText(str, xpix, zpix, style_txt)
                         txt.alignment = 'left'
                         txt.baseline = 'top'
-                    }
-                    if (Math.abs(valueRightPos) > 0.00001) {
-                        const str = myFormat(Math.abs(valueRightPos), 1, 2) + unit
-                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                        const txt = two.makeText(str, xn_max, zn_max + zp, style_txt)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
+                        txt.rotation = element[ielem].alpha
+                    } else {
+                        if (foundPos && (Math.abs(maxValuePos) > 0.00001) && (maxValuePos > valueRightPos)) {
+                            const str = myFormat(Math.abs(maxValuePos), 1, 2) + unit
+                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                            const txt = two.makeText(str, x_max, z_max + zp, style_txt)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
+                        if (foundNeg && (Math.abs(maxValueNeg) > 0.00001) && (maxValueNeg < valueRightNeg)) {
+                            const str = myFormat(Math.abs(maxValueNeg), 1, 2) + unit
+                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                            const txt = two.makeText(str, x_min, z_min + zp, style_txt)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
+
+                        if (Math.abs(valueLeftPos) > 0.00001) {
+                            const str = myFormat(Math.abs(valueLeftPos), 1, 2) + unit
+                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                            const txt = two.makeText(str, x0_max, z0_max + zp, style_txt)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
+                        if (Math.abs(valueRightPos) > 0.00001) {
+                            const str = myFormat(Math.abs(valueRightPos), 1, 2) + unit
+                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                            const txt = two.makeText(str, xn_max, zn_max + zp, style_txt)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
+
+                        if (Math.abs(valueLeftNeg) > 0.00001) {
+                            const str = myFormat(Math.abs(valueLeftNeg), 1, 2) + unit
+                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                            const txt = two.makeText(str, x0_min, z0_min + zp, style_txt)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
+                        if (Math.abs(valueRightNeg) > 0.00001) {
+                            const str = myFormat(Math.abs(valueRightNeg), 1, 2) + unit
+                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                            const txt = two.makeText(str, xn_min, zn_min + zp, style_txt)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                        }
                     }
 
-                    if (Math.abs(valueLeftNeg) > 0.00001) {
-                        const str = myFormat(Math.abs(valueLeftNeg), 1, 2) + unit
-                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                        const txt = two.makeText(str, x0_min, z0_min + zp, style_txt)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
-                    }
-                    if (Math.abs(valueRightNeg) > 0.00001) {
-                        const str = myFormat(Math.abs(valueRightNeg), 1, 2) + unit
-                        if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                        const txt = two.makeText(str, xn_min, zn_min + zp, style_txt)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
-                    }
                 }
 
+
             }
-
-
         }
     }
 
 
-
-    if (show_systemlinien) {
+    if (show_systemlinien || !show_selection) {
 
 
         for (let ielem = 0; ielem < nelem; ielem++) {
@@ -1479,13 +1480,15 @@ export function drawsystem() {
     if (flag_eingabe != 0) draw_gelenke(two);
 
     //console.log("++++ show_lasten_temp", show_lasten_temp)
-    if (show_lasten_temp) {
+    if (show_lasten_temp && show_selection) {
         draw_elementlasten(two);
         draw_knotenkraefte(two);
         if (nNodeDisps > 0) draw_knotenverformungen(two);
     }
-    if (!(show_labels && onlyLabels)) {
-        if (show_lagerkraefte && flag_eingabe === 1) draw_lagerkraefte(two);
+    if (show_selection) {
+        if (!(show_labels && onlyLabels)) {
+            if (show_lagerkraefte && flag_eingabe === 1) draw_lagerkraefte(two);
+        }
     }
 
     //console.log("vor update")

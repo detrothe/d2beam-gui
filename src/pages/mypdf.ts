@@ -22,6 +22,7 @@ import {
   neigv,
   THIIO_flag,
   disp_print,
+  disp_print_kombi,
   lagerkraefte,
   lagerkraefte_kombi,
   querschnittset,
@@ -38,7 +39,8 @@ import {
 
 import { myFormat } from "./utility";
 import { app } from "./haupt";
-import { current_unit_stress, unit_stress_factor, unit_length_factor, current_unit_length } from "./einstellungen";
+import { unit_length_factor, current_unit_length } from "./einstellungen";
+import {svg_pdf_ratio} from "./grafik.js";
 
 let lastFileHandlePDF = "documents";
 let currentFilenamePDF = "d2beam.pdf";
@@ -999,9 +1001,20 @@ export async function my_jspdf() {
 
     //   Schnittgrößen
     {
+      let str_Vz = "V<sub>z</sub>"
+
       yy = testSeite(yy, fs, 1, 5);
       doc.setFont("freesans_bold");
-      doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
+      if (THIIO_flag === 0) {
+        doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
+      } else {
+        if (ausgabe_gleichgewichtSG) {
+          doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
+          str_Vz = "T<sub>z</sub>"
+        } else {
+          doc.text("Nachweisschnittgrößen und lokale Verformungen", links, yy);
+        }
+      }
       yy = neueZeile(yy, fs, 1);
 
       for (let ielem = 0; ielem < nelem; ielem++) {
@@ -1014,7 +1027,7 @@ export async function my_jspdf() {
         if (System === 0) {
           el_table.htmlText("x [m]", 0, "center", yy);
           el_table.htmlText("N [kN]", 1, "center", yy);
-          el_table.htmlText("V<sub>z</sub> [kN]", 2, "center", yy);
+          el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
           el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
           el_table.htmlText("u<sub>xL</sub> [mm]", 4, "center", yy);
           el_table.htmlText("w<sub>zL</sub> [mm]", 5, "center", yy);
@@ -1022,7 +1035,7 @@ export async function my_jspdf() {
         } else {
           el_table.htmlText("x [m]", 0, "center", yy);
           el_table.htmlText("N [kN]", 1, "center", yy);
-          el_table.htmlText("V<sub>z</sub> [kN]", 2, "center", yy);
+          el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
           el_table.htmlText("u<sub>xL</sub> [mm]", 3, "center", yy);
           el_table.htmlText("w<sub>zL</sub> [mm]", 4, "center", yy);
 
@@ -1042,8 +1055,8 @@ export async function my_jspdf() {
 
         const lf_index = iLastfall - 1;
         el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
-        el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index,ausgabe_gleichgewichtSG);
-        el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index,ausgabe_gleichgewichtSG);
+        el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
+        el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
         el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index, false);
 
         for (let i = 0; i < nelTeilungen; i++) {
@@ -1068,43 +1081,213 @@ export async function my_jspdf() {
     }
   }
 
+  //******************************************
+  // Kombinationen bei Theorie I. Ordnung    *
+  //******************************************
+
+  if (THIIO_flag === 0 && nkombinationen > 0) {
+
+    for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
+      text = "Kombination " + iKomb;
+      console.log("text", links, yy, text);
+      doc.setFont("freesans_bold");
+      yy = neueZeile(yy, fs, 1);
+
+      doc.line(links, yy, 200, yy, "S");
+
+      //yy = neueZeile(yy, fs, 1)
+      yy = testSeite(yy, fs, 1, 8);
+      doc.text(text, links, yy);
+      yy = neueZeile(yy, fs, 1);
+
+      //   Verformungen
+      {
+        yy = testSeite(yy, fs, 1, 5);
+        doc.setFont("freesans_bold");
+        doc.text("Knotenverformungen", links, yy);
+        //yy = neueZeile(yy, fs, 1)
+
+        doc.setFontSize(fs);
+        doc.setFont("freesans_bold");
+        yy = neueZeile(yy, fs1, 1);
+        let el_table = new pdf_table(doc, links, [20, 20, 20, 20]);
+        el_table.htmlText("Node No", 0, "left", yy);
+        el_table.htmlText("u [mm]", 1, "center", yy);
+        el_table.htmlText("w [mm]", 2, "center", yy);
+        if (System === 0) el_table.htmlText("φ [mrad]", 3, "center", yy);
+
+        doc.setFontSize(fs);
+        doc.setFont("freesans_normal");
+        yy = neueZeile(yy, fs, 1);
+
+        for (let i = 0; i < nnodes; i++) {
+          el_table.htmlText(String(+i + 1), 0, "center", yy);
+          el_table.htmlText(myFormat(disp_print_kombi._(i + 1, 1, iKomb), 2, 2), 1, "right", yy, 5);
+          el_table.htmlText(myFormat(disp_print_kombi._(i + 1, 2, iKomb), 2, 2), 2, "right", yy, 5);
+          if (System === 0) el_table.htmlText(myFormat(disp_print_kombi._(i + 1, 3, iKomb), 2, 2), 3, "right", yy, 5);
+          yy = neueZeile(yy, fs, 1);
+        }
+      }
+
+      //   Lagerkräfte
+      {
+        //yy = neueZeile(yy, fs, 1)
+        yy = testSeite(yy, fs, 1, 5);
+        doc.setFont("freesans_bold");
+        doc.text("Lagerreaktionen", links, yy);
+        //yy = neueZeile(yy, fs, 1)
+
+        doc.setFontSize(fs);
+        doc.setFont("freesans_bold");
+        yy = neueZeile(yy, fs1, 1);
+        let el_table = new pdf_table(doc, links, [20, 20, 20, 20]);
+        el_table.htmlText("Node No", 0, "left", yy);
+        el_table.htmlText("A<sub>x</sub> [kN]", 1, "center", yy);
+        el_table.htmlText("A<sub>z</sub> [kN]", 2, "center", yy);
+        if (System === 0) el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
+
+        doc.setFontSize(fs);
+        doc.setFont("freesans_normal");
+        yy = neueZeile(yy, fs, 1);
+
+        for (let i = 0; i < nnodes; i++) {
+          el_table.htmlText(String(+i + 1), 0, "center", yy);
+          el_table.htmlText(myFormat(lagerkraefte_kombi._(i, 0, iKomb - 1), 2, 2), 1, "right", yy, 5);
+          el_table.htmlText(myFormat(lagerkraefte_kombi._(i, 1, iKomb - 1), 2, 2), 2, "right", yy, 5);
+          if (System === 0) el_table.htmlText(myFormat(lagerkraefte_kombi._(i, 2, iKomb - 1), 2, 2), 3, "right", yy, 5);
+          yy = neueZeile(yy, fs, 1);
+        }
+      }
+
+
+      //   Schnittgrößen
+      {
+        let str_Vz = "V<sub>z</sub>"
+
+        yy = testSeite(yy, fs, 1, 5);
+        doc.setFont("freesans_bold");
+        if (THIIO_flag === 0) {
+          doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
+        } else {
+          if (ausgabe_gleichgewichtSG) {
+            doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
+            str_Vz = "T<sub>z</sub>"
+          } else {
+            doc.text("Nachweisschnittgrößen und lokale Verformungen", links, yy);
+          }
+        }
+        yy = neueZeile(yy, fs, 1);
+
+        for (let ielem = 0; ielem < nelem; ielem++) {
+          yy = neueZeile(yy, fs, 1);
+          doc.setFont("freesans_bold");
+          doc.text("Element " + (+ielem + 1), links, yy);
+          yy = neueZeile(yy, fs, 1);
+
+          let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 20, 20, 20]);
+          if (System === 0) {
+            el_table.htmlText("x [m]", 0, "center", yy);
+            el_table.htmlText("N [kN]", 1, "center", yy);
+            el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
+            el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
+            el_table.htmlText("u<sub>xL</sub> [mm]", 4, "center", yy);
+            el_table.htmlText("w<sub>zL</sub> [mm]", 5, "center", yy);
+            el_table.htmlText("ß [mrad]", 6, "center", yy);
+          } else {
+            el_table.htmlText("x [m]", 0, "center", yy);
+            el_table.htmlText("N [kN]", 1, "center", yy);
+            el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
+            el_table.htmlText("u<sub>xL</sub> [mm]", 3, "center", yy);
+            el_table.htmlText("w<sub>zL</sub> [mm]", 4, "center", yy);
+
+          }
+          doc.setFontSize(fs);
+          doc.setFont("freesans_normal");
+          yy = neueZeile(yy, fs, 1);
+
+          const nelTeilungen = el[ielem].nTeilungen;
+          let sg_M: number[] = new Array(nelTeilungen);
+          let sg_V: number[] = new Array(nelTeilungen);
+          let sg_N: number[] = new Array(nelTeilungen);
+
+          let uL: number[] = new Array(nelTeilungen); // L = Verformung lokal
+          let wL: number[] = new Array(nelTeilungen);
+          let phiL: number[] = new Array(nelTeilungen);
+
+          const lf_index = iKomb - 1 + nlastfaelle;
+          el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
+          el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
+          el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
+          el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index, false);
+
+          for (let i = 0; i < nelTeilungen; i++) {
+            if (System === 0) {
+              el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
+              el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
+              el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
+              el_table.htmlText(myFormat(sg_M[i], 2, 2), 3, "right", yy, 5);
+              el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 4, "right", yy, 5);
+              el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 5, "right", yy, 5);
+              el_table.htmlText(myFormat(phiL[i] * 1000, 3, 3), 6, "right", yy, 5);
+            } else {
+              el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
+              el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
+              el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
+              el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 3, "right", yy, 5);
+              el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 4, "right", yy, 5);
+            }
+            yy = neueZeile(yy, fs, 1);
+          }
+        }
+      }
+    }
+
+  }
+
+
   // -------------------------------------  S  V  G  --------------------------------------
 
   //Get svg markup as string
-  // let svg = document.getElementById("my-svg").innerHTML;
+  let svg = document.getElementById("svg_artboard")!.innerHTML;
 
-  // if (svg) {
-  // svg = svg.replace(/\r?\n|\r/g, "").trim();
-  // svg = svg.substring(0, svg.indexOf("</svg>")) + "</svg>";
-  // // @ts-ignore
-  // svg = svg.replaceAll("  ", "");
-  // // console.log("svg", svg);
+  if (svg) {
+    svg = svg.replace(/\r?\n|\r/g, "").trim();
+    svg = svg.substring(0, svg.indexOf("</svg>")) + "</svg>";
+    // @ts-ignore
+    svg = svg.replaceAll("  ", "");
+    // console.log("svg", svg);
 
-  // var canvas = document.createElement("canvas");
-  // var context = canvas.getContext("2d");
-  // console.log("canvas", canvas.width, canvas.height);
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d");
+    console.log("canvas", canvas.width, canvas.height);
 
-  // context.clearRect(0, 0, canvas.width, canvas.height);
-  // const v = Canvg.fromString(context, svg);
+    if (context != null) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      const v = Canvg.fromString(context, svg);
 
-  // v.render();
+      v.render();
 
-  // var imgData = canvas.toDataURL("image/png", 1);
+      var imgData = canvas.toDataURL("image/png", 1);
 
-  // if ((yy + 200) > 275) {
-  //   yy = neueSeite();
-  // } else {
-  //   yy = neueZeile(yy, fs)
-  // }
-  // if (app.browserLanguage == 'de') {
-  //   doc.text('Querschnitt', links, yy)
-  // } else {
-  //   doc.text('Cross section', links, yy)
-  // }
+      if ((yy + 200) > 275) {
+        yy = neueSeite();
+      } else {
+        yy = neueZeile(yy, fs)
+      }
+      if (app.browserLanguage == 'de') {
+        doc.text('System', links, yy)
+      } else {
+        doc.text('System', links, yy)
+      }
 
-  // doc.addImage(imgData, "PNG", 0, yy, 200, 200); // * myScreen.clientHeight / myScreen.svgWidth);
+      doc.addImage(imgData, "PNG", 5, yy, 200, 200/svg_pdf_ratio);
 
-  // letzteSeite();
+      letzteSeite();
+    }
+
+  }
+
+  // ---
 
   let filename: any = "d2beam.pdf";
 
@@ -1114,40 +1297,40 @@ export async function my_jspdf() {
       "d2beam.pdf"
     );
   } else if (app.hasFSAccess) {
-    filename = window.prompt(
-      "Name der Datei mit Extension, z.B. d2beam.pdf\nDie Datei wird im Default Download Ordner gespeichert",
-      "d2beam.pdf"
-    );
+    // filename = window.prompt(
+    //   "Name der Datei mit Extension, z.B. d2beam.pdf\nDie Datei wird im Default Download Ordner gespeichert",
+    //   "d2beam.pdf"
+    // );
 
-    // try {
-    //   // @ts-ignore
-    //   const fileHandle = await window.showSaveFilePicker({
-    //     suggestedName: currentFilenamePDF,
-    //     startIn: lastFileHandlePDF,
-    //     types: [{
-    //       description: "pdf file",
-    //       accept: { "application/pdf": [".pdf"] }
-    //     }]
-    //   });
-    //   //console.log("fileHandle PDF", fileHandle)
-    //   lastFileHandlePDF = fileHandle
-    //   currentFilenamePDF = fileHandle.name
+    try {
+      // @ts-ignore
+      const fileHandle = await window.showSaveFilePicker({
+        suggestedName: currentFilenamePDF,
+        startIn: lastFileHandlePDF,
+        types: [{
+          description: "pdf file",
+          accept: { "application/pdf": [".pdf"] }
+        }]
+      });
+      //console.log("fileHandle PDF", fileHandle)
+      lastFileHandlePDF = fileHandle
+      currentFilenamePDF = fileHandle.name
 
-    //   const fileStream = await fileHandle.createWritable();
-    //   //console.log("fileStream=",fileStream);
+      const fileStream = await fileHandle.createWritable();
+      //console.log("fileStream=",fileStream);
 
-    //   let blobPDF = new Blob([doc.output('blob')],{type:'application/pdf'});
+      let blobPDF = new Blob([doc.output('blob')], { type: 'application/pdf' });
 
-    //   //  WRITE FILE
-    //   await fileStream.write(blobPDF);
-    //   await fileStream.close();
+      //  WRITE FILE
+      await fileStream.write(blobPDF);
+      await fileStream.close();
 
-    // } catch (error: any) {
-    //   //alert(error.name);
-    //   alert(error.message);
-    // }
+    } catch (error: any) {
+      //alert(error.name);
+      alert(error.message);
+    }
 
-    // return
+    return
   }
 
   try {

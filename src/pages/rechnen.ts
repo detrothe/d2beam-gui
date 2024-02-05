@@ -43,6 +43,7 @@ export let nNodeDisps = 0;
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
 export let disp_print: TFArray3D;
+export let disp_print_kombi: TFArray3D;
 export let stabendkraefte: TFArray3D
 export let lagerkraefte: TFArray3D
 export let nodeDisp0Force: TFArray3D_0
@@ -503,7 +504,7 @@ export function rechnen(flag = 1) {
     el = document.getElementById('id_ausgabe_SG_option') as any;
     if (el.value === 'true') ausgabe_gleichgewichtSG = true;
     else ausgabe_gleichgewichtSG = false;
-    console.log("== ausgabe_gleichgewichtSG =",ausgabe_gleichgewichtSG)
+    console.log("== ausgabe_gleichgewichtSG =", ausgabe_gleichgewichtSG)
 
     console.log("== THIIO_flag", THIIO_flag, nelTeilungen, n_iterationen)
 
@@ -2089,6 +2090,7 @@ function calculate() {
 
         if (nkombinationen > 0) {
             lagerkraefte_kombi = new TFArray3D(0, nnodes - 1, 0, 2, 0, nkombinationen - 1);   //
+            disp_print_kombi = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);   //
             berechne_kombinationen();
         }
     }
@@ -2479,6 +2481,8 @@ function calculate() {
     }
 
     init_grafik(1);
+    drawsystem('svg_artboard');
+
     drawsystem();
 
     const checkbox = document.getElementById("id_glsystem_darstellen") as HTMLInputElement;
@@ -2616,6 +2620,7 @@ function berechne_kombinationen() {
     let norm = 0.0
     let ug = 0.0
     let wg = 0.0
+    let phi = 0.0
 
     let delta = 0.0
 
@@ -2637,6 +2642,7 @@ function berechne_kombinationen() {
                 norm = 0.0
                 ug = 0.0
                 wg = 0.0
+                phi = 0.0
 
                 for (let iLastfall = 0; iLastfall < nlastfaelle; iLastfall++) {
 
@@ -2645,6 +2651,7 @@ function berechne_kombinationen() {
                     norm += el[ielem].N_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                     ug += el[ielem].u_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                     wg += el[ielem].w_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                    phi += el[ielem].phi_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                     //console.log("mom...", iteil, iLastfall, mom, quer, norm)
                 }
 
@@ -2659,6 +2666,7 @@ function berechne_kombinationen() {
                 el[ielem].N_komb[iKomb][iteil] = norm
                 el[ielem].u_komb[iKomb][iteil] = ug
                 el[ielem].w_komb[iKomb][iteil] = wg
+                el[ielem].phi_komb[iKomb][iteil] = phi
 
                 max_S_kombi[0][iKomb] = Math.max(Math.abs(mom), max_S_kombi[0][iKomb])
                 max_S_kombi[1][iKomb] = Math.max(Math.abs(quer), max_S_kombi[1][iKomb])
@@ -2693,6 +2701,25 @@ function berechne_kombinationen() {
         }
     }
 
+
+    // jetzt die Knotenverformungen
+
+    for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
+        for (let inode = 1; inode <= nnodes; inode++) {
+            let ux = 0.0
+            let wz = 0.0
+            let phi = 0.0
+            for (let iLastfall = 0; iLastfall < nlastfaelle; iLastfall++) {
+                ux += disp_print._(inode, 1, iLastfall + 1) * kombiTabelle[iKomb][iLastfall]
+                wz += disp_print._(inode, 2, iLastfall + 1) * kombiTabelle[iKomb][iLastfall]
+                phi += disp_print._(inode, 3, iLastfall + 1) * kombiTabelle[iKomb][iLastfall]
+            }
+            disp_print_kombi.set(inode, 1, iKomb + 1, ux);
+            disp_print_kombi.set(inode, 2, iKomb + 1, wz);
+            disp_print_kombi.set(inode, 3, iKomb + 1, phi);
+
+        }
+    }
 
 
 }
