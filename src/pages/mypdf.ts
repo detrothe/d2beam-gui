@@ -40,7 +40,7 @@ import {
 import { myFormat } from "./utility";
 import { app } from "./haupt";
 import { unit_length_factor, current_unit_length } from "./einstellungen";
-import {svg_pdf_ratio} from "./grafik.js";
+import { svg_pdf_ratio } from "./grafik.js";
 
 let lastFileHandlePDF = "documents";
 let currentFilenamePDF = "d2beam.pdf";
@@ -1280,7 +1280,11 @@ export async function my_jspdf() {
         doc.text('System', links, yy)
       }
 
-      doc.addImage(imgData, "PNG", 5, yy, 200, 200/svg_pdf_ratio);
+      if (svg_pdf_ratio > 1.0) {
+        doc.addImage(imgData, "PNG", 5, yy, 200, 200 / svg_pdf_ratio);
+      } else {
+        doc.addImage(imgData, "PNG", 5, yy, 200 * svg_pdf_ratio, 200);
+      }
 
       letzteSeite();
     }
