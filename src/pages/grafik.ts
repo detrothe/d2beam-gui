@@ -444,8 +444,8 @@ export function drawsystem(svg_id = 'artboard') {
         breite = two.width;
         hoehe = two.height;
     } else {
-        two.width = breite = 2000;
-        two.height = hoehe = 2000;
+        two.width = breite = 1500;
+        two.height = hoehe = 1500;
     }
 
     show_lasten_temp = show_lasten;    // Bei Schnittgrößen werden Lasten temporär nicht gezeichnet
