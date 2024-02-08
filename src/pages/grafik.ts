@@ -623,7 +623,7 @@ export function drawsystem(svg_id = 'artboard') {
                         const phi = phiL[i]
 
                         // oben
-                        let uoben = uL[i] + Math.sin(phi) * h
+                        let uoben = uL[i] + phi * h;   //Math.sin(phi) * h
                         let woben = wL[i] //- Math.cos(phi) * h
 
                         let uobenG = element[ielem].cosinus * uoben - element[ielem].sinus * woben
@@ -636,7 +636,7 @@ export function drawsystem(svg_id = 'artboard') {
                         umriss_x[i] = xp1 = tr.xPix(xoben2)
                         umriss_z[i] = zp1 = tr.zPix(zoben2)
 
-                        let uunten = uL[i] - Math.sin(phi) * h
+                        let uunten = uL[i] - phi * h;  //Math.sin(phi) * h
                         let wunten = wL[i] //- Math.cos(phi) * h
 
                         let uuntenG = element[ielem].cosinus * uunten - element[ielem].sinus * wunten

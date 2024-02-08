@@ -1659,6 +1659,13 @@ export class CTimoshenko_beam extends CElement {
                             Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
                             ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[3]
                             wx += Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
+
+                            Nphi[0] = 6.0 * (sl * x - x2) / nenner
+                            Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl3) / nenner
+                            Nphi[2] = -6.0 * (sl * x - x2) / nenner
+                            Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
+                            phix -= Nphi[0] * edisp0[1] + Nphi[1] * edisp0[2] + Nphi[2] * edisp0[4] + Nphi[3] * edisp0[5];  // im Uhrzeigersinn
+
                         }
                     }
                 }
