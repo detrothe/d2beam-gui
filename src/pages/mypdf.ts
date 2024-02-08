@@ -1035,9 +1035,9 @@ export async function my_jspdf() {
         } else {
           el_table.htmlText("x [m]", 0, "center", yy);
           el_table.htmlText("N [kN]", 1, "center", yy);
-          el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
-          el_table.htmlText("u<sub>xL</sub> [mm]", 3, "center", yy);
-          el_table.htmlText("w<sub>zL</sub> [mm]", 4, "center", yy);
+          // el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
+          el_table.htmlText("u<sub>xL</sub> [mm]", 2, "center", yy);
+          el_table.htmlText("w<sub>zL</sub> [mm]", 3, "center", yy);
 
         }
         doc.setFontSize(fs);
@@ -1071,9 +1071,9 @@ export async function my_jspdf() {
           } else {
             el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
             el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
-            el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
-            el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 3, "right", yy, 5);
-            el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 4, "right", yy, 5);
+            //el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
+            el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 2, "right", yy, 5);
+            el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 3, "right", yy, 5);
           }
           yy = neueZeile(yy, fs, 1);
         }
@@ -1196,9 +1196,9 @@ export async function my_jspdf() {
           } else {
             el_table.htmlText("x [m]", 0, "center", yy);
             el_table.htmlText("N [kN]", 1, "center", yy);
-            el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
-            el_table.htmlText("u<sub>xL</sub> [mm]", 3, "center", yy);
-            el_table.htmlText("w<sub>zL</sub> [mm]", 4, "center", yy);
+            // el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
+            el_table.htmlText("u<sub>xL</sub> [mm]", 2, "center", yy);
+            el_table.htmlText("w<sub>zL</sub> [mm]", 3, "center", yy);
 
           }
           doc.setFontSize(fs);
@@ -1232,9 +1232,9 @@ export async function my_jspdf() {
             } else {
               el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
               el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
-              el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
-              el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 3, "right", yy, 5);
-              el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 4, "right", yy, 5);
+              // el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
+              el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 2, "right", yy, 5);
+              el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 3, "right", yy, 5);
             }
             yy = neueZeile(yy, fs, 1);
           }

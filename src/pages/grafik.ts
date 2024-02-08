@@ -196,6 +196,10 @@ export function init_grafik(flag = 1) {
 
     flag_eingabe = flag;   // 0 = Eingabe überprüfen
 
+    mouseDx = 0.0
+    mouseDz = 0.0
+    wheel_factor = 1.0
+
     if (drawPanel === 0) {
         myPanel();
         drawPanel = 1;
