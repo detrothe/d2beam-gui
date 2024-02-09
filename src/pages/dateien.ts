@@ -649,13 +649,13 @@ async function handleFileSelect_save() {
             }
 
         } else if (app.isMac) {
-            filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert");
+            filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert",currentFilename);
             download(filename, jsonse);
             set_current_filename(filename);
         } else {
 
             //window.alert("showSaveFilePicker UNBEKANNT");
-            filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert");
+            filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert",currentFilename);
             const myFile = new File([jsonse], filename, { type: "text/plain;charset=utf-8" });
             try {
                 saveAs(myFile);
