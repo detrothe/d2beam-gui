@@ -5,103 +5,106 @@ import { Detect } from '../pages/haupt';
 
 import { berechnungErforderlich } from "../pages/globals";
 
-const contextMenuLinkClassName = "context-menu__link";
-const contextMenuActive = "context-menu--active";
+// const contextMenuLinkClassName = "context-menu__link";
+// const contextMenuActive = "context-menu--active";
 
-const taskItemClassName = "tabellen";   // tasks  tabelle
-let taskItemInContext;
+// const taskItemClassName = "tabellen";   // tasks  tabelle
+// let taskItemInContext;
 
-let clickCoords;
-let clickCoordsX;
-let clickCoordsY;
+// let clickCoords;
+// let clickCoordsX;
+// let clickCoordsY;
 
-const menu = document.querySelector("#context-menu") as any;
+// const menu = document.querySelector("#context-menu") as any;
 
-let menuState = 0;
-let menuWidth;
-let menuHeight;
+// let menuState = 0;
+// let menuWidth;
+// let menuHeight;
 
-let windowWidth;
-let windowHeight;
-
-
-//----------------------------------------------------------------------------------------------
-function toggleMenuOn() {
-   //------------------------------------------------------------------------------------------
-   //console.log("toggleMenuOn", menuState);
-   if (menuState !== 1) {
-      menuState = 1;
-      menu?.classList.add(contextMenuActive);
-      menu?.focus();
-   }
-}
-
-//----------------------------------------------------------------------------------------------
-export function toggleMenuOff() {
-   //------------------------------------------------------------------------------------------
-   if (menuState !== 0) {
-      menuState = 0;
-      menu?.classList.remove(contextMenuActive);
-   }
-}
+// let windowWidth;
+// let windowHeight;
 
 
+// //----------------------------------------------------------------------------------------------
+// function toggleMenuOn() {
+//    //------------------------------------------------------------------------------------------
+//    //console.log("toggleMenuOn", menuState);
+//    if (menuState !== 1) {
+//       menuState = 1;
+//       menu?.classList.add(contextMenuActive);
+//       menu?.focus();
+//    }
+// }
 
-//----------------------------------------------------------------------------------------------
-function getPosition(e: any) {
-   //------------------------------------------------------------------------------------------
-   let posx = 0;
-   let posy = 0;
-
-   //if (!e) var e = window.event;
-
-   if (e.pageX || e.pageY) {
-      posx = e.pageX;
-      posy = e.pageY;
-   } else if (e.clientX || e.clientY) {
-      posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-      posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-   }
-
-   //console.log("getPosition", posx, posy)
-
-   return {
-      x: posx,
-      y: posy
-   }
-}
-
-//----------------------------------------------------------------------------------------------
-function positionMenu(e: any) {
-   //------------------------------------------------------------------------------------------
-
-   //console.log("positionMenu", e.pageX, e.pageY);
-
-   clickCoords = getPosition(e);
-   clickCoordsX = clickCoords.x;
-   clickCoordsY = clickCoords.y;
-
-   menuWidth = menu.offsetWidth + 4;
-   menuHeight = menu.offsetHeight + 4;
-
-   windowWidth = document.documentElement.clientWidth;   //window.innerWidth;
-   windowHeight = document.documentElement.clientHeight; //window.innerHeight;
-
-   if ((e.pageX + menuWidth) > windowWidth) {
-      menu.style.left = e.pageX - menuWidth + "px";
-   } else {
-      //menu.style.left = clickCoordsX + "px";
-      menu.style.left = e.pageX + "px";
-   }
+// //----------------------------------------------------------------------------------------------
+// export function toggleMenuOff() {
+//    //------------------------------------------------------------------------------------------
+//    if (menuState !== 0) {
+//       menuState = 0;
+//       menu?.classList.remove(contextMenuActive);
+//    }
+// }
 
 
-   if ((e.pageY + menuHeight) > windowHeight) {
-      menu.style.top = e.pageY - menuHeight + "px";
-   } else {
-      //menu.style.top = clickCoordsY + "px";
-      menu.style.top = e.pageY + "px";
-   }
-}
+
+// //----------------------------------------------------------------------------------------------
+// function getPosition(e: any) {
+//    //------------------------------------------------------------------------------------------
+//    let posx = 0;
+//    let posy = 0;
+
+//    //if (!e) var e = window.event;
+
+//    if (e.pageX || e.pageY) {
+//       posx = e.pageX;
+//       posy = e.pageY;
+//    } else if (e.clientX || e.clientY) {
+//       posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+//       posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+//    }
+
+//    //console.log("getPosition", posx, posy)
+
+//    return {
+//       x: posx,
+//       y: posy
+//    }
+// }
+
+// //----------------------------------------------------------------------------------------------
+// function positionMenu(e: any) {
+//    //------------------------------------------------------------------------------------------
+
+//    //console.log("positionMenu", e.pageX, e.pageY);
+
+//    clickCoords = getPosition(e);
+//    clickCoordsX = clickCoords.x;
+//    clickCoordsY = clickCoords.y;
+
+//    menuWidth = menu.offsetWidth + 4;
+//    menuHeight = menu.offsetHeight + 4;
+
+//    windowWidth = document.documentElement.clientWidth;   //window.innerWidth;
+//    windowHeight = document.documentElement.clientHeight; //window.innerHeight;
+
+//    if ((e.pageX + menuWidth) > windowWidth) {
+//       menu.style.left = e.pageX - menuWidth + "px";
+//    } else {
+//       //menu.style.left = clickCoordsX + "px";
+//       menu.style.left = e.pageX + "px";
+//    }
+
+
+//    if ((e.pageY + menuHeight) > windowHeight) {
+//       menu.style.top = e.pageY - menuHeight + "px";
+//    } else {
+//       //menu.style.top = clickCoordsY + "px";
+//       menu.style.top = e.pageY + "px";
+//    }
+// }
+
+
+let current_table_id = ''
 
 //______________________________________________________________________________________________________
 //______________________________________________________________________________________________________ DrTabelle
@@ -139,7 +142,7 @@ class DrTabelle extends HTMLElement {
 
    tableRoot: any;
 
-   tableId = null;
+   tableId = '';
    isSelected = false;
    selectedCellRow = -1;
    selectedCellCol = -1;
@@ -171,6 +174,27 @@ class DrTabelle extends HTMLElement {
       this.textContent = 'Hello, World!';
    }
   */
+
+   contextMenuLinkClassName = "context-menu__link";
+   contextMenuActive = "context-menu--active";
+
+   taskItemClassName = "tabellen";   // tasks  tabelle
+   taskItemInContext: any;
+
+   clickCoords: any;
+   clickCoordsX: any;
+   clickCoordsY: any;
+
+   menu = document.querySelector("#context-menu") as any;
+
+   menuState = 0;
+   menuWidth: any;
+   menuHeight: any;
+
+   windowWidth: any;
+   windowHeight: any;
+
+
    //---------------------------------------------------------------------------------------------------------------
    connectedCallback() {
       //------------------------------------------------------------------------------------------------------------
@@ -191,6 +215,7 @@ class DrTabelle extends HTMLElement {
       table.addEventListener('pointerup', this.POINTER_UP.bind(this));
 
       table.addEventListener("contextmenu", e => e.preventDefault());
+      //table.addEventListener("focusout", this.lostFocus.bind(this));
 
       let thead = table.createTHead();
       //console.log('thead', thead);
@@ -392,6 +417,8 @@ class DrTabelle extends HTMLElement {
             this.nSpalten = newValue;
             this.nTabCol = Number(this.nSpalten) + 1; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
             //console.log('#### name=', name, this.nTabCol);
+         } else if (name === 'id') {
+            this.tableId = newValue;
          }
       } else {
          if (name === 'nzeilen') {
@@ -410,7 +437,7 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    static get observedAttributes() {
       //------------------------------------------------------------------------------------------------------------
-      return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext', 'option_deleted', 'hide_column', 'show_column'];
+      return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext', 'option_deleted', 'hide_column', 'show_column', 'id'];
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -1112,7 +1139,7 @@ class DrTabelle extends HTMLElement {
       //TODO toggleMenuOff()
       //console.log("this.selectionMode", this.selectionMode)
 
-      toggleMenuOff();
+      this.toggleMenuOff();
 
       if (this.cellsLeft.length !== this.nTabCol) {
          this.cellsLeft = Array(this.nTabCol);
@@ -1397,250 +1424,254 @@ class DrTabelle extends HTMLElement {
 
 
    //----------------------------------------------------------------------------------------------
-   menuItemListener(link: any) {
+   _menuItemListener(link: any) {
       //-------------------------------------------------------------------------------------------
       console.log("LINK", link.getAttribute("data-action"))
+      console.log(" in menuItemListener, , this.tableId =", this.tableId, current_table_id)
       //console.log("Task ID - " + taskItemInContext.getAttribute("data-id") + ", Task action - " + link.getAttribute("data-action"));
-      toggleMenuOff();
+      this.toggleMenuOff();
 
-      if (link.getAttribute("data-action") === "copyFirst") {
-         // Zellwert in zuletzt geklickter Zelle
-         let row = this.startRowIndex;
-         let col = this.startColIndex;
+      if (this.tableId === current_table_id) {
+         if (link.getAttribute("data-action") === "copyFirst") {
+            // Zellwert in zuletzt geklickter Zelle
+            let row = this.startRowIndex;
+            let col = this.startColIndex;
 
-         const wert = this.firtstWert;
-         console.log("copyFirst, wert=", wert, row, col);
+            const wert = this.firtstWert;
+            console.log("copyFirst, wert=", wert, row, col);
 
-         const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
-         console.log("tabelle 1=", tabelle)
-         const nZeilen = tabelle.rows.length;  // header abziehen
-         const nSpalten = tabelle.rows[0].cells.length;
-         //console.log("Tabelle", tabelle, nZeilen, nSpalten)
+            const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
+            console.log("tabelle 1=", tabelle)
+            const nZeilen = tabelle.rows.length;  // header abziehen
+            const nSpalten = tabelle.rows[0].cells.length;
+            //console.log("Tabelle", tabelle, nZeilen, nSpalten)
 
-         let i, j;
-         for (i = 1; i < nZeilen; i++) {
-            for (j = 1; j < nSpalten; j++) {
-               let child = tabelle.rows[i].cells[j].firstElementChild as any // input
-               if (child.className === 'input_select') {
-                  child.value = wert.toString();
+            let i, j;
+            for (i = 1; i < nZeilen; i++) {
+               for (j = 1; j < nSpalten; j++) {
+                  let child = tabelle.rows[i].cells[j].firstElementChild as any // input
+                  if (child.className === 'input_select') {
+                     child.value = wert.toString();
+                  }
                }
             }
+            berechnungErforderlich(true);
          }
-         berechnungErforderlich(true);
-      }
-      else if (link.getAttribute("data-action") === "copyFirstRow") {
+         else if (link.getAttribute("data-action") === "copyFirstRow") {
 
-         let i, j;
-         console.log("copyFirstRow")
-         // Zellwert in zuletzt geklickter Zelle
-         let row = this.startRowIndex;
-         let col = this.startColIndex;
+            let i, j;
+            console.log("copyFirstRow")
+            // Zellwert in zuletzt geklickter Zelle
+            let row = this.startRowIndex;
+            let col = this.startColIndex;
 
-         const wert = this.firtstWert;
-         console.log("copyFirst, wert=", wert, row, col);
+            const wert = this.firtstWert;
+            console.log("copyFirst, wert=", wert, row, col);
 
-         const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
-         const nZeilen = tabelle.rows.length;  // header abziehen
-         const nSpalten = tabelle.rows[0].cells.length;
+            const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
+            const nZeilen = tabelle.rows.length;  // header abziehen
+            const nSpalten = tabelle.rows[0].cells.length;
 
-         const value = [];
-         let nCols = 0;
-         for (j = 1; j < nSpalten; j++) {
-            value.push((tabelle.rows[row].cells[j].firstElementChild as any).value)
-            nCols++;
-         }
-         console.log("value", value);
-
-         for (i = 1; i < nZeilen; i++) {
+            const value = [];
+            let nCols = 0;
             for (j = 1; j < nSpalten; j++) {
-               let child = tabelle.rows[i].cells[j].firstElementChild as any // input
-               if (child.className === 'input_select') {
-                  child.value = value[j - 1].toString();
+               value.push((tabelle.rows[row].cells[j].firstElementChild as any).value)
+               nCols++;
+            }
+            console.log("value", value, tabelle);
+
+            for (i = 1; i < nZeilen; i++) {
+               for (j = 1; j < nSpalten; j++) {
+                  let child = tabelle.rows[i].cells[j].firstElementChild as any // input
+                  if (child.className === 'input_select') {
+                     child.value = value[j - 1].toString();
+                  }
                }
             }
+            berechnungErforderlich(true);
          }
-         berechnungErforderlich(true);
-      }
-      else if (link.getAttribute("data-action") === "increment_1") {
+         else if (link.getAttribute("data-action") === "increment_1") {
 
-         let i, j;
+            let i, j;
 
-         // Zellwert in zuletzt geklickter Zelle
-         let row = this.startRowIndex;
-         let col = this.startColIndex;
+            // Zellwert in zuletzt geklickter Zelle
+            let row = this.startRowIndex;
+            let col = this.startColIndex;
 
-         let wert = this.firtstWert;
-         //console.log("increment_1, wert=", wert);
+            let wert = this.firtstWert;
+            //console.log("increment_1, wert=", wert);
 
-         const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
-         const nZeilen = tabelle.rows.length;
-         const nSpalten = tabelle.rows[0].cells.length;
+            const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
+            const nZeilen = tabelle.rows.length;
+            const nSpalten = tabelle.rows[0].cells.length;
 
-         const value = [];
+            const value = [];
 
-         for (j = 1; j < nSpalten; j++) {
-            value.push((tabelle.rows[row].cells[j].firstElementChild as any).value)
-         }
-         console.log("value", value);
-
-
-         for (i = 1; i < nZeilen; i++) {
             for (j = 1; j < nSpalten; j++) {
-               let child = tabelle.rows[i].cells[j].firstElementChild as any  // input
-               if (child.className === 'input_select') {
-                  child.value = (value[j - 1]++).toString();
+               value.push((tabelle.rows[row].cells[j].firstElementChild as any).value)
+            }
+            console.log("value", value);
+
+
+            for (i = 1; i < nZeilen; i++) {
+               for (j = 1; j < nSpalten; j++) {
+                  let child = tabelle.rows[i].cells[j].firstElementChild as any  // input
+                  if (child.className === 'input_select') {
+                     child.value = (value[j - 1]++).toString();
+                  }
                }
             }
+            berechnungErforderlich(true);
          }
-         berechnungErforderlich(true);
-      }
-      else if (link.getAttribute("data-action") === "increment_delta") {
+         else if (link.getAttribute("data-action") === "increment_delta") {
 
-         let i, j;
+            let i, j;
 
-         const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
-         const nZeilen = tabelle.rows.length;
-         const nSpalten = tabelle.rows[0].cells.length;
+            const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
+            const nZeilen = tabelle.rows.length;
+            const nSpalten = tabelle.rows[0].cells.length;
 
-         // Zellwert in zuletzt geklickter Zelle
-         let row = Number(this.startRowIndex);
-         console.log("test increment_delta", row, nZeilen)
-         if (Number(row) + 2 >= nZeilen) return;    // das geht nicht, da gibt es nichts zu tun
-         console.log("alive")
-         //let col = selectedCellPoly.col;
+            // Zellwert in zuletzt geklickter Zelle
+            let row = Number(this.startRowIndex);
+            console.log("test increment_delta", row, nZeilen)
+            if (Number(row) + 2 >= nZeilen) return;    // das geht nicht, da gibt es nichts zu tun
+            console.log("alive")
+            //let col = selectedCellPoly.col;
 
-         //let wert = Number(selectedCellPoly.wert);
-         //console.log("increment_1, wert=", wert);
+            //let wert = Number(selectedCellPoly.wert);
+            //console.log("increment_1, wert=", wert);
 
-         const value = [];
-         const delta = [];
-         let del;
+            const value = [];
+            const delta = [];
+            let del;
 
-         for (j = 1; j < nSpalten; j++) {
-
-            //del = Number(tabelle.rows[row + 1].cells[j].firstElementChild.value.replace(/,/g, '.'))
-            //    - Number(tabelle.rows[row].cells[j].firstElementChild.value.replace(/,/g, '.'))
-            //value.push(Number(tabelle.rows[row].cells[j].firstElementChild.value.replace(/,/g, '.')))
-            del = (tabelle.rows[row + 1].cells[j].firstElementChild as any).value
-               - (tabelle.rows[row].cells[j].firstElementChild as any).value
-            value.push(Number((tabelle.rows[row].cells[j].firstElementChild as any).value))
-            delta.push(Number(del))
-         }
-         console.log("value", value);
-         console.log("delta", delta);
-
-         for (i = 1; i < nZeilen; i++) {
             for (j = 1; j < nSpalten; j++) {
-               let child = tabelle.rows[i].cells[j].firstElementChild as any
-               if (child.className === 'input_select') {
-                  let zahl = (Number(value[j - 1]) as any).toPrecision(12) * 1;
-                  (tabelle.rows[i].cells[j].firstElementChild as any).value = zahl.toString();
-                  value[j - 1] += delta[j - 1];
+
+               //del = Number(tabelle.rows[row + 1].cells[j].firstElementChild.value.replace(/,/g, '.'))
+               //    - Number(tabelle.rows[row].cells[j].firstElementChild.value.replace(/,/g, '.'))
+               //value.push(Number(tabelle.rows[row].cells[j].firstElementChild.value.replace(/,/g, '.')))
+               del = (tabelle.rows[row + 1].cells[j].firstElementChild as any).value
+                  - (tabelle.rows[row].cells[j].firstElementChild as any).value
+               value.push(Number((tabelle.rows[row].cells[j].firstElementChild as any).value))
+               delta.push(Number(del))
+            }
+            console.log("value", value);
+            console.log("delta", delta);
+
+            for (i = 1; i < nZeilen; i++) {
+               for (j = 1; j < nSpalten; j++) {
+                  let child = tabelle.rows[i].cells[j].firstElementChild as any
+                  if (child.className === 'input_select') {
+                     let zahl = (Number(value[j - 1]) as any).toPrecision(12) * 1;
+                     (tabelle.rows[i].cells[j].firstElementChild as any).value = zahl.toString();
+                     value[j - 1] += delta[j - 1];
+                  }
                }
             }
+            berechnungErforderlich(true);
          }
-         berechnungErforderlich(true);
-      }
-      else if (link.getAttribute("data-action") === "copy") {
+         else if (link.getAttribute("data-action") === "copy") {
 
-         let newClip = "";
-         let wertInSpalte1 = false;
+            let newClip = "";
+            let wertInSpalte1 = false;
 
-         let numberFormat_OS = Intl.NumberFormat().resolvedOptions().locale.split("-")
+            let numberFormat_OS = Intl.NumberFormat().resolvedOptions().locale.split("-")
 
-         let newLine = null;
-         if (Detect.OS === 'Windows') {
-            newLine = "\r\n";
-         } else {
-            newLine = "\n";
-         }
-         const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
-         const nZeilen = tabelle.rows.length;
-         const nSpalten = tabelle.rows[0].cells.length;
+            let newLine = null;
+            if (Detect.OS === 'Windows') {
+               newLine = "\r\n";
+            } else {
+               newLine = "\n";
+            }
+            const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
+            const nZeilen = tabelle.rows.length;
+            const nSpalten = tabelle.rows[0].cells.length;
 
-         let i, j;
-         for (i = 1; i < nZeilen; i++) {
-            wertInSpalte1 = false;
-            for (j = 1; j < nSpalten - 1; j++) {
-               let child = tabelle.rows[i].cells[j].firstElementChild as any // input
+            let i, j;
+            for (i = 1; i < nZeilen; i++) {
+               wertInSpalte1 = false;
+               for (j = 1; j < nSpalten - 1; j++) {
+                  let child = tabelle.rows[i].cells[j].firstElementChild as any // input
+                  if (child.className === 'input_select') {
+                     if (wertInSpalte1) newClip += "\t";
+                     let wert = (tabelle.rows[i].cells[j].firstElementChild as any).value;
+                     if (numberFormat_OS[0] === 'de') {
+                        wert = wert.replace('.', ',')
+                     }
+                     newClip += wert;
+                     wertInSpalte1 = true;
+                  }
+               }
+               let child = tabelle.rows[i].cells[nSpalten - 1].firstElementChild as any // input
                if (child.className === 'input_select') {
                   if (wertInSpalte1) newClip += "\t";
-                  let wert = (tabelle.rows[i].cells[j].firstElementChild as any).value;
+                  let wert = (tabelle.rows[i].cells[nSpalten - 1].firstElementChild as any).value;
                   if (numberFormat_OS[0] === 'de') {
                      wert = wert.replace('.', ',')
                   }
-                  newClip += wert;
-                  wertInSpalte1 = true;
+                  newClip += wert + newLine;
+               } else {
+                  if (wertInSpalte1) newClip += newLine;
                }
             }
-            let child = tabelle.rows[i].cells[nSpalten - 1].firstElementChild as any // input
-            if (child.className === 'input_select') {
-               if (wertInSpalte1) newClip += "\t";
-               let wert = (tabelle.rows[i].cells[nSpalten - 1].firstElementChild as any).value;
-               if (numberFormat_OS[0] === 'de') {
-                  wert = wert.replace('.', ',')
-               }
-               newClip += wert + newLine;
+
+
+            navigator.clipboard.writeText(newClip).then(function () {
+               console.log("clipboard successfully set");
+            }, function () {
+               console.log("clipboard write failed");
+            });
+
+         }
+         else if (link.getAttribute("data-action") === "insert") {
+
+            let newLine = '';
+            if (Detect.OS === 'Windows') {
+               newLine = "\r\n";
             } else {
-               if (wertInSpalte1) newClip += newLine;
+               newLine = "\n";
             }
-         }
 
+            // Zellwert in zuletzt geklickter Zelle
+            let row = Number(this.startRowIndex);
+            let col = Number(this.startColIndex);
 
-         navigator.clipboard.writeText(newClip).then(function () {
-            console.log("clipboard successfully set");
-         }, function () {
-            console.log("clipboard write failed");
-         });
+            //console.log("insert", row, col)
+            console.log("!!!!!!! ----- this.shadow", this.shadow)
 
-      }
-      else if (link.getAttribute("data-action") === "insert") {
+            const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
+            const nZeilen = tabelle.rows.length;
+            const nSpalten = tabelle.rows[0].cells.length;
 
-         let newLine = '';
-         if (Detect.OS === 'Windows') {
-            newLine = "\r\n";
-         } else {
-            newLine = "\n";
-         }
+            //console.log("nZeilen,nSpalten", nZeilen, nSpalten)
 
-         // Zellwert in zuletzt geklickter Zelle
-         let row = Number(this.startRowIndex);
-         let col = Number(this.startColIndex);
+            navigator.clipboard.readText().then(function (clipText) {
+               //console.log("clipText", clipText);
 
-         //console.log("insert", row, col)
+               let zeilen = clipText.split(newLine);
+               //console.log("zeilen", zeilen, zeilen.length);
 
-         const tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;
-         const nZeilen = tabelle.rows.length;
-         const nSpalten = tabelle.rows[0].cells.length;
-
-         //console.log("nZeilen,nSpalten", nZeilen, nSpalten)
-
-         navigator.clipboard.readText().then(function (clipText) {
-            //console.log("clipText", clipText);
-
-            let zeilen = clipText.split(newLine);
-            //console.log("zeilen", zeilen, zeilen.length);
-
-            let i, j;
-            for (i = 0; i < zeilen.length - 1; i++) {
-               let zeile = zeilen[i].split("\t");
-               //console.log("zeile", i, zeile, zeile.length);
-               for (j = 0; j < zeile.length; j++) {
-                  //console.log("z", i, j, zeile[j], (row + i), nZeilen, (col + j), nSpalten);
-                  if ((row + i) < nZeilen && (col + j) < nSpalten) {
+               let i, j;
+               for (i = 0; i < zeilen.length - 1; i++) {
+                  let zeile = zeilen[i].split("\t");
+                  //console.log("zeile", i, zeile, zeile.length);
+                  for (j = 0; j < zeile.length; j++) {
                      //console.log("z", i, j, zeile[j], (row + i), nZeilen, (col + j), nSpalten);
-                     let zahl: any = (zeile[j] as any).replace(/,/g, '.');
-                     (tabelle.rows[row + i].cells[col + j].firstElementChild as any).value = zahl;
+                     if ((row + i) < nZeilen && (col + j) < nSpalten) {
+                        //console.log("z", i, j, zeile[j], (row + i), nZeilen, (col + j), nSpalten);
+                        let zahl: any = (zeile[j] as any).replace(/,/g, '.');
+                        (tabelle.rows[row + i].cells[col + j].firstElementChild as any).value = zahl;
+                     }
                   }
                }
-            }
 
-         });
-         berechnungErforderlich(true);
-      }
-      else if (link.getAttribute("data-action") === "close") {
-      }
+            });
+            berechnungErforderlich(true);
+         }
+         else if (link.getAttribute("data-action") === "close") {
+         }
 
+      }
 
       document.getElementById("context-menu")?.removeEventListener('click', this.ref_listener)
       this.ref_listener = null;
@@ -1657,18 +1688,19 @@ class DrTabelle extends HTMLElement {
          document.getElementById("context-menu")?.addEventListener('click', this.ref_listener = this.contextMenuClicked.bind(this));
       }
 
-      taskItemInContext = this.clickInsideElement(ev, taskItemClassName);
+      this.taskItemInContext = this.clickInsideElement(ev, this.taskItemClassName);
 
-      console.log("//// show_contextMemu  taskItem In Context", taskItemInContext);
+      console.log("//// show_contextMemu  taskItem In Context", this.taskItemInContext);
       console.log("this.nSpalten", this.nSpalten)
 
-      if (taskItemInContext) {
+      if (this.taskItemInContext) {
          ev.preventDefault();
-         toggleMenuOn();
-         positionMenu(ev);
+         this.toggleMenuOn();
+         this.positionMenu(ev);
+         current_table_id = this.tableId
       } else {
-         taskItemInContext = null;
-         toggleMenuOff();
+         this.taskItemInContext = null;
+         this.toggleMenuOff();
       }
    }
 
@@ -1677,7 +1709,7 @@ class DrTabelle extends HTMLElement {
       //------------------------------------------------------------------------------------------
 
       let el = e.srcElement || e.target;
-      //console.log("click Inside Element:", className, e.target, "-el-", el);
+      console.log("click Inside Element:", className, e.target, "-el-", el);
 
       if (el.classList.contains(className)) {
          //console.log("el.classList.contains: ", className)
@@ -1703,17 +1735,110 @@ class DrTabelle extends HTMLElement {
       //------------------------------------------------------------------------------------------
 
       console.log("in contextMenuClicked", ev)
-      const clickeElIsLink = this.clickInsideElement(ev, contextMenuLinkClassName);
+      const clickeElIsLink = this.clickInsideElement(ev, this.contextMenuLinkClassName);
       //console.log("+++ clickListener  clickeElIsLink", clickeElIsLink, ev.button);
 
       if (clickeElIsLink) {
          ev.preventDefault();
          if (ev.button === 2) return
-         this.menuItemListener(clickeElIsLink);
+         this._menuItemListener(clickeElIsLink);
       }
    }
 
 
+
+
+
+   //----------------------------------------------------------------------------------------------
+   toggleMenuOn() {
+      //------------------------------------------------------------------------------------------
+      //console.log("toggleMenuOn", menuState);
+      if (this.menuState !== 1) {
+         this.menuState = 1;
+         this.menu?.classList.add(this.contextMenuActive);
+         this.menu?.focus();
+      }
+   }
+
+   //----------------------------------------------------------------------------------------------
+   toggleMenuOff() {
+      //------------------------------------------------------------------------------------------
+      if (this.menuState !== 0) {
+         this.menuState = 0;
+         this.menu?.classList.remove(this.contextMenuActive);
+      }
+   }
+
+
+
+   //----------------------------------------------------------------------------------------------
+   getPosition(e: any) {
+      //------------------------------------------------------------------------------------------
+      let posx = 0;
+      let posy = 0;
+
+      //if (!e) var e = window.event;
+
+      if (e.pageX || e.pageY) {
+         posx = e.pageX;
+         posy = e.pageY;
+      } else if (e.clientX || e.clientY) {
+         posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+         posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+      }
+
+      //console.log("getPosition", posx, posy)
+
+      return {
+         x: posx,
+         y: posy
+      }
+   }
+
+   //----------------------------------------------------------------------------------------------
+   positionMenu(e: any) {
+      //------------------------------------------------------------------------------------------
+
+      //console.log("positionMenu", e.pageX, e.pageY);
+
+      this.clickCoords = this.getPosition(e);
+      this.clickCoordsX = this.clickCoords.x;
+      this.clickCoordsY = this.clickCoords.y;
+
+      this.menuWidth = this.menu.offsetWidth + 4;
+      this.menuHeight = this.menu.offsetHeight + 4;
+
+      this.windowWidth = document.documentElement.clientWidth;   //window.innerWidth;
+      this.windowHeight = document.documentElement.clientHeight; //window.innerHeight;
+
+      if ((e.pageX + this.menuWidth) > this.windowWidth) {
+         this.menu.style.left = e.pageX - this.menuWidth + "px";
+      } else {
+         //menu.style.left = clickCoordsX + "px";
+         this.menu.style.left = e.pageX + "px";
+      }
+
+
+      if ((e.pageY + this.menuHeight) > this.windowHeight) {
+         this.menu.style.top = e.pageY - this.menuHeight + "px";
+      } else {
+         //menu.style.top = clickCoordsY + "px";
+         this.menu.style.top = e.pageY + "px";
+      }
+   }
+
+   // //----------------------------------------------------------------------------------------------
+   // lostFocus(e: any) {
+   //    //------------------------------------------------------------------------------------------
+
+   //    console.log("q q q q q q   Lost Focus")
+
+   //    const tabelle = this.shadow.getElementById('mytable') as any;
+
+   //    console.log("mytable table.id", this.tableId)
+
+
+   // }
 
 }
 
