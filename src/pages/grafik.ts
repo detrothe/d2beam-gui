@@ -287,7 +287,7 @@ export function init_grafik(flag = 1) {
 function wheel(ev: WheelEvent) {
     //----------------------------------------------------------------------------------------------------
 
-    ev.preventDefault()
+    //ev.preventDefault()  // wenn passive, sonst unkommentieren
     if (ev.deltaY > 0) {
         wheel_factor += 0.1;
         if (wheel_factor > 2) wheel_factor = 2.0
@@ -373,7 +373,7 @@ export function drawsystem(svg_id = 'artboard') {
 
 
     if (domElement != null) {
-        domElement.removeEventListener('wheel', wheel, false);
+        domElement.removeEventListener('wheel', wheel, { passive: true });
         domElement.removeEventListener('mousedown', mousedown, false);
         domElement.removeEventListener('mouseup', mousemove, false);
 
@@ -1519,7 +1519,7 @@ export function drawsystem(svg_id = 'artboard') {
     //svgElement = two.render
     //console.log("domElement", domElement)
     //domElement.addEventListener('mousedown', mousedown, false);
-    domElement.addEventListener('wheel', wheel, false);
+    domElement.addEventListener('wheel', wheel, { passive: true });
     //domElement.addEventListener('wheel', mousewheel, false);
     domElement.addEventListener('mousedown', mousedown, false);
     domElement.addEventListener('mouseup', mouseup, false);

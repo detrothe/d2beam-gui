@@ -1,7 +1,7 @@
 {
   "name": "pwa-d2beam",
-  "version": "0.9",
-  "description": "A layered beam analysis PWA",
+  "version": "1.0",
+  "description": "A 2D beam analysis PWA",
   "main": "index.js",
   "scripts": {
     "dev-server": "vite --open --host",

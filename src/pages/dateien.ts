@@ -348,327 +348,327 @@ async function handleFileSelect_save() {
     console.log("in select save");
     //console.log("filename", filename);
 
-    const elem = document.getElementById("id_button_nnodes");
+    // const elem = document.getElementById("id_button_nnodes");
 
-    if (elem) {
+    // if (elem) {
 
-        let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv;
+    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv;
 
-        let el = document.getElementById('id_button_nteilungen') as any;
-        nelTeilungen = el.nel;
+    let el = document.getElementById('id_button_nteilungen') as any;
+    nelTeilungen = el.nel;
 
-        el = document.getElementById('id_button_niter') as any;
-        n_iterationen = el.nel;
+    el = document.getElementById('id_button_niter') as any;
+    n_iterationen = el.nel;
 
-        el = document.getElementById('id_THIIO') as HTMLSelectElement;
-        THIIO_flag = el.value;
+    el = document.getElementById('id_THIIO') as HTMLSelectElement;
+    THIIO_flag = el.value;
 
-        el = document.getElementById('id_maxu_node') as HTMLSelectElement;
-        maxU_node = el.value;
+    el = document.getElementById('id_maxu_node') as HTMLSelectElement;
+    maxU_node = el.value;
 
-        el = document.getElementById('id_maxu_dir') as HTMLSelectElement;
-        maxU_dir = el.value;
+    el = document.getElementById('id_maxu_dir') as HTMLSelectElement;
+    maxU_dir = el.value;
 
-        el = document.getElementById('id_maxu_schief') as HTMLElement;
-        maxU_schief = el.value
+    el = document.getElementById('id_maxu_schief') as HTMLElement;
+    maxU_schief = el.value
 
-        el = document.getElementById('id_neigv') as HTMLSelectElement;
-        neigv = el.value;
+    el = document.getElementById('id_neigv') as HTMLSelectElement;
+    neigv = el.value;
 
-        //el = document.getElementById('id_dialog_neue_eingabe') as HTMLElement;
-        let system = System; //Number((el.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+    //el = document.getElementById('id_dialog_neue_eingabe') as HTMLElement;
+    let system = System; //Number((el.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
 
-        el = document.getElementById('id_knoten_tabelle') as HTMLElement;
-        let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        console.log("knotentabelle", tabelle)
-        let n_nodes = tabelle.rows.length - 1;
-        let nSpalten = tabelle.rows[0].cells.length - 1;
-        //const neq = nZeilen;
-        //const nlf = nSpalten;
+    el = document.getElementById('id_knoten_tabelle') as HTMLElement;
+    let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    console.log("knotentabelle", tabelle)
+    let n_nodes = tabelle.rows.length - 1;
+    let nSpalten = tabelle.rows[0].cells.length - 1;
+    //const neq = nZeilen;
+    //const nlf = nSpalten;
 
-        const node = Array.from(Array(n_nodes), () => new Array(nSpalten));
+    const node = Array.from(Array(n_nodes), () => new Array(nSpalten));
 
-        for (i = 0; i < n_nodes; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                node[i][j] = child.value;
-                //console.log(i,j,c[i][j]);
-            }
+    for (i = 0; i < n_nodes; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            node[i][j] = child.value;
+            //console.log(i,j,c[i][j]);
+        }
+    }
+
+    el = document.getElementById('id_element_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    let n_elem = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+
+    const elem = Array.from(Array(n_elem), () => new Array(nSpalten));
+
+    for (i = 0; i < n_elem; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            elem[i][j] = child.value
+            //console.log(i,j,a[i][j]);
+        }
+    }
+
+    el = document.getElementById('id_knotenlasten_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    let nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const nloads = nZeilen
+    const nodalload = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            nodalload[i][j] = child.value
+        }
+    }
+
+    el = document.getElementById('id_streckenlasten_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const nstreckenlasten = nZeilen
+    const linload = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            linload[i][j] = child.value
+        }
+    }
+
+    el = document.getElementById('id_einzellasten_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const neinzellasten = nZeilen
+    const pointload = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            pointload[i][j] = child.value
+        }
+    }
+
+    el = document.getElementById('id_temperaturlasten_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const ntemperaturlasten = nZeilen
+    const tempload = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            tempload[i][j] = child.value
+        }
+    }
+
+    el = document.getElementById('id_vorspannungen_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const nvorspannungen = nZeilen
+    const sigvload = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            sigvload[i][j] = child.value
+        }
+    }
+
+    el = document.getElementById('id_spannschloesser_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const nspannschloesser = nZeilen
+    const spannload = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            spannload[i][j] = child.value
+        }
+    }
+
+    el = document.getElementById('id_stabvorverfomungen_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const nStabvorverfomungen = nZeilen
+    const stabvorverformung = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            stabvorverformung[i][j] = child.value
+        }
+    }
+
+    el = document.getElementById('id_lastfaelle_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const nlastfaelle = nZeilen
+    const lastfaelle = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            lastfaelle[i][j] = child.value
+        }
+    }
+
+    el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const nkombinationen = nZeilen
+    const kombination = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            kombination[i][j] = child.value
+        }
+    }
+
+    el = document.getElementById('id_nnodedisps_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const nNodeDisps = nZeilen
+    const nodeDisp0 = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            nodeDisp0[i][j] = child.value
+        }
+    }
+
+
+    let qsClassName = new Array(nQuerschnittSets)
+    let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(12));
+
+    for (i = 0; i < nQuerschnittSets; i++) {
+        console.log('get_querschnitt_length', get_querschnitt_length(i))
+        qsWerte[i] = get_querschnittRechteck(i)
+        qsClassName[i] = get_querschnitt_classname(i)
+    }
+
+    let polyData = {
+
+        'version': 1,
+
+        // 'unit_length': current_unit_length,
+        'system': system,
+        'nnodes': n_nodes,
+        'nelem': n_elem,
+        'nloads': nloads,
+        'nstreckenlasten': nstreckenlasten,
+        'neinzellasten': neinzellasten,
+        'ntempload': ntemperaturlasten,
+        'nvorspannungen': nvorspannungen,
+        'nspannschloesser': nspannschloesser,
+        'nloadcases': nlastfaelle,
+        'ncombinations': nkombinationen,
+        'nquerschnittsets': nQuerschnittSets,
+        'nstabvorverfomungen': nStabvorverfomungen,
+        'nelteilungen': nelTeilungen,
+        'n_iter': n_iterationen,
+        'THIIO_flag': THIIO_flag,
+        'maxU_node': maxU_node,
+        'maxU_dir': maxU_dir,
+        'maxU_schief': maxU_schief,
+        'neigv': neigv,
+        'nNodeDisps': nNodeDisps,
+
+
+        'elem': elem,
+        'node': node,
+        'nodalLoad': nodalload,
+        'streckenlasten': linload,
+        'einzellasten': pointload,
+        'tempLoad': tempload,
+        'sigvload': sigvload,
+        'spannload': spannload,
+        'stabvorverformung': stabvorverformung,
+        'loadcases': lastfaelle,
+        'combination': kombination,
+        'qsclassname': qsClassName,
+        'qswerte': qsWerte,
+        'nodeDisp0': nodeDisp0
+    };
+
+
+
+    let jsonse = JSON.stringify(polyData);
+
+    console.log("stringify", jsonse);
+
+    let filename: any
+
+    if (app.hasFSAccess) {
+
+        //window.alert("showSaveFilePicker bekannt")
+
+        try {
+            // (A) CREATE BLOB OBJECT
+            const myBlob = new Blob([jsonse], { type: "text/plain" });
+
+            // (B) FILE HANDLER & FILE STREAM
+            // @ts-ignore
+            const fileHandle = await window.showSaveFilePicker({
+                suggestedName: currentFilename,
+                startIn: lastFileHandle,
+                types: [{
+                    description: "Text file",
+                    accept: { "text/plain": [".txt"] }
+                }]
+            });
+            console.log("fileHandle", fileHandle)
+            lastFileHandle = fileHandle
+
+            const fileStream = await fileHandle.createWritable();
+            //console.log("fileStream=",fileStream);
+
+            // (C) WRITE FILE
+            await fileStream.write(myBlob);
+            await fileStream.close();
+
+            set_current_filename(fileHandle.name);
+
+        } catch (error: any) {
+            //alert(error.name);
+            alert(error.message);
         }
 
-        el = document.getElementById('id_element_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        let n_elem = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
+    } else if (app.isMac) {
+        filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert", currentFilename);
+        download(filename, jsonse);
+        set_current_filename(filename);
+    } else {
 
-        const elem = Array.from(Array(n_elem), () => new Array(nSpalten));
-
-        for (i = 0; i < n_elem; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                elem[i][j] = child.value
-                //console.log(i,j,a[i][j]);
-            }
-        }
-
-        el = document.getElementById('id_knotenlasten_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        let nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const nloads = nZeilen
-        const nodalload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                nodalload[i][j] = child.value
-            }
-        }
-
-        el = document.getElementById('id_streckenlasten_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const nstreckenlasten = nZeilen
-        const linload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                linload[i][j] = child.value
-            }
-        }
-
-        el = document.getElementById('id_einzellasten_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const neinzellasten = nZeilen
-        const pointload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                pointload[i][j] = child.value
-            }
-        }
-
-        el = document.getElementById('id_temperaturlasten_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const ntemperaturlasten = nZeilen
-        const tempload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                tempload[i][j] = child.value
-            }
-        }
-
-        el = document.getElementById('id_vorspannungen_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const nvorspannungen = nZeilen
-        const sigvload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                sigvload[i][j] = child.value
-            }
-        }
-
-        el = document.getElementById('id_spannschloesser_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const nspannschloesser = nZeilen
-        const spannload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                spannload[i][j] = child.value
-            }
-        }
-
-        el = document.getElementById('id_stabvorverfomungen_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const nStabvorverfomungen = nZeilen
-        const stabvorverformung = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                stabvorverformung[i][j] = child.value
-            }
-        }
-
-        el = document.getElementById('id_lastfaelle_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const nlastfaelle = nZeilen
-        const lastfaelle = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                lastfaelle[i][j] = child.value
-            }
-        }
-
-        el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const nkombinationen = nZeilen
-        const kombination = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                kombination[i][j] = child.value
-            }
-        }
-
-        el = document.getElementById('id_nnodedisps_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const nNodeDisps = nZeilen
-        const nodeDisp0 = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                nodeDisp0[i][j] = child.value
-            }
-        }
-
-
-        let qsClassName = new Array(nQuerschnittSets)
-        let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(12));
-
-        for (i = 0; i < nQuerschnittSets; i++) {
-            console.log('get_querschnitt_length', get_querschnitt_length(i))
-            qsWerte[i] = get_querschnittRechteck(i)
-            qsClassName[i] = get_querschnitt_classname(i)
-        }
-
-        let polyData = {
-
-            'version': 1,
-
-            // 'unit_length': current_unit_length,
-            'system': system,
-            'nnodes': n_nodes,
-            'nelem': n_elem,
-            'nloads': nloads,
-            'nstreckenlasten': nstreckenlasten,
-            'neinzellasten': neinzellasten,
-            'ntempload': ntemperaturlasten,
-            'nvorspannungen': nvorspannungen,
-            'nspannschloesser': nspannschloesser,
-            'nloadcases': nlastfaelle,
-            'ncombinations': nkombinationen,
-            'nquerschnittsets': nQuerschnittSets,
-            'nstabvorverfomungen': nStabvorverfomungen,
-            'nelteilungen': nelTeilungen,
-            'n_iter': n_iterationen,
-            'THIIO_flag': THIIO_flag,
-            'maxU_node': maxU_node,
-            'maxU_dir': maxU_dir,
-            'maxU_schief': maxU_schief,
-            'neigv': neigv,
-            'nNodeDisps': nNodeDisps,
-
-
-            'elem': elem,
-            'node': node,
-            'nodalLoad': nodalload,
-            'streckenlasten': linload,
-            'einzellasten': pointload,
-            'tempLoad': tempload,
-            'sigvload': sigvload,
-            'spannload': spannload,
-            'stabvorverformung': stabvorverformung,
-            'loadcases': lastfaelle,
-            'combination': kombination,
-            'qsclassname': qsClassName,
-            'qswerte': qsWerte,
-            'nodeDisp0': nodeDisp0
-        };
-
-
-
-        let jsonse = JSON.stringify(polyData);
-
-        console.log("stringify", jsonse);
-
-        let filename: any
-
-        if (app.hasFSAccess) {
-
-            //window.alert("showSaveFilePicker bekannt")
-
-            try {
-                // (A) CREATE BLOB OBJECT
-                const myBlob = new Blob([jsonse], { type: "text/plain" });
-
-                // (B) FILE HANDLER & FILE STREAM
-                // @ts-ignore
-                const fileHandle = await window.showSaveFilePicker({
-                    suggestedName: currentFilename,
-                    startIn: lastFileHandle,
-                    types: [{
-                        description: "Text file",
-                        accept: { "text/plain": [".txt"] }
-                    }]
-                });
-                console.log("fileHandle", fileHandle)
-                lastFileHandle = fileHandle
-
-                const fileStream = await fileHandle.createWritable();
-                //console.log("fileStream=",fileStream);
-
-                // (C) WRITE FILE
-                await fileStream.write(myBlob);
-                await fileStream.close();
-
-                set_current_filename(fileHandle.name);
-
-            } catch (error: any) {
-                //alert(error.name);
-                alert(error.message);
-            }
-
-        } else if (app.isMac) {
-            filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert",currentFilename);
-            download(filename, jsonse);
+        //window.alert("showSaveFilePicker UNBEKANNT");
+        filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert", currentFilename);
+        const myFile = new File([jsonse], filename, { type: "text/plain;charset=utf-8" });
+        try {
+            saveAs(myFile);
             set_current_filename(filename);
-        } else {
-
-            //window.alert("showSaveFilePicker UNBEKANNT");
-            filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert",currentFilename);
-            const myFile = new File([jsonse], filename, { type: "text/plain;charset=utf-8" });
-            try {
-                saveAs(myFile);
-                set_current_filename(filename);
-            } catch (error: any) {
-                //alert(error.name);
-                alert(error.message);
-            }
-
+        } catch (error: any) {
+            //alert(error.name);
+            alert(error.message);
         }
-
 
     }
+
+
+    //}
 
     //  }
 }
