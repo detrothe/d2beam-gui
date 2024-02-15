@@ -15,6 +15,8 @@ import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 import "@shoelace-style/shoelace/dist/components/select/select.js";
 import "@shoelace-style/shoelace/dist/components/option/option.js";
 
+import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
+
 //import { styles } from '../styles/shared-styles';
 import "./globals";
 import { berechnungErforderlich } from "./globals";
@@ -734,10 +736,26 @@ async function initTabellenLoop() {
                 <dr-button-pm id="id_button_nteilungen" nel="10" inputid="nteilungen"  @change=${berechnungErforderlich}></dr-button-pm>
               </td>
             </tr>
+            <tr><td>&nbsp;<b>für Theorie II. Ordnung:</b></td></tr>
             <tr>
               <td id="id_niter" title="max. Anzahl Iterationen bei Th. II. Ordnung">&nbsp;max. Anzahl Iterationen:</td>
               <td>
                 <dr-button-pm id="id_button_niter" nel="5" inputid="niter"  @change=${berechnungErforderlich}></dr-button-pm>
+              </td>
+            </tr>
+            <tr>
+              <td id="id_eps_disp" title="max. Euklidische Fehlertoleranz eps für Verformungen">&nbsp;eps tol Verformung:</td>
+              <td>
+              <input
+                  type="number"
+                  step="any"
+                  id="id_eps_disp_tol"
+                  name="eps_disp_tol"
+                  class="input_tab"
+                  pattern="[0-9.,eE+-]*"
+                  value="1e-5"
+                  onchange="berechnungErforderlich()"
+                />
               </td>
             </tr>
             <tr>
@@ -1577,6 +1595,18 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     el.setValue(0);
     el = document.getElementById("id_button_nstabvorverformungen") as drButtonPM;
     el.setValue(0);
+
+    el = document.getElementById("id_button_niter") as drButtonPM;
+    el.setValue(5);
+
+    let eli = document.getElementById("id_eps_disp_tol") as HTMLInputElement;
+    eli.value = "1e-5";
+
+    let els = document.getElementById("id_P_delta_option") as SlSelect;
+    els.setAttribute("value", "false");
+
+    els = document.getElementById("id_ausgabe_SG_option") as SlSelect;
+    els.setAttribute("value", "true");
 
     resizeTables();
     clearTables();

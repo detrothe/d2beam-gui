@@ -485,13 +485,13 @@ export function rechnen(flag = 1) {
     el = document.getElementById('id_THIIO') as HTMLSelectElement;
     THIIO_flag = Number(el.value);
 
-    el = document.getElementById('id_maxu_node') as HTMLSelectElement;
+    el = document.getElementById('id_maxu_node') as HTMLInputElement;
     maxU_node = Number(el.value);
 
     el = document.getElementById('id_maxu_dir') as HTMLSelectElement;
     maxU_dir = Number(el.value);
 
-    el = document.getElementById('id_maxu_schief') as HTMLSelectElement;
+    el = document.getElementById('id_maxu_schief') as HTMLInputElement;
     maxU_schief = Number(el.value) / 1000.0;  // in m bzw. rad
 
     el = document.getElementById('id_neigv') as HTMLSelectElement;
@@ -502,6 +502,9 @@ export function rechnen(flag = 1) {
 
     el = document.getElementById('id_button_niter') as any;
     n_iterationen = Number(el.nel);
+
+    el = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
+    epsDisp_tol = Number(el.value)
 
     el = document.getElementById('id_ausgabe_SG_option') as any;
     if (el.value === 'true') ausgabe_gleichgewichtSG = true;

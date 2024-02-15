@@ -79,12 +79,12 @@ export function read_daten(eingabedaten: string) {
         else el.setValue(Math.max(jobj.n_iter, 2));
 
         let slel = document.getElementById('id_P_delta_option') as SlSelect;
-        if (jobj.P_delta === undefined) slel.setAttribute("value",'false')   //.setValue(false);
-        else slel.setAttribute("value",jobj.P_delta)   //.setValue(jobj.P_delta);
+        if (jobj.P_delta === undefined) slel.setAttribute("value", 'false')   //.setValue(false);
+        else slel.setAttribute("value", jobj.P_delta)   //.setValue(jobj.P_delta);
 
         slel = document.getElementById('id_ausgabe_SG_option') as SlSelect;
-        if (jobj.ausgabe_SG === undefined) slel.setAttribute("value",'true')
-        else slel.setAttribute("value",jobj.ausgabe_SG)
+        if (jobj.ausgabe_SG === undefined) slel.setAttribute("value", 'true')
+        else slel.setAttribute("value", jobj.ausgabe_SG)
 
 
         el = document.getElementById('id_button_nnodedisps') as drButtonPM;
@@ -109,6 +109,10 @@ export function read_daten(eingabedaten: string) {
 
         eli = document.getElementById('id_neigv') as HTMLInputElement;
         if (jobj.neigv !== undefined) eli.value = jobj.neigv
+
+        eli = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
+        if (jobj.epsDisp_tol === undefined) eli.value ='1e-3';
+        else eli.value = jobj.neigv;
     }
 
     resizeTables();
@@ -364,7 +368,7 @@ async function handleFileSelect_save() {
 
     // if (elem) {
 
-    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta,ausgabe_SG;
+    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol;
 
     let el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = el.nel;
@@ -392,6 +396,9 @@ async function handleFileSelect_save() {
 
     el = document.getElementById('id_ausgabe_SG_option') as HTMLSelectElement;
     ausgabe_SG = el.value;
+
+    el = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
+    epsDisp_tol = el.value;
 
     //el = document.getElementById('id_dialog_neue_eingabe') as HTMLElement;
     let system = System; //Number((el.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
@@ -607,6 +614,7 @@ async function handleFileSelect_save() {
         'nNodeDisps': nNodeDisps,
         'P_delta': P_delta,
         'ausgabe_SG': ausgabe_SG,
+        'epsDisp_tol': epsDisp_tol,
 
 
         'elem': elem,
