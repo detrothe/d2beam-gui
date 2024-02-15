@@ -112,7 +112,7 @@ export function read_daten(eingabedaten: string) {
 
         eli = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
         if (jobj.epsDisp_tol === undefined) eli.value ='1e-5';
-        else eli.value = jobj.neigv;
+        else eli.value = jobj.epsDisp_tol;
     }
 
     resizeTables();
