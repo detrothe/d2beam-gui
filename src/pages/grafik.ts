@@ -1216,7 +1216,7 @@ export function drawsystem(svg_id = 'artboard') {
 
                 if (show_labels) {
 
-                    console.log("show_labels", ielem, foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
+                    //console.log("show_labels", ielem, foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
                     let zp: number
                     if (!foundNeg && !foundPos && Math.abs(valueLeftPos - valueRightPos) < 0.0001) {
                         let xpix = (x1 + x2 + x3 + x4) / 4

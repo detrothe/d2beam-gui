@@ -1,5 +1,5 @@
 declare let Module: any;
-import { app, nlastfaelle_init, opendialog, contextmenu_querschnitt, add_new_cross_section } from "./haupt"
+import { app, nlastfaelle_init, opendialog, contextmenu_querschnitt, add_new_cross_section, nstabvorverfomungen_init } from "./haupt"
 import { TFVector, TFArray2D, TFArray3D, TFArray3D_0 } from "./TFArray"
 
 import { berechnungErfolgreich } from './globals'
@@ -35,6 +35,8 @@ export let nkombinationen: number = 0;
 export let nelTeilungen = 10;
 export let n_iterationen = 5;
 export let ausgabe_gleichgewichtSG = true      // Ausgabe der Gleichgewichtsschnittgrößen
+export let P_delta = false;
+export let epsDisp_tol = 1.e-5
 
 
 export let neigv: number = 2;
@@ -505,6 +507,11 @@ export function rechnen(flag = 1) {
     if (el.value === 'true') ausgabe_gleichgewichtSG = true;
     else ausgabe_gleichgewichtSG = false;
     console.log("== ausgabe_gleichgewichtSG =", ausgabe_gleichgewichtSG)
+
+    el = document.getElementById('id_P_delta_option') as any;
+    if (el.value === 'true') P_delta = true;
+    else P_delta = false;
+    console.log("== P_delta =", P_delta)
 
     console.log("== THIIO_flag", THIIO_flag, nelTeilungen, n_iterationen)
 
@@ -2099,6 +2106,8 @@ function calculate() {
 
     else if (THIIO_flag === 1) {
 
+        let eps_disp = 1.0, iter = 0
+
         if (nkombinationen < 1) {
             window.alert("Es muss mindestens eine Kombination definiert sein");
 
@@ -2114,6 +2123,8 @@ function calculate() {
         disp_print = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);
         u_lf = Array.from(Array(neq), () => new Array(nkombinationen).fill(0.0));
         u0_komb = Array.from(Array(neq), () => new Array(nkombinationen).fill(0.0));
+
+        const u_last = Array(neq);
 
         //console.log("nkombinationen", nkombinationen)
         stabendkraefte = new TFArray3D(1, 6, 1, nelemTotal, 1, nkombinationen);
@@ -2143,11 +2154,12 @@ function calculate() {
         for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
 
             pg.fill(0.0)
-            //console.log("pg init", pg)
+            u_last.fill(0.0);
 
             console.log("\n***************  K O M B I N A T I O N ", iKomb, "\n\n")
+            write("\n***************  K O M B I N A T I O N   " + iKomb + "\n")
 
-            for (let iter = 0; iter < n_iterationen; iter++) {
+            for (iter = 0; iter < n_iterationen; iter++) {
 
                 console.log("_________________  I T E R  = ", iter, " ___________________")
 
@@ -2306,7 +2318,24 @@ function calculate() {
                     el[ielem].berechneLagerkraefte();
                 }
 
-                if (iter === n_iterationen - 1) {
+                // Überprüfe Konvergenz der Verformungen
+
+                {
+                    let zaehler = 0.0, nenner = 0.0
+                    for (let i = 0; i < neq; i++) {
+                        zaehler += (u[i] - u_last[i]) ** 2
+                        nenner += u[i] * u[i]
+                    }
+                    zaehler = Math.sqrt(zaehler)
+                    nenner = Math.sqrt(nenner)
+                    if (nenner === 0.0) eps_disp = 0.0;
+                    else eps_disp = zaehler / nenner;
+                    write('Fehler eps in Iterationsschritt ' + iter + ' = ' + eps_disp)
+
+                    for (let i = 0; i < neq; i++) u_last[i] = u[i];
+                }
+
+                if ((iter === n_iterationen - 1) || (eps_disp < epsDisp_tol)) {
                     let disp = [3]
                     for (i = 0; i < nnodes; i++) {                      // Ausgabe der Verschiebungen der einzelnen Knoten im gedrehten Koordinatensystem
                         for (j = 0; j < 3; j++) {
@@ -2330,7 +2359,7 @@ function calculate() {
                                 const index = eload[ieload].lf - 1
                                 if (kombiTabelle[iKomb - 1][index] !== 0.0) {
                                     if (nodeDisp0[j].node === i) {
-                                        console.log("<<<<<<<<<<<<<<< nNodeDisps >>>>>>>>>>>>>", i, nodeDisp0[j].lf, iKomb)
+                                        //console.log("<<<<<<<<<<<<<<< nNodeDisps >>>>>>>>>>>>>", i, nodeDisp0[j].lf, iKomb)
                                         if (nodeDisp0[j].dispx0 !== 0) {
                                             disp[0] = nodeDisp0[j].dispx0 * kombiTabelle[iKomb - 1][index]
                                         }
@@ -2395,6 +2424,8 @@ function calculate() {
 
 
                 }
+
+                if (eps_disp < epsDisp_tol) break;
 
             }  // ende iter
 
@@ -2471,10 +2502,13 @@ function calculate() {
 
             ausgabe(iKomb, newDiv)
 
+            if (eps_disp < epsDisp_tol) {
+                write('Konvergenz bei den Verformungen erreicht, iter = ' + iter)
+            } else {
+                write('keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen')
+            }
 
-            //for (i = 0; i < nnodes; i++) {
-            //    console.log("eigenform_c", i,eigenform_container_node[iKomb-1]._(i + 1, 1, 1), eigenform_container_node[iKomb-1]._(i + 1, 2, 1), eigenform_container_node[iKomb-1]._(i + 1, 3, 1))
-            //}
+
 
         }   //ende iKomb
 

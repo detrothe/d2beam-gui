@@ -524,7 +524,7 @@ export class CTruss extends CElement {
         let j: number, k: number
         const help = Array.from(Array(6), () => new Array(this.neqeG));
 
-        console.log("berechneElementsteifigkeitsmatrix", theorie, this.normalkraft)
+        //console.log("berechneElementsteifigkeitsmatrix", theorie, this.normalkraft)
 
         if (theorie === 0) {
 
@@ -654,7 +654,7 @@ export class CTruss extends CElement {
                 this.estiff_sig[j][k] = -sum * this.normalkraft
             }
         }
-        console.log("NORMALKRAFT", this.normalkraft)
+        //console.log("NORMALKRAFT", this.normalkraft)
     }
 
     //---------------------------------------------------------------------------------------------
@@ -693,7 +693,7 @@ export class CTruss extends CElement {
             }
         }
 
-        console.log("this.u[]", this.neqeG, this.u)
+        //console.log("this.u[]", this.neqeG, this.u)
 
         for (j = 0; j < this.neqeG; j++) {
             sum = 0.0
@@ -703,7 +703,7 @@ export class CTruss extends CElement {
             this.F[j] = sum
         }
 
-        console.log("this.F[]", this.F)
+        //console.log("this.F[]", this.F)
 
         // normale Elementlasten hinzufügen
 
@@ -724,7 +724,7 @@ export class CTruss extends CElement {
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if (eload[ieload].element === ielem) {
                     const index = eload[ieload].lf - 1
-                    console.log("elem kombi index", index, kombiTabelle[iLastf - 1][index])
+                    //console.log("elem kombi index", index, kombiTabelle[iLastf - 1][index])
                     if (kombiTabelle[iLastf - 1][index] !== 0.0) {
 
                         for (i = 0; i < this.neqeG; i++) {
@@ -742,7 +742,7 @@ export class CTruss extends CElement {
 
         }
 
-        console.log("element F global ", this.F)
+        //console.log("element F global ", this.F)
 
         // TODO ?? Bei gedrehten Lagern erst ins x,z Koordinatensystem zurückdrehen, siehe Excel ab Zeile 434
 
@@ -758,12 +758,12 @@ export class CTruss extends CElement {
 
         for (i = 0; i < 2; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
 
-        console.log('lokale Schnittgrößen, Element', (ielem + 1), this.FL)
+        //console.log('lokale Schnittgrößen, Element', (ielem + 1), this.FL)
 
         this.normalkraft = this.FL[0]
         if (this.normalkraft > 0.0) this.normalkraft = 0.0           // keine Zugversteifung
 
-        console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
+        //console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
 
         for (i = 0; i < 4; i++) { // Verformungen lokal
             sum = 0.0
@@ -1175,7 +1175,7 @@ export class CTruss extends CElement {
                 edisp[j] = 0.0
             }
         }
-        console.log("disp", edisp)
+        //console.log("disp", edisp)
 
         for (let i = 0; i < 4; i++) {
             let sum = 0.0
@@ -1184,7 +1184,7 @@ export class CTruss extends CElement {
             }
             edispL[i] = sum
         }
-        console.log("dispL", edispL)
+        //console.log("dispL", edispL)
     }
 
 
@@ -1202,7 +1202,7 @@ export class CTruss extends CElement {
                 edisp[j] = 0.0
             }
         }
-        console.log("disp", edisp)
+        //console.log("disp", edisp)
 
         for (let i = 0; i < 4; i++) {
             let sum = 0.0
@@ -1211,7 +1211,7 @@ export class CTruss extends CElement {
             }
             edispL[i] = sum
         }
-        console.log("dispL", edispL)
+        //console.log("dispL", edispL)
     }
 
     //---------------------------------------------------------------------------------------------
@@ -1228,7 +1228,7 @@ export class CTruss extends CElement {
                 edisp[j] = 0.0
             }
         }
-        console.log("eigen, disp", edisp)
+        //console.log("eigen, disp", edisp)
 
         for (let i = 0; i < 4; i++) {
             let sum = 0.0
@@ -1237,7 +1237,7 @@ export class CTruss extends CElement {
             }
             edispL[i] = sum
         }
-        console.log("eigen, dispL", edispL)
+        //console.log("eigen, dispL", edispL)
     }
 
 

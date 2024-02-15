@@ -1,5 +1,7 @@
 //import './listener.js';
 
+import "@shoelace-style/shoelace/dist/components/select/select.js";
+
 import { drButtonPM } from "../components/dr-button-pm";
 import { app, clearTables, currentFilename, set_current_filename } from "./haupt";
 //import { testeZahl } from "./utility";
@@ -8,6 +10,7 @@ import { saveAs } from 'file-saver';
 
 import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length, set_querschnittszaehler } from "./rechnen"
 import { add_rechteck_querschnitt, setSystem, System } from './rechnen'
+import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
 
@@ -74,6 +77,15 @@ export function read_daten(eingabedaten: string) {
         el = document.getElementById('id_button_niter') as drButtonPM;
         if (jobj.n_iter === undefined) el.setValue(5);
         else el.setValue(Math.max(jobj.n_iter, 2));
+
+        let slel = document.getElementById('id_P_delta_option') as SlSelect;
+        if (jobj.P_delta === undefined) slel.setAttribute("value",'false')   //.setValue(false);
+        else slel.setAttribute("value",jobj.P_delta)   //.setValue(jobj.P_delta);
+
+        slel = document.getElementById('id_ausgabe_SG_option') as SlSelect;
+        if (jobj.ausgabe_SG === undefined) slel.setAttribute("value",'true')
+        else slel.setAttribute("value",jobj.ausgabe_SG)
+
 
         el = document.getElementById('id_button_nnodedisps') as drButtonPM;
         if (jobj.nNodeDisps === undefined) el.setValue(0);
@@ -352,7 +364,7 @@ async function handleFileSelect_save() {
 
     // if (elem) {
 
-    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv;
+    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta,ausgabe_SG;
 
     let el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = el.nel;
@@ -374,6 +386,12 @@ async function handleFileSelect_save() {
 
     el = document.getElementById('id_neigv') as HTMLSelectElement;
     neigv = el.value;
+
+    el = document.getElementById('id_P_delta_option') as HTMLSelectElement;
+    P_delta = el.value;
+
+    el = document.getElementById('id_ausgabe_SG_option') as HTMLSelectElement;
+    ausgabe_SG = el.value;
 
     //el = document.getElementById('id_dialog_neue_eingabe') as HTMLElement;
     let system = System; //Number((el.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
@@ -587,6 +605,8 @@ async function handleFileSelect_save() {
         'maxU_schief': maxU_schief,
         'neigv': neigv,
         'nNodeDisps': nNodeDisps,
+        'P_delta': P_delta,
+        'ausgabe_SG': ausgabe_SG,
 
 
         'elem': elem,

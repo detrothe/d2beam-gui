@@ -735,9 +735,18 @@ async function initTabellenLoop() {
               </td>
             </tr>
             <tr>
-              <td id="id_niter" title="Anzahl Iterationen bei Th. II. Ordnung">&nbsp;Anzahl Iterationen:</td>
+              <td id="id_niter" title="max. Anzahl Iterationen bei Th. II. Ordnung">&nbsp;max. Anzahl Iterationen:</td>
               <td>
                 <dr-button-pm id="id_button_niter" nel="5" inputid="niter"  @change=${berechnungErforderlich}></dr-button-pm>
+              </td>
+            </tr>
+            <tr>
+              <td id="id_P_delta" title="Art der geometrischen Steifigkeitsmatrix">&nbsp;Geom. Steifigkeitsmatrix:</td>
+              <td>
+              <sl-select  value="false" id="id_P_delta_option" >
+                 <sl-option value='false' @click=${berechnungErforderlich} > vollständiger Ansatz </sl-option>
+                 <sl-option value='true' @click=${berechnungErforderlich} >nur P-Δ Effekt</sl-option>
+              </sl-select>
               </td>
             </tr>
             <tr>

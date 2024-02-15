@@ -2,7 +2,7 @@ import { CElement } from "./element"
 
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
-    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung
+    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung, P_delta
 } from "./rechnen"
 
 import { BubbleSort } from "./lib"
@@ -540,47 +540,57 @@ export class CTimoshenko_beam extends CElement {
         this.estm[5][5] = (1.0 + 3.0 * psi) * EI / sl
 
 
-        EAL = 0.0
-        const fact = 1.0 / 60.0 / sl
-        const psi2 = psi * psi
+        if (P_delta) {
+            for (let i = 0; i < 6; i++) this.ksig[i].fill(0.0);
+            EAL = 1.0 / sl
 
-        this.ksig[0][0] = EAL
-        this.ksig[0][1] = 0.0
-        this.ksig[0][2] = 0.0
-        this.ksig[0][3] = -EAL
-        this.ksig[0][4] = 0.0
-        this.ksig[0][5] = 0.0
-        this.ksig[1][0] = 0.0
-        this.ksig[1][1] = (60.0 + 12.0 * psi2) * fact
-        this.ksig[1][2] = -6. * psi2 * fact * sl
-        this.ksig[1][3] = 0.0
-        this.ksig[1][4] = -(60. + 12. * psi2) * fact
-        this.ksig[1][5] = -6. * psi2 * fact * sl
-        this.ksig[2][0] = 0.0
-        this.ksig[2][1] = -6. * psi2 * fact * sl
-        this.ksig[2][2] = (5. + 3. * psi2) * fact * L2
-        this.ksig[2][3] = 0.0
-        this.ksig[2][4] = 6. * psi2 * fact * sl
-        this.ksig[2][5] = (3. * psi2 - 5.) * fact * L2
-        this.ksig[3][0] = -EAL
-        this.ksig[3][1] = 0.0
-        this.ksig[3][2] = 0.0
-        this.ksig[3][3] = EAL
-        this.ksig[3][4] = 0.0
-        this.ksig[3][5] = 0.0
-        this.ksig[4][0] = 0.0
-        this.ksig[4][1] = -(60.0 + 12.0 * psi2) * fact
-        this.ksig[4][2] = 6. * psi2 * fact * sl
-        this.ksig[4][3] = 0.0
-        this.ksig[4][4] = (60.0 + 12.0 * psi2) * fact
-        this.ksig[4][5] = 6. * psi2 * fact * sl
-        this.ksig[5][0] = 0.0
-        this.ksig[5][1] = -6. * psi2 * fact * sl
-        this.ksig[5][2] = (3. * psi2 - 5.) * fact * L2
-        this.ksig[5][3] = 0.0
-        this.ksig[5][4] = 6. * psi2 * fact * sl
-        this.ksig[5][5] = (5. + 3. * psi2) * fact * L2
+            this.ksig[1][1] = EAL
+            this.ksig[1][4] = -EAL
+            this.ksig[4][1] = -EAL
+            this.ksig[4][4] = EAL
 
+        } else {
+            EAL = 0.0
+            const fact = 1.0 / 60.0 / sl
+            const psi2 = psi * psi
+
+            this.ksig[0][0] = EAL
+            this.ksig[0][1] = 0.0
+            this.ksig[0][2] = 0.0
+            this.ksig[0][3] = -EAL
+            this.ksig[0][4] = 0.0
+            this.ksig[0][5] = 0.0
+            this.ksig[1][0] = 0.0
+            this.ksig[1][1] = (60.0 + 12.0 * psi2) * fact
+            this.ksig[1][2] = -6. * psi2 * fact * sl
+            this.ksig[1][3] = 0.0
+            this.ksig[1][4] = -(60. + 12. * psi2) * fact
+            this.ksig[1][5] = -6. * psi2 * fact * sl
+            this.ksig[2][0] = 0.0
+            this.ksig[2][1] = -6. * psi2 * fact * sl
+            this.ksig[2][2] = (5. + 3. * psi2) * fact * L2
+            this.ksig[2][3] = 0.0
+            this.ksig[2][4] = 6. * psi2 * fact * sl
+            this.ksig[2][5] = (3. * psi2 - 5.) * fact * L2
+            this.ksig[3][0] = -EAL
+            this.ksig[3][1] = 0.0
+            this.ksig[3][2] = 0.0
+            this.ksig[3][3] = EAL
+            this.ksig[3][4] = 0.0
+            this.ksig[3][5] = 0.0
+            this.ksig[4][0] = 0.0
+            this.ksig[4][1] = -(60.0 + 12.0 * psi2) * fact
+            this.ksig[4][2] = 6. * psi2 * fact * sl
+            this.ksig[4][3] = 0.0
+            this.ksig[4][4] = (60.0 + 12.0 * psi2) * fact
+            this.ksig[4][5] = 6. * psi2 * fact * sl
+            this.ksig[5][0] = 0.0
+            this.ksig[5][1] = -6. * psi2 * fact * sl
+            this.ksig[5][2] = (3. * psi2 - 5.) * fact * L2
+            this.ksig[5][3] = 0.0
+            this.ksig[5][4] = 6. * psi2 * fact * sl
+            this.ksig[5][5] = (5. + 3. * psi2) * fact * L2
+        }
 
     }
 
