@@ -111,7 +111,7 @@ export function read_daten(eingabedaten: string) {
         if (jobj.neigv !== undefined) eli.value = jobj.neigv
 
         eli = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
-        if (jobj.epsDisp_tol === undefined) eli.value ='1e-3';
+        if (jobj.epsDisp_tol === undefined) eli.value ='1e-5';
         else eli.value = jobj.neigv;
     }
 
