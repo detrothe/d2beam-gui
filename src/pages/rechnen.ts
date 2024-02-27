@@ -37,6 +37,7 @@ export let n_iterationen = 5;
 export let ausgabe_gleichgewichtSG = true      // Ausgabe der Gleichgewichtsschnittgrößen
 export let P_delta = false;
 export let epsDisp_tol = 1.e-5
+export let nnodalMass: number = 0;
 
 
 export let neigv: number = 2;
@@ -66,6 +67,7 @@ export let kombiTabelle = [] as number[][]
 export let kombiTabelle_txt = [] as string[]
 export let lastfall_bezeichnung = [] as string[]
 export let alpha_cr = [] as number[][]
+export let nodalmass = [] as TMass[]
 
 export let maxU_schief = 0.03
 export let maxU_node = -1
@@ -78,6 +80,7 @@ export let ndivsl = 3;
 export let art = 1;
 export let intArt = 2;
 export let THIIO_flag = 0;
+export let stadyn = 0;
 export let System = 0;        // Stabwerk = 0, Fachwerk = 1
 
 export let el = [] as any
@@ -241,6 +244,12 @@ class TLoads {
     p = [0.0, 0.0, 0.0]
     Px = 0.0                                 // Last in globale x-Richtung
     Pz = 0.0                                 // Last in globale z-Richtung
+}
+
+class TMass {
+    node: number = -1
+    mass = 0.0
+    theta = 0.0
 }
 
 class TElLoads {
@@ -516,6 +525,16 @@ export function rechnen(flag = 1) {
     else P_delta = false;
     console.log("== P_delta =", P_delta)
 
+    const sel = document.getElementById("id_stadyn") as HTMLSelectElement;
+    if (sel.value === '0') stadyn = 0;
+    else stadyn = 1;
+    console.log("== stadyn =", stadyn)
+
+
+    el = document.getElementById('id_button_nnodalmass') as any;
+    nnodalMass = Number(el.nel);
+
+
     console.log("== THIIO_flag", THIIO_flag, nelTeilungen, n_iterationen)
 
     console.log("== intAt, art", intArt, art, ndivsl)
@@ -528,6 +547,7 @@ export function rechnen(flag = 1) {
     read_nodal_loads();
     read_element_loads();
     read_stabvorverformungen();
+    if ( stadyn === 1) read_nodal_mass();
 
     if (flag === 1) {
         let fehler = check_input();
@@ -913,6 +933,45 @@ function read_nodal_loads() {
         }
 
         console.log("R", izeile, load[izeile - 1])
+    }
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function read_nodal_mass() {
+    //-----------------------------------------------------------------------------------------------------------
+
+    let i: number;
+
+    const el = document.getElementById('id_knotenmassen_tabelle');
+    //console.log('EL: >>', el);
+    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+
+    const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    //console.log('nZeilen', table.rows.length);
+    //console.log('nSpalten', table.rows[0].cells.length);
+
+    nodalmass.length = 0
+    for (i = 0; i < nnodalMass; i++) {
+        nodalmass.push(new TMass())
+    }
+
+    let nRowTab = table.rows.length;
+    let nColTab = table.rows[0].cells.length;
+    let wert: any;
+    const shad = el?.shadowRoot?.getElementById('mytable')
+
+    for (let izeile = 1; izeile < nRowTab; izeile++) {
+        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+            wert = child.value;
+            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+            if (ispalte === 1) nodalmass[izeile - 1].node = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) nodalmass[izeile - 1].mass = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) nodalmass[izeile - 1].theta = Number(testNumber(wert, izeile, ispalte, shad));
+        }
+
+        console.log("nodalmass", izeile, nodalmass[izeile - 1])
     }
 }
 

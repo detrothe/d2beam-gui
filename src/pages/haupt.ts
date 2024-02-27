@@ -85,6 +85,7 @@ export const nkombinationen_init = "2";
 export const nstabvorverfomungen_init = "0";
 export const nvorspannungen_init = "0";
 export const nspannschloesser_init = "0";
+export const nnodalmass_init = "0";
 export let column_string_kombitabelle: string;
 export let typs_string_kombitabelle: string;
 //export let column_width_elementtabelle: string;
@@ -188,6 +189,7 @@ async function initTabellenLoop() {
       <sl-tab slot="nav" panel="tab-knotenlasten">Knotenlasten</sl-tab>
       <sl-tab slot="nav" panel="tab-elementlasten">Elementlasten</sl-tab>
       <sl-tab slot="nav" panel="tab-stabvorverfomungen">Vorverformungen</sl-tab>
+      <sl-tab id="id_tab_mass" slot="nav" panel="tab-mass" disabled>Massen</sl-tab>
       <sl-tab id="id_tab_kombi" slot="nav" panel="tab-kombinationen">Kombinationen</sl-tab>
       <sl-tab slot="nav" panel="tab-ergebnisse">Ergebnisse</sl-tab>
       <sl-tab slot="nav" panel="tab-pro">Pro</sl-tab>
@@ -230,9 +232,9 @@ async function initTabellenLoop() {
             <tr>
               <td>&nbsp;&nbsp; Berechnungsart :</td>
               <td>
-                <select name="stadyn" id="id_stadyn" style="min-width:100%;">
+                <select @change="${berechnungsart_changed}" name="stadyn" id="id_stadyn" style="min-width:100%;">
                   <option value="0" selected>statisch</option>
-                  <option value="1">dynamisch TODO</option>
+                  <option value="1">dynamisch</option>
                 </select>
               </td>
               <td></td>
@@ -832,6 +834,32 @@ async function initTabellenLoop() {
         </table>
     -->
       </sl-tab-panel>
+
+      <!--------------------------------------------------------------------------------------->
+      <sl-tab-panel name="tab-mass">
+
+      <p><b>Eingabe der Knotenmassen</b><br /><br /></p>
+
+      <p> M = Masse<br>
+      Θ<sub>y</sub> = Massenträgheitsmoment um y-Achse<br>
+      </p>
+
+      <p>
+          Anzahl Knotenmassen:
+
+          <dr-button-pm id="id_button_nnodalmass" nel="${nnodalmass_init}" inputid="nnodalmass"></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Resize Tabelle</sl-button>
+          <br /><br />
+        </p>
+        <dr-tabelle
+          id="id_knotenmassen_tabelle"
+          nzeilen="${nnodalmass_init}"
+          nspalten="3"
+          columns='["No", "Knoten", "M [t]", "Θ<sub>y</sub> [tm²]"]'
+        ></dr-tabelle>
+
+
+    </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-info">
@@ -1487,6 +1515,14 @@ export function resizeTables() {
     el?.setAttribute("nspalten", String(Number(nelem) + 1)); // +1 wegen Kommentarspalte
   }
 
+  {
+    const el_elemente = document.getElementById("id_button_nnodalmass");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nnodalmass") as HTMLInputElement).value;
+
+    const el = document.getElementById("id_knotenmassen_tabelle");
+    el?.setAttribute("nzeilen", nelem);
+  }
+
   if (System === 0) showColumnsForStabwerk();
   else hideColumnsForFachwerk();
 }
@@ -1666,4 +1702,15 @@ function elem_select_changed() {
   const checkbox = document.getElementById("id_glsystem_darstellen") as HTMLInputElement;
   console.log("checkbox", checkbox.checked);
   if (checkbox.checked) show_gleichungssystem(true);
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function berechnungsart_changed() {
+  //---------------------------------------------------------------------------------------------------------------
+  console.log("berechnungsart_changed");
+  const sel = document.getElementById("id_stadyn") as HTMLSelectElement;
+  const id_mass = document.getElementById("id_tab_mass") as SlSelect;
+  if (sel.value === "0") id_mass.disabled = true;
+  else id_mass.disabled = false;
+  berechnungErforderlich();
 }
