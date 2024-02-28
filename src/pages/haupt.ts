@@ -189,9 +189,9 @@ async function initTabellenLoop() {
       <sl-tab slot="nav" panel="tab-knotenlasten">Knotenlasten</sl-tab>
       <sl-tab slot="nav" panel="tab-elementlasten">Elementlasten</sl-tab>
       <sl-tab slot="nav" panel="tab-stabvorverfomungen">Vorverformungen</sl-tab>
-      <sl-tab id="id_tab_mass" slot="nav" panel="tab-mass" disabled>Massen</sl-tab>
       <sl-tab id="id_tab_kombi" slot="nav" panel="tab-kombinationen">Kombinationen</sl-tab>
       <sl-tab slot="nav" panel="tab-ergebnisse">Ergebnisse</sl-tab>
+      <sl-tab id="id_tab_mass" slot="nav" panel="tab-mass" disabled>Dynamik</sl-tab>
       <sl-tab slot="nav" panel="tab-pro">Pro</sl-tab>
       <sl-tab slot="nav" panel="tab-info">Info</sl-tab>
       <sl-tab slot="nav" panel="tab-menue3">ꔷꔷꔷ</sl-tab>

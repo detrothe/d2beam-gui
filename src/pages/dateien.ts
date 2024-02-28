@@ -91,7 +91,18 @@ export function read_daten(eingabedaten: string) {
         if (jobj.nNodeDisps === undefined) el.setValue(0);
         else el.setValue(jobj.nNodeDisps);
 
-        let els = document.getElementById('id_THIIO') as HTMLSelectElement;
+
+        let els = document.getElementById('id_stadyn') as HTMLSelectElement;
+        if (jobj.stadyn == undefined) els.value = '0';
+        else els.value = jobj.stadyn;
+        if (jobj.stadyn === '1') { // Dynamik : tab clickbar machen
+            (document.getElementById("id_tab_mass") as SlSelect).disabled = false;
+        }
+
+        el = document.getElementById('id_button_nnodalmass') as drButtonPM;
+        el.setValue(jobj.nnodalmass);
+
+        els = document.getElementById('id_THIIO') as HTMLSelectElement;
         if (jobj.THIIO_flag !== undefined) {
             els.options[jobj.THIIO_flag].selected = true;
         }
@@ -111,7 +122,7 @@ export function read_daten(eingabedaten: string) {
         if (jobj.neigv !== undefined) eli.value = jobj.neigv
 
         eli = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
-        if (jobj.epsDisp_tol === undefined) eli.value ='1e-5';
+        if (jobj.epsDisp_tol === undefined) eli.value = '1e-5';
         else eli.value = jobj.epsDisp_tol;
     }
 
@@ -298,6 +309,18 @@ export function read_daten(eingabedaten: string) {
         }
     }
 
+
+    el = document.getElementById('id_knotenmassen_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.nodalmass[i - 1][j - 1];
+        }
+    }
+
 }
 
 //------------------------------------------------------------------------------------------------
@@ -368,7 +391,7 @@ async function handleFileSelect_save() {
 
     // if (elem) {
 
-    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol;
+    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, stadyn;
 
     let el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = el.nel;
@@ -378,6 +401,9 @@ async function handleFileSelect_save() {
 
     el = document.getElementById('id_THIIO') as HTMLSelectElement;
     THIIO_flag = el.value;
+
+    el = document.getElementById('id_stadyn') as HTMLSelectElement;
+    stadyn = el.value;
 
     el = document.getElementById('id_maxu_node') as HTMLSelectElement;
     maxU_node = el.value;
@@ -577,6 +603,20 @@ async function handleFileSelect_save() {
     }
 
 
+    el = document.getElementById('id_knotenmassen_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const nnodalmass = nZeilen
+    const nodalmass = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            nodalmass[i][j] = child.value
+        }
+    }
+
     let qsClassName = new Array(nQuerschnittSets)
     let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(12));
 
@@ -615,6 +655,8 @@ async function handleFileSelect_save() {
         'P_delta': P_delta,
         'ausgabe_SG': ausgabe_SG,
         'epsDisp_tol': epsDisp_tol,
+        'stadyn': stadyn,
+        'nnodalmass': nnodalmass,
 
 
         'elem': elem,
@@ -630,7 +672,8 @@ async function handleFileSelect_save() {
         'combination': kombination,
         'qsclassname': qsClassName,
         'qswerte': qsWerte,
-        'nodeDisp0': nodeDisp0
+        'nodeDisp0': nodeDisp0,
+        'nodalmass': nodalmass
     };
 
 
@@ -676,10 +719,10 @@ async function handleFileSelect_save() {
             alert(error.message);
         }
 
-    // } else if (app.isMac) {
-    //     filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert", currentFilename);
-    //     download(filename, jsonse);
-    //     set_current_filename(filename);
+        // } else if (app.isMac) {
+        //     filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert", currentFilename);
+        //     download(filename, jsonse);
+        //     set_current_filename(filename);
     } else {
 
         //window.alert("showSaveFilePicker UNBEKANNT");
