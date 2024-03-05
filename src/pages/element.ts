@@ -17,9 +17,7 @@ export class CElement {
         console.log("class element: berechneElementsteifigkeitsmatrix", theorie)
     }
 
-    berechneLokaleElementsteifigkeitmatrix() {
-
-    }
+    berechneLokaleElementsteifigkeitmatrix() { }
 
     addiereElementsteifigkeitmatrix(stiff: number[][]) {
         console.log("class element: addiereElementsteifigkeitmatrix", stiff[0][0])
@@ -30,6 +28,12 @@ export class CElement {
     }
 
     berechneElementsteifigkeitsmatrix_Ksig() { }
+
+    berechneElementmassenmatrix() { }
+
+    addiereElementmassmatrix(mass_matrix: number[][]) {
+        console.log("class element: addiereElementmassmatrix not defined", mass_matrix[0][0])
+    }
 
     berechneInterneKraefte(ielem: number, iLastf: number, iter: number, u: number[]) {
         console.log("class element: berechneInterneKraefte", ielem, iLastf, iter, u[0])

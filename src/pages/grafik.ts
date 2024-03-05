@@ -4,11 +4,12 @@ import Two from 'two.js'
 import { CTrans } from './trans';
 import { myFormat, write } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
-import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb } from "./rechnen";
+import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
 import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all, kombiTabelle, nNodeDisps, nodeDisp0, System, STABWERK, FACHWERK } from "./rechnen";
+import { maxValue_dyn_eigenform, eigenform_dyn } from "./rechnen";
 
 //import { Pane } from 'tweakpane';
 import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
@@ -63,6 +64,8 @@ let show_gesamtverformung = false;
 
 let show_lasten_temp = true;
 let show_gleichgewichtSG = true;
+
+let show_dyn_eigenformen = false;
 
 let opacity = 0.5
 
@@ -251,7 +254,18 @@ export function init_grafik(flag = 1) {
             el_select.appendChild(option);
         }
 
-        el_select_eigv.style.display = "none"
+        if (stadyn === 0) {
+            el_select_eigv.style.display = "none"
+        } else {
+            el_select_eigv.style.display = "block"
+
+            for (let i = 0; i < neigv; i++) {
+                let option = document.createElement('option');
+                option.value = String(+i + 1)
+                option.textContent = 'Eigenform ' + (+i + 1);
+                el_select_eigv.appendChild(option);
+            }
+        }
 
     } else if (THIIO_flag === 1) {
 
@@ -414,7 +428,7 @@ export function drawsystem(svg_id = 'artboard') {
     */
 
 
-    let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen || show_stabvorverformung);
+    let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen || show_stabvorverformung || show_dyn_eigenformen);
 
     //console.log("O N L Y  L A B E L S", onlyLabels)
 
@@ -803,6 +817,103 @@ export function drawsystem(svg_id = 'artboard') {
         }
     }
 
+
+    // Eigenformen aus Dynamik
+
+    if (show_dyn_eigenformen && show_selection && (maxValue_dyn_eigenform[draw_eigenform - 1] > 0.0)) {
+
+        let xx1, xx2, zz1, zz2
+        let dx: number, x: number, eta: number, sl: number, nenner: number
+        let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
+
+        let u: number, w: number, uG: number, wG: number
+        let edispL: number[] = new Array(6)
+        let ikomb = draw_lastfall
+        let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+        let xmem = 0.0, zmem = 0.0
+
+
+        let scalefactor = 0.1 * slmax / maxValue_dyn_eigenform[draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
+
+        scalefactor *= scaleFactor_panel
+
+        console.log("scalefaktor", scalefactor, slmax)
+        console.log("draw_eigenform", draw_eigenform)
+
+        for (let ielem = 0; ielem < nelem; ielem++) {
+            maxU = 0.0
+
+            x1 = Math.round(tr.xPix(element[ielem].x1));
+            z1 = Math.round(tr.zPix(element[ielem].z1));
+            x2 = Math.round(tr.xPix(element[ielem].x2));
+            z2 = Math.round(tr.zPix(element[ielem].z2));
+
+            element[ielem].get_edispL_dyn_eigenform(edispL, draw_eigenform - 1)
+
+            dx = element[ielem].sl / nelTeilungen
+            eta = element[ielem].eta
+            sl = element[ielem].sl
+            nenner = sl ** 3 + 12 * eta * sl
+
+            x = 0.0; xx2 = 0.0; zz2 = 0.0
+            for (let i = 0; i <= nelTeilungen; i++) {
+                if (System === 0) {
+                    Nu[0] = (1.0 - x / sl);
+                    Nu[1] = x / sl
+                    Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                    Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                    Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                    Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                    u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                    w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                } else {
+                    Nu[0] = (1.0 - x / sl);
+                    Nu[1] = x / sl
+                    u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                    w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+                }
+                uG = element[ielem].cosinus * u - element[ielem].sinus * w
+                wG = element[ielem].sinus * u + element[ielem].cosinus * w
+
+                //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
+                xx1 = xx2; zz1 = zz2;
+                xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
+                zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+                //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
+                if (i > 0) {
+                    //console.log("line", xx1, zz1, xx2, zz2)
+                    let line = two.makeLine(xx1, zz1, xx2, zz2);
+                    line.linewidth = 5;
+                }
+
+                dispG = Math.sqrt(uG * uG + wG * wG)
+
+                if (dispG > maxU) {
+                    maxU = dispG
+                    x_max = xx2
+                    z_max = zz2
+                    xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+                    zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+                }
+
+                x = x + dx
+            }
+
+            if (show_labels && maxU > 0.0) {
+
+                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                pfeil.stroke = '#D3D3D3'
+
+                const str = myFormat(maxU, 1, 2)
+                const txt = two.makeText(str, x_max, z_max, style_txt)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+
+            }
+
+        }
+    }
 
     // Schiefstellung
 
@@ -1495,14 +1606,17 @@ export function drawsystem(svg_id = 'artboard') {
     if (flag_eingabe != 0) draw_gelenke(two);
 
     //console.log("++++ show_lasten_temp", show_lasten_temp)
-    if (show_lasten_temp && show_selection) {
-        draw_elementlasten(two);
-        draw_knotenkraefte(two);
-        if (nNodeDisps > 0) draw_knotenverformungen(two);
-    }
-    if (show_selection) {
-        if (!(show_labels && onlyLabels)) {
-            if (show_lagerkraefte && flag_eingabe === 1) draw_lagerkraefte(two);
+
+    if (stadyn === 0) {
+        if (show_lasten_temp && show_selection) {
+            draw_elementlasten(two);
+            draw_knotenkraefte(two);
+            if (nNodeDisps > 0) draw_knotenverformungen(two);
+        }
+        if (show_selection) {
+            if (!(show_labels && onlyLabels)) {
+                if (show_lagerkraefte && flag_eingabe === 1) draw_lagerkraefte(two);
+            }
         }
     }
 
@@ -3512,6 +3626,19 @@ function reset_grafik() {
     console.log("reset_grafik=")
     drawsystem();
 }
+
+//--------------------------------------------------------------------------------------------------------
+function draw_dyn_eigenformen_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_dyn_verformungen_grafik");
+    show_dyn_eigenformen = !show_dyn_eigenformen;
+
+    //if (Gesamt_ys === undefined || isNaN(yM)) return;
+
+    drawsystem();
+}
+
 //---------------------------------------------------------------------------------- a d d E v e n t L i s t e n e r
 
 window.addEventListener('draw_label_grafik', draw_label_grafik);
@@ -3528,6 +3655,8 @@ window.addEventListener('draw_lagerkraefte_grafik', draw_lagerkraefte_grafik);
 window.addEventListener('draw_umriss_grafik', draw_umriss_grafik);
 window.addEventListener('draw_gesamtverformung_grafik', draw_gesamtverformung_grafik);
 window.addEventListener('draw_gleichgewicht_SG_grafik', draw_gleichgewicht_SG_grafik);
+
+window.addEventListener('draw_dyn_eigenformen_grafik', draw_dyn_eigenformen_grafik);
 
 window.addEventListener('scale_factor', scale_factor);
 window.addEventListener('reset_webgl', reset_grafik);

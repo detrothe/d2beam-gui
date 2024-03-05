@@ -43,6 +43,7 @@ export function myPanel() {
         show_umriss: false,
         Gesamtverformung: false,
         Gleichgewicht_SG: true,
+        dyn_eigenform: false,
 
         Reset: function () {
             window.dispatchEvent(new Event("reset_webgl"));
@@ -55,7 +56,7 @@ export function myPanel() {
     let querkraft = 'Querkraft'
     let moment = 'Moment'
     let skalierung = 'Skalierung'
-    let eigenformen = 'Eigenformen'
+    let eigenformen = 'Knickfigur'
     let lasten_anzeigen = 'Lasten anzeigen'
     // let skalierung_pfeile = '-'
     let lager_kraefte = 'Lagerkräfte anzeigen'
@@ -159,6 +160,14 @@ export function myPanel() {
 
 
     // nested controllers
+    const dyn_folder = gui.addFolder('Dynamik');
+    dyn_folder.open(false);
+
+    dyn_folder.add(obj, 'dyn_eigenform').name('Eigenformen').onChange(() => {
+        window.dispatchEvent(new Event("draw_dyn_eigenformen_grafik"));
+    });
+
+    // nested controllers
     const folder = gui.addFolder('Optionen');
     folder.open(false);
 
@@ -179,6 +188,8 @@ export function myPanel() {
     gui.add(obj, 'Reset').name('Reset Grafik')
 
     gui.close();
+
+
 
 }
 

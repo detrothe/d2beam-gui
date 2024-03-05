@@ -38,7 +38,8 @@ export let ausgabe_gleichgewichtSG = true      // Ausgabe der Gleichgewichtsschn
 export let P_delta = false;
 export let epsDisp_tol = 1.e-5
 export let nnodalMass: number = 0;
-
+export let eigenform_dyn = [] as number[][]
+export let maxValue_dyn_eigenform = [] as number[]
 
 export let neigv: number = 2;
 export let nNodeDisps = 0;
@@ -2598,7 +2599,11 @@ function calculate() {
     return 0;
 }
 
-
+/**
+ *
+ * @param stiff
+ * @param mass_matrix
+ */
 //---------------------------------------------------------------------------------------------------------------
 function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
     //---------------------------------------------------------------------------------------------------------------
@@ -2615,8 +2620,8 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
         el[ielem].berechneElementsteifigkeitsmatrix(0);
         el[ielem].addiereElementsteifigkeitmatrix(stiff)
 
-        // el[ielem].berechneElementsteifigkeitsmatrix_Ksig();
-        // el[ielem].addiereElementsteifigkeitmatrix_ksig(mass_matrix)
+        el[ielem].berechneElementmassenmatrix();
+        el[ielem].addiereElementmassmatrix(mass_matrix)
 
     }
 
@@ -2668,10 +2673,26 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
     for (i = 0; i < neigv; i++) dyn_omega[i] = omega_array[i]
 
     for (i = 0; i < neigv; i++) {
-        console.log("omega", i, dyn_omega[i], dyn_omega[i]/2/Math.PI)
+        console.log("omega", +i+1, dyn_omega[i], dyn_omega[i] / 2 / Math.PI)
     }
 
     let eigenform_array = new Float64Array(Module.HEAPF64.buffer, eigenform_ptr, neq * neigv);
+
+    eigenform_dyn.length = 0;
+    eigenform_dyn = Array.from(Array(neigv), () => new Array(neq).fill(0.0));
+    maxValue_dyn_eigenform.length = 0
+    maxValue_dyn_eigenform = new Array(neigv).fill(0.0)
+
+    let offset = 0
+    for (let ieigv = 0; ieigv < neigv; ieigv++) {
+
+        for (i = 0; i < neq; i++) {
+            eigenform_dyn[ieigv][i] = eigenform_array[i + offset]
+            if (Math.abs(eigenform_array[i + offset]) > maxValue_dyn_eigenform[ieigv]) maxValue_dyn_eigenform[ieigv] = Math.abs(eigenform_array[i + offset]);
+        }
+        offset = offset + neq
+        console.log(" maxValue_dyn_eigenform[ieigv+1] = ", +ieigv+1, maxValue_dyn_eigenform[ieigv])
+    }
 
 }
 

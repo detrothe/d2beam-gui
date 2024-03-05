@@ -2,7 +2,8 @@ import { CElement } from "./element"
 
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
-    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung, P_delta
+    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung, P_delta,
+    stadyn, eigenform_dyn
 } from "./rechnen"
 
 import { BubbleSort } from "./lib"
@@ -56,12 +57,15 @@ export class CTimoshenko_beam extends CElement {
     estmL2: number[][] = []       // lokale Elementsteifigkeitsmatrix incl. TH.II.O., für Lastvektor von Knotenverformungen
     ksig: number[][] = []
     //trans: number[][] = []
+    emass: number[][] = []
+    mue = 0.0                     // Dichte * Area für Dynamik Massenmatrix
 
     transU: number[][] = []       // Transformation von global nach lokal
     transF: number[][] = []       // Transformation von lokal nach global = transU ^T
     TfG2L: number[][] = []        // Transformation der Kraefte von global nach lokal
 
     estiffG: number[][] = []      // globale Elementsteigkeitsmatrix mit Berücksichtigung der Gelenke
+    emassG: number[][] = []      // globale Elementmassenmatrix mit Berücksichtigung der Gelenke
 
 
     u: number[] = Array(10)        // Verformungen global
@@ -208,6 +212,12 @@ export class CTimoshenko_beam extends CElement {
         this.TfG2L = Array.from(Array(6), () => new Array(this.neqe).fill(0.0));
 
         this.estiffG = Array.from(Array(this.neqeG), () => new Array(this.neqeG));
+
+        if (stadyn > 0) {
+            this.emass = Array.from(Array(6), () => new Array(6));
+            this.emassG = Array.from(Array(this.neqeG), () => new Array(this.neqeG));
+            this.mue = this.wichte * this.area / 10   // in Tonnen/m
+        }
 
         let cophi = node[this.nod1].co
         let siphi = node[this.nod1].si
@@ -472,7 +482,7 @@ export class CTimoshenko_beam extends CElement {
         eload[ielem].pL = this.stabgewicht
         eload[ielem].pR = this.stabgewicht
 
-
+        if (stadyn > 0) this.berechneLokaleElementmassenmatrix();
     }
 
 
@@ -595,6 +605,63 @@ export class CTimoshenko_beam extends CElement {
     }
 
 
+
+    //---------------------------------------------------------------------------------------------
+    berechneLokaleElementmassenmatrix() {
+
+
+        const sl = this.sl
+        const L2 = sl * sl
+
+        let fac = this.mue * sl / 840
+        let EAL = this.mue * sl / 6
+
+        const psi = this.psi
+        const psi2 = psi * psi
+
+        this.emass[0][0] = 2 * EAL
+        this.emass[0][1] = 0.0
+        this.emass[0][2] = 0.0
+        this.emass[0][3] = EAL
+        this.emass[0][4] = 0.0
+        this.emass[0][5] = 0.0
+        this.emass[1][0] = 0.0
+        this.emass[1][1] = fac * (280 + 28 * psi + 4 * psi2)
+        this.emass[1][2] = -fac * sl * (35 + 7 * psi + 2 * psi2)
+        this.emass[1][3] = 0.0
+        this.emass[1][4] = fac * (140 - 28 * psi - 4 * psi2)
+        this.emass[1][5] = fac * sl * (35 - 7 * psi - 2 * psi2)
+        this.emass[2][0] = 0.0
+        this.emass[2][1] = this.emass[1][2]
+        this.emass[2][2] = fac * L2 * (7 + psi2)
+        this.emass[2][3] = 0.0
+        this.emass[2][4] = -fac * sl * (35 - 7 * psi - 2 * psi2)
+        this.emass[2][5] = -fac * L2 * (7 - psi2)
+        this.emass[3][0] = EAL
+        this.emass[3][1] = 0.0
+        this.emass[3][2] = 0.0
+        this.emass[3][3] = 2 * EAL
+        this.emass[3][4] = 0.0
+        this.emass[3][5] = 0.0
+        this.emass[4][0] = 0.0
+        this.emass[4][1] = this.emass[1][4]
+        this.emass[4][2] = this.emass[2][4]
+        this.emass[4][3] = 0.0
+        this.emass[4][4] = this.emass[1][1]
+        this.emass[4][5] = fac * sl * (35 + 7 * psi + 2 * psi2)
+        this.emass[5][0] = 0.0
+        this.emass[5][1] = this.emass[1][5]
+        this.emass[5][2] = this.emass[2][5]
+        this.emass[5][3] = 0.0
+        this.emass[5][4] = this.emass[4][5]
+        this.emass[5][5] = this.emass[2][2]
+
+
+        for (let j = 0; j < 6; j++) {
+            console.log("this.emass", this.emass[j])
+        }
+    }
+
     //---------------------------------------------------------------------------------------------
     berechneElementsteifigkeitsmatrix(theorie: number) {
 
@@ -689,6 +756,77 @@ export class CTimoshenko_beam extends CElement {
 
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    berechneElementmassenmatrix() {
+
+        let sum: number
+        let j: number, k: number
+        const help = Array.from(Array(6), () => new Array(this.neqeG));
+
+        console.log("berechneElementmassenmatrix")
+
+
+        for (j = 0; j < 6; j++) {
+            for (k = 0; k < this.neqeG; k++) {
+                sum = 0.0
+                for (let l = 0; l < 6; l++) {
+                    // sum = sum + this.estm[j][l] * this.trans[l][k]
+                    sum = sum + this.emass[j][l] * this.transU[l][k]
+
+                }
+                help[j][k] = sum
+            }
+        }
+
+
+        // for (j = 0; j < 6; j++) {
+        //     for (k = 0; k < 6; k++) {
+        //         this.estmL2[j][k] = this.estm[j][k]
+        //     }
+        // }
+
+
+
+        for (j = 0; j < this.neqeG; j++) {
+            for (k = 0; k < this.neqeG; k++) {
+                sum = 0.0
+                for (let l = 0; l < 6; l++) {
+                    sum = sum + this.transU[l][j] * help[l][k]   // 31.12.
+                    //sum = sum + this.transF[j][l] * help[l][k]
+                }
+                // this.estiff[j][k] = sum
+                this.emassG[j][k] = sum
+            }
+        }
+
+        for (j = 0; j < this.neqeG; j++) {
+            console.log("this.emassG", this.emassG[j])
+        }
+    }
+
+
+    //---------------------------------------------------------------------------------------------
+    addiereElementmassmatrix(mass: number[][]) {
+
+        let i: number, j: number
+        let lmi: number, lmj: number
+
+
+        for (i = 0; i < this.neqeG; i++) {
+            lmi = this.lm[i];
+            if (lmi >= 0) {
+                for (j = 0; j < this.neqeG; j++) {
+                    lmj = this.lm[j];
+                    if (lmj >= 0) {
+                        // stiff[lmi][lmj] = stiff[lmi][lmj] + this.estiff[i][j];
+                        mass[lmi][lmj] = mass[lmi][lmj] + this.emassG[i][j];
+                    }
+                }
+            }
+        }
+
+    }
 
     //---------------------------------------------------------------------------------------------
     berechneElementsteifigkeitsmatrix_Ksig() {
@@ -1347,6 +1485,32 @@ export class CTimoshenko_beam extends CElement {
         console.log("eigen, dispL", edispL)
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    get_edispL_dyn_eigenform(edispL: number[], ieigv: number) {
+
+        let edisp: number[] = new Array(10)
+
+
+        for (let j = 0; j < this.neqeG; j++) {
+            let ieq = this.lm[j]
+            if (ieq >= 0) {
+                edisp[j] = eigenform_dyn[ieigv][ieq]
+            } else {
+                edisp[j] = 0.0
+            }
+        }
+        console.log("eigen, disp", edisp)
+
+        for (let i = 0; i < 6; i++) {
+            let sum = 0.0
+            for (let j = 0; j < this.neqeG; j++) {
+                sum += this.transU[i][j] * edisp[j]
+            }
+            edispL[i] = sum
+        }
+        console.log("eigen, dispL", edispL)
+    }
 
     //---------------------------------------------------------------------------------------------
 
