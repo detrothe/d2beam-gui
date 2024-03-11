@@ -34,6 +34,8 @@ let mouseOffsetY = 0.0
 let mouseDx = 0.0
 let mouseDz = 0.0
 
+let two: any = null;
+
 let xminw = 0.0, xmaxw = 0.0, zminw = 0.0, zmaxw = 0.0
 let xmint = 0.0, xmaxt = 0.0, zmint = 0.0, zmaxt = 0.0
 
@@ -66,6 +68,10 @@ let show_lasten_temp = true;
 let show_gleichgewichtSG = true;
 
 let show_dyn_eigenformen = false;
+let show_dyn_animate_eigenformen = false;
+let animate_scale = 0.0;
+let animate_scale_dx = 0.04;
+let start_animation = false;
 
 let opacity = 0.5
 
@@ -372,7 +378,10 @@ function mouseup(ev: any) {
     //drawsystem()
 }
 
-//--------------------------------------------------------------------------------------------------- d r a w s y s t e m
+//---------------------------------------------------------- d r a w s y s t e m  -------------------
+//---------------------------------------------------------- d r a w s y s t e m  -------------------
+//---------------------------------------------------------- d r a w s y s t e m  -------------------
+//---------------------------------------------------------- d r a w s y s t e m  -------------------
 
 export function drawsystem(svg_id = 'artboard') {
 
@@ -391,6 +400,7 @@ export function drawsystem(svg_id = 'artboard') {
         domElement.removeEventListener('mousedown', mousedown, false);
         domElement.removeEventListener('mouseup', mousemove, false);
 
+        //domElement.removeEventListener();
     }
 
     // const tab_group = document.getElementById('container') as any;
@@ -434,7 +444,13 @@ export function drawsystem(svg_id = 'artboard') {
 
     const artboard = document.getElementById(svg_id) as any;
     // console.log("artboard", artboard)
-    let two = new Two(params).appendTo(artboard);
+    if (two !== null) {
+        two.unbind('update')
+        two.pause()
+        two.removeEventListener()
+        two.clear()
+    }
+    two = new Two(params).appendTo(artboard);
 
     console.log("width,height from two.js ", two.width, two.height)
 
@@ -836,6 +852,23 @@ export function drawsystem(svg_id = 'artboard') {
         let scalefactor = 0.1 * slmax / maxValue_dyn_eigenform[draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
 
         scalefactor *= scaleFactor_panel
+
+        if (show_dyn_animate_eigenformen) {
+
+            animate_scale += animate_scale_dx
+
+            if (animate_scale > 1.0) {
+
+                animate_scale = 1.0
+                animate_scale_dx = -animate_scale_dx
+
+            } else if (animate_scale < -1.0) {
+                animate_scale = -1.0
+                animate_scale_dx = -animate_scale_dx
+            }
+
+            scalefactor *= animate_scale
+        }
 
         console.log("scalefaktor", scalefactor, slmax)
         console.log("draw_eigenform", draw_eigenform)
@@ -1624,7 +1657,18 @@ export function drawsystem(svg_id = 'artboard') {
 
     // Don’t forget to tell two to draw everything to the screen
 
-    two.update();
+    if (show_dyn_animate_eigenformen) {
+
+        if (start_animation) {
+            start_animation = false;
+            two.bind('update', draw_eigenformen);
+
+            two.play();
+        }
+    } else {
+        two.update();
+    }
+
 
     //el = document.querySelector('.footer'); //.getElementById("container")
     //console.log("nach update container footer boundingRect", el?.getBoundingClientRect())
@@ -1637,6 +1681,132 @@ export function drawsystem(svg_id = 'artboard') {
     //domElement.addEventListener('wheel', mousewheel, false);
     domElement.addEventListener('mousedown', mousedown, false);
     domElement.addEventListener('mouseup', mouseup, false);
+
+
+}
+
+//-----------------------------------------   E  N  D  E   ---------------------------------
+//-----------------------------------------   E  N  D  E   ---------------------------------
+//-----------------------------------------   E  N  D  E   ---------------------------------
+//-----------------------------------------   E  N  D  E   ---------------------------------
+//-----------------------------------------   E  N  D  E   ---------------------------------
+
+
+function draw_eigenformen (frameCount: any, timeDelta: any) {
+    console.log("frameCount", frameCount, timeDelta)
+    if (show_dyn_eigenformen &&  (maxValue_dyn_eigenform[draw_eigenform - 1] > 0.0)) {
+
+        two.clear();
+
+        let xx1, xx2, zz1, zz2
+        let dx: number, x: number, eta: number, sl: number, nenner: number
+        let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
+
+        let u: number, w: number, uG: number, wG: number
+        let edispL: number[] = new Array(6)
+        let ikomb = draw_lastfall
+        let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+        let xmem = 0.0, zmem = 0.0
+
+
+        let scalefactor = 0.1 * slmax / maxValue_dyn_eigenform[draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
+
+        scalefactor *= scaleFactor_panel
+
+        if (show_dyn_animate_eigenformen) {
+
+            animate_scale += animate_scale_dx
+
+            if (animate_scale > 1.0) {
+
+                animate_scale = 1.0
+                animate_scale_dx = -animate_scale_dx
+
+            } else if (animate_scale < -1.0) {
+                animate_scale = -1.0
+                animate_scale_dx = -animate_scale_dx
+            }
+
+            scalefactor *= animate_scale
+        }
+
+        console.log("scalefaktor", scalefactor, slmax)
+        console.log("draw_eigenform", draw_eigenform)
+
+        for (let ielem = 0; ielem < nelem; ielem++) {
+            maxU = 0.0
+
+            let x1 = Math.round(tr.xPix(element[ielem].x1));
+            let z1 = Math.round(tr.zPix(element[ielem].z1));
+            let x2 = Math.round(tr.xPix(element[ielem].x2));
+            let z2 = Math.round(tr.zPix(element[ielem].z2));
+
+            element[ielem].get_edispL_dyn_eigenform(edispL, draw_eigenform - 1)
+
+            dx = element[ielem].sl / nelTeilungen
+            eta = element[ielem].eta
+            sl = element[ielem].sl
+            nenner = sl ** 3 + 12 * eta * sl
+
+            x = 0.0; xx2 = 0.0; zz2 = 0.0
+            for (let i = 0; i <= nelTeilungen; i++) {
+                if (System === 0) {
+                    Nu[0] = (1.0 - x / sl);
+                    Nu[1] = x / sl
+                    Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                    Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                    Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                    Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                    u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                    w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                } else {
+                    Nu[0] = (1.0 - x / sl);
+                    Nu[1] = x / sl
+                    u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                    w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+                }
+                uG = element[ielem].cosinus * u - element[ielem].sinus * w
+                wG = element[ielem].sinus * u + element[ielem].cosinus * w
+
+                //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
+                xx1 = xx2; zz1 = zz2;
+                xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
+                zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+                //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
+                if (i > 0) {
+                    //console.log("line", xx1, zz1, xx2, zz2)
+                    let line = two.makeLine(xx1, zz1, xx2, zz2);
+                    line.linewidth = 5;
+                }
+
+                dispG = Math.sqrt(uG * uG + wG * wG)
+
+                if (dispG > maxU) {
+                    maxU = dispG
+                    x_max = xx2
+                    z_max = zz2
+                    xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+                    zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+                }
+
+                x = x + dx
+            }
+
+            if (show_labels && maxU > 0.0) {
+
+                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                pfeil.stroke = '#D3D3D3'
+
+                const str = myFormat(maxU, 1, 2)
+                const txt = two.makeText(str, x_max, z_max, style_txt)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+
+            }
+
+        }
+    }
 
 }
 
@@ -3639,6 +3809,18 @@ function draw_dyn_eigenformen_grafik() {
     drawsystem();
 }
 
+//--------------------------------------------------------------------------------------------------------
+function draw_dyn_animate_eigenformen_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_dyn_animate_eigenformen_grafik");
+    show_dyn_animate_eigenformen = !show_dyn_animate_eigenformen;
+    animate_scale = 0.0
+    if (show_dyn_animate_eigenformen) start_animation = true;
+
+    drawsystem();
+}
+
 //---------------------------------------------------------------------------------- a d d E v e n t L i s t e n e r
 
 window.addEventListener('draw_label_grafik', draw_label_grafik);
@@ -3657,6 +3839,7 @@ window.addEventListener('draw_gesamtverformung_grafik', draw_gesamtverformung_gr
 window.addEventListener('draw_gleichgewicht_SG_grafik', draw_gleichgewicht_SG_grafik);
 
 window.addEventListener('draw_dyn_eigenformen_grafik', draw_dyn_eigenformen_grafik);
+window.addEventListener('draw_dyn_animate_eigenformen_grafik', draw_dyn_animate_eigenformen_grafik);
 
 window.addEventListener('scale_factor', scale_factor);
 window.addEventListener('reset_webgl', reset_grafik);
