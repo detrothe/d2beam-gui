@@ -551,7 +551,7 @@ export function drawsystem(svg_id = 'artboard') {
         let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
         let xmem = 0.0, zmem = 0.0
 
-        let edispL: number[] = new Array(6)
+        //let edispL: number[] = new Array(6)
         let iLastfall = draw_lastfall
         let scalefactor = 0
 
@@ -1692,9 +1692,12 @@ export function drawsystem(svg_id = 'artboard') {
 //-----------------------------------------   E  N  D  E   ---------------------------------
 
 
-function draw_eigenformen (frameCount: any, timeDelta: any) {
+//--------------------------------------------------------------------------------------------------------
+function draw_eigenformen(frameCount: any, timeDelta: any) {
+    //----------------------------------------------------------------------------------------------------
+
     console.log("frameCount", frameCount, timeDelta)
-    if (show_dyn_eigenformen &&  (maxValue_dyn_eigenform[draw_eigenform - 1] > 0.0)) {
+    if (show_dyn_eigenformen && (maxValue_dyn_eigenform[draw_eigenform - 1] > 0.0)) {
 
         two.clear();
 
@@ -1733,13 +1736,29 @@ function draw_eigenformen (frameCount: any, timeDelta: any) {
         console.log("scalefaktor", scalefactor, slmax)
         console.log("draw_eigenform", draw_eigenform)
 
+        if (show_systemlinien) {
+            for (let ielem = 0; ielem < nelem; ielem++) {
+
+                let x1 = Math.round(tr.xPix(stab[ielem].x1));
+                let z1 = Math.round(tr.zPix(stab[ielem].z1));
+                let x2 = Math.round(tr.xPix(stab[ielem].x2));
+                let z2 = Math.round(tr.zPix(stab[ielem].z2));
+
+                //console.log("STAB x,z", x1, x2, z1, z2)
+                let line = two.makeLine(x1, z1, x2, z2);
+                line.linewidth = 2 / devicePixelRatio;
+                line.stroke = '#aaaaaa';
+            }
+        }
+        draw_lager(two);
+
         for (let ielem = 0; ielem < nelem; ielem++) {
             maxU = 0.0
 
-            let x1 = Math.round(tr.xPix(element[ielem].x1));
-            let z1 = Math.round(tr.zPix(element[ielem].z1));
-            let x2 = Math.round(tr.xPix(element[ielem].x2));
-            let z2 = Math.round(tr.zPix(element[ielem].z2));
+            // let x1 = Math.round(tr.xPix(element[ielem].x1));
+            // let z1 = Math.round(tr.zPix(element[ielem].z1));
+            // let x2 = Math.round(tr.xPix(element[ielem].x2));
+            // let z2 = Math.round(tr.zPix(element[ielem].z2));
 
             element[ielem].get_edispL_dyn_eigenform(edispL, draw_eigenform - 1)
 
@@ -2788,7 +2807,7 @@ function draw_lager(two: Two) {
             }
             else if ((node[i].L_org[0] === 1) && (node[i].L_org[1] === 1) && (node[i].L_org[2] === -1 || node[i].L[2] >= 0)) { // zweiwertiges Lager
                 let group = two.makeGroup();
-                console.log("in zweiwertiges Lager")
+                //console.log("in zweiwertiges Lager")
                 var vertices = [];
                 vertices.push(new Two.Anchor(0, 0));
                 vertices.push(new Two.Anchor(-12, 20));
@@ -2811,7 +2830,7 @@ function draw_lager(two: Two) {
             }
             else if ((node[i].L[0] >= 0 || node[i].L_org[0] === -1) && (node[i].L_org[1] === 1) && (node[i].L[2] >= 0 || node[i].L_org[2] === -1)) { // einwertiges horizontal verschieblisches Lager
                 let group = two.makeGroup();
-                console.log("in einwertiges horizontal verschieblisches Lager")
+                //console.log("in einwertiges horizontal verschieblisches Lager")
                 var vertices = [];
                 vertices.push(new Two.Anchor(0, 0));
                 vertices.push(new Two.Anchor(-12, 20));
@@ -2834,7 +2853,7 @@ function draw_lager(two: Two) {
             }
             else if ((node[i].L_org[0] === 1) && (node[i].L[1] >= 0 || node[i].L_org[1] === -1) && (node[i].L[2] >= 0 || node[i].L_org[2] === -1)) { // einwertiges vertikal verschieblisches Lager
                 let group = two.makeGroup();
-                console.log("in einwertiges vertikales verschieblisches Lager")
+                //console.log("in einwertiges vertikales verschieblisches Lager")
                 var vertices = [];
                 vertices.push(new Two.Anchor(0, 0));
                 vertices.push(new Two.Anchor(-12, 20));
@@ -2858,7 +2877,7 @@ function draw_lager(two: Two) {
         } else {                     // Fachwerk
             if ((node[i].L[0] === -1) && (node[i].L[1] === -1)) { // zweiwertiges Lager
                 let group = two.makeGroup();
-                console.log("in zweiwertiges Lager")
+                //console.log("in zweiwertiges Lager")
                 var vertices = [];
                 vertices.push(new Two.Anchor(0, 0));
                 vertices.push(new Two.Anchor(-12, 20));
@@ -2881,7 +2900,7 @@ function draw_lager(two: Two) {
             }
             else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1)) { // einwertiges horizontal verschieblisches Lager
                 let group = two.makeGroup();
-                console.log("in einwertiges horizontal verschieblisches Lager")
+                //console.log("in einwertiges horizontal verschieblisches Lager")
                 var vertices = [];
                 vertices.push(new Two.Anchor(0, 0));
                 vertices.push(new Two.Anchor(-12, 20));
@@ -2904,7 +2923,7 @@ function draw_lager(two: Two) {
             }
             else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0)) { // einwertiges vertikal verschieblisches Lager
                 let group = two.makeGroup();
-                console.log("in einwertiges vertikales Lager")
+                //console.log("in einwertiges vertikales Lager")
                 var vertices = [];
                 vertices.push(new Two.Anchor(0, 0));
                 vertices.push(new Two.Anchor(-12, 20));

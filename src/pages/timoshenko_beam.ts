@@ -1473,7 +1473,7 @@ export class CTimoshenko_beam extends CElement {
                 edisp[j] = 0.0
             }
         }
-        console.log("eigen, disp", edisp)
+        //console.log("eigen, disp", edisp)
 
         for (let i = 0; i < 6; i++) {
             let sum = 0.0
@@ -1482,7 +1482,7 @@ export class CTimoshenko_beam extends CElement {
             }
             edispL[i] = sum
         }
-        console.log("eigen, dispL", edispL)
+        //console.log("eigen, dispL", edispL)
     }
 
 
@@ -1500,7 +1500,7 @@ export class CTimoshenko_beam extends CElement {
                 edisp[j] = 0.0
             }
         }
-        console.log("eigen, disp", edisp)
+        //console.log("eigen, disp", edisp)
 
         for (let i = 0; i < 6; i++) {
             let sum = 0.0
@@ -1509,7 +1509,7 @@ export class CTimoshenko_beam extends CElement {
             }
             edispL[i] = sum
         }
-        console.log("eigen, dispL", edispL)
+        // console.log("eigen, dispL", edispL)
     }
 
     //---------------------------------------------------------------------------------------------

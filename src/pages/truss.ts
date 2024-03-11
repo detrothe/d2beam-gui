@@ -2,7 +2,8 @@ import { CElement } from "./element"
 
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
-    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung
+    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung,
+    stadyn, eigenform_dyn
 } from "./rechnen"
 
 //import { BubbleSort } from "./lib"
@@ -53,12 +54,15 @@ export class CTruss extends CElement {
     estmL2: number[][] = []       // lokale Elementsteifigkeitsmatrix incl. TH.II.O., für Lastvektor von Knotenverformungen
     ksig: number[][] = []
     //trans: number[][] = []
+    emass: number[][] = []
+    mue = 0.0                     // Dichte * Area für Dynamik Massenmatrix
 
     transU: number[][] = []       // Transformation von global nach lokal
     //transF: number[][] = []       // Transformation von lokal nach global = transU ^T
     TfG2L: number[][] = []        // Transformation der Kraefte von global nach lokal
 
     estiffG: number[][] = []      // globale Elementsteigkeitsmatrix mit Berücksichtigung der Gelenke
+    emassG: number[][] = []      // globale Elementmassenmatrix mit Berücksichtigung der Gelenke
 
 
     u: number[] = Array(4)        // Verformungen global
@@ -97,7 +101,7 @@ export class CTruss extends CElement {
 
 
     ich_bin(ielem: number) {
-        console.log("Ich bin ein Timoshenko Element , No ", ielem)
+        console.log("Ich bin ein Truss Element , No ", ielem)
     }
 
 
@@ -181,6 +185,13 @@ export class CTruss extends CElement {
         this.TfG2L = Array.from(Array(4), () => new Array(4).fill(0.0));
 
         this.estiffG = Array.from(Array(4), () => new Array(4));
+
+        if (stadyn > 0) {
+            this.emass = Array.from(Array(4), () => new Array(4));
+            this.emassG = Array.from(Array(4), () => new Array(4));
+            this.mue = this.wichte * this.area / 10   // in Tonnen/m
+            console.log("wichte", this.wichte)
+        }
 
         let cophi = node[this.nod1].co
         let siphi = node[this.nod1].si
@@ -459,7 +470,7 @@ export class CTruss extends CElement {
         eload[ielem].pL = this.stabgewicht
         eload[ielem].pR = this.stabgewicht
 
-
+        if (stadyn > 0) this.berechneLokaleElementmassenmatrix();
     }
 
 
@@ -516,6 +527,38 @@ export class CTruss extends CElement {
 
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    berechneLokaleElementmassenmatrix() {
+
+        let EAL = this.mue * this.sl / 6
+        console.log("EAL", EAL, this.mue)
+
+        this.emass[0][0] = 2 * EAL
+        this.emass[0][1] = 0.0
+        this.emass[0][2] = EAL
+        this.emass[0][3] = 0.0
+
+        this.emass[1][0] = 0.0
+        this.emass[1][1] = 2 * EAL
+        this.emass[1][2] = 0.0
+        this.emass[1][3] = EAL
+
+        this.emass[2][0] = EAL
+        this.emass[2][1] = 0.0
+        this.emass[2][2] = 2 * EAL
+        this.emass[2][3] = 0.0
+
+        this.emass[3][0] = 0.0
+        this.emass[3][1] = EAL
+        this.emass[3][2] = 0.0
+        this.emass[3][3] = 2 * EAL
+
+
+        for (let j = 0; j < 4; j++) {
+            console.log("this.emass", this.emass[j])
+        }
+    }
 
     //---------------------------------------------------------------------------------------------
     berechneElementsteifigkeitsmatrix(theorie: number) {
@@ -625,6 +668,65 @@ export class CTruss extends CElement {
 
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    berechneElementmassenmatrix() {
+
+        let sum: number
+        let j: number, k: number
+        const help = Array.from(Array(4), () => new Array(4));
+
+        console.log("berechneElementmassenmatrix")
+
+
+        for (j = 0; j < 4; j++) {
+            for (k = 0; k < 4; k++) {
+                sum = 0.0
+                for (let l = 0; l < 4; l++) {
+                    sum = sum + this.emass[j][l] * this.transU[l][k]
+
+                }
+                help[j][k] = sum
+            }
+        }
+
+
+        for (j = 0; j < 4; j++) {
+            for (k = 0; k < 4; k++) {
+                sum = 0.0
+                for (let l = 0; l < 4; l++) {
+                    sum = sum + this.transU[l][j] * help[l][k]
+                }
+                this.emassG[j][k] = sum
+            }
+        }
+
+        for (j = 0; j < 4; j++) {
+            console.log("this.emassG", this.emassG[j])
+        }
+    }
+
+
+    //---------------------------------------------------------------------------------------------
+    addiereElementmassmatrix(mass: number[][]) {
+
+        let i: number, j: number
+        let lmi: number, lmj: number
+
+
+        for (i = 0; i < 4; i++) {
+            lmi = this.lm[i];
+            if (lmi >= 0) {
+                for (j = 0; j < 4; j++) {
+                    lmj = this.lm[j];
+                    if (lmj >= 0) {
+                        mass[lmi][lmj] = mass[lmi][lmj] + this.emassG[i][j];
+                    }
+                }
+            }
+        }
+
+    }
 
     //---------------------------------------------------------------------------------------------
     berechneElementsteifigkeitsmatrix_Ksig() {
@@ -1240,6 +1342,32 @@ export class CTruss extends CElement {
         //console.log("eigen, dispL", edispL)
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    get_edispL_dyn_eigenform(edispL: number[], ieigv: number) {
+
+        let edisp: number[] = new Array(4)
+
+
+        for (let j = 0; j < 4; j++) {
+            let ieq = this.lm[j]
+            if (ieq >= 0) {
+                edisp[j] = eigenform_dyn[ieigv][ieq]
+            } else {
+                edisp[j] = 0.0
+            }
+        }
+        //console.log("eigen, disp", edisp)
+
+        for (let i = 0; i < 4; i++) {
+            let sum = 0.0
+            for (let j = 0; j < 4; j++) {
+                sum += this.transU[i][j] * edisp[j]
+            }
+            edispL[i] = sum
+        }
+        // console.log("eigen, dispL", edispL)
+    }
 
     //---------------------------------------------------------------------------------------------
 
