@@ -3639,7 +3639,7 @@ function draw_label_grafik() {
     console.log("in draw_label_grafik");
     show_labels = !show_labels;
 
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 //--------------------------------------------------------------------------------------------------------
 function draw_systemlinien_grafik() {
@@ -3650,7 +3650,7 @@ function draw_systemlinien_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3662,7 +3662,7 @@ function draw_verformungen_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3674,7 +3674,8 @@ function draw_momentenlinien_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    if (!draw_group) drawsystem();
+    if (show_dyn_animate_eigenformen) return;
+    else if (!draw_group) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3686,7 +3687,8 @@ function draw_querkraftlinien_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    if (!draw_group) drawsystem();
+    if (show_dyn_animate_eigenformen) return;
+    else if (!draw_group) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3698,7 +3700,8 @@ function draw_normalkraftlinien_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    if (!draw_group) drawsystem();
+    if (show_dyn_animate_eigenformen) return;
+    else if (!draw_group) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3710,7 +3713,7 @@ function draw_eigenformen_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3722,7 +3725,7 @@ function draw_schiefstellung_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 //--------------------------------------------------------------------------------------------------------
 function draw_stabvorverformung_grafik() {
@@ -3733,7 +3736,7 @@ function draw_stabvorverformung_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3757,7 +3760,7 @@ function draw_lagerkraefte_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3769,7 +3772,7 @@ function draw_umriss_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3781,7 +3784,7 @@ function draw_gesamtverformung_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3793,7 +3796,7 @@ function draw_gleichgewicht_SG_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3802,7 +3805,7 @@ function scale_factor() {
 
     scaleFactor_panel = get_scale_factor();
     console.log("stressFactor=", scaleFactor_panel)
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 //--------------------------------------------------------------------------------------------------------
 function reset_grafik() {
@@ -3811,6 +3814,7 @@ function reset_grafik() {
     mouseDx = 0.0
     mouseDz = 0.0
     wheel_factor = 1.0
+    show_dyn_eigenformen = false;
 
     console.log("reset_grafik=")
     drawsystem();

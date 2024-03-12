@@ -532,7 +532,7 @@ export class CTruss extends CElement {
     berechneLokaleElementmassenmatrix() {
 
         let EAL = this.mue * this.sl / 6
-        console.log("EAL", EAL, this.mue)
+        //console.log("EAL", EAL, this.mue)
 
         this.emass[0][0] = 2 * EAL
         this.emass[0][1] = 0.0
@@ -676,7 +676,7 @@ export class CTruss extends CElement {
         let j: number, k: number
         const help = Array.from(Array(4), () => new Array(4));
 
-        console.log("berechneElementmassenmatrix")
+        //console.log("berechneElementmassenmatrix")
 
 
         for (j = 0; j < 4; j++) {
@@ -701,9 +701,9 @@ export class CTruss extends CElement {
             }
         }
 
-        for (j = 0; j < 4; j++) {
-            console.log("this.emassG", this.emassG[j])
-        }
+        // for (j = 0; j < 4; j++) {
+        //     console.log("this.emassG", this.emassG[j])
+        // }
     }
 
 
