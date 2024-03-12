@@ -9,7 +9,7 @@ import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorver
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
 import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all, kombiTabelle, nNodeDisps, nodeDisp0, System, STABWERK, FACHWERK } from "./rechnen";
-import { maxValue_dyn_eigenform, eigenform_dyn } from "./rechnen";
+import { maxValue_dyn_eigenform, eigenform_dyn, dyn_neigv, nnodalMass, nodalmass } from "./rechnen";
 
 //import { Pane } from 'tweakpane';
 import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
@@ -44,6 +44,7 @@ let tr: CTrans
 let drawPanel = 0
 let draw_lastfall = 1
 let draw_eigenform = 1
+let draw_dyn_eigenform = 1
 
 let flag_eingabe = 1
 
@@ -72,6 +73,7 @@ let show_dyn_animate_eigenformen = false;
 let animate_scale = 0.0;
 let animate_scale_dx = 0.04;
 let start_animation = false;
+let show_knotenmassen = false;
 
 let opacity = 0.5
 
@@ -152,9 +154,9 @@ export function select_loadcase_changed() {
 
     //console.log("################################################ select_loadcase_changed")
     const el_select_loadcase = document.getElementById("id_select_loadcase") as HTMLSelectElement
-    console.log("select_loadcase_changed option", el_select_loadcase.value)
+    //console.log("select_loadcase_changed option", el_select_loadcase.value)
     draw_lastfall = Number(el_select_loadcase.value)
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -165,7 +167,18 @@ export function select_eigenvalue_changed() {
     const el_select_eigenvalue = document.getElementById("id_select_eigenvalue") as HTMLSelectElement
     //console.log("option", el_select_eigenvalue.value)
     draw_eigenform = Number(el_select_eigenvalue.value)
-    drawsystem();
+    if (!show_dyn_animate_eigenformen) drawsystem();
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function select_dyn_eigenvalue_changed() {
+    //----------------------------------------------------------------------------------------------------
+
+    //console.log("################################################ select_eigenvalue_changed")
+    const el_select_dyn_eigenvalue = document.getElementById("id_select_dyn_eigenvalue") as HTMLSelectElement
+    //console.log("option", el_select_eigenvalue.value)
+    draw_dyn_eigenform = Number(el_select_dyn_eigenvalue.value)
+    if (!show_dyn_animate_eigenformen) drawsystem();
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -228,12 +241,19 @@ export function init_grafik(flag = 1) {
     draw_lastfall = 1
 
     const el_select_eigv = document.getElementById('id_select_eigenvalue') as HTMLSelectElement;
+    const el_select_dyn_eigv = document.getElementById('id_select_dyn_eigenvalue') as HTMLSelectElement;
 
     while (el_select_eigv.hasChildNodes()) {  // alte Optionen entfernen
         // @ts-ignore
         el_select_eigv.removeChild(el_select_eigv?.lastChild);
     }
     draw_eigenform = 1
+
+    while (el_select_dyn_eigv.hasChildNodes()) {  // alte Optionen entfernen
+        // @ts-ignore
+        el_select_dyn_eigv.removeChild(el_select_dyn_eigv?.lastChild);
+    }
+    draw_dyn_eigenform = 1
 
     if (THIIO_flag === 0) {
 
@@ -260,16 +280,27 @@ export function init_grafik(flag = 1) {
             el_select.appendChild(option);
         }
 
-        if (stadyn === 0) {
-            el_select_eigv.style.display = "none"
-        } else {
+        if (stadyn === 0) { // Statik
+            el_select_dyn_eigv.style.display = "none"
+
             el_select_eigv.style.display = "block"
 
             for (let i = 0; i < neigv; i++) {
                 let option = document.createElement('option');
                 option.value = String(+i + 1)
-                option.textContent = 'Eigenform ' + (+i + 1);
+                option.textContent = 'Knickfigur ' + (+i + 1);
                 el_select_eigv.appendChild(option);
+            }
+        } else {    // Dynamik
+            el_select_eigv.style.display = "none"
+
+            el_select_dyn_eigv.style.display = "block"
+
+            for (let i = 0; i < dyn_neigv; i++) {
+                let option = document.createElement('option');
+                option.value = String(+i + 1)
+                option.textContent = 'Eigenform ' + (+i + 1);
+                el_select_dyn_eigv.appendChild(option);
             }
         }
 
@@ -836,7 +867,7 @@ export function drawsystem(svg_id = 'artboard') {
 
     // Eigenformen aus Dynamik
 
-    if (show_dyn_eigenformen && show_selection && (maxValue_dyn_eigenform[draw_eigenform - 1] > 0.0)) {
+    if (show_dyn_eigenformen && show_selection && (maxValue_dyn_eigenform[draw_dyn_eigenform - 1] > 0.0)) {
 
         let xx1, xx2, zz1, zz2
         let dx: number, x: number, eta: number, sl: number, nenner: number
@@ -849,7 +880,7 @@ export function drawsystem(svg_id = 'artboard') {
         let xmem = 0.0, zmem = 0.0
 
 
-        let scalefactor = 0.1 * slmax / maxValue_dyn_eigenform[draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
+        let scalefactor = 0.1 * slmax / maxValue_dyn_eigenform[draw_dyn_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
 
         scalefactor *= scaleFactor_panel
 
@@ -871,7 +902,7 @@ export function drawsystem(svg_id = 'artboard') {
         }
 
         console.log("scalefaktor", scalefactor, slmax)
-        console.log("draw_eigenform", draw_eigenform)
+        console.log("draw_dyn_eigenform", draw_dyn_eigenform)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
             maxU = 0.0
@@ -881,7 +912,7 @@ export function drawsystem(svg_id = 'artboard') {
             x2 = Math.round(tr.xPix(element[ielem].x2));
             z2 = Math.round(tr.zPix(element[ielem].z2));
 
-            element[ielem].get_edispL_dyn_eigenform(edispL, draw_eigenform - 1)
+            element[ielem].get_edispL_dyn_eigenform(edispL, draw_dyn_eigenform - 1)
 
             dx = element[ielem].sl / nelTeilungen
             eta = element[ielem].eta
@@ -947,6 +978,7 @@ export function drawsystem(svg_id = 'artboard') {
 
         }
     }
+
 
     // Schiefstellung
 
@@ -1486,7 +1518,7 @@ export function drawsystem(svg_id = 'artboard') {
 
                     let line = two.makeLine(x1, z1, x2, z2);
                     if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
-                    else if (show_verformungen || show_eigenformen || show_schiefstellung || show_stabvorverformung) line.linewidth = 2 / devicePixelRatio;
+                    else if (show_verformungen || show_eigenformen || show_dyn_eigenformen || show_schiefstellung || show_stabvorverformung) line.linewidth = 2 / devicePixelRatio;
                     else line.linewidth = 5 / devicePixelRatio;
 
                     // gestrichelte Faser
@@ -1635,6 +1667,9 @@ export function drawsystem(svg_id = 'artboard') {
         }
     }
 
+
+    if (show_knotenmassen && show_selection) draw_knotenmassen(two);
+
     draw_lager(two);
     if (flag_eingabe != 0) draw_gelenke(two);
 
@@ -1661,7 +1696,7 @@ export function drawsystem(svg_id = 'artboard') {
 
         if (start_animation) {
             start_animation = false;
-            two.bind('update', draw_eigenformen);
+            two.bind('update', draw_dyn_eigenformen);
 
             two.play();
         }
@@ -1693,11 +1728,11 @@ export function drawsystem(svg_id = 'artboard') {
 
 
 //--------------------------------------------------------------------------------------------------------
-function draw_eigenformen(frameCount: any, timeDelta: any) {
+function draw_dyn_eigenformen(frameCount: any, timeDelta: any) {
     //----------------------------------------------------------------------------------------------------
 
     console.log("frameCount", frameCount, timeDelta)
-    if (show_dyn_eigenformen && (maxValue_dyn_eigenform[draw_eigenform - 1] > 0.0)) {
+    if (show_dyn_eigenformen && (maxValue_dyn_eigenform[draw_dyn_eigenform - 1] > 0.0)) {
 
         two.clear();
 
@@ -1712,7 +1747,7 @@ function draw_eigenformen(frameCount: any, timeDelta: any) {
         let xmem = 0.0, zmem = 0.0
 
 
-        let scalefactor = 0.1 * slmax / maxValue_dyn_eigenform[draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
+        let scalefactor = 0.1 * slmax / maxValue_dyn_eigenform[draw_dyn_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
 
         scalefactor *= scaleFactor_panel
 
@@ -1734,7 +1769,7 @@ function draw_eigenformen(frameCount: any, timeDelta: any) {
         }
 
         console.log("scalefaktor", scalefactor, slmax)
-        console.log("draw_eigenform", draw_eigenform)
+        console.log("draw_dyn_eigenform", draw_dyn_eigenform)
 
         if (show_systemlinien) {
             for (let ielem = 0; ielem < nelem; ielem++) {
@@ -1750,6 +1785,7 @@ function draw_eigenformen(frameCount: any, timeDelta: any) {
                 line.stroke = '#aaaaaa';
             }
         }
+
         draw_lager(two);
 
         for (let ielem = 0; ielem < nelem; ielem++) {
@@ -1760,7 +1796,7 @@ function draw_eigenformen(frameCount: any, timeDelta: any) {
             // let x2 = Math.round(tr.xPix(element[ielem].x2));
             // let z2 = Math.round(tr.zPix(element[ielem].z2));
 
-            element[ielem].get_edispL_dyn_eigenform(edispL, draw_eigenform - 1)
+            element[ielem].get_edispL_dyn_eigenform(edispL, draw_dyn_eigenform - 1)
 
             dx = element[ielem].sl / nelTeilungen
             eta = element[ielem].eta
@@ -1827,6 +1863,20 @@ function draw_eigenformen(frameCount: any, timeDelta: any) {
         }
     }
 
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+function draw_knotenmassen(two: Two) {
+    //----------------------------------------------------------------------------------------------------
+    for (let i = 0; i < nnodalMass; i++) {
+        let inode = nodalmass[i].node
+        let x = Math.round(tr.xPix(node[inode].x));
+        let z = Math.round(tr.zPix(node[inode].z));
+        let circle = two.makeCircle(x, z, 14, 20)
+        circle.fill = '#ff3333'
+
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -3844,6 +3894,16 @@ function draw_dyn_animate_eigenformen_grafik() {
     drawsystem();
 }
 
+//--------------------------------------------------------------------------------------------------------
+function draw_knotenmassen_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_knotenmassen_grafik");
+    show_knotenmassen = !show_knotenmassen;
+
+    if (!show_dyn_animate_eigenformen) drawsystem();
+}
+
 //---------------------------------------------------------------------------------- a d d E v e n t L i s t e n e r
 
 window.addEventListener('draw_label_grafik', draw_label_grafik);
@@ -3863,6 +3923,7 @@ window.addEventListener('draw_gleichgewicht_SG_grafik', draw_gleichgewicht_SG_gr
 
 window.addEventListener('draw_dyn_eigenformen_grafik', draw_dyn_eigenformen_grafik);
 window.addEventListener('draw_dyn_animate_eigenformen_grafik', draw_dyn_animate_eigenformen_grafik);
+window.addEventListener('draw_knotenmassen_grafik', draw_knotenmassen_grafik);
 
 window.addEventListener('scale_factor', scale_factor);
 window.addEventListener('reset_webgl', reset_grafik);

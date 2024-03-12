@@ -38,7 +38,7 @@ import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschni
 import DetectOS from "./detectos";
 
 import { addListener_filesave } from "./dateien";
-import { select_loadcase_changed, select_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik } from "./grafik";
+import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik } from "./grafik";
 import { set_info, write } from "./utility";
 
 import { my_jspdf } from "./mypdf";
@@ -91,6 +91,7 @@ export let typs_string_kombitabelle: string;
 //export let column_width_elementtabelle: string;
 const nkombiSpalten_init = "3"; // immer 1 mehr als nlastfaelle_init
 const nnodedisps_init = "0";
+const dyn_neigv_init = "1";
 
 let width_lager = 175; // /window.devicePixelRatio;
 
@@ -194,7 +195,7 @@ async function initTabellenLoop() {
       <sl-tab id="id_tab_mass" slot="nav" panel="tab-mass" disabled>Dynamik</sl-tab>
       <sl-tab slot="nav" panel="tab-pro">Pro</sl-tab>
       <sl-tab slot="nav" panel="tab-info">Info</sl-tab>
-      <sl-tab slot="nav" panel="tab-menue3">ꔷꔷꔷ</sl-tab>
+      <sl-tab slot="nav" panel="tab-einstellungen">ꔷꔷꔷ</sl-tab>
 
       <!--------------------------------------------------------------------------------------->
 
@@ -284,6 +285,9 @@ async function initTabellenLoop() {
             </div>
             <div id="id_div_select_eigv">
               <select id="id_select_eigenvalue" on></select>
+            </div>
+            <div id="id_div_select_dyn_eigv">
+              <select id="id_select_dyn_eigenvalue" on></select>
             </div>
           </div>
           <button id="id_button_zurueck_grafik">Fullscreen</button>
@@ -676,7 +680,7 @@ async function initTabellenLoop() {
             </tr>
             <tr>
               <td title="Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet">
-                Anzahl Eigenwerte :
+                Anzahl Knickfiguren :
               </td>
               <td>
                 <input
@@ -838,6 +842,14 @@ async function initTabellenLoop() {
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-mass">
 
+
+      <p>
+          Anzahl Eigenwerte:
+
+          <dr-button-pm id="id_button_dyn_neigv" nel="${dyn_neigv_init}" inputid="dyn_neigv"></dr-button-pm>
+          <br /><br />
+        </p>
+
       <p><b>Eingabe der Knotenmassen</b><br /><br /></p>
 
       <p> M = Masse<br>
@@ -878,7 +890,7 @@ async function initTabellenLoop() {
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
-      <sl-tab-panel name="tab-menue3"
+      <sl-tab-panel name="tab-einstellungen"
         ><p><b>Einstellungen</b><br /><br /></p>
         <div id="id_einstellungen">
           <br />
@@ -971,6 +983,8 @@ async function initTabellenLoop() {
   el_select_loadcase?.addEventListener("change", select_loadcase_changed);
   const el_select_eigenvalue = document.getElementById("id_select_eigenvalue");
   el_select_eigenvalue?.addEventListener("change", select_eigenvalue_changed);
+  const el_select_dyn_eigenvalue = document.getElementById("id_select_dyn_eigenvalue");
+  el_select_dyn_eigenvalue?.addEventListener("change", select_dyn_eigenvalue_changed);
   const el_zurueck_grafik = document.getElementById("id_button_zurueck_grafik");
   el_zurueck_grafik?.addEventListener("click", click_zurueck_grafik);
 
@@ -1565,6 +1579,9 @@ export function clearTables() {
   el?.setAttribute("clear", "0");
 
   el = document.getElementById("id_kombinationen_tabelle");
+  el?.setAttribute("clear", "0");
+
+  el = document.getElementById("id_knotenmassen_tabelle");
   el?.setAttribute("clear", "0");
 
   while (nQuerschnittSets > 0) {

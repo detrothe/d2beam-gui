@@ -40,6 +40,7 @@ export let epsDisp_tol = 1.e-5
 export let nnodalMass: number = 0;
 export let eigenform_dyn = [] as number[][]
 export let maxValue_dyn_eigenform = [] as number[]
+export let dyn_neigv = 1;
 
 export let neigv: number = 2;
 export let nNodeDisps = 0;
@@ -535,6 +536,8 @@ export function rechnen(flag = 1) {
     el = document.getElementById('id_button_nnodalmass') as any;
     nnodalMass = Number(el.nel);
 
+    el = document.getElementById('id_button_dyn_neigv') as any;
+    dyn_neigv = Number(el.nel);
 
     console.log("== THIIO_flag", THIIO_flag, nelTeilungen, n_iterationen)
 
@@ -2610,7 +2613,7 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
 
     let i: number, j: number, ielem: number
 
-    dyn_omega = new Array(neigv);
+    dyn_omega = new Array(dyn_neigv);
 
     for (i = 0; i < neq; i++) stiff[i].fill(0.0);
 
@@ -2662,29 +2665,29 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
     let mass_ptr = Module._malloc(mass_array.length * bytes_8);
     Module.HEAPF64.set(mass_array, mass_ptr / bytes_8);
 
-    let eigenform_ptr = Module._malloc(neq * neigv * bytes_8);
-    let omega_ptr = Module._malloc(neigv * bytes_8);
+    let eigenform_ptr = Module._malloc(neq * dyn_neigv * bytes_8);
+    let omega_ptr = Module._malloc(dyn_neigv * bytes_8);
 
-    c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, neigv);
+    c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv);
 
-    let omega_array = new Float64Array(Module.HEAPF64.buffer, omega_ptr, neigv);
+    let omega_array = new Float64Array(Module.HEAPF64.buffer, omega_ptr, dyn_neigv);
     console.log("omega_array", omega_array);
 
-    for (i = 0; i < neigv; i++) dyn_omega[i] = omega_array[i]
+    for (i = 0; i < dyn_neigv; i++) dyn_omega[i] = omega_array[i]
 
-    for (i = 0; i < neigv; i++) {
+    for (i = 0; i < dyn_neigv; i++) {
         console.log("omega", +i+1, dyn_omega[i], dyn_omega[i] / 2 / Math.PI)
     }
 
-    let eigenform_array = new Float64Array(Module.HEAPF64.buffer, eigenform_ptr, neq * neigv);
+    let eigenform_array = new Float64Array(Module.HEAPF64.buffer, eigenform_ptr, neq * dyn_neigv);
 
     eigenform_dyn.length = 0;
-    eigenform_dyn = Array.from(Array(neigv), () => new Array(neq).fill(0.0));
+    eigenform_dyn = Array.from(Array(dyn_neigv), () => new Array(neq).fill(0.0));
     maxValue_dyn_eigenform.length = 0
-    maxValue_dyn_eigenform = new Array(neigv).fill(0.0)
+    maxValue_dyn_eigenform = new Array(dyn_neigv).fill(0.0)
 
     let offset = 0
-    for (let ieigv = 0; ieigv < neigv; ieigv++) {
+    for (let ieigv = 0; ieigv < dyn_neigv; ieigv++) {
 
         for (i = 0; i < neq; i++) {
             eigenform_dyn[ieigv][i] = eigenform_array[i + offset]

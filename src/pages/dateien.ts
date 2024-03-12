@@ -102,6 +102,10 @@ export function read_daten(eingabedaten: string) {
         el = document.getElementById('id_button_nnodalmass') as drButtonPM;
         el.setValue(jobj.nnodalmass);
 
+        el = document.getElementById('id_button_dyn_neigv') as drButtonPM;
+        if (jobj.dyn_neigv === undefined) el.setValue(1);
+        else el.setValue(jobj.dyn_neigv);
+
         els = document.getElementById('id_THIIO') as HTMLSelectElement;
         if (jobj.THIIO_flag !== undefined) {
             els.options[jobj.THIIO_flag].selected = true;
@@ -391,7 +395,7 @@ async function handleFileSelect_save() {
 
     // if (elem) {
 
-    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, stadyn;
+    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, stadyn, dyn_neigv;
 
     let el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = el.nel;
@@ -404,6 +408,9 @@ async function handleFileSelect_save() {
 
     el = document.getElementById('id_stadyn') as HTMLSelectElement;
     stadyn = el.value;
+
+    el = document.getElementById('id_button_dyn_neigv') as any;
+    dyn_neigv = el.nel
 
     el = document.getElementById('id_maxu_node') as HTMLSelectElement;
     maxU_node = el.value;
@@ -657,6 +664,7 @@ async function handleFileSelect_save() {
         'epsDisp_tol': epsDisp_tol,
         'stadyn': stadyn,
         'nnodalmass': nnodalmass,
+        'dyn_neigv': dyn_neigv,
 
 
         'elem': elem,

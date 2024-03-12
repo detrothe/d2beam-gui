@@ -44,7 +44,8 @@ export function myPanel() {
         Gesamtverformung: false,
         Gleichgewicht_SG: true,
         dyn_eigenform: false,
-        dyn_animate_eigenform : false,
+        dyn_animate_eigenform: false,
+        knotenmassen: false,
 
         Reset: function () {
             window.dispatchEvent(new Event("reset_webgl"));
@@ -170,6 +171,10 @@ export function myPanel() {
 
     dyn_folder.add(obj, 'dyn_animate_eigenform').name('animate Eigenformen').onChange(() => {
         window.dispatchEvent(new Event("draw_dyn_animate_eigenformen_grafik"));
+    });
+
+    dyn_folder.add(obj, 'knotenmassen').name('Massen anzeigen').onChange(() => {
+        window.dispatchEvent(new Event("draw_knotenmassen_grafik"));
     });
 
     // nested controllers
