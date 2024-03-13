@@ -8,6 +8,8 @@ import {
     nQuerschnittSets,
     querschnittset,
     System,
+    nnodalMass,
+    nodalmass,
 } from "./rechnen";
 
 import { testNumber, myFormat, write } from "./utility";
@@ -266,14 +268,14 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         th0.colSpan = 4;
         row0.appendChild(th0);
 
-        if ( System === 0 ){
-        // @ts-ignore
-        th0 = table.tHead.appendChild(document.createElement("th"));
-        th0.innerHTML = "Gelenke";
-        th0.title = "Gelenke";
-        th0.setAttribute("class", "table_ein_cell_center");
-        th0.colSpan = 6;
-        row0.appendChild(th0);
+        if (System === 0) {
+            // @ts-ignore
+            th0 = table.tHead.appendChild(document.createElement("th"));
+            th0.innerHTML = "Gelenke";
+            th0.title = "Gelenke";
+            th0.setAttribute("class", "table_ein_cell_center");
+            th0.colSpan = 6;
+            row0.appendChild(th0);
         }
         // @ts-ignore
         th0 = table.tHead.appendChild(document.createElement("th"));
@@ -426,6 +428,97 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
                 newCell.setAttribute("class", "table_cell_right");
             }
         }
+    }
+
+    if (nnodalMass > 0) {
+
+        let tag = document.createElement("p"); // <p></p>
+        let text = document.createTextNode("xxx");
+        tag.appendChild(text);
+        tag.innerHTML = "<b>Knotenmassen</b>";
+        newDiv?.appendChild(tag);
+
+        const table = document.createElement("TABLE") as HTMLTableElement;
+        table.setAttribute("id", "id_table_ein_knotenmassen");
+        table.setAttribute("class", "output_table_ein");
+
+        table.style.border = "none";
+        newDiv?.appendChild(table);
+
+        const thead = table.createTHead();
+        const row0 = thead.insertRow();
+
+        // @ts-ignore
+        let th0 = table.tHead.appendChild(document.createElement("th"));
+        th0.innerHTML = "Knoten";
+        th0.title = "Knotennummer";
+        th0.setAttribute("class", "table_ein_cell_center");
+        row0.appendChild(th0);
+
+        // @ts-ignore
+        let th1 = table.tHead.appendChild(document.createElement("th"));
+        th1.innerHTML = "Masse [t]";
+        th1.title = "Translationsmasse in Tonnen";
+        th1.setAttribute("class", "table_ein_cell_center");
+        row0.appendChild(th1);
+
+        // @ts-ignore
+        th1 = table.tHead.appendChild(document.createElement("th"));
+        th1.innerHTML = "Theta [tm²]";
+        th1.title = "Massenträgheitsmoment um y-Achse in t*m²";
+        th1.setAttribute("class", "table_ein_cell_center");
+        row0.appendChild(th1);
+
+        let sum_mass = 0.0
+        let sum_theta = 0.0
+
+        for (let i = 0; i < nnodalMass; i++) {
+            sum_mass += nodalmass[i].mass
+            sum_theta += nodalmass[i].theta
+
+            let newRow = table.insertRow(-1);
+            let newCell, newText;
+            newCell = newRow.insertCell(0); // Insert a cell in the row at index 0
+
+            newText = document.createTextNode(String(+nodalmass[i].node + 1)); // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_ein_cell_center");
+
+            newCell = newRow.insertCell(1); // Insert a cell in the row at index 1
+            newText = document.createTextNode(myFormat(nodalmass[i].mass, 0, 2)); // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_ein_cell_center");
+
+            newCell = newRow.insertCell(2); // Insert a cell in the row at index 1
+            newText = document.createTextNode(myFormat(nodalmass[i].theta, 0, 2)); // Append a text node to the cell
+            newCell.appendChild(newText);
+            newCell.setAttribute("class", "table_ein_cell_center");
+        }
+
+
+        tag = document.createElement("p"); // <p></p>
+        text = document.createTextNode("   Summe der Knotenmassen = " + myFormat(sum_mass, 1, 1) + ' [t]');
+        tag.appendChild(text);
+        //tag.innerHTML = "<b>Knoten</b>";
+        newDiv?.appendChild(tag);
+
+        tag = document.createElement("p"); // <p></p>
+        text = document.createTextNode("   Summe der Massenträgheitsmomente = " + myFormat(sum_theta, 1, 1) + ' [tm²]');
+        tag.appendChild(text);
+        //tag.innerHTML = "<b>Knoten</b>";
+        newDiv?.appendChild(tag);
+
+        sum_mass = 0.0
+        for (let i = 0; i < nelem; i++) {
+            sum_mass += el[i].mass_gesamt
+        }
+
+        tag = document.createElement("p"); // <p></p>
+        text = document.createTextNode("   Summe der Elementmassen = " + myFormat(sum_mass, 1, 2) + ' [t]');
+        tag.appendChild(text);
+        //tag.innerHTML = "<b>Knoten</b>";
+        newDiv?.appendChild(tag);
+
     }
 
     return newDiv;

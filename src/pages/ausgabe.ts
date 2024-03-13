@@ -18,6 +18,8 @@ import {
     System,
     alpha_cr,
     ausgabe_gleichgewichtSG,
+    dyn_neigv,
+    dyn_omega,
 } from "./rechnen";
 
 import { prot_eingabe } from "./prot_eingabe"
@@ -617,6 +619,89 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         }
     }
 
+}
 
+
+
+//--------------------------------------------------------------------------------------------
+//------------------------------- D Y N  A U S G A B E ---------------------------------------
+//--------------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------------------------------
+export function dyn_ausgabe(newDiv: HTMLDivElement) {
+    //-----------------------------------------------------------------------------------------------------------
+
+    let i: number, j: number
+
+
+    newDiv = prot_eingabe(1, newDiv)!;
+
+    let tag = document.createElement("p");
+    let text = document.createTextNode("Ergebnisse");
+    tag.appendChild(text);
+    tag.innerHTML = "<b>Ergebnisse</b>"
+    newDiv?.appendChild(tag);
+
+
+    tag = document.createElement("p");
+    text = document.createTextNode("Eigenwerte");
+    tag.appendChild(text);
+    tag.innerHTML = "<b>Eigenwerte</b>"
+    newDiv?.appendChild(tag);
+
+
+    const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+    table.setAttribute("id", "id_table_eigenwerte");
+    table.setAttribute("class", "output_table");
+
+    table.style.border = 'none';
+    newDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+
+    const thead = table.createTHead();
+    const row = thead.insertRow();
+
+    // @ts-ignore
+    const th = table.tHead.appendChild(document.createElement("th"));
+    th.innerHTML = "No";
+    th.title = "Nummer des Eigenwertes"
+    th.setAttribute("class", "table_cell_center");
+    row.appendChild(th);
+
+    // @ts-ignore
+    const th0 = table.tHead.appendChild(document.createElement("th"));
+    th0.innerHTML = "Frequenz [Hz]";
+    th0.title = "Frequenz in Schwingungen pro Sekunde"
+    th0.setAttribute("class", "table_cell_center");
+    row.appendChild(th0);
+
+    // @ts-ignore
+    const th1 = table.tHead.appendChild(document.createElement("th"));
+    th1.innerHTML = "Periode [sec]";
+    th1.title = "Periode T in Sekunden"
+    th1.setAttribute("class", "table_cell_center");
+    row.appendChild(th1);
+
+
+
+    for (i = 0; i < dyn_neigv; i++) {
+
+        let newRow = table.insertRow(-1);
+        let newCell, newText
+        newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+        newText = document.createTextNode(String(+i + 1));  // Append a text node to the cell
+        newCell.appendChild(newText);
+        newCell.setAttribute("class", "table_cell_center");
+
+        newCell = newRow.insertCell(1);
+        newText = document.createTextNode(myFormat(dyn_omega[i] / 2 / Math.PI,2,2));
+        newCell.appendChild(newText);
+        newCell.setAttribute("class", "table_cell_mitte");
+
+        newCell = newRow.insertCell(2);
+        newText = document.createTextNode(myFormat(2 * Math.PI / dyn_omega[i],2,2));
+        newCell.appendChild(newText);
+        newCell.setAttribute("class", "table_cell_mitte");
+    }
 
 }

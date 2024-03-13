@@ -11,7 +11,7 @@ import { fontBold } from "../fonts/FreeSans-bold.js";
 import htmlToPdfmake from "html-to-pdfmake";
 //import { tabQWerte, schnittgroesse, bezugswerte } from "./duennQ"
 
-import { nnodes, nelem, System } from "./rechnen";
+import { nnodes, nelem, System, stadyn, nnodalMass, nodalmass, dyn_neigv, dyn_omega } from "./rechnen";
 import {
   el,
   element as stab,
@@ -544,346 +544,379 @@ export async function my_jspdf() {
 
   }
 
-  if (nloads > 0) {   // Knotenlasten
+  //   Knotenmassen
 
-    yy = testSeite(yy, fs1, 1, 5);
-    if (app.browserLanguage == "de") {
-      doc.text("Knotenlasten", links, yy);
-    } else {
-      doc.text("Nodal loads", links, yy);
-    }
+  if (nnodalMass > 0) {
+
+    yy = testSeite(yy, fs, 1, 5);
+    doc.setFont("freesans_bold");
+    doc.text("Knotenmassen", links, yy);
+    //yy = neueZeile(yy, fs, 1)
 
     doc.setFontSize(fs);
     doc.setFont("freesans_bold");
-    yy = neueZeile(yy, fs, 2);
-
-    let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20, 20, 20]);
-
-    el_table_nodes.htmlText("No", 0, "left", yy);
-    el_table_nodes.htmlText("Knoten", 1, "center", yy);
-    el_table_nodes.htmlText("Lastfall", 2, "center", yy);
-    el_table_nodes.htmlText("P<sub>x</sub> [kN]", 3, "center", yy);
-    el_table_nodes.htmlText("P<sub>z</sub> [kN]", 4, "center", yy);
-    if (System === 0) el_table_nodes.htmlText("M<sub>y</sub> [kNm]", 5, "center", yy);
+    yy = neueZeile(yy, fs1, 1);
+    let el_table = new pdf_table(doc, links, [20, 20, 30]);
+    el_table.htmlText("Node No", 0, "left", yy);
+    el_table.htmlText("Masse [t]", 1, "center", yy);
+    if (System === 0) el_table.htmlText("Theta [tm²]", 2, "center", yy);
 
     doc.setFontSize(fs);
     doc.setFont("freesans_normal");
-    yy = neueZeile(yy, fs1, 1);
+    yy = neueZeile(yy, fs, 1);
 
-    for (let i = 0; i < nloads; i++) {
-      el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
-      el_table_nodes.htmlText(String(load[i].node), 1, "center", yy);
-      el_table_nodes.htmlText(String(load[i].lf), 2, "center", yy);
-
-      str = myFormat(load[i].Px, 1, 3);
-      el_table_nodes.htmlText(str, 3, "right", yy, 5);
-
-      str = myFormat(load[i].Pz, 1, 3);
-      el_table_nodes.htmlText(str, 4, "right", yy, 5);
-
-      if (System === 0) {
-        str = myFormat(load[i].p[2], 1, 3);
-        el_table_nodes.htmlText(str, 5, "right", yy, 5);
-      }
+    for (let i = 0; i < nnodalMass; i++) {
+      el_table.htmlText(String(+nodalmass[i].node + 1), 0, "center", yy);
+      el_table.htmlText(myFormat(nodalmass[i].mass, 1, 2), 1, "right", yy, 5);
+      if (System === 0) el_table.htmlText(myFormat(nodalmass[i].theta, 1, 2), 2, "right", yy, 10);
       yy = neueZeile(yy, fs, 1);
     }
+
   }
 
-  if (nstreckenlasten > 0) {     // Trapezstreckenlasten
+  if (stadyn === 0) {
 
-    yy = testSeite(yy, fs1, 1, 10);
-    if (app.browserLanguage == "de") {
-      doc.text("Trapezstreckenlasten", links, yy);
-    } else {
-      doc.text("Element loads", links, yy);
-    }
+    if (nloads > 0) {   // Knotenlasten
 
-    doc.setFontSize(fs);
-    doc.setFont("freesans_normal");
-    yy = neueZeile(yy, fs, 2);
-
-    doc.text('0 = Trapezstreckenlast senkrecht auf Stab', links, yy); yy = neueZeile(yy, fs, 1);
-    doc.text('1 = Trapezstreckenlast in globaler z-Richtung', links, yy); yy = neueZeile(yy, fs, 1);
-    doc.text('2 = Trapezstreckenlast in globaler z-Richtung, Projektion', links, yy); yy = neueZeile(yy, fs, 1);
-    doc.text('3 = Trapezstreckenlast in globaler x-Richtung', links, yy); yy = neueZeile(yy, fs, 1);
-    doc.text('4 = Trapezstreckenlast in globaler x-Richtung, Projektion', links, yy); yy = neueZeile(yy, fs, 2);
-
-    doc.setFont("freesans_bold");
-
-    let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20, 20, 20]);
-
-    el_table_nodes.htmlText("No", 0, "left", yy);
-    el_table_nodes.htmlText("Element", 1, "center", yy);
-    el_table_nodes.htmlText("Lastfall", 2, "center", yy);
-    el_table_nodes.htmlText("Art", 3, "center", yy);
-    el_table_nodes.htmlText("p<sub>a</sub> [kN/m]", 4, "center", yy);
-    el_table_nodes.htmlText("p<sub>e</sub> [kN/m]", 5, "center", yy);
-
-    doc.setFontSize(fs);
-    doc.setFont("freesans_normal");
-    yy = neueZeile(yy, fs1, 1);
-
-    for (let i = 0; i < nstreckenlasten; i++) {
-      el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
-      el_table_nodes.htmlText(String(+eload[i].element + 1), 1, "center", yy);
-      el_table_nodes.htmlText(String(eload[i].lf), 2, "center", yy);
-      el_table_nodes.htmlText(String(eload[i].art), 3, "center", yy);
-
-      str = myFormat(eload[i].pL, 1, 3);
-      el_table_nodes.htmlText(str, 4, "right", yy, 5);
-
-      str = myFormat(eload[i].pR, 1, 3);
-      el_table_nodes.htmlText(str, 5, "right", yy, 5);
-
-      yy = neueZeile(yy, fs, 1);
-    }
-  }
-
-
-  if (neinzellasten > 0) {    // Einzellasten auf Element
-
-    yy = testSeite(yy, fs1, 1, 10);
-    if (app.browserLanguage == "de") {
-      doc.text("Einzellasten", links, yy);
-    } else {
-      doc.text("Element loads P, M", links, yy);
-    }
-    yy = neueZeile(yy, fs, 2);
-    doc.setFont("freesans_bold");
-    doc.setFontSize(fs);
-
-    let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20, 20, 20]);
-
-    el_table_nodes.htmlText("No", 0, "left", yy);
-    el_table_nodes.htmlText("Element", 1, "center", yy);
-    el_table_nodes.htmlText("Lastfall", 2, "center", yy);
-    el_table_nodes.htmlText("x [m]", 3, "center", yy);
-    el_table_nodes.htmlText("P [kN]", 4, "center", yy);
-    el_table_nodes.htmlText("M [kNm]", 5, "center", yy);
-
-    doc.setFontSize(fs);
-    doc.setFont("freesans_normal");
-    yy = neueZeile(yy, fs1, 1);
-
-    for (let i = 0; i < neinzellasten; i++) {
-      let index = i + nstreckenlasten
-
-      el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
-      el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
-      el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
-
-      str = myFormat(eload[index].x, 1, 3);
-      el_table_nodes.htmlText(str, 3, "right", yy, 5);
-
-      str = myFormat(eload[index].P, 1, 3);
-      el_table_nodes.htmlText(str, 4, "right", yy, 5);
-
-      str = myFormat(eload[index].M, 1, 3);
-      el_table_nodes.htmlText(str, 5, "right", yy, 5);
-
-      yy = neueZeile(yy, fs, 1);
-    }
-  }
-
-
-  if (ntemperaturlasten > 0) {    // Temperaturlasten
-
-    yy = testSeite(yy, fs1, 1, 10);
-    if (app.browserLanguage == "de") {
-      doc.text("Temperaturlasten", links, yy);
-    } else {
-      doc.text("Element loads temperature", links, yy);
-    }
-    yy = neueZeile(yy, fs, 2);
-    doc.setFont("freesans_bold");
-    doc.setFontSize(fs);
-
-    let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20, 20]);
-
-    el_table_nodes.htmlText("No", 0, "left", yy);
-    el_table_nodes.htmlText("Element", 1, "center", yy);
-    el_table_nodes.htmlText("Lastfall", 2, "center", yy);
-    el_table_nodes.htmlText("T<sub>u</sub> [°]", 3, "center", yy);
-    el_table_nodes.htmlText("T<sub>o</sub> [°]", 4, "center", yy);
-
-    doc.setFontSize(fs);
-    doc.setFont("freesans_normal");
-    yy = neueZeile(yy, fs1, 1);
-
-    for (let i = 0; i < ntemperaturlasten; i++) {
-      let index = i + nstreckenlasten + neinzellasten
-
-      el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
-      el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
-      el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
-
-      str = myFormat(eload[index].Tu, 1, 3);
-      el_table_nodes.htmlText(str, 3, "right", yy, 5);
-
-      str = myFormat(eload[index].To, 1, 3);
-      el_table_nodes.htmlText(str, 4, "right", yy, 5);
-
-      yy = neueZeile(yy, fs, 1);
-    }
-  }
-
-  if (nvorspannungen > 0) {    // Vorspannung
-
-    yy = testSeite(yy, fs1, 1, 10);
-    if (app.browserLanguage == "de") {
-      doc.text("Vorspannung", links, yy);
-    } else {
-      doc.text("Element loads prestress", links, yy);
-    }
-    yy = neueZeile(yy, fs, 2);
-    doc.setFont("freesans_bold");
-    doc.setFontSize(fs);
-
-    let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20]);
-
-    el_table_nodes.htmlText("No", 0, "left", yy);
-    el_table_nodes.htmlText("Element", 1, "center", yy);
-    el_table_nodes.htmlText("Lastfall", 2, "center", yy);
-    el_table_nodes.htmlText("σ<sub>v</sub> [N/mm²]", 3, "center", yy);
-
-    doc.setFontSize(fs);
-    doc.setFont("freesans_normal");
-    yy = neueZeile(yy, fs1, 1);
-
-    for (let i = 0; i < nvorspannungen; i++) {
-      let index = i + nstreckenlasten + neinzellasten + ntemperaturlasten
-
-      el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
-      el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
-      el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
-
-      str = myFormat(eload[index].sigmaV / 1000., 1, 3);
-      el_table_nodes.htmlText(str, 3, "right", yy, 5);
-
-      yy = neueZeile(yy, fs, 1);
-    }
-  }
-
-
-  if (nspannschloesser > 0) {    // Spannschloss
-
-    yy = testSeite(yy, fs1, 1, 10);
-    if (app.browserLanguage == "de") {
-      doc.text("Spannschloss", links, yy);
-    } else {
-      doc.text("Element loads lock", links, yy);
-    }
-    yy = neueZeile(yy, fs, 2);
-    doc.setFont("freesans_bold");
-    doc.setFontSize(fs);
-
-    let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20]);
-
-    el_table_nodes.htmlText("No", 0, "left", yy);
-    el_table_nodes.htmlText("Element", 1, "center", yy);
-    el_table_nodes.htmlText("Lastfall", 2, "center", yy);
-    el_table_nodes.htmlText("Δs [mm]", 3, "center", yy);
-
-    doc.setFontSize(fs);
-    doc.setFont("freesans_normal");
-    yy = neueZeile(yy, fs1, 1);
-
-    for (let i = 0; i < nspannschloesser; i++) {
-      let index = i + nstreckenlasten + neinzellasten + ntemperaturlasten + nvorspannungen
-
-      el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
-      el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
-      el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
-
-      str = myFormat(eload[index].delta_s * 1000., 1, 3);
-      el_table_nodes.htmlText(str, 3, "right", yy, 5);
-
-      yy = neueZeile(yy, fs, 1);
-    }
-  }
-
-  // Bezeichnungen der Lastfälle ausdrucken
-
-  {
-    let nBezeichnungen = 0;
-    for (let i = 0; i < nlastfaelle; i++) {
-      if (lastfall_bezeichnung[i].length > 0) nBezeichnungen++;
-    }
-    console.log("Anzahl Lastfall-Bezeichnugen", nBezeichnungen);
-
-    if (nBezeichnungen > 0) {
-      yy = testSeite(yy, fs1, 1, 4 + nBezeichnungen);
+      yy = testSeite(yy, fs1, 1, 5);
       if (app.browserLanguage == "de") {
-        doc.text("Lastfälle", links, yy);
+        doc.text("Knotenlasten", links, yy);
       } else {
-        doc.text("Load cases", links, yy);
+        doc.text("Nodal loads", links, yy);
       }
 
       doc.setFontSize(fs);
       doc.setFont("freesans_bold");
       yy = neueZeile(yy, fs, 2);
 
-      let el_table = new pdf_table(doc, links, [10, 150]);
-      console.log("el_table", el_table);
+      let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20, 20, 20]);
 
-      el_table.htmlText("Lf", 0, "center", yy);
-      el_table.htmlText("Bezeichnung", 1, "left", yy);
+      el_table_nodes.htmlText("No", 0, "left", yy);
+      el_table_nodes.htmlText("Knoten", 1, "center", yy);
+      el_table_nodes.htmlText("Lastfall", 2, "center", yy);
+      el_table_nodes.htmlText("P<sub>x</sub> [kN]", 3, "center", yy);
+      el_table_nodes.htmlText("P<sub>z</sub> [kN]", 4, "center", yy);
+      if (System === 0) el_table_nodes.htmlText("M<sub>y</sub> [kNm]", 5, "center", yy);
+
+      doc.setFontSize(fs);
+      doc.setFont("freesans_normal");
+      yy = neueZeile(yy, fs1, 1);
+
+      for (let i = 0; i < nloads; i++) {
+        el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
+        el_table_nodes.htmlText(String(load[i].node), 1, "center", yy);
+        el_table_nodes.htmlText(String(load[i].lf), 2, "center", yy);
+
+        str = myFormat(load[i].Px, 1, 3);
+        el_table_nodes.htmlText(str, 3, "right", yy, 5);
+
+        str = myFormat(load[i].Pz, 1, 3);
+        el_table_nodes.htmlText(str, 4, "right", yy, 5);
+
+        if (System === 0) {
+          str = myFormat(load[i].p[2], 1, 3);
+          el_table_nodes.htmlText(str, 5, "right", yy, 5);
+        }
+        yy = neueZeile(yy, fs, 1);
+      }
+    }
+
+    if (nstreckenlasten > 0) {     // Trapezstreckenlasten
+
+      yy = testSeite(yy, fs1, 1, 10);
+      if (app.browserLanguage == "de") {
+        doc.text("Trapezstreckenlasten", links, yy);
+      } else {
+        doc.text("Element loads", links, yy);
+      }
+
+      doc.setFontSize(fs);
+      doc.setFont("freesans_normal");
+      yy = neueZeile(yy, fs, 2);
+
+      doc.text('0 = Trapezstreckenlast senkrecht auf Stab', links, yy); yy = neueZeile(yy, fs, 1);
+      doc.text('1 = Trapezstreckenlast in globaler z-Richtung', links, yy); yy = neueZeile(yy, fs, 1);
+      doc.text('2 = Trapezstreckenlast in globaler z-Richtung, Projektion', links, yy); yy = neueZeile(yy, fs, 1);
+      doc.text('3 = Trapezstreckenlast in globaler x-Richtung', links, yy); yy = neueZeile(yy, fs, 1);
+      doc.text('4 = Trapezstreckenlast in globaler x-Richtung, Projektion', links, yy); yy = neueZeile(yy, fs, 2);
+
+      doc.setFont("freesans_bold");
+
+      let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20, 20, 20]);
+
+      el_table_nodes.htmlText("No", 0, "left", yy);
+      el_table_nodes.htmlText("Element", 1, "center", yy);
+      el_table_nodes.htmlText("Lastfall", 2, "center", yy);
+      el_table_nodes.htmlText("Art", 3, "center", yy);
+      el_table_nodes.htmlText("p<sub>a</sub> [kN/m]", 4, "center", yy);
+      el_table_nodes.htmlText("p<sub>e</sub> [kN/m]", 5, "center", yy);
+
+      doc.setFontSize(fs);
+      doc.setFont("freesans_normal");
+      yy = neueZeile(yy, fs1, 1);
+
+      for (let i = 0; i < nstreckenlasten; i++) {
+        el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
+        el_table_nodes.htmlText(String(+eload[i].element + 1), 1, "center", yy);
+        el_table_nodes.htmlText(String(eload[i].lf), 2, "center", yy);
+        el_table_nodes.htmlText(String(eload[i].art), 3, "center", yy);
+
+        str = myFormat(eload[i].pL, 1, 3);
+        el_table_nodes.htmlText(str, 4, "right", yy, 5);
+
+        str = myFormat(eload[i].pR, 1, 3);
+        el_table_nodes.htmlText(str, 5, "right", yy, 5);
+
+        yy = neueZeile(yy, fs, 1);
+      }
+    }
+
+
+    if (neinzellasten > 0) {    // Einzellasten auf Element
+
+      yy = testSeite(yy, fs1, 1, 10);
+      if (app.browserLanguage == "de") {
+        doc.text("Einzellasten", links, yy);
+      } else {
+        doc.text("Element loads P, M", links, yy);
+      }
+      yy = neueZeile(yy, fs, 2);
+      doc.setFont("freesans_bold");
+      doc.setFontSize(fs);
+
+      let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20, 20, 20]);
+
+      el_table_nodes.htmlText("No", 0, "left", yy);
+      el_table_nodes.htmlText("Element", 1, "center", yy);
+      el_table_nodes.htmlText("Lastfall", 2, "center", yy);
+      el_table_nodes.htmlText("x [m]", 3, "center", yy);
+      el_table_nodes.htmlText("P [kN]", 4, "center", yy);
+      el_table_nodes.htmlText("M [kNm]", 5, "center", yy);
+
+      doc.setFontSize(fs);
+      doc.setFont("freesans_normal");
+      yy = neueZeile(yy, fs1, 1);
+
+      for (let i = 0; i < neinzellasten; i++) {
+        let index = i + nstreckenlasten
+
+        el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
+        el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
+        el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
+
+        str = myFormat(eload[index].x, 1, 3);
+        el_table_nodes.htmlText(str, 3, "right", yy, 5);
+
+        str = myFormat(eload[index].P, 1, 3);
+        el_table_nodes.htmlText(str, 4, "right", yy, 5);
+
+        str = myFormat(eload[index].M, 1, 3);
+        el_table_nodes.htmlText(str, 5, "right", yy, 5);
+
+        yy = neueZeile(yy, fs, 1);
+      }
+    }
+
+
+    if (ntemperaturlasten > 0) {    // Temperaturlasten
+
+      yy = testSeite(yy, fs1, 1, 10);
+      if (app.browserLanguage == "de") {
+        doc.text("Temperaturlasten", links, yy);
+      } else {
+        doc.text("Element loads temperature", links, yy);
+      }
+      yy = neueZeile(yy, fs, 2);
+      doc.setFont("freesans_bold");
+      doc.setFontSize(fs);
+
+      let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20, 20]);
+
+      el_table_nodes.htmlText("No", 0, "left", yy);
+      el_table_nodes.htmlText("Element", 1, "center", yy);
+      el_table_nodes.htmlText("Lastfall", 2, "center", yy);
+      el_table_nodes.htmlText("T<sub>u</sub> [°]", 3, "center", yy);
+      el_table_nodes.htmlText("T<sub>o</sub> [°]", 4, "center", yy);
+
+      doc.setFontSize(fs);
+      doc.setFont("freesans_normal");
+      yy = neueZeile(yy, fs1, 1);
+
+      for (let i = 0; i < ntemperaturlasten; i++) {
+        let index = i + nstreckenlasten + neinzellasten
+
+        el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
+        el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
+        el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
+
+        str = myFormat(eload[index].Tu, 1, 3);
+        el_table_nodes.htmlText(str, 3, "right", yy, 5);
+
+        str = myFormat(eload[index].To, 1, 3);
+        el_table_nodes.htmlText(str, 4, "right", yy, 5);
+
+        yy = neueZeile(yy, fs, 1);
+      }
+    }
+
+    if (nvorspannungen > 0) {    // Vorspannung
+
+      yy = testSeite(yy, fs1, 1, 10);
+      if (app.browserLanguage == "de") {
+        doc.text("Vorspannung", links, yy);
+      } else {
+        doc.text("Element loads prestress", links, yy);
+      }
+      yy = neueZeile(yy, fs, 2);
+      doc.setFont("freesans_bold");
+      doc.setFontSize(fs);
+
+      let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20]);
+
+      el_table_nodes.htmlText("No", 0, "left", yy);
+      el_table_nodes.htmlText("Element", 1, "center", yy);
+      el_table_nodes.htmlText("Lastfall", 2, "center", yy);
+      el_table_nodes.htmlText("σ<sub>v</sub> [N/mm²]", 3, "center", yy);
+
+      doc.setFontSize(fs);
+      doc.setFont("freesans_normal");
+      yy = neueZeile(yy, fs1, 1);
+
+      for (let i = 0; i < nvorspannungen; i++) {
+        let index = i + nstreckenlasten + neinzellasten + ntemperaturlasten
+
+        el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
+        el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
+        el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
+
+        str = myFormat(eload[index].sigmaV / 1000., 1, 3);
+        el_table_nodes.htmlText(str, 3, "right", yy, 5);
+
+        yy = neueZeile(yy, fs, 1);
+      }
+    }
+
+
+    if (nspannschloesser > 0) {    // Spannschloss
+
+      yy = testSeite(yy, fs1, 1, 10);
+      if (app.browserLanguage == "de") {
+        doc.text("Spannschloss", links, yy);
+      } else {
+        doc.text("Element loads lock", links, yy);
+      }
+      yy = neueZeile(yy, fs, 2);
+      doc.setFont("freesans_bold");
+      doc.setFontSize(fs);
+
+      let el_table_nodes = new pdf_table(doc, links, [5, 20, 20, 20]);
+
+      el_table_nodes.htmlText("No", 0, "left", yy);
+      el_table_nodes.htmlText("Element", 1, "center", yy);
+      el_table_nodes.htmlText("Lastfall", 2, "center", yy);
+      el_table_nodes.htmlText("Δs [mm]", 3, "center", yy);
+
+      doc.setFontSize(fs);
+      doc.setFont("freesans_normal");
+      yy = neueZeile(yy, fs1, 1);
+
+      for (let i = 0; i < nspannschloesser; i++) {
+        let index = i + nstreckenlasten + neinzellasten + ntemperaturlasten + nvorspannungen
+
+        el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
+        el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
+        el_table_nodes.htmlText(String(eload[index].lf), 2, "center", yy);
+
+        str = myFormat(eload[index].delta_s * 1000., 1, 3);
+        el_table_nodes.htmlText(str, 3, "right", yy, 5);
+
+        yy = neueZeile(yy, fs, 1);
+      }
+    }
+
+    // Bezeichnungen der Lastfälle ausdrucken
+
+    {
+      let nBezeichnungen = 0;
+      for (let i = 0; i < nlastfaelle; i++) {
+        if (lastfall_bezeichnung[i].length > 0) nBezeichnungen++;
+      }
+      console.log("Anzahl Lastfall-Bezeichnugen", nBezeichnungen);
+
+      if (nBezeichnungen > 0) {
+        yy = testSeite(yy, fs1, 1, 4 + nBezeichnungen);
+        if (app.browserLanguage == "de") {
+          doc.text("Lastfälle", links, yy);
+        } else {
+          doc.text("Load cases", links, yy);
+        }
+
+        doc.setFontSize(fs);
+        doc.setFont("freesans_bold");
+        yy = neueZeile(yy, fs, 2);
+
+        let el_table = new pdf_table(doc, links, [10, 150]);
+        console.log("el_table", el_table);
+
+        el_table.htmlText("Lf", 0, "center", yy);
+        el_table.htmlText("Bezeichnung", 1, "left", yy);
+
+        doc.setFontSize(fs);
+        doc.setFont("freesans_normal");
+        yy = neueZeile(yy, fs, 1);
+
+        for (let i = 0; i < nlastfaelle; i++) {
+          el_table.htmlText(String(+i + 1), 0, "center", yy);
+          el_table.htmlText(lastfall_bezeichnung[i], 1, "left", yy);
+          yy = neueZeile(yy, fs, 1);
+        }
+      }
+    }
+
+    // Kombinationen ausdrucken
+
+    {
+      yy = testSeite(yy, fs1, 1, 4 + nkombinationen);
+      if (app.browserLanguage == "de") {
+        doc.text("Kombinationen", links, yy);
+      } else {
+        doc.text("Load combinations", links, yy);
+      }
+
+      doc.setFontSize(fs);
+      doc.setFont("freesans_bold");
+      yy = neueZeile(yy, fs, 2);
+
+      let spaltenArray = Array(nlastfaelle + 2);
+      spaltenArray[0] = 10;
+      spaltenArray[1] = 30;
+      for (let i = 0; i < nlastfaelle; i++) spaltenArray[i + 2] = 10;
+      console.log("spaltenArray", spaltenArray);
+
+      let el_table = new pdf_table(doc, links, spaltenArray);
+      //console.log("el_table", el_table)
+
+      el_table.htmlText("No", 0, "center", yy);
+      el_table.htmlText("Erläuterung", 1, "left", yy);
+      for (let i = 0; i < nlastfaelle; i++) el_table.htmlText("Lf " + (+i + 1), 2 + i, "center", yy);
 
       doc.setFontSize(fs);
       doc.setFont("freesans_normal");
       yy = neueZeile(yy, fs, 1);
 
-      for (let i = 0; i < nlastfaelle; i++) {
+      for (let i = 0; i < nkombinationen; i++) {
         el_table.htmlText(String(+i + 1), 0, "center", yy);
-        el_table.htmlText(lastfall_bezeichnung[i], 1, "left", yy);
+        el_table.htmlText(kombiTabelle_txt[i], 1, "left", yy);
+        for (let j = 0; j < nlastfaelle; j++) {
+          console.log("kombitabelle", i, j, kombiTabelle[i][j]);
+          el_table.htmlText(myFormat(kombiTabelle[i][j], 1, 2), j + 2, "center", yy);
+        }
         yy = neueZeile(yy, fs, 1);
       }
     }
-  }
 
-  // Kombinationen ausdrucken
+  }  // Ende Lasten Statik
 
-  {
-    yy = testSeite(yy, fs1, 1, 4 + nkombinationen);
-    if (app.browserLanguage == "de") {
-      doc.text("Kombinationen", links, yy);
-    } else {
-      doc.text("Load combinations", links, yy);
-    }
-
-    doc.setFontSize(fs);
-    doc.setFont("freesans_bold");
-    yy = neueZeile(yy, fs, 2);
-
-    let spaltenArray = Array(nlastfaelle + 2);
-    spaltenArray[0] = 10;
-    spaltenArray[1] = 30;
-    for (let i = 0; i < nlastfaelle; i++) spaltenArray[i + 2] = 10;
-    console.log("spaltenArray", spaltenArray);
-
-    let el_table = new pdf_table(doc, links, spaltenArray);
-    //console.log("el_table", el_table)
-
-    el_table.htmlText("No", 0, "center", yy);
-    el_table.htmlText("Erläuterung", 1, "left", yy);
-    for (let i = 0; i < nlastfaelle; i++) el_table.htmlText("Lf " + (+i + 1), 2 + i, "center", yy);
-
-    doc.setFontSize(fs);
-    doc.setFont("freesans_normal");
-    yy = neueZeile(yy, fs, 1);
-
-    for (let i = 0; i < nkombinationen; i++) {
-      el_table.htmlText(String(+i + 1), 0, "center", yy);
-      el_table.htmlText(kombiTabelle_txt[i], 1, "left", yy);
-      for (let j = 0; j < nlastfaelle; j++) {
-        console.log("kombitabelle", i, j, kombiTabelle[i][j]);
-        el_table.htmlText(myFormat(kombiTabelle[i][j], 1, 2), j + 2, "center", yy);
-      }
-      yy = neueZeile(yy, fs, 1);
-    }
-  }
-
-  // Schnittgrößen ausdrucken
 
   doc.line(links, yy, 200, yy, "S");
   //  yy = neueZeile(yy, fs1, 2)
@@ -902,193 +935,27 @@ export async function my_jspdf() {
   //yy = neueZeile(yy, fs, 2)
   yy = neueZeile(yy, fs1, 1);
 
-  let text: string;
-  let nLoop = 0;
-  if (THIIO_flag === 0) {
-    // Theorie I.Ordnung
-    nLoop = nlastfaelle;
-    doc.text("Berechnung nach Theorie I. Ordnung", links, yy);
-  } else {
-    nLoop = nkombinationen;
-    doc.text("Berechnung nach Theorie II. Ordnung", links, yy);
-  }
-  yy = neueZeile(yy, fs, 1);
+  if (stadyn === 0) {
 
-  console.log("Ausgabe pdf", nLoop, nlastfaelle, nkombinationen);
+    // Schnittgrößen ausdrucken
 
-  for (let iLastfall = 1; iLastfall <= nLoop; iLastfall++) {
-    if (THIIO_flag === 0) text = "Lastfall " + iLastfall;
-    else text = "Kombination " + iLastfall;
-    console.log("text", links, yy, text);
-    doc.setFont("freesans_bold");
+    let text: string;
+    let nLoop = 0;
+    if (THIIO_flag === 0) {
+      // Theorie I.Ordnung
+      nLoop = nlastfaelle;
+      doc.text("Berechnung nach Theorie I. Ordnung", links, yy);
+    } else {
+      nLoop = nkombinationen;
+      doc.text("Berechnung nach Theorie II. Ordnung", links, yy);
+    }
     yy = neueZeile(yy, fs, 1);
 
-    doc.line(links, yy, 200, yy, "S");
+    //console.log("Ausgabe pdf", nLoop, nlastfaelle, nkombinationen);
 
-    //yy = neueZeile(yy, fs, 1)
-    yy = testSeite(yy, fs, 1, 8);
-    doc.text(text, links, yy);
-    yy = neueZeile(yy, fs, 1);
-
-    //   Verformungen
-    {
-      yy = testSeite(yy, fs, 1, 5);
-      doc.setFont("freesans_bold");
-      doc.text("Knotenverformungen", links, yy);
-      //yy = neueZeile(yy, fs, 1)
-
-      doc.setFontSize(fs);
-      doc.setFont("freesans_bold");
-      yy = neueZeile(yy, fs1, 1);
-      let el_table = new pdf_table(doc, links, [20, 20, 20, 20]);
-      el_table.htmlText("Node No", 0, "left", yy);
-      el_table.htmlText("u [mm]", 1, "center", yy);
-      el_table.htmlText("w [mm]", 2, "center", yy);
-      if (System === 0) el_table.htmlText("φ [mrad]", 3, "center", yy);
-
-      doc.setFontSize(fs);
-      doc.setFont("freesans_normal");
-      yy = neueZeile(yy, fs, 1);
-
-      for (let i = 0; i < nnodes; i++) {
-        el_table.htmlText(String(+i + 1), 0, "center", yy);
-        el_table.htmlText(myFormat(disp_print._(i + 1, 1, iLastfall), 2, 2), 1, "right", yy, 5);
-        el_table.htmlText(myFormat(disp_print._(i + 1, 2, iLastfall), 2, 2), 2, "right", yy, 5);
-        if (System === 0) el_table.htmlText(myFormat(disp_print._(i + 1, 3, iLastfall), 2, 2), 3, "right", yy, 5);
-        yy = neueZeile(yy, fs, 1);
-      }
-    }
-
-    //   Lagerkräfte
-    {
-      //yy = neueZeile(yy, fs, 1)
-      yy = testSeite(yy, fs, 1, 5);
-      doc.setFont("freesans_bold");
-      doc.text("Lagerreaktionen", links, yy);
-      //yy = neueZeile(yy, fs, 1)
-
-      doc.setFontSize(fs);
-      doc.setFont("freesans_bold");
-      yy = neueZeile(yy, fs1, 1);
-      let el_table = new pdf_table(doc, links, [20, 20, 20, 20]);
-      el_table.htmlText("Node No", 0, "left", yy);
-      el_table.htmlText("A<sub>x</sub> [kN]", 1, "center", yy);
-      el_table.htmlText("A<sub>z</sub> [kN]", 2, "center", yy);
-      if (System === 0) el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
-
-      doc.setFontSize(fs);
-      doc.setFont("freesans_normal");
-      yy = neueZeile(yy, fs, 1);
-
-      for (let i = 0; i < nnodes; i++) {
-        el_table.htmlText(String(+i + 1), 0, "center", yy);
-        el_table.htmlText(myFormat(lagerkraefte._(i, 0, iLastfall - 1), 2, 2), 1, "right", yy, 5);
-        el_table.htmlText(myFormat(lagerkraefte._(i, 1, iLastfall - 1), 2, 2), 2, "right", yy, 5);
-        if (System === 0) el_table.htmlText(myFormat(lagerkraefte._(i, 2, iLastfall - 1), 2, 2), 3, "right", yy, 5);
-        yy = neueZeile(yy, fs, 1);
-      }
-    }
-
-    {
-      if (THIIO_flag === 1) {
-        yy = neueZeile(yy, fs, 1);
-        for (let i = 0; i < neigv; i++) {
-          htmlText("α<sub>cr</sub>[Eigenwert " + (+i + 1) + "] = " + myFormat(alpha_cr[iLastfall - 1][i], 2, 2), links, yy);
-          yy = neueZeile(yy, fs, 1);
-        }
-      }
-    }
-
-    //   Schnittgrößen
-    {
-      let str_Vz = "V<sub>z</sub>"
-
-      yy = testSeite(yy, fs, 1, 5);
-      doc.setFont("freesans_bold");
-      if (THIIO_flag === 0) {
-        doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
-      } else {
-        if (ausgabe_gleichgewichtSG) {
-          doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
-          str_Vz = "T<sub>z</sub>"
-        } else {
-          doc.text("Nachweisschnittgrößen und lokale Verformungen", links, yy);
-        }
-      }
-      yy = neueZeile(yy, fs, 1);
-
-      for (let ielem = 0; ielem < nelem; ielem++) {
-        yy = neueZeile(yy, fs, 1);
-        doc.setFont("freesans_bold");
-        doc.text("Element " + (+ielem + 1), links, yy);
-        yy = neueZeile(yy, fs, 1);
-
-        let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 20, 20, 20]);
-        if (System === 0) {
-          el_table.htmlText("x [m]", 0, "center", yy);
-          el_table.htmlText("N [kN]", 1, "center", yy);
-          el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
-          el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
-          el_table.htmlText("u<sub>xL</sub> [mm]", 4, "center", yy);
-          el_table.htmlText("w<sub>zL</sub> [mm]", 5, "center", yy);
-          el_table.htmlText("ß [mrad]", 6, "center", yy);
-        } else {
-          el_table.htmlText("x [m]", 0, "center", yy);
-          el_table.htmlText("N [kN]", 1, "center", yy);
-          // el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
-          el_table.htmlText("u<sub>xL</sub> [mm]", 2, "center", yy);
-          el_table.htmlText("w<sub>zL</sub> [mm]", 3, "center", yy);
-
-        }
-        doc.setFontSize(fs);
-        doc.setFont("freesans_normal");
-        yy = neueZeile(yy, fs, 1);
-
-        const nelTeilungen = el[ielem].nTeilungen;
-        let sg_M: number[] = new Array(nelTeilungen);
-        let sg_V: number[] = new Array(nelTeilungen);
-        let sg_N: number[] = new Array(nelTeilungen);
-
-        let uL: number[] = new Array(nelTeilungen); // L = Verformung lokal
-        let wL: number[] = new Array(nelTeilungen);
-        let phiL: number[] = new Array(nelTeilungen);
-
-        const lf_index = iLastfall - 1;
-        el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
-        el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
-        el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
-        el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index, false);
-
-        for (let i = 0; i < nelTeilungen; i++) {
-          if (System === 0) {
-            el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
-            el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
-            el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
-            el_table.htmlText(myFormat(sg_M[i], 2, 2), 3, "right", yy, 5);
-            el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 4, "right", yy, 5);
-            el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 5, "right", yy, 5);
-            el_table.htmlText(myFormat(phiL[i] * 1000, 3, 3), 6, "right", yy, 5);
-          } else {
-            el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
-            el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
-            //el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
-            el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 2, "right", yy, 5);
-            el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 3, "right", yy, 5);
-          }
-          yy = neueZeile(yy, fs, 1);
-        }
-      }
-    }
-  }
-
-  //******************************************
-  // Kombinationen bei Theorie I. Ordnung    *
-  //******************************************
-
-  if (THIIO_flag === 0 && nkombinationen > 0) {
-
-    for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
-      text = "Kombination " + iKomb;
+    for (let iLastfall = 1; iLastfall <= nLoop; iLastfall++) {
+      if (THIIO_flag === 0) text = "Lastfall " + iLastfall;
+      else text = "Kombination " + iLastfall;
       console.log("text", links, yy, text);
       doc.setFont("freesans_bold");
       yy = neueZeile(yy, fs, 1);
@@ -1122,9 +989,9 @@ export async function my_jspdf() {
 
         for (let i = 0; i < nnodes; i++) {
           el_table.htmlText(String(+i + 1), 0, "center", yy);
-          el_table.htmlText(myFormat(disp_print_kombi._(i + 1, 1, iKomb), 2, 2), 1, "right", yy, 5);
-          el_table.htmlText(myFormat(disp_print_kombi._(i + 1, 2, iKomb), 2, 2), 2, "right", yy, 5);
-          if (System === 0) el_table.htmlText(myFormat(disp_print_kombi._(i + 1, 3, iKomb), 2, 2), 3, "right", yy, 5);
+          el_table.htmlText(myFormat(disp_print._(i + 1, 1, iLastfall), 2, 2), 1, "right", yy, 5);
+          el_table.htmlText(myFormat(disp_print._(i + 1, 2, iLastfall), 2, 2), 2, "right", yy, 5);
+          if (System === 0) el_table.htmlText(myFormat(disp_print._(i + 1, 3, iLastfall), 2, 2), 3, "right", yy, 5);
           yy = neueZeile(yy, fs, 1);
         }
       }
@@ -1152,13 +1019,22 @@ export async function my_jspdf() {
 
         for (let i = 0; i < nnodes; i++) {
           el_table.htmlText(String(+i + 1), 0, "center", yy);
-          el_table.htmlText(myFormat(lagerkraefte_kombi._(i, 0, iKomb - 1), 2, 2), 1, "right", yy, 5);
-          el_table.htmlText(myFormat(lagerkraefte_kombi._(i, 1, iKomb - 1), 2, 2), 2, "right", yy, 5);
-          if (System === 0) el_table.htmlText(myFormat(lagerkraefte_kombi._(i, 2, iKomb - 1), 2, 2), 3, "right", yy, 5);
+          el_table.htmlText(myFormat(lagerkraefte._(i, 0, iLastfall - 1), 2, 2), 1, "right", yy, 5);
+          el_table.htmlText(myFormat(lagerkraefte._(i, 1, iLastfall - 1), 2, 2), 2, "right", yy, 5);
+          if (System === 0) el_table.htmlText(myFormat(lagerkraefte._(i, 2, iLastfall - 1), 2, 2), 3, "right", yy, 5);
           yy = neueZeile(yy, fs, 1);
         }
       }
 
+      {
+        if (THIIO_flag === 1) {
+          yy = neueZeile(yy, fs, 1);
+          for (let i = 0; i < neigv; i++) {
+            htmlText("α<sub>cr</sub>[Eigenwert " + (+i + 1) + "] = " + myFormat(alpha_cr[iLastfall - 1][i], 2, 2), links, yy);
+            yy = neueZeile(yy, fs, 1);
+          }
+        }
+      }
 
       //   Schnittgrößen
       {
@@ -1214,7 +1090,7 @@ export async function my_jspdf() {
           let wL: number[] = new Array(nelTeilungen);
           let phiL: number[] = new Array(nelTeilungen);
 
-          const lf_index = iKomb - 1 + nlastfaelle;
+          const lf_index = iLastfall - 1;
           el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
           el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
           el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
@@ -1232,7 +1108,7 @@ export async function my_jspdf() {
             } else {
               el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
               el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
-              // el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
+              //el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
               el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 2, "right", yy, 5);
               el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 3, "right", yy, 5);
             }
@@ -1242,8 +1118,198 @@ export async function my_jspdf() {
       }
     }
 
-  }
+    //******************************************
+    // Kombinationen bei Theorie I. Ordnung    *
+    //******************************************
 
+    if (THIIO_flag === 0 && nkombinationen > 0) {
+
+      for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
+        text = "Kombination " + iKomb;
+        console.log("text", links, yy, text);
+        doc.setFont("freesans_bold");
+        yy = neueZeile(yy, fs, 1);
+
+        doc.line(links, yy, 200, yy, "S");
+
+        //yy = neueZeile(yy, fs, 1)
+        yy = testSeite(yy, fs, 1, 8);
+        doc.text(text, links, yy);
+        yy = neueZeile(yy, fs, 1);
+
+        //   Verformungen
+        {
+          yy = testSeite(yy, fs, 1, 5);
+          doc.setFont("freesans_bold");
+          doc.text("Knotenverformungen", links, yy);
+          //yy = neueZeile(yy, fs, 1)
+
+          doc.setFontSize(fs);
+          doc.setFont("freesans_bold");
+          yy = neueZeile(yy, fs1, 1);
+          let el_table = new pdf_table(doc, links, [20, 20, 20, 20]);
+          el_table.htmlText("Node No", 0, "left", yy);
+          el_table.htmlText("u [mm]", 1, "center", yy);
+          el_table.htmlText("w [mm]", 2, "center", yy);
+          if (System === 0) el_table.htmlText("φ [mrad]", 3, "center", yy);
+
+          doc.setFontSize(fs);
+          doc.setFont("freesans_normal");
+          yy = neueZeile(yy, fs, 1);
+
+          for (let i = 0; i < nnodes; i++) {
+            el_table.htmlText(String(+i + 1), 0, "center", yy);
+            el_table.htmlText(myFormat(disp_print_kombi._(i + 1, 1, iKomb), 2, 2), 1, "right", yy, 5);
+            el_table.htmlText(myFormat(disp_print_kombi._(i + 1, 2, iKomb), 2, 2), 2, "right", yy, 5);
+            if (System === 0) el_table.htmlText(myFormat(disp_print_kombi._(i + 1, 3, iKomb), 2, 2), 3, "right", yy, 5);
+            yy = neueZeile(yy, fs, 1);
+          }
+        }
+
+        //   Lagerkräfte
+        {
+          //yy = neueZeile(yy, fs, 1)
+          yy = testSeite(yy, fs, 1, 5);
+          doc.setFont("freesans_bold");
+          doc.text("Lagerreaktionen", links, yy);
+          //yy = neueZeile(yy, fs, 1)
+
+          doc.setFontSize(fs);
+          doc.setFont("freesans_bold");
+          yy = neueZeile(yy, fs1, 1);
+          let el_table = new pdf_table(doc, links, [20, 20, 20, 20]);
+          el_table.htmlText("Node No", 0, "left", yy);
+          el_table.htmlText("A<sub>x</sub> [kN]", 1, "center", yy);
+          el_table.htmlText("A<sub>z</sub> [kN]", 2, "center", yy);
+          if (System === 0) el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
+
+          doc.setFontSize(fs);
+          doc.setFont("freesans_normal");
+          yy = neueZeile(yy, fs, 1);
+
+          for (let i = 0; i < nnodes; i++) {
+            el_table.htmlText(String(+i + 1), 0, "center", yy);
+            el_table.htmlText(myFormat(lagerkraefte_kombi._(i, 0, iKomb - 1), 2, 2), 1, "right", yy, 5);
+            el_table.htmlText(myFormat(lagerkraefte_kombi._(i, 1, iKomb - 1), 2, 2), 2, "right", yy, 5);
+            if (System === 0) el_table.htmlText(myFormat(lagerkraefte_kombi._(i, 2, iKomb - 1), 2, 2), 3, "right", yy, 5);
+            yy = neueZeile(yy, fs, 1);
+          }
+        }
+
+
+        //   Schnittgrößen
+        {
+          let str_Vz = "V<sub>z</sub>"
+
+          yy = testSeite(yy, fs, 1, 5);
+          doc.setFont("freesans_bold");
+          if (THIIO_flag === 0) {
+            doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
+          } else {
+            if (ausgabe_gleichgewichtSG) {
+              doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
+              str_Vz = "T<sub>z</sub>"
+            } else {
+              doc.text("Nachweisschnittgrößen und lokale Verformungen", links, yy);
+            }
+          }
+          yy = neueZeile(yy, fs, 1);
+
+          for (let ielem = 0; ielem < nelem; ielem++) {
+            yy = neueZeile(yy, fs, 1);
+            doc.setFont("freesans_bold");
+            doc.text("Element " + (+ielem + 1), links, yy);
+            yy = neueZeile(yy, fs, 1);
+
+            let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 20, 20, 20]);
+            if (System === 0) {
+              el_table.htmlText("x [m]", 0, "center", yy);
+              el_table.htmlText("N [kN]", 1, "center", yy);
+              el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
+              el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
+              el_table.htmlText("u<sub>xL</sub> [mm]", 4, "center", yy);
+              el_table.htmlText("w<sub>zL</sub> [mm]", 5, "center", yy);
+              el_table.htmlText("ß [mrad]", 6, "center", yy);
+            } else {
+              el_table.htmlText("x [m]", 0, "center", yy);
+              el_table.htmlText("N [kN]", 1, "center", yy);
+              // el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
+              el_table.htmlText("u<sub>xL</sub> [mm]", 2, "center", yy);
+              el_table.htmlText("w<sub>zL</sub> [mm]", 3, "center", yy);
+
+            }
+            doc.setFontSize(fs);
+            doc.setFont("freesans_normal");
+            yy = neueZeile(yy, fs, 1);
+
+            const nelTeilungen = el[ielem].nTeilungen;
+            let sg_M: number[] = new Array(nelTeilungen);
+            let sg_V: number[] = new Array(nelTeilungen);
+            let sg_N: number[] = new Array(nelTeilungen);
+
+            let uL: number[] = new Array(nelTeilungen); // L = Verformung lokal
+            let wL: number[] = new Array(nelTeilungen);
+            let phiL: number[] = new Array(nelTeilungen);
+
+            const lf_index = iKomb - 1 + nlastfaelle;
+            el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
+            el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
+            el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
+            el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index, false);
+
+            for (let i = 0; i < nelTeilungen; i++) {
+              if (System === 0) {
+                el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
+                el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
+                el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
+                el_table.htmlText(myFormat(sg_M[i], 2, 2), 3, "right", yy, 5);
+                el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 4, "right", yy, 5);
+                el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 5, "right", yy, 5);
+                el_table.htmlText(myFormat(phiL[i] * 1000, 3, 3), 6, "right", yy, 5);
+              } else {
+                el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
+                el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
+                // el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
+                el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 2, "right", yy, 5);
+                el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 3, "right", yy, 5);
+              }
+              yy = neueZeile(yy, fs, 1);
+            }
+          }
+        }
+      }
+
+    }
+  }  // Ende stadyn === 0   STATIK
+
+  //   Eigenwerte
+
+  if (dyn_neigv > 0) {
+
+    yy = testSeite(yy, fs, 1, 5);
+    doc.setFont("freesans_bold");
+    doc.text("Eigenwerte", links, yy);
+
+    doc.setFontSize(fs);
+    doc.setFont("freesans_bold");
+    yy = neueZeile(yy, fs1, 1);
+    let el_table = new pdf_table(doc, links, [20, 20, 40]);
+    el_table.htmlText("Eig No", 0, "left", yy);
+    el_table.htmlText("Frequenz [Hz]", 1, "center", yy);
+    el_table.htmlText("Periode [sec]", 2, "center", yy);
+
+    doc.setFontSize(fs);
+    doc.setFont("freesans_normal");
+    yy = neueZeile(yy, fs, 1);
+
+    for (let i = 0; i < dyn_neigv; i++) {
+      el_table.htmlText(String(+i + 1), 0, "center", yy);
+      el_table.htmlText(myFormat(dyn_omega[i] / 2 / Math.PI, 2, 2), 1, "right", yy, 5);
+      el_table.htmlText(myFormat(2 * Math.PI / dyn_omega[i], 2, 2), 2, "right", yy, 15);
+      yy = neueZeile(yy, fs, 1);
+    }
+
+  }
 
   // -------------------------------------  S  V  G  --------------------------------------
 

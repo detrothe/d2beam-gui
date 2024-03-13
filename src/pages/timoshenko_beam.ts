@@ -59,6 +59,7 @@ export class CTimoshenko_beam extends CElement {
     //trans: number[][] = []
     emass: number[][] = []
     mue = 0.0                     // Dichte * Area für Dynamik Massenmatrix
+    mass_gesamt = 0.0             // Gesamtmasse des Elementes
 
     transU: number[][] = []       // Transformation von global nach lokal
     transF: number[][] = []       // Transformation von lokal nach global = transU ^T
@@ -217,6 +218,7 @@ export class CTimoshenko_beam extends CElement {
             this.emass = Array.from(Array(6), () => new Array(6));
             this.emassG = Array.from(Array(this.neqeG), () => new Array(this.neqeG));
             this.mue = this.wichte * this.area / 10   // in Tonnen/m
+            this.mass_gesamt = this.mue * this.sl
         }
 
         let cophi = node[this.nod1].co
