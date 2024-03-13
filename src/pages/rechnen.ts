@@ -3398,7 +3398,7 @@ export function show_gleichungssystem(checked: boolean) {
                 for (let i = 0; i <= neq; i++) {
                     if (table.tHead) {
                         const th0 = table.tHead.appendChild(document.createElement('th'));
-                        if (i === 0) th0.innerHTML = '[K]';
+                        if (i === 0) th0.innerHTML = '[M]';
                         else /*if (i <= neq)*/ th0.innerHTML = String(i);
                         // else if (i === neq + 1) th0.innerHTML = '{U}';
                         // else th0.innerHTML = '{R}';
