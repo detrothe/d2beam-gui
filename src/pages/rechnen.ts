@@ -15,6 +15,7 @@ import { init_grafik, drawsystem } from "./grafik";
 import { show_controller_THIIO, show_controller_results, show_controller_truss } from "./mypanelgui"
 import { ausgabe, dyn_ausgabe } from "./ausgabe"
 
+
 // import { read_daten } from "./dateien"
 
 let fatal_error = false;
@@ -1698,6 +1699,7 @@ function calc_neq_and_springs() {
 //---------------------------------------------------------------------------------------------------------------
 
 function calculate() {
+
 
     //-----------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------

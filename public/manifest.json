@@ -11,7 +11,9 @@
   "background_color": "#222222",
   "related_applications": [],
   "prefer_related_applications": false,
-  "display_override": ["window-controls-overlay"],
+  "display_override": [
+    "window-controls-overlay"
+  ],
   "icons": [
     {
       "src": "assets/icons/512x512.png",
@@ -55,7 +57,12 @@
       "short_name": "About",
       "description": "Open the about page",
       "url": "/about",
-      "icons": [{ "src": "assets/icons/192x192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "assets/icons/192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ],
   "widgets": [
@@ -78,6 +85,16 @@
           "sizes": "48x48"
         }
       ]
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/openFile",
+      "accept": {
+        "text/*": [
+          ".d2beam"
+        ]
+      }
     }
   ]
 }
