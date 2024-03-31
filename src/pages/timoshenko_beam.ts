@@ -76,7 +76,8 @@ export class CTimoshenko_beam extends CElement {
 
     F: number[] = Array(10)        // Stabendgrößen nach WGV im globalen Koordinatensystem
     FL: number[] = Array(6)        // Stabendgrößen nach KGV im lokalen Koordinatensystem
-    Fe: number[] = Array(10)       // Vorverformungen aus Schiefstellung
+    Fe: number[] = Array(10)       // Vorverformungen aus Schiefstellung 1. Eigenwert
+    FeVor: number[] = Array(10)    // Vorverformungen aus Stabschiefstellung
 
     N_ = [] as number[][]          // Schnittgrößen entlang Stab, lokal
     V_ = [] as number[][]
@@ -940,7 +941,7 @@ export class CTimoshenko_beam extends CElement {
 
             if (iter > 0) {
                 for (i = 0; i < this.neqeG; i++) {                            // Schiefstellung
-                    this.F[i] = this.F[i] + this.Fe[i]
+                    this.F[i] = this.F[i] + this.Fe[i] + this.FeVor[i]        // FeVor enthält kombiTabelle
                 }
             }
 
@@ -1285,7 +1286,7 @@ export class CTimoshenko_beam extends CElement {
     }
 
     //---------------------------------------------------------------------------------------------
-    berechneElementlasten_Vorverformung(Fe: number[], u: number[]) {
+    berechneElementlasten_Vorverformung(Fe: number[], FeStabvor: number[], u: number[], iKomb: number) {
 
         let ieq: number, i: number, j: number, k: number
         let sum: number
@@ -1320,15 +1321,30 @@ export class CTimoshenko_beam extends CElement {
             FeL[j] = sum     // lokal
         }
 
+
+        for (i = 0; i < this.neqeG; i++) {
+            sum = 0.0
+            for (j = 0; j < 6; j++) {
+                sum += this.transU[j][i] * FeL[j]
+                //sum += this.transF[i][j] * FeL[j]
+            }
+            this.Fe[i] = Fe[i] = sum          // global
+        }
+
         // jetzt noch die Anteile aus Stabvorverformungen
 
         console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß   nstabvorverfomungen", nstabvorverfomungen)
+
+        FeL.fill(0.0)
+        FeStabvor.fill(0.0)
 
         for (i = 0; i < nstabvorverfomungen; i++) {
 
             if (stabvorverformung[i].element === this.ielem) {
                 console.log("Element ", +i + 1, ' hat Stabvorverformungen')
                 v0.fill(0.0)
+
+                const index = stabvorverformung[i].lf - 1
 
                 v0[1] = stabvorverformung[i].p[0]
                 v0[4] = stabvorverformung[i].p[1]
@@ -1343,12 +1359,13 @@ export class CTimoshenko_beam extends CElement {
                 for (j = 0; j < 6; j++) {
                     sum = 0.0
                     for (k = 0; k < 6; k++) {
-                        sum += this.normalkraft * this.ksig[j][k] * v0[k]
+                        sum += this.normalkraft * this.ksig[j][k] * v0[k] * kombiTabelle[iKomb - 1][index]
                     }
                     FeL[j] += sum     // lokal
                 }
 
-                for (j = 0; j < 6; j++) this.edispv0[j] += v0[j];
+                // wird nicht benutzt
+                for (j = 0; j < 6; j++) this.edispv0[j] += v0[j] * kombiTabelle[iKomb - 1][index];   // TO DO geht so nicht
             }
         }
 
@@ -1360,7 +1377,7 @@ export class CTimoshenko_beam extends CElement {
                 sum += this.transU[j][i] * FeL[j]
                 //sum += this.transF[i][j] * FeL[j]
             }
-            this.Fe[i] = Fe[i] = sum          // global
+            this.FeVor[i] = FeStabvor[i] = sum          // global
         }
 
     }
@@ -1615,10 +1632,12 @@ export class CTimoshenko_beam extends CElement {
 
                 for (let i = 0; i < nstabvorverfomungen; i++) {
                     if (stabvorverformung[i].element === this.ielem) {
+                        const index = stabvorverformung[i].lf - 1
+                        const fact = kombiTabelle[iLastf][index]
                         //console.log("Element ", +i + 1, ' hat Stabvorverformungen')
-                        let w0a = stabvorverformung[i].p[0]
-                        let w0e = stabvorverformung[i].p[1]
-                        let v0m = stabvorverformung[i].p[2]
+                        let w0a = stabvorverformung[i].p[0] * fact
+                        let w0e = stabvorverformung[i].p[1] * fact
+                        let v0m = stabvorverformung[i].p[2] * fact
                         let w0x = (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
                         let phi0x = (w0e - w0a) / sl + 4.0 * v0m / sl * (1.0 - 2 * x / sl)
                         if (this.NL < 0.0) Mx = Mx - this.NL * w0x

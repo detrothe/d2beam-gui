@@ -26,6 +26,7 @@ export function read_daten(eingabedaten: string) {
     let jobj = JSON.parse(eingabedaten);
     //console.log("und zurück", jobj);
 
+    let version = jobj.version;
 
     // in Tabelle schreiben
     {
@@ -266,10 +267,24 @@ export function read_daten(eingabedaten: string) {
 
     nSpalten = tabelle.rows[0].cells.length;
 
-    for (i = 1; i < tabelle.rows.length; i++) {
-        for (j = 1; j < nSpalten; j++) {
-            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-            child.value = jobj.stabvorverformung[i - 1][j - 1];
+    if (version < 2) {            // ohne Lastfall
+        for (i = 1; i < tabelle.rows.length; i++) {
+            let child = tabelle.rows[i].cells[1].firstElementChild as HTMLInputElement;
+            child.value = jobj.stabvorverformung[i - 1][0];
+            child = tabelle.rows[i].cells[2].firstElementChild as HTMLInputElement;
+            child.value = '1';
+
+            for (j = 3; j < 6; j++) {
+                child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+                child.value = jobj.stabvorverformung[i - 1][j - 2];
+            }
+        }
+    } else {
+        for (i = 1; i < tabelle.rows.length; i++) {
+            for (j = 1; j < nSpalten; j++) {
+                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+                child.value = jobj.stabvorverformung[i - 1][j - 1];
+            }
         }
     }
 
@@ -635,7 +650,7 @@ async function handleFileSelect_save() {
 
     let polyData = {
 
-        'version': 1,
+        'version': 2,
 
         // 'unit_length': current_unit_length,
         'system': system,

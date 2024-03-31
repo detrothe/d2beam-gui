@@ -718,8 +718,8 @@ async function initTabellenLoop() {
         <dr-tabelle
           id="id_stabvorverfomungen_tabelle"
           nzeilen="${nstabvorverfomungen_init}"
-          nspalten="4"
-          columns='["No", "Element", "w<sub>0a</sub> [cm]", "w<sub>0e</sub> [cm]", "w<sub>0m</sub> [cm]"]'
+          nspalten="5"
+          columns='["No", "Element", "Lastfall", "w<sub>0a</sub> [cm]", "w<sub>0e</sub> [cm]", "w<sub>0m</sub> [cm]"]'
         ></dr-tabelle>
       </sl-tab-panel>
 

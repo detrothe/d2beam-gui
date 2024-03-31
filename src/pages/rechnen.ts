@@ -118,6 +118,8 @@ export let R_ = [] as number[];
 
 export let print_mass = [] as number[][];
 
+export let stabvorverformung_komb = [] as TStabvorverformung_komb[][]
+
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
 //console.log("CMULT-------------", cmult)
@@ -294,7 +296,14 @@ class TElLoads {
 
 class TStabvorverformung {
     element: number = -1
+    lf: number = -1
     p = [0.0, 0.0, 0.0]
+}
+
+class TStabvorverformung_komb {
+    w0a: number = 0
+    w0e: number = 0
+    w0m: number = 0
 }
 
 class TMaxValues {
@@ -669,6 +678,9 @@ function check_input() {
     if (maxU_node > nnodes) { write('Tab Vorverformungen, Schiefstellung: Knotennummer muss <= Anzahl Knoten sein') }
 
     for (let i = 0; i < nstabvorverfomungen; i++) {
+        if (stabvorverformung[i].lf < 1) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss größer 1 sein'); fehler++; }
+        if (stabvorverformung[i].lf > nlastfaelle) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
+
         if (stabvorverformung[i].element < 0) { write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++; }
         if (stabvorverformung[i].element > (nelem - 1)) { write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss  <= Anzahl Elemente sein'); fehler++; }
     }
@@ -1273,9 +1285,10 @@ function read_stabvorverformungen() {
             wert = child.value;
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
             if (ispalte === 1) stabvorverformung[izeile - 1].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) stabvorverformung[izeile - 1].p[0] = Number(testNumber(wert, izeile, ispalte, shad)) / 100.0;   // von cm in m
-            else if (ispalte === 3) stabvorverformung[izeile - 1].p[1] = Number(testNumber(wert, izeile, ispalte, shad)) / 100.0;
-            else if (ispalte === 4) stabvorverformung[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad)) / 100.0;
+            else if (ispalte === 2) stabvorverformung[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) stabvorverformung[izeile - 1].p[0] = Number(testNumber(wert, izeile, ispalte, shad)) / 100.0;   // von cm in m
+            else if (ispalte === 4) stabvorverformung[izeile - 1].p[1] = Number(testNumber(wert, izeile, ispalte, shad)) / 100.0;
+            else if (ispalte === 5) stabvorverformung[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad)) / 100.0;
         }
 
         maxValue_w0 = Math.max(maxValue_w0, Math.abs(stabvorverformung[izeile - 1].p[0]), Math.abs(stabvorverformung[izeile - 1].p[1]), Math.abs(stabvorverformung[izeile - 1].p[2]))
@@ -1778,6 +1791,42 @@ function calculate() {
 
     neloads = ntotalEloads;
 
+    if (THIIO_flag === 1) {
+        //stabvorverformung_komb = Array.from(Array(nelem), () => new Array(nkombinationen).fill(new TStabvorverformung_komb));
+        stabvorverformung_komb = Array(nelem);
+         for (i = 0; i < nelem; i++) {
+            stabvorverformung_komb[i] = Array(nkombinationen);
+            for (j = 0; j < nkombinationen; j++) {
+                stabvorverformung_komb[i][j] = new TStabvorverformung_komb;
+            }
+         }
+
+        console.log("stabvorverformung_komb", stabvorverformung_komb[0])
+        for (ielem = 0; ielem < nelem; ielem++) {
+            for (let ikomb = 0; ikomb < nkombinationen; ikomb++) {
+                stabvorverformung_komb[ielem][ikomb].w0a = 0.0
+                stabvorverformung_komb[ielem][ikomb].w0e = 0.0
+                stabvorverformung_komb[ielem][ikomb].w0m = 0.0
+                for (i = 0; i < nstabvorverfomungen; i++) {
+
+                    if (stabvorverformung[i].element === ielem) {
+                        const index = stabvorverformung[i].lf - 1
+                        //console.log("kombiTabelle",ielem,ikomb,i,index,kombiTabelle[ikomb][index])
+                        stabvorverformung_komb[ielem][ikomb].w0a += stabvorverformung[i].p[0] * kombiTabelle[ikomb][index]
+                        stabvorverformung_komb[ielem][ikomb].w0e += stabvorverformung[i].p[1] * kombiTabelle[ikomb][index]
+                        stabvorverformung_komb[ielem][ikomb].w0m += stabvorverformung[i].p[2] * kombiTabelle[ikomb][index]
+                    }
+                }
+                //maxValue_w0 = Math.max(maxValue_w0, Math.abs(stabvorverformung[izeile - 1].p[0]), Math.abs(stabvorverformung[izeile - 1].p[1]), Math.abs(stabvorverformung[izeile - 1].p[2]))
+
+            }
+        }
+
+        // for (i = 0; i < nelem; i++) {
+        //     for (j = 0; j < nkombinationen; j++) console.log('stabvorverformung_komb, ielem, ikomb',i,j,stabvorverformung_komb[i][j]);
+        // }
+        // console.log("stabvorverformung_komb[i][j]",stabvorverformung_komb)
+    }
 
 
     // für die Grafik
@@ -2310,16 +2359,17 @@ function calculate() {
                     if (iter > 0) {
 
                         let pel = new Array(10).fill(0.0)
+                        let FeStabvor = new Array(10).fill(0.0)   // Stabvorverformungen
 
                         for (ielem = 0; ielem < nelem; ielem++) {
 
-                            el[ielem].berechneElementlasten_Vorverformung(pel, pg)
+                            el[ielem].berechneElementlasten_Vorverformung(pel, FeStabvor, pg, iKomb)
                             console.log("P E L", ielem, pel)
 
                             for (j = 0; j < el[ielem].neqeG; j++) {
                                 lmj = el[ielem].lm[j]
                                 if (lmj >= 0) {
-                                    R[lmj] = R[lmj] - pel[j]
+                                    R[lmj] = R[lmj] - pel[j] - FeStabvor[j]
                                 }
                             }
                         }
@@ -3348,7 +3398,7 @@ export function show_gleichungssystem(checked: boolean) {
                 for (let iZeile = 1; iZeile <= neq; iZeile++) {
                     let newRow = tbody.insertRow(-1);
 
-                    for (let iSpalte = 0; iSpalte <= neq ; iSpalte++) {
+                    for (let iSpalte = 0; iSpalte <= neq; iSpalte++) {
                         let newCell, newText;
 
                         newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
@@ -3419,7 +3469,7 @@ export function show_gleichungssystem(checked: boolean) {
                 for (let iZeile = 1; iZeile <= neq; iZeile++) {
                     let newRow = tbody.insertRow(-1);
 
-                    for (let iSpalte = 0; iSpalte <= neq ; iSpalte++) {
+                    for (let iSpalte = 0; iSpalte <= neq; iSpalte++) {
                         let newCell, newText;
 
                         newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0

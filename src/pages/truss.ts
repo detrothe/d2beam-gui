@@ -70,7 +70,8 @@ export class CTruss extends CElement {
     edisp0: number[] = Array(4).fill(0.0)   // Vorverformungen
     F: number[] = Array(4)        // Stabendgrößen nach WGV im globalen Koordinatensystem
     FL: number[] = Array(4)        // Stabendgrößen nach KGV im lokalen Koordinatensystem
-    Fe: number[] = Array(4)       // Vorverformungen aus Schiefstellung
+    Fe: number[] = Array(4)       // Vorverformungen aus Schiefstellung 1. Eigenform
+    FeVor: number[] = Array(4)    // Vorverformungen aus Stabschiefstellung
 
     N_ = [] as number[][]          // Schnittgrößen entlang Stab, lokal
     V_ = [] as number[][]
