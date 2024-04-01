@@ -3,7 +3,7 @@ import { CElement } from "./element"
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
     nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung,
-    stadyn, eigenform_dyn
+    stadyn, eigenform_dyn, stabvorverformung_komb
 } from "./rechnen"
 
 //import { BubbleSort } from "./lib"
@@ -1145,12 +1145,12 @@ export class CTruss extends CElement {
     }
 
     //---------------------------------------------------------------------------------------------
-    berechneElementlasten_Vorverformung(Fe: number[], u: number[]) {
+    berechneElementlasten_Vorverformung(Fe: number[], u: number[], ikomb: number) {
 
         let ieq: number, i: number, j: number, k: number
         let sum: number
 
-        let dispL = Array(4), dispG = Array(4), FeL = Array(4)
+        let dispG = Array(4), FeL = Array(4)
         let v0 = Array(6).fill(0.0)
 
         for (j = 0; j < this.neqeG; j++) {                           // Stabverformungen
@@ -1182,22 +1182,25 @@ export class CTruss extends CElement {
 
         // jetzt noch die Anteile aus Stabvorverformungen
 
-        console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß   nstabvorverfomungen", nstabvorverfomungen)
-        for (i = 0; i < nstabvorverfomungen; i++) {
-            if (stabvorverformung[i].element === this.ielem) {
-                console.log("Element ", +i + 1, ' hat Stabvorverformungen')
-                v0[1] = stabvorverformung[i].p[0]
-                v0[3] = stabvorverformung[i].p[1]
+        // console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß   nstabvorverfomungen", nstabvorverfomungen)
+        // for (i = 0; i < nstabvorverfomungen; i++) {
+        //     if (stabvorverformung[i].element === this.ielem) {
+        //         console.log("Element ", +i + 1, ' hat Stabvorverformungen')
+        //         v0[1] = stabvorverformung[i].p[0]
+        //         v0[3] = stabvorverformung[i].p[1]
 
-                // v0[2] = -(v0[4] - v0[1] / this.sl)
-                // v0[5] = v0[2]
+        //         // v0[2] = -(v0[4] - v0[1] / this.sl)
+        //         // v0[5] = v0[2]
 
-                // let v0m = stabvorverformung[i].p[2]
-                // v0[2] = v0[2] - 4.0 * v0m / this.sl
-                // v0[5] = v0[5] + 4.0 * v0m / this.sl
-            }
+        //         // let v0m = stabvorverformung[i].p[2]
+        //         // v0[2] = v0[2] - 4.0 * v0m / this.sl
+        //         // v0[5] = v0[5] + 4.0 * v0m / this.sl
+        //     }
 
-        }
+        // }
+
+        v0[1] = stabvorverformung_komb[this.ielem][ikomb].w0a
+        v0[3] = stabvorverformung_komb[this.ielem][ikomb].w0e
 
 
         for (j = 0; j < 4; j++) {

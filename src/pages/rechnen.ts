@@ -2359,17 +2359,17 @@ function calculate() {
                     if (iter > 0) {
 
                         let pel = new Array(10).fill(0.0)
-                        let FeStabvor = new Array(10).fill(0.0)   // Stabvorverformungen
+                        //let FeStabvor = new Array(10).fill(0.0)   // Stabvorverformungen
 
                         for (ielem = 0; ielem < nelem; ielem++) {
 
-                            el[ielem].berechneElementlasten_Vorverformung(pel, FeStabvor, pg, iKomb)
+                            el[ielem].berechneElementlasten_Vorverformung(pel, pg, iKomb-1)
                             console.log("P E L", ielem, pel)
 
                             for (j = 0; j < el[ielem].neqeG; j++) {
                                 lmj = el[ielem].lm[j]
                                 if (lmj >= 0) {
-                                    R[lmj] = R[lmj] - pel[j] - FeStabvor[j]
+                                    R[lmj] = R[lmj] - pel[j]
                                 }
                             }
                         }

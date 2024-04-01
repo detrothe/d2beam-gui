@@ -3,7 +3,7 @@ import { CElement } from "./element"
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
     nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung, P_delta,
-    stadyn, eigenform_dyn
+    stadyn, eigenform_dyn, stabvorverformung_komb
 } from "./rechnen"
 
 import { BubbleSort } from "./lib"
@@ -941,7 +941,7 @@ export class CTimoshenko_beam extends CElement {
 
             if (iter > 0) {
                 for (i = 0; i < this.neqeG; i++) {                            // Schiefstellung
-                    this.F[i] = this.F[i] + this.Fe[i] + this.FeVor[i]        // FeVor enthält kombiTabelle
+                    this.F[i] = this.F[i] + this.Fe[i]// + this.FeVor[i]        // FeVor enthält kombiTabelle
                 }
             }
 
@@ -1286,7 +1286,7 @@ export class CTimoshenko_beam extends CElement {
     }
 
     //---------------------------------------------------------------------------------------------
-    berechneElementlasten_Vorverformung(Fe: number[], FeStabvor: number[], u: number[], iKomb: number) {
+    berechneElementlasten_Vorverformung(Fe: number[], u: number[], ikomb: number) {
 
         let ieq: number, i: number, j: number, k: number
         let sum: number
@@ -1322,6 +1322,72 @@ export class CTimoshenko_beam extends CElement {
         }
 
 
+        // for (i = 0; i < this.neqeG; i++) {
+        //     sum = 0.0
+        //     for (j = 0; j < 6; j++) {
+        //         sum += this.transU[j][i] * FeL[j]
+        //         //sum += this.transF[i][j] * FeL[j]
+        //     }
+        //     this.Fe[i] = Fe[i] = sum          // global
+        // }
+
+        // jetzt noch die Anteile aus Stabvorverformungen
+
+        console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß   nstabvorverfomungen", nstabvorverfomungen)
+
+        // FeL.fill(0.0)
+        // FeStabvor.fill(0.0)
+
+        // for (i = 0; i < nstabvorverfomungen; i++) {
+
+        //     if (stabvorverformung[i].element === this.ielem) {
+        //         console.log("Element ", +i + 1, ' hat Stabvorverformungen')
+        //         v0.fill(0.0)
+
+        //         const index = stabvorverformung[i].lf - 1
+
+        //         v0[1] = stabvorverformung[i].p[0]
+        //         v0[4] = stabvorverformung[i].p[1]
+
+        //         v0[2] = -(v0[4] - v0[1] / this.sl)
+        //         v0[5] = v0[2]
+
+        //         let v0m = stabvorverformung[i].p[2]
+        //         v0[2] = v0[2] - 4.0 * v0m / this.sl
+        //         v0[5] = v0[5] + 4.0 * v0m / this.sl
+
+        //         for (j = 0; j < 6; j++) {
+        //             sum = 0.0
+        //             for (k = 0; k < 6; k++) {
+        //                 sum += this.normalkraft * this.ksig[j][k] * v0[k] * kombiTabelle[iKomb - 1][index]
+        //             }
+        //             FeL[j] += sum     // lokal
+        //         }
+
+        //         // wird nicht benutzt
+        //         for (j = 0; j < 6; j++) this.edispv0[j] += v0[j] * kombiTabelle[iKomb - 1][index];   // TO DO geht so nicht
+        //     }
+        // }
+
+        console.log(" stabvorverformung_komb[this.ielem][ikomb]", this.ielem, ikomb, stabvorverformung_komb[this.ielem][ikomb])
+        v0[1] = stabvorverformung_komb[this.ielem][ikomb].w0a
+        v0[4] = stabvorverformung_komb[this.ielem][ikomb].w0e
+
+        v0[2] = -(v0[4] - v0[1] / this.sl)
+        v0[5] = v0[2]
+
+        let v0m = stabvorverformung_komb[this.ielem][ikomb].w0m
+        v0[2] = v0[2] - 4.0 * v0m / this.sl
+        v0[5] = v0[5] + 4.0 * v0m / this.sl
+
+        for (j = 0; j < 6; j++) {
+            sum = 0.0
+            for (k = 0; k < 6; k++) {
+                sum += this.normalkraft * this.ksig[j][k] * v0[k]
+            }
+            FeL[j] += sum     // lokal
+        }
+
         for (i = 0; i < this.neqeG; i++) {
             sum = 0.0
             for (j = 0; j < 6; j++) {
@@ -1329,55 +1395,6 @@ export class CTimoshenko_beam extends CElement {
                 //sum += this.transF[i][j] * FeL[j]
             }
             this.Fe[i] = Fe[i] = sum          // global
-        }
-
-        // jetzt noch die Anteile aus Stabvorverformungen
-
-        console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß   nstabvorverfomungen", nstabvorverfomungen)
-
-        FeL.fill(0.0)
-        FeStabvor.fill(0.0)
-
-        for (i = 0; i < nstabvorverfomungen; i++) {
-
-            if (stabvorverformung[i].element === this.ielem) {
-                console.log("Element ", +i + 1, ' hat Stabvorverformungen')
-                v0.fill(0.0)
-
-                const index = stabvorverformung[i].lf - 1
-
-                v0[1] = stabvorverformung[i].p[0]
-                v0[4] = stabvorverformung[i].p[1]
-
-                v0[2] = -(v0[4] - v0[1] / this.sl)
-                v0[5] = v0[2]
-
-                let v0m = stabvorverformung[i].p[2]
-                v0[2] = v0[2] - 4.0 * v0m / this.sl
-                v0[5] = v0[5] + 4.0 * v0m / this.sl
-
-                for (j = 0; j < 6; j++) {
-                    sum = 0.0
-                    for (k = 0; k < 6; k++) {
-                        sum += this.normalkraft * this.ksig[j][k] * v0[k] * kombiTabelle[iKomb - 1][index]
-                    }
-                    FeL[j] += sum     // lokal
-                }
-
-                // wird nicht benutzt
-                for (j = 0; j < 6; j++) this.edispv0[j] += v0[j] * kombiTabelle[iKomb - 1][index];   // TO DO geht so nicht
-            }
-        }
-
-
-
-        for (i = 0; i < this.neqeG; i++) {
-            sum = 0.0
-            for (j = 0; j < 6; j++) {
-                sum += this.transU[j][i] * FeL[j]
-                //sum += this.transF[i][j] * FeL[j]
-            }
-            this.FeVor[i] = FeStabvor[i] = sum          // global
         }
 
     }
