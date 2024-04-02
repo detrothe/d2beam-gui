@@ -9,7 +9,7 @@ import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorver
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
 import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all, kombiTabelle, nNodeDisps, nodeDisp0, System, STABWERK, FACHWERK } from "./rechnen";
-import { maxValue_dyn_eigenform, eigenform_dyn, dyn_neigv, nnodalMass, nodalmass } from "./rechnen";
+import { maxValue_dyn_eigenform, eigenform_dyn, dyn_neigv, nnodalMass, nodalmass, stabvorverformung_komb } from "./rechnen";
 
 //import { Pane } from 'tweakpane';
 import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
@@ -1081,86 +1081,10 @@ export function drawsystem(svg_id = 'artboard') {
 
     // Stabvorverformung
 
-    if (show_stabvorverformung && show_selection && maxValue_w0 > 0.0) {
+    if (show_stabvorverformung && show_selection) {
 
-        let xx1, xx2, zz1, zz2
-        let dx: number, x: number, sl: number, nenner: number
+        draw_stabvorverformung(two);
 
-        let uG: number, wG: number
-        let ikomb = draw_lastfall
-        let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
-        let xmem = 0.0, zmem = 0.0
-
-        let scalefactor = 0.05 * slmax / maxValue_w0
-
-        scalefactor *= scaleFactor_panel
-
-        console.log("scalefaktor", scalefactor, slmax, maxValue_w0)
-        console.log("draw_stabvorverformung", ikomb)
-
-        maxU = 0.0
-
-        for (let ielem = 0; ielem < nelem; ielem++) {
-            sl = element[ielem].sl
-
-            for (let i = 0; i < nstabvorverfomungen; i++) {
-                if (stabvorverformung[i].element === ielem) {
-                    //console.log("Element ", +i + 1, ' hat Stabvorverformungen')
-                    let w0a = stabvorverformung[i].p[0]
-                    let w0e = stabvorverformung[i].p[1]
-                    let v0m = stabvorverformung[i].p[2]
-
-                    dx = sl / nelTeilungen
-                    x = 0.0; xx2 = 0.0; zz2 = 0.0
-                    for (let iteil = 0; iteil <= nelTeilungen; iteil++) {
-
-
-                        let w0x = w0a + (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
-
-                        uG = -element[ielem].sinus * w0x
-                        wG = element[ielem].cosinus * w0x
-
-                        xx1 = xx2; zz1 = zz2;
-                        xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
-                        zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
-                        xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
-                        //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
-                        if (iteil > 0) {
-                            //console.log("line", xx1, zz1, xx2, zz2)
-                            let line = two.makeLine(xx1, zz1, xx2, zz2);
-                            line.linewidth = 5;
-                        }
-
-                        dispG = Math.sqrt(uG * uG + wG * wG)
-
-                        if (dispG > maxU) {
-                            maxU = dispG
-                            x_max = xx2
-                            z_max = zz2
-                            xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
-                            zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
-
-                        }
-                        x = x + dx
-                    }
-                }
-
-            }
-
-
-            if (show_labels && maxU > 0.0) {
-
-                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
-                pfeil.stroke = '#D3D3D3'
-
-                const str = myFormat(maxU * 1000, 1, 1) + 'mm'
-                const txt = two.makeText(str, x_max, z_max, style_txt)
-                txt.alignment = 'left'
-                txt.baseline = 'top'
-
-            }
-
-        }
     }
 
     // Zustandslinien
@@ -3632,6 +3556,137 @@ function draw_feder(two: Two, x0: number, z0: number, alpha: number) {
     group.translation.set(tr.xPix(x0), tr.zPix(z0))
 
 }
+
+//--------------------------------------------------------------------------------------------------------
+function draw_stabvorverformung(two: Two) {
+    //----------------------------------------------------------------------------------------------------
+
+    let xx1, xx2, zz1, zz2
+    let dx: number, x: number, sl: number, nenner: number
+
+
+    let uG: number, wG: number
+    let ikomb = draw_lastfall - 1
+    let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+    let xmem = 0.0, zmem = 0.0
+
+    if (maxValue_w0[ikomb] === 0.0) return;
+
+    let scalefactor = 0.05 * slmax / maxValue_w0[ikomb]
+
+    scalefactor *= scaleFactor_panel
+
+    console.log("scalefaktor", scalefactor, slmax, maxValue_w0[ikomb])
+    console.log("draw_stabvorverformung", ikomb + 1)
+
+    maxU = 0.0
+
+    for (let ielem = 0; ielem < nelem; ielem++) {
+
+        if (stabvorverformung_komb[ielem][ikomb].defined) {
+
+            sl = element[ielem].sl
+
+            let w0a = stabvorverformung_komb[ielem][ikomb].w0a
+            let w0e = stabvorverformung_komb[ielem][ikomb].w0e
+            let v0m = stabvorverformung_komb[ielem][ikomb].w0m
+
+            dx = sl / nelTeilungen
+            x = 0.0; xx2 = 0.0; zz2 = 0.0
+            for (let iteil = 0; iteil <= nelTeilungen; iteil++) {
+
+
+                let w0x = w0a + (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
+
+                uG = -element[ielem].sinus * w0x
+                wG = element[ielem].cosinus * w0x
+
+                xx1 = xx2; zz1 = zz2;
+                xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
+                zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+                //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
+                if (iteil > 0) {
+                    //console.log("line", xx1, zz1, xx2, zz2)
+                    let line = two.makeLine(xx1, zz1, xx2, zz2);
+                    line.linewidth = 5;
+                }
+
+                dispG = Math.sqrt(uG * uG + wG * wG)
+
+                if (dispG > maxU) {
+                    maxU = dispG
+                    x_max = xx2
+                    z_max = zz2
+                    xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+                    zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+
+                }
+                x = x + dx
+            }
+
+            // for (let i = 0; i < nstabvorverfomungen; i++) {
+            //     if (stabvorverformung[i].element === ielem) {
+            //         //console.log("Element ", +i + 1, ' hat Stabvorverformungen')
+            //         let w0a = stabvorverformung[i].p[0]
+            //         let w0e = stabvorverformung[i].p[1]
+            //         let v0m = stabvorverformung[i].p[2]
+
+            //         dx = sl / nelTeilungen
+            //         x = 0.0; xx2 = 0.0; zz2 = 0.0
+            //         for (let iteil = 0; iteil <= nelTeilungen; iteil++) {
+
+
+            //             let w0x = w0a + (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
+
+            //             uG = -element[ielem].sinus * w0x
+            //             wG = element[ielem].cosinus * w0x
+
+            //             xx1 = xx2; zz1 = zz2;
+            //             xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
+            //             zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+            //             xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+            //             //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
+            //             if (iteil > 0) {
+            //                 //console.log("line", xx1, zz1, xx2, zz2)
+            //                 let line = two.makeLine(xx1, zz1, xx2, zz2);
+            //                 line.linewidth = 5;
+            //             }
+
+            //             dispG = Math.sqrt(uG * uG + wG * wG)
+
+            //             if (dispG > maxU) {
+            //                 maxU = dispG
+            //                 x_max = xx2
+            //                 z_max = zz2
+            //                 xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+            //                 zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+
+            //             }
+            //             x = x + dx
+            //         }
+            //     }
+
+            // }
+
+
+            if (show_labels && maxU > 0.0) {
+
+                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                pfeil.stroke = '#D3D3D3'
+
+                const str = myFormat(maxU * 1000, 1, 1) + 'mm'
+                const txt = two.makeText(str, x_max, z_max, style_txt)
+                txt.alignment = 'left'
+                txt.baseline = 'top'
+
+            }
+
+        }
+    }
+
+}
+
 
 //--------------------------------------------------------------------------------------------------------
 function draw_drehfeder(two: Two, x0: number, z0: number) {

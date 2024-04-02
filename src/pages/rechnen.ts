@@ -94,7 +94,7 @@ export let maxValue_eigv = [] as number[][]
 export let maxValue_u0 = [] as TMaxU0[]
 export let maxValue_eload = [] as number[]
 export let maxValue_eload_komb = [] as number[]
-export let maxValue_w0 = 0.0                // Stabvorverformung
+export let maxValue_w0 = [] as number[]                // Stabvorverformung
 
 export let max_S_kombi = [] as number[][] //  (3, nKombi)
 export let max_disp_kombi = [] as number[]  //(nKombi)
@@ -304,6 +304,7 @@ class TStabvorverformung_komb {
     w0a: number = 0
     w0e: number = 0
     w0m: number = 0
+    defined = false
 }
 
 class TMaxValues {
@@ -1277,7 +1278,7 @@ function read_stabvorverformungen() {
     let wert: any;
     const shad = el?.shadowRoot?.getElementById('mytable')
 
-    maxValue_w0 = 0.0
+    //maxValue_w0 = 0.0
 
     for (let izeile = 1; izeile < nRowTab; izeile++) {
         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
@@ -1291,11 +1292,11 @@ function read_stabvorverformungen() {
             else if (ispalte === 5) stabvorverformung[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad)) / 100.0;
         }
 
-        maxValue_w0 = Math.max(maxValue_w0, Math.abs(stabvorverformung[izeile - 1].p[0]), Math.abs(stabvorverformung[izeile - 1].p[1]), Math.abs(stabvorverformung[izeile - 1].p[2]))
+        //maxValue_w0 = Math.max(maxValue_w0, Math.abs(stabvorverformung[izeile - 1].p[0]), Math.abs(stabvorverformung[izeile - 1].p[1]), Math.abs(stabvorverformung[izeile - 1].p[2]))
         console.log("stabvorverfomung", izeile, stabvorverformung[izeile - 1])
     }
 
-    console.log('nstabvorverfomungen, maxValue_w0', nstabvorverfomungen, maxValue_w0)
+    //console.log('nstabvorverfomungen, maxValue_w0', nstabvorverfomungen, maxValue_w0)
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1792,16 +1793,19 @@ function calculate() {
     neloads = ntotalEloads;
 
     if (THIIO_flag === 1) {
-        //stabvorverformung_komb = Array.from(Array(nelem), () => new Array(nkombinationen).fill(new TStabvorverformung_komb));
+
+        stabvorverformung_komb.length = 0
         stabvorverformung_komb = Array(nelem);
-         for (i = 0; i < nelem; i++) {
+        for (i = 0; i < nelem; i++) {
             stabvorverformung_komb[i] = Array(nkombinationen);
             for (j = 0; j < nkombinationen; j++) {
                 stabvorverformung_komb[i][j] = new TStabvorverformung_komb;
             }
-         }
+        }
+        maxValue_w0.length = 0
+        maxValue_w0 = Array(nkombinationen).fill(0.0)
 
-        console.log("stabvorverformung_komb", stabvorverformung_komb[0])
+        //console.log("stabvorverformung_komb", stabvorverformung_komb[0])
         for (ielem = 0; ielem < nelem; ielem++) {
             for (let ikomb = 0; ikomb < nkombinationen; ikomb++) {
                 stabvorverformung_komb[ielem][ikomb].w0a = 0.0
@@ -1817,8 +1821,18 @@ function calculate() {
                         stabvorverformung_komb[ielem][ikomb].w0m += stabvorverformung[i].p[2] * kombiTabelle[ikomb][index]
                     }
                 }
-                //maxValue_w0 = Math.max(maxValue_w0, Math.abs(stabvorverformung[izeile - 1].p[0]), Math.abs(stabvorverformung[izeile - 1].p[1]), Math.abs(stabvorverformung[izeile - 1].p[2]))
+            }
+        }
 
+        for (ielem = 0; ielem < nelem; ielem++) {
+            for (let ikomb = 0; ikomb < nkombinationen; ikomb++) {
+                if (stabvorverformung_komb[ielem][ikomb].w0a != 0.0 || stabvorverformung_komb[ielem][ikomb].w0e != 0.0 || stabvorverformung_komb[ielem][ikomb].w0m != 0.0) {
+                    stabvorverformung_komb[ielem][ikomb].defined = true;
+                } else {
+                    stabvorverformung_komb[ielem][ikomb].defined = false;
+                }
+                let wm = (stabvorverformung_komb[ielem][ikomb].w0a + stabvorverformung_komb[ielem][ikomb].w0e) / 2.0 + stabvorverformung_komb[ielem][ikomb].w0m;
+                maxValue_w0[ikomb] = Math.max(maxValue_w0[ikomb], Math.abs(stabvorverformung_komb[ielem][ikomb].w0a), Math.abs(stabvorverformung_komb[ielem][ikomb].w0e), Math.abs(wm))
             }
         }
 
@@ -2363,7 +2377,7 @@ function calculate() {
 
                         for (ielem = 0; ielem < nelem; ielem++) {
 
-                            el[ielem].berechneElementlasten_Vorverformung(pel, pg, iKomb-1)
+                            el[ielem].berechneElementlasten_Vorverformung(pel, pg, iKomb - 1)
                             console.log("P E L", ielem, pel)
 
                             for (j = 0; j < el[ielem].neqeG; j++) {
