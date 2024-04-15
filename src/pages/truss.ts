@@ -16,6 +16,7 @@ export class CTruss extends CElement {
 
     ielem = -1
     nknoten = 2
+    isActive = true
     emodul = 0.0
     gmodul = 0.0
     querdehnzahl = 0.0
@@ -133,6 +134,9 @@ export class CTruss extends CElement {
 
         if (THIIO_flag === 0) n = nlastfaelle;
         else n = nkombinationen;
+
+        this.isActive = element[ielem].isActive
+        if ( !this.isActive ) return;
 
         this.nod1 = element[ielem].nod[0];
         this.nod2 = element[ielem].nod[1];

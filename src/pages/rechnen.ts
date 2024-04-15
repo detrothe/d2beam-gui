@@ -147,6 +147,8 @@ class TNode {
     kphi = 0.0
     nel: number = 0                                 // Anzahl der Elemente, die an dem Knoten hängen
 
+    is_used = false
+
     phi = 0.0                                       // Drehung des Lagers im Gegenuhrzeigersinn
     co = 1.0
     si = 0.0
@@ -188,6 +190,7 @@ class TQuerschnittRechteck {
 
 class TElement {
     qname: string = ''
+    isActive = true;
     nodeTyp: number = 0           // 0= 2 Knoten, 1 = 3 Knoten, 2 = 4 Knoten
     nknoten: number = 2
     EModul: number = 0.0
@@ -1351,69 +1354,79 @@ function read_elements() {
         nod1 = element[ielem].nod[0];
         nod2 = element[ielem].nod[1];
 
-        let fehler = 0;
-        if (nod1 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
-        if (nod2 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
-        if (nod1 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
-        if (nod2 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++; }
-        if (nod1 === nod2) { write('Element ' + (+ielem + 1) + ': Knoteninzidenzen für (nod a) und (nod e) muessen unterschiedlich sein'); fehler++; }
+        if (nod1 === -2 && nod2 === -2) element[ielem].isActive = false;
 
-        if (fehler > 0) {
-            fatal_error = true;
-            write('Fataler Eingabefehler für Element ' + (+ielem + 1) + ', bitte als Erstes beheben\n')
-            continue;
-        }
+        console.log("isActive", (+ielem+1),element[ielem].isActive,nod1,nod2)
+        if (element[ielem].isActive) {
 
-        element[ielem].x1 = node[nod1].x;
-        element[ielem].x2 = node[nod2].x;
-        element[ielem].z1 = node[nod1].z;
-        element[ielem].z2 = node[nod2].z;
+            let fehler = 0;
+            if (nod1 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
+            if (nod2 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
+            if (nod1 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
+            if (nod2 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++; }
+            if (nod1 === nod2) { write('Element ' + (+ielem + 1) + ': Knoteninzidenzen für (nod a) und (nod e) muessen unterschiedlich sein'); fehler++; }
+
+            if (fehler > 0) {
+                fatal_error = true;
+                write('Fataler Eingabefehler für Element ' + (+ielem + 1) + ', bitte als Erstes beheben\n')
+                continue;
+            }
 
 
-        const dx = element[ielem].x2 - element[ielem].x1;
-        const dz = element[ielem].z2 - element[ielem].z1;
-        element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Stablänge
+            node[nod1].is_used = true
+            node[nod2].is_used = true
 
-        if (element[ielem].sl < 1e-12) {
-            write("Länge von Element " + String(ielem + 1) + " ist null")
-            element[ielem].cosinus = 1.0
-            element[ielem].sinus = 0.0
-            element[ielem].alpha = 0.0
-        } else {
-            element[ielem].cosinus = dx / element[ielem].sl
-            element[ielem].sinus = dz / element[ielem].sl
-            element[ielem].alpha = Math.atan2(dz, dx)
-        }
+            element[ielem].x1 = node[nod1].x;
+            element[ielem].x2 = node[nod2].x;
+            element[ielem].z1 = node[nod1].z;
+            element[ielem].z2 = node[nod2].z;
 
-        if (element[ielem].nodeTyp === 3) {
 
-            let x = (element[ielem].x2 + element[ielem].x1) / 2.0
-            let z = (element[ielem].z2 + element[ielem].z1) / 2.0
-            node.push(new TNode())
-            node[nnodesTotal].x = x
-            node[nnodesTotal].z = z
-            element[ielem].nod[2] = nnodesTotal
-            nnodesTotal++;
-        }
-        else if (element[ielem].nodeTyp === 4) {
+            const dx = element[ielem].x2 - element[ielem].x1;
+            const dz = element[ielem].z2 - element[ielem].z1;
+            element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Stablänge
 
-            let dx = (element[ielem].x2 - element[ielem].x1) / 3.0
-            let dz = (element[ielem].z2 - element[ielem].z1) / 3.0
-            let x = element[ielem].x1 + dx
-            let z = element[ielem].z1 + dz
-            node.push(new TNode())
-            node[nnodesTotal].x = x
-            node[nnodesTotal].z = z
-            element[ielem].nod[2] = nnodesTotal
-            nnodesTotal++;
+            if (element[ielem].sl < 1e-12) {
+                write("Länge von Element " + String(ielem + 1) + " ist null")
+                element[ielem].cosinus = 1.0
+                element[ielem].sinus = 0.0
+                element[ielem].alpha = 0.0
+            } else {
+                element[ielem].cosinus = dx / element[ielem].sl
+                element[ielem].sinus = dz / element[ielem].sl
+                element[ielem].alpha = Math.atan2(dz, dx)
+            }
 
-            x = x + dx
-            z = z + dz
-            node.push(new TNode())
-            node[nnodesTotal].x = x
-            node[nnodesTotal].z = z
-            element[ielem].nod[3] = nnodesTotal
-            nnodesTotal++;
+            if (element[ielem].nodeTyp === 3) {
+
+                let x = (element[ielem].x2 + element[ielem].x1) / 2.0
+                let z = (element[ielem].z2 + element[ielem].z1) / 2.0
+                node.push(new TNode())
+                node[nnodesTotal].x = x
+                node[nnodesTotal].z = z
+                element[ielem].nod[2] = nnodesTotal
+                nnodesTotal++;
+            }
+            else if (element[ielem].nodeTyp === 4) {
+
+                let dx = (element[ielem].x2 - element[ielem].x1) / 3.0
+                let dz = (element[ielem].z2 - element[ielem].z1) / 3.0
+                let x = element[ielem].x1 + dx
+                let z = element[ielem].z1 + dz
+                node.push(new TNode())
+                node[nnodesTotal].x = x
+                node[nnodesTotal].z = z
+                element[ielem].nod[2] = nnodesTotal
+                nnodesTotal++;
+
+                x = x + dx
+                z = z + dz
+                node.push(new TNode())
+                node[nnodesTotal].x = x
+                node[nnodesTotal].z = z
+                element[ielem].nod[3] = nnodesTotal
+                nnodesTotal++;
+            }
         }
     }
 
@@ -1658,7 +1671,7 @@ function calc_neq_and_springs() {
     // Berechnung der Gleichungsnummern bestimmen der Federn
 
     nelem_Federn = 0
-    neq = 0;
+
     for (i = 0; i < nnodesTotal; i++) {
 
         let kx = 0.0, kz = 0.0, kphi = 0.0
@@ -1670,14 +1683,14 @@ function calc_neq_and_springs() {
         node[i].kz = kz
         node[i].kphi = kphi
 
-        for (j = 0; j < 3; j++) {
-            if (Math.abs(node[i].L[j]) === 1) {
-                node[i].L[j] = -1;
-            } else {
-                node[i].L[j] = neq;
-                neq = neq + 1;
-            }
-        }
+        // for (j = 0; j < 3; j++) {
+        //     if (Math.abs(node[i].L[j]) === 1) {
+        //         node[i].L[j] = -1;
+        //     } else {
+        //         node[i].L[j] = neq;
+        //         neq = neq + 1;
+        //     }
+        // }
 
         let phi = node[i].phi * Math.PI / 180.0
         node[i].co = Math.cos(phi)
@@ -1690,12 +1703,31 @@ function calc_neq_and_springs() {
 
             feder.push(new TSpring(i, kx, kz, kphi))
             node[i].spring_index = nelem + nelem_Federn;                  // index in el[]
+            node[i].is_used = true
             nelemTotal++;
             nelem_Federn++;
 
         }
     }
 
+    neq = 0;
+    for (i = 0; i < nnodesTotal; i++) {
+
+        if (node[i].is_used) {   // nur Knoten berücksichtigen, an denen Stäbe oder Federn hängen
+
+            for (j = 0; j < 3; j++) {
+                if (Math.abs(node[i].L[j]) === 1) {
+                    node[i].L[j] = -1;
+                } else {
+                    node[i].L[j] = neq;
+                    neq = neq + 1;
+                }
+            }
+        } else {
+            for (j = 0; j < 3; j++) node[i].L[j] = -1;
+            write('\nWarnung: An Knoten ' + (+i + 1) + ' hängt kein Element')
+        }
+    }
 
     // Knotenlasten wirken in globalen Richtungen, auch bei gedrehten Lagern
 
@@ -2007,13 +2039,16 @@ function calculate() {
 
                 for (ielem = 0; ielem < nelemTotal; ielem++) {
 
-                    el[ielem].berechneElementsteifigkeitsmatrix(0);
-                    el[ielem].addiereElementsteifigkeitmatrix(stiff)
+                    if (el[ielem].isActive) {
 
-                    for (let ieload = 0; ieload < neloads; ieload++) {
-                        //console.log("********************************", ielem, ieload, eload[ieload].element)
-                        if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastfall)) {
-                            el[ielem].berechneElementlasten(ieload)
+                        el[ielem].berechneElementsteifigkeitsmatrix(0);
+                        el[ielem].addiereElementsteifigkeitmatrix(stiff)
+
+                        for (let ieload = 0; ieload < neloads; ieload++) {
+                            //console.log("********************************", ielem, ieload, eload[ieload].element)
+                            if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastfall)) {
+                                el[ielem].berechneElementlasten(ieload)
+                            }
                         }
                     }
                 }
@@ -2041,17 +2076,19 @@ function calculate() {
 
                 for (ielem = 0; ielem < nelem; ielem++) {
 
-                    for (let ieload = 0; ieload < neloads; ieload++) {
-                        if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastfall)) {
-                            for (j = 0; j < el[ielem].neqeG; j++) {
-                                lmj = el[ielem].lm[j]
-                                if (lmj >= 0) {
-                                    R[lmj] = R[lmj] - eload[ieload].el_r[j]
+                    if (el[ielem].isActive) {
+
+                        for (let ieload = 0; ieload < neloads; ieload++) {
+                            if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastfall)) {
+                                for (j = 0; j < el[ielem].neqeG; j++) {
+                                    lmj = el[ielem].lm[j]
+                                    if (lmj >= 0) {
+                                        R[lmj] = R[lmj] - eload[ieload].el_r[j]
+                                    }
                                 }
                             }
                         }
                     }
-
                 }
 
                 // wenn mindestens eine vorgegebene Knotenverschiebung im Lastfall vorhanden ist,
@@ -2116,13 +2153,17 @@ function calculate() {
                 //console.log("LAGERKRAFT 0 rechnen", lagerkraft)
 
                 for (ielem = 0; ielem < nelemTotal; ielem++) {
-                    force = el[ielem].berechneInterneKraefte(ielem, iLastfall, 0, u);
-                    console.log("force", el[ielem].neqe, force)
-                    for (i = 0; i < el[ielem].neqe; i++) stabendkraefte.set(i + 1, ielem + 1, iLastfall, force[i]);
 
-                    el[ielem].berechneLagerkraefte();
-                    //console.log("LAGERKRAFT rechnen", lagerkraft)
-                    //for (i = 0; i < nnodes; i++) console.log("LAger", lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
+                    if (el[ielem].isActive) {
+
+                        force = el[ielem].berechneInterneKraefte(ielem, iLastfall, 0, u);
+                        console.log("force", el[ielem].neqe, force)
+                        for (i = 0; i < el[ielem].neqe; i++) stabendkraefte.set(i + 1, ielem + 1, iLastfall, force[i]);
+
+                        el[ielem].berechneLagerkraefte();
+                        //console.log("LAGERKRAFT rechnen", lagerkraft)
+                        //for (i = 0; i < nnodes; i++) console.log("LAger", lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
+                    }
                 }
 
                 let disp = Array(3)
@@ -2224,7 +2265,7 @@ function calculate() {
                 //}
 
                 for (ielem = 0; ielem < nelem; ielem++) {
-                    el[ielem].berechneElementSchnittgroessen(ielem, iLastfall - 1)
+                    if (el[ielem].isActive) el[ielem].berechneElementSchnittgroessen(ielem, iLastfall - 1);
                 }
 
 
@@ -2280,9 +2321,10 @@ function calculate() {
             alpha_cr = Array.from(Array(nkombinationen), () => new Array(neigv).fill(0.0));
 
             for (ielem = 0; ielem < nelem; ielem++) {
-
-                for (let ieload = 0; ieload < neloads; ieload++) {
-                    if ((eload[ieload].element === ielem) && (eload[ieload].art !== 8)) el[ielem].berechneElementlasten(ieload)
+                if (el[ielem].isActive) {
+                    for (let ieload = 0; ieload < neloads; ieload++) {
+                        if ((eload[ieload].element === ielem) && (eload[ieload].art !== 8)) el[ielem].berechneElementlasten(ieload)
+                    }
                 }
             }
 
@@ -2311,15 +2353,18 @@ function calculate() {
 
                     for (ielem = 0; ielem < nelemTotal; ielem++) {
 
-                        el[ielem].berechneElementsteifigkeitsmatrix(iter);
-                        el[ielem].addiereElementsteifigkeitmatrix(stiff)
-                        /*
-                                            for (let ieload = 0; ieload < neloads; ieload++) {
-                                                if ((eload[ieload].element === ielem) && (eload[ieload].lf === iKomb)) {
-                                                    el[ielem].berechneElementlasten(ieload)
+                        if (el[ielem].isActive) {
+
+                            el[ielem].berechneElementsteifigkeitsmatrix(iter);
+                            el[ielem].addiereElementsteifigkeitmatrix(stiff)
+                            /*
+                                                for (let ieload = 0; ieload < neloads; ieload++) {
+                                                    if ((eload[ieload].element === ielem) && (eload[ieload].lf === iKomb)) {
+                                                        el[ielem].berechneElementlasten(ieload)
+                                                    }
                                                 }
-                                            }
-                        */
+                            */
+                        }
                     }
 
                     for (j = 0; j < neq; j++) {
@@ -2346,25 +2391,28 @@ function calculate() {
                     //  und jetzt noch die normalen Elementlasten
 
                     for (ielem = 0; ielem < nelemTotal; ielem++) {
-                        console.log("ELEMENTLASTEN,ielem", ielem)
-                        for (let ieload = 0; ieload < neloads; ieload++) {
-                            if (eload[ieload].element === ielem) {
-                                const index = eload[ieload].lf - 1
-                                console.log("elem kombi index,art", index, kombiTabelle[iKomb - 1][index], eload[ieload].art)
-                                if (kombiTabelle[iKomb - 1][index] !== 0.0) {
 
-                                    if (eload[ieload].art === 8) el[ielem].berechneElementlasten(ieload)
+                        if (el[ielem].isActive) {
 
-                                    for (j = 0; j < el[ielem].neqeG; j++) {
-                                        lmj = el[ielem].lm[j]
-                                        if (lmj >= 0) {
-                                            R[lmj] = R[lmj] - eload[ieload].el_r[j] * kombiTabelle[iKomb - 1][index]
+                            console.log("ELEMENTLASTEN,ielem", ielem)
+                            for (let ieload = 0; ieload < neloads; ieload++) {
+                                if (eload[ieload].element === ielem) {
+                                    const index = eload[ieload].lf - 1
+                                    console.log("elem kombi index,art", index, kombiTabelle[iKomb - 1][index], eload[ieload].art)
+                                    if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+
+                                        if (eload[ieload].art === 8) el[ielem].berechneElementlasten(ieload)
+
+                                        for (j = 0; j < el[ielem].neqeG; j++) {
+                                            lmj = el[ielem].lm[j]
+                                            if (lmj >= 0) {
+                                                R[lmj] = R[lmj] - eload[ieload].el_r[j] * kombiTabelle[iKomb - 1][index]
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-
                     }
                     console.log("R mit Elementlasten", R)
 
@@ -2376,14 +2424,15 @@ function calculate() {
                         //let FeStabvor = new Array(10).fill(0.0)   // Stabvorverformungen
 
                         for (ielem = 0; ielem < nelem; ielem++) {
+                            if (el[ielem].isActive) {
+                                el[ielem].berechneElementlasten_Vorverformung(pel, pg, iKomb - 1)
+                                console.log("P E L", ielem, pel)
 
-                            el[ielem].berechneElementlasten_Vorverformung(pel, pg, iKomb - 1)
-                            console.log("P E L", ielem, pel)
-
-                            for (j = 0; j < el[ielem].neqeG; j++) {
-                                lmj = el[ielem].lm[j]
-                                if (lmj >= 0) {
-                                    R[lmj] = R[lmj] - pel[j]
+                                for (j = 0; j < el[ielem].neqeG; j++) {
+                                    lmj = el[ielem].lm[j]
+                                    if (lmj >= 0) {
+                                        R[lmj] = R[lmj] - pel[j]
+                                    }
                                 }
                             }
                         }
@@ -2450,11 +2499,13 @@ function calculate() {
                     let force: number[] = Array(6)
 
                     for (ielem = 0; ielem < nelemTotal; ielem++) {
-                        force = el[ielem].berechneInterneKraefte(ielem, iKomb, iter, u);
-                        console.log("force", force)
-                        for (i = 0; i < 6; i++) stabendkraefte.set(i + 1, ielem + 1, iKomb, force[i]);
+                        if (el[ielem].isActive) {
+                            force = el[ielem].berechneInterneKraefte(ielem, iKomb, iter, u);
+                            console.log("force", force)
+                            for (i = 0; i < 6; i++) stabendkraefte.set(i + 1, ielem + 1, iKomb, force[i]);
 
-                        el[ielem].berechneLagerkraefte();
+                            el[ielem].berechneLagerkraefte();
+                        }
                     }
 
                     // Überprüfe Konvergenz der Verformungen
@@ -2573,7 +2624,7 @@ function calculate() {
                 }
 
                 for (ielem = 0; ielem < nelem; ielem++) {
-                    el[ielem].berechneElementSchnittgroessen(ielem, iKomb - 1)
+                    if (el[ielem].isActive) el[ielem].berechneElementSchnittgroessen(ielem, iKomb - 1);
                 }
 
 
@@ -2692,13 +2743,13 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
 
 
     for (ielem = 0; ielem < nelemTotal; ielem++) {
+        if (el[ielem].isActive) {
+            el[ielem].berechneElementsteifigkeitsmatrix(0);
+            el[ielem].addiereElementsteifigkeitmatrix(stiff)
 
-        el[ielem].berechneElementsteifigkeitsmatrix(0);
-        el[ielem].addiereElementsteifigkeitmatrix(stiff)
-
-        el[ielem].berechneElementmassenmatrix();
-        el[ielem].addiereElementmassmatrix(mass_matrix)
-
+            el[ielem].berechneElementmassenmatrix();
+            el[ielem].addiereElementmassmatrix(mass_matrix)
+        }
     }
 
 
@@ -2794,13 +2845,13 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
         //const help = Array.from(Array(6), () => new Array(6));
 
         for (ielem = 0; ielem < nelemTotal; ielem++) {
+            if (el[ielem].isActive) {
+                el[ielem].berechneElementsteifigkeitsmatrix(0);
+                el[ielem].addiereElementsteifigkeitmatrix(stiff)
 
-            el[ielem].berechneElementsteifigkeitsmatrix(0);
-            el[ielem].addiereElementsteifigkeitmatrix(stiff)
-
-            el[ielem].berechneElementsteifigkeitsmatrix_Ksig();
-            el[ielem].addiereElementsteifigkeitmatrix_ksig(stiff_sig)
-
+                el[ielem].berechneElementsteifigkeitsmatrix_Ksig();
+                el[ielem].addiereElementsteifigkeitmatrix_ksig(stiff_sig)
+            }
         }
 
         // for (i = 0; i < neq; i++) {
@@ -2917,46 +2968,47 @@ function berechne_kombinationen() {
     for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
 
         for (let ielem = 0; ielem < nelem_Balken; ielem++) {
-            //console.log("nTeilungen", el[ielem].nTeilungen)
-            for (let iteil = 0; iteil < el[ielem].nTeilungen; iteil++) {
+            if (el[ielem].isActive) {
+                //console.log("nTeilungen", el[ielem].nTeilungen)
+                for (let iteil = 0; iteil < el[ielem].nTeilungen; iteil++) {
 
-                mom = 0.0
-                quer = 0.0
-                norm = 0.0
-                ug = 0.0
-                wg = 0.0
-                phi = 0.0
+                    mom = 0.0
+                    quer = 0.0
+                    norm = 0.0
+                    ug = 0.0
+                    wg = 0.0
+                    phi = 0.0
 
-                for (let iLastfall = 0; iLastfall < nlastfaelle; iLastfall++) {
+                    for (let iLastfall = 0; iLastfall < nlastfaelle; iLastfall++) {
 
-                    mom += el[ielem].M_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
-                    quer += el[ielem].V_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
-                    norm += el[ielem].N_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
-                    ug += el[ielem].u_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
-                    wg += el[ielem].w_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
-                    phi += el[ielem].phi_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
-                    //console.log("mom...", iteil, iLastfall, mom, quer, norm)
+                        mom += el[ielem].M_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                        quer += el[ielem].V_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                        norm += el[ielem].N_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                        ug += el[ielem].u_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                        wg += el[ielem].w_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                        phi += el[ielem].phi_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                        //console.log("mom...", iteil, iLastfall, mom, quer, norm)
+                    }
+
+                    maxM_all = Math.max(Math.abs(mom), maxM_all)
+                    maxV_all = Math.max(Math.abs(quer), maxV_all)
+                    maxN_all = Math.max(Math.abs(norm), maxN_all)
+                    delta = Math.sqrt(ug * ug + wg * wg)
+                    maxdisp_all = Math.max(Math.abs(delta), maxdisp_all)
+
+                    el[ielem].M_komb[iKomb][iteil] = mom
+                    el[ielem].V_komb[iKomb][iteil] = quer
+                    el[ielem].N_komb[iKomb][iteil] = norm
+                    el[ielem].u_komb[iKomb][iteil] = ug
+                    el[ielem].w_komb[iKomb][iteil] = wg
+                    el[ielem].phi_komb[iKomb][iteil] = phi
+
+                    max_S_kombi[0][iKomb] = Math.max(Math.abs(mom), max_S_kombi[0][iKomb])
+                    max_S_kombi[1][iKomb] = Math.max(Math.abs(quer), max_S_kombi[1][iKomb])
+                    max_S_kombi[2][iKomb] = Math.max(Math.abs(norm), max_S_kombi[2][iKomb])
+                    max_disp_kombi[iKomb] = Math.max(Math.abs(delta), max_disp_kombi[iKomb])
                 }
-
-                maxM_all = Math.max(Math.abs(mom), maxM_all)
-                maxV_all = Math.max(Math.abs(quer), maxV_all)
-                maxN_all = Math.max(Math.abs(norm), maxN_all)
-                delta = Math.sqrt(ug * ug + wg * wg)
-                maxdisp_all = Math.max(Math.abs(delta), maxdisp_all)
-
-                el[ielem].M_komb[iKomb][iteil] = mom
-                el[ielem].V_komb[iKomb][iteil] = quer
-                el[ielem].N_komb[iKomb][iteil] = norm
-                el[ielem].u_komb[iKomb][iteil] = ug
-                el[ielem].w_komb[iKomb][iteil] = wg
-                el[ielem].phi_komb[iKomb][iteil] = phi
-
-                max_S_kombi[0][iKomb] = Math.max(Math.abs(mom), max_S_kombi[0][iKomb])
-                max_S_kombi[1][iKomb] = Math.max(Math.abs(quer), max_S_kombi[1][iKomb])
-                max_S_kombi[2][iKomb] = Math.max(Math.abs(norm), max_S_kombi[2][iKomb])
-                max_disp_kombi[iKomb] = Math.max(Math.abs(delta), max_disp_kombi[iKomb])
             }
-
         }
 
         console.log("max_S_kombi, iKomb=", iKomb, max_S_kombi[0][iKomb], max_S_kombi[1][iKomb], max_S_kombi[2][iKomb], max_disp_kombi[iKomb])
