@@ -191,7 +191,7 @@ class TQuerschnittRechteck {
 class TElement {
     qname: string = ''
     isActive = true;
-    nodeTyp: number = 0           // 0= 2 Knoten, 1 = 3 Knoten, 2 = 4 Knoten
+    elTyp: number = 0           // 0 = 2 Knoten, 1 = Fachwerkstab, 3 = 3 Knoten, 3 = 4 Knoten
     nknoten: number = 2
     EModul: number = 0.0
     querdehnzahl: number = 0.3
@@ -1338,7 +1338,7 @@ function read_elements() {
                 //console.log('NODE i:1', nnodes, izeile, ispalte, wert, table.rows[izeile].cells[ispalte].textContent);
             }
             if (ispalte === 1) element[izeile - 1].qname = wert;
-            else if (ispalte === 2) element[izeile - 1].nodeTyp = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 2) element[izeile - 1].elTyp = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 3) element[izeile - 1].nod[0] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte === 4) element[izeile - 1].nod[1] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte > 4 && ispalte <= 10) {
@@ -1355,8 +1355,9 @@ function read_elements() {
         nod2 = element[ielem].nod[1];
 
         if (nod1 === -2 && nod2 === -2) element[ielem].isActive = false;
+        if (element[ielem].elTyp === -1) element[ielem].isActive = false;
 
-        console.log("isActive", (+ielem+1),element[ielem].isActive,nod1,nod2)
+        console.log("isActive", (+ielem + 1), element[ielem].isActive, nod1, nod2)
         if (element[ielem].isActive) {
 
             let fehler = 0;
@@ -1397,7 +1398,7 @@ function read_elements() {
                 element[ielem].alpha = Math.atan2(dz, dx)
             }
 
-            if (element[ielem].nodeTyp === 3) {
+            if (element[ielem].elTyp === 3) {
 
                 let x = (element[ielem].x2 + element[ielem].x1) / 2.0
                 let z = (element[ielem].z2 + element[ielem].z1) / 2.0
@@ -1407,7 +1408,7 @@ function read_elements() {
                 element[ielem].nod[2] = nnodesTotal
                 nnodesTotal++;
             }
-            else if (element[ielem].nodeTyp === 4) {
+            else if (element[ielem].elTyp === 4) {
 
                 let dx = (element[ielem].x2 - element[ielem].x1) / 3.0
                 let dz = (element[ielem].z2 - element[ielem].z1) / 3.0
@@ -1970,8 +1971,10 @@ function calculate() {
 
         }
 
-        if (System === STABWERK) el.push(new CTimoshenko_beam());
-        else el.push(new CTruss());
+        if (System === STABWERK) {
+            if (element[ielem].elTyp === 0 ) el.push(new CTimoshenko_beam());
+            else if (element[ielem].elTyp === 1 ) el.push(new CTruss());
+        } else el.push(new CTruss());
 
         el[ielem].setQuerschnittsdaten(emodul, Iy, area, wichte, ks, querdehnzahl, schubfaktor, height, zso, alphaT)
         el[ielem].initialisiereElementdaten(ielem)

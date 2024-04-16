@@ -616,6 +616,9 @@ export function drawsystem(svg_id = 'artboard') {
         //console.log("scalefaktor", scalefactor, slmax, maxValue_lf[iLastfall - 1].disp)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+
+            if ( !stab[ielem].isActive) continue
+
             maxU = 0.0
 
             const nelTeilungen = element[ielem].nTeilungen
@@ -790,6 +793,9 @@ export function drawsystem(svg_id = 'artboard') {
         console.log("draw_eigenform", draw_eigenform, ikomb)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+
+            if ( !stab[ielem].isActive) continue
+
             maxU = 0.0
 
             x1 = Math.round(tr.xPix(element[ielem].x1));
@@ -905,6 +911,9 @@ export function drawsystem(svg_id = 'artboard') {
         console.log("draw_dyn_eigenform", draw_dyn_eigenform)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+
+            if ( !stab[ielem].isActive) continue
+
             maxU = 0.0
 
             x1 = Math.round(tr.xPix(element[ielem].x1));
@@ -1002,6 +1011,9 @@ export function drawsystem(svg_id = 'artboard') {
         console.log("draw_schiefstellung", ikomb)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+
+            if ( !stab[ielem].isActive) continue
+
             maxU = 0.0
 
             // x1 = Math.round(tr.xPix(element[ielem].x1));
@@ -1152,6 +1164,8 @@ export function drawsystem(svg_id = 'artboard') {
             console.log("SCALEFACTOR", 1. / scalefactor)
 
             for (let ielem = 0; ielem < nelem; ielem++) {
+
+                if ( !stab[ielem].isActive) continue
 
                 if (scalefactor === Infinity || scalefactor > 1.e10) break;
 
@@ -1385,6 +1399,8 @@ export function drawsystem(svg_id = 'artboard') {
 
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+
+            if ( !stab[ielem].isActive) continue
 
             if (flag_eingabe === 0) {
                 x1 = Math.round(tr.xPix(stab[ielem].x1));
@@ -1698,6 +1714,8 @@ function draw_dyn_eigenformen(frameCount: any, timeDelta: any) {
         if (show_systemlinien) {
             for (let ielem = 0; ielem < nelem; ielem++) {
 
+                if ( !stab[ielem].isActive) continue
+
                 let x1 = Math.round(tr.xPix(stab[ielem].x1));
                 let z1 = Math.round(tr.zPix(stab[ielem].z1));
                 let x2 = Math.round(tr.xPix(stab[ielem].x2));
@@ -1713,6 +1731,9 @@ function draw_dyn_eigenformen(frameCount: any, timeDelta: any) {
         draw_lager(two);
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+
+            if ( !stab[ielem].isActive) continue
+
             maxU = 0.0
 
             // let x1 = Math.round(tr.xPix(element[ielem].x1));
@@ -1880,6 +1901,8 @@ function draw_elementlasten(two: Two) {
 
 
     for (let ielem = 0; ielem < nelem; ielem++) {
+
+        if ( !stab[ielem].isActive) continue
 
         a = slmax / 100.
         a_spalt = a
@@ -2949,6 +2972,8 @@ function draw_gelenke(two: Two) {
 
     for (let ielem = 0; ielem < nelem; ielem++) {
 
+        if ( !stab[ielem].isActive) continue
+
         if (element[ielem].nGelenke > 0) {
 
             let aL = element[ielem].aL
@@ -3582,6 +3607,8 @@ function draw_stabvorverformung(two: Two) {
     maxU = 0.0
 
     for (let ielem = 0; ielem < nelem; ielem++) {
+
+        if ( !stab[ielem].isActive) continue
 
         if (stabvorverformung_komb[ielem][ikomb].defined) {
 

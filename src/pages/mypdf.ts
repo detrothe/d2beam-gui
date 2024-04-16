@@ -1055,6 +1055,9 @@ export async function my_jspdf() {
         yy = neueZeile(yy, fs, 1);
 
         for (let ielem = 0; ielem < nelem; ielem++) {
+
+          if ( !el[ielem].isActive) continue
+
           yy = neueZeile(yy, fs, 1);
           doc.setFont("freesans_bold");
           doc.text("Element " + (+ielem + 1), links, yy);
@@ -1216,6 +1219,9 @@ export async function my_jspdf() {
           yy = neueZeile(yy, fs, 1);
 
           for (let ielem = 0; ielem < nelem; ielem++) {
+
+            if ( !el[ielem].isActive) continue
+
             yy = neueZeile(yy, fs, 1);
             doc.setFont("freesans_bold");
             doc.text("Element " + (+ielem + 1), links, yy);
