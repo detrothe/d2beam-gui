@@ -102,10 +102,10 @@ if (isAndroid) {
         console.log("beforeunload", event)
 
 
-        if (dbPromise) {
-            dbPromise.then(db => db.close());
-            dbPromise = null;
-        }
+        // if (dbPromise) {
+        //     dbPromise.then(db => db.close());
+        //     dbPromise = null;
+        // }
 
         window.localStorage.setItem('current_input', 'input');
 
@@ -128,7 +128,7 @@ if (isAndroid) {
             write('This page was restored from the bfcache.');
         } else {
             write('This page was loaded normally.');
-            openDB();
+            // openDB();
             const input = window.localStorage.getItem('current_input');
             write('current input = ' + input)
 
@@ -152,14 +152,14 @@ async function handleFiles(files: any) {
     }
 }
 
-function openDB() {
-    if (!dbPromise) {
-        dbPromise = new Promise((resolve, reject) => {
-            const req = indexedDB.open('my-db', 1);
-            req.onupgradeneeded = () => req.result.createObjectStore('keyval');
-            req.onerror = () => reject(req.error);
-            req.onsuccess = () => resolve(req.result);
-        });
-    }
-    return dbPromise;
-}
+// function openDB() {
+//     if (!dbPromise) {
+//         dbPromise = new Promise((resolve, reject) => {
+//             const req = indexedDB.open('my-db', 1);
+//             req.onupgradeneeded = () => req.result.createObjectStore('keyval');
+//             req.onerror = () => reject(req.error);
+//             req.onsuccess = () => resolve(req.result);
+//         });
+//     }
+//     return dbPromise;
+// }
