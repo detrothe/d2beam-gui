@@ -8,12 +8,22 @@ import './pages/haupt';
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 
 if ( isAndroid) {
-    window.addEventListener('load', function() {
-        window.history.pushState({}, '')
+    // window.addEventListener('load', function() {
+    //     window.history.pushState({}, '')
+    //   })
+
+    //   window.addEventListener('popstate', function() {
+    //     window.history.pushState({}, '')
+    //   })
+
+      window.addEventListener('load', function() {
+        window.history.pushState({ noBackExitsApp: true }, '')
       })
 
-      window.addEventListener('popstate', function() {
-        window.history.pushState({}, '')
+      window.addEventListener('popstate', function(event) {
+        if (event.state && event.state.noBackExitsApp) {
+          window.history.pushState({ noBackExitsApp: true }, '')
+        }
       })
 }
 
