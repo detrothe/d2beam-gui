@@ -43,10 +43,10 @@ if (isAndroid) {
         event.returnValue = 'hallo';
         write("beforeunload " + event)
 
-        if (dbPromise) {
-            dbPromise.then(db => db.close());
-            dbPromise = null;
-        }
+        // if (dbPromise) {
+        //     dbPromise.then(db => db.close());
+        //     dbPromise = null;
+        // }
         window.localStorage.setItem('current_input', 'i-n-p-u-t');
 
     });
@@ -56,7 +56,7 @@ if (isAndroid) {
             write('This page was restored from the bfcache.');
         } else {
             write('This page was loaded normally.');
-            openDB();
+            // openDB();
             const input = window.localStorage.getItem('current_input');
             write('PAGE SHOW  current input = ' + input)
         }
