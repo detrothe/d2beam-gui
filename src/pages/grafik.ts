@@ -617,7 +617,7 @@ export function drawsystem(svg_id = 'artboard') {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if ( !stab[ielem].isActive) continue
+            if (!stab[ielem].isActive) continue
 
             maxU = 0.0
 
@@ -778,7 +778,7 @@ export function drawsystem(svg_id = 'artboard') {
         let dx: number, x: number, eta: number, sl: number, nenner: number
         let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
 
-        let u: number, w: number, uG: number, wG: number
+        let u = 0.0, w = 0.0, uG: number, wG: number
         let edispL: number[] = new Array(6)
         let ikomb = draw_lastfall
         let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
@@ -794,7 +794,7 @@ export function drawsystem(svg_id = 'artboard') {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if ( !stab[ielem].isActive) continue
+            if (!stab[ielem].isActive) continue
 
             maxU = 0.0
 
@@ -813,14 +813,25 @@ export function drawsystem(svg_id = 'artboard') {
             x = 0.0; xx2 = 0.0; zz2 = 0.0
             for (let i = 0; i <= nelTeilungen; i++) {
                 if (System === 0) {
-                    Nu[0] = (1.0 - x / sl);
-                    Nu[1] = x / sl
-                    Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
-                    Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
-                    Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
-                    Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
-                    u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                    w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                    console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
+                    if (stab[ielem].elTyp === 0) {
+                        Nu[0] = (1.0 - x / sl);
+                        Nu[1] = x / sl
+                        Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                        Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                        Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                        Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                        w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                    } else if (stab[ielem].elTyp === 1) {
+                        Nu[0] = (1.0 - x / sl);
+                        Nu[1] = x / sl
+                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                        w = Nu[0] * edispL[1] + Nu[1] * edispL[4]
+
+                        // u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                        // w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+                    }
                 } else {
                     Nu[0] = (1.0 - x / sl);
                     Nu[1] = x / sl
@@ -879,7 +890,7 @@ export function drawsystem(svg_id = 'artboard') {
         let dx: number, x: number, eta: number, sl: number, nenner: number
         let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
 
-        let u: number, w: number, uG: number, wG: number
+        let u = 0.0, w = 0.0, uG: number, wG: number
         let edispL: number[] = new Array(6)
         let ikomb = draw_lastfall
         let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
@@ -912,7 +923,7 @@ export function drawsystem(svg_id = 'artboard') {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if ( !stab[ielem].isActive) continue
+            if (!stab[ielem].isActive) continue
 
             maxU = 0.0
 
@@ -931,14 +942,22 @@ export function drawsystem(svg_id = 'artboard') {
             x = 0.0; xx2 = 0.0; zz2 = 0.0
             for (let i = 0; i <= nelTeilungen; i++) {
                 if (System === 0) {
-                    Nu[0] = (1.0 - x / sl);
-                    Nu[1] = x / sl
-                    Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
-                    Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
-                    Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
-                    Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
-                    u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                    w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                    console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
+                    if (stab[ielem].elTyp === 0) {
+                        Nu[0] = (1.0 - x / sl);
+                        Nu[1] = x / sl
+                        Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                        Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                        Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                        Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                        w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                    } else if (stab[ielem].elTyp === 1) {
+                        Nu[0] = (1.0 - x / sl);
+                        Nu[1] = x / sl
+                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                        w = Nu[0] * edispL[1] + Nu[1] * edispL[4]
+                    }
                 } else {
                     Nu[0] = (1.0 - x / sl);
                     Nu[1] = x / sl
@@ -997,7 +1016,7 @@ export function drawsystem(svg_id = 'artboard') {
         let dx: number, x: number, eta: number, sl: number, nenner: number
         let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
 
-        let u: number, w: number, uG: number, wG: number
+        let u = 0.0, w = 0.0, uG: number, wG: number
         let edispL: number[] = new Array(6)
         let ikomb = draw_lastfall
         let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
@@ -1012,7 +1031,7 @@ export function drawsystem(svg_id = 'artboard') {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if ( !stab[ielem].isActive) continue
+            if (!stab[ielem].isActive) continue
 
             maxU = 0.0
 
@@ -1031,14 +1050,25 @@ export function drawsystem(svg_id = 'artboard') {
             x = 0.0; xx2 = 0.0; zz2 = 0.0
             for (let i = 0; i <= nelTeilungen; i++) {
                 if (System === 0) {
-                    Nu[0] = (1.0 - x / sl);
-                    Nu[1] = x / sl
-                    Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
-                    Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
-                    Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
-                    Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
-                    u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                    w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                    console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
+                    if (stab[ielem].elTyp === 0) {
+                        Nu[0] = (1.0 - x / sl);
+                        Nu[1] = x / sl
+                        Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                        Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                        Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                        Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                        w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                    } else if (stab[ielem].elTyp === 1) {
+                        Nu[0] = (1.0 - x / sl);
+                        Nu[1] = x / sl
+                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                        w = Nu[0] * edispL[1] + Nu[1] * edispL[4]
+
+                        // u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                        // w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+                    }
                 } else {
                     Nu[0] = (1.0 - x / sl);
                     Nu[1] = x / sl
@@ -1165,7 +1195,7 @@ export function drawsystem(svg_id = 'artboard') {
 
             for (let ielem = 0; ielem < nelem; ielem++) {
 
-                if ( !stab[ielem].isActive) continue
+                if (!stab[ielem].isActive) continue
 
                 if (scalefactor === Infinity || scalefactor > 1.e10) break;
 
@@ -1400,7 +1430,7 @@ export function drawsystem(svg_id = 'artboard') {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if ( !stab[ielem].isActive) continue
+            if (!stab[ielem].isActive) continue
 
             if (flag_eingabe === 0) {
                 x1 = Math.round(tr.xPix(stab[ielem].x1));
@@ -1714,7 +1744,7 @@ function draw_dyn_eigenformen(frameCount: any, timeDelta: any) {
         if (show_systemlinien) {
             for (let ielem = 0; ielem < nelem; ielem++) {
 
-                if ( !stab[ielem].isActive) continue
+                if (!stab[ielem].isActive) continue
 
                 let x1 = Math.round(tr.xPix(stab[ielem].x1));
                 let z1 = Math.round(tr.zPix(stab[ielem].z1));
@@ -1732,7 +1762,7 @@ function draw_dyn_eigenformen(frameCount: any, timeDelta: any) {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if ( !stab[ielem].isActive) continue
+            if (!stab[ielem].isActive) continue
 
             maxU = 0.0
 
@@ -1902,7 +1932,7 @@ function draw_elementlasten(two: Two) {
 
     for (let ielem = 0; ielem < nelem; ielem++) {
 
-        if ( !stab[ielem].isActive) continue
+        if (!stab[ielem].isActive) continue
 
         a = slmax / 100.
         a_spalt = a
@@ -2972,7 +3002,7 @@ function draw_gelenke(two: Two) {
 
     for (let ielem = 0; ielem < nelem; ielem++) {
 
-        if ( !stab[ielem].isActive) continue
+        if (!stab[ielem].isActive) continue
 
         if (element[ielem].nGelenke > 0) {
 
@@ -3608,7 +3638,7 @@ function draw_stabvorverformung(two: Two) {
 
     for (let ielem = 0; ielem < nelem; ielem++) {
 
-        if ( !stab[ielem].isActive) continue
+        if (!stab[ielem].isActive) continue
 
         if (stabvorverformung_komb[ielem][ikomb].defined) {
 

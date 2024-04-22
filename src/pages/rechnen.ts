@@ -1358,6 +1358,7 @@ function read_elements() {
         if (element[ielem].elTyp === -1) element[ielem].isActive = false;
 
         console.log("isActive", (+ielem + 1), element[ielem].isActive, nod1, nod2)
+
         if (element[ielem].isActive) {
 
             let fehler = 0;
@@ -1972,8 +1973,9 @@ function calculate() {
         }
 
         if (System === STABWERK) {
-            if (element[ielem].elTyp === 0 ) el.push(new CTimoshenko_beam());
-            else if (element[ielem].elTyp === 1 ) el.push(new CTruss());
+            if (element[ielem].elTyp === 1) el.push(new CTruss());
+            else el.push(new CTimoshenko_beam());
+
         } else el.push(new CTruss());
 
         el[ielem].setQuerschnittsdaten(emodul, Iy, area, wichte, ks, querdehnzahl, schubfaktor, height, zso, alphaT)

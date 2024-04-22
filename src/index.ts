@@ -5,6 +5,17 @@ import './styles/contextMenu.css';
 
 import './pages/haupt';
 
+const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+
+if ( isAndroid) {
+    window.addEventListener('load', function() {
+        window.history.pushState({}, '')
+      })
+
+      window.addEventListener('popstate', function() {
+        window.history.pushState({}, '')
+      })
+}
 
 // Damit man nicht versehentlich das Browserfenster löscht und Eingaben verliert
 
