@@ -15,9 +15,10 @@ if (isAndroid) {
         window.history.pushState({}, '')
       })
 
-      window.addEventListener('popstate', function() {
+      window.addEventListener('popstate', function(event) {
         write('Android popstate')
         window.history.pushState({}, '')
+        event.preventDefault();
       })
 
     // window.addEventListener('load', function () {
