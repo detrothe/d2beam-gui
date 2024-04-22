@@ -19,7 +19,7 @@ if (isAndroid) {
 
     window.addEventListener('load', function () {
         write('Android load')
-        window.history.pushState({}, '')
+        //window.history.pushState({}, '')
         input = window.localStorage.getItem('current_input');
         write('LOAD  current input = ' + input)
         if (input.length > 0) read_daten(input);
@@ -41,11 +41,11 @@ if (isAndroid) {
     });
 
     window.addEventListener('beforeunload', function (event) {
-        window.alert('beforeunload');
+        //window.alert('beforeunload');
         event.preventDefault();
         // Google Chrome requires returnValue to be set.
-        event.returnValue = 'hallo';
-        write("beforeunload " + event)
+        event.returnValue = '';
+        //write("beforeunload " + event)
 
         // if (dbPromise) {
         //     dbPromise.then(db => db.close());
@@ -69,10 +69,10 @@ if (isAndroid) {
     window.addEventListener('pagehide', (event) => {
         if (event.persisted) {
             write('This page *might* be entering the bfcache.');
-            window.alert('This page *might* be entering the bfcache.');
+            //window.alert('This page *might* be entering the bfcache.');
         } else {
             write('This page will unload normally and be discarded.');
-            window.alert('This page will unload normally and be discarded.');
+            //window.alert('This page will unload normally and be discarded.');
         }
     });
 
