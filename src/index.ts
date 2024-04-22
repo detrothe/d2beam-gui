@@ -21,6 +21,14 @@ if (isAndroid) {
         event.preventDefault();
       })
 
+      window.addEventListener('visibilitychange', function() {
+        // fires when user switches tabs, apps, goes to homescreen, etc.
+          if (document.visibilityState == 'hidden') {  write('Android hidden') }
+
+          // fires when app transitions from prerender, user returns to the app / tab.
+          if (document.visibilityState == 'visible') {  write('Android visible') }
+      });
+
     // window.addEventListener('load', function () {
     //     write('Android load')
     //     window.history.pushState({ noBackExitsApp: true }, '')
