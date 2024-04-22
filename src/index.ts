@@ -24,10 +24,17 @@ if (isAndroid) {
     document.addEventListener('visibilitychange', function () {
         write('Android visibilitychange = ' + document.visibilityState)
         // fires when user switches tabs, apps, goes to homescreen, etc.
-        if (document.visibilityState == 'hidden') { write('Android hidden') }
+        if (document.visibilityState === 'hidden') { write('Android hidden') }
 
         // fires when app transitions from prerender, user returns to the app / tab.
-        if (document.visibilityState == 'visible') { write('Android visible') }
+        if (document.visibilityState === 'visible') { write('Android visible') }
+    });
+
+    window.addEventListener('beforeunload', function (event) {
+        //event.preventDefault();
+        // Google Chrome requires returnValue to be set.
+
+        console.log("beforeunload", event)
     });
 
     // window.addEventListener('load', function () {
