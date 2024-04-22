@@ -410,6 +410,75 @@ async function handleFileSelect_save() {
 
     // if (elem) {
 
+    let jsonse = str_inputToJSON();
+
+    console.log("stringify", jsonse);
+
+    let filename: any
+
+    if (app.hasFSAccess) {
+
+        //window.alert("showSaveFilePicker bekannt")
+
+        try {
+            // (A) CREATE BLOB OBJECT
+            const myBlob = new Blob([jsonse], { type: "text/plain" });
+
+            // (B) FILE HANDLER & FILE STREAM
+            // @ts-ignore
+            const fileHandle = await window.showSaveFilePicker({
+                suggestedName: currentFilename,
+                startIn: lastFileHandle,
+                types: [{
+                    description: "Text file",
+                    accept: { "text/plain": [".txt"] }
+                }]
+            });
+            console.log("fileHandle", fileHandle)
+            lastFileHandle = fileHandle
+
+            const fileStream = await fileHandle.createWritable();
+            //console.log("fileStream=",fileStream);
+
+            // (C) WRITE FILE
+            await fileStream.write(myBlob);
+            await fileStream.close();
+
+            set_current_filename(fileHandle.name);
+
+        } catch (error: any) {
+            //alert(error.name);
+            alert(error.message);
+        }
+
+        // } else if (app.isMac) {
+        //     filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert", currentFilename);
+        //     download(filename, jsonse);
+        //     set_current_filename(filename);
+    } else {
+
+        //window.alert("showSaveFilePicker UNBEKANNT");
+        filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert", currentFilename);
+        const myFile = new File([jsonse], filename, { type: "text/plain;charset=utf-8" });
+        try {
+            saveAs(myFile);
+            set_current_filename(filename);
+        } catch (error: any) {
+            //alert(error.name);
+            alert(error.message);
+        }
+
+    }
+
+
+    //}
+
+    //  }
+}
+
+export function str_inputToJSON() {
+
+
     let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, stadyn, dyn_neigv;
 
     let el = document.getElementById('id_button_nteilungen') as any;
@@ -701,70 +770,8 @@ async function handleFileSelect_save() {
 
 
 
-    let jsonse = JSON.stringify(polyData);
+    return JSON.stringify(polyData);
 
-    console.log("stringify", jsonse);
-
-    let filename: any
-
-    if (app.hasFSAccess) {
-
-        //window.alert("showSaveFilePicker bekannt")
-
-        try {
-            // (A) CREATE BLOB OBJECT
-            const myBlob = new Blob([jsonse], { type: "text/plain" });
-
-            // (B) FILE HANDLER & FILE STREAM
-            // @ts-ignore
-            const fileHandle = await window.showSaveFilePicker({
-                suggestedName: currentFilename,
-                startIn: lastFileHandle,
-                types: [{
-                    description: "Text file",
-                    accept: { "text/plain": [".txt"] }
-                }]
-            });
-            console.log("fileHandle", fileHandle)
-            lastFileHandle = fileHandle
-
-            const fileStream = await fileHandle.createWritable();
-            //console.log("fileStream=",fileStream);
-
-            // (C) WRITE FILE
-            await fileStream.write(myBlob);
-            await fileStream.close();
-
-            set_current_filename(fileHandle.name);
-
-        } catch (error: any) {
-            //alert(error.name);
-            alert(error.message);
-        }
-
-        // } else if (app.isMac) {
-        //     filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert", currentFilename);
-        //     download(filename, jsonse);
-        //     set_current_filename(filename);
-    } else {
-
-        //window.alert("showSaveFilePicker UNBEKANNT");
-        filename = window.prompt("Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert", currentFilename);
-        const myFile = new File([jsonse], filename, { type: "text/plain;charset=utf-8" });
-        try {
-            saveAs(myFile);
-            set_current_filename(filename);
-        } catch (error: any) {
-            //alert(error.name);
-            alert(error.message);
-        }
-
-    }
-
-
-    //}
-
-    //  }
 }
 
 //document.getElementById('readFile').addEventListener('click', initFileSelect_read, false);

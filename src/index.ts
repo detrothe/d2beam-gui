@@ -5,6 +5,7 @@ import './styles/contextMenu.css';
 
 import './pages/haupt';
 import { write } from './pages/utility'
+import { str_inputToJSON} from './pages/dateien'
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log("isAndroid =", isAndroid)
@@ -48,7 +49,7 @@ if (isAndroid) {
         //     dbPromise.then(db => db.close());
         //     dbPromise = null;
         // }
-        window.localStorage.setItem('current_input', 'i-n-p-u-t');
+        window.localStorage.setItem('current_input', str_inputToJSON() );
 
     });
 
