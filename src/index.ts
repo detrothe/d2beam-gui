@@ -37,6 +37,22 @@ if (isAndroid) {
         write("beforeunload " + event)
     });
 
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+          write('This page was restored from the bfcache.');
+        } else {
+          write('This page was loaded normally.');
+        }
+      });
+
+      window.addEventListener('pagehide', (event) => {
+        if (event.persisted) {
+          write('This page *might* be entering the bfcache.');
+        } else {
+          write('This page will unload normally and be discarded.');
+        }
+      });
+
     // window.addEventListener('load', function () {
     //     write('Android load')
     //     window.history.pushState({ noBackExitsApp: true }, '')
