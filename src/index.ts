@@ -33,7 +33,7 @@ if (isAndroid) {
     window.addEventListener('beforeunload', function (event) {
         event.preventDefault();
         // Google Chrome requires returnValue to be set.
-        event.returnValue = '';
+        event.returnValue = 'hallo';
         write("beforeunload " + event)
     });
 
