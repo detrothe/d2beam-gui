@@ -5,12 +5,13 @@ import './styles/contextMenu.css';
 
 import './pages/haupt';
 import { write } from './pages/utility'
-import { str_inputToJSON} from './pages/dateien'
+import { str_inputToJSON, read_daten } from './pages/dateien'
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log("isAndroid =", isAndroid)
 
 let dbPromise: any;
+let input: any;
 
 if (isAndroid) {
 
@@ -19,8 +20,9 @@ if (isAndroid) {
     window.addEventListener('load', function () {
         write('Android load')
         window.history.pushState({}, '')
-        const input = window.localStorage.getItem('current_input');
+        input = window.localStorage.getItem('current_input');
         write('LOAD  current input = ' + input)
+        if (input.length > 0) read_daten(input);
     })
 
     // window.addEventListener('popstate', function (event) {
@@ -49,7 +51,7 @@ if (isAndroid) {
         //     dbPromise.then(db => db.close());
         //     dbPromise = null;
         // }
-        window.localStorage.setItem('current_input', str_inputToJSON() );
+        window.localStorage.setItem('current_input', str_inputToJSON());
 
     });
 
@@ -109,7 +111,7 @@ if (isAndroid) {
         //     dbPromise = null;
         // }
 
-        window.localStorage.setItem('current_input', 'input');
+        window.localStorage.setItem('current_input', str_inputToJSON());
 
     });
 
@@ -138,10 +140,20 @@ if (isAndroid) {
     });
 
     window.addEventListener('load', () => {
-        const input = window.localStorage.getItem('current_input');
+        input = window.localStorage.getItem('current_input');
         write('LOAD  current input = ' + input)
-
+        console.log('LOAD  current input = ', input)
+        if (input.length > 0) read_daten(input);
     });
+
+    document.addEventListener("readystatechange", (event: any) => {
+        console.log("readystatechange", event.target.readyState, document.readyState)
+        console.log('LOADED  current input = ', input)
+        if (event.target.readyState === "complete") {
+            if (input) read_daten(input);;
+        }
+    });
+
 }
 
 async function handleFiles(files: any) {

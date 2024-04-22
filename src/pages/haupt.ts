@@ -152,21 +152,21 @@ portrait.addEventListener("change", function (e) {
   }
 });
 
-const sleepNow = (delay: any) => new Promise((resolve) => setTimeout(resolve, delay));
+// const sleepNow = (delay: any) => new Promise((resolve) => setTimeout(resolve, delay));
 
-async function initTabellenLoop() {
-  for (let i = 1; i <= 25; i++) {
-    await sleepNow(50);
-    if (document.readyState === "complete") {
-      init_tabellen();
-      rechnen(1);
+// async function initTabellenLoop() {
+//   for (let i = 1; i <= 25; i++) {
+//     await sleepNow(50);
+//     if (document.readyState === "complete") {
+//       init_tabellen();
+//       rechnen(1);
 
-      write(`document.readyState = complete after ${i * 50} msec`);
-      break;
-    }
-    console.log(`Hello #${i * 50}`);
-  }
-}
+//       write(`document.readyState = complete after ${i * 50} msec`);
+//       break;
+//     }
+//     console.log(`Hello #${i * 50}`);
+//   }
+// }
 
 {
   //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
@@ -1031,9 +1031,11 @@ async function initTabellenLoop() {
   // write('document.readyState ' + document.readyState)
   //}
 
-  initTabellenLoop();
+  // initTabellenLoop();
+  console.log('vor init_tabellen in haupt')
+  init_tabellen();
 
-  //rechnen(1);
+  rechnen(1);
 }
 
 //---------------------------------------------------------------------------------------------------------------
