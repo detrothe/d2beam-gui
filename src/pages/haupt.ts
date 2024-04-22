@@ -231,7 +231,7 @@ async function initTabellenLoop() {
               </td>
             </tr>
             <tr>
-              <td>&nbsp;&nbsp; Berechnungsart :</td>
+              <td>&nbsp;&nbsp; Berechnungsart:</td>
               <td>
                 <select @change="${berechnungsart_changed}" name="stadyn" id="id_stadyn" style="min-width:100%;">
                   <option value="0" selected>statisch</option>
@@ -241,7 +241,7 @@ async function initTabellenLoop() {
               <td></td>
             </tr>
             <tr>
-              <td>&nbsp;&nbsp; Berechnung nach :</td>
+              <td>&nbsp;&nbsp; Berechnung nach:</td>
               <td>
                 <select name="THIIO" id="id_THIIO" style="min-width:100%;" onchange="berechnungErforderlich()">
                   <option value="0" selected>Th. I. Ordnung</option>
