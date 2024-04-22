@@ -34,7 +34,7 @@ if (isAndroid) {
         //event.preventDefault();
         // Google Chrome requires returnValue to be set.
 
-        console.log("beforeunload", event)
+        write("beforeunload " + event)
     });
 
     // window.addEventListener('load', function () {
