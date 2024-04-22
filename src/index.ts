@@ -38,6 +38,7 @@ if (isAndroid) {
     });
 
     window.addEventListener('beforeunload', function (event) {
+        window.alert('beforeunload');
         event.preventDefault();
         // Google Chrome requires returnValue to be set.
         event.returnValue = 'hallo';
