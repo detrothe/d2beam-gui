@@ -47,9 +47,11 @@ if (isAndroid) {
 
       window.addEventListener('pagehide', (event) => {
         if (event.persisted) {
-          write('This page *might* be entering the bfcache.');
+            write('This page *might* be entering the bfcache.');
+            window.alert('This page *might* be entering the bfcache.');
         } else {
-          write('This page will unload normally and be discarded.');
+            write('This page will unload normally and be discarded.');
+            window.alert('This page will unload normally and be discarded.');
         }
       });
 
