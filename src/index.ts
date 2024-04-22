@@ -10,29 +10,31 @@ const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log("isAndroid =", isAndroid)
 
 if (isAndroid) {
-    // window.addEventListener('load', function() {
-    //     window.history.pushState({}, '')
-    //   })
-
-    //   window.addEventListener('popstate', function() {
-    //     window.history.pushState({}, '')
-    //   })
-
-    window.addEventListener('load', function () {
+    window.addEventListener('load', function() {
         write('Android load')
-        window.history.pushState({ noBackExitsApp: true }, '')
-        // window.history.back();
-        // window.history.forward();
-    })
+        window.history.pushState({}, '')
+      })
 
-    window.addEventListener('popstate', function (event) {
-        write('Android popstate'+event.state)
-        if (event.state && event.state.noBackExitsApp) {
-            window.history.pushState({ noBackExitsApp: true }, '')
-            // window.history.back();
-            // window.history.forward();
-        }
-    })
+      window.addEventListener('popstate', function() {
+        write('Android popstate')
+        window.history.pushState({}, '')
+      })
+
+    // window.addEventListener('load', function () {
+    //     write('Android load')
+    //     window.history.pushState({ noBackExitsApp: true }, '')
+    //     // window.history.back();
+    //     // window.history.forward();
+    // })
+
+    // window.addEventListener('popstate', function (event) {
+    //     write('Android popstate'+event.state)
+    //     if (event.state && event.state.noBackExitsApp) {
+    //         window.history.pushState({ noBackExitsApp: true }, '')
+    //         // window.history.back();
+    //         // window.history.forward();
+    //     }
+    // })
 
 } else {
 
