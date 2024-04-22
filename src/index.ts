@@ -10,24 +10,25 @@ const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log("isAndroid =", isAndroid)
 
 if (isAndroid) {
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         write('Android load')
         window.history.pushState({}, '')
-      })
+    })
 
-      window.addEventListener('popstate', function(event) {
-        write('Android popstate')
-        window.history.pushState({}, '')
-        event.preventDefault();
-      })
+    // window.addEventListener('popstate', function (event) {
+    //     write('Android popstate')
+    //     window.history.pushState({}, '')
+    //     event.preventDefault();
+    // })
 
-      window.addEventListener('visibilitychange', function() {
+    document.addEventListener('visibilitychange', function () {
+        write('Android visibilitychange = ' + document.visibilityState)
         // fires when user switches tabs, apps, goes to homescreen, etc.
-          if (document.visibilityState == 'hidden') {  write('Android hidden') }
+        if (document.visibilityState == 'hidden') { write('Android hidden') }
 
-          // fires when app transitions from prerender, user returns to the app / tab.
-          if (document.visibilityState == 'visible') {  write('Android visible') }
-      });
+        // fires when app transitions from prerender, user returns to the app / tab.
+        if (document.visibilityState == 'visible') { write('Android visible') }
+    });
 
     // window.addEventListener('load', function () {
     //     write('Android load')
