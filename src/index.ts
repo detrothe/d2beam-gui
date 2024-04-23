@@ -13,89 +13,89 @@ console.log("isAndroid =", isAndroid)
 let dbPromise: any;
 let input: any;
 
-if (isAndroid) {
+// if (isAndroid) {
 
 
 
-    window.addEventListener('load', function () {
-        write('Android load')
-        //window.history.pushState({}, '')
-        input = window.localStorage.getItem('current_input');
-        write('LOAD  current input = ' + input)
-        if (input.length > 0) read_daten(input);
-    })
+//     window.addEventListener('load', function () {
+//         write('Android load')
+//         //window.history.pushState({}, '')
+//         input = window.localStorage.getItem('current_input');
+//         write('LOAD  current input = ' + input)
+//         if (input.length > 0) read_daten(input);
+//     })
 
-    // window.addEventListener('popstate', function (event) {
-    //     write('Android popstate')
-    //     window.history.pushState({}, '')
-    //     event.preventDefault();
-    // })
+//     // window.addEventListener('popstate', function (event) {
+//     //     write('Android popstate')
+//     //     window.history.pushState({}, '')
+//     //     event.preventDefault();
+//     // })
 
-    document.addEventListener('visibilitychange', function () {
-        write('Android visibilitychange = ' + document.visibilityState)
-        // fires when user switches tabs, apps, goes to homescreen, etc.
-        if (document.visibilityState === 'hidden') { write('Android hidden') }
+//     document.addEventListener('visibilitychange', function () {
+//         write('Android visibilitychange = ' + document.visibilityState)
+//         // fires when user switches tabs, apps, goes to homescreen, etc.
+//         if (document.visibilityState === 'hidden') { write('Android hidden') }
 
-        // fires when app transitions from prerender, user returns to the app / tab.
-        if (document.visibilityState === 'visible') { write('Android visible') }
-    });
+//         // fires when app transitions from prerender, user returns to the app / tab.
+//         if (document.visibilityState === 'visible') { write('Android visible') }
+//     });
 
-    window.addEventListener('beforeunload', function (event) {
-        //window.alert('beforeunload');
-        event.preventDefault();
-        // Google Chrome requires returnValue to be set.
-        event.returnValue = '';
-        //write("beforeunload " + event)
+//     window.addEventListener('beforeunload', function (event) {
+//         //window.alert('beforeunload');
+//         event.preventDefault();
+//         // Google Chrome requires returnValue to be set.
+//         event.returnValue = '';
+//         //write("beforeunload " + event)
 
-        // if (dbPromise) {
-        //     dbPromise.then(db => db.close());
-        //     dbPromise = null;
-        // }
-        window.localStorage.setItem('current_input', str_inputToJSON());
+//         // if (dbPromise) {
+//         //     dbPromise.then(db => db.close());
+//         //     dbPromise = null;
+//         // }
+//         window.localStorage.setItem('current_input', str_inputToJSON());
 
-    });
+//     });
 
-    window.addEventListener('pageshow', (event) => {
-        if (event.persisted) {
-            write('This page was restored from the bfcache.');
-        } else {
-            write('This page was loaded normally.');
-            // openDB();
-            const input = window.localStorage.getItem('current_input');
-            write('PAGE SHOW  current input = ' + input)
-        }
-    });
+//     window.addEventListener('pageshow', (event) => {
+//         if (event.persisted) {
+//             write('This page was restored from the bfcache.');
+//         } else {
+//             write('This page was loaded normally.');
+//             // openDB();
+//             const input = window.localStorage.getItem('current_input');
+//             write('PAGE SHOW  current input = ' + input)
+//         }
+//     });
 
-    window.addEventListener('pagehide', (event) => {
-        if (event.persisted) {
-            write('This page *might* be entering the bfcache.');
-            //window.alert('This page *might* be entering the bfcache.');
-        } else {
-            write('This page will unload normally and be discarded.');
-            //window.alert('This page will unload normally and be discarded.');
-        }
-    });
+//     window.addEventListener('pagehide', (event) => {
+//         if (event.persisted) {
+//             write('This page *might* be entering the bfcache.');
+//             //window.alert('This page *might* be entering the bfcache.');
+//         } else {
+//             write('This page will unload normally and be discarded.');
+//             //window.alert('This page will unload normally and be discarded.');
+//         }
+//     });
 
-    // window.addEventListener('load', function () {
-    //     write('Android load')
-    //     window.history.pushState({ noBackExitsApp: true }, '')
-    //     // window.history.back();
-    //     // window.history.forward();
-    // })
+//     // window.addEventListener('load', function () {
+//     //     write('Android load')
+//     //     window.history.pushState({ noBackExitsApp: true }, '')
+//     //     // window.history.back();
+//     //     // window.history.forward();
+//     // })
 
-    // window.addEventListener('popstate', function (event) {
-    //     write('Android popstate'+event.state)
-    //     if (event.state && event.state.noBackExitsApp) {
-    //         window.history.pushState({ noBackExitsApp: true }, '')
-    //         // window.history.back();
-    //         // window.history.forward();
-    //     }
-    // })
-
-
+//     // window.addEventListener('popstate', function (event) {
+//     //     write('Android popstate'+event.state)
+//     //     if (event.state && event.state.noBackExitsApp) {
+//     //         window.history.pushState({ noBackExitsApp: true }, '')
+//     //         // window.history.back();
+//     //         // window.history.forward();
+//     //     }
+//     // })
 
 
-} else {
+
+
+// } else {
 
     // Damit man nicht versehentlich das Browserfenster löscht und Eingaben verliert
 
@@ -154,7 +154,7 @@ if (isAndroid) {
         }
     });
 
-}
+// }
 
 async function handleFiles(files: any) {
     for (const file of files) {
