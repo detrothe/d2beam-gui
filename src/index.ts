@@ -115,33 +115,33 @@ let input: any;
 
     });
 
-    if ('launchQueue' in window) {
-        console.log('File Handling API is supported!');
+    // if ('launchQueue' in window) {
+    //     console.log('File Handling API is supported!');
 
-        //@ts-ignore
-        launchQueue.setConsumer(launchParams => {
-            handleFiles(launchParams.files);
-        });
-    } else {
-        console.error('File Handling API is not supported!');
-    }
+    //     //@ts-ignore
+    //     launchQueue.setConsumer(launchParams => {
+    //         handleFiles(launchParams.files);
+    //     });
+    // } else {
+    //     console.error('File Handling API is not supported!');
+    // }
 
 
     window.addEventListener('pageshow', (event) => {
         if (event.persisted) {
-            write('This page was restored from the bfcache.');
+            //write('This page was restored from the bfcache.');
         } else {
-            write('This page was loaded normally.');
+            //write('This page was loaded normally.');
             // openDB();
             const input = window.localStorage.getItem('current_input');
-            write('current input = ' + input)
+            //write('current input = ' + input)
 
         }
     });
 
     window.addEventListener('load', () => {
         input = window.localStorage.getItem('current_input');
-        write('LOAD  current input = ' + input)
+        //write('LOAD  current input = ' + input)
         console.log('LOAD  current input = ', input)
         if (input.length > 0) read_daten(input);
     });
