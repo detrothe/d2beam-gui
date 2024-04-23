@@ -100,9 +100,9 @@ let input: any;
     // Damit man nicht versehentlich das Browserfenster löscht und Eingaben verliert
 
     window.addEventListener('beforeunload', function (event) {
-        event.preventDefault();
+        //event.preventDefault();
         // Google Chrome requires returnValue to be set.
-        event.returnValue = '';
+        //event.returnValue = '';
         console.log("beforeunload", event)
 
 
