@@ -7,11 +7,11 @@ import './pages/haupt';
 import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
 
-const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
-console.log("isAndroid =", isAndroid)
+// const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+// console.log("isAndroid =", isAndroid)
 
-let dbPromise: any;
-let input: any;
+// let dbPromise: any;
+// let input: any;
 
 // if (isAndroid) {
 
