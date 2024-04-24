@@ -7,7 +7,7 @@ import { app, clearTables, currentFilename, set_current_filename } from "./haupt
 //import { testeZahl } from "./utility";
 import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
-import { write} from './utility'
+import { write } from './utility'
 
 import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length, set_querschnittszaehler } from "./rechnen"
 import { add_rechteck_querschnitt, setSystem, System } from './rechnen'
@@ -22,8 +22,11 @@ export function read_daten(eingabedaten: string) {
     //------------------------------------------------------------------------------------------------
 
     let i, j;
-
+    let startTime: any
+    let endTime: any
     write('start read_daten')
+    startTime = performance.now();
+
     //console.log("in result", eingabedaten);
     let jobj = JSON.parse(eingabedaten);
     //console.log("und zurück", jobj);
@@ -133,12 +136,17 @@ export function read_daten(eingabedaten: string) {
         else eli.value = jobj.epsDisp_tol;
     }
 
-    write ('vor resizeTables')
+    endTime =performance.now();
+    write('vor resizeTables ' + String(endTime - startTime))
+    startTime = performance.now();
     resizeTables();
-    write ('vor clearTables')
+    endTime = performance.now();
+    write('time used for resizeTables ' + String(endTime - startTime))
+    startTime = performance.now();
     clearTables();
-
-    write("nach resize")
+    endTime = performance.now();
+    write("time used for clearTables " + String(endTime - startTime))
+    startTime = performance.now();
 
     //if (jobj.system === 1) {
     //hideColumnsForFachwerk();
@@ -344,7 +352,8 @@ export function read_daten(eingabedaten: string) {
         }
     }
 
-    write ('done read_daten')
+    endTime = performance.now();
+    write('done read_daten ' + String(endTime - startTime))
 }
 
 //------------------------------------------------------------------------------------------------
