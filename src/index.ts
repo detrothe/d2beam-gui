@@ -6,6 +6,7 @@ import './styles/contextMenu.css';
 import './pages/haupt';
 import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
+import { rechnen } from './pages/rechnen'
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log("isAndroid =", isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
@@ -154,7 +155,10 @@ if (isAndroid) {
         input = window.localStorage.getItem('current_input');
         write('LOAD  current input = ' + input.length)
         console.log('LOAD  current input = ', input.length)
-        if (input.length > 0) read_daten(input);
+        if (input.length > 0) {
+            read_daten(input);
+            rechnen(1)
+        }
     });
 
     // document.addEventListener("readystatechange", (event: any) => {
