@@ -8,7 +8,7 @@ import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
-console.log("isAndroid =", isAndroid)
+console.log("isAndroid =", isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
 
 // let dbPromise: any;
 let input: any;
@@ -41,15 +41,15 @@ if (isAndroid) {
 
     });
 
-        document.addEventListener('visibilitychange', function () {
-            write (navigator.userAgent);
-            write('Android visibilitychange = ' + document.visibilityState)
-            // fires when user switches tabs, apps, goes to homescreen, etc.
-            if (document.visibilityState === 'hidden') { write('Android hidden') }
+    document.addEventListener('visibilitychange', function () {
+        write(navigator.userAgent);
+        write('Android visibilitychange = ' + document.visibilityState)
+        // fires when user switches tabs, apps, goes to homescreen, etc.
+        if (document.visibilityState === 'hidden') { write('Android hidden') }
 
-            // fires when app transitions from prerender, user returns to the app / tab.
-            if (document.visibilityState === 'visible') { write('Android visible') }
-        });
+        // fires when app transitions from prerender, user returns to the app / tab.
+        if (document.visibilityState === 'visible') { write('Android visible') }
+    });
 
     //     window.addEventListener('beforeunload', function (event) {
     //         //window.alert('beforeunload');
