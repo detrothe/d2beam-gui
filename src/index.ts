@@ -150,7 +150,7 @@ let input: any;
         console.log("readystatechange", event.target.readyState, document.readyState)
         console.log('LOADED  current input = ', input)
         if (event.target.readyState === "complete") {
-            if (input) read_daten(input);;
+            //if (input) read_daten(input);;
         }
     });
 
