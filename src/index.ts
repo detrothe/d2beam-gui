@@ -99,11 +99,11 @@ let input: any;
 
     // Damit man nicht versehentlich das Browserfenster löscht und Eingaben verliert
 
-    window.addEventListener('beforeunload', function (event) {
-        //event.preventDefault();
-        // Google Chrome requires returnValue to be set.
-        //event.returnValue = '';
-        console.log("beforeunload", event)
+    // window.addEventListener('beforeunload', function (event) {
+    //     //event.preventDefault();
+    //     // Google Chrome requires returnValue to be set.
+    //     //event.returnValue = '';
+    //     console.log("beforeunload", event)
 
 
         // if (dbPromise) {
@@ -139,20 +139,20 @@ let input: any;
     //     }
     // });
 
-    window.addEventListener('load', () => {
-        //input = window.localStorage.getItem('current_input');
-        //write('LOAD  current input = ' + input)
-        console.log('LOAD  current input = ', input)
-        //if (input.length > 0) read_daten(input);
-    });
+    // window.addEventListener('load', () => {
+    //     //input = window.localStorage.getItem('current_input');
+    //     //write('LOAD  current input = ' + input)
+    //     console.log('LOAD  current input = ', input)
+    //     //if (input.length > 0) read_daten(input);
+    // });
 
-    document.addEventListener("readystatechange", (event: any) => {
-        console.log("readystatechange", event.target.readyState, document.readyState)
-        console.log('LOADED  current input = ', input)
-        if (event.target.readyState === "complete") {
-            //if (input) read_daten(input);;
-        }
-    });
+    // document.addEventListener("readystatechange", (event: any) => {
+    //     console.log("readystatechange", event.target.readyState, document.readyState)
+    //     console.log('LOADED  current input = ', input)
+    //     if (event.target.readyState === "complete") {
+    //         //if (input) read_daten(input);;
+    //     }
+    // });
 
 // }
 
