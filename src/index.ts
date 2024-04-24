@@ -16,15 +16,16 @@ let input: any;
 
 if (isAndroid) {
 
+    window.addEventListener('load', () => {
+        input = window.localStorage.getItem('current_input');
+        write('LOAD  current input = ' + input.length)
+        console.log('LOAD  current input = ', input.length)
+        if (input.length > 0) {
+            read_daten(input);
+            rechnen(1)
+        }
+    });
 
-
-    //     window.addEventListener('load', function () {
-    //         write('Android load')
-    //         //window.history.pushState({}, '')
-    //         input = window.localStorage.getItem('current_input');
-    //         write('LOAD  current input = ' + input)
-    //         if (input.length > 0) read_daten(input);
-    //     })
 
     //     // window.addEventListener('popstate', function (event) {
     //     //     write('Android popstate')
@@ -35,7 +36,7 @@ if (isAndroid) {
     window.addEventListener('beforeunload', function (event) {
         //event.preventDefault();
         // Google Chrome < 119 requires returnValue to be set.
-        event.returnValue = true;
+        //event.returnValue = true;
         write("beforeunload")
 
         window.localStorage.setItem('current_input', str_inputToJSON());
