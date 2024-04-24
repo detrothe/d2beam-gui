@@ -150,12 +150,12 @@ if (isAndroid) {
     //     }
     // });
 
-    // window.addEventListener('load', () => {
-    //     //input = window.localStorage.getItem('current_input');
-    //     //write('LOAD  current input = ' + input)
-    //     console.log('LOAD  current input = ', input)
-    //     //if (input.length > 0) read_daten(input);
-    // });
+    window.addEventListener('load', () => {
+        input = window.localStorage.getItem('current_input');
+        write('LOAD  current input = ' + input.length)
+        console.log('LOAD  current input = ', input.length)
+        if (input.length > 0) read_daten(input);
+    });
 
     // document.addEventListener("readystatechange", (event: any) => {
     //     console.log("readystatechange", event.target.readyState, document.readyState)
