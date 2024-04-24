@@ -113,7 +113,7 @@ let input: any;
 
         //window.localStorage.setItem('current_input', str_inputToJSON());
 
-    });
+    // });
 
     // if ('launchQueue' in window) {
     //     console.log('File Handling API is supported!');
