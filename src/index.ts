@@ -32,6 +32,7 @@ if (isAndroid) {
     //     // })
 
         document.addEventListener('visibilitychange', function () {
+            write (navigator.userAgent);
             write('Android visibilitychange = ' + document.visibilityState)
             // fires when user switches tabs, apps, goes to homescreen, etc.
             if (document.visibilityState === 'hidden') { write('Android hidden') }
@@ -103,7 +104,7 @@ if (isAndroid) {
         event.preventDefault();
         // Google Chrome < 119 requires returnValue to be set.
         event.returnValue = true;
-        console.log("beforeunload", event.target)
+        console.log("beforeunload", navigator.userAgent)
 
 
         // if (dbPromise) {
