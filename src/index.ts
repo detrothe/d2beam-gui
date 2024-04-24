@@ -31,6 +31,16 @@ if (isAndroid) {
     //     //     event.preventDefault();
     //     // })
 
+    window.addEventListener('beforeunload', function (event) {
+        //event.preventDefault();
+        // Google Chrome < 119 requires returnValue to be set.
+        event.returnValue = true;
+        write("beforeunload")
+
+        window.localStorage.setItem('current_input', str_inputToJSON());
+
+    });
+
         document.addEventListener('visibilitychange', function () {
             write (navigator.userAgent);
             write('Android visibilitychange = ' + document.visibilityState)
