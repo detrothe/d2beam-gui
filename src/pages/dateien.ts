@@ -7,6 +7,7 @@ import { app, clearTables, currentFilename, set_current_filename } from "./haupt
 //import { testeZahl } from "./utility";
 import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
+import { write} from './utility'
 
 import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length, set_querschnittszaehler } from "./rechnen"
 import { add_rechteck_querschnitt, setSystem, System } from './rechnen'
@@ -22,6 +23,7 @@ export function read_daten(eingabedaten: string) {
 
     let i, j;
 
+    write('start read_daten')
     //console.log("in result", eingabedaten);
     let jobj = JSON.parse(eingabedaten);
     //console.log("und zurück", jobj);
@@ -131,10 +133,12 @@ export function read_daten(eingabedaten: string) {
         else eli.value = jobj.epsDisp_tol;
     }
 
+    write ('vor resizeTables')
     resizeTables();
+    write ('vor clearTables')
     clearTables();
 
-    console.log("nach resize")
+    write("nach resize")
 
     //if (jobj.system === 1) {
     //hideColumnsForFachwerk();
@@ -340,6 +344,7 @@ export function read_daten(eingabedaten: string) {
         }
     }
 
+    write ('done read_daten')
 }
 
 //------------------------------------------------------------------------------------------------
