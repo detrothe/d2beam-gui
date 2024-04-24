@@ -111,7 +111,7 @@ let input: any;
         //     dbPromise = null;
         // }
 
-        window.localStorage.setItem('current_input', str_inputToJSON());
+        //window.localStorage.setItem('current_input', str_inputToJSON());
 
     });
 
@@ -140,10 +140,10 @@ let input: any;
     // });
 
     window.addEventListener('load', () => {
-        input = window.localStorage.getItem('current_input');
+        //input = window.localStorage.getItem('current_input');
         //write('LOAD  current input = ' + input)
         console.log('LOAD  current input = ', input)
-        if (input.length > 0) read_daten(input);
+        //if (input.length > 0) read_daten(input);
     });
 
     document.addEventListener("readystatechange", (event: any) => {
