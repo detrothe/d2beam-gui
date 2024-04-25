@@ -210,9 +210,9 @@ class DrTabelle extends HTMLElement {
       const table = document.createElement('table');
       this.shadow.appendChild(table);
       table.id = 'mytable';
-      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
-      table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
-      table.addEventListener('pointerup', this.POINTER_UP.bind(this));
+      // table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
+      // table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
+      // table.addEventListener('pointerup', this.POINTER_UP.bind(this));
 
       table.addEventListener("contextmenu", e => e.preventDefault());
       //table.addEventListener("focusout", this.lostFocus.bind(this));
@@ -237,6 +237,9 @@ class DrTabelle extends HTMLElement {
 
       let tbody = table.createTBody();
       //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
+      tbody.addEventListener('mousemove', this.MOUSE_MOVE.bind(this));    // , {capture:true}
+      tbody.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
+      tbody.addEventListener('pointerup', this.POINTER_UP.bind(this));
 
       for (let iZeile = 1; iZeile < this.nTabRow; iZeile++) {
          let newRow = tbody.insertRow(-1);
@@ -990,19 +993,22 @@ class DrTabelle extends HTMLElement {
    //------------------------------------------------------------------------------------------------
    POINTER_UP(ev: any) {
       //---------------------------------------------------------------------------------------------
-      console.log("---- POINTER_UP ----")
+      console.log("---- POINTER_UP ----", ev.pointerType)
 
       if (this.selectionMode) this.show_contextMenu(ev);
 
       this.selectionMode = false;
-
+      if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
+         console.log("vor removeEventListener")
+         this.removeEventListener('touchmove', this.TOUCH_MOVE.bind(this), true);
+      }
 
    }
 
    //------------------------------------------------------------------------------------------------
    POINTER_LEAVE(ev: any) {
       //---------------------------------------------------------------------------------------------
-      console.log("---- POINTER_LEAVE ----")
+      console.log("---- POINTER_LEAVE ----", ev.pointerType)
       if (!this.selectionMode) {
          ev.preventDefault();
          return;
@@ -1010,7 +1016,10 @@ class DrTabelle extends HTMLElement {
 
       this.selectionMode = false;
       this.unselect_Tabelle();
-
+      if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
+         console.log("vor removeEventListener")
+         this.removeEventListener('touchmove', this.TOUCH_MOVE.bind(this), true);
+      }
    }
 
    //------------------------------------------------------------------------------------------------
@@ -1060,11 +1069,21 @@ class DrTabelle extends HTMLElement {
                // let input_id = 'idtable' + '-' + zeile + '-' + ispalte;
                // const el = this.shadow.getElementById(input_id) as HTMLInputElement;
                // el.className = 'input_select'
-               // console.log("TOUCH MOVE", ispalte, this.cellLeft, left, this.cellsLeft[ispalte])
+               console.log("TOUCH MOVE left", ispalte, this.cellLeft, left, this.cellsLeft[ispalte])
                spalte = ispalte
             }
          }
+         //console.log("außerhalb", left, this.nTabCol, this.cellsLeft[this.nTabCol - 1], this.cellsWidth[this.nTabCol - 1])
+         if (left > this.cellsLeft[this.nTabCol - 1] + this.cellsWidth[this.nTabCol - 1]) {
+            console.log("außerhalb rechts")
+            this.selectionMode = false;
+            this.unselect_Tabelle();
+            //if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
+            this.removeEventListener('touchmove', this.TOUCH_MOVE.bind(this), true);
+            return
+            //}
 
+         }
          {
             rowIndex = zeile;
             colIndex = spalte;
@@ -1198,7 +1217,7 @@ class DrTabelle extends HTMLElement {
       // this.cellCol = myArray[2];
       // console.log('MEMORY', this.cellRow, this.cellCol, this.cellLeft, this.cellTop, this.cellWidth, this.cellHeight, this.offsetX, this.offsetY);
       if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
-         this.addEventListener('touchmove', this.TOUCH_MOVE.bind(this)); // , { passive: false }  , { capture: true }
+         this.addEventListener('touchmove', this.TOUCH_MOVE.bind(this), true); // , { passive: false }  , { capture: true }
          this.selectionMode = true;
 
          this.offsetX = ev.pageX - ev.clientX
@@ -1209,7 +1228,7 @@ class DrTabelle extends HTMLElement {
          this.cellTop = el.getBoundingClientRect().y + this.offsetY
          this.cellHeight = el.getBoundingClientRect().height;
 
-         console.log("??????????? ", this.cellLeft, this.cellTop, this.cellHeight)
+         console.log("ADDED EVENT LISTENER FOR TOUCHMOVE ", this.cellLeft, this.cellTop, this.cellHeight)
       }
 
       if (ev.which === 3) {                 // rechte Maustaste
@@ -1229,7 +1248,7 @@ class DrTabelle extends HTMLElement {
    }
 
    //------------------------------------------------------------------------------------------------
-   POINTER_MOVE(ev: any) {
+   MOUSE_MOVE(ev: any) {
       //--------------------------------------------------------------------------------------------
       //console.log('POINTER MOVE', ev.target.id, this.selectionMode);
       ev.preventDefault();
