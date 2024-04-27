@@ -210,9 +210,10 @@ class DrTabelle extends HTMLElement {
       const table = document.createElement('table');
       this.shadow.appendChild(table);
       table.id = 'mytable';
-      // table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
-      // table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
-      // table.addEventListener('pointerup', this.POINTER_UP.bind(this));
+// alt      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
+      table.addEventListener('pointermove', this.TOUCH_MOVE.bind(this));    // , {capture:true}
+      table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
+      table.addEventListener('pointerup', this.POINTER_UP.bind(this));
 
       table.addEventListener("contextmenu", e => e.preventDefault());
       //table.addEventListener("focusout", this.lostFocus.bind(this));
@@ -237,9 +238,9 @@ class DrTabelle extends HTMLElement {
 
       let tbody = table.createTBody();
       //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
-      tbody.addEventListener('mousemove', this.MOUSE_MOVE.bind(this));    // , {capture:true}
-      tbody.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
-      tbody.addEventListener('pointerup', this.POINTER_UP.bind(this));
+      // tbody.addEventListener('mousemove', this.MOUSE_MOVE.bind(this));    // , {capture:true}
+      // tbody.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
+      // tbody.addEventListener('pointerup', this.POINTER_UP.bind(this));
 
       for (let iZeile = 1; iZeile < this.nTabRow; iZeile++) {
          let newRow = tbody.insertRow(-1);
