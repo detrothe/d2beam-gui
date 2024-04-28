@@ -211,7 +211,7 @@ class DrTabelle extends HTMLElement {
       this.shadow.appendChild(table);
       table.id = 'mytable';
 // alt      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
-      table.addEventListener('pointermove', this.TOUCH_MOVE.bind(this));    // , {capture:true}
+    //  table.addEventListener('pointermove', this.TOUCH_MOVE.bind(this));    // , {capture:true}
       table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
       table.addEventListener('pointerup', this.POINTER_UP.bind(this));
 
