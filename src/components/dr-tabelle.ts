@@ -212,8 +212,8 @@ class DrTabelle extends HTMLElement {
       table.id = 'mytable';
 // alt      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
     //  table.addEventListener('pointermove', this.TOUCH_MOVE.bind(this));    // , {capture:true}
-      table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
-      table.addEventListener('pointerup', this.POINTER_UP.bind(this));
+      // table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
+      // table.addEventListener('pointerup', this.POINTER_UP.bind(this));
 
       table.addEventListener("contextmenu", e => e.preventDefault());
       //table.addEventListener("focusout", this.lostFocus.bind(this));
@@ -1001,7 +1001,7 @@ class DrTabelle extends HTMLElement {
       this.selectionMode = false;
       if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
          console.log("vor removeEventListener")
-         this.removeEventListener('touchmove', this.TOUCH_MOVE.bind(this), true);
+         this.removeEventListener('pointermove', this.TOUCH_MOVE.bind(this), true);
       }
 
    }
@@ -1019,7 +1019,7 @@ class DrTabelle extends HTMLElement {
       this.unselect_Tabelle();
       if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
          console.log("vor removeEventListener")
-         this.removeEventListener('touchmove', this.TOUCH_MOVE.bind(this), true);
+         this.removeEventListener('pointermove', this.TOUCH_MOVE.bind(this), true);
       }
    }
 
@@ -1218,7 +1218,11 @@ class DrTabelle extends HTMLElement {
       // this.cellCol = myArray[2];
       // console.log('MEMORY', this.cellRow, this.cellCol, this.cellLeft, this.cellTop, this.cellWidth, this.cellHeight, this.offsetX, this.offsetY);
       if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
-         this.addEventListener('touchmove', this.TOUCH_MOVE.bind(this), true); // , { passive: false }  , { capture: true }
+         this.addEventListener('pointermove', this.TOUCH_MOVE.bind(this), true); // , { passive: false }  , { capture: true }
+         this.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
+         this.addEventListener('pointerup', this.POINTER_UP.bind(this));
+
+
          this.selectionMode = true;
 
          this.offsetX = ev.pageX - ev.clientX
