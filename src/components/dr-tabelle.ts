@@ -1010,7 +1010,7 @@ class DrTabelle extends HTMLElement {
    //------------------------------------------------------------------------------------------------
    MOUSE_LEAVE(ev: any) {
       //---------------------------------------------------------------------------------------------
-      // console.log("---- POINTER_LEAVE ----", ev.pointerType)
+       console.log("---- MOUSE_LEAVE ----", ev.pointerType)
       // if (!this.selectionMode) {
       //    ev.preventDefault();
       //    return;
