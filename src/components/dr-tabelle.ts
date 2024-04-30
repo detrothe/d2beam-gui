@@ -211,7 +211,7 @@ class DrTabelle extends HTMLElement {
       this.shadow.appendChild(table);
       table.id = 'mytable';
       // alt      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
-      //table.addEventListener('touchmove', this.TOUCH_MOVE.bind(this));    // , {capture:true}
+      table.addEventListener('touchstart', this.TOUCH_START.bind(this));    // , {capture:true}
       // table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
 
       table.addEventListener('pointerup', this.POINTER_UP.bind(this), true);
@@ -1063,15 +1063,23 @@ class DrTabelle extends HTMLElement {
    }
 
    //------------------------------------------------------------------------------------------------
+   TOUCH_START(ev: any) {
+      //---------------------------------------------------------------------------------------------
+      console.log("---- TOUCH_START ---- = ev.touches.length", ev.touches.length)
+   }
+
+   //------------------------------------------------------------------------------------------------
    TOUCH_MOVE(ev: any) {
       //---------------------------------------------------------------------------------------------
 
       // if (ev.target.hasPointerCapture(ev.pointerId)) {
       //    ev.target.releasePointerCapture(ev.pointerId);
       // }
-console.log('touches.length',ev.touches.length,ev.cancelable)
-if(ev.touches.length !== 1) return
-
+      console.log('touches.length', ev.touches.length, ev.cancelable)
+      if (ev.touches.length !== 1) {
+         this.selectionMode = false;
+         return
+      }
       if (ev.cancelable) ev.preventDefault();
 
       //console.log('TOUCH MOVE', ev);   // ev.target
