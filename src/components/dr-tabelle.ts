@@ -1186,7 +1186,7 @@ if(ev.touches.length !== 1) return
       }
    }
    //------------------------------------------------------------------------------------------------
-   POINTER_DOWN(ev: PointerEvent) {
+   POINTER_DOWN(ev: any) {
       //---------------------------------------------------------------------------------------------
 
       //const tableId = ev.target.offsetParent.offsetParent.id;
