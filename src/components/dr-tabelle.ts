@@ -213,9 +213,9 @@ class DrTabelle extends HTMLElement {
 // alt      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
       //table.addEventListener('touchmove', this.TOUCH_MOVE.bind(this));    // , {capture:true}
       // table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
-       // table.addEventListener('pointerup', this.POINTER_UP.bind(this));
-       table.addEventListener('mouseup', this.MOUSE_UP.bind(this));
-       table.addEventListener('touchend', this.TOUCH_END.bind(this));
+        table.addEventListener('pointerup', this.POINTER_UP.bind(this));
+       //table.addEventListener('mouseup', this.MOUSE_UP.bind(this));
+       //table.addEventListener('touchend', this.TOUCH_END.bind(this));
 
       table.addEventListener("contextmenu", e => e.preventDefault());
       //table.addEventListener("focusout", this.lostFocus.bind(this));
@@ -991,6 +991,23 @@ class DrTabelle extends HTMLElement {
    SELECT() {
       //---------------------------------------------------------------------------------------------
       console.log("---- SELECT ----")
+   }
+
+   //------------------------------------------------------------------------------------------------
+   POINTER_UP(ev: any) {
+      //---------------------------------------------------------------------------------------------
+      console.log("---- POINTER_UP ----", ev.pointerType)
+
+      if (this.selectionMode) this.show_contextMenu(ev);
+
+      this.selectionMode = false;
+      if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
+         console.log("vor removeEventListener")
+         this.removeEventListener('touchmove', this.TOUCH_MOVE.bind(this), true);
+      } else {
+         console.log("vor removeEventListener mouse_move")
+         this.removeEventListener('mousemove', this.MOUSE_MOVE.bind(this), true);
+      }
    }
 
    //------------------------------------------------------------------------------------------------
@@ -1843,7 +1860,8 @@ class DrTabelle extends HTMLElement {
          posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
       }
 
-      //console.log("getPosition", posx, posy)
+      //console.log('e position',e.touches)
+      console.log("getPosition", posx, posy)
 
       return {
          x: posx,
