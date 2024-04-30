@@ -210,12 +210,14 @@ class DrTabelle extends HTMLElement {
       const table = document.createElement('table');
       this.shadow.appendChild(table);
       table.id = 'mytable';
-// alt      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
+      // alt      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
       //table.addEventListener('touchmove', this.TOUCH_MOVE.bind(this));    // , {capture:true}
       // table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
-        table.addEventListener('pointerup', this.POINTER_UP.bind(this));
-       //table.addEventListener('mouseup', this.MOUSE_UP.bind(this));
-       //table.addEventListener('touchend', this.TOUCH_END.bind(this));
+
+      table.addEventListener('pointerup', this.POINTER_UP.bind(this), true);
+
+      //table.addEventListener('mouseup', this.MOUSE_UP.bind(this));
+      // table.addEventListener('touchend', this.TOUCH_END.bind(this));
 
       table.addEventListener("contextmenu", e => e.preventDefault());
       //table.addEventListener("focusout", this.lostFocus.bind(this));
@@ -996,7 +998,9 @@ class DrTabelle extends HTMLElement {
    //------------------------------------------------------------------------------------------------
    POINTER_UP(ev: any) {
       //---------------------------------------------------------------------------------------------
-      console.log("---- POINTER_UP ----", ev.pointerType)
+      console.log("---- POINTER_UP ----", ev.pointerType, ev.cancelable)
+
+      if (ev.cancelable) ev.preventDefault();
 
       if (this.selectionMode) this.show_contextMenu(ev);
 
@@ -1019,15 +1023,15 @@ class DrTabelle extends HTMLElement {
 
       this.selectionMode = false;
 
-         console.log("vor removeEventListener mouse_move")
-         this.removeEventListener('mousemove', this.MOUSE_MOVE.bind(this), true);
+      console.log("vor removeEventListener mouse_move")
+      this.removeEventListener('mousemove', this.MOUSE_MOVE.bind(this), true);
 
    }
 
    //------------------------------------------------------------------------------------------------
    MOUSE_LEAVE(ev: any) {
       //---------------------------------------------------------------------------------------------
-       console.log("---- MOUSE_LEAVE ----", ev.pointerType)
+      console.log("---- MOUSE_LEAVE ----", ev.pointerType)
       // if (!this.selectionMode) {
       //    ev.preventDefault();
       //    return;
@@ -1045,16 +1049,16 @@ class DrTabelle extends HTMLElement {
    //------------------------------------------------------------------------------------------------
    TOUCH_END(ev: any) {
       //---------------------------------------------------------------------------------------------
-      console.log("---- TOUCH_END ---- selectionMode= ",this.selectionMode)
+      console.log("---- TOUCH_END ---- selectionMode= ", this.selectionMode, ev.cancelable)
 
-      if (this.selectionMode) this.show_contextMenu(ev);
+      /*   if (this.selectionMode) this.show_contextMenu(ev);
 
-      this.selectionMode = false;
+        this.selectionMode = false;
 
-      //if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
-         console.log("vor removeEventListener")
-         this.removeEventListener('touchend', this.TOUCH_MOVE.bind(this), true);
-      //}
+        //if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
+           console.log("vor removeEventListener")
+           //this.removeEventListener('touchend', this.TOUCH_MOVE.bind(this), true);
+        //} */
 
    }
 
@@ -1065,9 +1069,11 @@ class DrTabelle extends HTMLElement {
       // if (ev.target.hasPointerCapture(ev.pointerId)) {
       //    ev.target.releasePointerCapture(ev.pointerId);
       // }
-      ev.preventDefault();
-      console.log('TOUCH MOVE', ev);   // ev.target
-      console.log('TOUCH MOVE 2', ev.changedTouches, ev.target.id, this.selectionMode);
+
+      if (ev.cancelable) ev.preventDefault();
+
+      //console.log('TOUCH MOVE', ev);   // ev.target
+      //console.log('TOUCH MOVE 2', ev.changedTouches, ev.target.id, this.selectionMode);
 
       const text = ev.target?.id;
       if (text.length > 0) {
@@ -1092,7 +1098,7 @@ class DrTabelle extends HTMLElement {
          if (vorz < 0.0) ny = ny - 1
          //ny = Number(Math.trunc(dy / cellHeight))
          zeile = Number(this.startRowIndex) + 1 * ny
-         console.log("Zeile=", zeile, div, dy, vorz, ny, touch.pageY, this.cellTop, this.cellHeight, this.startRowIndex)
+         //console.log("Zeile=", zeile, div, dy, vorz, ny, touch.pageY, this.cellTop, this.cellHeight, this.startRowIndex)
          //console.log("::::", tableIndex, zeile, spalte)
          if (zeile > this.nZeilen) return;    //zeile = tableInfo[tableIndex].nZeilen
          if (zeile < 1) return;   // zeile = 1
@@ -1254,17 +1260,17 @@ class DrTabelle extends HTMLElement {
       // this.cellCol = myArray[2];
       // console.log('MEMORY', this.cellRow, this.cellCol, this.cellLeft, this.cellTop, this.cellWidth, this.cellHeight, this.offsetX, this.offsetY);
       if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
-          const table = this.shadow.getElementById('mytable') as HTMLTableElement;
-          console.log("s",table,this)
-          table.addEventListener('touchmove', this.TOUCH_MOVE.bind(this), true); // , { passive: false }  , { capture: true }
+         const table = this.shadow.getElementById('mytable') as HTMLTableElement;
+         console.log("s", table, this)
+         table.addEventListener('touchmove', this.TOUCH_MOVE.bind(this), true); // , { passive: false }  , { capture: true }
          // //this.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
          //  table.addEventListener('touchend', this.TOUCH_END.bind(this));
+         // table.addEventListener('pointerup', this.POINTER_UP.bind(this), true);
 
-
-//          console.log("this",this)
-//          console.log('pointerId',ev.pointerId)
-//          const zelle = this.shadow.getElementById(inputId) as any
-// zelle.setPointerCapture(ev.pointerId)
+         //          console.log("this",this)
+         //          console.log('pointerId',ev.pointerId)
+         //          const zelle = this.shadow.getElementById(inputId) as any
+         // zelle.setPointerCapture(ev.pointerId)
 
          this.selectionMode = true;
 
@@ -1293,7 +1299,7 @@ class DrTabelle extends HTMLElement {
 
          this.selectionMode = true;
 
-         console.log('linke Maustaste');
+         console.log('linke Maustaste', ev.button, ev.which, myArray);
 
          this.startRowIndex = Number(myArray[1]);
          this.startColIndex = Number(myArray[2]);
@@ -1757,6 +1763,7 @@ class DrTabelle extends HTMLElement {
    //-------------------------------------------------------------------------
    show_contextMenu(ev: any) {
       //---------------------------------------------------------------------
+      console.log('this.ref_listener', this.ref_listener)
       if (this.ref_listener === null) {
          document.getElementById("context-menu")?.addEventListener('click', this.ref_listener = this.contextMenuClicked.bind(this));
       }
@@ -1767,7 +1774,7 @@ class DrTabelle extends HTMLElement {
       console.log("this.nSpalten", this.nSpalten)
 
       if (this.taskItemInContext) {
-         ev.preventDefault();
+         if (ev.cancelable) ev.preventDefault();
          this.toggleMenuOn();
          this.positionMenu(ev);
          current_table_id = this.tableId
