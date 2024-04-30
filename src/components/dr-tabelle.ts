@@ -1069,6 +1069,8 @@ class DrTabelle extends HTMLElement {
       // if (ev.target.hasPointerCapture(ev.pointerId)) {
       //    ev.target.releasePointerCapture(ev.pointerId);
       // }
+console.log('touches.length',ev.touches.length,ev.cancelable)
+if(ev.touches.length !== 1) return
 
       if (ev.cancelable) ev.preventDefault();
 
@@ -1184,10 +1186,10 @@ class DrTabelle extends HTMLElement {
       }
    }
    //------------------------------------------------------------------------------------------------
-   POINTER_DOWN(ev: any) {
+   POINTER_DOWN(ev: PointerEvent) {
       //---------------------------------------------------------------------------------------------
 
-      const tableId = ev.target.offsetParent.offsetParent.id;
+      //const tableId = ev.target.offsetParent.offsetParent.id;
       const inputId = ev.target.id;
 
       console.log("INFO POINTER DOWN", inputId)
@@ -1227,7 +1229,7 @@ class DrTabelle extends HTMLElement {
       //const shadow = this.shadowRoot;
       //console.log('pointerdown THIS:', this);
       //if (shadow) {
-      const myTable = ev.target.offsetParent.offsetParent as HTMLTableElement; //this.tableRoot.getElementById(tableId);
+      // const myTable = ev.target.offsetParent.offsetParent as HTMLTableElement; //this.tableRoot.getElementById(tableId);
       //console.log('myTable:', myTable);
 
       //myTable.addEventListener('mousemove', this.POINTER_MOVE);
@@ -1282,7 +1284,7 @@ class DrTabelle extends HTMLElement {
          this.cellTop = el.getBoundingClientRect().y + this.offsetY
          this.cellHeight = el.getBoundingClientRect().height;
 
-         console.log("ADDED EVENT LISTENER FOR TOUCHMOVE ", this.cellLeft, this.cellTop, this.cellHeight)
+         console.log("ADDED EVENT LISTENER FOR TOUCHMOVE ", ev)
       } else {
          const table = this.shadow.getElementById('mytable') as HTMLTableElement;
          table.addEventListener('mousemove', this.MOUSE_MOVE.bind(this), true); // , { passive: false }  , { capture: true }
