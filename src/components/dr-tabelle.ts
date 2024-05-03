@@ -169,6 +169,7 @@ class DrTabelle extends HTMLElement {
 
    cellsLeft: number[] = [];
    cellsWidth: number[] = [];
+   col_visible: boolean[] = [];   // gibt an, ob Spalte sichtbar ist
    /*
    connectedCallback() {
       this.textContent = 'Hello, World!';
@@ -342,6 +343,7 @@ class DrTabelle extends HTMLElement {
 
       this.cellsLeft = Array(this.nTabCol);
       this.cellsWidth = Array(this.nTabCol);
+      this.col_visible = Array(this.nTabCol).fill(true);
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -479,6 +481,7 @@ class DrTabelle extends HTMLElement {
       for (let i = 0; i <= nZeilen; i++) {
          tabelle.rows[i].cells[iSpalte].style.display = 'none'
       }
+      this.col_visible[iSpalte] = false;
 
    }
 
@@ -486,7 +489,7 @@ class DrTabelle extends HTMLElement {
    show_column(iSpalte: number) {
       //------------------------------------------------------------------------------------------------------------
 
-      console.info('in hide_column');
+      console.info('in show_column');
 
       const tabelle = this.shadow.getElementById('mytable') as any;
       const nZeilen = this.nZeilen;
@@ -495,6 +498,7 @@ class DrTabelle extends HTMLElement {
       for (let i = 0; i <= nZeilen; i++) {
          tabelle.rows[i].cells[iSpalte].style.display = 'table-cell'
       }
+      this.col_visible[iSpalte] = true;
 
    }
 
@@ -853,6 +857,12 @@ class DrTabelle extends HTMLElement {
                   newCell.appendChild(el);
                   el.addEventListener('pointerdown', this.POINTER_DOWN.bind(this));
                   //el.addEventListener('mousemove', this.POINTER_MOVE);
+
+                  console.log('NEUE ZEILE visible', iSpalte, this.col_visible[iSpalte])
+                  // if (this.col_visible[iSpalte]) el.style.display = 'table-cell';
+                  // else el.style.display = 'none';
+                  if (this.col_visible[iSpalte]) newCell.style.display = 'table-cell';
+                  else newCell.style.display = 'none';
                }
             }
          }

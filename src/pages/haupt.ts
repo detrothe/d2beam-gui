@@ -385,18 +385,19 @@ portrait.addEventListener('change', function (e) {
         <table>
           <tbody>
             <tr>
+              <td style="background-color:lightgray;">&nbsp;</td>
               <td>
-        <dr-tabelle
-          id="id_element_tabelle"
-          nzeilen="${nelem_init}"
-          nspalten="12"
-          columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a<br>[m]", "starr e<br>[m]"]'
-          typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
-          colwidth='["4","8","2","3","3","2","2","2","2","2","2","3","3"]'
-        ></dr-tabelle>
-        </td>
-        <td style="background-color:powderblue;">&nbsp;</td>
-        </tr>
+              <dr-tabelle
+                id="id_element_tabelle"
+                nzeilen="${nelem_init}"
+                nspalten="12"
+                columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a<br>[m]", "starr e<br>[m]"]'
+                typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
+                colwidth='["4","8","2","3","3","2","2","2","2","2","2","3","3"]'
+              ></dr-tabelle>
+              </td>
+              <td style="background-color:lightgray;">&nbsp;</td>
+              </tr>
           </tbody>
         </table>
       </sl-tab-panel>
@@ -1706,8 +1707,9 @@ export function resizeTables() {
     el?.setAttribute('nzeilen', nelem);
   }
 
-  if (System === 0) showColumnsForStabwerk();
-  else hideColumnsForFachwerk();
+  // if (System === 0) showColumnsForStabwerk();
+  // else hideColumnsForFachwerk();
+  if (System === 1) hideColumnsForFachwerk();
 }
 
 //---------------------------------------------------------------------------------------------------------------
