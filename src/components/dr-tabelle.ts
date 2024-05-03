@@ -1136,12 +1136,14 @@ class DrTabelle extends HTMLElement {
          let left = touch.clientX;
          spalte = 1
          for (let ispalte = 1; ispalte < this.nTabCol; ispalte++) {
-            if (left > this.cellsLeft[ispalte]) {
-               // let input_id = 'idtable' + '-' + zeile + '-' + ispalte;
-               // const el = this.shadow.getElementById(input_id) as HTMLInputElement;
-               // el.className = 'input_select'
-               // console.log("TOUCH MOVE left", ispalte, this.cellLeft, left, this.cellsLeft[ispalte])
-               spalte = ispalte
+            if (this.col_visible[ispalte]) {
+               if (left > this.cellsLeft[ispalte]) {
+                  // let input_id = 'idtable' + '-' + zeile + '-' + ispalte;
+                  // const el = this.shadow.getElementById(input_id) as HTMLInputElement;
+                  // el.className = 'input_select'
+                  // console.log("TOUCH MOVE left", ispalte, this.cellLeft, left, this.cellsLeft[ispalte])
+                  spalte = ispalte
+               }
             }
          }
          //console.log("außerhalb", left, this.nTabCol, this.cellsLeft[this.nTabCol - 1], this.cellsWidth[this.nTabCol - 1])
@@ -1400,7 +1402,7 @@ class DrTabelle extends HTMLElement {
                      // let input_id = 'idtable' + '-' + zeile + '-' + ispalte;
                      // const el = this.shadow.getElementById(input_id) as HTMLInputElement;
                      // el.className = 'input_select'
-                     console.log("MOUSE MOVE left FIREFOX", ispalte, this.nTabCol, this.cellLeft, left, this.cellsLeft[ispalte])
+                     //console.log("MOUSE MOVE left FIREFOX", ispalte, this.nTabCol, this.cellLeft, left, this.cellsLeft[ispalte])
                      spalte = ispalte
                   }
                }
@@ -1606,9 +1608,11 @@ class DrTabelle extends HTMLElement {
             let i, j;
             for (i = 1; i < nZeilen; i++) {
                for (j = 1; j < nSpalten; j++) {
-                  let child = tabelle.rows[i].cells[j].firstElementChild as any // input
-                  if (child.className === 'input_select') {
-                     child.value = wert.toString();
+                  if (this.col_visible[j]) {
+                     let child = tabelle.rows[i].cells[j].firstElementChild as any // input
+                     if (child.className === 'input_select') {
+                        child.value = wert.toString();
+                     }
                   }
                }
             }
@@ -1639,9 +1643,11 @@ class DrTabelle extends HTMLElement {
 
             for (i = 1; i < nZeilen; i++) {
                for (j = 1; j < nSpalten; j++) {
-                  let child = tabelle.rows[i].cells[j].firstElementChild as any // input
-                  if (child.className === 'input_select') {
-                     child.value = value[j - 1].toString();
+                  if (this.col_visible[j]) {
+                     let child = tabelle.rows[i].cells[j].firstElementChild as any // input
+                     if (child.className === 'input_select') {
+                        child.value = value[j - 1].toString();
+                     }
                   }
                }
             }
@@ -1672,9 +1678,11 @@ class DrTabelle extends HTMLElement {
 
             for (i = 1; i < nZeilen; i++) {
                for (j = 1; j < nSpalten; j++) {
-                  let child = tabelle.rows[i].cells[j].firstElementChild as any  // input
-                  if (child.className === 'input_select') {
-                     child.value = (value[j - 1]++).toString();
+                  if (this.col_visible[j]) {
+                     let child = tabelle.rows[i].cells[j].firstElementChild as any  // input
+                     if (child.className === 'input_select') {
+                        child.value = (value[j - 1]++).toString();
+                     }
                   }
                }
             }
@@ -1717,11 +1725,13 @@ class DrTabelle extends HTMLElement {
 
             for (i = 1; i < nZeilen; i++) {
                for (j = 1; j < nSpalten; j++) {
-                  let child = tabelle.rows[i].cells[j].firstElementChild as any
-                  if (child.className === 'input_select') {
-                     let zahl = (Number(value[j - 1]) as any).toPrecision(12) * 1;
-                     (tabelle.rows[i].cells[j].firstElementChild as any).value = zahl.toString();
-                     value[j - 1] += delta[j - 1];
+                  if (this.col_visible[j]) {
+                     let child = tabelle.rows[i].cells[j].firstElementChild as any
+                     if (child.className === 'input_select') {
+                        let zahl = (Number(value[j - 1]) as any).toPrecision(12) * 1;
+                        (tabelle.rows[i].cells[j].firstElementChild as any).value = zahl.toString();
+                        value[j - 1] += delta[j - 1];
+                     }
                   }
                }
             }
