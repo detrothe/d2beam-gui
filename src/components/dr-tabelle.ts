@@ -211,16 +211,21 @@ class DrTabelle extends HTMLElement {
       this.shadow.appendChild(table);
       table.id = 'mytable';
       // alt      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
-      table.addEventListener('touchstart', this.TOUCH_START.bind(this));    // , {capture:true}
+      const table1 = this.shadow.getElementById('mytable') as HTMLTableElement;
+      table1.addEventListener('touchstart', this.TOUCH_START.bind(this));    // , {capture:true}
       // table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
-
-      table.addEventListener('pointerup', this.POINTER_UP.bind(this), true);
+      //table1.addEventListener('mousemove', this.MOUSE_MOVE.bind(this),false);
+      table1.addEventListener('pointerup', this.POINTER_UP.bind(this), true);
 
       //table.addEventListener('mouseup', this.MOUSE_UP.bind(this));
       // table.addEventListener('touchend', this.TOUCH_END.bind(this));
 
-      table.addEventListener("contextmenu", e => e.preventDefault());
+      table1.addEventListener("contextmenu", e => e.preventDefault());
       //table.addEventListener("focusout", this.lostFocus.bind(this));
+      table.onclick = function (e) {
+         // Some code here...
+         console.log("Table clicked!", e);
+      };
 
       let thead = table.createTHead();
       //console.log('thead', thead);
@@ -1002,22 +1007,25 @@ class DrTabelle extends HTMLElement {
 
       if (ev.cancelable) ev.preventDefault();
 
+      const table = this.shadow.getElementById('mytable') as HTMLTableElement;
+      if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
+         console.log("vor removeEventListener")
+         table.removeEventListener('touchmove', this.TOUCH_MOVE.bind(this), true);
+      } else {
+         console.log("vor removeEventListener mouse_move")
+         table.removeEventListener('mousemove', this.MOUSE_MOVE.bind(this), false);
+      }
+
       if (this.selectionMode) this.show_contextMenu(ev);
 
       this.selectionMode = false;
-      if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
-         console.log("vor removeEventListener")
-         this.removeEventListener('touchmove', this.TOUCH_MOVE.bind(this), true);
-      } else {
-         console.log("vor removeEventListener mouse_move")
-         this.removeEventListener('mousemove', this.MOUSE_MOVE.bind(this), true);
-      }
+
    }
 
    //------------------------------------------------------------------------------------------------
    MOUSE_UP(ev: any) {
       //---------------------------------------------------------------------------------------------
-      console.log("---- POINTER_UP ----", ev.pointerType)
+      console.log("---- Mouse_UP ----", ev.pointerType)
 
       if (this.selectionMode) this.show_contextMenu(ev);
 
@@ -1295,11 +1303,23 @@ class DrTabelle extends HTMLElement {
          console.log("ADDED EVENT LISTENER FOR TOUCHMOVE ", ev)
       } else {
          const table = this.shadow.getElementById('mytable') as HTMLTableElement;
-         table.addEventListener('mousemove', this.MOUSE_MOVE.bind(this), true); // , { passive: false }  , { capture: true }
+         table.addEventListener('mousemove', this.MOUSE_MOVE.bind(this), false); // , { passive: false }  , { capture: true }
          //this.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
          // table.addEventListener('mouseup', this.MOUSE_UP.bind(this));
 
+         const browser = Detect.browser
+         if (browser === 'Firefox') {
+
+            this.offsetX = ev.pageX - ev.clientX
+            this.offsetY = ev.pageY - ev.clientY
+
+            const el = this.shadow.getElementById(inputId) as HTMLInputElement;
+            this.cellLeft = el.getBoundingClientRect().x + this.offsetX
+            this.cellTop = el.getBoundingClientRect().y + this.offsetY
+            this.cellHeight = el.getBoundingClientRect().height;
+         }
       }
+      console.log('Maustaste', ev.button, ev.which, myArray);
 
       if (ev.which === 3) {                 // rechte Maustaste
          console.log('rechte Maustaste');
@@ -1320,7 +1340,7 @@ class DrTabelle extends HTMLElement {
    //------------------------------------------------------------------------------------------------
    MOUSE_MOVE(ev: any) {
       //--------------------------------------------------------------------------------------------
-      //console.log('POINTER MOVE', ev.target.id, this.selectionMode);
+      console.log('MOUSE MOVE', ev.target.id, this.selectionMode);
       ev.preventDefault();
 
       if (!this.selectionMode) return;
@@ -1333,18 +1353,54 @@ class DrTabelle extends HTMLElement {
 
       if (ev.target.tagName !== 'INPUT') return;
 
-      let rowIndex: number, colIndex: number;
+      let rowIndex = -1, colIndex = -1;
 
       const tableId = ev.target.offsetParent.offsetParent.id;
-      //console.log("tableId", tableId)
+      console.log("tableId", tableId, ev.target.id)
       if (tableId === '') return; // cursor steht auf irgendwas, aber nicht auf tag <input>
 
       const text = ev.target.id;
       if (text.length > 0) {
-         const myArray = text.split("-");
-         //console.log("Array", tableId, myArray.length, myArray[0], myArray[1], myArray[2])
-         rowIndex = Number(myArray[1]);
-         colIndex = Number(myArray[2]);
+
+         const browser = Detect.browser
+         if (browser === 'Firefox') {
+
+            let dy = ev.pageY - this.cellTop; // + document.documentElement.scrollTop;
+            let zeile: number, spalte: number = 1
+            let nx: number, ny: number, vorz: number, div: number
+
+            div = dy / this.cellHeight
+            vorz = Math.abs(div) / div
+            ny = Math.trunc(Math.abs(div)) * vorz
+            if (vorz < 0.0) ny = ny - 1
+            //ny = Number(Math.trunc(dy / cellHeight))
+            zeile = Number(this.startRowIndex) + 1 * ny
+            console.log("Zeile=", zeile, div, dy, vorz, ny, this.cellTop, this.cellHeight, this.startRowIndex)
+            //console.log("::::", tableIndex, zeile, spalte)
+            if (zeile > this.nZeilen) return;    //zeile = tableInfo[tableIndex].nZeilen
+            if (zeile < 1) return;   // zeile = 1
+
+
+
+            let left = ev.clientX;
+            spalte = 1
+            for (let ispalte = 1; ispalte < this.nTabCol; ispalte++) {
+               if (left > this.cellsLeft[ispalte]) {
+                  // let input_id = 'idtable' + '-' + zeile + '-' + ispalte;
+                  // const el = this.shadow.getElementById(input_id) as HTMLInputElement;
+                  // el.className = 'input_select'
+                  //console.log("MOUSE MOVE left", ispalte, this.cellLeft, left, this.cellsLeft[ispalte])
+                  spalte = ispalte
+               }
+            }
+            rowIndex = zeile;
+            colIndex = spalte;
+         } else {
+            const myArray = text.split("-");
+            //console.log("Array", tableId, myArray.length, myArray[0], myArray[1], myArray[2])
+            rowIndex = Number(myArray[1]);
+            colIndex = Number(myArray[2]);
+         }
 
          if (rowIndex === this.firstRowIndex && colIndex === this.firstColIndex) { // Bewegung innerhalb erstgepickter Zelle
             return;
