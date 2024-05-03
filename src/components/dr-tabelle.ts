@@ -1140,7 +1140,7 @@ class DrTabelle extends HTMLElement {
                // let input_id = 'idtable' + '-' + zeile + '-' + ispalte;
                // const el = this.shadow.getElementById(input_id) as HTMLInputElement;
                // el.className = 'input_select'
-               //console.log("TOUCH MOVE left", ispalte, this.cellLeft, left, this.cellsLeft[ispalte])
+               // console.log("TOUCH MOVE left", ispalte, this.cellLeft, left, this.cellsLeft[ispalte])
                spalte = ispalte
             }
          }
@@ -1395,12 +1395,14 @@ class DrTabelle extends HTMLElement {
             let left = ev.clientX;
             spalte = 1
             for (let ispalte = 1; ispalte < this.nTabCol; ispalte++) {
-               if (left > this.cellsLeft[ispalte]) {
-                  // let input_id = 'idtable' + '-' + zeile + '-' + ispalte;
-                  // const el = this.shadow.getElementById(input_id) as HTMLInputElement;
-                  // el.className = 'input_select'
-                  //console.log("MOUSE MOVE left", ispalte, this.cellLeft, left, this.cellsLeft[ispalte])
-                  spalte = ispalte
+               if (this.cellsLeft[ispalte] > 0) {  // unsichtbare Spalte
+                  if (left > this.cellsLeft[ispalte]) {
+                     // let input_id = 'idtable' + '-' + zeile + '-' + ispalte;
+                     // const el = this.shadow.getElementById(input_id) as HTMLInputElement;
+                     // el.className = 'input_select'
+                     console.log("MOUSE MOVE left FIREFOX", ispalte, this.nTabCol, this.cellLeft, left, this.cellsLeft[ispalte])
+                     spalte = ispalte
+                  }
                }
             }
             rowIndex = zeile;
