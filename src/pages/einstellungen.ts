@@ -1,7 +1,10 @@
 //import { set_myScreen, app } from "./index.js";
 //console.log("enter einstellungen")
-import { testeZahl } from "./utility.js";
+// import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 
+import { testeZahl } from "./utility.js";
+import { touch_support_table,set_touch_support_table } from './globals';
+import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 //console.log("vor getElementId")
 //document.getElementById("unitLength")?.addEventListener('change', einstellungen);
 //document.getElementById("id_body_width")?.addEventListener('change', set_body_width);
@@ -292,6 +295,8 @@ function saveLocalStorage() {
     window.localStorage.setItem('color_table_out', color_table_out);
     window.localStorage.setItem('color_table_in', color_table_in);
 
+    window.localStorage.setItem('touch_support_tables', String(touch_support_table));
+
     console.log("saveLocalStorage, my_fontsize", my_fontsize)
 }
 
@@ -374,6 +379,19 @@ export function readLocalStorage() {
         color_table_in = color
     }
 
+
+    let touch_support = window.localStorage.getItem('touch_support_tables');
+    //console.log('touch_support',touch_support)
+    if (touch_support) {
+        const el = document.getElementById("id_touch_support_tables") as SlCheckbox
+        const isTrueSet = (touch_support?.toLowerCase?.() === 'true');
+        el.checked = isTrueSet
+        set_touch_support_table(isTrueSet)
+    } else {
+        const el = document.getElementById("id_touch_support_tables") as SlCheckbox
+        el.checked = false
+        set_touch_support_table(false)
+    }
 
 
     console.log("exit readLocalStorage")

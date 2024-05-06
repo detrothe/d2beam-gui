@@ -19,7 +19,7 @@ import SlSelect from '@shoelace-style/shoelace/dist/components/select/select.js'
 
 //import { styles } from '../styles/shared-styles';
 import './globals';
-import { berechnungErforderlich } from './globals';
+import { berechnungErforderlich,set_touch_support_table } from './globals';
 
 import { add_listeners_einstellungen, readLocalStorage } from './einstellungen';
 
@@ -945,6 +945,13 @@ portrait.addEventListener('change', function (e) {
                 <td>&nbsp;</td>
               </tr>
               <tr>
+                <td title='Selektion von Zellen mit Finger'>nur für Touchscreens: </td>
+                <td><sl-checkbox id="id_touch_support_tables">Selektion von Zellen mit Finger erlauben</sl-checkbox></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
                 <td style="white-space:nowrap">
                   Tabellenfarbe außen: &nbsp;
                 </td>
@@ -1062,6 +1069,17 @@ portrait.addEventListener('change', function (e) {
       elementTabelle_starre_enden_anzeigen(false);
     }
   });
+
+  const touch_support_tables = document.getElementById('id_touch_support_tables');
+  touch_support_tables!.addEventListener('sl-change', (event) => {
+    // @ts-ignore
+    if (event.currentTarget.checked) {
+      set_touch_support_table(true);
+    } else {
+      set_touch_support_table(false);
+    }
+  });
+
 
   // console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
   // console.log("rechnen", getComputedStyle(document?.getElementById("rechnen")!).width);

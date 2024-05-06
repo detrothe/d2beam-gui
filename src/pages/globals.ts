@@ -1,5 +1,6 @@
 export let berechnung_erfolgreich = false;
 export let berechnung_erforderlich = true;
+export let touch_support_table = false;
 
 let txt_berechnung = "Neue Berechnung erforderlich"
 
@@ -21,6 +22,10 @@ export function berechnungErforderlich(ev=true) { // ev:any
 export function set_text_berechnung_erforderlich(txt:string) {
     txt_berechnung = txt
     //document.getElementById("info_berechnung").innerText = txt_berechnung
+}
+
+export function set_touch_support_table(wert:boolean) {
+    touch_support_table = wert
 }
 
 // @ts-ignore
