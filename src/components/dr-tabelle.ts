@@ -166,6 +166,7 @@ class DrTabelle extends HTMLElement {
    //nZeilen = 0
    //nSpalten = 0
    selectionMode = false;
+   selection_ended = false;
 
    cellsLeft: number[] = [];
    cellsWidth: number[] = [];
@@ -1093,9 +1094,13 @@ class DrTabelle extends HTMLElement {
       // if (ev.target.hasPointerCapture(ev.pointerId)) {
       //    ev.target.releasePointerCapture(ev.pointerId);
       // }
+      if (this.selection_ended) return
+
       console.log('touches.length', ev.touches.length, ev.cancelable)
       if (ev.touches.length !== 1) {
          this.selectionMode = false;
+         this.selection_ended = true;
+         this.unselect_Tabelle();
          return
       }
       if (ev.cancelable) ev.preventDefault();
@@ -1232,6 +1237,7 @@ class DrTabelle extends HTMLElement {
       //console.log("this.selectionMode", this.selectionMode)
 
       this.toggleMenuOff();
+      this.selection_ended = false
 
       if (this.cellsLeft.length !== this.nTabCol) {
          this.cellsLeft = Array(this.nTabCol);
