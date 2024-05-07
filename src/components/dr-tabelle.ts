@@ -319,7 +319,7 @@ class DrTabelle extends HTMLElement {
                newCell.style.borderWidth = '1px';
                newCell.style.padding = '0px';
                newCell.style.margin = '0px';
-               newCell.style.backgroundColor = 'rgb(255,255,255)';
+               newCell.style.backgroundColor = 'rgb(105,255,255)';
                newCell.style.touchAction = 'auto';
                const str1 = id_table + 'Cell-' + iZeile + '-' + iSpalte;
                newCell.id = str1;
@@ -637,12 +637,18 @@ class DrTabelle extends HTMLElement {
       console.info('in unselect_Tabelle');
 
       const tabelle = this.shadow.getElementById('mytable') as any;
+      if (tabelle === null) return;
+
       const nZeilen = this.nZeilen;
       const nSpalten = this.nSpalten;
 
       for (let i = 1; i <= nZeilen; i++) {
          for (let j = 1; j <= nSpalten; j++) {
-            if (tabelle !== null) tabelle.rows[i].cells[j].firstElementChild.className = 'input_normal';
+            if (this.typs[j] === 'select') {
+               tabelle.rows[i].cells[j].firstElementChild.style.backgroundColor = 'rgb(255,255,255)';
+            } else {
+               tabelle.rows[i].cells[j].firstElementChild.className = 'input_normal';
+            }
          }
       }
 
@@ -1173,7 +1179,7 @@ class DrTabelle extends HTMLElement {
             }
             this.firstRowIndex = -1;
 
-            let tabelle = this.shadow.getElementById('mytable') as HTMLTableElement;  //ev.target.offsetParent.offsetParent;
+            let tabelle = this.shadow.getElementById('mytable') as any  //HTMLTableElement;  //ev.target.offsetParent.offsetParent;
             tabelle.rows[rowIndex].cells[colIndex].firstElementChild!.className = 'input_select';
 
 
@@ -1206,13 +1212,21 @@ class DrTabelle extends HTMLElement {
             for (let i = 1; i <= nZeilen; i++) {
                for (let j = 1; j <= nSpalten; j++) {
                   //console.log("i,j", tabelle.rows[i].cells[j].firstElementChild)
-                  tabelle.rows[i].cells[j].firstElementChild!.className = 'input_normal';
+                  if (this.typs[j] === 'select') {
+                     tabelle.rows[i].cells[j].firstElementChild!.style.backgroundColor = 'rgb(255,255,255)';
+                  } else {
+                     tabelle.rows[i].cells[j].firstElementChild!.className = 'input_normal';
+                  }
                }
             }
 
             for (let i = rowStart; i <= rowEnd; i++) {
                for (let j = colStart; j <= colEnd; j++) {
-                  tabelle.rows[i].cells[j].firstElementChild!.className = 'input_select';
+                  if (this.typs[j] === 'select') {
+                     tabelle.rows[i].cells[j].firstElementChild.style.backgroundColor = 'rgb(255,165,0)';
+                  } else {
+                     tabelle.rows[i].cells[j].firstElementChild!.className = 'input_select';
+                  }
                }
             }
          }
@@ -1223,6 +1237,8 @@ class DrTabelle extends HTMLElement {
    //------------------------------------------------------------------------------------------------
    POINTER_DOWN(ev: any) {
       //---------------------------------------------------------------------------------------------
+
+      if ( ev.pointerType === 'mouse' && ev.button === 0 ) return;
 
       //const tableId = ev.target.offsetParent.offsetParent.id;
       const inputId = ev.target.id;
@@ -1357,7 +1373,7 @@ class DrTabelle extends HTMLElement {
    //------------------------------------------------------------------------------------------------
    MOUSE_MOVE(ev: any) {
       //--------------------------------------------------------------------------------------------
-      console.log('MOUSE MOVE', ev.target.id, this.selectionMode);
+      console.log('MOUSE MOVE', ev.target.id, this.selectionMode, ev.target.tagName);
       ev.preventDefault();
 
       if (!this.selectionMode) return;
@@ -1368,7 +1384,7 @@ class DrTabelle extends HTMLElement {
 
       //ev.preventDefault();
 
-      if (ev.target.tagName !== 'INPUT') return;
+      if (!(ev.target.tagName === 'INPUT' || ev.target.tagName === 'SELECT')) return;
 
       let rowIndex = -1, colIndex = -1;
 
@@ -1463,13 +1479,22 @@ class DrTabelle extends HTMLElement {
          for (let i = 1; i <= nZeilen; i++) {
             for (let j = 1; j <= nSpalten; j++) {
                //console.log("i,j", tabelle.rows[i].cells[j].firstElementChild)
-               tabelle.rows[i].cells[j].firstElementChild.className = 'input_normal';
+               if (this.typs[j] === 'select') {
+                  tabelle.rows[i].cells[j].firstElementChild.style.backgroundColor = 'rgb(255,255,255)';
+               } else {
+                  tabelle.rows[i].cells[j].firstElementChild.className = 'input_normal';
+               }
             }
          }
 
          for (let i = rowStart; i <= rowEnd; i++) {
             for (let j = colStart; j <= colEnd; j++) {
-               tabelle.rows[i].cells[j].firstElementChild.className = 'input_select';
+               console.log('this.typs', j, this.typs[j])
+               if (this.typs[j] === 'select') {
+                  tabelle.rows[i].cells[j].firstElementChild.style.backgroundColor = 'rgb(255,165,0)';
+               } else {
+                  tabelle.rows[i].cells[j].firstElementChild.className = 'input_select';
+               }
             }
          }
 

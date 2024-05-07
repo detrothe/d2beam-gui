@@ -67,9 +67,14 @@ td.highlight {
 
 .input_normal {
   background-color: rgb(255, 255, 255);
-  color: rgb(0, 0, 0);
+  color: rgb(0, 100, 0);
   /*font-variant-numeric: oldstyle-nums tabular-nums;
   touch-action: none;*/
   font-size: 1rem;
+}
+
+select {
+  background-color: orange;
+  color: orange;
 }
 
