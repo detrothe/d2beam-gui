@@ -101,6 +101,7 @@ const nnodedisps_init = '0';
 const dyn_neigv_init = '1';
 
 let width_lager = 175; // /window.devicePixelRatio;
+let width_def_d2beam = 400;
 
 export let currentFilename = 'empty';
 
@@ -348,6 +349,13 @@ portrait.addEventListener('change', function (e) {
 
       <sl-tab-panel name="tab-elemente">
         <p><b>Eingabe der Elemente</b> <br /></p>
+        <p>
+        <img  src="/assets/def_d2beam.png"
+                  name="Definition_d2beam"
+                  title="Definition Stabelement d2beam"
+                  style="max-width:80%; width:${width_def_d2beam}px; height:auto; border:0px; margin: left; display: block;"
+                />
+        </p>
         <p>
           a = Element<b>a</b>nfang <br />
           e = Element<b>e</b>nde<br />
