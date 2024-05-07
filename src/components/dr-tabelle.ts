@@ -1708,7 +1708,7 @@ class DrTabelle extends HTMLElement {
 
             for (i = 1; i < nZeilen; i++) {
                for (j = 1; j < nSpalten; j++) {
-                  if (this.col_visible[j]) {
+                  if (this.col_visible[j] && this.typs[j] !== 'select') {
                      let child = tabelle.rows[i].cells[j].firstElementChild as any  // input
                      if (child.className === 'input_select') {
                         child.value = (value[j - 1]++).toString();
@@ -1755,7 +1755,7 @@ class DrTabelle extends HTMLElement {
 
             for (i = 1; i < nZeilen; i++) {
                for (j = 1; j < nSpalten; j++) {
-                  if (this.col_visible[j]) {
+                  if (this.col_visible[j] && this.typs[j] !== 'select') {
                      let child = tabelle.rows[i].cells[j].firstElementChild as any
                      if (child.className === 'input_select') {
                         let zahl = (Number(value[j - 1]) as any).toPrecision(12) * 1;
