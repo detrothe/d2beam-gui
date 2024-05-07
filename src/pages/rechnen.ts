@@ -474,7 +474,7 @@ export function rechnen(flag = 1) {
 
     console.log("in rechnen");
 
-    //      (document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
+    (document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
 
     fatal_error = false;
 
