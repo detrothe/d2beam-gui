@@ -1239,7 +1239,7 @@ class DrTabelle extends HTMLElement {
    POINTER_DOWN(ev: any) {
       //---------------------------------------------------------------------------------------------
 
-      write('pointertype ' + ev.pointerType + ' | ' + ev.button);
+      write('pointertype ' + ev.pointerType + ' | ' + ev.button + ' | ' + ev.which);
 
       if (ev.pointerType === 'mouse' && ev.button === 0) return;
 
