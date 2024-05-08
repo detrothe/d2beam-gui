@@ -908,6 +908,8 @@ class DrTabelle extends HTMLElement {
    KEYDOWN(ev: any) {
       //--------------------------------------------------------------------------------------------
 
+      write('KEYDOWN ' + ev.target.type + ' | ' + ev)
+
       console.log(
          'KEYDOWN, keycode, id_input, id_tabelle',
          ev.keyCode,
@@ -1235,11 +1237,13 @@ class DrTabelle extends HTMLElement {
 
       }
    }
+
    //------------------------------------------------------------------------------------------------
    POINTER_DOWN(ev: any) {
       //---------------------------------------------------------------------------------------------
 
-      write('pointertype ' + ev.pointerType + ' | ' + ev.button + ' | ' + ev.which);
+      write('pointertype ' + ev.pointerType + ' | ' + ev.button + ' | ' + ev.which + ' | ' + ev.target.type);
+      console.log('pointertype ', ev.pointerType, ev.button, ev.which, ev.target.type);
 
       if (ev.pointerType === 'mouse' && ev.button === 0) return;
 
