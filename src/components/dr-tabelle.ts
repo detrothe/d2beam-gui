@@ -1383,6 +1383,7 @@ class DrTabelle extends HTMLElement {
          this.startColIndex = Number(myArray[2]);
 
       }
+
    }
 
    //------------------------------------------------------------------------------------------------
