@@ -4,6 +4,7 @@ import { nQuerschnittSets, get_querschnittRechteck_name } from '../pages/rechnen
 import { Detect } from '../pages/haupt';
 
 import { berechnungErforderlich, touch_support_table } from "../pages/globals";
+import { write } from '../pages/utility'
 
 // const contextMenuLinkClassName = "context-menu__link";
 // const contextMenuActive = "context-menu--active";
@@ -1237,6 +1238,8 @@ class DrTabelle extends HTMLElement {
    //------------------------------------------------------------------------------------------------
    POINTER_DOWN(ev: any) {
       //---------------------------------------------------------------------------------------------
+
+      write('pointertype ' + ev.pointerType + ' | ' + ev.button);
 
       if (ev.pointerType === 'mouse' && ev.button === 0) return;
 
