@@ -1247,6 +1247,8 @@ class DrTabelle extends HTMLElement {
 
       if (ev.pointerType === 'mouse' && ev.button === 0) return;
 
+      if ( ev.pointerType === 'mouse' && ev.which === 3) ev.preventDefault();
+
       //const tableId = ev.target.offsetParent.offsetParent.id;
       const inputId = ev.target.id;
 
