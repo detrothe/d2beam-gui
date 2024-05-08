@@ -332,7 +332,7 @@ class DrTabelle extends HTMLElement {
                //if (this.typs[iSpalte] === 'select') el.addEventListener('click', this.SELECT.bind(this));
                //else
                el.addEventListener('pointerdown', this.POINTER_DOWN.bind(this));
-               //el.addEventListener('touchmove', this.TOUCH_MOVE.bind(this));
+               //el.addEventListener('click', this.CLICK.bind(this));
 
 
                //el.addEventListener('mousemove', this.POINTER_MOVE);
@@ -1019,6 +1019,12 @@ class DrTabelle extends HTMLElement {
       //---------------------------------------------------------------------------------------------
       console.log("---- SELECT ----")
    }
+   //------------------------------------------------------------------------------------------------
+   CLICK(ev:any) {
+      //---------------------------------------------------------------------------------------------
+      console.log("---- C  L I C K ----", ev)
+      write ('C L I C K ' + ev.button)
+   }
 
    //------------------------------------------------------------------------------------------------
    POINTER_UP(ev: any) {
@@ -1247,7 +1253,7 @@ class DrTabelle extends HTMLElement {
 
       if (ev.pointerType === 'mouse' && ev.button === 0) return;
 
-      if ( ev.pointerType === 'mouse' && ev.which === 3) ev.preventDefault();
+      //if ( ev.pointerType === 'mouse' && ev.which === 3) ev.preventDefault();
 
       //const tableId = ev.target.offsetParent.offsetParent.id;
       const inputId = ev.target.id;
