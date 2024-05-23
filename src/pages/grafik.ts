@@ -2650,6 +2650,10 @@ function draw_knotenverformungen(two: Two) {
 function draw_lagerkraefte(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
+    console.log("draw_lastfall,nlastfaelle,nkombinationen", draw_lastfall, nlastfaelle, nkombinationen)
+    if (THIIO_flag === 0) if (draw_lastfall > nlastfaelle + nkombinationen) return;
+    if (THIIO_flag === 1) if (draw_lastfall > nkombinationen) return;
+
     let plength = 35, delta = 30
     let xpix: number, zpix: number
 

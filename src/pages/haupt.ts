@@ -81,8 +81,8 @@ let dialog_querschnitt_new = true;
 let dialog_querschnitt_index = 0;
 let dialog_querschnitt_item_id = '';
 
-export const nnodes_init = '2';
-export const nelem_init = '1';
+export const nnodes_init = '3';
+export const nelem_init = '2';
 export const nnodalloads_init = '1';
 export const nstreckenlasten_init = '1';
 export const neinzellasten_init = '0';

@@ -2,15 +2,16 @@
 import './styles/global.css';
 import './styles/contextMenu.css';
 
-console.log ('process.env.NODE_ENV',process.env.NODE_ENV)
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 if (process.env.NODE_ENV !== "development") {
-    console.log = () => {};
+    console.log = () => { };
 }
 
 import './pages/haupt';
 import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
 import { rechnen } from './pages/rechnen'
+import { ConfirmDialog } from './pages/confirm_dialog';
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log("isAndroid =", isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
@@ -161,8 +162,7 @@ if (isAndroid) {
         write('LOAD  current input = ' + input.length)
         console.log('LOAD  current input = ', input.length)
         if (input.length > 0) {
-            read_daten(input);
-            rechnen(1)
+            autoEingabeLesen();
         }
     });
 
@@ -184,6 +184,21 @@ async function handleFiles(files: any) {
 
         console.log(`${file.name} handled, content: ${text}`);
     }
+}
+
+async function autoEingabeLesen() {
+    const dialog = new ConfirmDialog({
+        trueButton_Text: 'ja',
+        falseButton_Text: 'nein',
+        question_Text: 'letzte (automatisch) gespeicherte Eingabe einlesen'
+    });
+    const loesche = await dialog.confirm();
+
+    if (loesche) {
+        read_daten(input);
+        rechnen(1)
+    }
+
 }
 
 // function openDB() {
