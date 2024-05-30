@@ -9,6 +9,7 @@ import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
 import { write } from './utility'
 import { reset_gui} from './mypanelgui'
+import {reset_controlpanel_grafik} from './grafik'
 
 import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length, set_querschnittszaehler } from "./rechnen"
 import { add_rechteck_querschnitt, setSystem, System } from './rechnen'
@@ -405,6 +406,7 @@ function handleFileSelect_read() {
             set_current_filename(files[0].name);
 
             reset_gui();
+            reset_controlpanel_grafik();
         }
     }
 

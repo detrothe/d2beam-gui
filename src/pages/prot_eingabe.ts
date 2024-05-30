@@ -8,6 +8,7 @@ import {
     nQuerschnittSets,
     querschnittset,
     System,
+    stadyn,
     nnodalMass,
     nodalmass,
 } from "./rechnen";
@@ -430,7 +431,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         }
     }
 
-    if (nnodalMass > 0) {
+    if (nnodalMass > 0 && stadyn > 0) {
 
         let tag = document.createElement("p"); // <p></p>
         let text = document.createTextNode("xxx");
