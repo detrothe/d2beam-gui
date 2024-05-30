@@ -19,7 +19,7 @@ import SlSelect from '@shoelace-style/shoelace/dist/components/select/select.js'
 
 //import { styles } from '../styles/shared-styles';
 import './globals';
-import { berechnungErforderlich,set_touch_support_table } from './globals';
+import { berechnungErforderlich, set_touch_support_table } from './globals';
 
 import { add_listeners_einstellungen, readLocalStorage } from './einstellungen';
 
@@ -33,7 +33,7 @@ import '../components/dr-dialog_neue_eingabe';
 import { drButtonPM } from '../components/dr-button-pm';
 import { drRechteckQuerSchnitt } from '../components/dr-dialog-rechteckquerschnitt';
 
-//import { testclass } from './element';
+import { reset_gui } from './mypanelgui'
 
 import DetectOS from './detectos';
 
@@ -45,6 +45,7 @@ import {
   copy_svg,
   drawsystem,
   click_zurueck_grafik,
+  reset_controlpanel_grafik,
 } from './grafik';
 import { set_info, write } from './utility';
 
@@ -1796,11 +1797,11 @@ function handleClick_neue_eingabe() {
   console.log('handleClick_neue_eingabe()');
 
   const el = document.getElementById('id_dialog_neue_eingabe');
-  console.log('id_dialog_neue_eingabe', el);
-  console.log(
-    'QUERY Dialog',
-    el?.shadowRoot?.getElementById('dialog_neue_eingabe')
-  );
+  // console.log('id_dialog_neue_eingabe', el);
+  // console.log(
+  //   'QUERY Dialog',
+  //   el?.shadowRoot?.getElementById('dialog_neue_eingabe')
+  // );
 
   (
     el?.shadowRoot?.getElementById('dialog_neue_eingabe') as HTMLDialogElement
@@ -1860,13 +1861,17 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     el.setValue(1);
     el = document.getElementById('id_button_nkombinationen') as drButtonPM;
     el.setValue(0);
-    el = document.getElementById(
-      'id_button_nstabvorverformungen'
-    ) as drButtonPM;
+    el = document.getElementById('id_button_nstabvorverformungen') as drButtonPM;
     el.setValue(0);
 
     el = document.getElementById('id_button_niter') as drButtonPM;
     el.setValue(5);
+
+    el = document.getElementById('id_button_nnodalmass') as drButtonPM;
+    el.setValue(0);
+
+    el = document.getElementById('id_button_dyn_neigv') as drButtonPM;
+    el.setValue(1);
 
     let eli = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
     eli.value = '1e-5';
@@ -1877,8 +1882,24 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     els = document.getElementById('id_ausgabe_SG_option') as SlSelect;
     els.setAttribute('value', 'true');
 
+
+    eli = document.getElementById('id_maxu_node') as HTMLInputElement;
+    eli.value = ""
+
+    let elSel = document.getElementById('id_maxu_dir') as HTMLSelectElement;
+    elSel.options[1].selected = true;
+
+    eli = document.getElementById('id_maxu_schief') as HTMLInputElement;
+    eli.value = ""
+
+    eli = document.getElementById('id_neigv') as HTMLInputElement;
+    eli.value = '1'
+
+
     resizeTables();
     clearTables();
+    reset_gui();
+    reset_controlpanel_grafik();
 
     if (system === 1) {
       el = document.getElementById('id_button_nteilungen') as drButtonPM;

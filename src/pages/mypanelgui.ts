@@ -1,6 +1,8 @@
 import GUI from 'lil-gui';
 import { System } from './rechnen'
 
+let gui:GUI;
+
 let scale_factor = 1.0;
 let scale_factor_arrows = 1.0;
 
@@ -19,6 +21,8 @@ let controller_N: any
 let controller_V: any
 let controller_M: any
 let controller_disp: any
+
+let controller_SG: any
 
 //--------------------------------------------------------------------------------------------------------
 export function myPanel() {
@@ -65,7 +69,7 @@ export function myPanel() {
     let umriss_anzeigen = 'Umriss anzeigen'
 
     // @ts-ignore
-    const gui = new GUI({ container: document.getElementById('panel_gui'), touchStyles: false }); // , touchStyles: true  , width: 230
+    gui = new GUI({ container: document.getElementById('panel_gui'), touchStyles: false }); // , touchStyles: true  , width: 230
     //gui.domElement.classList.add('allow-touch-styles');
 
     gui.add(obj, 'Label').name(beschriftung).onChange(() => {
@@ -189,7 +193,7 @@ export function myPanel() {
         window.dispatchEvent(new Event("draw_gesamtverformung_grafik"));
     });
 
-    folder.add(obj, 'Gleichgewicht_SG')
+    controller_SG = folder.add(obj, 'Gleichgewicht_SG')
         .name('Gleichgewicht SG')
         .onChange(() => {
             window.dispatchEvent(new Event("draw_gleichgewicht_SG_grafik"));
@@ -242,4 +246,11 @@ export function show_controller_truss(wert: boolean) {
     //----------------------------------------------------------------------------------------------------
     controller_V.show(wert);
     controller_M.show(wert);
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function reset_gui() {
+    //----------------------------------------------------------------------------------------------------
+    gui.reset();
 }

@@ -147,6 +147,34 @@ const style_pfeil_koord = {
     color: '#006666'
 }
 
+//--------------------------------------------------------------------------------------------------------
+export function reset_controlpanel_grafik() {
+    //----------------------------------------------------------------------------------------------------
+    scaleFactor_panel = 1.0
+    show_labels = false;
+    show_systemlinien = true;
+    show_verformungen = false;
+    show_eigenformen = false;
+    show_momentenlinien = false;
+    show_querkraftlinien = false;
+    show_normalkraftlinien = false;
+    show_schiefstellung = false;
+    show_lasten = true;
+    show_lagerkraefte = true;
+    show_stabvorverformung = false;
+    show_umriss = false;
+    show_gesamtverformung = false;
+
+    show_lasten_temp = true;
+    show_gleichgewichtSG = true;
+
+    show_dyn_eigenformen = false;
+    show_dyn_animate_eigenformen = false;
+    animate_scale = 0.0;
+    animate_scale_dx = 0.04;
+    start_animation = false;
+    show_knotenmassen = false;
+}
 
 //--------------------------------------------------------------------------------------------------------
 export function select_loadcase_changed() {

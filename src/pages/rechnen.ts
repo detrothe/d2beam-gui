@@ -1765,6 +1765,11 @@ function calculate() {
 
     //(document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
 
+    let startTime: any
+    let endTime: any
+    //write('start read_daten')
+    startTime = performance.now();
+
 
     const elem_darstellen = document.getElementById('id_element_darstellen') as HTMLSelectElement;
 
@@ -2722,10 +2727,18 @@ function calculate() {
 
     }
 
+
+    endTime = performance.now();
+    write('\nElapsed calculation time: ' + myFormat(endTime - startTime, 2, 2) + ' msec')
+    startTime = performance.now();
+
     init_grafik(1);
     drawsystem('svg_artboard');
 
     drawsystem();
+
+    endTime = performance.now();
+    write('Elapsed drawing time: ' + myFormat(endTime - startTime, 2, 2) + ' msec')
 
     const checkbox = document.getElementById("id_glsystem_darstellen") as HTMLInputElement;
     if (checkbox.checked) show_gleichungssystem(true);
