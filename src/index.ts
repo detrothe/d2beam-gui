@@ -23,11 +23,12 @@ if (isAndroid) {
 
     window.addEventListener('load', () => {
         input = window.localStorage.getItem('current_input');
-        write('LOAD  current input = ' + input.length)
+        // write('LOAD  current input = ' + input.length)
         console.log('LOAD  current input = ', input.length)
         if (input.length > 0) {
-            read_daten(input);
-            rechnen(1)
+            autoEingabeLesen();
+            // read_daten(input);
+            // rechnen(1)
         }
     });
 
@@ -42,15 +43,16 @@ if (isAndroid) {
         //event.preventDefault();
         // Google Chrome < 119 requires returnValue to be set.
         //event.returnValue = true;
-        write("beforeunload")
+
+        //write("beforeunload")
 
         window.localStorage.setItem('current_input', str_inputToJSON());
 
     });
 
     document.addEventListener('visibilitychange', function () {
-        write(navigator.userAgent);
-        write('Android visibilitychange = ' + document.visibilityState)
+        //write(navigator.userAgent);
+        //write('Android visibilitychange = ' + document.visibilityState)
         // fires when user switches tabs, apps, goes to homescreen, etc.
         if (document.visibilityState === 'hidden') { write('Android hidden') }
 
@@ -159,7 +161,7 @@ if (isAndroid) {
 
     window.addEventListener('load', () => {
         input = window.localStorage.getItem('current_input');
-        write('LOAD  current input = ' + input.length)
+        //write('LOAD  current input = ' + input.length)
         console.log('LOAD  current input = ', input.length)
         if (input.length > 0) {
             autoEingabeLesen();

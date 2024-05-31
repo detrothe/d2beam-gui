@@ -107,15 +107,17 @@
 		<a href="#">Übersicht</a>
 	</h1>
 	<p>
-		Mit dieser Webanwendung können ebene Rahmen- und Fachwerksysteme nach Theorie I. und II. Ordnung berechnet werden. Es wird die
-		Finite Element Methode verwendet, [1], [2], [3]. Zur Zeit ist ein Stabelement (Typ = 0) implementiert, welches
-		Schubverformungen nach Timoshenko berücksichtigen kann. Ausgangspunkt ist ein 4-knotiges gerades schubweiches
+		Mit dieser Webanwendung können ebene Stab- und Fachwerke mit der Methode der finiten Elemente analysiert werden.
+		Es bestehen Berechnungsoptionen für statische und dynamische Analysen zur Verfügung, [1], [2], [3].
+		Statische Berechnungen können nach Theorie I. und II. Ordnung berechnet werden. Bei dynamischen Berechnungen können zur Zeit Eigenwerte und Eigenformen bestimmt werden.
+		Das Stabelement mit Namen d2beam (Typ 0) kann Schubverformungen nach der Theorie von Timoshenko berücksichtigen. Der Fachwerkstab ist ein klassisches 2-knotiges Element.
+		 Ausgangspunkt für das Element d2beam ist ein 4-knotiges gerades schubweiches
 		Balkenelement [1], dessen innere Knoten kondensiert werden, so dass der Anwender mit einem 2-knotigem Element
 		arbeitet. Für Berechnungen nach Theorie I.Ordnung entsprechen die Elementmatrizen der Lösung, die man auch mit
 		der Differentialgleichung für den Timoshenkobalken erhält. Die Ergebnisse sind in diesem Fall also exakt.
 	</p>
 	<p>Nach Klicken des Buttons 'neue Eingabe beginnen' besteht die Auswahl zwischen der Berechnung eines Stabwerks oder eines reinen Fachwerks.
-		 Der Fachwerkstab ist ein  klassisches 2-knotiges Element mit konstantem Querschnitt. Die Wahl Fachwerk vereinfacht die Eingabe
+		 Die Wahl Fachwerk vereinfacht die Eingabe
 		 bei Fachwerken. Natürlich können mit den Stabwerkselementen auch Fachwerke berechnet werden, wenn man Momemntengelenke für die
 		 Stäbe eingibt.
 
@@ -211,7 +213,7 @@
 	</p>
 	<p>Um die Knoten- und Elementeingabe zu beschleunigen, können einzelne Zellwerte oder Zeilen der Tabellen kopiert
 		bzw. generiert		werden.
-		Es kann durch Drücken der linken Maustaste ein Block selektiert werden.
+		Es kann durch Drücken der RECHTEN Maustaste ein Block selektiert werden.
 		Nach dem Loslassen der Maustaste erscheint ein Kontextmenü. <br>
 		Bei <b>Touch screens:</b> Beim Übersteichen mit dem Finger
 		oder dem Stift werden dann wie bei der Maus
