@@ -2,7 +2,7 @@ declare let Module: any;
 import { app, nlastfaelle_init, opendialog, contextmenu_querschnitt, add_new_cross_section, nstabvorverfomungen_init } from "./haupt"
 import { TFVector, TFArray2D, TFArray3D, TFArray3D_0 } from "./TFArray"
 
-import { berechnungErfolgreich } from './globals'
+import { berechnungErfolgreich, berechnungErforderlich } from './globals'
 
 import { testNumber, myFormat, write } from './utility'
 //import {Module} from '../../d2beam_wasm.js'
@@ -14,7 +14,7 @@ import { CSpring } from "./feder"
 import { init_grafik, drawsystem } from "./grafik";
 import { show_controller_THIIO, show_controller_results, show_controller_truss } from "./mypanelgui"
 import { ausgabe, dyn_ausgabe } from "./ausgabe"
-
+import { AlertDialog } from "../pages/confirm_dialog";
 
 // import { read_daten } from "./dateien"
 
@@ -45,6 +45,7 @@ export let dyn_neigv = 1;
 
 export let neigv: number = 2;
 export let nNodeDisps = 0;
+export let keineKonvergenzErreicht = false;
 
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
@@ -1753,7 +1754,7 @@ function calc_neq_and_springs() {
 //---------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------
 
-function calculate() {
+async function calculate() {
 
 
     //-----------------------------------------------------------------------------------------------------------
@@ -1764,6 +1765,8 @@ function calculate() {
     let ielem: number
 
     //(document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
+
+    keineKonvergenzErreicht = false;
 
     let startTime: any
     let endTime: any
@@ -2537,7 +2540,7 @@ function calculate() {
                         nenner = Math.sqrt(nenner)
                         if (nenner === 0.0) eps_disp = 0.0;
                         else eps_disp = zaehler / nenner;
-                        write('Fehler eps in Iterationsschritt ' + iter + ' = ' + eps_disp)
+                        write('Toleranz eps in Iterationsschritt ' + iter + ' = ' + eps_disp)
 
                         for (let i = 0; i < neq; i++) u_last[i] = u[i];
                     }
@@ -2712,7 +2715,8 @@ function calculate() {
                 if (eps_disp < epsDisp_tol) {
                     write('Konvergenz bei den Verformungen erreicht, iter = ' + iter)
                 } else {
-                    write('keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen')
+                    write('++++ keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen ++++')
+                    keineKonvergenzErreicht = true
                 }
 
 
@@ -2744,9 +2748,22 @@ function calculate() {
     if (checkbox.checked) show_gleichungssystem(true);
 
     write('______________________________')
-    write('Berechnung erfolgreich beendet')
+    if (keineKonvergenzErreicht) {
+        write('FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Verformungen')
+        berechnungErfolgreich(false);
+        berechnungErforderlich(true);
 
-    berechnungErfolgreich(true);
+        const dialogAlert = new AlertDialog({
+            trueButton_Text: "ok",
+            question_Text: "In mindestens einer Kombination keine Konvergenz der Verformungen erreicht. "+
+            "Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. "+
+            "Die Ergebnisse sind wahrscheinlich nicht brauchbar!",
+        });
+        await dialogAlert.confirm();
+    } else {
+        write('Berechnung erfolgreich beendet')
+        berechnungErfolgreich(true);
+    }
 
     return 0;
 }

@@ -566,6 +566,15 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                     row.appendChild(th6);
                 }
 
+                if (THIIO_flag === 1) {
+                    // @ts-ignore
+                    const th7 = table.tHead.appendChild(document.createElement("th"));
+                    th7.innerHTML = "&epsilon;";
+                    th7.title = "Stabkennzahl epsilon"
+                    th7.setAttribute("class", "table_cell_center");
+                    row.appendChild(th7);
+                }
+
                 const nelTeilungen = el[ielem].nTeilungen
                 let sg_M: number[] = new Array(nelTeilungen)
                 let sg_V: number[] = new Array(nelTeilungen)
@@ -592,7 +601,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                     newCell.setAttribute("class", "table_cell_center");
 
                     if (System === 0) {
-                        for (j = 1; j <= 6; j++) {
+                        for (j = 1; j <= 7; j++) {
                             newCell = newRow.insertCell(j);
                             if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
                             else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i], 2, 2));
@@ -600,6 +609,12 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                             else if (j === 4) newText = document.createTextNode(myFormat(uL[i] * 1000., 3, 3));
                             else if (j === 5) newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
                             else if (j === 6) newText = document.createTextNode(myFormat(phiL[i] * 1000., 3, 3));
+                            else if (j === 7) {
+                                if ((THIIO_flag === 1) && (sg_N[i] < 0.0)) {
+                                    const eps = el[ielem].sl * Math.sqrt(Math.abs(sg_N[i]) / el[ielem].emodul / el[ielem].Iy)
+                                    newText = document.createTextNode(myFormat(eps, 3, 3));
+                                }
+                            }
                             newCell.appendChild(newText);
                             newCell.setAttribute("class", "table_cell_right");
                         }
@@ -619,6 +634,14 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                         newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
                         newCell.appendChild(newText);
                         newCell.setAttribute("class", "table_cell_right");
+
+                        if ((THIIO_flag === 1) && (sg_N[i] < 0.0)) {
+                            newCell = newRow.insertCell(4);
+                            const eps = el[ielem].sl * Math.sqrt(Math.abs(sg_N[i]) / el[ielem].emodul / el[ielem].Iy)
+                            newText = document.createTextNode(myFormat(eps, 3, 3));
+                            newCell.appendChild(newText);
+                            newCell.setAttribute("class", "table_cell_right");
+                        }
                     }
                 }
             }
