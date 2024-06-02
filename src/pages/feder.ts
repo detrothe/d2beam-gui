@@ -14,6 +14,7 @@ export class CSpring extends CElement {
 
     ielem = -1
     nknoten = 1
+    isActive = true
 
     nod = -1
     kx = 0.0
@@ -50,6 +51,9 @@ export class CSpring extends CElement {
 
         console.log("initialisiere Feder")
         this.ielem = ielem
+
+        // this.isActive = element[ielem].isActive
+        // if ( !this.isActive ) return;
 
         this.estm = Array.from(Array(3), () => new Array(3));
 

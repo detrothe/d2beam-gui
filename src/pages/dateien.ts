@@ -105,6 +105,8 @@ export function read_daten(eingabedaten: string) {
         else els.value = jobj.stadyn;
         if (jobj.stadyn === '1') { // Dynamik : tab clickbar machen
             (document.getElementById("id_tab_mass") as SlSelect).disabled = false;
+        } else {
+            (document.getElementById("id_tab_mass") as SlSelect).disabled = true;
         }
 
         el = document.getElementById('id_button_nnodalmass') as drButtonPM;

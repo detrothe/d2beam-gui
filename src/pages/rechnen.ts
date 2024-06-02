@@ -546,7 +546,10 @@ export function rechnen(flag = 1) {
 
     const sel = document.getElementById("id_stadyn") as HTMLSelectElement;
     if (sel.value === '0') stadyn = 0;
-    else stadyn = 1;
+    else {
+        stadyn = 1;
+        THIIO_flag = 0;   // Dynamik ist immer Th.I. Ordnung
+    }
     console.log("== stadyn =", stadyn)
 
 
