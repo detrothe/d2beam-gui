@@ -334,6 +334,8 @@ export function init_grafik(flag = 1) {
 
     } else if (THIIO_flag === 1) {
 
+        el_select_dyn_eigv.style.display = "none"
+
         let option: any
         for (let i = 0; i < nkombinationen; i++) {
             option = document.createElement('option');
@@ -355,7 +357,7 @@ export function init_grafik(flag = 1) {
         for (let i = 0; i < neigv; i++) {
             let option = document.createElement('option');
             option.value = String(+i + 1)
-            option.textContent = 'Eigenform ' + (+i + 1);
+            option.textContent = 'Knickfigur ' + (+i + 1);
             el_select_eigv.appendChild(option);
         }
     }
