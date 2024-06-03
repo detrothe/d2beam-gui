@@ -2752,7 +2752,7 @@ async function calculate() {
 
     write('______________________________')
     if (keineKonvergenzErreicht) {
-        write('FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Verformungen')
+        write('Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Verformungen')
         berechnungErfolgreich(false);
         berechnungErforderlich(true);
 
@@ -2764,7 +2764,7 @@ async function calculate() {
         });
         await dialogAlert.confirm();
     } else {
-        write('Berechnung erfolgreich beendet')
+        write('Berechnung erfolgreich beendet ✔')
         berechnungErfolgreich(true);
     }
 

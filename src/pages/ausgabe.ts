@@ -601,7 +601,8 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                     newCell.setAttribute("class", "table_cell_center");
 
                     if (System === 0) {
-                        for (j = 1; j <= 7; j++) {
+                        let n = 6; if (THIIO_flag === 1) n = 7;
+                        for (j = 1; j <= n; j++) {
                             newCell = newRow.insertCell(j);
                             if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
                             else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i], 2, 2));

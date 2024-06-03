@@ -948,6 +948,9 @@ portrait.addEventListener('change', function (e) {
                     <option value="0.95em">15</option>
                     <option value="1em" selected>16</option>
                     <option value="1.125em">18</option>
+                    <option value="1.25em">20</option>
+                    <option value="1.375em">22</option>
+                    <option value="1.5em">24</option>
                   </select>
                 </td>
               </tr>
