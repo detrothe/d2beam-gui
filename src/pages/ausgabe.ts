@@ -611,9 +611,13 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                             else if (j === 5) newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
                             else if (j === 6) newText = document.createTextNode(myFormat(phiL[i] * 1000., 3, 3));
                             else if (j === 7) {
-                                if ((THIIO_flag === 1) && (sg_N[i] < 0.0)) {
-                                    const eps = el[ielem].sl * Math.sqrt(Math.abs(sg_N[i]) / el[ielem].emodul / el[ielem].Iy)
-                                    newText = document.createTextNode(myFormat(eps, 3, 3));
+                                if ((THIIO_flag === 1)) {
+                                    if (sg_N[i] < 0.0) {
+                                        const eps = el[ielem].sl * Math.sqrt(Math.abs(sg_N[i]) / el[ielem].emodul / el[ielem].Iy)
+                                        newText = document.createTextNode(myFormat(eps, 3, 3));
+                                    } else {
+                                        newText = document.createTextNode("");
+                                    }
                                 }
                             }
                             newCell.appendChild(newText);
