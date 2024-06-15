@@ -30,11 +30,11 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
             "z [m]",
             "L<sub>x</sub> <br> (kN/m)",
             "L<sub>z</sub> <br> (kN/m)",
-            "L<sub>&phi;</sub> <br> (kNm/rad)",
+            "L<sub>φ</sub> <br> (kNm/rad)",
             "Winkel <br> [°]",
             "n<sub>x</sub>",
             "n<sub>z</sub>",
-            "n<sub>&phi;</sub>",
+            "n<sub>φ</sub>",
         ];
         //const kopf2 = ['', '', '[cm²]', '[cm<sup>4</sup>]', '[N/mm²]', '-', '-', '[1/K]', '[kN/m³]'];
         const kopf_text = [

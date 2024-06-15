@@ -97,8 +97,8 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         if (System === 0) {
             // @ts-ignore
             const th3 = table.tHead.appendChild(document.createElement("th"));
-            th3.innerHTML = "&phi; &nbsp;[mrad]";
-            th3.title = "Verdrehung &phi;, positiv im Gegenuhrzeigersinn"
+            th3.innerHTML = "φ &nbsp;[mrad]";
+            th3.title = "Verdrehung φ, positiv im Gegenuhrzeigersinn"
             th3.setAttribute("class", "table_cell_center");
             row.appendChild(th3);
         }
@@ -348,7 +348,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         row.appendChild(th2);
         // @ts-ignore
         const th3 = table.tHead.appendChild(document.createElement("th"));
-        th3.innerHTML = "M<sub>&phi;</sub>&nbsp;[kNm]";
+        th3.innerHTML = "M<sub>φ</sub>&nbsp;[kNm]";
         th3.title = "Federmoment, positiv im Uhrzeigersinn"
         th3.setAttribute("class", "table_cell_center");
         row.appendChild(th3);
@@ -427,7 +427,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         row.appendChild(th2);
         // @ts-ignore
         const th3 = table.tHead.appendChild(document.createElement("th"));
-        th3.innerHTML = "M<sub>&phi;</sub>&nbsp;[kNm]";
+        th3.innerHTML = "M<sub>φ</sub>&nbsp;[kNm]";
         th3.title = "erforderliches Moment, positiv im Gegenuhrzeigersinn"
         th3.setAttribute("class", "table_cell_center");
         row.appendChild(th3);
@@ -783,7 +783,7 @@ export function dyn_ausgabe(newDiv: HTMLDivElement) {
                 // @ts-ignore
                 const th3 = table.tHead.appendChild(document.createElement("th"));
                 th3.innerHTML = "ψ<sub>φ</sub>";
-                th3.title = "Verdrehung ψ&phi;, positiv im Gegenuhrzeigersinn"
+                th3.title = "Verdrehung φ, positiv im Gegenuhrzeigersinn"
                 th3.setAttribute("class", "table_cell_center");
                 row.appendChild(th3);
             }

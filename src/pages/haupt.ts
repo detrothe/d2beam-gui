@@ -448,7 +448,7 @@ portrait.addEventListener('change', function (e) {
                   id="id_knoten_tabelle"
                   nzeilen="${nnodes_init}"
                   nspalten="6"
-                  columns='["No", "x [m]", "z [m]", "L<sub>x</sub><br>(kN/m)", "L<sub>z</sub><br>(kN/m)", "L<sub>&phi;</sub><br>(kNm/rad)", "Winkel [°]"]'
+                  columns='["No", "x [m]", "z [m]", "L<sub>x</sub><br>(kN/m)", "L<sub>z</sub><br>(kN/m)", "L<sub>φ</sub><br>(kNm/rad)", "Winkel [°]"]'
                   colwidth='["4","5","5","5","5","5","5"]'
                 ></dr-tabelle>
               </td>
@@ -474,7 +474,7 @@ portrait.addEventListener('change', function (e) {
           id="id_nnodedisps_tabelle"
           nzeilen="${nnodedisps_init}"
           nspalten="5"
-          columns='["No", "Knoten", "Lastfall", "u<sub>x&prime;0</sub> [mm]", "u<sub>z&prime;0</sub> [mm]", "&phi;<sub>0</sub> [mrad]"]'
+          columns='["No", "Knoten", "Lastfall", "u<sub>x&prime;0</sub> [mm]", "u<sub>z&prime;0</sub> [mm]", "φ<sub>0</sub> [mrad]"]'
         ></dr-tabelle>
       </sl-tab-panel>
 
@@ -695,7 +695,7 @@ portrait.addEventListener('change', function (e) {
                 <select name="maxu_dir" id="id_maxu_dir" style="min-width: 100%;"  onchange="berechnungErforderlich()">
                   <option value="0">x (u)</option>
                   <option value="1" selected>z (w)</option>
-                  <option value="2">&phi;</option>
+                  <option value="2">φ</option>
                 </select>
               </td>
             </tr>

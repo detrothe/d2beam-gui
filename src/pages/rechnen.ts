@@ -46,6 +46,7 @@ export let dyn_neigv = 1;
 export let neigv: number = 2;
 export let nNodeDisps = 0;
 export let keineKonvergenzErreicht = false;
+export let alpha_cr_2_low = false;
 
 export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
@@ -125,8 +126,8 @@ export let stabvorverformung_komb = [] as TStabvorverformung_komb[][]
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
 //console.log("CMULT-------------", cmult)
-let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number"]);
-let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]);
+//let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number"]);
+//let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]);
 let c_simvektoriteration = Module.cwrap("c_simvektoriteration", null, ["number", "number", "number", "number", "number", "number"]);
 //console.log("C_D2BEAM2-------------", c_d2beam2)
 
@@ -1771,6 +1772,7 @@ async function calculate() {
     //(document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
 
     keineKonvergenzErreicht = false;
+    alpha_cr_2_low = false;
 
     let startTime: any
     let endTime: any
@@ -2752,18 +2754,32 @@ async function calculate() {
     if (checkbox.checked) show_gleichungssystem(true);
 
     write('______________________________')
-    if (keineKonvergenzErreicht) {
-        write('Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Verformungen')
+    if (keineKonvergenzErreicht || alpha_cr_2_low) {
+        if (keineKonvergenzErreicht) {
+            write('Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Verformungen')
+
+            const dialogAlert = new AlertDialog({
+                trueButton_Text: "ok",
+                question_Text: "In mindestens einer Kombination keine Konvergenz der Verformungen erreicht. " +
+                    "Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. " +
+                    "Die Ergebnisse sind wahrscheinlich nicht brauchbar!",
+            });
+            await dialogAlert.confirm();
+        }
+        if (alpha_cr_2_low) {
+            write('Ꚛ FEHLER - In mindestens einer Kombination war alpha_cr < 1')
+
+            const dialogAlert = new AlertDialog({
+                trueButton_Text: "ok",
+                question_Text: "In mindestens einer Kombination war alpha_cr < 1. " +
+                    "Mögliche Lösungen: Lasten reduzieren oder Querschnitte vergrößern. " +
+                    "Die Ergebnisse sind nicht brauchbar!",
+            });
+            await dialogAlert.confirm();
+        }
         berechnungErfolgreich(false);
         berechnungErforderlich(true);
 
-        const dialogAlert = new AlertDialog({
-            trueButton_Text: "ok",
-            question_Text: "In mindestens einer Kombination keine Konvergenz der Verformungen erreicht. "+
-            "Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. "+
-            "Die Ergebnisse sind wahrscheinlich nicht brauchbar!",
-        });
-        await dialogAlert.confirm();
     } else {
         write('Berechnung erfolgreich beendet ✔')
         berechnungErfolgreich(true);
@@ -2784,7 +2800,7 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
     let i: number, j: number, ielem: number
 
     dyn_omega = new Array(dyn_neigv);
-    eigenform_print = new TFArray3D_0( nnodesTotal,  3,  dyn_neigv);
+    eigenform_print = new TFArray3D_0(nnodesTotal, 3, dyn_neigv);
 
     for (i = 0; i < neq; i++) stiff[i].fill(0.0);
 
@@ -2954,7 +2970,11 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
         let omega_array = new Float64Array(Module.HEAPF64.buffer, omega_ptr, neigv);
         console.log("omega", omega_array[0], omega_array[1]);
 
-        for (i = 0; i < neigv; i++) alpha_cr[iKomb - 1][i] = omega_array[i] ** 2
+        for (i = 0; i < neigv; i++) {
+            let alphaCr = omega_array[i] ** 2
+            if ((alphaCr > 0.01) && (alphaCr < 1.0)) alpha_cr_2_low = true;
+            alpha_cr[iKomb - 1][i] = alphaCr
+        }
 
         let eigenform_array = new Float64Array(Module.HEAPF64.buffer, eigenform_ptr, neq * neigv);
         //console.log("eigenform_array", eigenform_array);
