@@ -57,6 +57,7 @@ export class CTruss extends CElement {
     //trans: number[][] = []
     emass: number[][] = []
     mue = 0.0                     // Dichte * Area für Dynamik Massenmatrix
+    mass_gesamt = 0.0             // Gesamtmasse des Elementes
 
     transU: number[][] = []       // Transformation von global nach lokal
     //transF: number[][] = []       // Transformation von lokal nach global = transU ^T
@@ -195,7 +196,8 @@ export class CTruss extends CElement {
             this.emass = Array.from(Array(4), () => new Array(4));
             this.emassG = Array.from(Array(4), () => new Array(4));
             this.mue = this.wichte * this.area / 10   // in Tonnen/m
-            console.log("wichte", this.wichte)
+            //console.log("wichte", this.wichte)
+            this.mass_gesamt = this.mue * this.sl
         }
 
         let cophi = node[this.nod1].co

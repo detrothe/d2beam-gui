@@ -20,6 +20,7 @@ import {
     ausgabe_gleichgewichtSG,
     dyn_neigv,
     dyn_omega,
+    eigenform_print,
 } from "./rechnen";
 
 import { prot_eingabe } from "./prot_eingabe"
@@ -736,6 +737,85 @@ export function dyn_ausgabe(newDiv: HTMLDivElement) {
         newText = document.createTextNode(myFormat(2 * Math.PI / dyn_omega[i], 2, 2));
         newCell.appendChild(newText);
         newCell.setAttribute("class", "table_cell_mitte");
+    }
+
+
+    //   Eigenformen
+    {
+        for (let ieigv = 0; ieigv < dyn_neigv; ieigv++) {
+
+
+            tag = document.createElement("p"); // <p></p>
+            text = document.createTextNode("xxx");
+            tag.appendChild(text);
+            tag.innerHTML = "<b>Eigenform " + (+ieigv+1) + "</b>"
+
+            newDiv?.appendChild(tag);
+
+            const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+            table.setAttribute("id", "id_table_eigenformen");
+            table.setAttribute("class", "output_table");
+            table.style.border = 'none';
+            newDiv?.appendChild(table);
+
+            const thead = table.createTHead();
+            const row = thead.insertRow();
+
+            // @ts-ignore
+            const th0 = table.tHead.appendChild(document.createElement("th"));
+            th0.innerHTML = "Node No";
+            th0.title = "Knotennummer"
+            th0.setAttribute("class", "table_cell_center");
+            row.appendChild(th0);
+            // @ts-ignore
+            const th1 = table.tHead.appendChild(document.createElement("th"));
+            th1.innerHTML = "u";
+            th1.title = "Verschiebung u, positiv in positiver x-Richtung"
+            th1.setAttribute("class", "table_cell_center");
+            row.appendChild(th1);
+            // @ts-ignore
+            const th2 = table.tHead.appendChild(document.createElement("th"));
+            th2.innerHTML = "w";
+            th2.title = "Verschiebung w, positiv in positiver z-Richtung"
+            th2.setAttribute("class", "table_cell_center");
+            row.appendChild(th2);
+            if (System === 0) {
+                // @ts-ignore
+                const th3 = table.tHead.appendChild(document.createElement("th"));
+                th3.innerHTML = "&phi;";
+                th3.title = "Verdrehung &phi;, positiv im Gegenuhrzeigersinn"
+                th3.setAttribute("class", "table_cell_center");
+                row.appendChild(th3);
+            }
+
+            for (i = 0; i < nnodes; i++) {
+
+                let newRow = table.insertRow(-1);
+                let newCell, newText
+                newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+                newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_center");
+
+                newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(eigenform_print._(i, 0, ieigv), 3, 3));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+
+                newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
+                newText = document.createTextNode(myFormat(eigenform_print._(i, 1, ieigv), 3, 3));  // Append a text node to the cell
+                newCell.appendChild(newText);
+                newCell.setAttribute("class", "table_cell_right");
+
+                if (System === 0) {
+                    newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
+                    newText = document.createTextNode(myFormat(eigenform_print._(i, 2, ieigv), 3, 3));  // Append a text node to the cell
+                    newCell.appendChild(newText);
+                    newCell.setAttribute("class", "table_cell_right");
+                }
+            }
+        }
     }
 
 }

@@ -51,6 +51,7 @@ export let lagerkraft = [] as number[][];
 export let disp_lf: TFArray3D;
 export let disp_print: TFArray3D;
 export let disp_print_kombi: TFArray3D;
+export let eigenform_print: TFArray3D_0;
 export let stabendkraefte: TFArray3D
 export let lagerkraefte: TFArray3D
 export let nodeDisp0Force: TFArray3D_0
@@ -2783,6 +2784,7 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
     let i: number, j: number, ielem: number
 
     dyn_omega = new Array(dyn_neigv);
+    eigenform_print = new TFArray3D_0( nnodesTotal,  3,  dyn_neigv);
 
     for (i = 0; i < neq; i++) stiff[i].fill(0.0);
 
@@ -2871,6 +2873,25 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
         }
         offset = offset + neq
         console.log(" maxValue_dyn_eigenform[ieigv+1] = ", +ieigv + 1, maxValue_dyn_eigenform[ieigv])
+
+
+        let disp = Array(3)
+        for (i = 0; i < nnodes; i++) {                      // Ausgabe der Verschiebungen der einzelnen Knoten im gedrehten Koordinatensystem
+            for (j = 0; j < 3; j++) {
+                let ieq = node[i].L[j]
+                if (ieq === -1) {
+                    disp[j] = 0
+                } else {
+                    disp[j] = eigenform_dyn[ieigv][ieq]
+                }
+            }
+
+            for (j = 0; j < 3; j++) eigenform_print.set(i, j, ieigv, disp[j])
+
+        }
+
+
+
     }
 
 }
