@@ -769,21 +769,21 @@ export function dyn_ausgabe(newDiv: HTMLDivElement) {
             row.appendChild(th0);
             // @ts-ignore
             const th1 = table.tHead.appendChild(document.createElement("th"));
-            th1.innerHTML = "u";
-            th1.title = "Verschiebung u, positiv in positiver x-Richtung"
+            th1.innerHTML = "ψ<sub>u</sub>";
+            th1.title = "Verschiebung ψu, positiv in positiver x-Richtung"
             th1.setAttribute("class", "table_cell_center");
             row.appendChild(th1);
             // @ts-ignore
             const th2 = table.tHead.appendChild(document.createElement("th"));
-            th2.innerHTML = "w";
-            th2.title = "Verschiebung w, positiv in positiver z-Richtung"
+            th2.innerHTML = "ψ<sub>w</sub>";
+            th2.title = "Verschiebung ψw, positiv in positiver z-Richtung"
             th2.setAttribute("class", "table_cell_center");
             row.appendChild(th2);
             if (System === 0) {
                 // @ts-ignore
                 const th3 = table.tHead.appendChild(document.createElement("th"));
-                th3.innerHTML = "&phi;";
-                th3.title = "Verdrehung &phi;, positiv im Gegenuhrzeigersinn"
+                th3.innerHTML = "ψ<sub>φ</sub>";
+                th3.title = "Verdrehung ψ&phi;, positiv im Gegenuhrzeigersinn"
                 th3.setAttribute("class", "table_cell_center");
                 row.appendChild(th3);
             }

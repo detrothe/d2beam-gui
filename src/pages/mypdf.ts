@@ -11,7 +11,7 @@ import { fontBold } from "../fonts/FreeSans-bold.js";
 import htmlToPdfmake from "html-to-pdfmake";
 //import { tabQWerte, schnittgroesse, bezugswerte } from "./duennQ"
 
-import { nnodes, nelem, System, stadyn, nnodalMass, nodalmass, dyn_neigv, dyn_omega } from "./rechnen";
+import { nnodes, nelem, System, stadyn, nnodalMass, nodalmass, dyn_neigv, dyn_omega, eigenform_print } from "./rechnen";
 import {
   el,
   element as stab,
@@ -546,7 +546,10 @@ export async function my_jspdf() {
 
   //   Knotenmassen
 
-  if (nnodalMass > 0) {
+  let sum_mass = 0.0
+  let sum_theta = 0.0
+
+  if ((stadyn === 1) && (nnodalMass > 0)) {
 
     yy = testSeite(yy, fs, 1, 5);
     doc.setFont("freesans_bold");
@@ -566,6 +569,9 @@ export async function my_jspdf() {
     yy = neueZeile(yy, fs, 1);
 
     for (let i = 0; i < nnodalMass; i++) {
+      sum_mass += nodalmass[i].mass
+      sum_theta += nodalmass[i].theta
+
       el_table.htmlText(String(+nodalmass[i].node + 1), 0, "center", yy);
       el_table.htmlText(myFormat(nodalmass[i].mass, 1, 2), 1, "right", yy, 5);
       if (System === 0) el_table.htmlText(myFormat(nodalmass[i].theta, 1, 2), 2, "right", yy, 10);
@@ -573,6 +579,27 @@ export async function my_jspdf() {
     }
 
   }
+
+  if (stadyn === 1) {
+
+    yy = testSeite(yy, fs, 1, 4);
+    doc.setFont("freesans_normal");
+    doc.text("Summe der Knotenmassen = " + myFormat(sum_mass, 1, 1) + ' [t]', links, yy);
+    yy = neueZeile(yy, fs, 1);
+    doc.text("Summe der Massenträgheitsmomente = " + myFormat(sum_theta, 1, 1) + ' [tm²]', links, yy);
+
+    sum_mass = 0.0
+    for (let i = 0; i < nelem; i++) {
+      sum_mass += el[i].mass_gesamt
+    }
+
+    yy = neueZeile(yy, fs, 1);
+    doc.text("Summe der Elementmassen = " + myFormat(sum_mass, 1, 2) + ' [t]', links, yy);
+    yy = neueZeile(yy, fs, 1);
+
+  }
+
+
 
   if (stadyn === 0) {
 
@@ -1056,7 +1083,7 @@ export async function my_jspdf() {
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
-          if ( !el[ielem].isActive) continue
+          if (!el[ielem].isActive) continue
 
           yy = neueZeile(yy, fs, 1);
           doc.setFont("freesans_bold");
@@ -1220,7 +1247,7 @@ export async function my_jspdf() {
 
           for (let ielem = 0; ielem < nelem; ielem++) {
 
-            if ( !el[ielem].isActive) continue
+            if (!el[ielem].isActive) continue
 
             yy = neueZeile(yy, fs, 1);
             doc.setFont("freesans_bold");
@@ -1290,7 +1317,7 @@ export async function my_jspdf() {
 
   //   Eigenwerte
 
-  if (dyn_neigv > 0) {
+  if ((stadyn === 1) && (dyn_neigv > 0)) {
 
     yy = testSeite(yy, fs, 1, 5);
     doc.setFont("freesans_bold");
@@ -1315,6 +1342,38 @@ export async function my_jspdf() {
       yy = neueZeile(yy, fs, 1);
     }
 
+    for (let ieigv = 0; ieigv < dyn_neigv; ieigv++) {
+      //   Eigenformen
+      {
+        yy = testSeite(yy, fs, 1, 5);
+        doc.setFont("freesans_bold");
+        doc.text("Eigenform " + (+ieigv + 1), links, yy);
+        //yy = neueZeile(yy, fs, 1)
+
+        doc.setFontSize(fs);
+        doc.setFont("freesans_bold");
+        yy = neueZeile(yy, fs1, 1);
+        let el_table = new pdf_table(doc, links, [20, 20, 20, 20]);
+        el_table.htmlText("Node No", 0, "left", yy);
+        el_table.htmlText("ψ<sub>u</sub>", 1, "center", yy);
+        el_table.htmlText("ψ<sub>w</sub>", 2, "center", yy);
+        if (System === 0) el_table.htmlText("ψ<sub>φ</sub>", 3, "center", yy);
+
+        doc.setFontSize(fs);
+        doc.setFont("freesans_normal");
+        yy = neueZeile(yy, fs, 1);
+
+        for (let i = 0; i < nnodes; i++) {
+          el_table.htmlText(String(+i + 1), 0, "center", yy);
+          el_table.htmlText(myFormat(eigenform_print._(i, 0, ieigv), 3, 3), 1, "right", yy, 5);
+          el_table.htmlText(myFormat(eigenform_print._(i, 1, ieigv), 3, 3), 2, "right", yy, 5);
+          if (System === 0) el_table.htmlText(myFormat(eigenform_print._(i, 2, ieigv), 3, 3), 3, "right", yy, 5);
+          yy = neueZeile(yy, fs, 1);
+        }
+      }
+
+
+    }
   }
 
   // -------------------------------------  S  V  G  --------------------------------------

@@ -431,7 +431,8 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         }
     }
 
-    if (stadyn > 0) {   // nnodalMass > 0 &&
+    if (stadyn > 0) {
+
         let sum_mass = 0.0
         let sum_theta = 0.0
 
