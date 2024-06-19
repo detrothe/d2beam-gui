@@ -94,6 +94,10 @@ export function read_daten(eingabedaten: string) {
         if (jobj.ausgabe_SG === undefined) slel.setAttribute("value", 'true')
         else slel.setAttribute("value", jobj.ausgabe_SG)
 
+        slel = document.getElementById('id_eig_solver_option') as SlSelect;
+        if (jobj.eig_solver === undefined) slel.setAttribute("value", '0')
+        else slel.setAttribute("value", jobj.eig_solver)
+
 
         el = document.getElementById('id_button_nnodedisps') as drButtonPM;
         if (jobj.nNodeDisps === undefined) el.setValue(0);
@@ -500,6 +504,7 @@ export function str_inputToJSON() {
 
 
     let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, stadyn, dyn_neigv;
+let eig_solver;
 
     let el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = el.nel;
@@ -533,6 +538,9 @@ export function str_inputToJSON() {
 
     el = document.getElementById('id_ausgabe_SG_option') as HTMLSelectElement;
     ausgabe_SG = el.value;
+
+    el = document.getElementById('id_eig_solver_option') as HTMLSelectElement;
+    eig_solver = el.value;
 
     el = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
     epsDisp_tol = el.value;
@@ -769,6 +777,7 @@ export function str_inputToJSON() {
         'stadyn': stadyn,
         'nnodalmass': nnodalmass,
         'dyn_neigv': dyn_neigv,
+        'eig_solver': eig_solver,
 
 
         'elem': elem,

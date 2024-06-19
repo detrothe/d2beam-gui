@@ -123,13 +123,15 @@ export let print_mass = [] as number[][];
 
 export let stabvorverformung_komb = [] as TStabvorverformung_komb[][]
 
+export let eig_solver = 0;
+
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
 //console.log("CMULT-------------", cmult)
 //let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number"]);
 //let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]);
 let c_simvektoriteration = Module.cwrap("c_simvektoriteration", null, ["number", "number", "number", "number", "number", "number"]);
-//console.log("C_D2BEAM2-------------", c_d2beam2)
+let c_gsl_eigenwert = Module.cwrap("gsl_eigenwert", "number", ["number", "number", "number"]);
 
 const bytes_8 = 8;
 const bytes_4 = 4;
@@ -536,10 +538,14 @@ export function rechnen(flag = 1) {
     el = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
     epsDisp_tol = Number(el.value)
 
+    el = document.getElementById('id_eig_solver_option') as any;
+    eig_solver = Number(el.value);
+    console.log("== id_eig_solver_option =", eig_solver)
+
     el = document.getElementById('id_ausgabe_SG_option') as any;
-    if (el.value === 'true') ausgabe_gleichgewichtSG = true;
+    if (el.value === '0') ausgabe_gleichgewichtSG = true;
     else ausgabe_gleichgewichtSG = false;
-    console.log("== ausgabe_gleichgewichtSG =", ausgabe_gleichgewichtSG)
+    console.log("== ausgabe_gleichgewichtSG =", eig_solver)
 
     el = document.getElementById('id_P_delta_option') as any;
     if (el.value === 'true') P_delta = true;
@@ -2862,7 +2868,14 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
     let eigenform_ptr = Module._malloc(neq * dyn_neigv * bytes_8);
     let omega_ptr = Module._malloc(dyn_neigv * bytes_8);
 
-    c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv);
+    if (eig_solver === 0) {
+        let status = c_gsl_eigenwert(mass_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv)
+        write("Status der Eigenwertberechnung = " + status)
+        if (status !== 0) keineKonvergenzErreicht = true
+    } else if (eig_solver === 1) {
+        c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv);
+    }
+    //c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv);
 
     let omega_array = new Float64Array(Module.HEAPF64.buffer, omega_ptr, dyn_neigv);
     console.log("omega_array", omega_array);
@@ -2965,7 +2978,15 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
         let eigenform_ptr = Module._malloc(neq * neigv * bytes_8);
         let omega_ptr = Module._malloc(neigv * bytes_8);
 
-        c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv);
+        if (eig_solver === 0) {
+            let status = c_gsl_eigenwert(kstiff_sig_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv)
+            write("Status der Eigenwertberechnung = " + status)
+            if (status !== 0) keineKonvergenzErreicht = true
+        } else if (eig_solver === 1) {
+            c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv);
+        }
+
+        //c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv);
 
         let omega_array = new Float64Array(Module.HEAPF64.buffer, omega_ptr, neigv);
         console.log("omega", omega_array[0], omega_array[1]);

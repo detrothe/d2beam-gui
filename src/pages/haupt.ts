@@ -820,6 +820,16 @@ portrait.addEventListener('change', function (e) {
               </sl-select>
               </td>
             </tr>
+            <tr><td>&nbsp;<b>für Theorie II. Ordnung und Dynamik:</b></td></tr>
+            <tr>
+              <td id="id_eig_solver" title="Auswahl des Eigenwert solvers, Neuberechnung erforderlich">&nbsp;Eigenwertberechnung:</td>
+              <td>
+              <sl-select  value="0" id="id_eig_solver_option" >
+                 <sl-option value='0' @click=${berechnungErforderlich} >Gnu Gsl QR Methode</sl-option>
+                 <sl-option value='1' @click=${berechnungErforderlich} >simultane Vektoriteration</sl-option>
+              </sl-select>
+              </td>
+            </tr>
           </tbody>
         </table>
 
@@ -1884,6 +1894,9 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     els = document.getElementById('id_ausgabe_SG_option') as SlSelect;
     els.setAttribute('value', 'true');
+
+    els = document.getElementById('id_eig_solver_option') as SlSelect;
+    els.setAttribute('value', '0');
 
 
     eli = document.getElementById('id_maxu_node') as HTMLInputElement;
