@@ -825,7 +825,7 @@ portrait.addEventListener('change', function (e) {
               <td id="id_eig_solver" title="Auswahl des Eigenwert solvers, Neuberechnung erforderlich">&nbsp;Eigenwertberechnung:</td>
               <td>
               <sl-select  value="0" id="id_eig_solver_option" >
-                 <sl-option value='0' @click=${berechnungErforderlich} >Gnu Gsl QR Methode</sl-option>
+                 <sl-option value='0' @click=${berechnungErforderlich} >GNU GSL QR Methode</sl-option>
                  <sl-option value='1' @click=${berechnungErforderlich} >simultane Vektoriteration</sl-option>
               </sl-select>
               </td>

@@ -124,6 +124,7 @@ export let print_mass = [] as number[][];
 export let stabvorverformung_komb = [] as TStabvorverformung_komb[][]
 
 export let eig_solver = 0;
+export let equation_solver = 0;  // 0 = cholesky, 1 = gauss
 
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
@@ -132,6 +133,8 @@ export let eig_solver = 0;
 //let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]);
 let c_simvektoriteration = Module.cwrap("c_simvektoriteration", null, ["number", "number", "number", "number", "number", "number"]);
 let c_gsl_eigenwert = Module.cwrap("gsl_eigenwert", "number", ["number", "number", "number"]);
+let c_cholesky_decomp = Module.cwrap("cholesky_decomp", "number", ["number", "number", "number"]);
+let c_cholesky_2 = Module.cwrap("cholesky_2", "number", ["number", "number", "number"]);
 
 const bytes_8 = 8;
 const bytes_4 = 4;
@@ -2164,7 +2167,12 @@ async function calculate() {
 
                 // Gleichungssystem lösen
 
-                let error = gauss(neq, stiff, R);
+                let error = -1
+                if (equation_solver === 0) {
+                    error = cholesky_solve_equation(stiff, R);
+                } else {
+                    error = gauss(neq, stiff, R);
+                }
                 if (error != 0) {
                     window.alert("Gleichungssystem singulär");
                     return 1;
@@ -2512,11 +2520,21 @@ async function calculate() {
 
                     // Gleichungssystem lösen
 
-                    let error = gauss(neq, stiff, R);
+                    let error = -1
+                    if (equation_solver === 0) {
+                        error = cholesky_solve_equation(stiff, R);
+                    } else {
+                        error = gauss(neq, stiff, R);
+                    }
                     if (error != 0) {
                         window.alert("Gleichungssystem singulär");
                         return 1;
                     }
+                    // let error = gauss(neq, stiff, R);
+                    // if (error != 0) {
+                    //     window.alert("Gleichungssystem singulär");
+                    //     return 1;
+                    // }
 
                     for (i = 0; i < neq; i++) u[i] = R[i];
                     for (i = 0; i < neq; i++) U_[i] = R[i];
@@ -3044,7 +3062,52 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
 }
 
 
+//---------------------------------------------------------------------------------------------------------------
+function cholesky_solve_equation(stiff: number[][], R: number[]) {
+    //---------------------------------------------------------------------------------------------------------------
+    {
+        console.log('in cholesky')
 
+        let error = 0
+
+        let kstiff_array = new Float64Array(neq * neq);
+        let k = 0
+        for (let ispalte = 0; ispalte < neq; ispalte++) {
+            for (let izeile = 0; izeile < neq; izeile++) {
+                kstiff_array[k] = stiff[izeile][ispalte];
+                k++;
+            }
+        }
+        let R_array = new Float64Array(neq);
+
+        for (let i = 0; i < neq; i++) {
+            R_array[i] = R[i];
+        }
+
+        let kstiff_ptr = Module._malloc(kstiff_array.length * bytes_8);
+        Module.HEAPF64.set(kstiff_array, kstiff_ptr / bytes_8);
+
+        let R_vector_ptr = Module._malloc(neq * bytes_8);
+        Module.HEAPF64.set(R_array, R_vector_ptr / bytes_8);
+
+        let L_matrix_ptr = Module._malloc(neq * neq * bytes_8);
+
+        error = c_cholesky_decomp(kstiff_ptr, L_matrix_ptr, neq);
+
+        if (error === 0) {
+            c_cholesky_2(L_matrix_ptr, R_vector_ptr, neq);
+
+            let U_array = new Float64Array(Module.HEAPF64.buffer, R_vector_ptr, neq);
+            for (let i = 0; i < neq; i++) R[i] = U_array[i];
+        }
+
+        Module._free(kstiff_ptr);
+        Module._free(L_matrix_ptr);
+        Module._free(R_vector_ptr);
+
+        return error;
+    }
+}
 
 //--------------------------------------------------------------------------------------------
 //------------------------------- K O M B I N A T I O N E N ---------------------------------
