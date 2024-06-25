@@ -438,6 +438,7 @@ class DrTabelle extends HTMLElement {
             this.tableId = newValue;
          }
       } else {
+         console.log("bin hier", name, newValue)
          if (name === 'nzeilen') {
             this.nZeilen = newValue;
             this.nTabRow = Number(this.nZeilen) + 1; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt
@@ -771,6 +772,11 @@ class DrTabelle extends HTMLElement {
                         newCell.appendChild(el);
                         // el.addEventListener("pointermove", POINTERMOVE);
                         el.addEventListener('pointerdown', this.POINTER_DOWN.bind(this));
+                        if (iSpalte === this.col_visible.length) {
+                           this.col_visible.push(true);
+                           console.log('addiere NEUE Spalte visible', iSpalte, this.col_visible[iSpalte], this.col_visible.length)
+                        }
+
                      }
                   }
                }
@@ -866,7 +872,11 @@ class DrTabelle extends HTMLElement {
                   el.addEventListener('pointerdown', this.POINTER_DOWN.bind(this));
                   //el.addEventListener('mousemove', this.POINTER_MOVE);
 
-                  console.log('NEUE ZEILE visible', iSpalte, this.col_visible[iSpalte])
+
+                  if (iSpalte === this.col_visible.length) {
+                     this.col_visible.push(true);
+                     console.log('addiere NEUE ZEILE visible', iSpalte, this.col_visible[iSpalte], this.col_visible.length)
+                  }
                   // if (this.col_visible[iSpalte]) el.style.display = 'table-cell';
                   // else el.style.display = 'none';
                   if (this.col_visible[iSpalte]) newCell.style.display = 'table-cell';
@@ -1020,10 +1030,10 @@ class DrTabelle extends HTMLElement {
       console.log("---- SELECT ----")
    }
    //------------------------------------------------------------------------------------------------
-   CLICK(ev:any) {
+   CLICK(ev: any) {
       //---------------------------------------------------------------------------------------------
       console.log("---- C  L I C K ----", ev)
-      write ('C L I C K ' + ev.button)
+      write('C L I C K ' + ev.button)
    }
 
    //------------------------------------------------------------------------------------------------
