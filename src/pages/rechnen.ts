@@ -46,6 +46,7 @@ export let dyn_neigv = 1;
 export let neigv: number = 2;
 export let nNodeDisps = 0;
 export let keineKonvergenzErreicht = false;
+export let keineKonvergenzErreicht_eigv = false;
 export let alpha_cr_2_low = false;
 
 export let lagerkraft = [] as number[][];
@@ -123,7 +124,7 @@ export let print_mass = [] as number[][];
 
 export let stabvorverformung_komb = [] as TStabvorverformung_komb[][]
 
-export let eig_solver = 0;
+export let eig_solver = 1;
 export let equation_solver = 0;  // 0 = cholesky, 1 = gauss
 
 // @ts-ignore
@@ -1781,6 +1782,7 @@ async function calculate() {
     //(document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
 
     keineKonvergenzErreicht = false;
+    keineKonvergenzErreicht_eigv = false;
     alpha_cr_2_low = false;
 
     let startTime: any
@@ -2778,7 +2780,7 @@ async function calculate() {
     if (checkbox.checked) show_gleichungssystem(true);
 
     write('______________________________')
-    if (keineKonvergenzErreicht || alpha_cr_2_low) {
+    if (keineKonvergenzErreicht || alpha_cr_2_low || keineKonvergenzErreicht_eigv) {
         if (keineKonvergenzErreicht) {
             write('Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Verformungen')
 
@@ -2786,6 +2788,17 @@ async function calculate() {
                 trueButton_Text: "ok",
                 question_Text: "In mindestens einer Kombination keine Konvergenz der Verformungen erreicht. " +
                     "Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. " +
+                    "Die Ergebnisse sind wahrscheinlich nicht brauchbar!",
+            });
+            await dialogAlert.confirm();
+        }
+        if (keineKonvergenzErreicht_eigv) {
+            write('Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Eigenwerte')
+
+            const dialogAlert = new AlertDialog({
+                trueButton_Text: "ok",
+                question_Text: "In mindestens einer Kombination keine Konvergenz der Eigenwerte erreicht. " +
+                    "Mögliche Lösungen: Anderen Eigenwertlöser probieren, und/oder Anzahl der Eigenwerte reduzieren, siehe Tab Pro. " +
                     "Die Ergebnisse sind wahrscheinlich nicht brauchbar!",
             });
             await dialogAlert.confirm();
@@ -2886,13 +2899,14 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
     let eigenform_ptr = Module._malloc(neq * dyn_neigv * bytes_8);
     let omega_ptr = Module._malloc(dyn_neigv * bytes_8);
 
+    let status = 0
     if (eig_solver === 0) {
-        let status = c_gsl_eigenwert(mass_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv)
-        write("Status der Eigenwertberechnung = " + status)
-        if (status !== 0) keineKonvergenzErreicht = true
+        status = c_gsl_eigenwert(mass_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv)
     } else if (eig_solver === 1) {
-        c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv);
+        status = c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv);
     }
+    write("Status der Eigenwertberechnung = " + status)
+    if (status !== 0) keineKonvergenzErreicht_eigv = true
     //c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv);
 
     let omega_array = new Float64Array(Module.HEAPF64.buffer, omega_ptr, dyn_neigv);
@@ -2996,13 +3010,14 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
         let eigenform_ptr = Module._malloc(neq * neigv * bytes_8);
         let omega_ptr = Module._malloc(neigv * bytes_8);
 
+        let status = 0;
         if (eig_solver === 0) {
-            let status = c_gsl_eigenwert(kstiff_sig_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv)
-            write("Status der Eigenwertberechnung = " + status)
-            if (status !== 0) keineKonvergenzErreicht = true
+            status = c_gsl_eigenwert(kstiff_sig_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv)
         } else if (eig_solver === 1) {
-            c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv);
+            status = c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv);
         }
+        write("Status der Eigenwertberechnung = " + status)
+        if (status !== 0) keineKonvergenzErreicht_eigv = true
 
         //c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv);
 

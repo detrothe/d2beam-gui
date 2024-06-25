@@ -716,24 +716,7 @@ portrait.addEventListener('change', function (e) {
                 />
               </td>
             </tr>
-            <tr>
-              <td title="Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet">
-                Anzahl Knickfiguren :
-              </td>
-              <td>
-                <input
-                  type="number"
-                  step="1"
-                  min="1"
-                  id="id_neigv"
-                  name="neigv"
-                  class="input_tab"
-                  pattern="[0-9.,eE+-]*"
-                  value="1"
-                  @change=${berechnungErforderlich}
-                />
-              </td>
-            </tr>
+
           </tbody>
         </table>
 
@@ -784,7 +767,7 @@ portrait.addEventListener('change', function (e) {
             <tr>
               <td id="id_niter" title="max. Anzahl Iterationen bei Th. II. Ordnung">&nbsp;max. Anzahl Iterationen:</td>
               <td>
-                <dr-button-pm id="id_button_niter" nel="5" inputid="niter"  @change=${berechnungErforderlich}></dr-button-pm>
+                <dr-button-pm id="id_button_niter" nel="10" inputid="niter"  @change=${berechnungErforderlich}></dr-button-pm>
               </td>
             </tr>
             <tr>
@@ -802,6 +785,29 @@ portrait.addEventListener('change', function (e) {
                 />
               </td>
             </tr>
+
+
+            <tr>
+              <td title="Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet">
+              &nbsp;Anzahl Knickfiguren :
+              </td>
+              <td>
+                <input
+                  type="number"
+                  step="1"
+                  min="1"
+                  id="id_neigv"
+                  name="neigv"
+                  class="input_tab"
+                  pattern="[0-9.,eE+-]*"
+                  value="1"
+                  @change=${berechnungErforderlich}
+                />
+              </td>
+            </tr>
+
+
+
             <tr>
               <td id="id_P_delta" title="Art der geometrischen Steifigkeitsmatrix">&nbsp;Geom. Steifigkeitsmatrix:</td>
               <td>
@@ -820,11 +826,16 @@ portrait.addEventListener('change', function (e) {
               </sl-select>
               </td>
             </tr>
+
+            <tr>
+              <td>&nbsp; </td>
+            </tr>
+
             <tr><td>&nbsp;<b>für Theorie II. Ordnung und Dynamik:</b></td></tr>
             <tr>
               <td id="id_eig_solver" title="Auswahl des Eigenwert solvers, Neuberechnung erforderlich">&nbsp;Eigenwertberechnung:</td>
               <td>
-              <sl-select  value="0" id="id_eig_solver_option" >
+              <sl-select  value="1" id="id_eig_solver_option" >
                  <sl-option value='0' @click=${berechnungErforderlich} >GNU GSL QR Methode</sl-option>
                  <sl-option value='1' @click=${berechnungErforderlich} >simultane Vektoriteration</sl-option>
               </sl-select>
@@ -836,7 +847,7 @@ portrait.addEventListener('change', function (e) {
         <hr />
         <p>
           <!-- <input type="checkbox" id="id_glsystem_darstellen" />Gleichungssystem darstellen  -->
-          <sl-checkbox id="id_glsystem_darstellen">Gleichungssystem darstellen</sl-checkbox>
+          <sl-checkbox id="id_glsystem_darstellen"><b>Gleichungssystem darstellen</b></sl-checkbox>
           <br /><br />
           &nbsp;&nbsp;Zeige :
           <select id="id_element_darstellen" on></select>

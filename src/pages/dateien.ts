@@ -95,7 +95,7 @@ export function read_daten(eingabedaten: string) {
         else slel.setAttribute("value", jobj.ausgabe_SG)
 
         slel = document.getElementById('id_eig_solver_option') as SlSelect;
-        if (jobj.eig_solver === undefined) slel.setAttribute("value", '0')
+        if (jobj.eig_solver === undefined) slel.setAttribute("value", '1')
         else slel.setAttribute("value", jobj.eig_solver)
 
 
