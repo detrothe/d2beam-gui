@@ -985,8 +985,8 @@ export function drawsystem(svg_id = 'artboard') {
                     } else if (stab[ielem].elTyp === 1) {
                         Nu[0] = (1.0 - x / sl);
                         Nu[1] = x / sl
-                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                        w = Nu[0] * edispL[1] + Nu[1] * edispL[4]
+                        u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                        w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
                     }
                 } else {
                     Nu[0] = (1.0 - x / sl);
