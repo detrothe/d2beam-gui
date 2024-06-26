@@ -1907,7 +1907,7 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     els.setAttribute('value', 'true');
 
     els = document.getElementById('id_eig_solver_option') as SlSelect;
-    els.setAttribute('value', '0');
+    els.setAttribute('value', '1');
 
 
     eli = document.getElementById('id_maxu_node') as HTMLInputElement;
