@@ -819,8 +819,8 @@ export function drawsystem(svg_id = 'artboard') {
 
         scalefactor *= scaleFactor_panel
 
-        console.log("scalefaktor", scalefactor, slmax, maxValue_lf[draw_eigenform - 1].disp)
-        console.log("draw_eigenform", draw_eigenform, ikomb)
+        //console.log("scalefaktor", scalefactor, slmax, maxValue_lf[draw_eigenform - 1].disp)
+        //console.log("draw_eigenform", draw_eigenform, ikomb)
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -856,8 +856,8 @@ export function drawsystem(svg_id = 'artboard') {
                     } else if (stab[ielem].elTyp === 1) {
                         Nu[0] = (1.0 - x / sl);
                         Nu[1] = x / sl
-                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                        w = Nu[0] * edispL[1] + Nu[1] * edispL[4]
+                        u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                        w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
 
                         // u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
                         // w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
