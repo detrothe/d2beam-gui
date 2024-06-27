@@ -736,9 +736,9 @@ export class CTimoshenko_beam extends CElement {
             }
         }
 
-        for (j = 0; j < this.neqeG; j++) {
-            console.log("this.estiffG", this.estiffG[j])
-        }
+        // for (j = 0; j < this.neqeG; j++) {
+        //     console.log("this.estiffG", this.estiffG[j])
+        // }
     }
 
     //---------------------------------------------------------------------------------------------

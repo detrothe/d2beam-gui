@@ -438,7 +438,7 @@ class DrTabelle extends HTMLElement {
             this.tableId = newValue;
          }
       } else {
-         console.log("bin hier", name, newValue)
+         //console.log("bin hier", name, newValue)
          if (name === 'nzeilen') {
             this.nZeilen = newValue;
             this.nTabRow = Number(this.nZeilen) + 1; // immert 1 mehr, da Zeile, Spalte mit 0 beginnt

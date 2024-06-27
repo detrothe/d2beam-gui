@@ -410,7 +410,7 @@ export class drRechteckQuerSchnitt extends LitElement {
         let h = Number((shadow?.getElementById("height") as HTMLInputElement).value)
         let b = Number((shadow?.getElementById("width") as HTMLInputElement).value)
         console.log("Es handelt sich um einen Rechteckquerschnitt", h, b);
-        (shadow?.getElementById("area") as HTMLInputElement).value = myFormat_en(b * h, 1, 2);
+        (shadow?.getElementById("area") as HTMLInputElement).value = myFormat_en(b * h, 1, 4);
         (shadow?.getElementById("traeg_y") as HTMLInputElement).value = myFormat_en(b * h * h * h / 12, 1, 2);
         (shadow?.getElementById("zso") as HTMLInputElement).value = myFormat_en(h / 2, 1, 2);
       }

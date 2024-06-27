@@ -602,7 +602,7 @@ export function drawsystem(svg_id = 'artboard') {
 
     //                              Verformungen   Verformungen   Verformungen   Verformungen
 
-    if (show_verformungen && show_selection) {
+    if (show_verformungen && show_selection && (flag_eingabe != 0)) {
 
         let xx1, xx2, zz1, zz2, xp1, xp2, zp1, zp2
         let dx: number, x: number, eta: number, sl: number, nenner: number
@@ -799,357 +799,358 @@ export function drawsystem(svg_id = 'artboard') {
         }
     }
 
+    if (flag_eingabe != 0) {
 
-    // Eigenformen
+        // Eigenformen
 
-    if (show_eigenformen && show_selection && (maxValue_eigv[draw_lastfall - 1][draw_eigenform - 1] > 0.0)) {
+        if (show_eigenformen && show_selection && (maxValue_eigv[draw_lastfall - 1][draw_eigenform - 1] > 0.0)) {
 
-        let xx1, xx2, zz1, zz2
-        let dx: number, x: number, eta: number, sl: number, nenner: number
-        let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
+            let xx1, xx2, zz1, zz2
+            let dx: number, x: number, eta: number, sl: number, nenner: number
+            let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
 
-        let u = 0.0, w = 0.0, uG: number, wG: number
-        let edispL: number[] = new Array(6)
-        let ikomb = draw_lastfall
-        let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
-        let xmem = 0.0, zmem = 0.0
-
-
-        let scalefactor = 0.1 * slmax / maxValue_eigv[ikomb - 1][draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
-
-        scalefactor *= scaleFactor_panel
-
-        //console.log("scalefaktor", scalefactor, slmax, maxValue_lf[draw_eigenform - 1].disp)
-        //console.log("draw_eigenform", draw_eigenform, ikomb)
-
-        for (let ielem = 0; ielem < nelem; ielem++) {
-
-            if (!stab[ielem].isActive) continue
-
-            maxU = 0.0
-
-            x1 = Math.round(tr.xPix(element[ielem].x1));
-            z1 = Math.round(tr.zPix(element[ielem].z1));
-            x2 = Math.round(tr.xPix(element[ielem].x2));
-            z2 = Math.round(tr.zPix(element[ielem].z2));
-
-            element[ielem].get_edispL_eigenform(edispL, ikomb, draw_eigenform)
-
-            dx = element[ielem].sl / nelTeilungen
-            eta = element[ielem].eta
-            sl = element[ielem].sl
-            nenner = sl ** 3 + 12 * eta * sl
-
-            x = 0.0; xx2 = 0.0; zz2 = 0.0
-            for (let i = 0; i <= nelTeilungen; i++) {
-                if (System === 0) {
-                    console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
-                    if (stab[ielem].elTyp === 0) {
-                        Nu[0] = (1.0 - x / sl);
-                        Nu[1] = x / sl
-                        Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
-                        Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
-                        Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
-                        Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
-                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                        w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
-                    } else if (stab[ielem].elTyp === 1) {
-                        Nu[0] = (1.0 - x / sl);
-                        Nu[1] = x / sl
-                        u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
-                        w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
-
-                        // u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
-                        // w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
-                    }
-                } else {
-                    Nu[0] = (1.0 - x / sl);
-                    Nu[1] = x / sl
-                    u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
-                    w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
-                }
-                uG = element[ielem].cosinus * u - element[ielem].sinus * w
-                wG = element[ielem].sinus * u + element[ielem].cosinus * w
-
-                //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
-                xx1 = xx2; zz1 = zz2;
-                xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
-                zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
-                xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
-                //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
-                if (i > 0) {
-                    //console.log("line", xx1, zz1, xx2, zz2)
-                    let line = two.makeLine(xx1, zz1, xx2, zz2);
-                    line.linewidth = 5;
-                }
-
-                dispG = Math.sqrt(uG * uG + wG * wG)
-
-                if (dispG > maxU) {
-                    maxU = dispG
-                    x_max = xx2
-                    z_max = zz2
-                    xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
-                    zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
-                }
-
-                x = x + dx
-            }
-
-            if (show_labels && maxU > 0.0) {
-
-                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
-                pfeil.stroke = '#D3D3D3'
-
-                const str = myFormat(maxU, 1, 2)
-                const txt = two.makeText(str, x_max, z_max, style_txt)
-                txt.alignment = 'left'
-                txt.baseline = 'top'
-
-            }
-
-        }
-    }
+            let u = 0.0, w = 0.0, uG: number, wG: number
+            let edispL: number[] = new Array(6)
+            let ikomb = draw_lastfall
+            let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+            let xmem = 0.0, zmem = 0.0
 
 
-    // Eigenformen aus Dynamik
+            let scalefactor = 0.1 * slmax / maxValue_eigv[ikomb - 1][draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
 
-    if (show_dyn_eigenformen && show_selection && (maxValue_dyn_eigenform[draw_dyn_eigenform - 1] > 0.0)) {
+            scalefactor *= scaleFactor_panel
 
-        let xx1, xx2, zz1, zz2
-        let dx: number, x: number, eta: number, sl: number, nenner: number
-        let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
+            //console.log("scalefaktor", scalefactor, slmax, maxValue_lf[draw_eigenform - 1].disp)
+            //console.log("draw_eigenform", draw_eigenform, ikomb)
 
-        let u = 0.0, w = 0.0, uG: number, wG: number
-        let edispL: number[] = new Array(6)
-        let ikomb = draw_lastfall
-        let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
-        let xmem = 0.0, zmem = 0.0
+            for (let ielem = 0; ielem < nelem; ielem++) {
 
+                if (!stab[ielem].isActive) continue
 
-        let scalefactor = 0.1 * slmax / maxValue_dyn_eigenform[draw_dyn_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
+                maxU = 0.0
 
-        scalefactor *= scaleFactor_panel
+                x1 = Math.round(tr.xPix(element[ielem].x1));
+                z1 = Math.round(tr.zPix(element[ielem].z1));
+                x2 = Math.round(tr.xPix(element[ielem].x2));
+                z2 = Math.round(tr.zPix(element[ielem].z2));
 
-        if (show_dyn_animate_eigenformen) {
+                element[ielem].get_edispL_eigenform(edispL, ikomb, draw_eigenform)
 
-            animate_scale += animate_scale_dx
+                dx = element[ielem].sl / nelTeilungen
+                eta = element[ielem].eta
+                sl = element[ielem].sl
+                nenner = sl ** 3 + 12 * eta * sl
 
-            if (animate_scale > 1.0) {
+                x = 0.0; xx2 = 0.0; zz2 = 0.0
+                for (let i = 0; i <= nelTeilungen; i++) {
+                    if (System === 0) {
+                        console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
+                        if (stab[ielem].elTyp === 0) {
+                            Nu[0] = (1.0 - x / sl);
+                            Nu[1] = x / sl
+                            Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                            Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                            Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                            Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                            u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                            w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                        } else if (stab[ielem].elTyp === 1) {
+                            Nu[0] = (1.0 - x / sl);
+                            Nu[1] = x / sl
+                            u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                            w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
 
-                animate_scale = 1.0
-                animate_scale_dx = -animate_scale_dx
-
-            } else if (animate_scale < -1.0) {
-                animate_scale = -1.0
-                animate_scale_dx = -animate_scale_dx
-            }
-
-            scalefactor *= animate_scale
-        }
-
-        console.log("scalefaktor", scalefactor, slmax)
-        console.log("draw_dyn_eigenform", draw_dyn_eigenform)
-
-        for (let ielem = 0; ielem < nelem; ielem++) {
-
-            if (!stab[ielem].isActive) continue
-
-            maxU = 0.0
-
-            x1 = Math.round(tr.xPix(element[ielem].x1));
-            z1 = Math.round(tr.zPix(element[ielem].z1));
-            x2 = Math.round(tr.xPix(element[ielem].x2));
-            z2 = Math.round(tr.zPix(element[ielem].z2));
-
-            element[ielem].get_edispL_dyn_eigenform(edispL, draw_dyn_eigenform - 1)
-
-            dx = element[ielem].sl / nelTeilungen
-            eta = element[ielem].eta
-            sl = element[ielem].sl
-            nenner = sl ** 3 + 12 * eta * sl
-
-            x = 0.0; xx2 = 0.0; zz2 = 0.0
-            for (let i = 0; i <= nelTeilungen; i++) {
-                if (System === 0) {
-                    console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
-                    if (stab[ielem].elTyp === 0) {
-                        Nu[0] = (1.0 - x / sl);
-                        Nu[1] = x / sl
-                        Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
-                        Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
-                        Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
-                        Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
-                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                        w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
-                    } else if (stab[ielem].elTyp === 1) {
+                            // u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                            // w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+                        }
+                    } else {
                         Nu[0] = (1.0 - x / sl);
                         Nu[1] = x / sl
                         u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
                         w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
                     }
-                } else {
-                    Nu[0] = (1.0 - x / sl);
-                    Nu[1] = x / sl
-                    u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
-                    w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
-                }
-                uG = element[ielem].cosinus * u - element[ielem].sinus * w
-                wG = element[ielem].sinus * u + element[ielem].cosinus * w
+                    uG = element[ielem].cosinus * u - element[ielem].sinus * w
+                    wG = element[ielem].sinus * u + element[ielem].cosinus * w
 
-                //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
-                xx1 = xx2; zz1 = zz2;
-                xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
-                zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
-                xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
-                //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
-                if (i > 0) {
-                    //console.log("line", xx1, zz1, xx2, zz2)
-                    let line = two.makeLine(xx1, zz1, xx2, zz2);
-                    line.linewidth = 5;
-                }
+                    //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
+                    xx1 = xx2; zz1 = zz2;
+                    xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
+                    zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                    xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+                    //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
+                    if (i > 0) {
+                        //console.log("line", xx1, zz1, xx2, zz2)
+                        let line = two.makeLine(xx1, zz1, xx2, zz2);
+                        line.linewidth = 5;
+                    }
 
-                dispG = Math.sqrt(uG * uG + wG * wG)
+                    dispG = Math.sqrt(uG * uG + wG * wG)
 
-                if (dispG > maxU) {
-                    maxU = dispG
-                    x_max = xx2
-                    z_max = zz2
-                    xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
-                    zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+                    if (dispG > maxU) {
+                        maxU = dispG
+                        x_max = xx2
+                        z_max = zz2
+                        xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+                        zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+                    }
+
+                    x = x + dx
                 }
 
-                x = x + dx
-            }
+                if (show_labels && maxU > 0.0) {
 
-            if (show_labels && maxU > 0.0) {
+                    const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                    pfeil.stroke = '#D3D3D3'
 
-                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
-                pfeil.stroke = '#D3D3D3'
+                    const str = myFormat(maxU, 1, 2)
+                    const txt = two.makeText(str, x_max, z_max, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
 
-                const str = myFormat(maxU, 1, 2)
-                const txt = two.makeText(str, x_max, z_max, style_txt)
-                txt.alignment = 'left'
-                txt.baseline = 'top'
+                }
 
             }
-
         }
-    }
 
 
-    // Schiefstellung
+        // Eigenformen aus Dynamik
 
-    if (show_schiefstellung && show_selection && (maxValue_u0[draw_lastfall - 1].u0 > 0.0)) {
+        if (show_dyn_eigenformen && show_selection && (maxValue_dyn_eigenform[draw_dyn_eigenform - 1] > 0.0)) {
 
-        let xx1, xx2, zz1, zz2
-        let dx: number, x: number, eta: number, sl: number, nenner: number
-        let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
+            let xx1, xx2, zz1, zz2
+            let dx: number, x: number, eta: number, sl: number, nenner: number
+            let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
 
-        let u = 0.0, w = 0.0, uG: number, wG: number
-        let edispL: number[] = new Array(6)
-        let ikomb = draw_lastfall
-        let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
-        let xmem = 0.0, zmem = 0.0
+            let u = 0.0, w = 0.0, uG: number, wG: number
+            let edispL: number[] = new Array(6)
+            let ikomb = draw_lastfall
+            let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+            let xmem = 0.0, zmem = 0.0
 
-        let scalefactor = 0.1 * slmax / maxValue_u0[ikomb - 1].u0
 
-        scalefactor *= scaleFactor_panel
+            let scalefactor = 0.1 * slmax / maxValue_dyn_eigenform[draw_dyn_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
 
-        console.log("scalefaktor", scalefactor, slmax, maxValue_u0[ikomb - 1].u0)
-        console.log("draw_schiefstellung", ikomb)
+            scalefactor *= scaleFactor_panel
 
-        for (let ielem = 0; ielem < nelem; ielem++) {
+            if (show_dyn_animate_eigenformen) {
 
-            if (!stab[ielem].isActive) continue
+                animate_scale += animate_scale_dx
 
-            maxU = 0.0
+                if (animate_scale > 1.0) {
 
-            // x1 = Math.round(tr.xPix(element[ielem].x1));
-            // z1 = Math.round(tr.zPix(element[ielem].z1));
-            // x2 = Math.round(tr.xPix(element[ielem].x2));
-            // z2 = Math.round(tr.zPix(element[ielem].z2));
+                    animate_scale = 1.0
+                    animate_scale_dx = -animate_scale_dx
 
-            element[ielem].get_edispL_schiefstellung(edispL, ikomb - 1)
+                } else if (animate_scale < -1.0) {
+                    animate_scale = -1.0
+                    animate_scale_dx = -animate_scale_dx
+                }
 
-            dx = element[ielem].sl / nelTeilungen
-            eta = element[ielem].eta
-            sl = element[ielem].sl
-            nenner = sl ** 3 + 12 * eta * sl
+                scalefactor *= animate_scale
+            }
 
-            x = 0.0; xx2 = 0.0; zz2 = 0.0
-            for (let i = 0; i <= nelTeilungen; i++) {
-                if (System === 0) {
-                    console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
-                    if (stab[ielem].elTyp === 0) {
-                        Nu[0] = (1.0 - x / sl);
-                        Nu[1] = x / sl
-                        Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
-                        Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
-                        Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
-                        Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
-                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                        w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
-                    } else if (stab[ielem].elTyp === 1) {
+            console.log("scalefaktor", scalefactor, slmax)
+            console.log("draw_dyn_eigenform", draw_dyn_eigenform)
+
+            for (let ielem = 0; ielem < nelem; ielem++) {
+
+                if (!stab[ielem].isActive) continue
+
+                maxU = 0.0
+
+                x1 = Math.round(tr.xPix(element[ielem].x1));
+                z1 = Math.round(tr.zPix(element[ielem].z1));
+                x2 = Math.round(tr.xPix(element[ielem].x2));
+                z2 = Math.round(tr.zPix(element[ielem].z2));
+
+                element[ielem].get_edispL_dyn_eigenform(edispL, draw_dyn_eigenform - 1)
+
+                dx = element[ielem].sl / nelTeilungen
+                eta = element[ielem].eta
+                sl = element[ielem].sl
+                nenner = sl ** 3 + 12 * eta * sl
+
+                x = 0.0; xx2 = 0.0; zz2 = 0.0
+                for (let i = 0; i <= nelTeilungen; i++) {
+                    if (System === 0) {
+                        console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
+                        if (stab[ielem].elTyp === 0) {
+                            Nu[0] = (1.0 - x / sl);
+                            Nu[1] = x / sl
+                            Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                            Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                            Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                            Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                            u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                            w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                        } else if (stab[ielem].elTyp === 1) {
+                            Nu[0] = (1.0 - x / sl);
+                            Nu[1] = x / sl
+                            u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                            w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+                        }
+                    } else {
                         Nu[0] = (1.0 - x / sl);
                         Nu[1] = x / sl
                         u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
                         w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
-
-                        // u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
-                        // w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
                     }
-                } else {
-                    Nu[0] = (1.0 - x / sl);
-                    Nu[1] = x / sl
-                    u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
-                    w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
-                }
-                uG = element[ielem].cosinus * u - element[ielem].sinus * w
-                wG = element[ielem].sinus * u + element[ielem].cosinus * w
+                    uG = element[ielem].cosinus * u - element[ielem].sinus * w
+                    wG = element[ielem].sinus * u + element[ielem].cosinus * w
 
+                    //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
+                    xx1 = xx2; zz1 = zz2;
+                    xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
+                    zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                    xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+                    //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
+                    if (i > 0) {
+                        //console.log("line", xx1, zz1, xx2, zz2)
+                        let line = two.makeLine(xx1, zz1, xx2, zz2);
+                        line.linewidth = 5;
+                    }
 
-                //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
-                xx1 = xx2; zz1 = zz2;
-                xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
-                zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
-                xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
-                //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
-                if (i > 0) {
-                    //console.log("line", xx1, zz1, xx2, zz2)
-                    let line = two.makeLine(xx1, zz1, xx2, zz2);
-                    line.linewidth = 5;
-                }
+                    dispG = Math.sqrt(uG * uG + wG * wG)
 
-                dispG = Math.sqrt(uG * uG + wG * wG)
+                    if (dispG > maxU) {
+                        maxU = dispG
+                        x_max = xx2
+                        z_max = zz2
+                        xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+                        zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+                    }
 
-                if (dispG > maxU) {
-                    maxU = dispG
-                    x_max = xx2
-                    z_max = zz2
-                    xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
-                    zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
-
+                    x = x + dx
                 }
 
-                x = x + dx
-            }
+                if (show_labels && maxU > 0.0) {
 
-            if (show_labels && maxU > 0.0) {
+                    const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                    pfeil.stroke = '#D3D3D3'
 
-                const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
-                pfeil.stroke = '#D3D3D3'
+                    const str = myFormat(maxU, 1, 2)
+                    const txt = two.makeText(str, x_max, z_max, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
 
-                const str = myFormat(maxU * 1000, 1, 1) + 'mm'
-                const txt = two.makeText(str, x_max, z_max, style_txt)
-                txt.alignment = 'left'
-                txt.baseline = 'top'
+                }
 
             }
+        }
 
+
+        // Schiefstellung
+
+        if (show_schiefstellung && show_selection && (maxValue_u0[draw_lastfall - 1].u0 > 0.0)) {
+
+            let xx1, xx2, zz1, zz2
+            let dx: number, x: number, eta: number, sl: number, nenner: number
+            let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
+
+            let u = 0.0, w = 0.0, uG: number, wG: number
+            let edispL: number[] = new Array(6)
+            let ikomb = draw_lastfall
+            let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+            let xmem = 0.0, zmem = 0.0
+
+            let scalefactor = 0.1 * slmax / maxValue_u0[ikomb - 1].u0
+
+            scalefactor *= scaleFactor_panel
+
+            console.log("scalefaktor", scalefactor, slmax, maxValue_u0[ikomb - 1].u0)
+            console.log("draw_schiefstellung", ikomb)
+
+            for (let ielem = 0; ielem < nelem; ielem++) {
+
+                if (!stab[ielem].isActive) continue
+
+                maxU = 0.0
+
+                // x1 = Math.round(tr.xPix(element[ielem].x1));
+                // z1 = Math.round(tr.zPix(element[ielem].z1));
+                // x2 = Math.round(tr.xPix(element[ielem].x2));
+                // z2 = Math.round(tr.zPix(element[ielem].z2));
+
+                element[ielem].get_edispL_schiefstellung(edispL, ikomb - 1)
+
+                dx = element[ielem].sl / nelTeilungen
+                eta = element[ielem].eta
+                sl = element[ielem].sl
+                nenner = sl ** 3 + 12 * eta * sl
+
+                x = 0.0; xx2 = 0.0; zz2 = 0.0
+                for (let i = 0; i <= nelTeilungen; i++) {
+                    if (System === 0) {
+                        console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
+                        if (stab[ielem].elTyp === 0) {
+                            Nu[0] = (1.0 - x / sl);
+                            Nu[1] = x / sl
+                            Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                            Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                            Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                            Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                            u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                            w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                        } else if (stab[ielem].elTyp === 1) {
+                            Nu[0] = (1.0 - x / sl);
+                            Nu[1] = x / sl
+                            u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                            w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+
+                            // u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                            // w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+                        }
+                    } else {
+                        Nu[0] = (1.0 - x / sl);
+                        Nu[1] = x / sl
+                        u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                        w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+                    }
+                    uG = element[ielem].cosinus * u - element[ielem].sinus * w
+                    wG = element[ielem].sinus * u + element[ielem].cosinus * w
+
+
+                    //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
+                    xx1 = xx2; zz1 = zz2;
+                    xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
+                    zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                    xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+                    //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
+                    if (i > 0) {
+                        //console.log("line", xx1, zz1, xx2, zz2)
+                        let line = two.makeLine(xx1, zz1, xx2, zz2);
+                        line.linewidth = 5;
+                    }
+
+                    dispG = Math.sqrt(uG * uG + wG * wG)
+
+                    if (dispG > maxU) {
+                        maxU = dispG
+                        x_max = xx2
+                        z_max = zz2
+                        xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
+                        zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+
+                    }
+
+                    x = x + dx
+                }
+
+                if (show_labels && maxU > 0.0) {
+
+                    const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+                    pfeil.stroke = '#D3D3D3'
+
+                    const str = myFormat(maxU * 1000, 1, 1) + 'mm'
+                    const txt = two.makeText(str, x_max, z_max, style_txt)
+                    txt.alignment = 'left'
+                    txt.baseline = 'top'
+
+                }
+
+            }
         }
     }
-
 
     // Stabvorverformung
 
@@ -1159,301 +1160,304 @@ export function drawsystem(svg_id = 'artboard') {
 
     }
 
-    // Zustandslinien
+    if (flag_eingabe != 0) {
 
-    if (show_selection) {
-        if (show_momentenlinien || show_querkraftlinien || show_normalkraftlinien) {
+        // Zustandslinien
 
-            show_lasten_temp = false
+        if (show_selection) {
+            if (show_momentenlinien || show_querkraftlinien || show_normalkraftlinien) {
 
-            let xx1: number, zz1: number, xx2: number, zz2: number
-            let dx: number, x: number, sl: number, vorzeichen: number, sgArea = 0.0
-            let sgL: number, sgR: number, xL: number, index_sg = 0, max_all = 0.0
-            let aL: number, aR: number
-            let x3 = 0.0, x4 = 0.0, z3 = 0.0, z4 = 0.0
+                show_lasten_temp = false
 
-            let iLastfall = draw_lastfall
-            let scalefactor = 0
-            let x_max = 0.0, z_max = 0.0, x_min = 0.0, z_min = 0.0
-            let x0_min = 0.0, z0_min = 0.0, xn_min = 0.0, zn_min = 0.0, x0_max = 0.0, z0_max = 0.0, xn_max = 0.0, zn_max = 0.0
+                let xx1: number, zz1: number, xx2: number, zz2: number
+                let dx: number, x: number, sl: number, vorzeichen: number, sgArea = 0.0
+                let sgL: number, sgR: number, xL: number, index_sg = 0, max_all = 0.0
+                let aL: number, aR: number
+                let x3 = 0.0, x4 = 0.0, z3 = 0.0, z4 = 0.0
 
-            let nLoop = 1, lf_index = 0
+                let iLastfall = draw_lastfall
+                let scalefactor = 0
+                let x_max = 0.0, z_max = 0.0, x_min = 0.0, z_min = 0.0
+                let x0_min = 0.0, z0_min = 0.0, xn_min = 0.0, zn_min = 0.0, x0_max = 0.0, z0_max = 0.0, xn_max = 0.0, zn_max = 0.0
 
-            let unit: string
-            if (show_momentenlinien) unit = 'kNm';
-            else unit = 'kN';
+                let nLoop = 1, lf_index = 0
 
-            if (show_momentenlinien) { index_sg = 0; max_all = maxM_all; }
-            else if (show_querkraftlinien) { index_sg = 1; max_all = maxV_all; }
-            else if (show_normalkraftlinien) { index_sg = 2; max_all = maxN_all; }
+                let unit: string
+                if (show_momentenlinien) unit = 'kNm';
+                else unit = 'kN';
 
-            if (THIIO_flag === 0) {
-                if (iLastfall <= nlastfaelle) {
-                    lf_index = iLastfall - 1
-                    if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].My;
-                    else if (show_querkraftlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].Vz;
-                    else if (show_normalkraftlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].N;
-                    //console.log("MAX VALUES, Lastfall=", iLastfall, maxValue_lf[lf_index].My)
-                } else if (iLastfall <= nlastfaelle + nkombinationen) {
-                    lf_index = iLastfall - 1
-                    let ikomb = iLastfall - 1 - nlastfaelle
-                    scalefactor = 0.05 * slmax / max_S_kombi[index_sg][ikomb]
-                    //console.log("MAX VALUES KOMBINATION ", iLastfall, max_S_kombi[index_sg][ikomb])
+                if (show_momentenlinien) { index_sg = 0; max_all = maxM_all; }
+                else if (show_querkraftlinien) { index_sg = 1; max_all = maxV_all; }
+                else if (show_normalkraftlinien) { index_sg = 2; max_all = maxN_all; }
 
-                } else {
-                    nLoop = nkombinationen
-                    lf_index = nlastfaelle
-                    scalefactor = 0.05 * slmax / max_all
+                if (THIIO_flag === 0) {
+                    if (iLastfall <= nlastfaelle) {
+                        lf_index = iLastfall - 1
+                        if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].My;
+                        else if (show_querkraftlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].Vz;
+                        else if (show_normalkraftlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].N;
+                        //console.log("MAX VALUES, Lastfall=", iLastfall, maxValue_lf[lf_index].My)
+                    } else if (iLastfall <= nlastfaelle + nkombinationen) {
+                        lf_index = iLastfall - 1
+                        let ikomb = iLastfall - 1 - nlastfaelle
+                        scalefactor = 0.05 * slmax / max_S_kombi[index_sg][ikomb]
+                        //console.log("MAX VALUES KOMBINATION ", iLastfall, max_S_kombi[index_sg][ikomb])
+
+                    } else {
+                        nLoop = nkombinationen
+                        lf_index = nlastfaelle
+                        scalefactor = 0.05 * slmax / max_all
+                    }
                 }
-            }
-            else if (THIIO_flag === 1) {
-                if (iLastfall <= nkombinationen) {
-                    lf_index = iLastfall - 1
-                    if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].My;
-                    else if (show_querkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].Vz;
-                    else if (show_normalkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].N;
-                    console.log("MAX VALUES, maxValue_komb.Vz.My", iLastfall, maxValue_komb[lf_index].Vz, maxValue_komb[lf_index].My)
-                } else {
-                    nLoop = nkombinationen
-                    lf_index = 0
-                    scalefactor = 0.05 * slmax / max_all
+                else if (THIIO_flag === 1) {
+                    if (iLastfall <= nkombinationen) {
+                        lf_index = iLastfall - 1
+                        if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].My;
+                        else if (show_querkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].Vz;
+                        else if (show_normalkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].N;
+                        console.log("MAX VALUES, maxValue_komb.Vz.My", iLastfall, maxValue_komb[lf_index].Vz, maxValue_komb[lf_index].My)
+                    } else {
+                        nLoop = nkombinationen
+                        lf_index = 0
+                        scalefactor = 0.05 * slmax / max_all
+                    }
                 }
-            }
 
-            scalefactor *= scaleFactor_panel
-            console.log("SCALEFACTOR", 1. / scalefactor)
+                scalefactor *= scaleFactor_panel
+                console.log("SCALEFACTOR", 1. / scalefactor)
 
-            for (let ielem = 0; ielem < nelem; ielem++) {
+                for (let ielem = 0; ielem < nelem; ielem++) {
 
-                if (!stab[ielem].isActive) continue
+                    if (!stab[ielem].isActive) continue
 
-                if (scalefactor === Infinity || scalefactor > 1.e10) break;
+                    if (scalefactor === Infinity || scalefactor > 1.e10) break;
 
-                const nelTeilungen = element[ielem].nTeilungen
-                let sg: number[] = new Array(nelTeilungen)
-
-
-                aL = stab[ielem].aL
-                aR = stab[ielem].aR
-
-                let si = stab[ielem].sinus
-                let co = stab[ielem].cosinus
+                    const nelTeilungen = element[ielem].nTeilungen
+                    let sg: number[] = new Array(nelTeilungen)
 
 
-                let xs1 = stab[ielem].x1 + co * aL;
-                let zs1 = stab[ielem].z1 + si * aL;
-                let xs2 = stab[ielem].x2 - co * aR;
-                let zs2 = stab[ielem].z2 - si * aR;
+                    aL = stab[ielem].aL
+                    aR = stab[ielem].aR
 
-                x1 = Math.round(tr.xPix(xs1));
-                z1 = Math.round(tr.zPix(zs1));
-                x2 = Math.round(tr.xPix(xs2));
-                z2 = Math.round(tr.zPix(zs2));
+                    let si = stab[ielem].sinus
+                    let co = stab[ielem].cosinus
 
-                sl = element[ielem].sl
 
-                let maxValuePos = -1e+30
-                let maxValueNeg = 1e+30
-                let valueLeftPos = -1e+30
-                let valueRightPos = -1e+30
-                let valueLeftNeg = 1e+30
-                let valueRightNeg = 1e+30
+                    let xs1 = stab[ielem].x1 + co * aL;
+                    let zs1 = stab[ielem].z1 + si * aL;
+                    let xs2 = stab[ielem].x2 - co * aR;
+                    let zs2 = stab[ielem].z2 - si * aR;
 
-                let foundPos = false
-                let foundNeg = false
+                    x1 = Math.round(tr.xPix(xs1));
+                    z1 = Math.round(tr.zPix(zs1));
+                    x2 = Math.round(tr.xPix(xs2));
+                    z2 = Math.round(tr.zPix(zs2));
 
-                for (let loop = 0; loop < nLoop; loop++) {
+                    sl = element[ielem].sl
 
-                    if (show_momentenlinien) element[ielem].get_elementSchnittgroesse_Moment(sg, lf_index + loop);
-                    else if (show_querkraftlinien) element[ielem].get_elementSchnittgroesse_Querkraft(sg, lf_index + loop, show_gleichgewichtSG);
-                    else if (show_normalkraftlinien) element[ielem].get_elementSchnittgroesse_Normalkraft(sg, lf_index + loop, show_gleichgewichtSG);
-                    //console.log("GRAFIK  Mx,Vx or N", nelTeilungen, sg)
+                    let maxValuePos = -1e+30
+                    let maxValueNeg = 1e+30
+                    let valueLeftPos = -1e+30
+                    let valueRightPos = -1e+30
+                    let valueLeftNeg = 1e+30
+                    let valueRightNeg = 1e+30
 
-                    //let group = two.makeGroup();
-                    let vertices = [];
-                    vertices.push(new Two.Anchor(x1, z1));
+                    let foundPos = false
+                    let foundNeg = false
 
-                    xx2 = 0.0; zz2 = 0.0
-                    sgL = sg[0]
-                    xx1 = tr.xPix(xs1 - element[ielem].sinus * sg[0] * scalefactor)
-                    zz1 = tr.zPix(zs1 + element[ielem].cosinus * sg[0] * scalefactor)
-                    x3 = xx1   // nur für Bechriftung
-                    z3 = zz1
+                    for (let loop = 0; loop < nLoop; loop++) {
 
-                    if (sgL > valueLeftPos) {
-                        valueLeftPos = sgL
-                        x0_max = xx1
-                        z0_max = zz1
-                        if (sgL > maxValuePos) {
-                            maxValuePos = sgL
+                        if (show_momentenlinien) element[ielem].get_elementSchnittgroesse_Moment(sg, lf_index + loop);
+                        else if (show_querkraftlinien) element[ielem].get_elementSchnittgroesse_Querkraft(sg, lf_index + loop, show_gleichgewichtSG);
+                        else if (show_normalkraftlinien) element[ielem].get_elementSchnittgroesse_Normalkraft(sg, lf_index + loop, show_gleichgewichtSG);
+                        //console.log("GRAFIK  Mx,Vx or N", nelTeilungen, sg)
+
+                        //let group = two.makeGroup();
+                        let vertices = [];
+                        vertices.push(new Two.Anchor(x1, z1));
+
+                        xx2 = 0.0; zz2 = 0.0
+                        sgL = sg[0]
+                        xx1 = tr.xPix(xs1 - element[ielem].sinus * sg[0] * scalefactor)
+                        zz1 = tr.zPix(zs1 + element[ielem].cosinus * sg[0] * scalefactor)
+                        x3 = xx1   // nur für Bechriftung
+                        z3 = zz1
+
+                        if (sgL > valueLeftPos) {
+                            valueLeftPos = sgL
                             x0_max = xx1
                             z0_max = zz1
+                            if (sgL > maxValuePos) {
+                                maxValuePos = sgL
+                                x0_max = xx1
+                                z0_max = zz1
+                            }
                         }
-                    }
-                    if (sgL < valueLeftNeg) {
-                        valueLeftNeg = sgL
-                        x0_min = xx1
-                        z0_min = zz1
-                        if (sgL < maxValueNeg) {
-                            maxValueNeg = sgL
+                        if (sgL < valueLeftNeg) {
+                            valueLeftNeg = sgL
                             x0_min = xx1
                             z0_min = zz1
+                            if (sgL < maxValueNeg) {
+                                maxValueNeg = sgL
+                                x0_min = xx1
+                                z0_min = zz1
+                            }
                         }
+
+                        vorzeichen = 1
+                        sgArea = 0.0
+
+                        for (let i = 1; i < nelTeilungen; i++) {
+
+                            x = element[ielem].x_[i]
+                            xL = element[ielem].x_[i - 1]
+                            dx = x - xL
+                            sgR = sg[i]
+                            //console.log("sigL und R", sgL, sgR)
+
+                            if (sgL === 0.0 && sgR === 0.0) {
+                            } else if (sgL >= 0.0 && sgR > 0.0) {
+                                vertices.push(new Two.Anchor(xx1, zz1));
+                                vorzeichen = 1
+                                sgArea += (sgL + sgR) * dx / 2.
+                            } else if (sgL <= 0.0 && sgR < 0.0) {
+                                vertices.push(new Two.Anchor(xx1, zz1));
+                                vorzeichen = -1
+                                sgArea += (sgL + sgR) * dx / 2.
+                            } else {   // Vorzeichenwechsel
+                                //console.log("Vorzeichenwechsel", sgL, sgR)
+
+                                let dx0 = -sgL * dx / (sgR - sgL)
+                                let xx0 = tr.xPix(xs1 + (xL + dx0) * element[ielem].cosinus)
+                                let zz0 = tr.zPix(zs1 + (xL + dx0) * element[ielem].sinus)
+                                vertices.push(new Two.Anchor(xx1, zz1));
+                                //console.log("dx0=", dx0, xx0, zz0)
+                                vertices.push(new Two.Anchor(xx0, zz0));
+
+                                let flaeche = two.makePath(vertices);
+                                if (sgArea > 0.0) flaeche.fill = '#00AEFF';
+                                else flaeche.fill = '#FF0000';
+                                flaeche.opacity = opacity
+
+                                vertices.length = 0
+                                sgArea = 0.0
+                                sgL = 0.0
+                                vertices.push(new Two.Anchor(xx0, zz0));
+                            }
+                            xx2 = xs1 + x * element[ielem].cosinus - element[ielem].sinus * sg[i] * scalefactor
+                            zz2 = zs1 + x * element[ielem].sinus + element[ielem].cosinus * sg[i] * scalefactor
+                            xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+
+                            if (i === nelTeilungen - 1) {
+                                if (sgR > valueRightPos) {
+                                    valueRightPos = sgR
+                                    xn_max = xx2
+                                    zn_max = zz2
+                                }
+                                if (sgR < valueRightNeg) {
+                                    valueRightNeg = sgR
+                                    xn_min = xx2
+                                    zn_min = zz2
+                                }
+                            } else {
+                                if ((sgR > maxValuePos) && (sgR > valueLeftPos)) {  // (Math.abs(sgR) > Math.abs(valueLeftPos))
+                                    foundPos = true
+                                    maxValuePos = sgR
+                                    x_max = xx2
+                                    z_max = zz2
+                                }
+                                if ((sgR < maxValueNeg) && (sgR < valueLeftNeg)) {   //(Math.abs(sgR) < Math.abs(valueLeftNeg))
+                                    //console.log("maxValueNeg", sgR, maxValueNeg, valueLeftNeg)
+                                    foundNeg = true
+                                    maxValueNeg = sgR
+                                    x_min = xx2
+                                    z_min = zz2
+                                }
+                            }
+
+                            xx1 = xx2
+                            zz1 = zz2
+                            sgL = sgR
+                        }
+                        vertices.push(new Two.Anchor(xx2, zz2));
+                        vertices.push(new Two.Anchor(x2, z2));
+                        x4 = xx2
+                        z4 = zz2
+
+                        let flaeche = two.makePath(vertices);
+                        if (sgArea > 0.0) flaeche.fill = '#00AEFF';
+                        else flaeche.fill = '#FF0000';
+                        flaeche.opacity = opacity
+
                     }
 
-                    vorzeichen = 1
-                    sgArea = 0.0
+                    if (show_labels) {
 
-                    for (let i = 1; i < nelTeilungen; i++) {
-
-                        x = element[ielem].x_[i]
-                        xL = element[ielem].x_[i - 1]
-                        dx = x - xL
-                        sgR = sg[i]
-                        //console.log("sigL und R", sgL, sgR)
-
-                        if (sgL === 0.0 && sgR === 0.0) {
-                        } else if (sgL >= 0.0 && sgR > 0.0) {
-                            vertices.push(new Two.Anchor(xx1, zz1));
-                            vorzeichen = 1
-                            sgArea += (sgL + sgR) * dx / 2.
-                        } else if (sgL <= 0.0 && sgR < 0.0) {
-                            vertices.push(new Two.Anchor(xx1, zz1));
-                            vorzeichen = -1
-                            sgArea += (sgL + sgR) * dx / 2.
-                        } else {   // Vorzeichenwechsel
-                            //console.log("Vorzeichenwechsel", sgL, sgR)
-
-                            let dx0 = -sgL * dx / (sgR - sgL)
-                            let xx0 = tr.xPix(xs1 + (xL + dx0) * element[ielem].cosinus)
-                            let zz0 = tr.zPix(zs1 + (xL + dx0) * element[ielem].sinus)
-                            vertices.push(new Two.Anchor(xx1, zz1));
-                            //console.log("dx0=", dx0, xx0, zz0)
-                            vertices.push(new Two.Anchor(xx0, zz0));
-
-                            let flaeche = two.makePath(vertices);
-                            if (sgArea > 0.0) flaeche.fill = '#00AEFF';
-                            else flaeche.fill = '#FF0000';
-                            flaeche.opacity = opacity
-
-                            vertices.length = 0
-                            sgArea = 0.0
-                            sgL = 0.0
-                            vertices.push(new Two.Anchor(xx0, zz0));
-                        }
-                        xx2 = xs1 + x * element[ielem].cosinus - element[ielem].sinus * sg[i] * scalefactor
-                        zz2 = zs1 + x * element[ielem].sinus + element[ielem].cosinus * sg[i] * scalefactor
-                        xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
-
-                        if (i === nelTeilungen - 1) {
-                            if (sgR > valueRightPos) {
-                                valueRightPos = sgR
-                                xn_max = xx2
-                                zn_max = zz2
-                            }
-                            if (sgR < valueRightNeg) {
-                                valueRightNeg = sgR
-                                xn_min = xx2
-                                zn_min = zz2
-                            }
-                        } else {
-                            if ((sgR > maxValuePos) && (sgR > valueLeftPos)) {  // (Math.abs(sgR) > Math.abs(valueLeftPos))
-                                foundPos = true
-                                maxValuePos = sgR
-                                x_max = xx2
-                                z_max = zz2
-                            }
-                            if ((sgR < maxValueNeg) && (sgR < valueLeftNeg)) {   //(Math.abs(sgR) < Math.abs(valueLeftNeg))
-                                //console.log("maxValueNeg", sgR, maxValueNeg, valueLeftNeg)
-                                foundNeg = true
-                                maxValueNeg = sgR
-                                x_min = xx2
-                                z_min = zz2
-                            }
-                        }
-
-                        xx1 = xx2
-                        zz1 = zz2
-                        sgL = sgR
-                    }
-                    vertices.push(new Two.Anchor(xx2, zz2));
-                    vertices.push(new Two.Anchor(x2, z2));
-                    x4 = xx2
-                    z4 = zz2
-
-                    let flaeche = two.makePath(vertices);
-                    if (sgArea > 0.0) flaeche.fill = '#00AEFF';
-                    else flaeche.fill = '#FF0000';
-                    flaeche.opacity = opacity
-
-                }
-
-                if (show_labels) {
-
-                    //console.log("show_labels", ielem, foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
-                    let zp: number
-                    if (!foundNeg && !foundPos && Math.abs(valueLeftPos - valueRightPos) < 0.0001) {
-                        let xpix = (x1 + x2 + x3 + x4) / 4
-                        let zpix = (z1 + z2 + z3 + z4) / 4
-                        const str = myFormat(Math.abs(valueLeftPos), 1, 2) + unit
-                        let txt = two.makeText(str, xpix, zpix, style_txt)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
-                        txt.rotation = element[ielem].alpha
-                    } else {
-                        if (foundPos && (Math.abs(maxValuePos) > 0.00001) && (maxValuePos > valueRightPos)) {
-                            const str = myFormat(Math.abs(maxValuePos), 1, 2) + unit
-                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                            const txt = two.makeText(str, x_max, z_max + zp, style_txt)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
-                        }
-                        if (foundNeg && (Math.abs(maxValueNeg) > 0.00001) && (maxValueNeg < valueRightNeg)) {
-                            const str = myFormat(Math.abs(maxValueNeg), 1, 2) + unit
-                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                            const txt = two.makeText(str, x_min, z_min + zp, style_txt)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
-                        }
-
-                        if (Math.abs(valueLeftPos) > 0.00001) {
+                        //console.log("show_labels", ielem, foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
+                        let zp: number
+                        if (!foundNeg && !foundPos && Math.abs(valueLeftPos - valueRightPos) < 0.0001) {
+                            let xpix = (x1 + x2 + x3 + x4) / 4
+                            let zpix = (z1 + z2 + z3 + z4) / 4
                             const str = myFormat(Math.abs(valueLeftPos), 1, 2) + unit
-                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                            const txt = two.makeText(str, x0_max, z0_max + zp, style_txt)
+                            let txt = two.makeText(str, xpix, zpix, style_txt)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
-                        }
-                        if (Math.abs(valueRightPos) > 0.00001) {
-                            const str = myFormat(Math.abs(valueRightPos), 1, 2) + unit
-                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                            const txt = two.makeText(str, xn_max, zn_max + zp, style_txt)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
+                            txt.rotation = element[ielem].alpha
+                        } else {
+                            if (foundPos && (Math.abs(maxValuePos) > 0.00001) && (maxValuePos > valueRightPos)) {
+                                const str = myFormat(Math.abs(maxValuePos), 1, 2) + unit
+                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                const txt = two.makeText(str, x_max, z_max + zp, style_txt)
+                                txt.alignment = 'left'
+                                txt.baseline = 'top'
+                            }
+                            if (foundNeg && (Math.abs(maxValueNeg) > 0.00001) && (maxValueNeg < valueRightNeg)) {
+                                const str = myFormat(Math.abs(maxValueNeg), 1, 2) + unit
+                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                const txt = two.makeText(str, x_min, z_min + zp, style_txt)
+                                txt.alignment = 'left'
+                                txt.baseline = 'top'
+                            }
+
+                            if (Math.abs(valueLeftPos) > 0.00001) {
+                                const str = myFormat(Math.abs(valueLeftPos), 1, 2) + unit
+                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                const txt = two.makeText(str, x0_max, z0_max + zp, style_txt)
+                                txt.alignment = 'left'
+                                txt.baseline = 'top'
+                            }
+                            if (Math.abs(valueRightPos) > 0.00001) {
+                                const str = myFormat(Math.abs(valueRightPos), 1, 2) + unit
+                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                const txt = two.makeText(str, xn_max, zn_max + zp, style_txt)
+                                txt.alignment = 'left'
+                                txt.baseline = 'top'
+                            }
+
+                            if (Math.abs(valueLeftNeg) > 0.00001) {
+                                const str = myFormat(Math.abs(valueLeftNeg), 1, 2) + unit
+                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                const txt = two.makeText(str, x0_min, z0_min + zp, style_txt)
+                                txt.alignment = 'left'
+                                txt.baseline = 'top'
+                            }
+                            if (Math.abs(valueRightNeg) > 0.00001) {
+                                const str = myFormat(Math.abs(valueRightNeg), 1, 2) + unit
+                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                const txt = two.makeText(str, xn_min, zn_min + zp, style_txt)
+                                txt.alignment = 'left'
+                                txt.baseline = 'top'
+                            }
                         }
 
-                        if (Math.abs(valueLeftNeg) > 0.00001) {
-                            const str = myFormat(Math.abs(valueLeftNeg), 1, 2) + unit
-                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                            const txt = two.makeText(str, x0_min, z0_min + zp, style_txt)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
-                        }
-                        if (Math.abs(valueRightNeg) > 0.00001) {
-                            const str = myFormat(Math.abs(valueRightNeg), 1, 2) + unit
-                            if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
-                            const txt = two.makeText(str, xn_min, zn_min + zp, style_txt)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
-                        }
                     }
 
+
                 }
-
-
             }
         }
-    }
 
+    }
 
     if (show_systemlinien || !show_selection) {
 

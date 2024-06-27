@@ -1023,6 +1023,8 @@ function read_nodal_mass() {
 function find_maxValues_eloads(ieload: number) {
     //-----------------------------------------------------------------------------------------------------------
 
+    maxValue_eload.fill(0.0)
+
     for (let i = 0; i < ieload; i++) {
         let lf = eload[i].lf - 1
         let art = eload[i].art
@@ -1094,12 +1096,19 @@ function read_element_loads() {
 
     // Eigengewicht
 
+    let wichte = 0.0, area = 0.0
     for (let ielem = 0; ielem < nelem_Balken; ielem++) {
+        let index = getMaterialIndex(ielem);
+        if (index === -1) return index;
+        if (querschnittset[index].className === 'QuerschnittRechteck') {   //  linear elastisch
+            wichte = querschnittset[index].wichte
+            area = querschnittset[index].area
+        }
         eload[ieload].element = ielem
         eload[ieload].lf = 1
         eload[ieload].art = 1
-        eload[ieload].pL = 0.01   // richtige Werte werden in initialisiereElementdaten() gesetzt
-        eload[ieload].pR = 0.01
+        eload[ieload].pL = wichte * area/ 10000.0   // richtige Werte werden in initialisiereElementdaten() gesetzt
+        eload[ieload].pR = wichte * area/ 10000.0
         ieload++;
     }
 
@@ -1770,6 +1779,30 @@ function calc_neq_and_springs() {
     }
 
 }
+//---------------------------------------------------------------------------------------------------------------
+function getMaterialIndex(ielem: number) {
+    //---------------------------------------------------------------------------------------------------------------
+    let j: number
+
+    const qname = element[ielem].qname
+    console.log("qname", qname, nQuerschnittSets)
+    let index = -1;
+    for (j = 0; j < nQuerschnittSets; j++) {
+        console.log("qname", querschnittset[j].name)
+        if (querschnittset[j].name === qname) {
+            index = j;
+            break;
+        }
+    }
+
+    if (index === -1) {
+        alert('element ' + ielem + ' hat keinen Querschnitt');
+        return -1;
+    }
+    console.log("typeOf ", index, querschnittset[index].className)
+
+    return index;
+}
 
 //---------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------
@@ -1959,22 +1992,25 @@ async function calculate() {
 
         // get material data
 
-        const qname = element[ielem].qname
-        console.log("qname", qname, nQuerschnittSets)
-        let index = -1;
-        for (j = 0; j < nQuerschnittSets; j++) {
-            console.log("qname", querschnittset[j].name)
-            if (querschnittset[j].name === qname) {
-                index = j;
-                break;
-            }
-        }
+        // const qname = element[ielem].qname
+        // console.log("qname", qname, nQuerschnittSets)
+        // let index = -1;
+        // for (j = 0; j < nQuerschnittSets; j++) {
+        //     console.log("qname", querschnittset[j].name)
+        //     if (querschnittset[j].name === qname) {
+        //         index = j;
+        //         break;
+        //     }
+        // }
 
-        if (index === -1) {
-            alert('element ' + ielem + ' hat keinen Querschnitt');
-            return -1;
-        }
-        console.log("typeOf ", index, querschnittset[index].className)
+        // if (index === -1) {
+        //     alert('element ' + ielem + ' hat keinen Querschnitt');
+        //     return -1;
+        // }
+        // console.log("typeOf ", index, querschnittset[index].className)
+
+        let index = getMaterialIndex(ielem);
+        if (index === -1) return index;
 
         if (querschnittset[index].className === 'QuerschnittRechteck') {   //  linear elastisch
             console.log('es ist ein Rechteck')
@@ -2157,9 +2193,9 @@ async function calculate() {
                     }
                 }
 
-                for (j = 0; j < neq; j++) {
-                    console.log('stiff[]', stiff[j])
-                }
+                // for (j = 0; j < neq; j++) {
+                //     console.log('stiff[]', stiff[j])
+                // }
                 for (i = 0; i < neq; i++) {  // merken für Ausdruck in Tab Pro
                     for (j = 0; j < neq; j++) {
                         stm[i][j] = stiff[i][j]
@@ -2168,7 +2204,7 @@ async function calculate() {
 
 
                 for (i = 0; i < neq; i++) {
-                    console.log("R", i, R[i])
+                    //console.log("R", i, R[i])
                     R_[i] = R[i];
                 }
 
@@ -2181,7 +2217,15 @@ async function calculate() {
                     error = gauss(neq, stiff, R);
                 }
                 if (error != 0) {
-                    window.alert("Gleichungssystem singulär");
+                    //window.alert("Gleichungssystem singulär");
+
+                    const dialogAlert = new AlertDialog({
+                        trueButton_Text: "ok",
+                        question_Text: "Steifigkeitsmatrix nicht positiv definit. " +
+                            "Mögliche Ursache: das System ist vermutlich kinematisch.",
+                    });
+                    await dialogAlert.confirm();
+
                     return 1;
                 }
 
@@ -2534,7 +2578,16 @@ async function calculate() {
                         error = gauss(neq, stiff, R);
                     }
                     if (error != 0) {
-                        window.alert("Gleichungssystem singulär");
+                        //window.alert("Gleichungssystem singulär");
+
+                        const dialogAlert = new AlertDialog({
+                            trueButton_Text: "ok",
+                            question_Text: "Steifigkeitsmatrix nicht positiv definit in Kombination " + iKomb + ". " +
+                                "Mögliche Ursachen: Lasten zu hoch in dieser Kombination. Tritt die Meldung auch bei einer Berechnung " +
+                                "nach Th. I. Ordnung auf, dann ist das System kinematisch.",
+                        });
+                        await dialogAlert.confirm();
+
                         return 1;
                     }
                     // let error = gauss(neq, stiff, R);
