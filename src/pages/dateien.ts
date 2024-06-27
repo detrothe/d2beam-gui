@@ -142,6 +142,11 @@ export function read_daten(eingabedaten: string) {
         eli = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
         if (jobj.epsDisp_tol === undefined) eli.value = '1e-5';
         else eli.value = jobj.epsDisp_tol;
+
+        eli = document.getElementById('id_iter_neigv') as HTMLInputElement;
+        if (jobj.niter_neigv === undefined) eli.value = '500';
+        else eli.value = jobj.niter_neigv;
+
     }
 
     endTime =performance.now();
@@ -504,7 +509,7 @@ export function str_inputToJSON() {
 
 
     let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, stadyn, dyn_neigv;
-let eig_solver;
+let eig_solver,niter_neigv;
 
     let el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = el.nel;
@@ -544,6 +549,9 @@ let eig_solver;
 
     el = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
     epsDisp_tol = el.value;
+
+    el = document.getElementById('id_iter_neigv') as HTMLInputElement;
+    niter_neigv = el.value;
 
     //el = document.getElementById('id_dialog_neue_eingabe') as HTMLElement;
     let system = System; //Number((el.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
@@ -778,6 +786,7 @@ let eig_solver;
         'nnodalmass': nnodalmass,
         'dyn_neigv': dyn_neigv,
         'eig_solver': eig_solver,
+        'niter_neigv':niter_neigv,
 
 
         'elem': elem,

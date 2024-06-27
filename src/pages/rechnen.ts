@@ -126,13 +126,14 @@ export let stabvorverformung_komb = [] as TStabvorverformung_komb[][]
 
 export let eig_solver = 1;
 export let equation_solver = 0;  // 0 = cholesky, 1 = gauss
+export let niter_neigv = 500;
 
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
 //console.log("CMULT-------------", cmult)
 //let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number"]);
 //let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]);
-let c_simvektoriteration = Module.cwrap("c_simvektoriteration", null, ["number", "number", "number", "number", "number", "number"]);
+let c_simvektoriteration = Module.cwrap("c_simvektoriteration", "number", ["number", "number", "number", "number", "number", "number", "number"]);
 let c_gsl_eigenwert = Module.cwrap("gsl_eigenwert", "number", ["number", "number", "number"]);
 let c_cholesky_decomp = Module.cwrap("cholesky_decomp", "number", ["number", "number", "number"]);
 let c_cholesky_2 = Module.cwrap("cholesky_2", "number", ["number", "number", "number"]);
@@ -570,6 +571,10 @@ export function rechnen(flag = 1) {
 
     el = document.getElementById('id_button_dyn_neigv') as any;
     dyn_neigv = Number(el.nel);
+
+    el = document.getElementById('id_iter_neigv') as any;
+    niter_neigv = Number(el.value);
+    console.log("niter_neigv = ", niter_neigv)
 
     console.log("== THIIO_flag", THIIO_flag, nelTeilungen, n_iterationen)
 
@@ -2903,7 +2908,7 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
     if (eig_solver === 0) {
         status = c_gsl_eigenwert(mass_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv)
     } else if (eig_solver === 1) {
-        status = c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv);
+        status = c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv, niter_neigv);
     }
     write("Status der Eigenwertberechnung = " + status)
     if (status !== 0) keineKonvergenzErreicht_eigv = true
@@ -3014,7 +3019,7 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
         if (eig_solver === 0) {
             status = c_gsl_eigenwert(kstiff_sig_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv)
         } else if (eig_solver === 1) {
-            status = c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv);
+            status = c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv, niter_neigv);
         }
         write("Status der Eigenwertberechnung = " + status)
         if (status !== 0) keineKonvergenzErreicht_eigv = true

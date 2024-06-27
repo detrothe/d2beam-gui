@@ -1406,7 +1406,7 @@ var _gsl_eigenwert = Module['_gsl_eigenwert'] = createExportWrapper('gsl_eigenwe
 var _cmult = Module['_cmult'] = createExportWrapper('cmult', 0);
 var _malloc = Module['_malloc'] = createExportWrapper('malloc', 1);
 var _free = Module['_free'] = createExportWrapper('free', 1);
-var _c_simvektoriteration = Module['_c_simvektoriteration'] = createExportWrapper('c_simvektoriteration', 6);
+var _c_simvektoriteration = Module['_c_simvektoriteration'] = createExportWrapper('c_simvektoriteration', 7);
 var _cholesky_decomp = Module['_cholesky_decomp'] = createExportWrapper('cholesky_decomp', 3);
 var _cholesky_2 = Module['_cholesky_2'] = createExportWrapper('cholesky_2', 3);
 var _fflush = createExportWrapper('fflush', 1);

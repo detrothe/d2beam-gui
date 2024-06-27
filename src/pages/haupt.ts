@@ -758,14 +758,14 @@ portrait.addEventListener('change', function (e) {
         <table>
           <tbody>
             <tr>
-              <td id="id_nteilungen" title="Stabteilungen für Ausgabe der Schnittgrößen">&nbsp;Teilungen Ausgabe:</td>
+              <td id="id_nteilungen" title="Stabteilungen für Ausgabe der Schnittgrößen">&nbsp;Stabteilungen Ausgabe:</td>
               <td>
                 <dr-button-pm id="id_button_nteilungen" nel="10" inputid="nteilungen"  @change=${berechnungErforderlich}></dr-button-pm>
               </td>
             </tr>
             <tr><td>&nbsp;<b>für Theorie II. Ordnung:</b></td></tr>
             <tr>
-              <td id="id_niter" title="max. Anzahl Iterationen bei Th. II. Ordnung">&nbsp;max. Anzahl Iterationen:</td>
+              <td id="id_niter" title="max. Anzahl Iterationen bei Th. II. Ordnung">&nbsp;max. Anzahl Gleichgewichts-Iterationen:</td>
               <td>
                 <dr-button-pm id="id_button_niter" nel="10" inputid="niter"  @change=${berechnungErforderlich}></dr-button-pm>
               </td>
@@ -786,7 +786,6 @@ portrait.addEventListener('change', function (e) {
               </td>
             </tr>
 
-
             <tr>
               <td title="Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet">
               &nbsp;Anzahl Knickfiguren :
@@ -805,8 +804,6 @@ portrait.addEventListener('change', function (e) {
                 />
               </td>
             </tr>
-
-
 
             <tr>
               <td id="id_P_delta" title="Art der geometrischen Steifigkeitsmatrix">&nbsp;Geom. Steifigkeitsmatrix:</td>
@@ -841,6 +838,27 @@ portrait.addEventListener('change', function (e) {
               </sl-select>
               </td>
             </tr>
+
+
+            <tr>
+              <td title="max. Anzahl der Iterationen für simultane Vektoriteration">
+              &nbsp;max. Anzahl Iterationen für Vektoriteration :
+              </td>
+              <td>
+                <input
+                  type="number"
+                  step="1"
+                  min="1"
+                  id="id_iter_neigv"
+                  name="iter_neigv"
+                  class="input_tab"
+                  pattern="[0-9]*"
+                  value="500"
+                  @change=${berechnungErforderlich}
+                />
+              </td>
+            </tr>
+
           </tbody>
         </table>
 
