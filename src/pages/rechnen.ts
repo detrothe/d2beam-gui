@@ -133,10 +133,19 @@ export let niter_neigv = 500;
 //console.log("CMULT-------------", cmult)
 //let c_d2beam1 = Module.cwrap("c_d2beam1", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number"]);
 //let c_d2beam2 = Module.cwrap("c_d2beam2", null, ["number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]);
-let c_simvektoriteration = Module.cwrap("c_simvektoriteration", "number", ["number", "number", "number", "number", "number", "number", "number"]);
-let c_gsl_eigenwert = Module.cwrap("gsl_eigenwert", "number", ["number", "number", "number"]);
-let c_cholesky_decomp = Module.cwrap("cholesky_decomp", "number", ["number", "number", "number"]);
-let c_cholesky_2 = Module.cwrap("cholesky_2", "number", ["number", "number", "number"]);
+
+let c_simvektoriteration: any
+let c_gsl_eigenwert: any
+let c_cholesky_decomp: any
+let c_cholesky_2: any
+
+//let result = Module.onRuntimeInitialized = () => {
+c_simvektoriteration = Module.cwrap("c_simvektoriteration", "number", ["number", "number", "number", "number", "number", "number", "number"]);
+c_gsl_eigenwert = Module.cwrap("gsl_eigenwert", "number", ["number", "number", "number"]);
+c_cholesky_decomp = Module.cwrap("cholesky_decomp", "number", ["number", "number", "number"]);
+c_cholesky_2 = Module.cwrap("cholesky_2", "number", ["number", "number", "number"]);
+//}
+console.log("c_cholesky_decomp", c_cholesky_decomp)
 
 const bytes_8 = 8;
 const bytes_4 = 4;
@@ -586,9 +595,9 @@ export function rechnen(flag = 1) {
     read_kombinationen();
 
     read_nodal_loads();
-    let status=0;
-    if ( (status=read_element_loads()) < 0 ) {
-        if ( status === -1 ) write('\nEingabefehler , ein Element hat keinen Querschnitt')
+    let status = 0;
+    if ((status = read_element_loads()) < 0) {
+        if (status === -1) write('\nEingabefehler , ein Element hat keinen Querschnitt')
     }
     read_stabvorverformungen();
     if (stadyn === 1) read_nodal_mass();
@@ -1110,8 +1119,8 @@ function read_element_loads() {
         eload[ieload].element = ielem
         eload[ieload].lf = 1
         eload[ieload].art = 1
-        eload[ieload].pL = wichte * area/ 10000.0   // richtige Werte werden in initialisiereElementdaten() gesetzt
-        eload[ieload].pR = wichte * area/ 10000.0
+        eload[ieload].pL = wichte * area / 10000.0   // richtige Werte werden in initialisiereElementdaten() gesetzt
+        eload[ieload].pR = wichte * area / 10000.0
         ieload++;
     }
 
