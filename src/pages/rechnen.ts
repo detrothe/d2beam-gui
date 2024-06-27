@@ -139,6 +139,9 @@ let c_gsl_eigenwert: any
 let c_cholesky_decomp: any
 let c_cholesky_2: any
 
+
+
+
 //let result = Module.onRuntimeInitialized = () => {
 c_simvektoriteration = Module.cwrap("c_simvektoriteration", "number", ["number", "number", "number", "number", "number", "number", "number"]);
 c_gsl_eigenwert = Module.cwrap("gsl_eigenwert", "number", ["number", "number", "number"]);
