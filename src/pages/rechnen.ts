@@ -586,7 +586,10 @@ export function rechnen(flag = 1) {
     read_kombinationen();
 
     read_nodal_loads();
-    read_element_loads();
+    let status=0;
+    if ( (status=read_element_loads()) < 0 ) {
+        if ( status === -1 ) write('\nEingabefehler , ein Element hat keinen Querschnitt')
+    }
     read_stabvorverformungen();
     if (stadyn === 1) read_nodal_mass();
 
@@ -1284,6 +1287,9 @@ function read_element_loads() {
 
     //for (i = 0; i < nlastfaelle; i++) console.log('maxValue_eload', i, maxValue_eload[i])
     console.log('maxValue_eload', maxValue_eload)
+
+    return 0;
+
 }
 
 
