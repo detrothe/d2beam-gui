@@ -3159,9 +3159,10 @@ function cholesky_solve_equation(stiff: number[][], R: number[]) {
     {
         write('in cholesky')
         write("c_cholesky_decomp= " + c_cholesky_decomp)
-        Module.onRuntimeInitialized = () => {
-            write("Module.onRuntimeInitialized")
-        }
+        // Module.onRuntimeInitialized = () => {
+        //     write("Module.onRuntimeInitialized = " + Module.onRuntimeInitialized)
+        // }
+        write("Module.onRuntimeInitialized = " + Module.onRuntimeInitialized)
 
         let error = 0
 
