@@ -8,6 +8,7 @@ import { testNumber, myFormat, write } from './utility'
 //import {Module} from '../../d2beam_wasm.js'
 // @ts-ignore
 import { gauss } from "./gauss"
+import { cholesky } from "./cholesky"
 import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CTruss } from "./truss"
 import { CSpring } from "./feder"
@@ -125,7 +126,7 @@ export let print_mass = [] as number[][];
 export let stabvorverformung_komb = [] as TStabvorverformung_komb[][]
 
 export let eig_solver = 1;
-export let equation_solver = 0;  // 0 = cholesky, 1 = gauss
+export let equation_solver = 3;  // 0 = cholesky Fortran, 1 = gauss, 3 = cholesky javascript
 export let niter_neigv = 500;
 
 // @ts-ignore
@@ -2229,7 +2230,7 @@ async function calculate() {
                 // Gleichungssystem lösen
 
                 let error = -1
-                if (equation_solver === 0) {
+                if (equation_solver !== 1) {
                     error = cholesky_solve_equation(stiff, R);
                 } else {
                     error = gauss(neq, stiff, R);
@@ -2590,7 +2591,7 @@ async function calculate() {
                     // Gleichungssystem lösen
 
                     let error = -1
-                    if (equation_solver === 0) {
+                    if (equation_solver !== 1) {
                         error = cholesky_solve_equation(stiff, R);
                     } else {
                         error = gauss(neq, stiff, R);
@@ -3157,50 +3158,57 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
 function cholesky_solve_equation(stiff: number[][], R: number[]) {
     //---------------------------------------------------------------------------------------------------------------
     {
-        write('in cholesky')
-        write("c_cholesky_decomp= " + c_cholesky_decomp)
-        // Module.onRuntimeInitialized = () => {
-        //     write("Module.onRuntimeInitialized = " + Module.onRuntimeInitialized)
-        // }
-        write("Module.onRuntimeInitialized = " + Module.onRuntimeInitialized)
-
         let error = 0
 
-        let kstiff_array = new Float64Array(neq * neq);
-        let k = 0
-        for (let ispalte = 0; ispalte < neq; ispalte++) {
-            for (let izeile = 0; izeile < neq; izeile++) {
-                kstiff_array[k] = stiff[izeile][ispalte];
-                k++;
+        if (equation_solver === 0) {
+
+            write('in cholesky')
+            write("c_cholesky_decomp= " + c_cholesky_decomp)
+            // Module.onRuntimeInitialized = () => {
+            //     write("Module.onRuntimeInitialized = " + Module.onRuntimeInitialized)
+            // }
+            write("Module.onRuntimeInitialized = " + Module.onRuntimeInitialized)
+
+
+            let kstiff_array = new Float64Array(neq * neq);
+            let k = 0
+            for (let ispalte = 0; ispalte < neq; ispalte++) {
+                for (let izeile = 0; izeile < neq; izeile++) {
+                    kstiff_array[k] = stiff[izeile][ispalte];
+                    k++;
+                }
             }
+            let R_array = new Float64Array(neq);
+
+            for (let i = 0; i < neq; i++) {
+                R_array[i] = R[i];
+            }
+
+            let kstiff_ptr = Module._malloc(kstiff_array.length * bytes_8);
+            Module.HEAPF64.set(kstiff_array, kstiff_ptr / bytes_8);
+
+            let R_vector_ptr = Module._malloc(neq * bytes_8);
+            Module.HEAPF64.set(R_array, R_vector_ptr / bytes_8);
+
+            let L_matrix_ptr = Module._malloc(neq * neq * bytes_8);
+
+            error = c_cholesky_decomp(kstiff_ptr, L_matrix_ptr, neq);
+
+            if (error === 0) {
+                c_cholesky_2(L_matrix_ptr, R_vector_ptr, neq);
+
+                let U_array = new Float64Array(Module.HEAPF64.buffer, R_vector_ptr, neq);
+                for (let i = 0; i < neq; i++) R[i] = U_array[i];
+            }
+
+            Module._free(kstiff_ptr);
+            Module._free(L_matrix_ptr);
+            Module._free(R_vector_ptr);
         }
-        let R_array = new Float64Array(neq);
-
-        for (let i = 0; i < neq; i++) {
-            R_array[i] = R[i];
+        else {
+            error = cholesky(stiff, R, neq, 1);
+            if (error === 0) error = cholesky(stiff, R, neq, 2);
         }
-
-        let kstiff_ptr = Module._malloc(kstiff_array.length * bytes_8);
-        Module.HEAPF64.set(kstiff_array, kstiff_ptr / bytes_8);
-
-        let R_vector_ptr = Module._malloc(neq * bytes_8);
-        Module.HEAPF64.set(R_array, R_vector_ptr / bytes_8);
-
-        let L_matrix_ptr = Module._malloc(neq * neq * bytes_8);
-
-        error = c_cholesky_decomp(kstiff_ptr, L_matrix_ptr, neq);
-
-        if (error === 0) {
-            c_cholesky_2(L_matrix_ptr, R_vector_ptr, neq);
-
-            let U_array = new Float64Array(Module.HEAPF64.buffer, R_vector_ptr, neq);
-            for (let i = 0; i < neq; i++) R[i] = U_array[i];
-        }
-
-        Module._free(kstiff_ptr);
-        Module._free(L_matrix_ptr);
-        Module._free(R_vector_ptr);
-
         return error;
     }
 }
