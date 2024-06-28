@@ -148,7 +148,7 @@ c_gsl_eigenwert = Module.cwrap("gsl_eigenwert", "number", ["number", "number", "
 c_cholesky_decomp = Module.cwrap("c_cholesky_decomp", "number", ["number", "number", "number"]);
 c_cholesky_2 = Module.cwrap("c_cholesky_2", "number", ["number", "number", "number"]);
 //}
-console.log("c_cholesky_decomp", c_cholesky_decomp)
+write("c_cholesky_decomp= " + c_cholesky_decomp)
 
 const bytes_8 = 8;
 const bytes_4 = 4;
@@ -3157,7 +3157,11 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
 function cholesky_solve_equation(stiff: number[][], R: number[]) {
     //---------------------------------------------------------------------------------------------------------------
     {
-        console.log('in cholesky')
+        write('in cholesky')
+        write("c_cholesky_decomp= " + c_cholesky_decomp)
+        Module.onRuntimeInitialized = () => {
+            write("Module.onRuntimeInitialized")
+        }
 
         let error = 0
 
