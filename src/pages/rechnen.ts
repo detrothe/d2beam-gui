@@ -145,8 +145,8 @@ let c_cholesky_2: any
 //let result = Module.onRuntimeInitialized = () => {
 c_simvektoriteration = Module.cwrap("c_simvektoriteration", "number", ["number", "number", "number", "number", "number", "number", "number"]);
 c_gsl_eigenwert = Module.cwrap("gsl_eigenwert", "number", ["number", "number", "number"]);
-c_cholesky_decomp = Module.cwrap("cholesky_decomp", "number", ["number", "number", "number"]);
-c_cholesky_2 = Module.cwrap("cholesky_2", "number", ["number", "number", "number"]);
+c_cholesky_decomp = Module.cwrap("c_cholesky_decomp", "number", ["number", "number", "number"]);
+c_cholesky_2 = Module.cwrap("c_cholesky_2", "number", ["number", "number", "number"]);
 //}
 console.log("c_cholesky_decomp", c_cholesky_decomp)
 
