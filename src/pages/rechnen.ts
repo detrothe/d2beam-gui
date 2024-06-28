@@ -125,7 +125,7 @@ export let print_mass = [] as number[][];
 export let stabvorverformung_komb = [] as TStabvorverformung_komb[][]
 
 export let eig_solver = 1;
-export let equation_solver = 1;  // 0 = cholesky, 1 = gauss
+export let equation_solver = 0;  // 0 = cholesky, 1 = gauss
 export let niter_neigv = 500;
 
 // @ts-ignore
