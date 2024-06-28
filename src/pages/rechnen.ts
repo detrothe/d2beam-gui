@@ -3162,12 +3162,12 @@ function cholesky_solve_equation(stiff: number[][], R: number[]) {
 
         if (equation_solver === 0) {
 
-            write('in cholesky')
-            write("c_cholesky_decomp= " + c_cholesky_decomp)
+            //write('in cholesky')
+            //write("c_cholesky_decomp= " + c_cholesky_decomp)
             // Module.onRuntimeInitialized = () => {
             //     write("Module.onRuntimeInitialized = " + Module.onRuntimeInitialized)
             // }
-            write("Module.onRuntimeInitialized = " + Module.onRuntimeInitialized)
+            //write("Module.onRuntimeInitialized = " + Module.onRuntimeInitialized)
 
 
             let kstiff_array = new Float64Array(neq * neq);
