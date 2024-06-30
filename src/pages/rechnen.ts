@@ -2230,10 +2230,10 @@ async function calculate() {
                 // Gleichungssystem lösen
 
                 let error = -1
-                if (equation_solver !== 1) {
-                    error = cholesky_solve_equation(stiff, R);
-                } else {
+                if (equation_solver === 1) {
                     error = gauss(neq, stiff, R);
+                } else {
+                    error = cholesky_solve_equation(stiff, R);
                 }
                 if (error != 0) {
                     //window.alert("Gleichungssystem singulär");
@@ -2477,9 +2477,9 @@ async function calculate() {
                         }
                     }
 
-                    for (j = 0; j < neq; j++) {
-                        console.log('stiff[]', stiff[j])
-                    }
+                    // for (j = 0; j < neq; j++) {
+                    //     console.log('stiff[]', stiff[j])
+                    // }
 
                     // Aufstellen der rechte Seite, Einzellasten
 
@@ -2496,7 +2496,7 @@ async function calculate() {
                             }
                         }
                     }
-                    console.log("R Einzellasten", R)
+                    // console.log("R Einzellasten", R)
 
                     //  und jetzt noch die normalen Elementlasten
 
@@ -2524,7 +2524,7 @@ async function calculate() {
                             }
                         }
                     }
-                    console.log("R mit Elementlasten", R)
+                    // console.log("R mit Elementlasten", R)
 
                     //for (i = 0; i < neq; i++) R[i] -= pg[i]   // Schiefstellung
 
@@ -2591,10 +2591,10 @@ async function calculate() {
                     // Gleichungssystem lösen
 
                     let error = -1
-                    if (equation_solver !== 1) {
-                        error = cholesky_solve_equation(stiff, R);
-                    } else {
+                    if (equation_solver === 1) {
                         error = gauss(neq, stiff, R);
+                    } else {
+                        error = cholesky_solve_equation(stiff, R);
                     }
                     if (error != 0) {
                         //window.alert("Gleichungssystem singulär");
@@ -3024,7 +3024,7 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
                 }
             }
 
-            for (j = 0; j < 3; j++) eigenform_print.set(i, j, ieigv, disp[j])
+            for (j = 0; j < 3; j++) eigenform_print.set(i, j, ieigv, disp[j]);
 
         }
 

@@ -34,6 +34,10 @@ let mouseOffsetY = 0.0
 let mouseDx = 0.0
 let mouseDz = 0.0
 
+// Global vars to cache touch event state
+const evCache: any = [];
+let prevDiff = -1;
+
 let two: any = null;
 
 let xminw = 0.0, xmaxw = 0.0, zminw = 0.0, zmaxw = 0.0
@@ -254,6 +258,12 @@ export function init_grafik(flag = 1) {
         myPanel();
         drawPanel = 1;
     }
+    two = null;
+
+    // const elw = document.getElementById('artboard') as any
+    // elw.addEventListener('touchstart', touchstart,  { passive: false });
+    // elw.addEventListener('touchmove', touchmove,  { passive: false });
+    // elw.addEventListener('touchend', touchend,  { passive: false });
 
     devicePixelRatio = window.devicePixelRatio
     console.log('devicePixelRatio =  ', devicePixelRatio)
@@ -364,6 +374,146 @@ export function init_grafik(flag = 1) {
 
 }
 
+function touchdownHandler(ev: any) {
+    // The pointerdown event signals the start of a touch interaction.
+    // This event is cached to support 2-finger gestures
+    evCache.push(ev);
+    console.log("touchDown", ev.pointerId);
+    ev.preventDefault();
+}
+
+function touchmove(ev: TouchEvent) {
+
+    console.log("in touchmove");
+
+    if (ev.touches.length === 2) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        const curDiff = Math.abs(ev.touches[0].clientX - ev.touches[1].clientX);
+        console.log("curDff,prevDiff", curDiff,prevDiff);
+
+        if (curDiff < prevDiff) {
+            wheel_factor += 0.01;
+            //if (wheel_factor > 2) wheel_factor = 2.0
+        }
+        else if (curDiff > prevDiff) {
+            wheel_factor -= 0.01;
+            //if (wheel_factor < 0.5) wheel_factor = 0.5
+        }
+        prevDiff = curDiff;
+        //wheel_factor += 0.01;
+        drawsystem()
+    }
+    else {
+        mouseDx += ev.touches[0].clientX - mouseOffsetX
+        mouseDz += ev.touches[0].clientY - mouseOffsetY
+        mouseOffsetX = ev.touches[0].clientX
+        mouseOffsetY = ev.touches[0].clientY
+        drawsystem()
+    }
+
+}
+
+function touchstart(ev: any) {
+    //ev.preventDefault();
+    console.log("in touchstart");
+
+    mouseOffsetX = ev.touches[0].clientX
+    mouseOffsetY = ev.touches[0].clientY
+}
+
+function touchend(ev: any) {
+    //ev.preventDefault();
+    console.log("in touchend");
+    prevDiff = 0.0
+}
+
+function touchmoveHandler(ev: any) {
+    // This function implements a 2-pointer horizontal pinch/zoom gesture.
+    //
+    // If the distance between the two pointers has increased (zoom in),
+    // the target element's background is changed to "pink" and if the
+    // distance is decreasing (zoom out), the color is changed to "lightblue".
+    //
+    // This function sets the target element's border to "dashed" to visually
+    // indicate the pointer's target received a move event.
+    ev.stopPropagation();
+    ev.preventDefault();
+    //console.log("touchMove, length, ID", evCache.length, ev.pointerId);
+
+    // Find this event in the cache and update its record with this event
+    // const index = evCache.findIndex(
+    //     (cachedEv: { pointerId: any; }) => cachedEv.pointerId === ev.pointerId,
+    // );
+    let index = -1;
+    for (let i = 0; i < evCache.length; i++) {
+        if (evCache[i].pointerId === ev.pointerId) index = i;
+
+    }
+    console.log("touchMove, length, ID, index:", evCache.length, ev.pointerId, index);
+    if (index === -1) return;
+    evCache[index] = ev;
+
+    // If two pointers are down, check for pinch gestures
+    if (evCache.length === 2) {
+        // Calculate the distance between the two pointers
+        const curDiff = Math.abs(evCache[0].clientX - evCache[1].clientX);
+        console.log("CURRENT DIFF ", curDiff);
+
+        if (prevDiff > 0) {
+            if (curDiff > prevDiff) {
+                // The distance between the two pointers has increased
+                console.log("Pinch moving OUT -> Zoom in", curDiff);
+                //ev.target.style.background = "pink";
+            }
+            if (curDiff < prevDiff) {
+                // The distance between the two pointers has decreased
+                console.log("Pinch moving IN -> Zoom out", curDiff);
+                //ev.target.style.background = "lightblue";
+            }
+        }
+
+        // Cache the distance for the next move event
+        prevDiff = curDiff;
+    }
+}
+
+function touchupHandler(ev: any) {
+    ev.preventDefault();
+    //console.log("touchupHandler", ev.type);
+    // Remove this pointer from the cache and reset the target's
+    // background and border
+    removeEvent(ev);
+
+    // If the number of pointers down is less than two then reset diff tracker
+    if (evCache.length < 2) {
+        prevDiff = -1;
+    }
+    console.log("touchupHandler", ev.type, evCache.length);
+}
+
+function removeEvent(ev: any) {
+    // Remove this event from the target's cache
+    // const index = evCache.findIndex(
+    //     (cachedEv: { pointerId: any; }) => cachedEv.pointerId === ev.pointerId,
+    // );
+    if (evCache.length === 1) {
+        evCache.length = 0;
+    }
+    else {
+        let index = -1;
+        for (let i = 0; i < evCache.length; i++) {
+            if (evCache[i].pointerId === ev.pointerId) index = i;
+
+        }
+        if (index > -1) {
+            console.log("vor evCache.length", evCache.length);
+            evCache.splice(index, 1);
+        }
+    }
+    console.log("in removeEvent, nach evCache.length", evCache.length);
+}
+
 //--------------------------------------------------------------------------------------------------------
 function wheel(ev: WheelEvent) {
     //----------------------------------------------------------------------------------------------------
@@ -455,13 +605,26 @@ export function drawsystem(svg_id = 'artboard') {
         fullscreen: false
     };
 
+    //evCache.length = 0;
 
     if (domElement != null) {
-        domElement.removeEventListener('wheel', wheel, { passive: true });
-        domElement.removeEventListener('mousedown', mousedown, false);
-        domElement.removeEventListener('mouseup', mousemove, false);
+        // domElement.removeEventListener('wheel', wheel, { passive: true });
+        // domElement.removeEventListener('mousedown', mousedown, false);
+        // domElement.removeEventListener('mouseup', mousemove, false);
 
         //domElement.removeEventListener();
+
+        // domElement.removeEventListener('pointerdown', touchdownHandler, false);  // , false
+        // domElement.removeEventListener('pointerup', touchupHandler, false);
+        // domElement.removeEventListener('pointermove', touchmoveHandler, false);
+
+        // domElement.removeEventListener('pointercancel', touchupHandler, false);
+        // domElement.removeEventListener('pointerout', touchupHandler, false);
+        // domElement.removeEventListener('pointerleave', touchupHandler, false);
+
+        //domElement.removeEventListener('touchstart', touchstart, { passive: false });
+        //domElement.removeEventListener('touchmove', touchmove, { passive: false });
+        //domElement.removeEventListener('touchend', touchend, { passive: false });
     }
 
     // const tab_group = document.getElementById('container') as any;
@@ -1716,10 +1879,26 @@ export function drawsystem(svg_id = 'artboard') {
     //svgElement = two.render
     //console.log("domElement", domElement)
     //domElement.addEventListener('mousedown', mousedown, false);
-    domElement.addEventListener('wheel', wheel, { passive: true });
+
+    //domElement.addEventListener('wheel', wheel, { passive: true });
+
+
+
     //domElement.addEventListener('wheel', mousewheel, false);
-    domElement.addEventListener('mousedown', mousedown, false);
-    domElement.addEventListener('mouseup', mouseup, false);
+    //domElement.addEventListener('mousedown', mousedown, false);
+    //domElement.addEventListener('mouseup', mouseup, false);
+
+    // domElement.addEventListener('pointerdown', touchdownHandler, false);
+    // domElement.addEventListener('pointerup', touchupHandler, false);
+    // domElement.addEventListener('pointercancel', touchupHandler, false);
+    // domElement.addEventListener('pointerout', touchupHandler, false);
+    // domElement.addEventListener('pointerleave', touchupHandler, false);
+    // domElement.addEventListener('pointermove', touchmoveHandler, false);
+
+
+    domElement.addEventListener('touchstart', touchstart, { passive: false });
+    domElement.addEventListener('touchmove', touchmove, { passive: false });
+    domElement.addEventListener('touchend', touchend, { passive: false });
 
 
 }

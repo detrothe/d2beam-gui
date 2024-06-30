@@ -2,6 +2,16 @@
 
 export function cholesky(a: number[][], b: number[], n: number, flag: number) {
 
+    /* Cholesky Zerlegung   A = L*L^T = L*U
+
+          | x x x |
+      U = | 0 x x |
+          | 0 0 x |
+
+        der obere Teil der Matrix [A] enthält [U] nach der Zerlegung
+    */
+
+
     let i = 0, j = 0, k = 0;
     let s = 0.0;
 
@@ -25,6 +35,9 @@ export function cholesky(a: number[][], b: number[], n: number, flag: number) {
                     }
                 }
             }
+            // for (j = 0; j < n; j++) {
+            //     console.log('a_stiff[]', a[j])
+            // }
             return 0;
 
         case 2:
