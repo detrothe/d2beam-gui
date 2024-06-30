@@ -424,7 +424,7 @@ function touchstart(ev: any) {
 
 function touchend(ev: any) {
     //ev.preventDefault();
-    console.log("in touchend");
+    console.log("in touchend",ev.touches.length);
     prevDiff = 0.0
 }
 
