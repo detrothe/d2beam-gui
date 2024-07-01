@@ -791,7 +791,8 @@ portrait.addEventListener('change', function (e) {
               &nbsp;Anzahl Knickfiguren :
               </td>
               <td>
-                <input
+              <dr-button-pm id="id_neigv" nel="1" minValue="1" inputid="neigv"  @change=${berechnungErforderlich}></dr-button-pm>
+                <!-- <input
                   type="number"
                   step="1"
                   min="1"
@@ -801,7 +802,7 @@ portrait.addEventListener('change', function (e) {
                   pattern="[0-9.,eE+-]*"
                   value="1"
                   @change=${berechnungErforderlich}
-                />
+                /> -->
               </td>
             </tr>
 
@@ -1937,8 +1938,8 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     eli = document.getElementById('id_maxu_schief') as HTMLInputElement;
     eli.value = ""
 
-    eli = document.getElementById('id_neigv') as HTMLInputElement;
-    eli.value = '1'
+    el = document.getElementById('id_neigv') as drButtonPM;
+    el.setValue(1)
 
 
     resizeTables();

@@ -404,6 +404,13 @@ function touchmove(ev: TouchEvent) {
         }
         prevDiff = curDiff;
         //wheel_factor += 0.01;
+        dx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2.
+        dy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2.
+        mouseDx += dx //ev.touches[0].clientX - mouseOffsetX
+        mouseDz += dy //ev.touches[0].clientY - mouseOffsetY
+        mouseOffsetX = ev.touches[0].clientX + dx
+        mouseOffsetY = ev.touches[0].clientY + dy
+
         drawsystem()
     }
     else {
@@ -690,7 +697,7 @@ export function drawsystem(svg_id = 'artboard') {
         height = document.documentElement.clientHeight - 4;
     } else {
         let grafik_top = ele.getBoundingClientRect().top
-        console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
+        //console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
         //write("grafik top: " + grafik_top)
         if (grafik_top === 0) grafik_top = 69
         height = document.documentElement.clientHeight - grafik_top - 1 //- el?.getBoundingClientRect()?.height;
@@ -712,7 +719,7 @@ export function drawsystem(svg_id = 'artboard') {
 
 
     console.log("MAX", slmax, xmin, xmax, zmin, zmax)
-    console.log('maxValue_lf(komb)', maxValue_lf, maxValue_komb)
+    //console.log('maxValue_lf(komb)', maxValue_lf, maxValue_komb)
 
 
     // xminw = xmin * (1 + wheel_factor) / 2. + xmax * (1. - wheel_factor) / 2.
@@ -1009,7 +1016,7 @@ export function drawsystem(svg_id = 'artboard') {
                 x = 0.0; xx2 = 0.0; zz2 = 0.0
                 for (let i = 0; i <= nelTeilungen; i++) {
                     if (System === 0) {
-                        console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
+                        //console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
                         if (stab[ielem].elTyp === 0) {
                             Nu[0] = (1.0 - x / sl);
                             Nu[1] = x / sl
@@ -1138,7 +1145,7 @@ export function drawsystem(svg_id = 'artboard') {
                 x = 0.0; xx2 = 0.0; zz2 = 0.0
                 for (let i = 0; i <= nelTeilungen; i++) {
                     if (System === 0) {
-                        console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
+                        //console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
                         if (stab[ielem].elTyp === 0) {
                             Nu[0] = (1.0 - x / sl);
                             Nu[1] = x / sl
@@ -1246,7 +1253,7 @@ export function drawsystem(svg_id = 'artboard') {
                 x = 0.0; xx2 = 0.0; zz2 = 0.0
                 for (let i = 0; i <= nelTeilungen; i++) {
                     if (System === 0) {
-                        console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
+                        //console.log("DRAW KNICKFIGUR", (+ielem + 1), stab[ielem].elTyp)
                         if (stab[ielem].elTyp === 0) {
                             Nu[0] = (1.0 - x / sl);
                             Nu[1] = x / sl
@@ -2168,7 +2175,7 @@ function draw_elementlasten(two: Two) {
         z2 = stab[ielem].z2 - si * aR;
 
         for (let iLoop = 0; iLoop < nLoop; iLoop++) {
-            console.log("iLoop: ", iLoop)
+            //console.log("iLoop: ", iLoop)
 
             for (let ieload = 0; ieload < neloads; ieload++) {
                 //console.log("ieload:", ieload)

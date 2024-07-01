@@ -7,6 +7,8 @@ import { berechnungErfolgreich, berechnungErforderlich } from './globals'
 import { testNumber, myFormat, write } from './utility'
 //import {Module} from '../../d2beam_wasm.js'
 // @ts-ignore
+import { drButtonPM } from "../components/dr-button-pm";
+
 import { gauss } from "./gauss"
 import { cholesky } from "./cholesky"
 import { CTimoshenko_beam } from "./timoshenko_beam"
@@ -544,8 +546,8 @@ export function rechnen(flag = 1) {
     el = document.getElementById('id_maxu_schief') as HTMLInputElement;
     maxU_schief = Number(el.value) / 1000.0;  // in m bzw. rad
 
-    el = document.getElementById('id_neigv') as HTMLSelectElement;
-    neigv = Number(el.value);
+    el = document.getElementById('id_neigv') as drButtonPM;
+    neigv = Number(el.nel);
 
     el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = Number(el.nel);

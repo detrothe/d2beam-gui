@@ -8,8 +8,8 @@ import { app, clearTables, currentFilename, set_current_filename } from "./haupt
 import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
 import { write } from './utility'
-import { reset_gui} from './mypanelgui'
-import {reset_controlpanel_grafik} from './grafik'
+import { reset_gui } from './mypanelgui'
+import { reset_controlpanel_grafik } from './grafik'
 
 import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length, set_querschnittszaehler } from "./rechnen"
 import { add_rechteck_querschnitt, setSystem, System } from './rechnen'
@@ -131,13 +131,14 @@ export function read_daten(eingabedaten: string) {
         }
 
         let eli = document.getElementById('id_maxu_node') as HTMLInputElement;
-        if (jobj.maxU_node !== undefined) eli.value = jobj.maxU_node
+        if (jobj.maxU_node !== undefined) eli.value = jobj.maxU_node;
 
         eli = document.getElementById('id_maxu_schief') as HTMLInputElement;
-        if (jobj.maxU_schief !== undefined) eli.value = jobj.maxU_schief
+        if (jobj.maxU_schief !== undefined) eli.value = jobj.maxU_schief;
 
-        eli = document.getElementById('id_neigv') as HTMLInputElement;
-        if (jobj.neigv !== undefined) eli.value = jobj.neigv
+        el = document.getElementById('id_neigv') as drButtonPM;
+        if (jobj.neigv !== undefined) el.setValue(Number(jobj.neigv));
+        console.log("neigv",jobj.neigv)
 
         eli = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
         if (jobj.epsDisp_tol === undefined) eli.value = '1e-5';
@@ -149,7 +150,7 @@ export function read_daten(eingabedaten: string) {
 
     }
 
-    endTime =performance.now();
+    endTime = performance.now();
     write('vor resizeTables ' + String(endTime - startTime))
     startTime = performance.now();
     resizeTables();
@@ -509,7 +510,7 @@ export function str_inputToJSON() {
 
 
     let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, stadyn, dyn_neigv;
-let eig_solver,niter_neigv;
+    let eig_solver, niter_neigv;
 
     let el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = el.nel;
@@ -535,8 +536,8 @@ let eig_solver,niter_neigv;
     el = document.getElementById('id_maxu_schief') as HTMLElement;
     maxU_schief = el.value
 
-    el = document.getElementById('id_neigv') as HTMLSelectElement;
-    neigv = el.value;
+    el = document.getElementById('id_neigv') as drButtonPM;
+    neigv = el.nel;
 
     el = document.getElementById('id_P_delta_option') as HTMLSelectElement;
     P_delta = el.value;
@@ -786,7 +787,7 @@ let eig_solver,niter_neigv;
         'nnodalmass': nnodalmass,
         'dyn_neigv': dyn_neigv,
         'eig_solver': eig_solver,
-        'niter_neigv':niter_neigv,
+        'niter_neigv': niter_neigv,
 
 
         'elem': elem,
