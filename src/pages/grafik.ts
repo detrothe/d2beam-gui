@@ -403,13 +403,13 @@ function touchmove(ev: TouchEvent) {
             //if (wheel_factor < 0.5) wheel_factor = 0.5
         }
         prevDiff = curDiff;
-        //wheel_factor += 0.01;
-        dx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2.
-        dy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2.
-        mouseDx += dx //ev.touches[0].clientX - mouseOffsetX
-        mouseDz += dy //ev.touches[0].clientY - mouseOffsetY
-        mouseOffsetX = ev.touches[0].clientX + dx
-        mouseOffsetY = ev.touches[0].clientY + dy
+
+        // dx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2.
+        // dy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2.
+        // mouseDx += dx //ev.touches[0].clientX - mouseOffsetX
+        // mouseDz += dy //ev.touches[0].clientY - mouseOffsetY
+        // mouseOffsetX = ev.touches[0].clientX + dx
+        // mouseOffsetY = ev.touches[0].clientY + dy
 
         drawsystem()
     }
