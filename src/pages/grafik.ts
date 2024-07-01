@@ -389,8 +389,10 @@ function touchmove(ev: TouchEvent) {
     if (ev.touches.length === 2) {
         ev.stopPropagation();
         ev.preventDefault();
-        const curDiff = Math.abs(ev.touches[0].clientX - ev.touches[1].clientX);
-        console.log("curDff,prevDiff", curDiff,prevDiff);
+        let dx = ev.touches[0].clientX - ev.touches[1].clientX
+        let dy = ev.touches[0].clientY - ev.touches[1].clientY
+        const curDiff = Math.sqrt(dx * dx + dy * dy);
+        console.log("curDff,prevDiff", curDiff, prevDiff);
 
         if (curDiff < prevDiff) {
             wheel_factor += 0.01;
@@ -424,7 +426,7 @@ function touchstart(ev: any) {
 
 function touchend(ev: any) {
     //ev.preventDefault();
-    console.log("in touchend",ev.touches.length);
+    console.log("in touchend", ev.touches.length);
     prevDiff = 0.0
 }
 
