@@ -35,6 +35,8 @@ let mouseDx = 0.0
 let mouseDz = 0.0
 let nFingers = 0;
 let touchLoop = 0;
+let touchDx = 0.0
+let touchDy = 0.0
 
 // Global vars to cache touch event state
 const evCache: any = [];
@@ -400,6 +402,8 @@ function touchmove(ev: TouchEvent) {
         let dy = ev.touches[0].clientY - ev.touches[1].clientY
         const curDiff = Math.sqrt(dx * dx + dy * dy);
         console.log("*********** curDff,prevDiff", curDiff, prevDiff, wheel_factor, curDiff / prevDiff, touchLoop);
+        dx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2.
+        dy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2.
 
         if (touchLoop === 1) {
             if (curDiff < prevDiff) {
@@ -413,8 +417,10 @@ function touchmove(ev: TouchEvent) {
             wheel_factor = prevDiff / curDiff
             //prevDiff = curDiff;
 
-            // dx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2.
-            // dy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2.
+            mouseDx += dx - touchDx
+            mouseDz += dy - touchDy
+            touchDx = dx
+            touchDy = dy
             // mouseDx += dx //ev.touches[0].clientX - mouseOffsetX
             // mouseDz += dy //ev.touches[0].clientY - mouseOffsetY
             // mouseOffsetX = ev.touches[0].clientX + dx
@@ -424,15 +430,17 @@ function touchmove(ev: TouchEvent) {
         } else {
             touchLoop = 1
             prevDiff = curDiff;
+            touchDx = dx
+            touchDy = dy
         }
     }
     else {
-        mouseDx += ev.touches[0].clientX - mouseOffsetX
-        mouseDz += ev.touches[0].clientY - mouseOffsetY
-        mouseOffsetX = ev.touches[0].clientX
-        mouseOffsetY = ev.touches[0].clientY
-        console.log("++++++++++ mouseDx,mouseDz", mouseDx, mouseDz)
-        drawsystem()
+        // mouseDx += ev.touches[0].clientX - mouseOffsetX
+        // mouseDz += ev.touches[0].clientY - mouseOffsetY
+        // mouseOffsetX = ev.touches[0].clientX
+        // mouseOffsetY = ev.touches[0].clientY
+        // console.log("++++++++++ mouseDx,mouseDz", mouseDx, mouseDz)
+        // drawsystem()
     }
 
 }
@@ -726,7 +734,7 @@ export function drawsystem(svg_id = 'artboard') {
         //console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
         //write("grafik top: " + grafik_top)
         if (grafik_top === 0) grafik_top = 69
-        height = document.documentElement.clientHeight - grafik_top - 1 -20//- el?.getBoundingClientRect()?.height;
+        height = document.documentElement.clientHeight - grafik_top - 1 - 20//- el?.getBoundingClientRect()?.height;
     }
 
     let breite: number
@@ -1920,9 +1928,9 @@ export function drawsystem(svg_id = 'artboard') {
     //console.log("domElement", domElement)
     //domElement.addEventListener('mousedown', mousedown, false);
 
-        domElement.addEventListener('wheel', wheel, { passive: true });
-        domElement.addEventListener('mousedown', mousedown, false);
-        domElement.addEventListener('mouseup', mouseup, false);
+    domElement.addEventListener('wheel', wheel, { passive: true });
+    domElement.addEventListener('mousedown', mousedown, false);
+    domElement.addEventListener('mouseup', mouseup, false);
 
     // domElement.addEventListener('pointerdown', touchdownHandler, false);
     // domElement.addEventListener('pointerup', touchupHandler, false);

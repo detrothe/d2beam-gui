@@ -283,7 +283,7 @@ portrait.addEventListener("change", function (e) {
 
         <div id="id_container" class="footer" >
       <!-- <footer class="footer">-->
-        2D structural analysis of frames and trusses, v1.2.1,d, 2-Juli-2024,
+        2D structural analysis of frames and trusses, v1.2.1,e, 2-Juli-2024,
         <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
       <!--</footer>-->
     </div>
