@@ -1,43 +1,43 @@
-import { html, render } from 'lit';
+import { html, render } from "lit";
 //import { property, customElement } from 'lit/decorators.js';
 
-import '@shoelace-style/shoelace/dist/components/card/card.js';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
-import '@shoelace-style/shoelace/dist/components/tab/tab.js';
-import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
-import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
-import '@shoelace-style/shoelace/dist/components/tree/tree.js';
-import '@shoelace-style/shoelace/dist/components/tree-item/tree-item.js';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
-import '@shoelace-style/shoelace/dist/components/radio-group/radio-group.js';
-import '@shoelace-style/shoelace/dist/components/radio-button/radio-button.js';
-import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
-import '@shoelace-style/shoelace/dist/components/select/select.js';
-import '@shoelace-style/shoelace/dist/components/option/option.js';
+import "@shoelace-style/shoelace/dist/components/card/card.js";
+import "@shoelace-style/shoelace/dist/components/button/button.js";
+import "@shoelace-style/shoelace/dist/components/tab/tab.js";
+import "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
+import "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
+import "@shoelace-style/shoelace/dist/components/tree/tree.js";
+import "@shoelace-style/shoelace/dist/components/tree-item/tree-item.js";
+import "@shoelace-style/shoelace/dist/components/icon/icon.js";
+import "@shoelace-style/shoelace/dist/components/radio-group/radio-group.js";
+import "@shoelace-style/shoelace/dist/components/radio-button/radio-button.js";
+import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
+import "@shoelace-style/shoelace/dist/components/select/select.js";
+import "@shoelace-style/shoelace/dist/components/option/option.js";
 
-import SlSelect from '@shoelace-style/shoelace/dist/components/select/select.js';
+import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 
 //import { styles } from '../styles/shared-styles';
-import './globals';
-import { berechnungErforderlich, set_touch_support_table } from './globals';
+import "./globals";
+import { berechnungErforderlich, set_touch_support_table } from "./globals";
 
-import { add_listeners_einstellungen, readLocalStorage } from './einstellungen';
+import { add_listeners_einstellungen, readLocalStorage } from "./einstellungen";
 
-import '../components/dr-button-pm';
+import "../components/dr-button-pm";
 
-import '../components/dr-tabelle';
-import '../components/dr-dialog-layerquerschnitt';
-import '../components/dr-dialog-rechteckquerschnitt';
-import '../components/dr-dialog_neue_eingabe';
+import "../components/dr-tabelle";
+import "../components/dr-dialog-layerquerschnitt";
+import "../components/dr-dialog-rechteckquerschnitt";
+import "../components/dr-dialog_neue_eingabe";
 
-import { drButtonPM } from '../components/dr-button-pm';
-import { drRechteckQuerSchnitt } from '../components/dr-dialog-rechteckquerschnitt';
+import { drButtonPM } from "../components/dr-button-pm";
+import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt";
 
-import { reset_gui } from './mypanelgui'
+import { reset_gui } from "./mypanelgui";
 
-import DetectOS from './detectos';
+import DetectOS from "./detectos";
 
-import { addListener_filesave } from './dateien';
+import { addListener_filesave } from "./dateien";
 import {
   select_loadcase_changed,
   select_eigenvalue_changed,
@@ -46,10 +46,10 @@ import {
   drawsystem,
   click_zurueck_grafik,
   reset_controlpanel_grafik,
-} from './grafik';
-import { set_info, write } from './utility';
+} from "./grafik";
+import { set_info, write } from "./utility";
 
-import { my_jspdf } from './mypdf';
+import { my_jspdf } from "./mypdf";
 
 //import { init_contextmenu } from '../components/dr-tabelle';
 
@@ -72,43 +72,43 @@ import {
   System,
   hideColumnsForFachwerk,
   showColumnsForStabwerk,
-} from './rechnen';
+} from "./rechnen";
 
-import { ConfirmDialog, AlertDialog } from './confirm_dialog';
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js';
+import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
+import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 //import { Children } from "two.js/src/children";
 
 let dialog_querschnitt_new = true;
 let dialog_querschnitt_index = 0;
-let dialog_querschnitt_item_id = '';
+let dialog_querschnitt_item_id = "";
 
-export const nnodes_init = '3';
-export const nelem_init = '2';
-export const nnodalloads_init = '1';
-export const nstreckenlasten_init = '1';
-export const neinzellasten_init = '0';
-export const ntemperaturlasten_init = '0';
-export const nlastfaelle_init = '2';
-export const nkombinationen_init = '2';
-export const nstabvorverfomungen_init = '0';
-export const nvorspannungen_init = '0';
-export const nspannschloesser_init = '0';
-export const nnodalmass_init = '0';
+export const nnodes_init = "3";
+export const nelem_init = "2";
+export const nnodalloads_init = "1";
+export const nstreckenlasten_init = "1";
+export const neinzellasten_init = "0";
+export const ntemperaturlasten_init = "0";
+export const nlastfaelle_init = "2";
+export const nkombinationen_init = "2";
+export const nstabvorverfomungen_init = "0";
+export const nvorspannungen_init = "0";
+export const nspannschloesser_init = "0";
+export const nnodalmass_init = "0";
 export let column_string_kombitabelle: string;
 export let typs_string_kombitabelle: string;
 //export let column_width_elementtabelle: string;
-const nkombiSpalten_init = '3'; // immer 1 mehr als nlastfaelle_init
-const nnodedisps_init = '0';
-const dyn_neigv_init = '1';
+const nkombiSpalten_init = "3"; // immer 1 mehr als nlastfaelle_init
+const nnodedisps_init = "0";
+const dyn_neigv_init = "1";
 
 let width_lager = 175; // /window.devicePixelRatio;
 let width_def_d2beam = 400;
 
-export let currentFilename = 'empty';
+export let currentFilename = "empty";
 
 export const app = {
-  appName: 'd2beam',
-  browserLanguage: 'de',
+  appName: "d2beam",
+  browserLanguage: "de",
   file: {
     handle: null,
     name: null,
@@ -120,39 +120,36 @@ export const app = {
     monoSpace: false,
     wordWrap: true,
   },
-  hasFSAccess:
-    'chooseFileSystemEntries' in window ||
-    'showOpenFilePicker' in window ||
-    'showSaveFilePicker' in window,
-  isMac: navigator.userAgent.includes('Mac OS X'),
+  hasFSAccess: "chooseFileSystemEntries" in window || "showOpenFilePicker" in window || "showSaveFilePicker" in window,
+  isMac: navigator.userAgent.includes("Mac OS X"),
 };
 
 export const Detect = new DetectOS();
 {
   let txt = navigator.language;
-  let txtArray = txt.split('-');
+  let txtArray = txt.split("-");
 
   app.browserLanguage = txtArray[0];
-  console.log('app.browserLanguage', app.browserLanguage);
+  console.log("app.browserLanguage", app.browserLanguage);
 }
 
 column_string_kombitabelle = '["Kombi", "Kommentar"';
 for (let i = 1; i <= Number(nlastfaelle_init); i++) {
   column_string_kombitabelle = column_string_kombitabelle + ', "Lf ' + i + '"';
 }
-column_string_kombitabelle = column_string_kombitabelle + ']';
+column_string_kombitabelle = column_string_kombitabelle + "]";
 //console.log("column_string_kombitabelle", column_string_kombitabelle);
 
 typs_string_kombitabelle = '["-", "text"';
 for (let i = 1; i <= Number(nlastfaelle_init); i++) {
   typs_string_kombitabelle = typs_string_kombitabelle + ', "number"';
 }
-typs_string_kombitabelle = typs_string_kombitabelle + ']';
+typs_string_kombitabelle = typs_string_kombitabelle + "]";
 //console.log("typs_string_kombitabelle", typs_string_kombitabelle);
 
-const portrait = window.matchMedia('(orientation: portrait)');
+const portrait = window.matchMedia("(orientation: portrait)");
 
-portrait.addEventListener('change', function (e) {
+portrait.addEventListener("change", function (e) {
   if (e.matches) {
     // Portrait mode
     //write("portrait mode")
@@ -183,7 +180,7 @@ portrait.addEventListener('change', function (e) {
 {
   //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
 
-  console.log('vor template');
+  console.log("vor template");
 
   const template = () => html`
     <style>
@@ -283,6 +280,14 @@ portrait.addEventListener('change', function (e) {
         </div>
 
         <dr-dialog_neue_eingabe id="id_dialog_neue_eingabe"></dr-dialog_neue_eingabe>
+
+        <div id="id_container" class="footer" >
+      <!-- <footer class="footer">-->
+        2D structural analysis of frames and trusses, v1.2.1,c, 2-Juli-2024,
+        <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
+      <!--</footer>-->
+    </div>
+
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
@@ -1043,18 +1048,19 @@ portrait.addEventListener('change', function (e) {
         </div>
       </sl-tab-panel>
     </sl-tab-group>
+
   `;
 
-  const container = document.getElementById('container') as HTMLDivElement;
-  const renderBefore = container?.querySelector('footer');
-  render(template(), container, { renderBefore });
+  // const container = document.getElementById('container') as HTMLDivElement;
+  // const renderBefore = container?.querySelector('footer');
+  // render(template(), container, { renderBefore });
 
   // setTimeout(function(){
   //   console.log("in setTimeout document.readyState",document.readyState)
   //            console.log("Executed after 1 second");
   //        }, 500);
 
-  // render( template(), document.body);
+  render(template(), document.body);
 
   // Tabellen sin jetzt da, Tabellen mit Voreinstellungen füllen
 
@@ -1067,28 +1073,19 @@ portrait.addEventListener('change', function (e) {
   readLocalStorage();
   set_info();
 
-  const el_select_loadcase = document.getElementById('id_select_loadcase');
-  el_select_loadcase?.addEventListener('change', select_loadcase_changed);
-  const el_select_eigenvalue = document.getElementById('id_select_eigenvalue');
-  el_select_eigenvalue?.addEventListener('change', select_eigenvalue_changed);
-  const el_select_dyn_eigenvalue = document.getElementById(
-    'id_select_dyn_eigenvalue'
-  );
-  el_select_dyn_eigenvalue?.addEventListener(
-    'change',
-    select_dyn_eigenvalue_changed
-  );
-  const el_zurueck_grafik = document.getElementById(
-    'id_button_zurueck_grafik'
-  );
-  el_zurueck_grafik?.addEventListener('click', click_zurueck_grafik);
+  const el_select_loadcase = document.getElementById("id_select_loadcase");
+  el_select_loadcase?.addEventListener("change", select_loadcase_changed);
+  const el_select_eigenvalue = document.getElementById("id_select_eigenvalue");
+  el_select_eigenvalue?.addEventListener("change", select_eigenvalue_changed);
+  const el_select_dyn_eigenvalue = document.getElementById("id_select_dyn_eigenvalue");
+  el_select_dyn_eigenvalue?.addEventListener("change", select_dyn_eigenvalue_changed);
+  const el_zurueck_grafik = document.getElementById("id_button_zurueck_grafik");
+  el_zurueck_grafik?.addEventListener("click", click_zurueck_grafik);
 
-  document
-    ?.getElementById('id_button_copy_svg')
-    ?.addEventListener('click', copy_svg, false);
+  document?.getElementById("id_button_copy_svg")?.addEventListener("click", copy_svg, false);
 
-  const checkbox = document.getElementById('id_glsystem_darstellen');
-  checkbox!.addEventListener('sl-change', (event) => {
+  const checkbox = document.getElementById("id_glsystem_darstellen");
+  checkbox!.addEventListener("sl-change", (event) => {
     // @ts-ignore
     if (event.currentTarget.checked) {
       gleichungssystem_darstellen(true);
@@ -1097,14 +1094,14 @@ portrait.addEventListener('change', function (e) {
     }
   });
 
-  const elem_select = document.getElementById('id_element_darstellen');
-  elem_select!.addEventListener('change', () => {
+  const elem_select = document.getElementById("id_element_darstellen");
+  elem_select!.addEventListener("change", () => {
     // @ts-ignore
     elem_select_changed();
   });
 
-  const checkbox_gelenk = document.getElementById('id_gelenke_anzeigen');
-  checkbox_gelenk!.addEventListener('sl-change', (event) => {
+  const checkbox_gelenk = document.getElementById("id_gelenke_anzeigen");
+  checkbox_gelenk!.addEventListener("sl-change", (event) => {
     // @ts-ignore
     if (event.currentTarget.checked) {
       elementTabelle_gelenke_anzeigen(true);
@@ -1113,8 +1110,8 @@ portrait.addEventListener('change', function (e) {
     }
   });
 
-  const checkbox_starr = document.getElementById('id_starre_enden_anzeigen');
-  checkbox_starr!.addEventListener('sl-change', (event) => {
+  const checkbox_starr = document.getElementById("id_starre_enden_anzeigen");
+  checkbox_starr!.addEventListener("sl-change", (event) => {
     // @ts-ignore
     if (event.currentTarget.checked) {
       elementTabelle_starre_enden_anzeigen(true);
@@ -1123,8 +1120,8 @@ portrait.addEventListener('change', function (e) {
     }
   });
 
-  const touch_support_tables = document.getElementById('id_touch_support_tables');
-  touch_support_tables!.addEventListener('sl-change', (event) => {
+  const touch_support_tables = document.getElementById("id_touch_support_tables");
+  touch_support_tables!.addEventListener("sl-change", (event) => {
     // @ts-ignore
     if (event.currentTarget.checked) {
       set_touch_support_table(true);
@@ -1133,7 +1130,6 @@ portrait.addEventListener('change', function (e) {
     }
   });
 
-
   // console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
   // console.log("rechnen", getComputedStyle(document?.getElementById("rechnen")!).width);
 
@@ -1141,7 +1137,7 @@ portrait.addEventListener('change', function (e) {
   // console.log("ELEMENT", ELEMENT);
   // console.log("ELEMENT", getComputedStyle(ELEMENT!).width);
 
-  console.log('document.readyState', document.readyState);
+  console.log("document.readyState", document.readyState);
 
   // let time = 0
   // //while (document.readyState != 'complete') {
@@ -1156,7 +1152,7 @@ portrait.addEventListener('change', function (e) {
   //}
 
   // initTabellenLoop();
-  console.log('vor init_tabellen in haupt');
+  console.log("vor init_tabellen in haupt");
   init_tabellen();
 
   rechnen(1);
@@ -1165,38 +1161,32 @@ portrait.addEventListener('change', function (e) {
 //---------------------------------------------------------------------------------------------------------------
 
 function handleClick_allgeiner_querschnitt() {
-  console.log('handleClick_allgeiner_querschnitt()');
+  console.log("handleClick_allgeiner_querschnitt()");
 
-  const el = document.getElementById('id_dialog');
-  console.log('id_dialog', el);
-  console.log('QUERY Dialog', el?.shadowRoot?.getElementById('dialog'));
-  (el?.shadowRoot?.getElementById('dialog') as HTMLDialogElement).showModal();
+  const el = document.getElementById("id_dialog");
+  console.log("id_dialog", el);
+  console.log("QUERY Dialog", el?.shadowRoot?.getElementById("dialog"));
+  (el?.shadowRoot?.getElementById("dialog") as HTMLDialogElement).showModal();
 }
 
 //---------------------------------------------------------------------------------------------------------------
 
 function click_neuer_querschnitt_rechteck() {
   //---------------------------------------------------------------------------------------------------------------
-  console.log('click_neuer_querschnitt_rechteck()');
+  console.log("click_neuer_querschnitt_rechteck()");
 
-  const el = document.getElementById(
-    'id_dialog_rechteck'
-  ) as drRechteckQuerSchnitt;
+  const el = document.getElementById("id_dialog_rechteck") as drRechteckQuerSchnitt;
 
   el.init_name_changed(true);
 
   // console.log("id_dialog_rechteck", el);
   // console.log("QUERY Dialog", el?.shadowRoot?.getElementById("dialog_rechteck"));
 
-  (
-    el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement
-  ).addEventListener('close', dialog_closed);
+  (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).addEventListener("close", dialog_closed);
 
   dialog_querschnitt_new = true;
 
-  (
-    el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement
-  ).showModal();
+  (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).showModal();
 }
 /*
 //---------------------------------------------------------------------------------------------------------------
@@ -1252,60 +1242,50 @@ function calculate() {
 //---------------------------------------------------------------------------------------------------------------
 function dialog_closed(e: any) {
   //------------------------------------------------------------------------------------------------------------
-  console.log('Event dialog closed', e);
-  const el = document.getElementById(
-    'id_dialog_rechteck'
-  ) as HTMLDialogElement;
+  console.log("Event dialog closed", e);
+  const el = document.getElementById("id_dialog_rechteck") as HTMLDialogElement;
 
   // @ts-ignore
   const returnValue = this.returnValue;
 
-  (
-    el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement
-  ).removeEventListener('close', dialog_closed);
+  (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).removeEventListener("close", dialog_closed);
 
-  if (returnValue === 'ok') {
+  if (returnValue === "ok") {
     let id: string;
     if (dialog_querschnitt_new) {
       incr_querschnitts_zaehler();
-      id = 'mat-' + querschnitts_zaehler;
+      id = "mat-" + querschnitts_zaehler;
     } else {
-      id = 'mat-' + dialog_querschnitt_index;
+      id = "mat-" + dialog_querschnitt_index;
     }
     {
-      let elem = el?.shadowRoot?.getElementById(
-        'emodul'
-      ) as HTMLInputElement;
-      console.log('emodul=', elem.value);
+      let elem = el?.shadowRoot?.getElementById("emodul") as HTMLInputElement;
+      console.log("emodul=", elem.value);
       const emodul = +elem.value;
-      elem = el?.shadowRoot?.getElementById('traeg_y') as HTMLInputElement;
+      elem = el?.shadowRoot?.getElementById("traeg_y") as HTMLInputElement;
       const Iy = +elem.value;
-      elem = el?.shadowRoot?.getElementById('area') as HTMLInputElement;
+      elem = el?.shadowRoot?.getElementById("area") as HTMLInputElement;
       const area = +elem.value;
-      elem = el?.shadowRoot?.getElementById('qname') as HTMLInputElement;
+      elem = el?.shadowRoot?.getElementById("qname") as HTMLInputElement;
       const qname = elem.value;
-      elem = el?.shadowRoot?.getElementById('height') as HTMLInputElement;
+      elem = el?.shadowRoot?.getElementById("height") as HTMLInputElement;
       const height = +elem.value;
-      elem = el?.shadowRoot?.getElementById('width') as HTMLInputElement;
+      elem = el?.shadowRoot?.getElementById("width") as HTMLInputElement;
       const width = +elem.value;
       //         elem = el?.shadowRoot?.querySelector('.radio-group-querschnitt') as any;
-      elem = el?.shadowRoot?.getElementById('id_defquerschnitt') as any;
+      elem = el?.shadowRoot?.getElementById("id_defquerschnitt") as any;
       //console.log("defquerschnitt", elem)
       const defquerschnitt = +elem.value;
       //console.log("defquerschnitt", defquerschnitt)
-      elem = el?.shadowRoot?.getElementById(
-        'schubfaktor'
-      ) as HTMLInputElement;
+      elem = el?.shadowRoot?.getElementById("schubfaktor") as HTMLInputElement;
       const schubfaktor = +elem.value;
-      elem = el?.shadowRoot?.getElementById(
-        'querdehnzahl'
-      ) as HTMLInputElement;
+      elem = el?.shadowRoot?.getElementById("querdehnzahl") as HTMLInputElement;
       const querdehnzahl = +elem.value;
-      elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
+      elem = el?.shadowRoot?.getElementById("wichte") as HTMLInputElement;
       const wichte = +elem.value;
-      elem = el?.shadowRoot?.getElementById('zso') as HTMLInputElement;
+      elem = el?.shadowRoot?.getElementById("zso") as HTMLInputElement;
       const zso = +elem.value;
-      elem = el?.shadowRoot?.getElementById('alpha_t') as HTMLInputElement;
+      elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
       const alphaT = +elem.value;
 
       //console.log("ALPHA T = ", alphaT);
@@ -1313,21 +1293,7 @@ function dialog_closed(e: any) {
       if (dialog_querschnitt_new) {
         incr_querschnittSets();
 
-        set_querschnittRechteck(
-          qname,
-          id,
-          emodul,
-          Iy,
-          area,
-          height,
-          width,
-          defquerschnitt,
-          wichte,
-          schubfaktor,
-          querdehnzahl,
-          zso,
-          alphaT
-        );
+        set_querschnittRechteck(qname, id, emodul, Iy, area, height, width, defquerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT);
       } else {
         update_querschnittRechteck(
           dialog_querschnitt_index,
@@ -1347,37 +1313,23 @@ function dialog_closed(e: any) {
         );
 
         // Name des Querschnitts in Querschnitts-tree (tab Querschnitte) ändern
-        const el = document.getElementById(
-          dialog_querschnitt_item_id
-        ) as HTMLElement;
-        console.log(
-          'dialog_querschnitt_item_id',
-          dialog_querschnitt_item_id
-        );
-        console.log(
-          'dialog_querschnitt_index, qname',
-          dialog_querschnitt_index,
-          qname
-        ); // , el.textContent
+        const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
+        console.log("dialog_querschnitt_item_id", dialog_querschnitt_item_id);
+        console.log("dialog_querschnitt_index, qname", dialog_querschnitt_index, qname); // , el.textContent
 
         if (el.textContent !== qname) {
           // innerHTML
           el.textContent = qname;
-          const ele = document.getElementById('id_element_tabelle');
+          const ele = document.getElementById("id_element_tabelle");
           //console.log('ELE: >>', ele);
-          ele?.setAttribute(
-            'namechanged',
-            String(dialog_querschnitt_index)
-          );
+          ele?.setAttribute("namechanged", String(dialog_querschnitt_index));
         }
       }
     }
 
     if (dialog_querschnitt_new) {
-      const qName = (
-        el?.shadowRoot?.getElementById('qname') as HTMLInputElement
-      ).value;
-      console.log('NAME', qName);
+      const qName = (el?.shadowRoot?.getElementById("qname") as HTMLInputElement).value;
+      console.log("NAME", qName);
 
       add_new_cross_section(qName, id);
     }
@@ -1390,58 +1342,58 @@ function dialog_closed(e: any) {
 export function add_new_cross_section(qName: string, id: string) {
   //-------------------------------------------------------------------------------------------------------------
 
-  const tag = document.createElement('sl-tree-item');
+  const tag = document.createElement("sl-tree-item");
   // tag.textContent = qName
   //const text = document.createTextNode(qName);
   //tag.appendChild(text);
 
-  const quer_button = document.createElement('sl-button');
+  const quer_button = document.createElement("sl-button");
   quer_button.textContent = qName;
-  quer_button.style.minWidth = '8rem';
-  quer_button.addEventListener('click', opendialog);
-  quer_button.title = 'click to modify';
+  quer_button.style.minWidth = "8rem";
+  quer_button.addEventListener("click", opendialog);
+  quer_button.title = "click to modify";
   quer_button.id = id;
   //quer_button.style.margin='0';
   //quer_button.style.padding='0';
 
-  const delete_button = document.createElement('button');
+  const delete_button = document.createElement("button");
   //delete_button.textContent = "delete";
   delete_button.value = id;
-  delete_button.className = 'btn';
+  delete_button.className = "btn";
   delete_button.innerHTML = '<i class = "fa fa-trash"></i>';
-  delete_button.addEventListener('click', contextmenu_querschnitt);
-  delete_button.title = 'delete Querschnitt';
+  delete_button.addEventListener("click", contextmenu_querschnitt);
+  delete_button.title = "delete Querschnitt";
   //delete_button.style.margin='0';
   //delete_button.style.padding='auto'
 
   //  var br = document.createElement("br");
   //  tag.appendChild(br);
-  var div = document.createElement('div');
+  var div = document.createElement("div");
   //div.id='div_add_cross_section'
-  div.style.display = 'flex';
-  div.style.alignItems = 'center';
-  div.style.backgroundColor = '#f5f5f5';
-  div.style.border = '0px';
+  div.style.display = "flex";
+  div.style.alignItems = "center";
+  div.style.backgroundColor = "#f5f5f5";
+  div.style.border = "0px";
 
   div.appendChild(quer_button);
   div.appendChild(delete_button);
 
   tag.appendChild(div);
 
-  const element = document.getElementById('id_tree_LQ');
+  const element = document.getElementById("id_tree_LQ");
   element?.appendChild(tag);
-  console.log('child appendchild', element);
+  console.log("child appendchild", element);
 
-  const ele = document.getElementById('id_element_tabelle');
+  const ele = document.getElementById("id_element_tabelle");
   //console.log("ELE: >>", ele);
-  ele?.setAttribute('add_new_option', '4');
+  ele?.setAttribute("add_new_option", "4");
 }
 
 //---------------------------------------------------------------------------------------------------------------
 export async function contextmenu_querschnitt(ev: any) {
   //-------------------------------------------------------------------------------------------------------------
 
-  let qname = '';
+  let qname = "";
 
   ev.preventDefault();
 
@@ -1454,9 +1406,9 @@ export async function contextmenu_querschnitt(ev: any) {
   //console.log("contextmenu_querschnitt, qname", el.innerText, el.textContent, '|', el.value);
 
   const dialog = new ConfirmDialog({
-    trueButton_Text: 'ja',
-    falseButton_Text: 'nein',
-    question_Text: 'Lösche Querschnitt: ' + qname,
+    trueButton_Text: "ja",
+    falseButton_Text: "nein",
+    question_Text: "Lösche Querschnitt: " + qname,
   });
   const loesche = await dialog.confirm();
   //console.log("loesche", loesche);
@@ -1468,16 +1420,15 @@ export async function contextmenu_querschnitt(ev: any) {
     if (anzahl === 0) {
       del_querschnittSet(qname);
 
-      let element = document.getElementById('id_tree_LQ') as any;
+      let element = document.getElementById("id_tree_LQ") as any;
       //console.log("element.children", element.children);
       //console.log("el.parentNode", el.parentNode.parentNode);
       //console.log("el.parentElement", el.parentElement.parentElement);
       element?.removeChild(el.parentElement.parentElement);
     } else {
       const dialogAlert = new AlertDialog({
-        trueButton_Text: 'ok',
-        question_Text:
-          'Es gibt mindestens ein Element, das den Querschnitt verwendet',
+        trueButton_Text: "ok",
+        question_Text: "Es gibt mindestens ein Element, das den Querschnitt verwendet",
       });
       await dialogAlert.confirm();
       //window.alert("Lösche Querschnitt: ")
@@ -1490,7 +1441,7 @@ export function opendialog(ev: any) {
   //-------------------------------------------------------------------------------------------------------------
 
   // @ts-ignore
-  console.log('opendialog geht', this);
+  console.log("opendialog geht", this);
   ev.preventDefault;
 
   // @ts-ignore
@@ -1506,17 +1457,11 @@ export function opendialog(ev: any) {
   // @ts-ignore
   const ele = this;
   const qname = ele.textContent;
-  console.log(
-    'opendialog, qname',
-    ele.innerText,
-    '|',
-    ele.textContent,
-    ele.id
-  );
+  console.log("opendialog, qname", ele.innerText, "|", ele.textContent, ele.id);
   const index = get_querschnitt_index(qname);
 
   if (index < 0) {
-    alert('BIG Problem in opendialog, contact developer');
+    alert("BIG Problem in opendialog, contact developer");
     return;
   }
 
@@ -1542,91 +1487,75 @@ export function opendialog(ev: any) {
 
     //if (id0 !== id) console.log("BIG Problem in opendialog");
 
-    const el = document.getElementById(
-      'id_dialog_rechteck'
-    ) as HTMLDialogElement;
+    const el = document.getElementById("id_dialog_rechteck") as HTMLDialogElement;
 
-    let elem = el?.shadowRoot?.getElementById('emodul') as HTMLInputElement;
-    console.log('set emodul=', elem.value, emodul);
+    let elem = el?.shadowRoot?.getElementById("emodul") as HTMLInputElement;
+    console.log("set emodul=", elem.value, emodul);
     elem.value = String(emodul);
-    elem = el?.shadowRoot?.getElementById('traeg_y') as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("traeg_y") as HTMLInputElement;
     elem.value = String(Iy);
-    elem = el?.shadowRoot?.getElementById('area') as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("area") as HTMLInputElement;
     elem.value = String(area);
-    elem = el?.shadowRoot?.getElementById('qname') as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("qname") as HTMLInputElement;
     elem.value = String(qname);
-    elem = el?.shadowRoot?.getElementById('height') as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("height") as HTMLInputElement;
     elem.value = String(height);
-    elem = el?.shadowRoot?.getElementById('width') as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("width") as HTMLInputElement;
     elem.value = String(width);
-    elem = el?.shadowRoot?.getElementById(
-      'id_defquerschnitt'
-    ) as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("id_defquerschnitt") as HTMLInputElement;
     elem.value = String(definedQuerschnitt);
-    elem = el?.shadowRoot?.getElementById('wichte') as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("wichte") as HTMLInputElement;
     elem.value = String(wichte);
-    elem = el?.shadowRoot?.getElementById('schubfaktor') as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("schubfaktor") as HTMLInputElement;
     elem.value = String(schubfaktor);
-    elem = el?.shadowRoot?.getElementById('querdehnzahl') as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("querdehnzahl") as HTMLInputElement;
     elem.value = String(querdehnzahl);
-    elem = el?.shadowRoot?.getElementById('zso') as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("zso") as HTMLInputElement;
     elem.value = String(zso);
-    elem = el?.shadowRoot?.getElementById('alpha_t') as HTMLInputElement;
+    elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
     elem.value = String(alphaT);
   }
 
   //const el=document.getElementById(id);
-  const el = document.getElementById(
-    'id_dialog_rechteck'
-  ) as drRechteckQuerSchnitt;
+  const el = document.getElementById("id_dialog_rechteck") as drRechteckQuerSchnitt;
 
   el.init_name_changed(false);
 
-  (
-    el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement
-  ).addEventListener('close', dialog_closed);
+  (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).addEventListener("close", dialog_closed);
 
   dialog_querschnitt_new = false;
   dialog_querschnitt_index = index;
   dialog_querschnitt_item_id = id;
 
-  (
-    el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement
-  ).showModal();
+  (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).showModal();
 }
 
 //---------------------------------------------------------------------------------------------------------------
 export function resizeTables() {
   //---------------------------------------------------------------------------------------------------------------
   {
-    const el_knoten = document.getElementById('id_button_nnodes');
-    const nnodes = (
-      el_knoten?.shadowRoot?.getElementById('nnodes') as HTMLInputElement
-    ).value;
+    const el_knoten = document.getElementById("id_button_nnodes");
+    const nnodes = (el_knoten?.shadowRoot?.getElementById("nnodes") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_knoten_tabelle');
+    const el = document.getElementById("id_knoten_tabelle");
     //console.log("EL: >>", el);
-    el?.setAttribute('nzeilen', nnodes);
+    el?.setAttribute("nzeilen", nnodes);
   }
   {
-    const el_knoten = document.getElementById('id_button_nnodedisps');
-    const nnodes = (
-      el_knoten?.shadowRoot?.getElementById('nnodedisps') as HTMLInputElement
-    ).value;
+    const el_knoten = document.getElementById("id_button_nnodedisps");
+    const nnodes = (el_knoten?.shadowRoot?.getElementById("nnodedisps") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_nnodedisps_tabelle');
+    const el = document.getElementById("id_nnodedisps_tabelle");
     //console.log("EL: >>", el);
-    el?.setAttribute('nzeilen', nnodes);
+    el?.setAttribute("nzeilen", nnodes);
   }
   {
-    const el_elemente = document.getElementById('id_button_nelem');
-    const nelem = (
-      el_elemente?.shadowRoot?.getElementById('nelem') as HTMLInputElement
-    ).value;
+    const el_elemente = document.getElementById("id_button_nelem");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nelem") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_element_tabelle');
+    const el = document.getElementById("id_element_tabelle");
     //console.log("EL: >>", el);
-    el?.setAttribute('nzeilen', nelem);
+    el?.setAttribute("nzeilen", nelem);
 
     // el?.setAttribute("hide_column", String(9));
     // el?.setAttribute("hide_column", String(8));
@@ -1635,147 +1564,99 @@ export function resizeTables() {
   }
 
   {
-    const el_elemente = document.getElementById('id_button_nnodalloads');
-    const nelem = (
-      el_elemente?.shadowRoot?.getElementById(
-        'nnodalloads'
-      ) as HTMLInputElement
-    ).value;
+    const el_elemente = document.getElementById("id_button_nnodalloads");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nnodalloads") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_knotenlasten_tabelle');
+    const el = document.getElementById("id_knotenlasten_tabelle");
     //console.log("EL: >>", el);
-    el?.setAttribute('nzeilen', nelem);
+    el?.setAttribute("nzeilen", nelem);
   }
 
   {
-    const el_elemente = document.getElementById('id_button_nstreckenlasten');
-    const nelem = (
-      el_elemente?.shadowRoot?.getElementById(
-        'nelemloads'
-      ) as HTMLInputElement
-    ).value;
+    const el_elemente = document.getElementById("id_button_nstreckenlasten");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nelemloads") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_streckenlasten_tabelle');
+    const el = document.getElementById("id_streckenlasten_tabelle");
     //console.log("EL: >>", el);
-    el?.setAttribute('nzeilen', nelem);
+    el?.setAttribute("nzeilen", nelem);
   }
 
   {
-    const el_elemente = document.getElementById('id_button_neinzellasten');
-    const nelem = (
-      el_elemente?.shadowRoot?.getElementById(
-        'nelemloads'
-      ) as HTMLInputElement
-    ).value;
+    const el_elemente = document.getElementById("id_button_neinzellasten");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nelemloads") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_einzellasten_tabelle');
+    const el = document.getElementById("id_einzellasten_tabelle");
     //console.log("EL: >>", el);
-    el?.setAttribute('nzeilen', nelem);
+    el?.setAttribute("nzeilen", nelem);
   }
 
   {
-    const el_elemente = document.getElementById(
-      'id_button_ntemperaturlasten'
-    );
-    const nelem = (
-      el_elemente?.shadowRoot?.getElementById(
-        'nelemloads'
-      ) as HTMLInputElement
-    ).value;
+    const el_elemente = document.getElementById("id_button_ntemperaturlasten");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nelemloads") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_temperaturlasten_tabelle');
+    const el = document.getElementById("id_temperaturlasten_tabelle");
     //console.log("EL: >>", el);
-    el?.setAttribute('nzeilen', nelem);
+    el?.setAttribute("nzeilen", nelem);
   }
 
   {
-    const el_elemente = document.getElementById(
-      'id_button_nstabvorverformungen'
-    );
-    const nelem = (
-      el_elemente?.shadowRoot?.getElementById(
-        'nstabvorverformungen'
-      ) as HTMLInputElement
-    ).value;
+    const el_elemente = document.getElementById("id_button_nstabvorverformungen");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nstabvorverformungen") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_stabvorverfomungen_tabelle');
+    const el = document.getElementById("id_stabvorverfomungen_tabelle");
     //console.log("EL: >>", el);
-    el?.setAttribute('nzeilen', nelem);
+    el?.setAttribute("nzeilen", nelem);
   }
 
   {
-    const el_elemente = document.getElementById('id_button_nvorspannungen');
-    const nelem = (
-      el_elemente?.shadowRoot?.getElementById(
-        'nvorspannungen'
-      ) as HTMLInputElement
-    ).value;
+    const el_elemente = document.getElementById("id_button_nvorspannungen");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nvorspannungen") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_vorspannungen_tabelle');
+    const el = document.getElementById("id_vorspannungen_tabelle");
     //console.log("EL: >>", el);
-    el?.setAttribute('nzeilen', nelem);
+    el?.setAttribute("nzeilen", nelem);
   }
 
   {
-    const el_elemente = document.getElementById('id_button_nspannschloesser');
-    const nelem = (
-      el_elemente?.shadowRoot?.getElementById(
-        'nspannschloesser'
-      ) as HTMLInputElement
-    ).value;
+    const el_elemente = document.getElementById("id_button_nspannschloesser");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nspannschloesser") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_spannschloesser_tabelle');
+    const el = document.getElementById("id_spannschloesser_tabelle");
     //console.log("EL: >>", el);
-    el?.setAttribute('nzeilen', nelem);
+    el?.setAttribute("nzeilen", nelem);
   }
 
   {
-    const el_elemente = document.getElementById('id_button_nlastfaelle');
-    const nelem = (
-      el_elemente?.shadowRoot?.getElementById(
-        'nlastfaelle'
-      ) as HTMLInputElement
-    ).value;
+    const el_elemente = document.getElementById("id_button_nlastfaelle");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nlastfaelle") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_lastfaelle_tabelle');
+    const el = document.getElementById("id_lastfaelle_tabelle");
     //console.log("EL: >>", el);
-    el?.setAttribute('nzeilen', nelem);
+    el?.setAttribute("nzeilen", nelem);
   }
 
   {
-    let el_elemente = document.getElementById('id_button_nkombinationen');
-    let nelem = (
-      el_elemente?.shadowRoot?.getElementById(
-        'nkombinationen'
-      ) as HTMLInputElement
-    ).value;
+    let el_elemente = document.getElementById("id_button_nkombinationen");
+    let nelem = (el_elemente?.shadowRoot?.getElementById("nkombinationen") as HTMLInputElement).value;
 
-    let el = document.getElementById('id_kombinationen_tabelle');
+    let el = document.getElementById("id_kombinationen_tabelle");
     //console.log("EL nzeilen: >>", nelem);
-    el?.setAttribute('nzeilen', nelem);
+    el?.setAttribute("nzeilen", nelem);
     //---------------------------------------
-    el_elemente = document.getElementById('id_button_nlastfaelle');
-    nelem = (
-      el_elemente?.shadowRoot?.getElementById(
-        'nlastfaelle'
-      ) as HTMLInputElement
-    ).value;
+    el_elemente = document.getElementById("id_button_nlastfaelle");
+    nelem = (el_elemente?.shadowRoot?.getElementById("nlastfaelle") as HTMLInputElement).value;
 
-    el = document.getElementById('id_kombinationen_tabelle');
+    el = document.getElementById("id_kombinationen_tabelle");
     //console.log("EL nspalten: >>", nelem);
-    el?.setAttribute('nspalten', String(Number(nelem) + 1)); // +1 wegen Kommentarspalte
+    el?.setAttribute("nspalten", String(Number(nelem) + 1)); // +1 wegen Kommentarspalte
   }
 
   {
-    const el_elemente = document.getElementById('id_button_nnodalmass');
-    const nelem = (
-      el_elemente?.shadowRoot?.getElementById(
-        'nnodalmass'
-      ) as HTMLInputElement
-    ).value;
+    const el_elemente = document.getElementById("id_button_nnodalmass");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nnodalmass") as HTMLInputElement).value;
 
-    const el = document.getElementById('id_knotenmassen_tabelle');
-    el?.setAttribute('nzeilen', nelem);
+    const el = document.getElementById("id_knotenmassen_tabelle");
+    el?.setAttribute("nzeilen", nelem);
   }
 
   // if (System === 0) showColumnsForStabwerk();
@@ -1787,48 +1668,48 @@ export function resizeTables() {
 export function clearTables() {
   //------------------------------------------------------------------------------------------------------------
 
-  let el = document.getElementById('id_knoten_tabelle');
-  el?.setAttribute('clear', '0');
+  let el = document.getElementById("id_knoten_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_nnodedisps_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_nnodedisps_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_element_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_element_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_knotenlasten_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_knotenlasten_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_streckenlasten_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_streckenlasten_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_einzellasten_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_einzellasten_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_temperaturlasten_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_temperaturlasten_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_stabvorverfomungen_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_stabvorverfomungen_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_vorspannungen_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_vorspannungen_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_spannschloesser_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_spannschloesser_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_lastfaelle_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_lastfaelle_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_kombinationen_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_kombinationen_tabelle");
+  el?.setAttribute("clear", "0");
 
-  el = document.getElementById('id_knotenmassen_tabelle');
-  el?.setAttribute('clear', '0');
+  el = document.getElementById("id_knotenmassen_tabelle");
+  el?.setAttribute("clear", "0");
 
   while (nQuerschnittSets > 0) {
     del_last_querschnittSet();
-    let element = document.getElementById('id_tree_LQ') as any;
+    let element = document.getElementById("id_tree_LQ") as any;
     element?.removeChild(element?.lastChild);
   }
 }
@@ -1837,110 +1718,95 @@ export function clearTables() {
 
 function handleClick_neue_eingabe() {
   //------------------------------------------------------------------------------------------------------------
-  console.log('handleClick_neue_eingabe()');
+  console.log("handleClick_neue_eingabe()");
 
-  const el = document.getElementById('id_dialog_neue_eingabe');
+  const el = document.getElementById("id_dialog_neue_eingabe");
   // console.log('id_dialog_neue_eingabe', el);
   // console.log(
   //   'QUERY Dialog',
   //   el?.shadowRoot?.getElementById('dialog_neue_eingabe')
   // );
 
-  (
-    el?.shadowRoot?.getElementById('dialog_neue_eingabe') as HTMLDialogElement
-  ).addEventListener('close', dialog_neue_eingabe_closed);
+  (el?.shadowRoot?.getElementById("dialog_neue_eingabe") as HTMLDialogElement).addEventListener("close", dialog_neue_eingabe_closed);
 
-  (
-    el?.shadowRoot?.getElementById('dialog_neue_eingabe') as HTMLDialogElement
-  ).showModal();
+  (el?.shadowRoot?.getElementById("dialog_neue_eingabe") as HTMLDialogElement).showModal();
 }
 
 //---------------------------------------------------------------------------------------------------------------
 function dialog_neue_eingabe_closed(this: any, e: any) {
   //------------------------------------------------------------------------------------------------------------
-  console.log('Event dialog closed', e);
-  console.log('this', this);
-  const ele = document.getElementById(
-    'id_dialog_neue_eingabe'
-  ) as HTMLDialogElement;
+  console.log("Event dialog closed", e);
+  console.log("this", this);
+  const ele = document.getElementById("id_dialog_neue_eingabe") as HTMLDialogElement;
 
   // ts-ignore
   const returnValue = this.returnValue;
 
-  (
-    ele?.shadowRoot?.getElementById(
-      'dialog_neue_eingabe'
-    ) as HTMLDialogElement
-  ).removeEventListener('close', dialog_closed);
+  (ele?.shadowRoot?.getElementById("dialog_neue_eingabe") as HTMLDialogElement).removeEventListener("close", dialog_closed);
 
-  if (returnValue === 'ok') {
-    let system = Number(
-      (ele.shadowRoot?.getElementById('id_system') as HTMLSelectElement)
-        .value
-    );
+  if (returnValue === "ok") {
+    let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
 
     setSystem(system);
 
-    console.log('Dialog neue Eingabe mit ok geschlossen', system);
+    console.log("Dialog neue Eingabe mit ok geschlossen", system);
 
-    let el = document.getElementById('id_button_nnodes') as drButtonPM;
-    console.log('el id_button_nnodes', el);
+    let el = document.getElementById("id_button_nnodes") as drButtonPM;
+    console.log("el id_button_nnodes", el);
     el.setValue(2);
 
-    el = document.getElementById('id_button_nelem') as drButtonPM;
+    el = document.getElementById("id_button_nelem") as drButtonPM;
     el.setValue(1);
-    el = document.getElementById('id_button_nnodalloads') as drButtonPM;
+    el = document.getElementById("id_button_nnodalloads") as drButtonPM;
     el.setValue(0);
-    el = document.getElementById('id_button_nstreckenlasten') as drButtonPM;
-    el.setValue(0);
-
-    el = document.getElementById('id_button_neinzellasten') as drButtonPM;
+    el = document.getElementById("id_button_nstreckenlasten") as drButtonPM;
     el.setValue(0);
 
-    el = document.getElementById('id_button_ntemperaturlasten') as drButtonPM;
+    el = document.getElementById("id_button_neinzellasten") as drButtonPM;
     el.setValue(0);
 
-    el = document.getElementById('id_button_nlastfaelle') as drButtonPM;
+    el = document.getElementById("id_button_ntemperaturlasten") as drButtonPM;
+    el.setValue(0);
+
+    el = document.getElementById("id_button_nlastfaelle") as drButtonPM;
     el.setValue(1);
-    el = document.getElementById('id_button_nkombinationen') as drButtonPM;
+    el = document.getElementById("id_button_nkombinationen") as drButtonPM;
     el.setValue(0);
-    el = document.getElementById('id_button_nstabvorverformungen') as drButtonPM;
+    el = document.getElementById("id_button_nstabvorverformungen") as drButtonPM;
     el.setValue(0);
 
-    el = document.getElementById('id_button_niter') as drButtonPM;
+    el = document.getElementById("id_button_niter") as drButtonPM;
     el.setValue(5);
 
-    el = document.getElementById('id_button_nnodalmass') as drButtonPM;
+    el = document.getElementById("id_button_nnodalmass") as drButtonPM;
     el.setValue(0);
 
-    el = document.getElementById('id_button_dyn_neigv') as drButtonPM;
+    el = document.getElementById("id_button_dyn_neigv") as drButtonPM;
     el.setValue(1);
 
-    let eli = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
-    eli.value = '1e-5';
+    let eli = document.getElementById("id_eps_disp_tol") as HTMLInputElement;
+    eli.value = "1e-5";
 
-    let els = document.getElementById('id_P_delta_option') as SlSelect;
-    els.setAttribute('value', 'false');
+    let els = document.getElementById("id_P_delta_option") as SlSelect;
+    els.setAttribute("value", "false");
 
-    els = document.getElementById('id_ausgabe_SG_option') as SlSelect;
-    els.setAttribute('value', 'true');
+    els = document.getElementById("id_ausgabe_SG_option") as SlSelect;
+    els.setAttribute("value", "true");
 
-    els = document.getElementById('id_eig_solver_option') as SlSelect;
-    els.setAttribute('value', '1');
+    els = document.getElementById("id_eig_solver_option") as SlSelect;
+    els.setAttribute("value", "1");
 
+    eli = document.getElementById("id_maxu_node") as HTMLInputElement;
+    eli.value = "";
 
-    eli = document.getElementById('id_maxu_node') as HTMLInputElement;
-    eli.value = ""
-
-    let elSel = document.getElementById('id_maxu_dir') as HTMLSelectElement;
+    let elSel = document.getElementById("id_maxu_dir") as HTMLSelectElement;
     elSel.options[1].selected = true;
 
-    eli = document.getElementById('id_maxu_schief') as HTMLInputElement;
-    eli.value = ""
+    eli = document.getElementById("id_maxu_schief") as HTMLInputElement;
+    eli.value = "";
 
-    el = document.getElementById('id_neigv') as drButtonPM;
-    el.setValue(1)
-
+    el = document.getElementById("id_neigv") as drButtonPM;
+    el.setValue(1);
 
     resizeTables();
     clearTables();
@@ -1948,16 +1814,16 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     reset_controlpanel_grafik();
 
     if (system === 1) {
-      el = document.getElementById('id_button_nteilungen') as drButtonPM;
+      el = document.getElementById("id_button_nteilungen") as drButtonPM;
       el.setValue(1);
     } else {
-      el = document.getElementById('id_button_nteilungen') as drButtonPM;
+      el = document.getElementById("id_button_nteilungen") as drButtonPM;
       el.setValue(10);
     }
 
     berechnungErforderlich(true);
 
-    let element = document.getElementById('id_quer'); // id_eingabe
+    let element = document.getElementById("id_quer"); // id_eingabe
     element?.click();
   }
 }
@@ -1966,15 +1832,15 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 export function set_current_filename(name: string) {
   //-------------------------------------------------------------------------------------------------------------
   currentFilename = name;
-  console.log('file name', name);
-  const el = document.getElementById('id_current_filename') as HTMLElement;
-  el.innerHTML = '&nbsp;&nbsp;aktueller Dateiname: ' + currentFilename;
+  console.log("file name", name);
+  const el = document.getElementById("id_current_filename") as HTMLElement;
+  el.innerHTML = "&nbsp;&nbsp;aktueller Dateiname: " + currentFilename;
 }
 
 //---------------------------------------------------------------------------------------------------------------
 function handleClick_eingabe_ueberpruefen() {
   //-------------------------------------------------------------------------------------------------------------
-  console.log('handleClick_eingabe_ueberpruefen()');
+  console.log("handleClick_eingabe_ueberpruefen()");
 
   resizeTables();
   rechnen(0);
@@ -1989,7 +1855,7 @@ function create_pdf() {
 //---------------------------------------------------------------------------------------------------------------
 function gleichungssystem_darstellen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
-  console.log('in gleichungssystem_darstellen', check);
+  console.log("in gleichungssystem_darstellen", check);
   show_gleichungssystem(check);
   //myFunction_get();
   //myFunction_set();
@@ -1998,21 +1864,19 @@ function gleichungssystem_darstellen(check: boolean) {
 //---------------------------------------------------------------------------------------------------------------
 function elem_select_changed() {
   //-------------------------------------------------------------------------------------------------------------
-  console.log('elem_select_changed');
-  const checkbox = document.getElementById(
-    'id_glsystem_darstellen'
-  ) as HTMLInputElement;
-  console.log('checkbox', checkbox.checked);
+  console.log("elem_select_changed");
+  const checkbox = document.getElementById("id_glsystem_darstellen") as HTMLInputElement;
+  console.log("checkbox", checkbox.checked);
   if (checkbox.checked) show_gleichungssystem(true);
 }
 
 //---------------------------------------------------------------------------------------------------------------
 function berechnungsart_changed() {
   //---------------------------------------------------------------------------------------------------------------
-  console.log('berechnungsart_changed');
-  const sel = document.getElementById('id_stadyn') as HTMLSelectElement;
-  const id_mass = document.getElementById('id_tab_mass') as SlSelect;
-  if (sel.value === '0') id_mass.disabled = true;
+  console.log("berechnungsart_changed");
+  const sel = document.getElementById("id_stadyn") as HTMLSelectElement;
+  const id_mass = document.getElementById("id_tab_mass") as SlSelect;
+  if (sel.value === "0") id_mass.disabled = true;
   else id_mass.disabled = false;
   berechnungErforderlich();
 }
@@ -2020,28 +1884,27 @@ function berechnungsart_changed() {
 //---------------------------------------------------------------------------------------------------------------
 function elementTabelle_gelenke_anzeigen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
-  console.log('in elementTabelle_gelenke_anzeigen', check);
+  console.log("in elementTabelle_gelenke_anzeigen", check);
 
   if (check) {
-    let el = document.getElementById('id_element_tabelle');
-    for (let i = 10; i > 4; i--) el?.setAttribute('show_column', String(i));
+    let el = document.getElementById("id_element_tabelle");
+    for (let i = 10; i > 4; i--) el?.setAttribute("show_column", String(i));
   } else {
-    let el = document.getElementById('id_element_tabelle');
-    for (let i = 10; i > 4; i--) el?.setAttribute('hide_column', String(i));
+    let el = document.getElementById("id_element_tabelle");
+    for (let i = 10; i > 4; i--) el?.setAttribute("hide_column", String(i));
   }
 }
 
 //---------------------------------------------------------------------------------------------------------------
 function elementTabelle_starre_enden_anzeigen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
-  console.log('in elementTabelle_gelenke_anzeigen', check);
+  console.log("in elementTabelle_gelenke_anzeigen", check);
 
   if (check) {
-    let el = document.getElementById('id_element_tabelle');
-    for (let i = 12; i > 10; i--) el?.setAttribute('show_column', String(i));
+    let el = document.getElementById("id_element_tabelle");
+    for (let i = 12; i > 10; i--) el?.setAttribute("show_column", String(i));
   } else {
-    let el = document.getElementById('id_element_tabelle');
-    for (let i = 12; i > 10; i--) el?.setAttribute('hide_column', String(i));
+    let el = document.getElementById("id_element_tabelle");
+    for (let i = 12; i > 10; i--) el?.setAttribute("hide_column", String(i));
   }
 }
-

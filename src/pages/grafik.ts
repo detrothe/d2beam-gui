@@ -33,6 +33,8 @@ let mouseOffsetX = 0.0
 let mouseOffsetY = 0.0
 let mouseDx = 0.0
 let mouseDz = 0.0
+let nFingers = 0;
+let touchLoop = 0;
 
 // Global vars to cache touch event state
 const evCache: any = [];
@@ -260,6 +262,9 @@ export function init_grafik(flag = 1) {
     }
     two = null;
 
+    // const el_container = document.getElementById('id_container') as HTMLDivElement
+    // el_container.style.display = 'none'
+
     // const elw = document.getElementById('artboard') as any
     // elw.addEventListener('touchstart', touchstart,  { passive: false });
     // elw.addEventListener('touchmove', touchmove,  { passive: false });
@@ -374,15 +379,17 @@ export function init_grafik(flag = 1) {
 
 }
 
-function touchdownHandler(ev: any) {
-    // The pointerdown event signals the start of a touch interaction.
-    // This event is cached to support 2-finger gestures
-    evCache.push(ev);
-    console.log("touchDown", ev.pointerId);
-    ev.preventDefault();
-}
+// function touchdownHandler(ev: any) {
+//     // The pointerdown event signals the start of a touch interaction.
+//     // This event is cached to support 2-finger gestures
+//     evCache.push(ev);
+//     console.log("touchDown", ev.pointerId);
+//     ev.preventDefault();
+// }
 
+//--------------------------------------------------------------------------------------------------------
 function touchmove(ev: TouchEvent) {
+    //--------------------------------------------------------------------------------------------------------
 
     console.log("in touchmove");
 
@@ -392,136 +399,155 @@ function touchmove(ev: TouchEvent) {
         let dx = ev.touches[0].clientX - ev.touches[1].clientX
         let dy = ev.touches[0].clientY - ev.touches[1].clientY
         const curDiff = Math.sqrt(dx * dx + dy * dy);
-        console.log("curDff,prevDiff", curDiff, prevDiff);
+        console.log("*********** curDff,prevDiff", curDiff, prevDiff, wheel_factor, curDiff / prevDiff, touchLoop);
 
-        if (curDiff < prevDiff) {
-            wheel_factor += 0.01;
-            //if (wheel_factor > 2) wheel_factor = 2.0
+        if (touchLoop === 1) {
+            if (curDiff < prevDiff) {
+                wheel_factor += 0.01;
+                //if (wheel_factor > 2) wheel_factor = 2.0
+            }
+            else if (curDiff > prevDiff) {
+                wheel_factor -= 0.01;
+                if (wheel_factor < 0.01) wheel_factor = 0.01
+            }
+            wheel_factor = prevDiff / curDiff
+            //prevDiff = curDiff;
+
+            // dx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2.
+            // dy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2.
+            // mouseDx += dx //ev.touches[0].clientX - mouseOffsetX
+            // mouseDz += dy //ev.touches[0].clientY - mouseOffsetY
+            // mouseOffsetX = ev.touches[0].clientX + dx
+            // mouseOffsetY = ev.touches[0].clientY + dy
+
+            drawsystem()
+        } else {
+            touchLoop = 1
+            prevDiff = curDiff;
         }
-        else if (curDiff > prevDiff) {
-            wheel_factor -= 0.01;
-            //if (wheel_factor < 0.5) wheel_factor = 0.5
-        }
-        prevDiff = curDiff;
-
-        // dx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2.
-        // dy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2.
-        // mouseDx += dx //ev.touches[0].clientX - mouseOffsetX
-        // mouseDz += dy //ev.touches[0].clientY - mouseOffsetY
-        // mouseOffsetX = ev.touches[0].clientX + dx
-        // mouseOffsetY = ev.touches[0].clientY + dy
-
-        drawsystem()
     }
     else {
         mouseDx += ev.touches[0].clientX - mouseOffsetX
         mouseDz += ev.touches[0].clientY - mouseOffsetY
         mouseOffsetX = ev.touches[0].clientX
         mouseOffsetY = ev.touches[0].clientY
+        console.log("++++++++++ mouseDx,mouseDz", mouseDx, mouseDz)
         drawsystem()
     }
 
 }
 
+//--------------------------------------------------------------------------------------------------------
 function touchstart(ev: any) {
-    //ev.preventDefault();
-    console.log("in touchstart");
+    //--------------------------------------------------------------------------------------------------------
+    ev.preventDefault();
 
     mouseOffsetX = ev.touches[0].clientX
     mouseOffsetY = ev.touches[0].clientY
+    if (ev.touches.length === 1) nFingers = 1
+    if (ev.touches.length === 2) {
+        nFingers = 2
+        touchLoop = 0
+    }
+    console.log("in touchstart", nFingers);
 }
 
+//--------------------------------------------------------------------------------------------------------
 function touchend(ev: any) {
-    //ev.preventDefault();
-    console.log("in touchend", ev.touches.length);
+    //--------------------------------------------------------------------------------------------------------
+    ev.preventDefault();
     prevDiff = 0.0
+    if (ev.touches.length === 1) nFingers = 1
+    if (ev.touches.length === 0) nFingers = 0
+    console.log("in touchend", ev.touches.length);
+    if (ev.touches.length < 2) touchLoop = 0;
 }
 
-function touchmoveHandler(ev: any) {
-    // This function implements a 2-pointer horizontal pinch/zoom gesture.
-    //
-    // If the distance between the two pointers has increased (zoom in),
-    // the target element's background is changed to "pink" and if the
-    // distance is decreasing (zoom out), the color is changed to "lightblue".
-    //
-    // This function sets the target element's border to "dashed" to visually
-    // indicate the pointer's target received a move event.
-    ev.stopPropagation();
-    ev.preventDefault();
-    //console.log("touchMove, length, ID", evCache.length, ev.pointerId);
+// function touchmoveHandler(ev: any) {
+//     // This function implements a 2-pointer horizontal pinch/zoom gesture.
+//     //
+//     // If the distance between the two pointers has increased (zoom in),
+//     // the target element's background is changed to "pink" and if the
+//     // distance is decreasing (zoom out), the color is changed to "lightblue".
+//     //
+//     // This function sets the target element's border to "dashed" to visually
+//     // indicate the pointer's target received a move event.
+//     ev.stopPropagation();
+//     ev.preventDefault();
+//     //console.log("touchMove, length, ID", evCache.length, ev.pointerId);
 
-    // Find this event in the cache and update its record with this event
-    // const index = evCache.findIndex(
-    //     (cachedEv: { pointerId: any; }) => cachedEv.pointerId === ev.pointerId,
-    // );
-    let index = -1;
-    for (let i = 0; i < evCache.length; i++) {
-        if (evCache[i].pointerId === ev.pointerId) index = i;
+//     // Find this event in the cache and update its record with this event
+//     // const index = evCache.findIndex(
+//     //     (cachedEv: { pointerId: any; }) => cachedEv.pointerId === ev.pointerId,
+//     // );
+//     let index = -1;
+//     for (let i = 0; i < evCache.length; i++) {
+//         if (evCache[i].pointerId === ev.pointerId) index = i;
 
-    }
-    console.log("touchMove, length, ID, index:", evCache.length, ev.pointerId, index);
-    if (index === -1) return;
-    evCache[index] = ev;
+//     }
+//     console.log("touchMove, length, ID, index:", evCache.length, ev.pointerId, index);
+//     if (index === -1) return;
+//     evCache[index] = ev;
 
-    // If two pointers are down, check for pinch gestures
-    if (evCache.length === 2) {
-        // Calculate the distance between the two pointers
-        const curDiff = Math.abs(evCache[0].clientX - evCache[1].clientX);
-        console.log("CURRENT DIFF ", curDiff);
+//     // If two pointers are down, check for pinch gestures
+//     if (evCache.length === 2) {
+//         // Calculate the distance between the two pointers
+//         const curDiff = Math.abs(evCache[0].clientX - evCache[1].clientX);
+//         console.log("CURRENT DIFF ", curDiff);
 
-        if (prevDiff > 0) {
-            if (curDiff > prevDiff) {
-                // The distance between the two pointers has increased
-                console.log("Pinch moving OUT -> Zoom in", curDiff);
-                //ev.target.style.background = "pink";
-            }
-            if (curDiff < prevDiff) {
-                // The distance between the two pointers has decreased
-                console.log("Pinch moving IN -> Zoom out", curDiff);
-                //ev.target.style.background = "lightblue";
-            }
-        }
+//         if (prevDiff > 0) {
+//             if (curDiff > prevDiff) {
+//                 // The distance between the two pointers has increased
+//                 console.log("Pinch moving OUT -> Zoom in", curDiff);
+//                 //ev.target.style.background = "pink";
+//             }
+//             if (curDiff < prevDiff) {
+//                 // The distance between the two pointers has decreased
+//                 console.log("Pinch moving IN -> Zoom out", curDiff);
+//                 //ev.target.style.background = "lightblue";
+//             }
+//         }
 
-        // Cache the distance for the next move event
-        prevDiff = curDiff;
-    }
-}
+//         // Cache the distance for the next move event
+//         prevDiff = curDiff;
+//     }
+// }
 
-function touchupHandler(ev: any) {
-    ev.preventDefault();
-    //console.log("touchupHandler", ev.type);
-    // Remove this pointer from the cache and reset the target's
-    // background and border
-    removeEvent(ev);
+// function touchupHandler(ev: any) {
+//     ev.preventDefault();
+//     //console.log("touchupHandler", ev.type);
+//     // Remove this pointer from the cache and reset the target's
+//     // background and border
+//     removeEvent(ev);
 
-    // If the number of pointers down is less than two then reset diff tracker
-    if (evCache.length < 2) {
-        prevDiff = -1;
-    }
-    console.log("touchupHandler", ev.type, evCache.length);
-}
+//     // If the number of pointers down is less than two then reset diff tracker
+//     if (evCache.length < 2) {
+//         prevDiff = -1;
+//     }
+//     console.log("touchupHandler", ev.type, evCache.length);
+// }
 
-function removeEvent(ev: any) {
-    // Remove this event from the target's cache
-    // const index = evCache.findIndex(
-    //     (cachedEv: { pointerId: any; }) => cachedEv.pointerId === ev.pointerId,
-    // );
-    if (evCache.length === 1) {
-        evCache.length = 0;
-    }
-    else {
-        let index = -1;
-        for (let i = 0; i < evCache.length; i++) {
-            if (evCache[i].pointerId === ev.pointerId) index = i;
+// function removeEvent(ev: any) {
+//     // Remove this event from the target's cache
+//     // const index = evCache.findIndex(
+//     //     (cachedEv: { pointerId: any; }) => cachedEv.pointerId === ev.pointerId,
+//     // );
+//     if (evCache.length === 1) {
+//         evCache.length = 0;
+//     }
+//     else {
+//         let index = -1;
+//         for (let i = 0; i < evCache.length; i++) {
+//             if (evCache[i].pointerId === ev.pointerId) index = i;
 
-        }
-        if (index > -1) {
-            console.log("vor evCache.length", evCache.length);
-            evCache.splice(index, 1);
-        }
-    }
-    console.log("in removeEvent, nach evCache.length", evCache.length);
-}
+//         }
+//         if (index > -1) {
+//             console.log("vor evCache.length", evCache.length);
+//             evCache.splice(index, 1);
+//         }
+//     }
+//     console.log("in removeEvent, nach evCache.length", evCache.length);
+// }
 
 //--------------------------------------------------------------------------------------------------------
 function wheel(ev: WheelEvent) {
@@ -529,12 +555,12 @@ function wheel(ev: WheelEvent) {
 
     //ev.preventDefault()  // wenn passive, sonst unkommentieren
     if (ev.deltaY > 0) {
-        wheel_factor += 0.1;
-        if (wheel_factor > 2) wheel_factor = 2.0
+        wheel_factor += 0.05;
+        if (wheel_factor > 3) wheel_factor = 3.0
     }
     else if (ev.deltaY < 0) {
-        wheel_factor -= 0.1;
-        if (wheel_factor < 0.5) wheel_factor = 0.5
+        wheel_factor -= 0.05;
+        if (wheel_factor < 0.2) wheel_factor = 0.2
     }
     // console.log('==========================in mousewheel', ev.deltaX, ev.deltaY, ev.offsetX, ev.offsetY, mouseDx, mouseDz)
 
@@ -700,7 +726,7 @@ export function drawsystem(svg_id = 'artboard') {
         //console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
         //write("grafik top: " + grafik_top)
         if (grafik_top === 0) grafik_top = 69
-        height = document.documentElement.clientHeight - grafik_top - 1 //- el?.getBoundingClientRect()?.height;
+        height = document.documentElement.clientHeight - grafik_top - 1 -20//- el?.getBoundingClientRect()?.height;
     }
 
     let breite: number
@@ -1888,15 +1914,11 @@ export function drawsystem(svg_id = 'artboard') {
     //svgElement = two.render
     //console.log("domElement", domElement)
     //domElement.addEventListener('mousedown', mousedown, false);
-
-    //domElement.addEventListener('wheel', wheel, { passive: true });
-
-
-
-    //domElement.addEventListener('wheel', mousewheel, false);
-    //domElement.addEventListener('mousedown', mousedown, false);
-    //domElement.addEventListener('mouseup', mouseup, false);
-
+    /*
+        // domElement.addEventListener('wheel', wheel, { passive: true });
+        // domElement.addEventListener('mousedown', mousedown, false);
+        // domElement.addEventListener('mouseup', mouseup, false);
+     */
     // domElement.addEventListener('pointerdown', touchdownHandler, false);
     // domElement.addEventListener('pointerup', touchupHandler, false);
     // domElement.addEventListener('pointercancel', touchupHandler, false);

@@ -13,7 +13,7 @@ export function testeZahl(wert: any) {
 }
 
 //------------------------------------------------------------------------------------------------
-export function testNumber(wert: any, zeile: number, spalte: number, id: any) {
+export function testNumber(wert: string, zeile: number, spalte: number, id: any) {
     //--------------------------------------------------------------------------------------------
 
     //console.log("id", id.rows.item(zeile).cells.item(spalte).firstElementChild)
@@ -21,15 +21,29 @@ export function testNumber(wert: any, zeile: number, spalte: number, id: any) {
 
     wert = wert.replace(/,/g, '.');
     //console.log('Komma entfernt',wert);
-    if (isNaN(wert)) {
-        //window.alert("Das ist keine Zahl ");
+    // let np = 0, ne = 0;
+    // for (let i = 0; i < wert.length; i++) {
+    //     if (wert[i] === '.') np++;
+    //     if (wert[i] === 'e') ne++;
+    //     if (wert[i] === 'E') ne++;
+    // }
+    // console.log("np,ne", wert, np, ne)
+    // //@ts-ignore
+    // if (np > 1 || ne > 1) {
+    //     write("Das ist keine zulässige Zahl in Zeile " + zeile + ", spalte " + spalte);
+    //     return NaN;
+    // }
+
+    let nwert = Number(wert)
+    if (isNaN(nwert)) {
+        write("Das ist keine zulässige Zahl in Zeile " + zeile + ", spalte " + spalte);
 
         //console.log("ss", zeile + spalte + id);
 
         id.rows.item(zeile).cells.item(spalte).firstElementChild.classList.add("input_select");
         return 0;
     }
-    return wert;
+    return nwert;
 }
 
 //------------------------------------------------------------------------------------------------
