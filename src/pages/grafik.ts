@@ -555,11 +555,11 @@ function wheel(ev: WheelEvent) {
 
     //ev.preventDefault()  // wenn passive, sonst unkommentieren
     if (ev.deltaY > 0) {
-        wheel_factor += 0.05;
+        wheel_factor += 0.025;
         if (wheel_factor > 3) wheel_factor = 3.0
     }
     else if (ev.deltaY < 0) {
-        wheel_factor -= 0.05;
+        wheel_factor -= 0.025;
         if (wheel_factor < 0.2) wheel_factor = 0.2
     }
     // console.log('==========================in mousewheel', ev.deltaX, ev.deltaY, ev.offsetX, ev.offsetY, mouseDx, mouseDz)
@@ -770,6 +770,11 @@ export function drawsystem(svg_id = 'artboard') {
         xmaxt = xmin * (1 - wheel_factor) / 2. + xmax * (1. + wheel_factor) / 2.
         zmint = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
         zmaxt = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
+
+        // xmint = xmin * (0 + wheel_factor) / 1. + xmax * (0 - wheel_factor) / 1.
+        // xmaxt = xmin * (0 - wheel_factor) / 1. + xmax * (0 + wheel_factor) / 1.
+        // zmint = zmin * (0 + wheel_factor) / 1. + zmax * (0 - wheel_factor) / 1.
+        // zmaxt = zmin * (0 - wheel_factor) / 1. + zmax * (0 + wheel_factor) / 1.
 
         console.log("xmint", wheel_factor, xmint, xmaxt, zmint, zmaxt)
 
@@ -1914,11 +1919,11 @@ export function drawsystem(svg_id = 'artboard') {
     //svgElement = two.render
     //console.log("domElement", domElement)
     //domElement.addEventListener('mousedown', mousedown, false);
-    /*
-        // domElement.addEventListener('wheel', wheel, { passive: true });
-        // domElement.addEventListener('mousedown', mousedown, false);
-        // domElement.addEventListener('mouseup', mouseup, false);
-     */
+
+        domElement.addEventListener('wheel', wheel, { passive: true });
+        domElement.addEventListener('mousedown', mousedown, false);
+        domElement.addEventListener('mouseup', mouseup, false);
+
     // domElement.addEventListener('pointerdown', touchdownHandler, false);
     // domElement.addEventListener('pointerup', touchupHandler, false);
     // domElement.addEventListener('pointercancel', touchupHandler, false);
