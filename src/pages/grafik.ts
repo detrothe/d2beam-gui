@@ -257,6 +257,7 @@ export function init_grafik(flag = 1) {
     mouseDx = 0.0
     mouseDz = 0.0
     wheel_factor = 1.0
+    touchLoop = 0
 
     if (drawPanel === 0) {
         myPanel();
@@ -394,10 +395,11 @@ function touchmove(ev: TouchEvent) {
     //--------------------------------------------------------------------------------------------------------
 
     console.log("in touchmove");
+    ev.preventDefault();
 
     if (ev.touches.length === 2) {
-        ev.stopPropagation();
-        ev.preventDefault();
+        // ev.stopPropagation();
+        // ev.preventDefault();
         let dx = ev.touches[0].clientX - ev.touches[1].clientX
         let dy = ev.touches[0].clientY - ev.touches[1].clientY
         const curDiff = Math.sqrt(dx * dx + dy * dy);
@@ -455,7 +457,7 @@ function touchstart(ev: any) {
     if (ev.touches.length === 1) nFingers = 1
     if (ev.touches.length === 2) {
         nFingers = 2
-        touchLoop = 0
+        //touchLoop = 0
     }
     console.log("in touchstart", nFingers);
 }
@@ -464,11 +466,11 @@ function touchstart(ev: any) {
 function touchend(ev: any) {
     //--------------------------------------------------------------------------------------------------------
     ev.preventDefault();
-    prevDiff = 0.0
+    //prevDiff = 0.0
     if (ev.touches.length === 1) nFingers = 1
     if (ev.touches.length === 0) nFingers = 0
     console.log("in touchend", ev.touches.length);
-    if (ev.touches.length < 2) touchLoop = 0;
+    //if (ev.touches.length < 2) touchLoop = 0;
 }
 
 // function touchmoveHandler(ev: any) {
@@ -4237,6 +4239,7 @@ function reset_grafik() {
     mouseDx = 0.0
     mouseDz = 0.0
     wheel_factor = 1.0
+    touchLoop = 0
     show_dyn_eigenformen = false;
 
     console.log("reset_grafik=")

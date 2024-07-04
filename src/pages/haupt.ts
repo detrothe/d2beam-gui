@@ -78,6 +78,8 @@ import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 //import { Children } from "two.js/src/children";
 
+let theFooter = '2D structural analysis of frames and trusses, v1.2.1,a, 4-Juli-2024, ';
+
 let dialog_querschnitt_new = true;
 let dialog_querschnitt_index = 0;
 let dialog_querschnitt_item_id = "";
@@ -281,9 +283,9 @@ portrait.addEventListener("change", function (e) {
 
         <dr-dialog_neue_eingabe id="id_dialog_neue_eingabe"></dr-dialog_neue_eingabe>
 
-        <div id="id_container" class="footer" >
-      <!-- <footer class="footer">-->
-        2D structural analysis of frames and trusses, v1.2.1,e, 2-Juli-2024,
+        <div id="id_container" class="footer" >${theFooter}
+      <!-- <footer class="footer">
+        2D structural analysis of frames and trusses, v1.2.1,a, 4-Juli-2024,-->
         <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
       <!--</footer>-->
     </div>

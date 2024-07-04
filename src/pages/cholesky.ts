@@ -49,11 +49,6 @@ export function cholesky(a: number[][], b: number[], n: number, flag: number) {
                 b[k] = s / a[k][k];
             }
 
-            //   for ( i = 0; i < n; i++)
-            //   {
-            //     printf("b(%i)= %lf\n",i,b[i]);
-            //   }
-
             for (i = n - 1; i >= 0; --i) {
                 s = b[i];
                 for (k = i + 1; k < n; ++k) {
