@@ -23,6 +23,7 @@ let lastFileHandleSVG = 'documents';
 let currentFilenameSVG = 'd2beam.svg'
 
 console.log("in grafik")
+let xmin0 = 0, xmax0 = 0, zmin0 = 0, zmax0 = 0
 
 //let two: Two
 let domElement: any = null
@@ -572,18 +573,18 @@ function wheel(ev: WheelEvent) {
     }
     else if (ev.deltaY < 0) {
         if (wheel_factor > -0.9) {
-        mouseCounter--;
-        wheel_factor = mouseCounter / 40.0;  //0.025;
-        //if (wheel_factor < 0.2) wheel_factor = 0.2
+            mouseCounter--;
+            wheel_factor = mouseCounter / 40.0;  //0.025;
+            //if (wheel_factor < 0.2) wheel_factor = 0.2
         }
     }
     // console.log('==========================in mousewheel', ev.deltaX, ev.deltaY, ev.offsetX, ev.offsetY, mouseDx, mouseDz)
 
     //    drawsystem()
 
-    console.log("WHEEL", mouseCounter, wheel_factor, ev.deltaY,ev.clientX,ev.offsetX)
-    mouseDx = ev.clientX -1471  //offsetX
-    mouseDz = ev.clientY -939  //offsetY
+    console.log("WHEEL", mouseCounter, wheel_factor, ev.deltaY, ev.clientX, ev.offsetX)
+    mouseDx = ev.clientX - 1471  //offsetX
+    mouseDz = ev.clientY - 939  //offsetY
 
     drawsystem()
 }
@@ -770,17 +771,29 @@ export function drawsystem(svg_id = 'artboard') {
     // xmaxw = xmin * (1 - wheel_factor) / 2. + xmax * (1. + wheel_factor) / 2.
     // zminw = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
     // zmaxw = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
+
+    console.log("tr",tr)
     if (tr === undefined) {
 
-        xminw = xmin
-        xmaxw = xmax
-        zminw = zmin
-        zmaxw = zmax
+        let dx = xmax - xmin;
+        let dz = zmax - zmin;
+
+        xmin0 = xmin - 0.2 * dx;
+        xmax0 = xmax + 0.2 * dx;
+        zmin0 = zmin - 0.2 * dz;
+        zmax0 = zmax + 0.2 * dz;
+
+        xminw = xmin0
+        xmaxw = xmax0
+        zminw = zmin0
+        zmaxw = zmax0
     } else {
         // let ax = tr.xWorld(mouseOffsetX)
         // let az = tr.zWorld(mouseOffsetY)
-        let dx = xmax - xmin
-        let dz = zmax - zmin
+        let dx = xmax0 - xmin0
+        let dz = zmax0 - zmin0
+        console.log("dx,dz",dx,dz)
+
         //console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
 
 
@@ -789,10 +802,10 @@ export function drawsystem(svg_id = 'artboard') {
         // zmint = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
         // zmaxt = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
 
-        xmint = xmin - dx * wheel_factor / 2.
-        xmaxt = xmax + dx * wheel_factor / 2.
-        zmint = zmin - dz * wheel_factor / 2.
-        zmaxt = zmax + dz * wheel_factor / 2.
+        xmint = xmin0 - dx * wheel_factor / 2.
+        xmaxt = xmax0 + dx * wheel_factor / 2.
+        zmint = zmin0 - dz * wheel_factor / 2.
+        zmaxt = zmax0 + dz * wheel_factor / 2.
 
         console.log("xmint", wheel_factor, xmint, xmaxt, zmint, zmaxt)
         dx = tr.World0(mouseDx)

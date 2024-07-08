@@ -1013,7 +1013,7 @@ class DrTabelle extends HTMLElement {
          return;
       }
       else if (ev.target.type === 'number') {
-         console.log("in sonst", ev.keycode)
+         console.log("in number", ev.key, ev.keycode)
          if (ev.key === '0' || ev.key === '1' || ev.key === '2' || ev.key === '3' || ev.key === '4' || ev.key === '5' || ev.key === '6' || ev.key === '7' || ev.key === '8' || ev.key === '9') { berechnungErforderlich(true); return; }                            // Ziffern 0-9
          //if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
          //if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad

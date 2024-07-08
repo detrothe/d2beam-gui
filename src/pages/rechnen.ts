@@ -538,6 +538,7 @@ export function rechnen(flag = 1) {
     THIIO_flag = Number(el.value);
 
     el = document.getElementById('id_maxu_node') as HTMLInputElement;
+    //console.log("id_maxu_node|",el.value,'|')
     maxU_node = Number(el.value);
 
     el = document.getElementById('id_maxu_dir') as HTMLSelectElement;
