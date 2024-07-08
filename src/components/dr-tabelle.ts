@@ -921,16 +921,19 @@ class DrTabelle extends HTMLElement {
       //write('KEYDOWN ' + ev.target.type + ' | ' + ev)
 
       console.log(
-         'KEYDOWN, keycode, id_input, id_tabelle',
+         'KEYDOWN, keycode, id_input, id_tabelle: ',
          ev.keyCode,
-         ev.target.id,
-         ev.target.offsetParent.offsetParent.id,
-         ev.target.type
+         ev.key,
+         ev.code,
+         //ev.target.id,
+         //ev.target.offsetParent.offsetParent.id,
+         //ev.target.type
       );
       //const tableCellId = ev.target.offsetParent.id;
 
-      write ("KEYDOWN ",ev.keycode)
-      console.log('KEYDOWN', ev.keyCode, ev.shiftKey, ev.key, ev);
+      write("KEYDOWN " + ev.code + " | ", ev.key)
+      //console.log('KEYDOWN', ev.keyCode, ev.shiftKey, ev.key, ev);
+
       //infoBox.innerHTML += "<br>key= " + ev.key + "  | keyCode= " + ev.keyCode
 
       //ev.target.style.backgroundColor = 'rgb(210,00,00)';
@@ -1009,7 +1012,7 @@ class DrTabelle extends HTMLElement {
          berechnungErforderlich(true);
          return;
       }
-      else  if (ev.target.type === 'number') {
+      else if (ev.target.type === 'number') {
          console.log("in sonst", ev.keycode)
          if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
          if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad
