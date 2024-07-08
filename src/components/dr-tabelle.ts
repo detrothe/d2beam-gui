@@ -1014,14 +1014,21 @@ class DrTabelle extends HTMLElement {
       }
       else if (ev.target.type === 'number') {
          console.log("in sonst", ev.keycode)
-         if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
-         if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad
-         if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) { berechnungErforderlich(true); return; } // e .  ,
-         if (ev.keyCode === 8 || ev.keyCode === 46) { berechnungErforderlich(true); return; }                         //  del, entfernen
-         if (ev.keyCode === 37 || ev.keyCode === 39 || ev.keyCode === 189) { berechnungErforderlich(true); return; }  // rechts links -
-         if (ev.keyCode === 9 || ev.keyCode === 27) { berechnungErforderlich(true); return; }                         // Tab, ESC
-         if (ev.keyCode === 173) { berechnungErforderlich(true); return; }                                            // - Zeichen bei Firefox
-         if (ev.keyCode === 0) { berechnungErforderlich(true); return; }                                              // - Zeichen bei Android Firefox
+         if (ev.key === '0' || ev.key === '1' || ev.key === '2' || ev.key === '3' || ev.key === '4' || ev.key === '5' || ev.key === '6' || ev.key === '7' || ev.key === '8' || ev.key === '9') { berechnungErforderlich(true); return; }                            // Ziffern 0-9
+         //if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
+         //if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad
+         if (ev.key === 'e'|| ev.key === 'E' || ev.key === '.' || ev.key === ',') { berechnungErforderlich(true); return; } // e .  ,
+         //if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) { berechnungErforderlich(true); return; } // e .  ,
+         //if (ev.keyCode === 8 || ev.keyCode === 46) { berechnungErforderlich(true); return; }                         //  del, entfernen
+         if (ev.key === 'Backspace' || ev.key === 'Delete') { berechnungErforderlich(true); return; }                         //  del, entfernen
+
+         if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') { berechnungErforderlich(true); return; }  // rechts links -
+         if (ev.key === 'Tab' || ev.key === 'Escape') { berechnungErforderlich(true); return; }                         // Tab, ESC
+         //if (ev.keyCode === 9 || ev.keyCode === 27) { berechnungErforderlich(true); return; }                         // Tab, ESC
+
+         if (ev.key === '-' || ev.key === '+') { berechnungErforderlich(true); return; }                                            // + und - Zeichen
+         //if (ev.keyCode === 173) { berechnungErforderlich(true); return; }                                            // - Zeichen bei Firefox
+         //if (ev.keyCode === 0) { berechnungErforderlich(true); return; }                                              // - Zeichen bei Android Firefox
 
          ev.preventDefault();
       }
