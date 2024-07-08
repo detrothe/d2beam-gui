@@ -37,6 +37,7 @@ let nFingers = 0;
 let touchLoop = 0;
 let touchDx = 0.0
 let touchDy = 0.0
+let mouseCounter = 0;
 
 // Global vars to cache touch event state
 const evCache: any = [];
@@ -256,7 +257,7 @@ export function init_grafik(flag = 1) {
 
     mouseDx = 0.0
     mouseDz = 0.0
-    wheel_factor = 1.0
+    wheel_factor = 0.0   // 1.0
     touchLoop = 0
 
     if (drawPanel === 0) {
@@ -565,17 +566,24 @@ function wheel(ev: WheelEvent) {
 
     //ev.preventDefault()  // wenn passive, sonst unkommentieren
     if (ev.deltaY > 0) {
-        wheel_factor += 0.025;
-        if (wheel_factor > 3) wheel_factor = 3.0
+        mouseCounter++;
+        wheel_factor = mouseCounter / 40.    //0.025;
+        //if (wheel_factor > 3) wheel_factor = 3.0
     }
     else if (ev.deltaY < 0) {
-        wheel_factor -= 0.025;
-        if (wheel_factor < 0.2) wheel_factor = 0.2
+        if (wheel_factor > -0.9) {
+        mouseCounter--;
+        wheel_factor = mouseCounter / 40.0;  //0.025;
+        //if (wheel_factor < 0.2) wheel_factor = 0.2
+        }
     }
     // console.log('==========================in mousewheel', ev.deltaX, ev.deltaY, ev.offsetX, ev.offsetY, mouseDx, mouseDz)
 
     //    drawsystem()
 
+    console.log("WHEEL", mouseCounter, wheel_factor, ev.deltaY,ev.clientX,ev.offsetX)
+    mouseDx = ev.clientX -1471  //offsetX
+    mouseDz = ev.clientY -939  //offsetY
 
     drawsystem()
 }
@@ -771,22 +779,25 @@ export function drawsystem(svg_id = 'artboard') {
     } else {
         // let ax = tr.xWorld(mouseOffsetX)
         // let az = tr.zWorld(mouseOffsetY)
-        let dx = tr.World0(mouseDx)
-        let dz = tr.World0(mouseDz)
-        console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
+        let dx = xmax - xmin
+        let dz = zmax - zmin
+        //console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
 
 
-        xmint = xmin * (1 + wheel_factor) / 2. + xmax * (1. - wheel_factor) / 2.
-        xmaxt = xmin * (1 - wheel_factor) / 2. + xmax * (1. + wheel_factor) / 2.
-        zmint = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
-        zmaxt = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
+        // xmint = xmin * (1 + wheel_factor) / 2. + xmax * (1. - wheel_factor) / 2.
+        // xmaxt = xmin * (1 - wheel_factor) / 2. + xmax * (1. + wheel_factor) / 2.
+        // zmint = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
+        // zmaxt = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
 
-        // xmint = xmin * (0 + wheel_factor) / 1. + xmax * (0 - wheel_factor) / 1.
-        // xmaxt = xmin * (0 - wheel_factor) / 1. + xmax * (0 + wheel_factor) / 1.
-        // zmint = zmin * (0 + wheel_factor) / 1. + zmax * (0 - wheel_factor) / 1.
-        // zmaxt = zmin * (0 - wheel_factor) / 1. + zmax * (0 + wheel_factor) / 1.
+        xmint = xmin - dx * wheel_factor / 2.
+        xmaxt = xmax + dx * wheel_factor / 2.
+        zmint = zmin - dz * wheel_factor / 2.
+        zmaxt = zmax + dz * wheel_factor / 2.
 
         console.log("xmint", wheel_factor, xmint, xmaxt, zmint, zmaxt)
+        dx = tr.World0(mouseDx)
+        dz = tr.World0(mouseDz)
+        console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
 
         xminw = xmint - dx
         xmaxw = xmaxt - dx
@@ -4238,8 +4249,9 @@ function reset_grafik() {
 
     mouseDx = 0.0
     mouseDz = 0.0
-    wheel_factor = 1.0
+    wheel_factor = 0.0  // 1.0
     touchLoop = 0
+    mouseCounter = 0;
     show_dyn_eigenformen = false;
 
     console.log("reset_grafik=")

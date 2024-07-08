@@ -1008,7 +1008,7 @@ class DrTabelle extends HTMLElement {
          berechnungErforderlich(true);
          return;
       }
-      else {
+      else  if (ev.target.type === 'number') {
          console.log("in sonst", ev.keycode)
          if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
          if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad
@@ -1020,6 +1020,20 @@ class DrTabelle extends HTMLElement {
          if (ev.keyCode === 0) { berechnungErforderlich(true); return; }                                              // - Zeichen bei Android Firefox
 
          ev.preventDefault();
+      }
+      else {
+         console.log("in sonst", ev.keycode)
+
+         ev.preventDefault();
+         return;
+         // if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
+         // if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad
+         // if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) { berechnungErforderlich(true); return; } // e .  ,
+         // if (ev.keyCode === 8 || ev.keyCode === 46) { berechnungErforderlich(true); return; }                         //  del, entfernen
+         // if (ev.keyCode === 37 || ev.keyCode === 39 || ev.keyCode === 189) { berechnungErforderlich(true); return; }  // rechts links -
+         // if (ev.keyCode === 9 || ev.keyCode === 27) { berechnungErforderlich(true); return; }                         // Tab, ESC
+         // if (ev.keyCode === 173) { berechnungErforderlich(true); return; }                                            // - Zeichen bei Firefox
+         // if (ev.keyCode === 0) { berechnungErforderlich(true); return; }                                              // - Zeichen bei Android Firefox
       }
    }
 

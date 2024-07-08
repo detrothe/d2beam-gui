@@ -26,13 +26,13 @@ class CTrans {
         this.zmin = Number(zmin);
         this.zmax = Number(zmax);
 
-        dx = this.xmax - this.xmin;
-        dz = this.zmax - this.zmin;
+        // dx = this.xmax - this.xmin;
+        // dz = this.zmax - this.zmin;
 
-        this.xmin -= 0.2 * dx;
-        this.xmax += 0.2 * dx;
-        this.zmin -= 0.2 * dz;
-        this.zmax += 0.2 * dz;
+        // this.xmin -= 0.2 * dx;
+        // this.xmax += 0.2 * dx;
+        // this.zmin -= 0.2 * dz;
+        // this.zmax += 0.2 * dz;
 
         this.dx = this.xmax - this.xmin;
         this.dz = this.zmax - this.zmin;
