@@ -30,6 +30,7 @@ let domElement: any = null
 let svgElement: any = null;
 let fullscreen = false;
 let wheel_factor = 1.0
+let wheel_factor_alt = 0.0
 let mouseOffsetX = 0.0
 let mouseOffsetY = 0.0
 let mouseDx = 0.0
@@ -39,6 +40,11 @@ let touchLoop = 0;
 let touchDx = 0.0
 let touchDy = 0.0
 let mouseCounter = 0;
+let firstTouch = true
+let curDiff = 0.0
+let curDiff_alt = 0.0
+let mouse_DownWX = 0.0
+let mouse_DownWY = 0.0
 
 // Global vars to cache touch event state
 const evCache: any = [];
@@ -259,7 +265,10 @@ export function init_grafik(flag = 1) {
     mouseDx = 0.0
     mouseDz = 0.0
     wheel_factor = 0.0   // 1.0
+    wheel_factor_alt = 0.0
     touchLoop = 0
+    firstTouch = true
+    curDiff_alt = 0.0
 
     if (drawPanel === 0) {
         myPanel();
@@ -404,21 +413,26 @@ function touchmove(ev: TouchEvent) {
         // ev.preventDefault();
         let dx = ev.touches[0].clientX - ev.touches[1].clientX
         let dy = ev.touches[0].clientY - ev.touches[1].clientY
-        const curDiff = Math.sqrt(dx * dx + dy * dy);
-        console.log("*********** curDff,prevDiff", curDiff, prevDiff, wheel_factor, curDiff / prevDiff, touchLoop);
+        curDiff = Math.sqrt(dx * dx + dy * dy);
+        //        curDiff = curDiff_alt + Math.sqrt(dx * dx + dy * dy);
+        console.log("*********** curDiff,prevDiff", curDiff, prevDiff, wheel_factor, curDiff / prevDiff, touchLoop);
         dx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2.
         dy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2.
+        write('wheel_factor ' + wheel_factor + '|' + Math.sqrt(dx * dx + dy * dy) + '|' + curDiff_alt)
+
+        // write('prevDiff ', prevDiff)
 
         if (touchLoop === 1) {
-            if (curDiff < prevDiff) {
-                wheel_factor += 0.01;
-                //if (wheel_factor > 2) wheel_factor = 2.0
-            }
-            else if (curDiff > prevDiff) {
-                wheel_factor -= 0.01;
-                if (wheel_factor < 0.01) wheel_factor = 0.01
-            }
-            wheel_factor = prevDiff / curDiff
+            // if (curDiff < prevDiff) {
+            //     wheel_factor += 0.01;
+            //     //if (wheel_factor > 2) wheel_factor = 2.0
+            // }
+            // else if (curDiff > prevDiff) {
+            //     wheel_factor -= 0.01;
+            //     if (wheel_factor < 0.01) wheel_factor = 0.01
+            // }
+            wheel_factor = prevDiff / curDiff - 1.0
+            //write('wheel_factor ', wheel_factor)
             //prevDiff = curDiff;
 
             mouseDx += dx - touchDx
@@ -433,7 +447,12 @@ function touchmove(ev: TouchEvent) {
             drawsystem()
         } else {
             touchLoop = 1
-            prevDiff = curDiff;
+            if (firstTouch) {
+                prevDiff = curDiff;
+                firstTouch = false
+            } else {
+                //prevDiff = curDiff;
+            }
             touchDx = dx
             touchDy = dy
         }
@@ -460,6 +479,7 @@ function touchstart(ev: any) {
     if (ev.touches.length === 2) {
         nFingers = 2
         //touchLoop = 0
+        wheel_factor = wheel_factor_alt
     }
     console.log("in touchstart", nFingers);
 }
@@ -469,97 +489,18 @@ function touchend(ev: any) {
     //--------------------------------------------------------------------------------------------------------
     ev.preventDefault();
     //prevDiff = 0.0
-    if (ev.touches.length === 1) nFingers = 1
+    if (ev.touches.length === 1) {
+        nFingers = 1
+        curDiff_alt = curDiff
+    }
     if (ev.touches.length === 0) nFingers = 0
     console.log("in touchend", ev.touches.length);
     //if (ev.touches.length < 2) touchLoop = 0;
+    wheel_factor_alt = wheel_factor
+    //curDiff_alt = curDiff
 }
 
-// function touchmoveHandler(ev: any) {
-//     // This function implements a 2-pointer horizontal pinch/zoom gesture.
-//     //
-//     // If the distance between the two pointers has increased (zoom in),
-//     // the target element's background is changed to "pink" and if the
-//     // distance is decreasing (zoom out), the color is changed to "lightblue".
-//     //
-//     // This function sets the target element's border to "dashed" to visually
-//     // indicate the pointer's target received a move event.
-//     ev.stopPropagation();
-//     ev.preventDefault();
-//     //console.log("touchMove, length, ID", evCache.length, ev.pointerId);
 
-//     // Find this event in the cache and update its record with this event
-//     // const index = evCache.findIndex(
-//     //     (cachedEv: { pointerId: any; }) => cachedEv.pointerId === ev.pointerId,
-//     // );
-//     let index = -1;
-//     for (let i = 0; i < evCache.length; i++) {
-//         if (evCache[i].pointerId === ev.pointerId) index = i;
-
-//     }
-//     console.log("touchMove, length, ID, index:", evCache.length, ev.pointerId, index);
-//     if (index === -1) return;
-//     evCache[index] = ev;
-
-//     // If two pointers are down, check for pinch gestures
-//     if (evCache.length === 2) {
-//         // Calculate the distance between the two pointers
-//         const curDiff = Math.abs(evCache[0].clientX - evCache[1].clientX);
-//         console.log("CURRENT DIFF ", curDiff);
-
-//         if (prevDiff > 0) {
-//             if (curDiff > prevDiff) {
-//                 // The distance between the two pointers has increased
-//                 console.log("Pinch moving OUT -> Zoom in", curDiff);
-//                 //ev.target.style.background = "pink";
-//             }
-//             if (curDiff < prevDiff) {
-//                 // The distance between the two pointers has decreased
-//                 console.log("Pinch moving IN -> Zoom out", curDiff);
-//                 //ev.target.style.background = "lightblue";
-//             }
-//         }
-
-//         // Cache the distance for the next move event
-//         prevDiff = curDiff;
-//     }
-// }
-
-// function touchupHandler(ev: any) {
-//     ev.preventDefault();
-//     //console.log("touchupHandler", ev.type);
-//     // Remove this pointer from the cache and reset the target's
-//     // background and border
-//     removeEvent(ev);
-
-//     // If the number of pointers down is less than two then reset diff tracker
-//     if (evCache.length < 2) {
-//         prevDiff = -1;
-//     }
-//     console.log("touchupHandler", ev.type, evCache.length);
-// }
-
-// function removeEvent(ev: any) {
-//     // Remove this event from the target's cache
-//     // const index = evCache.findIndex(
-//     //     (cachedEv: { pointerId: any; }) => cachedEv.pointerId === ev.pointerId,
-//     // );
-//     if (evCache.length === 1) {
-//         evCache.length = 0;
-//     }
-//     else {
-//         let index = -1;
-//         for (let i = 0; i < evCache.length; i++) {
-//             if (evCache[i].pointerId === ev.pointerId) index = i;
-
-//         }
-//         if (index > -1) {
-//             console.log("vor evCache.length", evCache.length);
-//             evCache.splice(index, 1);
-//         }
-//     }
-//     console.log("in removeEvent, nach evCache.length", evCache.length);
-// }
 
 //--------------------------------------------------------------------------------------------------------
 function wheel(ev: WheelEvent) {
@@ -582,9 +523,15 @@ function wheel(ev: WheelEvent) {
 
     //    drawsystem()
 
+    // mouse_DownWX=tr.xWorld(ev.offsetX)
+    // mouse_DownWY=tr.zWorld(ev.offsetY)
+
     console.log("WHEEL", mouseCounter, wheel_factor, ev.deltaY, ev.clientX, ev.offsetX)
-    mouseDx = ev.clientX - 1471  //offsetX
-    mouseDz = ev.clientY - 939  //offsetY
+    mouseDx = ev.clientX - document.documentElement.clientWidth / 2  //1471  //offsetX
+    mouseDz = ev.clientY - document.documentElement.clientHeight / 2  //939  //offsetY
+     mouseDx -= tr.xPix(mouse_DownWX-(xmin0+xmax0)/2)
+     mouseDz -= tr.zPix(mouse_DownWY-(zmin0+zmax0)/2)
+    console.log("wheeli", mouse_DownWX - (xmin0 + xmax0) / 2, tr.xPix(mouse_DownWX - (xmin0 + xmax0) / 2))
 
     drawsystem()
 }
@@ -605,6 +552,10 @@ function mousedown(ev: any) {
     //mouseDz = 0.0
     //wheel_factor=1.0
     //drawsystem()
+
+    mouse_DownWX = tr.xWorld(ev.offsetX)
+    mouse_DownWY = tr.zWorld(ev.offsetY)
+    console.log("mouse_DownWX", mouse_DownWX, mouse_DownWY)
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -763,7 +714,7 @@ export function drawsystem(svg_id = 'artboard') {
     show_lasten_temp = show_lasten;    // Bei Schnittgrößen werden Lasten temporär nicht gezeichnet
 
 
-    console.log("MAX", slmax, xmin, xmax, zmin, zmax)
+    //console.log("MAX", slmax, xmin, xmax, zmin, zmax)
     //console.log('maxValue_lf(komb)', maxValue_lf, maxValue_komb)
 
 
@@ -772,7 +723,7 @@ export function drawsystem(svg_id = 'artboard') {
     // zminw = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
     // zmaxw = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
 
-    console.log("tr",tr)
+    //console.log("tr", tr)
     if (tr === undefined) {
 
         let dx = xmax - xmin;
@@ -792,7 +743,7 @@ export function drawsystem(svg_id = 'artboard') {
         // let az = tr.zWorld(mouseOffsetY)
         let dx = xmax0 - xmin0
         let dz = zmax0 - zmin0
-        console.log("dx,dz",dx,dz)
+        //console.log("dx,dz",dx,dz)
 
         //console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
 
@@ -801,13 +752,15 @@ export function drawsystem(svg_id = 'artboard') {
         // xmaxt = xmin * (1 - wheel_factor) / 2. + xmax * (1. + wheel_factor) / 2.
         // zmint = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
         // zmaxt = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
+        //write('wheel_factor ', wheel_factor)
+        console.log('wheel_factor ', wheel_factor)
 
         xmint = xmin0 - dx * wheel_factor / 2.
         xmaxt = xmax0 + dx * wheel_factor / 2.
         zmint = zmin0 - dz * wheel_factor / 2.
         zmaxt = zmax0 + dz * wheel_factor / 2.
 
-        console.log("xmint", wheel_factor, xmint, xmaxt, zmint, zmaxt)
+        //console.log("xmint", wheel_factor, xmint, xmaxt, zmint, zmaxt)
         dx = tr.World0(mouseDx)
         dz = tr.World0(mouseDz)
         console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
@@ -823,7 +776,7 @@ export function drawsystem(svg_id = 'artboard') {
 
 
     if (tr === undefined) {
-        console.log("in undefined")
+        //console.log("in undefined")
         tr = new CTrans(xminw, zminw, xmaxw, zmaxw, breite, hoehe)
     } else {
         tr.init(xminw, zminw, xmaxw, zmaxw, breite, hoehe);
