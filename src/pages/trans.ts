@@ -84,7 +84,10 @@ class CTrans {
         //return this.xmax - xPix * this.dx / this.width;
         return xPix * this.dx / this.width + this.xmin;
     }
-
+    xWorld0(xPix: number) {
+        //return this.xmax - xPix * this.dx / this.width;
+        return xPix * this.dx / this.width - this.xmin;
+    }
     zWorld(zPix: number) {
         return zPix * this.dz / this.height + this.zmin;
     }

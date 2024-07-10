@@ -45,6 +45,8 @@ let curDiff = 0.0
 let curDiff_alt = 0.0
 let mouse_DownWX = 0.0
 let mouse_DownWY = 0.0
+let init = true
+let ev_deltaY_last = 0
 
 // Global vars to cache touch event state
 const evCache: any = [];
@@ -269,12 +271,18 @@ export function init_grafik(flag = 1) {
     touchLoop = 0
     firstTouch = true
     curDiff_alt = 0.0
+    mouse_DownWX=0.0
+    mouse_DownWY=0.0
+    ev_deltaY_last=0.0
 
     if (drawPanel === 0) {
         myPanel();
         drawPanel = 1;
     }
     two = null;
+
+    init = true;
+    window.addEventListener('wheel', wheel, { passive: false });
 
     // const el_container = document.getElementById('id_container') as HTMLDivElement
     // el_container.style.display = 'none'
@@ -506,16 +514,22 @@ function touchend(ev: any) {
 function wheel(ev: WheelEvent) {
     //----------------------------------------------------------------------------------------------------
 
-    //ev.preventDefault()  // wenn passive, sonst unkommentieren
+    ev.stopImmediatePropagation()
+    ev.preventDefault()  // wenn passive, sonst unkommentieren
+    console.log("ev.deltaY",ev.deltaY,ev.deltaMode)
+
+   // if ( ev.deltaY === ev_deltaY_last ) return;
+    ev_deltaY_last = ev.deltaY
+
     if (ev.deltaY > 0) {
         mouseCounter++;
-        wheel_factor = mouseCounter / 40.    //0.025;
+        wheel_factor = mouseCounter / 60.    //0.025;
         //if (wheel_factor > 3) wheel_factor = 3.0
     }
     else if (ev.deltaY < 0) {
-        if (wheel_factor > -0.9) {
+        if (mouseCounter > -58) {
             mouseCounter--;
-            wheel_factor = mouseCounter / 40.0;  //0.025;
+            wheel_factor = mouseCounter / 60.0;  //0.025;
             //if (wheel_factor < 0.2) wheel_factor = 0.2
         }
     }
@@ -526,12 +540,18 @@ function wheel(ev: WheelEvent) {
     // mouse_DownWX=tr.xWorld(ev.offsetX)
     // mouse_DownWY=tr.zWorld(ev.offsetY)
 
-    console.log("WHEEL", mouseCounter, wheel_factor, ev.deltaY, ev.clientX, ev.offsetX)
+    //console.log("WHEEL", mouseCounter, wheel_factor, ev.deltaY, ev.clientX, ev.offsetX)
     mouseDx = ev.clientX - document.documentElement.clientWidth / 2  //1471  //offsetX
     mouseDz = ev.clientY - document.documentElement.clientHeight / 2  //939  //offsetY
-     mouseDx -= tr.xPix(mouse_DownWX-(xmin0+xmax0)/2)
-     mouseDz -= tr.zPix(mouse_DownWY-(zmin0+zmax0)/2)
-    console.log("wheeli", mouse_DownWX - (xmin0 + xmax0) / 2, tr.xPix(mouse_DownWX - (xmin0 + xmax0) / 2))
+    // mouseDx = ev.clientX - mouse_DownWX
+    // mouseDz = ev.clientY - mouse_DownWY
+    //console.log("wheel0 ", ev.clientX, ev.clientY, document.documentElement.clientWidth, document.documentElement.clientHeight)
+    //mouseDx -= tr.xPix(mouse_DownWX - (xmin0 + xmax0) / 2)
+    //mouseDz -= tr.zPix(mouse_DownWY - (zmin0 + zmax0) / 2)
+    //console.log("wheel1 ", mouse_DownWX, mouse_DownWY, (xmin0 + xmax0) / 2, (zmin0 + zmax0) / 2)
+    //console.log("wheeli ", mouse_DownWX - (xmin0 + xmax0) / 2, tr.xPix(mouse_DownWX - (xmin0 + xmax0) / 2))
+    //console.log("wheel2 ", mouseDx, mouseDz)
+
 
     drawsystem()
 }
@@ -553,8 +573,12 @@ function mousedown(ev: any) {
     //wheel_factor=1.0
     //drawsystem()
 
-    mouse_DownWX = tr.xWorld(ev.offsetX)
-    mouse_DownWY = tr.zWorld(ev.offsetY)
+    //mouse_DownWX = tr.xWorld(ev.offsetX)
+    //mouse_DownWY = tr.zWorld(ev.offsetY)
+
+    //mouse_DownWX = ev.offsetX
+    //mouse_DownWY = ev.offsetY
+
     console.log("mouse_DownWX", mouse_DownWX, mouse_DownWY)
 }
 
@@ -591,6 +615,11 @@ function mouseup(ev: any) {
     // else if (ev.wheelDeltaY < 0) wheel_factor += 0.1;
     window.removeEventListener('mousemove', mousemove, false);
 
+    mouse_DownWX = (xmax0 + xmin0) / 2-tr.xWorld(ev.offsetX)
+    mouse_DownWY = (zmax0 + zmin0) / 2-tr.zWorld(ev.offsetY)
+
+    console.log("mouse_UP WX", mouse_DownWX, mouse_DownWY)
+
     //drawsystem()
 }
 
@@ -612,8 +641,10 @@ export function drawsystem(svg_id = 'artboard') {
 
     //evCache.length = 0;
 
+    //window.removeEventListener('wheel', wheel);
+
     if (domElement != null) {
-        // domElement.removeEventListener('wheel', wheel, { passive: true });
+        domElement.removeEventListener('wheel', wheel, { passive: false });
         // domElement.removeEventListener('mousedown', mousedown, false);
         // domElement.removeEventListener('mouseup', mousemove, false);
 
@@ -714,7 +745,7 @@ export function drawsystem(svg_id = 'artboard') {
     show_lasten_temp = show_lasten;    // Bei Schnittgrößen werden Lasten temporär nicht gezeichnet
 
 
-    //console.log("MAX", slmax, xmin, xmax, zmin, zmax)
+    console.log("MAX", slmax, xmin, xmax, zmin, zmax)
     //console.log('maxValue_lf(komb)', maxValue_lf, maxValue_komb)
 
 
@@ -738,11 +769,17 @@ export function drawsystem(svg_id = 'artboard') {
         xmaxw = xmax0
         zminw = zmin0
         zmaxw = zmax0
+        console.log("xmin0", xmin0, xmax0, zmin0, zmax0)
     } else {
         // let ax = tr.xWorld(mouseOffsetX)
         // let az = tr.zWorld(mouseOffsetY)
         let dx = xmax0 - xmin0
         let dz = zmax0 - zmin0
+
+        xmin0 = xmin - 0.2 * dx;
+        xmax0 = xmax + 0.2 * dx;
+        zmin0 = zmin - 0.2 * dz;
+        zmax0 = zmax + 0.2 * dz;
         //console.log("dx,dz",dx,dz)
 
         //console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
@@ -753,22 +790,43 @@ export function drawsystem(svg_id = 'artboard') {
         // zmint = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
         // zmaxt = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
         //write('wheel_factor ', wheel_factor)
-        console.log('wheel_factor ', wheel_factor)
+        //console.log('wheel_factor ', wheel_factor)
 
         xmint = xmin0 - dx * wheel_factor / 2.
         xmaxt = xmax0 + dx * wheel_factor / 2.
         zmint = zmin0 - dz * wheel_factor / 2.
         zmaxt = zmax0 + dz * wheel_factor / 2.
 
-        //console.log("xmint", wheel_factor, xmint, xmaxt, zmint, zmaxt)
-        dx = tr.World0(mouseDx)
-        dz = tr.World0(mouseDz)
-        console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
+        // let ddx = (xmaxt - xmint)/2
+        // let ddz = (zmaxt - zmint)/2
+        // let ddx = (xmax0 + xmin0) / 2
+        // let ddz = (zmax0 + zmin0) / 2
+        //ddx = 0; ddz = 0;
+        //console.log("xmint", wheel_factor, xmint, xmaxt, zmint, zmaxt, mouse_DownWX,  mouse_DownWY,ddx,ddz)
+//        dx = tr.World0(mouseDx) +  ddx - mouse_DownWX   //+ mouse_DownWX
+//        dz = tr.World0(mouseDz) + (ddz - mouse_DownWY)  //+ mouse_DownWY
+        dx = tr.World0(mouseDx) +  mouse_DownWX   //+ mouse_DownWX
+        dz = tr.World0(mouseDz) + mouse_DownWY  //+ mouse_DownWY
+        // dx=mouse_DownWX
+        // dz=mouse_DownWY
+        //console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
+
+        // xminw = xmint - dx - ddx //dx
+        // xmaxw = xmaxt - dx - ddx//dx
+        // zminw = zmint - dz - ddz//dz
+        // zmaxw = zmaxt - dz - ddz//dz
+
+        // xminw = xmint  - ddx //dx
+        // xmaxw = xmaxt  - ddx//dx
+        // zminw = zmint  - ddz//dz
+        // zmaxw = zmaxt  - ddz//dz
 
         xminw = xmint - dx
         xmaxw = xmaxt - dx
         zminw = zmint - dz
         zmaxw = zmaxt - dz
+        console.log("xminw", xminw, xmaxw, zminw, zmaxw)
+
     }
     //     xminw = ax - wheel_factor * (xmax - xmin)/2
     //     xmaxw = ax + wheel_factor * (xmax - xmin)/2
@@ -779,7 +837,10 @@ export function drawsystem(svg_id = 'artboard') {
         //console.log("in undefined")
         tr = new CTrans(xminw, zminw, xmaxw, zmaxw, breite, hoehe)
     } else {
+        //if (init) {
         tr.init(xminw, zminw, xmaxw, zmaxw, breite, hoehe);
+        init = false;
+        //}
     }
 
     { // für Ausdruck des Systems in pdf-Datei
@@ -1907,7 +1968,8 @@ export function drawsystem(svg_id = 'artboard') {
     //console.log("domElement", domElement)
     //domElement.addEventListener('mousedown', mousedown, false);
 
-    domElement.addEventListener('wheel', wheel, { passive: true });
+    //domElement.addEventListener('wheel', wheel, { passive: false });
+    //window.addEventListener('wheel', wheel, { passive: false });
     domElement.addEventListener('mousedown', mousedown, false);
     domElement.addEventListener('mouseup', mouseup, false);
 
@@ -4219,6 +4281,9 @@ function reset_grafik() {
     touchLoop = 0
     mouseCounter = 0;
     show_dyn_eigenformen = false;
+    mouse_DownWX=0.0
+    mouse_DownWY=0.0
+    ev_deltaY_last=0.0
 
     console.log("reset_grafik=")
     drawsystem();
