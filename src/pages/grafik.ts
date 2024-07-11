@@ -414,7 +414,7 @@ export function init_grafik(flag = 1) {
 function touchmove(ev: TouchEvent) {
     //--------------------------------------------------------------------------------------------------------
 
-    console.log("in touchmove",ev.touches.length);
+    console.log("in touchmove", ev.touches.length);
     ev.preventDefault();
 
     if (ev.touches.length === 2) {
@@ -425,11 +425,17 @@ function touchmove(ev: TouchEvent) {
         curDiff = Math.sqrt(dx * dx + dy * dy) * 0.5;
         //        curDiff = curDiff_alt + Math.sqrt(dx * dx + dy * dy);
         //console.log("*********** curDiff,prevDiff", curDiff, prevDiff, wheel_factor, curDiff / prevDiff, touchLoop);
-        dx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2.
-        dy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2.
+        dx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2 //+ document.documentElement.clientWidth / 2
+        dy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2  // + document.documentElement.clientHeight / 2
+
+        // mouse_DownWX = (xmax0 + xmin0) / 2 - tr.xWorld(dx)
+        // mouse_DownWY = (zmax0 + zmin0) / 2 - tr.zWorld(dy)
+        // dx =  document.documentElement.clientWidth / 2
+        // dy =  document.documentElement.clientHeight / 2
         //console.log('touchmove wheel_factor ' + wheel_factor + '|' + prevDiff / curDiff + '|' + wheel_factor_alt+ '|'+touchLoop)
 
         // write('prevDiff ', prevDiff)
+
 
         if (touchLoop === 1) {
             // if (curDiff < prevDiff) {
@@ -440,20 +446,24 @@ function touchmove(ev: TouchEvent) {
             //     wheel_factor -= 0.01;
             //     if (wheel_factor < 0.01) wheel_factor = 0.01
             // }
-            wheel_factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
-            //write('wheel_factor ', wheel_factor)
-            //prevDiff = curDiff;
+            let factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
+            if (factor > -0.9 && factor < 0.2) {
+                wheel_factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
+                //write('wheel_factor ', wheel_factor)
+                //prevDiff = curDiff;
 
-            mouseDx += dx - touchDx
-            mouseDz += dy - touchDy
-            touchDx = dx
-            touchDy = dy
-            // mouseDx += dx //ev.touches[0].clientX - mouseOffsetX
-            // mouseDz += dy //ev.touches[0].clientY - mouseOffsetY
-            // mouseOffsetX = ev.touches[0].clientX + dx
-            // mouseOffsetY = ev.touches[0].clientY + dy
+                mouseDx += dx - touchDx
+                mouseDz += dy - touchDy
+                touchDx = dx
+                touchDy = dy
+                // mouseDx += dx //ev.touches[0].clientX - mouseOffsetX
+                // mouseDz += dy //ev.touches[0].clientY - mouseOffsetY
+                // mouseOffsetX = ev.touches[0].clientX + dx
+                // mouseOffsetY = ev.touches[0].clientY + dy
+                console.log('wheelfaktor', wheel_factor)
 
-            drawsystem()
+                drawsystem()
+            }
         } else {
             touchLoop = 1
             if (firstTouch) {
@@ -529,7 +539,7 @@ function touchend(ev: any) {
 function wheel(ev: WheelEvent) {
     //----------------------------------------------------------------------------------------------------
 
-    ev.stopImmediatePropagation()
+    //ev.stopImmediatePropagation()
     ev.preventDefault()
     if (started) return;
 
@@ -539,8 +549,10 @@ function wheel(ev: WheelEvent) {
     ev_deltaY_last = ev.deltaY
 
     if (ev.deltaY > 0) {
-        mouseCounter++;
-        wheel_factor = mouseCounter / 60.    //0.025;
+        if (mouseCounter < 40) {
+            mouseCounter++;
+            wheel_factor = mouseCounter / 60.    //0.025;
+        }
         //if (wheel_factor > 3) wheel_factor = 3.0
     }
     else if (ev.deltaY < 0) {
@@ -569,14 +581,14 @@ function wheel(ev: WheelEvent) {
     //console.log("wheeli ", mouse_DownWX - (xmin0 + xmax0) / 2, tr.xPix(mouse_DownWX - (xmin0 + xmax0) / 2))
     //console.log("wheel2 ", mouseDx, mouseDz)
 
-    let startTime: any
-    let endTime: any
-    startTime = performance.now();
-    started = true
-    drawsystem()
-    started = false
-    endTime = performance.now();
-    console.log("ev.deltaY", ev.deltaY, ev.deltaMode, (endTime - startTime), 'msec')
+    // let startTime: any
+    // let endTime: any
+    // startTime = performance.now();
+    // started = true
+    // drawsystem()
+    // started = false
+    // endTime = performance.now();
+    // console.log("ev.deltaY", ev.deltaY, ev.deltaMode, (endTime - startTime), 'msec')
 }
 
 //--------------------------------------------------------------------------------------------------------
