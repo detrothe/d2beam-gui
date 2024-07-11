@@ -541,7 +541,7 @@ function wheel(ev: WheelEvent) {
 
     //ev.stopImmediatePropagation()
     ev.preventDefault()
-    if (started) return;
+    //if (started) return;
 
     //console.log("ev.deltaY", ev.deltaY, ev.deltaMode)
 
@@ -581,14 +581,14 @@ function wheel(ev: WheelEvent) {
     //console.log("wheeli ", mouse_DownWX - (xmin0 + xmax0) / 2, tr.xPix(mouse_DownWX - (xmin0 + xmax0) / 2))
     //console.log("wheel2 ", mouseDx, mouseDz)
 
-    // let startTime: any
-    // let endTime: any
-    // startTime = performance.now();
-    // started = true
-    // drawsystem()
-    // started = false
-    // endTime = performance.now();
-    // console.log("ev.deltaY", ev.deltaY, ev.deltaMode, (endTime - startTime), 'msec')
+    let startTime: any
+    let endTime: any
+    startTime = performance.now();
+    started = true
+     drawsystem()
+    started = false
+    endTime = performance.now();
+    console.log("ev.deltaY", ev.deltaY, ev.deltaMode, (endTime - startTime), 'msec')
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -671,7 +671,8 @@ export function drawsystem(svg_id = 'artboard') {
     let height = 0
 
     var params = {
-        fullscreen: false
+        fullscreen: false,
+        type: Two.Types.canvas
     };
 
     //evCache.length = 0;
@@ -680,22 +681,18 @@ export function drawsystem(svg_id = 'artboard') {
 
     if (domElement != null) {
         domElement.removeEventListener('wheel', wheel, { passive: false });
-        // domElement.removeEventListener('mousedown', mousedown, false);
-        // domElement.removeEventListener('mouseup', mousemove, false);
+         domElement.removeEventListener('mousedown', mousedown, false);
+         domElement.removeEventListener('mouseup', mousemove, false);
 
+        // domElement.removeEventListener('touchstart', touchstart, { passive: false });
+        // domElement.removeEventListener('touchmove', touchmove, { passive: false });
+        // domElement.removeEventListener('touchend', touchend, { passive: false });
         //domElement.removeEventListener();
 
         // domElement.removeEventListener('pointerdown', touchdownHandler, false);  // , false
         // domElement.removeEventListener('pointerup', touchupHandler, false);
         // domElement.removeEventListener('pointermove', touchmoveHandler, false);
 
-        // domElement.removeEventListener('pointercancel', touchupHandler, false);
-        // domElement.removeEventListener('pointerout', touchupHandler, false);
-        // domElement.removeEventListener('pointerleave', touchupHandler, false);
-
-        //domElement.removeEventListener('touchstart', touchstart, { passive: false });
-        //domElement.removeEventListener('touchmove', touchmove, { passive: false });
-        //domElement.removeEventListener('touchend', touchend, { passive: false });
     }
 
     // const tab_group = document.getElementById('container') as any;
