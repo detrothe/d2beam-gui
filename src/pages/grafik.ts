@@ -581,14 +581,14 @@ function wheel(ev: WheelEvent) {
     //console.log("wheeli ", mouse_DownWX - (xmin0 + xmax0) / 2, tr.xPix(mouse_DownWX - (xmin0 + xmax0) / 2))
     //console.log("wheel2 ", mouseDx, mouseDz)
 
-    let startTime: any
-    let endTime: any
-    startTime = performance.now();
-    started = true
-     drawsystem()
-    started = false
-    endTime = performance.now();
-    console.log("ev.deltaY", ev.deltaY, ev.deltaMode, (endTime - startTime), 'msec')
+    // let startTime: any
+    // let endTime: any
+    // startTime = performance.now();
+    // started = true
+    drawsystem()
+    // started = false
+    // endTime = performance.now();
+    // console.log("ev.deltaY", ev.deltaY, ev.deltaMode, (endTime - startTime), 'msec')
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -672,7 +672,7 @@ export function drawsystem(svg_id = 'artboard') {
 
     var params = {
         fullscreen: false,
-        type: Two.Types.canvas
+        //type: Two.Types.canvas
     };
 
     //evCache.length = 0;
@@ -681,9 +681,13 @@ export function drawsystem(svg_id = 'artboard') {
 
     if (domElement != null) {
         domElement.removeEventListener('wheel', wheel, { passive: false });
-         domElement.removeEventListener('mousedown', mousedown, false);
-         domElement.removeEventListener('mouseup', mousemove, false);
+        domElement.removeEventListener('mousedown', mousedown, false);
+        domElement.removeEventListener('mouseup', mousemove, false);
 
+        //console.log('domElement',domElement)
+        let parent = domElement.parentElement
+        //console.log("Parent ", parent)
+        if (parent) parent.removeChild(domElement);
         // domElement.removeEventListener('touchstart', touchstart, { passive: false });
         // domElement.removeEventListener('touchmove', touchmove, { passive: false });
         // domElement.removeEventListener('touchend', touchend, { passive: false });
@@ -736,14 +740,23 @@ export function drawsystem(svg_id = 'artboard') {
 
     const artboard = document.getElementById(svg_id) as any;
     // console.log("artboard", artboard)
+
     if (two !== null) {
+        // let parent = two.renderer.domElement.parentElement
+        // console.log("Parent ", parent)
+
         two.unbind('update')
         two.pause()
         two.removeEventListener()
         two.clear()
-    }
-    two = new Two(params).appendTo(artboard);
 
+        //two.bind('update')
+        //        let parent = two.renderer.domElement.parentelement;
+        //console.log("Parent ", parent)
+        //if (parent) parent.removeChild(two.renderer.domElement);
+    } //else {
+        two = new Two(params).appendTo(artboard);
+    //}
     console.log("width,height from two.js ", two.width, two.height)
 
     //let el1 = document.getElementById("id_tab_group") as any   // id_tab_group
