@@ -531,6 +531,7 @@ function touchend(ev: any) {
     if (ev.touches.length === 1) {
         nFingers = 1
         curDiff_alt = curDiff
+        touchLoop = 0
     }
     if (ev.touches.length === 0) nFingers = 0
     console.log("in touchend", ev.touches.length);
@@ -684,11 +685,25 @@ export function drawsystem(svg_id = 'artboard') {
     //evCache.length = 0;
 
     //window.removeEventListener('wheel', wheel);
+    if (two !== null) {
+        // let parent = two.renderer.domElement.parentElement
+        // console.log("Parent ", parent)
+
+        two.unbind('update')
+        two.pause()
+        two.removeEventListener()
+        two.clear()
+
+        //two.bind('update')
+        //        let parent = two.renderer.domElement.parentelement;
+        //console.log("Parent ", parent)
+        //if (parent) parent.removeChild(two.renderer.domElement);
+    }
 
     if (domElement != null) {
-        domElement.removeEventListener('wheel', wheel, { passive: false });
-        domElement.removeEventListener('mousedown', mousedown, false);
-        domElement.removeEventListener('mouseup', mousemove, false);
+        // domElement.removeEventListener('wheel', wheel, { passive: false });
+        // domElement.removeEventListener('mousedown', mousedown, false);
+        // domElement.removeEventListener('mouseup', mousemove, false);
 
         //console.log('domElement',domElement)
         let parent = domElement.parentElement
@@ -719,25 +734,6 @@ export function drawsystem(svg_id = 'artboard') {
     console.log("childElementCount", elem.childElementCount)
 
     if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
-    /*
-        while (elem.hasChildNodes()) {  // alte Zeichnungen entfernen
-            elem.removeChild(elem?.lastChild);  //   ?.firstChild);
-        }
-    */
-    /*
-        const el_container = document.getElementById('panel_gui') as any; //HTMLDivElement;
-
-
-        const pane = new Pane({ container: el_container});  // document.querySelector('#id_grafik')
-
-        const PARAMS = {
-            speed: 0.5,
-        };
-
-        pane.addInput(PARAMS, 'speed');
-
-        //return;
-    */
 
 
     let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen || show_stabvorverformung || show_dyn_eigenformen);
@@ -747,20 +743,20 @@ export function drawsystem(svg_id = 'artboard') {
     const artboard = document.getElementById(svg_id) as any;
     // console.log("artboard", artboard)
 
-    if (two !== null) {
-        // let parent = two.renderer.domElement.parentElement
-        // console.log("Parent ", parent)
+    // if (two !== null) {
+    //     // let parent = two.renderer.domElement.parentElement
+    //     // console.log("Parent ", parent)
 
-        two.unbind('update')
-        two.pause()
-        two.removeEventListener()
-        two.clear()
+    //     two.unbind('update')
+    //     two.pause()
+    //     two.removeEventListener()
+    //     two.clear()
 
-        //two.bind('update')
-        //        let parent = two.renderer.domElement.parentelement;
-        //console.log("Parent ", parent)
-        //if (parent) parent.removeChild(two.renderer.domElement);
-    } //else {
+    //     //two.bind('update')
+    //     //        let parent = two.renderer.domElement.parentelement;
+    //     //console.log("Parent ", parent)
+    //     //if (parent) parent.removeChild(two.renderer.domElement);
+    // } //else {
     two = null;
     two = new Two(params).appendTo(artboard);
     //}
