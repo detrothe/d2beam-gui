@@ -435,7 +435,7 @@ function touchmove(ev: TouchEvent) {
         //console.log('touchmove wheel_factor ' + wheel_factor + '|' + prevDiff / curDiff + '|' + wheel_factor_alt+ '|'+touchLoop)
 
         // write('prevDiff ', prevDiff)
-
+        dx=0.0; dy = 0.0
 
         if (touchLoop === 1) {
             // if (curDiff < prevDiff) {
@@ -477,19 +477,22 @@ function touchmove(ev: TouchEvent) {
         }
     }
     else if (ev.touches.length === 1) {
-        // let dx = (ev.touches[0].clientX )
-        // let dy = (ev.touches[0].clientY )
-        // console.log("finger 1",dx,dy,touchLoop)
-        // if (touchLoop === 1) {
-        //     mouseDx += dx - touchDx
-        //     mouseDz += dy - touchDy
-        //     touchDx = dx
-        //     touchDy = dy
-        // } else {
-        //     touchLoop = 1
-        //     touchDx = dx
-        //     touchDy = dy
-        // }
+
+        let dx = (ev.touches[0].clientX )
+        let dy = (ev.touches[0].clientY )
+//        console.log("finger 1",dx,dy,touchLoop)
+        if (touchLoop === 1) {
+            mouseDx += dx - touchDx
+            mouseDz += dy - touchDy
+            console.log("finger 1",mouseDx,mouseDz,touchLoop)
+            touchDx = dx
+            touchDy = dy
+            drawsystem()
+        } else {
+            touchLoop = 1
+            touchDx = dx
+            touchDy = dy
+        }
 
         // mouseDx += ev.touches[0].clientX - mouseOffsetX
         // mouseDz += ev.touches[0].clientY - mouseOffsetY
@@ -508,7 +511,10 @@ function touchstart(ev: any) {
 
     mouseOffsetX = ev.touches[0].clientX
     mouseOffsetY = ev.touches[0].clientY
-    if (ev.touches.length === 1) nFingers = 1
+    if (ev.touches.length === 1) {
+        nFingers = 1
+        touchLoop=0
+    }
     if (ev.touches.length === 2) {
         nFingers = 2
         touchLoop = 0
@@ -548,14 +554,14 @@ function wheel(ev: WheelEvent) {
     // if ( ev.deltaY === ev_deltaY_last ) return;
     ev_deltaY_last = ev.deltaY
 
-    if (ev.deltaY > 0) {
+    if (ev.deltaY > 0) {       // Bild wird kleiner
         if (mouseCounter < 40) {
             mouseCounter++;
             wheel_factor = mouseCounter / 60.    //0.025;
         }
         //if (wheel_factor > 3) wheel_factor = 3.0
     }
-    else if (ev.deltaY < 0) {
+    else if (ev.deltaY < 0) {   // zoom in, Detail
         if (mouseCounter > -58) {
             mouseCounter--;
             wheel_factor = mouseCounter / 60.0;  //0.025;
@@ -755,7 +761,8 @@ export function drawsystem(svg_id = 'artboard') {
         //console.log("Parent ", parent)
         //if (parent) parent.removeChild(two.renderer.domElement);
     } //else {
-        two = new Two(params).appendTo(artboard);
+    two = null;
+    two = new Two(params).appendTo(artboard);
     //}
     console.log("width,height from two.js ", two.width, two.height)
 
