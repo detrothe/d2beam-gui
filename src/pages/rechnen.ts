@@ -2849,7 +2849,7 @@ async function calculate() {
     startTime = performance.now();
 
     init_grafik(1);
-    drawsystem('svg_artboard');
+    //   debug  drawsystem('svg_artboard');
 
     drawsystem();
 

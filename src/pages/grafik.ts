@@ -48,6 +48,8 @@ let mouse_DownWY = 0.0
 let init = true
 let ev_deltaY_last = 0
 let started = false
+let centerX=0.0
+let centerY=0.0
 
 // Global vars to cache touch event state
 const evCache: any = [];
@@ -275,6 +277,8 @@ export function init_grafik(flag = 1) {
     mouse_DownWX = 0.0
     mouse_DownWY = 0.0
     ev_deltaY_last = 0.0
+    centerX=0.0
+    centerY=0.0
 
     if (drawPanel === 0) {
         myPanel();
@@ -400,6 +404,71 @@ export function init_grafik(flag = 1) {
         }
     }
 
+    if (two !== null) {
+        // let parent = two.renderer.domElement.parentElement
+        // console.log("Parent ", parent)
+
+        two.unbind('update')
+        two.pause()
+        two.removeEventListener()
+        two.clear()
+
+        //two.bind('update')
+        //        let parent = two.renderer.domElement.parentelement;
+        //console.log("Parent ", parent)
+        //if (parent) parent.removeChild(two.renderer.domElement);
+    }
+
+    if (domElement != null) {
+        // domElement.removeEventListener('wheel', wheel, { passive: false });
+        // domElement.removeEventListener('mousedown', mousedown, false);
+        // domElement.removeEventListener('mouseup', mousemove, false);
+
+        //console.log('domElement',domElement)
+        let parent = domElement.parentElement
+        //console.log("Parent ", parent)
+        if (parent) parent.removeChild(domElement);
+
+    }
+
+    // const tab_group = document.getElementById('container') as any;
+    // tab_group.hidden=true
+
+    // for (let i = 0; i < two.scene.children.length; i++) {
+    //     let child = two.scene.children[i];
+    //     two.scene.remove(child);
+    //     Two.Utils.dispose(child);
+    // }
+
+    console.log("__________________________________  G R A F I K  ___________")
+    // const elem = document.getElementById(svg_id) as any; //HTMLDivElement;
+    // console.log("childElementCount", elem.childElementCount)
+
+    // if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
+
+
+    var params = {
+        fullscreen: false,
+        //type: Two.Types.canvas
+    };
+
+    two = null;
+    const artboard = document.getElementById('artboard') as any;
+
+    two = new Two(params).appendTo(artboard);
+
+    domElement = two.renderer.domElement;
+    //svgElement = two.render
+    //console.log("domElement", domElement)
+    //domElement.addEventListener('mousedown', mousedown, false);
+
+    domElement.addEventListener('wheel', wheel, { passive: false });
+    domElement.addEventListener('mousedown', mousedown, false);
+    domElement.addEventListener('mouseup', mouseup, false);
+
+    domElement.addEventListener('touchstart', touchstart, { passive: false });
+    domElement.addEventListener('touchmove', touchmove, { passive: false });
+    domElement.addEventListener('touchend', touchend, { passive: false });
 }
 
 // function touchdownHandler(ev: any) {
@@ -435,7 +504,7 @@ function touchmove(ev: TouchEvent) {
         //console.log('touchmove wheel_factor ' + wheel_factor + '|' + prevDiff / curDiff + '|' + wheel_factor_alt+ '|'+touchLoop)
 
         // write('prevDiff ', prevDiff)
-        dx=0.0; dy = 0.0
+        dx = 0.0; dy = 0.0
 
         if (touchLoop === 1) {
             // if (curDiff < prevDiff) {
@@ -478,13 +547,13 @@ function touchmove(ev: TouchEvent) {
     }
     else if (ev.touches.length === 1) {
 
-        let dx = (ev.touches[0].clientX )
-        let dy = (ev.touches[0].clientY )
-//        console.log("finger 1",dx,dy,touchLoop)
+        let dx = (ev.touches[0].clientX)
+        let dy = (ev.touches[0].clientY)
+        //        console.log("finger 1",dx,dy,touchLoop)
         if (touchLoop === 1) {
             mouseDx += dx - touchDx
             mouseDz += dy - touchDy
-            console.log("finger 1",mouseDx,mouseDz,touchLoop)
+            console.log("finger 1", mouseDx, mouseDz, touchLoop)
             touchDx = dx
             touchDy = dy
             drawsystem()
@@ -513,7 +582,7 @@ function touchstart(ev: any) {
     mouseOffsetY = ev.touches[0].clientY
     if (ev.touches.length === 1) {
         nFingers = 1
-        touchLoop=0
+        touchLoop = 0
     }
     if (ev.touches.length === 2) {
         nFingers = 2
@@ -533,8 +602,13 @@ function touchend(ev: any) {
         curDiff_alt = curDiff
         touchLoop = 0
     }
-    if (ev.touches.length === 0) nFingers = 0
+    if (ev.touches.length === 0) {
+        nFingers = 0
+        mouse_DownWX = (xmax0 + xmin0) / 2 - tr.xWorld(ev.touches[0].clientX)
+        mouse_DownWY = (zmax0 + zmin0) / 2 - tr.zWorld(ev.touches[0].clientY)
+    }
     console.log("in touchend", ev.touches.length);
+    write ("touchend "+mouse_DownWX + "|"+mouse_DownWY)
     //if (ev.touches.length < 2) touchLoop = 0;
     wheel_factor_alt = wheel_factor
     //curDiff_alt = curDiff
@@ -606,7 +680,7 @@ function mousedown(ev: any) {
     ev.preventDefault()
     // if (ev.wheelDeltaY > 0) wheel_factor -= 0.1;
     // else if (ev.wheelDeltaY < 0) wheel_factor += 0.1;
-    window.addEventListener('mousemove', mousemove, false);
+    domElement.addEventListener('mousemove', mousemove, false);
 
     mouseOffsetX = ev.offsetX
     mouseOffsetY = ev.offsetY
@@ -655,12 +729,18 @@ function mouseup(ev: any) {
     ev.preventDefault()
     // if (ev.wheelDeltaY > 0) wheel_factor -= 0.1;
     // else if (ev.wheelDeltaY < 0) wheel_factor += 0.1;
-    window.removeEventListener('mousemove', mousemove, false);
+    domElement.removeEventListener('mousemove', mousemove, false);
 
     mouse_DownWX = (xmax0 + xmin0) / 2 - tr.xWorld(ev.offsetX)
     mouse_DownWY = (zmax0 + zmin0) / 2 - tr.zWorld(ev.offsetY)
+    //mouse_DownWX = tr.xWorld(document.documentElement.clientWidth / 2)- tr.xWorld(ev.offsetX)
+    //mouse_DownWY = tr.zWorld(document.documentElement.clientHeight / 2)- tr.zWorld(ev.offsetY)
 
-    console.log("mouse_UP WX", mouse_DownWX, mouse_DownWY)
+    centerX = tr.xWorld(document.documentElement.clientWidth / 2)- tr.xWorld(ev.offsetX)
+    centerY = tr.zWorld(document.documentElement.clientHeight / 2)- tr.zWorld(ev.offsetY)
+    console.log("centerX,centerY", centerX, centerY,tr.xWorld(ev.offsetX),tr.zWorld(ev.offsetY))
+
+//    console.log("mouse_UP WX", mouse_DownWX, mouse_DownWY)
 
     //drawsystem()
 }
@@ -677,63 +757,65 @@ export function drawsystem(svg_id = 'artboard') {
 
     let height = 0
 
-    var params = {
-        fullscreen: false,
-        //type: Two.Types.canvas
-    };
+    two.clear()
+
+    // var params = {
+    //     fullscreen: false,
+    //     //type: Two.Types.canvas
+    // };
 
     //evCache.length = 0;
 
     //window.removeEventListener('wheel', wheel);
-    if (two !== null) {
-        // let parent = two.renderer.domElement.parentElement
-        // console.log("Parent ", parent)
+    // if (two !== null) {
+    //     // let parent = two.renderer.domElement.parentElement
+    //     // console.log("Parent ", parent)
 
-        two.unbind('update')
-        two.pause()
-        two.removeEventListener()
-        two.clear()
+    //     two.unbind('update')
+    //     two.pause()
+    //     two.removeEventListener()
+    //     two.clear()
 
-        //two.bind('update')
-        //        let parent = two.renderer.domElement.parentelement;
-        //console.log("Parent ", parent)
-        //if (parent) parent.removeChild(two.renderer.domElement);
-    }
-
-    if (domElement != null) {
-        // domElement.removeEventListener('wheel', wheel, { passive: false });
-        // domElement.removeEventListener('mousedown', mousedown, false);
-        // domElement.removeEventListener('mouseup', mousemove, false);
-
-        //console.log('domElement',domElement)
-        let parent = domElement.parentElement
-        //console.log("Parent ", parent)
-        if (parent) parent.removeChild(domElement);
-        // domElement.removeEventListener('touchstart', touchstart, { passive: false });
-        // domElement.removeEventListener('touchmove', touchmove, { passive: false });
-        // domElement.removeEventListener('touchend', touchend, { passive: false });
-        //domElement.removeEventListener();
-
-        // domElement.removeEventListener('pointerdown', touchdownHandler, false);  // , false
-        // domElement.removeEventListener('pointerup', touchupHandler, false);
-        // domElement.removeEventListener('pointermove', touchmoveHandler, false);
-
-    }
-
-    // const tab_group = document.getElementById('container') as any;
-    // tab_group.hidden=true
-
-    // for (let i = 0; i < two.scene.children.length; i++) {
-    //     let child = two.scene.children[i];
-    //     two.scene.remove(child);
-    //     Two.Utils.dispose(child);
+    //     //two.bind('update')
+    //     //        let parent = two.renderer.domElement.parentelement;
+    //     //console.log("Parent ", parent)
+    //     //if (parent) parent.removeChild(two.renderer.domElement);
     // }
 
-    console.log("__________________________________  G R A F I K  ___________")
-    const elem = document.getElementById(svg_id) as any; //HTMLDivElement;
-    console.log("childElementCount", elem.childElementCount)
+    // if (domElement != null) {
+    //     // domElement.removeEventListener('wheel', wheel, { passive: false });
+    //     // domElement.removeEventListener('mousedown', mousedown, false);
+    //     // domElement.removeEventListener('mouseup', mousemove, false);
 
-    if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
+    //     //console.log('domElement',domElement)
+    //     let parent = domElement.parentElement
+    //     //console.log("Parent ", parent)
+    //     if (parent) parent.removeChild(domElement);
+    //     // domElement.removeEventListener('touchstart', touchstart, { passive: false });
+    //     // domElement.removeEventListener('touchmove', touchmove, { passive: false });
+    //     // domElement.removeEventListener('touchend', touchend, { passive: false });
+    //     //domElement.removeEventListener();
+
+    //     // domElement.removeEventListener('pointerdown', touchdownHandler, false);  // , false
+    //     // domElement.removeEventListener('pointerup', touchupHandler, false);
+    //     // domElement.removeEventListener('pointermove', touchmoveHandler, false);
+
+    // }
+
+    // // const tab_group = document.getElementById('container') as any;
+    // // tab_group.hidden=true
+
+    // // for (let i = 0; i < two.scene.children.length; i++) {
+    // //     let child = two.scene.children[i];
+    // //     two.scene.remove(child);
+    // //     Two.Utils.dispose(child);
+    // // }
+
+     console.log("__________________________________  G R A F I K  ___________")
+    // const elem = document.getElementById(svg_id) as any; //HTMLDivElement;
+    // console.log("childElementCount", elem.childElementCount)
+
+    // if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
 
 
     let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen || show_stabvorverformung || show_dyn_eigenformen);
@@ -757,9 +839,11 @@ export function drawsystem(svg_id = 'artboard') {
     //     //console.log("Parent ", parent)
     //     //if (parent) parent.removeChild(two.renderer.domElement);
     // } //else {
-    two = null;
-    two = new Two(params).appendTo(artboard);
-    //}
+
+
+    // two = null;
+    // two = new Two(params).appendTo(artboard);
+    // //}
     console.log("width,height from two.js ", two.width, two.height)
 
     //let el1 = document.getElementById("id_tab_group") as any   // id_tab_group
@@ -803,6 +887,7 @@ export function drawsystem(svg_id = 'artboard') {
     // zmaxw = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
 
     //console.log("tr", tr)
+
     if (tr === undefined) {
 
         let dx = xmax - xmin;
@@ -821,6 +906,13 @@ export function drawsystem(svg_id = 'artboard') {
     } else {
         // let ax = tr.xWorld(mouseOffsetX)
         // let az = tr.zWorld(mouseOffsetY)
+
+        // get word koordinate of Center
+
+        //  centerX = tr.xWorld(document.documentElement.clientWidth / 2)
+        //  centerY = tr.zWorld(height/2)
+//        console.log("centerX,centerY", centerX, centerY,document.documentElement.clientWidth / 2,height/2)
+
         let dx = xmax0 - xmin0
         let dz = zmax0 - zmin0
 
@@ -853,8 +945,15 @@ export function drawsystem(svg_id = 'artboard') {
         //console.log("xmint", wheel_factor, xmint, xmaxt, zmint, zmaxt, mouse_DownWX,  mouse_DownWY,ddx,ddz)
         //        dx = tr.World0(mouseDx) +  ddx - mouse_DownWX   //+ mouse_DownWX
         //        dz = tr.World0(mouseDz) + (ddz - mouse_DownWY)  //+ mouse_DownWY
+
+
         dx = tr.World0(mouseDx) + mouse_DownWX   //+ mouse_DownWX
         dz = tr.World0(mouseDz) + mouse_DownWY  //+ mouse_DownWY
+       // dx = tr.World0(mouseDx) + centerX   //+ mouse_DownWX
+        //dz = tr.World0(mouseDz) + centerY  //+ mouse_DownWY
+//dx = centerX
+//dz =centerY
+
         // dx=mouse_DownWX
         // dz=mouse_DownWY
         //console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
@@ -882,7 +981,7 @@ export function drawsystem(svg_id = 'artboard') {
 
 
     if (tr === undefined) {
-        //console.log("in undefined")
+        console.log("in undefined")
         tr = new CTrans(xminw, zminw, xmaxw, zmaxw, breite, hoehe)
     } else {
         //if (init) {
@@ -2011,27 +2110,27 @@ export function drawsystem(svg_id = 'artboard') {
     //el = document.querySelector('.footer'); //.getElementById("container")
     //console.log("nach update container footer boundingRect", el?.getBoundingClientRect())
 
-    domElement = two.renderer.domElement;
-    //svgElement = two.render
-    //console.log("domElement", domElement)
-    //domElement.addEventListener('mousedown', mousedown, false);
+    // domElement = two.renderer.domElement;
+    // //svgElement = two.render
+    // //console.log("domElement", domElement)
+    // //domElement.addEventListener('mousedown', mousedown, false);
 
-    domElement.addEventListener('wheel', wheel, { passive: false });
-    //window.addEventListener('wheel', wheel, { passive: false });
-    domElement.addEventListener('mousedown', mousedown, false);
-    domElement.addEventListener('mouseup', mouseup, false);
+    // domElement.addEventListener('wheel', wheel, { passive: false });
+    // //window.addEventListener('wheel', wheel, { passive: false });
+    // domElement.addEventListener('mousedown', mousedown, false);
+    // domElement.addEventListener('mouseup', mouseup, false);
 
-    // domElement.addEventListener('pointerdown', touchdownHandler, false);
-    // domElement.addEventListener('pointerup', touchupHandler, false);
-    // domElement.addEventListener('pointercancel', touchupHandler, false);
-    // domElement.addEventListener('pointerout', touchupHandler, false);
-    // domElement.addEventListener('pointerleave', touchupHandler, false);
-    // domElement.addEventListener('pointermove', touchmoveHandler, false);
+    // // domElement.addEventListener('pointerdown', touchdownHandler, false);
+    // // domElement.addEventListener('pointerup', touchupHandler, false);
+    // // domElement.addEventListener('pointercancel', touchupHandler, false);
+    // // domElement.addEventListener('pointerout', touchupHandler, false);
+    // // domElement.addEventListener('pointerleave', touchupHandler, false);
+    // // domElement.addEventListener('pointermove', touchmoveHandler, false);
 
 
-    domElement.addEventListener('touchstart', touchstart, { passive: false });
-    domElement.addEventListener('touchmove', touchmove, { passive: false });
-    domElement.addEventListener('touchend', touchend, { passive: false });
+    // domElement.addEventListener('touchstart', touchstart, { passive: false });
+    // domElement.addEventListener('touchmove', touchmove, { passive: false });
+    // domElement.addEventListener('touchend', touchend, { passive: false });
 
 
 }
@@ -4333,6 +4432,8 @@ function reset_grafik() {
     mouse_DownWY = 0.0
     ev_deltaY_last = 0.0
     wheel_factor_alt = 0.0
+    centerX=0.0
+    centerY=0.0
 
     console.log("reset_grafik=")
     drawsystem();
