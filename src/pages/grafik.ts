@@ -48,8 +48,10 @@ let mouse_DownWY = 0.0
 let init = true
 let ev_deltaY_last = 0
 let started = false
-let centerX=0.0
-let centerY=0.0
+let centerX = 0.0
+let centerY = 0.0
+let centerX_last = 0.0
+let centerY_last = 0.0
 
 // Global vars to cache touch event state
 const evCache: any = [];
@@ -277,8 +279,8 @@ export function init_grafik(flag = 1) {
     mouse_DownWX = 0.0
     mouse_DownWY = 0.0
     ev_deltaY_last = 0.0
-    centerX=0.0
-    centerY=0.0
+    centerX = 0.0
+    centerY = 0.0
 
     if (drawPanel === 0) {
         myPanel();
@@ -521,14 +523,12 @@ function touchmove(ev: TouchEvent) {
                 //write('wheel_factor ', wheel_factor)
                 //prevDiff = curDiff;
 
-                mouseDx += dx - touchDx
-                mouseDz += dy - touchDy
-                touchDx = dx
-                touchDy = dy
-                // mouseDx += dx //ev.touches[0].clientX - mouseOffsetX
-                // mouseDz += dy //ev.touches[0].clientY - mouseOffsetY
-                // mouseOffsetX = ev.touches[0].clientX + dx
-                // mouseOffsetY = ev.touches[0].clientY + dy
+                // mouseDx += dx - touchDx
+                // mouseDz += dy - touchDy
+                // touchDx = dx
+                // touchDy = dy
+
+
                 console.log('wheelfaktor', wheel_factor)
 
                 drawsystem()
@@ -541,8 +541,8 @@ function touchmove(ev: TouchEvent) {
             } else {
                 prevDiff = curDiff;
             }
-            touchDx = dx
-            touchDy = dy
+            // touchDx = dx
+            // touchDy = dy
         }
     }
     else if (ev.touches.length === 1) {
@@ -556,6 +556,8 @@ function touchmove(ev: TouchEvent) {
             console.log("finger 1", mouseDx, mouseDz, touchLoop)
             touchDx = dx
             touchDy = dy
+            centerX = tr.World0(mouseDx)
+            centerY = tr.World0(mouseDz)
             drawsystem()
         } else {
             touchLoop = 1
@@ -606,9 +608,11 @@ function touchend(ev: any) {
         nFingers = 0
         mouse_DownWX = (xmax0 + xmin0) / 2 - tr.xWorld(ev.touches[0].clientX)
         mouse_DownWY = (zmax0 + zmin0) / 2 - tr.zWorld(ev.touches[0].clientY)
+        touchLoop = 0
     }
+    touchLoop = 0
     console.log("in touchend", ev.touches.length);
-    write ("touchend "+mouse_DownWX + "|"+mouse_DownWY)
+    write("touchend " + mouse_DownWX + "|" + mouse_DownWY)
     //if (ev.touches.length < 2) touchLoop = 0;
     wheel_factor_alt = wheel_factor
     //curDiff_alt = curDiff
@@ -647,20 +651,9 @@ function wheel(ev: WheelEvent) {
 
     //    drawsystem()
 
-    // mouse_DownWX=tr.xWorld(ev.offsetX)
-    // mouse_DownWY=tr.zWorld(ev.offsetY)
 
-    //console.log("WHEEL", mouseCounter, wheel_factor, ev.deltaY, ev.clientX, ev.offsetX)
-    mouseDx = ev.clientX - document.documentElement.clientWidth / 2  //1471  //offsetX
-    mouseDz = ev.clientY - document.documentElement.clientHeight / 2  //939  //offsetY
-    // mouseDx = ev.clientX - mouse_DownWX
-    // mouseDz = ev.clientY - mouse_DownWY
-    //console.log("wheel0 ", ev.clientX, ev.clientY, document.documentElement.clientWidth, document.documentElement.clientHeight)
-    //mouseDx -= tr.xPix(mouse_DownWX - (xmin0 + xmax0) / 2)
-    //mouseDz -= tr.zPix(mouse_DownWY - (zmin0 + zmax0) / 2)
-    //console.log("wheel1 ", mouse_DownWX, mouse_DownWY, (xmin0 + xmax0) / 2, (zmin0 + zmax0) / 2)
-    //console.log("wheeli ", mouse_DownWX - (xmin0 + xmax0) / 2, tr.xPix(mouse_DownWX - (xmin0 + xmax0) / 2))
-    //console.log("wheel2 ", mouseDx, mouseDz)
+    //mouseDx = ev.clientX - document.documentElement.clientWidth / 2  //1471  //offsetX
+    //mouseDz = ev.clientY - document.documentElement.clientHeight / 2  //939  //offsetY
 
     // let startTime: any
     // let endTime: any
@@ -684,6 +677,11 @@ function mousedown(ev: any) {
 
     mouseOffsetX = ev.offsetX
     mouseOffsetY = ev.offsetY
+    // mouseOffsetX = 0.0
+    // mouseOffsetY = 0.0
+    mouseDx = 0.0
+    mouseDz = 0.0
+
     //mouseDx = 0.0
     //mouseDz = 0.0
     //wheel_factor=1.0
@@ -718,6 +716,8 @@ function mousemove(ev: MouseEvent) {
     mouseDz += ev.offsetY - mouseOffsetY
     mouseOffsetX = ev.offsetX
     mouseOffsetY = ev.offsetY
+    centerX = centerX_last + tr.World0(mouseDx) //+ mouse_DownWX   //+ mouse_DownWX
+    centerY = centerY_last + tr.World0(mouseDz) //+ mouse_DownWY
     drawsystem()
 }
 
@@ -731,16 +731,17 @@ function mouseup(ev: any) {
     // else if (ev.wheelDeltaY < 0) wheel_factor += 0.1;
     domElement.removeEventListener('mousemove', mousemove, false);
 
-    mouse_DownWX = (xmax0 + xmin0) / 2 - tr.xWorld(ev.offsetX)
-    mouse_DownWY = (zmax0 + zmin0) / 2 - tr.zWorld(ev.offsetY)
-    //mouse_DownWX = tr.xWorld(document.documentElement.clientWidth / 2)- tr.xWorld(ev.offsetX)
-    //mouse_DownWY = tr.zWorld(document.documentElement.clientHeight / 2)- tr.zWorld(ev.offsetY)
+    centerX_last = centerX
+    centerY_last = centerY
+    // mouse_DownWX = (xmaxt + xmint) / 2 - tr.xWorld(ev.offsetX)
+    // mouse_DownWY = (zmaxt + zmint) / 2 - tr.zWorld(ev.offsetY)
 
-    centerX = tr.xWorld(document.documentElement.clientWidth / 2)- tr.xWorld(ev.offsetX)
-    centerY = tr.zWorld(document.documentElement.clientHeight / 2)- tr.zWorld(ev.offsetY)
-    console.log("centerX,centerY", centerX, centerY,tr.xWorld(ev.offsetX),tr.zWorld(ev.offsetY))
 
-//    console.log("mouse_UP WX", mouse_DownWX, mouse_DownWY)
+    //centerX = tr.xWorld(document.documentElement.clientWidth / 2) - tr.xWorld(ev.offsetX)
+    //centerY = tr.zWorld(document.documentElement.clientHeight / 2) - tr.zWorld(ev.offsetY)
+    //console.log("centerX,centerY", centerX, centerY, tr.xWorld(ev.offsetX), tr.zWorld(ev.offsetY))
+
+    //    console.log("mouse_UP WX", mouse_DownWX, mouse_DownWY)
 
     //drawsystem()
 }
@@ -811,7 +812,7 @@ export function drawsystem(svg_id = 'artboard') {
     // //     Two.Utils.dispose(child);
     // // }
 
-     console.log("__________________________________  G R A F I K  ___________")
+    console.log("__________________________________  G R A F I K  ___________")
     // const elem = document.getElementById(svg_id) as any; //HTMLDivElement;
     // console.log("childElementCount", elem.childElementCount)
 
@@ -844,7 +845,7 @@ export function drawsystem(svg_id = 'artboard') {
     // two = null;
     // two = new Two(params).appendTo(artboard);
     // //}
-    console.log("width,height from two.js ", two.width, two.height)
+    // console.log("width,height from two.js ", two.width, two.height)
 
     //let el1 = document.getElementById("id_tab_group") as any   // id_tab_group
     //console.log("HEIGHT id_tab_group boundingRect", el1, el1.getBoundingClientRect());
@@ -877,7 +878,7 @@ export function drawsystem(svg_id = 'artboard') {
     show_lasten_temp = show_lasten;    // Bei Schnittgrößen werden Lasten temporär nicht gezeichnet
 
 
-    console.log("MAX", slmax, xmin, xmax, zmin, zmax)
+    //console.log("MAX", slmax, xmin, xmax, zmin, zmax)
     //console.log('maxValue_lf(komb)', maxValue_lf, maxValue_komb)
 
 
@@ -902,24 +903,30 @@ export function drawsystem(svg_id = 'artboard') {
         xmaxw = xmax0
         zminw = zmin0
         zmaxw = zmax0
-        console.log("xmin0", xmin0, xmax0, zmin0, zmax0)
+        //console.log("xmin0", xmin0, xmax0, zmin0, zmax0)
     } else {
         // let ax = tr.xWorld(mouseOffsetX)
         // let az = tr.zWorld(mouseOffsetY)
 
         // get word koordinate of Center
 
-        //  centerX = tr.xWorld(document.documentElement.clientWidth / 2)
-        //  centerY = tr.zWorld(height/2)
-//        console.log("centerX,centerY", centerX, centerY,document.documentElement.clientWidth / 2,height/2)
+        //   centerX = tr.xWorld(document.documentElement.clientWidth / 2)
+        //   centerY = tr.zWorld(height/2)
+        // centerX = tr.World0(mouseDx) + mouse_DownWX   //+ mouse_DownWX
+        // centerY = tr.World0(mouseDz) + mouse_DownWY
+        //centerX = 2.5
+        //centerY = 2.5
+        //centerX = tr.xWorld(mouseDx) //+ mouse_DownWX   //+ mouse_DownWX
+        //centerY = tr.zWorld(mouseDz) //+ mouse_DownWY
+        console.log("centerX,centerY", centerX, centerY, mouseDx, mouseDz)
 
-        let dx = xmax0 - xmin0
-        let dz = zmax0 - zmin0
+        let dx = xmax - xmin
+        let dz = zmax - zmin
 
-        xmin0 = xmin - 0.2 * dx;
-        xmax0 = xmax + 0.2 * dx;
-        zmin0 = zmin - 0.2 * dz;
-        zmax0 = zmax + 0.2 * dz;
+        xmin0 = xmin - 0.2 * dx - centerX;
+        xmax0 = xmax + 0.2 * dx - centerX;
+        zmin0 = zmin - 0.2 * dz - centerY;
+        zmax0 = zmax + 0.2 * dz - centerY;
         //console.log("dx,dz",dx,dz)
 
         //console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
@@ -947,27 +954,10 @@ export function drawsystem(svg_id = 'artboard') {
         //        dz = tr.World0(mouseDz) + (ddz - mouse_DownWY)  //+ mouse_DownWY
 
 
-        dx = tr.World0(mouseDx) + mouse_DownWX   //+ mouse_DownWX
-        dz = tr.World0(mouseDz) + mouse_DownWY  //+ mouse_DownWY
-       // dx = tr.World0(mouseDx) + centerX   //+ mouse_DownWX
-        //dz = tr.World0(mouseDz) + centerY  //+ mouse_DownWY
-//dx = centerX
-//dz =centerY
+        // dx = tr.World0(mouseDx) + mouse_DownWX   //+ mouse_DownWX
+        // dz = tr.World0(mouseDz) + mouse_DownWY  //+ mouse_DownWY
 
-        // dx=mouse_DownWX
-        // dz=mouse_DownWY
-        //console.log("======= dx,dz", mouseDx, mouseDz, dx, dz)
-
-        // xminw = xmint - dx - ddx //dx
-        // xmaxw = xmaxt - dx - ddx//dx
-        // zminw = zmint - dz - ddz//dz
-        // zmaxw = zmaxt - dz - ddz//dz
-
-        // xminw = xmint  - ddx //dx
-        // xmaxw = xmaxt  - ddx//dx
-        // zminw = zmint  - ddz//dz
-        // zmaxw = zmaxt  - ddz//dz
-
+        dx = 0; dz = 0
         xminw = xmint - dx
         xmaxw = xmaxt - dx
         zminw = zmint - dz
@@ -2065,6 +2055,28 @@ export function drawsystem(svg_id = 'artboard') {
                 txt1.fill = '#000000'
                 txt1.baseline = 'baseline'
                 txt1.alignment = 'center'
+            }
+
+            {
+                let xmean = (xminw + xmaxw) / 2
+                //xmean = Number(xmean.toFixed(1))
+                let line5 = two.makeLine(tr.xPix(xmean), tr.zPix(z_max), tr.xPix(xmean), tr.zPix(z_max - rand));
+                line5.linewidth = 1;
+                txt1 = two.makeText(myFormat(xmean, 1, 2), tr.xPix(xmean), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
+                txt1.fill = '#000000'
+                txt1.baseline = 'baseline'
+                txt1.alignment = 'center'
+            }
+
+            {
+                let zmean = (zminw + zmaxw) / 2
+                //zmean = Number(zmean.toFixed(1))
+                let line2 = two.makeLine(tr.xPix(x_min), tr.zPix(zmean), tr.xPix(x_min + rand), tr.zPix(zmean));
+                line2.linewidth = 1;
+                txt = two.makeText(myFormat(zmean, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(zmean), style_txt)
+                txt.fill = '#000000'
+                txt.baseline = 'middle'
+                txt.alignment = 'left'
             }
         }
     }
@@ -4432,8 +4444,8 @@ function reset_grafik() {
     mouse_DownWY = 0.0
     ev_deltaY_last = 0.0
     wheel_factor_alt = 0.0
-    centerX=0.0
-    centerY=0.0
+    centerX = 0.0
+    centerY = 0.0
 
     console.log("reset_grafik=")
     drawsystem();
