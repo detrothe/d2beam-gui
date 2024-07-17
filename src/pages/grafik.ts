@@ -485,54 +485,38 @@ export function init_grafik(flag = 1) {
 function touchmove(ev: TouchEvent) {
     //--------------------------------------------------------------------------------------------------------
 
-    console.log("in touchmove", ev.touches.length);
+    console.log("in touchmove", ev.touches.length,wheel_factor);
     ev.preventDefault();
 
     if (ev.touches.length === 2) {
-        // ev.stopPropagation();
-        // ev.preventDefault();
+
         let dx = ev.touches[0].clientX - ev.touches[1].clientX
         let dy = ev.touches[0].clientY - ev.touches[1].clientY
         curDiff = Math.sqrt(dx * dx + dy * dy) * 0.5;
-        //        curDiff = curDiff_alt + Math.sqrt(dx * dx + dy * dy);
-        //console.log("*********** curDiff,prevDiff", curDiff, prevDiff, wheel_factor, curDiff / prevDiff, touchLoop);
-        dx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2 //+ document.documentElement.clientWidth / 2
-        dy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2  // + document.documentElement.clientHeight / 2
 
-        // mouse_DownWX = (xmax0 + xmin0) / 2 - tr.xWorld(dx)
-        // mouse_DownWY = (zmax0 + zmin0) / 2 - tr.zWorld(dy)
-        // dx =  document.documentElement.clientWidth / 2
-        // dy =  document.documentElement.clientHeight / 2
-        //console.log('touchmove wheel_factor ' + wheel_factor + '|' + prevDiff / curDiff + '|' + wheel_factor_alt+ '|'+touchLoop)
+        let x = (ev.touches[0].clientX + ev.touches[1].clientX) / 2
+        let y = (ev.touches[0].clientY + ev.touches[1].clientY) / 2
 
-        // write('prevDiff ', prevDiff)
-        dx = 0.0; dy = 0.0
+        mouseDx += x - touchDx
+        mouseDz += y - touchDy
+        console.log("finger 1", mouseDx, mouseDz, touchLoop)
+        touchDx = x
+        touchDy = y
+
+        centerX = centerX_last + tr.World0(mouseDx)
+        centerY = centerY_last + tr.World0(mouseDz)
 
         if (touchLoop === 1) {
-            // if (curDiff < prevDiff) {
-            //     wheel_factor += 0.01;
-            //     //if (wheel_factor > 2) wheel_factor = 2.0
-            // }
-            // else if (curDiff > prevDiff) {
-            //     wheel_factor -= 0.01;
-            //     if (wheel_factor < 0.01) wheel_factor = 0.01
-            // }
+
             let factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
-            if (factor > -0.9 && factor < 0.2) {
+            if (factor > -1.3 && factor < 0.2) {
                 wheel_factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
                 //write('wheel_factor ', wheel_factor)
-                //prevDiff = curDiff;
 
-                // mouseDx += dx - touchDx
-                // mouseDz += dy - touchDy
-                // touchDx = dx
-                // touchDy = dy
-
-
-                console.log('wheelfaktor', wheel_factor)
-
-                drawsystem()
+                //console.log('wheelfaktor', wheel_factor)
             }
+
+            drawsystem()
         } else {
             touchLoop = 1
             if (firstTouch) {
@@ -541,42 +525,44 @@ function touchmove(ev: TouchEvent) {
             } else {
                 prevDiff = curDiff;
             }
-            // touchDx = dx
-            // touchDy = dy
+
+            touchDx = x
+            touchDy = y
+            mouseDx = 0.0
+            mouseDz = 0.0
+
         }
     }
     else if (ev.touches.length === 1) {
 
-        let dx = (ev.touches[0].clientX)
-        let dy = (ev.touches[0].clientY)
+        let x = (ev.touches[0].clientX)
+        let y = (ev.touches[0].clientY)
         //        console.log("finger 1",dx,dy,touchLoop)
         if (touchLoop === 1) {
-            mouseDx += dx - touchDx
-            mouseDz += dy - touchDy
+            mouseDx += x - touchDx
+            mouseDz += y - touchDy
             console.log("finger 1", mouseDx, mouseDz, touchLoop)
-            touchDx = dx
-            touchDy = dy
-            centerX = tr.World0(mouseDx)
-            centerY = tr.World0(mouseDz)
+            touchDx = x
+            touchDy = y
+
+            centerX = centerX_last + tr.World0(mouseDx)
+            centerY = centerY_last + tr.World0(mouseDz)
             drawsystem()
         } else {
             touchLoop = 1
-            touchDx = dx
-            touchDy = dy
+            touchDx = x
+            touchDy = y
+            mouseDx = 0.0
+            mouseDz = 0.0
+
         }
 
-        // mouseDx += ev.touches[0].clientX - mouseOffsetX
-        // mouseDz += ev.touches[0].clientY - mouseOffsetY
-        // mouseOffsetX = ev.touches[0].clientX
-        // mouseOffsetY = ev.touches[0].clientY
-        // console.log("++++++++++ mouseDx,mouseDz", mouseDx, mouseDz)
-        // drawsystem()
     }
 
 }
 
 //--------------------------------------------------------------------------------------------------------
-function touchstart(ev: any) {
+function touchstart(ev: TouchEvent) {
     //--------------------------------------------------------------------------------------------------------
     ev.preventDefault();
 
@@ -584,19 +570,26 @@ function touchstart(ev: any) {
     mouseOffsetY = ev.touches[0].clientY
     if (ev.touches.length === 1) {
         nFingers = 1
-        touchLoop = 0
+        touchLoop = 1
+        touchDx = mouseOffsetX
+        touchDy = mouseOffsetY
+        mouseDx = 0.0
+        mouseDz = 0.0
     }
     if (ev.touches.length === 2) {
         nFingers = 2
         touchLoop = 0
-        //wheel_factor = wheel_factor_alt
+
     }
+
     console.log("in touchstart", nFingers);
 }
 
 //--------------------------------------------------------------------------------------------------------
-function touchend(ev: any) {
+function touchend(ev: TouchEvent) {
     //--------------------------------------------------------------------------------------------------------
+    console.log("in touchend", ev.touches.length);
+    write("in touchend " + ev.touches.length);
     ev.preventDefault();
     //prevDiff = 0.0
     if (ev.touches.length === 1) {
@@ -606,16 +599,17 @@ function touchend(ev: any) {
     }
     if (ev.touches.length === 0) {
         nFingers = 0
-        mouse_DownWX = (xmax0 + xmin0) / 2 - tr.xWorld(ev.touches[0].clientX)
-        mouse_DownWY = (zmax0 + zmin0) / 2 - tr.zWorld(ev.touches[0].clientY)
+
         touchLoop = 0
+
+        centerX_last = centerX
+        centerY_last = centerY
     }
     touchLoop = 0
-    console.log("in touchend", ev.touches.length);
-    write("touchend " + mouse_DownWX + "|" + mouse_DownWY)
-    //if (ev.touches.length < 2) touchLoop = 0;
+    //write("touchend " + mouse_DownWX + "|" + mouse_DownWY)
+
     wheel_factor_alt = wheel_factor
-    //curDiff_alt = curDiff
+
 }
 
 
@@ -641,7 +635,7 @@ function wheel(ev: WheelEvent) {
         //if (wheel_factor > 3) wheel_factor = 3.0
     }
     else if (ev.deltaY < 0) {   // zoom in, Detail
-        if (mouseCounter > -58) {
+        if (mouseCounter > -80) {
             mouseCounter--;
             wheel_factor = mouseCounter / 60.0;  //0.025;
             //if (wheel_factor < 0.2) wheel_factor = 0.2
@@ -716,8 +710,8 @@ function mousemove(ev: MouseEvent) {
     mouseDz += ev.offsetY - mouseOffsetY
     mouseOffsetX = ev.offsetX
     mouseOffsetY = ev.offsetY
-    centerX = centerX_last + tr.World0(mouseDx) //+ mouse_DownWX   //+ mouse_DownWX
-    centerY = centerY_last + tr.World0(mouseDz) //+ mouse_DownWY
+    centerX = centerX_last + tr.World0(mouseDx)
+    centerY = centerY_last + tr.World0(mouseDz)
     drawsystem()
 }
 
