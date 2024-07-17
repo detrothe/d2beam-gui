@@ -45,9 +45,7 @@ let curDiff = 0.0
 let curDiff_alt = 0.0
 let mouse_DownWX = 0.0
 let mouse_DownWY = 0.0
-let init = true
-let ev_deltaY_last = 0
-let started = false
+
 let centerX = 0.0
 let centerY = 0.0
 let centerX_last = 0.0
@@ -278,9 +276,11 @@ export function init_grafik(flag = 1) {
     curDiff_alt = 0.0
     mouse_DownWX = 0.0
     mouse_DownWY = 0.0
-    ev_deltaY_last = 0.0
+
     centerX = 0.0
     centerY = 0.0
+    centerX_last = 0.0
+    centerY_last = 0.0
 
     if (drawPanel === 0) {
         myPanel();
@@ -288,7 +288,7 @@ export function init_grafik(flag = 1) {
     }
     two = null;
 
-    init = true;
+
     //window.addEventListener('wheel', wheel, { passive: false });
 
     // const el_container = document.getElementById('id_container') as HTMLDivElement
@@ -473,13 +473,7 @@ export function init_grafik(flag = 1) {
     domElement.addEventListener('touchend', touchend, { passive: false });
 }
 
-// function touchdownHandler(ev: any) {
-//     // The pointerdown event signals the start of a touch interaction.
-//     // This event is cached to support 2-finger gestures
-//     evCache.push(ev);
-//     console.log("touchDown", ev.pointerId);
-//     ev.preventDefault();
-// }
+
 
 //--------------------------------------------------------------------------------------------------------
 function touchmove(ev: TouchEvent) {
@@ -512,7 +506,6 @@ function touchmove(ev: TouchEvent) {
             if (factor > -1.3 && factor < 0.2) {
                 wheel_factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
                 //write('wheel_factor ', wheel_factor)
-
                 //console.log('wheelfaktor', wheel_factor)
             }
 
@@ -618,14 +611,7 @@ function touchend(ev: TouchEvent) {
 function wheel(ev: WheelEvent) {
     //----------------------------------------------------------------------------------------------------
 
-    //ev.stopImmediatePropagation()
     ev.preventDefault()
-    //if (started) return;
-
-    //console.log("ev.deltaY", ev.deltaY, ev.deltaMode)
-
-    // if ( ev.deltaY === ev_deltaY_last ) return;
-    ev_deltaY_last = ev.deltaY
 
     if (ev.deltaY > 0) {       // Bild wird kleiner
         if (mouseCounter < 40) {
@@ -643,11 +629,6 @@ function wheel(ev: WheelEvent) {
     }
     // console.log('==========================in mousewheel', ev.deltaX, ev.deltaY, ev.offsetX, ev.offsetY, mouseDx, mouseDz)
 
-    //    drawsystem()
-
-
-    //mouseDx = ev.clientX - document.documentElement.clientWidth / 2  //1471  //offsetX
-    //mouseDz = ev.clientY - document.documentElement.clientHeight / 2  //939  //offsetY
 
     // let startTime: any
     // let endTime: any
@@ -665,27 +646,14 @@ function mousedown(ev: any) {
 
     console.log('in mousedown', ev)
     ev.preventDefault()
-    // if (ev.wheelDeltaY > 0) wheel_factor -= 0.1;
-    // else if (ev.wheelDeltaY < 0) wheel_factor += 0.1;
+
     domElement.addEventListener('mousemove', mousemove, false);
 
     mouseOffsetX = ev.offsetX
     mouseOffsetY = ev.offsetY
-    // mouseOffsetX = 0.0
-    // mouseOffsetY = 0.0
+
     mouseDx = 0.0
     mouseDz = 0.0
-
-    //mouseDx = 0.0
-    //mouseDz = 0.0
-    //wheel_factor=1.0
-    //drawsystem()
-
-    //mouse_DownWX = tr.xWorld(ev.offsetX)
-    //mouse_DownWY = tr.zWorld(ev.offsetY)
-
-    //mouse_DownWX = ev.offsetX
-    //mouse_DownWY = ev.offsetY
 
     console.log("mouse_DownWX", mouse_DownWX, mouse_DownWY)
 }
@@ -699,10 +667,7 @@ function mousemove(ev: MouseEvent) {
     console.log('**********************************')
 
     ev.preventDefault()
-    // if (ev.wheelDeltaY > 0) wheel_factor -= 0.1;
-    // else if (ev.wheelDeltaY < 0) wheel_factor += 0.1;
 
-    //drawsystem()
 
     console.log("word", tr.xWorld(ev.offsetX), tr.zWorld(ev.offsetY))
 
@@ -721,23 +686,12 @@ function mouseup(ev: any) {
 
     console.log('in mouseup', ev)
     ev.preventDefault()
-    // if (ev.wheelDeltaY > 0) wheel_factor -= 0.1;
-    // else if (ev.wheelDeltaY < 0) wheel_factor += 0.1;
+
     domElement.removeEventListener('mousemove', mousemove, false);
 
     centerX_last = centerX
     centerY_last = centerY
-    // mouse_DownWX = (xmaxt + xmint) / 2 - tr.xWorld(ev.offsetX)
-    // mouse_DownWY = (zmaxt + zmint) / 2 - tr.zWorld(ev.offsetY)
 
-
-    //centerX = tr.xWorld(document.documentElement.clientWidth / 2) - tr.xWorld(ev.offsetX)
-    //centerY = tr.zWorld(document.documentElement.clientHeight / 2) - tr.zWorld(ev.offsetY)
-    //console.log("centerX,centerY", centerX, centerY, tr.xWorld(ev.offsetX), tr.zWorld(ev.offsetY))
-
-    //    console.log("mouse_UP WX", mouse_DownWX, mouse_DownWY)
-
-    //drawsystem()
 }
 
 //---------------------------------------------------------- d r a w s y s t e m  -------------------
@@ -970,7 +924,7 @@ export function drawsystem(svg_id = 'artboard') {
     } else {
         //if (init) {
         tr.init(xminw, zminw, xmaxw, zmaxw, breite, hoehe);
-        init = false;
+
         //}
     }
 
@@ -4430,16 +4384,18 @@ function reset_grafik() {
 
     mouseDx = 0.0
     mouseDz = 0.0
-    wheel_factor = 0.0  // 1.0
+    wheel_factor = 0.0
     touchLoop = 0
     mouseCounter = 0;
     show_dyn_eigenformen = false;
     mouse_DownWX = 0.0
     mouse_DownWY = 0.0
-    ev_deltaY_last = 0.0
+
     wheel_factor_alt = 0.0
     centerX = 0.0
     centerY = 0.0
+    centerX_last = 0.0
+    centerY_last = 0.0
 
     console.log("reset_grafik=")
     drawsystem();
