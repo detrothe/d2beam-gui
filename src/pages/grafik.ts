@@ -451,7 +451,7 @@ export function init_grafik(flag = 1) {
 
     var params = {
         fullscreen: false,
-        //type: Two.Types.canvas
+        type: Two.Types.canvas
     };
 
     two = null;
@@ -470,6 +470,7 @@ export function init_grafik(flag = 1) {
 
     domElement.addEventListener('touchstart', touchstart, { passive: false });
     domElement.addEventListener('touchmove', touchmove, { passive: false });
+    //window.addEventListener('touchmove', touchmove, { passive: false });
     domElement.addEventListener('touchend', touchend, { passive: false });
 }
 
