@@ -487,7 +487,7 @@ function touchmove(ev: TouchEvent) {
 
         let dx = ev.touches[0].clientX - ev.touches[1].clientX
         let dy = ev.touches[0].clientY - ev.touches[1].clientY
-        curDiff = Math.sqrt(dx * dx + dy * dy) * 0.5;
+        curDiff = Math.sqrt(dx * dx + dy * dy) * 0.25;
 
         let x = (ev.touches[0].clientX + ev.touches[1].clientX) / 2
         let y = (ev.touches[0].clientY + ev.touches[1].clientY) / 2
