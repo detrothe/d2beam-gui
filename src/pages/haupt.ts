@@ -388,6 +388,9 @@ portrait.addEventListener("change", function (e) {
           starr e = starres Stabende am Elementende in Meter
         </p>
         <p>
+          k<sub>0</sub> = Bettung nach Winkler
+        </p>
+        <p>
           <sl-checkbox checked id="id_gelenke_anzeigen">Spalten für Gelenke anzeigen</sl-checkbox>
           <br /><br />
           <sl-checkbox checked id="id_starre_enden_anzeigen">Spalten für starre Enden anzeigen</sl-checkbox>
@@ -411,7 +414,7 @@ portrait.addEventListener("change", function (e) {
                 id="id_element_tabelle"
                 nzeilen="${nelem_init}"
                 nspalten="13"
-                columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a<br>[m]", "starr e<br>[m]","k<sub>s</sub><br>[kN/m³]"]'
+                columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a<br>[m]", "starr e<br>[m]","k<sub>0</sub><br>[MN/m³]"]'
                 typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
                 colwidth='["4","8","2","3","3","2","2","2","2","2","2","3","3","4"]'
               ></dr-tabelle>

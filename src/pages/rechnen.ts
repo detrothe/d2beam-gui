@@ -223,6 +223,7 @@ class TElement {
     schubfaktor: number = 0.833
     gmodul: number = 0.0
     dicke: number = 0.0
+    k_0 = 0.0                          // Bettungsmodul nach Winkler
     x1: number = 0.0
     x2: number = 0.0
     z1: number = 0.0
@@ -1398,6 +1399,8 @@ function read_elements() {
             }
             else if (ispalte === 11) element[izeile - 1].aL = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 12) element[izeile - 1].aR = Number(testNumber(wert, izeile, ispalte, shad));
+
+            else if (ispalte === 13) element[izeile - 1].k_0 = Number(testNumber(wert, izeile, ispalte, shad)) * 1000.0;   // in kN/m³
         }
         console.log("element", izeile, element[izeile - 1].qname, element[izeile - 1].nod[0], element[izeile - 1].nod[1])
 

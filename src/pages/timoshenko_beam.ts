@@ -21,6 +21,7 @@ export class CTimoshenko_beam extends CElement {
     gmodul = 0.0
     querdehnzahl = 0.0
     schubfaktor = 0.0
+    k_0 = 0.0           // Bettungsmodul nach Winkler
     wichte = 0.0
     stabgewicht = 0.0   // Area * Wichte
     ks = 0.0
@@ -160,6 +161,7 @@ export class CTimoshenko_beam extends CElement {
 
         this.aL = element[ielem].aL
         this.aR = element[ielem].aR
+        this.k_0 = element[ielem].k_0
 
         this.dx = x2 - x1;
         this.dz = z2 - z1;
@@ -556,28 +558,33 @@ export class CTimoshenko_beam extends CElement {
         this.estm[5][4] = 6 * EI * psi / L2
         this.estm[5][5] = (1.0 + 3.0 * psi) * EI / sl
 
-        const L4 = L3 * sl
-        const nenner2 = (1.0 + 12. * this.eta / sl ** 2) ** 2
-        const eta = this.eta
-        const eta2 = eta * eta
+        if (this.k_0 > 0.0) {
 
-        this.estm[1][1] += (13. * L4 + 295. * eta + 1680. * eta2) / (35. * nenner2 * L3)
-        this.estm[1][2] += -(11. * L4 + 231. * eta * L2 + 1260. * eta2) / (210. * nenner2 * L2)
-        this.estm[1][4] += (9. * L4 + 252. * eta * L2 + 1680. * eta2) / (70. * nenner2 * L3)
-        this.estm[1][5] += (13. * L4 + 378. * eta * L2 + 2520. * eta2) / (420. * nenner2 * L2)
-        this.estm[2][2] += (L4 + 21. * eta * L2 + 126 * eta2) / (105. * nenner2 * sl)
-        this.estm[2][4] += -(13. * L4 + 378. * eta * L2 + 2520. * eta2) / (420. * nenner2 * L2)
-        this.estm[2][5] += -(L4 + 28. * eta * L2 + 168. * eta2) / (140. * nenner2 * sl)
-        this.estm[4][4] += (13. * L4 + 295. * eta + 1680. * eta2) / (35. * nenner2 * L3)
-        this.estm[4][5] += (11. * L4 + 231. * eta * L2 + 1260. * eta2) / (210. * nenner2 * L2)
-        this.estm[5][5] += (L4 + 21. * eta * L2 + 126. * eta2) / (105. * nenner2 * sl)
+            const L4 = L3 * sl
+            const nenner2 = (1.0 + 12. * this.eta / L2) ** 2
+            const eta = this.eta
+            const eta2 = eta * eta
 
-        this.estm[2][1] = this.estm[1][2]
-        this.estm[4][1] = this.estm[1][4]
-        this.estm[5][1] = this.estm[1][5]
-        this.estm[4][2] = this.estm[2][4]
-        this.estm[5][2] = this.estm[2][5]
-        this.estm[5][4] = this.estm[4][5]
+            console.log("ielem, k_0", this.ielem, this.k_0, nenner2)
+
+            this.estm[1][1] += this.k_0 * (13. * L4 + 295. * eta + 1680. * eta2) / (35. * nenner2 * L3)
+            this.estm[1][2] += -this.k_0 * (11. * L4 + 231. * eta * L2 + 1260. * eta2) / (210. * nenner2 * L2)
+            this.estm[1][4] += this.k_0 * (9. * L4 + 252. * eta * L2 + 1680. * eta2) / (70. * nenner2 * L3)
+            this.estm[1][5] += this.k_0 * (13. * L4 + 378. * eta * L2 + 2520. * eta2) / (420. * nenner2 * L2)
+            this.estm[2][2] += this.k_0 * (L4 + 21. * eta * L2 + 126 * eta2) / (105. * nenner2 * sl)
+            this.estm[2][4] += -this.k_0 * (13. * L4 + 378. * eta * L2 + 2520. * eta2) / (420. * nenner2 * L2)
+            this.estm[2][5] += -this.k_0 * (L4 + 28. * eta * L2 + 168. * eta2) / (140. * nenner2 * sl)
+            this.estm[4][4] += this.k_0 * (13. * L4 + 295. * eta + 1680. * eta2) / (35. * nenner2 * L3)
+            this.estm[4][5] += this.k_0 * (11. * L4 + 231. * eta * L2 + 1260. * eta2) / (210. * nenner2 * L2)
+            this.estm[5][5] += this.k_0 * (L4 + 21. * eta * L2 + 126. * eta2) / (105. * nenner2 * sl)
+
+            this.estm[2][1] = this.estm[1][2]
+            this.estm[4][1] = this.estm[1][4]
+            this.estm[5][1] = this.estm[1][5]
+            this.estm[4][2] = this.estm[2][4]
+            this.estm[5][2] = this.estm[2][5]
+            this.estm[5][4] = this.estm[4][5]
+        }
 
         if (P_delta) {
             for (let i = 0; i < 6; i++) this.ksig[i].fill(0.0);
@@ -1637,6 +1644,7 @@ export class CTimoshenko_beam extends CElement {
 
         //let d_x = this.sl / (nelTeilungen)
         let x = 0.0
+        let dV = 0.0, dM = 0.0
 
         for (let iteil = 0; iteil < this.nTeilungen; iteil++) {
             x = this.x_[iteil]
@@ -1665,6 +1673,7 @@ export class CTimoshenko_beam extends CElement {
             phix = -(Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5]);  // im Uhrzeigersinn
             phixG = -(Nphi[0] * edispG[1] + Nphi[1] * edispG[2] + Nphi[2] * edispG[4] + Nphi[3] * edispG[5]);  // im Uhrzeigersinn
             //console.log("phix", x, phix)
+
 
             if (THIIO_flag === 1) {
 
@@ -1909,6 +1918,16 @@ export class CTimoshenko_beam extends CElement {
                 }
 
                 disp = Math.sqrt(ux * ux + wx * wx) * 1000.0      // in mm
+
+                if (iteil > 0 && this.k_0 > 0.0) {
+                    let dx = x - this.x_[iteil - 1]
+                    let wl = this.w_[iLastf][iteil - 1]
+                    dM += dV * dx
+                    dV += this.k_0 * (wl + wx) * dx / 2.
+                    Vx += dV
+                    dM += this.k_0 * (wl * dx * dx / 2. + (wx - wl) * dx / 2. * dx / 3.)
+                    Mx += dM
+                }
 
                 if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
                 if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
