@@ -78,7 +78,7 @@ import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 //import { Children } from "two.js/src/children";
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.2.1,a, 5-August-2024, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 1-Oktober-2024, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -391,6 +391,8 @@ portrait.addEventListener("change", function (e) {
           <sl-checkbox checked id="id_gelenke_anzeigen">Spalten für Gelenke anzeigen</sl-checkbox>
           <br /><br />
           <sl-checkbox checked id="id_starre_enden_anzeigen">Spalten für starre Enden anzeigen</sl-checkbox>
+          <br /><br />
+          <sl-checkbox checked id="id_bettung_anzeigen">Spalten für Bettung anzeigen</sl-checkbox>
           <br />
         </p>
         <p>
@@ -408,10 +410,10 @@ portrait.addEventListener("change", function (e) {
               <dr-tabelle
                 id="id_element_tabelle"
                 nzeilen="${nelem_init}"
-                nspalten="12"
-                columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a<br>[m]", "starr e<br>[m]"]'
-                typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
-                colwidth='["4","8","2","3","3","2","2","2","2","2","2","3","3"]'
+                nspalten="13"
+                columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a<br>[m]", "starr e<br>[m]","k<sub>s</sub><br>[kN/m³]"]'
+                typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
+                colwidth='["4","8","2","3","3","2","2","2","2","2","2","3","3","4"]'
               ></dr-tabelle>
               </td>
               <td style="background-color:lightgray;">&nbsp;</td>
@@ -1130,6 +1132,16 @@ portrait.addEventListener("change", function (e) {
       set_touch_support_table(true);
     } else {
       set_touch_support_table(false);
+    }
+  });
+
+  const checkbox_bettung = document.getElementById("id_bettung_anzeigen");
+  checkbox_bettung!.addEventListener("sl-change", (event) => {
+    // @ts-ignore
+    if (event.currentTarget.checked) {
+      elementTabelle_bettung_anzeigen(true);
+    } else {
+      elementTabelle_bettung_anzeigen(false);
     }
   });
 
@@ -1901,7 +1913,7 @@ function elementTabelle_gelenke_anzeigen(check: boolean) {
 //---------------------------------------------------------------------------------------------------------------
 function elementTabelle_starre_enden_anzeigen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
-  console.log("in elementTabelle_gelenke_anzeigen", check);
+  console.log("in elementTabelle_starre_enden_anzeigen", check);
 
   if (check) {
     let el = document.getElementById("id_element_tabelle");
@@ -1909,5 +1921,19 @@ function elementTabelle_starre_enden_anzeigen(check: boolean) {
   } else {
     let el = document.getElementById("id_element_tabelle");
     for (let i = 12; i > 10; i--) el?.setAttribute("hide_column", String(i));
+  }
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function elementTabelle_bettung_anzeigen(check: boolean) {
+  //-------------------------------------------------------------------------------------------------------------
+  console.log("in elementTabelle_bettung_anzeigen", check);
+
+  if (check) {
+    let el = document.getElementById("id_element_tabelle");
+    for (let i = 13; i > 12; i--) el?.setAttribute("show_column", String(i));
+  } else {
+    let el = document.getElementById("id_element_tabelle");
+    for (let i = 13; i > 12; i--) el?.setAttribute("hide_column", String(i));
   }
 }

@@ -146,7 +146,7 @@ export class CTimoshenko_beam extends CElement {
         else n = nkombinationen;
 
         this.isActive = element[ielem].isActive
-        if ( !this.isActive ) return;
+        if (!this.isActive) return;
 
         this.nod1 = element[ielem].nod[0];
         this.nod2 = element[ielem].nod[1];
@@ -556,6 +556,28 @@ export class CTimoshenko_beam extends CElement {
         this.estm[5][4] = 6 * EI * psi / L2
         this.estm[5][5] = (1.0 + 3.0 * psi) * EI / sl
 
+        const L4 = L3 * sl
+        const nenner2 = (1.0 + 12. * this.eta / sl ** 2) ** 2
+        const eta = this.eta
+        const eta2 = eta * eta
+
+        this.estm[1][1] += (13. * L4 + 295. * eta + 1680. * eta2) / (35. * nenner2 * L3)
+        this.estm[1][2] += -(11. * L4 + 231. * eta * L2 + 1260. * eta2) / (210. * nenner2 * L2)
+        this.estm[1][4] += (9. * L4 + 252. * eta * L2 + 1680. * eta2) / (70. * nenner2 * L3)
+        this.estm[1][5] += (13. * L4 + 378. * eta * L2 + 2520. * eta2) / (420. * nenner2 * L2)
+        this.estm[2][2] += (L4 + 21. * eta * L2 + 126 * eta2) / (105. * nenner2 * sl)
+        this.estm[2][4] += -(13. * L4 + 378. * eta * L2 + 2520. * eta2) / (420. * nenner2 * L2)
+        this.estm[2][5] += -(L4 + 28. * eta * L2 + 168. * eta2) / (140. * nenner2 * sl)
+        this.estm[4][4] += (13. * L4 + 295. * eta + 1680. * eta2) / (35. * nenner2 * L3)
+        this.estm[4][5] += (11. * L4 + 231. * eta * L2 + 1260. * eta2) / (210. * nenner2 * L2)
+        this.estm[5][5] += (L4 + 21. * eta * L2 + 126. * eta2) / (105. * nenner2 * sl)
+
+        this.estm[2][1] = this.estm[1][2]
+        this.estm[4][1] = this.estm[1][4]
+        this.estm[5][1] = this.estm[1][5]
+        this.estm[4][2] = this.estm[2][4]
+        this.estm[5][2] = this.estm[2][5]
+        this.estm[5][4] = this.estm[4][5]
 
         if (P_delta) {
             for (let i = 0; i < 6; i++) this.ksig[i].fill(0.0);
