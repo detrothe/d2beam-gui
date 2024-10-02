@@ -78,7 +78,7 @@ import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 //import { Children } from "two.js/src/children";
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 1-Oktober-2024, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.0,b, 2-Oktober-2024, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -103,6 +103,7 @@ export let typs_string_kombitabelle: string;
 const nkombiSpalten_init = "3"; // immer 1 mehr als nlastfaelle_init
 const nnodedisps_init = "0";
 const dyn_neigv_init = "1";
+const nkoppelfedern_init = "1";
 
 let width_lager = 175; // /window.devicePixelRatio;
 let width_def_d2beam = 400;
@@ -388,7 +389,7 @@ portrait.addEventListener("change", function (e) {
           starr e = starres Stabende am Elementende in Meter
         </p>
         <p>
-          k<sub>0</sub> = Bettung nach Winkler
+          k<sub>0</sub> = Bettung nach Winkler in kN/m³
         </p>
         <p>
           <sl-checkbox checked id="id_gelenke_anzeigen">Spalten für Gelenke anzeigen</sl-checkbox>
@@ -414,7 +415,7 @@ portrait.addEventListener("change", function (e) {
                 id="id_element_tabelle"
                 nzeilen="${nelem_init}"
                 nspalten="13"
-                columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a<br>[m]", "starr e<br>[m]","k<sub>0</sub><br>[MN/m³]"]'
+                columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a<br>[m]", "starr e<br>[m]","k<sub>0</sub><br>[kN/m³]"]'
                 typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
                 colwidth='["4","8","2","3","3","2","2","2","2","2","2","3","3","4"]'
               ></dr-tabelle>
@@ -423,6 +424,25 @@ portrait.addEventListener("change", function (e) {
               </tr>
           </tbody>
         </table>
+
+
+        <p><br /><b>Koppelfedern</b><br /></p>
+
+        <p>
+          Anzahl Koppelfedern:
+
+          <dr-button-pm id="id_button_nkoppelfedern" nel="${nkoppelfedern_init}" inputid="nkoppelfedern"></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+        </p>
+
+        <dr-tabelle
+                  id="id_koppelfedern_tabelle"
+                  nzeilen="${nkoppelfedern_init}"
+                  nspalten="9"
+                  columns='["No", "nod a", "nod e", "k<sub>x</sub><br>[kN/m]", "f<sub>x.plast</sub><br>[kN]", "k<sub>z</sub><br>[kN/m]", "f<sub>z.plast</sub><br>[kN]", "k<sub>φ</sub><br>[kNm/rad]", "m<sub>φ.plast</sub><br>[kNm]", "Winkel<br>[°]"  ]'
+                  colwidth='["4","3","3","5","5","5","5","5","5","5"]'
+        ></dr-tabelle>
+
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
@@ -1677,6 +1697,14 @@ export function resizeTables() {
     el?.setAttribute("nzeilen", nelem);
   }
 
+  {
+    const el_elemente = document.getElementById("id_button_nkoppelfedern");
+    const nelem = (el_elemente?.shadowRoot?.getElementById("nkoppelfedern") as HTMLInputElement).value;
+
+    const el = document.getElementById("id_koppelfedern_tabelle");
+    el?.setAttribute("nzeilen", nelem);
+  }
+
   // if (System === 0) showColumnsForStabwerk();
   // else hideColumnsForFachwerk();
   if (System === 1) hideColumnsForFachwerk();
@@ -1723,6 +1751,9 @@ export function clearTables() {
   el?.setAttribute("clear", "0");
 
   el = document.getElementById("id_knotenmassen_tabelle");
+  el?.setAttribute("clear", "0");
+
+  el = document.getElementById("id_koppelfedern_tabelle");
   el?.setAttribute("clear", "0");
 
   while (nQuerschnittSets > 0) {
@@ -1825,6 +1856,9 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     el = document.getElementById("id_neigv") as drButtonPM;
     el.setValue(1);
+
+    el = document.getElementById("id_button_nkoppelfedern") as drButtonPM;
+    el.setValue(0);
 
     resizeTables();
     clearTables();

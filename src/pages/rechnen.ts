@@ -1400,7 +1400,7 @@ function read_elements() {
             else if (ispalte === 11) element[izeile - 1].aL = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 12) element[izeile - 1].aR = Number(testNumber(wert, izeile, ispalte, shad));
 
-            else if (ispalte === 13) element[izeile - 1].k_0 = Number(testNumber(wert, izeile, ispalte, shad)) * 1000.0;   // in kN/m³
+            else if (ispalte === 13) element[izeile - 1].k_0 = Number(testNumber(wert, izeile, ispalte, shad));   // in kN/m³
         }
         console.log("element", izeile, element[izeile - 1].qname, element[izeile - 1].nod[0], element[izeile - 1].nod[1])
 
