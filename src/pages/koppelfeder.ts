@@ -8,7 +8,7 @@ import {
 
 //import { BubbleSort } from "./lib"
 
-export class CKoppelfederTruss extends CElement {
+export class CKoppelfeder extends CElement {
 
     neqe = 6
 
@@ -20,6 +20,10 @@ export class CKoppelfederTruss extends CElement {
     kx = 0.0
     kz = 0.0
     kphi = 0.0
+    fx = 0.0
+    fz = 0.0
+    mphi = 0.0
+    winkel = 0.0
 
     emodul = 0.0
     gmodul = 0.0
@@ -106,9 +110,23 @@ export class CKoppelfederTruss extends CElement {
     nTeilungen = 1;
     x_: number[] = []
 
+    //---------------------------------------------------------------------------------------------
+    constructor(prop: number[]) {
 
+        super()
+        this.kx = prop[0]
+        this.fx = prop[1]
+        this.kz = prop[2]
+        this.fz = prop[3]
+        this.kphi = prop[4]
+        this.mphi = prop[5]
+        console.log("CONSTRUCTOR KOPPELFEDER", this.kx, this.kz, this.kphi)
+
+    }
+
+    //---------------------------------------------------------------------------------------------
     ich_bin(ielem: number) {
-        console.log("Ich bin ein Truss Element , No ", ielem)
+        console.log("Ich bin ein Koppelfeder Element , No ", ielem)
     }
 
 
@@ -278,12 +296,12 @@ export class CKoppelfederTruss extends CElement {
 
         this.berechneLokaleElementsteifigkeitmatrix()
 
-        // Eigengewicht
-        this.stabgewicht = this.area * this.wichte
-        eload[ielem].pL = this.stabgewicht
-        eload[ielem].pR = this.stabgewicht
+        // // Eigengewicht
+        // this.stabgewicht = this.area * this.wichte
+        // eload[ielem].pL = this.stabgewicht
+        // eload[ielem].pR = this.stabgewicht
 
-        if (stadyn > 0) this.berechneLokaleElementmassenmatrix();
+        // if (stadyn > 0) this.berechneLokaleElementmassenmatrix();
     }
 
 
@@ -310,7 +328,9 @@ export class CKoppelfederTruss extends CElement {
         this.estm[2][5] = -this.kphi
         this.estm[5][2] = -this.kphi
 
-
+        for (let j = 0; j < 6; j++) {
+            console.log('kopfed estm[]', this.estm[j])
+        }
         // EAL = 1.0 / sl
 
         // this.ksig[0][0] = 0.0
@@ -409,9 +429,9 @@ export class CKoppelfederTruss extends CElement {
             }
         }
 
-        // for (j = 0; j < 4; j++) {
-        //     console.log("this.estiffG", this.estiffG[j])
-        // }
+        for (j = 0; j < 6; j++) {
+            console.log("this.estiffG", this.estiffG[j])
+        }
     }
 
     //---------------------------------------------------------------------------------------------
@@ -421,10 +441,10 @@ export class CKoppelfederTruss extends CElement {
         let lmi: number, lmj: number
 
 
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < 6; i++) {
             lmi = this.lm[i];
             if (lmi >= 0) {
-                for (j = 0; j < 4; j++) {
+                for (j = 0; j < 6; j++) {
                     lmj = this.lm[j];
                     if (lmj >= 0) {
                         // stiff[lmi][lmj] = stiff[lmi][lmj] + this.estiff[i][j];
@@ -440,34 +460,34 @@ export class CKoppelfederTruss extends CElement {
     //---------------------------------------------------------------------------------------------
     berechneElementmassenmatrix() {
 
-        let sum: number
-        let j: number, k: number
-        const help = Array.from(Array(4), () => new Array(4));
+        // let sum: number
+        // let j: number, k: number
+        // const help = Array.from(Array(4), () => new Array(4));
 
-        //console.log("berechneElementmassenmatrix")
-
-
-        for (j = 0; j < 4; j++) {
-            for (k = 0; k < 4; k++) {
-                sum = 0.0
-                for (let l = 0; l < 4; l++) {
-                    sum = sum + this.emass[j][l] * this.transU[l][k]
-
-                }
-                help[j][k] = sum
-            }
-        }
+        // //console.log("berechneElementmassenmatrix")
 
 
-        for (j = 0; j < 4; j++) {
-            for (k = 0; k < 4; k++) {
-                sum = 0.0
-                for (let l = 0; l < 4; l++) {
-                    sum = sum + this.transU[l][j] * help[l][k]
-                }
-                this.emassG[j][k] = sum
-            }
-        }
+        // for (j = 0; j < 6; j++) {
+        //     for (k = 0; k < 4; k++) {
+        //         sum = 0.0
+        //         for (let l = 0; l < 4; l++) {
+        //             sum = sum + this.emass[j][l] * this.transU[l][k]
+
+        //         }
+        //         help[j][k] = sum
+        //     }
+        // }
+
+
+        // for (j = 0; j < 4; j++) {
+        //     for (k = 0; k < 4; k++) {
+        //         sum = 0.0
+        //         for (let l = 0; l < 4; l++) {
+        //             sum = sum + this.transU[l][j] * help[l][k]
+        //         }
+        //         this.emassG[j][k] = sum
+        //     }
+        // }
 
         // for (j = 0; j < 4; j++) {
         //     console.log("this.emassG", this.emassG[j])
@@ -482,10 +502,10 @@ export class CKoppelfederTruss extends CElement {
         let lmi: number, lmj: number
 
 
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < 6; i++) {
             lmi = this.lm[i];
             if (lmi >= 0) {
-                for (j = 0; j < 4; j++) {
+                for (j = 0; j < 6; j++) {
                     lmj = this.lm[j];
                     if (lmj >= 0) {
                         mass[lmi][lmj] = mass[lmi][lmj] + this.emassG[i][j];
@@ -616,7 +636,7 @@ export class CKoppelfederTruss extends CElement {
 
         // TODO ?? Bei gedrehten Lagern erst ins x,z Koordinatensystem zurückdrehen, siehe Excel ab Zeile 434
 
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < 6; i++) {
             sum = 0.0
             for (j = 0; j < this.neqe; j++) {
                 sum += this.transU[i][j] * this.F[j]
@@ -635,7 +655,7 @@ export class CKoppelfederTruss extends CElement {
 
         //console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
 
-        for (i = 0; i < 4; i++) { // Verformungen lokal
+        for (i = 0; i < 6; i++) { // Verformungen lokal
             sum = 0.0
             for (j = 0; j < this.neqeG; j++) {
                 sum += this.transU[i][j] * this.u[j]
@@ -667,8 +687,9 @@ export class CKoppelfederTruss extends CElement {
         for (let i = 0; i < 2; i++) {
             nodi = this.nod[i]
             //console.log("nodi", i, nodi)
-            lagerkraft[nodi][0] = lagerkraft[nodi][0] - this.F[2 * i]
-            lagerkraft[nodi][1] = lagerkraft[nodi][1] - this.F[2 * i + 1]
+            lagerkraft[nodi][0] = lagerkraft[nodi][0] - this.F[3 * i]
+            lagerkraft[nodi][1] = lagerkraft[nodi][1] - this.F[3 * i + 1]
+            lagerkraft[nodi][2] = lagerkraft[nodi][2] - this.F[3 * i + 2]
         }
 
     }

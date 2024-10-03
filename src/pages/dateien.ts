@@ -52,6 +52,10 @@ export function read_daten(eingabedaten: string) {
 
         el = document.getElementById('id_button_nelem') as drButtonPM;
         el.setValue(jobj.nelem);
+
+        el = document.getElementById('id_button_nkoppelfedern') as drButtonPM;
+        el.setValue(jobj.nelem_koppelfedern);
+
         el = document.getElementById('id_button_nnodalloads') as drButtonPM;
         el.setValue(jobj.nloads);
         el = document.getElementById('id_button_nstreckenlasten') as drButtonPM;
@@ -207,6 +211,18 @@ export function read_daten(eingabedaten: string) {
         for (j = 1; j < nSpalten; j++) {
             let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
             child.value = jobj.elem[i - 1][j - 1];
+            //console.log("Element Table ", jobj.elem[i - 1][j - 1])
+        }
+    }
+
+    el = document.getElementById('id_koppelfedern_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nSpalten = tabelle.rows[0].cells.length;
+
+    for (i = 1; i < tabelle.rows.length; i++) {
+        for (j = 1; j < nSpalten; j++) {
+            let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+            child.value = jobj.koppelfedern[i - 1][j - 1];
             //console.log("Element Table ", jobj.elem[i - 1][j - 1])
         }
     }
@@ -510,7 +526,7 @@ export function str_inputToJSON() {
 
 
     let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, stadyn, dyn_neigv;
-    let eig_solver, niter_neigv;
+    let eig_solver, niter_neigv, nelem_koppelfedern;
 
     let el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = el.nel;
@@ -572,6 +588,21 @@ export function str_inputToJSON() {
             let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
             node[i][j] = child.value;
             //console.log(i,j,c[i][j]);
+        }
+    }
+
+    el = document.getElementById('id_koppelfedern_tabelle') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nelem_koppelfedern = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+
+    const koppelfedern = Array.from(Array(nelem_koppelfedern), () => new Array(nSpalten));
+
+    for (i = 0; i < nelem_koppelfedern; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            koppelfedern[i][j] = child.value
+            //console.log(i,j,a[i][j]);
         }
     }
 
@@ -788,9 +819,11 @@ export function str_inputToJSON() {
         'dyn_neigv': dyn_neigv,
         'eig_solver': eig_solver,
         'niter_neigv': niter_neigv,
+        'nelem_koppelfedern': nelem_koppelfedern,
 
 
         'elem': elem,
+        'koppelfedern':koppelfedern,
         'node': node,
         'nodalLoad': nodalload,
         'streckenlasten': linload,

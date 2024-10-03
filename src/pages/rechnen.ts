@@ -14,6 +14,7 @@ import { cholesky } from "./cholesky"
 import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CTruss } from "./truss"
 import { CSpring } from "./feder"
+import { CKoppelfeder } from "./koppelfeder"
 import { init_grafik, drawsystem } from "./grafik";
 import { show_controller_THIIO, show_controller_results, show_controller_truss } from "./mypanelgui"
 import { ausgabe, dyn_ausgabe } from "./ausgabe"
@@ -27,6 +28,7 @@ export let nnodes: number;
 export let nelem: number;
 export let nelem_Balken = 0;
 export let nelem_Federn = 0;
+export let nelem_koppelfedern = 0;
 export let nloads: number = 0;
 export let neloads: number = 0;
 export let ntotalEloads: number = 0;
@@ -252,6 +254,7 @@ class TElement {
     brAbst_ptr: any
     stress_ptr: any
 
+    mat_koppelfeder: number[] = Array(7)  // Eigenschaften der Koppelfeder
 }
 
 class TSpring {
@@ -510,6 +513,9 @@ export function rechnen(flag = 1) {
     el = document.getElementById('id_button_nelem') as any;
     nelem = Number(el.nel);
     nelem_Balken = nelem;
+
+    el = document.getElementById('id_button_nkoppelfedern') as any;
+    nelem_koppelfedern = Number(el.nel);
 
     el = document.getElementById('id_button_nnodalloads') as any;
     nloads = Number(el.nel);
@@ -1361,11 +1367,11 @@ function read_elements() {
 
     let i: number, ielem: number, nod1: number, nod2: number, dx: number, dz: number;
 
-    const el = document.getElementById('id_element_tabelle');
+    let el = document.getElementById('id_element_tabelle');
     //console.log('EL: >>', el);
     //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
-    const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
     //console.log('nZeilen', table.rows.length);
     //console.log('nSpalten', table.rows[0].cells.length);
 
@@ -1378,7 +1384,7 @@ function read_elements() {
     let nRowTab = table.rows.length;
     let nColTab = table.rows[0].cells.length;
     let wert: any;
-    const shad = el?.shadowRoot?.getElementById('mytable')
+    let shad = el?.shadowRoot?.getElementById('mytable')
 
     for (let izeile = 1; izeile < nRowTab; izeile++) {
         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
@@ -1485,6 +1491,86 @@ function read_elements() {
                 nnodesTotal++;
             }
         }
+    }
+
+    // **********************************
+    // Koppelfedern
+    // **********************************
+
+    el = document.getElementById('id_koppelfedern_tabelle');
+    //console.log('EL: >>', el);
+    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+
+    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    for (i = 0; i < nelem_koppelfedern; i++) {
+        element.push(new TElement())
+    }
+    nelemTotal += nelem_koppelfedern
+
+    nRowTab = table.rows.length;
+    nColTab = table.rows[0].cells.length;
+    shad = el?.shadowRoot?.getElementById('mytable')
+
+    ielem = nelem_Balken
+
+    for (let izeile = 1; izeile < nRowTab; izeile++) {
+        element[ielem].qname = element[ielem].qname = 'koppelfeder';
+
+        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+
+            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+            wert = child.value;
+            //console.log('NODE i:1', nnodes, izeile, ispalte, wert, table.rows[izeile].cells[ispalte].textContent);
+
+            if (ispalte === 1) element[ielem].nod[0] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte === 2) element[ielem].nod[1] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            else if (ispalte > 2) {
+                element[ielem].mat_koppelfeder[ispalte - 3] = Number(testNumber(wert, izeile, ispalte, shad));
+            }
+        }
+        console.log("element", izeile, element[ielem].qname, element[ielem].nod[0], element[ielem].nod[1])
+
+
+        nod1 = element[ielem].nod[0];
+        nod2 = element[ielem].nod[1];
+
+        if (nod1 === -2 && nod2 === -2) element[ielem].isActive = false;
+
+        console.log("isActive", (+ielem + 1), element[ielem].isActive, nod1, nod2)
+
+        if (element[ielem].isActive) {
+
+            let fehler = 0;
+            if (nod1 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
+            if (nod2 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
+            if (nod1 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
+            if (nod2 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++; }
+            if (nod1 === nod2) { write('Element ' + (+ielem + 1) + ': Knoteninzidenzen für (nod a) und (nod e) muessen unterschiedlich sein'); fehler++; }
+
+            if (fehler > 0) {
+                fatal_error = true;
+                write('Fataler Eingabefehler für Element ' + (+ielem + 1) + ', bitte als Erstes beheben\n')
+                continue;
+            }
+
+            node[nod1].is_used = true
+            node[nod2].is_used = true
+
+            element[ielem].x1 = node[nod1].x;
+            element[ielem].x2 = node[nod2].x;
+            element[ielem].z1 = node[nod1].z;
+            element[ielem].z2 = node[nod2].z;
+
+            element[ielem].sl = 1.0   // Stablänge
+
+            element[ielem].cosinus = 1.0
+            element[ielem].sinus = 0.0
+            element[ielem].alpha = 0.0
+
+        }
+
+        ielem++;
     }
 
 
@@ -2013,6 +2099,7 @@ async function calculate() {
     let breite: number[] = Array(2)
     let abstand: number[] = Array(2)
 
+    console.log("NELEM=",nelem)
     for (ielem = 0; ielem < nelem; ielem++) {
 
         // get material data
@@ -2080,13 +2167,20 @@ async function calculate() {
         el[ielem].initialisiereElementdaten(ielem)
     }
 
+
+    // Koppelfedern addieren
+
+    for (let ifeder = 0; ifeder < nelem_koppelfedern; ifeder++) {
+        el.push(new CKoppelfeder(element[ifeder+nelem_Balken].mat_koppelfeder));
+        el[ifeder + nelem_Balken].initialisiereElementdaten(ifeder+nelem_Balken)
+    }
     find_maxValues_eloads(neloads);  // Skalierung für grafiache Darstellung der Streckenlasten, jetzt mit Eigengewicht
 
     // Federn addieren
 
     for (let ifeder = 0; ifeder < nelem_Federn; ifeder++) {
         el.push(new CSpring(feder[ifeder].getNode(), feder[ifeder].getKx(), feder[ifeder].getKz(), feder[ifeder].getKphi()))
-        el[ifeder + nelem].initialisiereElementdaten(ielem)
+        el[ifeder + nelem_Balken+nelem_koppelfedern].initialisiereElementdaten(ielem)
     }
 
     console.log("TOTALS,nelemTotal,nnodesTotal ", nelemTotal, nnodesTotal)
@@ -2156,9 +2250,9 @@ async function calculate() {
                     }
                 }
 
-                // for (j = 0; j < neq; j++) {
-                //     console.log('stiff[]', stiff[j])
-                // }
+                for (j = 0; j < neq; j++) {
+                    console.log('stiff[]', stiff[j])
+                }
 
                 // Aufstellen der rechte Seite, Einzellasten
 

@@ -103,7 +103,7 @@ export let typs_string_kombitabelle: string;
 const nkombiSpalten_init = "3"; // immer 1 mehr als nlastfaelle_init
 const nnodedisps_init = "0";
 const dyn_neigv_init = "1";
-const nkoppelfedern_init = "1";
+const nkoppelfedern_init = "0";
 
 let width_lager = 175; // /window.devicePixelRatio;
 let width_def_d2beam = 400;
