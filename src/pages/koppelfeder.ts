@@ -369,7 +369,7 @@ export class CKoppelfederTruss extends CElement {
     }
 
     //---------------------------------------------------------------------------------------------
-    berechneElementsteifigkeitsmatrix(theorie: number) {
+    berechneElementsteifigkeitsmatrix(_theorie: number) {
 
         let sum: number
         let j: number, k: number
