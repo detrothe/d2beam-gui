@@ -21,6 +21,7 @@ import {
     dyn_neigv,
     dyn_omega,
     eigenform_print,
+    nelem_koppelfedern,
 } from "./rechnen";
 
 import { prot_eingabe } from "./prot_eingabe"
@@ -654,6 +655,192 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         }
     }
 
+    // Koppelfedern
+
+    if (nelem_koppelfedern > 0) {
+        let str_Vz = "V<sub>z</sub>&nbsp;[kN]"
+        let str_Vz_title = "Querkraft Vz, positiv in positiver z-Richtung am positiven Schnittufer"
+
+        tag = document.createElement("p"); // <p></p>
+        text = document.createTextNode("xxx");
+        tag.appendChild(text);
+        if (THIIO_flag === 0) {
+            tag.innerHTML = "<b>Koppelfedern-Schnittgrößen und lokale Verformungen</b>"
+        } else {
+            if (ausgabe_gleichgewichtSG) {
+                tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
+                str_Vz = "T<sub>z</sub>&nbsp;[kN]"
+                str_Vz_title = "Transversalkraft Tz, positiv in positiver z-Richtung am positiven Schnittufer"
+            } else {
+                tag.innerHTML = "<b>Nachweisschnittgrößen und lokale Verformungen</b>"
+                tag.title = "Nachweisschnittgrößen berücksichtigen die Rotation des Querschnitts und sind für die Bemessung zu verwenden"
+                str_Vz_title = "Querkraft Vz, positiv in positiver z(φ)-Richtung am positiven Schnittufer"
+            }
+        }
+        newDiv?.appendChild(tag);
+
+        let ielem = 0
+
+        for (let iel = 0; iel < nelem_koppelfedern; iel++) {
+
+            ielem = iel + nelem_Balken
+
+            if (el[ielem].isActive) {
+
+                tag = document.createElement("p"); // <p></p>
+                text = document.createTextNode("xxx");
+                tag.appendChild(text);
+                tag.innerHTML = "<b>Koppelfeder " + (+iel+ 1) + "</b>"
+
+                newDiv?.appendChild(tag);
+
+                const table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+                table.setAttribute("id", "id_table_schnittgroessen");
+                table.setAttribute("class", "output_table");
+
+                table.style.border = 'none';
+                newDiv?.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+
+                const thead = table.createTHead();
+                const row = thead.insertRow();
+
+
+                const th0 = table!.tHead!.appendChild(document.createElement("th"));
+                th0.innerHTML = "x &nbsp;[m]";
+                th0.title = "Stelle x"
+                th0.setAttribute("class", "table_cell_center");
+                row.appendChild(th0);
+
+                // @ts-ignore
+                const th1 = table.tHead.appendChild(document.createElement("th"));
+                th1.innerHTML = "N &nbsp;[kN]";
+                th1.title = "Normalkraft N, positiv als Zugkraft"
+                th1.setAttribute("class", "table_cell_center");
+                row.appendChild(th1);
+
+                if (System === 0) {
+                    // @ts-ignore
+                    const th2 = table.tHead.appendChild(document.createElement("th"));
+                    th2.innerHTML = str_Vz;
+                    th2.title = str_Vz_title
+                    th2.setAttribute("class", "table_cell_center");
+                    row.appendChild(th2);
+                    // @ts-ignore
+                    const th3 = table.tHead.appendChild(document.createElement("th"));
+                    th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+                    th3.title = "Biegemoment, positiv im Uhrzeigersinn am negativen Schnittufer"
+                    th3.setAttribute("class", "table_cell_center");
+                    row.appendChild(th3);
+                }
+
+                // @ts-ignore
+                const th4 = table.tHead.appendChild(document.createElement("th"));
+                th4.innerHTML = "u<sub>xL</sub> &nbsp;[mm]";
+                th4.title = "lokale Verschiebung in Stabrichtung, positiv in lokaler x-Richtung"
+                th4.setAttribute("class", "table_cell_center");
+                row.appendChild(th4);
+                // @ts-ignore
+                const th5 = table.tHead.appendChild(document.createElement("th"));
+                th5.innerHTML = "w<sub>zL</sub>&nbsp;[mm]";
+                th5.title = "lokale Verschiebung in senkrecht zur Stabrichtung, positiv in lokaler z-Richtung"
+                th5.setAttribute("class", "table_cell_center");
+                row.appendChild(th5);
+                if (System === 0) {
+                    // @ts-ignore
+                    const th6 = table.tHead.appendChild(document.createElement("th"));
+                    th6.innerHTML = "&beta; &nbsp;[mrad]";
+                    th6.title = "Rotation der Querschnittsebene, positiv im Uhrzeigersinn, bei schubstarr: ß = w'"
+                    th6.setAttribute("class", "table_cell_center");
+                    row.appendChild(th6);
+                }
+
+                // if (THIIO_flag === 1) {
+                //     // @ts-ignore
+                //     const th7 = table.tHead.appendChild(document.createElement("th"));
+                //     th7.innerHTML = "&epsilon;";
+                //     th7.title = "Stabkennzahl epsilon"
+                //     th7.setAttribute("class", "table_cell_center");
+                //     row.appendChild(th7);
+                // }
+
+                const nelTeilungen = el[ielem].nTeilungen
+                let sg_M: number[] = new Array(nelTeilungen)
+                let sg_V: number[] = new Array(nelTeilungen)
+                let sg_N: number[] = new Array(nelTeilungen)
+
+                let uL: number[] = new Array(nelTeilungen)   // L = Verformung lokal
+                let wL: number[] = new Array(nelTeilungen)
+                let phiL: number[] = new Array(nelTeilungen)
+
+                const lf_index = iLastfall - 1
+                el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
+                el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
+                el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
+                el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index);
+
+                for (i = 0; i < nelTeilungen; i++) {
+
+                    let newRow = table.insertRow(-1);
+                    let newCell, newText
+                    newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+                    newText = document.createTextNode(myFormat(el[ielem].x_[i], 2, 2));  // Append a text node to the cell
+                    newCell.appendChild(newText);
+                    newCell.setAttribute("class", "table_cell_center");
+
+                    if (System === 0) {
+                        let n = 6; if (THIIO_flag === 1) n = 7;
+                        for (j = 1; j <= n; j++) {
+                            newCell = newRow.insertCell(j);
+                            if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
+                            else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i], 2, 2));
+                            else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i], 2, 2));
+                            else if (j === 4) newText = document.createTextNode(myFormat(uL[i] * 1000., 3, 3));
+                            else if (j === 5) newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
+                            else if (j === 6) newText = document.createTextNode(myFormat(phiL[i] * 1000., 3, 3));
+                            else if (j === 7) {
+                                if ((THIIO_flag === 1)) {
+                                    if (sg_N[i] < 0.0) {
+                                        const eps = el[ielem].sl * Math.sqrt(Math.abs(sg_N[i]) / el[ielem].emodul / el[ielem].Iy)
+                                        newText = document.createTextNode(myFormat(eps, 3, 3));
+                                    } else {
+                                        newText = document.createTextNode("");
+                                    }
+                                }
+                            }
+                            newCell.appendChild(newText);
+                            newCell.setAttribute("class", "table_cell_right");
+                        }
+                    }
+                    else {
+                        newCell = newRow.insertCell(1);
+                        newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
+                        newCell.appendChild(newText);
+                        newCell.setAttribute("class", "table_cell_right");
+
+                        newCell = newRow.insertCell(2);
+                        newText = document.createTextNode(myFormat(uL[i] * 1000., 3, 3));
+                        newCell.appendChild(newText);
+                        newCell.setAttribute("class", "table_cell_right");
+
+                        newCell = newRow.insertCell(3);
+                        newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
+                        newCell.appendChild(newText);
+                        newCell.setAttribute("class", "table_cell_right");
+
+                        if ((THIIO_flag === 1) && (sg_N[i] < 0.0)) {
+                            newCell = newRow.insertCell(4);
+                            const eps = el[ielem].sl * Math.sqrt(Math.abs(sg_N[i]) / el[ielem].emodul / el[ielem].Iy)
+                            newText = document.createTextNode(myFormat(eps, 3, 3));
+                            newCell.appendChild(newText);
+                            newCell.setAttribute("class", "table_cell_right");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 
@@ -748,7 +935,7 @@ export function dyn_ausgabe(newDiv: HTMLDivElement) {
             tag = document.createElement("p"); // <p></p>
             text = document.createTextNode("xxx");
             tag.appendChild(text);
-            tag.innerHTML = "<b>Eigenform " + (+ieigv+1) + "</b>"
+            tag.innerHTML = "<b>Eigenform " + (+ieigv + 1) + "</b>"
 
             newDiv?.appendChild(tag);
 

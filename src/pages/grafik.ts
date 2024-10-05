@@ -1650,7 +1650,7 @@ export function drawsystem(svg_id = 'artboard') {
                             xL = element[ielem].x_[i - 1]
                             dx = x - xL
                             sgR = sg[i]
-                            //console.log("sigL und R", sgL, sgR)
+                            //console.log("ielem, sigL und R", ielem,i, nelTeilungen, sgL, sgR)
 
                             if (sgL === 0.0 && sgR === 0.0) {
                             } else if (sgL >= 0.0 && sgR > 0.0) {

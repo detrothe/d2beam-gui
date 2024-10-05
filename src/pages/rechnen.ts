@@ -2474,7 +2474,7 @@ async function calculate() {
                 //    console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
                 //}
 
-                for (ielem = 0; ielem < nelem; ielem++) {
+                for (ielem = 0; ielem < nelem_Balken+nelem_koppelfedern; ielem++) {
                     if (el[ielem].isActive) el[ielem].berechneElementSchnittgroessen(ielem, iLastfall - 1);
                 }
 
@@ -2852,7 +2852,7 @@ async function calculate() {
                     console.log("==== pg_max", maxValue_u0[iKomb - 1].ieq, maxValue_u0[iKomb - 1].u0, u0_komb[maxValue_u0[iKomb - 1].ieq][iKomb - 1])
                 }
 
-                for (ielem = 0; ielem < nelem; ielem++) {
+                for (ielem = 0; ielem < nelem_Balken+nelem_koppelfedern; ielem++) {
                     if (el[ielem].isActive) el[ielem].berechneElementSchnittgroessen(ielem, iKomb - 1);
                 }
 

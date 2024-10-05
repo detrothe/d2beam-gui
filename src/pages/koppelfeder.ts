@@ -130,21 +130,21 @@ export class CKoppelfeder extends CElement {
     }
 
 
-    //---------------------------------------------------------------------------------------------
-    setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number,
-        height: number, zso: number, alphaT: number) {
+    // //---------------------------------------------------------------------------------------------
+    // setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number,
+    //     height: number, zso: number, alphaT: number) {
 
-        this.emodul = emodul
-        this.Iy = Iy
-        this.area = area
-        this.wichte = wichte
-        this.ks = ks
-        this.querdehnzahl = querdehnzahl
-        this.schubfaktor = schubfaktor
-        this.h = height
-        this.zso = zso
-        this.alphaT = alphaT
-    }
+    //     this.emodul = emodul
+    //     this.Iy = Iy
+    //     this.area = area
+    //     this.wichte = wichte
+    //     this.ks = ks
+    //     this.querdehnzahl = querdehnzahl
+    //     this.schubfaktor = schubfaktor
+    //     this.h = height
+    //     this.zso = zso
+    //     this.alphaT = alphaT
+    // }
 
     //---------------------------------------------------------------------------------------------
     initialisiereElementdaten(ielem: number) {
@@ -166,14 +166,14 @@ export class CKoppelfeder extends CElement {
         this.nod[0] = this.nod1
         this.nod[1] = this.nod2
 
-        // this.x1 = x1 = node[this.nod1].x;
-        // this.x2 = x2 = node[this.nod2].x;
-        // this.z1 = z1 = node[this.nod1].z;
-        // this.z2 = z2 = node[this.nod2].z;
+        this.x1 = x1 = node[this.nod1].x;
+        this.x2 = x2 = node[this.nod2].x;
+        this.z1 = z1 = node[this.nod1].z;
+        this.z2 = z2 = node[this.nod2].z;
 
 
-        this.dx = 1.0   //x2 - x1;
-        this.dz = 0.0  //z2 - z1;
+        this.dx = x2 - x1;
+        this.dz = z2 - z1;
         this.sl = Math.sqrt(this.dx * this.dx + this.dz * this.dz);      // elastische Stablänge
 
         // if (this.sl < 1e-12) {
@@ -182,8 +182,8 @@ export class CKoppelfeder extends CElement {
         // }
 
 
-        this.cosinus = this.dx / this.sl
-        this.sinus = this.dz / this.sl
+        this.cosinus = 1.0  //this.dx / this.sl
+        this.sinus = 0.0  //this.dz / this.sl
 
         this.alpha = Math.atan2(this.dz, this.dx) // *180.0/Math.PI
         console.log("sl = ", ielem, this.sl, this.alpha)
@@ -256,7 +256,8 @@ export class CKoppelfeder extends CElement {
 
 
 
-        this.nTeilungen = nelTeilungen    // übernahme der Voreinstellung
+        // this.nTeilungen
+        // übernahme der Voreinstellung
 
         this.x_ = Array(this.nTeilungen + 1)
 
@@ -273,6 +274,7 @@ export class CKoppelfeder extends CElement {
 
 
         this.nTeilungen = nelTeilungenNeu
+        //console.log ("NTEILUNGEN",this.nTeilungen,nelTeilungenNeu,nelTeilungen)
 
         if (THIIO_flag === 0) {
             this.N_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
@@ -523,10 +525,10 @@ export class CKoppelfeder extends CElement {
         let j: number, k: number
         const help = Array.from(Array(4), () => new Array(4));
 
-        for (j = 0; j < 4; j++) {
-            for (k = 0; k < 4; k++) {
+        for (j = 0; j < 6; j++) {
+            for (k = 0; k < 6; k++) {
                 sum = 0.0
-                for (let l = 0; l < 4; l++) {
+                for (let l = 0; l < 6; l++) {
                     sum = sum + this.ksig[j][l] * this.transU[l][k]
                 }
                 help[j][k] = sum
@@ -534,10 +536,10 @@ export class CKoppelfeder extends CElement {
         }
 
 
-        for (j = 0; j < 4; j++) {
-            for (k = 0; k < 4; k++) {
+        for (j = 0; j < 6; j++) {
+            for (k = 0; k < 6; k++) {
                 sum = 0.0
-                for (let l = 0; l < 4; l++) {
+                for (let l = 0; l < 6; l++) {
                     sum = sum + this.transU[l][j] * help[l][k]
                     // sum = sum + this.transF[j][l] * help[l][k]
                 }
@@ -646,7 +648,7 @@ export class CKoppelfeder extends CElement {
         }
 
 
-        for (i = 0; i < 2; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
+        for (i = 0; i < 3; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
 
         //console.log('lokale Schnittgrößen, Element', (ielem + 1), this.FL)
 
@@ -665,15 +667,15 @@ export class CKoppelfeder extends CElement {
 
         this.NL = this.FL[0]                               // Verformungen, Schnittgrößen am Stabanfang für Zustandslinien
         this.VL = this.FL[1]
-        this.ML = 0.0
+        this.ML = this.FL[2]
         this.uL = this.edispL[0]
         this.wL = this.edispL[1]
-        this.phiL = (this.edispL[3] - this.edispL[1]) / this.sl   // Stabdrehung
-        this.NR = this.FL[0]
+        this.phiL = this.edispL[2]
+        this.NR = this.FL[3]
 
         //this.FL[1] = this.FL[1] - this.normalkraft * this.phiL
 
-        //console.log("--- Bemessungsquerkraft",(ielem+1),this.VL,this.FL[0] * this.phiL, this.phiL)
+        // console.log("--- Bemessungsquerkraft",(ielem+1),this.VL,this.FL[0] * this.phiL, this.phiL)
         return this.FL;
     }
 
@@ -697,181 +699,180 @@ export class CKoppelfeder extends CElement {
     //---------------------------------------------------------------------------------------------
     berechneElementlasten(ieload: number) {
 
-        const sl = this.sl
-        // const sl2 = sl * sl
-        // const sl3 = sl2 * sl
+        // const sl = this.sl
 
-        if (eload[ieload].art === 0) {                          // Trapezstreckenlast senkrecht auf Stab
 
-            console.log("STRECKENLAST SENKRECHT")
-            const p1 = -sl * (2.0 * eload[ieload].pL + eload[ieload].pR) / 6.0
-            const p2 = -sl * (eload[ieload].pL + 2.0 * eload[ieload].pR) / 6.0
+        // if (eload[ieload].art === 0) {                          // Trapezstreckenlast senkrecht auf Stab
 
-            eload[ieload].re[0] = 0
-            eload[ieload].re[2] = 0
+        //     console.log("STRECKENLAST SENKRECHT")
+        //     const p1 = -sl * (2.0 * eload[ieload].pL + eload[ieload].pR) / 6.0
+        //     const p2 = -sl * (eload[ieload].pL + 2.0 * eload[ieload].pR) / 6.0
 
-            eload[ieload].re[1] = p1 // VL
-            eload[ieload].re[3] = p2 // VR
+        //     eload[ieload].re[0] = 0
+        //     eload[ieload].re[2] = 0
 
-            eload[ieload].re[2] = 0.0
-            eload[ieload].re[5] = 0.0
+        //     eload[ieload].re[1] = p1 // VL
+        //     eload[ieload].re[3] = p2 // VR
 
-            eload[ieload].C1 = 0.0
-            eload[ieload].C2 = 0.0
+        //     eload[ieload].re[2] = 0.0
+        //     eload[ieload].re[5] = 0.0
 
-        }
-        else if (eload[ieload].art === 1) {                     // Trapezstreckenlast z-Richtung
+        //     eload[ieload].C1 = 0.0
+        //     eload[ieload].C2 = 0.0
 
-            let pL = eload[ieload].pL
-            let pR = eload[ieload].pR
+        // }
+        // else if (eload[ieload].art === 1) {                     // Trapezstreckenlast z-Richtung
 
-            let pzL = this.cosinus * pL                         // Lastanteil senkrecht auf Stab
-            let pzR = this.cosinus * pR
-            let pxL = this.sinus * pL                           // Lastanteil parallel zum Stab
-            let pxR = this.sinus * pR
+        //     let pL = eload[ieload].pL
+        //     let pR = eload[ieload].pR
 
-            eload[ieload].re[0] = -sl * (2.0 * pxL + pxR) / 6
-            eload[ieload].re[2] = -sl * (pxL + 2.0 * pxR) / 6
+        //     let pzL = this.cosinus * pL                         // Lastanteil senkrecht auf Stab
+        //     let pzR = this.cosinus * pR
+        //     let pxL = this.sinus * pL                           // Lastanteil parallel zum Stab
+        //     let pxR = this.sinus * pR
 
-            eload[ieload].re[1] = -sl * (2.0 * pzL + pzR) / 6
-            eload[ieload].re[3] = -sl * (pzL + 2.0 * pzR) / 6
+        //     eload[ieload].re[0] = -sl * (2.0 * pxL + pxR) / 6
+        //     eload[ieload].re[2] = -sl * (pxL + 2.0 * pxR) / 6
 
-            eload[ieload].re[4] = 0.0
-            eload[ieload].re[5] = 0.0
+        //     eload[ieload].re[1] = -sl * (2.0 * pzL + pzR) / 6
+        //     eload[ieload].re[3] = -sl * (pzL + 2.0 * pzR) / 6
 
-            eload[ieload].C1 = 0.0
-            eload[ieload].C2 = 0.0
+        //     eload[ieload].re[4] = 0.0
+        //     eload[ieload].re[5] = 0.0
 
-        }
-        else if (eload[ieload].art === 2) {                     // Trapezstreckenlast z-Richtung, Projektion
+        //     eload[ieload].C1 = 0.0
+        //     eload[ieload].C2 = 0.0
 
-            let pL = eload[ieload].pL * this.dx / this.sl
-            let pR = eload[ieload].pR * this.dx / this.sl
+        // }
+        // else if (eload[ieload].art === 2) {                     // Trapezstreckenlast z-Richtung, Projektion
 
-            let pzL = this.cosinus * pL                         // Lastanteil senkrecht auf Stab
-            let pzR = this.cosinus * pR
-            let pxL = this.sinus * pL                           // Lastanteil parallel zum Stab
-            let pxR = this.sinus * pR
+        //     let pL = eload[ieload].pL * this.dx / this.sl
+        //     let pR = eload[ieload].pR * this.dx / this.sl
 
-            eload[ieload].re[0] = -sl * (2.0 * pxL + pxR) / 6
-            eload[ieload].re[2] = -sl * (pxL + 2.0 * pxR) / 6
+        //     let pzL = this.cosinus * pL                         // Lastanteil senkrecht auf Stab
+        //     let pzR = this.cosinus * pR
+        //     let pxL = this.sinus * pL                           // Lastanteil parallel zum Stab
+        //     let pxR = this.sinus * pR
 
-            eload[ieload].re[1] = -sl * (2.0 * pzL + pzR) / 6
-            eload[ieload].re[3] = -sl * (pzL + 2.0 * pzR) / 6
+        //     eload[ieload].re[0] = -sl * (2.0 * pxL + pxR) / 6
+        //     eload[ieload].re[2] = -sl * (pxL + 2.0 * pxR) / 6
 
-            eload[ieload].re[4] = 0.0
-            eload[ieload].re[5] = 0.0
+        //     eload[ieload].re[1] = -sl * (2.0 * pzL + pzR) / 6
+        //     eload[ieload].re[3] = -sl * (pzL + 2.0 * pzR) / 6
 
-            eload[ieload].C1 = 0.0
-            eload[ieload].C2 = 0.0
+        //     eload[ieload].re[4] = 0.0
+        //     eload[ieload].re[5] = 0.0
 
-        }
-        else if (eload[ieload].art === 3) {                     // Trapezstreckenlast x-Richtung
+        //     eload[ieload].C1 = 0.0
+        //     eload[ieload].C2 = 0.0
 
-            let pL = eload[ieload].pL
-            let pR = eload[ieload].pR
+        // }
+        // else if (eload[ieload].art === 3) {                     // Trapezstreckenlast x-Richtung
 
-            let pzL = -this.sinus * pL                          // Lastanteil senkrecht auf Stab
-            let pzR = -this.sinus * pR
-            let pxL = this.cosinus * pL                         // Lastanteil parallel zum Stab
-            let pxR = this.cosinus * pR
+        //     let pL = eload[ieload].pL
+        //     let pR = eload[ieload].pR
 
-            eload[ieload].re[0] = -sl * (2.0 * pxL + pxR) / 6
-            eload[ieload].re[2] = -sl * (pxL + 2.0 * pxR) / 6
+        //     let pzL = -this.sinus * pL                          // Lastanteil senkrecht auf Stab
+        //     let pzR = -this.sinus * pR
+        //     let pxL = this.cosinus * pL                         // Lastanteil parallel zum Stab
+        //     let pxR = this.cosinus * pR
 
-            eload[ieload].re[1] = -sl * (2.0 * pzL + pzR) / 6
-            eload[ieload].re[3] = -sl * (pzL + 2.0 * pzR) / 6
+        //     eload[ieload].re[0] = -sl * (2.0 * pxL + pxR) / 6
+        //     eload[ieload].re[2] = -sl * (pxL + 2.0 * pxR) / 6
 
-            eload[ieload].re[4] = 0.0
-            eload[ieload].re[5] = 0.0
+        //     eload[ieload].re[1] = -sl * (2.0 * pzL + pzR) / 6
+        //     eload[ieload].re[3] = -sl * (pzL + 2.0 * pzR) / 6
 
-            eload[ieload].C1 = 0.0
-            eload[ieload].C2 = 0.0
+        //     eload[ieload].re[4] = 0.0
+        //     eload[ieload].re[5] = 0.0
 
-        }
-        else if (eload[ieload].art === 4) {                     // Trapezstreckenlast x-Richtung, Projektion
+        //     eload[ieload].C1 = 0.0
+        //     eload[ieload].C2 = 0.0
 
-            let pL = eload[ieload].pL * this.dz / sl
-            let pR = eload[ieload].pR * this.dz / sl
+        // }
+        // else if (eload[ieload].art === 4) {                     // Trapezstreckenlast x-Richtung, Projektion
 
-            let pzL = -this.sinus * pL                          // Lastanteil senkrecht auf Stab
-            let pzR = -this.sinus * pR
-            let pxL = this.cosinus * pL                         // Lastanteil parallel zum Stab
-            let pxR = this.cosinus * pR
+        //     let pL = eload[ieload].pL * this.dz / sl
+        //     let pR = eload[ieload].pR * this.dz / sl
 
-            eload[ieload].re[0] = -sl * (2.0 * pxL + pxR) / 6
-            eload[ieload].re[2] = -sl * (pxL + 2.0 * pxR) / 6
+        //     let pzL = -this.sinus * pL                          // Lastanteil senkrecht auf Stab
+        //     let pzR = -this.sinus * pR
+        //     let pxL = this.cosinus * pL                         // Lastanteil parallel zum Stab
+        //     let pxR = this.cosinus * pR
 
-            eload[ieload].re[1] = -sl * (2.0 * pzL + pzR) / 6
-            eload[ieload].re[3] = -sl * (pzL + 2.0 * pzR) / 6
+        //     eload[ieload].re[0] = -sl * (2.0 * pxL + pxR) / 6
+        //     eload[ieload].re[2] = -sl * (pxL + 2.0 * pxR) / 6
 
-            eload[ieload].re[4] = 0.0
-            eload[ieload].re[5] = 0.0
+        //     eload[ieload].re[1] = -sl * (2.0 * pzL + pzR) / 6
+        //     eload[ieload].re[3] = -sl * (pzL + 2.0 * pzR) / 6
 
-            eload[ieload].C1 = 0.0
-            eload[ieload].C2 = 0.0
+        //     eload[ieload].re[4] = 0.0
+        //     eload[ieload].re[5] = 0.0
 
-        }
-        else if (eload[ieload].art === 5) {              // Temperatur
+        //     eload[ieload].C1 = 0.0
+        //     eload[ieload].C2 = 0.0
 
-            eload[ieload].kappa_dT = this.alphaT * (eload[ieload].Tu - eload[ieload].To) / this.h
-            eload[ieload].eps_Ts = this.alphaT * ((eload[ieload].Tu - eload[ieload].To) * this.zso / this.h + eload[ieload].To)
-            console.log("Temperatur", this.alphaT, eload[ieload].Tu, eload[ieload].To, this.h, this.emodul * this.area)
+        // }
+        // else if (eload[ieload].art === 5) {              // Temperatur
 
-            eload[ieload].re[0] = this.emodul * this.area * eload[ieload].eps_Ts
-            eload[ieload].re[2] = -this.emodul * this.area * eload[ieload].eps_Ts
+        //     eload[ieload].kappa_dT = this.alphaT * (eload[ieload].Tu - eload[ieload].To) / this.h
+        //     eload[ieload].eps_Ts = this.alphaT * ((eload[ieload].Tu - eload[ieload].To) * this.zso / this.h + eload[ieload].To)
+        //     console.log("Temperatur", this.alphaT, eload[ieload].Tu, eload[ieload].To, this.h, this.emodul * this.area)
 
-            eload[ieload].re[1] = 0.0
-            eload[ieload].re[3] = 0.0
+        //     eload[ieload].re[0] = this.emodul * this.area * eload[ieload].eps_Ts
+        //     eload[ieload].re[2] = -this.emodul * this.area * eload[ieload].eps_Ts
 
-        }
+        //     eload[ieload].re[1] = 0.0
+        //     eload[ieload].re[3] = 0.0
 
-        else if (eload[ieload].art === 8) {              // Knotenverformungen
+        // }
 
-            if (eload[ieload].node0 === this.nod1) {
-                eload[ieload].dispL0[0] = this.transU[0][0] * eload[ieload].dispx0 + this.transU[0][1] * eload[ieload].dispz0
-                eload[ieload].dispL0[1] = this.transU[1][0] * eload[ieload].dispx0 + this.transU[1][1] * eload[ieload].dispz0
-                eload[ieload].dispL0[2] = 0.0
-                eload[ieload].dispL0[3] = 0.0
-            } else {
-                eload[ieload].dispL0[0] = 0.0
-                eload[ieload].dispL0[1] = 0.0
-                eload[ieload].dispL0[2] = this.transU[2][2] * eload[ieload].dispx0 + this.transU[2][3] * eload[ieload].dispz0
-                eload[ieload].dispL0[3] = this.transU[3][2] * eload[ieload].dispx0 + this.transU[3][3] * eload[ieload].dispz0
+        // else if (eload[ieload].art === 8) {              // Knotenverformungen
 
-            }
-            for (let j = 0; j < 4; j++) {
-                let sum = 0.0
-                for (let k = 0; k < 4; k++) {
-                    sum += this.estmL2[j][k] * eload[ieload].dispL0[k]
-                }
-                eload[ieload].re[j] = sum
-            }
-            console.log("LASTVEKTOR 8 ", eload[ieload].re)
-            console.log("dispL0", eload[ieload].dispL0)
-        }
+        //     if (eload[ieload].node0 === this.nod1) {
+        //         eload[ieload].dispL0[0] = this.transU[0][0] * eload[ieload].dispx0 + this.transU[0][1] * eload[ieload].dispz0
+        //         eload[ieload].dispL0[1] = this.transU[1][0] * eload[ieload].dispx0 + this.transU[1][1] * eload[ieload].dispz0
+        //         eload[ieload].dispL0[2] = 0.0
+        //         eload[ieload].dispL0[3] = 0.0
+        //     } else {
+        //         eload[ieload].dispL0[0] = 0.0
+        //         eload[ieload].dispL0[1] = 0.0
+        //         eload[ieload].dispL0[2] = this.transU[2][2] * eload[ieload].dispx0 + this.transU[2][3] * eload[ieload].dispz0
+        //         eload[ieload].dispL0[3] = this.transU[3][2] * eload[ieload].dispx0 + this.transU[3][3] * eload[ieload].dispz0
 
-        else if (eload[ieload].art === 9) {              // zentrische Vorspannung
+        //     }
+        //     for (let j = 0; j < 4; j++) {
+        //         let sum = 0.0
+        //         for (let k = 0; k < 4; k++) {
+        //             sum += this.estmL2[j][k] * eload[ieload].dispL0[k]
+        //         }
+        //         eload[ieload].re[j] = sum
+        //     }
+        //     console.log("LASTVEKTOR 8 ", eload[ieload].re)
+        //     console.log("dispL0", eload[ieload].dispL0)
+        // }
 
-            eload[ieload].re[0] = -this.area * eload[ieload].sigmaV
-            eload[ieload].re[2] = this.area * eload[ieload].sigmaV
+        // else if (eload[ieload].art === 9) {              // zentrische Vorspannung
 
-            eload[ieload].re[1] = 0.0
-            eload[ieload].re[3] = 0.0
-        }
-        else if (eload[ieload].art === 10) {              // Spannschloss
+        //     eload[ieload].re[0] = -this.area * eload[ieload].sigmaV
+        //     eload[ieload].re[2] = this.area * eload[ieload].sigmaV
 
-            eload[ieload].re[0] = -this.emodul * this.area * eload[ieload].delta_s / sl
-            eload[ieload].re[2] = this.emodul * this.area * eload[ieload].delta_s / sl
+        //     eload[ieload].re[1] = 0.0
+        //     eload[ieload].re[3] = 0.0
+        // }
+        // else if (eload[ieload].art === 10) {              // Spannschloss
 
-            eload[ieload].re[1] = 0.0
-            eload[ieload].re[3] = 0.0
-        }
+        //     eload[ieload].re[0] = -this.emodul * this.area * eload[ieload].delta_s / sl
+        //     eload[ieload].re[2] = this.emodul * this.area * eload[ieload].delta_s / sl
+
+        //     eload[ieload].re[1] = 0.0
+        //     eload[ieload].re[3] = 0.0
+        // }
 
 
         for (let j = 0; j < this.neqeG; j++) {
             let sum = 0.0
-            for (let k = 0; k < 4; k++) {
+            for (let k = 0; k < 6; k++) {
                 // sum += this.transF[j][k] * eload[ieload].re[k]
                 sum += this.transU[k][j] * eload[ieload].re[k]
             }
@@ -963,7 +964,7 @@ export class CKoppelfeder extends CElement {
         }
         //console.log("disp", edisp)
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 6; i++) {
             let sum = 0.0
             for (let j = 0; j < this.neqeG; j++) {
                 sum += this.transU[i][j] * edisp[j]
@@ -990,7 +991,7 @@ export class CKoppelfeder extends CElement {
         }
         //console.log("disp", edisp)
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 6; i++) {
             let sum = 0.0
             for (let j = 0; j < this.neqeG; j++) {
                 sum += this.transU[i][j] * edisp[j]
@@ -1016,7 +1017,7 @@ export class CKoppelfeder extends CElement {
         }
         //console.log("eigen, disp", edisp)
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 6; i++) {
             let sum = 0.0
             for (let j = 0; j < this.neqeG; j++) {
                 sum += this.transU[i][j] * edisp[j]
@@ -1033,7 +1034,7 @@ export class CKoppelfeder extends CElement {
         let edisp: number[] = new Array(4)
 
 
-        for (let j = 0; j < 4; j++) {
+        for (let j = 0; j < 6; j++) {
             let ieq = this.lm[j]
             if (ieq >= 0) {
                 edisp[j] = eigenform_dyn[ieigv][ieq]
@@ -1043,9 +1044,9 @@ export class CKoppelfeder extends CElement {
         }
         //console.log("eigen, disp", edisp)
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 6; i++) {
             let sum = 0.0
-            for (let j = 0; j < 4; j++) {
+            for (let j = 0; j < 6; j++) {
                 sum += this.transU[i][j] * edisp[j]
             }
             edispL[i] = sum
@@ -1059,11 +1060,11 @@ export class CKoppelfeder extends CElement {
         //-----------------------------------------------------------------------------------------
 
         let Mx: number, Vx: number, Nx: number, ux: number, wx: number, phix: number, phixG: number
-        let Nu: number[] = new Array(2), Nw: number[] = new Array(4), Nphi: number[] = new Array(4)
+        let Nu: number[] = new Array(2), Nw: number[] = new Array(6), Nphi: number[] = new Array(6)
         let u: number, wL: number = 0.0, wLG = 0.0, disp = 0.0, dwx = 0.0, wxG = 0.0, uxG = 0.0, dwxG = 0.0
         let Nm = 0.0
-        let edisp: number[] = Array(4)
-        let edispG: number[] = Array(4).fill(0.0)
+        let edisp: number[] = Array(6)
+        let edispG: number[] = Array(6).fill(0.0)
 
         let EI = this.emodul * this.Iy
         let EA = this.emodul * this.area
@@ -1080,12 +1081,12 @@ export class CKoppelfeder extends CElement {
         //console.log("ETA", eta)
 
         if (THIIO_flag === 0) {      // Theorie I. Ordnung
-            for (let i = 0; i < 4; i++) edisp[i] = this.edispL[i]
+            for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i]
         }
         else {      // Theorie II. Ordnung
 
-            for (let i = 0; i < 4; i++) edisp[i] = this.edispL[i] // Verformung
-            for (let i = 0; i < 4; i++) edispG[i] = this.edispL[i] + this.edisp0[i]  // Verformung + Schiefstellung
+            for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i] // Verformung
+            for (let i = 0; i < 6; i++) edispG[i] = this.edispL[i] + this.edisp0[i]  // Verformung + Schiefstellung
             //console.log(" 1 edisp", edisp)
 
             wL = this.wL
@@ -1121,8 +1122,8 @@ export class CKoppelfeder extends CElement {
             x = this.x_[iteil]
             const x2 = x * x
             const x3 = x2 * x
-            Vx = 0.0
-            Mx = 0.0
+            Vx = this.VL
+            Mx = this.ML + Vx * x
             Nx = this.NL
             //ux = 0.0
             //wx = 0.0
@@ -1166,229 +1167,60 @@ export class CKoppelfeder extends CElement {
 
             }
 
-            // normale Elementlasten hinzufügen
-
             if (THIIO_flag === 0) {
 
-                for (let ieload = 0; ieload < neloads; ieload++) {
-                    if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === iLastf)) {
-
-                        if (eload[ieload].art === 0) {                            // Trapezstreckenlast senkrecht auf Stab
-
-
-                        }
-                        else if (eload[ieload].art === 1) {                       // Trapezstreckenlast z-Richtung
-
-                            const pL = eload[ieload].pL
-                            const pR = eload[ieload].pR
-
-                            //let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
-                            //let pzR = this.cosinus * pR
-                            let pxL = this.sinus * pL                             // Lastanteil parallel zum Stab
-                            let pxR = this.sinus * pR
-
-                            const dpx = pxR - pxL
-                            //const dpz = pzR - pzL
-
-                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-
-
-                        }
-                        else if (eload[ieload].art === 2) {                       // Trapezstreckenlast z-Richtung, Projektion
-
-                            //console.log("Projektion",this.dx, sl)
-                            const pL = eload[ieload].pL * this.dx / this.sl
-                            const pR = eload[ieload].pR * this.dx / this.sl
-
-                            //let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
-                            //let pzR = this.cosinus * pR
-                            let pxL = this.sinus * pL                             // Lastanteil parallel zum Stab
-                            let pxR = this.sinus * pR
-
-                            const dpx = pxR - pxL
-                            //const dpz = pzR - pzL
-
-                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-
-
-                        }
-                        else if (eload[ieload].art === 3) {                         // Trapezstreckenlast x-Richtung
-
-                            const pL = eload[ieload].pL
-                            const pR = eload[ieload].pR
-
-                            //let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
-                            //let pzR = -this.sinus * pR
-                            let pxL = this.cosinus * pL                             // Lastanteil parallel zum Stab
-                            let pxR = this.cosinus * pR
-
-                            const dpx = pxR - pxL
-                            //const dpz = pzR - pzL
-
-                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-
-                        }
-                        else if (eload[ieload].art === 4) {                         // Trapezstreckenlast x-Richtung, Projektion
-
-                            //console.log("Projektion",this.dx, sl)
-                            const pL = eload[ieload].pL * this.dz / sl
-                            const pR = eload[ieload].pR * this.dz / sl
-
-                            //let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
-                            //let pzR = -this.sinus * pR
-                            let pxL = this.cosinus * pL                             // Lastanteil parallel zum Stab
-                            let pxR = this.cosinus * pR
-
-                            const dpx = pxR - pxL
-                            //const dpz = pzR - pzL
-
-                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-
-                        }
-
-
-
-                        else if (eload[ieload].art === 8) {         // Knotenverformung
-
-                            let edisp0 = Array(4)
-                            for (let i = 0; i < 4; i++) edisp0[i] = eload[ieload].dispL0[i];
-
-                            Nu[0] = (1.0 - x / sl);
-                            Nu[1] = x / sl
-                            Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
-                            Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
-                            Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
-                            Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-                            ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[2]
-                            //wx += Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
-                        }
-                    }
-                }
+                Nx = this.FL[3 * iteil]
+                Vx = this.FL[3 * iteil + 1]
+                Mx = this.FL[3 * iteil + 2]
+                ux = this.edispL[3 * iteil]
+                wx = this.edispL[3 * iteil + 1]
+                phix = this.edispL[3 * iteil + 2]
 
                 disp = Math.sqrt(ux * ux + wx * wx) * 1000.0      // in mm
 
                 if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
-                // if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
-                // if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
+                if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
+                if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
                 if (disp > maxValue_lf[iLastf].disp) maxValue_lf[iLastf].disp = disp
 
-                this.M_[iLastf][iteil] = 0.0  //Mx
-                this.V_[iLastf][iteil] = 0.0  //Vx
+                console.log("°°° Mx", Mx, Vx, Nx)
+                this.M_[iLastf][iteil] = Mx
+                this.V_[iLastf][iteil] = Vx
                 this.N_[iLastf][iteil] = Nx
                 this.u_[iLastf][iteil] = ux
                 this.w_[iLastf][iteil] = wx
-                this.phi_[iLastf][iteil] = 0.0  //phix
+                this.phi_[iLastf][iteil] = phix
 
             }
             else if (THIIO_flag === 1) { // ikomb=iLastf
 
-                for (let ieload = 0; ieload < neloads; ieload++) {
 
-                    if (eload[ieload].element === ielem) {
-                        const index = eload[ieload].lf - 1
-                        //console.log("elem kombi index", index, kombiTabelle[iLastf][index])
-                        if (kombiTabelle[iLastf][index] !== 0.0) {
-
-                            let fact = kombiTabelle[iLastf][index]
-
-                            if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
-
-
-                            }
-                            else if (eload[ieload].art === 1) {         // Trapezstreckenlast z-Richtung
-
-                                const pL = eload[ieload].pL * kombiTabelle[iLastf][index]
-                                const pR = eload[ieload].pR * kombiTabelle[iLastf][index]
-
-                                let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
-                                let pzR = this.cosinus * pR
-                                let pxL = this.sinus * pL                             // Lastanteil parallel zum Stab
-                                let pxR = this.sinus * pR
-
-                                const dpx = pxR - pxL
-                                const dpz = pzR - pzL
-
-                                Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-
-                            }
-                            else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
-
-                                const pL = eload[ieload].pL * this.dx / this.sl * kombiTabelle[iLastf][index]
-                                const pR = eload[ieload].pR * this.dx / this.sl * kombiTabelle[iLastf][index]
-
-                                let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
-                                let pzR = this.cosinus * pR
-                                let pxL = this.sinus * pL                             // Lastanteil parallel zum Stab
-                                let pxR = this.sinus * pR
-
-                                const dpx = pxR - pxL
-                                const dpz = pzR - pzL
-
-                                //console.log("2 p---", pxL, pxR, pzL, pzR, dpx, dpz)
-                                Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-
-                            }
-                            else if (eload[ieload].art === 3) {                         // Trapezstreckenlast x-Richtung
-
-                                const pL = eload[ieload].pL
-                                const pR = eload[ieload].pR
-
-                                let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
-                                let pzR = -this.sinus * pR
-                                let pxL = this.cosinus * pL                             // Lastanteil parallel zum Stab
-                                let pxR = this.cosinus * pR
-
-                                const dpx = pxR - pxL
-                                const dpz = pzR - pzL
-
-                                Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-
-
-                            }
-                            else if (eload[ieload].art === 4) {                         // Trapezstreckenlast x-Richtung, Projektion
-
-                                //console.log("Projektion",this.dx, sl)
-                                const pL = eload[ieload].pL * this.dz / sl
-                                const pR = eload[ieload].pR * this.dz / sl
-
-                                let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
-                                let pzR = -this.sinus * pR
-                                let pxL = this.cosinus * pL                             // Lastanteil parallel zum Stab
-                                let pxR = this.cosinus * pR
-
-                                const dpx = pxR - pxL
-                                const dpz = pzR - pzL
-
-                                Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-
-                            }
-
-
-
-                        }
-                    }
-                }
+                Nx = this.FL[3 * iteil]
+                Vx = this.FL[3 * iteil + 1]
+                Mx = this.FL[3 * iteil + 2]
+                ux = this.edispL[3 * iteil]
+                wx = this.edispL[3 * iteil + 1]
+                phix = this.edispL[3 * iteil + 2]
 
                 disp = Math.sqrt(ux * ux + wx * wx) * 1000.0
 
                 if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
-                //if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
-                //if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
+                if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
+                if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
                 if (disp > maxValue_komb[iLastf].disp) maxValue_komb[iLastf].disp = disp
 
-                this.M_komb[iLastf][iteil] = 0.0  // Mx
-                this.V_komb[iLastf][iteil] = 0.0  //Vx
+                this.M_komb[iLastf][iteil] = Mx
+                this.V_komb[iLastf][iteil] = Vx
                 this.N_komb[iLastf][iteil] = Nx
                 this.u_komb[iLastf][iteil] = ux
                 this.uG_komb[iLastf][iteil] = uxG
                 this.w_komb[iLastf][iteil] = wx
                 this.wG_komb[iLastf][iteil] = wxG
-                this.phi_komb[iLastf][iteil] = 0.0  // phix
+                this.phi_komb[iLastf][iteil] = phix
 
             }  // ende TH II Ordnung
 
-            // console.log("x, Vx, Mx", x, Vx, Mx, wx, phix)
-            //x += d_x
+
         }
 
     }
