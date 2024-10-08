@@ -3,7 +3,7 @@ import { CElement } from "./element"
 
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
-    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung
+    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung, R_internal
 } from "./rechnen"
 
 import { BubbleSort } from "./lib"
@@ -129,6 +129,14 @@ export class CSpring extends CElement {
             this.Fi[j] = sum
         }
 
+        // internen Kraftvektor berechnen für Iterationen
+
+        for (j = 0; j < 3; j++) {
+            ieq = this.lm[j]
+            if (ieq >= 0) {
+                R_internal[ieq] += this.Fi[j]
+            }
+        }
 
         // normale Elementlasten hinzufügen
 

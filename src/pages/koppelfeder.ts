@@ -3,7 +3,7 @@ import { CElement } from "./element"
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
     nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung,
-    stadyn, eigenform_dyn, stabvorverformung_komb
+    stadyn, eigenform_dyn, stabvorverformung_komb, R_internal
 } from "./rechnen"
 
 //import { BubbleSort } from "./lib"
@@ -632,6 +632,15 @@ export class CKoppelfeder extends CElement {
                 }
             }
 
+        }
+
+        // internen Kraftvektor berechnen für Iterationen
+
+        for (j = 0; j < this.neqeG; j++) {
+            ieq = this.lm[j]
+            if (ieq >= 0) {
+                R_internal[ieq] += this.F[j]
+            }
         }
 
         //console.log("element F global ", this.F)

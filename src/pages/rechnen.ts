@@ -125,6 +125,8 @@ export let stm = [] as number[][];
 export let U_ = [] as number[];
 export let R_ = [] as number[];
 
+export let R_internal = [] as number[];
+
 export let print_mass = [] as number[][];
 
 export let stabvorverformung_komb = [] as TStabvorverformung_komb[][]
@@ -2099,7 +2101,7 @@ async function calculate() {
     let breite: number[] = Array(2)
     let abstand: number[] = Array(2)
 
-    console.log("NELEM=",nelem)
+    console.log("NELEM=", nelem)
     for (ielem = 0; ielem < nelem; ielem++) {
 
         // get material data
@@ -2171,8 +2173,8 @@ async function calculate() {
     // Koppelfedern addieren
 
     for (let ifeder = 0; ifeder < nelem_koppelfedern; ifeder++) {
-        el.push(new CKoppelfeder(element[ifeder+nelem_Balken].mat_koppelfeder));
-        el[ifeder + nelem_Balken].initialisiereElementdaten(ifeder+nelem_Balken)
+        el.push(new CKoppelfeder(element[ifeder + nelem_Balken].mat_koppelfeder));
+        el[ifeder + nelem_Balken].initialisiereElementdaten(ifeder + nelem_Balken)
     }
     find_maxValues_eloads(neloads);  // Skalierung für grafiache Darstellung der Streckenlasten, jetzt mit Eigengewicht
 
@@ -2180,7 +2182,7 @@ async function calculate() {
 
     for (let ifeder = 0; ifeder < nelem_Federn; ifeder++) {
         el.push(new CSpring(feder[ifeder].getNode(), feder[ifeder].getKx(), feder[ifeder].getKz(), feder[ifeder].getKphi()))
-        el[ifeder + nelem_Balken+nelem_koppelfedern].initialisiereElementdaten(ielem)
+        el[ifeder + nelem_Balken + nelem_koppelfedern].initialisiereElementdaten(ielem)
     }
 
     console.log("TOTALS,nelemTotal,nnodesTotal ", nelemTotal, nnodesTotal)
@@ -2192,6 +2194,8 @@ async function calculate() {
     stm = Array.from(Array(neq), () => new Array(neq));    // Gleichungssystem für Ausdruck
     R_ = Array(neq);
     U_ = Array(neq);
+
+    R_internal = Array(neq);
 
     const R = Array(neq);
     const u = Array(neq);
@@ -2232,6 +2236,8 @@ async function calculate() {
 
                 R.fill(0.0);
                 u.fill(0.0);
+                R_internal.fill(0.0)
+
                 for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0)
 
                 for (ielem = 0; ielem < nelemTotal; ielem++) {
@@ -2376,6 +2382,21 @@ async function calculate() {
                     }
                 }
 
+                {
+                    let zaehler = 0.0, nenner = 0.0
+                    for (let i = 0; i < neq; i++) {
+                        zaehler += (R_[i] - R_internal[i]) ** 2
+                        nenner += R_[i] * R_[i]
+                        console.log("R_internal -- ", iLastfall, i, R_[i], R_internal[i])
+                    }
+                    zaehler = Math.sqrt(zaehler)
+                    nenner = Math.sqrt(nenner)
+                    let eps_force = 0.0
+                    if (nenner !== 0.0) eps_force = zaehler / nenner;
+                    write('Toleranz eps_force in Lastfall ' + iLastfall + ' = ' + eps_force)
+
+                }
+
                 let disp = Array(3)
                 for (i = 0; i < nnodes; i++) {                      // Ausgabe der Verschiebungen der einzelnen Knoten im gedrehten Koordinatensystem
                     for (j = 0; j < 3; j++) {
@@ -2474,7 +2495,7 @@ async function calculate() {
                 //    console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
                 //}
 
-                for (ielem = 0; ielem < nelem_Balken+nelem_koppelfedern; ielem++) {
+                for (ielem = 0; ielem < nelem_Balken + nelem_koppelfedern; ielem++) {
                     if (el[ielem].isActive) el[ielem].berechneElementSchnittgroessen(ielem, iLastfall - 1);
                 }
 
@@ -2560,6 +2581,7 @@ async function calculate() {
 
                     R.fill(0.0);
                     u.fill(0.0);
+                    R_internal.fill(0.0)
 
                     for (ielem = 0; ielem < nelemTotal; ielem++) {
 
@@ -2737,7 +2759,7 @@ async function calculate() {
                         }
                     }
 
-                    // Überprüfe Konvergenz der Verformungen
+                    // Überprüfe Konvergenz der Verformungen und Kräfte
 
                     {
                         let zaehler = 0.0, nenner = 0.0
@@ -2752,6 +2774,18 @@ async function calculate() {
                         write('Toleranz eps in Iterationsschritt ' + iter + ' = ' + eps_disp)
 
                         for (let i = 0; i < neq; i++) u_last[i] = u[i];
+
+                        zaehler = 0.0; nenner = 0.0
+                        for (let i = 0; i < neq; i++) {
+                            zaehler += (R_[i] - R_internal[i]) ** 2
+                            nenner += R_[i] * R_[i]
+                        }
+                        zaehler = Math.sqrt(zaehler)
+                        nenner = Math.sqrt(nenner)
+                        let eps_force = 0.0
+                        if (nenner !== 0.0) eps_force = zaehler / nenner;
+                        write('Toleranz eps_force in Iterationsschritt ' + iter + ' = ' + eps_force)
+
                     }
 
                     if ((iter === n_iterationen - 1) || (eps_disp < epsDisp_tol)) {
@@ -2852,7 +2886,7 @@ async function calculate() {
                     console.log("==== pg_max", maxValue_u0[iKomb - 1].ieq, maxValue_u0[iKomb - 1].u0, u0_komb[maxValue_u0[iKomb - 1].ieq][iKomb - 1])
                 }
 
-                for (ielem = 0; ielem < nelem_Balken+nelem_koppelfedern; ielem++) {
+                for (ielem = 0; ielem < nelem_Balken + nelem_koppelfedern; ielem++) {
                     if (el[ielem].isActive) el[ielem].berechneElementSchnittgroessen(ielem, iKomb - 1);
                 }
 

@@ -3,7 +3,7 @@ import { CElement } from "./element"
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
     nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung,
-    stadyn, eigenform_dyn, stabvorverformung_komb
+    stadyn, eigenform_dyn, stabvorverformung_komb, R_internal
 } from "./rechnen"
 
 //import { BubbleSort } from "./lib"
@@ -137,7 +137,7 @@ export class CTruss extends CElement {
         else n = nkombinationen;
 
         this.isActive = element[ielem].isActive
-        if ( !this.isActive ) return;
+        if (!this.isActive) return;
 
         this.nod1 = element[ielem].nod[0];
         this.nod2 = element[ielem].nod[1];
@@ -813,6 +813,15 @@ export class CTruss extends CElement {
         }
 
         //console.log("this.F[]", this.F)
+
+        // internen Kraftvektor berechnen für Iterationen
+
+        for (j = 0; j < this.neqeG; j++) {
+            ieq = this.lm[j]
+            if (ieq >= 0) {
+                R_internal[ieq] += this.F[j]
+            }
+        }
 
         // normale Elementlasten hinzufügen
 

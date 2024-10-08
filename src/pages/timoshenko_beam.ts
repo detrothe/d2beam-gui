@@ -3,7 +3,8 @@ import { CElement } from "./element"
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
     nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung, P_delta,
-    stadyn, eigenform_dyn, stabvorverformung_komb
+    stadyn, eigenform_dyn, stabvorverformung_komb,
+    R_internal
 } from "./rechnen"
 
 import { BubbleSort } from "./lib"
@@ -943,6 +944,16 @@ export class CTimoshenko_beam extends CElement {
 
         //console.log("this.F[]", this.F)
 
+
+        // internen Kraftvektor berechnen für Iterationen
+
+        for (j = 0; j < this.neqeG; j++) {
+            ieq = this.lm[j]
+            if (ieq >= 0) {
+                R_internal[ieq] += this.F[j]
+            }
+        }
+
         // normale Elementlasten hinzufügen
 
         if (THIIO_flag === 0) {
@@ -981,6 +992,7 @@ export class CTimoshenko_beam extends CElement {
         }
 
         console.log("element F global ", this.F)
+
 
         // TODO ?? Bei gedrehten Lagern erst ins x,z Koordinatensystem zurückdrehen, siehe Excel ab Zeile 434
 
