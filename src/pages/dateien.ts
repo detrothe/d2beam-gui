@@ -125,8 +125,17 @@ export function read_daten(eingabedaten: string) {
         else el.setValue(jobj.dyn_neigv);
 
         els = document.getElementById('id_THIIO') as HTMLSelectElement;
-        if (jobj.THIIO_flag !== undefined) {
+        if (jobj.THIIO_flag === undefined) {
+            els.options[0].selected = true;
+        } else {
             els.options[jobj.THIIO_flag].selected = true;
+        }
+
+        els = document.getElementById('id_matprop') as HTMLSelectElement;
+        if (jobj.matprop_flag === undefined) {
+            els.options[0].selected = true;
+        } else {
+            els.options[jobj.matprop_flag].selected = true;
         }
 
         els = document.getElementById('id_maxu_dir') as HTMLSelectElement;
@@ -526,7 +535,7 @@ export function str_inputToJSON() {
 
 
     let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, stadyn, dyn_neigv;
-    let eig_solver, niter_neigv, nelem_koppelfedern;
+    let eig_solver, niter_neigv, nelem_koppelfedern,matprop_flag;
 
     let el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = el.nel;
@@ -536,6 +545,9 @@ export function str_inputToJSON() {
 
     el = document.getElementById('id_THIIO') as HTMLSelectElement;
     THIIO_flag = el.value;
+
+    el = document.getElementById('id_matprop') as HTMLSelectElement;
+    matprop_flag = el.value;
 
     el = document.getElementById('id_stadyn') as HTMLSelectElement;
     stadyn = el.value;
@@ -806,6 +818,7 @@ export function str_inputToJSON() {
         'nelteilungen': nelTeilungen,
         'n_iter': n_iterationen,
         'THIIO_flag': THIIO_flag,
+        'matprop_flag':matprop_flag,
         'maxU_node': maxU_node,
         'maxU_dir': maxU_dir,
         'maxU_schief': maxU_schief,

@@ -93,7 +93,8 @@ export let art = 1;
 export let intArt = 2;
 export let THIIO_flag = 0;
 export let stadyn = 0;
-export let System = 0;        // Stabwerk = 0, Fachwerk = 1
+export let System = 0;             // Stabwerk = 0, Fachwerk = 1
+export let matprop_flag = 0;       // Materialeigenschaften 0=linear, 1=nichtlinear
 
 export let el = [] as any
 
@@ -543,8 +544,12 @@ export function rechnen(flag = 1) {
         el = document.getElementById('id_art') as HTMLSelectElement;
         art = Number(el.value);
     */
+
     el = document.getElementById('id_THIIO') as HTMLSelectElement;
     THIIO_flag = Number(el.value);
+
+    el = document.getElementById('id_matprop') as HTMLSelectElement;
+    matprop_flag = Number(el.value);
 
     el = document.getElementById('id_maxu_node') as HTMLInputElement;
     //console.log("id_maxu_node|",el.value,'|')
@@ -2009,7 +2014,7 @@ async function calculate() {
 
     neloads = ntotalEloads;
 
-    if (THIIO_flag === 1) {
+    if (THIIO_flag === 1 || matprop_flag === 1) {
 
         stabvorverformung_komb.length = 0
         stabvorverformung_komb = Array(nelem);
@@ -2220,7 +2225,13 @@ async function calculate() {
     //------------------------------------------------------------------------
 
     if (stadyn === 0) {
-        if (THIIO_flag === 0) { // Theorie I.Ordnung
+
+
+        if (matprop_flag === 1) {   // nichtlineare Berechnung
+            nonlinear(stiff, R, u, newDiv)
+        }
+
+        else if (THIIO_flag === 0) { // Theorie I.Ordnung
 
             disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nlastfaelle);   // nlastfaelle
             disp_print = new TFArray3D(1, nnodesTotal, 1, 3, 1, nlastfaelle);   // nlastfaelle
@@ -2771,7 +2782,7 @@ async function calculate() {
                         nenner = Math.sqrt(nenner)
                         if (nenner === 0.0) eps_disp = 0.0;
                         else eps_disp = zaehler / nenner;
-                        write('Toleranz eps in Iterationsschritt ' + iter + ' = ' + eps_disp)
+                        //write('Toleranz eps in Iterationsschritt ' + iter + ' = ' + eps_disp)
 
                         for (let i = 0; i < neq; i++) u_last[i] = u[i];
 
@@ -2784,7 +2795,9 @@ async function calculate() {
                         nenner = Math.sqrt(nenner)
                         let eps_force = 0.0
                         if (nenner !== 0.0) eps_force = zaehler / nenner;
-                        write('Toleranz eps_force in Iterationsschritt ' + iter + ' = ' + eps_force)
+                        //write('Toleranz eps_force in Iterationsschritt ' + iter + ' = ' + eps_force)
+                        write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + eps_disp + ', eps_force = ' + eps_force)
+
 
                     }
 
@@ -3979,5 +3992,500 @@ export function show_gleichungssystem(checked: boolean) {
 
         }
     }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+//-------------------- N  O  N  L  I  N  E  A  R  ---------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+
+function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivElement) {
+
+    //---------------------------------------------------------------------------------------------------------------
+
+    let ielem: number, i: number, j: number
+    let nod1: number, nodi: number, lmj: number
+
+    const dR = Array(neq);
+    const du = Array(neq);
+
+    let eps_disp = 1.0, iter = 0
+    let eps_force=0.0
+
+    if (nkombinationen < 1) {
+        window.alert("Es muss mindestens eine Kombination definiert sein");
+
+        let element = document.getElementById("id_tab_kombi"); // id_eingabe
+        element?.click();
+
+        return 1;
+    }
+
+    const stiff_sig = Array.from(Array(neq), () => new Array(neq).fill(0.0));
+
+    disp_lf = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);
+    disp_print = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);
+    u_lf = Array.from(Array(neq), () => new Array(nkombinationen).fill(0.0));
+    u0_komb = Array.from(Array(neq), () => new Array(nkombinationen).fill(0.0));
+
+    const u_last = Array(neq);
+
+    //console.log("nkombinationen", nkombinationen)
+    stabendkraefte = new TFArray3D(1, 6, 1, nelemTotal, 1, nkombinationen);
+    lagerkraefte = new TFArray3D(0, nnodes - 1, 0, 2, 0, nkombinationen - 1);
+    if (nNodeDisps > 0) { nodeDisp0Force = new TFArray3D_0(nNodeDisps, 3, nkombinationen); nodeDisp0Force.zero(); }
+    eigenform_container_node.length = 0
+    eigenform_container_u.length = 0
+    for (let i = 0; i < nkombinationen; i++) {
+        let a = new TFArray3D(1, nnodesTotal, 1, 3, 1, neigv)
+        eigenform_container_node.push(a)
+
+        let b = new TFArray2D(0, neq - 1, 1, neigv)
+        eigenform_container_u.push(b)
+    }
+    alpha_cr = Array.from(Array(nkombinationen), () => new Array(neigv).fill(0.0));
+
+    for (ielem = 0; ielem < nelem; ielem++) {
+        if (el[ielem].isActive) {
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                if ((eload[ieload].element === ielem) && (eload[ieload].art !== 8)) el[ielem].berechneElementlasten(ieload)
+            }
+        }
+    }
+
+
+    let pg = new Array(neq)
+    let u_gesamt = new Array(neq)
+    let R_last = new Array(neq)
+
+
+    for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
+
+        pg.fill(0.0)
+        u_last.fill(0.0);
+        R_internal.fill(0.0)
+        u.fill(0.0);
+        R_last.fill(0.0)
+        u_gesamt.fill(0.0)
+
+
+        console.log("\n***************  K O M B I N A T I O N ", iKomb, "\n\n")
+        write("\n***************  K O M B I N A T I O N   " + iKomb + "\n")
+
+        for (iter = 0; iter < n_iterationen; iter++) {
+
+            console.log("_________________  I T E R  = ", iter, " ___________________")
+
+            for (i = 0; i < neq; i++) stiff[i].fill(0.0);
+            for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0)
+
+            R.fill(0.0);
+            //R_internal.fill(0.0)
+
+            for (ielem = 0; ielem < nelemTotal; ielem++) {
+
+                if (el[ielem].isActive) {
+
+                    el[ielem].berechneElementsteifigkeitsmatrix(iter);
+                    el[ielem].addiereElementsteifigkeitmatrix(stiff)
+                    /*
+                                        for (let ieload = 0; ieload < neloads; ieload++) {
+                                            if ((eload[ieload].element === ielem) && (eload[ieload].lf === iKomb)) {
+                                                el[ielem].berechneElementlasten(ieload)
+                                            }
+                                        }
+                    */
+                }
+            }
+
+            // for (j = 0; j < neq; j++) {
+            //     console.log('stiff[]', stiff[j])
+            // }
+
+            // Aufstellen der rechte Seite, Einzellasten
+
+
+            for (i = 0; i < nloads; i++) {
+                const index = load[i].lf - 1
+                if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                    nod1 = load[i].node
+                    for (j = 0; j < 3; j++) {
+                        lmj = node[nod1].L[j]
+                        if (lmj >= 0) {
+                            R[lmj] = R[lmj] + load[i].p[j] * kombiTabelle[iKomb - 1][index]
+                        }
+                    }
+                }
+            }
+            // console.log("R Einzellasten", R)
+
+            //  und jetzt noch die normalen Elementlasten
+
+            for (ielem = 0; ielem < nelemTotal; ielem++) {
+
+                if (el[ielem].isActive) {
+
+                    //console.log("ELEMENTLASTEN,ielem", ielem)
+                    for (let ieload = 0; ieload < neloads; ieload++) {
+                        if (eload[ieload].element === ielem) {
+                            const index = eload[ieload].lf - 1
+                            //console.log("elem kombi index,art", index, kombiTabelle[iKomb - 1][index], eload[ieload].art)
+                            if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+
+                                if (eload[ieload].art === 8) el[ielem].berechneElementlasten(ieload)
+
+                                for (j = 0; j < el[ielem].neqeG; j++) {
+                                    lmj = el[ielem].lm[j]
+                                    if (lmj >= 0) {
+                                        R[lmj] = R[lmj] - eload[ieload].el_r[j] * kombiTabelle[iKomb - 1][index]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // console.log("R mit Elementlasten", R)
+
+            //for (i = 0; i < neq; i++) R[i] -= pg[i]   // Schiefstellung
+
+            if (iter > 0) {
+
+                let pel = new Array(10).fill(0.0)
+                //let FeStabvor = new Array(10).fill(0.0)   // Stabvorverformungen
+
+                for (ielem = 0; ielem < nelem; ielem++) {
+                    if (el[ielem].isActive) {
+                        el[ielem].berechneElementlasten_Vorverformung(pel, pg, iKomb - 1)
+                        console.log("P E L", ielem, pel)
+
+                        for (j = 0; j < el[ielem].neqeG; j++) {
+                            lmj = el[ielem].lm[j]
+                            if (lmj >= 0) {
+                                R[lmj] = R[lmj] - pel[j]
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            // wenn mindestens eine vorgegebenen Knotenverschiebung im der Kombination vorhanden ist,
+            // dann für diese Freiheitsgrade Zeilen und Spalten bearbeiten
+
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                const index = eload[ieload].lf - 1
+                if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                    if ((eload[ieload].art === 8)) {         // && (eload[ieload].lf === iLastfall)
+                        console.log("VORDEFINIERTE VERFORMUNGEN", eload[ieload].ieq0)
+
+                        for (let k = 0; k < 3; k++) {
+
+                            if (eload[ieload].ieq0[k] >= 0) {
+                                let ieq = eload[ieload].ieq0[k]
+                                console.log("I E Q ", ieq)
+                                for (i = 0; i < neq; i++) {
+                                    stiff[i][ieq] = 0.0   // Spalte streichen
+                                    stiff[ieq][i] = 0.0   // Zeile streichen
+                                }
+                                stiff[ieq][ieq] = 1000.0
+                                R[ieq] = 0.0
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+            for (i = 0; i < neq; i++) {
+                dR[i] = R[i] - R_internal[i]
+                R_[i] = R[i];
+                console.log("R,Ri,dR", i, R[i], R_internal[i], dR[i], u[i])
+            }
+
+            for (i = 0; i < neq; i++) {
+                for (j = 0; j < neq; j++) {
+                    stm[i][j] = stiff[i][j]
+                }
+            }
+
+            // Gleichungssystem lösen
+
+            let error = -1
+            if (equation_solver === 1) {
+                error = gauss(neq, stiff, dR);
+            } else {
+                error = cholesky_solve_equation(stiff, dR);
+            }
+            if (error != 0) {
+                //window.alert("Gleichungssystem singulär");
+
+                const question_Text = "Steifigkeitsmatrix nicht positiv definit in Kombination " + iKomb + ". " +
+                    "Mögliche Ursachen: Lasten zu hoch in dieser Kombination. Tritt die Meldung auch bei einer Berechnung " +
+                    "nach Th. I. Ordnung auf, dann ist das System kinematisch."
+
+                alertdialog('ok', question_Text);
+
+                return 1;
+            }
+
+
+            for (i = 0; i < neq; i++) {
+                du[i] = dR[i];
+                u[i] = u_gesamt[i] = u_gesamt[i] + du[i];
+                U_[i] = du[i];
+            }
+
+            for (i = 0; i < neq; i++) {
+                console.log("U", i, u[i] * 1000.0)    // in mm, mrad
+                u_lf[i][iKomb - 1] = u[i]
+            }
+
+            // Rückrechnung
+
+            let force: number[] = Array(6)
+            R_internal.fill(0.0)
+
+
+            for (ielem = 0; ielem < nelemTotal; ielem++) {
+                if (el[ielem].isActive) {
+                    force = el[ielem].berechneInterneKraefte(ielem, iKomb, iter, u);
+                    console.log("force", force)
+                    for (i = 0; i < 6; i++) stabendkraefte.set(i + 1, ielem + 1, iKomb, force[i]);
+
+                    el[ielem].berechneLagerkraefte();
+                }
+            }
+
+            // Überprüfe Konvergenz der Verformungen und Kräfte
+
+            {
+                let zaehler = 0.0, nenner = 0.0
+                for (let i = 0; i < neq; i++) {
+                    zaehler += (u[i] - u_last[i]) ** 2
+                    nenner += u[i] * u[i]
+                }
+                zaehler = Math.sqrt(zaehler)
+                nenner = Math.sqrt(nenner)
+                if (nenner === 0.0) eps_disp = 0.0;
+                else eps_disp = zaehler / nenner;
+                //write('Toleranz eps in Iterationsschritt ' + iter + ' = ' + eps_disp)
+
+                for (let i = 0; i < neq; i++) u_last[i] = u[i];
+
+                zaehler = 0.0; nenner = 0.0
+                for (let i = 0; i < neq; i++) {
+                    zaehler += (R_[i] - R_internal[i]) ** 2
+                    nenner += R_[i] * R_[i]
+                }
+                zaehler = Math.sqrt(zaehler)
+                nenner = Math.sqrt(nenner)
+                eps_force = 0.0
+                if (nenner !== 0.0) eps_force = zaehler / nenner;
+
+                write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + eps_disp + ', eps_force = ' + eps_force)
+
+                //for (let i = 0; i < neq; i++) R_internal[i] = R_[i];
+
+            }
+
+            if ((iter === n_iterationen - 1) || (eps_disp < epsDisp_tol)) {
+                let disp = [3]
+                for (i = 0; i < nnodes; i++) {                      // Ausgabe der Verschiebungen der einzelnen Knoten im gedrehten Koordinatensystem
+                    for (j = 0; j < 3; j++) {
+                        let ieq = node[i].L[j]
+                        if (ieq === -1) {
+                            disp[j] = 0
+                        } else {
+                            disp[j] = u[ieq] * 1000     // Umrechnung in mm und mrad
+                        }
+                    }
+
+                    for (j = 0; j < 3; j++) {
+                        disp_lf.set(i + 1, j + 1, iKomb, disp[j])
+                        if (Math.abs(disp[j]) > maxValue_komb[iKomb - 1].disp) maxValue_komb[iKomb - 1].disp = Math.abs(disp[j])
+                    }
+
+                    // Knotenverformungen wieder einarbeiten
+
+                    for (j = 0; j < nNodeDisps; j++) {
+                        for (let ieload = 0; ieload < neloads; ieload++) {
+                            const index = eload[ieload].lf - 1
+                            if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                                if (nodeDisp0[j].node === i) {
+                                    //console.log("<<<<<<<<<<<<<<< nNodeDisps >>>>>>>>>>>>>", i, nodeDisp0[j].lf, iKomb)
+                                    if (nodeDisp0[j].dispx0 !== 0) {
+                                        disp[0] = nodeDisp0[j].dispx0 * kombiTabelle[iKomb - 1][index]
+                                    }
+                                    if (nodeDisp0[j].dispz0 !== 0) {
+                                        disp[1] = nodeDisp0[j].dispz0 * kombiTabelle[iKomb - 1][index]
+                                    }
+                                    if (nodeDisp0[j].phi0 !== 0) {
+                                        disp[2] = nodeDisp0[j].phi0 * kombiTabelle[iKomb - 1][index]
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                    for (j = 0; j < 3; j++) disp_print.set(i + 1, j + 1, iKomb, disp[j])
+
+                }
+            }
+            if (iter === 0) {     // Schiefstellung
+
+                eigenwertberechnung(iKomb, stiff, stiff_sig, u, 0)
+
+                let umax = 0.0, ieq = -1
+                if (maxU_node === 0 || maxU_node > nnodes) {
+
+                    for (i = 0; i < neq; i++) {
+                        if (Math.abs(u[i]) > umax) {
+                            umax = Math.abs(u[i]);
+                            ieq = i;
+                        }
+                    }
+                    console.log("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU umax=", umax)
+
+                } else {
+                    ieq = node[maxU_node - 1].L[maxU_dir]
+                    console.log("schief", ieq, u[ieq])
+                    umax = Math.abs(u[ieq])
+                }
+
+                let pg_max = 0.0
+                if (umax > 0.0) {
+                    let vorzeichen_U = Math.sign(u_lf[ieq][iKomb - 1])
+                    if (vorzeichen_U === 0.0) vorzeichen_U = 1.0
+                    let vorzeichen_umax = Math.sign(u[ieq])
+                    let faktor = vorzeichen_U * vorzeichen_umax * maxU_schief / umax
+                    console.log("vorzeichen", vorzeichen_U, vorzeichen_umax, faktor)
+                    for (i = 0; i < neq; i++) {
+                        pg[i] = u[i] * faktor
+                        if (Math.abs(pg[i]) > pg_max) pg_max = Math.abs(pg[i])
+                    }
+                } else {
+                    pg.fill(0.0)
+                }
+
+                for (i = 0; i < neq; i++) {
+                    u0_komb[i][iKomb - 1] = pg[i]
+                }
+                maxValue_u0[iKomb - 1].ieq = ieq
+                maxValue_u0[iKomb - 1].u0 = pg_max
+
+                //console.log("pg", pg)
+
+
+            }
+
+            if (eps_disp < epsDisp_tol && eps_force < epsDisp_tol) break;
+
+        }  // ende iter
+
+        if (maxValue_u0[iKomb - 1].ieq >= 0) {
+            console.log("==== pg_max", maxValue_u0[iKomb - 1].ieq, maxValue_u0[iKomb - 1].u0, u0_komb[maxValue_u0[iKomb - 1].ieq][iKomb - 1])
+        }
+
+        for (ielem = 0; ielem < nelem_Balken + nelem_koppelfedern; ielem++) {
+            if (el[ielem].isActive) el[ielem].berechneElementSchnittgroessen(ielem, iKomb - 1);
+        }
+
+
+        for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
+
+            const index = load[i].lf - 1
+            if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                nodi = load[i].node
+                lagerkraft[nodi][0] = lagerkraft[nodi][0] + load[i].p[0] * kombiTabelle[iKomb - 1][index]
+                lagerkraft[nodi][1] = lagerkraft[nodi][1] + load[i].p[1] * kombiTabelle[iKomb - 1][index]
+                lagerkraft[nodi][2] = lagerkraft[nodi][2] + load[i].p[2] * kombiTabelle[iKomb - 1][index]
+            }
+        }
+
+        if (nNodeDisps > 0) {
+            for (let k = 0; k < nNodeDisps; k++) {
+                let index = nodeDisp0[k].lf - 1
+                console.log("nodeDisp0 index", k, index, iKomb, kombiTabelle[iKomb - 1][index])
+                if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                    for (let j = 0; j < 3; j++) {
+                        if (nodeDisp0[k].dispL[j]) {
+                            nodi = nodeDisp0[k].node
+                            console.log("nodeDisp0Force", k, j, iKomb, lagerkraft[nodi][j])
+                            nodeDisp0Force.set(k, j, iKomb - 1, -lagerkraft[nodi][j]);
+                            if (node[nodi].L_org[j] !== 1) lagerkraft[nodi][j] = 0.0   // kein starres Lager
+                        }
+                    }
+                }
+            }
+        }
+
+        if (nelem_Federn > 0) {                        // Federkraefte in lagerkraft[] Tabelle eintragen
+            for (i = 0; i < nelem_Federn; i++) {
+
+                let iFeder = i + nelem_Balken
+                console.log("FEDER hängt an Knoten", el[iFeder].nod)
+                nodi = el[iFeder].nod
+                for (let j = 0; j < 3; j++) {
+                    // if (nNodeDisps > 0) {
+                    //     for (let k = 0; k < nNodeDisps; k++) {
+                    //         if (nodeDisp0[k].node === nodi && nodeDisp0[k].lf === iKomb) {
+                    //             console.log("nodeDisp0Force", k, j, iKomb, lagerkraft[nodi][j])
+                    //             nodeDisp0Force.set(k, j, iKomb - 1, -lagerkraft[nodi][j]);
+                    //         }
+                    //     }
+                    // }
+                    if (node[nodi].L_org[j] > 1) lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iKomb);
+                }
+            }
+        }
+
+
+        for (let inode = 0; inode < nnodes; inode++) {
+            lagerkraefte.set(inode, 0, iKomb - 1, lagerkraft[inode][0]);
+            lagerkraefte.set(inode, 1, iKomb - 1, lagerkraft[inode][1]);
+            lagerkraefte.set(inode, 2, iKomb - 1, lagerkraft[inode][2]);
+        }
+        //for (i = 0; i < nnodesTotal; i++) {
+        //    console.log("Lager", i + 1, lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
+        //}
+
+        // Berechnung alpha_cr, Knickformen
+
+        eigenwertberechnung(iKomb, stiff, stiff_sig, u, 1)
+
+        ausgabe(iKomb, newDiv)
+
+        if (eps_disp < epsDisp_tol) {
+            write('Konvergenz bei den Verformungen erreicht, iter = ' + iter)
+        } else {
+            write('++++ keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen ++++')
+            keineKonvergenzErreicht = true
+        }
+
+
+
+    }   //ende iKomb
+
+    return 0;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+async function alertdialog(trueButton_text: string, question_text: string) {
+    //-----------------------------------------------------------------------------------------------------------
+
+    const dialogAlert = new AlertDialog({
+        trueButton_Text: trueButton_text,
+        question_Text: question_text,
+        // "Steifigkeitsmatrix nicht positiv definit in Kombination " + iKomb + ". " +
+        //     "Mögliche Ursachen: Lasten zu hoch in dieser Kombination. Tritt die Meldung auch bei einer Berechnung " +
+        //     "nach Th. I. Ordnung auf, dann ist das System kinematisch.",
+    });
+    await dialogAlert.confirm();
+
+    return 1;
 
 }

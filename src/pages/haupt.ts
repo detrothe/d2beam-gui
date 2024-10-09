@@ -78,7 +78,7 @@ import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 //import { Children } from "two.js/src/children";
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 8-Oktober-2024, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 9-Oktober-2024, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -259,6 +259,17 @@ portrait.addEventListener("change", function (e) {
                 <select name="THIIO" id="id_THIIO" style="min-width:100%;" onchange="berechnungErforderlich()">
                   <option value="0" selected>Th. I. Ordnung</option>
                   <option value="1">Th. II. Ordnung</option>
+                </select>
+              </td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td title="nichtlineare Materialeigenschaften nur bei Koppelfedern möglich">&nbsp;&nbsp; Materialeigenschaften:</td>
+              <td>
+                <select name="matprop" id="id_matprop" style="min-width:100%;" onchange="berechnungErforderlich()">
+                  <option value="0" selected>linear</option>
+                  <option value="1">nichtlinear</option>
                 </select>
               </td>
               <td></td>
