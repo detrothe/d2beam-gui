@@ -480,7 +480,7 @@ export function init_grafik(flag = 1) {
 function touchmove(ev: TouchEvent) {
     //--------------------------------------------------------------------------------------------------------
 
-    console.log("in touchmove", ev.touches.length,wheel_factor);
+    console.log("in touchmove", ev.touches.length, wheel_factor);
     ev.preventDefault();
 
     if (ev.touches.length === 2) {
@@ -1499,7 +1499,7 @@ export function drawsystem(svg_id = 'artboard') {
 
     if (flag_eingabe != 0) {
 
-        // Zustandslinien
+        // Zustandslinien   Zustandslinien   Zustandslinien   Zustandslinien
 
         if (show_selection) {
             if (show_momentenlinien || show_querkraftlinien || show_normalkraftlinien) {
@@ -1662,7 +1662,7 @@ export function drawsystem(svg_id = 'artboard') {
                                 vorzeichen = -1
                                 sgArea += (sgL + sgR) * dx / 2.
                             } else {   // Vorzeichenwechsel
-                                //console.log("Vorzeichenwechsel", sgL, sgR)
+                                //console.log("Vorzeichenwechsel, ielem", ielem, sgL, sgR, sgArea)
 
                                 let dx0 = -sgL * dx / (sgR - sgL)
                                 let xx0 = tr.xPix(xs1 + (xL + dx0) * element[ielem].cosinus)
@@ -1672,18 +1672,22 @@ export function drawsystem(svg_id = 'artboard') {
                                 vertices.push(new Two.Anchor(xx0, zz0));
 
                                 let flaeche = two.makePath(vertices);
+                                sgArea += sgL * dx0 / 2.0
                                 if (sgArea > 0.0) flaeche.fill = '#00AEFF';
                                 else flaeche.fill = '#FF0000';
                                 flaeche.opacity = opacity
 
                                 vertices.length = 0
-                                sgArea = 0.0
+                                let dx1 = dx - dx0
+                                sgArea = sgR * dx1 / 2.0
                                 sgL = 0.0
                                 vertices.push(new Two.Anchor(xx0, zz0));
                             }
                             xx2 = xs1 + x * element[ielem].cosinus - element[ielem].sinus * sg[i] * scalefactor
                             zz2 = zs1 + x * element[ielem].sinus + element[ielem].cosinus * sg[i] * scalefactor
                             xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+
+                            //console.log("ielem, i,nelTeilungen", ielem, i, nelTeilungen, sgR, valueRightPos, valueRightNeg, sgArea)
 
                             if (i === nelTeilungen - 1) {
                                 if (sgR > valueRightPos) {

@@ -23,7 +23,14 @@ export class CKoppelfeder extends CElement {
     fx = 0.0
     fz = 0.0
     mphi = 0.0
+    dkx = 0.0
+    dkz = 0.0
+    dphi = 0.0
     winkel = 0.0
+
+    delta_x = 0.0
+    delta_z = 0.0
+    delta_phi = 0.0
 
     emodul = 0.0
     gmodul = 0.0
@@ -121,6 +128,10 @@ export class CKoppelfeder extends CElement {
         this.kphi = prop[4]
         this.mphi = prop[5]
         console.log("CONSTRUCTOR KOPPELFEDER", this.kx, this.kz, this.kphi)
+
+        if (this.kx !== 0.0) Math.abs(this.dkx = this.fx / this.kx)
+        if (this.kz !== 0.0) Math.abs(this.dkz = this.fz / this.kz)
+        if (this.kphi !== 0.0) Math.abs(this.dphi = this.mphi / this.kphi)
 
     }
 
