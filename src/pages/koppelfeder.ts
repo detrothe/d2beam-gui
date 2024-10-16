@@ -3,7 +3,7 @@ import { CElement } from "./element"
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
     nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung,
-    stadyn, eigenform_dyn, stabvorverformung_komb, R_internal
+    stadyn, eigenform_dyn, stabvorverformung_komb, R_internal, matprop_flag
 } from "./rechnen"
 
 //import { BubbleSort } from "./lib"
@@ -31,6 +31,8 @@ export class CKoppelfeder extends CElement {
     delta_x = 0.0
     delta_z = 0.0
     delta_phi = 0.0
+
+    kphi_tang = 0.0
 
     emodul = 0.0
     gmodul = 0.0
@@ -87,8 +89,8 @@ export class CKoppelfeder extends CElement {
     edisp0: number[] = Array(6).fill(0.0)   // Vorverformungen
     F: number[] = Array(6)        // Stabendgrößen nach WGV im globalen Koordinatensystem
     FL: number[] = Array(6)        // Stabendgrößen nach KGV im lokalen Koordinatensystem
-    Fe: number[] = Array(6)       // Vorverformungen aus Schiefstellung 1. Eigenform
-    FeVor: number[] = Array(6)    // Vorverformungen aus Stabschiefstellung
+    Fe: number[] = Array(6).fill(0.0)       // Vorverformungen aus Schiefstellung 1. Eigenform
+    FeVor: number[] = Array(6).fill(0.0)    // Vorverformungen aus Stabschiefstellung
 
     N_ = [] as number[][]          // Schnittgrößen entlang Stab, lokal
     V_ = [] as number[][]
@@ -125,13 +127,13 @@ export class CKoppelfeder extends CElement {
         this.fx = prop[1]
         this.kz = prop[2]
         this.fz = prop[3]
-        this.kphi = prop[4]
+        this.kphi = this.kphi_tang = prop[4]
         this.mphi = prop[5]
         console.log("CONSTRUCTOR KOPPELFEDER", this.kx, this.kz, this.kphi)
 
-        if (this.kx !== 0.0) Math.abs(this.dkx = this.fx / this.kx)
-        if (this.kz !== 0.0) Math.abs(this.dkz = this.fz / this.kz)
-        if (this.kphi !== 0.0) Math.abs(this.dphi = this.mphi / this.kphi)
+        if (this.kx !== 0.0) this.dkx = Math.abs(this.fx / this.kx)
+        if (this.kz !== 0.0) this.dkz = Math.abs(this.dkz = this.fz / this.kz)
+        if (this.kphi !== 0.0) this.dphi = Math.abs(this.mphi / this.kphi)
 
     }
 
@@ -222,14 +224,14 @@ export class CKoppelfeder extends CElement {
         this.estiff_sig = Array.from(Array(6), () => new Array(6));
 
         this.transU = Array.from(Array(6), () => new Array(6).fill(0.0));
-        //this.transF = Array.from(Array(4), () => new Array(4).fill(0.0));
+        //this.transF = Array.from(Array(6), () => new Array(6).fill(0.0));
         this.TfG2L = Array.from(Array(6), () => new Array(6).fill(0.0));
 
         this.estiffG = Array.from(Array(6), () => new Array(6));
 
         if (stadyn > 0) {
-            // this.emass = Array.from(Array(4), () => new Array(4));
-            // this.emassG = Array.from(Array(4), () => new Array(4));
+            // this.emass = Array.from(Array(6), () => new Array(6));
+            // this.emassG = Array.from(Array(6), () => new Array(6));
             // this.mue = this.wichte * this.area / 10   // in Tonnen/m
             // //console.log("wichte", this.wichte)
             // this.mass_gesamt = this.mue * this.sl
@@ -336,10 +338,10 @@ export class CKoppelfeder extends CElement {
         this.estm[1][4] = -this.kz
         this.estm[4][1] = -this.kz
 
-        this.estm[2][2] = this.kphi
-        this.estm[5][5] = this.kphi
-        this.estm[2][5] = -this.kphi
-        this.estm[5][2] = -this.kphi
+        this.estm[2][2] = this.kphi_tang
+        this.estm[5][5] = this.kphi_tang
+        this.estm[2][5] = -this.kphi_tang
+        this.estm[5][2] = -this.kphi_tang
 
         for (let j = 0; j < 6; j++) {
             console.log('kopfed estm[]', this.estm[j])
@@ -410,6 +412,7 @@ export class CKoppelfeder extends CElement {
 
         //console.log("berechneElementsteifigkeitsmatrix", theorie, this.normalkraft)
 
+        this.berechneLokaleElementsteifigkeitmatrix()
 
         for (j = 0; j < 6; j++) {
             for (k = 0; k < this.neqeG; k++) {
@@ -475,7 +478,7 @@ export class CKoppelfeder extends CElement {
 
         // let sum: number
         // let j: number, k: number
-        // const help = Array.from(Array(4), () => new Array(4));
+        // const help = Array.from(Array(6), () => new Array(6));
 
         // //console.log("berechneElementmassenmatrix")
 
@@ -534,7 +537,7 @@ export class CKoppelfeder extends CElement {
 
         let sum: number
         let j: number, k: number
-        const help = Array.from(Array(4), () => new Array(4));
+        const help = Array.from(Array(6), () => new Array(6));
 
         for (j = 0; j < 6; j++) {
             for (k = 0; k < 6; k++) {
@@ -596,6 +599,14 @@ export class CKoppelfeder extends CElement {
             }
         }
 
+        for (i = 0; i < 6; i++) { // Verformungen lokal
+            sum = 0.0
+            for (j = 0; j < this.neqeG; j++) {
+                sum += this.transU[i][j] * this.u[j]
+            }
+            this.edispL[i] = sum
+        }
+
         //console.log("this.u[]", this.neqeG, this.u)
 
         for (j = 0; j < this.neqeG; j++) {
@@ -606,7 +617,28 @@ export class CKoppelfeder extends CElement {
             this.F[j] = sum
         }
 
-        //console.log("this.F[]", this.F)
+
+        if (matprop_flag > 0) {    // nichtlineare Feder
+
+            let dx = this.edispL[3] - this.edispL[0]
+            if (this.kx !== 0.0 && Math.abs(dx) > this.dkx) {
+                this.F[0] = -this.fx * Math.sign(dx)
+                this.F[3] = this.fx * Math.sign(dx)
+                console.log("this.F[0]", this.F[0], this.fx, Math.sign(dx))
+            }
+
+            let dphi = this.edispL[5] - this.edispL[2]
+            if (this.kphi !== 0.0 && Math.abs(dphi) > this.dphi) {
+                this.F[2] = -this.mphi * Math.sign(dphi)
+                this.F[5] = this.mphi * Math.sign(dphi)
+                console.log("this.F[2]", this.F[2], this.mphi, dphi)
+                this.kphi_tang = 0.0
+            } else {
+                this.kphi_tang = this.kphi
+            }
+
+        }
+        console.log("this.F[]", this.F)
 
         // normale Elementlasten hinzufügen
 
@@ -638,6 +670,7 @@ export class CKoppelfeder extends CElement {
             }
 
             if (iter > 0) {
+                //console.log("FE[]", this.Fe)
                 for (i = 0; i < this.neqeG; i++) {                            // Schiefstellung
                     this.F[i] = this.F[i] + this.Fe[i]
                 }
@@ -670,20 +703,13 @@ export class CKoppelfeder extends CElement {
 
         for (i = 0; i < 3; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
 
-        //console.log('lokale Schnittgrößen, Element', (ielem + 1), this.FL)
+        console.log('lokale Schnittgrößen, Element', (ielem + 1), this.FL)
 
         this.normalkraft = this.FL[0]
         if (this.normalkraft > 0.0) this.normalkraft = 0.0           // keine Zugversteifung
 
         //console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
 
-        for (i = 0; i < 6; i++) { // Verformungen lokal
-            sum = 0.0
-            for (j = 0; j < this.neqeG; j++) {
-                sum += this.transU[i][j] * this.u[j]
-            }
-            this.edispL[i] = sum
-        }
 
         this.NL = this.FL[0]                               // Verformungen, Schnittgrößen am Stabanfang für Zustandslinien
         this.VL = this.FL[1]
@@ -909,7 +935,7 @@ export class CKoppelfeder extends CElement {
         let ieq: number, i: number, j: number, k: number
         let sum: number
 
-        let dispG = Array(4), FeL = Array(4)
+        let dispG = Array(6), FeL = Array(6)
         let v0 = Array(6).fill(0.0)
 
         for (j = 0; j < this.neqeG; j++) {                           // Stabverformungen
@@ -923,7 +949,7 @@ export class CKoppelfeder extends CElement {
 
         console.log("dispG", dispG)
 
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < 6; i++) {
             sum = 0.0
             for (j = 0; j < this.neqeG; j++) {
                 sum += this.transU[i][j] * dispG[j]
@@ -931,9 +957,9 @@ export class CKoppelfeder extends CElement {
             this.edisp0[i] = sum
         }
 
-        for (j = 0; j < 4; j++) {
+        for (j = 0; j < 6; j++) {
             sum = 0.0
-            for (k = 0; k < 4; k++) {
+            for (k = 0; k < 6; k++) {
                 sum += this.normalkraft * this.ksig[j][k] * this.edisp0[k]    // this.normalkraft *
             }
             FeL[j] = sum     // lokal
@@ -945,9 +971,9 @@ export class CKoppelfeder extends CElement {
         v0[3] = stabvorverformung_komb[this.ielem][ikomb].w0e
 
 
-        for (j = 0; j < 4; j++) {
+        for (j = 0; j < 6; j++) {
             sum = 0.0
-            for (k = 0; k < 4; k++) {
+            for (k = 0; k < 6; k++) {
                 sum += this.normalkraft * this.ksig[j][k] * v0[k]
             }
             FeL[j] += sum     // lokal
@@ -957,7 +983,7 @@ export class CKoppelfeder extends CElement {
 
         for (i = 0; i < this.neqeG; i++) {
             sum = 0.0
-            for (j = 0; j < 4; j++) {
+            for (j = 0; j < 6; j++) {
                 sum += this.transU[j][i] * FeL[j]
                 //sum += this.transF[i][j] * FeL[j]
             }
@@ -971,7 +997,7 @@ export class CKoppelfeder extends CElement {
     //---------------------------------------------------------------------------------------------
     get_edispL(edispL: number[], iLastfall: number) {
 
-        let edisp: number[] = new Array(4)
+        let edisp: number[] = new Array(6)
 
 
         for (let j = 0; j < this.neqeG; j++) {
@@ -998,7 +1024,7 @@ export class CKoppelfeder extends CElement {
     //---------------------------------------------------------------------------------------------
     get_edispL_schiefstellung(edispL: number[], iKomb: number) {
 
-        let edisp: number[] = new Array(4)
+        let edisp: number[] = new Array(6)
 
 
         for (let j = 0; j < this.neqeG; j++) {
@@ -1024,7 +1050,7 @@ export class CKoppelfeder extends CElement {
     //---------------------------------------------------------------------------------------------
     get_edispL_eigenform(edispL: number[], iKomb: number, ieigv: number) {
 
-        let edisp: number[] = new Array(4)
+        let edisp: number[] = new Array(6)
 
 
         for (let j = 0; j < this.neqeG; j++) {
@@ -1051,7 +1077,7 @@ export class CKoppelfeder extends CElement {
     //---------------------------------------------------------------------------------------------
     get_edispL_dyn_eigenform(edispL: number[], ieigv: number) {
 
-        let edisp: number[] = new Array(4)
+        let edisp: number[] = new Array(6)
 
 
         for (let j = 0; j < 6; j++) {

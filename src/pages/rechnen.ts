@@ -4203,8 +4203,11 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
             for (i = 0; i < neq; i++) {
                 dR[i] = R[i] - R_internal[i]
                 R_[i] = R[i];
-                console.log("R,Ri,dR", i, R[i], R_internal[i], dR[i], u[i])
+                //console.log("R,Ri,dR", i, R[i], R_internal[i], dR[i], u[i])
             }
+            console.log("dR[]",dR)
+            console.log("R[]",R)
+            console.log("R_internal[]",R_internal)
 
             for (i = 0; i < neq; i++) {
                 for (j = 0; j < neq; j++) {
@@ -4240,10 +4243,11 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
             }
 
             for (i = 0; i < neq; i++) {
-                console.log("U", i, u[i] * 1000.0)    // in mm, mrad
+                //console.log("U", i, u[i] * 1000.0)    // in mm, mrad
                 u_lf[i][iKomb - 1] = u[i]
             }
-
+            console.log("U[]",u)
+            console.log("dU[]",U_)
             // Rückrechnung
 
             let force: number[] = Array(6)
