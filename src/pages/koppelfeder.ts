@@ -32,6 +32,8 @@ export class CKoppelfeder extends CElement {
     delta_z = 0.0
     delta_phi = 0.0
 
+    kx_tang = 0.0
+    kz_tang = 0.0
     kphi_tang = 0.0
 
     emodul = 0.0
@@ -123,9 +125,9 @@ export class CKoppelfeder extends CElement {
     constructor(prop: number[]) {
 
         super()
-        this.kx = prop[0]
+        this.kx = this.kx_tang = prop[0]
         this.fx = prop[1]
-        this.kz = prop[2]
+        this.kz = this.kz_tang = prop[2]
         this.fz = prop[3]
         this.kphi = this.kphi_tang = prop[4]
         this.mphi = prop[5]
@@ -328,15 +330,15 @@ export class CKoppelfeder extends CElement {
 
         //  let EAL = this.emodul * this.area / sl
 
-        this.estm[0][0] = this.kx
-        this.estm[3][3] = this.kx
-        this.estm[0][3] = -this.kx
-        this.estm[3][0] = -this.kx
+        this.estm[0][0] = this.kx_tang
+        this.estm[3][3] = this.kx_tang
+        this.estm[0][3] = -this.kx_tang
+        this.estm[3][0] = -this.kx_tang
 
-        this.estm[1][1] = this.kz
-        this.estm[4][4] = this.kz
-        this.estm[1][4] = -this.kz
-        this.estm[4][1] = -this.kz
+        this.estm[1][1] = this.kz_tang
+        this.estm[4][4] = this.kz_tang
+        this.estm[1][4] = -this.kz_tang
+        this.estm[4][1] = -this.kz_tang
 
         this.estm[2][2] = this.kphi_tang
         this.estm[5][5] = this.kphi_tang
@@ -620,21 +622,38 @@ export class CKoppelfeder extends CElement {
 
         if (matprop_flag > 0) {    // nichtlineare Feder
 
-            let dx = this.edispL[3] - this.edispL[0]
-            if (this.kx !== 0.0 && Math.abs(dx) > this.dkx) {
-                this.F[0] = -this.fx * Math.sign(dx)
-                this.F[3] = this.fx * Math.sign(dx)
-                console.log("this.F[0]", this.F[0], this.fx, Math.sign(dx))
+            if (this.fx > 0.0) {
+                let dx = this.edispL[3] - this.edispL[0]
+                if (this.kx !== 0.0 && Math.abs(dx) > this.dkx) {
+                    this.F[0] = -this.fx * Math.sign(dx)
+                    this.F[3] = this.fx * Math.sign(dx)
+                    //console.log("this.F[0]", this.F[0], this.fx, Math.sign(dx))
+                    this.kx_tang = 0.0
+                } else {
+                    this.kx_tang = this.kx
+                }
             }
-
-            let dphi = this.edispL[5] - this.edispL[2]
-            if (this.kphi !== 0.0 && Math.abs(dphi) > this.dphi) {
-                this.F[2] = -this.mphi * Math.sign(dphi)
-                this.F[5] = this.mphi * Math.sign(dphi)
-                console.log("this.F[2]", this.F[2], this.mphi, dphi)
-                this.kphi_tang = 0.0
-            } else {
-                this.kphi_tang = this.kphi
+            if (this.fz > 0.0) {
+                let dz = this.edispL[4] - this.edispL[1]
+                if (this.kz !== 0.0 && Math.abs(dz) > this.dkz) {
+                    this.F[1] = -this.fz * Math.sign(dz)
+                    this.F[4] = this.fz * Math.sign(dz)
+                    //console.log("this.F[1]", this.F[1], this.fz, Math.sign(dz))
+                    this.kz_tang = 0.0
+                } else {
+                    this.kz_tang = this.kz
+                }
+            }
+            if (this.mphi > 0.0) {
+                let dphi = this.edispL[5] - this.edispL[2]
+                if (this.kphi !== 0.0 && Math.abs(dphi) > this.dphi) {
+                    this.F[2] = -this.mphi * Math.sign(dphi)
+                    this.F[5] = this.mphi * Math.sign(dphi)
+                    //console.log("this.F[2]", this.F[2], this.mphi, dphi)
+                    this.kphi_tang = 0.0
+                } else {
+                    this.kphi_tang = this.kphi
+                }
             }
 
         }
