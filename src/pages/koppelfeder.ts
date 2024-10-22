@@ -2,7 +2,7 @@ import { CElement } from "./element"
 
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
-    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung,
+    ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung,
     stadyn, eigenform_dyn, stabvorverformung_komb, R_internal, matprop_flag
 } from "./rechnen"
 
@@ -448,7 +448,7 @@ export class CKoppelfeder extends CElement {
         }
 
         for (j = 0; j < 6; j++) {
-            console.log("this.estiffG", this.estiffG[j])
+            console.log("Koppelfeder this.estiffG", this.estiffG[j])
         }
     }
 
@@ -659,6 +659,16 @@ export class CKoppelfeder extends CElement {
         }
         console.log("this.F[]", this.F)
 
+
+        // internen Kraftvektor berechnen für Iterationen
+
+        for (j = 0; j < this.neqeG; j++) {
+            ieq = this.lm[j]
+            if (ieq >= 0) {
+                R_internal[ieq] += this.F[j]
+            }
+        }
+
         // normale Elementlasten hinzufügen
 
         if (THIIO_flag === 0) {
@@ -695,15 +705,6 @@ export class CKoppelfeder extends CElement {
                 }
             }
 
-        }
-
-        // internen Kraftvektor berechnen für Iterationen
-
-        for (j = 0; j < this.neqeG; j++) {
-            ieq = this.lm[j]
-            if (ieq >= 0) {
-                R_internal[ieq] += this.F[j]
-            }
         }
 
         //console.log("element F global ", this.F)
@@ -892,30 +893,35 @@ export class CKoppelfeder extends CElement {
 
         // }
 
-        // else if (eload[ieload].art === 8) {              // Knotenverformungen
 
-        //     if (eload[ieload].node0 === this.nod1) {
-        //         eload[ieload].dispL0[0] = this.transU[0][0] * eload[ieload].dispx0 + this.transU[0][1] * eload[ieload].dispz0
-        //         eload[ieload].dispL0[1] = this.transU[1][0] * eload[ieload].dispx0 + this.transU[1][1] * eload[ieload].dispz0
-        //         eload[ieload].dispL0[2] = 0.0
-        //         eload[ieload].dispL0[3] = 0.0
-        //     } else {
-        //         eload[ieload].dispL0[0] = 0.0
-        //         eload[ieload].dispL0[1] = 0.0
-        //         eload[ieload].dispL0[2] = this.transU[2][2] * eload[ieload].dispx0 + this.transU[2][3] * eload[ieload].dispz0
-        //         eload[ieload].dispL0[3] = this.transU[3][2] * eload[ieload].dispx0 + this.transU[3][3] * eload[ieload].dispz0
+        if (eload[ieload].art === 8) {              // Knotenverformungen
 
-        //     }
-        //     for (let j = 0; j < 4; j++) {
-        //         let sum = 0.0
-        //         for (let k = 0; k < 4; k++) {
-        //             sum += this.estmL2[j][k] * eload[ieload].dispL0[k]
-        //         }
-        //         eload[ieload].re[j] = sum
-        //     }
-        //     console.log("LASTVEKTOR 8 ", eload[ieload].re)
-        //     console.log("dispL0", eload[ieload].dispL0)
-        // }
+            if (eload[ieload].node0 === this.nod1) {
+                eload[ieload].dispL0[0] = this.transU[0][0] * eload[ieload].dispx0 + this.transU[0][1] * eload[ieload].dispz0
+                eload[ieload].dispL0[1] = this.transU[1][0] * eload[ieload].dispx0 + this.transU[1][1] * eload[ieload].dispz0
+                eload[ieload].dispL0[2] = eload[ieload].phi0
+                eload[ieload].dispL0[3] = 0.0
+                eload[ieload].dispL0[4] = 0.0
+                eload[ieload].dispL0[5] = 0.0
+            } else {
+                eload[ieload].dispL0[0] = 0.0
+                eload[ieload].dispL0[1] = 0.0
+                eload[ieload].dispL0[2] = 0.0
+                eload[ieload].dispL0[3] = this.transU[3][3] * eload[ieload].dispx0 + this.transU[3][4] * eload[ieload].dispz0
+                eload[ieload].dispL0[4] = this.transU[4][3] * eload[ieload].dispx0 + this.transU[4][4] * eload[ieload].dispz0
+                eload[ieload].dispL0[5] = eload[ieload].phi0
+
+            }
+            for (let j = 0; j < 6; j++) {
+                let sum = 0.0
+                for (let k = 0; k < 6; k++) {
+                    sum += this.estmL2[j][k] * eload[ieload].dispL0[k]
+                }
+                eload[ieload].re[j] = sum
+            }
+            console.log("Koppelfeder LASTVEKTOR 8 ", eload[ieload].re)
+            console.log("dispL0", eload[ieload].dispL0)
+        }
 
         // else if (eload[ieload].art === 9) {              // zentrische Vorspannung
 
@@ -944,7 +950,7 @@ export class CKoppelfeder extends CElement {
             eload[ieload].el_r[j] = sum
         }
 
-        console.log("elementload global ", eload[ieload].el_r)
+        console.log("Koppelfeder elementload global ", eload[ieload].el_r)
 
     }
 

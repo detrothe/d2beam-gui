@@ -1970,7 +1970,7 @@ async function calculate() {
 
     let nElNodeDisps = 0
     for (i = 0; i < nNodeDisps; i++) {
-        for (j = 0; j < nelem; j++) {
+        for (j = 0; j < nelem_Balken + nelem_koppelfedern; j++) {
             if (nodeDisp0[i].node === element[j].nod[0] || nodeDisp0[i].node === element[j].nod[1]) {
                 nElNodeDisps = nElNodeDisps + 1
                 eload.push(new TElLoads())
@@ -2288,7 +2288,7 @@ async function calculate() {
 
                 //  und jetzt noch die normalen Elementlasten
 
-                for (ielem = 0; ielem < nelem; ielem++) {
+                for (ielem = 0; ielem < nelem_Balken + nelem_koppelfedern; ielem++) {
 
                     if (el[ielem].isActive) {
 
@@ -2394,11 +2394,28 @@ async function calculate() {
                 }
 
                 {
+
+                    for (let ieload = 0; ieload < neloads; ieload++) {
+
+                        if ((eload[ieload].art === 8) && (eload[ieload].lf === iLastfall)) {
+                            //console.log("VORDEFINIERTE VERFORMUNGEN", eload[ieload].ieq0)
+
+                            for (let k = 0; k < 3; k++) {
+
+                                if (eload[ieload].ieq0[k] >= 0) {
+                                    let ieq = eload[ieload].ieq0[k]
+                                    //console.log("I E Q ", ieq)
+                                    R_internal[ieq] = 0.0
+                                }
+                            }
+                        }
+                    }
+
                     let zaehler = 0.0, nenner = 0.0
                     for (let i = 0; i < neq; i++) {
                         zaehler += (R_[i] - R_internal[i]) ** 2
                         nenner += R_[i] * R_[i]
-                        console.log("R_internal -- ", iLastfall, i, R_[i], R_internal[i])
+                        console.log("R_internal -- ", iLastfall, i, R_[i], R_internal[i], R_[i] - R_internal[i])
                     }
                     zaehler = Math.sqrt(zaehler)
                     nenner = Math.sqrt(nenner)
@@ -4012,7 +4029,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
     const du = Array(neq);
 
     let eps_disp = 1.0, iter = 0
-    let eps_force=0.0
+    let eps_force = 0.0
 
     if (nkombinationen < 1) {
         window.alert("Es muss mindestens eine Kombination definiert sein");
@@ -4205,9 +4222,9 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                 R_[i] = R[i];
                 //console.log("R,Ri,dR", i, R[i], R_internal[i], dR[i], u[i])
             }
-            console.log("dR[]",dR)
-            console.log("R[]",R)
-            console.log("R_internal[]",R_internal)
+            console.log("dR[]", dR)
+            console.log("R[]", R)
+            console.log("R_internal[]", R_internal)
 
             for (i = 0; i < neq; i++) {
                 for (j = 0; j < neq; j++) {
@@ -4246,8 +4263,8 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                 //console.log("U", i, u[i] * 1000.0)    // in mm, mrad
                 u_lf[i][iKomb - 1] = u[i]
             }
-            console.log("U[]",u)
-            console.log("dU[]",U_)
+            console.log("U[]", u)
+            console.log("dU[]", U_)
             // Rückrechnung
 
             let force: number[] = Array(6)
@@ -4279,6 +4296,21 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                 //write('Toleranz eps in Iterationsschritt ' + iter + ' = ' + eps_disp)
 
                 for (let i = 0; i < neq; i++) u_last[i] = u[i];
+
+
+                for (let ieload = 0; ieload < neloads; ieload++) {
+                    const index = eload[ieload].lf - 1
+                    if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                        if ((eload[ieload].art === 8)) {
+                            for (let k = 0; k < 3; k++) {
+                                if (eload[ieload].ieq0[k] >= 0) {
+                                    let ieq = eload[ieload].ieq0[k]
+                                    R_internal[ieq] = 0.0
+                                }
+                            }
+                        }
+                    }
+                }
 
                 zaehler = 0.0; nenner = 0.0
                 for (let i = 0; i < neq; i++) {
