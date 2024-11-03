@@ -878,8 +878,12 @@ export class CTruss extends CElement {
 
         //console.log('lokale Schnittgrößen, Element', (ielem + 1), this.FL)
 
-        this.normalkraft = this.FL[0]
-        if (this.normalkraft > 0.0) this.normalkraft = 0.0           // keine Zugversteifung
+        if (THIIO_flag === 0) {
+            this.normalkraft = 0.0
+        } else {
+            this.normalkraft = this.FL[0]
+            if (this.normalkraft > 0.0) this.normalkraft = 0.0           // keine Zugversteifung
+        }
 
         //console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
 
