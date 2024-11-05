@@ -78,7 +78,7 @@ import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 //import { Children } from "two.js/src/children";
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 3-November-2024, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 5-November-2024, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -807,13 +807,12 @@ portrait.addEventListener("change", function (e) {
                 <dr-button-pm id="id_button_nteilungen" nel="10" inputid="nteilungen"  @change=${berechnungErforderlich}></dr-button-pm>
               </td>
             </tr>
-            <tr><td>&nbsp;<b>für Theorie II. Ordnung:</b></td></tr>
+
             <tr>
-              <td id="id_niter" title="max. Anzahl Iterationen bei Th. II. Ordnung">&nbsp;max. Anzahl Gleichgewichts-Iterationen:</td>
-              <td>
-                <dr-button-pm id="id_button_niter" nel="10" inputid="niter"  @change=${berechnungErforderlich}></dr-button-pm>
-              </td>
+              <td>&nbsp; </td>
             </tr>
+            <tr><td>&nbsp;<b>Allgemein:</b></td></tr>
+
             <tr>
               <td id="id_eps_disp" title="max. Euklidische Fehlertoleranz eps für Verformungen">&nbsp;eps tol Verformung:</td>
               <td>
@@ -829,6 +828,35 @@ portrait.addEventListener("change", function (e) {
                 />
               </td>
             </tr>
+
+            <tr>
+              <td id="id_eps_force" title="max. Euklidische Fehlertoleranz eps für Kräfte">&nbsp;eps tol Kraft:</td>
+              <td>
+              <input
+                  type="number"
+                  step="any"
+                  id="id_eps_force_tol"
+                  name="eps_force_tol"
+                  class="input_tab"
+                  pattern="[0-9.,eE+-]*"
+                  value="1e-8"
+                  onchange="berechnungErforderlich()"
+                />
+              </td>
+            </tr>
+
+            <tr>
+              <td>&nbsp; </td>
+            </tr>
+
+            <tr><td>&nbsp;<b>für Theorie II. Ordnung:</b></td></tr>
+            <tr>
+              <td id="id_niter" title="max. Anzahl Iterationen bei Th. II. Ordnung">&nbsp;max. Anzahl Gleichgewichts-Iterationen:</td>
+              <td>
+                <dr-button-pm id="id_button_niter" nel="10" inputid="niter"  @change=${berechnungErforderlich}></dr-button-pm>
+              </td>
+            </tr>
+
 
             <tr>
               <td title="Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet">

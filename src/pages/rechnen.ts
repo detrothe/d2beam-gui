@@ -43,6 +43,7 @@ export let n_iterationen = 5;
 export let ausgabe_gleichgewichtSG = true      // Ausgabe der Gleichgewichtsschnittgrößen
 export let P_delta = false;
 export let epsDisp_tol = 1.e-5
+export let epsForce_tol = 1.e-8
 export let nnodalMass: number = 0;
 export let eigenform_dyn = [] as number[][]
 export let maxValue_dyn_eigenform = [] as number[]
@@ -572,6 +573,9 @@ export function rechnen(flag = 1) {
 
     el = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
     epsDisp_tol = Number(el.value)
+
+    el = document.getElementById('id_eps_force_tol') as HTMLInputElement;
+    epsForce_tol = Number(el.value)
 
     el = document.getElementById('id_eig_solver_option') as any;
     eig_solver = Number(el.value);
@@ -4429,7 +4433,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                 }
             }
 
-            if (eps_disp < epsDisp_tol && eps_force < epsDisp_tol) break;
+            if (eps_disp < epsDisp_tol && eps_force < epsForce_tol) break;
 
         }  // ende iter
 
@@ -4510,6 +4514,13 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
             write('Konvergenz bei den Verformungen erreicht, iter = ' + iter)
         } else {
             write('++++ keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen ++++')
+            keineKonvergenzErreicht = true
+        }
+
+        if (eps_force < epsForce_tol) {
+            write('Konvergenz bei den Kräften erreicht, iter = ' + iter)
+        } else {
+            write('++++ keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen ++++')
             keineKonvergenzErreicht = true
         }
 

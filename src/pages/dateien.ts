@@ -157,6 +157,10 @@ export function read_daten(eingabedaten: string) {
         if (jobj.epsDisp_tol === undefined) eli.value = '1e-5';
         else eli.value = jobj.epsDisp_tol;
 
+        eli = document.getElementById('id_eps_force_tol') as HTMLInputElement;
+        if (jobj.epsForce_tol === undefined) eli.value = '1e-8';
+        else eli.value = jobj.epsForce_tol;
+
         eli = document.getElementById('id_iter_neigv') as HTMLInputElement;
         if (jobj.niter_neigv === undefined) eli.value = '500';
         else eli.value = jobj.niter_neigv;
@@ -534,7 +538,7 @@ async function handleFileSelect_save() {
 export function str_inputToJSON() {
 
 
-    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, stadyn, dyn_neigv;
+    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, epsForce_tol, stadyn, dyn_neigv;
     let eig_solver, niter_neigv, nelem_koppelfedern,matprop_flag;
 
     let el = document.getElementById('id_button_nteilungen') as any;
@@ -578,6 +582,9 @@ export function str_inputToJSON() {
 
     el = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
     epsDisp_tol = el.value;
+
+    el = document.getElementById('id_eps_force_tol') as HTMLInputElement;
+    epsForce_tol = el.value;
 
     el = document.getElementById('id_iter_neigv') as HTMLInputElement;
     niter_neigv = el.value;
@@ -827,6 +834,7 @@ export function str_inputToJSON() {
         'P_delta': P_delta,
         'ausgabe_SG': ausgabe_SG,
         'epsDisp_tol': epsDisp_tol,
+        'epsForce_tol': epsForce_tol,
         'stadyn': stadyn,
         'nnodalmass': nnodalmass,
         'dyn_neigv': dyn_neigv,
