@@ -4,7 +4,7 @@ import Two from 'two.js'
 import { CTrans } from './trans';
 import { myFormat, write } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
-import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn } from "./rechnen";
+import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
@@ -1884,7 +1884,7 @@ export function drawsystem(svg_id = 'artboard') {
                 }
             }
 
-            if ((show_labels && onlyLabels) || !show_selection) {
+            if ((show_labels && onlyLabels) || !show_selection || nur_eingabe_ueberpruefen) {
 
                 let xm = (x1 + x2) / 2. + stab[ielem].sinus * 7 / devicePixelRatio
                 let zm = (z1 + z2) / 2. - stab[ielem].cosinus * 7 / devicePixelRatio
@@ -1911,7 +1911,7 @@ export function drawsystem(svg_id = 'artboard') {
 
         }
 
-        if ((show_labels && onlyLabels) || !show_selection) {
+        if ((show_labels && onlyLabels) || !show_selection || nur_eingabe_ueberpruefen) {
 
             for (let i = 0; i < nnodes; i++) {
                 x1 = Math.round(tr.xPix(node[i].x)) + 10 / devicePixelRatio + 12;

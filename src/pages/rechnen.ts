@@ -89,6 +89,8 @@ export let maxU_dir = 1
 export let nQuerschnittSets = 0
 export let querschnitts_zaehler = -1
 
+export let nur_eingabe_ueberpruefen = false;
+
 export let ndivsl = 3;
 export let art = 1;
 export let intArt = 2;
@@ -628,6 +630,9 @@ export function rechnen(flag = 1) {
     if (stadyn === 1) read_nodal_mass();
 
     if (flag === 1) {
+
+        nur_eingabe_ueberpruefen = false
+
         let fehler = check_input();
         if (fatal_error || fehler > 0) {
             write('\nEingabefehler bitte erst beheben')
@@ -639,6 +644,7 @@ export function rechnen(flag = 1) {
         }
     } else {
 
+        nur_eingabe_ueberpruefen = true
 
         calc_neq_and_springs();
 
@@ -4506,7 +4512,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
 
         // Berechnung alpha_cr, Knickformen
 
-        if ( THIIO_flag > 0 ) eigenwertberechnung(iKomb, stiff, stiff_sig, u, 1)
+        if (THIIO_flag > 0) eigenwertberechnung(iKomb, stiff, stiff_sig, u, 1)
 
         ausgabe(iKomb, newDiv)
 
