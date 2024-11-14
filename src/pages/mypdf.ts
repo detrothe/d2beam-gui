@@ -577,10 +577,10 @@ export async function my_jspdf() {
     el_table.htmlText("", 2, "center", yy);
 
     el_table.htmlText("k<sub>x</sub>", 3, "center", yy);
-    el_table.htmlText("k<sub>x.plast</sub>", 4, "center", yy);
+    el_table.htmlText("f<sub>x.plast</sub>", 4, "center", yy);
     el_table.htmlText("k<sub>z</sub>", 5, "center", yy);
-    el_table.htmlText("k<sub>z.plast</sub>", 6, "center", yy);
-    el_table.htmlText("m<sub>φ</sub>", 7, "center", yy);
+    el_table.htmlText("f<sub>z.plast</sub>", 6, "center", yy);
+    el_table.htmlText("k<sub>φ</sub>", 7, "center", yy);
     el_table.htmlText("m<sub>φ.plast</sub>", 8, "center", yy);
 
     yy = neueZeile(yy, fs, 1);
