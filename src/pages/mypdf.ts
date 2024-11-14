@@ -563,13 +563,7 @@ export async function my_jspdf() {
     doc.setFont("freesans_bold");
     yy = neueZeile(yy, fs, 2);
 
-    if (System === 0) {
-      texWid = doc.getTextWidth("Gelenke");
-      doc.text("Gelenke", links + 70 + 30 - texWid / 2, yy);
-      yy = neueZeile(yy, fs, 1);
-    }
-
-    let el_table = new pdf_table(doc, links, [10, 15, 15, 25, 25, 25, 25, 25, 25]);
+    let el_table = new pdf_table(doc, links, [10, 15, 15, 23, 23, 23, 23, 23, 23]);
     console.log("el_table", el_table);
 
     el_table.htmlText("", 0, "left", yy);

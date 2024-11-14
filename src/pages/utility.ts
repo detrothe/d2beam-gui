@@ -36,9 +36,9 @@ export function testNumber(wert: string, zeile: number, spalte: number, id: any)
 
     let nwert = Number(wert)
     if (isNaN(nwert)) {
-        write("Das ist keine zulässige Zahl in Zeile " + zeile + ", spalte " + spalte);
+        write("Das ist keine zulässige Zahl in Zeile " + zeile + ", spalte " + spalte );
 
-        //console.log("ss", zeile + spalte + id);
+        console.log("FEHLER TABELLE", id);
 
         id.rows.item(zeile).cells.item(spalte).firstElementChild.classList.add("input_select");
         return 0;
