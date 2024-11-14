@@ -11,7 +11,7 @@ import { fontBold } from "../fonts/FreeSans-bold.js";
 import htmlToPdfmake from "html-to-pdfmake";
 //import { tabQWerte, schnittgroesse, bezugswerte } from "./duennQ"
 
-import { nnodes, nelem, System, stadyn, nnodalMass, nodalmass, dyn_neigv, dyn_omega, eigenform_print } from "./rechnen";
+import { nnodes, nelem, System, stadyn, nnodalMass, nodalmass, dyn_neigv, dyn_omega, eigenform_print, nelem_koppelfedern, nelem_Balken } from "./rechnen";
 import {
   el,
   element as stab,
@@ -543,6 +543,81 @@ export async function my_jspdf() {
     }
 
   }
+
+  // Koppelfedern
+
+  if (System === 0) {
+
+    const nspalten = 3,
+      nzeilen = nelem_koppelfedern;
+
+    yy = testSeite(yy, fs1, 1, 4 + nzeilen);
+    if (app.browserLanguage == "de") {
+      doc.text("Koppelfedern", links, yy);
+    } else {
+      doc.text("Spring data", links, yy);
+    }
+    let str: string, texWid: number;
+
+    doc.setFontSize(fs);
+    doc.setFont("freesans_bold");
+    yy = neueZeile(yy, fs, 2);
+
+    if (System === 0) {
+      texWid = doc.getTextWidth("Gelenke");
+      doc.text("Gelenke", links + 70 + 30 - texWid / 2, yy);
+      yy = neueZeile(yy, fs, 1);
+    }
+
+    let el_table = new pdf_table(doc, links, [10, 15, 15, 25, 25, 25, 25, 25, 25]);
+    console.log("el_table", el_table);
+
+    el_table.htmlText("", 0, "left", yy);
+    el_table.htmlText("", 1, "center", yy);
+    el_table.htmlText("", 2, "center", yy);
+
+    el_table.htmlText("k<sub>x</sub>", 3, "center", yy);
+    el_table.htmlText("k<sub>x.plast</sub>", 4, "center", yy);
+    el_table.htmlText("k<sub>z</sub>", 5, "center", yy);
+    el_table.htmlText("k<sub>z.plast</sub>", 6, "center", yy);
+    el_table.htmlText("m<sub>φ</sub>", 7, "center", yy);
+    el_table.htmlText("m<sub>φ.plast</sub>", 8, "center", yy);
+
+    yy = neueZeile(yy, fs, 1);
+
+    el_table.htmlText("No", 0, "left", yy);
+    el_table.htmlText("nod a", 1, "center", yy);
+    el_table.htmlText("nod e", 2, "center", yy);
+
+    el_table.htmlText("[kN/m]", 3, "center", yy);
+    el_table.htmlText("[kN]", 4, "center", yy);
+    el_table.htmlText("[kN/m]", 5, "center", yy);
+    el_table.htmlText("[kN]", 6, "center", yy);
+    el_table.htmlText("[kNm/rad]", 7, "center", yy);
+    el_table.htmlText("[kNm]", 8, "center", yy);
+
+    doc.setFontSize(fs);
+    doc.setFont("freesans_normal");
+    yy = neueZeile(yy, fs, 1);
+
+    let ielem = nelem_Balken
+
+    for (let i = 0; i < nzeilen; i++) {
+      el_table.htmlText(String(+i + 1), 0, "center", yy);
+      el_table.htmlText(String(+stab[ielem].nod[0] + 1), 1, "center", yy);
+      el_table.htmlText(String(+stab[ielem].nod[1] + 1), 2, "center", yy);
+
+      for (let j = 0; j < 6; j++) {
+        str = myFormat(stab[ielem].mat_koppelfeder[j], 1, 5, 1);
+        el_table.htmlText(str, j + 3, "center", yy);
+      }
+
+      ielem++;
+      yy = neueZeile(yy, fs1, 1);
+    }
+
+  }
+
 
   //   Knotenmassen
 

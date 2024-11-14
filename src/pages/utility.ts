@@ -64,6 +64,7 @@ export function myFormat_en(wert: any, minDecimal: any, maxDecimal: any, notatio
     if (notation === 0) {
         return (new Intl.NumberFormat('en', { minimumFractionDigits: minDecimal, maximumFractionDigits: maxDecimal }).format(wert)).replace(/,/g, '');
     } else {
+        wert = wert.replace(/,/g, '.');
         return (new Intl.NumberFormat('en', { notation: "scientific", minimumFractionDigits: minDecimal, maximumFractionDigits: maxDecimal }).format(wert)).replace(/,/g, '');
 
     }

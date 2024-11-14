@@ -1544,6 +1544,7 @@ function read_elements() {
             else if (ispalte === 2) element[ielem].nod[1] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte > 2) {
                 element[ielem].mat_koppelfeder[ispalte - 3] = Number(testNumber(wert, izeile, ispalte, shad));
+                console.log("MAT KOPPELFEDER",wert,element[ielem].mat_koppelfeder[ispalte - 3])
             }
         }
         console.log("element", izeile, element[ielem].qname, element[ielem].nod[0], element[ielem].nod[1])

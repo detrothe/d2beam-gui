@@ -78,7 +78,7 @@ import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 //import { Children } from "two.js/src/children";
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 12-November-2024, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 14-November-2024, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -452,6 +452,7 @@ portrait.addEventListener("change", function (e) {
                   nspalten="9"
                   columns='["No", "nod a", "nod e", "k<sub>x</sub><br>[kN/m]", "f<sub>x.plast</sub><br>[kN]", "k<sub>z</sub><br>[kN/m]", "f<sub>z.plast</sub><br>[kN]", "k<sub>φ</sub><br>[kNm/rad]", "m<sub>φ.plast</sub><br>[kNm]", "Winkel<br>[°]"  ]'
                   colwidth='["4","3","3","5","5","5","5","5","5","5"]'
+                  typs='["-", "number", "number", "text", "text", "text", "text", "text", "text"]'
         ></dr-tabelle>
 
       </sl-tab-panel>
