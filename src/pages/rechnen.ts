@@ -10,7 +10,7 @@ import { testNumber, myFormat, write } from './utility'
 import { drButtonPM } from "../components/dr-button-pm";
 
 import { gauss } from "./gauss"
-import { cholesky } from "./cholesky"
+import { cholesky, det_cholesky } from "./cholesky"
 import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CTruss } from "./truss"
 import { CSpring } from "./feder"
@@ -1544,7 +1544,7 @@ function read_elements() {
             else if (ispalte === 2) element[ielem].nod[1] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte > 2) {
                 element[ielem].mat_koppelfeder[ispalte - 3] = Number(testNumber(wert, izeile, ispalte, shad));
-                console.log("MAT KOPPELFEDER",wert,element[ielem].mat_koppelfeder[ispalte - 3])
+                console.log("MAT KOPPELFEDER", wert, element[ielem].mat_koppelfeder[ispalte - 3])
             }
         }
         console.log("element", izeile, element[ielem].qname, element[ielem].nod[0], element[ielem].nod[1])
@@ -3383,6 +3383,8 @@ function cholesky_solve_equation(stiff: number[][], R: number[]) {
         }
         else {
             error = cholesky(stiff, R, neq, 1);
+            let det = det_cholesky(stiff, neq)
+            write('Determinante = ' + det)
             if (error === 0) error = cholesky(stiff, R, neq, 2);
         }
         return error;
