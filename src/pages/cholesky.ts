@@ -72,31 +72,31 @@ export function cholesky(a: number[][], b: number[], n: number, flag: number) {
 export function det_cholesky(a: number[][], n: number) {
     let det = 1.0
     let exponent = 0
-    let determinante = 1.0
-    console.log("in det_cholesky")
+    //let determinante = 1.0
+    //console.log("in det_cholesky")
     for (let i = 0; i < n; i++) {
-        det = det * a[i][i] ** 2
-        determinante = determinante * a[i][i] ** 2
+        det = det * a[i][i]**2
+        //determinante = determinante * a[i][i] ** 2
 
         while (Math.abs(det) < 0.1 && det !== 0.0) {
             det = det * 10.0
             exponent = exponent - 1
-            console.log("det < 0.1", det)
+            //console.log("det < 0.1", det)
         }
         while (Math.abs(det) > 1000.0) {
             det = det / 1000.0
             exponent = exponent + 3
-            console.log("det > 1000", det)
+            //console.log("det > 1000", det)
         }
     }
 
     while (Math.abs(det) > 1.0) {
         det = det / 10.0
         exponent = exponent + 1
-        console.log("det > 1", det)
+        //console.log("det > 1", det)
     }
-    console.log("ex det_cholesky")
+    //console.log("ex det_cholesky")
 
-    return String(myFormat(det, 5, 5) + 'e' + exponent + ' ' + determinante)
+    return String(myFormat(det, 5, 5) + 'e' + exponent)
 
 }

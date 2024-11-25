@@ -3383,9 +3383,11 @@ function cholesky_solve_equation(stiff: number[][], R: number[]) {
         }
         else {
             error = cholesky(stiff, R, neq, 1);
-            let det = det_cholesky(stiff, neq)
-            write('Determinante = ' + det)
-            if (error === 0) error = cholesky(stiff, R, neq, 2);
+            if (error === 0) {
+                let det = det_cholesky(stiff, neq)
+                write('Determinante = ' + det)
+                error = cholesky(stiff, R, neq, 2);
+            }
         }
         return error;
     }
