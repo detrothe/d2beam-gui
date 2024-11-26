@@ -242,6 +242,7 @@ class TElement {
     nod = [0, 0, 0, 0]                  // globale Knotennummer der Stabenden
     lm: number[] = []
     gelenk = [0, 0, 0, 0, 0, 0]
+    nGelenke = 0
     estiff: number[][] = []
     estm: number[][] = []
     ksig: number[][] = []
@@ -1404,6 +1405,7 @@ function read_elements() {
     let shad = el?.shadowRoot?.getElementById('mytable')
 
     for (let izeile = 1; izeile < nRowTab; izeile++) {
+        element[izeile - 1].nGelenke = 0
         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
             if (ispalte === 1) {
                 //console.log('iSpalte === 1',izeile, ispalte, table.rows[izeile].cells[ispalte].firstElementChild.value);
@@ -1419,6 +1421,7 @@ function read_elements() {
             else if (ispalte === 4) element[izeile - 1].nod[1] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
             else if (ispalte > 4 && ispalte <= 10) {
                 element[izeile - 1].gelenk[ispalte - 5] = Number(testNumber(wert, izeile, ispalte, shad));
+                if (element[izeile - 1].gelenk[ispalte - 5] > 0) element[izeile - 1].nGelenke++;
             }
             else if (ispalte === 11) element[izeile - 1].aL = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 12) element[izeile - 1].aR = Number(testNumber(wert, izeile, ispalte, shad));
@@ -2435,6 +2438,12 @@ async function calculate() {
                     if (nenner !== 0.0) eps_force = zaehler / nenner;
                     write('Toleranz eps_force in Lastfall ' + iLastfall + ' = ' + eps_force)
 
+                    if (eps_force < epsForce_tol) {
+                        write('Toleranz bei den Kräften erreicht')
+                    } else {
+                        write('++++ geforderte Genauigkeit bei den Kräften nicht erreicht, das System auf mögliche Kinematiken überprüfen')
+                        keineKonvergenzErreicht = true
+                    }
                 }
 
                 let disp = Array(3)
@@ -2556,7 +2565,7 @@ async function calculate() {
 
         else if (THIIO_flag === 1) {
 
-            let eps_disp = 1.0, iter = 0
+            let eps_disp = 1.0, eps_force = 0.0, iter = 0
 
             if (nkombinationen < 1) {
                 window.alert("Es muss mindestens eine Kombination definiert sein");
@@ -2822,7 +2831,7 @@ async function calculate() {
                         }
                         zaehler = Math.sqrt(zaehler)
                         nenner = Math.sqrt(nenner)
-                        let eps_force = 0.0
+                        eps_force = 0.0
                         if (nenner !== 0.0) eps_force = zaehler / nenner;
                         //write('Toleranz eps_force in Iterationsschritt ' + iter + ' = ' + eps_force)
                         write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + eps_disp + ', eps_force = ' + eps_force)
@@ -2920,7 +2929,7 @@ async function calculate() {
 
                     }
 
-                    if (eps_disp < epsDisp_tol) break;
+                    if (eps_disp < epsDisp_tol && eps_force < epsForce_tol) break;
 
                 }  // ende iter
 
@@ -3004,6 +3013,12 @@ async function calculate() {
                     keineKonvergenzErreicht = true
                 }
 
+                if (eps_force < epsForce_tol) {
+                    write('Konvergenz bei den Kräften erreicht, iter = ' + iter)
+                } else {
+                    write('++++ keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen ++++')
+                    keineKonvergenzErreicht = true
+                }
 
 
             }   //ende iKomb
@@ -3033,14 +3048,25 @@ async function calculate() {
     if (checkbox.checked) show_gleichungssystem(true);
 
     write('______________________________')
-    if (keineKonvergenzErreicht || alpha_cr_2_low || keineKonvergenzErreicht_eigv) {
+    if (keineKonvergenzErreicht && (THIIO_flag === 0) && (matprop_flag === 0)) {    // TH I. Ordnung linear
+        write('Ꚛ FEHLER - In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten')
+
+        const dialogAlert = new AlertDialog({
+            trueButton_Text: "ok",
+            question_Text: "In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten. " +
+                "Mögliche Ursache: Das System ist kinematisch. " +
+                "Die Ergebnisse sind wahrscheinlich nicht brauchbar!",
+        });
+        await dialogAlert.confirm();
+    }
+    else if (keineKonvergenzErreicht || alpha_cr_2_low || keineKonvergenzErreicht_eigv) {
         if (keineKonvergenzErreicht) {
-            write('Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Verformungen')
+            write('Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Verformungen/Kräfte')
 
             const dialogAlert = new AlertDialog({
                 trueButton_Text: "ok",
-                question_Text: "In mindestens einer Kombination keine Konvergenz der Verformungen erreicht. " +
-                    "Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. " +
+                question_Text: "In mindestens einer Kombination keine Konvergenz der Verformungen/Kräfte erreicht. " +
+                    "Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. Kinematiken überprüfen. " +
                     "Die Ergebnisse sind wahrscheinlich nicht brauchbar!",
             });
             await dialogAlert.confirm();

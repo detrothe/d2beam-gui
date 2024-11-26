@@ -2038,7 +2038,7 @@ export function drawsystem(svg_id = 'artboard') {
     if (show_knotenmassen && show_selection) draw_knotenmassen(two);
 
     draw_lager(two);
-    if (flag_eingabe != 0) draw_gelenke(two);
+    if (flag_eingabe != 0 || nur_eingabe_ueberpruefen) draw_gelenke(two);
 
     //console.log("++++ show_lasten_temp", show_lasten_temp)
 
@@ -3418,10 +3418,10 @@ function draw_gelenke(two: Two) {
 
         if (!stab[ielem].isActive) continue
 
-        if (element[ielem].nGelenke > 0) {
+        if (stab[ielem].nGelenke > 0) {
 
-            let aL = element[ielem].aL
-            let aR = element[ielem].aR
+            let aL = stab[ielem].aL
+            let aR = stab[ielem].aR
 
             if (aL > 0.0) distL = radius;
             else distL = a + radius;
@@ -3429,15 +3429,15 @@ function draw_gelenke(two: Two) {
             else distR = a + radius;
 
 
-            si = element[ielem].sinus
-            co = element[ielem].cosinus
+            si = stab[ielem].sinus
+            co = stab[ielem].cosinus
 
-            x1 = Math.round(tr.xPix(element[ielem].x1 + co * aL));
-            z1 = Math.round(tr.zPix(element[ielem].z1 + si * aL));
-            x2 = Math.round(tr.xPix(element[ielem].x2 - co * aR));
-            z2 = Math.round(tr.zPix(element[ielem].z2 - si * aR));
+            x1 = Math.round(tr.xPix(stab[ielem].x1 + co * aL));
+            z1 = Math.round(tr.zPix(stab[ielem].z1 + si * aL));
+            x2 = Math.round(tr.xPix(stab[ielem].x2 - co * aR));
+            z2 = Math.round(tr.zPix(stab[ielem].z2 - si * aR));
 
-            if (element[ielem].gelenk[2] > 0) {                         // Momentengelenk links
+            if (stab[ielem].gelenk[2] > 0) {                         // Momentengelenk links
                 dx = co * distL; //(a + radius)
                 dz = si * distL; //(a + radius)
                 let kreis = two.makeCircle(x1 + dx, z1 + dz, radius, 10)
@@ -3446,16 +3446,16 @@ function draw_gelenke(two: Two) {
                 distL += radius
 
             }
-            if (element[ielem].gelenk[5] > 0) {                         // Momentengelenk rechts
-                dx = element[ielem].cosinus * distR; //(a + radius)
-                dz = element[ielem].sinus * distR; //(a + radius)
+            if (stab[ielem].gelenk[5] > 0) {                         // Momentengelenk rechts
+                dx = stab[ielem].cosinus * distR; //(a + radius)
+                dz = stab[ielem].sinus * distR; //(a + radius)
                 let kreis = two.makeCircle(x2 - dx, z2 - dz, radius, 10)
                 kreis.fill = '#ffffff';
                 kreis.linewidth = 2 / devicePixelRatio;
                 distR += radius
 
             }
-            if (element[ielem].gelenk[1] > 0) {                  // Querkraftgelenk links
+            if (stab[ielem].gelenk[1] > 0) {                  // Querkraftgelenk links
                 dist = distL + 3 / devicePixelRatio
                 dx = co * dist
                 dz = si * dist
@@ -3498,7 +3498,7 @@ function draw_gelenke(two: Two) {
 
                 distL += 6 / devicePixelRatio
             }
-            if (element[ielem].gelenk[4] > 0) {                  // Querkraftgelenk rechts
+            if (stab[ielem].gelenk[4] > 0) {                  // Querkraftgelenk rechts
                 dist = distR + 3 / devicePixelRatio
                 dx = co * dist
                 dz = si * dist
@@ -3542,7 +3542,7 @@ function draw_gelenke(two: Two) {
                 distR += 6 / devicePixelRatio
 
             }
-            if (element[ielem].gelenk[0] > 0) {                  // Normalkraftgelenk links
+            if (stab[ielem].gelenk[0] > 0) {                  // Normalkraftgelenk links
 
                 dist = distL
                 dx = co * dist
@@ -3601,7 +3601,7 @@ function draw_gelenke(two: Two) {
                 line3.linewidth = 6 / devicePixelRatio;
                 line3.stroke = '#000000';
             }
-            if (element[ielem].gelenk[3] > 0) {                  // Normalkraftgelenk rechts
+            if (stab[ielem].gelenk[3] > 0) {                  // Normalkraftgelenk rechts
 
                 dist = distR
                 dx = co * dist
