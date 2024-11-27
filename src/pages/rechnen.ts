@@ -15,7 +15,7 @@ import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CTruss } from "./truss"
 import { CSpring } from "./feder"
 import { CKoppelfeder } from "./koppelfeder"
-import { init_grafik, drawsystem } from "./grafik";
+import { init_grafik, drawsystem, init_two } from "./grafik";
 import { show_controller_THIIO, show_controller_results, show_controller_truss } from "./mypanelgui"
 import { ausgabe, dyn_ausgabe } from "./ausgabe"
 import { AlertDialog } from "../pages/confirm_dialog";
@@ -3036,9 +3036,12 @@ async function calculate() {
     write('\nElapsed calculation time: ' + myFormat(endTime - startTime, 2, 2) + ' msec')
     startTime = performance.now();
 
-    init_grafik(1);
-    //   debug  drawsystem('svg_artboard');
+    init_grafik(0);
+    init_two('svg_artboard');
+    drawsystem('svg_artboard');
 
+    init_grafik(1);
+    init_two();
     drawsystem();
 
     endTime = performance.now();

@@ -261,9 +261,88 @@ export function click_zurueck_grafik() {
 
 
 }
+//--------------------------------------------------------------------------------------------------- i n i t _ t w o
+
+export function init_two(svg_id = 'artboard') {
+
+
+    if (two !== null) {
+        // let parent = two.renderer.domElement.parentElement
+        // console.log("Parent ", parent)
+
+        two.unbind('update')
+        two.pause()
+        two.removeEventListener()
+        two.clear()
+
+        //two.bind('update')
+        //        let parent = two.renderer.domElement.parentelement;
+        //console.log("Parent ", parent)
+        //if (parent) parent.removeChild(two.renderer.domElement);
+    }
+
+    if (domElement != null) {
+        // domElement.removeEventListener('wheel', wheel, { passive: false });
+        // domElement.removeEventListener('mousedown', mousedown, false);
+        // domElement.removeEventListener('mouseup', mousemove, false);
+
+        //console.log('domElement',domElement)
+        let parent = domElement.parentElement
+        //console.log("Parent ", parent)
+        if (parent) parent.removeChild(domElement);
+
+    }
+
+    // const tab_group = document.getElementById('container') as any;
+    // tab_group.hidden=true
+
+    // for (let i = 0; i < two.scene.children.length; i++) {
+    //     let child = two.scene.children[i];
+    //     two.scene.remove(child);
+    //     Two.Utils.dispose(child);
+    // }
+
+    console.log("__________________________________  G R A F I K  ___________")
+    if (svg_id === 'svg_artboard') {
+        const elem = document.getElementById(svg_id) as any; //HTMLDivElement;
+        console.log("childElementCount", elem.childElementCount)
+
+        if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
+    }
+
+    var params = {
+        fullscreen: false,
+        type: Two.Types.canvas
+    };
+
+    if (svg_id === 'svg_artboard') params.type = Two.Types.svg
+
+    two = null;
+    const artboard = document.getElementById(svg_id) as any;
+
+    two = new Two(params).appendTo(artboard);
+
+    if (svg_id === 'artboard') {
+        domElement = two.renderer.domElement;
+        //svgElement = two.render
+        //console.log("domElement", domElement)
+        //domElement.addEventListener('mousedown', mousedown, false);
+
+        domElement.addEventListener('wheel', wheel, { passive: false });
+        domElement.addEventListener('mousedown', mousedown, false);
+        domElement.addEventListener('mouseup', mouseup, false);
+
+        domElement.addEventListener('touchstart', touchstart, { passive: false });
+        domElement.addEventListener('touchmove', touchmove, { passive: false });
+        //window.addEventListener('touchmove', touchmove, { passive: false });
+        domElement.addEventListener('touchend', touchend, { passive: false });
+    }
+
+}
+
 //--------------------------------------------------------------------------------------------------- i n i t _ g r a f i k
 
-export function init_grafik(flag = 1) {
+export function init_grafik(flag: number) {
 
     flag_eingabe = flag;   // 0 = Eingabe überprüfen
 
@@ -406,72 +485,6 @@ export function init_grafik(flag = 1) {
         }
     }
 
-    if (two !== null) {
-        // let parent = two.renderer.domElement.parentElement
-        // console.log("Parent ", parent)
-
-        two.unbind('update')
-        two.pause()
-        two.removeEventListener()
-        two.clear()
-
-        //two.bind('update')
-        //        let parent = two.renderer.domElement.parentelement;
-        //console.log("Parent ", parent)
-        //if (parent) parent.removeChild(two.renderer.domElement);
-    }
-
-    if (domElement != null) {
-        // domElement.removeEventListener('wheel', wheel, { passive: false });
-        // domElement.removeEventListener('mousedown', mousedown, false);
-        // domElement.removeEventListener('mouseup', mousemove, false);
-
-        //console.log('domElement',domElement)
-        let parent = domElement.parentElement
-        //console.log("Parent ", parent)
-        if (parent) parent.removeChild(domElement);
-
-    }
-
-    // const tab_group = document.getElementById('container') as any;
-    // tab_group.hidden=true
-
-    // for (let i = 0; i < two.scene.children.length; i++) {
-    //     let child = two.scene.children[i];
-    //     two.scene.remove(child);
-    //     Two.Utils.dispose(child);
-    // }
-
-    console.log("__________________________________  G R A F I K  ___________")
-    // const elem = document.getElementById(svg_id) as any; //HTMLDivElement;
-    // console.log("childElementCount", elem.childElementCount)
-
-    // if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
-
-
-    var params = {
-        fullscreen: false,
-        type: Two.Types.canvas
-    };
-
-    two = null;
-    const artboard = document.getElementById('artboard') as any;
-
-    two = new Two(params).appendTo(artboard);
-
-    domElement = two.renderer.domElement;
-    //svgElement = two.render
-    //console.log("domElement", domElement)
-    //domElement.addEventListener('mousedown', mousedown, false);
-
-    domElement.addEventListener('wheel', wheel, { passive: false });
-    domElement.addEventListener('mousedown', mousedown, false);
-    domElement.addEventListener('mouseup', mouseup, false);
-
-    domElement.addEventListener('touchstart', touchstart, { passive: false });
-    domElement.addEventListener('touchmove', touchmove, { passive: false });
-    //window.addEventListener('touchmove', touchmove, { passive: false });
-    domElement.addEventListener('touchend', touchend, { passive: false });
 }
 
 
