@@ -36,6 +36,10 @@ export class CKoppelfeder extends CElement {
     kz_tang = 0.0
     kphi_tang = 0.0
 
+    kx_is_plastic = false
+    kz_is_plastic = false
+    kphi_is_plastic = false
+
     emodul = 0.0
     gmodul = 0.0
     querdehnzahl = 0.0
@@ -629,8 +633,10 @@ export class CKoppelfeder extends CElement {
                     this.F[3] = this.fx * Math.sign(dx)
                     //console.log("this.F[0]", this.F[0], this.fx, Math.sign(dx))
                     this.kx_tang = 0.0
+                    this.kx_is_plastic = true
                 } else {
                     this.kx_tang = this.kx
+                    this.kx_is_plastic = false
                 }
             }
             if (this.fz > 0.0) {
@@ -640,8 +646,10 @@ export class CKoppelfeder extends CElement {
                     this.F[4] = this.fz * Math.sign(dz)
                     //console.log("this.F[1]", this.F[1], this.fz, Math.sign(dz))
                     this.kz_tang = 0.0
+                    this.kz_is_plastic = true
                 } else {
                     this.kz_tang = this.kz
+                    this.kz_is_plastic = true
                 }
             }
             if (this.mphi > 0.0) {
@@ -651,8 +659,10 @@ export class CKoppelfeder extends CElement {
                     this.F[5] = this.mphi * Math.sign(dphi)
                     //console.log("this.F[2]", this.F[2], this.mphi, dphi)
                     this.kphi_tang = 0.0
+                    this.kphi_is_plastic = true
                 } else {
                     this.kphi_tang = this.kphi
+                    this.kphi_is_plastic = false
                 }
             }
 

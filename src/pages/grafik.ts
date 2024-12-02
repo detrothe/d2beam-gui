@@ -4,7 +4,7 @@ import Two from 'two.js'
 import { CTrans } from './trans';
 import { myFormat, write } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
-import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen } from "./rechnen";
+import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen, matprop_flag, nelem_koppelfedern, nelem_Balken } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
@@ -2051,7 +2051,27 @@ export function drawsystem(svg_id = 'artboard') {
     if (show_knotenmassen && show_selection) draw_knotenmassen(two);
 
     draw_lager(two);
-    if (flag_eingabe != 0 || nur_eingabe_ueberpruefen) draw_gelenke(two);
+
+    if (show_systemlinien || !show_selection) {
+        //if (flag_eingabe != 0 || nur_eingabe_ueberpruefen)
+        draw_gelenke(two);
+    }
+
+
+    if (flag_eingabe !== 0 && matprop_flag > 0) {  // plastifizierte nichtlineare Feder darstellen
+
+        let ielem = nelem_Balken - 1
+        for (let i = 0; i < nelem_koppelfedern; i++) {
+            ielem++;
+            if (!stab[ielem].isActive) continue
+            if (element[ielem].kx_is_plastic || element[ielem].kz_is_plastic || element[ielem].kphi_is_plastic ) {
+                console.log('Koppelfeder ' + (+i+1) + ' ist plastiziert')
+            }
+
+
+        }
+
+    }
 
     //console.log("++++ show_lasten_temp", show_lasten_temp)
 
@@ -4484,9 +4504,16 @@ export async function copy_svg() {
 
     //let svg = svgElement;
     //console.log("svg", svg)
-    const elem = document.getElementById('artboard') as any;
+    const elem1 = document.getElementById('artboard') as any;
 
-    if (elem) {
+    if (elem1) {
+
+
+        init_two('svg_artboard');
+        drawsystem()
+        const elem = document.getElementById('svg_artboard') as any;
+
+
         // svg = svg.replace(/\r?\n|\r/g, "").trim();
         // svg = svg.substring(0, svg.indexOf("</svg>")) + "</svg>";
         // // @ts-ignore
@@ -4537,6 +4564,12 @@ export async function copy_svg() {
                 alert(error.message);
             }
 
+            // Zeichnung auf Bildschirm wieder herstellen
+
+            //console.log("redraw screen artboard")
+            init_two('artboard');
+            drawsystem();
+
             return
         }
 
@@ -4547,6 +4580,12 @@ export async function copy_svg() {
         } catch (error: any) {
             alert(error.message);
         }
+
+        // Zeichnung auf Bildschirm wieder herstellen
+
+        //console.log("redraw screen artboard")
+        init_two('artboard');
+        drawsystem();
     }
 
 }
