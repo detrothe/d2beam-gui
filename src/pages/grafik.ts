@@ -2057,20 +2057,24 @@ export function drawsystem(svg_id = 'artboard') {
         draw_gelenke(two);
     }
 
+    if (show_momentenlinien || show_querkraftlinien || show_normalkraftlinien) {
+        if (flag_eingabe !== 0 && matprop_flag > 0) {  // plastifizierte nichtlineare Feder darstellen
 
-    if (flag_eingabe !== 0 && matprop_flag > 0) {  // plastifizierte nichtlineare Feder darstellen
-
-        let ielem = nelem_Balken - 1
-        for (let i = 0; i < nelem_koppelfedern; i++) {
-            ielem++;
-            if (!stab[ielem].isActive) continue
-            if (element[ielem].kx_is_plastic || element[ielem].kz_is_plastic || element[ielem].kphi_is_plastic ) {
-                console.log('Koppelfeder ' + (+i+1) + ' ist plastiziert')
+            let ielem = nelem_Balken - 1
+            let radius = 8 / devicePixelRatio
+            for (let i = 0; i < nelem_koppelfedern; i++) {
+                ielem++;
+                if (!stab[ielem].isActive) continue
+                if (element[ielem].kx_is_plastic || element[ielem].kz_is_plastic || element[ielem].kphi_is_plastic) {
+                    //console.log('Koppelfeder ' + (+i + 1) + ' ist plastiziert')
+                    let x1 = tr.xPix(stab[ielem].x1)
+                    let z1 = tr.zPix(stab[ielem].z1)
+                    let kreis = two.makeCircle(x1, z1, radius, 10)
+                    kreis.fill = '#ff0000';
+                    kreis.linewidth = 2 / devicePixelRatio;
+                }
             }
-
-
         }
-
     }
 
     //console.log("++++ show_lasten_temp", show_lasten_temp)
