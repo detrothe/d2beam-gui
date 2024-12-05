@@ -1013,6 +1013,7 @@ export async function my_jspdf() {
 
   }  // Ende Lasten Statik
 
+  //    --------------------------------------  E R G E B N I S S E  --------------------------------
 
   doc.line(links, yy, 200, yy, "S");
   //  yy = neueZeile(yy, fs1, 2)
@@ -1132,7 +1133,7 @@ export async function my_jspdf() {
         }
       }
 
-      //   Schnittgrößen
+      //   Schnittgrößen Stäbe
       {
         let str_Vz = "V<sub>z</sub>"
 
@@ -1215,6 +1216,85 @@ export async function my_jspdf() {
           }
         }
       }
+
+
+      //   Schnittgrößen Koppelfedern
+      {
+        let str_Vz = "V<sub>z</sub>"
+
+        yy = testSeite(yy, fs, 1, 5);
+        doc.setFont("freesans_bold");
+        if (THIIO_flag === 0) {
+          doc.text("Koppelfedern-Schnittgrößen und lokale Verformungen", links, yy);
+        } else {
+          if (ausgabe_gleichgewichtSG) {
+            doc.text("Koppelfedern-Schnittgrößen und lokale Verformungen", links, yy);
+            str_Vz = "T<sub>z</sub>"
+          } else {
+            doc.text("Nachweisschnittgrößen und lokale Verformungen", links, yy);
+          }
+        }
+        yy = neueZeile(yy, fs, 1);
+
+        let ielem = 0
+
+        for (let iel = 0; iel < nelem_koppelfedern; iel++) {
+
+          ielem = iel + nelem_Balken
+
+          if (!el[ielem].isActive) continue
+
+          yy = neueZeile(yy, fs, 1);
+          doc.setFont("freesans_bold");
+          doc.text("Koppelfeder " + (+iel + 1), links, yy);
+          yy = neueZeile(yy, fs, 1);
+
+          let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 25, 25, 25]);
+
+          el_table.htmlText("x [m]", 0, "center", yy);
+          el_table.htmlText("N [kN]", 1, "center", yy);
+          el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
+          el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
+          el_table.htmlText("Δu<sub>xL</sub> [mm]", 4, "center", yy);
+          el_table.htmlText("Δw<sub>zL</sub> [mm]", 5, "center", yy);
+          el_table.htmlText("Δφ [mrad]", 6, "center", yy);
+
+          doc.setFontSize(fs);
+          doc.setFont("freesans_normal");
+          yy = neueZeile(yy, fs, 1);
+
+          const nelTeilungen = el[ielem].nTeilungen;
+          let sg_M: number[] = new Array(nelTeilungen);
+          let sg_V: number[] = new Array(nelTeilungen);
+          let sg_N: number[] = new Array(nelTeilungen);
+
+          let uL: number[] = new Array(nelTeilungen); // L = Verformung lokal
+          let wL: number[] = new Array(nelTeilungen);
+          let phiL: number[] = new Array(nelTeilungen);
+
+          const lf_index = iLastfall - 1;
+          el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
+          el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
+          el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
+          el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index, false);
+
+          for (let i = 0; i < 1; i++) {
+
+            el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
+            el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
+            el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
+            el_table.htmlText(myFormat(sg_M[i], 2, 2), 3, "right", yy, 5);
+            el_table.htmlText(myFormat((uL[i + 1] - uL[i]) * 1000, 3, 3), 4, "right", yy, 5);
+            el_table.htmlText(myFormat((wL[i + 1] - wL[i]) * 1000, 3, 3), 5, "right", yy, 5);
+            el_table.htmlText(myFormat((phiL[i + 1] - phiL[i]) * 1000, 3, 3), 6, "right", yy, 5);
+
+            yy = neueZeile(yy, fs, 1);
+          }
+        }
+      }
+
+
+
     }
 
     //******************************************
@@ -1296,7 +1376,7 @@ export async function my_jspdf() {
         }
 
 
-        //   Schnittgrößen
+        //   Schnittgrößen Stäbe
         {
           let str_Vz = "V<sub>z</sub>"
 
@@ -1379,6 +1459,83 @@ export async function my_jspdf() {
             }
           }
         }
+
+
+        //   Schnittgrößen Koppelfedern
+        {
+          let str_Vz = "V<sub>z</sub>"
+
+          yy = testSeite(yy, fs, 1, 5);
+          doc.setFont("freesans_bold");
+          if (THIIO_flag === 0) {
+            doc.text("Koppelfedern-Schnittgrößen und lokale Verformungen", links, yy);
+          } else {
+            if (ausgabe_gleichgewichtSG) {
+              doc.text("Koppelfedern-Schnittgrößen und lokale Verformungen", links, yy);
+              str_Vz = "T<sub>z</sub>"
+            } else {
+              doc.text("Nachweisschnittgrößen und lokale Verformungen", links, yy);
+            }
+          }
+          yy = neueZeile(yy, fs, 1);
+
+          let ielem = 0
+
+          for (let iel = 0; iel < nelem_koppelfedern; iel++) {
+
+            ielem = iel + nelem_Balken
+
+            if (!el[ielem].isActive) continue
+
+            yy = neueZeile(yy, fs, 1);
+            doc.setFont("freesans_bold");
+            doc.text("Element " + (+iel + 1), links, yy);
+            yy = neueZeile(yy, fs, 1);
+
+            let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 25, 25, 25]);
+
+            el_table.htmlText("x [m]", 0, "center", yy);
+            el_table.htmlText("N [kN]", 1, "center", yy);
+            el_table.htmlText(str_Vz + " [kN]", 2, "center", yy);
+            el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
+            el_table.htmlText("Δu<sub>xL</sub> [mm]", 4, "center", yy);
+            el_table.htmlText("Δw<sub>zL</sub> [mm]", 5, "center", yy);
+            el_table.htmlText("Δφ [mrad]", 6, "center", yy);
+
+            doc.setFontSize(fs);
+            doc.setFont("freesans_normal");
+            yy = neueZeile(yy, fs, 1);
+
+            const nelTeilungen = el[ielem].nTeilungen;
+            let sg_M: number[] = new Array(nelTeilungen);
+            let sg_V: number[] = new Array(nelTeilungen);
+            let sg_N: number[] = new Array(nelTeilungen);
+
+            let uL: number[] = new Array(nelTeilungen); // L = Verformung lokal
+            let wL: number[] = new Array(nelTeilungen);
+            let phiL: number[] = new Array(nelTeilungen);
+
+            const lf_index = iKomb - 1 + nlastfaelle;
+            el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
+            el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
+            el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
+            el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index, false);
+
+            for (let i = 0; i < 1; i++) {
+
+              el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
+              el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
+              el_table.htmlText(myFormat(sg_V[i], 2, 2), 2, "right", yy, 5);
+              el_table.htmlText(myFormat(sg_M[i], 2, 2), 3, "right", yy, 5);
+              el_table.htmlText(myFormat((uL[i + 1] - uL[i]) * 1000, 3, 3), 4, "right", yy, 5);
+              el_table.htmlText(myFormat((wL[i + 1] - wL[i]) * 1000, 3, 3), 5, "right", yy, 5);
+              el_table.htmlText(myFormat((phiL[i + 1] - phiL[i]) * 1000, 3, 3), 6, "right", yy, 5);
+
+              yy = neueZeile(yy, fs, 1);
+            }
+          }
+        }
+
       }
 
     }

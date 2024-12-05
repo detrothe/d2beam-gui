@@ -3450,7 +3450,7 @@ function berechne_kombinationen() {
 
     for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
 
-        for (let ielem = 0; ielem < nelem_Balken; ielem++) {
+        for (let ielem = 0; ielem < nelem_Balken+nelem_koppelfedern; ielem++) {
             if (el[ielem].isActive) {
                 //console.log("nTeilungen", el[ielem].nTeilungen)
                 for (let iteil = 0; iteil < el[ielem].nTeilungen; iteil++) {
