@@ -403,63 +403,70 @@ export class CTimoshenko_beam extends CElement {
         // this.trans[4][4] = this.trans[3][3]
         // this.trans[5][5] = 1.0
 
-
-        this.nTeilungen = nelTeilungen    // übernahme der Voreinstellung
-
-        this.x_ = Array(this.nTeilungen + 1)
-
-        const delta_x = this.sl / this.nTeilungen                    //erstmal normal mit nTeilungen Stab teilen
-        let xx = 0.0
-        let j = 1
-        for (let i = 0; i <= this.nTeilungen; i++) {
-            this.x_[i] = xx
-            xx = xx + delta_x
+        if (this.k_0 > 0.0) {
+            this.nTeilungen = 2
+            this.x_ = Array(this.nTeilungen)
+            this.x_[0] = 0.0
+            this.x_[1] = this.sl
         }
+        else {
+            this.nTeilungen = nelTeilungen    // übernahme der Voreinstellung
 
-        let sort = 0
-        let nelTeilungenNeu = this.nTeilungen + 1
-        for (let ieload = 0; ieload < ntotalEloads; ieload++) {                   //jetzt zusaetzliche Teilungspunkte fuer die jeweilige Einzellast, falls xP in x_ nicht enthalten ist
-            if (eload[ieload].element === ielem && (eload[ieload].art === 6)) {
+            this.x_ = Array(this.nTeilungen + 1)
 
-                if (Math.abs(this.x_[0] - eload[ieload].x) < 0.0000001) continue;  // nichts zu tun wenn Last am Anfang oder Ende des Stabs angreift
-                if (Math.abs(this.x_[this.nTeilungen] - eload[ieload].x) < 0.0000001) continue;
+            const delta_x = this.sl / this.nTeilungen                    //erstmal normal mit nTeilungen Stab teilen
+            let xx = 0.0
+            let j = 1
+            for (let i = 0; i <= this.nTeilungen; i++) {
+                this.x_[i] = xx
+                xx = xx + delta_x
+            }
 
-                let nn = 0
-                for (j = 0; j < nelTeilungenNeu; j++) {     // bei erster und letzter Stelle braucht nichts eingefügt zu werden
-                    if (Math.abs(this.x_[j] - eload[ieload].x) < 0.0000001) { //xP schon in x_ enthalten, also xP nur 1mal hinzufuegen
-                        nn = 1
-                    }
-                }
+            let sort = 0
+            let nelTeilungenNeu = this.nTeilungen + 1
+            for (let ieload = 0; ieload < ntotalEloads; ieload++) {                   //jetzt zusaetzliche Teilungspunkte fuer die jeweilige Einzellast, falls xP in x_ nicht enthalten ist
+                if (eload[ieload].element === ielem && (eload[ieload].art === 6)) {
 
-                if (nn === 1) {
-                    for (j = this.nTeilungen; j < nelTeilungenNeu; j++) {
-                        if (Math.abs(this.x_[j] - eload[ieload].x) < 0.0000001) { //xP schon 2mal in x_ enthalten
-                            nn = 0
+                    if (Math.abs(this.x_[0] - eload[ieload].x) < 0.0000001) continue;  // nichts zu tun wenn Last am Anfang oder Ende des Stabs angreift
+                    if (Math.abs(this.x_[this.nTeilungen] - eload[ieload].x) < 0.0000001) continue;
+
+                    let nn = 0
+                    for (j = 0; j < nelTeilungenNeu; j++) {     // bei erster und letzter Stelle braucht nichts eingefügt zu werden
+                        if (Math.abs(this.x_[j] - eload[ieload].x) < 0.0000001) { //xP schon in x_ enthalten, also xP nur 1mal hinzufuegen
+                            nn = 1
                         }
                     }
+
                     if (nn === 1) {
-                        nelTeilungenNeu++;
+                        for (j = this.nTeilungen; j < nelTeilungenNeu; j++) {
+                            if (Math.abs(this.x_[j] - eload[ieload].x) < 0.0000001) { //xP schon 2mal in x_ enthalten
+                                nn = 0
+                            }
+                        }
+                        if (nn === 1) {
+                            nelTeilungenNeu++;
+                            this.x_.push(eload[ieload].x)
+                            sort = 1
+                        }
+                    }
+                    else if (nn === 0) {                   //xP war nicht enthalten,deshalb jetzt xP 2mal zu x_ dazu fuegen
+                        nn = 2
+                        nelTeilungenNeu += 2
+                        this.x_.push(eload[ieload].x)
                         this.x_.push(eload[ieload].x)
                         sort = 1
                     }
-                }
-                else if (nn === 0) {                   //xP war nicht enthalten,deshalb jetzt xP 2mal zu x_ dazu fuegen
-                    nn = 2
-                    nelTeilungenNeu += 2
-                    this.x_.push(eload[ieload].x)
-                    this.x_.push(eload[ieload].x)
-                    sort = 1
-                }
 
+                }
             }
+            console.log("vor BUBBLESORT", this.x_)
+
+            if (sort > 0) BubbleSort(this.x_);
+
+            console.log("nach BUBBLESORT", this.x_)
+
+            this.nTeilungen = nelTeilungenNeu
         }
-        console.log("vor BUBBLESORT", this.x_)
-
-        if (sort > 0) BubbleSort(this.x_);
-
-        console.log("nach BUBBLESORT", this.x_)
-
-        this.nTeilungen = nelTeilungenNeu
 
         if (THIIO_flag === 0) {
             this.N_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
@@ -1658,339 +1665,154 @@ export class CTimoshenko_beam extends CElement {
             // console.log("edisp0", this.edisp0)
         }
 
-        //let d_x = this.sl / (nelTeilungen)
-        let x = 0.0
-        let dV = 0.0, dM = 0.0
+        if (this.k_0 > 0.0) { // gebetteter Balken, nur Anfangs- und Endwerte werden ausgegeben
 
-        for (let iteil = 0; iteil < this.nTeilungen; iteil++) {
-            x = this.x_[iteil]
-            const x2 = x * x
-            const x3 = x2 * x
-            Vx = this.VL
-            Mx = this.ML + Vx * x
-            Nx = this.NL
-            //ux = 0.0
-            //wx = 0.0
+            console.log("k0 > 0, el teilungen", this.nTeilungen)
 
-            Nu[0] = (1.0 - x / sl);
-            Nu[1] = x / sl
-            Nw[0] = (2. * x3 - 3. * sl * x2 - 12. * eta * x + sl3 + 12. * eta * sl) / nenner;
-            Nw[1] = -((sl * x3 + (-2. * sl2 - 6. * eta) * x2 + (sl3 + 6. * eta * sl) * x) / nenner);
-            Nw[2] = -((2. * x3 - 3. * sl * x2 - 12. * eta * x) / nenner);
-            Nw[3] = -((sl * x3 + (6. * eta - sl2) * x2 - 6. * eta * sl * x) / nenner);
-            Nphi[0] = 6.0 * (sl * x - x2) / nenner
-            Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl3) / nenner
-            Nphi[2] = -6.0 * (sl * x - x2) / nenner
-            Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
-            ux = Nu[0] * edisp[0] + Nu[1] * edisp[3]
-            wx = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
-            uxG = Nu[0] * edispG[0] + Nu[1] * edispG[3]
-            wxG = Nw[0] * edispG[1] + Nw[1] * edispG[2] + Nw[2] * edispG[4] + Nw[3] * edispG[5];
-            phix = -(Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5]);  // im Uhrzeigersinn
-            phixG = -(Nphi[0] * edispG[1] + Nphi[1] * edispG[2] + Nphi[2] * edispG[4] + Nphi[3] * edispG[5]);  // im Uhrzeigersinn
-            //console.log("phix", x, phix)
+            for (let iteil = 0; iteil < 2; iteil++) {
+                if (THIIO_flag === 0) {
+
+                    Nx = this.FL[3 * iteil]
+                    Vx = this.FL[3 * iteil + 1]
+                    Mx = this.FL[3 * iteil + 2]
+                    ux = this.edispL[3 * iteil]
+                    wx = this.edispL[3 * iteil + 1]
+                    phix = -this.edispL[3 * iteil + 2]
+
+                    disp = Math.sqrt(ux * ux + wx * wx) * 1000.0      // in mm
+
+                    if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
+                    if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
+                    if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
+                    if (disp > maxValue_lf[iLastf].disp) maxValue_lf[iLastf].disp = disp
+
+                    console.log("°°° Mx", Mx, Vx, Nx)
+                    this.M_[iLastf][iteil] = Mx
+                    this.V_[iLastf][iteil] = Vx
+                    this.N_[iLastf][iteil] = Nx
+                    this.u_[iLastf][iteil] = ux
+                    this.w_[iLastf][iteil] = wx
+                    this.phi_[iLastf][iteil] = phix
+
+                }
+                else if (THIIO_flag === 1) { // ikomb=iLastf
 
 
-            if (THIIO_flag === 1) {
+                    Nx = this.FL[3 * iteil]
+                    Vx = this.FL[3 * iteil + 1]
+                    Mx = this.FL[3 * iteil + 2]
+                    ux = this.edispL[3 * iteil]
+                    wx = this.edispL[3 * iteil + 1]
+                    phix = -this.edispL[3 * iteil + 2]
 
-                dwx = wxG - wLG
-                dwxG = wxG - wLG
-                if (this.NL < 0.0) Mx = Mx - this.NL * (wxG - wLG)  //?
-                //if (Nm < 0.0) Mx = Mx - Nm * (wxG - wLG)  //?
+                    disp = Math.sqrt(ux * ux + wx * wx) * 1000.0
 
-                for (let i = 0; i < nstabvorverfomungen; i++) {
-                    if (stabvorverformung[i].element === this.ielem) {
-                        const index = stabvorverformung[i].lf - 1
-                        const fact = kombiTabelle[iLastf][index]
-                        //console.log("Element ", +i + 1, ' hat Stabvorverformungen')
-                        let w0a = stabvorverformung[i].p[0] * fact
-                        let w0e = stabvorverformung[i].p[1] * fact
-                        let v0m = stabvorverformung[i].p[2] * fact
-                        let w0x = (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
-                        let phi0x = (w0e - w0a) / sl + 4.0 * v0m / sl * (1.0 - 2 * x / sl)
-                        if (this.NL < 0.0) Mx = Mx - this.NL * w0x
-                        wxG += w0x + w0a;
-                        phixG += phi0x;
+                    if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
+                    if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
+                    if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
+                    if (disp > maxValue_komb[iLastf].disp) maxValue_komb[iLastf].disp = disp
+
+                    this.M_komb[iLastf][iteil] = Mx
+                    this.V_komb[iLastf][iteil] = Vx
+                    this.N_komb[iLastf][iteil] = Nx
+                    this.u_komb[iLastf][iteil] = ux
+                    this.uG_komb[iLastf][iteil] = uxG
+                    this.w_komb[iLastf][iteil] = wx
+                    this.wG_komb[iLastf][iteil] = wxG
+                    this.phi_komb[iLastf][iteil] = phix
+
+                }  // ende TH II Ordnung
+            }
+
+        }
+        else {
+
+            //let d_x = this.sl / (nelTeilungen)
+            let x = 0.0
+            let dV = 0.0, dM = 0.0
+
+            for (let iteil = 0; iteil < this.nTeilungen; iteil++) {
+                x = this.x_[iteil]
+                const x2 = x * x
+                const x3 = x2 * x
+                Vx = this.VL
+                Mx = this.ML + Vx * x
+                Nx = this.NL
+                //ux = 0.0
+                //wx = 0.0
+
+                Nu[0] = (1.0 - x / sl);
+                Nu[1] = x / sl
+                Nw[0] = (2. * x3 - 3. * sl * x2 - 12. * eta * x + sl3 + 12. * eta * sl) / nenner;
+                Nw[1] = -((sl * x3 + (-2. * sl2 - 6. * eta) * x2 + (sl3 + 6. * eta * sl) * x) / nenner);
+                Nw[2] = -((2. * x3 - 3. * sl * x2 - 12. * eta * x) / nenner);
+                Nw[3] = -((sl * x3 + (6. * eta - sl2) * x2 - 6. * eta * sl * x) / nenner);
+                Nphi[0] = 6.0 * (sl * x - x2) / nenner
+                Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl3) / nenner
+                Nphi[2] = -6.0 * (sl * x - x2) / nenner
+                Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
+                ux = Nu[0] * edisp[0] + Nu[1] * edisp[3]
+                wx = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                uxG = Nu[0] * edispG[0] + Nu[1] * edispG[3]
+                wxG = Nw[0] * edispG[1] + Nw[1] * edispG[2] + Nw[2] * edispG[4] + Nw[3] * edispG[5];
+                phix = -(Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5]);  // im Uhrzeigersinn
+                phixG = -(Nphi[0] * edispG[1] + Nphi[1] * edispG[2] + Nphi[2] * edispG[4] + Nphi[3] * edispG[5]);  // im Uhrzeigersinn
+                //console.log("phix", x, phix)
+
+
+                if (THIIO_flag === 1) {
+
+                    dwx = wxG - wLG
+                    dwxG = wxG - wLG
+                    if (this.NL < 0.0) Mx = Mx - this.NL * (wxG - wLG)  //?
+                    //if (Nm < 0.0) Mx = Mx - Nm * (wxG - wLG)  //?
+
+                    for (let i = 0; i < nstabvorverfomungen; i++) {
+                        if (stabvorverformung[i].element === this.ielem) {
+                            const index = stabvorverformung[i].lf - 1
+                            const fact = kombiTabelle[iLastf][index]
+                            //console.log("Element ", +i + 1, ' hat Stabvorverformungen')
+                            let w0a = stabvorverformung[i].p[0] * fact
+                            let w0e = stabvorverformung[i].p[1] * fact
+                            let v0m = stabvorverformung[i].p[2] * fact
+                            let w0x = (w0e - w0a) * x / sl + 4.0 * v0m * x / sl * (1.0 - x / sl)
+                            let phi0x = (w0e - w0a) / sl + 4.0 * v0m / sl * (1.0 - 2 * x / sl)
+                            if (this.NL < 0.0) Mx = Mx - this.NL * w0x
+                            wxG += w0x + w0a;
+                            phixG += phi0x;
+                        }
+
                     }
 
                 }
 
-            }
+                // normale Elementlasten hinzufügen
 
-            // normale Elementlasten hinzufügen
+                if (THIIO_flag === 0) {
 
-            if (THIIO_flag === 0) {
+                    for (let ieload = 0; ieload < neloads; ieload++) {
+                        if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === iLastf)) {
 
-                for (let ieload = 0; ieload < neloads; ieload++) {
-                    if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === iLastf)) {
+                            if (eload[ieload].art === 0) {                            // Trapezstreckenlast senkrecht auf Stab
 
-                        if (eload[ieload].art === 0) {                            // Trapezstreckenlast senkrecht auf Stab
-
-                            const pL = eload[ieload].pL
-                            const pR = eload[ieload].pR
-                            const dp = pR - pL
-
-                            Vx = Vx - pL * x - dp * x * x / sl / 2.
-                            Mx = Mx - pL * x * x / 2. - dp * x * x * x / sl / 6.
-
-                            //wx += pL / 24.0 * (x ** 4 - 2 * sl * x ** 3 + sl * sl * x * x) / EI
-                            let temp = pL / 24.0 * x ** 4 + dp / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                            temp += this.eta * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * x)
-                            wx = wx + temp / EI
-                            temp = pL / 6.0 * x ** 3 + dp / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x
-                            phix = phix + temp / EI
-                        }
-                        else if (eload[ieload].art === 1) {                       // Trapezstreckenlast z-Richtung
-
-                            const pL = eload[ieload].pL
-                            const pR = eload[ieload].pR
-
-                            let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
-                            let pzR = this.cosinus * pR
-                            let pxL = this.sinus * pL                             // Lastanteil parallel zum Stab
-                            let pxR = this.sinus * pR
-
-                            const dpx = pxR - pxL
-                            const dpz = pzR - pzL
-
-                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-                            Vx = Vx - pzL * x - dpz * x * x / sl / 2.
-                            Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
-
-                            ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
-
-                            let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                            wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
-                            //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
-                            // if (THIIO_flag === 1) Mx = Mx - this.NL * wl
-
-                            wx += wl
-                            phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
-
-                        }
-                        else if (eload[ieload].art === 2) {                       // Trapezstreckenlast z-Richtung, Projektion
-
-                            //console.log("Projektion",this.dx, sl)
-                            const pL = eload[ieload].pL * this.dx / this.sl0
-                            const pR = eload[ieload].pR * this.dx / this.sl0
-
-                            let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
-                            let pzR = this.cosinus * pR
-                            let pxL = this.sinus * pL                             // Lastanteil parallel zum Stab
-                            let pxR = this.sinus * pR
-
-                            const dpx = pxR - pxL
-                            const dpz = pzR - pzL
-
-                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-                            Vx = Vx - pzL * x - dpz * x * x / sl / 2.
-                            Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
-
-                            ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
-
-                            let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                            wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
-                            wx += wl
-                            phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
-
-                        }
-                        else if (eload[ieload].art === 3) {                         // Trapezstreckenlast x-Richtung
-
-                            const pL = eload[ieload].pL
-                            const pR = eload[ieload].pR
-
-                            let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
-                            let pzR = -this.sinus * pR
-                            let pxL = this.cosinus * pL                             // Lastanteil parallel zum Stab
-                            let pxR = this.cosinus * pR
-
-                            const dpx = pxR - pxL
-                            const dpz = pzR - pzL
-
-                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-                            Vx = Vx - pzL * x - dpz * x * x / sl / 2.
-                            Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
-
-                            ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
-
-                            let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                            wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
-                            //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
-                            // if (THIIO_flag === 1) Mx = Mx - this.NL * wl
-
-                            wx += wl
-                            phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
-
-                        }
-                        else if (eload[ieload].art === 4) {                         // Trapezstreckenlast x-Richtung, Projektion
-
-                            //console.log("Projektion",this.dx, sl)
-                            const pL = eload[ieload].pL * this.dz / sl
-                            const pR = eload[ieload].pR * this.dz / sl
-
-                            let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
-                            let pzR = -this.sinus * pR
-                            let pxL = this.cosinus * pL                             // Lastanteil parallel zum Stab
-                            let pxR = this.cosinus * pR
-
-                            const dpx = pxR - pxL
-                            const dpz = pzR - pzL
-
-                            Nx = Nx - pxL * x - dpx * x * x / sl / 2.
-                            Vx = Vx - pzL * x - dpz * x * x / sl / 2.
-                            Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
-
-                            ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
-
-                            let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
-                            wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
-                            wx += wl
-                            phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
-
-                        }
-
-                        else if (eload[ieload].art === 6) {         // Einzellast oder Moment
-
-                            const xP = eload[ieload].x
-                            const P = eload[ieload].P
-                            const M = eload[ieload].M
-                            let edisp = Array(6).fill(0.0);
-
-                            if (iteil > 0) {
-                                let xxx = Math.abs(x - this.x_[iteil - 1])
-                                let xxxx = Math.abs(x - eload[ieload].x)
-                                //If (x > eload(ieload).xP) Or (x = x_(j - 1) And x = eload(ieload).xP) Then
-                                if ((x > xP) || (xxx < 0.000000000001 && xxxx < 0.000000000001)) {
-
-                                    Vx = Vx - P
-                                    Mx = Mx - M - P * (x - xP)
-                                    edisp[1] = eload[ieload].CwP + eload[ieload].CwM; edisp[2] = eload[ieload].CphiP + eload[ieload].CphiM;
-
-                                    const xx = x - xP;
-                                    const xx2 = xx * xx
-                                    const sl = this.sl - xP
-                                    const nenner = sl ** 3 + 12. * eta * sl
-                                    Nw[0] = (2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx + sl ** 3 + 12. * eta * sl) / nenner;
-                                    Nw[1] = -((sl * xx ** 3 + (-2. * sl ** 2 - 6. * eta) * xx ** 2 + (sl ** 3 + 6. * eta * sl) * xx) / nenner);
-                                    Nw[2] = -((2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx) / nenner);
-                                    Nw[3] = -((sl * xx ** 3 + (6. * eta - sl ** 2) * xx ** 2 - 6. * eta * sl * xx) / nenner);
-                                    wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
-                                    Nphi[0] = 6.0 * (sl * xx - xx2) / nenner
-                                    Nphi[1] = (3 * sl * xx2 + (-12 * eta - 4 * sl ** 2) * xx + 12 * sl * eta + sl ** 3) / nenner
-                                    Nphi[2] = -6.0 * (sl * xx - xx2) / nenner
-                                    Nphi[3] = (3 * sl * xx2 + (12 * eta - 2 * sl ** 2) * xx) / nenner
-                                    phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
-
-                                    //console.log("Nw,edisp", wx, edisp, Nw)
-                                } else {
-                                    edisp[4] = eload[ieload].CwP + eload[ieload].CwM; edisp[5] = eload[ieload].CphiP + eload[ieload].CphiM;
-                                    const sl = xP
-                                    const sl2 = sl * sl
-                                    const nenner = sl ** 3 + 12. * eta * sl
-                                    Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
-                                    Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
-                                    Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
-                                    Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-                                    wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
-                                    //console.log("Nw,edisp", wx, edisp, Nw)
-                                    Nphi[0] = 6.0 * (sl * x - x2) / nenner
-                                    Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl2 * sl) / nenner
-                                    Nphi[2] = -6.0 * (sl * x - x2) / nenner
-                                    Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
-                                    phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
-
-                                }
-
-                            }
-                            else {
-                                if (Math.abs(x - xP) < 0.000000000001) {
-                                    Vx = Vx - P
-                                    Mx = Mx - M
-                                }
-                            }
-                        }
-                        else if (eload[ieload].art === 8) {         // Knotenverformung
-
-                            let edisp0 = Array(6)
-                            for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i];
-
-                            Nu[0] = (1.0 - x / sl);
-                            Nu[1] = x / sl
-                            Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
-                            Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
-                            Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
-                            Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-                            ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[3]
-                            wx += Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
-
-                            Nphi[0] = 6.0 * (sl * x - x2) / nenner
-                            Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl3) / nenner
-                            Nphi[2] = -6.0 * (sl * x - x2) / nenner
-                            Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
-                            phix -= Nphi[0] * edisp0[1] + Nphi[1] * edisp0[2] + Nphi[2] * edisp0[4] + Nphi[3] * edisp0[5];  // im Uhrzeigersinn
-
-                        }
-                    }
-                }
-
-                disp = Math.sqrt(ux * ux + wx * wx) * 1000.0      // in mm
-
-                if (iteil > 0 && this.k_0 > 0.0) {
-                    let dx = x - this.x_[iteil - 1]
-                    let wl = this.w_[iLastf][iteil - 1]
-                    dM += dV * dx
-                    dV += this.k_0 * (wl + wx) * dx / 2.
-                    Vx += dV
-                    dM += this.k_0 * (wl * dx * dx / 2. + (wx - wl) * dx / 2. * dx / 3.)
-                    Mx += dM
-                }
-
-                if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
-                if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
-                if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
-                if (disp > maxValue_lf[iLastf].disp) maxValue_lf[iLastf].disp = disp
-
-                this.M_[iLastf][iteil] = Mx
-                this.V_[iLastf][iteil] = Vx
-                this.N_[iLastf][iteil] = Nx
-                this.u_[iLastf][iteil] = ux
-                this.w_[iLastf][iteil] = wx
-                this.phi_[iLastf][iteil] = phix
-
-            }
-            else if (THIIO_flag === 1) { // ikomb=iLastf
-
-                for (let ieload = 0; ieload < neloads; ieload++) {
-
-                    if (eload[ieload].element === ielem) {
-                        const index = eload[ieload].lf - 1
-                        //console.log("elem kombi index", index, kombiTabelle[iLastf][index])
-                        if (kombiTabelle[iLastf][index] !== 0.0) {
-
-                            let fact = kombiTabelle[iLastf][index]
-
-                            if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
-
-                                const pL = eload[ieload].pL * kombiTabelle[iLastf][index]
-                                const pR = eload[ieload].pR * kombiTabelle[iLastf][index]
+                                const pL = eload[ieload].pL
+                                const pR = eload[ieload].pR
                                 const dp = pR - pL
 
                                 Vx = Vx - pL * x - dp * x * x / sl / 2.
-                                Mx = Mx - pL * x * x / 2 - dp * x * x * x / sl / 6.
+                                Mx = Mx - pL * x * x / 2. - dp * x * x * x / sl / 6.
 
-                                let wl = pL / 24.0 * x ** 4 + dp / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
-                                wl = (wl + this.eta * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
-                                //console.log("wl0", THIIO_flag, ielem, ieload, wl, - this.NL * wl, Mx, Mx - this.NL * wl)
-                                if (this.NL < 0.0) Mx = Mx - this.NL * wl
-
-                                wx += wl
-                                wxG += wl
-
+                                //wx += pL / 24.0 * (x ** 4 - 2 * sl * x ** 3 + sl * sl * x * x) / EI
+                                let temp = pL / 24.0 * x ** 4 + dp / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                                temp += this.eta * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * x)
+                                wx = wx + temp / EI
+                                temp = pL / 6.0 * x ** 3 + dp / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x
+                                phix = phix + temp / EI
                             }
-                            else if (eload[ieload].art === 1) {         // Trapezstreckenlast z-Richtung
+                            else if (eload[ieload].art === 1) {                       // Trapezstreckenlast z-Richtung
 
-                                const pL = eload[ieload].pL * kombiTabelle[iLastf][index]
-                                const pR = eload[ieload].pR * kombiTabelle[iLastf][index]
+                                const pL = eload[ieload].pL
+                                const pR = eload[ieload].pR
 
                                 let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
                                 let pzR = this.cosinus * pR
@@ -2004,26 +1826,22 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
+                                ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
 
-                                let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
-                                ux += ul
-                                uxG += ul
-
-                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
-                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
-                                if (this.NL < 0.0) Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
-                                //console.log("wl1", ielem, x, ieload, wl, - this.NL * wl, Mx)
+                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
+                                //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
+                                // if (THIIO_flag === 1) Mx = Mx - this.NL * wl
 
                                 wx += wl
-                                wxG += wl
-
-                                phix += (pzL / 6.0 * x ** 3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x) / EI
+                                phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
 
                             }
-                            else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
+                            else if (eload[ieload].art === 2) {                       // Trapezstreckenlast z-Richtung, Projektion
 
-                                const pL = eload[ieload].pL * this.dx / this.sl0 * kombiTabelle[iLastf][index]
-                                const pR = eload[ieload].pR * this.dx / this.sl0 * kombiTabelle[iLastf][index]
+                                //console.log("Projektion",this.dx, sl)
+                                const pL = eload[ieload].pL * this.dx / this.sl0
+                                const pR = eload[ieload].pR * this.dx / this.sl0
 
                                 let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
                                 let pzR = this.cosinus * pR
@@ -2033,25 +1851,16 @@ export class CTimoshenko_beam extends CElement {
                                 const dpx = pxR - pxL
                                 const dpz = pzR - pzL
 
-                                //console.log("2 p---", pxL, pxR, pzL, pzR, dpx, dpz)
                                 Nx = Nx - pxL * x - dpx * x * x / sl / 2.
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
-                                Mx = Mx - pzL * x * x / 2. - dpz * x * x * x / sl / 6.
+                                Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
-                                let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
-                                ux += ul
-                                uxG += ul
+                                ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
 
-                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
-                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
-                                //console.log("wl2", THIIO_flag, ielem, ieload, wl, - this.NL * wl, Mx, Mx - Nx * wl)
-                                if (this.NL < 0.0) Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
-                                //if (Nm < 0.0) Mx = Mx - Nm * wl + (pxL + pxR) * x / 4 * dwx
-
+                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
                                 wx += wl
-                                wxG += wl
-
-                                phix += (pzL / 6.0 * x ** 3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x) / EI
+                                phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
 
                             }
                             else if (eload[ieload].art === 3) {                         // Trapezstreckenlast x-Richtung
@@ -2071,19 +1880,14 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
-                                let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
-                                ux += ul
-                                uxG += ul
+                                ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
 
-                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
-                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
+                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
                                 //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
-                                if (this.NL < 0.0) Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwxG
-                                //console.log("Mx3", ielem, x, Mx)
+                                // if (THIIO_flag === 1) Mx = Mx - this.NL * wl
 
                                 wx += wl
-                                wxG += wl
-
                                 phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
 
                             }
@@ -2105,26 +1909,21 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
-                                let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
-                                ux += ul
-                                uxG += ul
+                                ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
 
-                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
-                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
+                                let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
+                                wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
                                 wx += wl
-                                wxG += wl
-
                                 phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
 
-                                if (this.NL < 0.0) Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
                             }
+
                             else if (eload[ieload].art === 6) {         // Einzellast oder Moment
 
                                 const xP = eload[ieload].x
-                                const P = eload[ieload].P * fact
-                                const M = eload[ieload].M * fact
+                                const P = eload[ieload].P
+                                const M = eload[ieload].M
                                 let edisp = Array(6).fill(0.0);
-                                let wl = 0.0
 
                                 if (iteil > 0) {
                                     let xxx = Math.abs(x - this.x_[iteil - 1])
@@ -2134,7 +1933,7 @@ export class CTimoshenko_beam extends CElement {
 
                                         Vx = Vx - P
                                         Mx = Mx - M - P * (x - xP)
-                                        edisp[1] = fact * (eload[ieload].CwP + eload[ieload].CwM); edisp[2] = fact * (eload[ieload].CphiP + eload[ieload].CphiM);
+                                        edisp[1] = eload[ieload].CwP + eload[ieload].CwM; edisp[2] = eload[ieload].CphiP + eload[ieload].CphiM;
 
                                         const xx = x - xP;
                                         const xx2 = xx * xx
@@ -2144,7 +1943,7 @@ export class CTimoshenko_beam extends CElement {
                                         Nw[1] = -((sl * xx ** 3 + (-2. * sl ** 2 - 6. * eta) * xx ** 2 + (sl ** 3 + 6. * eta * sl) * xx) / nenner);
                                         Nw[2] = -((2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx) / nenner);
                                         Nw[3] = -((sl * xx ** 3 + (6. * eta - sl ** 2) * xx ** 2 - 6. * eta * sl * xx) / nenner);
-                                        wx += wl = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                                        wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
                                         Nphi[0] = 6.0 * (sl * xx - xx2) / nenner
                                         Nphi[1] = (3 * sl * xx2 + (-12 * eta - 4 * sl ** 2) * xx + 12 * sl * eta + sl ** 3) / nenner
                                         Nphi[2] = -6.0 * (sl * xx - xx2) / nenner
@@ -2153,7 +1952,7 @@ export class CTimoshenko_beam extends CElement {
 
                                         //console.log("Nw,edisp", wx, edisp, Nw)
                                     } else {
-                                        edisp[4] = fact * (eload[ieload].CwP + eload[ieload].CwM); edisp[5] = fact * (eload[ieload].CphiP + eload[ieload].CphiM);
+                                        edisp[4] = eload[ieload].CwP + eload[ieload].CwM; edisp[5] = eload[ieload].CphiP + eload[ieload].CphiM;
                                         const sl = xP
                                         const sl2 = sl * sl
                                         const nenner = sl ** 3 + 12. * eta * sl
@@ -2161,7 +1960,7 @@ export class CTimoshenko_beam extends CElement {
                                         Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
                                         Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
                                         Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-                                        wx += wl = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                                        wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
                                         //console.log("Nw,edisp", wx, edisp, Nw)
                                         Nphi[0] = 6.0 * (sl * x - x2) / nenner
                                         Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl2 * sl) / nenner
@@ -2170,8 +1969,6 @@ export class CTimoshenko_beam extends CElement {
                                         phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
 
                                     }
-                                    if (this.NL < 0.0) Mx = Mx - this.NL * wl
-                                    wxG += wl
 
                                 }
                                 else {
@@ -2181,59 +1978,334 @@ export class CTimoshenko_beam extends CElement {
                                     }
                                 }
                             }
-                            // else if (eload[ieload].art === 8) {         // Knotenverformung
-                            //     let edisp0 = Array(6)
-                            //     for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
-                            //     //console.log("ART=8,edisp0", edisp0)
+                            else if (eload[ieload].art === 8) {         // Knotenverformung
 
-                            //     Nu[0] = (1.0 - x / sl);
-                            //     Nu[1] = x / sl
-                            //     Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
-                            //     Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
-                            //     Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
-                            //     Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-                            //     ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[3]
-                            //     let wx0 = Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
-                            //     //Mx = Mx - this.NL * (wx0 - wL)
-                            //     wx += wx0
-                            // }
+                                let edisp0 = Array(6)
+                                for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i];
+
+                                Nu[0] = (1.0 - x / sl);
+                                Nu[1] = x / sl
+                                Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+                                Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+                                Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+                                Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+                                ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[3]
+                                wx += Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
+
+                                Nphi[0] = 6.0 * (sl * x - x2) / nenner
+                                Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl3) / nenner
+                                Nphi[2] = -6.0 * (sl * x - x2) / nenner
+                                Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
+                                phix -= Nphi[0] * edisp0[1] + Nphi[1] * edisp0[2] + Nphi[2] * edisp0[4] + Nphi[3] * edisp0[5];  // im Uhrzeigersinn
+
+                            }
                         }
                     }
+
+                    disp = Math.sqrt(ux * ux + wx * wx) * 1000.0      // in mm
+
+                    // Bettung berücksichtigen
+
+                    if (iteil > 0 && this.k_0 > 0.0) {
+                        let dx = x - this.x_[iteil - 1]
+                        let wl = this.w_[iLastf][iteil - 1]
+                        dM += dV * dx
+                        dV += this.k_0 * (wl + wx) * dx / 2.
+                        Vx += dV
+                        dM += this.k_0 * (wl * dx * dx / 2. + (wx - wl) * dx / 2. * dx / 3.)
+                        Mx += dM
+                    }
+
+                    if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
+                    if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
+                    if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
+                    if (disp > maxValue_lf[iLastf].disp) maxValue_lf[iLastf].disp = disp
+
+                    this.M_[iLastf][iteil] = Mx
+                    this.V_[iLastf][iteil] = Vx
+                    this.N_[iLastf][iteil] = Nx
+                    this.u_[iLastf][iteil] = ux
+                    this.w_[iLastf][iteil] = wx
+                    this.phi_[iLastf][iteil] = phix
+
                 }
+                else if (THIIO_flag === 1) { // ikomb=iLastf
 
-                disp = Math.sqrt(ux * ux + wx * wx) * 1000.0
+                    for (let ieload = 0; ieload < neloads; ieload++) {
+
+                        if (eload[ieload].element === ielem) {
+                            const index = eload[ieload].lf - 1
+                            //console.log("elem kombi index", index, kombiTabelle[iLastf][index])
+                            if (kombiTabelle[iLastf][index] !== 0.0) {
+
+                                let fact = kombiTabelle[iLastf][index]
+
+                                if (eload[ieload].art === 0) {              // Trapezstreckenlast senkrecht auf Stab
+
+                                    const pL = eload[ieload].pL * kombiTabelle[iLastf][index]
+                                    const pR = eload[ieload].pR * kombiTabelle[iLastf][index]
+                                    const dp = pR - pL
+
+                                    Vx = Vx - pL * x - dp * x * x / sl / 2.
+                                    Mx = Mx - pL * x * x / 2 - dp * x * x * x / sl / 6.
+
+                                    let wl = pL / 24.0 * x ** 4 + dp / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
+                                    wl = (wl + this.eta * (-pL / 2 * x * x - dp / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
+                                    //console.log("wl0", THIIO_flag, ielem, ieload, wl, - this.NL * wl, Mx, Mx - this.NL * wl)
+                                    if (this.NL < 0.0) Mx = Mx - this.NL * wl
+
+                                    wx += wl
+                                    wxG += wl
+
+                                }
+                                else if (eload[ieload].art === 1) {         // Trapezstreckenlast z-Richtung
+
+                                    const pL = eload[ieload].pL * kombiTabelle[iLastf][index]
+                                    const pR = eload[ieload].pR * kombiTabelle[iLastf][index]
+
+                                    let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
+                                    let pzR = this.cosinus * pR
+                                    let pxL = this.sinus * pL                             // Lastanteil parallel zum Stab
+                                    let pxR = this.sinus * pR
+
+                                    const dpx = pxR - pxL
+                                    const dpz = pzR - pzL
+
+                                    Nx = Nx - pxL * x - dpx * x * x / sl / 2.
+                                    Vx = Vx - pzL * x - dpz * x * x / sl / 2.
+                                    Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
 
-                if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
-                if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
-                if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
-                if (disp > maxValue_komb[iLastf].disp) maxValue_komb[iLastf].disp = disp
+                                    let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                    ux += ul
+                                    uxG += ul
 
-                this.M_komb[iLastf][iteil] = Mx
-                this.V_komb[iLastf][iteil] = Vx
-                this.N_komb[iLastf][iteil] = Nx
-                this.u_komb[iLastf][iteil] = ux
-                this.uG_komb[iLastf][iteil] = uxG
-                this.w_komb[iLastf][iteil] = wx
-                this.wG_komb[iLastf][iteil] = wxG
-                this.phi_komb[iLastf][iteil] = phix
-                this.phiG_komb[iLastf][iteil] = phixG
+                                    let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
+                                    wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
+                                    if (this.NL < 0.0) Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
+                                    //console.log("wl1", ielem, x, ieload, wl, - this.NL * wl, Mx)
 
-                if (this.normalkraft >= 0.0) {
-                    this.Vb_komb[iLastf][iteil] = Vx
-                    this.Nb_komb[iLastf][iteil] = Nx
-                } else {
-                    let Nb = Nx + Vx * phixG
-                    let Vb = Vx - Nx * phixG
-                    this.Vb_komb[iLastf][iteil] = Vb
-                    this.Nb_komb[iLastf][iteil] = Nb
-                    if (Math.abs(Vb) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vb)
-                    if (Math.abs(Nb) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nb)
-                }
-            }  // ende TH II Ordnung
+                                    wx += wl
+                                    wxG += wl
 
-            // console.log("x, Vx, Mx", x, Vx, Mx, wx, phix)
-            //x += d_x
+                                    phix += (pzL / 6.0 * x ** 3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x) / EI
+
+                                }
+                                else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
+
+                                    const pL = eload[ieload].pL * this.dx / this.sl0 * kombiTabelle[iLastf][index]
+                                    const pR = eload[ieload].pR * this.dx / this.sl0 * kombiTabelle[iLastf][index]
+
+                                    let pzL = this.cosinus * pL                           // Lastanteil senkrecht auf Stab
+                                    let pzR = this.cosinus * pR
+                                    let pxL = this.sinus * pL                             // Lastanteil parallel zum Stab
+                                    let pxR = this.sinus * pR
+
+                                    const dpx = pxR - pxL
+                                    const dpz = pzR - pzL
+
+                                    //console.log("2 p---", pxL, pxR, pzL, pzR, dpx, dpz)
+                                    Nx = Nx - pxL * x - dpx * x * x / sl / 2.
+                                    Vx = Vx - pzL * x - dpz * x * x / sl / 2.
+                                    Mx = Mx - pzL * x * x / 2. - dpz * x * x * x / sl / 6.
+
+                                    let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                    ux += ul
+                                    uxG += ul
+
+                                    let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
+                                    wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
+                                    //console.log("wl2", THIIO_flag, ielem, ieload, wl, - this.NL * wl, Mx, Mx - Nx * wl)
+                                    if (this.NL < 0.0) Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
+                                    //if (Nm < 0.0) Mx = Mx - Nm * wl + (pxL + pxR) * x / 4 * dwx
+
+                                    wx += wl
+                                    wxG += wl
+
+                                    phix += (pzL / 6.0 * x ** 3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x) / EI
+
+                                }
+                                else if (eload[ieload].art === 3) {                         // Trapezstreckenlast x-Richtung
+
+                                    const pL = eload[ieload].pL
+                                    const pR = eload[ieload].pR
+
+                                    let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
+                                    let pzR = -this.sinus * pR
+                                    let pxL = this.cosinus * pL                             // Lastanteil parallel zum Stab
+                                    let pxR = this.cosinus * pR
+
+                                    const dpx = pxR - pxL
+                                    const dpz = pzR - pzL
+
+                                    Nx = Nx - pxL * x - dpx * x * x / sl / 2.
+                                    Vx = Vx - pzL * x - dpz * x * x / sl / 2.
+                                    Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
+
+                                    let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                    ux += ul
+                                    uxG += ul
+
+                                    let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
+                                    wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
+                                    //console.log("wl",THIIO_flag,ielem,ieload,wl,- this.NL * wl)
+                                    if (this.NL < 0.0) Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwxG
+                                    //console.log("Mx3", ielem, x, Mx)
+
+                                    wx += wl
+                                    wxG += wl
+
+                                    phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
+
+                                }
+                                else if (eload[ieload].art === 4) {                         // Trapezstreckenlast x-Richtung, Projektion
+
+                                    //console.log("Projektion",this.dx, sl)
+                                    const pL = eload[ieload].pL * this.dz / sl
+                                    const pR = eload[ieload].pR * this.dz / sl
+
+                                    let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
+                                    let pzR = -this.sinus * pR
+                                    let pxL = this.cosinus * pL                             // Lastanteil parallel zum Stab
+                                    let pxR = this.cosinus * pR
+
+                                    const dpx = pxR - pxL
+                                    const dpz = pzR - pzL
+
+                                    Nx = Nx - pxL * x - dpx * x * x / sl / 2.
+                                    Vx = Vx - pzL * x - dpz * x * x / sl / 2.
+                                    Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
+
+                                    let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                    ux += ul
+                                    uxG += ul
+
+                                    let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 * fact / 6 * x ** 3 - eload[ieload].C2 * fact / 2 * x * x
+                                    wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * fact * x)) / EI
+                                    wx += wl
+                                    wxG += wl
+
+                                    phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
+
+                                    if (this.NL < 0.0) Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
+                                }
+                                else if (eload[ieload].art === 6) {         // Einzellast oder Moment
+
+                                    const xP = eload[ieload].x
+                                    const P = eload[ieload].P * fact
+                                    const M = eload[ieload].M * fact
+                                    let edisp = Array(6).fill(0.0);
+                                    let wl = 0.0
+
+                                    if (iteil > 0) {
+                                        let xxx = Math.abs(x - this.x_[iteil - 1])
+                                        let xxxx = Math.abs(x - eload[ieload].x)
+                                        //If (x > eload(ieload).xP) Or (x = x_(j - 1) And x = eload(ieload).xP) Then
+                                        if ((x > xP) || (xxx < 0.000000000001 && xxxx < 0.000000000001)) {
+
+                                            Vx = Vx - P
+                                            Mx = Mx - M - P * (x - xP)
+                                            edisp[1] = fact * (eload[ieload].CwP + eload[ieload].CwM); edisp[2] = fact * (eload[ieload].CphiP + eload[ieload].CphiM);
+
+                                            const xx = x - xP;
+                                            const xx2 = xx * xx
+                                            const sl = this.sl - xP
+                                            const nenner = sl ** 3 + 12. * eta * sl
+                                            Nw[0] = (2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx + sl ** 3 + 12. * eta * sl) / nenner;
+                                            Nw[1] = -((sl * xx ** 3 + (-2. * sl ** 2 - 6. * eta) * xx ** 2 + (sl ** 3 + 6. * eta * sl) * xx) / nenner);
+                                            Nw[2] = -((2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx) / nenner);
+                                            Nw[3] = -((sl * xx ** 3 + (6. * eta - sl ** 2) * xx ** 2 - 6. * eta * sl * xx) / nenner);
+                                            wx += wl = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                                            Nphi[0] = 6.0 * (sl * xx - xx2) / nenner
+                                            Nphi[1] = (3 * sl * xx2 + (-12 * eta - 4 * sl ** 2) * xx + 12 * sl * eta + sl ** 3) / nenner
+                                            Nphi[2] = -6.0 * (sl * xx - xx2) / nenner
+                                            Nphi[3] = (3 * sl * xx2 + (12 * eta - 2 * sl ** 2) * xx) / nenner
+                                            phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
+
+                                            //console.log("Nw,edisp", wx, edisp, Nw)
+                                        } else {
+                                            edisp[4] = fact * (eload[ieload].CwP + eload[ieload].CwM); edisp[5] = fact * (eload[ieload].CphiP + eload[ieload].CphiM);
+                                            const sl = xP
+                                            const sl2 = sl * sl
+                                            const nenner = sl ** 3 + 12. * eta * sl
+                                            Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+                                            Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+                                            Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+                                            Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+                                            wx += wl = Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
+                                            //console.log("Nw,edisp", wx, edisp, Nw)
+                                            Nphi[0] = 6.0 * (sl * x - x2) / nenner
+                                            Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl2 * sl) / nenner
+                                            Nphi[2] = -6.0 * (sl * x - x2) / nenner
+                                            Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
+                                            phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
+
+                                        }
+                                        if (this.NL < 0.0) Mx = Mx - this.NL * wl
+                                        wxG += wl
+
+                                    }
+                                    else {
+                                        if (Math.abs(x - xP) < 0.000000000001) {
+                                            Vx = Vx - P
+                                            Mx = Mx - M
+                                        }
+                                    }
+                                }
+                                // else if (eload[ieload].art === 8) {         // Knotenverformung
+                                //     let edisp0 = Array(6)
+                                //     for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
+                                //     //console.log("ART=8,edisp0", edisp0)
+
+                                //     Nu[0] = (1.0 - x / sl);
+                                //     Nu[1] = x / sl
+                                //     Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+                                //     Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+                                //     Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+                                //     Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+                                //     ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[3]
+                                //     let wx0 = Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
+                                //     //Mx = Mx - this.NL * (wx0 - wL)
+                                //     wx += wx0
+                                // }
+                            }
+                        }
+                    }
+
+                    disp = Math.sqrt(ux * ux + wx * wx) * 1000.0
+
+
+                    if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
+                    if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
+                    if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
+                    if (disp > maxValue_komb[iLastf].disp) maxValue_komb[iLastf].disp = disp
+
+                    this.M_komb[iLastf][iteil] = Mx
+                    this.V_komb[iLastf][iteil] = Vx
+                    this.N_komb[iLastf][iteil] = Nx
+                    this.u_komb[iLastf][iteil] = ux
+                    this.uG_komb[iLastf][iteil] = uxG
+                    this.w_komb[iLastf][iteil] = wx
+                    this.wG_komb[iLastf][iteil] = wxG
+                    this.phi_komb[iLastf][iteil] = phix
+                    this.phiG_komb[iLastf][iteil] = phixG
+
+                    if (this.normalkraft >= 0.0) {
+                        this.Vb_komb[iLastf][iteil] = Vx
+                        this.Nb_komb[iLastf][iteil] = Nx
+                    } else {
+                        let Nb = Nx + Vx * phixG
+                        let Vb = Vx - Nx * phixG
+                        this.Vb_komb[iLastf][iteil] = Vb
+                        this.Nb_komb[iLastf][iteil] = Nb
+                        if (Math.abs(Vb) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vb)
+                        if (Math.abs(Nb) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nb)
+                    }
+                }  // ende TH II Ordnung
+
+                // console.log("x, Vx, Mx", x, Vx, Mx, wx, phix)
+                //x += d_x
+            }
         }
 
     }

@@ -1219,7 +1219,9 @@ export async function my_jspdf() {
 
 
       //   Schnittgrößen Koppelfedern
-      {
+
+      if ( nelem_koppelfedern > 0 ) {
+
         let str_Vz = "V<sub>z</sub>"
 
         yy = testSeite(yy, fs, 1, 5);
@@ -1462,7 +1464,8 @@ export async function my_jspdf() {
 
 
         //   Schnittgrößen Koppelfedern
-        {
+        if ( nelem_koppelfedern > 0 ) {
+
           let str_Vz = "V<sub>z</sub>"
 
           yy = testSeite(yy, fs, 1, 5);

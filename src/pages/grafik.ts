@@ -720,7 +720,7 @@ export function drawsystem(svg_id = 'artboard') {
 
     let height = 0
 
-    two.clear()
+    if (two) two.clear()
 
     // var params = {
     //     fullscreen: false,
@@ -1511,8 +1511,9 @@ export function drawsystem(svg_id = 'artboard') {
     }
 
     if (flag_eingabe != 0) {
-
+        // -----------------------------------------------------------------
         // Zustandslinien   Zustandslinien   Zustandslinien   Zustandslinien
+        // -----------------------------------------------------------------
 
         if (show_selection) {
             if (show_momentenlinien || show_querkraftlinien || show_normalkraftlinien) {
@@ -1748,7 +1749,7 @@ export function drawsystem(svg_id = 'artboard') {
                     if (show_labels) {
 
                         //console.log("show_labels", ielem, foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
-                        let zp: number
+                        let zp=0.0
                         if (!foundNeg && !foundPos && Math.abs(valueLeftPos - valueRightPos) < 0.0001) {
                             let xpix = (x1 + x2 + x3 + x4) / 4
                             let zpix = (z1 + z2 + z3 + z4) / 4
@@ -1760,14 +1761,14 @@ export function drawsystem(svg_id = 'artboard') {
                         } else {
                             if (foundPos && (Math.abs(maxValuePos) > 0.00001) && (maxValuePos > valueRightPos)) {
                                 const str = myFormat(Math.abs(maxValuePos), 1, 2) + unit
-                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, x_max, z_max + zp, style_txt)
                                 txt.alignment = 'left'
                                 txt.baseline = 'top'
                             }
                             if (foundNeg && (Math.abs(maxValueNeg) > 0.00001) && (maxValueNeg < valueRightNeg)) {
                                 const str = myFormat(Math.abs(maxValueNeg), 1, 2) + unit
-                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, x_min, z_min + zp, style_txt)
                                 txt.alignment = 'left'
                                 txt.baseline = 'top'
@@ -1775,14 +1776,14 @@ export function drawsystem(svg_id = 'artboard') {
 
                             if (Math.abs(valueLeftPos) > 0.00001) {
                                 const str = myFormat(Math.abs(valueLeftPos), 1, 2) + unit
-                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, x0_max, z0_max + zp, style_txt)
                                 txt.alignment = 'left'
                                 txt.baseline = 'top'
                             }
                             if (Math.abs(valueRightPos) > 0.00001) {
                                 const str = myFormat(Math.abs(valueRightPos), 1, 2) + unit
-                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, xn_max, zn_max + zp, style_txt)
                                 txt.alignment = 'left'
                                 txt.baseline = 'top'
@@ -1790,14 +1791,14 @@ export function drawsystem(svg_id = 'artboard') {
 
                             if (Math.abs(valueLeftNeg) > 0.00001) {
                                 const str = myFormat(Math.abs(valueLeftNeg), 1, 2) + unit
-                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, x0_min, z0_min + zp, style_txt)
                                 txt.alignment = 'left'
                                 txt.baseline = 'top'
                             }
                             if (Math.abs(valueRightNeg) > 0.00001) {
                                 const str = myFormat(Math.abs(valueRightNeg), 1, 2) + unit
-                                if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
+                                //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, xn_min, zn_min + zp, style_txt)
                                 txt.alignment = 'left'
                                 txt.baseline = 'top'

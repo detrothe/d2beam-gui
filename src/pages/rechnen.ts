@@ -670,6 +670,7 @@ export function rechnen(flag = 1) {
         slmax = Math.sqrt((xmax - xmin) ** 2 + (zmax - zmin) ** 2)
 
         init_grafik(0);
+        init_two();
 
         show_controller_THIIO(false);
         show_controller_results(false);
