@@ -88,6 +88,7 @@ export class CTimoshenko_beam extends CElement {
     u_ = [] as number[][]          // Verformungen entlang Stab, lokale Richtung
     w_ = [] as number[][]
     phi_ = [] as number[][]
+    bettung_ = [] as number[][]
 
     N_komb = [] as number[][]         // Schnittgrößen entlang Stab, lokal, aus Kombinationen
     V_komb = [] as number[][]
@@ -98,6 +99,7 @@ export class CTimoshenko_beam extends CElement {
     wG_komb = [] as number[][]
     phi_komb = [] as number[][]
     phiG_komb = [] as number[][]
+    bettung_komb = [] as number[][]
 
     Nb_komb = [] as number[][]         // Bemessungs(Nachweis)-Schnittgrößen entlang Stab, lokal, aus Kombinationen
     Vb_komb = [] as number[][]
@@ -475,6 +477,7 @@ export class CTimoshenko_beam extends CElement {
             this.u_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
             this.w_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
             this.phi_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+            this.bettung_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
         }
 
         if (nkombinationen > 0) {
@@ -487,6 +490,7 @@ export class CTimoshenko_beam extends CElement {
             this.wG_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.phi_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.phiG_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
+            this.bettung_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
 
             this.Nb_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.Vb_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
@@ -1693,6 +1697,7 @@ export class CTimoshenko_beam extends CElement {
                     this.u_[iLastf][iteil] = ux
                     this.w_[iLastf][iteil] = wx
                     this.phi_[iLastf][iteil] = phix
+                    this.bettung_[iLastf][iteil] = wx * this.k_0
 
                 }
                 else if (THIIO_flag === 1) { // ikomb=iLastf
@@ -1720,6 +1725,7 @@ export class CTimoshenko_beam extends CElement {
                     this.w_komb[iLastf][iteil] = wx
                     this.wG_komb[iLastf][iteil] = wxG
                     this.phi_komb[iLastf][iteil] = phix
+                    this.bettung_komb[iLastf][iteil] = wx * this.k_0
 
                 }  // ende TH II Ordnung
             }
@@ -2027,6 +2033,7 @@ export class CTimoshenko_beam extends CElement {
                     this.u_[iLastf][iteil] = ux
                     this.w_[iLastf][iteil] = wx
                     this.phi_[iLastf][iteil] = phix
+                    this.bettung_[iLastf][iteil] = 0.0
 
                 }
                 else if (THIIO_flag === 1) { // ikomb=iLastf
@@ -2289,6 +2296,7 @@ export class CTimoshenko_beam extends CElement {
                     this.wG_komb[iLastf][iteil] = wxG
                     this.phi_komb[iLastf][iteil] = phix
                     this.phiG_komb[iLastf][iteil] = phixG
+                    this.bettung_komb[iLastf][iteil] = 0.0
 
                     if (this.normalkraft >= 0.0) {
                         this.Vb_komb[iLastf][iteil] = Vx
@@ -2364,6 +2372,28 @@ export class CTimoshenko_beam extends CElement {
             }
         }
     }
+
+
+    //---------------------------------------------------------------------------------------------
+    get_elementSchnittgroesse_bettung(bettung: number[], iLastf: number, use_gleichgewichtSG: boolean) {
+
+
+        if (THIIO_flag === 0) {
+            if (iLastf < nlastfaelle) {
+                for (let i = 0; i < this.nTeilungen; i++)  bettung[i] = this.bettung_[iLastf][i]
+
+            } else {
+                for (let i = 0; i < this.nTeilungen; i++)  bettung[i] = this.bettung_komb[iLastf - nlastfaelle][i]
+            }
+        } else {
+            if (use_gleichgewichtSG) {
+                for (let i = 0; i < this.nTeilungen; i++) bettung[i] = this.bettung_komb[iLastf][i]
+            } else {
+                for (let i = 0; i < this.nTeilungen; i++) bettung[i] = this.bettung_komb[iLastf][i]
+            }
+        }
+    }
+
 
     //---------------------------------------------------------------------------------------------
     get_elementSchnittgroesse_u_w_phi(ux: number[], wx: number[], phix: number[], iLastf: number, gesamt: boolean) {

@@ -197,7 +197,11 @@ input[type='number'] {
 
 .table_cell_center {
    text-align: center;
-   background-color: coral;
+   background-color: #ff7f50;
+}
+.table_cell_center_kombi {
+   text-align: center;
+   background-color: #ffa000;
 }
 
 .table_cell_right {
@@ -456,7 +460,8 @@ input[type='number'] {
 
 .table_ein_cell_center {
    text-align: center;
-   background-color: rgb(255, 229, 80);
+   background-color: #ffc966;
+   /* background-color: #ffe550;  alt gelb*/
 }
 
 .table_ein_cell_right {

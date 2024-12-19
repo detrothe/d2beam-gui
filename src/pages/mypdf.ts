@@ -499,12 +499,17 @@ export async function my_jspdf() {
     yy = neueZeile(yy, fs, 2);
 
     if (System === 0) {
-      texWid = doc.getTextWidth("Gelenke");
-      doc.text("Gelenke", links + 70 + 30 - texWid / 2, yy);
+      //texWid = doc.getTextWidth("Gelenke");
+      //let xx = links + 70 + 30 - texWid / 2
+      let el_table = new pdf_table(doc, links, [70, 60, 20]);
+      el_table.htmlText("", 0, "center", yy);
+      el_table.htmlText("Gelenke", 1, "center", yy);
+      //doc.text("Gelenke", links + 70 + 30 - texWid / 2, yy);
+      el_table.htmlText("k<sub>0</sub>", 2, "center", yy);
       yy = neueZeile(yy, fs, 1);
     }
 
-    let el_table = new pdf_table(doc, links, [10, 30, 15, 15, 10, 10, 10, 10, 10, 10]);
+    let el_table = new pdf_table(doc, links, [10, 30, 15, 15, 10, 10, 10, 10, 10, 10, 20]);
     console.log("el_table", el_table);
 
     el_table.htmlText("No", 0, "left", yy);
@@ -518,6 +523,7 @@ export async function my_jspdf() {
       el_table.htmlText("Ne", 7, "center", yy);
       el_table.htmlText("Ve", 8, "center", yy);
       el_table.htmlText("Me", 9, "center", yy);
+      el_table.htmlText("[kN/m³]", 10, "center", yy);
     }
     doc.setFontSize(fs);
     doc.setFont("freesans_normal");
@@ -537,6 +543,9 @@ export async function my_jspdf() {
             el_table.htmlText("ʘ", j + 4, "center", yy);
           }
         }
+        if (stab[i].k_0 > 0.0) {
+          el_table.htmlText(myFormat(stab[i].k_0, 1, 2,1), 10, "center", yy);
+        }
       }
 
       yy = neueZeile(yy, fs1, 1);
@@ -546,7 +555,7 @@ export async function my_jspdf() {
 
   // Koppelfedern
 
-  if (System === 0) {
+  if (System === 0 && nelem_koppelfedern > 0) {
 
     const nspalten = 3,
       nzeilen = nelem_koppelfedern;
@@ -1220,7 +1229,7 @@ export async function my_jspdf() {
 
       //   Schnittgrößen Koppelfedern
 
-      if ( nelem_koppelfedern > 0 ) {
+      if (nelem_koppelfedern > 0) {
 
         let str_Vz = "V<sub>z</sub>"
 
@@ -1464,7 +1473,7 @@ export async function my_jspdf() {
 
 
         //   Schnittgrößen Koppelfedern
-        if ( nelem_koppelfedern > 0 ) {
+        if (nelem_koppelfedern > 0) {
 
           let str_Vz = "V<sub>z</sub>"
 

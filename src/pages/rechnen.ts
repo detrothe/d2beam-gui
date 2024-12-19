@@ -17,7 +17,7 @@ import { CSpring } from "./feder"
 import { CKoppelfeder } from "./koppelfeder"
 import { init_grafik, drawsystem, init_two } from "./grafik";
 import { show_controller_THIIO, show_controller_results, show_controller_truss } from "./mypanelgui"
-import { ausgabe, dyn_ausgabe } from "./ausgabe"
+import { ausgabe, ausgabe_kombinationen_Th_I_O, dyn_ausgabe } from "./ausgabe"
 import { AlertDialog } from "../pages/confirm_dialog";
 
 // import { read_daten } from "./dateien"
@@ -2555,9 +2555,10 @@ async function calculate() {
             }   //ende iLastfall
 
             if (nkombinationen > 0) {
-                lagerkraefte_kombi = new TFArray3D(0, nnodes - 1, 0, 2, 0, nkombinationen - 1);   //
-                disp_print_kombi = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);   //
+                lagerkraefte_kombi = new TFArray3D(0, nnodes - 1, 0, 2, 0, nkombinationen - 1);
+                disp_print_kombi = new TFArray3D(1, nnodesTotal, 1, 3, 1, nkombinationen);
                 berechne_kombinationen();
+                ausgabe_kombinationen_Th_I_O(newDiv);
             }
         }
 
