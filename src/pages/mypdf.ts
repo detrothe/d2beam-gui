@@ -234,6 +234,9 @@ function letzteSeite() {
 export async function my_jspdf() {
   //--------------------------------------------------------------------------------------------
 
+
+  console.log(" PDF eload", eload)
+
   let str: string, texWid: number;
 
   let fs1 = 15,
@@ -544,7 +547,7 @@ export async function my_jspdf() {
           }
         }
         if (stab[i].k_0 > 0.0) {
-          el_table.htmlText(myFormat(stab[i].k_0, 1, 2,1), 10, "center", yy);
+          el_table.htmlText(myFormat(stab[i].k_0, 1, 2, 1), 10, "center", yy);
         }
       }
 
@@ -760,7 +763,8 @@ export async function my_jspdf() {
       doc.setFont("freesans_normal");
       yy = neueZeile(yy, fs1, 1);
 
-      for (let i = 0; i < nstreckenlasten; i++) {
+      for (let j = 0; j < nstreckenlasten; j++) {
+        let i = j + nelem_Balken     // Eigengewicht nicht ausgeben
         el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
         el_table_nodes.htmlText(String(+eload[i].element + 1), 1, "center", yy);
         el_table_nodes.htmlText(String(eload[i].lf), 2, "center", yy);
@@ -803,7 +807,8 @@ export async function my_jspdf() {
       yy = neueZeile(yy, fs1, 1);
 
       for (let i = 0; i < neinzellasten; i++) {
-        let index = i + nstreckenlasten
+        let index = i + nstreckenlasten + nelem_Balken
+        console.log("  PDF ", index, nstreckenlasten, eload[index])
 
         el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
         el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
@@ -848,7 +853,7 @@ export async function my_jspdf() {
       yy = neueZeile(yy, fs1, 1);
 
       for (let i = 0; i < ntemperaturlasten; i++) {
-        let index = i + nstreckenlasten + neinzellasten
+        let index = i + nstreckenlasten + neinzellasten + nelem_Balken
 
         el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
         el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
@@ -888,7 +893,7 @@ export async function my_jspdf() {
       yy = neueZeile(yy, fs1, 1);
 
       for (let i = 0; i < nvorspannungen; i++) {
-        let index = i + nstreckenlasten + neinzellasten + ntemperaturlasten
+        let index = i + nstreckenlasten + neinzellasten + ntemperaturlasten + nelem_Balken
 
         el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
         el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
@@ -926,7 +931,7 @@ export async function my_jspdf() {
       yy = neueZeile(yy, fs1, 1);
 
       for (let i = 0; i < nspannschloesser; i++) {
-        let index = i + nstreckenlasten + neinzellasten + ntemperaturlasten + nvorspannungen
+        let index = i + nstreckenlasten + neinzellasten + ntemperaturlasten + nvorspannungen + nelem_Balken
 
         el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
         el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);

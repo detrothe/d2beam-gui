@@ -1215,9 +1215,27 @@ function read_element_loads() {
             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
             wert = child.value;
             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+            if (ispalte === 1) {
+                eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+                let ele = eload[ieload].element
+                if (ele < 0 || ele >= nelem_Balken) {
+                    fatal_error = true;
+                    write('Elementeinzellast in Zeile ' + izeile + ': unzulässsige Elementnummer');
+                }
+            }
             else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[ieload].x = Number(testNumber(wert, izeile, ispalte, shad));
+            else if (ispalte === 3) {
+                eload[ieload].x = Number(testNumber(wert, izeile, ispalte, shad));
+                if (!fatal_error) {
+                    let ele = eload[ieload].element
+                    if (eload[ieload].x - 0.0001 > element[ele].sl) {
+                        fatal_error = true;
+                        write('Elementeinzellast in Zeile ' + izeile + ': Lastangriff x größer Stablänge');
+                    } else {
+                        if (eload[ieload].x > element[ele].sl) eload[ieload].x = element[ele].sl  // Rundungsärger eliminieren
+                    }
+                }
+            }
             else if (ispalte === 4) eload[ieload].P = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 5) eload[ieload].M = Number(testNumber(wert, izeile, ispalte, shad));
             eload[ieload].art = 6;
@@ -3452,7 +3470,7 @@ function berechne_kombinationen() {
 
     for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
 
-        for (let ielem = 0; ielem < nelem_Balken+nelem_koppelfedern; ielem++) {
+        for (let ielem = 0; ielem < nelem_Balken + nelem_koppelfedern; ielem++) {
             if (el[ielem].isActive) {
                 //console.log("nTeilungen", el[ielem].nTeilungen)
                 for (let iteil = 0; iteil < el[ielem].nTeilungen; iteil++) {
