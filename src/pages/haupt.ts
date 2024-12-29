@@ -78,7 +78,7 @@ import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 //import { Children } from "two.js/src/children";
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 19-Dezember-2024, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 29-Dezember-2024, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -400,7 +400,7 @@ portrait.addEventListener("change", function (e) {
           starr e = starres Stabende am Elementende in Meter
         </p>
         <p>
-          k<sub>0</sub> = Bettung nach Winkler in kN/m³
+          k<sub>b</sub> = Bettung nach Winkler in kN/m²
         </p>
         <p>
           <sl-checkbox checked id="id_gelenke_anzeigen">Spalten für Gelenke anzeigen</sl-checkbox>
@@ -426,7 +426,7 @@ portrait.addEventListener("change", function (e) {
                 id="id_element_tabelle"
                 nzeilen="${nelem_init}"
                 nspalten="13"
-                columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a<br>[m]", "starr e<br>[m]","k<sub>0</sub><br>[kN/m³]"]'
+                columns='["No", "Querschnitt", "Typ", "nod a", "nod e", "N<sub>a</sub>", "V<sub>a</sub>", "M<sub>a</sub>", "N<sub>e</sub>", "V<sub>e</sub>", "M<sub>e</sub>", "starr a<br>[m]", "starr e<br>[m]","k<sub>b</sub><br>[kN/m²]"]'
                 typs='["-", "select", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number", "number"]'
                 colwidth='["4","8","2","3","3","2","2","2","2","2","2","3","3","4"]'
               ></dr-tabelle>

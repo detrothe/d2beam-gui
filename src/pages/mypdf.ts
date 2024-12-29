@@ -505,7 +505,7 @@ export async function my_jspdf() {
       el_table.htmlText("", 0, "center", yy);
       el_table.htmlText("Gelenke", 1, "center", yy);
       //doc.text("Gelenke", links + 70 + 30 - texWid / 2, yy);
-      el_table.htmlText("k<sub>0</sub>", 2, "center", yy);
+      el_table.htmlText("k<sub>b</sub>", 2, "center", yy);
       yy = neueZeile(yy, fs, 1);
     }
 
@@ -523,7 +523,7 @@ export async function my_jspdf() {
       el_table.htmlText("Ne", 7, "center", yy);
       el_table.htmlText("Ve", 8, "center", yy);
       el_table.htmlText("Me", 9, "center", yy);
-      el_table.htmlText("[kN/m³]", 10, "center", yy);
+      el_table.htmlText("[kN/m²]", 10, "center", yy);
     }
     doc.setFontSize(fs);
     doc.setFont("freesans_normal");
