@@ -121,6 +121,13 @@ const style_txt_knotenlast = {
     weight: 'bold'
 };
 
+const style_txt_knotenlast_element = {
+    family: 'system-ui, sans-serif',
+    size: 14,
+    fill: '#ba0000',
+    weight: 'bold'
+};
+
 const style_pfeil = {
     b: 20,
     h: 10,
@@ -151,6 +158,14 @@ const style_pfeil_knotenlast = {
     color: '#dc0000'
 }
 
+const style_pfeil_knotenlast_element = {
+    a: 35,
+    b: 25,
+    h: 16,
+    linewidth: 7,
+    color: '#ba0000'
+}
+
 const style_pfeil_moment = {
     radius: 50,
     b: 25,
@@ -159,6 +174,14 @@ const style_pfeil_moment = {
     color: '#dc0000'
 }
 
+
+const style_pfeil_moment_element = {
+    radius: 40,
+    b: 22,
+    h: 14,
+    linewidth: 7,
+    color: '#ba0000'
+}
 
 const style_pfeil_koord = {
     a: 35,
@@ -1749,7 +1772,7 @@ export function drawsystem(svg_id = 'artboard') {
                     if (show_labels) {
 
                         //console.log("show_labels", ielem, foundPos, foundNeg, maxValuePos, maxValueNeg, valueLeftPos, valueRightPos, valueLeftNeg, valueRightNeg)
-                        let zp=0.0
+                        let zp = 0.0
                         if (!foundNeg && !foundPos && Math.abs(valueLeftPos - valueRightPos) < 0.0001) {
                             let xpix = (x1 + x2 + x3 + x4) / 4
                             let zpix = (z1 + z2 + z3 + z4) / 4
@@ -2776,14 +2799,14 @@ function draw_elementlasten(two: Two) {
                             let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
                             console.log("GRAFIK Einzellast", xl, zl, wert)
                             if (wert < 0.0) {
-                                draw_arrow(two, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast)
+                                draw_arrow(two, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast_element)
                             } else {
-                                draw_arrow(two, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast)
+                                draw_arrow(two, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast_element)
                             }
                             xpix = tr.xPix(xl + ddx + dpx) + 4
                             zpix = tr.zPix(zl - ddz - dpz) - 4
                             const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
-                            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast_element)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
                         }
@@ -2791,18 +2814,18 @@ function draw_elementlasten(two: Two) {
                             let wert = eload[ieload].M * fact[iLoop]
                             let vorzeichen = Math.sign(wert)
                             let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
-                            let radius = style_pfeil_moment.radius;
+                            let radius = style_pfeil_moment_element.radius;
                             console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
                             if (wert > 0.0) {
-                                draw_moment_arrow(two, xl, zl, 1.0, radius, style_pfeil_moment)
+                                draw_moment_arrow(two, xl, zl, 1.0, radius, style_pfeil_moment_element)
                             } else {
-                                draw_moment_arrow(two, xl, zl, -1.0, radius, style_pfeil_moment)
+                                draw_moment_arrow(two, xl, zl, -1.0, radius, style_pfeil_moment_element)
                             }
 
                             xpix = tr.xPix(xl) - 10 / devicePixelRatio
-                            zpix = tr.zPix(zl) + vorzeichen * radius + 15 * vorzeichen / devicePixelRatio
+                            zpix = tr.zPix(zl) + vorzeichen * radius + 12 * vorzeichen / devicePixelRatio
                             const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
-                            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                            const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast_element)
                             txt.alignment = 'right'
                         }
                     }
@@ -2935,6 +2958,7 @@ function draw_knotenkraefte(two: Two) {
 
                 wert = load[i].p[2] * fact[iLoop]
                 let vorzeichen = Math.sign(wert)
+                let radius = style_pfeil_moment.radius;
                 //console.log("Moment ", +inode + 1, wert)
                 if (wert > 0.0) {
                     draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_moment)
@@ -2943,7 +2967,8 @@ function draw_knotenkraefte(two: Two) {
                 }
 
                 xpix = tr.xPix(x) - 10 / devicePixelRatio
-                zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
+                zpix = tr.zPix(z) + vorzeichen * radius + 15 * vorzeichen / devicePixelRatio
+                //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
                 const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
                 const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                 txt.alignment = 'right'
