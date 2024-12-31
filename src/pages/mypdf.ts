@@ -808,7 +808,7 @@ export async function my_jspdf() {
 
       for (let i = 0; i < neinzellasten; i++) {
         let index = i + nstreckenlasten + nelem_Balken
-        console.log("  PDF ", index, nstreckenlasten, eload[index])
+        //console.log("  PDF ", index, nstreckenlasten, eload[index])
 
         el_table_nodes.htmlText(String(+i + 1), 0, "center", yy);
         el_table_nodes.htmlText(String(+eload[index].element + 1), 1, "center", yy);
@@ -951,7 +951,7 @@ export async function my_jspdf() {
       for (let i = 0; i < nlastfaelle; i++) {
         if (lastfall_bezeichnung[i].length > 0) nBezeichnungen++;
       }
-      console.log("Anzahl Lastfall-Bezeichnugen", nBezeichnungen);
+      //console.log("Anzahl Lastfall-Bezeichnugen", nBezeichnungen);
 
       if (nBezeichnungen > 0) {
         yy = testSeite(yy, fs1, 1, 4 + nBezeichnungen);
@@ -966,7 +966,7 @@ export async function my_jspdf() {
         yy = neueZeile(yy, fs, 2);
 
         let el_table = new pdf_table(doc, links, [10, 150]);
-        console.log("el_table", el_table);
+        //console.log("el_table", el_table);
 
         el_table.htmlText("Lf", 0, "center", yy);
         el_table.htmlText("Bezeichnung", 1, "left", yy);
