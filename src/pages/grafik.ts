@@ -4,7 +4,7 @@ import Two from 'two.js'
 import { CTrans } from './trans';
 import { myFormat, write } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
-import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen, matprop_flag, nelem_koppelfedern, nelem_Balken } from "./rechnen";
+import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen, matprop_flag, nelem_koppelfedern, nelem_Balken, maxBettung } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
@@ -1837,6 +1837,12 @@ export function drawsystem(svg_id = 'artboard') {
 
     }
 
+
+    // ---------------------------  S Y S T E M L I N I E N  --------------------------
+    // ---------------------------  S Y S T E M L I N I E N  --------------------------
+    // ---------------------------  S Y S T E M L I N I E N  --------------------------
+
+
     if (show_systemlinien || !show_selection) {
 
 
@@ -1850,7 +1856,6 @@ export function drawsystem(svg_id = 'artboard') {
                 x2 = Math.round(tr.xPix(stab[ielem].x2));
                 z2 = Math.round(tr.zPix(stab[ielem].z2));
 
-                //console.log("STAB x,z", x1, x2, z1, z2)
                 let line = two.makeLine(x1, z1, x2, z2);
                 if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
                 else line.linewidth = 5 / devicePixelRatio;
@@ -1870,6 +1875,9 @@ export function drawsystem(svg_id = 'artboard') {
                 let line1 = two.makeLine(tmpX1, tmpZ1, tmpX2, tmpZ2);
                 line1.linewidth = 2 / devicePixelRatio;
                 line1.dashes = [10, 4]
+
+
+                if (stab[ielem].k_0 !== 0.0) draw_bettungsmodul(ielem, onlyLabels, show_selection)  // Bettung darstellen
 
             } else {
 
@@ -1918,6 +1926,9 @@ export function drawsystem(svg_id = 'artboard') {
                     let line1 = two.makeLine(tmpX1, tmpZ1, tmpX2, tmpZ2);
                     line1.linewidth = 1 / devicePixelRatio;
                     line1.dashes = [5, 3]
+
+                    if (stab[ielem].k_0 !== 0.0) draw_bettungsmodul(ielem, onlyLabels, show_selection)   // Bettung darstellen
+
                 }
             }
 
@@ -2469,8 +2480,9 @@ function draw_elementlasten(two: Two) {
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
                             let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
+                            txt.alignment = 'center'
+                            txt.baseline = 'middle'
+                            txt.rotation = stab[ielem].alpha
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
@@ -2531,8 +2543,10 @@ function draw_elementlasten(two: Two) {
                                 zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
                                 let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
                                 let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                                txt.alignment = 'left'
-                                txt.baseline = 'top'
+                                txt.alignment = 'center'
+                                txt.baseline = 'middle'
+                                txt.rotation = stab[ielem].alpha
+
                             } else {
                                 xpix = xtr[3] + 5
                                 zpix = ztr[3] - 5
@@ -2593,8 +2607,9 @@ function draw_elementlasten(two: Two) {
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
                             let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
+                            txt.alignment = 'center'
+                            txt.baseline = 'middle'
+                            //txt.rotation = stab[ielem].alpha
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
@@ -2657,8 +2672,9 @@ function draw_elementlasten(two: Two) {
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
                             let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
+                            txt.alignment = 'center'
+                            txt.baseline = 'middle'
+                            txt.rotation = stab[ielem].alpha
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
@@ -2719,8 +2735,9 @@ function draw_elementlasten(two: Two) {
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
                             let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                            txt.alignment = 'left'
-                            txt.baseline = 'top'
+                            txt.alignment = 'center'
+                            txt.baseline = 'middle'
+                            //txt.rotation = stab[ielem].alpha
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
@@ -2780,7 +2797,7 @@ function draw_elementlasten(two: Two) {
                         let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                         txt.alignment = 'center'
                         txt.baseline = 'middle'
-                        txt.rotation = element[ielem].alpha
+                        txt.rotation = stab[ielem].alpha
 
                         dp = pMax // - pMin
                         a = a + dp + a_spalt
@@ -4437,6 +4454,54 @@ function draw_gleichgewicht_SG_grafik() {
 
     if (!show_dyn_animate_eigenformen) drawsystem();
 }
+
+
+//--------------------------------------------------------------------------------------------------------
+function draw_bettungsmodul(ielem: number, onlyLabels: boolean, show_selection: boolean) {
+    //----------------------------------------------------------------------------------------------------
+
+    if (onlyLabels) {
+
+        let x = Array(4), z = Array(4), xtr = Array(4), ztr = Array(4)
+        let si = stab[ielem].sinus
+        let co = stab[ielem].cosinus
+        let a = -slmax / 150.
+        let p = stab[ielem].k_0 * slmax / 40 / maxBettung
+        const color_load = '#ffc680';
+
+        let x1 = stab[ielem].x1;
+        let z1 = stab[ielem].z1;
+        let x2 = stab[ielem].x2;
+        let z2 = stab[ielem].z2;
+        x[0] = x1 + si * a; z[0] = z1 - co * a;
+        x[1] = x2 + si * a; z[1] = z2 - co * a;
+        x[2] = x[1] - si * p; z[2] = z[1] + co * p;
+        x[3] = x[0] - si * p; z[3] = z[0] + co * p;
+
+        var vertices = [];
+        for (let i = 0; i < 4; i++) {
+            xtr[i] = tr.xPix(x[i])
+            ztr[i] = tr.zPix(z[i])
+            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+        }
+
+        let flaeche = two.makePath(vertices);
+        flaeche.fill = color_load;
+        flaeche.opacity = opacity
+
+        if ((show_labels && onlyLabels) || !show_selection || nur_eingabe_ueberpruefen) {
+
+            let xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+            let zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+            let str = myFormat(Math.abs(stab[ielem].k_0), 1, 2) + ' kN/m²'
+            let txt = two.makeText(str, xpix, zpix, style_txt)
+            txt.alignment = 'center'
+            txt.baseline = 'middle'
+            txt.rotation = stab[ielem].alpha
+        }
+    }
+}
+
 
 //--------------------------------------------------------------------------------------------------------
 function scale_factor() {

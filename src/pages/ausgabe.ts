@@ -26,6 +26,7 @@ import {
     nlastfaelle,
     disp_print_kombi,
     lagerkraefte_kombi,
+    nelem_Balken_Bettung,
 } from "./rechnen";
 
 import { prot_eingabe } from "./prot_eingabe"
@@ -570,6 +571,15 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                     th6.title = "Rotation der Querschnittsebene, positiv im Uhrzeigersinn, bei schubstarr: ß = w'"
                     th6.setAttribute("class", "table_cell_center");
                     row.appendChild(th6);
+
+                    if (nelem_Balken_Bettung > 0) {
+                        // @ts-ignore
+                        const th7 = table.tHead.appendChild(document.createElement("th"));
+                        th7.innerHTML = "press [kN/m]";
+                        th7.title = "Bodenpressung"
+                        th7.setAttribute("class", "table_cell_center");
+                        row.appendChild(th7);
+                    }
                 }
 
                 if (THIIO_flag === 1) {
@@ -589,12 +599,15 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                 let uL: number[] = new Array(nelTeilungen)   // L = Verformung lokal
                 let wL: number[] = new Array(nelTeilungen)
                 let phiL: number[] = new Array(nelTeilungen)
+                let press: number[] = new Array(nelTeilungen)
 
                 const lf_index = iLastfall - 1
                 el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
                 el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
                 el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
                 el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index);
+                el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index);
+                el[ielem].get_elementSchnittgroesse_bettung(press, lf_index);
 
                 for (i = 0; i < nelTeilungen; i++) {
 
@@ -608,6 +621,8 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
                     if (System === 0) {
                         let n = 6; if (THIIO_flag === 1) n = 7;
+                        if (nelem_Balken_Bettung > 0) n++;
+
                         for (j = 1; j <= n; j++) {
                             newCell = newRow.insertCell(j);
                             if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
@@ -617,6 +632,18 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                             else if (j === 5) newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
                             else if (j === 6) newText = document.createTextNode(myFormat(phiL[i] * 1000., 3, 3));
                             else if (j === 7) {
+                                if (nelem_Balken_Bettung > 0) {
+                                    newText = document.createTextNode(myFormat(press[i], 3, 3));
+                                } else if ((THIIO_flag === 1)) {
+                                    if (sg_N[i] < 0.0) {
+                                        const eps = el[ielem].sl * Math.sqrt(Math.abs(sg_N[i]) / el[ielem].emodul / el[ielem].Iy)
+                                        newText = document.createTextNode(myFormat(eps, 3, 3));
+                                    } else {
+                                        newText = document.createTextNode("");
+                                    }
+                                }
+                            }
+                            else if (j === 8) {
                                 if ((THIIO_flag === 1)) {
                                     if (sg_N[i] < 0.0) {
                                         const eps = el[ielem].sl * Math.sqrt(Math.abs(sg_N[i]) / el[ielem].emodul / el[ielem].Iy)
@@ -626,6 +653,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                                     }
                                 }
                             }
+
                             newCell.appendChild(newText);
                             newCell.setAttribute("class", "table_cell_right");
                         }
@@ -1073,6 +1101,15 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
                     th6.title = "Rotation der Querschnittsebene, positiv im Uhrzeigersinn, bei schubstarr: ß = w'"
                     th6.setAttribute("class", "table_cell_center_kombi");
                     row.appendChild(th6);
+
+                    if (nelem_Balken_Bettung > 0) {
+                        // @ts-ignore
+                        const th7 = table.tHead.appendChild(document.createElement("th"));
+                        th7.innerHTML = "press [kN/m]";
+                        th7.title = "Bodenpressung"
+                        th7.setAttribute("class", "table_cell_center_kombi");
+                        row.appendChild(th7);
+                    }
                 }
 
                 // if (THIIO_flag === 1) {
@@ -1092,12 +1129,14 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
                 let uL: number[] = new Array(nelTeilungen)   // L = Verformung lokal
                 let wL: number[] = new Array(nelTeilungen)
                 let phiL: number[] = new Array(nelTeilungen)
+                let press: number[] = new Array(nelTeilungen)
 
                 const lf_index = iKomb - 1 + nlastfaelle;
                 el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
                 el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
                 el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
                 el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index);
+                el[ielem].get_elementSchnittgroesse_bettung(press, lf_index);
 
                 for (i = 0; i < nelTeilungen; i++) {
 
@@ -1111,6 +1150,8 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
 
                     if (System === 0) {
                         let n = 6;
+                        if (nelem_Balken_Bettung > 0) n++;
+
                         for (j = 1; j <= n; j++) {
                             newCell = newRow.insertCell(j);
                             if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
@@ -1119,6 +1160,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
                             else if (j === 4) newText = document.createTextNode(myFormat(uL[i] * 1000., 3, 3));
                             else if (j === 5) newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
                             else if (j === 6) newText = document.createTextNode(myFormat(phiL[i] * 1000., 3, 3));
+                            else if (j === 7) newText = document.createTextNode(myFormat(press[i], 3, 3));
 
                             newCell.appendChild(newText);
                             newCell.setAttribute("class", "table_cell_right");

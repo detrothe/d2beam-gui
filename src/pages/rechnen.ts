@@ -16,7 +16,7 @@ import { CTruss } from "./truss"
 import { CSpring } from "./feder"
 import { CKoppelfeder } from "./koppelfeder"
 import { init_grafik, drawsystem, init_two } from "./grafik";
-import { show_controller_THIIO, show_controller_results, show_controller_truss } from "./mypanelgui"
+import { show_controller_THIIO, show_controller_bettung, show_controller_results, show_controller_truss } from "./mypanelgui"
 import { ausgabe, ausgabe_kombinationen_Th_I_O, dyn_ausgabe } from "./ausgabe"
 import { AlertDialog } from "../pages/confirm_dialog";
 
@@ -27,6 +27,7 @@ let fatal_error = false;
 export let nnodes: number;
 export let nelem: number;
 export let nelem_Balken = 0;
+export let nelem_Balken_Bettung = 0;      // Anzahl Balken mit Bettung
 export let nelem_Federn = 0;
 export let nelem_koppelfedern = 0;
 export let nloads: number = 0;
@@ -116,6 +117,8 @@ export let maxM_all = 0.0
 export let maxV_all = 0.0
 export let maxN_all = 0.0
 export let maxdisp_all = 0.0
+
+export let maxBettung = 0.0
 
 export let xmin = -50.0, zmin = -50.0, xmax = 50.0, zmax = 50.0, slmax = 0.0;
 
@@ -642,6 +645,7 @@ export function rechnen(flag = 1) {
             if (THIIO_flag === 0) show_controller_THIIO(false);
             else show_controller_THIIO(true);
             show_controller_results(true);
+            if (nelem_Balken_Bettung > 0) show_controller_bettung(true); else show_controller_bettung(false);
         }
     } else {
 
@@ -674,6 +678,7 @@ export function rechnen(flag = 1) {
 
         show_controller_THIIO(false);
         show_controller_results(false);
+        show_controller_bettung(false);
 
         drawsystem();
 
@@ -1412,6 +1417,8 @@ function read_elements() {
     //console.log('nZeilen', table.rows.length);
     //console.log('nSpalten', table.rows[0].cells.length);
 
+    nelem_Balken_Bettung = 0
+
     element.length = 0
     for (i = 0; i < nelem; i++) {
         element.push(new TElement())
@@ -1445,7 +1452,13 @@ function read_elements() {
             else if (ispalte === 11) element[izeile - 1].aL = Number(testNumber(wert, izeile, ispalte, shad));
             else if (ispalte === 12) element[izeile - 1].aR = Number(testNumber(wert, izeile, ispalte, shad));
 
-            else if (ispalte === 13) element[izeile - 1].k_0 = Number(testNumber(wert, izeile, ispalte, shad));   // in kN/m³
+            else if (ispalte === 13) {
+                element[izeile - 1].k_0 = Number(testNumber(wert, izeile, ispalte, shad));   // in kN/m²
+                if (element[izeile - 1].k_0 !== 0.0) {
+                    nelem_Balken_Bettung++;
+                    if (Math.abs(element[izeile - 1].k_0) > maxBettung) maxBettung = Math.abs(element[izeile - 1].k_0)
+                }
+            }
         }
         console.log("element", izeile, element[izeile - 1].qname, element[izeile - 1].nod[0], element[izeile - 1].nod[1])
 
@@ -3458,6 +3471,7 @@ function berechne_kombinationen() {
     let ug = 0.0
     let wg = 0.0
     let phi = 0.0
+    let press = 0.0
 
     let delta = 0.0
 
@@ -3481,6 +3495,7 @@ function berechne_kombinationen() {
                     ug = 0.0
                     wg = 0.0
                     phi = 0.0
+                    press = 0.0
 
                     for (let iLastfall = 0; iLastfall < nlastfaelle; iLastfall++) {
 
@@ -3490,6 +3505,7 @@ function berechne_kombinationen() {
                         ug += el[ielem].u_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                         wg += el[ielem].w_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                         phi += el[ielem].phi_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                        press += el[ielem].bettung_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                         //console.log("mom...", iteil, iLastfall, mom, quer, norm)
                     }
 
@@ -3505,6 +3521,7 @@ function berechne_kombinationen() {
                     el[ielem].u_komb[iKomb][iteil] = ug
                     el[ielem].w_komb[iKomb][iteil] = wg
                     el[ielem].phi_komb[iKomb][iteil] = phi
+                    el[ielem].bettung_komb[iKomb][iteil] = press
 
                     max_S_kombi[0][iKomb] = Math.max(Math.abs(mom), max_S_kombi[0][iKomb])
                     max_S_kombi[1][iKomb] = Math.max(Math.abs(quer), max_S_kombi[1][iKomb])

@@ -22,7 +22,7 @@ export class CTimoshenko_beam extends CElement {
     gmodul = 0.0
     querdehnzahl = 0.0
     schubfaktor = 0.0
-    k_0 = 0.0           // Bettungsmodul nach Winkler
+    k_0 = 0.0           // Bettungsmodul nach Winkler in kN/m²
     wichte = 0.0
     stabgewicht = 0.0   // Area * Wichte
     ks = 0.0
@@ -2375,7 +2375,7 @@ export class CTimoshenko_beam extends CElement {
 
 
     //---------------------------------------------------------------------------------------------
-    get_elementSchnittgroesse_bettung(bettung: number[], iLastf: number, use_gleichgewichtSG: boolean) {
+    get_elementSchnittgroesse_bettung(bettung: number[], iLastf: number) {
 
 
         if (THIIO_flag === 0) {
@@ -2386,11 +2386,7 @@ export class CTimoshenko_beam extends CElement {
                 for (let i = 0; i < this.nTeilungen; i++)  bettung[i] = this.bettung_komb[iLastf - nlastfaelle][i]
             }
         } else {
-            if (use_gleichgewichtSG) {
-                for (let i = 0; i < this.nTeilungen; i++) bettung[i] = this.bettung_komb[iLastf][i]
-            } else {
-                for (let i = 0; i < this.nTeilungen; i++) bettung[i] = this.bettung_komb[iLastf][i]
-            }
+            for (let i = 0; i < this.nTeilungen; i++) bettung[i] = this.bettung_komb[iLastf][i]
         }
     }
 

@@ -1,7 +1,7 @@
 import GUI from 'lil-gui';
 import { System } from './rechnen'
 
-let gui:GUI;
+let gui: GUI;
 
 let scale_factor = 1.0;
 let scale_factor_arrows = 1.0;
@@ -21,6 +21,7 @@ let controller_N: any
 let controller_V: any
 let controller_M: any
 let controller_disp: any
+let controller_bettung: any
 
 let controller_SG: any
 
@@ -50,6 +51,7 @@ export function myPanel() {
         dyn_eigenform: false,
         dyn_animate_eigenform: false,
         knotenmassen: false,
+        bettung: false,
 
         Reset: function () {
             window.dispatchEvent(new Event("reset_webgl"));
@@ -67,6 +69,7 @@ export function myPanel() {
     // let skalierung_pfeile = '-'
     let lager_kraefte = 'Lagerkräfte anzeigen'
     let umriss_anzeigen = 'Umriss anzeigen'
+    let bettung = 'Bettung'
 
     // @ts-ignore
     gui = new GUI({ container: document.getElementById('panel_gui'), touchStyles: false }); // , touchStyles: true  , width: 230
@@ -82,6 +85,10 @@ export function myPanel() {
 
     controller_disp = gui.add(obj, 'verformung').name(verformungen).onChange(() => {
         window.dispatchEvent(new Event("draw_verformungen_grafik"));
+    });
+
+    controller_bettung = gui.add(obj, 'bettung').name(bettung).onChange(() => {
+        window.dispatchEvent(new Event("draw_bettung_grafik"));
     });
 
     controller_N = gui.add(obj, 'normalkraft').name(normalkraft).onChange((value: any) => {
@@ -248,6 +255,12 @@ export function show_controller_truss(wert: boolean) {
     controller_M.show(wert);
 }
 
+
+//--------------------------------------------------------------------------------------------------------
+export function show_controller_bettung(wert: boolean) {
+    //----------------------------------------------------------------------------------------------------
+    controller_bettung.show(wert);
+}
 
 //--------------------------------------------------------------------------------------------------------
 export function reset_gui() {
