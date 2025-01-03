@@ -4,7 +4,7 @@ import Two from 'two.js'
 import { CTrans } from './trans';
 import { myFormat, write } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
-import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen, matprop_flag, nelem_koppelfedern, nelem_Balken, maxBettung } from "./rechnen";
+import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen, matprop_flag, nelem_koppelfedern, nelem_Balken, maxBettung, maxpress_all, max_press_kombi } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
@@ -85,6 +85,7 @@ let show_lagerkraefte = true;
 let show_stabvorverformung = false;
 let show_umriss = false;
 let show_gesamtverformung = false;
+let show_bodenpressung = false;
 
 let show_lasten_temp = true;
 let show_gleichgewichtSG = true;
@@ -804,7 +805,7 @@ export function drawsystem(svg_id = 'artboard') {
     // if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
 
 
-    let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen || show_stabvorverformung || show_dyn_eigenformen);
+    let onlyLabels = !(show_normalkraftlinien || show_querkraftlinien || show_momentenlinien || show_schiefstellung || show_eigenformen || show_verformungen || show_stabvorverformung || show_dyn_eigenformen || show_bodenpressung);
 
     //console.log("O N L Y  L A B E L S", onlyLabels)
 
@@ -971,6 +972,12 @@ export function drawsystem(svg_id = 'artboard') {
     }
 
     let x1: number, x2: number, z1: number, z2: number
+
+    //                              B o d e n p r e s s u n g     B o d e n p r e s s u n g     B o d e n p r e s s u n g
+
+    if (show_bodenpressung && show_selection && (flag_eingabe != 0)) {
+        draw_bodenpressung();
+    }
 
 
     //                              Verformungen   Verformungen   Verformungen   Verformungen
@@ -4504,6 +4511,158 @@ function draw_bettungsmodul(ielem: number, onlyLabels: boolean, show_selection: 
 
 
 //--------------------------------------------------------------------------------------------------------
+function draw_bodenpressung() {
+    //----------------------------------------------------------------------------------------------------
+
+
+    //                              B o d e n p r e s s u n g     B o d e n p r e s s u n g
+
+
+    let xx1, xx2, zz1, zz2, xp1, xp2, zp1, zp2
+    let dx: number, x: number, eta: number, sl: number, nenner: number
+
+    let uG: number, wG: number
+    let nLoop = 1, lf_index = 0
+    let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+    let xmem = 0.0, zmem = 0.0
+
+    //let edispL: number[] = new Array(6)
+    let iLastfall = draw_lastfall
+    let scalefactor = 0
+
+    if (THIIO_flag === 0) {
+        if (iLastfall <= nlastfaelle) {
+            lf_index = iLastfall - 1
+            if (maxValue_lf[iLastfall - 1].press != 0.0) scalefactor = 0.1 * slmax / maxValue_lf[iLastfall - 1].press
+        } else if (iLastfall <= nlastfaelle + nkombinationen) {
+            lf_index = iLastfall - 1
+            let ikomb = iLastfall - 1 - nlastfaelle
+            scalefactor = 0.1 * slmax / max_press_kombi[ikomb]
+        } else {
+            nLoop = nkombinationen
+            lf_index = nlastfaelle
+            scalefactor = 0.1 * slmax / maxpress_all
+        }
+    }
+    else if (THIIO_flag === 1) {
+        if (iLastfall <= nkombinationen) {
+            lf_index = iLastfall - 1
+            if (maxValue_komb[iLastfall - 1].press != 0.0) scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].press
+        } else {
+            nLoop = nkombinationen
+            lf_index = 0
+            scalefactor = 0.05 * slmax / maxpress_all
+        }
+    }
+
+    scalefactor *= scaleFactor_panel
+
+    //console.log("scalefaktor", scalefactor, slmax, maxValue_lf[iLastfall - 1].disp)
+
+    for (let ielem = 0; ielem < nelem_Balken; ielem++) {
+
+        if (!stab[ielem].isActive) continue
+        if (stab[ielem].k_0 === 0.0) continue
+
+        maxU = 0.0
+
+        const nelTeilungen = element[ielem].nTeilungen
+        let press: number[] = new Array(nelTeilungen)   // L = Verformung lokal
+
+
+        let umriss_x: number[] = new Array(2 * nelTeilungen)
+        let umriss_z: number[] = new Array(2 * nelTeilungen)
+
+
+        let aL = stab[ielem].aL
+        let aR = stab[ielem].aR
+
+        let si = stab[ielem].sinus
+        let co = stab[ielem].cosinus
+
+
+        let xs1 = stab[ielem].x1 + co * aL;
+        let zs1 = stab[ielem].z1 + si * aL;
+        let xs2 = stab[ielem].x2 - co * aR;
+        let zs2 = stab[ielem].z2 - si * aR;
+
+        let x1 = Math.round(tr.xPix(xs1));
+        let z1 = Math.round(tr.zPix(zs1));
+        let x2 = Math.round(tr.xPix(xs2));
+        let z2 = Math.round(tr.zPix(zs2));
+
+        let h = element[ielem].h / 2.
+
+        dx = element[ielem].sl / nelTeilungen
+        eta = element[ielem].eta
+        sl = element[ielem].sl
+        nenner = sl ** 3 + 12 * eta * sl
+
+        for (let loop = 0; loop < nLoop; loop++) {
+
+            element[ielem].get_elementSchnittgroesse_bettung(press, lf_index + loop);
+            console.log("press", press)
+
+            xx2 = 0.0; zz2 = 0.0
+            for (let i = 0; i < nelTeilungen; i++) {
+
+                x = element[ielem].x_[i]
+
+                uG =  - element[ielem].sinus * press[i]
+                wG =  element[ielem].cosinus * press[i]
+
+                xx1 = xx2; zz1 = zz2;
+                xx2 = xs1 + x * element[ielem].cosinus + uG * scalefactor
+                zz2 = zs1 + x * element[ielem].sinus + wG * scalefactor
+
+                xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
+
+                if (i > 0) {
+                    let line = two.makeLine(xx1, zz1, xx2, zz2);
+                    line.linewidth = 5;
+                }
+
+                dispG = Math.sqrt(uG * uG + wG * wG)
+                if (dispG > maxU) {
+                    maxU = dispG
+                    x_max = xx2
+                    z_max = zz2
+                    xmem = tr.xPix(xs1 + x * element[ielem].cosinus)
+                    zmem = tr.zPix(zs1 + x * element[ielem].sinus)
+                }
+
+                x = x + dx
+            }
+
+            // if (show_umriss) {
+            //     var vertices = [];
+            //     for (let i = 0; i < 2 * nelTeilungen; i++) {
+            //         vertices.push(new Two.Anchor(umriss_x[i], umriss_z[i]));
+            //     }
+            //     let umriss = two.makePath(vertices);
+            //     umriss.linewidth = 1;
+            //     umriss.fill = '#006600'
+            //     umriss.opacity = opacity
+            // }
+
+        }
+
+        if (show_labels && maxU > 0.0) {
+
+            //const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
+            //pfeil.stroke = '#111111'     //'#D3D3D3'
+            draw_arrowPix(two, xmem, zmem, x_max, z_max, style_pfeil_pix)
+
+            const str = myFormat(maxU, 1, 1) + 'kN/m'
+            const txt = two.makeText(str, x_max + 5, z_max, style_txt)
+            txt.alignment = 'left'
+            txt.baseline = 'bottom'
+
+        }
+    }
+}
+
+//--------------------------------------------------------------------------------------------------------
 function scale_factor() {
     //--------------------------------------------------------------------------------------------------------
 
@@ -4568,6 +4727,15 @@ function draw_knotenmassen_grafik() {
     if (!show_dyn_animate_eigenformen) drawsystem();
 }
 
+//--------------------------------------------------------------------------------------------------------
+function draw_bodenpressung_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_bodenpressung_grafik");
+    show_bodenpressung = !show_bodenpressung;
+
+    if (!show_dyn_animate_eigenformen) drawsystem();
+}
 //---------------------------------------------------------------------------------- a d d E v e n t L i s t e n e r
 
 window.addEventListener('draw_label_grafik', draw_label_grafik);
@@ -4584,6 +4752,7 @@ window.addEventListener('draw_lagerkraefte_grafik', draw_lagerkraefte_grafik);
 window.addEventListener('draw_umriss_grafik', draw_umriss_grafik);
 window.addEventListener('draw_gesamtverformung_grafik', draw_gesamtverformung_grafik);
 window.addEventListener('draw_gleichgewicht_SG_grafik', draw_gleichgewicht_SG_grafik);
+window.addEventListener('draw_bodenpressung_grafik', draw_bodenpressung_grafik);
 
 window.addEventListener('draw_dyn_eigenformen_grafik', draw_dyn_eigenformen_grafik);
 window.addEventListener('draw_dyn_animate_eigenformen_grafik', draw_dyn_animate_eigenformen_grafik);

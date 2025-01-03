@@ -1616,7 +1616,7 @@ export class CTimoshenko_beam extends CElement {
         let Mx: number, Vx: number, Nx: number, ux: number, wx: number, phix: number, phixG: number
         let Nu: number[] = new Array(2), Nw: number[] = new Array(4), Nphi: number[] = new Array(4)
         let u: number, wL: number = 0.0, wLG = 0.0, disp = 0.0, dwx = 0.0, wxG = 0.0, uxG = 0.0, dwxG = 0.0
-        let Nm = 0.0
+        let Nm = 0.0, press = 0.0
         let edisp: number[] = Array(6)
         let edispG: number[] = Array(6).fill(0.0)
 
@@ -1682,12 +1682,14 @@ export class CTimoshenko_beam extends CElement {
                     ux = this.edispL[3 * iteil]
                     wx = this.edispL[3 * iteil + 1]
                     phix = -this.edispL[3 * iteil + 2]
+                    press = wx * this.k_0
 
                     disp = Math.sqrt(ux * ux + wx * wx) * 1000.0      // in mm
 
                     if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
                     if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
                     if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
+                    if (Math.abs(press) > maxValue_lf[iLastf].press) maxValue_lf[iLastf].press = Math.abs(press)
                     if (disp > maxValue_lf[iLastf].disp) maxValue_lf[iLastf].disp = disp
 
                     console.log("°°° Mx", Mx, Vx, Nx)
@@ -1697,7 +1699,7 @@ export class CTimoshenko_beam extends CElement {
                     this.u_[iLastf][iteil] = ux
                     this.w_[iLastf][iteil] = wx
                     this.phi_[iLastf][iteil] = phix
-                    this.bettung_[iLastf][iteil] = wx * this.k_0
+                    this.bettung_[iLastf][iteil] = press
 
                 }
                 else if (THIIO_flag === 1) { // ikomb=iLastf
@@ -1709,12 +1711,14 @@ export class CTimoshenko_beam extends CElement {
                     ux = this.edispL[3 * iteil]
                     wx = this.edispL[3 * iteil + 1]
                     phix = -this.edispL[3 * iteil + 2]
+                    press = wx * this.k_0
 
                     disp = Math.sqrt(ux * ux + wx * wx) * 1000.0
 
                     if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
                     if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
                     if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
+                    if (Math.abs(press) > maxValue_komb[iLastf].press) maxValue_komb[iLastf].press = Math.abs(press)
                     if (disp > maxValue_komb[iLastf].disp) maxValue_komb[iLastf].disp = disp
 
                     this.M_komb[iLastf][iteil] = Mx

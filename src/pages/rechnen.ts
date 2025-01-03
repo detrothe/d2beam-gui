@@ -112,11 +112,13 @@ export let maxValue_w0 = [] as number[]                // Stabvorverformung
 
 export let max_S_kombi = [] as number[][] //  (3, nKombi)
 export let max_disp_kombi = [] as number[]  //(nKombi)
+export let max_press_kombi = [] as number[]  //(nKombi)
 
 export let maxM_all = 0.0
 export let maxV_all = 0.0
 export let maxN_all = 0.0
 export let maxdisp_all = 0.0
+export let maxpress_all = 0.0
 
 export let maxBettung = 0.0
 
@@ -355,6 +357,7 @@ class TMaxValues {
     Vz = 0.0
     My = 0.0
     eload = 0.0
+    press = 0.0
 
     zero() {
         this.disp = 0.0
@@ -362,6 +365,7 @@ class TMaxValues {
         this.Vz = 0.0
         this.My = 0.0
         this.eload = 0.0
+        this.press = 0.0
     }
 }
 
@@ -2258,8 +2262,11 @@ async function calculate() {
         print_mass = Array.from(Array(neq), () => new Array(neq));    // Gesamtmassenmatrix für Ausdruck
     }
 
-    if (nkombinationen > 0) max_S_kombi = Array.from(Array(3), () => new Array(nkombinationen).fill(0.0));
-    if (nkombinationen > 0) max_disp_kombi = Array(nkombinationen).fill(0.0)
+    if (nkombinationen > 0) {
+        max_S_kombi = Array.from(Array(3), () => new Array(nkombinationen).fill(0.0));
+        max_disp_kombi = Array(nkombinationen).fill(0.0)
+        max_press_kombi = Array(nkombinationen).fill(0.0)
+    }
 
     //------------------------------------------------------------------------   alte Ausgabe löschen
     let elem = document.getElementById('id_newDiv');
@@ -3475,12 +3482,13 @@ function berechne_kombinationen() {
 
     let delta = 0.0
 
-    maxM_all = 0.0; maxV_all = 0.0; maxN_all = 0.0; maxdisp_all = 0.0;
+    maxM_all = 0.0; maxV_all = 0.0; maxN_all = 0.0; maxdisp_all = 0.0; maxpress_all = 0.0
 
     //console.log("...", nkombinationen, nelem_Balken, nlastfaelle)
 
     for (let i = 0; i < 3; i++) max_S_kombi[i].fill(0.0);
     max_disp_kombi.fill(0.0)
+    max_press_kombi.fill(0.0)
 
     for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
 
@@ -3514,6 +3522,7 @@ function berechne_kombinationen() {
                     maxN_all = Math.max(Math.abs(norm), maxN_all)
                     delta = Math.sqrt(ug * ug + wg * wg)
                     maxdisp_all = Math.max(Math.abs(delta), maxdisp_all)
+                    maxpress_all = Math.max(Math.abs(press), maxpress_all)
 
                     el[ielem].M_komb[iKomb][iteil] = mom
                     el[ielem].V_komb[iKomb][iteil] = quer
@@ -3527,6 +3536,7 @@ function berechne_kombinationen() {
                     max_S_kombi[1][iKomb] = Math.max(Math.abs(quer), max_S_kombi[1][iKomb])
                     max_S_kombi[2][iKomb] = Math.max(Math.abs(norm), max_S_kombi[2][iKomb])
                     max_disp_kombi[iKomb] = Math.max(Math.abs(delta), max_disp_kombi[iKomb])
+                    max_press_kombi[iKomb] = Math.max(Math.abs(press), max_press_kombi[iKomb])
                 }
             }
         }
@@ -3534,7 +3544,7 @@ function berechne_kombinationen() {
         console.log("max_S_kombi, iKomb=", iKomb, max_S_kombi[0][iKomb], max_S_kombi[1][iKomb], max_S_kombi[2][iKomb], max_disp_kombi[iKomb])
     }
 
-    console.log("MAX_ALL", maxM_all, maxV_all, maxN_all, maxdisp_all)
+    console.log("MAX_ALL", maxM_all, maxV_all, maxN_all, maxdisp_all, maxpress_all)
 
 
     // jetzt die Auflagerkombinationen

@@ -88,7 +88,7 @@ export function myPanel() {
     });
 
     controller_bettung = gui.add(obj, 'bettung').name(bettung).onChange(() => {
-        window.dispatchEvent(new Event("draw_bettung_grafik"));
+        window.dispatchEvent(new Event("draw_bodenpressung_grafik"));
     });
 
     controller_N = gui.add(obj, 'normalkraft').name(normalkraft).onChange((value: any) => {
