@@ -4608,8 +4608,8 @@ function draw_bodenpressung() {
 
                 x = element[ielem].x_[i]
 
-                uG =  - element[ielem].sinus * press[i]
-                wG =  element[ielem].cosinus * press[i]
+                uG = - element[ielem].sinus * press[i]
+                wG = element[ielem].cosinus * press[i]
 
                 xx1 = xx2; zz1 = zz2;
                 xx2 = xs1 + x * element[ielem].cosinus + uG * scalefactor
@@ -4617,10 +4617,10 @@ function draw_bodenpressung() {
 
                 xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
 
-                if (i > 0) {
-                    let line = two.makeLine(xx1, zz1, xx2, zz2);
-                    line.linewidth = 5;
-                }
+                // if (i > 0) {
+                //     let line = two.makeLine(xx1, zz1, xx2, zz2);
+                //     line.linewidth = 1;
+                // }
 
                 dispG = Math.sqrt(uG * uG + wG * wG)
                 if (dispG > maxU) {
@@ -4634,16 +4634,16 @@ function draw_bodenpressung() {
                 x = x + dx
             }
 
-            // if (show_umriss) {
-            //     var vertices = [];
-            //     for (let i = 0; i < 2 * nelTeilungen; i++) {
-            //         vertices.push(new Two.Anchor(umriss_x[i], umriss_z[i]));
-            //     }
-            //     let umriss = two.makePath(vertices);
-            //     umriss.linewidth = 1;
-            //     umriss.fill = '#006600'
-            //     umriss.opacity = opacity
-            // }
+            var vertices = [];
+            vertices.push(new Two.Anchor(x1, z1));
+            vertices.push(new Two.Anchor(x2, z2));
+            vertices.push(new Two.Anchor(xx2, zz2));
+            vertices.push(new Two.Anchor(xx1, zz1));
+
+            let umriss = two.makePath(vertices);
+            umriss.linewidth = 2;
+            umriss.fill = '#006600'
+            umriss.opacity = 0.2  //  opacity
 
         }
 
@@ -4651,7 +4651,7 @@ function draw_bodenpressung() {
 
             //const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
             //pfeil.stroke = '#111111'     //'#D3D3D3'
-            draw_arrowPix(two, xmem, zmem, x_max, z_max, style_pfeil_pix)
+            draw_arrowPix(two, x_max, z_max, xmem, zmem, style_pfeil_pix)
 
             const str = myFormat(maxU, 1, 1) + 'kN/m'
             const txt = two.makeText(str, x_max + 5, z_max, style_txt)

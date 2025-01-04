@@ -69,7 +69,7 @@ export function myPanel() {
     // let skalierung_pfeile = '-'
     let lager_kraefte = 'Lagerkräfte anzeigen'
     let umriss_anzeigen = 'Umriss anzeigen'
-    let bettung = 'Bettung'
+    let bettung = 'Bodenpressung'
 
     // @ts-ignore
     gui = new GUI({ container: document.getElementById('panel_gui'), touchStyles: false }); // , touchStyles: true  , width: 230
