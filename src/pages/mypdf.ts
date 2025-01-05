@@ -11,7 +11,7 @@ import { fontBold } from "../fonts/FreeSans-bold.js";
 import htmlToPdfmake from "html-to-pdfmake";
 //import { tabQWerte, schnittgroesse, bezugswerte } from "./duennQ"
 
-import { nnodes, nelem, System, stadyn, nnodalMass, nodalmass, dyn_neigv, dyn_omega, eigenform_print, nelem_koppelfedern, nelem_Balken } from "./rechnen";
+import { nnodes, nelem, System, stadyn, nnodalMass, nodalmass, dyn_neigv, dyn_omega, eigenform_print, nelem_koppelfedern, nelem_Balken, nelem_Balken_Bettung } from "./rechnen";
 import {
   el,
   element as stab,
@@ -1174,7 +1174,7 @@ export async function my_jspdf() {
           doc.text("Element " + (+ielem + 1), links, yy);
           yy = neueZeile(yy, fs, 1);
 
-          let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 20, 20, 20]);
+          let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 20, 20, 20, 25]);
           if (System === 0) {
             el_table.htmlText("x [m]", 0, "center", yy);
             el_table.htmlText("N [kN]", 1, "center", yy);
@@ -1183,6 +1183,9 @@ export async function my_jspdf() {
             el_table.htmlText("u<sub>xL</sub> [mm]", 4, "center", yy);
             el_table.htmlText("w<sub>zL</sub> [mm]", 5, "center", yy);
             el_table.htmlText("ß [mrad]", 6, "center", yy);
+            if (nelem_Balken_Bettung > 0) {
+              el_table.htmlText("press [kN/m]", 7, "center", yy);
+            }
           } else {
             el_table.htmlText("x [m]", 0, "center", yy);
             el_table.htmlText("N [kN]", 1, "center", yy);
@@ -1203,12 +1206,14 @@ export async function my_jspdf() {
           let uL: number[] = new Array(nelTeilungen); // L = Verformung lokal
           let wL: number[] = new Array(nelTeilungen);
           let phiL: number[] = new Array(nelTeilungen);
+          let press: number[] = new Array(nelTeilungen);
 
           const lf_index = iLastfall - 1;
           el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
           el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
           el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
           el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index, false);
+          el[ielem].get_elementSchnittgroesse_bettung(press, lf_index);
 
           for (let i = 0; i < nelTeilungen; i++) {
             if (System === 0) {
@@ -1219,6 +1224,9 @@ export async function my_jspdf() {
               el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 4, "right", yy, 5);
               el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 5, "right", yy, 5);
               el_table.htmlText(myFormat(phiL[i] * 1000, 3, 3), 6, "right", yy, 5);
+              if (nelem_Balken_Bettung > 0) {
+                el_table.htmlText(myFormat(press[i], 3, 3), 7, "right", yy, 5);
+              }
             } else {
               el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
               el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);
@@ -1419,7 +1427,7 @@ export async function my_jspdf() {
             doc.text("Element " + (+ielem + 1), links, yy);
             yy = neueZeile(yy, fs, 1);
 
-            let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 20, 20, 20]);
+            let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 20, 20, 20,25]);
             if (System === 0) {
               el_table.htmlText("x [m]", 0, "center", yy);
               el_table.htmlText("N [kN]", 1, "center", yy);
@@ -1428,6 +1436,9 @@ export async function my_jspdf() {
               el_table.htmlText("u<sub>xL</sub> [mm]", 4, "center", yy);
               el_table.htmlText("w<sub>zL</sub> [mm]", 5, "center", yy);
               el_table.htmlText("ß [mrad]", 6, "center", yy);
+              if (nelem_Balken_Bettung > 0) {
+                el_table.htmlText("press [kN/m]", 7, "center", yy);
+              }
             } else {
               el_table.htmlText("x [m]", 0, "center", yy);
               el_table.htmlText("N [kN]", 1, "center", yy);
@@ -1448,12 +1459,14 @@ export async function my_jspdf() {
             let uL: number[] = new Array(nelTeilungen); // L = Verformung lokal
             let wL: number[] = new Array(nelTeilungen);
             let phiL: number[] = new Array(nelTeilungen);
+            let press: number[] = new Array(nelTeilungen);
 
             const lf_index = iKomb - 1 + nlastfaelle;
             el[ielem].get_elementSchnittgroesse_Moment(sg_M, lf_index);
             el[ielem].get_elementSchnittgroesse_Querkraft(sg_V, lf_index, ausgabe_gleichgewichtSG);
             el[ielem].get_elementSchnittgroesse_Normalkraft(sg_N, lf_index, ausgabe_gleichgewichtSG);
             el[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index, false);
+            el[ielem].get_elementSchnittgroesse_bettung(press, lf_index);
 
             for (let i = 0; i < nelTeilungen; i++) {
               if (System === 0) {
@@ -1464,6 +1477,9 @@ export async function my_jspdf() {
                 el_table.htmlText(myFormat(uL[i] * 1000, 3, 3), 4, "right", yy, 5);
                 el_table.htmlText(myFormat(wL[i] * 1000, 3, 3), 5, "right", yy, 5);
                 el_table.htmlText(myFormat(phiL[i] * 1000, 3, 3), 6, "right", yy, 5);
+                if (nelem_Balken_Bettung > 0) {
+                  el_table.htmlText(myFormat(press[i], 3, 3), 7, "right", yy, 5);
+                }
               } else {
                 el_table.htmlText(myFormat(el[ielem].x_[i], 2, 2), 0, "center", yy);
                 el_table.htmlText(myFormat(sg_N[i], 2, 2), 1, "right", yy, 5);

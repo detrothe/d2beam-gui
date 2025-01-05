@@ -2478,7 +2478,7 @@ async function calculate() {
                     write('Toleranz eps_force in Lastfall ' + iLastfall + ' = ' + eps_force)
 
                     if (eps_force < epsForce_tol) {
-                        write('Toleranz bei den Kräften erreicht')
+                        write('Toleranz bei den Kräften eingehalten')
                     } else {
                         write('++++ geforderte Genauigkeit bei den Kräften nicht erreicht, das System auf mögliche Kinematiken überprüfen')
                         keineKonvergenzErreicht = true
