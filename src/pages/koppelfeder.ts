@@ -1259,10 +1259,10 @@ export class CKoppelfeder extends CElement {
 
                 disp = Math.sqrt(ux * ux + wx * wx) * 1000.0      // in mm
 
-                if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
-                if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
-                if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
-                if (disp > maxValue_lf[iLastf].disp) maxValue_lf[iLastf].disp = disp
+                // if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
+                // if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
+                // if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
+                // if (disp > maxValue_lf[iLastf].disp) maxValue_lf[iLastf].disp = disp
 
                 console.log("°°° Mx", Mx, Vx, Nx)
                 this.M_[iLastf][iteil] = Mx
@@ -1285,10 +1285,10 @@ export class CKoppelfeder extends CElement {
 
                 disp = Math.sqrt(ux * ux + wx * wx) * 1000.0
 
-                if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
-                if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
-                if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
-                if (disp > maxValue_komb[iLastf].disp) maxValue_komb[iLastf].disp = disp
+                // if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
+                // if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
+                // if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
+                // if (disp > maxValue_komb[iLastf].disp) maxValue_komb[iLastf].disp = disp
 
                 this.M_komb[iLastf][iteil] = Mx
                 this.V_komb[iLastf][iteil] = Vx

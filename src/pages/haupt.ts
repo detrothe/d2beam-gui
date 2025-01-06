@@ -78,7 +78,7 @@ import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 //import { Children } from "two.js/src/children";
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 6-Januar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.0,b, 6-Januar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -1899,6 +1899,18 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     el = document.getElementById("id_button_nkoppelfedern") as drButtonPM;
     el.setValue(0);
+
+    elSel = document.getElementById('id_stadyn') as HTMLSelectElement;
+    elSel.value = '0';
+
+    const id_mass = document.getElementById("id_tab_mass") as SlSelect;
+    id_mass.disabled = true;
+
+    elSel = document.getElementById('id_THIIO') as HTMLSelectElement;
+    elSel.options[0].selected = true;
+
+    elSel = document.getElementById('id_matprop') as HTMLSelectElement;
+    elSel.options[0].selected = true;
 
     resizeTables();
     clearTables();
