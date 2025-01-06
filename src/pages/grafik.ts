@@ -1966,6 +1966,8 @@ export function drawsystem(svg_id = 'artboard') {
 
         }
 
+
+
         if ((show_labels && onlyLabels) || !show_selection || nur_eingabe_ueberpruefen) {
 
             for (let i = 0; i < nnodes; i++) {
@@ -2098,6 +2100,34 @@ export function drawsystem(svg_id = 'artboard') {
         //if (flag_eingabe != 0 || nur_eingabe_ueberpruefen)
         draw_gelenke(two);
     }
+
+    // Koppelfedern darstellen
+
+    if (show_systemlinien || !show_selection) {
+
+        let ielem = 0
+        let radius = 8 / devicePixelRatio
+
+        for (let iel = 0; iel < nelem_koppelfedern; iel++) {
+
+            ielem = iel + nelem_Balken
+
+            if (stab[ielem].isActive) {
+                x1 = Math.round(tr.xPix(stab[ielem].x1));
+                z1 = Math.round(tr.zPix(stab[ielem].z1));
+                x2 = Math.round(tr.xPix(stab[ielem].x2));
+                z2 = Math.round(tr.zPix(stab[ielem].z2));
+
+                let kreis = two.makeCircle(x1, z1, radius, 10)
+                kreis.fill = '#00aaff';
+                kreis.linewidth = 2 / devicePixelRatio;
+                kreis = two.makeCircle(x2, z2, radius, 10)
+                kreis.fill = '#00aaff';
+                kreis.linewidth = 2 / devicePixelRatio;
+            }
+        }
+    }
+
 
     if (show_momentenlinien || show_querkraftlinien || show_normalkraftlinien) {
         if (flag_eingabe !== 0 && matprop_flag > 0) {  // plastifizierte nichtlineare Feder darstellen
