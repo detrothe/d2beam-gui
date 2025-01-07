@@ -78,7 +78,7 @@ import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 //import { Children } from "two.js/src/children";
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.0,c, 6-Januar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 7-Januar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -1977,7 +1977,7 @@ function elem_select_changed() {
 //---------------------------------------------------------------------------------------------------------------
 function berechnungsart_changed() {
   //---------------------------------------------------------------------------------------------------------------
-  console.log("berechnungsart_changed");
+  // console.log("berechnungsart_changed");
   const sel = document.getElementById("id_stadyn") as HTMLSelectElement;
   const id_mass = document.getElementById("id_tab_mass") as SlSelect;
   if (sel.value === "0") id_mass.disabled = true;
@@ -1988,7 +1988,7 @@ function berechnungsart_changed() {
 //---------------------------------------------------------------------------------------------------------------
 function elementTabelle_gelenke_anzeigen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
-  console.log("in elementTabelle_gelenke_anzeigen", check);
+  // console.log("in elementTabelle_gelenke_anzeigen", check);
 
   if (check) {
     let el = document.getElementById("id_element_tabelle");
@@ -2002,7 +2002,7 @@ function elementTabelle_gelenke_anzeigen(check: boolean) {
 //---------------------------------------------------------------------------------------------------------------
 function elementTabelle_starre_enden_anzeigen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
-  console.log("in elementTabelle_starre_enden_anzeigen", check);
+  // console.log("in elementTabelle_starre_enden_anzeigen", check);
 
   if (check) {
     let el = document.getElementById("id_element_tabelle");
@@ -2016,7 +2016,7 @@ function elementTabelle_starre_enden_anzeigen(check: boolean) {
 //---------------------------------------------------------------------------------------------------------------
 function elementTabelle_bettung_anzeigen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
-  console.log("in elementTabelle_bettung_anzeigen", check);
+  // console.log("in elementTabelle_bettung_anzeigen", check);
 
   if (check) {
     let el = document.getElementById("id_element_tabelle");

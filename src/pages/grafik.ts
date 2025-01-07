@@ -517,7 +517,7 @@ export function init_grafik(flag: number) {
 function touchmove(ev: TouchEvent) {
     //--------------------------------------------------------------------------------------------------------
 
-    console.log("in touchmove", ev.touches.length, wheel_factor);
+    // console.log("in touchmove", ev.touches.length, wheel_factor);
     ev.preventDefault();
 
     if (ev.touches.length === 2) {
@@ -531,7 +531,7 @@ function touchmove(ev: TouchEvent) {
 
         mouseDx += x - touchDx
         mouseDz += y - touchDy
-        console.log("finger 1", mouseDx, mouseDz, touchLoop)
+        // console.log("finger 1", mouseDx, mouseDz, touchLoop)
         touchDx = x
         touchDy = y
 
@@ -572,7 +572,7 @@ function touchmove(ev: TouchEvent) {
         if (touchLoop === 1) {
             mouseDx += x - touchDx
             mouseDz += y - touchDy
-            console.log("finger 1", mouseDx, mouseDz, touchLoop)
+            // console.log("finger 1", mouseDx, mouseDz, touchLoop)
             touchDx = x
             touchDy = y
 
@@ -613,14 +613,14 @@ function touchstart(ev: TouchEvent) {
 
     }
 
-    console.log("in touchstart", nFingers);
+    //console.log("in touchstart", nFingers);
 }
 
 //--------------------------------------------------------------------------------------------------------
 function touchend(ev: TouchEvent) {
     //--------------------------------------------------------------------------------------------------------
-    console.log("in touchend", ev.touches.length);
-    write("in touchend " + ev.touches.length);
+    // console.log("in touchend", ev.touches.length);
+    // write("in touchend " + ev.touches.length);
     ev.preventDefault();
     //prevDiff = 0.0
     if (ev.touches.length === 1) {
@@ -682,7 +682,7 @@ function wheel(ev: WheelEvent) {
 function mousedown(ev: any) {
     //----------------------------------------------------------------------------------------------------
 
-    console.log('in mousedown', ev)
+    //console.log('in mousedown', ev)
     ev.preventDefault()
 
     domElement.addEventListener('mousemove', mousemove, false);
@@ -693,21 +693,21 @@ function mousedown(ev: any) {
     mouseDx = 0.0
     mouseDz = 0.0
 
-    console.log("mouse_DownWX", mouse_DownWX, mouse_DownWY)
+    //console.log("mouse_DownWX", mouse_DownWX, mouse_DownWY)
 }
 
 //--------------------------------------------------------------------------------------------------------
 function mousemove(ev: MouseEvent) {
     //----------------------------------------------------------------------------------------------------
 
-    console.log('**********************************')
-    console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY)
-    console.log('**********************************')
+    // console.log('**********************************')
+    // console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY)
+    // console.log('**********************************')
 
     ev.preventDefault()
 
 
-    console.log("word", tr.xWorld(ev.offsetX), tr.zWorld(ev.offsetY))
+    // console.log("word", tr.xWorld(ev.offsetX), tr.zWorld(ev.offsetY))
 
     mouseDx += ev.offsetX - mouseOffsetX
     mouseDz += ev.offsetY - mouseOffsetY
@@ -722,7 +722,7 @@ function mousemove(ev: MouseEvent) {
 function mouseup(ev: any) {
     //----------------------------------------------------------------------------------------------------
 
-    console.log('in mouseup', ev)
+    // console.log('in mouseup', ev)
     ev.preventDefault()
 
     domElement.removeEventListener('mousemove', mousemove, false);
