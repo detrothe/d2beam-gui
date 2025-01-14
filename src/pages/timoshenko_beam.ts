@@ -4,7 +4,8 @@ import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
     nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung, P_delta,
     stadyn, eigenform_dyn, stabvorverformung_komb,
-    R_internal
+    R_internal,
+    matprop_flag
 } from "./rechnen"
 
 import { BubbleSort } from "./lib"
@@ -120,6 +121,11 @@ export class CTimoshenko_beam extends CElement {
         console.log("Ich bin ein Timoshenko Element , No ", ielem)
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    reset_element(): void {   // zu Beginn jeder Kombination aufrufen
+        this.normalkraft = 0.0
+    }
 
     //---------------------------------------------------------------------------------------------
     setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number,
@@ -1798,7 +1804,7 @@ export class CTimoshenko_beam extends CElement {
 
                 // normale Elementlasten hinzufügen
 
-                if (THIIO_flag === 0) {
+                if (THIIO_flag === 0 && matprop_flag === 0) {
 
                     for (let ieload = 0; ieload < neloads; ieload++) {
                         if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === iLastf)) {
@@ -2040,7 +2046,7 @@ export class CTimoshenko_beam extends CElement {
                     this.bettung_[iLastf][iteil] = 0.0
 
                 }
-                else if (THIIO_flag === 1) { // ikomb=iLastf
+                else if (THIIO_flag === 1 || matprop_flag > 0) { // ikomb=iLastf
 
                     for (let ieload = 0; ieload < neloads; ieload++) {
 
@@ -2325,7 +2331,7 @@ export class CTimoshenko_beam extends CElement {
     //---------------------------------------------------------------------------------------------
     get_elementSchnittgroesse_Moment(Mx: number[], iLastf: number) {
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++)  Mx[i] = this.M_[iLastf][i]
 
@@ -2341,7 +2347,7 @@ export class CTimoshenko_beam extends CElement {
     get_elementSchnittgroesse_Querkraft(Vx: number[], iLastf: number, use_gleichgewichtSG: boolean) {
 
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++)  Vx[i] = this.V_[iLastf][i]
 
@@ -2361,7 +2367,7 @@ export class CTimoshenko_beam extends CElement {
     get_elementSchnittgroesse_Normalkraft(Nx: number[], iLastf: number, use_gleichgewichtSG: boolean) {
 
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++)  Nx[i] = this.N_[iLastf][i]
 
@@ -2382,7 +2388,7 @@ export class CTimoshenko_beam extends CElement {
     get_elementSchnittgroesse_bettung(bettung: number[], iLastf: number) {
 
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++)  bettung[i] = this.bettung_[iLastf][i]
 
@@ -2399,7 +2405,7 @@ export class CTimoshenko_beam extends CElement {
     get_elementSchnittgroesse_u_w_phi(ux: number[], wx: number[], phix: number[], iLastf: number, gesamt: boolean) {
 
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++) {
                     ux[i] = this.u_[iLastf][i]

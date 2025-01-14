@@ -430,7 +430,7 @@ export function init_grafik(flag: number) {
     }
     draw_dyn_eigenform = 1
 
-    if (THIIO_flag === 0) {
+    if (THIIO_flag === 0 && matprop_flag === 0) {
 
         let option: any
         for (let i = 0; i < nlastfaelle; i++) {
@@ -479,7 +479,7 @@ export function init_grafik(flag: number) {
             }
         }
 
-    } else if (THIIO_flag === 1) {
+    } else if (THIIO_flag === 1 || matprop_flag > 0) {
 
         el_select_dyn_eigv.style.display = "none"
 
@@ -996,7 +996,7 @@ export function drawsystem(svg_id = 'artboard') {
         let iLastfall = draw_lastfall
         let scalefactor = 0
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastfall <= nlastfaelle) {
                 lf_index = iLastfall - 1
                 if (maxValue_lf[iLastfall - 1].disp != 0.0) scalefactor = 0.1 * slmax / maxValue_lf[iLastfall - 1].disp * 1000.
@@ -1010,7 +1010,7 @@ export function drawsystem(svg_id = 'artboard') {
                 scalefactor = 0.1 * slmax / maxdisp_all
             }
         }
-        else if (THIIO_flag === 1) {
+        else if (THIIO_flag === 1 || matprop_flag > 0) {
             if (iLastfall <= nkombinationen) {
                 lf_index = iLastfall - 1
                 if (maxValue_komb[iLastfall - 1].disp != 0.0) scalefactor = 0.1 * slmax / maxValue_komb[iLastfall - 1].disp * 1000.
@@ -1571,7 +1571,7 @@ export function drawsystem(svg_id = 'artboard') {
                 else if (show_querkraftlinien) { index_sg = 1; max_all = maxV_all; }
                 else if (show_normalkraftlinien) { index_sg = 2; max_all = maxN_all; }
 
-                if (THIIO_flag === 0) {
+                if (THIIO_flag === 0 && matprop_flag === 0) {
                     if (iLastfall <= nlastfaelle) {
                         lf_index = iLastfall - 1
                         if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_lf[lf_index].My;
@@ -1590,7 +1590,7 @@ export function drawsystem(svg_id = 'artboard') {
                         scalefactor = 0.05 * slmax / max_all
                     }
                 }
-                else if (THIIO_flag === 1) {
+                else if (THIIO_flag === 1 || matprop_flag > 0) {
                     if (iLastfall <= nkombinationen) {
                         lf_index = iLastfall - 1
                         if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].My;
@@ -3195,7 +3195,7 @@ function draw_lagerkraefte(two: Two) {
         let wert = 0.0
         if (node[i].L_org[0] === 1 || node[i].kx > 0.0) {      // horizontales Lager
 
-            if (THIIO_flag === 0) {
+            if (THIIO_flag === 0 && matprop_flag === 0) {
                 if (draw_lastfall <= nlastfaelle) {
                     wert = lagerkraefte._(i, 0, draw_lastfall - 1)
                 } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
@@ -3224,7 +3224,7 @@ function draw_lagerkraefte(two: Two) {
         }
 
         if (node[i].L_org[1] === 1 || node[i].kz > 0.0) {      // vertikales Lager
-            if (THIIO_flag === 0) {
+            if (THIIO_flag === 0  && matprop_flag === 0) {
                 if (draw_lastfall <= nlastfaelle) {
                     wert = lagerkraefte._(i, 1, draw_lastfall - 1)
                 } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
@@ -3257,7 +3257,7 @@ function draw_lagerkraefte(two: Two) {
         if (System === STABWERK) {
             if (node[i].L_org[2] === 1 || node[i].kphi > 0.0) {      // Einspannung
 
-                if (THIIO_flag === 0) {
+                if (THIIO_flag === 0  && matprop_flag === 0) {
                     if (draw_lastfall <= nlastfaelle) {
                         wert = lagerkraefte._(i, 2, draw_lastfall - 1)
                     } else if (draw_lastfall <= nlastfaelle + nkombinationen) {

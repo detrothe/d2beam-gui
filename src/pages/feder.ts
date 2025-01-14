@@ -3,7 +3,8 @@ import { CElement } from "./element"
 
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
-    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung, R_internal
+    nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung, R_internal,
+    matprop_flag
 } from "./rechnen"
 
 import { BubbleSort } from "./lib"
@@ -140,7 +141,7 @@ export class CSpring extends CElement {
 
         // normale Elementlasten hinzufügen
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
 
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastf)) {
@@ -150,7 +151,7 @@ export class CSpring extends CElement {
                 }
             }
         }
-        else if (THIIO_flag === 1) { // ikomb=iLastf
+        else if (THIIO_flag === 1 || matprop_flag > 0) { // ikomb=iLastf
 
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if (eload[ieload].element === ielem) {

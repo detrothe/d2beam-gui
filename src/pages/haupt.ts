@@ -78,7 +78,7 @@ import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 //import { Children } from "two.js/src/children";
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 7-Januar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.0,a, 14-Januar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;

@@ -149,6 +149,18 @@ export class CKoppelfeder extends CElement {
     }
 
 
+    //---------------------------------------------------------------------------------------------
+    reset_element(): void {   // zu Beginn jeder Kombination aufrufen
+
+        this.kx_tang = this.kx
+        this.kz_tang = this.kz
+        this.kphi_tang = this.kphi
+
+        this.kx_is_plastic = false
+        this.kz_is_plastic = false
+        this.kphi_is_plastic = false
+    }
+
     // //---------------------------------------------------------------------------------------------
     // setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number,
     //     height: number, zso: number, alphaT: number) {
@@ -1161,7 +1173,7 @@ export class CKoppelfeder extends CElement {
 
         //console.log("ETA", eta)
 
-        if (THIIO_flag === 0) {      // Theorie I. Ordnung
+        if (THIIO_flag === 0 && matprop_flag === 0) {      // Theorie I. Ordnung
             for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i]
         }
         else {      // Theorie II. Ordnung
@@ -1248,7 +1260,7 @@ export class CKoppelfeder extends CElement {
 
             }
 
-            if (THIIO_flag === 0) {
+            if (THIIO_flag === 0 && matprop_flag === 0) {
 
                 Nx = this.FL[3 * iteil]
                 Vx = this.FL[3 * iteil + 1]
@@ -1273,7 +1285,7 @@ export class CKoppelfeder extends CElement {
                 this.phi_[iLastf][iteil] = phix
 
             }
-            else if (THIIO_flag === 1) { // ikomb=iLastf
+            else if (THIIO_flag === 1  || matprop_flag > 0) { // ikomb=iLastf
 
 
                 Nx = this.FL[3 * iteil]
@@ -1309,7 +1321,7 @@ export class CKoppelfeder extends CElement {
     //---------------------------------------------------------------------------------------------
     get_elementSchnittgroesse_Moment(Mx: number[], iLastf: number) {
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++)  Mx[i] = this.M_[iLastf][i]
 
@@ -1325,7 +1337,7 @@ export class CKoppelfeder extends CElement {
     get_elementSchnittgroesse_Querkraft(Vx: number[], iLastf: number, use_gleichgewichtSG: boolean) {
 
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++)  Vx[i] = this.V_[iLastf][i]
 
@@ -1345,7 +1357,7 @@ export class CKoppelfeder extends CElement {
     get_elementSchnittgroesse_Normalkraft(Nx: number[], iLastf: number, use_gleichgewichtSG: boolean) {
 
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++)  Nx[i] = this.N_[iLastf][i]
 
@@ -1365,7 +1377,7 @@ export class CKoppelfeder extends CElement {
     get_elementSchnittgroesse_u_w_phi(ux: number[], wx: number[], phix: number[], iLastf: number, gesamt: boolean) {
 
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++) {
                     ux[i] = this.u_[iLastf][i]

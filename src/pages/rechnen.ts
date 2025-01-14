@@ -2657,6 +2657,12 @@ async function calculate() {
                 pg.fill(0.0)
                 u_last.fill(0.0);
 
+                for (ielem = 0; ielem < nelemTotal; ielem++) {
+                    if (el[ielem].isActive) {
+                        el[ielem].reset_element();
+                    }
+                }
+
                 console.log("\n***************  K O M B I N A T I O N ", iKomb, "\n\n")
                 write("\n***************  K O M B I N A T I O N   " + iKomb + "\n")
 
@@ -4180,6 +4186,11 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
         R_last.fill(0.0)
         u_gesamt.fill(0.0)
 
+        for (ielem = 0; ielem < nelemTotal; ielem++) {
+            if (el[ielem].isActive) {
+                el[ielem].reset_element();
+            }
+        }
 
         console.log("\n***************  K O M B I N A T I O N ", iKomb, "\n\n")
         write("\n***************  K O M B I N A T I O N   " + iKomb + "\n")

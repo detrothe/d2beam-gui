@@ -39,9 +39,10 @@ export class CElement {
         console.log("class element: berechneInterneKraefte", ielem, iLastf, iter, u[0])
     }
 
-    berechneLagerkraefte() {
+    berechneLagerkraefte() { }
 
-    }
+    reset_element() { }
+
     berechneElementlasten(ieload: number) {
         console.log("class element: berechneElementlasten von ", ieload)
     }
