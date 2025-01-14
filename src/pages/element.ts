@@ -74,6 +74,8 @@ export class CElement {
     get_elementSchnittgroesse_Normalkraft(Nx: number[], iLastf: number, use_gleichgewichtSG: boolean) {
         console.log("class element: get_elementSchnittgroesse_Normalkraft", iLastf, Nx[0], use_gleichgewichtSG)
     }
+
+    get_elementSchnittgroesse_bettung(_press:number[], _lf_index:number){}
 }
 
 
