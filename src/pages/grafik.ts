@@ -2915,7 +2915,7 @@ function draw_knotenkraefte(two: Two) {
 
     let iLastfall = draw_lastfall
 
-    if (THIIO_flag === 0) {
+    if (THIIO_flag === 0 && matprop_flag === 0) {
         if (iLastfall <= nlastfaelle) {
             //lf_index = iLastfall - 1
             nLoop = 1
@@ -2942,7 +2942,7 @@ function draw_knotenkraefte(two: Two) {
             nLoop = 0
         }
     }
-    else if (THIIO_flag === 1) {
+    else if (THIIO_flag === 1  || matprop_flag > 0) {
 
         if (iLastfall <= nkombinationen) {
             //lf_index = iLastfall - 1
@@ -2975,10 +2975,10 @@ function draw_knotenkraefte(two: Two) {
             let x = node[inode].x;
             let z = node[inode].z;
             //console.log("load[i]", i, load)
-            if (load[i].p[0] != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
+            if (load[i].Px != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
                 //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
 
-                wert = load[i].p[0] * fact[iLoop]
+                wert = load[i].Px * fact[iLoop]
                 if (wert > 0.0) {
                     draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
                 } else {
@@ -2991,10 +2991,10 @@ function draw_knotenkraefte(two: Two) {
                 txt.alignment = 'left'
                 txt.baseline = 'top'
             }
-            if (load[i].p[1] != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
+            if (load[i].Pz != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
                 //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
 
-                wert = load[i].p[1] * fact[iLoop]
+                wert = load[i].Pz * fact[iLoop]
                 if (wert > 0.0) {
                     draw_arrow(two, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
                 } else {
