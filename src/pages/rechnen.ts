@@ -19,6 +19,7 @@ import { init_grafik, drawsystem, init_two } from "./grafik";
 import { show_controller_THIIO, show_controller_bettung, show_controller_results, show_controller_truss } from "./mypanelgui"
 import { ausgabe, ausgabe_kombinationen_Th_I_O, dyn_ausgabe } from "./ausgabe"
 import { AlertDialog } from "../pages/confirm_dialog";
+import { SlCheckbox } from "@shoelace-style/shoelace";
 
 // import { read_daten } from "./dateien"
 
@@ -379,8 +380,13 @@ export function setSystem(system: number) {
     //-----------------------------------------------------------------------------------------------------------
     System = system;
 
-    if (system === 0) show_controller_truss(true);
-    else show_controller_truss(false);
+    if (system === 0) {
+        show_controller_truss(true);
+        showColumnsForStabwerk();
+    } else {
+        show_controller_truss(false);
+        hideColumnsForFachwerk();
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -390,7 +396,7 @@ export function hideColumnsForFachwerk() {
     let el = document.getElementById("id_knoten_tabelle");
     el?.setAttribute("hide_column", String(5));
     el = document.getElementById("id_element_tabelle");
-    for (let i = 5; i <= 12; i++)el?.setAttribute("hide_column", String(i));
+    for (let i = 5; i <= 13; i++)el?.setAttribute("hide_column", String(i));
     el?.setAttribute("hide_column", String(2));
     el = document.getElementById("id_knotenlasten_tabelle");
     el?.setAttribute("hide_column", String(5));
@@ -400,6 +406,12 @@ export function hideColumnsForFachwerk() {
     el = document.getElementById("id_nnodedisps_tabelle");
     el?.setAttribute("hide_column", String(5));
 
+    const checkbox_gelenk = document.getElementById("id_gelenke_anzeigen") as SlCheckbox;
+    checkbox_gelenk.disabled = true;
+    const checkbox_bettung = document.getElementById("id_bettung_anzeigen") as SlCheckbox;
+    checkbox_bettung.disabled = true;
+    const checkbox_starr = document.getElementById("id_starre_enden_anzeigen") as SlCheckbox;
+    checkbox_starr.disabled = true;
 }
 //---------------------------------------------------------------------------------------------------------------
 export function showColumnsForStabwerk() {
@@ -408,7 +420,7 @@ export function showColumnsForStabwerk() {
     let el = document.getElementById("id_knoten_tabelle");
     el?.setAttribute("show_column", String(5));
     el = document.getElementById("id_element_tabelle");
-    for (let i = 12; i >= 5; i--)el?.setAttribute("show_column", String(i));
+    for (let i = 13; i >= 5; i--)el?.setAttribute("show_column", String(i));
     el?.setAttribute("show_column", String(2));
     el = document.getElementById("id_knotenlasten_tabelle");
     el?.setAttribute("show_column", String(5));
@@ -418,7 +430,14 @@ export function showColumnsForStabwerk() {
     el = document.getElementById("id_nnodedisps_tabelle");
     el?.setAttribute("show_column", String(5));
 
+    const checkbox_gelenk = document.getElementById("id_gelenke_anzeigen") as SlCheckbox;
+    checkbox_gelenk.disabled = false;
+    const checkbox_bettung = document.getElementById("id_bettung_anzeigen") as SlCheckbox;
+    checkbox_bettung.disabled = false;
+    const checkbox_starr = document.getElementById("id_starre_enden_anzeigen") as SlCheckbox;
+    checkbox_starr.disabled = false;
 }
+
 
 //---------------------------------------------------------------------------------------------------------------
 export function incr_neq() {
