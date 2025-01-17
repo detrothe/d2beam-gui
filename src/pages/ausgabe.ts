@@ -67,7 +67,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
     tag = document.createElement("p"); // <p></p>
     text = document.createTextNode("xxx");
     tag.appendChild(text);
-    tag.innerHTML = "<b>Knotenverformungen</b>"
+    tag.innerHTML = "<b>Knotenverformungen</b> im Knoten-Koordinatensystem"
 
     newDiv?.appendChild(tag);
 
@@ -90,13 +90,13 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         row.appendChild(th0);
         // @ts-ignore
         const th1 = table.tHead.appendChild(document.createElement("th"));
-        th1.innerHTML = "u &nbsp; [mm]";
+        th1.innerHTML = "u' &nbsp; [mm]";
         th1.title = "Verschiebung u, positiv in positiver x-Richtung"
         th1.setAttribute("class", "table_cell_center");
         row.appendChild(th1);
         // @ts-ignore
         const th2 = table.tHead.appendChild(document.createElement("th"));
-        th2.innerHTML = "w &nbsp; [mm]";
+        th2.innerHTML = "w' &nbsp; [mm]";
         th2.title = "Verschiebung w, positiv in positiver z-Richtung"
         th2.setAttribute("class", "table_cell_center");
         row.appendChild(th2);
@@ -143,7 +143,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Lagerreaktionen</b>"
+        tag.innerHTML = "<b>Lagerreaktionen</b> im Knoten-Koordinatensystem"
 
         newDiv?.appendChild(tag);
 
@@ -165,13 +165,13 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         row.appendChild(th0);
         // @ts-ignore
         const th1 = table.tHead.appendChild(document.createElement("th"));
-        th1.innerHTML = "A<sub>x</sub>&nbsp;[kN]";
+        th1.innerHTML = "A<sub>x'</sub>&nbsp;[kN]";
         th1.title = "Auflagerkraft Ax, positiv in negativer x-Richtung"
         th1.setAttribute("class", "table_cell_center");
         row.appendChild(th1);
         // @ts-ignore
         const th2 = table.tHead.appendChild(document.createElement("th"));
-        th2.innerHTML = "A<sub>z</sub>&nbsp;[kN]";
+        th2.innerHTML = "A<sub>z'</sub>&nbsp;[kN]";
         th2.title = "Auflagerkraft Az, positiv in negativer z-Richtung"
         th2.setAttribute("class", "table_cell_center");
         row.appendChild(th2);
@@ -871,7 +871,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Knotenverformungen</b>"
+        tag.innerHTML = "<b>Knotenverformungen</b> im Knoten-Koordinatensystem"
 
         newDiv?.appendChild(tag);
 
@@ -894,13 +894,13 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
             row.appendChild(th0);
             // @ts-ignore
             const th1 = table.tHead.appendChild(document.createElement("th"));
-            th1.innerHTML = "u &nbsp; [mm]";
+            th1.innerHTML = "u' &nbsp; [mm]";
             th1.title = "Verschiebung u, positiv in positiver x-Richtung"
             th1.setAttribute("class", "table_cell_center_kombi");
             row.appendChild(th1);
             // @ts-ignore
             const th2 = table.tHead.appendChild(document.createElement("th"));
-            th2.innerHTML = "w &nbsp; [mm]";
+            th2.innerHTML = "w' &nbsp; [mm]";
             th2.title = "Verschiebung w, positiv in positiver z-Richtung"
             th2.setAttribute("class", "table_cell_center_kombi");
             row.appendChild(th2);
@@ -949,7 +949,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
             tag = document.createElement("p"); // <p></p>
             text = document.createTextNode("xxx");
             tag.appendChild(text);
-            tag.innerHTML = "<b>Lagerreaktionen</b>"
+            tag.innerHTML = "<b>Lagerreaktionen</b> im Knoten-Koordinatensystem"
 
             newDiv?.appendChild(tag);
 
@@ -971,13 +971,13 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
             row.appendChild(th0);
             // @ts-ignore
             const th1 = table.tHead.appendChild(document.createElement("th"));
-            th1.innerHTML = "A<sub>x</sub>&nbsp;[kN]";
+            th1.innerHTML = "A<sub>x'</sub>&nbsp;[kN]";
             th1.title = "Auflagerkraft Ax, positiv in negativer x-Richtung"
             th1.setAttribute("class", "table_cell_center_kombi");
             row.appendChild(th1);
             // @ts-ignore
             const th2 = table.tHead.appendChild(document.createElement("th"));
-            th2.innerHTML = "A<sub>z</sub>&nbsp;[kN]";
+            th2.innerHTML = "A<sub>z'</sub>&nbsp;[kN]";
             th2.title = "Auflagerkraft Az, positiv in negativer z-Richtung"
             th2.setAttribute("class", "table_cell_center_kombi");
             row.appendChild(th2);

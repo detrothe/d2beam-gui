@@ -3539,7 +3539,9 @@ function berechne_kombinationen() {
                         ug += el[ielem].u_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                         wg += el[ielem].w_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                         phi += el[ielem].phi_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
-                        if (ielem < nelem_Balken) press += el[ielem].bettung_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                        if (System === 0) {
+                            if (ielem < nelem_Balken) press += el[ielem].bettung_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall];
+                        }
                         //console.log("mom...", iteil, iLastfall, mom, quer, norm)
                     }
 
@@ -3556,7 +3558,9 @@ function berechne_kombinationen() {
                     el[ielem].u_komb[iKomb][iteil] = ug
                     el[ielem].w_komb[iKomb][iteil] = wg
                     el[ielem].phi_komb[iKomb][iteil] = phi
-                    if (ielem < nelem_Balken) el[ielem].bettung_komb[iKomb][iteil] = press
+                    if (System === 0) {
+                        if (ielem < nelem_Balken) el[ielem].bettung_komb[iKomb][iteil] = press
+                    }
 
                     max_S_kombi[0][iKomb] = Math.max(Math.abs(mom), max_S_kombi[0][iKomb])
                     max_S_kombi[1][iKomb] = Math.max(Math.abs(quer), max_S_kombi[1][iKomb])

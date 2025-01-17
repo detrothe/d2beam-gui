@@ -11,7 +11,7 @@ import { fontBold } from "../fonts/FreeSans-bold.js";
 import htmlToPdfmake from "html-to-pdfmake";
 //import { tabQWerte, schnittgroesse, bezugswerte } from "./duennQ"
 
-import { nnodes, nelem, System, stadyn, nnodalMass, nodalmass, dyn_neigv, dyn_omega, eigenform_print, nelem_koppelfedern, nelem_Balken, nelem_Balken_Bettung } from "./rechnen";
+import { nnodes, nelem, System, stadyn, nnodalMass, nodalmass, dyn_neigv, dyn_omega, eigenform_print, nelem_koppelfedern, nelem_Balken, nelem_Balken_Bettung, matprop_flag } from "./rechnen";
 import {
   el,
   element as stab,
@@ -1090,8 +1090,8 @@ export async function my_jspdf() {
         yy = neueZeile(yy, fs1, 1);
         let el_table = new pdf_table(doc, links, [20, 20, 20, 20]);
         el_table.htmlText("Node No", 0, "left", yy);
-        el_table.htmlText("u [mm]", 1, "center", yy);
-        el_table.htmlText("w [mm]", 2, "center", yy);
+        el_table.htmlText("u' [mm]", 1, "center", yy);
+        el_table.htmlText("w' [mm]", 2, "center", yy);
         if (System === 0) el_table.htmlText("φ [mrad]", 3, "center", yy);
 
         doc.setFontSize(fs);
@@ -1120,8 +1120,8 @@ export async function my_jspdf() {
         yy = neueZeile(yy, fs1, 1);
         let el_table = new pdf_table(doc, links, [20, 20, 20, 20]);
         el_table.htmlText("Node No", 0, "left", yy);
-        el_table.htmlText("A<sub>x</sub> [kN]", 1, "center", yy);
-        el_table.htmlText("A<sub>z</sub> [kN]", 2, "center", yy);
+        el_table.htmlText("A<sub>x'</sub> [kN]", 1, "center", yy);
+        el_table.htmlText("A<sub>z'</sub> [kN]", 2, "center", yy);
         if (System === 0) el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
 
         doc.setFontSize(fs);
@@ -1325,7 +1325,7 @@ export async function my_jspdf() {
     // Kombinationen bei Theorie I. Ordnung    *
     //******************************************
 
-    if (THIIO_flag === 0 && nkombinationen > 0) {
+    if (THIIO_flag === 0 && matprop_flag === 0 && nkombinationen > 0) {
 
       for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
         text = "Kombination " + iKomb;
@@ -1352,8 +1352,8 @@ export async function my_jspdf() {
           yy = neueZeile(yy, fs1, 1);
           let el_table = new pdf_table(doc, links, [20, 20, 20, 20]);
           el_table.htmlText("Node No", 0, "left", yy);
-          el_table.htmlText("u [mm]", 1, "center", yy);
-          el_table.htmlText("w [mm]", 2, "center", yy);
+          el_table.htmlText("u' [mm]", 1, "center", yy);
+          el_table.htmlText("w' [mm]", 2, "center", yy);
           if (System === 0) el_table.htmlText("φ [mrad]", 3, "center", yy);
 
           doc.setFontSize(fs);
@@ -1382,8 +1382,8 @@ export async function my_jspdf() {
           yy = neueZeile(yy, fs1, 1);
           let el_table = new pdf_table(doc, links, [20, 20, 20, 20]);
           el_table.htmlText("Node No", 0, "left", yy);
-          el_table.htmlText("A<sub>x</sub> [kN]", 1, "center", yy);
-          el_table.htmlText("A<sub>z</sub> [kN]", 2, "center", yy);
+          el_table.htmlText("A<sub>x'</sub> [kN]", 1, "center", yy);
+          el_table.htmlText("A<sub>z'</sub> [kN]", 2, "center", yy);
           if (System === 0) el_table.htmlText("M<sub>y</sub> [kNm]", 3, "center", yy);
 
           doc.setFontSize(fs);
