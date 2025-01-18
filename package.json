@@ -1,53 +1,53 @@
 {
-  "name": "pwa-d2beam",
-  "version": "1.0",
+  "author": "",
+  "dependencies": {
+    "@shoelace-style/shoelace": "2.19.1",
+    "@thepassle/app-tools": "0.9.12",
+    "@types/emscripten": "1.39.13",
+    "@types/html-to-pdfmake": "2.4.4",
+    "file-saver": "2.0.5",
+    "html-to-pdfmake": "2.5.20",
+    "jspdf": "2.5.2",
+    "lit": "3.2.1",
+    "npm-check-updates": "17.1.14",
+    "tweakpane": "4.0.5",
+    "two.js": "0.8.15",
+    "urlpattern-polyfill": "10.0.0",
+    "workbox-build": "7.3.0",
+    "workbox-core": "7.3.0",
+    "workbox-precaching": "7.3.0"
+  },
   "description": "A 2D beam analysis PWA",
+  "devDependencies": {
+    "@tweakpane/core": "2.0.5",
+    "@types/file-saver": "2.0.7",
+    "lil-gui": "0.20.0",
+    "typescript": "5.7.3",
+    "vite": "6.0.7",
+    "vite-plugin-pwa": "0.21.1",
+    "vite-plugin-static-copy": "2.2.0"
+  },
+  "license": "ISC",
   "main": "index.js",
+  "name": "pwa-d2beam",
+  "prettier": {
+    "bracketSpacing": true,
+    "endOfLine": "crlf",
+    "quoteProps": "consistent",
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 3,
+    "trailingComma": "es5",
+    "useTabs": false
+  },
   "scripts": {
-    "dev-server": "vite --open --host",
-    "dev": "npm run dev-server",
-    "dev-task": "vite",
-    "deploy": " npx @azure/static-web-apps-cli login --no-use-keychain && npx @azure/static-web-apps-cli deploy",
     "build": "tsc && vite build",
+    "deploy": " npx @azure/static-web-apps-cli login --no-use-keychain && npx @azure/static-web-apps-cli deploy",
+    "dev": "npm run dev-server",
+    "dev-server": "vite --open --host",
+    "dev-task": "vite",
     "start": "npm run dev",
     "start-remote": "vite --host"
   },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@shoelace-style/shoelace": "2.12.0",
-    "@thepassle/app-tools": "^0.9.10",
-    "@types/emscripten": "^1.39.10",
-    "@types/html-to-pdfmake": "^2.4.4",
-    "file-saver": "^2.0.5",
-    "html-to-pdfmake": "^2.5.1",
-    "jspdf": "^2.5.1",
-    "lit": "^3.1.0",
-    "npm-check-updates": "^16.14.11",
-    "tweakpane": "^4.0.1",
-    "two.js": "0.8.12",
-    "urlpattern-polyfill": "^9.0.0",
-    "workbox-build": "^7.0.0",
-    "workbox-core": "^7.0.0",
-    "workbox-precaching": "^7.0.0"
-  },
-  "devDependencies": {
-    "@tweakpane/core": "^2.0.1",
-    "@types/file-saver": "^2.0.7",
-    "lil-gui": "^0.19.1",
-    "typescript": "^5.3.3",
-    "vite": "^5.0.7",
-    "vite-plugin-pwa": "^0.17.4",
-    "vite-plugin-static-copy": "0.17.1"
-  },
-  "prettier": {
-    "tabWidth": 3,
-    "useTabs": false,
-    "semi": true,
-    "singleQuote": true,
-    "quoteProps": "consistent",
-    "trailingComma": "es5",
-    "endOfLine": "crlf",
-    "bracketSpacing": true
-  }
+  "version": "1.0"
 }
