@@ -470,7 +470,7 @@ portrait.addEventListener("change", function (e) {
                   0 oder leere Zelle = frei beweglich<br />
                   > 1 = Federsteifigkeit in kN/m bzw. kNm/rad<br />
                   <br />
-                  Drehung des Lagers im Gegenuhrzeigersinn positiv<br /><br />
+                  Drehung des Knotens (Lagers) im Gegenuhrzeigersinn positiv<br /><br />
                 </p>
                 <p>
                   Anzahl Knoten:
