@@ -398,7 +398,7 @@
   /* Line heights */
   --sl-line-height-denser: 1;
   --sl-line-height-dense: 1.4;
-  --sl-line-height-normal: 1.8;
+  --sl-line-height-normal: 1.0;
   --sl-line-height-loose: 2.2;
   --sl-line-height-looser: 2.6;
 
@@ -420,7 +420,7 @@
 
   /* Inputs */
   --sl-input-height-small: 1.875rem; /* 30px */
-  --sl-input-height-medium: 2.5rem; /* 40px */
+  --sl-input-height-medium: 2.0rem; /* 40px */
   --sl-input-height-large: 3.125rem; /* 50px */
 
   --sl-input-background-color: var(--sl-color-neutral-0);
