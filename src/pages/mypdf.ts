@@ -1052,20 +1052,23 @@ export async function my_jspdf() {
 
     let text: string;
     let nLoop = 0;
-    if (THIIO_flag === 0) {
-      // Theorie I.Ordnung
-      nLoop = nlastfaelle;
+    if (THIIO_flag === 0) {      // Theorie I.Ordnung
       doc.text("Berechnung nach Theorie I. Ordnung", links, yy);
     } else {
-      nLoop = nkombinationen;
       doc.text("Berechnung nach Theorie II. Ordnung", links, yy);
     }
     yy = neueZeile(yy, fs, 1);
 
+    if (THIIO_flag === 0 && matprop_flag === 0) {      // Theorie I.Ordnung
+      nLoop = nlastfaelle;
+    } else {
+      nLoop = nkombinationen;
+    }
+
     //console.log("Ausgabe pdf", nLoop, nlastfaelle, nkombinationen);
 
     for (let iLastfall = 1; iLastfall <= nLoop; iLastfall++) {
-      if (THIIO_flag === 0) text = "Lastfall " + iLastfall;
+      if (THIIO_flag === 0 && matprop_flag === 0) text = "Lastfall " + iLastfall;
       else text = "Kombination " + iLastfall;
       console.log("text", links, yy, text);
       doc.setFont("freesans_bold");
@@ -1427,7 +1430,7 @@ export async function my_jspdf() {
             doc.text("Element " + (+ielem + 1), links, yy);
             yy = neueZeile(yy, fs, 1);
 
-            let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 20, 20, 20,25]);
+            let el_table = new pdf_table(doc, links, [20, 20, 20, 20, 20, 20, 20, 25]);
             if (System === 0) {
               el_table.htmlText("x [m]", 0, "center", yy);
               el_table.htmlText("N [kN]", 1, "center", yy);
