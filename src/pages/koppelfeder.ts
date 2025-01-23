@@ -1285,7 +1285,7 @@ export class CKoppelfeder extends CElement {
                 this.phi_[iLastf][iteil] = phix
 
             }
-            else if (THIIO_flag === 1  || matprop_flag > 0) { // ikomb=iLastf
+            else if (THIIO_flag === 1 || matprop_flag > 0) { // ikomb=iLastf
 
 
                 Nx = this.FL[3 * iteil]

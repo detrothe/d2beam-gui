@@ -1640,7 +1640,7 @@ export class CTimoshenko_beam extends CElement {
 
         //console.log("ETA", eta)
 
-        if (THIIO_flag === 0) {      // Theorie I. Ordnung
+        if (THIIO_flag === 0 && matprop_flag === 0) {      // Theorie I. Ordnung
             for (let i = 0; i < 6; i++) edisp[i] = this.edispL[i]
         }
         else {      // Theorie II. Ordnung
@@ -1680,7 +1680,7 @@ export class CTimoshenko_beam extends CElement {
             console.log("k0 > 0, el teilungen", this.nTeilungen)
 
             for (let iteil = 0; iteil < 2; iteil++) {
-                if (THIIO_flag === 0) {
+                if (THIIO_flag === 0 && matprop_flag === 0) {
 
                     Nx = this.FL[3 * iteil]
                     Vx = this.FL[3 * iteil + 1]
@@ -1708,7 +1708,7 @@ export class CTimoshenko_beam extends CElement {
                     this.bettung_[iLastf][iteil] = press
 
                 }
-                else if (THIIO_flag === 1) { // ikomb=iLastf
+                else /*if (THIIO_flag === 1)*/ { // ikomb=iLastf
 
 
                     Nx = this.FL[3 * iteil]

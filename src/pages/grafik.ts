@@ -1067,9 +1067,9 @@ export function drawsystem(svg_id = 'artboard') {
             for (let loop = 0; loop < nLoop; loop++) {
 
                 element[ielem].get_elementSchnittgroesse_u_w_phi(uL, wL, phiL, lf_index + loop, show_gesamtverformung);
-                console.log("uL", uL)
-                console.log("wL", wL)
-                console.log("phiL", phiL)
+                // console.log("uL", uL)
+                // console.log("wL", wL)
+                // console.log("phiL", phiL)
 
                 xx2 = 0.0; zz2 = 0.0
                 for (let i = 0; i < nelTeilungen; i++) {

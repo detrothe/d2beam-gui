@@ -2573,18 +2573,10 @@ async function calculate() {
                 if (nelem_Federn > 0) {                        // Federkraefte in lagerkraft[] Tabelle eintragen
                     for (i = 0; i < nelem_Federn; i++) {
 
-                        let iFeder = i + nelem_Balken
+                        let iFeder = i + nelem_Balken + nelem_koppelfedern
                         console.log("FEDER hängt an Knoten", el[iFeder].nod)
                         nodi = el[iFeder].nod
                         for (let j = 0; j < 3; j++) {
-                            // if (nNodeDisps > 0) {
-                            //     for (let k = 0; k < nNodeDisps; k++) {
-                            //         if (nodeDisp0[k].node === nodi && nodeDisp0[k].lf === iLastfall) {
-                            //             console.log("nodeDisp0Force", k, j, iLastfall, lagerkraft[nodi][j])
-                            //             nodeDisp0Force.set(k, j, iLastfall - 1, -lagerkraft[nodi][j]);
-                            //         }
-                            //     }
-                            // }
                             // Federkräfte in Lagerkraft[] eintragen
                             if (node[nodi].L_org[j] > 1) {
                                 lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iLastfall)
@@ -4316,7 +4308,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
             }
 
 
-            // wenn mindestens eine vorgegebenen Knotenverschiebung im der Kombination vorhanden ist,
+            // wenn mindestens eine vorgegebenen Knotenverschiebung in der Kombination vorhanden ist,
             // dann für diese Freiheitsgrade Zeilen und Spalten bearbeiten
 
             for (let ieload = 0; ieload < neloads; ieload++) {
@@ -4599,18 +4591,10 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
         if (nelem_Federn > 0) {                        // Federkraefte in lagerkraft[] Tabelle eintragen
             for (i = 0; i < nelem_Federn; i++) {
 
-                let iFeder = i + nelem_Balken
+                let iFeder = i + nelem_Balken + nelem_koppelfedern
                 console.log("FEDER hängt an Knoten", el[iFeder].nod)
                 nodi = el[iFeder].nod
                 for (let j = 0; j < 3; j++) {
-                    // if (nNodeDisps > 0) {
-                    //     for (let k = 0; k < nNodeDisps; k++) {
-                    //         if (nodeDisp0[k].node === nodi && nodeDisp0[k].lf === iKomb) {
-                    //             console.log("nodeDisp0Force", k, j, iKomb, lagerkraft[nodi][j])
-                    //             nodeDisp0Force.set(k, j, iKomb - 1, -lagerkraft[nodi][j]);
-                    //         }
-                    //     }
-                    // }
                     if (node[nodi].L_org[j] > 1) lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iKomb);
                 }
             }

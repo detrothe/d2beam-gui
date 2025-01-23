@@ -363,7 +363,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
         for (i = 0; i < nelem_Federn; i++) {
 
-            let iFeder = i + nelem_Balken
+            let iFeder = i + nelem_Balken+nelem_koppelfedern
             let newRow = table.insertRow(-1);
             let newCell, newText
             newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
