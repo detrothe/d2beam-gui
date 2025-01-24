@@ -78,7 +78,7 @@ import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js"
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.1, 23-Januar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.2, 24-Januar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;

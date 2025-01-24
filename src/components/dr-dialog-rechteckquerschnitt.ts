@@ -528,7 +528,7 @@ export class drRechteckQuerSchnitt extends LitElement {
         (shadow?.getElementById("area") as HTMLInputElement).value = String(PROFIL[index][2]);
         (shadow?.getElementById("wichte") as HTMLInputElement).value = String(PROFIL[index][5]);
         (shadow?.getElementById("querdehnzahl") as HTMLInputElement).value = "0.3";
-        (shadow?.getElementById("alpha_t") as HTMLInputElement).value = "1.2e-6";
+        (shadow?.getElementById("alpha_t") as HTMLInputElement).value = "1.2e-5";
         if (achse === 'y') {
           (shadow?.getElementById("traeg_y") as HTMLInputElement).value = String(PROFIL[index][3]);
           (shadow?.getElementById("height") as HTMLInputElement).value = String(Number(PROFIL[index][6]) / 10.);  // h
