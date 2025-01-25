@@ -361,7 +361,7 @@ export class drRechteckQuerSchnitt extends LitElement {
             </tr>
             <tr>
               <td>Temp-Koeffizient &alpha;<sub>T</sub>:</td>
-              <td><input id="alpha_t" type="number" value="1.e-5" /></td>
+              <td><input id="alpha_t" type="text" value="1.e-5" /></td>
               <td>&nbsp;[1/K]</td>
             </tr>
           </tbody>

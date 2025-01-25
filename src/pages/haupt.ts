@@ -78,7 +78,7 @@ import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js"
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.2, 25-Januar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.2.a, 25-Januar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -1338,7 +1338,7 @@ function dialog_closed(e: any) {
     }
     {
       let elem = el?.shadowRoot?.getElementById("emodul") as HTMLInputElement;
-      console.log("emodul=", elem.value);
+      //console.log("emodul=", elem.value);
       const emodul = +elem.value;
       elem = el?.shadowRoot?.getElementById("traeg_y") as HTMLInputElement;
       const Iy = +elem.value;
@@ -1364,7 +1364,8 @@ function dialog_closed(e: any) {
       elem = el?.shadowRoot?.getElementById("zso") as HTMLInputElement;
       const zso = +elem.value;
       elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
-      const alphaT = +elem.value;
+      const alphaT = +elem.value.replace(/,/g, '.');
+      //console.log("dialog_closed",elem.value,alphaT)
 
       //console.log("ALPHA T = ", alphaT);
 
