@@ -473,7 +473,7 @@ export async function my_jspdf() {
       str = myFormat(querschnittset[i].schubfaktor, 0, 3);
       el_table_nodes.htmlText(str, 6, "right", yy, 5);
 
-      str = myFormat(querschnittset[i].alphaT, 1, 2, 1);
+      str = myFormat(querschnittset[i].alphaT, 1, 6, 1);
       el_table_nodes.htmlText(str, 7, "right", yy, 5);
 
       str = myFormat(querschnittset[i].wichte, 1, 2);

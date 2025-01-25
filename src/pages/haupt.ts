@@ -47,7 +47,7 @@ import {
   click_zurueck_grafik,
   reset_controlpanel_grafik,
 } from "./grafik";
-import { set_info, write } from "./utility";
+import { myFormat, set_info, write } from "./utility";
 
 import { my_jspdf } from "./mypdf";
 
@@ -78,7 +78,7 @@ import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js"
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.2, 24-Januar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.2, 25-Januar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -1590,8 +1590,12 @@ export function opendialog(ev: any) {
     elem.value = String(querdehnzahl);
     elem = el?.shadowRoot?.getElementById("zso") as HTMLInputElement;
     elem.value = String(zso);
+    let wert = String(myFormat(Number(alphaT), 1, 6, 1)).replace(/,/g, '.');
     elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
-    elem.value = String(alphaT);
+    // elem.setAttribute('value', String(myFormat(Number(alphaT), 1, 6, 1)));
+    console.log("myformat",alphaT,'|',myFormat(Number(alphaT),1, 6, 1),'|', String(myFormat(Number(alphaT), 1, 6, 1)))
+    //    elem.value = String(alphaT);
+    elem.value = wert
   }
 
   //const el=document.getElementById(id);
