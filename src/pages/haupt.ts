@@ -78,7 +78,7 @@ import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js"
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.3.2.a, 25-Januar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.3.2, 26-Januar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -1339,30 +1339,30 @@ function dialog_closed(e: any) {
     {
       let elem = el?.shadowRoot?.getElementById("emodul") as HTMLInputElement;
       //console.log("emodul=", elem.value);
-      const emodul = +elem.value;
+      const emodul = +elem.value.replace(/,/g, '.');
       elem = el?.shadowRoot?.getElementById("traeg_y") as HTMLInputElement;
-      const Iy = +elem.value;
+      const Iy = +elem.value.replace(/,/g, '.');
       elem = el?.shadowRoot?.getElementById("area") as HTMLInputElement;
-      const area = +elem.value;
+      const area = +elem.value.replace(/,/g, '.');
       elem = el?.shadowRoot?.getElementById("qname") as HTMLInputElement;
-      const qname = elem.value;
+      const qname = elem.value.replace(/,/g, '.');
       elem = el?.shadowRoot?.getElementById("height") as HTMLInputElement;
-      const height = +elem.value;
+      const height = +elem.value.replace(/,/g, '.');
       elem = el?.shadowRoot?.getElementById("width") as HTMLInputElement;
-      const width = +elem.value;
+      const width = +elem.value.replace(/,/g, '.');
       //         elem = el?.shadowRoot?.querySelector('.radio-group-querschnitt') as any;
       elem = el?.shadowRoot?.getElementById("id_defquerschnitt") as any;
       //console.log("defquerschnitt", elem)
-      const defquerschnitt = +elem.value;
+      const defquerschnitt = +elem.value.replace(/,/g, '.');
       //console.log("defquerschnitt", defquerschnitt)
       elem = el?.shadowRoot?.getElementById("schubfaktor") as HTMLInputElement;
-      const schubfaktor = +elem.value;
+      const schubfaktor = +elem.value.replace(/,/g, '.');
       elem = el?.shadowRoot?.getElementById("querdehnzahl") as HTMLInputElement;
-      const querdehnzahl = +elem.value;
+      const querdehnzahl = +elem.value.replace(/,/g, '.');
       elem = el?.shadowRoot?.getElementById("wichte") as HTMLInputElement;
-      const wichte = +elem.value;
+      const wichte = +elem.value.replace(/,/g, '.');
       elem = el?.shadowRoot?.getElementById("zso") as HTMLInputElement;
-      const zso = +elem.value;
+      const zso = +elem.value.replace(/,/g, '.');
       elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
       const alphaT = +elem.value.replace(/,/g, '.');
       //console.log("dialog_closed",elem.value,alphaT)
