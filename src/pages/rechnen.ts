@@ -3808,7 +3808,6 @@ export function show_gleichungssystem(checked: boolean) {
             }
 
             let tbody = table.createTBody();
-            //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
 
             for (let iZeile = 1; iZeile <= el[draw_element].neqe; iZeile++) {
                 let newRow = tbody.insertRow(-1);
@@ -3938,7 +3937,6 @@ export function show_gleichungssystem(checked: boolean) {
                 }
 
                 let tbody = table.createTBody();
-                //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
 
                 for (let iZeile = 1; iZeile <= neq; iZeile++) {
                     let newRow = tbody.insertRow(-1);
@@ -4011,7 +4009,6 @@ export function show_gleichungssystem(checked: boolean) {
                 }
 
                 let tbody = table.createTBody();
-                //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
 
                 for (let iZeile = 1; iZeile <= neq; iZeile++) {
                     let newRow = tbody.insertRow(-1);
@@ -4082,7 +4079,6 @@ export function show_gleichungssystem(checked: boolean) {
                 }
 
                 let tbody = table.createTBody();
-                //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
 
                 for (let iZeile = 1; iZeile <= neq; iZeile++) {
                     let newRow = tbody.insertRow(-1);

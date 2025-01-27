@@ -25,6 +25,10 @@ let currentFilenameSVG = 'd2beam.svg'
 console.log("in grafik")
 let xmin0 = 0, xmax0 = 0, zmin0 = 0, zmax0 = 0
 
+let mouseMoveIsActive = false
+let needMouseMoveForInfo = false
+let zoomIsActive = false
+
 //let two: Two
 let domElement: any = null
 let svgElement: any = null;
@@ -380,6 +384,10 @@ export function init_grafik(flag: number) {
     mouse_DownWX = 0.0
     mouse_DownWY = 0.0
 
+    mouseMoveIsActive = false
+    needMouseMoveForInfo = false
+    zoomIsActive = false
+
     centerX = 0.0
     centerY = 0.0
     centerX_last = 0.0
@@ -685,7 +693,11 @@ function mousedown(ev: any) {
     //console.log('in mousedown', ev)
     ev.preventDefault()
 
-    domElement.addEventListener('mousemove', mousemove, false);
+    if (!mouseMoveIsActive) {
+        domElement.addEventListener('mousemove', mousemove, false);
+        mouseMoveIsActive = true
+    }
+    zoomIsActive = true
 
     mouseOffsetX = ev.offsetX
     mouseOffsetY = ev.offsetY
@@ -709,13 +721,15 @@ function mousemove(ev: MouseEvent) {
 
     // console.log("word", tr.xWorld(ev.offsetX), tr.zWorld(ev.offsetY))
 
-    mouseDx += ev.offsetX - mouseOffsetX
-    mouseDz += ev.offsetY - mouseOffsetY
-    mouseOffsetX = ev.offsetX
-    mouseOffsetY = ev.offsetY
-    centerX = centerX_last + tr.World0(mouseDx)
-    centerY = centerY_last + tr.World0(mouseDz)
-    drawsystem()
+    if (zoomIsActive) {
+        mouseDx += ev.offsetX - mouseOffsetX
+        mouseDz += ev.offsetY - mouseOffsetY
+        mouseOffsetX = ev.offsetX
+        mouseOffsetY = ev.offsetY
+        centerX = centerX_last + tr.World0(mouseDx)
+        centerY = centerY_last + tr.World0(mouseDz)
+        drawsystem()
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -725,7 +739,11 @@ function mouseup(ev: any) {
     // console.log('in mouseup', ev)
     ev.preventDefault()
 
-    domElement.removeEventListener('mousemove', mousemove, false);
+    if (!needMouseMoveForInfo) {
+        domElement.removeEventListener('mousemove', mousemove, false);
+        mouseMoveIsActive = false
+    }
+    zoomIsActive = false
 
     centerX_last = centerX
     centerY_last = centerY
@@ -744,7 +762,9 @@ export function drawsystem(svg_id = 'artboard') {
 
     let height = 0
 
-    if (two) two.clear()
+    if (two) two.clear();
+
+    needMouseMoveForInfo = false
 
     // var params = {
     //     fullscreen: false,
@@ -2942,7 +2962,7 @@ function draw_knotenkraefte(two: Two) {
             nLoop = 0
         }
     }
-    else if (THIIO_flag === 1  || matprop_flag > 0) {
+    else if (THIIO_flag === 1 || matprop_flag > 0) {
 
         if (iLastfall <= nkombinationen) {
             //lf_index = iLastfall - 1
@@ -3224,7 +3244,7 @@ function draw_lagerkraefte(two: Two) {
         }
 
         if (node[i].L_org[1] === 1 || node[i].kz > 0.0) {      // vertikales Lager
-            if (THIIO_flag === 0  && matprop_flag === 0) {
+            if (THIIO_flag === 0 && matprop_flag === 0) {
                 if (draw_lastfall <= nlastfaelle) {
                     wert = lagerkraefte._(i, 1, draw_lastfall - 1)
                 } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
@@ -3257,7 +3277,7 @@ function draw_lagerkraefte(two: Two) {
         if (System === STABWERK) {
             if (node[i].L_org[2] === 1 || node[i].kphi > 0.0) {      // Einspannung
 
-                if (THIIO_flag === 0  && matprop_flag === 0) {
+                if (THIIO_flag === 0 && matprop_flag === 0) {
                     if (draw_lastfall <= nlastfaelle) {
                         wert = lagerkraefte._(i, 2, draw_lastfall - 1)
                     } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
