@@ -49,6 +49,7 @@ let curDiff = 0.0
 let curDiff_alt = 0.0
 let mouse_DownWX = 0.0
 let mouse_DownWY = 0.0
+let view_diagonale = 0.0
 
 let centerX = 0.0
 let centerY = 0.0
@@ -101,6 +102,23 @@ let animate_scale_dx = 0.04;
 let start_animation = false;
 let show_knotenmassen = false;
 
+class TWerte {
+    x = 0.0
+    z = 0.0
+    wert = ''
+    unit = 'mm'
+}
+
+let werte = [] as TWerte[];
+let index_werte = 0
+
+const draw_wert = {
+    found: false,
+    x: 0.0,
+    y: 0.0,
+    wert: ''
+}
+
 let opacity = 0.5
 
 const style_txt = {
@@ -112,6 +130,14 @@ const style_txt = {
     weight: 'normal'
 };
 
+const style_txt_werte = {
+    family: 'system-ui, sans-serif',
+    size: 14,
+    fill: 'green',
+    //opacity: 0.5,
+    //leading: 50
+    weight: 'normal'
+};
 const style_txt_lager = {
     family: 'system-ui, sans-serif',
     size: 14,
@@ -359,6 +385,7 @@ export function init_two(svg_id = 'artboard') {
         domElement.addEventListener('wheel', wheel, { passive: false });
         domElement.addEventListener('mousedown', mousedown, false);
         domElement.addEventListener('mouseup', mouseup, false);
+        domElement.addEventListener('mousemove', mousemove, false);
 
         domElement.addEventListener('touchstart', touchstart, { passive: false });
         domElement.addEventListener('touchmove', touchmove, { passive: false });
@@ -387,6 +414,7 @@ export function init_grafik(flag: number) {
     mouseMoveIsActive = false
     needMouseMoveForInfo = false
     zoomIsActive = false
+    draw_wert.found = false
 
     centerX = 0.0
     centerY = 0.0
@@ -693,10 +721,10 @@ function mousedown(ev: any) {
     //console.log('in mousedown', ev)
     ev.preventDefault()
 
-    if (!mouseMoveIsActive) {
-        domElement.addEventListener('mousemove', mousemove, false);
-        mouseMoveIsActive = true
-    }
+    // if (!mouseMoveIsActive) {
+    //domElement.addEventListener('mousemove', mousemove, false);
+    //     mouseMoveIsActive = true
+    // }
     zoomIsActive = true
 
     mouseOffsetX = ev.offsetX
@@ -730,6 +758,37 @@ function mousemove(ev: MouseEvent) {
         centerY = centerY_last + tr.World0(mouseDz)
         drawsystem()
     }
+    else {
+        if (werte.length > 0) {
+            let index = -1
+            let x0 = ev.offsetX, z0 = ev.offsetY
+            let mind = 1.e30
+            //console.log("werte.length", werte.length,ev.clientX,ev.clientY,tr.xPix(0.0),tr.zPix(0.0))
+            for (let i = 0; i < werte.length; i++) {
+                let dx = x0 - werte[i].x
+                let dz = z0 - werte[i].z
+                let d = dx * dx + dz * dz
+
+                if (d < mind && d < (view_diagonale / 5)**2) {
+                    mind = d
+                    index = i
+                }
+            }
+            if (index > -1) {
+                console.log('gefunden', index, werte[index].wert, mind, view_diagonale/5)
+                draw_wert.found = true
+                draw_wert.x = werte[index].x
+                draw_wert.y = werte[index].z
+                draw_wert.wert = werte[index].wert
+                drawsystem()
+            }
+            else {
+                draw_wert.found = false
+                drawsystem()
+            }
+
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -739,10 +798,10 @@ function mouseup(ev: any) {
     // console.log('in mouseup', ev)
     ev.preventDefault()
 
-    if (!needMouseMoveForInfo) {
-        domElement.removeEventListener('mousemove', mousemove, false);
-        mouseMoveIsActive = false
-    }
+    //if (!needMouseMoveForInfo) {
+    //domElement.removeEventListener('mousemove', mousemove, false);
+    //    mouseMoveIsActive = false
+    // }
     zoomIsActive = false
 
     centerX_last = centerX
@@ -764,7 +823,14 @@ export function drawsystem(svg_id = 'artboard') {
 
     if (two) two.clear();
 
+    // if (mouseMoveIsActive) {
+    //     domElement.removeEventListener('mousemove', mousemove, false);
+    //     mouseMoveIsActive = false
+    // }
     needMouseMoveForInfo = false
+    werte.length = 0
+    index_werte = 0
+
 
     // var params = {
     //     fullscreen: false,
@@ -880,6 +946,8 @@ export function drawsystem(svg_id = 'artboard') {
         two.width = breite = 1500;
         two.height = hoehe = 1500;
     }
+
+    view_diagonale = Math.sqrt(breite * breite + hoehe * hoehe)
 
     show_lasten_temp = show_lasten;    // Bei Schnittgrößen werden Lasten temporär nicht gezeichnet
 
@@ -1015,6 +1083,8 @@ export function drawsystem(svg_id = 'artboard') {
         //let edispL: number[] = new Array(6)
         let iLastfall = draw_lastfall
         let scalefactor = 0
+
+        needMouseMoveForInfo = true
 
         if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastfall <= nlastfaelle) {
@@ -1167,6 +1237,12 @@ export function drawsystem(svg_id = 'artboard') {
                         xmem = tr.xPix(xs1 + x * element[ielem].cosinus)
                         zmem = tr.zPix(zs1 + x * element[ielem].sinus)
                     }
+
+                    werte.push(new TWerte())
+                    werte[index_werte].x = xx2
+                    werte[index_werte].z = zz2
+                    werte[index_werte].wert = myFormat(dispG * 1000, 1, 1) + '|' + myFormat(uG * 1000, 1, 1) + '|' + myFormat(wG * 1000, 1, 1) + 'mm'
+                    index_werte++
 
                     x = x + dx
                 }
@@ -1684,6 +1760,12 @@ export function drawsystem(svg_id = 'artboard') {
                         x3 = xx1   // nur für Bechriftung
                         z3 = zz1
 
+                        werte.push(new TWerte())
+                        werte[index_werte].x = xx1
+                        werte[index_werte].z = zz1
+                        werte[index_werte].wert = myFormat(sgL, 1, 1) + unit
+                        index_werte++
+
                         if (sgL > valueLeftPos) {
                             valueLeftPos = sgL
                             x0_max = xx1
@@ -1780,6 +1862,12 @@ export function drawsystem(svg_id = 'artboard') {
                                 }
                             }
 
+                            werte.push(new TWerte())
+                            werte[index_werte].x = xx2
+                            werte[index_werte].z = zz2
+                            werte[index_werte].wert = myFormat(sgR, 1, 1) + unit
+                            index_werte++
+
                             xx1 = xx2
                             zz1 = zz2
                             sgL = sgR
@@ -1872,6 +1960,7 @@ export function drawsystem(svg_id = 'artboard') {
 
     if (show_systemlinien || !show_selection) {
 
+        needMouseMoveForInfo = true
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -2184,6 +2273,27 @@ export function drawsystem(svg_id = 'artboard') {
         }
     }
 
+    if (draw_wert.found) {      // Beschriftung Verformungen, Zustandslinien über MouseMove
+
+        let rect = two.makeRectangle(draw_wert.x + 60 + 4, draw_wert.y - 7, 120, 20)
+        rect.fill = 'white'
+        rect.stroke = 'white'
+        rect.linewidth = 1
+        //rect.opacity = 0.1
+        let txt = two.makeText(draw_wert.wert, draw_wert.x + 5, draw_wert.y - 5, style_txt_werte)
+        txt.alignment = 'left'
+        txt.baseline = 'middle'
+        // let box = txt.getBoundingClientRect()
+        // console.log('getBoundingClientRect', box.width, box.height)
+        // rect.width = box.width
+        // rect.x = 500
+        //rect.x = draw_wert.x// + 4 + box.width / 2
+        let radius = 4 / devicePixelRatio
+        let kreis = two.makeCircle(draw_wert.x, draw_wert.y, radius, 10)
+        kreis.fill = '#ff0000';
+        draw_wert.found = false
+    }
+
     //console.log("vor update")
 
     // Don’t forget to tell two to draw everything to the screen
@@ -2199,7 +2309,12 @@ export function drawsystem(svg_id = 'artboard') {
     } else {
         two.update();
     }
-
+    // if (svg_id === 'artboard') {
+    //     if (needMouseMoveForInfo) {
+    //         domElement.addEventListener('mousemove', mousemove, false);
+    //         mouseMoveIsActive = true
+    //     }
+    // }
 
     //el = document.querySelector('.footer'); //.getElementById("container")
     //console.log("nach update container footer boundingRect", el?.getBoundingClientRect())
