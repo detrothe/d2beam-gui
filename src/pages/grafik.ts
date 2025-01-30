@@ -769,7 +769,7 @@ function mousemove(ev: MouseEvent) {
                 let dz = z0 - werte[i].z
                 let d = dx * dx + dz * dz
 
-                if (d < mind && d < (view_diagonale / 10)**2) {
+                if (d < mind && d < (view_diagonale / 10) ** 2) {
                     mind = d
                     index = i
                 }
@@ -2284,9 +2284,9 @@ export function drawsystem(svg_id = 'artboard') {
         let txt = two.makeText(draw_wert.wert, draw_wert.x + 5, draw_wert.y - 5, style_txt_werte)
         txt.alignment = 'left'
         txt.baseline = 'middle'
-         let box = txt.getBoundingClientRect()
+        let box = txt.getBoundingClientRect()
         // console.log('getBoundingClientRect', box.width, box.height)
-         rect.width = box.width
+        rect.width = box.width
         // rect.x = 500
         rect.position.x = draw_wert.x + 4 + box.width / 2
         let radius = 4 / devicePixelRatio
@@ -4689,7 +4689,7 @@ function draw_bodenpressung() {
 
     let uG: number, wG: number
     let nLoop = 1, lf_index = 0
-    let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
+    let maxPress = 0.0, x_max = 0.0, z_max = 0.0, dispG: number, maxPressSign = 0.0
     let xmem = 0.0, zmem = 0.0
 
     //let edispL: number[] = new Array(6)
@@ -4730,14 +4730,14 @@ function draw_bodenpressung() {
         if (!stab[ielem].isActive) continue
         if (stab[ielem].k_0 === 0.0) continue
 
-        maxU = 0.0
+        maxPress = 0.0
 
         const nelTeilungen = element[ielem].nTeilungen
         let press: number[] = new Array(nelTeilungen)   // L = Verformung lokal
 
 
-        let umriss_x: number[] = new Array(2 * nelTeilungen)
-        let umriss_z: number[] = new Array(2 * nelTeilungen)
+        // let umriss_x: number[] = new Array(2 * nelTeilungen)
+        // let umriss_z: number[] = new Array(2 * nelTeilungen)
 
 
         let aL = stab[ielem].aL
@@ -4774,8 +4774,8 @@ function draw_bodenpressung() {
 
                 x = element[ielem].x_[i]
 
-                uG = - element[ielem].sinus * press[i]
-                wG = element[ielem].cosinus * press[i]
+                uG = - element[ielem].sinus * press[i] * (-1.0)
+                wG = element[ielem].cosinus * press[i] * (-1.0)
 
                 xx1 = xx2; zz1 = zz2;
                 xx2 = xs1 + x * element[ielem].cosinus + uG * scalefactor
@@ -4789,13 +4789,20 @@ function draw_bodenpressung() {
                 // }
 
                 dispG = Math.sqrt(uG * uG + wG * wG)
-                if (dispG > maxU) {
-                    maxU = dispG
+                if (Math.abs(press[i]) > maxPress) {
+                    maxPress = dispG
+                    maxPressSign = press[i]
                     x_max = xx2
                     z_max = zz2
                     xmem = tr.xPix(xs1 + x * element[ielem].cosinus)
                     zmem = tr.zPix(zs1 + x * element[ielem].sinus)
                 }
+
+                werte.push(new TWerte())
+                werte[index_werte].x = xx2
+                werte[index_werte].z = zz2
+                werte[index_werte].wert = myFormat(press[i], 1, 2) + 'kN/m'
+                index_werte++
 
                 x = x + dx
             }
@@ -4813,13 +4820,14 @@ function draw_bodenpressung() {
 
         }
 
-        if (show_labels && maxU > 0.0) {
+        draw_arrowPix(two, x_max, z_max, xmem, zmem, style_pfeil_pix)
+
+        if (show_labels && maxPress > 0.0) {
 
             //const pfeil = two.makeArrow(xmem, zmem, x_max, z_max, 10)
             //pfeil.stroke = '#111111'     //'#D3D3D3'
-            draw_arrowPix(two, x_max, z_max, xmem, zmem, style_pfeil_pix)
 
-            const str = myFormat(maxU, 1, 1) + 'kN/m'
+            const str = myFormat(maxPressSign, 1, 1) + 'kN/m'
             const txt = two.makeText(str, x_max + 5, z_max, style_txt)
             txt.alignment = 'left'
             txt.baseline = 'bottom'

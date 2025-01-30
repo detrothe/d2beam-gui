@@ -1688,7 +1688,7 @@ export class CTimoshenko_beam extends CElement {
                     ux = this.edispL[3 * iteil]
                     wx = this.edispL[3 * iteil + 1]
                     phix = -this.edispL[3 * iteil + 2]
-                    press = wx * this.k_0
+                    press = -wx * this.k_0
 
                     disp = Math.sqrt(ux * ux + wx * wx) * 1000.0      // in mm
 
@@ -1717,7 +1717,7 @@ export class CTimoshenko_beam extends CElement {
                     ux = this.edispL[3 * iteil]
                     wx = this.edispL[3 * iteil + 1]
                     phix = -this.edispL[3 * iteil + 2]
-                    press = wx * this.k_0
+                    press = -wx * this.k_0
 
                     disp = Math.sqrt(ux * ux + wx * wx) * 1000.0
 
@@ -1735,7 +1735,7 @@ export class CTimoshenko_beam extends CElement {
                     this.w_komb[iLastf][iteil] = wx
                     this.wG_komb[iLastf][iteil] = wxG
                     this.phi_komb[iLastf][iteil] = phix
-                    this.bettung_komb[iLastf][iteil] = wx * this.k_0
+                    this.bettung_komb[iLastf][iteil] = -wx * this.k_0
 
                 }  // ende TH II Ordnung
             }
