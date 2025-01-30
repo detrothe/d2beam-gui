@@ -2353,7 +2353,7 @@ export function drawsystem(svg_id = 'artboard') {
 
 
 //--------------------------------------------------------------------------------------------------------
-function draw_dyn_eigenformen(frameCount: any, timeDelta: any) {
+function draw_dyn_eigenformen(_frameCount: any, _timeDelta: any) {
     //----------------------------------------------------------------------------------------------------
 
     //console.log("frameCount", frameCount, timeDelta)
