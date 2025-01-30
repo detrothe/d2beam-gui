@@ -348,10 +348,10 @@ export class CTimoshenko_beam extends CElement {
         // this.transU[5][5] = 1.0
         // this.transF[5][5] = 1.0
 
-        for (let j = 0; j < 6; j++) {
-            console.log("this.transU", (ielem + 1), this.transU[j])
-            //console.log("this.TfG2L. ielem", (ielem + 1), this.TfG2L[j])
-        }
+        // for (let j = 0; j < 6; j++) {
+        //     console.log("this.transU", (ielem + 1), this.transU[j])
+        //     //console.log("this.TfG2L. ielem", (ielem + 1), this.TfG2L[j])
+        // }
 
         // ind = 5;
         // if (this.gelenk[0] > 0) {
@@ -711,9 +711,9 @@ export class CTimoshenko_beam extends CElement {
         this.emass[5][5] = this.emass[2][2]
 
 
-        for (let j = 0; j < 6; j++) {
-            console.log("this.emass", this.emass[j])
-        }
+        // for (let j = 0; j < 6; j++) {
+        //     console.log("this.emass", this.emass[j])
+        // }
     }
 
     //---------------------------------------------------------------------------------------------
@@ -854,9 +854,9 @@ export class CTimoshenko_beam extends CElement {
             }
         }
 
-        for (j = 0; j < this.neqeG; j++) {
-            console.log("this.emassG", this.emassG[j])
-        }
+        // for (j = 0; j < this.neqeG; j++) {
+        //     console.log("this.emassG", this.emassG[j])
+        // }
     }
 
 

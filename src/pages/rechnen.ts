@@ -2341,9 +2341,9 @@ async function calculate() {
                     }
                 }
 
-                for (j = 0; j < neq; j++) {
-                    console.log('stiff[]', stiff[j])
-                }
+                // for (j = 0; j < neq; j++) {
+                //     console.log('stiff[]', stiff[j])
+                // }
 
                 // Aufstellen der rechte Seite, Einzellasten
 
@@ -2458,7 +2458,7 @@ async function calculate() {
                     if (el[ielem].isActive) {
 
                         force = el[ielem].berechneInterneKraefte(ielem, iLastfall, 0, u);
-                        console.log("force", el[ielem].neqe, force)
+                        //console.log("force", el[ielem].neqe, force)
                         for (i = 0; i < el[ielem].neqe; i++) stabendkraefte.set(i + 1, ielem + 1, iLastfall, force[i]);
 
                         el[ielem].berechneLagerkraefte();
@@ -2489,7 +2489,7 @@ async function calculate() {
                     for (let i = 0; i < neq; i++) {
                         zaehler += (R_[i] - R_internal[i]) ** 2
                         nenner += R_[i] * R_[i]
-                        console.log("R_internal -- ", iLastfall, i, R_[i], R_internal[i], R_[i] - R_internal[i])
+                        //console.log("R_internal -- ", iLastfall, i, R_[i], R_internal[i], R_[i] - R_internal[i])
                     }
                     zaehler = Math.sqrt(zaehler)
                     nenner = Math.sqrt(nenner)
@@ -2542,9 +2542,9 @@ async function calculate() {
 
                 }
 
-                for (i = 0; i < nnodes; i++) {
-                    console.log("lagerkraft", lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
-                }
+                // for (i = 0; i < nnodes; i++) {
+                //     console.log("lagerkraft", lagerkraft[i][0], lagerkraft[i][1], lagerkraft[i][2])
+                // }
 
                 for (i = 0; i < nloads; i++) {                          // Knotenlasten am Knoten abziehen
                     if (load[i].lf === iLastfall) {
@@ -2560,7 +2560,7 @@ async function calculate() {
                         for (let j = 0; j < 3; j++) {
                             if (nodeDisp0[k].dispL[j] && nodeDisp0[k].lf === iLastfall) {
                                 nodi = nodeDisp0[k].node
-                                console.log("~~~~~ nodeDisp0Force", k, j, iLastfall, nodi, lagerkraft[nodi][j])
+                                //console.log("~~~~~ nodeDisp0Force", k, j, iLastfall, nodi, lagerkraft[nodi][j])
                                 nodeDisp0Force.set(k, j, iLastfall - 1, -lagerkraft[nodi][j]);
                                 if (node[nodi].L_org[j] !== 1) lagerkraft[nodi][j] = 0.0   // kein starres Lager
                             }
@@ -2574,7 +2574,7 @@ async function calculate() {
                     for (i = 0; i < nelem_Federn; i++) {
 
                         let iFeder = i + nelem_Balken + nelem_koppelfedern
-                        console.log("FEDER hängt an Knoten", el[iFeder].nod)
+                        //console.log("FEDER hängt an Knoten", el[iFeder].nod)
                         nodi = el[iFeder].nod
                         for (let j = 0; j < 3; j++) {
                             // Federkräfte in Lagerkraft[] eintragen

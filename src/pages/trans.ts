@@ -47,7 +47,7 @@ class CTrans {
         //this.width = document.getElementById("dataviz_area").clientWidth - 1;
         this.width = clientWidth - 1;
 
-        console.log("width,height", this.width, this.height)
+        //console.log("width,height", this.width, this.height)
 
         dz = this.dx * this.height / this.width;
         //console.log("dz", dz, this.dz);

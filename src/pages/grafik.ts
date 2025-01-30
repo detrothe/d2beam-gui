@@ -133,7 +133,7 @@ const style_txt = {
 const style_txt_werte = {
     family: 'system-ui, sans-serif',
     size: 14,
-    fill: 'green',
+    fill: '#006666',
     //opacity: 0.5,
     //leading: 50
     weight: 'normal'
@@ -769,13 +769,13 @@ function mousemove(ev: MouseEvent) {
                 let dz = z0 - werte[i].z
                 let d = dx * dx + dz * dz
 
-                if (d < mind && d < (view_diagonale / 5)**2) {
+                if (d < mind && d < (view_diagonale / 10)**2) {
                     mind = d
                     index = i
                 }
             }
             if (index > -1) {
-                console.log('gefunden', index, werte[index].wert, mind, view_diagonale/5)
+                //console.log('gefunden', index, werte[index].wert, mind, view_diagonale/5)
                 draw_wert.found = true
                 draw_wert.x = werte[index].x
                 draw_wert.y = werte[index].z
@@ -992,7 +992,8 @@ export function drawsystem(svg_id = 'artboard') {
         //centerY = 2.5
         //centerX = tr.xWorld(mouseDx) //+ mouse_DownWX   //+ mouse_DownWX
         //centerY = tr.zWorld(mouseDz) //+ mouse_DownWY
-        console.log("centerX,centerY", centerX, centerY, mouseDx, mouseDz)
+
+        //console.log("centerX,centerY", centerX, centerY, mouseDx, mouseDz)
 
         let dx = xmax - xmin
         let dz = zmax - zmin
@@ -1036,7 +1037,7 @@ export function drawsystem(svg_id = 'artboard') {
         xmaxw = xmaxt - dx
         zminw = zmint - dz
         zmaxw = zmaxt - dz
-        console.log("xminw", xminw, xmaxw, zminw, zmaxw)
+        //console.log("xminw", xminw, xmaxw, zminw, zmaxw)
 
     }
     //     xminw = ax - wheel_factor * (xmax - xmin)/2
@@ -1425,8 +1426,8 @@ export function drawsystem(svg_id = 'artboard') {
                 scalefactor *= animate_scale
             }
 
-            console.log("scalefaktor", scalefactor, slmax)
-            console.log("draw_dyn_eigenform", draw_dyn_eigenform)
+            //console.log("scalefaktor", scalefactor, slmax)
+            //console.log("draw_dyn_eigenform", draw_dyn_eigenform)
 
             for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -1533,8 +1534,8 @@ export function drawsystem(svg_id = 'artboard') {
 
             scalefactor *= scaleFactor_panel
 
-            console.log("scalefaktor", scalefactor, slmax, maxValue_u0[ikomb - 1].u0)
-            console.log("draw_schiefstellung", ikomb)
+            //console.log("scalefaktor", scalefactor, slmax, maxValue_u0[ikomb - 1].u0)
+            //console.log("draw_schiefstellung", ikomb)
 
             for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -2283,11 +2284,11 @@ export function drawsystem(svg_id = 'artboard') {
         let txt = two.makeText(draw_wert.wert, draw_wert.x + 5, draw_wert.y - 5, style_txt_werte)
         txt.alignment = 'left'
         txt.baseline = 'middle'
-        // let box = txt.getBoundingClientRect()
+         let box = txt.getBoundingClientRect()
         // console.log('getBoundingClientRect', box.width, box.height)
-        // rect.width = box.width
+         rect.width = box.width
         // rect.x = 500
-        //rect.x = draw_wert.x// + 4 + box.width / 2
+        rect.position.x = draw_wert.x + 4 + box.width / 2
         let radius = 4 / devicePixelRatio
         let kreis = two.makeCircle(draw_wert.x, draw_wert.y, radius, 10)
         kreis.fill = '#ff0000';
@@ -2355,7 +2356,7 @@ export function drawsystem(svg_id = 'artboard') {
 function draw_dyn_eigenformen(frameCount: any, timeDelta: any) {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("frameCount", frameCount, timeDelta)
+    //console.log("frameCount", frameCount, timeDelta)
     if (show_dyn_eigenformen && (maxValue_dyn_eigenform[draw_dyn_eigenform - 1] > 0.0)) {
 
         two.clear();
@@ -2392,8 +2393,8 @@ function draw_dyn_eigenformen(frameCount: any, timeDelta: any) {
             scalefactor *= animate_scale
         }
 
-        console.log("scalefaktor", scalefactor, slmax)
-        console.log("draw_dyn_eigenform", draw_dyn_eigenform)
+        //console.log("scalefaktor", scalefactor, slmax)
+        //console.log("draw_dyn_eigenform", draw_dyn_eigenform)
 
         if (show_systemlinien) {
             for (let ielem = 0; ielem < nelem; ielem++) {
@@ -4297,8 +4298,8 @@ function draw_stabvorverformung(two: Two) {
 
     scalefactor *= scaleFactor_panel
 
-    console.log("scalefaktor", scalefactor, slmax, maxValue_w0[ikomb])
-    console.log("draw_stabvorverformung", ikomb + 1)
+    //console.log("scalefaktor", scalefactor, slmax, maxValue_w0[ikomb])
+    //console.log("draw_stabvorverformung", ikomb + 1)
 
     maxU = 0.0
 
@@ -4832,7 +4833,7 @@ function scale_factor() {
     //--------------------------------------------------------------------------------------------------------
 
     scaleFactor_panel = get_scale_factor();
-    console.log("stressFactor=", scaleFactor_panel)
+    //console.log("stressFactor=", scaleFactor_panel)
     if (!show_dyn_animate_eigenformen) drawsystem();
 }
 //--------------------------------------------------------------------------------------------------------
@@ -4862,7 +4863,7 @@ function reset_grafik() {
 function draw_dyn_eigenformen_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_dyn_verformungen_grafik");
+    //console.log("in draw_dyn_verformungen_grafik");
     show_dyn_eigenformen = !show_dyn_eigenformen;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4874,7 +4875,7 @@ function draw_dyn_eigenformen_grafik() {
 function draw_dyn_animate_eigenformen_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_dyn_animate_eigenformen_grafik");
+    //console.log("in draw_dyn_animate_eigenformen_grafik");
     show_dyn_animate_eigenformen = !show_dyn_animate_eigenformen;
     animate_scale = 0.0
     if (show_dyn_animate_eigenformen) start_animation = true;
@@ -4886,7 +4887,7 @@ function draw_dyn_animate_eigenformen_grafik() {
 function draw_knotenmassen_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_knotenmassen_grafik");
+    //console.log("in draw_knotenmassen_grafik");
     show_knotenmassen = !show_knotenmassen;
 
     if (!show_dyn_animate_eigenformen) drawsystem();
@@ -4896,7 +4897,7 @@ function draw_knotenmassen_grafik() {
 function draw_bodenpressung_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_bodenpressung_grafik");
+    //console.log("in draw_bodenpressung_grafik");
     show_bodenpressung = !show_bodenpressung;
 
     if (!show_dyn_animate_eigenformen) drawsystem();
