@@ -990,7 +990,7 @@ export class CTimoshenko_beam extends CElement {
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if (eload[ieload].element === ielem) {
                     const index = eload[ieload].lf - 1
-                    console.log("elem kombi index", index, kombiTabelle[iLastf - 1][index])
+                    //console.log("elem kombi index", index, kombiTabelle[iLastf - 1][index])
                     if (kombiTabelle[iLastf - 1][index] !== 0.0) {
 
                         for (i = 0; i < this.neqeG; i++) {
@@ -1008,7 +1008,7 @@ export class CTimoshenko_beam extends CElement {
 
         }
 
-        console.log("element F global ", this.F)
+        //console.log("element F global ", this.F)
 
 
         // TODO ?? Bei gedrehten Lagern erst ins x,z Koordinatensystem zurückdrehen, siehe Excel ab Zeile 434
@@ -1062,7 +1062,7 @@ export class CTimoshenko_beam extends CElement {
 
         for (let i = 0; i < 2; i++) {
             nodi = this.nod[i]
-            console.log("nodi", i, nodi)
+            //console.log("nodi", i, nodi)
             lagerkraft[nodi][0] = lagerkraft[nodi][0] - this.F[3 * i]
             lagerkraft[nodi][1] = lagerkraft[nodi][1] - this.F[3 * i + 1]
             lagerkraft[nodi][2] = lagerkraft[nodi][2] - this.F[3 * i + 2]
@@ -1079,7 +1079,7 @@ export class CTimoshenko_beam extends CElement {
 
         if (eload[ieload].art === 0) {                          // Trapezstreckenlast senkrecht auf Stab
 
-            console.log("STRECKENLAST SENKRECHT")
+            //console.log("STRECKENLAST SENKRECHT")
             const p1 = -sl * (eload[ieload].pR + eload[ieload].pL) / 2.0 / 60.0
             const p2 = -sl * (eload[ieload].pR - eload[ieload].pL) / 2.0 / 60.0
             eload[ieload].re[0] = 0
@@ -1218,7 +1218,7 @@ export class CTimoshenko_beam extends CElement {
 
             eload[ieload].kappa_dT = this.alphaT * (eload[ieload].Tu - eload[ieload].To) / this.h
             eload[ieload].eps_Ts = this.alphaT * ((eload[ieload].Tu - eload[ieload].To) * this.zso / this.h + eload[ieload].To)
-            console.log("Temperatur", this.alphaT, eload[ieload].Tu, eload[ieload].To, this.h, this.emodul * this.area)
+            //console.log("Temperatur", this.alphaT, eload[ieload].Tu, eload[ieload].To, this.h, this.emodul * this.area)
 
             eload[ieload].re[0] = this.emodul * this.area * eload[ieload].eps_Ts
             eload[ieload].re[3] = -this.emodul * this.area * eload[ieload].eps_Ts
@@ -1237,14 +1237,14 @@ export class CTimoshenko_beam extends CElement {
             const eta = this.eta
             const EI = this.emodul * this.Iy
             const alf = 12 * sl * eta + sl3
-            console.log("Einzellast", x, P, M)
+            //console.log("Einzellast", x, P, M)
 
             eload[ieload].CwP = -((36 * x ** 2 - 36 * sl * x) * P * eta ** 2 + (-3 * x ** 4 + 6 * sl * x ** 3 - 3 * sl3 * x) * P * eta + (x ** 6 - 3 * sl * x ** 5 + 3 * sl2 * x ** 4 - sl3 * x ** 3) * P) / 3 / alf / EI;
             eload[ieload].CphiP = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * P) / 2 / alf / EI;
-            console.log("EINZELLAST P, C1, C2 in [mm, mrad]", eload[ieload].CwP * 1000., eload[ieload].CphiP * 1000.)
+            //console.log("EINZELLAST P, C1, C2 in [mm, mrad]", eload[ieload].CwP * 1000., eload[ieload].CphiP * 1000.)
             eload[ieload].CwM = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * M) / 2 / alf / EI
             eload[ieload].CphiM = -((12 * x ** 2 - 12 * sl * x) * M * eta + (3 * x ** 4 - 6 * sl * x ** 3 + 4 * sl2 * x ** 2 - sl3 * x) * M) / alf / EI
-            console.log("EINZELMOMENT M, C1, C2 in [mm, mrad]", eload[ieload].CwM * 1000., eload[ieload].CphiM * 1000.)
+            //console.log("EINZELMOMENT M, C1, C2 in [mm, mrad]", eload[ieload].CwM * 1000., eload[ieload].CphiM * 1000.)
 
             eload[ieload].re[0] = 0.0
             eload[ieload].re[3] = 0.0
@@ -1262,14 +1262,14 @@ export class CTimoshenko_beam extends CElement {
             const ML_P = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / alf
             const MR_P = VR_P * sl + P * x - ML_P
 
-            console.log("EINZELLAST", VL_P, VR_P, ML_P, MR_P)
+            //console.log("EINZELLAST", VL_P, VR_P, ML_P, MR_P)
 
             const VL_M = (6 * (x ** 2 - sl * x) * M) / alf
             const VR_M = -VL_M
 
             const ML_M = (12 * (x - sl) * M * eta + (-3 * sl * x ** 2 + 4 * sl2 * x - sl3) * M) / alf
             const MR_M = -ML_M - M - VL_M * sl
-            console.log("EINZELMOMENT", VL_M, VR_M, ML_M, MR_M)
+            //console.log("EINZELMOMENT", VL_M, VR_M, ML_M, MR_M)
 
             eload[ieload].re[1] = VL_P + VL_M
             eload[ieload].re[4] = VR_P + VR_M
@@ -1277,7 +1277,7 @@ export class CTimoshenko_beam extends CElement {
             eload[ieload].re[2] = ML_P + ML_M
             eload[ieload].re[5] = MR_P + MR_M
 
-            console.log("EINZELLAST + MOMENT", eload[ieload].re[1], eload[ieload].re[4], eload[ieload].re[2], eload[ieload].re[5])
+            //console.log("EINZELLAST + MOMENT", eload[ieload].re[1], eload[ieload].re[4], eload[ieload].re[2], eload[ieload].re[5])
         }
 
         else if (eload[ieload].art === 8) {              // Knotenverformungen
@@ -1305,8 +1305,8 @@ export class CTimoshenko_beam extends CElement {
                 }
                 eload[ieload].re[j] = sum
             }
-            console.log("LASTVEKTOR 8 ", eload[ieload].re)
-            console.log("dispL0", eload[ieload].dispL0)
+            //console.log("LASTVEKTOR 8 ", eload[ieload].re)
+            //console.log("dispL0", eload[ieload].dispL0)
         }
 
         else if (eload[ieload].art === 9) {              // zentrische Vorspannung
@@ -1347,7 +1347,7 @@ export class CTimoshenko_beam extends CElement {
             eload[ieload].el_r[j] = sum
         }
 
-        console.log("elementload global ", eload[ieload].el_r)
+        //console.log("elementload global ", eload[ieload].el_r)
 
     }
 
@@ -1369,7 +1369,7 @@ export class CTimoshenko_beam extends CElement {
             }
         }
 
-        console.log("dispG", dispG)
+        //console.log("dispG", dispG)
 
         for (i = 0; i < 6; i++) {
             sum = 0.0
@@ -1399,7 +1399,7 @@ export class CTimoshenko_beam extends CElement {
 
         // jetzt noch die Anteile aus Stabvorverformungen
 
-        console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß   nstabvorverfomungen", nstabvorverfomungen)
+        // console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß   nstabvorverfomungen", nstabvorverfomungen)
 
         // FeL.fill(0.0)
         // FeStabvor.fill(0.0)
@@ -1435,7 +1435,7 @@ export class CTimoshenko_beam extends CElement {
         //     }
         // }
 
-        console.log(" stabvorverformung_komb[this.ielem][ikomb]", this.ielem, ikomb, stabvorverformung_komb[this.ielem][ikomb])
+        //console.log(" stabvorverformung_komb[this.ielem][ikomb]", this.ielem, ikomb, stabvorverformung_komb[this.ielem][ikomb])
         v0[1] = stabvorverformung_komb[this.ielem][ikomb].w0a
         v0[4] = stabvorverformung_komb[this.ielem][ikomb].w0e
 

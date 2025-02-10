@@ -361,7 +361,7 @@ export function init_two(svg_id = 'artboard') {
     console.log("__________________________________  G R A F I K  ___________")
     if (svg_id === 'svg_artboard') {
         const elem = document.getElementById(svg_id) as any; //HTMLDivElement;
-        console.log("childElementCount", elem.childElementCount)
+        //console.log("childElementCount", elem.childElementCount)
 
         if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
     }
@@ -452,7 +452,7 @@ export function init_grafik(flag: number) {
         el_select.removeChild(el_select?.lastChild);
     }
     //el.style.width = '100%';   // 100px
-    console.log('CREATE SELECT', nlastfaelle, el_select);
+    //console.log('CREATE SELECT', nlastfaelle, el_select);
     draw_lastfall = 1
 
     const el_select_eigv = document.getElementById('id_select_eigenvalue') as HTMLSelectElement;
@@ -1758,7 +1758,7 @@ export function drawsystem(svg_id = 'artboard') {
                         if (show_momentenlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].My;
                         else if (show_querkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].Vz;
                         else if (show_normalkraftlinien) scalefactor = 0.05 * slmax / maxValue_komb[lf_index].N;
-                        console.log("MAX VALUES, maxValue_komb.Vz.My", iLastfall, maxValue_komb[lf_index].Vz, maxValue_komb[lf_index].My)
+                        //console.log("MAX VALUES, maxValue_komb.Vz.My", iLastfall, maxValue_komb[lf_index].Vz, maxValue_komb[lf_index].My)
                     } else {
                         nLoop = nkombinationen
                         lf_index = 0
@@ -1767,7 +1767,7 @@ export function drawsystem(svg_id = 'artboard') {
                 }
 
                 scalefactor *= scaleFactor_panel
-                console.log("SCALEFACTOR", 1. / scalefactor)
+                //console.log("SCALEFACTOR", 1. / scalefactor)
 
                 for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -2641,9 +2641,9 @@ function draw_elementlasten(two: Two) {
         }
     }
 
-    for (let i = 0; i < nLoop; i++) {
-        console.log("°°°°°°° lf_show,fact", i, lf_show[i], fact[i])
-    }
+    // for (let i = 0; i < nLoop; i++) {
+    //     console.log("°°°°°°° lf_show,fact", i, lf_show[i], fact[i])
+    // }
 
 
 
@@ -3247,12 +3247,8 @@ function draw_knotenverformungen(two: Two) {
     let fact = Array(nlastfaelle)
     let lf_show = Array(nlastfaelle)
 
-    console.log("in draw_knotenverformungen, draw_lastfall, nNodeDisps", draw_lastfall, nNodeDisps)
-    // const out = document.getElementById('output') as HTMLTextAreaElement;
-    // if (out) {
-    //     out.value += "plength= " + plength + "\n";
-    //     out.scrollTop = element.scrollHeight; // focus on bottom
-    // }
+    //console.log("in draw_knotenverformungen, draw_lastfall, nNodeDisps", draw_lastfall, nNodeDisps)
+
 
     plength = tr.World0(2 * plength / devicePixelRatio)
     delta = tr.World0(delta / devicePixelRatio)
@@ -3307,20 +3303,20 @@ function draw_knotenverformungen(two: Two) {
         }
     }
 
-    for (let i = 0; i < nLoop; i++) {
-        console.log("°°°°°°° lf_show,fact", i, lf_show[i], fact[i])
-    }
+    // for (let i = 0; i < nLoop; i++) {
+    //     console.log("°°°°°°° lf_show,fact", i, lf_show[i], fact[i])
+    // }
 
     for (let iLoop = 0; iLoop < nLoop; iLoop++) {
-        console.log("iLoop: ", iLoop)
+        //console.log("iLoop: ", iLoop)
 
         for (let i = 0; i < nNodeDisps; i++) {
             let inode = nodeDisp0[i].node
             let x = node[inode].x;
             let z = node[inode].z;
-            console.log("nodeDisp0[i]", i, nodeDisp0)
+            //console.log("nodeDisp0[i]", i, nodeDisp0)
             if (nodeDisp0[i].dispL[0] && nodeDisp0[i].lf - 1 === lf_show[iLoop]) {
-                console.log("Knotenverformung zu zeichnen am Knoten ", +inode + 1)
+                //console.log("Knotenverformung zu zeichnen am Knoten ", +inode + 1)
 
                 wert = nodeDisp0[i].dispx0 * fact[iLoop]
                 if (wert > 0.0) {
@@ -3356,7 +3352,7 @@ function draw_knotenverformungen(two: Two) {
 
                 wert = nodeDisp0[i].phi0 * fact[iLoop]
                 let vorzeichen = Math.sign(wert)
-                console.log("phi0 ", +inode + 1, wert)
+                //console.log("phi0 ", +inode + 1, wert)
                 if (wert > 0.0) {
                     draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_moment)
                 } else {
@@ -3378,7 +3374,7 @@ function draw_knotenverformungen(two: Two) {
 function draw_lagerkraefte(two: Two) {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("draw_lastfall,nlastfaelle,nkombinationen", draw_lastfall, nlastfaelle, nkombinationen)
+    //console.log("draw_lastfall,nlastfaelle,nkombinationen", draw_lastfall, nlastfaelle, nkombinationen)
     if (THIIO_flag === 0 && matprop_flag === 0) if (draw_lastfall > nlastfaelle + nkombinationen) return;
     if (THIIO_flag === 1 || matprop_flag > 0) if (draw_lastfall > nkombinationen) return;
 
@@ -4530,7 +4526,7 @@ function draw_drehfeder(two: Two, x0: number, z0: number) {
 function draw_label_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_label_grafik");
+    //console.log("in draw_label_grafik");
     show_labels = !show_labels;
 
     if (!show_dyn_animate_eigenformen) drawsystem();
@@ -4539,7 +4535,7 @@ function draw_label_grafik() {
 function draw_systemlinien_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_systemlinien_grafik");
+    //console.log("in draw_systemlinien_grafik");
     show_systemlinien = !show_systemlinien;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4551,7 +4547,7 @@ function draw_systemlinien_grafik() {
 function draw_verformungen_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_verformungen_grafik");
+    //console.log("in draw_verformungen_grafik");
     show_verformungen = !show_verformungen;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4563,7 +4559,7 @@ function draw_verformungen_grafik() {
 function draw_momentenlinien_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_momentenlinien_grafik", draw_sg.My, show_momentenlinien);
+    //console.log("in draw_momentenlinien_grafik", draw_sg.My, show_momentenlinien);
     show_momentenlinien = draw_sg.My  //!show_momentenlinien;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4576,7 +4572,7 @@ function draw_momentenlinien_grafik() {
 function draw_querkraftlinien_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_querkraftlinien_grafik", draw_sg.Vz, show_querkraftlinien);
+    //console.log("in draw_querkraftlinien_grafik", draw_sg.Vz, show_querkraftlinien);
     show_querkraftlinien = draw_sg.Vz //!show_querkraftlinien;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4589,7 +4585,7 @@ function draw_querkraftlinien_grafik() {
 function draw_normalkraftlinien_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_normalkraftlinien_grafik", draw_sg.N, show_normalkraftlinien);
+    //console.log("in draw_normalkraftlinien_grafik", draw_sg.N, show_normalkraftlinien);
     show_normalkraftlinien = draw_sg.N   //!show_normalkraftlinien;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4602,7 +4598,7 @@ function draw_normalkraftlinien_grafik() {
 function draw_eigenformen_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_verformungen_grafik");
+    //console.log("in draw_verformungen_grafik");
     show_eigenformen = !show_eigenformen;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4614,7 +4610,7 @@ function draw_eigenformen_grafik() {
 function draw_schiefstellung_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_schiefstellung_grafik");
+    //console.log("in draw_schiefstellung_grafik");
     show_schiefstellung = !show_schiefstellung;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4625,7 +4621,7 @@ function draw_schiefstellung_grafik() {
 function draw_stabvorverformung_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_stabvorverformung_grafik");
+    //console.log("in draw_stabvorverformung_grafik");
     show_stabvorverformung = !show_stabvorverformung;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4637,7 +4633,7 @@ function draw_stabvorverformung_grafik() {
 function draw_lasten_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_lasten_grafik");
+    //console.log("in draw_lasten_grafik");
     show_lasten = !show_lasten;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4649,7 +4645,7 @@ function draw_lasten_grafik() {
 function draw_lagerkraefte_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_lagerkraefte_grafik");
+    //console.log("in draw_lagerkraefte_grafik");
     show_lagerkraefte = !show_lagerkraefte;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4661,7 +4657,7 @@ function draw_lagerkraefte_grafik() {
 function draw_umriss_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_umriss_grafik");
+    //console.log("in draw_umriss_grafik");
     show_umriss = !show_umriss;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4673,7 +4669,7 @@ function draw_umriss_grafik() {
 function draw_gesamtverformung_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_gesamtverformung_grafik");
+    //console.log("in draw_gesamtverformung_grafik");
     show_gesamtverformung = !show_gesamtverformung;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
@@ -4685,7 +4681,7 @@ function draw_gesamtverformung_grafik() {
 function draw_gleichgewicht_SG_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_gleichgewicht_SG_grafik");
+    //console.log("in draw_gleichgewicht_SG_grafik");
     show_gleichgewichtSG = !show_gleichgewichtSG;
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;

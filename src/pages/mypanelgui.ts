@@ -123,8 +123,8 @@ export function myPanel() {
     });
 
     controller_M = gui.add(obj, 'moment').name(moment).onChange((value: any) => {
-        console.log("value", value)
-        console.log("Boolean(gui.controllers[5].getValue)", gui.controllers[5])
+        //console.log("value", value)
+        //console.log("Boolean(gui.controllers[5].getValue)", gui.controllers[5])
         if (draw_group) {
             draw_sg.My = false;
             window.dispatchEvent(new Event("draw_momentenlinien_grafik"));

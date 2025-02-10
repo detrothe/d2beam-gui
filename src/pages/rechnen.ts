@@ -2495,7 +2495,7 @@ async function calculate() {
                     nenner = Math.sqrt(nenner)
                     let eps_force = 0.0
                     if (nenner !== 0.0) eps_force = zaehler / nenner;
-                    write('Toleranz eps_force in Lastfall ' + iLastfall + ' = ' + eps_force)
+                    write('Toleranz eps_force in Lastfall ' + iLastfall + ' = ' + myFormat(eps_force, 5, 5, 1))
 
                     if (eps_force < epsForce_tol) {
                         write('Toleranz bei den Kräften eingehalten')
@@ -2765,7 +2765,7 @@ async function calculate() {
                         for (ielem = 0; ielem < nelem; ielem++) {
                             if (el[ielem].isActive) {
                                 el[ielem].berechneElementlasten_Vorverformung(pel, pg, iKomb - 1)
-                                console.log("P E L", ielem, pel)
+                                //console.log("P E L", ielem, pel)
 
                                 for (j = 0; j < el[ielem].neqeG; j++) {
                                     lmj = el[ielem].lm[j]
@@ -2859,7 +2859,7 @@ async function calculate() {
                     for (ielem = 0; ielem < nelemTotal; ielem++) {
                         if (el[ielem].isActive) {
                             force = el[ielem].berechneInterneKraefte(ielem, iKomb, iter, u);
-                            console.log("force", force)
+                            //console.log("force", force)
                             for (i = 0; i < 6; i++) stabendkraefte.set(i + 1, ielem + 1, iKomb, force[i]);
 
                             el[ielem].berechneLagerkraefte();
@@ -2892,7 +2892,7 @@ async function calculate() {
                         eps_force = 0.0
                         if (nenner !== 0.0) eps_force = zaehler / nenner;
                         //write('Toleranz eps_force in Iterationsschritt ' + iter + ' = ' + eps_force)
-                        write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + eps_disp + ', eps_force = ' + eps_force)
+                        write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + myFormat(eps_disp,5,5,1) + ', eps_force = ' + myFormat(eps_force,5,5,51))
 
 
                     }
@@ -3563,10 +3563,10 @@ function berechne_kombinationen() {
             }
         }
 
-        console.log("max_S_kombi, iKomb=", iKomb, max_S_kombi[0][iKomb], max_S_kombi[1][iKomb], max_S_kombi[2][iKomb], max_disp_kombi[iKomb])
+        //console.log("max_S_kombi, iKomb=", iKomb, max_S_kombi[0][iKomb], max_S_kombi[1][iKomb], max_S_kombi[2][iKomb], max_disp_kombi[iKomb])
     }
 
-    console.log("MAX_ALL", maxM_all, maxV_all, maxN_all, maxdisp_all, maxpress_all)
+    //console.log("MAX_ALL", maxM_all, maxV_all, maxN_all, maxdisp_all, maxpress_all)
 
 
     // jetzt die Auflagerkombinationen
@@ -4437,7 +4437,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                 eps_force = 0.0
                 if (nenner !== 0.0) eps_force = zaehler / nenner;
 
-                write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + eps_disp + ', eps_force = ' + eps_force)
+                write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + myFormat(eps_disp,5,5,1) + ', eps_force = ' + myFormat(eps_force,5,5,1))
 
                 //for (let i = 0; i < neq; i++) R_internal[i] = R_[i];
 
