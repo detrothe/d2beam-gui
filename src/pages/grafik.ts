@@ -50,6 +50,8 @@ let curDiff_alt = 0.0
 let mouse_DownWX = 0.0
 let mouse_DownWY = 0.0
 let view_diagonale = 0.0
+let isPen = false
+let grafik_top = 0
 
 let centerX = 0.0
 let centerY = 0.0
@@ -385,7 +387,8 @@ export function init_two(svg_id = 'artboard') {
         domElement.addEventListener('wheel', wheel, { passive: false });
         domElement.addEventListener('mousedown', mousedown, false);
         domElement.addEventListener('mouseup', mouseup, false);
-        domElement.addEventListener('mousemove', mousemove, false);
+        domElement.addEventListener('pointermove', pointermove, false);
+        // domElement.addEventListener('mousemove', mousemove, false);
 
         domElement.addEventListener('touchstart', touchstart, { passive: false });
         domElement.addEventListener('touchmove', touchmove, { passive: false });
@@ -415,6 +418,7 @@ export function init_grafik(flag: number) {
     needMouseMoveForInfo = false
     zoomIsActive = false
     draw_wert.found = false
+    isPen = false
 
     centerX = 0.0
     centerY = 0.0
@@ -547,13 +551,33 @@ export function init_grafik(flag: number) {
 
 }
 
+//--------------------------------------------------------------------------------------------------------
+function pointermove(ev: PointerEvent) {
+    //----------------------------------------------------------------------------------------------------
+    //console.log("in pointermove", ev);
 
+    ev.preventDefault();
+
+    switch (ev.pointerType) {
+        case "mouse":
+            isPen = false
+            mousemove(ev);
+            break;
+        case "pen":
+            isPen = true
+            //mousemove(ev);
+            break;
+        // case "touch":
+        //     touchmove(ev);
+        //     break;
+    }
+}
 
 //--------------------------------------------------------------------------------------------------------
 function touchmove(ev: TouchEvent) {
-    //--------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
-    // console.log("in touchmove", ev.touches.length, wheel_factor);
+    //console.log("in touchmove", ev);
     ev.preventDefault();
 
     if (ev.touches.length === 2) {
@@ -605,27 +629,33 @@ function touchmove(ev: TouchEvent) {
         let x = (ev.touches[0].clientX)
         let y = (ev.touches[0].clientY)
         //        console.log("finger 1",dx,dy,touchLoop)
-        if (touchLoop === 1) {
-            mouseDx += x - touchDx
-            mouseDz += y - touchDy
-            // console.log("finger 1", mouseDx, mouseDz, touchLoop)
-            touchDx = x
-            touchDy = y
-
-            centerX = centerX_last + tr.World0(mouseDx)
-            centerY = centerY_last + tr.World0(mouseDz)
-            drawsystem()
+        if (isPen) {
+            x = ev.touches[0].clientX
+            y = ev.touches[0].clientY - grafik_top
+            draw_werte(x, y);
         } else {
-            touchLoop = 1
-            touchDx = x
-            touchDy = y
-            mouseDx = 0.0
-            mouseDz = 0.0
 
+            if (touchLoop === 1) {
+                mouseDx += x - touchDx
+                mouseDz += y - touchDy
+                // console.log("finger 1", mouseDx, mouseDz, touchLoop)
+                touchDx = x
+                touchDy = y
+
+                centerX = centerX_last + tr.World0(mouseDx)
+                centerY = centerY_last + tr.World0(mouseDz)
+                drawsystem()
+            } else {
+                touchLoop = 1
+                touchDx = x
+                touchDy = y
+                mouseDx = 0.0
+                mouseDz = 0.0
+            }
         }
 
     }
-
+    isPen = false
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -809,6 +839,40 @@ function mouseup(ev: any) {
 
 }
 
+
+//--------------------------------------------------------------------------------------------------------
+function draw_werte(x0: number, z0: number) {
+    //----------------------------------------------------------------------------------------------------
+    if (werte.length > 0) {
+        let index = -1
+        //let x0 = ev.offsetX, z0 = ev.offsetY
+        let mind = 1.e30
+        //console.log("werte.length", werte.length,ev.clientX,ev.clientY,tr.xPix(0.0),tr.zPix(0.0))
+        for (let i = 0; i < werte.length; i++) {
+            let dx = x0 - werte[i].x
+            let dz = z0 - werte[i].z
+            let d = dx * dx + dz * dz
+
+            if (d < mind && d < (view_diagonale / 10) ** 2) {
+                mind = d
+                index = i
+            }
+        }
+        if (index > -1) {
+            //console.log('gefunden', index, werte[index].wert, mind, view_diagonale/5)
+            draw_wert.found = true
+            draw_wert.x = werte[index].x
+            draw_wert.y = werte[index].z
+            draw_wert.wert = werte[index].wert
+            drawsystem()
+        }
+        else {
+            draw_wert.found = false
+            drawsystem()
+        }
+
+    }
+}
 //---------------------------------------------------------- d r a w s y s t e m  -------------------
 //---------------------------------------------------------- d r a w s y s t e m  -------------------
 //---------------------------------------------------------- d r a w s y s t e m  -------------------
@@ -925,14 +989,15 @@ export function drawsystem(svg_id = 'artboard') {
 
     let ele = document.getElementById("id_grafik") as any
     if (fullscreen) {
+        grafik_top = 0
         ele.style.position = 'absolute'
         height = document.documentElement.clientHeight - 4;
     } else {
-        let grafik_top = ele.getBoundingClientRect().top
+        grafik_top = ele.getBoundingClientRect().top
         //console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
         //write("grafik top: " + grafik_top)
         if (grafik_top === 0) grafik_top = 69
-        height = document.documentElement.clientHeight - grafik_top - 1 - 20//- el?.getBoundingClientRect()?.height;
+        height = document.documentElement.clientHeight - grafik_top - 4 - 17//- el?.getBoundingClientRect()?.height;
     }
 
     let breite: number
