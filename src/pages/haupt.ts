@@ -78,7 +78,7 @@ import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js"
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.4.3, 10-Februar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.4.3, 11-Februar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -225,6 +225,13 @@ portrait.addEventListener("change", function (e) {
         </p>
 
         <hr />
+
+        <p><span id="lab_freier_text" title="Der eingegebene Text wird auch für die pdf-Ergebnissdatei verwendet">Projekt (freier Text mit HTML Formatierung für fett):</span><br>
+          <textarea id="freetext" name="freetext" rows="3" cols="50" placeholder="<b>Hausübung A1, SS 2023</b>
+Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einrahmen, Zeilenumbruch mit Return-Taste">
+          </textarea>
+        </p>
+
         <br />
 
         <table id="querschnittwerte_table">

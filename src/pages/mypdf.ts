@@ -263,11 +263,12 @@ export async function my_jspdf() {
   //doc.line(links, 1, 200, 1, "S");
   //doc.line(links, 295, 200, 295, "S");
 
-  //const txtarea = document.getElementById("freetext") as HTMLTextAreaElement
-  const txtarea = document.createElement("textarea");
-  txtarea.value = "Bauvorhaben <b>In den Statikwiesen 1A</b>";
+  //const txtarea = document.createElement("textarea");
+  //txtarea.value = "Bauvorhaben <b>In den Statikwiesen 1A</b>";
+  const txtarea = document.getElementById("freetext") as HTMLTextAreaElement
 
   console.log("textarea", txtarea.value);
+
   const txt = txtarea.value;
   if (txt.length > 0) {
     let bold = false;

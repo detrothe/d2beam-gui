@@ -151,7 +151,7 @@ export function read_daten(eingabedaten: string) {
 
         el = document.getElementById('id_neigv') as drButtonPM;
         if (jobj.neigv !== undefined) el.setValue(Number(jobj.neigv));
-        console.log("neigv",jobj.neigv)
+        console.log("neigv", jobj.neigv)
 
         eli = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
         if (jobj.epsDisp_tol === undefined) eli.value = '1e-5';
@@ -164,6 +164,10 @@ export function read_daten(eingabedaten: string) {
         eli = document.getElementById('id_iter_neigv') as HTMLInputElement;
         if (jobj.niter_neigv === undefined) eli.value = '500';
         else eli.value = jobj.niter_neigv;
+
+        const txtarea = document.getElementById("freetext") as HTMLTextAreaElement
+        console.log("textarea", txtarea.value);
+        if (jobj.freetxt !== undefined) txtarea.value = jobj.freetxt;
 
     }
 
@@ -539,7 +543,7 @@ export function str_inputToJSON() {
 
 
     let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, epsForce_tol, stadyn, dyn_neigv;
-    let eig_solver, niter_neigv, nelem_koppelfedern,matprop_flag;
+    let eig_solver, niter_neigv, nelem_koppelfedern, matprop_flag;
 
     let el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = el.nel;
@@ -591,6 +595,10 @@ export function str_inputToJSON() {
 
     //el = document.getElementById('id_dialog_neue_eingabe') as HTMLElement;
     let system = System; //Number((el.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+
+    const txtarea = document.getElementById("freetext") as HTMLTextAreaElement
+    console.log("textarea", txtarea.value);
+    const freetxt = txtarea.value;
 
     el = document.getElementById('id_knoten_tabelle') as HTMLElement;
     let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
@@ -825,7 +833,7 @@ export function str_inputToJSON() {
         'nelteilungen': nelTeilungen,
         'n_iter': n_iterationen,
         'THIIO_flag': THIIO_flag,
-        'matprop_flag':matprop_flag,
+        'matprop_flag': matprop_flag,
         'maxU_node': maxU_node,
         'maxU_dir': maxU_dir,
         'maxU_schief': maxU_schief,
@@ -841,10 +849,11 @@ export function str_inputToJSON() {
         'eig_solver': eig_solver,
         'niter_neigv': niter_neigv,
         'nelem_koppelfedern': nelem_koppelfedern,
+        'freetxt': freetxt,
 
 
         'elem': elem,
-        'koppelfedern':koppelfedern,
+        'koppelfedern': koppelfedern,
         'node': node,
         'nodalLoad': nodalload,
         'streckenlasten': linload,
