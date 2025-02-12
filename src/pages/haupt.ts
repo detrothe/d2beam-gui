@@ -78,7 +78,7 @@ import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js"
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.4.3, 11-Februar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.4.4, 12-Februar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -228,8 +228,7 @@ portrait.addEventListener("change", function (e) {
 
         <p><span id="lab_freier_text" title="Der eingegebene Text wird auch für die pdf-Ergebnissdatei verwendet">Projekt (freier Text mit HTML Formatierung für fett):</span><br>
           <textarea id="freetext" name="freetext" rows="3" cols="50" placeholder="<b>Hausübung A1, SS 2023</b>
-Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einrahmen, Zeilenumbruch mit Return-Taste">
-          </textarea>
+Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einrahmen, Zeilenumbruch mit Return-Taste"></textarea>
         </p>
 
         <br />
@@ -298,17 +297,14 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         </table>
 
         <div class="output_container">
-          <textarea id="output" rows="40"></textarea>
+          <textarea id="output" rows="40" readonly spellcheck=false></textarea>
         </div>
 
         <dr-dialog_neue_eingabe id="id_dialog_neue_eingabe"></dr-dialog_neue_eingabe>
 
         <div id="id_container" class="footer" >${theFooter}
-      <!-- <footer class="footer">
-        2D structural analysis of frames and trusses, v1.2.1,a, 4-Juli-2024,-->
-        <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
-      <!--</footer>-->
-    </div>
+          <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
+        </div>
 
       </sl-tab-panel>
 
@@ -1601,7 +1597,7 @@ export function opendialog(ev: any) {
     let wert = String(myFormat(Number(alphaT), 1, 6, 1)).replace(/,/g, '.');
     elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
     // elem.setAttribute('value', String(myFormat(Number(alphaT), 1, 6, 1)));
-    console.log("myformat",alphaT,'|',myFormat(Number(alphaT),1, 6, 1),'|', String(myFormat(Number(alphaT), 1, 6, 1)))
+    console.log("myformat", alphaT, '|', myFormat(Number(alphaT), 1, 6, 1), '|', String(myFormat(Number(alphaT), 1, 6, 1)))
     //    elem.value = String(alphaT);
     elem.value = wert
   }

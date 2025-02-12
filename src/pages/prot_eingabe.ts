@@ -242,7 +242,11 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         }
     }
     let ne = 6
-    if (System === 1) ne = 4;
+    if (System === 0) {
+        for (let i = 0; i < nelem_Balken; i++) {
+            if (el[i].neqeG > ne) ne = el[i].neqeG
+        }
+    } else if (System === 1) ne = 4;
 
     {
         let tag = document.createElement("p"); // <p></p>
@@ -421,10 +425,11 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
             newCell.appendChild(newText);
             newCell.setAttribute("class", "table_cell_right");
 
-            for (let j = 0; j < el[i].neqe; j++) {
+            for (let j = 0; j < ne; j++) {
                 ispalte++;
                 newCell = newRow.insertCell(ispalte);
-                newText = document.createTextNode(String(+el[i].lm[j] + 1));
+                if (j >= el[i].neqeG) newText = document.createTextNode("");
+                else newText = document.createTextNode(String(+el[i].lm[j] + 1));
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_right");
             }
@@ -436,7 +441,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         let sum_mass = 0.0
         let sum_theta = 0.0
 
-        if ( nnodalMass > 0 ) {
+        if (nnodalMass > 0) {
 
             let tag = document.createElement("p"); // <p></p>
             let text = document.createTextNode("xxx");
