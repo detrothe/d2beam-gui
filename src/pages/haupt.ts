@@ -75,10 +75,11 @@ import {
 
 import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
+import { click_zurueck_cad, init_cad, init_two_cad } from "./cad";
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.4.4, 12-Februar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.5.0.a, 12-Februar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -158,10 +159,12 @@ portrait.addEventListener("change", function (e) {
     // Portrait mode
     //write("portrait mode")
     drawsystem();
+    init_cad(0);
   } else {
     // Landscape
     //write("landscape mode")
     drawsystem();
+    init_cad(0);
   }
 });
 
@@ -196,6 +199,7 @@ portrait.addEventListener("change", function (e) {
 
     <sl-tab-group id="id_sl_tab_group">
       <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">Haupt</sl-tab>
+      <sl-tab slot="nav" panel="tab-cad">CAD</sl-tab>
       <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
       <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
       <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>
@@ -306,6 +310,17 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
         </div>
 
+      </sl-tab-panel>
+
+      <!--------------------------------------------------------------------------------------->
+      <sl-tab-panel name="tab-cad">
+        <div id="id_cad" style=" background-color:#666666;margin:0;padding:0;position:relative;top:0">
+          <!-- width:100vw; ;width:300px;height:300px; -->
+          <button id="id_button_zurueck_cad">Fullscreen</button>
+
+          <div id="artboard_cad" style="margin:0;padding:0;"></div>
+          <div id="svg_artboard_cad" style="margin:0;padding:0;display:none"></div>
+        </div>
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
@@ -1153,6 +1168,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   const el_zurueck_grafik = document.getElementById("id_button_zurueck_grafik");
   el_zurueck_grafik?.addEventListener("click", click_zurueck_grafik);
 
+  const el_zurueck_cad = document.getElementById("id_button_zurueck_cad");
+  el_zurueck_cad?.addEventListener("click", click_zurueck_cad);
+
   document?.getElementById("id_button_copy_svg")?.addEventListener("click", copy_svg, false);
 
   const checkbox = document.getElementById("id_glsystem_darstellen");
@@ -1235,6 +1253,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   // initTabellenLoop();
   console.log("vor init_tabellen in haupt");
   init_tabellen();
+
+  init_two_cad();
+  init_cad(0);
 
   rechnen(1);
 }

@@ -317,6 +317,7 @@ export function click_zurueck_grafik() {
 
 
 }
+
 //--------------------------------------------------------------------------------------------------- i n i t _ t w o
 
 export function init_two(svg_id = 'artboard') {
@@ -771,7 +772,7 @@ function mousemove(ev: MouseEvent) {
     //----------------------------------------------------------------------------------------------------
 
     // console.log('**********************************')
-    // console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY)
+     console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY)
     // console.log('**********************************')
 
     ev.preventDefault()
