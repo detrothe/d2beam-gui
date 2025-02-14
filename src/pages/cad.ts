@@ -42,6 +42,11 @@ let txt_mouseCoord: any = null
 
 let xminv = 0.0, xmaxv = 0.0, zminv = 0.0, zmaxv = 0.0
 
+let raster_xmin = -1.0, raster_xmax = 10.0, raster_zmin = -1.0, raster_zmax = 9.0
+let raster_dx = 0.5, raster_dz = 0.5
+let xRasterPoint = 0.0, zRasterPoint = 0.0
+let rasterPoint: any = null
+let foundRasterPoint = false
 
 const style_txt = {
     family: 'system-ui, sans-serif',
@@ -51,6 +56,8 @@ const style_txt = {
     //leading: 50
     weight: 'normal'
 };
+
+function getFangweite() { return 0.2; }
 
 //--------------------------------------------------------------------------------------------------------
 export function click_zurueck_cad() {
@@ -260,6 +267,8 @@ export function init_cad(_flag: number) {
         txt1.alignment = 'center'
 
     }
+    drawRaster();
+
     two.update();
 }
 
@@ -336,6 +345,11 @@ function mousemove(ev: MouseEvent) {
     if (rubberband_drawn) {
         two.remove(rubberband);
     }
+    if (foundRasterPoint) {
+        two.remove(rasterPoint);
+        foundRasterPoint = false;
+    }
+
     if (input_started === 1) {
         rubberband = two.makeLine(start_x, start_y, ev.offsetX, ev.offsetY);
         rubberband.linewidth = 1 /// devicePixelRatio;
@@ -347,11 +361,23 @@ function mousemove(ev: MouseEvent) {
     if (txt_mouseCoord) {
         two.remove(txt_mouseCoord)
     }
-    let txt = myFormat(tr.xWorld(ev.offsetX),2,2) + '|' + myFormat(tr.zWorld(ev.offsetY),2,2)
+    let xc = tr.xWorld(ev.offsetX)
+    let zc = tr.zWorld(ev.offsetY)
+    let txt = myFormat(xc, 2, 2) + '|' + myFormat(zc, 2, 2)
     txt_mouseCoord = two.makeText(txt, two.width - 100, two.height - 20, style_txt)
     txt_mouseCoord.fill = '#000000'
     txt_mouseCoord.baseline = 'middle'
     txt_mouseCoord.alignment = 'left'
+
+    if (rubberband_drawn) {
+        let gefunden = findNextRasterPoint(xc, zc)
+        if (gefunden) {
+            rasterPoint = two.makeRectangle(tr.xPix(xRasterPoint), tr.zPix(zRasterPoint), 5, 5);
+            rasterPoint.fill = '#0000ff';
+            rasterPoint.stroke = "#0000ff";
+            foundRasterPoint = true;
+        }
+    }
 
     two.update();
 }
@@ -376,12 +402,30 @@ function mouseup(ev: any) {
         if (input_started === 0) {
             input_active = true
             input_started = 1
-            start_x = ev.offsetX
-            start_y = ev.offsetY
+
+            let xc = tr.xWorld(ev.offsetX)
+            let zc = tr.zWorld(ev.offsetY)
+            let gefunden = findNextRasterPoint(xc, zc)
+            if (gefunden) {
+                rasterPoint = two.makeRectangle(tr.xPix(xRasterPoint), tr.zPix(zRasterPoint), 5, 5);
+                rasterPoint.fill = '#0000ff';
+                rasterPoint.stroke = "#0000ff";
+                foundRasterPoint = true;
+                start_x = tr.xPix(xRasterPoint)
+                start_y = tr.zPix(zRasterPoint)
+            } else {
+                start_x = ev.offsetX
+                start_y = ev.offsetY
+            }
         } else if (input_started === 1) {
             two.remove(rubberband);
-            end_x = ev.offsetX
-            end_y = ev.offsetY
+            if (foundRasterPoint) {
+                end_x = tr.xPix(xRasterPoint)
+                end_y = tr.zPix(zRasterPoint)
+            } else {
+                end_x = ev.offsetX
+                end_y = ev.offsetY
+            }
             input_started = 0
             let line1 = two.makeLine(start_x, start_y, end_x, end_y);
             line1.linewidth = 3 /// devicePixelRatio;
@@ -418,4 +462,141 @@ function keydown(ev: any) {
         rubberband_drawn = false
         input_started = 0
     }
+}
+
+
+//------------------------------------------------------------------------------------------------
+function drawRaster() {
+    //--------------------------------------------------------------------------------------------
+
+    let xp = 0.0, zp = 0.0, xg = 0.0, zg = 0.0
+
+    let size = 5 / devicePixelRatio
+
+    let nx = Math.abs(raster_xmax - raster_xmin) / raster_dx;
+    let nz = Math.abs(raster_zmax - raster_zmin) / raster_dz;
+    //qDebug() << "nx, ny : " << nx << ny << m_xRaster << m_yRaster;
+    if (nx > 1000 || nz > 1000) return;
+
+    while (zp <= raster_zmax) {
+        xp = 0.0;
+        while (xp <= raster_xmax) {
+            xg = xp; zg = zp;
+            let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
+            rechteck.fill = '#ff0000';
+            rechteck.stroke = "#ff0000";
+            xp += raster_dx;
+        }
+        zp += raster_dz;
+    }
+
+
+    zp = -raster_dz;
+    while (zp >= raster_zmin) {
+        xp = -raster_dx;
+        while (xp >= raster_xmin) {
+            xg = xp; zg = zp;
+            let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
+            rechteck.fill = '#ff0000';
+            rechteck.stroke = "#ff0000";
+            xp -= raster_dx;
+        }
+        zp -= raster_dz;
+    }
+
+    zp = 0.0;
+    while (zp <= raster_zmax) {
+        xp = -raster_dx;
+        while (xp >= raster_xmin) {
+            xg = xp; zg = zp;
+            let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
+            rechteck.fill = '#ff0000';
+            rechteck.stroke = "#ff0000";
+            xp -= raster_dx;
+        }
+        zp += raster_dz;
+    }
+
+    zp = -raster_dz;
+    while (zp >= raster_zmin) {
+        xp = 0.0;
+        while (xp <= raster_xmax) {
+            xg = xp; zg = zp;
+            let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
+            rechteck.fill = '#ff0000';
+            rechteck.stroke = "#ff0000";
+            xp += raster_dx;
+        }
+        zp -= raster_dz;
+    }
+}
+
+
+//-------------------------------------------------------------------------------------------------------
+function findNextRasterPoint(xl: number, yl: number)
+//-------------------------------------------------------------------------------------------------------
+// xl, yl : lokale Koordinaten des Cursors
+{
+    let sl2: number, slmin: number, rahm: number, fangweite2: number;
+    let x1: number, x2: number, y1: number, y2: number;
+    let gefunden = false;
+
+    slmin = 1.e30;
+    rahm = getFangweite();
+    fangweite2 = rahm * rahm;
+
+    if (xl >= 0.0) {
+        x1 = Math.trunc(xl / raster_dx) * raster_dx;
+        x2 = x1 + raster_dx;
+    } else {
+        x2 = Math.trunc(xl / raster_dx) * raster_dx;
+        x1 = x2 - raster_dx;
+    }
+    if (yl >= 0.0) {
+        y1 = Math.trunc(yl / raster_dz) * raster_dz;
+        y2 = y1 + raster_dz;
+    } else {
+        y2 = Math.trunc(yl / raster_dz) * raster_dz;
+        y1 = y2 - raster_dz;
+    }
+
+    sl2 = (x1 - xl) * (x1 - xl) + (y1 - yl) * (y1 - yl);
+    if (sl2 < fangweite2) {
+        if (sl2 < slmin) {
+            slmin = sl2;
+            xRasterPoint = x1;
+            zRasterPoint = y1;
+            gefunden = true;
+        }
+    }
+    sl2 = (x2 - xl) * (x2 - xl) + (y1 - yl) * (y1 - yl);
+    if (sl2 < fangweite2) {
+        if (sl2 < slmin) {
+            slmin = sl2;
+            xRasterPoint = x2;
+            zRasterPoint = y1;
+            gefunden = true;
+        }
+    }
+    sl2 = (x2 - xl) * (x2 - xl) + (y2 - yl) * (y2 - yl);
+    if (sl2 < fangweite2) {
+        if (sl2 < slmin) {
+            slmin = sl2;
+            xRasterPoint = x2;
+            zRasterPoint = y2;
+            gefunden = true;
+        }
+    }
+    sl2 = (x1 - xl) * (x1 - xl) + (y2 - yl) * (y2 - yl);
+    if (sl2 < fangweite2) {
+        if (sl2 < slmin) {
+            slmin = sl2;
+            xRasterPoint = x1;
+            zRasterPoint = y2;
+            gefunden = true;
+        }
+    }
+
+    return gefunden;
+
 }
