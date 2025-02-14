@@ -79,7 +79,7 @@ import { click_zurueck_cad, init_cad, init_two_cad } from "./cad";
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.5.0.a, 12-Februar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.5.0.a, 13-Februar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -199,7 +199,7 @@ portrait.addEventListener("change", function (e) {
 
     <sl-tab-group id="id_sl_tab_group">
       <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">Haupt</sl-tab>
-      <sl-tab slot="nav" panel="tab-cad">CAD</sl-tab>
+      <sl-tab id="id_CAD" slot="nav" panel="tab-cad">CAD</sl-tab>
       <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
       <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
       <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>
@@ -314,7 +314,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-cad">
-        <div id="id_cad" style=" background-color:#666666;margin:0;padding:0;position:relative;top:0">
+        <div id="id_cad" style=" background-color:#666666;margin:0;padding:0;position:relative;top:0;cursor:none">
           <!-- width:100vw; ;width:300px;height:300px; -->
           <button id="id_button_zurueck_cad">Fullscreen</button>
 

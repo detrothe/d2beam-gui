@@ -772,7 +772,7 @@ function mousemove(ev: MouseEvent) {
     //----------------------------------------------------------------------------------------------------
 
     // console.log('**********************************')
-     console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY)
+    console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY)
     // console.log('**********************************')
 
     ev.preventDefault()
@@ -2161,10 +2161,10 @@ export function drawsystem(svg_id = 'artboard') {
 
             // Koordinatenursprung darstellen
 
-            draw_arrow_alpha(two, 0.0, 0.0, 0.0, -1.0, { a: 55, b: 25, h: 12, linewidth: 4, color: '#ff0000' })
+            draw_arrow_alpha(two, tr, 0.0, 0.0, 0.0, -1.0, { a: 55, b: 25, h: 12, linewidth: 4, color: '#ff0000' })
             let txt = two.makeText('x', tr.xPix(0.0) + 80 / devicePixelRatio, tr.zPix(0.0) - 10 / devicePixelRatio, style_txt)
             txt.fill = '#ff0000'
-            draw_arrow_alpha(two, 0.0, 0.0, Math.PI / 2.0, -1.0, { a: 55, b: 25, h: 12, linewidth: 4, color: '#0000ff' })
+            draw_arrow_alpha(two, tr, 0.0, 0.0, Math.PI / 2.0, -1.0, { a: 55, b: 25, h: 12, linewidth: 4, color: '#0000ff' })
             txt = two.makeText('z', tr.xPix(0.0) + 10 / devicePixelRatio, tr.zPix(0.0) + 80 / devicePixelRatio, style_txt)
             txt.fill = '#0000ff'
 
@@ -2172,7 +2172,7 @@ export function drawsystem(svg_id = 'artboard') {
 
 
         {
-            //let xmin = 0.0, xmax = 0.0, zmin = 0.0, zmax = 0.0
+            // -----------------  Masslinien darstellen  -----------------------
 
             const [x_min, x_max, z_min, z_max] = tr.getMinMax();
 
@@ -3407,10 +3407,10 @@ function draw_lagerkraefte(two: Two) {
 
             if (wert >= 0.0) {
                 //                draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_lager)
-                draw_arrow_alpha(two, x + delta * Math.cos(-alpha), z + delta * Math.sin(-alpha), -alpha, 1.0, style_pfeil_lager)
+                draw_arrow_alpha(two, tr, x + delta * Math.cos(-alpha), z + delta * Math.sin(-alpha), -alpha, 1.0, style_pfeil_lager)
             } else {
                 //                draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_lager)
-                draw_arrow_alpha(two, x + delta * Math.cos(-alpha), z + delta * Math.sin(-alpha), -alpha, -1.0, style_pfeil_lager)
+                draw_arrow_alpha(two, tr, x + delta * Math.cos(-alpha), z + delta * Math.sin(-alpha), -alpha, -1.0, style_pfeil_lager)
             }
 
             xpix = tr.xPix(x + (delta + plength) * Math.cos(-alpha)) + 5
@@ -3437,11 +3437,11 @@ function draw_lagerkraefte(two: Two) {
 
             if (wert >= 0.0) {
                 //                draw_arrow(two, x, z + delta + plength, x, z + delta, style_pfeil_lager)
-                draw_arrow_alpha(two, x + delta * Math.cos(-alpha + 1.5707963), z + delta * Math.sin(-alpha + 1.5707963), -alpha + 1.5707963, 1.0, style_pfeil_lager)
+                draw_arrow_alpha(two, tr, x + delta * Math.cos(-alpha + 1.5707963), z + delta * Math.sin(-alpha + 1.5707963), -alpha + 1.5707963, 1.0, style_pfeil_lager)
 
             } else {
                 //                draw_arrow(two, x, z + delta, x, z + delta + plength, style_pfeil_lager)
-                draw_arrow_alpha(two, x + delta * Math.cos(-alpha + 1.5707963), z + delta * Math.sin(-alpha + 1.5707963), -alpha + 1.5707963, -1.0, style_pfeil_lager)
+                draw_arrow_alpha(two, tr, x + delta * Math.cos(-alpha + 1.5707963), z + delta * Math.sin(-alpha + 1.5707963), -alpha + 1.5707963, -1.0, style_pfeil_lager)
             }
 
             xpix = tr.xPix(x + (delta + plength) * Math.cos(-alpha + 1.5707963)) + 5
@@ -4053,7 +4053,7 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
 }
 
 //--------------------------------------------------------------------------------------------------------
-function draw_arrow_alpha(two: Two, x1: number, z1: number, alpha: number, vorzeichen: number, styles?: any) {
+export function draw_arrow_alpha(two: Two, tr: CTrans, x1: number, z1: number, alpha: number, vorzeichen: number, styles?: any) {
     //----------------------------------------------------------------------------------------------------
 
     let b = 25, h = 16, linewidth = 2, color = '#000000'
