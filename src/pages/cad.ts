@@ -2,7 +2,8 @@ import Two from 'two.js'
 
 import { CTrans } from './trans';
 import { draw_arrow_alpha } from './grafik';
-import { myFormat } from './utility';
+import { myFormat, write } from './utility';
+import { LinkedList } from '../components/linkedlist';
 
 let two: any = null;
 let domElement: any = null
@@ -34,7 +35,11 @@ let input_x = 0
 let input_y = 0
 let start_x = 0, end_x = 0
 let start_y = 0, end_y = 0
+let touchstart_x = 0, touchend_x = 0
+let touchstart_y = 0, touchend_y = 0
 let input_started = 0
+let start_x_wc = 0, end_x_wc = 0  // x-z im Weltkoordinatensystem
+let start_z_wc = 0, end_z_wc = 0
 
 let cursorLineh = 0
 let cursorLinev = 0
@@ -56,6 +61,48 @@ const style_txt = {
     //leading: 50
     weight: 'normal'
 };
+
+class TCADElement {
+    qname: string = ''
+    isActive = true;
+    elTyp: number = 0           // 0 = 2 Knoten, 1 = Fachwerkstab, 3 = 3 Knoten, 3 = 4 Knoten
+    x1: number = 0.0
+    x2: number = 0.0
+    z1: number = 0.0
+    z2: number = 0.0
+
+    constructor(x1: number, z1: number, x2: number, z2: number, elTyp: number) {
+        this.x1 = x1
+        this.z1 = z1
+        this.x2 = x2
+        this.z2 = z2
+        this.elTyp = elTyp
+    }
+}
+
+let list: LinkedList = new LinkedList(); // Empty list
+
+
+// list.append(1);                           // 1
+// list.prepend('Hello');                    // Hello <-> 1
+// list.prepend(2);                          // 2 <-> Hello <-> 1
+// list.append('Here I am');                 // 2 <-> Hello <-> 1 <-> Here I am
+// list.insertAt('x', 2);                    // 2 <-> Hello <-> x <-> 1 <-> Here I am
+// list.insertAt(5, 0);                      // 5 <-> 2 <-> Hello <-> x <-> 1 <-> Here I am
+// console.log(list.getHead());              // would prompt 5
+// console.log(list.getAt(0));               // would prompt 5
+// console.log(list.getTail());              // would prompt Here I am
+// console.log(list.getAt(4))                // would prompt 1
+// console.log(list.removeHead());           // would prompt 5
+//                                           // then 2 <-> Hello <-> x <-> 1 <-> Here I am
+// console.log(list.removeTail());           // would pompt Here I am
+//                                           // then 2 <-> Hello <-> x <-> 1
+// console.log(list.removeAt(3));            // would prompt 1
+//                                           // then 2 <-> Hello <-> x
+// console.log(list.removeAt(1));            // would prompt Hello
+//                                           // then 2 <-> x
+// list.log();                               // would prompt 2 <-> Hello
+
 
 function getFangweite() { return 0.2; }
 
@@ -167,10 +214,10 @@ export function init_two_cad(svg_id = 'artboard_cad') {
         id_cad.addEventListener('keydown', keydown);
         domElement.addEventListener("contextmenu", (e: { preventDefault: () => any; }) => e.preventDefault());
 
-        //     domElement.addEventListener('touchstart', touchstart, { passive: false });
-        //     domElement.addEventListener('touchmove', touchmove, { passive: false });
+        domElement.addEventListener('touchstart', touchstart, { passive: false });
+        domElement.addEventListener('touchmove', touchmove, { passive: false });
 
-        //     domElement.addEventListener('touchend', touchend, { passive: false });
+        domElement.addEventListener('touchend', touchend, { passive: false });
 
     }
 
@@ -268,6 +315,16 @@ export function init_cad(_flag: number) {
 
     }
     drawRaster();
+
+    // Zeichne vorhandenes System
+
+    console.log("list.size", list.size);
+    for (let i = 0; i < list.size; i++) {
+        let obj: TCADElement = list.getAt(i)
+        //console.log("obj",obj)
+        let line1 = two.makeLine(tr.xPix(obj.x1), tr.zPix(obj.z1), tr.xPix(obj.x2), tr.zPix(obj.z2));
+        line1.linewidth = 3 /// devicePixelRatio;
+    }
 
     two.update();
 }
@@ -413,18 +470,26 @@ function mouseup(ev: any) {
                 foundRasterPoint = true;
                 start_x = tr.xPix(xRasterPoint)
                 start_y = tr.zPix(zRasterPoint)
+                start_x_wc = xRasterPoint
+                start_z_wc = zRasterPoint
             } else {
                 start_x = ev.offsetX
                 start_y = ev.offsetY
+                start_x_wc = xc
+                start_z_wc = zc
             }
         } else if (input_started === 1) {
             two.remove(rubberband);
             if (foundRasterPoint) {
                 end_x = tr.xPix(xRasterPoint)
                 end_y = tr.zPix(zRasterPoint)
+                end_x_wc = xRasterPoint
+                end_z_wc = zRasterPoint
             } else {
                 end_x = ev.offsetX
                 end_y = ev.offsetY
+                end_x_wc = tr.xWorld(ev.offsetX)
+                end_z_wc = tr.zWorld(ev.offsetY)
             }
             input_started = 0
             let line1 = two.makeLine(start_x, start_y, end_x, end_y);
@@ -433,6 +498,10 @@ function mouseup(ev: any) {
             two.update();
             input_active = false
             rubberband_drawn = false
+
+            const el = new TCADElement(start_x_wc, start_z_wc, end_x_wc, end_z_wc, 0)
+            list.append(el)
+            //list.log()
         }
     }
 }
@@ -464,6 +533,57 @@ function keydown(ev: any) {
     }
 }
 
+// --------------------------  T O U C H  T O U C H  T O U C H  T O U C H  T O U C H  --------------------
+//--------------------------------------------------------------------------------------------------------
+function touchstart(ev: TouchEvent) {
+    //----------------------------------------------------------------------------------------------------
+    ev.preventDefault();
+
+    write("in touchstart " + ev.touches.length + " | " + input_started)
+    if (ev.touches.length === 1) {
+        if (input_started === 0) {
+            input_active = true
+            input_started = 1
+            touchstart_x = ev.touches[0].clientX
+            touchstart_y = ev.touches[0].clientY - grafik_top
+        }
+    }
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+function touchend(ev: TouchEvent) {
+    //----------------------------------------------------------------------------------------------------
+    // console.log("in touchend", ev.touches.length);
+    write("in touchend " + ev.touches.length + " | " + input_started);
+
+    ev.preventDefault();
+
+    // if (ev.touches.length === 0) {
+    //     if (input_started === 1) {
+    input_active = false
+    input_started = 0
+    write("touchstart_x_y " + touchstart_x + " | " + touchstart_y);
+
+    write("touchend_x_y " + touchend_x + " | " + touchend_y);
+    let line1 = two.makeLine(touchstart_x, touchstart_y, touchend_x, touchend_y);
+    line1.linewidth = 2 /// devicePixelRatio;
+
+    two.update();
+    //     }
+    // }
+}
+
+//--------------------------------------------------------------------------------------------------------
+function touchmove(ev: TouchEvent) {
+    //----------------------------------------------------------------------------------------------------
+
+    //console.log("in touchmove", ev);
+    ev.preventDefault();
+
+    touchend_x = ev.touches[0].clientX;
+    touchend_y = ev.touches[0].clientY - grafik_top;
+}
 
 //------------------------------------------------------------------------------------------------
 function drawRaster() {

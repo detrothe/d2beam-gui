@@ -79,7 +79,7 @@ import { click_zurueck_cad, init_cad, init_two_cad } from "./cad";
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.5.0.a, 13-Februar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v2.0.0.b, 24-Februar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -167,6 +167,7 @@ portrait.addEventListener("change", function (e) {
     init_cad(0);
   }
 });
+
 
 // const sleepNow = (delay: any) => new Promise((resolve) => setTimeout(resolve, delay));
 
@@ -1227,6 +1228,12 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
     } else {
       elementTabelle_bettung_anzeigen(false);
     }
+  });
+
+
+  addEventListener("resize", function () {
+    console.log("RESIZE")
+    init_cad(0);
   });
 
   // console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
