@@ -75,11 +75,11 @@ import {
 
 import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
-import { click_zurueck_cad, init_cad, init_two_cad } from "./cad";
+import { cad_buttons, click_zurueck_cad, init_cad, init_two_cad } from "./cad";
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v2.0.0.b, 24-Februar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v2.0.0.a, 25-Februar-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -317,6 +317,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <sl-tab-panel name="tab-cad">
         <div id="id_cad" style=" background-color:#666666;margin:0;padding:0;position:relative;top:0;cursor:none">
           <!-- width:100vw; ;width:300px;height:300px; -->
+          <div id="id_cad_group">
+          </div>
+
           <button id="id_button_zurueck_cad">Fullscreen</button>
 
           <div id="artboard_cad" style="margin:0;padding:0;"></div>
@@ -1260,6 +1263,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   // initTabellenLoop();
   console.log("vor init_tabellen in haupt");
   init_tabellen();
+
+  cad_buttons();
 
   init_two_cad();
   init_cad(0);

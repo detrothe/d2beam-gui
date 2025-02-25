@@ -227,6 +227,17 @@ input[type='number'] {
    font-size: 1rem;
 }
 
+#id_cad_group {
+   position: absolute;
+   top: 2px;
+   /* var(--abst_gl_v);*/
+   left: 2px;
+   z-index: 90;
+   margin: 0;
+   padding: 0;
+   font-size: 1rem;
+}
+
 #id_div_select_lc {
    /*position: relative;
   top: 2px;
