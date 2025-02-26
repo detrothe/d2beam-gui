@@ -4,6 +4,7 @@ import { CTrans } from './trans';
 import { draw_arrow_alpha } from './grafik';
 import { myFormat, write } from './utility';
 import { LinkedList } from '../components/linkedlist';
+import { find_querschnittSet } from './rechnen';
 
 let two: any = null;
 let domElement: any = null
@@ -35,8 +36,8 @@ let input_x = 0
 let input_y = 0
 let start_x = 0, end_x = 0
 let start_y = 0, end_y = 0
-let touchstart_x = 0, touchend_x = 0
-let touchstart_y = 0, touchend_y = 0
+// let touchstart_x = 0, touchend_x = 0
+// let touchstart_y = 0, touchend_y = 0
 let input_started = 0
 let start_x_wc = 0, end_x_wc = 0  // x-z im Weltkoordinatensystem
 let start_z_wc = 0, end_z_wc = 0
@@ -52,9 +53,11 @@ let raster_dx = 0.5, raster_dz = 0.5
 let xRasterPoint = 0.0, zRasterPoint = 0.0
 let rasterPoint: any = null
 let foundRasterPoint = false
+let foundNodePoint = false
 
 let cad_eingabe_aktiv = false
 let stab_eingabe_aktiv = false
+let typ_cad_element = 0
 
 const style_txt = {
     family: 'system-ui, sans-serif',
@@ -94,6 +97,7 @@ class TCADElement {
 }
 
 let list: LinkedList = new LinkedList(); // Empty list
+let undoList: LinkedList = new LinkedList(); // Empty undo list
 
 
 // list.append(1);                           // 1
@@ -150,6 +154,7 @@ export function cad_buttons() {
     stab_button.className = "btn";
     stab_button.innerHTML = 'Stab';
     stab_button.addEventListener("click", Stab_button);
+    // stab_button.addEventListener('keydown', keydown);
     stab_button.title = "Eingabe Stab";
     stab_button.id = 'id_cad_stab_button'
     //stab_button.onmouseover = function () { this.style.backgroundColor = "RoyalBlue"; }
@@ -168,8 +173,10 @@ export function unDo_button() {
         let obj = list.getTail().two_obj;
         console.log("two.obj", obj)
         two.remove(obj);
-        list.removeTail();
+        let data = list.removeTail();
         two.update();
+
+        undoList.append(data);
     }
 
 }
@@ -177,11 +184,26 @@ export function unDo_button() {
 //--------------------------------------------------------------------------------------------------------
 export function reDo_button() {
     //----------------------------------------------------------------------------------------------------
+
+    if (undoList.size > 0) {
+
+        let obj = undoList.removeTail();
+        console.log("redo", obj)
+
+        let group = drawStab(obj.x1, obj.z1, obj.x2, obj.z2)
+
+        obj.setObj(group);   // alte line zuvor am Anfang dieser Funktion gelöscht
+        list.append(obj);
+
+        two.update();
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
-export function Stab_button() {
+export function Stab_button(ev: Event) {
     //----------------------------------------------------------------------------------------------------
+
+    console.log("in Stab_button", ev)
 
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement
 
@@ -189,10 +211,14 @@ export function Stab_button() {
         el.style.backgroundColor = 'DodgerBlue'
         stab_eingabe_aktiv = false
         cad_eingabe_aktiv = false
+        typ_cad_element = 0
+        el.removeEventListener('keydown', keydown);
     } else {
         el.style.backgroundColor = 'darkRed'
         stab_eingabe_aktiv = true
         cad_eingabe_aktiv = true
+        typ_cad_element = 1
+        el.addEventListener('keydown', keydown);
 
     }
 
@@ -302,8 +328,8 @@ export function init_two_cad(svg_id = 'artboard_cad') {
         domElement.addEventListener('pointerdown', pointerdown, false);
         domElement.addEventListener('pointerup', pointerup, false);
         domElement.addEventListener('pointermove', pointermove, false);
-        const id_cad = document.getElementById('id_CAD') as any;
-        id_cad.addEventListener('keydown', keydown);
+        // const id_cad = document.getElementById('id_CAD') as any;
+        // id_cad.addEventListener('keyup', keydown);
         domElement.addEventListener("contextmenu", (e: { preventDefault: () => any; }) => e.preventDefault());
 
         domElement.addEventListener('touchstart', touchstart, { passive: false });
@@ -412,10 +438,13 @@ export function init_cad(_flag: number) {
     console.log("list.size", list.size);
     for (let i = 0; i < list.size; i++) {
         let obj: TCADElement = list.getAt(i)
-        //console.log("obj",obj)
-        let line = two.makeLine(tr.xPix(obj.x1), tr.zPix(obj.z1), tr.xPix(obj.x2), tr.zPix(obj.z2));
-        line.linewidth = 2 /// devicePixelRatio;
-        obj.setObj(line);   // alte line zuvor am Anfang dieser Funktion gelöscht
+
+        let group = drawStab(obj.x1, obj.z1, obj.x2, obj.z2)
+
+        // console.log("obj", obj)
+        // let line = two.makeLine(tr.xPix(obj.x1), tr.zPix(obj.z1), tr.xPix(obj.x2), tr.zPix(obj.z2));
+        // line.linewidth = 2 /// devicePixelRatio;
+        obj.setObj(group);   // alte line zuvor am Anfang dieser Funktion gelöscht
     }
 
     two.update();
@@ -428,7 +457,7 @@ export function init_cad(_flag: number) {
 //--------------------------------------------------------------------------------------------------------
 function pointerdown(ev: PointerEvent) {
     //----------------------------------------------------------------------------------------------------
-    //console.log("in pointerdown", ev.pointerType);
+    console.log("in pointerdown", ev.pointerType);
 
     ev.preventDefault();
 
@@ -442,9 +471,11 @@ function pointerdown(ev: PointerEvent) {
             penDown(ev);
             mousedown(ev);
             break;
-        // case "touch":
-        //     touchmove(ev);
-        //     break;
+        case "touch":
+            isPen = true
+            penDown(ev);
+            mousedown(ev);
+            break;
     }
 }
 
@@ -464,9 +495,10 @@ function pointermove(ev: PointerEvent) {
             isPen = true
             mousemove(ev);
             break;
-        // case "touch":
-        //     touchmove(ev);
-        //     break;
+        case "touch":
+            isPen = true
+            mousemove(ev);
+            break;
     }
 }
 
@@ -487,9 +519,10 @@ function pointerup(ev: PointerEvent) {
             isPen = true
             mouseup(ev);
             break;
-        // case "touch":
-        //     touchmove(ev);
-        //     break;
+        case "touch":
+            isPen = true
+            mouseup(ev);
+            break;
     }
 }
 
@@ -599,7 +632,7 @@ function mousemove(ev: MouseEvent) {
         }
         let xc = tr.xWorld(ev.offsetX)
         let zc = tr.zWorld(ev.offsetY)
-        let txt = myFormat(xc, 2, 2) + '|' + myFormat(zc, 2, 2)
+        let txt = 'x: ' + myFormat(xc, 2, 2) + ' | z: ' + myFormat(zc, 2, 2)
         txt_mouseCoord = two.makeText(txt, two.width - 100, two.height - 20, style_txt)
         txt_mouseCoord.fill = '#000000'
         txt_mouseCoord.baseline = 'middle'
@@ -685,21 +718,22 @@ function mouseup(ev: any) {
                     end_x_wc = tr.xWorld(ev.offsetX)
                     end_z_wc = tr.zWorld(ev.offsetY)
                 }
-                let line1 = two.makeLine(start_x, start_y, end_x, end_y);
-                line1.linewidth = 3 /// devicePixelRatio;
 
                 // if (foundRasterPoint) {
                 //     two.remove(rasterPoint);
                 //     foundRasterPoint = false;
                 // }
 
+                let group = drawStab(start_x_wc, start_z_wc, end_x_wc, end_z_wc)
+
                 two.update();
+                //two.renderer.group.addEventListener("click",testclick)
 
                 input_started = 0
                 input_active = false
                 rubberband_drawn = false
 
-                const el = new TCADElement(line1, start_x_wc, start_z_wc, end_x_wc, end_z_wc, 0)
+                const el = new TCADElement(group, start_x_wc, start_z_wc, end_x_wc, end_z_wc, typ_cad_element)
                 list.append(el)
                 //list.log()
 
@@ -714,7 +748,7 @@ function mouseup(ev: any) {
 function keydown(ev: any) {
     //--------------------------------------------------------------------------------------------
 
-    //write('KEYDOWN ' + ev.target.type + ' | ' + ev)
+    console.log('KEYDOWN ' + ev.target.type + ' | ' + ev)
 
     console.log(
         'KEYDOWN, keycode, key, code: ',
@@ -744,18 +778,56 @@ function touchstart(ev: TouchEvent) {
 
     ev.preventDefault();
 
-    if (isPen) return;
+    //     if (isPen) return;
 
-    write("in touchstart " + ev.touches.length + " | " + input_started)
-    if (ev.touches.length === 1) {
-        if (input_started === 0) {
-            input_active = true
-            input_started = 1
-            touchstart_x = ev.touches[0].clientX
-            touchstart_y = ev.touches[0].clientY - grafik_top
-        }
-    }
+    //     console.log("in touchstart " + ev.touches.length + " | " + input_started)
+    //     if (ev.touches.length === 1) {
+    //         if (input_started === 0) {
+    //             input_active = true
+    //             input_started = 1
+    //             touchstart_x = ev.touches[0].clientX
+    //             touchstart_y = ev.touches[0].clientY - grafik_top
+    //         }
+    //     }
 }
+
+//--------------------------------------------------------------------------------------------------------
+// function myTouchStart(ev: PointerEvent) {
+//----------------------------------------------------------------------------------------------------
+
+// console.log("myPointerEvent", ev)
+// ev.preventDefault();
+
+//     if (isPen) return;
+
+//     if (cad_eingabe_aktiv) {
+
+//         if (input_started === 0) {
+//             input_active = true
+//             input_started = 1
+
+//             let xc = tr.xWorld(ev.offsetX)
+//             let zc = tr.zWorld(ev.offsetY)
+//             let gefunden = findNextRasterPoint(xc, zc)
+//             if (gefunden) {
+//                 rasterPoint = two.makeRectangle(tr.xPix(xRasterPoint), tr.zPix(zRasterPoint), 5, 5);
+//                 rasterPoint.fill = '#0000ff';
+//                 rasterPoint.stroke = "#0000ff";
+//                 foundRasterPoint = true;
+//                 touchstart_x = tr.xPix(xRasterPoint)
+//                 touchstart_y = tr.zPix(zRasterPoint)
+//                 start_x_wc = xRasterPoint
+//                 start_z_wc = zRasterPoint
+//             } else {
+//                 touchstart_x = ev.offsetX
+//                 touchstart_y = ev.offsetY
+//                 start_x_wc = xc
+//                 start_z_wc = zc
+//             }
+//         }
+//     }
+
+// }
 
 
 //--------------------------------------------------------------------------------------------------------
@@ -765,37 +837,37 @@ function touchend(ev: TouchEvent) {
     //write("in touchend " + ev.touches.length + " | " + input_started);
 
     ev.preventDefault();
-    if (isPen) return;
+    //     if (isPen) return;
 
 
 
-    // if (ev.touches.length === 0) {
-    //     if (input_started === 1) {
-    input_active = false
-    input_started = 0
-    //write("touchstart_x_y " + touchstart_x + " | " + touchstart_y);
+    //     // if (ev.touches.length === 0) {
+    //     //     if (input_started === 1) {
+    //     input_active = false
+    //     input_started = 0
+    //     //write("touchstart_x_y " + touchstart_x + " | " + touchstart_y);
 
-    //write("touchend_x_y " + touchend_x + " | " + touchend_y);
-    let line1 = two.makeLine(touchstart_x, touchstart_y, touchend_x, touchend_y);
-    line1.linewidth = 2 /// devicePixelRatio;
+    //     //write("touchend_x_y " + touchend_x + " | " + touchend_y);
+    //     let line1 = two.makeLine(touchstart_x, touchstart_y, touchend_x, touchend_y);
+    //     line1.linewidth = 2 /// devicePixelRatio;
 
-    two.update();
-    //     }
-    // }
+    //     two.update();
+    //     //     }
+    //     // }
 }
 
-//--------------------------------------------------------------------------------------------------------
+// //--------------------------------------------------------------------------------------------------------
 function touchmove(ev: TouchEvent) {
     //----------------------------------------------------------------------------------------------------
 
     ev.preventDefault();
-    if (isPen) return;
+    //     if (isPen) return;
 
-    //console.log("in touchmove", ev);
+    //     //console.log("in touchmove", ev);
 
 
-    touchend_x = ev.touches[0].clientX;
-    touchend_y = ev.touches[0].clientY - grafik_top;
+    //     touchend_x = ev.touches[0].clientX;
+    //     touchend_y = ev.touches[0].clientY - grafik_top;
 }
 
 //------------------------------------------------------------------------------------------------
@@ -932,4 +1004,43 @@ function findNextRasterPoint(xl: number, yl: number)
 
     return gefunden;
 
+}
+
+//-------------------------------------------------------------------------------------------------------
+function drawStab(x1_wc: number, z1_wc: number, x2_wc: number, z2_wc: number)
+//-------------------------------------------------------------------------------------------------------
+
+{
+    let group = two.makeGroup();
+    let line1 = two.makeLine(tr.xPix(x1_wc), tr.zPix(z1_wc), tr.xPix(x2_wc), tr.zPix(z2_wc));
+    line1.linewidth = 7 / devicePixelRatio;
+    group.add(line1)
+
+
+
+    // gestrichelte Faser
+
+    let dx = (x2_wc - x1_wc)
+    let dz = (z2_wc - z1_wc)
+    let dsl = Math.sqrt(dx * dx + dz * dz)
+    let sinus = dz / dsl
+    let cosinus = dx / dsl
+
+    let abstand = 10 / devicePixelRatio
+    let tmpX1 = tr.xPix(x1_wc + dx / 3) - sinus * abstand
+    let tmpZ1 = tr.zPix(z1_wc + dz / 3) + cosinus * abstand
+    let tmpX2 = tr.xPix(x2_wc - dx / 3) - sinus * abstand
+    let tmpZ2 = tr.zPix(z2_wc - dz / 3) + cosinus * abstand
+    //console.log("tmp", tmpX1, tmpZ1, tmpX2, tmpZ2)
+
+    let line2 = two.makeLine(tmpX1, tmpZ1, tmpX2, tmpZ2);
+    line2.linewidth = 1 / devicePixelRatio;
+    line2.dashes = [10, 4]
+    group.add(line2)
+
+    return group
+}
+
+function testclick() {
+    console.log("testclick")
 }
