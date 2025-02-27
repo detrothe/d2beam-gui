@@ -772,7 +772,7 @@ function mousemove(ev: MouseEvent) {
     //----------------------------------------------------------------------------------------------------
 
     // console.log('**********************************')
-    console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY)
+    // console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY)
     // console.log('**********************************')
 
     ev.preventDefault()

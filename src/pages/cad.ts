@@ -5,6 +5,7 @@ import { draw_arrow_alpha } from './grafik';
 import { myFormat, write } from './utility';
 import { LinkedList } from '../components/linkedlist';
 import { find_querschnittSet } from './rechnen';
+import { abstandPunktGerade_2D } from './lib';
 
 let two: any = null;
 let domElement: any = null
@@ -58,6 +59,9 @@ let foundNodePoint = false
 let cad_eingabe_aktiv = false
 let stab_eingabe_aktiv = false
 let typ_cad_element = 0
+
+let pick_element = false
+let picked_element = -1
 
 const style_txt = {
     family: 'system-ui, sans-serif',
@@ -147,6 +151,14 @@ export function cad_buttons() {
     redo_button.addEventListener("click", reDo_button);
     redo_button.title = "redo";
 
+    const trash_button = document.createElement("button");
+
+    trash_button.value = 'delete';
+    trash_button.className = "btn";
+    trash_button.innerHTML = '<i class = "fa fa-trash"></i>';
+    trash_button.addEventListener("click", delete_button);
+    trash_button.title = "Element löschen";
+    trash_button.id = 'id_cad_delete_button'
 
     const stab_button = document.createElement("button");
 
@@ -161,6 +173,7 @@ export function cad_buttons() {
 
     div.appendChild(undo_button);
     div.appendChild(redo_button);
+    div.appendChild(trash_button);
     div.appendChild(stab_button);
 
 }
@@ -196,6 +209,39 @@ export function reDo_button() {
         list.append(obj);
 
         two.update();
+    }
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function delete_button() {
+    //----------------------------------------------------------------------------------------------------
+
+    let el = document.getElementById("id_cad_delete_button") as HTMLButtonElement
+    el.style.backgroundColor = 'darkRed'
+
+    pick_element = true
+
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function delete_element(index: number, min_abstand: number) {
+    //----------------------------------------------------------------------------------------------------
+
+    if (index >= 0 && min_abstand < 0.25) {
+
+        if (list.size > 0) {
+
+            let obj = list.removeAt(index);
+            //console.log("two.obj", obj)
+            two.remove(obj.two_obj);
+
+            two.update();
+
+            undoList.append(obj);
+            pick_element = false
+            let el = document.getElementById("id_cad_delete_button") as HTMLButtonElement
+            el.style.backgroundColor = 'DodgerBlue'
+        }
     }
 }
 
@@ -328,6 +374,7 @@ export function init_two_cad(svg_id = 'artboard_cad') {
         domElement.addEventListener('pointerdown', pointerdown, false);
         domElement.addEventListener('pointerup', pointerup, false);
         domElement.addEventListener('pointermove', pointermove, false);
+
         // const id_cad = document.getElementById('id_CAD') as any;
         // id_cad.addEventListener('keyup', keydown);
         domElement.addEventListener("contextmenu", (e: { preventDefault: () => any; }) => e.preventDefault());
@@ -602,6 +649,8 @@ function mousemove(ev: MouseEvent) {
 
     ev.preventDefault()
 
+    //console.log(document.elementFromPoint(ev.offsetX, ev.offsetY));
+
     two.remove(cursorLineh);
     two.remove(cursorLinev);
     let len = 10
@@ -670,9 +719,27 @@ function mouseup(ev: any) {
     centerX_last = centerX
     centerY_last = centerY
 
+    if (pick_element) {
+        let xc = tr.xWorld(ev.offsetX)
+        let zc = tr.zWorld(ev.offsetY)
 
+        let min_abstand = 1.e30
+        let index = -1
+        for (let i = 0; i < list.size; i++) {
+            let obj = list.getAt(i);
+            let abstand = abstandPunktGerade_2D(obj.x1, obj.z1, obj.x2, obj.z2, xc, zc)
+            if (abstand > -1.0) {
+                if (abstand < min_abstand) {
+                    min_abstand = abstand
+                    index = i
+                }
+            }
+        }
+        console.log("ABSTAND", min_abstand, index)
+        delete_element(index, min_abstand)
+    }
 
-    if (cad_eingabe_aktiv) {
+    else if (cad_eingabe_aktiv) {
         if (ev.button === 0 || isPen) {   // Linker Mausbutton
             if (input_started === 0) {
                 input_active = true
@@ -727,7 +794,7 @@ function mouseup(ev: any) {
                 let group = drawStab(start_x_wc, start_z_wc, end_x_wc, end_z_wc)
 
                 two.update();
-                //two.renderer.group.addEventListener("click",testclick)
+                //domElement.addEventListener("mouseover",testclick)
 
                 input_started = 0
                 input_active = false

@@ -234,7 +234,7 @@ export class drRechteckQuerSchnitt extends LitElement {
     const shadow = this.shadowRoot;
     if (shadow) {
       let sel = shadow?.getElementById("id_profil_select") as HTMLSelectElement;
-      console.log("sel:", sel);
+      //console.log("sel:", sel);
       for (let i = 0; i < PROFIL.length; i++) {
         let option = document.createElement("option") as HTMLOptionElement;
 
