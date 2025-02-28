@@ -4,12 +4,14 @@ import { CTrans } from './trans';
 import { draw_arrow_alpha } from './grafik';
 import { myFormat, write } from './utility';
 import { LinkedList } from '../components/linkedlist';
-import { find_querschnittSet } from './rechnen';
+import { find_querschnittSet, TNode } from './rechnen';
 import { abstandPunktGerade_2D } from './lib';
+import { delete_element, pick_element } from './cad_buttons';
+import { draw_lager } from './cad_elemente';
 
-let two: any = null;
+export let two: any = null;
 let domElement: any = null
-let tr: CTrans
+export let tr: CTrans
 
 let devicePixelRatio = 1
 
@@ -58,10 +60,12 @@ let foundNodePoint = false
 
 let cad_eingabe_aktiv = false
 let stab_eingabe_aktiv = false
+let lager_eingabe_aktiv = false
 let typ_cad_element = 0
+let n_input_points = 0
 
-let pick_element = false
-let picked_element = -1
+
+export let picked_element = -1
 
 const style_txt = {
     family: 'system-ui, sans-serif',
@@ -100,8 +104,8 @@ class TCADElement {
     }
 }
 
-let list: LinkedList = new LinkedList(); // Empty list
-let undoList: LinkedList = new LinkedList(); // Empty undo list
+export let list: LinkedList = new LinkedList(); // Empty list
+export let undoList: LinkedList = new LinkedList(); // Empty undo list
 
 
 // list.append(1);                           // 1
@@ -130,122 +134,6 @@ function getFangweite() { return 0.2; }
 //--------------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------------
-export function cad_buttons() {
-    //----------------------------------------------------------------------------------------------------
-
-    let div = document.getElementById("id_cad_group") as HTMLDivElement
-
-    const undo_button = document.createElement("button");
-
-    undo_button.value = 'undo';
-    undo_button.className = "btn";
-    undo_button.innerHTML = '<i class = "fa fa-undo"></i>';
-    undo_button.addEventListener("click", unDo_button);
-    undo_button.title = "undo";
-
-    const redo_button = document.createElement("button");
-
-    redo_button.value = 'redo';
-    redo_button.className = "btn";
-    redo_button.innerHTML = '<i class = "fa fa-repeat"></i>';
-    redo_button.addEventListener("click", reDo_button);
-    redo_button.title = "redo";
-
-    const trash_button = document.createElement("button");
-
-    trash_button.value = 'delete';
-    trash_button.className = "btn";
-    trash_button.innerHTML = '<i class = "fa fa-trash"></i>';
-    trash_button.addEventListener("click", delete_button);
-    trash_button.title = "Element löschen";
-    trash_button.id = 'id_cad_delete_button'
-
-    const stab_button = document.createElement("button");
-
-    stab_button.value = 'Stab';
-    stab_button.className = "btn";
-    stab_button.innerHTML = 'Stab';
-    stab_button.addEventListener("click", Stab_button);
-    // stab_button.addEventListener('keydown', keydown);
-    stab_button.title = "Eingabe Stab";
-    stab_button.id = 'id_cad_stab_button'
-    //stab_button.onmouseover = function () { this.style.backgroundColor = "RoyalBlue"; }
-
-    div.appendChild(undo_button);
-    div.appendChild(redo_button);
-    div.appendChild(trash_button);
-    div.appendChild(stab_button);
-
-}
-
-//--------------------------------------------------------------------------------------------------------
-export function unDo_button() {
-    //----------------------------------------------------------------------------------------------------
-
-    if (list.size > 0) {
-        let obj = list.getTail().two_obj;
-        console.log("two.obj", obj)
-        two.remove(obj);
-        let data = list.removeTail();
-        two.update();
-
-        undoList.append(data);
-    }
-
-}
-
-//--------------------------------------------------------------------------------------------------------
-export function reDo_button() {
-    //----------------------------------------------------------------------------------------------------
-
-    if (undoList.size > 0) {
-
-        let obj = undoList.removeTail();
-        console.log("redo", obj)
-
-        let group = drawStab(obj.x1, obj.z1, obj.x2, obj.z2)
-
-        obj.setObj(group);   // alte line zuvor am Anfang dieser Funktion gelöscht
-        list.append(obj);
-
-        two.update();
-    }
-}
-
-//--------------------------------------------------------------------------------------------------------
-export function delete_button() {
-    //----------------------------------------------------------------------------------------------------
-
-    let el = document.getElementById("id_cad_delete_button") as HTMLButtonElement
-    el.style.backgroundColor = 'darkRed'
-
-    pick_element = true
-
-}
-
-//--------------------------------------------------------------------------------------------------------
-export function delete_element(index: number, min_abstand: number) {
-    //----------------------------------------------------------------------------------------------------
-
-    if (index >= 0 && min_abstand < 0.25) {
-
-        if (list.size > 0) {
-
-            let obj = list.removeAt(index);
-            //console.log("two.obj", obj)
-            two.remove(obj.two_obj);
-
-            two.update();
-
-            undoList.append(obj);
-            pick_element = false
-            let el = document.getElementById("id_cad_delete_button") as HTMLButtonElement
-            el.style.backgroundColor = 'DodgerBlue'
-        }
-    }
-}
-
-//--------------------------------------------------------------------------------------------------------
 export function Stab_button(ev: Event) {
     //----------------------------------------------------------------------------------------------------
 
@@ -259,17 +147,45 @@ export function Stab_button(ev: Event) {
         cad_eingabe_aktiv = false
         typ_cad_element = 0
         el.removeEventListener('keydown', keydown);
+        n_input_points = 0
     } else {
         el.style.backgroundColor = 'darkRed'
         stab_eingabe_aktiv = true
         cad_eingabe_aktiv = true
         typ_cad_element = 1
         el.addEventListener('keydown', keydown);
+        n_input_points = 2
 
     }
 
 }
 
+//--------------------------------------------------------------------------------------------------------
+export function Lager_button(ev: Event) {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in Lager_button", ev)
+
+    let el = document.getElementById("id_cad_lager_button") as HTMLButtonElement
+
+    if (lager_eingabe_aktiv) {
+        el.style.backgroundColor = 'DodgerBlue'
+        lager_eingabe_aktiv = false
+        cad_eingabe_aktiv = false
+        typ_cad_element = 0
+        el.removeEventListener('keydown', keydown);
+        n_input_points = 0
+    } else {
+        el.style.backgroundColor = 'darkRed'
+        lager_eingabe_aktiv = true
+        cad_eingabe_aktiv = true
+        typ_cad_element = 2   //Lager
+        el.addEventListener('keydown', keydown);
+        n_input_points = 1
+
+    }
+
+}
 //--------------------------------------------------------------------------------------------------------
 export function click_zurueck_cad() {
     //----------------------------------------------------------------------------------------------------
@@ -767,6 +683,24 @@ function mouseup(ev: any) {
                     start_x_wc = xc
                     start_z_wc = zc
                 }
+                if (n_input_points === 1) {
+
+                    if (lager_eingabe_aktiv) {
+                        //let group=two.makeRectangle(start_x,start_y,20,20);
+                        let node = new TNode
+                        node.L_org[0] = 1
+                        node.L_org[1] = 1
+                        node.x = start_x_wc
+                        node.z = start_z_wc
+                        let group = draw_lager(two, tr, node)
+                        two.update();
+                        const el = new TCADElement(group, start_x_wc, start_z_wc, start_x_wc, start_z_wc, typ_cad_element)
+                        list.append(el)
+                    }
+                    input_started = 0
+                    input_active = false
+                    rubberband_drawn = false
+                }
             } else if (input_started === 1) {
                 two.remove(rubberband);
 
@@ -1074,7 +1008,7 @@ function findNextRasterPoint(xl: number, yl: number)
 }
 
 //-------------------------------------------------------------------------------------------------------
-function drawStab(x1_wc: number, z1_wc: number, x2_wc: number, z2_wc: number)
+export function drawStab(x1_wc: number, z1_wc: number, x2_wc: number, z2_wc: number)
 //-------------------------------------------------------------------------------------------------------
 
 {

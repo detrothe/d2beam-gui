@@ -175,7 +175,7 @@ export const FACHWERK = 1;
 
 //__________________________________________________________________________________________________
 
-class TNode {
+export class TNode {
     x: number = 1.0                                 // Knotenkoordinaten bezogen auf Hilfskoordinatensystem
     z: number = 1.0
 

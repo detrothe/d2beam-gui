@@ -64,8 +64,8 @@ export function abstandPunktGerade_2D_v(p1: number[], p2: number[], pQ: number[]
 
     let abstand = -1.0
 
-    a[X] = p2[X] - p1[X];
-    a[Y] = p2[Y] - p1[Y];
+    a[X] = p2[X] - p1[X];  // dx
+    a[Y] = p2[Y] - p1[Y];  // dy
     // a[Z] = p2[Z] - p1[Z];
 
     aBetrag = Math.sqrt(a[X] * a[X] + a[Y] * a[Y]);
@@ -96,15 +96,21 @@ export function abstandPunktGerade_2D(p1x: number, p1y: number, p2x: number, p2y
 
     let abstand = -1.0
 
-    ax = p2x - p1x;
-    ay = p2y - p1y;
+    ax = p2x - p1x;   // dx
+    ay = p2y - p1y;   // dy
 
-    aBetrag = Math.sqrt(ax * ax + ay * ay);
+    let det = ax * ax + ay * ay
+
+    aBetrag = Math.sqrt(det);
 
     if (aBetrag < 1.e-12) return abstand;         // Geradenpunkte sind zu nahe beieinander
 
     bx = pQx - p1x;
     by = pQy - p1y;
+
+    let eta = (ax * bx + ay * by) / det
+    //console.log("eta", eta)
+    if ( eta < 0.0 || eta > 1.0 ) return abstand;
 
     // cross product
 
