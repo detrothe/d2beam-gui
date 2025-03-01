@@ -1,5 +1,7 @@
-import { list, undoList, drawStab, Stab_button, Lager_button } from './cad'
+import { list, undoList, drawStab, Stab_button, Lager_button, lager_eingabe_beenden } from './cad'
 import { two } from './cad'
+
+import "../components/dr-dialog_lager";
 
 export let pick_element = false
 
@@ -132,3 +134,40 @@ export function delete_element(index: number, min_abstand: number) {
     }
 }
 
+
+//---------------------------------------------------------------------------------------------------------------
+
+export function showDialog_lager() {
+    //------------------------------------------------------------------------------------------------------------
+    console.log("handleClick_lager()");
+
+    const el = document.getElementById("id_dialog_lager");
+    console.log('id_dialog_lager', el);
+
+    console.log("shadow", el?.shadowRoot?.getElementById("dialog_lager")),
+        (el?.shadowRoot?.getElementById("dialog_lager") as HTMLDialogElement).addEventListener("close", dialog_lager_closed);
+
+    (el?.shadowRoot?.getElementById("dialog_lager") as HTMLDialogElement).showModal();
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_lager_closed(this: any, e: any) {
+    //------------------------------------------------------------------------------------------------------------
+    console.log("Event dialog_lager_closed", e);
+    console.log("this", this);
+    const ele = document.getElementById("id_dialog_lager") as HTMLDialogElement;
+
+    // ts-ignore
+    const returnValue = this.returnValue;
+
+    (ele?.shadowRoot?.getElementById("dialog_lager") as HTMLDialogElement).removeEventListener("close", dialog_lager_closed);
+
+    if (returnValue === "ok") {
+        //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+        console.log("sieht gut aus")
+    } else {
+        // Abbruch
+        lager_eingabe_beenden();
+    }
+}

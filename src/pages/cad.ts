@@ -6,7 +6,7 @@ import { myFormat, write } from './utility';
 import { LinkedList } from '../components/linkedlist';
 import { find_querschnittSet, TNode } from './rechnen';
 import { abstandPunktGerade_2D } from './lib';
-import { delete_element, pick_element } from './cad_buttons';
+import { delete_element, handleClick_lager, pick_element, showDialog_lager } from './cad_buttons';
 import { draw_lager } from './cad_elemente';
 
 export let two: any = null;
@@ -169,12 +169,7 @@ export function Lager_button(ev: Event) {
     let el = document.getElementById("id_cad_lager_button") as HTMLButtonElement
 
     if (lager_eingabe_aktiv) {
-        el.style.backgroundColor = 'DodgerBlue'
-        lager_eingabe_aktiv = false
-        cad_eingabe_aktiv = false
-        typ_cad_element = 0
-        el.removeEventListener('keydown', keydown);
-        n_input_points = 0
+        lager_eingabe_beenden()
     } else {
         el.style.backgroundColor = 'darkRed'
         lager_eingabe_aktiv = true
@@ -183,9 +178,29 @@ export function Lager_button(ev: Event) {
         el.addEventListener('keydown', keydown);
         n_input_points = 1
 
+        showDialog_lager();
+
+        // jetzt auf Pointer eingabe warten
+
     }
 
 }
+
+
+//--------------------------------------------------------------------------------------------------------
+export function lager_eingabe_beenden() {
+    //----------------------------------------------------------------------------------------------------
+
+    let el = document.getElementById("id_cad_lager_button") as HTMLButtonElement
+
+    el.style.backgroundColor = 'DodgerBlue'
+    lager_eingabe_aktiv = false
+    cad_eingabe_aktiv = false
+    typ_cad_element = 0
+    el.removeEventListener('keydown', keydown);
+    n_input_points = 0
+}
+
 //--------------------------------------------------------------------------------------------------------
 export function click_zurueck_cad() {
     //----------------------------------------------------------------------------------------------------
@@ -876,8 +891,9 @@ function drawRaster() {
     //--------------------------------------------------------------------------------------------
 
     let xp = 0.0, zp = 0.0, xg = 0.0, zg = 0.0
+    const color = '#aaaaaa';
 
-    let size = 5 / devicePixelRatio
+    let size = 3 / devicePixelRatio
 
     let nx = Math.abs(raster_xmax - raster_xmin) / raster_dx;
     let nz = Math.abs(raster_zmax - raster_zmin) / raster_dz;
@@ -889,8 +905,8 @@ function drawRaster() {
         while (xp <= raster_xmax) {
             xg = xp; zg = zp;
             let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
-            rechteck.fill = '#ff0000';
-            rechteck.stroke = "#ff0000";
+            rechteck.fill = color;
+            rechteck.stroke = color;
             xp += raster_dx;
         }
         zp += raster_dz;
@@ -903,8 +919,8 @@ function drawRaster() {
         while (xp >= raster_xmin) {
             xg = xp; zg = zp;
             let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
-            rechteck.fill = '#ff0000';
-            rechteck.stroke = "#ff0000";
+            rechteck.fill = color;
+            rechteck.stroke = color;
             xp -= raster_dx;
         }
         zp -= raster_dz;
@@ -916,8 +932,8 @@ function drawRaster() {
         while (xp >= raster_xmin) {
             xg = xp; zg = zp;
             let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
-            rechteck.fill = '#ff0000';
-            rechteck.stroke = "#ff0000";
+            rechteck.fill = color;
+            rechteck.stroke = color;
             xp -= raster_dx;
         }
         zp += raster_dz;
@@ -929,8 +945,8 @@ function drawRaster() {
         while (xp <= raster_xmax) {
             xg = xp; zg = zp;
             let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
-            rechteck.fill = '#ff0000';
-            rechteck.stroke = "#ff0000";
+            rechteck.fill = color;
+            rechteck.stroke = color;
             xp += raster_dx;
         }
         zp -= raster_dz;

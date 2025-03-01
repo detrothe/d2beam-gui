@@ -29,6 +29,7 @@ import "../components/dr-tabelle";
 import "../components/dr-dialog-layerquerschnitt";
 import "../components/dr-dialog-rechteckquerschnitt";
 import "../components/dr-dialog_neue_eingabe";
+import "../components/dr-dialog_lager";
 
 import { drButtonPM } from "../components/dr-button-pm";
 import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt";
@@ -79,7 +80,7 @@ import { click_zurueck_cad, init_cad, init_two_cad } from "./cad";
 import { cad_buttons } from './cad_buttons'
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v2.0.0.a, 28-Februar-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v2.0.0.a, 1-März-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -325,6 +326,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <div id="artboard_cad" style="margin:0;padding:0;"></div>
           <div id="svg_artboard_cad" style="margin:0;padding:0;display:none"></div>
         </div>
+
+        <dr-dialog_lager id="id_dialog_lager"></dr-dialog_lager>
+
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
