@@ -80,7 +80,7 @@ import { click_zurueck_cad, init_cad, init_two_cad } from "./cad";
 import { cad_buttons } from './cad_buttons'
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v2.0.0.a, 1-März-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v2.0.0.a, 3-März-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;

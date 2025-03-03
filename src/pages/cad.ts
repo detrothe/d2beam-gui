@@ -4,9 +4,9 @@ import { CTrans } from './trans';
 import { draw_arrow_alpha } from './grafik';
 import { myFormat, write } from './utility';
 import { LinkedList } from '../components/linkedlist';
-import { find_querschnittSet, TNode } from './rechnen';
+import { TNode } from './rechnen';
 import { abstandPunktGerade_2D } from './lib';
-import { delete_element, handleClick_lager, pick_element, showDialog_lager } from './cad_buttons';
+import { delete_element, buttons_control, read_lager_dialog, showDialog_lager } from './cad_buttons';
 import { draw_lager } from './cad_elemente';
 
 export let two: any = null;
@@ -35,8 +35,8 @@ let centerY_last = 0.0
 let rubberband: any = null
 let input_active = false
 let rubberband_drawn = false
-let input_x = 0
-let input_y = 0
+// let input_x = 0
+// let input_y = 0
 let start_x = 0, end_x = 0
 let start_y = 0, end_y = 0
 // let touchstart_x = 0, touchend_x = 0
@@ -58,11 +58,11 @@ let rasterPoint: any = null
 let foundRasterPoint = false
 let foundNodePoint = false
 
-let cad_eingabe_aktiv = false
-let stab_eingabe_aktiv = false
-let lager_eingabe_aktiv = false
-let typ_cad_element = 0
-let n_input_points = 0
+// let cad_eingabe_aktiv = false
+// let stab_eingabe_aktiv = false
+// let lager_eingabe_aktiv = false
+// let typ_cad_element = 0
+// let n_input_points = 0
 
 
 export let picked_element = -1
@@ -108,6 +108,7 @@ export let list: LinkedList = new LinkedList(); // Empty list
 export let undoList: LinkedList = new LinkedList(); // Empty undo list
 
 
+
 // list.append(1);                           // 1
 // list.prepend('Hello');                    // Hello <-> 1
 // list.prepend(2);                          // 2 <-> Hello <-> 1
@@ -141,20 +142,19 @@ export function Stab_button(ev: Event) {
 
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement
 
-    if (stab_eingabe_aktiv) {
-        el.style.backgroundColor = 'DodgerBlue'
-        stab_eingabe_aktiv = false
-        cad_eingabe_aktiv = false
-        typ_cad_element = 0
+    if (buttons_control.stab_eingabe_aktiv) {
+        // el.style.backgroundColor = 'DodgerBlue'
+        buttons_control.reset()
         el.removeEventListener('keydown', keydown);
-        n_input_points = 0
     } else {
+        buttons_control.reset()
+
         el.style.backgroundColor = 'darkRed'
-        stab_eingabe_aktiv = true
-        cad_eingabe_aktiv = true
-        typ_cad_element = 1
+        buttons_control.stab_eingabe_aktiv = true
+        buttons_control.cad_eingabe_aktiv = true
+        buttons_control.typ_cad_element = 1
         el.addEventListener('keydown', keydown);
-        n_input_points = 2
+        buttons_control.n_input_points = 2
 
     }
 
@@ -168,15 +168,16 @@ export function Lager_button(ev: Event) {
 
     let el = document.getElementById("id_cad_lager_button") as HTMLButtonElement
 
-    if (lager_eingabe_aktiv) {
+    if (buttons_control.lager_eingabe_aktiv) {
         lager_eingabe_beenden()
     } else {
+        buttons_control.reset()
         el.style.backgroundColor = 'darkRed'
-        lager_eingabe_aktiv = true
-        cad_eingabe_aktiv = true
-        typ_cad_element = 2   //Lager
+        buttons_control.lager_eingabe_aktiv = true
+        buttons_control.cad_eingabe_aktiv = true
+        buttons_control.typ_cad_element = 2   //Lager
         el.addEventListener('keydown', keydown);
-        n_input_points = 1
+        buttons_control.n_input_points = 1
 
         showDialog_lager();
 
@@ -193,12 +194,13 @@ export function lager_eingabe_beenden() {
 
     let el = document.getElementById("id_cad_lager_button") as HTMLButtonElement
 
-    el.style.backgroundColor = 'DodgerBlue'
-    lager_eingabe_aktiv = false
-    cad_eingabe_aktiv = false
-    typ_cad_element = 0
+    //el.style.backgroundColor = 'DodgerBlue'
+    buttons_control.reset()
     el.removeEventListener('keydown', keydown);
-    n_input_points = 0
+    // lager_eingabe_aktiv = false
+    // cad_eingabe_aktiv = false
+    // typ_cad_element = 0
+    // n_input_points = 0
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -495,11 +497,11 @@ function pointerup(ev: PointerEvent) {
             break;
         case "pen":
             isPen = true
-            mouseup(ev);
+            if (buttons_control.n_input_points > 1) mouseup(ev);
             break;
         case "touch":
             isPen = true
-            mouseup(ev);
+            if (buttons_control.n_input_points > 1) mouseup(ev);
             break;
     }
 }
@@ -511,7 +513,7 @@ function penDown(ev: PointerEvent) {
 
     ev.preventDefault();
 
-    if (cad_eingabe_aktiv) {
+    if (buttons_control.cad_eingabe_aktiv) {
 
         if (input_started === 0) {
             input_active = true
@@ -534,6 +536,27 @@ function penDown(ev: PointerEvent) {
                 start_y = ev.offsetY
                 start_x_wc = xc
                 start_z_wc = zc
+            }
+
+            if (buttons_control.n_input_points === 1) {
+
+                if (buttons_control.lager_eingabe_aktiv) {
+                    //let group=two.makeRectangle(start_x,start_y,20,20);
+                    let node = new TNode
+                    // node.L_org[0] = 1
+                    // node.L_org[1] = 1
+                    // node.x = start_x_wc
+                    // node.z = start_z_wc
+                    read_lager_dialog(node);
+
+                    let group = draw_lager(two, tr, node)
+                    two.update();
+                    const el = new TCADElement(group, start_x_wc, start_z_wc, start_x_wc, start_z_wc, buttons_control.typ_cad_element)
+                    list.append(el)
+                }
+                input_started = 0
+                input_active = false
+                rubberband_drawn = false
             }
         }
     }
@@ -588,7 +611,7 @@ function mousemove(ev: MouseEvent) {
     cursorLineh = two.makeLine(ev.offsetX - len, ev.offsetY, ev.offsetX + len, ev.offsetY);
     cursorLinev = two.makeLine(ev.offsetX, ev.offsetY - len, ev.offsetX, ev.offsetY + len);
 
-    if (cad_eingabe_aktiv) {
+    if (buttons_control.cad_eingabe_aktiv) {
 
 
         if (rubberband_drawn) {
@@ -650,7 +673,7 @@ function mouseup(ev: any) {
     centerX_last = centerX
     centerY_last = centerY
 
-    if (pick_element) {
+    if (buttons_control.pick_element) {
         let xc = tr.xWorld(ev.offsetX)
         let zc = tr.zWorld(ev.offsetY)
 
@@ -670,7 +693,7 @@ function mouseup(ev: any) {
         delete_element(index, min_abstand)
     }
 
-    else if (cad_eingabe_aktiv) {
+    else if (buttons_control.cad_eingabe_aktiv) {
         if (ev.button === 0 || isPen) {   // Linker Mausbutton
             if (input_started === 0) {
                 input_active = true
@@ -698,18 +721,19 @@ function mouseup(ev: any) {
                     start_x_wc = xc
                     start_z_wc = zc
                 }
-                if (n_input_points === 1) {
+                if (buttons_control.n_input_points === 1) {
 
-                    if (lager_eingabe_aktiv) {
+                    if (buttons_control.lager_eingabe_aktiv) {
                         //let group=two.makeRectangle(start_x,start_y,20,20);
                         let node = new TNode
-                        node.L_org[0] = 1
-                        node.L_org[1] = 1
+                        // node.L_org[0] = 1
+                        // node.L_org[1] = 1
                         node.x = start_x_wc
                         node.z = start_z_wc
+                        read_lager_dialog(node);
                         let group = draw_lager(two, tr, node)
                         two.update();
-                        const el = new TCADElement(group, start_x_wc, start_z_wc, start_x_wc, start_z_wc, typ_cad_element)
+                        const el = new TCADElement(group, start_x_wc, start_z_wc, start_x_wc, start_z_wc, buttons_control.typ_cad_element)
                         list.append(el)
                     }
                     input_started = 0
@@ -749,7 +773,7 @@ function mouseup(ev: any) {
                 input_active = false
                 rubberband_drawn = false
 
-                const el = new TCADElement(group, start_x_wc, start_z_wc, end_x_wc, end_z_wc, typ_cad_element)
+                const el = new TCADElement(group, start_x_wc, start_z_wc, end_x_wc, end_z_wc, buttons_control.typ_cad_element)
                 list.append(el)
                 //list.log()
 
