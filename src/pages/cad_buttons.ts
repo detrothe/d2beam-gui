@@ -1,9 +1,11 @@
-import { list, undoList, drawStab, Stab_button, Lager_button, lager_eingabe_beenden } from "./cad";
+import { list, undoList, drawStab, Stab_button, Lager_button, lager_eingabe_beenden, CAD_KNOTEN } from "./cad";
 import { two } from "./cad";
 import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 
 import "../components/dr-dialog_lager";
+import "../components/dr-dialog_knoten";
+
 import { TNode } from "./rechnen";
 
 //export let pick_element = false
@@ -11,16 +13,20 @@ import { TNode } from "./rechnen";
 class Cbuttons_control {
   pick_element = false;
   cad_eingabe_aktiv = false;
+  knoten_eingabe_aktiv = false;
   stab_eingabe_aktiv = false;
   lager_eingabe_aktiv = false;
+  knotenlast_eingabe_aktiv = false;
   typ_cad_element = 0;
   n_input_points = 0;
 
   reset() {
     this.pick_element = false;
     this.cad_eingabe_aktiv = false;
+    this.knoten_eingabe_aktiv = false;
     this.stab_eingabe_aktiv = false;
     this.lager_eingabe_aktiv = false;
+    this.knotenlast_eingabe_aktiv = false;
     this.typ_cad_element = 0;
     this.n_input_points = 0;
 
@@ -30,6 +36,11 @@ class Cbuttons_control {
     el.style.backgroundColor = "DodgerBlue";
     el = document.getElementById("id_cad_delete_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
+    el = document.getElementById("id_cad_knoten_button") as HTMLButtonElement;
+    el.style.backgroundColor = "DodgerBlue";
+    el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement;
+    el.style.backgroundColor = "DodgerBlue";
+
   }
 }
 
@@ -66,6 +77,16 @@ export function cad_buttons() {
   trash_button.title = "Element löschen";
   trash_button.id = "id_cad_delete_button";
 
+  const knoten_button = document.createElement("button");
+
+  knoten_button.value = "Knoten";
+  knoten_button.className = "btn";
+  knoten_button.innerHTML = "Knoten";
+  knoten_button.addEventListener("click", Knoten_button);
+  // stab_button.addEventListener('keydown', keydown);
+  knoten_button.title = "Eingabe Knoten";
+  knoten_button.id = "id_cad_knoten_button";
+
   const stab_button = document.createElement("button");
 
   stab_button.value = "Stab";
@@ -87,11 +108,24 @@ export function cad_buttons() {
   lager_button.title = "Eingabe Lager";
   lager_button.id = "id_cad_lager_button";
 
+
+  const knotlast_button = document.createElement("button");
+
+  knotlast_button.value = "Knotenlast";
+  knotlast_button.className = "btn";
+  knotlast_button.innerHTML = "KnLast";
+  knotlast_button.addEventListener("click", Lager_button);
+  // stab_button.addEventListener('keydown', keydown);
+  knotlast_button.title = "Eingabe Knotenlasten";
+  knotlast_button.id = "id_cad_knotenlast_button";
+
   div.appendChild(undo_button);
   div.appendChild(redo_button);
   div.appendChild(trash_button);
+  div.appendChild(knoten_button);
   div.appendChild(stab_button);
   div.appendChild(lager_button);
+  div.appendChild(knotlast_button);
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -212,4 +246,78 @@ export function read_lager_dialog(node: TNode) {
   const lphi = elem.checked;
   if (lphi) node.L_org[2] = 1;
   else node.L_org[2] = 0;
+}
+
+
+export function showDialog_knoten() {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("showDialog_knoten()");
+
+  const el = document.getElementById("id_dialog_knoten");
+  console.log("id_dialog_knoten", el);
+
+  console.log("shadow showDialog_knoten", el?.shadowRoot?.getElementById("dialog_knoten")),
+  (el?.shadowRoot?.getElementById("dialog_knoten") as HTMLDialogElement).addEventListener("close", dialog_knoten_closed);
+
+  (el?.shadowRoot?.getElementById("dialog_knoten") as HTMLDialogElement).showModal();
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_knoten_closed(this: any, e: any) {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("Event dialog_knoten_closed", e);
+  console.log("this", this);
+  const ele = document.getElementById("id_dialog_knoten") as HTMLDialogElement;
+
+  // ts-ignore
+  const returnValue = this.returnValue;
+
+  if (returnValue === "ok") {
+    //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+    console.log("sieht gut aus");
+  } else {
+    // Abbruch
+    (ele?.shadowRoot?.getElementById("dialog_knoten") as HTMLDialogElement).removeEventListener("close", dialog_knoten_closed);
+
+    knoten_eingabe_beenden();
+  }
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function Knoten_button(ev: Event) {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in Knoten_button", ev)
+
+    let el = document.getElementById("id_cad_knoten_button") as HTMLButtonElement
+
+    if (buttons_control.knoten_eingabe_aktiv) {
+//        knoten_eingabe_beenden()
+        buttons_control.reset()
+
+    } else {
+        buttons_control.reset()
+        el.style.backgroundColor = 'darkRed'
+        buttons_control.knoten_eingabe_aktiv = true
+        buttons_control.cad_eingabe_aktiv = false
+        buttons_control.typ_cad_element=CAD_KNOTEN
+        //el.addEventListener('keydown', keydown);
+        buttons_control.n_input_points = 0
+
+        showDialog_knoten();
+
+    }
+
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function knoten_eingabe_beenden() {
+    //----------------------------------------------------------------------------------------------------
+
+    let el = document.getElementById("id_cad_knoten_button") as HTMLButtonElement
+
+    buttons_control.reset()
+
 }

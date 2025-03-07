@@ -9,6 +9,15 @@ import { abstandPunktGerade_2D } from './lib';
 import { delete_element, buttons_control, read_lager_dialog, showDialog_lager } from './cad_buttons';
 import { draw_lager } from './cad_elemente';
 
+import "../components/dr-dialog_knoten";
+import { drDialogKnoten } from '../components/dr-dialog_knoten';
+import { add_cad_node, find_nearest_cad_node, get_cad_node_X, get_cad_node_Z, TCADNode } from './cad_node';
+
+export const CAD_KNOTEN = 1
+export const CAD_STAB = 2
+export const CAD_KNLAST = 3
+export const CAD_LAGER = 4
+
 export let two: any = null;
 let domElement: any = null
 export let tr: CTrans
@@ -54,7 +63,9 @@ let xminv = 0.0, xmaxv = 0.0, zminv = 0.0, zmaxv = 0.0
 let raster_xmin = -1.0, raster_xmax = 10.0, raster_zmin = -1.0, raster_zmax = 9.0
 let raster_dx = 0.5, raster_dz = 0.5
 let xRasterPoint = 0.0, zRasterPoint = 0.0
+let xNodePoint = 0.0, zNodePoint = 0.0
 let rasterPoint: any = null
+let nodePoint: any = null
 let foundRasterPoint = false
 let foundNodePoint = false
 
@@ -107,6 +118,8 @@ class TCADElement {
 export let list: LinkedList = new LinkedList(); // Empty list
 export let undoList: LinkedList = new LinkedList(); // Empty undo list
 
+window.addEventListener('draw_cad_knoten', draw_cad_knoten);
+
 
 
 // list.append(1);                           // 1
@@ -152,7 +165,7 @@ export function Stab_button(ev: Event) {
         el.style.backgroundColor = 'darkRed'
         buttons_control.stab_eingabe_aktiv = true
         buttons_control.cad_eingabe_aktiv = true
-        buttons_control.typ_cad_element = 1
+        buttons_control.typ_cad_element = CAD_STAB
         el.addEventListener('keydown', keydown);
         buttons_control.n_input_points = 2
 
@@ -175,7 +188,7 @@ export function Lager_button(ev: Event) {
         el.style.backgroundColor = 'darkRed'
         buttons_control.lager_eingabe_aktiv = true
         buttons_control.cad_eingabe_aktiv = true
-        buttons_control.typ_cad_element = 2   //Lager
+        buttons_control.typ_cad_element = CAD_LAGER
         el.addEventListener('keydown', keydown);
         buttons_control.n_input_points = 1
 
@@ -521,21 +534,39 @@ function penDown(ev: PointerEvent) {
 
             let xc = tr.xWorld(ev.offsetX)
             let zc = tr.zWorld(ev.offsetY)
-            let gefunden = findNextRasterPoint(xc, zc)
-            if (gefunden) {
-                rasterPoint = two.makeRectangle(tr.xPix(xRasterPoint), tr.zPix(zRasterPoint), 5, 5);
-                rasterPoint.fill = '#0000ff';
-                rasterPoint.stroke = "#0000ff";
-                foundRasterPoint = true;
-                start_x = tr.xPix(xRasterPoint)
-                start_y = tr.zPix(zRasterPoint)
-                start_x_wc = xRasterPoint
-                start_z_wc = zRasterPoint
+
+            // find next CAD node
+
+            let index = find_nearest_cad_node(xc, zc)
+            console.log("mouseup, index", index, xc, zc)
+            if (index > -1) {
+                let x = get_cad_node_X(index)
+                let z = get_cad_node_Z(index)
+                let makeRoundedRectangle = two.makeRoundedRectangle(tr.xPix(x), tr.zPix(z), 15, 15, 4)
+                makeRoundedRectangle.fill = '#001111'
+                start_x = tr.xPix(x)
+                start_y = tr.zPix(z)
+                start_x_wc = x
+                start_z_wc = z
+                foundNodePoint = true
             } else {
-                start_x = ev.offsetX
-                start_y = ev.offsetY
-                start_x_wc = xc
-                start_z_wc = zc
+                let gefunden = findNextRasterPoint(xc, zc)
+                if (gefunden) {
+                    rasterPoint = two.makeRectangle(tr.xPix(xRasterPoint), tr.zPix(zRasterPoint), 5, 5);
+                    rasterPoint.fill = '#0000ff';
+                    rasterPoint.stroke = "#0000ff";
+                    foundRasterPoint = true;
+
+                    start_x = tr.xPix(xRasterPoint)
+                    start_y = tr.zPix(zRasterPoint)
+                    start_x_wc = xRasterPoint
+                    start_z_wc = zRasterPoint
+                } else {
+                    start_x = ev.offsetX
+                    start_y = ev.offsetY
+                    start_x_wc = xc
+                    start_z_wc = zc
+                }
             }
 
             if (buttons_control.n_input_points === 1) {
@@ -621,6 +652,10 @@ function mousemove(ev: MouseEvent) {
             two.remove(rasterPoint);
             foundRasterPoint = false;
         }
+        if (foundNodePoint) {
+            two.remove(nodePoint);
+            foundNodePoint = false;
+        }
 
         if (input_started === 1) {
             rubberband = two.makeLine(start_x, start_y, ev.offsetX, ev.offsetY);
@@ -641,18 +676,27 @@ function mousemove(ev: MouseEvent) {
         txt_mouseCoord.baseline = 'middle'
         txt_mouseCoord.alignment = 'left'
 
-        // if (rubberband_drawn) {
-        let gefunden = findNextRasterPoint(xc, zc)
-        if (gefunden) {
-            rasterPoint = two.makeRectangle(tr.xPix(xRasterPoint), tr.zPix(zRasterPoint), 5, 5);
-            rasterPoint.fill = '#0000ff';
-            rasterPoint.stroke = "#0000ff";
-            foundRasterPoint = true;
+        // find next CAD node
+
+        let index = find_nearest_cad_node(xc, zc)
+        if (index > -1) {
+            nodePoint = two.makeRoundedRectangle(tr.xPix(get_cad_node_X(index)), tr.zPix(get_cad_node_Z(index)), 15, 15, 4)
+            nodePoint.fill = '#001111'
+            foundNodePoint = true
+            xNodePoint = get_cad_node_X(index)
+            zNodePoint = get_cad_node_Z(index)
+        } else {
+            // if (rubberband_drawn) {
+            let gefunden = findNextRasterPoint(xc, zc)
+            if (gefunden) {
+                rasterPoint = two.makeRectangle(tr.xPix(xRasterPoint), tr.zPix(zRasterPoint), 5, 5);
+                rasterPoint.fill = '#0000ff';
+                rasterPoint.stroke = "#0000ff";
+                foundRasterPoint = true;
+            }
+
         }
-        // }
-
     }
-
     two.update();
 
 }
@@ -703,23 +747,43 @@ function mouseup(ev: any) {
                     two.remove(rasterPoint);
                     foundRasterPoint = false;
                 }
+                if (foundNodePoint) {
+                    two.remove(nodePoint);
+                    foundNodePoint = false;
+                }
                 let xc = tr.xWorld(ev.offsetX)
                 let zc = tr.zWorld(ev.offsetY)
-                let gefunden = findNextRasterPoint(xc, zc)
-                if (gefunden) {
-                    rasterPoint = two.makeRectangle(tr.xPix(xRasterPoint), tr.zPix(zRasterPoint), 5, 5);
-                    rasterPoint.fill = '#0000ff';
-                    rasterPoint.stroke = "#0000ff";
-                    foundRasterPoint = true;
-                    start_x = tr.xPix(xRasterPoint)
-                    start_y = tr.zPix(zRasterPoint)
-                    start_x_wc = xRasterPoint
-                    start_z_wc = zRasterPoint
+                // find next CAD node
+
+                let index = find_nearest_cad_node(xc, zc)
+                console.log("mouseup, index", index, xc, zc)
+                if (index > -1) {
+                    let x = get_cad_node_X(index)
+                    let z = get_cad_node_Z(index)
+                    nodePoint = two.makeRoundedRectangle(tr.xPix(x), tr.zPix(z), 15, 15, 4)
+                    nodePoint.fill = '#001111'
+                    foundNodePoint = true
+                    start_x = tr.xPix(x)
+                    start_y = tr.zPix(z)
+                    start_x_wc = x
+                    start_z_wc = z
                 } else {
-                    start_x = ev.offsetX
-                    start_y = ev.offsetY
-                    start_x_wc = xc
-                    start_z_wc = zc
+                    let gefunden = findNextRasterPoint(xc, zc)
+                    if (gefunden) {
+                        rasterPoint = two.makeRectangle(tr.xPix(xRasterPoint), tr.zPix(zRasterPoint), 5, 5);
+                        rasterPoint.fill = '#0000ff';
+                        rasterPoint.stroke = "#0000ff";
+                        foundRasterPoint = true;
+                        start_x = tr.xPix(xRasterPoint)
+                        start_y = tr.zPix(zRasterPoint)
+                        start_x_wc = xRasterPoint
+                        start_z_wc = zRasterPoint
+                    } else {
+                        start_x = ev.offsetX
+                        start_y = ev.offsetY
+                        start_x_wc = xc
+                        start_z_wc = zc
+                    }
                 }
                 if (buttons_control.n_input_points === 1) {
 
@@ -743,8 +807,15 @@ function mouseup(ev: any) {
             } else if (input_started === 1) {
                 two.remove(rubberband);
 
+                if (foundNodePoint) {
+                    end_x = tr.xPix(xNodePoint)
+                    end_y = tr.zPix(zNodePoint)
+                    end_x_wc = xNodePoint
+                    end_z_wc = zNodePoint
 
-                if (foundRasterPoint) {
+                    two.remove(nodePoint);
+                    foundNodePoint = false;
+                } else if (foundRasterPoint) {
                     end_x = tr.xPix(xRasterPoint)
                     end_y = tr.zPix(zRasterPoint)
                     end_x_wc = xRasterPoint
@@ -1082,6 +1153,34 @@ export function drawStab(x1_wc: number, z1_wc: number, x2_wc: number, z2_wc: num
     return group
 }
 
-function testclick() {
-    console.log("testclick")
+
+
+//-------------------------------------------------------------------------------------------------------
+function draw_cad_knoten() {
+    //---------------------------------------------------------------------------------------------------
+
+    console.log("es funktioniert")
+
+    const el = document.getElementById("id_dialog_knoten");
+    console.log("id_dialog_knoten", el);
+
+    //console.log("shadow showDialog_knoten", el?.shadowRoot?.getElementById("dialog_knoten").getValue())
+
+    let ele = document.getElementById("id_dialog_knoten") as drDialogKnoten;
+    console.log("drDialogKnoten", ele.getValueX())
+    console.log("drDialogKnoten", ele.getValueZ())
+
+    let x = ele.getValueX()
+    let z = ele.getValueZ()
+
+    let index = add_cad_node(x, z)
+
+    console.log("index draw_cad_knoten", index)
+    if (index === -1) {
+        let makeRoundedRectangle = two.makeRoundedRectangle(tr.xPix(x), tr.zPix(z), 15, 15, 4)
+        makeRoundedRectangle.fill = '#dd1100'
+        two.update();
+        const el = new TCADElement(makeRoundedRectangle, x, z, x, z, CAD_KNOTEN)
+        list.append(el)
+    }
 }

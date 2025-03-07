@@ -133,7 +133,7 @@ export class drButtonPM extends LitElement {
    }
 
    setValue(wert: number) {
-      //console.log("in setValue", wert)
+      console.log("in setValue", wert,'|',this.inputID,'|')
       if (typeof wert == 'number') this.nel = wert;
       else this.nel = 0;
 
