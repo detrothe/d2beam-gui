@@ -2711,8 +2711,8 @@ function draw_elementlasten(two: Two) {
                         flaeche.fill = color_load;
                         flaeche.opacity = opacity
 
-                        if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
-                        if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+                        if (Math.abs(pL) > 0.0) draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
+                        if (Math.abs(pR) > 0.0) draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
 
                         if (eload[ieload].pL === eload[ieload].pR) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
@@ -2774,8 +2774,8 @@ function draw_elementlasten(two: Two) {
                             flaeche.fill = color_load;
                             flaeche.opacity = opacity
 
-                            if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
-                            if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+                            if (Math.abs(pL) > 0.0) draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            if (Math.abs(pR) > 0.0) draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
 
                             if (eload[ieload].pL === eload[ieload].pR) {
                                 xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
@@ -2838,8 +2838,8 @@ function draw_elementlasten(two: Two) {
                         flaeche.fill = color_load;
                         flaeche.opacity = opacity
 
-                        if (Math.abs(pL) > 0.0) draw_arrow(two, x[3], z[3], x[0], z[0], style_pfeil)
-                        if (Math.abs(pR) > 0.0) draw_arrow(two, x[2], z[2], x[1], z[1], style_pfeil)
+                        if (Math.abs(pL) > 0.0) draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
+                        if (Math.abs(pR) > 0.0) draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
 
                         if (eload[ieload].pL === eload[ieload].pR) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
@@ -2903,8 +2903,8 @@ function draw_elementlasten(two: Two) {
                         let line = two.makeLine(xtr[0], ztr[0], xtr[1], ztr[1]);
                         line.linewidth = 2;
 
-                        if (Math.abs(pL) > 0.0) draw_arrow(two, x[0], z[0], x[3], z[3], style_pfeil)
-                        if (Math.abs(pR) > 0.0) draw_arrow(two, x[1], z[1], x[2], z[2], style_pfeil)
+                        if (Math.abs(pL) > 0.0) draw_arrow(two, tr, x[0], z[0], x[3], z[3], style_pfeil)
+                        if (Math.abs(pR) > 0.0) draw_arrow(two, tr, x[1], z[1], x[2], z[2], style_pfeil)
 
                         if (eload[ieload].pL === eload[ieload].pR) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
@@ -2966,8 +2966,8 @@ function draw_elementlasten(two: Two) {
                         flaeche.fill = color_load;
                         flaeche.opacity = opacity
 
-                        if (Math.abs(pL) > 0.0) draw_arrow(two, x[0], z[0], x[3], z[3], style_pfeil)
-                        if (Math.abs(pR) > 0.0) draw_arrow(two, x[1], z[1], x[2], z[2], style_pfeil)
+                        if (Math.abs(pL) > 0.0) draw_arrow(two, tr, x[0], z[0], x[3], z[3], style_pfeil)
+                        if (Math.abs(pR) > 0.0) draw_arrow(two, tr, x[1], z[1], x[2], z[2], style_pfeil)
 
                         if (eload[ieload].pL === eload[ieload].pR) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
@@ -3055,9 +3055,9 @@ function draw_elementlasten(two: Two) {
                             let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
                             console.log("GRAFIK Einzellast", xl, zl, wert)
                             if (wert < 0.0) {
-                                draw_arrow(two, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast_element)
+                                draw_arrow(two, tr, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast_element)
                             } else {
-                                draw_arrow(two, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast_element)
+                                draw_arrow(two, tr, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast_element)
                             }
                             xpix = tr.xPix(xl + ddx + dpx) + 4
                             zpix = tr.zPix(zl - ddz - dpz) - 4
@@ -3182,9 +3182,9 @@ function draw_knotenkraefte(two: Two) {
 
                 wert = load[i].Px * fact[iLoop]
                 if (wert > 0.0) {
-                    draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
                 } else {
-                    draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
                 }
                 xpix = tr.xPix(x + delta + plength) + 5
                 zpix = tr.zPix(z) - 5
@@ -3198,9 +3198,9 @@ function draw_knotenkraefte(two: Two) {
 
                 wert = load[i].Pz * fact[iLoop]
                 if (wert > 0.0) {
-                    draw_arrow(two, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
                 } else {
-                    draw_arrow(two, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
                 }
 
                 xpix = tr.xPix(x) + 5
@@ -3321,9 +3321,9 @@ function draw_knotenverformungen(two: Two) {
 
                 wert = nodeDisp0[i].dispx0 * fact[iLoop]
                 if (wert > 0.0) {
-                    draw_arrow(two, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
                 } else {
-                    draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
                 }
                 xpix = tr.xPix(x + delta + plength) + 5
                 zpix = tr.zPix(z) - 5
@@ -3337,9 +3337,9 @@ function draw_knotenverformungen(two: Two) {
 
                 wert = nodeDisp0[i].dispz0 * fact[iLoop]
                 if (wert > 0.0) {
-                    draw_arrow(two, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
                 } else {
-                    draw_arrow(two, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
                 }
 
                 xpix = tr.xPix(x) + 5
@@ -3980,7 +3980,7 @@ function draw_gelenke(two: Two) {
 }
 
 //--------------------------------------------------------------------------------------------------------
-function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, styles?: any) {
+export function draw_arrow(two: Two, tr: CTrans, x1: number, z1: number, x2: number, z2: number, styles?: any) {
     //----------------------------------------------------------------------------------------------------
 
     let b = 20, h = 10, linewidth = 2, color = '#000000'
@@ -4027,7 +4027,7 @@ function draw_arrow(two: Two, x1: number, z1: number, x2: number, z2: number, st
     let x0 = Math.round(tr.xPix(x1));
     let z0 = Math.round(tr.zPix(z1));
 
-    //console.log("sl,a", sl, a, b, x0, z0)
+    console.log("sl,a", sl, a, b, x0, z0, x1, z1)
 
     let group = two.makeGroup();
     let line = two.makeLine(0, 0, a, 0);
@@ -4117,7 +4117,7 @@ export function draw_arrow_alpha(two: Two, tr: CTrans, x1: number, z1: number, a
 
 
 //--------------------------------------------------------------------------------------------------------
-function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number, radius: number, styles?: any) {
+export function draw_moment_arrow(two: Two, x0: number, z0: number, vorzeichen: number, radius: number, styles?: any) {
     //----------------------------------------------------------------------------------------------------
     let b = 20, h = 10
     let x = 0.0, z = 0.0, linewidth = 2, color = '#000000'

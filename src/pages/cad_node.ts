@@ -21,7 +21,7 @@ export class TCADNode {
 
 }
 
-export function add_cad_node(x: number, z: number) {
+export function add_cad_node(x: number, z: number, option = 0) {
 
     let index = -1
 
@@ -41,6 +41,7 @@ export function add_cad_node(x: number, z: number) {
 
         let node = new TCADNode(x, z)
         CADNodes.push(node)
+        if (option > 0) return CADNodes.length - 1
     }
 
     return index;

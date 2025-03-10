@@ -290,7 +290,7 @@ class TSpring {
 
 }
 
-class TLoads {
+export class TLoads {
     node: number = -1
     lf: number = -1
     p = [0.0, 0.0, 0.0]
@@ -4634,7 +4634,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
 }
 
 //---------------------------------------------------------------------------------------------------------------
-async function alertdialog(trueButton_text: string, question_text: string) {
+export async function alertdialog(trueButton_text: string, question_text: string) {
     //-----------------------------------------------------------------------------------------------------------
 
     const dialogAlert = new AlertDialog({

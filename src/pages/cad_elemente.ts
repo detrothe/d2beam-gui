@@ -1,12 +1,38 @@
 import Two from 'two.js'
 
-import { System, STABWERK, TNode } from './rechnen'
+import { System, STABWERK, TNode, TLoads } from './rechnen'
 
 import { CTrans } from './trans';
+import { draw_moment_arrow } from './grafik';
+import { myFormat } from './utility';
 
+
+const style_pfeil_knotenlast = {
+    a: 35,
+    b: 25,
+    h: 16,
+    linewidth: 7,
+    color: '#dc0000'
+}
+
+
+const style_pfeil_moment = {
+    radius: 50,
+    b: 25,
+    h: 16,
+    linewidth: 7,
+    color: '#dc0000'
+}
+
+const style_txt_knotenlast = {
+    family: 'system-ui, sans-serif',
+    size: 14,
+    fill: '#dc0000',
+    weight: 'bold'
+};
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_lager(two: Two, tr:CTrans, node: TNode) {
+export function draw_lager(two: Two, tr: CTrans, node: TNode) {
     //----------------------------------------------------------------------------------------------------
 
     let x1 = Math.round(tr.xPix(node.x));
@@ -239,3 +265,217 @@ export function draw_lager(two: Two, tr:CTrans, node: TNode) {
 
 }
 
+//--------------------------------------------------------------------------------------------------------
+export function draw_knotenlast(two: Two, tr: CTrans, load: TLoads, x: number, z: number, fact: number, lf_show: number) {
+    //----------------------------------------------------------------------------------------------------
+
+    let slmax = 10
+    let plength = 35 /*slmax / 20.*/, delta = 12 //slmax / 200.0
+    let xpix: number, zpix: number
+    let wert: number
+    let nLoop = 0
+
+
+    plength = tr.World0(2 * plength / devicePixelRatio)
+    delta = tr.World0(delta / devicePixelRatio)
+
+    let group = new Two.Group();
+
+    console.log("draw_knotenlast", x, z, plength, delta, load)
+    // let iLastfall = draw_lastfall
+
+    // if (THIIO_flag === 0 && matprop_flag === 0) {
+    //     if (iLastfall <= nlastfaelle) {
+    //         //lf_index = iLastfall - 1
+    //         nLoop = 1
+    //         fact[0] = 1.0
+    //         lf_show[0] = draw_lastfall - 1
+    //         //scalefactor = slmax / 20 / maxValue_eload[draw_lastfall - 1]
+
+    //     } else if (iLastfall <= nlastfaelle + nkombinationen) {
+    //         //lf_index = iLastfall - 1
+    //         let ikomb = iLastfall - 1 - nlastfaelle
+    //         console.log("Kombination THIO, ikomb: ", ikomb, maxValue_eload_komb[ikomb])
+    //         //scalefactor = slmax / 20 / maxValue_eload_komb[ikomb]
+    //         nLoop = 0
+
+    //         for (let i = 0; i < nlastfaelle; i++) {
+    //             if (kombiTabelle[ikomb][i] !== 0.0) {
+    //                 //console.log("kombitabelle", i, ikomb, kombiTabelle[ikomb][i])
+    //                 fact[nLoop] = kombiTabelle[ikomb][i];
+    //                 lf_show[nLoop] = i
+    //                 nLoop++;
+    //             }
+    //         }
+    //     } else {
+    //         nLoop = 0
+    //     }
+    // }
+    // else if (THIIO_flag === 1 || matprop_flag > 0) {
+
+    //     if (iLastfall <= nkombinationen) {
+    //         //lf_index = iLastfall - 1
+    //         let ikomb = iLastfall - 1
+    //         //scalefactor = slmax / 20 / maxValue_eload_komb[ikomb]
+    //         nLoop = 0
+
+    //         for (let i = 0; i < nlastfaelle; i++) {
+    //             if (kombiTabelle[ikomb][i] !== 0.0) {
+    //                 fact[nLoop] = kombiTabelle[ikomb][i];
+    //                 lf_show[nLoop] = i
+    //                 nLoop++;
+    //             }
+    //         }
+
+    //     } else {
+    //         nLoop = 0
+    //     }
+    // }
+
+
+
+    // let inode = load.node
+    // let x = node[inode].x;
+    // let z = node[inode].z;
+    //console.log("load[i]", i, load)
+
+    if (load.Px != 0.0 && load.lf - 1 === lf_show) {
+        //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+
+        wert = load.Px * fact
+        if (wert > 0.0) {
+            let gr = draw_arrow(two, tr, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
+            group.add(gr)
+        } else {
+            let gr = draw_arrow(two, tr, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+            group.add(gr)
+        }
+        xpix = tr.xPix(x + delta + plength) + 5
+        zpix = tr.zPix(z) - 5
+        const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+        txt.alignment = 'left'
+        txt.baseline = 'top'
+        group.add(txt)
+    }
+    if (load.Pz != 0.0 && load.lf - 1 === lf_show) {
+        //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+
+        wert = load.Pz * fact
+        if (wert > 0.0) {
+            let gr = draw_arrow(two, tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
+            group.add(gr)
+        } else {
+            let gr = draw_arrow(two, tr, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
+            group.add(gr)
+        }
+
+        xpix = tr.xPix(x) + 5
+        zpix = tr.zPix(z - delta - plength) + 5
+        const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+        txt.alignment = 'left'
+        txt.baseline = 'top'
+        group.add(txt)
+    }
+    if (load.p[2] != 0.0 && load.lf - 1 === lf_show) {
+
+        wert = load.p[2] * fact
+        let vorzeichen = Math.sign(wert)
+        let radius = style_pfeil_moment.radius;
+        //console.log("Moment ", +inode + 1, wert)
+        if (wert > 0.0) {
+            draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_moment)
+        } else {
+            draw_moment_arrow(two, x, z, -1.0, slmax / 50, style_pfeil_moment)
+        }
+
+        xpix = tr.xPix(x) - 10 / devicePixelRatio
+        zpix = tr.zPix(z) + vorzeichen * radius + 15 * vorzeichen / devicePixelRatio
+        //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
+        const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+        txt.alignment = 'right'
+        //txt.baseline = 'bottom'
+        group.add(txt)
+    }
+
+    return group;
+
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+function draw_arrow(_two: Two, tr: CTrans, x1: number, z1: number, x2: number, z2: number, styles?: any) {
+    //----------------------------------------------------------------------------------------------------
+
+    let b = 20, h = 10, linewidth = 2, color = '#000000'
+    let a = 0.0, calc_a = true
+
+    if (styles) {
+        //console.log("styles", styles)
+        if (styles.linewidth) linewidth = styles.linewidth
+        if (styles.a) {
+            a = styles.a / devicePixelRatio;
+            calc_a = false
+        }
+        if (styles.b) b = styles.b
+        if (styles.h) h = styles.h
+        if (styles.color) color = styles.color
+    }
+
+    b = b / devicePixelRatio
+    h = h / devicePixelRatio
+    //b = slmax / 50.
+    //h = slmax / 100.
+    //linewidth = slmax / 400.
+
+    //b = tr.Pix0(b)
+    //h = tr.Pix0(h)
+    //linewidth = tr.Pix0(linewidth)
+    //write('linewidth: ', linewidth)
+    linewidth = linewidth / devicePixelRatio
+
+    let dx = x2 - x1, dz = z2 - z1
+    let alpha = Math.atan2(dz, dx)
+
+    let sl = Math.sqrt(dx * dx + dz * dz)
+    //console.log("sl", Math.round(tr.xPix(sl)));
+    //console.log("0.0", Math.round(tr.xPix(0.0)));
+
+    if (calc_a) a = Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)) - b;
+    // write('sl : ', sl)
+    // write('tr.Pix0 : ', tr.Pix0(sl))
+    // write('div', Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)))
+    // write('a: ', a)
+    // write('b: ', b)
+
+    let x0 = Math.round(tr.xPix(x1));
+    let z0 = Math.round(tr.zPix(z1));
+
+    console.log("sl,a", sl, a, b, x0, z0, x1, z1)
+
+    let group = new Two.Group();
+    let line = new Two.Line(0, 0, a, 0);
+    line.linewidth = linewidth;
+    line.stroke = color;
+
+    group.add(line)
+
+    var vertices = [];
+    vertices.push(new Two.Vector(a, -h / 2));
+    vertices.push(new Two.Vector(a + b, 0));
+    vertices.push(new Two.Vector(a, h / 2));
+    // @ts-ignore
+    let dreieck = new Two.Path(vertices);
+    dreieck.fill = color;
+    dreieck.stroke = color;
+    dreieck.linewidth = 1;
+
+    group.add(dreieck)
+    group.rotation = alpha
+    group.translation.set(x0, z0)
+
+    return group;
+
+}

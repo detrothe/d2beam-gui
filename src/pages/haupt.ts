@@ -31,6 +31,7 @@ import "../components/dr-dialog-rechteckquerschnitt";
 import "../components/dr-dialog_neue_eingabe";
 import "../components/dr-dialog_lager";
 import "../components/dr-dialog_knoten";
+import "../components/dr-dialog_knotenlast";
 
 import { drButtonPM } from "../components/dr-button-pm";
 import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt";
@@ -81,7 +82,7 @@ import { click_zurueck_cad, init_cad, init_two_cad } from "./cad";
 import { cad_buttons } from './cad_buttons'
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v2.0.0.a, 7-März-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v2.0.0.a, 10-März-2025, ';
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -330,6 +331,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
         <dr-dialog_lager id="id_dialog_lager"></dr-dialog_lager>
         <dr-dialog_knoten id="id_dialog_knoten"></dr-dialog_knoten>
+        <dr-dialog_knotenlast id="id_dialog_knotenlast"></dr-dialog_knotenlast>
 
       </sl-tab-panel>
 
@@ -1240,10 +1242,11 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   });
 
 
-  addEventListener("resize", function () {
-    console.log("RESIZE")
-    init_cad(0);
-  });
+  // addEventListener("resize", function () {
+  //   ("RESIZE")
+  //   write ("resize " + this.window.innerHeight)
+  //   init_cad(0);
+  // });
 
   // console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
   // console.log("rechnen", getComputedStyle(document?.getElementById("rechnen")!).width);

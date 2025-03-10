@@ -1,9 +1,9 @@
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
-@customElement("dr-dialog_knoten")
-export class drDialogKnoten extends LitElement {
-  @property({ type: String }) title = "neuer Knoten";
+@customElement("dr-dialog_knotenlast")
+export class drDialogKnotenlast extends LitElement {
+  @property({ type: String }) title = "neue Knotenlast";
 
   @property({ type: Number }) xValue = 0;
 
@@ -124,8 +124,8 @@ export class drDialogKnoten extends LitElement {
   //----------------------------------------------------------------------------------------------
 
   render() {
-    return html` <dialog id="dialog_knoten">
-      <h2>Neuer Knoten</h2>
+    return html` <dialog id="dialog_knotenlast">
+      <h2>Neue Knotenlast</h2>
 
       <br />
       <p>
@@ -133,19 +133,27 @@ export class drDialogKnoten extends LitElement {
       </p>
 
       <p>
-        x:
-        <input type="number" id="id_x" name="x" pattern="[0-9.,eE+-]*" value="" />
-        [m]
+        Lastfall:
+        <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="" />
       </p>
       <p>
-        z:
-        <input type="number" id="id_z" name="z" pattern="[0-9.,eE+-]*" value="" />
-        [m]
+        Px:
+        <input type="number" id="id_px" name="px" pattern="[0-9.,eE+-]*" value="" />
+        [kN]
+      </p>
+      <p>
+        Pz:
+        <input type="number" id="id_pz" name="pz" pattern="[0-9.,eE+-]*" value="" />
+        [kN]
+      </p> <p>
+        My:
+        <input type="number" id="id_my" name="my" pattern="[0-9.,eE+-]*" value="" />
+        [kNm]
       </p>
 
       <form method="dialog">
-        <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button>
-        <!--     <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>  -->
+        <!--<sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
+        <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
         <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
       </form>
     </dialog>`;
@@ -163,26 +171,33 @@ export class drDialogKnoten extends LitElement {
     console.log("dialog_ok");
     const shadow = this.shadowRoot;
     if (shadow) {
-      //(shadow.getElementById("dialog_knoten") as HTMLDialogElement).close("ok");
+      (shadow.getElementById("dialog_knotenlast") as HTMLDialogElement).close("ok");
     }
   }
 
   _dialog_abbruch() {
     console.log("dialog_abbruch");
     const shadow = this.shadowRoot;
-    if (shadow) (shadow.getElementById("dialog_knoten") as HTMLDialogElement).close("cancel");
+    if (shadow) (shadow.getElementById("dialog_knotenlast") as HTMLDialogElement).close("cancel");
   }
 
-  getValueX() {
+  getValuePx() {
     const shadow = this.shadowRoot;
-    console.log("id_x", (shadow?.getElementById("id_x") as HTMLInputElement).value)
-    let wert = Number((shadow?.getElementById("id_x") as HTMLInputElement).value.replace(/,/g, '.'))
-    return wert
+    console.log("id_px", (shadow?.getElementById("id_px") as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById("id_px") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
   }
-  getValueZ() {
+
+  getValuePz() {
     const shadow = this.shadowRoot;
-    console.log("id_z", (shadow?.getElementById("id_z") as HTMLInputElement).value)
-    let wert = Number((shadow?.getElementById("id_z") as HTMLInputElement).value.replace(/,/g, '.'))
-    return wert
+    console.log("id_pz", (shadow?.getElementById("id_pz") as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById("id_pz") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+
+  } getValueMy() {
+    const shadow = this.shadowRoot;
+    console.log("id_my", (shadow?.getElementById("id_my") as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById("id_my") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
   }
 }
