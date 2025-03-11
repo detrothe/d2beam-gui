@@ -3,8 +3,8 @@ import { drButtonPM } from "../components/dr-button-pm";
 import { CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { CADNodes } from "./cad_node";
-import { TCAD_Lager, TCAD_Stab } from "./CCAD_element";
-import { alertdialog, inc_nnodes, nnodes, node, set_nnodes, set_nnodesTotal, TNode } from "./rechnen";
+import { TCAD_Lager, TCAD_Stab, TCADElement } from "./CCAD_element";
+import { alertdialog, element, inc_nelem, inc_nnodes, nelem, nnodes, node, set_nelem, set_nelem_Balken_Bettung, set_nelemTotal, set_nnodes, set_nnodesTotal, TElement, TNode } from "./rechnen";
 import { myFormat, myFormat_en } from "./utility";
 
 export function cad_rechnen() {
@@ -12,6 +12,8 @@ export function cad_rechnen() {
 
     for (let i = 0; i < CADNodes.length; i++) CADNodes[i].nel = 0  // init
 
+    set_nelem_Balken_Bettung(0)
+    set_nelem(0)
     for (let i = 0; i < list.size; i++) {
         let obj = list.getAt(i) as TCAD_Stab;
         if (obj.elTyp === CAD_STAB) {
@@ -27,8 +29,11 @@ export function cad_rechnen() {
             } else {
                 alertdialog("ok", "Ende von Stab " + (+i + 1) + "hängt an keinem Knoten, FATAL ERROR");
             }
+
+            inc_nelem();
         }
     }
+    set_nelemTotal(nelem)
 
     set_nnodes(0);
     node.length = 0
@@ -48,11 +53,8 @@ export function cad_rechnen() {
     let el = document.getElementById("id_button_nnodes") as drButtonPM;
     el.setValue(nnodes);
 
-    let ele = document.getElementById("id_knoten_tabelle");
-    //console.log("EL: >>", el);
-    ele?.setAttribute("nzeilen", String(nnodes));
-
     let elTab = document.getElementById("id_knoten_tabelle");
+    elTab?.setAttribute("nzeilen", String(nnodes));
     elTab?.setAttribute("clear", "0");
 
     {
@@ -68,8 +70,6 @@ export function cad_rechnen() {
                 else if (j === 2) child.value = myFormat_en(node[i - 1].z, 2, 3);
             }
         }
-
-
 
         // jetzt die Lager
 
@@ -96,7 +96,57 @@ export function cad_rechnen() {
 
             }
         }
+
     }
+
+    // jetzt die Staebe
+    {
+
+        let el = document.getElementById("id_button_nelem") as drButtonPM;
+        el.setValue(nelem);
+
+        const elTab = document.getElementById("id_element_tabelle");
+        elTab?.setAttribute("nzeilen", String(nelem));
+        elTab?.setAttribute("clear", "0");
+    }
+
+
+
+    {
+        let el = document.getElementById('id_element_tabelle') as HTMLElement;
+        let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+        element.length = 0
+        let nel = 0
+        for (let i = 0; i < list.size; i++) {
+            let obj = list.getAt(i) as TCAD_Stab;
+            if (obj.elTyp === CAD_STAB) {
+                element.push(new TElement())
+
+                let index = obj.index1;
+                let ind1 = CADNodes[index].index_FE
+                index = obj.index2;
+                let ind2 = CADNodes[index].index_FE
+
+                element[nel].qname='R 40x30'
+                element[nel].nod[0] = ind1
+                element[nel].nod[1] = ind2
+
+                nel++
+
+                let child = tabelle.rows[nel].cells[2].firstElementChild as HTMLInputElement;
+                child.value = 'R 40x30'
+                child = tabelle.rows[nel].cells[3].firstElementChild as HTMLInputElement;
+                child.value = String(+ind1 + 1)
+                child = tabelle.rows[nel].cells[4].firstElementChild as HTMLInputElement;
+                child.value = String(+ind2 + 1)
+
+
+            }
+        }
+
+    }
+
 }
 
 

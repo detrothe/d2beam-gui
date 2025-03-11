@@ -31,8 +31,15 @@ export function set_nnodes(wert: number) { nnodes = wert; }
 export function inc_nnodes() { nnodes++; }
 
 export let nelem: number;
+export function set_nelem(wert: number) { nelem = wert; }
+export function inc_nelem() { nelem++; }
+
 export let nelem_Balken = 0;
+export function set_nelem_Balken(wert: number) { nelem_Balken = wert; }
+
 export let nelem_Balken_Bettung = 0;      // Anzahl Balken mit Bettung
+export function set_nelem_Balken_Bettung(wert: number) { nelem_Balken_Bettung = wert; }
+
 export let nelem_Federn = 0;
 export let nelem_koppelfedern = 0;
 export let nloads: number = 0;
@@ -42,7 +49,10 @@ export let nstabvorverfomungen = 0;
 export let neq: number;
 export let nnodesTotal: number = 0;
 export function set_nnodesTotal(wert: number):void { nnodesTotal = wert; }
+
 export let nelemTotal: number = 0;
+export function set_nelemTotal(wert: number) { nelemTotal = wert; }
+
 export let nlastfaelle: number = 0;
 export let nkombinationen: number = 0;
 export let nelTeilungen = 10;
@@ -232,7 +242,7 @@ class TQuerschnittRechteck {
     definedQuerschnitt: number = 1
 }
 
-class TElement {
+export class TElement {
     qname: string = ''
     isActive = true;
     elTyp: number = 0           // 0 = 2 Knoten, 1 = Fachwerkstab, 3 = 3 Knoten, 3 = 4 Knoten
