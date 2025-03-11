@@ -20,12 +20,16 @@ import { show_controller_THIIO, show_controller_bettung, show_controller_results
 import { ausgabe, ausgabe_kombinationen_Th_I_O, dyn_ausgabe } from "./ausgabe"
 import { AlertDialog } from "../pages/confirm_dialog";
 import { SlCheckbox } from "@shoelace-style/shoelace";
+import { cad_rechnen } from "./cad_rechnen";
 
 // import { read_daten } from "./dateien"
 
 let fatal_error = false;
 
 export let nnodes: number;
+export function set_nnodes(wert: number) { nnodes = wert; }
+export function inc_nnodes() { nnodes++; }
+
 export let nelem: number;
 export let nelem_Balken = 0;
 export let nelem_Balken_Bettung = 0;      // Anzahl Balken mit Bettung
@@ -37,6 +41,7 @@ export let ntotalEloads: number = 0;
 export let nstabvorverfomungen = 0;
 export let neq: number;
 export let nnodesTotal: number = 0;
+export function set_nnodesTotal(wert: number):void { nnodesTotal = wert; }
 export let nelemTotal: number = 0;
 export let nlastfaelle: number = 0;
 export let nkombinationen: number = 0;
@@ -540,24 +545,24 @@ export function rechnen(flag = 1) {
 
     fatal_error = false;
 
-    let el = document.getElementById('id_button_nnodes') as any;
-    nnodes = Number(el.nel);
+    // let el = document.getElementById('id_button_nnodes') as any;
+    // nnodes = Number(el.nel);
 
-    el = document.getElementById('id_button_nelem') as any;
-    nelem = Number(el.nel);
-    nelem_Balken = nelem;
+    // el = document.getElementById('id_button_nelem') as any;
+    // nelem = Number(el.nel);
+    // nelem_Balken = nelem;
 
-    el = document.getElementById('id_button_nkoppelfedern') as any;
-    nelem_koppelfedern = Number(el.nel);
+    // el = document.getElementById('id_button_nkoppelfedern') as any;
+    // nelem_koppelfedern = Number(el.nel);
 
-    el = document.getElementById('id_button_nnodalloads') as any;
-    nloads = Number(el.nel);
+    // el = document.getElementById('id_button_nnodalloads') as any;
+    // nloads = Number(el.nel);
 
-    el = document.getElementById('id_button_nstabvorverformungen') as any;
-    nstabvorverfomungen = Number(el.nel);
+    // el = document.getElementById('id_button_nstabvorverformungen') as any;
+    // nstabvorverfomungen = Number(el.nel);
 
-    el = document.getElementById('id_button_nnodedisps') as any;
-    nNodeDisps = Number(el.nel);
+    // el = document.getElementById('id_button_nnodedisps') as any;
+    // nNodeDisps = Number(el.nel);
 
     el = document.getElementById('id_button_nlastfaelle') as any;
     nlastfaelle = Number(el.nel);
@@ -644,17 +649,23 @@ export function rechnen(flag = 1) {
     console.log("== intAt, art", intArt, art, ndivsl)
     console.log("== maxU", maxU_node, maxU_dir, maxU_schief, neigv)
 
+    cad_rechnen();
+    return;
+
     read_nodes();
     read_elements();
     read_kombinationen();
 
     read_nodal_loads();
-    let status = 0;
-    if ((status = read_element_loads()) < 0) {
-        if (status === -1) write('\nEingabefehler , ein Element hat keinen Querschnitt')
-    }
-    read_stabvorverformungen();
-    if (stadyn === 1) read_nodal_mass();
+
+    // TO DO
+
+    // let status = 0;
+    // if ((status = read_element_loads()) < 0) {
+    //     if (status === -1) write('\nEingabefehler , ein Element hat keinen Querschnitt')
+    // }
+    // read_stabvorverformungen();
+    // if (stadyn === 1) read_nodal_mass();
 
     if (flag === 1) {
 
@@ -709,6 +720,187 @@ export function rechnen(flag = 1) {
     }
 
 }
+
+
+// //---------------------------------------------------------------------------------------------------------------
+// export function rechnen_alt(flag = 1) {
+//     //-----------------------------------------------------------------------------------------------------------
+
+//     console.log("in rechnen");
+
+//     (document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
+
+//     fatal_error = false;
+
+//     let el = document.getElementById('id_button_nnodes') as any;
+//     nnodes = Number(el.nel);
+
+//     el = document.getElementById('id_button_nelem') as any;
+//     nelem = Number(el.nel);
+//     nelem_Balken = nelem;
+
+//     el = document.getElementById('id_button_nkoppelfedern') as any;
+//     nelem_koppelfedern = Number(el.nel);
+
+//     el = document.getElementById('id_button_nnodalloads') as any;
+//     nloads = Number(el.nel);
+
+//     el = document.getElementById('id_button_nstabvorverformungen') as any;
+//     nstabvorverfomungen = Number(el.nel);
+
+//     el = document.getElementById('id_button_nnodedisps') as any;
+//     nNodeDisps = Number(el.nel);
+
+//     el = document.getElementById('id_button_nlastfaelle') as any;
+//     nlastfaelle = Number(el.nel);
+
+//     el = document.getElementById('id_button_nkombinationen') as any;
+//     nkombinationen = Number(el.nel);
+//     /*
+//         el = document.getElementById('id_ndivsl') as HTMLInputElement;
+//         ndivsl = Number(el.value);
+
+//         el = document.getElementById('id_intart') as HTMLSelectElement;
+//         intArt = Number(el.value);
+
+//         el = document.getElementById('id_art') as HTMLSelectElement;
+//         art = Number(el.value);
+//     */
+
+//     el = document.getElementById('id_THIIO') as HTMLSelectElement;
+//     THIIO_flag = Number(el.value);
+
+//     el = document.getElementById('id_matprop') as HTMLSelectElement;
+//     matprop_flag = Number(el.value);
+
+//     el = document.getElementById('id_maxu_node') as HTMLInputElement;
+//     //console.log("id_maxu_node|",el.value,'|')
+//     maxU_node = Number(el.value);
+
+//     el = document.getElementById('id_maxu_dir') as HTMLSelectElement;
+//     maxU_dir = Number(el.value);
+
+//     el = document.getElementById('id_maxu_schief') as HTMLInputElement;
+//     maxU_schief = Number(el.value) / 1000.0;  // in m bzw. rad
+
+//     el = document.getElementById('id_neigv') as drButtonPM;
+//     neigv = Number(el.nel);
+
+//     el = document.getElementById('id_button_nteilungen') as any;
+//     nelTeilungen = Number(el.nel);
+
+//     el = document.getElementById('id_button_niter') as any;
+//     n_iterationen = Number(el.nel);
+
+//     el = document.getElementById('id_eps_disp_tol') as HTMLInputElement;
+//     epsDisp_tol = Number(el.value)
+
+//     el = document.getElementById('id_eps_force_tol') as HTMLInputElement;
+//     epsForce_tol = Number(el.value)
+
+//     el = document.getElementById('id_eig_solver_option') as any;
+//     eig_solver = Number(el.value);
+//     console.log("== id_eig_solver_option =", eig_solver)
+
+//     el = document.getElementById('id_ausgabe_SG_option') as any;
+//     if (el.value === '0') ausgabe_gleichgewichtSG = true;
+//     else ausgabe_gleichgewichtSG = false;
+//     console.log("== ausgabe_gleichgewichtSG =", eig_solver)
+
+//     el = document.getElementById('id_P_delta_option') as any;
+//     if (el.value === 'true') P_delta = true;
+//     else P_delta = false;
+//     console.log("== P_delta =", P_delta)
+
+//     const sel = document.getElementById("id_stadyn") as HTMLSelectElement;
+//     if (sel.value === '0') stadyn = 0;
+//     else {
+//         stadyn = 1;
+//         THIIO_flag = 0;   // Dynamik ist immer Th.I. Ordnung
+//     }
+//     console.log("== stadyn =", stadyn)
+
+
+//     el = document.getElementById('id_button_nnodalmass') as any;
+//     nnodalMass = Number(el.nel);
+
+//     el = document.getElementById('id_button_dyn_neigv') as any;
+//     dyn_neigv = Number(el.nel);
+
+//     el = document.getElementById('id_iter_neigv') as any;
+//     niter_neigv = Number(el.value);
+//     console.log("niter_neigv = ", niter_neigv)
+
+//     console.log("== THIIO_flag", THIIO_flag, nelTeilungen, n_iterationen)
+
+//     console.log("== intAt, art", intArt, art, ndivsl)
+//     console.log("== maxU", maxU_node, maxU_dir, maxU_schief, neigv)
+
+//     read_nodes();
+//     read_elements();
+//     read_kombinationen();
+
+//     read_nodal_loads();
+//     let status = 0;
+//     if ((status = read_element_loads()) < 0) {
+//         if (status === -1) write('\nEingabefehler , ein Element hat keinen Querschnitt')
+//     }
+//     read_stabvorverformungen();
+//     if (stadyn === 1) read_nodal_mass();
+
+//     if (flag === 1) {
+
+//         nur_eingabe_ueberpruefen = false
+
+//         let fehler = check_input();
+//         if (fatal_error || fehler > 0) {
+//             write('\nEingabefehler bitte erst beheben')
+//         } else {
+//             calculate();
+//             if (THIIO_flag === 0) show_controller_THIIO(false);
+//             else show_controller_THIIO(true);
+//             show_controller_results(true);
+//             if (nelem_Balken_Bettung > 0) show_controller_bettung(true); else show_controller_bettung(false);
+//         }
+//     } else {
+
+//         nur_eingabe_ueberpruefen = true
+
+//         calc_neq_and_springs();
+
+//         let fehler = check_input();
+
+//         if (fatal_error || fehler > 0) return;
+
+//         // für die Grafik
+
+//         xmin = 1.e30
+//         zmin = 1.e30
+//         xmax = -1.e30
+//         zmax = -1.e30
+
+//         for (let i = 0; i < nnodes; i++) {
+//             if (node[i].x < xmin) xmin = node[i].x;
+//             if (node[i].z < zmin) zmin = node[i].z;
+//             if (node[i].x > xmax) xmax = node[i].x;
+//             if (node[i].z > zmax) zmax = node[i].z;
+//         }
+
+//         slmax = Math.sqrt((xmax - xmin) ** 2 + (zmax - zmin) ** 2)
+
+//         init_grafik(0);
+//         init_two();
+
+//         show_controller_THIIO(false);
+//         show_controller_results(false);
+//         show_controller_bettung(false);
+
+//         drawsystem();
+
+//         write('Im Tab Grafik wurde das System soweit möglich gezeichnet');
+//     }
+
+// }
 
 //---------------------------------------------------------------------------------------------------------------
 function check_input() {
@@ -2892,7 +3084,7 @@ async function calculate() {
                         eps_force = 0.0
                         if (nenner !== 0.0) eps_force = zaehler / nenner;
                         //write('Toleranz eps_force in Iterationsschritt ' + iter + ' = ' + eps_force)
-                        write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + myFormat(eps_disp,5,5,1) + ', eps_force = ' + myFormat(eps_force,5,5,51))
+                        write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + myFormat(eps_disp, 5, 5, 1) + ', eps_force = ' + myFormat(eps_force, 5, 5, 51))
 
 
                     }
@@ -4437,7 +4629,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                 eps_force = 0.0
                 if (nenner !== 0.0) eps_force = zaehler / nenner;
 
-                write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + myFormat(eps_disp,5,5,1) + ', eps_force = ' + myFormat(eps_force,5,5,1))
+                write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + myFormat(eps_disp, 5, 5, 1) + ', eps_force = ' + myFormat(eps_force, 5, 5, 1))
 
                 //for (let i = 0; i < neq; i++) R_internal[i] = R_[i];
 

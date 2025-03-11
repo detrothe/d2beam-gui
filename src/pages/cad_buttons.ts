@@ -11,7 +11,7 @@ import "../components/dr-dialog_knotenlast";
 
 import { TLoads, TNode } from "./rechnen";
 import { abstandPunktGerade_2D } from "./lib";
-import { draw_knotenlast, draw_lager } from "./cad_elemente";
+import { draw_knotenlast, draw_lager } from "./cad_draw_elemente";
 import { TCADElement } from "./CCAD_element";
 
 //export let pick_element = false

@@ -13,6 +13,9 @@ export class TCADNode {
     x: number = 0.0
     z: number = 0.0
 
+    nel: number = 0                                 // Anzahl der Elemente, die an dem Knoten hängen
+    index_FE = -1                                   // index in FE Berechnung
+
     constructor(x: number, z: number) {
         this.x = x
         this.z = z

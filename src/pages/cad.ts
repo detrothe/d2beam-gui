@@ -13,7 +13,7 @@ import {
    showDialog_lager,
    read_knotenlast_dialog,
 } from './cad_buttons';
-import { draw_knotenlast, draw_lager } from './cad_elemente';
+import { draw_knotenlast, draw_lager } from './cad_draw_elemente';
 
 import '../components/dr-dialog_knoten';
 import { drDialogKnoten } from '../components/dr-dialog_knoten';
