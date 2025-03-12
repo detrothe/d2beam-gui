@@ -43,8 +43,13 @@ export function set_nelem_Balken_Bettung(wert: number) { nelem_Balken_Bettung = 
 export let nelem_Federn = 0;
 export let nelem_koppelfedern = 0;
 export let nloads: number = 0;
+export function set_nloads(wert: number) { nloads = wert; }
+
 export let neloads: number = 0;
+export function set_neloads(wert: number) { neloads = wert; }
+
 export let ntotalEloads: number = 0;
+export function set_ntotalEloads(wert: number) { ntotalEloads = wert; }
 export let nstabvorverfomungen = 0;
 export let neq: number;
 export let nnodesTotal: number = 0;
@@ -319,7 +324,7 @@ class TMass {
     theta = 0.0
 }
 
-class TElLoads {
+export class TElLoads {
     element: number = 0
     lf: number = 0
     art: number = 0
@@ -574,7 +579,7 @@ export function rechnen(flag = 1) {
     // el = document.getElementById('id_button_nnodedisps') as any;
     // nNodeDisps = Number(el.nel);
 
-    el = document.getElementById('id_button_nlastfaelle') as any;
+   let  el = document.getElementById('id_button_nlastfaelle') as any;
     nlastfaelle = Number(el.nel);
 
     el = document.getElementById('id_button_nkombinationen') as any;
@@ -660,13 +665,13 @@ export function rechnen(flag = 1) {
     console.log("== maxU", maxU_node, maxU_dir, maxU_schief, neigv)
 
     cad_rechnen();
-    return;
+    // return;
 
-    read_nodes();
-    read_elements();
+    // read_nodes();
+    // read_elements();
     read_kombinationen();
 
-    read_nodal_loads();
+    // read_nodal_loads();
 
     // TO DO
 
@@ -2437,6 +2442,7 @@ async function calculate() {
 
         }
 
+        console.log("el",el)
         if (System === STABWERK) {
             if (element[ielem].elTyp === 1) el.push(new CTruss());
             else el.push(new CTimoshenko_beam());

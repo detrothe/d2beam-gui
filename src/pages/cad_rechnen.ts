@@ -1,10 +1,10 @@
 import { drButtonPM } from "../components/dr-button-pm";
 
-import { CAD_LAGER, CAD_STAB, list } from "./cad";
+import { CAD_KNLAST, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { CADNodes } from "./cad_node";
-import { TCAD_Lager, TCAD_Stab, TCADElement } from "./CCAD_element";
-import { alertdialog, element, inc_nelem, inc_nnodes, nelem, nnodes, node, set_nelem, set_nelem_Balken_Bettung, set_nelemTotal, set_nnodes, set_nnodesTotal, TElement, TNode } from "./rechnen";
+import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCADElement } from "./CCAD_element";
+import { alertdialog, element, eload, inc_nelem, inc_nnodes, load, nelem, nelem_Balken, nnodes, node, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nloads, set_nnodes, set_nnodesTotal, set_ntotalEloads, TElement, TElLoads, TLoads, TNode } from "./rechnen";
 import { myFormat, myFormat_en } from "./utility";
 
 export function cad_rechnen() {
@@ -14,9 +14,13 @@ export function cad_rechnen() {
 
     set_nelem_Balken_Bettung(0)
     set_nelem(0)
+
+    let nknlast = 0
+
     for (let i = 0; i < list.size; i++) {
         let obj = list.getAt(i) as TCAD_Stab;
-        if (obj.elTyp === CAD_STAB) {
+        if (obj.elTyp === CAD_KNLAST) nknlast++;
+        else if (obj.elTyp === CAD_STAB) {
             let index = obj.index1;
             if (index > -1) {
                 CADNodes[index].nel++;
@@ -33,7 +37,9 @@ export function cad_rechnen() {
             inc_nelem();
         }
     }
+    set_nelem_Balken(nelem)
     set_nelemTotal(nelem)
+    set_nloads(nknlast)
 
     set_nnodes(0);
     node.length = 0
@@ -43,6 +49,7 @@ export function cad_rechnen() {
             node.push(new TNode())
             node[nnodes].x = CADNodes[i].x
             node[nnodes].z = CADNodes[i].z
+            node[nnodes].is_used = true
             CADNodes[i].index_FE = nnodes
             inc_nnodes();
         }
@@ -100,6 +107,7 @@ export function cad_rechnen() {
     }
 
     // jetzt die Staebe
+
     {
 
         let el = document.getElementById("id_button_nelem") as drButtonPM;
@@ -128,7 +136,7 @@ export function cad_rechnen() {
                 index = obj.index2;
                 let ind2 = CADNodes[index].index_FE
 
-                element[nel].qname='R 40x30'
+                element[nel].qname = 'R 40x30'
                 element[nel].nod[0] = ind1
                 element[nel].nod[1] = ind2
 
@@ -147,6 +155,77 @@ export function cad_rechnen() {
 
     }
 
+    // jetzt die Knotenlasten
+
+    {
+
+        let el = document.getElementById("id_button_nnodalloads") as drButtonPM;
+        el.setValue(nknlast);
+
+        const elTab = document.getElementById("id_knotenlasten_tabelle");
+        elTab?.setAttribute("nzeilen", String(nknlast));
+
+        load.length = 0
+
+        if (nknlast > 0) {
+            elTab?.setAttribute("clear", "0");
+
+            let tabelle = elTab?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+            let nel = 0
+            for (let i = 0; i < list.size; i++) {
+                let obj = list.getAt(i) as TCAD_Knotenlast;
+                if (obj.elTyp === CAD_KNLAST) {
+                    load.push(new TLoads())
+                    let index = obj.index1;
+                    let ind = CADNodes[index].index_FE
+                    if (ind > -1) {
+                        load[nel].lf = obj.knlast.lf
+                        load[nel].Px = obj.knlast.Px
+                        load[nel].Pz = obj.knlast.Pz
+                        load[nel].p[2] = obj.knlast.p[2]
+                        load[nel].node = ind
+                    }
+                    nel++
+
+                    let child = tabelle.rows[nel].cells[1].firstElementChild as HTMLInputElement;
+                    child.value = String(+ind + 1)
+                    child = tabelle.rows[nel].cells[2].firstElementChild as HTMLInputElement;
+                    child.value = String(obj.knlast.lf)
+                    child = tabelle.rows[nel].cells[3].firstElementChild as HTMLInputElement;
+                    child.value = String(obj.knlast.Px)
+                    child = tabelle.rows[nel].cells[4].firstElementChild as HTMLInputElement;
+                    child.value = String(obj.knlast.Pz)
+                    child = tabelle.rows[nel].cells[5].firstElementChild as HTMLInputElement;
+                    child.value = String(obj.knlast.p[2])
+                }
+
+            }
+        }
+    }
+
+
+    // jetzt die Streckenlasten
+
+    {
+
+        // Eigengewicht für Balken
+
+        let el = document.getElementById("id_button_nstreckenlasten") as drButtonPM;
+        el.setValue(0);
+
+        const elTab = document.getElementById("id_streckenlasten_tabelle");
+        elTab?.setAttribute("nzeilen", String(0));
+        elTab?.setAttribute("clear", "0");
+
+        set_neloads(nelem_Balken);
+        set_ntotalEloads(nelem_Balken)
+
+        eload.length = 0
+        for (let i = 0; i < nelem_Balken; i++) {
+            eload.push(new TElLoads())
+        }
+    }
 }
 
 
