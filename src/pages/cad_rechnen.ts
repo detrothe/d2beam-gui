@@ -5,7 +5,7 @@ import { cad_buttons } from "./cad_buttons";
 import { CADNodes } from "./cad_node";
 import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCADElement } from "./CCAD_element";
 import { alertdialog, element, eload, inc_nelem, inc_nnodes, load, nelem, nelem_Balken, nnodes, node, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen, set_nlastfaelle, set_nloads, set_nnodes, set_nnodesTotal, set_ntotalEloads, TElement, TElLoads, TLoads, TNode } from "./rechnen";
-import { myFormat, myFormat_en } from "./utility";
+import { myFormat, myFormat_en, write } from "./utility";
 
 export function cad_rechnen() {
     // Markiere alle Knoten /Punkte, an denen Stäbe hängen
@@ -114,8 +114,9 @@ export function cad_rechnen() {
         el.setValue(nelem);
 
         const elTab = document.getElementById("id_element_tabelle");
+        elTab?.setAttribute("nzeilen", '0');
         elTab?.setAttribute("nzeilen", String(nelem));
-        elTab?.setAttribute("clear", "0");
+        //elTab?.setAttribute("clear", "0");
     }
 
 
@@ -125,29 +126,51 @@ export function cad_rechnen() {
         let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
         element.length = 0
-        let nel = 0
+        let ielem = 0
         for (let i = 0; i < list.size; i++) {
             let obj = list.getAt(i) as TCAD_Stab;
             if (obj.elTyp === CAD_STAB) {
                 element.push(new TElement())
 
                 let index = obj.index1;
-                let ind1 = CADNodes[index].index_FE
+                let nod1 = CADNodes[index].index_FE
                 index = obj.index2;
-                let ind2 = CADNodes[index].index_FE
+                let nod2 = CADNodes[index].index_FE
 
-                element[nel].qname = 'R 40x30'
-                element[nel].nod[0] = ind1
-                element[nel].nod[1] = ind2
+                element[ielem].qname = 'R 40x30'
+                element[ielem].nod[0] = nod1
+                element[ielem].nod[1] = nod2
 
-                nel++
+                element[ielem].x1 = node[nod1].x;
+                element[ielem].x2 = node[nod2].x;
+                element[ielem].z1 = node[nod1].z;
+                element[ielem].z2 = node[nod2].z;
 
-                let child = tabelle.rows[nel].cells[2].firstElementChild as HTMLInputElement;
+
+                const dx = element[ielem].x2 - element[ielem].x1;
+                const dz = element[ielem].z2 - element[ielem].z1;
+                element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Stablänge
+
+                if (element[ielem].sl < 1e-12) {
+                    write("Länge von Element " + String(ielem + 1) + " ist null")
+                    element[ielem].cosinus = 1.0
+                    element[ielem].sinus = 0.0
+                    element[ielem].alpha = 0.0
+                } else {
+                    element[ielem].cosinus = dx / element[ielem].sl
+                    element[ielem].sinus = dz / element[ielem].sl
+                    element[ielem].alpha = Math.atan2(dz, dx)
+                }
+
+
+                ielem++
+
+                let child = tabelle.rows[ielem].cells[2].firstElementChild as HTMLInputElement;
                 child.value = 'R 40x30'
-                child = tabelle.rows[nel].cells[3].firstElementChild as HTMLInputElement;
-                child.value = String(+ind1 + 1)
-                child = tabelle.rows[nel].cells[4].firstElementChild as HTMLInputElement;
-                child.value = String(+ind2 + 1)
+                child = tabelle.rows[ielem].cells[3].firstElementChild as HTMLInputElement;
+                child.value = String(+nod1 + 1)
+                child = tabelle.rows[ielem].cells[4].firstElementChild as HTMLInputElement;
+                child.value = String(+nod2 + 1)
 
 
             }

@@ -3,7 +3,6 @@ import Two from 'two.js'
 import { System, STABWERK, TNode, TLoads } from './rechnen'
 
 import { CTrans } from './trans';
-import { draw_moment_arrow } from './grafik';
 import { myFormat } from './utility';
 
 
@@ -385,9 +384,11 @@ export function draw_knotenlast(two: Two, tr: CTrans, load: TLoads, x: number, z
         let radius = style_pfeil_moment.radius;
         //console.log("Moment ", +inode + 1, wert)
         if (wert > 0.0) {
-            draw_moment_arrow(two, x, z, 1.0, slmax / 50, style_pfeil_moment)
+            let gr=draw_moment_arrow(two, tr, x, z, 1.0, slmax / 50, style_pfeil_moment)
+            group.add(gr)
         } else {
-            draw_moment_arrow(two, x, z, -1.0, slmax / 50, style_pfeil_moment)
+            let gr=draw_moment_arrow(two, tr, x, z, -1.0, slmax / 50, style_pfeil_moment)
+            group.add(gr)
         }
 
         xpix = tr.xPix(x) - 10 / devicePixelRatio
@@ -478,4 +479,109 @@ function draw_arrow(_two: Two, tr: CTrans, x1: number, z1: number, x2: number, z
 
     return group;
 
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+function draw_moment_arrow(_two: Two, tr: CTrans, x0: number, z0: number, vorzeichen: number, radius: number, styles?: any) {
+    //----------------------------------------------------------------------------------------------------
+    let b = 20, h = 10
+    let x = 0.0, z = 0.0, linewidth = 2, color = '#000000'
+    let alpha: number, dalpha: number, teilung = 12
+
+    if (styles) {
+        //console.log("styles", styles)
+        if (styles.linewidth) linewidth = styles.linewidth
+        if (styles.radius) radius = styles.radius
+        if (styles.b) b = styles.b
+        if (styles.h) h = styles.h
+        if (styles.color) color = styles.color
+    }
+    b /= devicePixelRatio
+    h /= devicePixelRatio
+    linewidth /= devicePixelRatio
+    radius /= devicePixelRatio
+
+    radius = tr.World0(radius)
+    //console.log('draw_moment_arrow, radius', radius, tr.Pix0(radius))
+
+    let group = new Two.Group();
+
+    var vertices = [];
+
+    if (vorzeichen > 0) {
+
+        dalpha = Math.PI / (teilung + 1)
+        alpha = 0.0
+        for (let i = 0; i < teilung - 2; i++) {
+            x = tr.Pix0(-radius * Math.sin(alpha))
+            z = tr.Pix0(radius * Math.cos(alpha))
+            vertices.push(new Two.Anchor(x, z));
+            alpha += dalpha
+        }
+
+
+        let curve = new Two.Path(vertices, false, true)
+        curve.linewidth = linewidth;
+        curve.stroke = color;
+        //curve.fill = '#00ffffff';
+        //curve.opacity = 0;
+        //curve.noFill()
+        //curve.fillOpacity=0.25
+        curve.fill = "none"
+        //curve.fill="rgba(0,0,0,0)"
+
+
+        group.add(curve)
+
+        vertices.length = 0;
+        vertices.push(new Two.Vector(0, -h / 2 + tr.Pix0(radius)));
+        vertices.push(new Two.Vector(0 + b, tr.Pix0(radius)));
+        vertices.push(new Two.Vector(0, h / 2 + tr.Pix0(radius)));
+        // @ts-ignore
+        let dreieck = new Two.Path(vertices);
+        dreieck.fill = color;
+        dreieck.stroke = color;
+        dreieck.linewidth = 1;
+        //    dreieck.translation.set(0.0,0.0) //tr.Pix0(radius))
+
+        group.add(dreieck)
+        group.rotation = Math.PI / 5
+        group.translation.set(tr.xPix(x0), tr.zPix(z0))
+
+    } else {
+
+        dalpha = Math.PI / (teilung + 1)
+        alpha = 0.0
+        for (let i = 0; i < teilung - 2; i++) {
+            x = tr.Pix0(-radius * Math.sin(alpha))
+            z = tr.Pix0(-radius * Math.cos(alpha))
+            vertices.push(new Two.Anchor(x, z));
+            alpha += dalpha
+        }
+
+
+        let curve = new Two.Path(vertices, false, true)
+        curve.linewidth = linewidth;
+        curve.stroke = color;
+        curve.noFill()
+
+        group.add(curve)
+
+        vertices.length = 0;
+        vertices.push(new Two.Vector(0, -h / 2 - tr.Pix0(radius)));
+        vertices.push(new Two.Vector(0 + b, -tr.Pix0(radius)));
+        vertices.push(new Two.Vector(0, h / 2 - tr.Pix0(radius)));
+        // @ts-ignore
+        let dreieck = new Two.Path(vertices);
+        dreieck.fill = color;
+        dreieck.stroke = color;
+        dreieck.linewidth = 1;
+
+        group.add(dreieck)
+        group.rotation = -Math.PI / 5
+        group.translation.set(tr.xPix(x0), tr.zPix(z0))
+    }
+
+    return group;
 }

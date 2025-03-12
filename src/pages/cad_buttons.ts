@@ -18,6 +18,7 @@ import { TCADElement } from "./CCAD_element";
 
 class Cbuttons_control {
   pick_element = false;
+  select_element = false;
   cad_eingabe_aktiv = false;
   knoten_eingabe_aktiv = false;
   stab_eingabe_aktiv = false;
@@ -28,6 +29,7 @@ class Cbuttons_control {
 
   reset() {
     this.pick_element = false;
+    this.select_element = false;
     this.cad_eingabe_aktiv = false;
     this.knoten_eingabe_aktiv = false;
     this.stab_eingabe_aktiv = false;
@@ -41,6 +43,8 @@ class Cbuttons_control {
     el = document.getElementById("id_cad_lager_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
     el = document.getElementById("id_cad_delete_button") as HTMLButtonElement;
+    el.style.backgroundColor = "DodgerBlue";
+    el = document.getElementById("id_cad_select_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
     el = document.getElementById("id_cad_knoten_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
@@ -82,6 +86,15 @@ export function cad_buttons() {
   trash_button.addEventListener("click", delete_button);
   trash_button.title = "Element löschen";
   trash_button.id = "id_cad_delete_button";
+
+  const select_button = document.createElement("button");
+
+  select_button.value = "select";
+  select_button.className = "btn";
+  select_button.innerHTML = '<i class = "fa fa-hand-pointer-o"></i>';
+  select_button.addEventListener("click", Select_button);
+  select_button.title = "Element auswählen/selektieren";
+  select_button.id = "id_cad_select_button";
 
   const knoten_button = document.createElement("button");
 
@@ -128,6 +141,7 @@ export function cad_buttons() {
   div.appendChild(undo_button);
   div.appendChild(redo_button);
   div.appendChild(trash_button);
+  div.appendChild(select_button);
   div.appendChild(knoten_button);
   div.appendChild(stab_button);
   div.appendChild(lager_button);
@@ -193,6 +207,16 @@ export function delete_button() {
 }
 
 //--------------------------------------------------------------------------------------------------------
+export function Select_button() {
+  //----------------------------------------------------------------------------------------------------
+
+  let el = document.getElementById("id_cad_select_button") as HTMLButtonElement;
+  el.style.backgroundColor = "darkRed";
+
+  buttons_control.select_element = true;
+}
+
+//--------------------------------------------------------------------------------------------------------
 export function delete_element(xc: number, zc: number) {
   //----------------------------------------------------------------------------------------------------
 
@@ -247,8 +271,8 @@ export function delete_element(xc: number, zc: number) {
     }
   }
 
-
   console.log('ABSTAND', min_abstand, index, lager_gefunden);
+
   if (lager_gefunden) {
     let obj = list.removeAt(index_lager);
     two.remove(obj.two_obj);

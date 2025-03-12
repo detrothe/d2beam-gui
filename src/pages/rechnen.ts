@@ -2024,29 +2024,22 @@ export function init_tabellen() {
 
     }
 
-    let el = document.getElementById('id_element_tabelle');
+    // let el = document.getElementById('id_element_tabelle');
+
+    // let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    // (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '0';
+    // (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '1';
+    // (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '2';
+
+    // (table.rows[2].cells[2].firstElementChild as HTMLInputElement).value = '0';
+    // (table.rows[2].cells[3].firstElementChild as HTMLInputElement).value = '2';
+    // (table.rows[2].cells[4].firstElementChild as HTMLInputElement).value = '3';
+
+
+    let el = document.getElementById('id_knoten_tabelle');
 
     let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-    (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '0';
-    (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '1';
-    (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '2';
-
-    (table.rows[2].cells[2].firstElementChild as HTMLInputElement).value = '0';
-    (table.rows[2].cells[3].firstElementChild as HTMLInputElement).value = '2';
-    (table.rows[2].cells[4].firstElementChild as HTMLInputElement).value = '3';
-
-    // el?.setAttribute("hide_column", String(9));
-    // el?.setAttribute("hide_column", String(8));
-    // el?.setAttribute("hide_column", String(6));
-    // el?.setAttribute("hide_column", String(5));
-
-    //(table.rows[2].cells[3].firstElementChild as HTMLInputElement).value = '2';
-    //(table.rows[2].cells[4].firstElementChild as HTMLInputElement).value = '3';
-
-    el = document.getElementById('id_knoten_tabelle');
-
-    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
     (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '1';
     (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '1';
