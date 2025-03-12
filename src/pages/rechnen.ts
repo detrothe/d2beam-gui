@@ -59,7 +59,10 @@ export let nelemTotal: number = 0;
 export function set_nelemTotal(wert: number) { nelemTotal = wert; }
 
 export let nlastfaelle: number = 0;
+export function set_nlastfaelle(wert: number) { nlastfaelle = wert; }
 export let nkombinationen: number = 0;
+export function set_nkombinationen(wert: number) { nkombinationen = wert; }
+
 export let nelTeilungen = 10;
 export let n_iterationen = 5;
 export let ausgabe_gleichgewichtSG = true      // Ausgabe der Gleichgewichtsschnittgrößen

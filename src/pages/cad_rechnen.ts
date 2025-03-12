@@ -4,7 +4,7 @@ import { CAD_KNLAST, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { CADNodes } from "./cad_node";
 import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCADElement } from "./CCAD_element";
-import { alertdialog, element, eload, inc_nelem, inc_nnodes, load, nelem, nelem_Balken, nnodes, node, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nloads, set_nnodes, set_nnodesTotal, set_ntotalEloads, TElement, TElLoads, TLoads, TNode } from "./rechnen";
+import { alertdialog, element, eload, inc_nelem, inc_nnodes, load, nelem, nelem_Balken, nnodes, node, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen, set_nlastfaelle, set_nloads, set_nnodes, set_nnodesTotal, set_ntotalEloads, TElement, TElLoads, TLoads, TNode } from "./rechnen";
 import { myFormat, myFormat_en } from "./utility";
 
 export function cad_rechnen() {
@@ -155,6 +155,21 @@ export function cad_rechnen() {
 
     }
 
+    {  // Tabellen für Lastfälle und Kombinationen initialisieren
+
+        set_nlastfaelle(1)
+        let el = document.getElementById("id_button_nlastfaelle") as drButtonPM;
+        el.setValue(1);
+        let elTab = document.getElementById("id_lastfaelle_tabelle");
+        elTab?.setAttribute("nzeilen", '1');
+
+        set_nkombinationen(0)
+        el = document.getElementById("id_button_nkombinationen") as drButtonPM;
+        el.setValue(0);
+        elTab = document.getElementById("id_kombinationen_tabelle");
+        elTab?.setAttribute("nzeilen", '0');
+    }
+
     // jetzt die Knotenlasten
 
     {
@@ -224,6 +239,9 @@ export function cad_rechnen() {
         eload.length = 0
         for (let i = 0; i < nelem_Balken; i++) {
             eload.push(new TElLoads())
+            eload[i].element = i
+            eload[i].lf = 1
+            eload[i].art = 1
         }
     }
 }
