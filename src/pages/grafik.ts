@@ -76,7 +76,7 @@ let draw_dyn_eigenform = 1
 
 let flag_eingabe = 1
 
-let devicePixelRatio = 1
+let devicePixelRatio =  window.devicePixelRatio
 
 let scaleFactor_panel = 1.0
 let show_labels = false;

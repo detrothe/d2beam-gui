@@ -4,6 +4,8 @@ export class TCADElement {
     two_obj: any;
     qname: string = '';
     isActive = true;
+    isSelected=false;
+
     elTyp: number = 0; // 0 = 2 Knoten, 1 = Fachwerkstab, 3 = 3 Knoten, 3 = 4 Knoten
 
     x1 = 0.0

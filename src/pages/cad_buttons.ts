@@ -1,5 +1,5 @@
 
-import { list, undoList, drawStab, Stab_button, Lager_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST, keydown, CAD_STAB, CAD_LAGER } from "./cad";
+import { list, undoList, drawStab, Stab_button, Lager_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST, keydown, CAD_STAB, CAD_LAGER, selected_element } from "./cad";
 
 import { two, tr } from "./cad";
 import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
@@ -174,6 +174,7 @@ export function reDo_button() {
     let group: any
     if (obj.elTyp === CAD_STAB) {
       group = drawStab(obj.x1, obj.z1, obj.x2, obj.z2);
+      two.add(group);
     }
     else if (obj.elTyp === CAD_LAGER) {
       let node = new TNode();
@@ -296,6 +297,96 @@ export function delete_element(xc: number, zc: number) {
       two.update();
 
       undoList.append(obj);
+      buttons_control.reset();
+    }
+  }
+
+
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function select_element(xc: number, zc: number) {
+  //----------------------------------------------------------------------------------------------------
+
+  console.log("select_element")
+  if (list.size === 0) return;
+
+  let min_abstand = 1e30;
+  let index = -1;
+  let stab_gefunden = false
+  let lager_gefunden = false
+  let index_lager = -1
+  let knotenlast_gefunden = false
+  let index_knlast = -1
+
+  let xpix = tr.xPix(xc)
+  let zpix = tr.zPix(zc)
+
+  for (let i = 0; i < list.size; i++) {
+    let obj = list.getAt(i) as any;
+    if (obj.elTyp === CAD_STAB) {
+
+      let abstand = abstandPunktGerade_2D(obj.x1, obj.z1, obj.x2, obj.z2, xc, zc);
+      if (abstand > -1.0) {
+        if (abstand < min_abstand) {
+          min_abstand = abstand;
+          index = i;
+          stab_gefunden = true
+        }
+      }
+    }
+    else if (obj.elTyp === CAD_LAGER) {
+      let two_obj = obj.two_obj
+      let rect = two_obj.getBoundingClientRect();
+      console.log("rect Lager", rect, xc, zc)
+      if (xpix > rect.left && xpix < rect.right) {
+        if (zpix > rect.top && zpix < rect.bottom) {
+          lager_gefunden = true
+          index_lager = i;
+        }
+      }
+    }
+    else if (obj.elTyp === CAD_KNLAST) {
+      let two_obj = obj.two_obj
+      let rect = two_obj.getBoundingClientRect();
+      console.log("rect Knotenlast", rect, xc, zc)
+      if (xpix > rect.left && xpix < rect.right) {
+        if (zpix > rect.top && zpix < rect.bottom) {
+          knotenlast_gefunden = true
+          index_knlast = i;
+        }
+      }
+    }
+  }
+
+  console.log('ABSTAND', min_abstand, index, lager_gefunden);
+
+  if (lager_gefunden) {
+    // let obj = list.removeAt(index_lager);
+    // two.remove(obj.two_obj);
+    // two.update();
+    // undoList.append(obj);
+    buttons_control.reset();
+  }
+  else if (knotenlast_gefunden) {
+    // let obj = list.removeAt(index_knlast);
+    // two.remove(obj.two_obj);
+    // two.update();
+    // undoList.append(obj);
+    buttons_control.reset();
+  }
+  else if (index >= 0 && min_abstand < 0.25) {
+    if (list.size > 0) {
+      let obj = list.getAt(index);
+      let group = drawStab(obj.x1, obj.z1, obj.x2, obj.z2, true);
+      two.add(group);
+      selected_element.group = group
+      obj.isSelected = true
+
+      two.update();
+
+      // undoList.append(obj);
       buttons_control.reset();
     }
   }
