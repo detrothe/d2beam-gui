@@ -498,8 +498,8 @@ export function init_cad(_flag: number) {
 //--------------------------------------------------------------------------------------------------------
 function pointerdown(ev: PointerEvent) {
    //----------------------------------------------------------------------------------------------------
-   console.log('in pointerdown', ev.width);
-   write('pointer wh ' + ev.width + '|' + ev.height);
+   //console.log('in pointerdown', ev.width);
+   //write('pointer wh ' + ev.width + '|' + ev.height);
 
    ev.preventDefault();
 
@@ -579,8 +579,20 @@ function penDown(ev: PointerEvent) {
    console.log('in penDown', ev);
 
    ev.preventDefault();
+   if (buttons_control.pick_element) {
+      let xc = tr.xWorld(ev.offsetX);
+      let zc = tr.zWorld(ev.offsetY);
 
-   if (buttons_control.cad_eingabe_aktiv) {
+      delete_element(xc, zc);
+
+   } else if (buttons_control.select_element) {
+      let xc = tr.xWorld(ev.offsetX);
+      let zc = tr.zWorld(ev.offsetY);
+
+      select_element(xc, zc);
+
+   }
+   else if (buttons_control.cad_eingabe_aktiv) {
       if (input_started === 0) {
          input_active = true;
          input_started = 1;
