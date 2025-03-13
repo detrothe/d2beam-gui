@@ -117,7 +117,7 @@ const style_txt = {
 };
 
 class Tselected_element {
-   group: any
+   group: any = null
 };
 export const selected_element = new Tselected_element
 

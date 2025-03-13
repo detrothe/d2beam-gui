@@ -51,6 +51,10 @@ class Cbuttons_control {
     el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
 
+    // if ( selected_element.group !== null) {
+    //   two.remove (selected_element.group)
+    //   two.update()
+    // }
   }
 }
 
@@ -390,6 +394,12 @@ export function select_element(xc: number, zc: number) {
       buttons_control.reset();
     }
   }
+
+  let divi = document.getElementById("id_context_menu");
+
+  divi!.style.left = xpix + 'px';
+  divi!.style.top = zpix + 'px';
+  divi!.style.display = 'block';
 
 
 }
