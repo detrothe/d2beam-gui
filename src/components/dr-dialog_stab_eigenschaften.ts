@@ -6,6 +6,9 @@ export class drDialogStabEigenschaften extends LitElement {
   @property({ type: String }) title = "Stab Eigenschaften";
 
   @property({ type: Number }) xValue = 0;
+  @property({ type: Array }) qname: string[];
+
+  nOptions = 0;
 
   static get styles() {
     return css`
@@ -119,6 +122,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
   constructor() {
     super();
+    this.qname = []
   }
 
   //----------------------------------------------------------------------------------------------
@@ -150,7 +154,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
             <td>k<sub>x,a</sub>:</td>
             <td>
-              <input type="number" id="id_kxa" name="kxa" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" id="id_kxa" name="kxa" pattern="[0-9.,eE+-]*" value="" disabled />
             </td>
             <td>kN/m</td>
           </tr>
@@ -161,7 +165,7 @@ export class drDialogStabEigenschaften extends LitElement {
             </td>
             <td>k<sub>z,a</sub>:</td>
             <td>
-              <input type="number" id="id_kza" name="kza" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" id="id_kza" name="kza" pattern="[0-9.,eE+-]*" value="" disabled />
             </td>
             <td>kN/m</td>
           </tr>
@@ -172,7 +176,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
             <td>k<sub>&phi;,a</sub>:</td>
             <td>
-              <input type="number" id="id_kphi_a" name="kphi_a" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" id="id_kphi_a" name="kphi_a" pattern="[0-9.,eE+-]*" value="" disabled />
             </td>
             <td>kNm/rad</td>
           </tr>
@@ -184,7 +188,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
             <td>k<sub>x,e</sub>:</td>
             <td>
-              <input type="number" id="id_kxe" name="kxe" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" id="id_kxe" name="kxe" pattern="[0-9.,eE+-]*" value="" disabled/>
             </td>
             <td>kN/m</td>
           </tr>
@@ -195,7 +199,7 @@ export class drDialogStabEigenschaften extends LitElement {
             </td>
             <td>k<sub>z,e</sub>:</td>
             <td>
-              <input type="number" id="id_kze" name="kze" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" id="id_kze" name="kze" pattern="[0-9.,eE+-]*" value="" disabled/>
             </td>
             <td>kN/m</td>
           </tr>
@@ -206,7 +210,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
             <td>k<sub>&phi;,e</sub>:</td>
             <td>
-              <input type="number" id="id_kphi_e" name="kphi_e" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" id="id_kphi_e" name="kphi_e" pattern="[0-9.,eE+-]*" value="" disabled/>
             </td>
             <td>kNm/rad</td>
           </tr>
@@ -263,10 +267,13 @@ export class drDialogStabEigenschaften extends LitElement {
     if (shadow) (shadow.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).close("cancel");
   }
 
-  getValueX() {
+  //---------------------------------------------------------------------------------------------------------------
+  getValueStarrA() {
+    //-------------------------------------------------------------------------------------------------------------
+
     const shadow = this.shadowRoot;
-    console.log("id_x", (shadow?.getElementById("id_x") as HTMLInputElement).value);
-    let wert = Number((shadow?.getElementById("id_x") as HTMLInputElement).value.replace(/,/g, "."));
+    console.log("id_a", (shadow?.getElementById("id_a") as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById("id_a") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
   getValueZ() {
@@ -275,4 +282,82 @@ export class drDialogStabEigenschaften extends LitElement {
     let wert = Number((shadow?.getElementById("id_z") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
+
+  //---------------------------------------------------------------------------------------------------------------
+  addQuerschnittName(name: string) {
+    //-------------------------------------------------------------------------------------------------------------
+    this.qname[this.nOptions] = name;
+
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
+    let option = document.createElement('option');
+
+    option.value = option.textContent = this.qname[this.nOptions];
+    el.appendChild(option);
+
+    this.nOptions++;
+
+  }
+
+
+  //---------------------------------------------------------------------------------------------------------------
+  setQuerschnittNames(name: string[]) {
+    //-------------------------------------------------------------------------------------------------------------
+
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
+    //    for (let i = 0; i < this.nOptions; i++) el.removeChild(el.lastChild);
+    for (let i = el.children.length - 1; i >= 0; i--) el.remove(i);
+
+    for (let i = 0; i < name.length; i++) {
+      this.qname[i] = name[i];
+
+      let option = document.createElement('option');
+
+      option.value = option.textContent = this.qname[i];
+
+      el.appendChild(option);
+    }
+
+    this.nOptions = name.length;
+  }
+
+  //---------------------------------------------------------------------------------------------------------------
+  selectOption(index: number) {
+    //-------------------------------------------------------------------------------------------------------------
+
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
+
+    el.selectedIndex = index;
+  }
+
+  //---------------------------------------------------------------------------------------------------------------
+  selectOptionByName(name: string) {
+    //-------------------------------------------------------------------------------------------------------------
+
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
+
+    for (let i = 0; i < el.children.length; i++) {
+      if (el.children.item(i)?.textContent === name) {
+        el.selectedIndex = i;
+        return;
+      }
+    }
+  }
+
+  //---------------------------------------------------------------------------------------------------------------
+  getSelectedOptionByName() {
+    //-------------------------------------------------------------------------------------------------------------
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
+
+    let index = el.selectedIndex;
+    let name = el.children.item(index)?.textContent;
+    //console.log("in getSelectedOptionByName",index,name)
+
+    return name;
+  }
+
 }
