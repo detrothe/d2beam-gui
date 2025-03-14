@@ -726,7 +726,7 @@ function mousemove(ev: MouseEvent) {
 
    two.remove(cursorLineh);
    two.remove(cursorLinev);
-   let len = 10;
+   let len = tr.Pix0(getFangweite()/2.);
    cursorLineh = two.makeLine(
       ev.offsetX - len,
       ev.offsetY,

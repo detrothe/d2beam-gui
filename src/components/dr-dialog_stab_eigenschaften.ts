@@ -105,7 +105,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
       /* Styling der geöffneten Popup-Box */
       dialog[open] {
-        width: 16rem;
+        width: 19rem;
         background: #fffbf0;
         border: thin solid #e7c157;
         margin: 5rem auto;
@@ -127,25 +127,115 @@ export class drDialogStabEigenschaften extends LitElement {
     return html` <dialog id="dialog_stabeigenschaften">
       <h2>Stab-Eigenschaften</h2>
 
-      <br />
       <p>
-        <b>Koordinaten eines neuen Knotens</b>
+        <b>Querschnitt</b>
       </p>
 
       <p>
-        x:
-        <input type="number" id="id_x" name="x" pattern="[0-9.,eE+-]*" value="" />
+        <select name="querschnitt" id="id_querschnitt"></select>
+
+      </p>
+      <table id="stab_table">
+        <thead>
+          <tr>
+            <td>Gelenke</td>
+            <td colspan="2" style="text-align: center;">Federkonstante</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <sl-checkbox id="id_Na">N<sub>a</sub></sl-checkbox>
+            </td>
+
+            <td>k<sub>x,a</sub>:</td>
+            <td>
+              <input type="number" id="id_kxa" name="kxa" pattern="[0-9.,eE+-]*" value="" />
+            </td>
+            <td>kN/m</td>
+          </tr>
+
+          <tr>
+            <td>
+              <sl-checkbox id="id_Va">V<sub>a</sub></sl-checkbox>
+            </td>
+            <td>k<sub>z,a</sub>:</td>
+            <td>
+              <input type="number" id="id_kza" name="kza" pattern="[0-9.,eE+-]*" value="" />
+            </td>
+            <td>kN/m</td>
+          </tr>
+          <tr>
+            <td>
+              <sl-checkbox id="id_Ma">M<sub>a</sub></sl-checkbox>
+            </td>
+
+            <td>k<sub>&phi;,a</sub>:</td>
+            <td>
+              <input type="number" id="id_kphi_a" name="kphi_a" pattern="[0-9.,eE+-]*" value="" />
+            </td>
+            <td>kNm/rad</td>
+          </tr>
+
+          <tr>
+            <td>
+              <sl-checkbox id="id_Ne">N<sub>e</sub></sl-checkbox>
+            </td>
+
+            <td>k<sub>x,e</sub>:</td>
+            <td>
+              <input type="number" id="id_kxe" name="kxe" pattern="[0-9.,eE+-]*" value="" />
+            </td>
+            <td>kN/m</td>
+          </tr>
+
+          <tr>
+            <td>
+              <sl-checkbox id="id_Ve">V<sub>e</sub></sl-checkbox>
+            </td>
+            <td>k<sub>z,e</sub>:</td>
+            <td>
+              <input type="number" id="id_kze" name="kze" pattern="[0-9.,eE+-]*" value="" />
+            </td>
+            <td>kN/m</td>
+          </tr>
+          <tr>
+            <td>
+              <sl-checkbox id="id_Me">M<sub>e</sub></sl-checkbox>
+            </td>
+
+            <td>k<sub>&phi;,e</sub>:</td>
+            <td>
+              <input type="number" id="id_kphi_e" name="kphi_e" pattern="[0-9.,eE+-]*" value="" />
+            </td>
+            <td>kNm/rad</td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      <p><b>Starre Stabenden</b></p>
+      <p>
+        starr a:
+        <input type="number" id="id_a" name="a" pattern="[0-9.,eE+-]*" value="" />
         [m]
       </p>
       <p>
-        z:
-        <input type="number" id="id_z" name="z" pattern="[0-9.,eE+-]*" value="" />
+        starr e:
+        <input type="number" id="id_e" name="e" pattern="[0-9.,eE+-]*" value="" />
         [m]
+      </p>
+
+      <p><b>Stabbettung</b></p>
+      <p>
+        k<sub>b</sub>:
+        <input type="number" id="id_kb" name="kb" pattern="[0-9.,eE+-]*" value="" />
+        [kN/m²]
       </p>
 
       <form method="dialog">
         <!-- <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
-            <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
+        <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
         <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
       </form>
     </dialog>`;
@@ -175,14 +265,14 @@ export class drDialogStabEigenschaften extends LitElement {
 
   getValueX() {
     const shadow = this.shadowRoot;
-    console.log("id_x", (shadow?.getElementById("id_x") as HTMLInputElement).value)
-    let wert = Number((shadow?.getElementById("id_x") as HTMLInputElement).value.replace(/,/g, '.'))
-    return wert
+    console.log("id_x", (shadow?.getElementById("id_x") as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById("id_x") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
   }
   getValueZ() {
     const shadow = this.shadowRoot;
-    console.log("id_z", (shadow?.getElementById("id_z") as HTMLInputElement).value)
-    let wert = Number((shadow?.getElementById("id_z") as HTMLInputElement).value.replace(/,/g, '.'))
-    return wert
+    console.log("id_z", (shadow?.getElementById("id_z") as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById("id_z") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
   }
 }

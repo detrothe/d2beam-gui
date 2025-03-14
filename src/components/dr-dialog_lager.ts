@@ -170,7 +170,7 @@ export class drDialogLager extends LitElement {
 
             <td>k<sub>&phi;</sub>:</td>
             <td>
-              <input type="number" id="id_kphi" name="kphi" pattern="[0-9.,eE+-]*" value="hi" />
+              <input type="number" id="id_kphi" name="kphi" pattern="[0-9.,eE+-]*" value="" />
             </td>
             <td>kNm/rad</td>
           </tr>
