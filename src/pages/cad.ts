@@ -647,10 +647,8 @@ function penDown(ev: PointerEvent) {
 
          if (buttons_control.n_input_points === 1) {
             if (buttons_control.lager_eingabe_aktiv) {
-               //let group=two.makeRectangle(start_x,start_y,20,20);
+
                let node = new TNode();
-               // node.L_org[0] = 1
-               // node.L_org[1] = 1
                node.x = start_x_wc;
                node.z = start_z_wc;
                read_lager_dialog(node);
@@ -660,20 +658,32 @@ function penDown(ev: PointerEvent) {
                if (index1 > -1) {
                   let group = draw_lager(two, tr, node);
                   two.update();
-                  const el = new TCAD_Lager(
-                     group,
-                     start_x_wc,
-                     start_z_wc,
-                     index1,
-                     node,
-                     buttons_control.typ_cad_element
-                  );
+                  const el = new TCAD_Lager(group, start_x_wc, start_z_wc, index1, node, buttons_control.typ_cad_element);
                   list.append(el);
                } else {
                   console.log('Keinen Knoten gefunden');
                   alertdialog('ok', 'keinen Knoten gefunden');
                }
             }
+
+            if (buttons_control.knotenlast_eingabe_aktiv) {
+
+               let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+               if (index1 > -1) {
+                  let knlast = new TLoads();
+                  read_knotenlast_dialog(knlast);
+                  let group = draw_knotenlast(two, tr, knlast, get_cad_node_X(index1), get_cad_node_Z(index1), 1, 0);
+                  two.add(group);
+                  two.update();
+                  console.log('getBoundingClientRect', group.getBoundingClientRect());
+                  const el = new TCAD_Knotenlast(group, start_x_wc, start_z_wc, index1, knlast, buttons_control.typ_cad_element);
+                  list.append(el);
+               } else {
+                  console.log('Keinen Knoten gefunden');
+                  alertdialog('ok', 'keinen Knoten gefunden');
+               }
+            }
+
             input_started = 0;
             input_active = false;
             rubberband_drawn = false;
@@ -726,7 +736,7 @@ function mousemove(ev: MouseEvent) {
 
    two.remove(cursorLineh);
    two.remove(cursorLinev);
-   let len = tr.Pix0(getFangweite()/2.);
+   let len = tr.Pix0(getFangweite() / 2.);
    cursorLineh = two.makeLine(
       ev.offsetX - len,
       ev.offsetY,
