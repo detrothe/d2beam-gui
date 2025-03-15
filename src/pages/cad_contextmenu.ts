@@ -1,7 +1,7 @@
 import { drDialogStabEigenschaften } from "../components/dr-dialog_stab_eigenschaften";
 import { keydown, selected_element, two } from "./cad";
 import { buttons_control } from "./cad_buttons";
-import { default_querschnitt } from "./rechnen";
+import { default_querschnitt, nQuerschnittSets, querschnittset } from "./querschnitte";
 
 //--------------------------------------------------------------------------------------------------------
 export function show_property_dialog() {
@@ -16,10 +16,15 @@ export function show_property_dialog() {
     const el = document.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
     console.log("id_dialog_stab_eigenschaften", el);
 
-    el.addQuerschnittName('hallo1');
-    el.addQuerschnittName('hallo2');
+    // el.addQuerschnittName('hallo1');
+    // el.addQuerschnittName('hallo2');
 
-    let names = [default_querschnitt, 'neu 2']
+
+    let names = [] as string[]
+    for (let i = 0; i < querschnittset.length; i++) {
+        names.push(querschnittset[i].name)
+    }
+
     el.setQuerschnittNames(names);
     //el.selectOption(1)
     el.selectOptionByName(default_querschnitt)

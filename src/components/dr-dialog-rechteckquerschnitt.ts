@@ -7,7 +7,7 @@ import "@shoelace-style/shoelace/dist/components/radio-group/radio-group.js";
 import "@shoelace-style/shoelace/dist/components/radio/radio.js";
 import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 
-import { check_if_name_exists } from "../pages/rechnen"
+import { check_if_name_exists } from "../pages/querschnitte"
 import { myFormat_en } from '../pages/utility'
 import { AlertDialog } from "../pages/confirm_dialog";
 

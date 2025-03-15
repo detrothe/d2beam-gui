@@ -18,14 +18,12 @@ import {
   node,
   nlastfaelle,
   nkombinationen,
-  nQuerschnittSets,
   neigv,
   THIIO_flag,
   disp_print,
   disp_print_kombi,
   lagerkraefte,
   lagerkraefte_kombi,
-  querschnittset,
   alpha_cr,
   lastfall_bezeichnung,
   kombiTabelle,
@@ -36,6 +34,8 @@ import {
   eload,
   ausgabe_gleichgewichtSG,
 } from "./rechnen";
+
+import {nQuerschnittSets,querschnittset } from "./querschnitte.js"
 
 import { myFormat } from "./utility";
 import { app } from "./haupt";

@@ -1,6 +1,6 @@
 import styles from './dr-tabelle.css?raw';
 
-import { nQuerschnittSets, get_querschnittRechteck_name } from '../pages/rechnen';
+import { nQuerschnittSets,get_querschnittRechteck_name } from '../pages/querschnitte';
 import { Detect } from '../pages/haupt';
 
 import { berechnungErforderlich, touch_support_table } from "../pages/globals";

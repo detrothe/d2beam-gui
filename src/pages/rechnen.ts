@@ -1,5 +1,5 @@
 declare let Module: any;
-import { app, nlastfaelle_init, opendialog, contextmenu_querschnitt, add_new_cross_section, nstabvorverfomungen_init } from "./haupt"
+//import { app, nlastfaelle_init,  nstabvorverfomungen_init } from "./haupt"
 import { TFVector, TFArray2D, TFArray3D, TFArray3D_0 } from "./TFArray"
 
 import { berechnungErfolgreich, berechnungErforderlich } from './globals'
@@ -21,6 +21,9 @@ import { ausgabe, ausgabe_kombinationen_Th_I_O, dyn_ausgabe } from "./ausgabe"
 import { AlertDialog } from "../pages/confirm_dialog";
 import { SlCheckbox } from "@shoelace-style/shoelace";
 import { cad_rechnen } from "./cad_rechnen";
+import { default_querschnitt, incr_querschnittSets, nQuerschnittSets, querschnitts_zaehler, querschnittset,
+    set_default_querschnitt, set_querschnitts_zaehler, add_new_cross_section,
+    set_querschnittRechteck} from "./querschnitte";
 
 // import { read_daten } from "./dateien"
 
@@ -100,7 +103,6 @@ export let nodeDisp0 = [] as TNodeDisp[]
 export let load = [] as TLoads[]
 export let eload = [] as TElLoads[]
 export let stabvorverformung = [] as TStabvorverformung[]
-export let querschnittset = [] as any[]
 export let kombiTabelle = [] as number[][]
 export let kombiTabelle_txt = [] as string[]
 export let lastfall_bezeichnung = [] as string[]
@@ -111,9 +113,6 @@ export let maxU_schief = 0.03
 export let maxU_node = -1
 export let maxU_dir = 1
 
-export let nQuerschnittSets = 0
-export let querschnitts_zaehler = -1
-export let default_querschnitt = ''
 export let nur_eingabe_ueberpruefen = false;
 
 export let ndivsl = 3;
@@ -232,23 +231,6 @@ class TNodeDisp {                                   // Knotenzwangsverformungen,
     //phiL = false
 }
 
-class TQuerschnittRechteck {
-    name: string = ''
-    id: string = ''
-    model: number = 1
-    className = 'QuerschnittRechteck'
-    emodul: number = 30000.0
-    Iy: number = 160000.0
-    area: number = 1200.0
-    zso: number = 0.2;
-    height: number = 0.4
-    width: number = 0.3
-    wichte: number = 0.0
-    alphaT: number = 0.0
-    querdehnzahl: number = 0.0
-    schubfaktor: number = 0.0
-    definedQuerschnitt: number = 1
-}
 
 export class TElement {
     qname: string = ''
@@ -466,91 +448,6 @@ export function showColumnsForStabwerk() {
 export function incr_neq() {
     //-----------------------------------------------------------------------------------------------------------
     neq++;
-}
-
-//---------------------------------------------------------------------------------------------------------------
-export function incr_querschnitts_zaehler() {
-    //-----------------------------------------------------------------------------------------------------------
-    querschnitts_zaehler++;
-}
-
-//---------------------------------------------------------------------------------------------------------------
-export function set_querschnittszaehler() {
-    //-----------------------------------------------------------------------------------------------------------
-
-    for (let i = 0; i < nQuerschnittSets; i++) {
-        let id = querschnittset[i].id
-        let txtArray = id.split("-");
-        console.log("txtArray", txtArray)
-        if (Number(txtArray[1]) > querschnitts_zaehler) querschnitts_zaehler = Number(txtArray[1])
-    }
-    console.log("querschnitts_zaehler", querschnitts_zaehler)
-}
-
-//---------------------------------------------------------------------------------------------------------------
-export function check_if_name_exists(name: string) {
-    //-----------------------------------------------------------------------------------------------------------
-    for (let i = 0; i < nQuerschnittSets; i++) {
-        console.log("check_if_name_exists", i, name, querschnittset[i].name)
-        if (name === querschnittset[i].name) return true;
-    }
-    console.log("exit check_if_name_exists")
-    return false;
-}
-
-//---------------------------------------------------------------------------------------------------------------
-export function incr_querschnittSets() {
-    //-----------------------------------------------------------------------------------------------------------
-    nQuerschnittSets++;
-    querschnittset.push(new TQuerschnittRechteck())
-}
-
-//---------------------------------------------------------------------------------------------------------------
-export function del_last_querschnittSet() {
-    //-----------------------------------------------------------------------------------------------------------
-    nQuerschnittSets--;
-    querschnittset.pop();
-}
-
-//---------------------------------------------------------------------------------------------------------------
-export function del_querschnittSet(qname: string) {
-    //-----------------------------------------------------------------------------------------------------------
-
-    for (let i = 0; i < nQuerschnittSets; i++) {
-        if (qname === querschnittset[i].name) {
-            console.log("lösche jetzt", i, qname)
-            querschnittset.splice(i, 1);
-            nQuerschnittSets--;
-            break;
-        }
-    }
-
-    let ele = document.getElementById("id_element_tabelle");
-    ele?.setAttribute("option_deleted", qname);
-}
-
-
-//---------------------------------------------------------------------------------------------------------------
-export function find_querschnittSet(qname: string) {
-    //-----------------------------------------------------------------------------------------------------------
-
-    let anzahl = 0;
-
-    const el = document.getElementById('id_element_tabelle');
-    const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-    let nRowTab = table.rows.length;
-
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        let qsname = (table.rows[izeile].cells[1].firstElementChild as HTMLSelectElement).value;
-
-        if (qname === qsname) {
-            console.log("find_querschnittSet, gefunden", izeile, qname)
-            anzahl++;
-            break;
-        }
-    }
-    return anzahl;
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1005,127 +902,6 @@ function check_input() {
 
     return fehler;
 
-}
-
-//---------------------------------------------------------------------------------------------------------------
-export function set_querschnittRechteck(name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number,
-    definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number) {
-    //-----------------------------------------------------------------------------------------------------------
-
-    const index = nQuerschnittSets - 1;
-
-    querschnittset[index].name = name;
-    querschnittset[index].emodul = emodul;
-    querschnittset[index].Iy = Iy;
-    querschnittset[index].area = area;
-    querschnittset[index].height = height;
-    querschnittset[index].width = width;
-    querschnittset[index].id = id;
-    querschnittset[index].definedQuerschnitt = definedQuerschnitt;
-    querschnittset[index].wichte = wichte;
-    querschnittset[index].schubfaktor = schubfaktor;
-    querschnittset[index].querdehnzahl = querdehnzahl;
-    querschnittset[index].zso = zso;
-    querschnittset[index].alphaT = alphaT;
-    console.log("set_querschnittRechteck", index, emodul)
-}
-
-
-//---------------------------------------------------------------------------------------------------------------
-export function update_querschnittRechteck(index: number, name: string, id: string, emodul: number, Iy: number, area: number,
-    height: number, width: number, definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number) {
-    //-----------------------------------------------------------------------------------------------------------
-
-    querschnittset[index].name = name;
-    querschnittset[index].emodul = emodul;
-    querschnittset[index].Iy = Iy;
-    querschnittset[index].area = area;
-    querschnittset[index].height = height;
-    querschnittset[index].width = width;
-    querschnittset[index].id = id;
-    querschnittset[index].definedQuerschnitt = definedQuerschnitt;
-    querschnittset[index].wichte = wichte;
-    querschnittset[index].schubfaktor = schubfaktor;
-    querschnittset[index].querdehnzahl = querdehnzahl;
-    querschnittset[index].zso = zso;
-    querschnittset[index].alphaT = alphaT;
-
-    console.log("update_querschnittRechteck", index, emodul)
-}
-
-//---------------------------------------------------------------------------------------------------------------
-export function get_querschnittRechteck(index: number) {
-    //-----------------------------------------------------------------------------------------------------------
-
-    let name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number, definedQuerschnitt: number, wichte: number
-    let schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number
-
-    console.log("index", index)
-    name = querschnittset[index].name;
-    emodul = querschnittset[index].emodul;
-    Iy = querschnittset[index].Iy;
-    area = querschnittset[index].area;
-    height = querschnittset[index].height;
-    width = querschnittset[index].width;
-    id = querschnittset[index].id;
-    definedQuerschnitt = querschnittset[index].definedQuerschnitt;
-    wichte = querschnittset[index].wichte;
-    schubfaktor = querschnittset[index].schubfaktor;
-    querdehnzahl = querschnittset[index].querdehnzahl;
-    zso = querschnittset[index].zso;
-    alphaT = querschnittset[index].alphaT;
-
-    console.log("get_querschnittRechteck", index, emodul)
-
-    return [name, id, emodul, Iy, area, height, width, definedQuerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT]
-}
-
-
-//---------------------------------------------------------------------------------------------------------------
-export function get_querschnittRechteck_name(index: number) {
-    //-----------------------------------------------------------------------------------------------------------
-
-    let name: string = 'error'
-
-    if (index >= 0) name = querschnittset[index].name;
-
-    return name;
-}
-
-//---------------------------------------------------------------------------------------------------------------
-export function get_querschnitt_classname(index: number) {
-    //-----------------------------------------------------------------------------------------------------------
-
-    let name: string = 'error'
-
-    if (index >= 0) name = querschnittset[index].className;
-
-    return name;
-}
-
-//---------------------------------------------------------------------------------------------------------------
-export function get_querschnitt_length(index: number) {
-    //-----------------------------------------------------------------------------------------------------------
-
-    let len = 0
-
-    if (index >= 0) len = Object.keys(querschnittset[index]).length;
-    console.log("get_querschnitt_length", querschnittset[index])
-
-    return len;
-}
-
-//---------------------------------------------------------------------------------------------------------------
-export function get_querschnitt_index(qname: string) {
-    //-----------------------------------------------------------------------------------------------------------
-
-    for (let index = 0; index < querschnittset.length; index++) {
-        if (qname === querschnittset[index].name) {
-            return index;
-            break;
-        }
-    }
-    return -1;
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1921,64 +1697,6 @@ function read_kombinationen() {
 
 
 //---------------------------------------------------------------------------------------------------------------
-export function add_rechteck_querschnitt(werte: any[]) {
-    //-----------------------------------------------------------------------------------------------------------
-    // Diese Methode darf nur von dateien.ts beim Einlesen aus Datei verwendet werden
-
-    console.log('add_rechteck_querschnitt wert', werte)
-
-    incr_querschnittSets();
-
-    const qname = werte[0]
-    const id = werte[1]
-    const emodul = werte[2]
-    const Iy = werte[3]
-    const area = werte[4]
-    const height = werte[5]
-    const width = werte[6]
-    const defquerschnitt = werte[7]
-    const wichte = werte[8]
-    const schubfaktor = werte[9]
-    const querdehnzahl = werte[10]
-    const zso = werte[11]
-    const alphaT = werte[12]
-
-    set_querschnittRechteck(
-        qname,
-        id,
-        emodul,
-        Iy,
-        area,
-        height,
-        width,
-        defquerschnitt,
-        wichte,
-        schubfaktor,
-        querdehnzahl,
-        zso,
-        alphaT
-    );
-
-    add_new_cross_section(qname, id);
-
-    // var tag = document.createElement('sl-tree-item');
-    // var text = document.createTextNode(qname);
-    // tag.appendChild(text);
-    // tag.addEventListener('click', opendialog);
-    // tag.addEventListener("contextmenu", contextmenu_querschnitt);
-
-    // tag.id = id;
-    // var element = document.getElementById('id_tree_LQ');
-    // element?.appendChild(tag);
-    // //console.log('child appendchild', element);
-
-    // const ele = document.getElementById('id_element_tabelle');
-    // //console.log('ELE: >>', ele);
-    // ele?.setAttribute('add_new_option', '4');
-
-}
-
-//---------------------------------------------------------------------------------------------------------------
 export function init_tabellen() {
     //-----------------------------------------------------------------------------------------------------------
 
@@ -1988,7 +1706,7 @@ export function init_tabellen() {
     {
 
         incr_querschnittSets();
-        querschnitts_zaehler = 0;
+        set_querschnitts_zaehler(0);
 
         const qname = 'R 40x30'
         const id = 'mat-' + querschnitts_zaehler;
@@ -2083,12 +1801,12 @@ export function init_tabellen() {
     let elh = document.getElementById("id_koppelfedern_tabelle");   // Drehwinkel bei Koppelfedern nicht anzeigen
     elh?.setAttribute("hide_column", String(9));
 
-    default_querschnitt = 'R 40x30'
+    set_default_querschnitt('R 40x30')
 
-    el = document.getElementById('id_querschnitt_default');
-    const opt1 = document.createElement("option");
-    opt1.text = default_querschnitt;
-    el.add(opt1);
+    // el = document.getElementById('id_querschnitt_default');
+    // const opt1 = document.createElement("option");
+    // opt1.text = default_querschnitt;
+    // el.add(opt1);
 
 }
 

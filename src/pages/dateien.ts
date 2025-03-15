@@ -11,8 +11,9 @@ import { write } from './utility'
 import { reset_gui } from './mypanelgui'
 import { reset_controlpanel_grafik } from './grafik'
 
-import { nQuerschnittSets, get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length, set_querschnittszaehler } from "./rechnen"
-import { add_rechteck_querschnitt, setSystem, System } from './rechnen'
+import {  get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length } from "./querschnitte"
+import { nQuerschnittSets, set_querschnittszaehler,add_rechteck_querschnitt } from "./querschnitte"
+import {  setSystem, System } from './rechnen'
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
@@ -193,7 +194,6 @@ export function read_daten(eingabedaten: string) {
     // el = document.getElementById("id_knotenlasten_tabelle");
     // el?.setAttribute("hide_column", String(5));
     //}
-
 
     let nQuerschnittSets = jobj.nquerschnittsets
     console.log('nQuerschnittSets', nQuerschnittSets)

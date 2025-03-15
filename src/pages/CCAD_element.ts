@@ -4,7 +4,7 @@ export class TCADElement {
     two_obj: any;
     qname: string = '';
     isActive = true;
-    isSelected=false;
+    isSelected = false;
 
     elTyp: number = 0; // 0 = 2 Knoten, 1 = Fachwerkstab, 3 = 3 Knoten, 3 = 4 Knoten
 
@@ -34,13 +34,15 @@ export class TCAD_Stab extends TCADElement {
     x2: number = 0.0;
     z2: number = 0.0;
     index2 = -1;
+    name_querschnitt = ''
 
-    constructor(obj: any, x1: number, z1: number, x2: number, z2: number, index1: number, index2: number, elTyp: number) {
+    constructor(obj: any, x1: number, z1: number, x2: number, z2: number, index1: number, index2: number, qname: string, elTyp: number) {
         super(obj, x1, z1, index1, elTyp);
 
         this.x2 = x2;
         this.z2 = z2;
         this.index2 = index2;
+        this.name_querschnitt = qname
     }
 
 }

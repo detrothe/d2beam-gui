@@ -5,13 +5,13 @@ import {
     nelem,
     nnodes,
     nelem_Balken,
-    nQuerschnittSets,
-    querschnittset,
     System,
     stadyn,
     nnodalMass,
     nodalmass,
 } from "./rechnen";
+
+import { nQuerschnittSets,    querschnittset} from "./querschnitte"
 
 import { testNumber, myFormat, write } from "./utility";
 

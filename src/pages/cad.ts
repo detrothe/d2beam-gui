@@ -29,6 +29,7 @@ import {
 import { AlertDialog } from './confirm_dialog';
 import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCADElement } from './CCAD_element';
 import { Group } from 'two.js/src/group';
+import { default_querschnitt } from './querschnitte';
 
 export const CAD_KNOTEN = 1;
 export const CAD_STAB = 2;
@@ -1036,6 +1037,7 @@ function mouseup(ev: any) {
                   end_z_wc,
                   index1,
                   index2,
+                  default_querschnitt,
                   buttons_control.typ_cad_element
                );
                list.append(el);
