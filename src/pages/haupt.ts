@@ -73,7 +73,7 @@ import { cad_buttons } from "./cad_buttons";
 import { show_property_dialog } from "./cad_contextmenu";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 15-März-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.c, 15-März-2025, ";
 //########################################################################################################################
 
 

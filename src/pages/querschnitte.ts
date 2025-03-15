@@ -2,7 +2,7 @@ import { SlButton } from "@shoelace-style/shoelace"
 import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt"
 import { CAD_STAB, list } from "./cad"
 import { TCAD_Stab } from "./CCAD_element"
-import { myFormat } from "./utility"
+import { myFormat, write } from "./utility"
 import { AlertDialog, ConfirmDialog } from "./confirm_dialog"
 import { berechnungErforderlich } from "./globals"
 
@@ -45,7 +45,7 @@ export function click_def_querschnitt() {
     //---------------------------------------------------------------------------------------------------------------
     let el = document.getElementById('id_querschnitt_default') as HTMLSelectElement;
     default_querschnitt = el.value;
-    console.log("default_querschnitt",default_querschnitt)
+    write("default_querschnitt " + default_querschnitt)
 }
 //---------------------------------------------------------------------------------------------------------------
 export function incr_querschnitts_zaehler() {

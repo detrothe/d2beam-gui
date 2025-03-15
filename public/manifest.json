@@ -1,10 +1,10 @@
 {
   "id": "/",
   "scope": "/",
-  "name": "PWA D2BEAM",
+  "name": "D2BEAM GUI",
   "display": "standalone",
   "start_url": "/",
-  "short_name": "d2beam",
+  "short_name": "d2beam gui",
   "theme_color": "#222222",
   "description": "This is a PWA D2BEAM app",
   "orientation": "any",
