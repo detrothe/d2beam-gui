@@ -1,6 +1,7 @@
 import { drDialogStabEigenschaften } from "../components/dr-dialog_stab_eigenschaften";
 import { keydown, selected_element, two } from "./cad";
 import { buttons_control } from "./cad_buttons";
+import { default_querschnitt } from "./rechnen";
 
 //--------------------------------------------------------------------------------------------------------
 export function show_property_dialog() {
@@ -18,10 +19,10 @@ export function show_property_dialog() {
     el.addQuerschnittName('hallo1');
     el.addQuerschnittName('hallo2');
 
-    let names = ['neu 1', 'neu 2']
+    let names = [default_querschnitt, 'neu 2']
     el.setQuerschnittNames(names);
     //el.selectOption(1)
-    el.selectOptionByName('1')
+    el.selectOptionByName(default_querschnitt)
 
     console.log("shadow", el?.shadowRoot?.getElementById("dialog_stabeigenschaften")),
         (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).addEventListener("close", dialog_stab_eigenschaften_closed);

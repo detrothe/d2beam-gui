@@ -205,20 +205,28 @@ export function reDo_button() {
 export function delete_button() {
   //----------------------------------------------------------------------------------------------------
 
-  let el = document.getElementById("id_cad_delete_button") as HTMLButtonElement;
-  el.style.backgroundColor = "darkRed";
+  if (buttons_control.pick_element) {
+    buttons_control.reset();
+  } else {
+    let el = document.getElementById("id_cad_delete_button") as HTMLButtonElement;
+    el.style.backgroundColor = "darkRed";
 
-  buttons_control.pick_element = true;
+    buttons_control.pick_element = true;
+  }
 }
 
 //--------------------------------------------------------------------------------------------------------
 export function Select_button() {
   //----------------------------------------------------------------------------------------------------
 
-  let el = document.getElementById("id_cad_select_button") as HTMLButtonElement;
-  el.style.backgroundColor = "darkRed";
+  if (buttons_control.select_element) {
+    buttons_control.reset();
+  } else {
+    let el = document.getElementById("id_cad_select_button") as HTMLButtonElement;
+    el.style.backgroundColor = "darkRed";
 
-  buttons_control.select_element = true;
+    buttons_control.select_element = true;
+  }
 }
 
 //--------------------------------------------------------------------------------------------------------

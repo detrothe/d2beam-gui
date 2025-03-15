@@ -53,7 +53,7 @@ export function set_ntotalEloads(wert: number) { ntotalEloads = wert; }
 export let nstabvorverfomungen = 0;
 export let neq: number;
 export let nnodesTotal: number = 0;
-export function set_nnodesTotal(wert: number):void { nnodesTotal = wert; }
+export function set_nnodesTotal(wert: number): void { nnodesTotal = wert; }
 
 export let nelemTotal: number = 0;
 export function set_nelemTotal(wert: number) { nelemTotal = wert; }
@@ -113,7 +113,7 @@ export let maxU_dir = 1
 
 export let nQuerschnittSets = 0
 export let querschnitts_zaehler = -1
-
+export let default_querschnitt = ''
 export let nur_eingabe_ueberpruefen = false;
 
 export let ndivsl = 3;
@@ -188,7 +188,7 @@ c_gsl_eigenwert = Module.cwrap("gsl_eigenwert", "number", ["number", "number", "
 c_cholesky_decomp = Module.cwrap("c_cholesky_decomp", "number", ["number", "number", "number"]);
 c_cholesky_2 = Module.cwrap("c_cholesky_2", "number", ["number", "number", "number"]);
 //}
-write("c_cholesky_decomp= " + c_cholesky_decomp)
+//write("c_cholesky_decomp= " + c_cholesky_decomp)
 
 const bytes_8 = 8;
 const bytes_4 = 4;
@@ -582,7 +582,7 @@ export function rechnen(flag = 1) {
     // el = document.getElementById('id_button_nnodedisps') as any;
     // nNodeDisps = Number(el.nel);
 
-   let  el = document.getElementById('id_button_nlastfaelle') as any;
+    let el = document.getElementById('id_button_nlastfaelle') as any;
     nlastfaelle = Number(el.nel);
 
     el = document.getElementById('id_button_nkombinationen') as any;
@@ -2037,54 +2037,59 @@ export function init_tabellen() {
     // (table.rows[2].cells[4].firstElementChild as HTMLInputElement).value = '3';
 
 
-    let el = document.getElementById('id_knoten_tabelle');
+    // let el = document.getElementById('id_knoten_tabelle');
 
     let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '1';
-    (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '1';
-    //(table.rows[1].cells[5].firstElementChild as HTMLInputElement).value = '1';
+    // (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '1';
+    // (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '1';
+    // //(table.rows[1].cells[5].firstElementChild as HTMLInputElement).value = '1';
 
-    (table.rows[2].cells[2].firstElementChild as HTMLInputElement).value = '-5';
+    // (table.rows[2].cells[2].firstElementChild as HTMLInputElement).value = '-5';
 
-    (table.rows[3].cells[1].firstElementChild as HTMLInputElement).value = '5';
-    (table.rows[3].cells[2].firstElementChild as HTMLInputElement).value = '-5';
-    (table.rows[3].cells[4].firstElementChild as HTMLInputElement).value = '1';
-
-
-    el = document.getElementById('id_knotenlasten_tabelle');
-
-    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-    (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '2';
-    (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '1';
-    (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '50';
-    (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '600';
+    // (table.rows[3].cells[1].firstElementChild as HTMLInputElement).value = '5';
+    // (table.rows[3].cells[2].firstElementChild as HTMLInputElement).value = '-5';
+    // (table.rows[3].cells[4].firstElementChild as HTMLInputElement).value = '1';
 
 
-    el = document.getElementById('id_streckenlasten_tabelle');
+    // el = document.getElementById('id_knotenlasten_tabelle');
 
-    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    // table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '2';
-    (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '2';
-    (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '5';
-    (table.rows[1].cells[5].firstElementChild as HTMLInputElement).value = '5';
+    // (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '2';
+    // (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '1';
+    // (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '50';
+    // (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '600';
 
-    el = document.getElementById('id_kombinationen_tabelle');
 
-    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    // el = document.getElementById('id_streckenlasten_tabelle');
 
-    for (let i = 1; i <= Number(nlastfaelle_init); i++) {
-        (table.rows[i].cells[i + 1].firstElementChild as HTMLInputElement).value = '1';
+    // table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    }
+    // (table.rows[1].cells[1].firstElementChild as HTMLInputElement).value = '2';
+    // (table.rows[1].cells[2].firstElementChild as HTMLInputElement).value = '2';
+    // (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '5';
+    // (table.rows[1].cells[5].firstElementChild as HTMLInputElement).value = '5';
+
+    // el = document.getElementById('id_kombinationen_tabelle');
+
+    // let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+    // for (let i = 1; i <= Number(nlastfaelle_init); i++) {
+    //     (table.rows[i].cells[i + 1].firstElementChild as HTMLInputElement).value = '1';
+
+    // }
 
     let elh = document.getElementById("id_koppelfedern_tabelle");   // Drehwinkel bei Koppelfedern nicht anzeigen
     elh?.setAttribute("hide_column", String(9));
 
-    //  const eingabedaten = '{"version":0,"nnodes":5,"nelem":4,"nloads":1,"nstreckenlasten":3,"neinzellasten":1,"ntempload":0,"nloadcases":4,"ncombinations":1,"nquerschnittsets":1,"nstabvorverfomungen":0,"nelteilungen":10,"n_iter":11,"THIIO_flag":"1","maxU_node":"","maxU_dir":"1","maxU_schief":"","neigv":"1","nNodeDisps":0,"elem":[["IPE 400","","1","2","","","","","",""],["IPE 400","","2","3","","","","","","1"],["IPE 400","","3","4","","","","","",""],["IPE 400","","4","5","","","","","",""]],"node":[["-1","2","1","1","",""],["","-5","","","",""],["4","-6","","","",""],["8","-5","","","",""],["8","","1","1","",""]],"nodalLoad":[["2","1","50","500",""]],"streckenlasten":[["1","3","","5","5"],["2","2","2","6","5"],["3","2","2","5","6"]],"einzellasten":[["4","4","3","50",""]],"tempLoad":[],"stabvorverformung":[],"loadcases":[["Knotenlasten"],["Streckenlasten Projektion"],["Streckenlasten senkrecht"],["Elementeinzellast"]],"combination":[["","2","2","2","3"]],"qsclassname":["QuerschnittRechteck"],"qswerte":[["IPE 400","mat-0",210000,23130,84.5,40,18,3,78.5,0.4,0.3,20,0.0000012]],"nodeDisp0":[]}'
-    //  read_daten(eingabedaten);
+    default_querschnitt = 'R 40x30'
+
+    el = document.getElementById('id_querschnitt_default');
+    const opt1 = document.createElement("option");
+    opt1.text = default_querschnitt;
+    el.add(opt1);
+
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -2438,7 +2443,7 @@ async function calculate() {
 
         }
 
-        console.log("el",el)
+        console.log("el", el)
         if (System === STABWERK) {
             if (element[ielem].elTyp === 1) el.push(new CTruss());
             else el.push(new CTimoshenko_beam());

@@ -79,7 +79,7 @@ import { cad_buttons } from "./cad_buttons";
 import { show_property_dialog } from "./cad_contextmenu";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 14-März-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 15-März-2025, ";
 //########################################################################################################################
 
 let dialog_querschnitt_new = true;
@@ -92,8 +92,8 @@ export const nnodalloads_init = "1";
 export const nstreckenlasten_init = "1";
 export const neinzellasten_init = "0";
 export const ntemperaturlasten_init = "0";
-export const nlastfaelle_init = "2";
-export const nkombinationen_init = "2";
+export const nlastfaelle_init = "1";
+export const nkombinationen_init = "0";
 export const nstabvorverfomungen_init = "0";
 export const nvorspannungen_init = "0";
 export const nspannschloesser_init = "0";
@@ -320,6 +320,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           </div>
 
           <button id="id_button_zurueck_cad">Fullscreen</button>
+          <select name="querschnitt_default" id="id_querschnitt_default" title="default Querschnitt"></select>
 
           <div id="id_context_menu" style="position:absolute;top:100;display:none;">
             <sl-menu style="max-width: 200px;">
