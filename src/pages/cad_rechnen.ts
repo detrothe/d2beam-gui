@@ -137,7 +137,7 @@ export function cad_rechnen() {
                 index = obj.index2;
                 let nod2 = CADNodes[index].index_FE
 
-                element[ielem].qname = 'R 40x30'
+                element[ielem].qname = obj.name_querschnitt
                 element[ielem].nod[0] = nod1
                 element[ielem].nod[1] = nod2
 
@@ -165,8 +165,10 @@ export function cad_rechnen() {
 
                 ielem++
 
-                let child = tabelle.rows[ielem].cells[2].firstElementChild as HTMLInputElement;
-                child.value = 'R 40x30'
+                let child = tabelle.rows[ielem].cells[1].firstElementChild as HTMLInputElement;
+                console.log("CHILD",child)
+                child.value = obj.name_querschnitt
+                //child.innerHTML = obj.name_querschnitt
                 child = tabelle.rows[ielem].cells[3].firstElementChild as HTMLInputElement;
                 child.value = String(+nod1 + 1)
                 child = tabelle.rows[ielem].cells[4].firstElementChild as HTMLInputElement;

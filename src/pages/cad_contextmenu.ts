@@ -1,6 +1,8 @@
 import { drDialogStabEigenschaften } from "../components/dr-dialog_stab_eigenschaften";
-import { keydown, selected_element, two } from "./cad";
-import { buttons_control } from "./cad_buttons";
+import { keydown, selected_element, tr, two } from "./cad";
+import { buttons_control, picked_obj } from "./cad_buttons";
+import { drawStab } from "./cad_draw_elemente";
+import { TCAD_Stab } from "./CCAD_element";
 import { default_querschnitt, nQuerschnittSets, querschnittset } from "./querschnitte";
 
 //--------------------------------------------------------------------------------------------------------
@@ -63,6 +65,19 @@ function dialog_stab_eigenschaften_closed(this: any, e: any) {
 
         const el = document.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
         console.log("Querschnitt : ", el.getSelectedOptionByName());
+
+        // Daten eintragen in Objekt
+        (picked_obj as TCAD_Stab).set_name_querschnitt(el.getSelectedOptionByName())
+
+        // Element neu zeichnen
+
+        let group = picked_obj.getTwoObj();
+        two.remove(group);
+        // two.update();
+        group = drawStab(picked_obj as TCAD_Stab, tr);
+        two.add(group)
+        picked_obj.setTwoObj(group);
+        two.update();
 
     } else {
         // Abbruch

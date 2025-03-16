@@ -1,9 +1,11 @@
 import Two from 'two.js'
 
-import { System, STABWERK, TNode, TLoads } from './rechnen'
+import { System, STABWERK, TNode, TLoads, alertdialog } from './rechnen'
 
 import { CTrans } from './trans';
 import { myFormat } from './utility';
+import { TCAD_Stab } from './CCAD_element';
+
 
 
 const style_pfeil_knotenlast = {
@@ -29,6 +31,67 @@ const style_txt_knotenlast = {
     fill: '#dc0000',
     weight: 'bold'
 };
+
+
+const style_txt = {
+    family: 'system-ui, sans-serif',
+    size: 14,
+    fill: 'black',
+    //opacity: 0.5,
+    //leading: 50
+    weight: 'normal'
+};
+
+
+//-------------------------------------------------------------------------------------------------------
+export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
+    //-------------------------------------------------------------------------------------------------------
+
+    let x1 = obj.x1, z1 = obj.z1, x2 = obj.x2, z2 = obj.z2
+    let group = new Two.Group();
+    let line1 = new Two.Line(tr.xPix(x1), tr.zPix(z1), tr.xPix(x2), tr.zPix(z2));
+    line1.linewidth = 7 / devicePixelRatio;
+    if (select) line1.stroke = '#ffd700'
+    group.add(line1);
+
+    // gestrichelte Faser
+
+    let dx = x2 - x1;
+    let dz = z2 - z1;
+    let dsl = Math.sqrt(dx * dx + dz * dz);
+    let sinus = dz / dsl;
+    let cosinus = dx / dsl;
+    let alpha = Math.atan2(dz, dx)
+
+    let abstand = 10 / devicePixelRatio;
+    let tmpX1 = tr.xPix(x1 + dx / 3) - sinus * abstand;
+    let tmpZ1 = tr.zPix(z1 + dz / 3) + cosinus * abstand;
+    let tmpX2 = tr.xPix(x2 - dx / 3) - sinus * abstand;
+    let tmpZ2 = tr.zPix(z2 - dz / 3) + cosinus * abstand;
+    //console.log("tmp", tmpX1, tmpZ1, tmpX2, tmpZ2)
+
+    let line2 = new Two.Line(tmpX1, tmpZ1, tmpX2, tmpZ2);
+    line2.linewidth = 1 / devicePixelRatio;
+    line2.dashes = [10, 4];
+    group.add(line2);
+
+
+    let xm = (tr.xPix(x1) + tr.xPix(x2)) / 2. + (sinus * 11 + cosinus * 17) // devicePixelRatio
+    let zm = (tr.zPix(z1) + tr.zPix(z2)) / 2. - (cosinus * 11 - sinus * 17) // devicePixelRatio
+
+    //console.log("qname", obj.name_querschnitt, xm, zm)
+    let str = obj.name_querschnitt
+    const txt1 = new Two.Text(str, xm, zm, style_txt)
+    txt1.fill = '#000000'
+    txt1.alignment = 'left'
+    txt1.baseline = 'middle'
+    txt1.rotation = alpha
+    group.add(txt1);
+
+    return group;
+}
+
+
 
 //--------------------------------------------------------------------------------------------------------
 export function draw_lager(two: Two, tr: CTrans, node: TNode) {
@@ -384,10 +447,10 @@ export function draw_knotenlast(two: Two, tr: CTrans, load: TLoads, x: number, z
         let radius = style_pfeil_moment.radius;
         //console.log("Moment ", +inode + 1, wert)
         if (wert > 0.0) {
-            let gr=draw_moment_arrow(two, tr, x, z, 1.0, slmax / 50, style_pfeil_moment)
+            let gr = draw_moment_arrow(two, tr, x, z, 1.0, slmax / 50, style_pfeil_moment)
             group.add(gr)
         } else {
-            let gr=draw_moment_arrow(two, tr, x, z, -1.0, slmax / 50, style_pfeil_moment)
+            let gr = draw_moment_arrow(two, tr, x, z, -1.0, slmax / 50, style_pfeil_moment)
             group.add(gr)
         }
 

@@ -21,11 +21,11 @@ export class TCADElement {
         this.index1 = index1;
     }
 
-    getObj() {
+    getTwoObj() {
         return this.two_obj;
     }
 
-    setObj(obj: any) {
+    setTwoObj(obj: any) {
         this.two_obj = obj;
     }
 }
@@ -45,6 +45,9 @@ export class TCAD_Stab extends TCADElement {
         this.name_querschnitt = qname
     }
 
+    set_name_querschnitt(name:string) {
+        this.name_querschnitt=name
+    }
 }
 
 export class TCAD_Lager extends TCADElement {

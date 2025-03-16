@@ -14,10 +14,10 @@ import {
    read_knotenlast_dialog,
    select_element,
 } from './cad_buttons';
-import { draw_knotenlast, draw_lager } from './cad_draw_elemente';
+import { draw_knotenlast, draw_lager, drawStab } from './cad_draw_elemente';
 
 import '../components/dr-dialog_knoten';
-import { drDialogKnoten } from '../components/dr-dialog_knoten';
+//import { drDialogKnoten } from '../components/dr-dialog_knoten';
 import {
    add_cad_node,
    CADNodes,
@@ -26,10 +26,11 @@ import {
    get_cad_node_Z,
    TCADNode,
 } from './cad_node';
-import { AlertDialog } from './confirm_dialog';
+//import { AlertDialog } from './confirm_dialog';
 import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCADElement } from './CCAD_element';
 import { Group } from 'two.js/src/group';
 import { default_querschnitt } from './querschnitte';
+import { drDialogKnoten } from '../components/dr-dialog_knoten';
 
 export const CAD_KNOTEN = 1;
 export const CAD_STAB = 2;
@@ -482,12 +483,12 @@ export function init_cad(_flag: number) {
    for (let i = 0; i < list.size; i++) {
       let obj: TCAD_Stab = list.getAt(i);
 
-      let group = drawStab(obj.x1, obj.z1, obj.x2, obj.z2);
+      let group = drawStab(obj, tr);
       two.add(group);
       // console.log("obj", obj)
       // let line = two.makeLine(tr.xPix(obj.x1), tr.zPix(obj.z1), tr.xPix(obj.x2), tr.zPix(obj.z2));
       // line.linewidth = 2 /// devicePixelRatio;
-      obj.setObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
+      obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
    }
 
    two.update();
@@ -737,7 +738,7 @@ function mousemove(ev: MouseEvent) {
 
    two.remove(cursorLineh);
    two.remove(cursorLinev);
-   let len = tr.Pix0(getFangweite() / 2.);
+   let len = tr.Pix0(getFangweite());
    cursorLineh = two.makeLine(
       ev.offsetX - len,
       ev.offsetY,
@@ -1018,18 +1019,17 @@ function mouseup(ev: any) {
                //     foundRasterPoint = false;
                // }
 
-               let group = drawStab(start_x_wc, start_z_wc, end_x_wc, end_z_wc);
-               two.add(group);
-               two.update();
+
                //domElement.addEventListener("mouseover",testclick)
 
                input_started = 0;
                input_active = false;
                rubberband_drawn = false;
+               let group = null
 
                let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
                let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
-               const el = new TCAD_Stab(
+               const obj = new TCAD_Stab(
                   group,
                   start_x_wc,
                   start_z_wc,
@@ -1040,7 +1040,14 @@ function mouseup(ev: any) {
                   default_querschnitt,
                   buttons_control.typ_cad_element
                );
-               list.append(el);
+               list.append(obj);
+
+               group = drawStab(obj, tr);
+               two.add(group);
+               two.update();
+
+               obj.setTwoObj(group)
+
                //list.log()
             }
          }
@@ -1310,40 +1317,42 @@ function findNextRasterPoint(xl: number, yl: number) {
 }
 
 //-------------------------------------------------------------------------------------------------------
-export function drawStab(x1_wc: number, z1_wc: number, x2_wc: number, z2_wc: number, select = false) {
-   //-------------------------------------------------------------------------------------------------------
+function test_for_cad_element(ev: any) {
+   //---------------------------------------------------------------------------------------------------
 
-   let group = new Two.Group();
-   let line1 = new Two.Line(tr.xPix(x1_wc), tr.zPix(z1_wc), tr.xPix(x2_wc), tr.zPix(z2_wc));
-   line1.linewidth = 7 / devicePixelRatio;
-   if (select) line1.stroke = '#ffd700'
-   group.add(line1);
+   console.log('test_for_element');
 
-   // gestrichelte Faser
+   let xc = tr.xWorld(ev.offsetX);
+   let zc = tr.zWorld(ev.offsetY);
 
-   let dx = x2_wc - x1_wc;
-   let dz = z2_wc - z1_wc;
-   let dsl = Math.sqrt(dx * dx + dz * dz);
-   let sinus = dz / dsl;
-   let cosinus = dx / dsl;
+   let min_abstand = Math.min(raster_dx, raster_dz) / 2;
+   let index = -1;
+   for (let i = 0; i < list.size; i++) {
+      let obj = list.getAt(i);
+      let abstand = abstandPunktGerade_2D(
+         obj.x1,
+         obj.z1,
+         obj.x2,
+         obj.z2,
+         xc,
+         zc
+      );
+      console.log('abstand', abstand);
+      if (abstand > -1.0) {
+         if (abstand < min_abstand) {
+            min_abstand = abstand;
+            index = i;
+         }
+      }
+   }
+   //if (index >= 0 && min_abstand < 0.25) {
 
-   let abstand = 10 / devicePixelRatio;
-   let tmpX1 = tr.xPix(x1_wc + dx / 3) - sinus * abstand;
-   let tmpZ1 = tr.zPix(z1_wc + dz / 3) + cosinus * abstand;
-   let tmpX2 = tr.xPix(x2_wc - dx / 3) - sinus * abstand;
-   let tmpZ2 = tr.zPix(z2_wc - dz / 3) + cosinus * abstand;
-   //console.log("tmp", tmpX1, tmpZ1, tmpX2, tmpZ2)
-
-   let line2 = new Two.Line(tmpX1, tmpZ1, tmpX2, tmpZ2);
-   line2.linewidth = 1 / devicePixelRatio;
-   line2.dashes = [10, 4];
-   group.add(line2);
-
-   return group;
+   console.log('rechte Maustaste, gefunden index= ', index, min_abstand);
 }
 
+
 //-------------------------------------------------------------------------------------------------------
-function draw_cad_knoten() {
+export function draw_cad_knoten() {
    //---------------------------------------------------------------------------------------------------
 
    console.log('es funktioniert');
@@ -1386,38 +1395,3 @@ function draw_cad_knoten() {
       alertdialog('ok', 'Knoten existiert bereits');
    }
 }
-
-//-------------------------------------------------------------------------------------------------------
-function test_for_cad_element(ev: any) {
-   //---------------------------------------------------------------------------------------------------
-
-   console.log('test_for_element');
-
-   let xc = tr.xWorld(ev.offsetX);
-   let zc = tr.zWorld(ev.offsetY);
-
-   let min_abstand = Math.min(raster_dx, raster_dz) / 2;
-   let index = -1;
-   for (let i = 0; i < list.size; i++) {
-      let obj = list.getAt(i);
-      let abstand = abstandPunktGerade_2D(
-         obj.x1,
-         obj.z1,
-         obj.x2,
-         obj.z2,
-         xc,
-         zc
-      );
-      console.log('abstand', abstand);
-      if (abstand > -1.0) {
-         if (abstand < min_abstand) {
-            min_abstand = abstand;
-            index = i;
-         }
-      }
-   }
-   //if (index >= 0 && min_abstand < 0.25) {
-
-   console.log('rechte Maustaste, gefunden index= ', index, min_abstand);
-}
-

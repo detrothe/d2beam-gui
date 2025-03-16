@@ -63,7 +63,7 @@ import {
 
 import {
   nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, set_dialog_querschnitt_new,
-  click_def_querschnitt
+  change_def_querschnitt
 } from "./querschnitte"
 
 //import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
@@ -73,7 +73,7 @@ import { cad_buttons } from "./cad_buttons";
 import { show_property_dialog } from "./cad_contextmenu";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.c, 15-März-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 16-März-2025, ";
 //########################################################################################################################
 
 
@@ -1184,7 +1184,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
 
   const el_def_quer = document.getElementById("id_querschnitt_default");
-  el_def_quer?.addEventListener("click", click_def_querschnitt);
+  el_def_quer?.addEventListener("change", change_def_querschnitt);
 
   document?.getElementById("id_button_copy_svg")?.addEventListener("click", copy_svg, false);
 

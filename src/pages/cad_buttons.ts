@@ -1,5 +1,5 @@
 
-import { list, undoList, drawStab, Stab_button, Lager_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST, keydown, CAD_STAB, CAD_LAGER, selected_element } from "./cad";
+import { list, undoList, Stab_button, Lager_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST, keydown, CAD_STAB, CAD_LAGER, selected_element } from "./cad";
 
 import { two, tr } from "./cad";
 import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
@@ -11,10 +11,12 @@ import "../components/dr-dialog_knotenlast";
 
 import { TLoads, TNode } from "./rechnen";
 import { abstandPunktGerade_2D } from "./lib";
-import { draw_knotenlast, draw_lager } from "./cad_draw_elemente";
+import { drawStab, draw_knotenlast, draw_lager } from "./cad_draw_elemente";
 import { TCADElement } from "./CCAD_element";
 
 //export let pick_element = false
+
+export let picked_obj: TCADElement;
 
 class Cbuttons_control {
   pick_element = false;
@@ -177,7 +179,7 @@ export function reDo_button() {
 
     let group: any
     if (obj.elTyp === CAD_STAB) {
-      group = drawStab(obj.x1, obj.z1, obj.x2, obj.z2);
+      group = drawStab(obj, tr);
       two.add(group);
     }
     else if (obj.elTyp === CAD_LAGER) {
@@ -194,7 +196,7 @@ export function reDo_button() {
       group = draw_knotenlast(two, tr, load, obj.x1, obj.z1, 1.0, 0)
       two.add(group);
     }
-    obj.setObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
+    obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
     list.append(obj);
 
     two.update();
@@ -335,6 +337,7 @@ export function select_element(xc: number, zc: number) {
   let xpix = tr.xPix(xc)
   let zpix = tr.zPix(zc)
 
+  let gefunden = false
   for (let i = 0; i < list.size; i++) {
     let obj = list.getAt(i) as any;
     if (obj.elTyp === CAD_STAB) {
@@ -375,14 +378,19 @@ export function select_element(xc: number, zc: number) {
   console.log('ABSTAND', min_abstand, index, lager_gefunden);
 
   if (lager_gefunden) {
-    // let obj = list.removeAt(index_lager);
+    gefunden = true
+    let obj = list.getAt(index_lager);
+    picked_obj = obj
     // two.remove(obj.two_obj);
     // two.update();
     // undoList.append(obj);
     buttons_control.reset();
   }
   else if (knotenlast_gefunden) {
-    // let obj = list.removeAt(index_knlast);
+    gefunden = true
+
+    let obj = list.getAt(index_knlast);
+    picked_obj = obj
     // two.remove(obj.two_obj);
     // two.update();
     // undoList.append(obj);
@@ -390,8 +398,10 @@ export function select_element(xc: number, zc: number) {
   }
   else if (index >= 0 && min_abstand < 0.25) {
     if (list.size > 0) {
+      gefunden = true
+
       let obj = list.getAt(index);
-      let group = drawStab(obj.x1, obj.z1, obj.x2, obj.z2, true);
+      let group = drawStab(obj, tr, true);
       two.add(group);
       selected_element.group = group
       obj.isSelected = true
@@ -400,15 +410,18 @@ export function select_element(xc: number, zc: number) {
 
       // undoList.append(obj);
       buttons_control.reset();
+      gefunden = true
+      picked_obj = obj;
     }
   }
 
-  let divi = document.getElementById("id_context_menu");
+  if (gefunden) {
+    let divi = document.getElementById("id_context_menu");
 
-  divi!.style.left = xpix + 'px';
-  divi!.style.top = zpix + 'px';
-  divi!.style.display = 'block';
-
+    divi!.style.left = xpix + 'px';
+    divi!.style.top = zpix + 'px';
+    divi!.style.display = 'block';
+  }
 
 }
 

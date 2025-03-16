@@ -41,7 +41,7 @@ class TQuerschnittRechteck {
 
 
 //---------------------------------------------------------------------------------------------------------------
-export function click_def_querschnitt() {
+export function change_def_querschnitt() {
     //---------------------------------------------------------------------------------------------------------------
     let el = document.getElementById('id_querschnitt_default') as HTMLSelectElement;
     default_querschnitt = el.value;

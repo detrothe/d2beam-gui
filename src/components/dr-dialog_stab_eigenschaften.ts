@@ -348,7 +348,7 @@ export class drDialogStabEigenschaften extends LitElement {
   }
 
   //---------------------------------------------------------------------------------------------------------------
-  getSelectedOptionByName() {
+  getSelectedOptionByName():string {
     //-------------------------------------------------------------------------------------------------------------
     const shadow = this.shadowRoot;
     let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
@@ -357,7 +357,8 @@ export class drDialogStabEigenschaften extends LitElement {
     let name = el.children.item(index)?.textContent;
     //console.log("in getSelectedOptionByName",index,name)
 
-    return name;
+    if (typeof name === 'string') return name;
+    else return ''
   }
 
 }
