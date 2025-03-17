@@ -154,6 +154,17 @@ function getFangweite() {
 }
 //--------------------------------------------------------------------------------------------------------
 
+export function two_cad_update() { two.update(); }
+
+export function redraw_stab(obj: TCAD_Stab) {
+
+   let group = obj.getTwoObj();
+   two.remove(group);
+
+   group = drawStab(obj as TCAD_Stab, tr);
+   two.add(group)
+}
+
 //--------------------------------------------------------------------------------------------------------
 export function Stab_button(ev: Event) {
    //----------------------------------------------------------------------------------------------------

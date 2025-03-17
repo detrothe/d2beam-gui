@@ -1,6 +1,6 @@
 import { SlButton } from "@shoelace-style/shoelace"
 import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt"
-import { CAD_STAB, list } from "./cad"
+import { CAD_STAB, list, redraw_stab, two_cad_update } from "./cad"
 import { TCAD_Stab } from "./CCAD_element"
 import { myFormat, write } from "./utility"
 import { AlertDialog, ConfirmDialog } from "./confirm_dialog"
@@ -382,9 +382,10 @@ export async function contextmenu_querschnitt(ev: any) {
 
 
 //---------------------------------------------------------------------------------------------------------------
-export function dialog_querschnitt_closed(e: any) {
+export function dialog_querschnitt_closed(_e: any) {
     //------------------------------------------------------------------------------------------------------------
-    console.log("Event dialog closed", e);
+    //console.log("Event dialog closed", e);
+    console.log("dialog_querschnitt_closed")
     const el = document.getElementById("id_dialog_rechteck") as HTMLDialogElement;
 
     // @ts-ignore
@@ -446,11 +447,34 @@ export function dialog_querschnitt_closed(e: any) {
                 console.log("dialog_querschnitt_index, qname", dialog_querschnitt_index, qname); // , el.textContent
 
                 if (el.textContent !== qname) {
+                    let old_name = el.textContent
                     // innerHTML
+
                     el.textContent = qname;
                     const ele = document.getElementById("id_element_tabelle");
                     //console.log('ELE: >>', ele);
                     ele?.setAttribute("namechanged", String(dialog_querschnitt_index));
+
+                    // update in Tab cad
+
+                    let eld = document.getElementById('id_querschnitt_default') as HTMLSelectElement;
+                    for (const option of eld.options) {
+                        console.log("OPTIONS", option.value, option.textContent, option.text)
+                        if (option.textContent === old_name) {
+                            option.textContent = qname
+                        }
+                    }
+
+                    // jetzt alle Stäbe korrigieren
+
+                    for (let i = 0; i < list.size; i++) {
+                        let obj = list.getAt(i) as TCAD_Stab;
+                        if (obj.elTyp === CAD_STAB) {
+                            if (obj.name_querschnitt === old_name) obj.name_querschnitt = qname;
+                            redraw_stab(obj);
+                        }
+                    }
+                    two_cad_update();
                 }
             }
         }
