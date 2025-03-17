@@ -1,6 +1,9 @@
 import { TLoads, TNode } from "./rechnen";
 
+//―――――――――――――――――――――――――――――――――――――――――――――
 export class TCADElement {
+    //―――――――――――――――――――――――――――――――――――――――――
+
     two_obj: any;
     qname: string = '';
     isActive = true;
@@ -21,20 +24,31 @@ export class TCADElement {
         this.index1 = index1;
     }
 
+    //―――――――――――――――――――――――――――――――――――――――――――――
     getTwoObj() {
         return this.two_obj;
     }
 
+    //―――――――――――――――――――――――――――――――――――――――――――――
     setTwoObj(obj: any) {
         this.two_obj = obj;
     }
 }
 
+//―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Stab extends TCADElement {
+    //―――――――――――――――――――――――――――――――――――――――――
     x2: number = 0.0;
     z2: number = 0.0;
     index2 = -1;
     name_querschnitt = ''
+    nGelenke = 0
+    gelenk = Array(6).fill(0)
+    aL = 0.0
+    aR = 0.0
+    sinus = 0.0
+    cosinus = 1.0
+    alpha = 0.0
 
     constructor(obj: any, x1: number, z1: number, x2: number, z2: number, index1: number, index2: number, qname: string, elTyp: number) {
         super(obj, x1, z1, index1, elTyp);
@@ -45,12 +59,30 @@ export class TCAD_Stab extends TCADElement {
         this.name_querschnitt = qname
     }
 
-    set_name_querschnitt(name:string) {
-        this.name_querschnitt=name
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    set_name_querschnitt(name: string) {
+        this.name_querschnitt = name
     }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    set_gelenke(gelenk: boolean[]) {
+
+        this.nGelenke = 0
+        for (let i = 0; i < 6; i++) {
+            if (gelenk[i]) {
+                this.gelenk[i] = 1;
+                this.nGelenke++;
+            }
+            else this.gelenk[i] = 0;
+        }
+
+    }
+
 }
 
+//―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Lager extends TCADElement {
+    //―――――――――――――――――――――――――――――――――――――――――
 
     // L_org = [0, 0, 0]                               // Lagerbedingung  bei Eingabe unverändert
     // kx = 0.0
@@ -66,7 +98,9 @@ export class TCAD_Lager extends TCADElement {
     }
 }
 
+//―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Knotenlast extends TCADElement {
+    //―――――――――――――――――――――――――――――――――――――――――
 
     knlast: TLoads;
 
@@ -78,7 +112,9 @@ export class TCAD_Knotenlast extends TCADElement {
 }
 
 
+//―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Knoten extends TCADElement {
+    //―――――――――――――――――――――――――――――――――――――――――
 
 
     constructor(obj: any, x1: number, z1: number, index1: number, elTyp: number) {

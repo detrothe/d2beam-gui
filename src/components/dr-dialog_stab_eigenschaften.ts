@@ -1,3 +1,4 @@
+import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
@@ -348,7 +349,7 @@ export class drDialogStabEigenschaften extends LitElement {
   }
 
   //---------------------------------------------------------------------------------------------------------------
-  getSelectedOptionByName():string {
+  getSelectedOptionByName(): string {
     //-------------------------------------------------------------------------------------------------------------
     const shadow = this.shadowRoot;
     let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
@@ -361,4 +362,27 @@ export class drDialogStabEigenschaften extends LitElement {
     else return ''
   }
 
+  //---------------------------------------------------------------------------------------------------------------
+  getGelenke() {
+    //-------------------------------------------------------------------------------------------------------------
+
+    let gelenke:boolean[] = Array(6)
+
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById("id_Na") as SlCheckbox;
+    gelenke[0] = el.checked;
+    el = shadow?.getElementById("id_Va") as SlCheckbox;
+    gelenke[1] = el.checked;
+    el = shadow?.getElementById("id_Ma") as SlCheckbox;
+    gelenke[2] = el.checked;
+    el = shadow?.getElementById("id_Ne") as SlCheckbox;
+    gelenke[3] = el.checked;
+    el = shadow?.getElementById("id_Ve") as SlCheckbox;
+    gelenke[4] = el.checked;
+    el = shadow?.getElementById("id_Me") as SlCheckbox;
+    gelenke[5] = el.checked;
+
+    //console.log("id_na", el.checked)
+    return gelenke;
+  }
 }

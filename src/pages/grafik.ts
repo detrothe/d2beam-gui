@@ -4027,7 +4027,7 @@ export function draw_arrow(two: Two, tr: CTrans, x1: number, z1: number, x2: num
     let x0 = Math.round(tr.xPix(x1));
     let z0 = Math.round(tr.zPix(z1));
 
-    console.log("sl,a", sl, a, b, x0, z0, x1, z1)
+    //console.log("sl,a", sl, a, b, x0, z0, x1, z1)
 
     let group = two.makeGroup();
     let line = two.makeLine(0, 0, a, 0);

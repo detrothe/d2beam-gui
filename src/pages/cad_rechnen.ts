@@ -162,11 +162,12 @@ export function cad_rechnen() {
                     element[ielem].alpha = Math.atan2(dz, dx)
                 }
 
+                for (let i = 0; i < 6; i++) element[ielem].gelenk[i] = obj.gelenk[i]
 
                 ielem++
 
                 let child = tabelle.rows[ielem].cells[1].firstElementChild as HTMLInputElement;
-                console.log("CHILD",child)
+                console.log("CHILD", child)
                 child.value = obj.name_querschnitt
                 //child.innerHTML = obj.name_querschnitt
                 child = tabelle.rows[ielem].cells[3].firstElementChild as HTMLInputElement;
@@ -174,6 +175,12 @@ export function cad_rechnen() {
                 child = tabelle.rows[ielem].cells[4].firstElementChild as HTMLInputElement;
                 child.value = String(+nod2 + 1)
 
+                for (let i = 0; i < 6; i++) {
+                    if (obj.gelenk[i] === 1) {
+                        child = tabelle.rows[ielem].cells[5 + i].firstElementChild as HTMLInputElement;
+                        child.value = '1'
+                    }
+                }
 
             }
         }

@@ -339,7 +339,7 @@ export function init_cad(_flag: number) {
    let show_selection = true;
    let height = 0;
 
-   write('init_cad');
+   //write('init_cad');
 
    if (two) two.clear();
 
@@ -1371,7 +1371,7 @@ export function draw_cad_knoten() {
 
    let index = add_cad_node(x, z);
 
-   write('index draw_cad_knoten ' + index);
+   //write('index draw_cad_knoten ' + index);
    if (index === -1) {
       let makeRoundedRectangle = two.makeRoundedRectangle(
          tr.xPix(x),

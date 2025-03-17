@@ -63,6 +63,10 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     let cosinus = dx / dsl;
     let alpha = Math.atan2(dz, dx)
 
+    obj.sinus = sinus
+    obj.cosinus = cosinus
+    obj.alpha = alpha
+
     let abstand = 10 / devicePixelRatio;
     let tmpX1 = tr.xPix(x1 + dx / 3) - sinus * abstand;
     let tmpZ1 = tr.zPix(z1 + dz / 3) + cosinus * abstand;
@@ -87,6 +91,11 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     txt1.baseline = 'middle'
     txt1.rotation = alpha
     group.add(txt1);
+
+    if (obj.nGelenke > 0) {
+        let gr = draw_stab_gelenke(obj as TCAD_Stab, tr);
+        group.add(gr)
+    }
 
     return group;
 }
@@ -517,7 +526,7 @@ function draw_arrow(_two: Two, tr: CTrans, x1: number, z1: number, x2: number, z
     let x0 = Math.round(tr.xPix(x1));
     let z0 = Math.round(tr.zPix(z1));
 
-    console.log("sl,a", sl, a, b, x0, z0, x1, z1)
+    //console.log("sl,a", sl, a, b, x0, z0, x1, z1)
 
     let group = new Two.Group();
     let line = new Two.Line(0, 0, a, 0);
@@ -644,6 +653,273 @@ function draw_moment_arrow(_two: Two, tr: CTrans, x0: number, z0: number, vorzei
         group.add(dreieck)
         group.rotation = -Math.PI / 5
         group.translation.set(tr.xPix(x0), tr.zPix(z0))
+    }
+
+    return group;
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function draw_stab_gelenke(obj: TCAD_Stab, tr: CTrans) {
+    //----------------------------------------------------------------------------------------------------
+
+    let x1: number, x2: number, z1: number, z2: number, dx: number, dz: number, si: number, co: number
+    let xp1: number, zp1: number, xp2: number, zp2: number, dist: number, aa: number, distL: number, distR: number
+    let radius = 8 / devicePixelRatio, a = 10 / devicePixelRatio, l_n = 20 / devicePixelRatio
+
+    let group = new Two.Group();
+
+    let aL = obj.aL
+    let aR = obj.aR
+
+    if (aL > 0.0) distL = radius;
+    else distL = a + radius;
+    if (aR > 0.0) distR = radius;
+    else distR = a + radius;
+
+
+    si = obj.sinus
+    co = obj.cosinus
+
+    x1 = Math.round(tr.xPix(obj.x1 + co * aL));
+    z1 = Math.round(tr.zPix(obj.z1 + si * aL));
+    x2 = Math.round(tr.xPix(obj.x2 - co * aR));
+    z2 = Math.round(tr.zPix(obj.z2 - si * aR));
+
+    if (obj.gelenk[2] > 0) {                         // Momentengelenk links
+        dx = co * distL; //(a + radius)
+        dz = si * distL; //(a + radius)
+        let kreis = new Two.Circle(x1 + dx, z1 + dz, radius, 10)
+        kreis.fill = '#ffffff';
+        kreis.linewidth = 2 / devicePixelRatio;
+        distL += radius
+        group.add(kreis)
+
+    }
+    if (obj.gelenk[5] > 0) {                         // Momentengelenk rechts
+        dx = co * distR; //(a + radius)
+        dz = si * distR; //(a + radius)
+        let kreis = new Two.Circle(x2 - dx, z2 - dz, radius, 10)
+        kreis.fill = '#ffffff';
+        kreis.linewidth = 2 / devicePixelRatio;
+        distR += radius
+        group.add(kreis)
+
+    }
+    if (obj.gelenk[1] > 0) {                  // Querkraftgelenk links
+        dist = distL + 3 / devicePixelRatio
+        dx = co * dist
+        dz = si * dist
+
+        aa = 16 / devicePixelRatio
+        xp1 = x1 + aa * si + dx
+        zp1 = z1 - aa * co + dz
+        xp2 = x1 - aa * si + dx
+        zp2 = z1 + aa * co + dz
+        let line = new Two.Line(xp1, zp1, xp2, zp2);
+        line.linewidth = 4 / devicePixelRatio;
+        line.stroke = '#ffffff';               // weißer Strich Mitte
+        group.add(line)
+
+        dist = distL
+        dx = co * dist
+        dz = si * dist
+
+        //aa = 16 / devicePixelRatio
+        xp1 = x1 + aa * si + dx
+        zp1 = z1 - aa * co + dz
+        xp2 = x1 - aa * si + dx
+        zp2 = z1 + aa * co + dz
+        let line2 = new Two.Line(xp1, zp1, xp2, zp2);
+        line2.linewidth = 2 / devicePixelRatio;
+        line2.stroke = '#000000';         // schwarzer Strich links
+        group.add(line2)
+
+        dist = distL + 4 / devicePixelRatio
+        dx = co * dist
+        dz = si * dist
+
+        //aa = 16 / devicePixelRatio
+        xp1 = x1 + aa * si + dx
+        zp1 = z1 - aa * co + dz
+        xp2 = x1 - aa * si + dx
+        zp2 = z1 + aa * co + dz
+        let line3 = new Two.Line(xp1, zp1, xp2, zp2);
+        line3.linewidth = 2 / devicePixelRatio;
+        line3.stroke = '#000000';        // schwarzer Strich rechts
+        group.add(line3)
+
+        distL += 6 / devicePixelRatio
+    }
+    if (obj.gelenk[4] > 0) {                  // Querkraftgelenk rechts
+        dist = distR + 3 / devicePixelRatio
+        dx = co * dist
+        dz = si * dist
+
+        aa = 16 / devicePixelRatio
+        xp1 = x2 + aa * si - dx
+        zp1 = z2 - aa * co - dz
+        xp2 = x2 - aa * si - dx
+        zp2 = z2 + aa * co - dz
+        let line = new Two.Line(xp1, zp1, xp2, zp2);
+        line.linewidth = 4 / devicePixelRatio;
+        line.stroke = '#ffffff';
+        group.add(line)
+
+        dist = distR
+        dx = co * dist
+        dz = si * dist
+
+        aa = 16 / devicePixelRatio
+        xp1 = x2 + aa * si - dx
+        zp1 = z2 - aa * co - dz
+        xp2 = x2 - aa * si - dx
+        zp2 = z2 + aa * co - dz
+        let line2 = new Two.Line(xp1, zp1, xp2, zp2);
+        line2.linewidth = 2 / devicePixelRatio;
+        line2.stroke = '#000000';
+        group.add(line2)
+
+        dist = distR + 4 / devicePixelRatio
+        dx = co * dist
+        dz = si * dist
+
+        aa = 16 / devicePixelRatio
+        xp1 = x2 + aa * si - dx
+        zp1 = z2 - aa * co - dz
+        xp2 = x2 - aa * si - dx
+        zp2 = z2 + aa * co - dz
+        let line3 = new Two.Line(xp1, zp1, xp2, zp2);
+        line3.linewidth = 2 / devicePixelRatio;
+        line3.stroke = '#000000';
+        group.add(line3)
+
+        distR += 6 / devicePixelRatio
+
+    }
+    if (obj.gelenk[0] > 0) {                  // Normalkraftgelenk links
+
+        dist = distL
+        dx = co * dist
+        dz = si * dist
+
+        aa = 0
+        xp1 = x1 + aa * si + dx
+        zp1 = z1 - aa * co + dz
+        xp2 = x1 + aa * si + dx + l_n * co
+        zp2 = z1 - aa * co + dz + l_n * si
+        let line0 = new Two.Line(xp1, zp1, xp2, zp2);
+        line0.linewidth = 10 / devicePixelRatio;
+        line0.stroke = '#000000';    //schwarz
+        group.add(line0)
+
+        xp1 = x1 + aa * si + dx
+        zp1 = z1 - aa * co + dz
+        xp2 = x1 + aa * si + dx + 0.8 * l_n * co
+        zp2 = z1 - aa * co + dz + 0.8 * l_n * si
+        let line = new Two.Line(xp1, zp1, xp2, zp2);
+        line.linewidth = 10 / devicePixelRatio;
+        line.stroke = '#ffffff';    //weiss
+        group.add(line)
+
+        xp1 = x1 + aa * si + dx
+        zp1 = z1 - aa * co + dz
+        xp2 = x1 + aa * si + dx + 0.5 * l_n * co
+        zp2 = z1 - aa * co + dz + 0.5 * l_n * si
+        let line4 = new Two.Line(xp1, zp1, xp2, zp2);
+        line4.linewidth = 5 / devicePixelRatio;
+        line4.stroke = '#000000';    //schwarz
+        group.add(line4)
+
+        //dist = 2 * radius + a
+        // dx = co * dist
+        // dz = si * dist
+
+        aa = 8 / devicePixelRatio
+        xp1 = x1 + aa * si + dx
+        zp1 = z1 - aa * co + dz
+        xp2 = x1 + aa * si + dx + l_n * co
+        zp2 = z1 - aa * co + dz + l_n * si
+        let line2 = new Two.Line(xp1, zp1, xp2, zp2);
+        line2.linewidth = 6 / devicePixelRatio;
+        line2.stroke = '#000000';
+        group.add(line2)
+
+        //dist = 2 * radius + a
+        // dx = co * dist
+        // dz = si * dist
+
+        //aa = 16
+        xp1 = x1 - aa * si + dx
+        zp1 = z1 + aa * co + dz
+        xp2 = x1 - aa * si + dx + l_n * co
+        zp2 = z1 + aa * co + dz + l_n * si
+        let line3 = new Two.Line(xp1, zp1, xp2, zp2);
+        line3.linewidth = 6 / devicePixelRatio;
+        line3.stroke = '#000000';
+        group.add(line3)
+    }
+    if (obj.gelenk[3] > 0) {                  // Normalkraftgelenk rechts
+
+        dist = distR
+        dx = co * dist
+        dz = si * dist
+
+        aa = 0
+        xp1 = x2 + aa * si - dx
+        zp1 = z2 - aa * co - dz
+        xp2 = x2 + aa * si - dx - l_n * co
+        zp2 = z2 - aa * co - dz - l_n * si
+        let line0 = new Two.Line(xp1, zp1, xp2, zp2);
+        line0.linewidth = 10 / devicePixelRatio;
+        line0.stroke = '#000000';    //schwarz
+        group.add(line0)
+
+        xp1 = x2 + aa * si - dx
+        zp1 = z2 - aa * co - dz
+        xp2 = x2 + aa * si - dx - 0.8 * l_n * co
+        zp2 = z2 - aa * co - dz - 0.8 * l_n * si
+        let line = new Two.Line(xp1, zp1, xp2, zp2);
+        line.linewidth = 10 / devicePixelRatio;
+        line.stroke = '#ffffff';    //weiss
+        group.add(line)
+
+        xp1 = x2 + aa * si - dx
+        zp1 = z2 - aa * co - dz
+        xp2 = x2 + aa * si - dx - 0.5 * l_n * co
+        zp2 = z2 - aa * co - dz - 0.5 * l_n * si
+        let line4 = new Two.Line(xp1, zp1, xp2, zp2);
+        line4.linewidth = 5 / devicePixelRatio;
+        line4.stroke = '#000000';    //schwarz
+        group.add(line4)
+
+        //dist = 2 * radius + a
+        // dx = co * dist
+        // dz = si * dist
+
+        aa = 8 / devicePixelRatio
+        xp1 = x2 + aa * si - dx
+        zp1 = z2 - aa * co - dz
+        xp2 = x2 + aa * si - dx - l_n * co
+        zp2 = z2 - aa * co - dz - l_n * si
+        let line2 = new Two.Line(xp1, zp1, xp2, zp2);
+        line2.linewidth = 6 / devicePixelRatio;
+        line2.stroke = '#000000';
+        group.add(line2)
+
+        //dist = 2 * radius + a
+        // dx = co * dist
+        // dz = si * dist
+
+        //aa = 16
+        xp1 = x2 - aa * si - dx
+        zp1 = z2 + aa * co - dz
+        xp2 = x2 - aa * si - dx - l_n * co
+        zp2 = z2 + aa * co - dz - l_n * si
+        let line3 = new Two.Line(xp1, zp1, xp2, zp2);
+        line3.linewidth = 6 / devicePixelRatio;
+        line3.stroke = '#000000';
+        group.add(line3)
     }
 
     return group;

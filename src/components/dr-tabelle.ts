@@ -931,7 +931,7 @@ class DrTabelle extends HTMLElement {
       );
       //const tableCellId = ev.target.offsetParent.id;
 
-      write("KEYDOWN " + ev.code + " | ", ev.key)
+      //write("KEYDOWN " + ev.code + " | ", ev.key)
       //console.log('KEYDOWN', ev.keyCode, ev.shiftKey, ev.key, ev);
 
       //infoBox.innerHTML += "<br>key= " + ev.key + "  | keyCode= " + ev.keyCode
@@ -1058,7 +1058,7 @@ class DrTabelle extends HTMLElement {
    CLICK(ev: any) {
       //---------------------------------------------------------------------------------------------
       console.log("---- C  L I C K ----", ev)
-      write('C L I C K ' + ev.button)
+      //write('C L I C K ' + ev.button)
    }
 
    //------------------------------------------------------------------------------------------------
