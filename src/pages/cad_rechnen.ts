@@ -3,8 +3,8 @@ import { drButtonPM } from "../components/dr-button-pm";
 import { CAD_KNLAST, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { CADNodes } from "./cad_node";
-import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCADElement } from "./CCAD_element";
-import { alertdialog, element, eload, inc_nelem, inc_nnodes, load, nelem, nelem_Balken, nnodes, node, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen, set_nlastfaelle, set_nloads, set_nnodes, set_nnodesTotal, set_ntotalEloads, TElement, TElLoads, TLoads, TNode } from "./rechnen";
+import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCADElement } from "./CCAD_element";
+import { alertdialog, element, eload, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, node, nstreckenlasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen, set_nlastfaelle, set_nloads, set_nnodes, set_nnodesTotal, set_ntotalEloads, TElement, TElLoads, TLoads, TNode } from "./rechnen";
 import { myFormat, myFormat_en, write } from "./utility";
 
 export function cad_rechnen() {
@@ -16,11 +16,13 @@ export function cad_rechnen() {
     set_nelem(0)
 
     let nknlast = 0
-
+    let elNo = 0
     for (let i = 0; i < list.size; i++) {
         let obj = list.getAt(i) as TCAD_Stab;
         if (obj.elTyp === CAD_KNLAST) nknlast++;
         else if (obj.elTyp === CAD_STAB) {
+            elNo++;
+            obj.elNo = elNo;
             let index = obj.index1;
             if (index > -1) {
                 CADNodes[index].nel++;
@@ -258,16 +260,6 @@ export function cad_rechnen() {
 
         // Eigengewicht für Balken
 
-        let el = document.getElementById("id_button_nstreckenlasten") as drButtonPM;
-        el.setValue(0);
-
-        const elTab = document.getElementById("id_streckenlasten_tabelle");
-        elTab?.setAttribute("nzeilen", String(0));
-        elTab?.setAttribute("clear", "0");
-
-        set_neloads(nelem_Balken);
-        set_ntotalEloads(nelem_Balken)
-
         eload.length = 0
         for (let i = 0; i < nelem_Balken; i++) {
             eload.push(new TElLoads())
@@ -275,7 +267,71 @@ export function cad_rechnen() {
             eload[i].lf = 1
             eload[i].art = 1
         }
+
+        let nStreckenlasten = 0
+        for (let i = 0; i < list.size; i++) {
+            let obj = list.getAt(i) as TCAD_Stab;
+            if (obj.elTyp === CAD_STAB) {
+                nStreckenlasten = nStreckenlasten + obj.nStreckenlasten;
+                console.log("nStreckenlasten", obj.nStreckenlasten, nStreckenlasten)
+            }
+        }
+
+        console.log("final nstreckenlasten", nStreckenlasten)
+        let el = document.getElementById("id_button_nstreckenlasten") as drButtonPM;
+        el.setValue(nStreckenlasten);
+
+        const elTab = document.getElementById("id_streckenlasten_tabelle");
+        elTab?.setAttribute("nzeilen", String(nStreckenlasten));
+        elTab?.setAttribute("clear", "0");
+
+        let tabelle = elTab?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+        let ielem = nelem_Balken
+        let irow = 1
+        for (let i = 0; i < list.size; i++) {
+            let obj = list.getAt(i) as TCAD_Stab;
+            if (obj.elTyp === CAD_STAB) {
+
+                if (obj.elast.length > 0) {
+                    for (let j = 0; j < obj.elast.length; j++) {
+                        let typ = obj.elast[j].typ
+                        if (typ === 0) { // Streckenlast
+
+                            let lf = (obj.elast[j] as TCAD_Streckenlast).lastfall
+                            let art = (obj.elast[j] as TCAD_Streckenlast).art
+                            let pL = (obj.elast[j] as TCAD_Streckenlast).pL
+                            let pR = (obj.elast[j] as TCAD_Streckenlast).pR
+                            //console.log("typeof", typeof obj.elast[j], lf)
+                            eload.push(new TElLoads())
+                            eload[ielem].element = obj.elNo - 1
+                            eload[ielem].lf = lf
+                            eload[ielem].art = art
+                            eload[ielem].pL = pL
+                            eload[ielem].pR = pR
+                            ielem++;
+
+                            let child = tabelle.rows[irow].cells[1].firstElementChild as HTMLInputElement;
+                            child.value = String(obj.elNo)
+                            child = tabelle.rows[irow].cells[2].firstElementChild as HTMLInputElement;
+                            child.value = String(lf)
+                            child = tabelle.rows[irow].cells[3].firstElementChild as HTMLInputElement;
+                            child.value = String(art)
+                            child = tabelle.rows[irow].cells[4].firstElementChild as HTMLInputElement;
+                            child.value = String(pL)
+                            child = tabelle.rows[irow].cells[5].firstElementChild as HTMLInputElement;
+                            child.value = String(pR)
+                            irow++;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        set_neloads(nelem_Balken + nStreckenlasten);
+        set_ntotalEloads(nelem_Balken + nStreckenlasten)
     }
+
+
 }
-
-

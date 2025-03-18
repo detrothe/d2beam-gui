@@ -35,6 +35,7 @@ import "../components/dr-dialog_neue_eingabe";
 import "../components/dr-dialog_lager";
 import "../components/dr-dialog_knoten";
 import "../components/dr-dialog_knotenlast";
+import "../components/dr-dialog_elementlasten";
 import "../components/dr-dialog_stab_eigenschaften";
 
 import { drButtonPM } from "../components/dr-button-pm";
@@ -73,7 +74,7 @@ import { cad_buttons } from "./cad_buttons";
 import { show_property_dialog } from "./cad_contextmenu";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 17-März-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 18-März-2025, ";
 //########################################################################################################################
 
 
@@ -330,6 +331,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <dr-dialog_lager id="id_dialog_lager"></dr-dialog_lager>
         <dr-dialog_knoten id="id_dialog_knoten"></dr-dialog_knoten>
         <dr-dialog_knotenlast id="id_dialog_knotenlast"></dr-dialog_knotenlast>
+        <dr-dialog_elementlasten id="id_dialog_elementlast"></dr-dialog_elementlasten>
         <dr-dialog_stab_eigenschaften id="id_dialog_stab_eigenschaften"></dr-dialog_stab_eigenschaften>
 
       </sl-tab-panel>

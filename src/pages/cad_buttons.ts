@@ -1,5 +1,8 @@
 
-import { list, undoList, Stab_button, Lager_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST, keydown, CAD_STAB, CAD_LAGER, selected_element } from "./cad";
+import {
+  list, undoList, Stab_button, Lager_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST,
+  keydown, CAD_STAB, CAD_LAGER, selected_element, CAD_ELLAST
+} from "./cad";
 
 import { two, tr } from "./cad";
 import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
@@ -8,11 +11,13 @@ import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkb
 import "../components/dr-dialog_lager";
 import "../components/dr-dialog_knoten";
 import "../components/dr-dialog_knotenlast";
+import "../components/dr-dialog_elementlasten";
 
 import { TLoads, TNode } from "./rechnen";
 import { abstandPunktGerade_2D } from "./lib";
 import { drawStab, draw_knotenlast, draw_lager } from "./cad_draw_elemente";
 import { TCADElement } from "./CCAD_element";
+import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 
 //export let pick_element = false
 
@@ -26,6 +31,7 @@ class Cbuttons_control {
   stab_eingabe_aktiv = false;
   lager_eingabe_aktiv = false;
   knotenlast_eingabe_aktiv = false;
+  elementlast_eingabe_aktiv = false;
   typ_cad_element = 0;
   n_input_points = 0;
 
@@ -37,6 +43,7 @@ class Cbuttons_control {
     this.stab_eingabe_aktiv = false;
     this.lager_eingabe_aktiv = false;
     this.knotenlast_eingabe_aktiv = false;
+    this.elementlast_eingabe_aktiv = false;
     this.typ_cad_element = 0;
     this.n_input_points = 0;
 
@@ -51,6 +58,8 @@ class Cbuttons_control {
     el = document.getElementById("id_cad_knoten_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
     el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement;
+    el.style.backgroundColor = "DodgerBlue";
+    el = document.getElementById("id_cad_elementlast_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
 
     // if ( selected_element.group !== null) {
@@ -144,6 +153,16 @@ export function cad_buttons() {
   knotlast_button.title = "Eingabe Knotenlasten";
   knotlast_button.id = "id_cad_knotenlast_button";
 
+  const ellast_button = document.createElement("button");
+
+  ellast_button.value = "Elementlast";
+  ellast_button.className = "btn";
+  ellast_button.innerHTML = "ElLast";
+  ellast_button.addEventListener("click", Elementlast_button);
+  // stab_button.addEventListener('keydown', keydown);
+  ellast_button.title = "Eingabe Elementlasten";
+  ellast_button.id = "id_cad_elementlast_button";
+
   div.appendChild(undo_button);
   div.appendChild(redo_button);
   div.appendChild(trash_button);
@@ -152,6 +171,7 @@ export function cad_buttons() {
   div.appendChild(stab_button);
   div.appendChild(lager_button);
   div.appendChild(knotlast_button);
+  div.appendChild(ellast_button);
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -425,6 +445,84 @@ export function select_element(xc: number, zc: number) {
 
 }
 
+
+//--------------------------------------------------------------------------------------------------------
+export function add_elementlast(xc: number, zc: number) {
+  //----------------------------------------------------------------------------------------------------
+
+  console.log("add_elementlast")
+  if (list.size === 0) return;
+
+  let min_abstand = 1e30;
+  let index = -1;
+  let stab_gefunden = false
+  let lager_gefunden = false
+  let index_lager = -1
+  let knotenlast_gefunden = false
+  let index_knlast = -1
+
+  let xpix = tr.xPix(xc)
+  let zpix = tr.zPix(zc)
+
+  let gefunden = false
+  for (let i = 0; i < list.size; i++) {
+    let obj = list.getAt(i) as any;
+    if (obj.elTyp === CAD_STAB) {
+
+      let abstand = abstandPunktGerade_2D(obj.x1, obj.z1, obj.x2, obj.z2, xc, zc);
+      if (abstand > -1.0) {
+        if (abstand < min_abstand) {
+          min_abstand = abstand;
+          index = i;
+          stab_gefunden = true
+        }
+      }
+    }
+
+  }
+
+  console.log('ABSTAND', min_abstand, index, lager_gefunden);
+
+  if (index >= 0 && min_abstand < 0.25) {
+    if (list.size > 0) {
+      gefunden = true
+
+      let obj = list.getAt(index);
+      const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
+
+      let lf = ele.get_lastfall()
+      let pa = ele.get_pa()
+      let pe = ele.get_pe()
+      let art = ele.get_art()
+
+      console.log("in add_elementlast ", index, lf, art, pa, pe)
+      obj.add_streckenlast(lf, art, pa, pe)
+
+      // let group = drawStab(obj, tr, true);
+      // two.add(group);
+      // selected_element.group = group
+      // obj.isSelected = true
+
+      // two.update();
+
+
+      // buttons_control.reset();
+      gefunden = true
+      picked_obj = obj;
+    }
+  }
+
+  // if (gefunden) {
+  //   let divi = document.getElementById("id_context_menu");
+
+  //   divi!.style.left = xpix + 'px';
+  //   divi!.style.top = zpix + 'px';
+  //   divi!.style.display = 'block';
+  // }
+
+}
+
+
 //---------------------------------------------------------------------------------------------------------------
 
 export function showDialog_lager() {
@@ -592,6 +690,8 @@ export function Knotenlast_button(_ev: Event) {
 }
 
 
+
+
 //---------------------------------------------------------------------------------------------------------------
 
 export function showDialog_knotenlast() {
@@ -651,4 +751,73 @@ export function read_knotenlast_dialog(knlast: TLoads) {
   elem = el?.shadowRoot?.getElementById("id_my") as HTMLInputElement;
   knlast.p[2] = +elem.value
 
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function Elementlast_button(_ev: Event) {
+  //----------------------------------------------------------------------------------------------------
+
+  //console.log("in Knotenlast_button", buttons_control.knotenlast_eingabe_aktiv,ev)
+
+  let el = document.getElementById("id_cad_elementlast_button") as HTMLButtonElement
+
+  if (buttons_control.elementlast_eingabe_aktiv) {
+
+    //let el = document.getElementById("id_cad_elementlast_button") as HTMLButtonElement
+    buttons_control.reset()
+    el.removeEventListener('keydown', keydown);
+  } else {
+    buttons_control.reset()
+    el.style.backgroundColor = 'darkRed'
+    buttons_control.elementlast_eingabe_aktiv = true
+    buttons_control.cad_eingabe_aktiv = true
+    buttons_control.typ_cad_element = CAD_ELLAST
+    el.addEventListener('keydown', keydown);
+    buttons_control.n_input_points = 1
+
+    showDialog_elementlast();
+
+    // jetzt auf Pointer eingabe warten
+
+  }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------
+
+export function showDialog_elementlast() {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("showDialog_elementlast()");
+
+  const el = document.getElementById("id_dialog_elementlast");
+  console.log("id_dialog_elementlast", el);
+
+  console.log("shadow", el?.shadowRoot?.getElementById("dialog_elementlast"));
+  (el?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).addEventListener("close", dialog_elementlast_closed);
+
+  (el?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).showModal();
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_elementlast_closed(this: any, e: any) {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("Event dialog_elementlast_closed", e);
+  console.log("this", this);
+  const ele = document.getElementById("id_dialog_elementlast") as HTMLDialogElement;
+
+  // ts-ignore
+  const returnValue = this.returnValue;
+
+  if (returnValue === "ok") {
+    //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+    console.log("sieht gut aus");
+  } else {
+    // Abbruch
+    (ele?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).removeEventListener("close", dialog_elementlast_closed);
+
+    // knoten_eingabe_beenden();
+    buttons_control.reset()
+  }
 }

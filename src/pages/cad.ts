@@ -13,6 +13,7 @@ import {
    showDialog_lager,
    read_knotenlast_dialog,
    select_element,
+   add_elementlast,
 } from './cad_buttons';
 import { draw_knotenlast, draw_lager, drawStab } from './cad_draw_elemente';
 
@@ -36,6 +37,7 @@ export const CAD_KNOTEN = 1;
 export const CAD_STAB = 2;
 export const CAD_KNLAST = 3;
 export const CAD_LAGER = 4;
+export const CAD_ELLAST = 5;
 
 export let two: any = null;
 let domElement: any = null;
@@ -862,6 +864,12 @@ function mouseup(ev: any) {
 
       select_element(xc, zc);
 
+   } else if (buttons_control.elementlast_eingabe_aktiv) {
+      let xc = tr.xWorld(ev.offsetX);
+      let zc = tr.zWorld(ev.offsetY);
+
+      add_elementlast(xc, zc);
+
    } else
       if (buttons_control.cad_eingabe_aktiv) {
          if (ev.button === 0 || isPen) {
@@ -995,6 +1003,41 @@ function mouseup(ev: any) {
                         alertdialog('ok', 'keinen Knoten gefunden');
                      }
                   }
+
+                  if (buttons_control.elementlast_eingabe_aktiv) {
+
+
+                     // let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+                     // if (index1 > -1) {
+                     //    let knlast = new TLoads();
+                     //    read_elementlast_dialog(knlast);
+                     //    let group = draw_knotenlast(
+                     //       two,
+                     //       tr,
+                     //       knlast,
+                     //       get_cad_node_X(index1),
+                     //       get_cad_node_Z(index1),
+                     //       1,
+                     //       0
+                     //    );
+                     //    two.add(group);
+                     //    two.update();
+                     //    console.log('getBoundingClientRect', group.getBoundingClientRect());
+                     //    const el = new TCAD_Knotenlast(
+                     //       group,
+                     //       start_x_wc,
+                     //       start_z_wc,
+                     //       index1,
+                     //       knlast,
+                     //       buttons_control.typ_cad_element
+                     //    );
+                     //    list.append(el);
+                     // } else {
+                     //    console.log('Keinen Knoten gefunden');
+                     //    alertdialog('ok', 'keinen Knoten gefunden');
+                     // }
+                  }
+
                   input_started = 0;
                   input_active = false;
                   rubberband_drawn = false;

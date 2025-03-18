@@ -38,6 +38,7 @@ export class TCADElement {
 //―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Stab extends TCADElement {
     //―――――――――――――――――――――――――――――――――――――――――
+    elNo = -1
     x2: number = 0.0;
     z2: number = 0.0;
     index2 = -1;
@@ -49,6 +50,9 @@ export class TCAD_Stab extends TCADElement {
     sinus = 0.0
     cosinus = 1.0
     alpha = 0.0
+
+    elast = [] as TCADElLast[];
+    nStreckenlasten = 0
 
     constructor(obj: any, x1: number, z1: number, x2: number, z2: number, index1: number, index2: number, qname: string, elTyp: number) {
         super(obj, x1, z1, index1, elTyp);
@@ -76,6 +80,13 @@ export class TCAD_Stab extends TCADElement {
             else this.gelenk[i] = 0;
         }
 
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    add_streckenlast(lf: number, art: number, pa: number, pe: number): void {
+        this.elast.push(new TCAD_Streckenlast(lf, art, pa, pe))
+        this.nStreckenlasten++;
+        console.log("add_streckenlast, lf,art= ", lf, art, pa, pe)
     }
 
 }
@@ -120,5 +131,37 @@ export class TCAD_Knoten extends TCADElement {
     constructor(obj: any, x1: number, z1: number, index1: number, elTyp: number) {
         super(obj, x1, z1, index1, elTyp);
 
+    }
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――
+export class TCADElLast {
+    //―――――――――――――――――――――――――――――――――――――――――
+
+    lastfall = 1
+    isActive = true;
+    isSelected = false;
+    typ = 0               // 0=Streckenlast, 1=Einzelllast, 2=Temperatur
+
+    constructor(lf: number, typ: number) {
+        this.lastfall = lf
+        this.typ = typ
+    }
+
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――
+export class TCAD_Streckenlast extends TCADElLast {
+    //―――――――――――――――――――――――――――――――――――――――――
+
+    art = 0  // 0=senkrecht auf Stab, 1=
+    pL = 0.0
+    pR = 0.0
+
+    constructor(lf: number, art: number, pa: number, pe: number) {
+        super(lf, 0)
+        this.art = art
+        this.pL = pa
+        this.pR = pe
     }
 }
