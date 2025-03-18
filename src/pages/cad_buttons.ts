@@ -420,7 +420,9 @@ export function select_element(xc: number, zc: number) {
     if (list.size > 0) {
       gefunden = true
 
+      //console.log("two.obj", obj)
       let obj = list.getAt(index);
+      two.remove(obj.two_obj);
       let group = drawStab(obj, tr, true);
       two.add(group);
       selected_element.group = group
@@ -498,12 +500,16 @@ export function add_elementlast(xc: number, zc: number) {
       console.log("in add_elementlast ", index, lf, art, pa, pe)
       obj.add_streckenlast(lf, art, pa, pe)
 
-      // let group = drawStab(obj, tr, true);
-      // two.add(group);
-      // selected_element.group = group
-      // obj.isSelected = true
+      two.remove(obj.two_obj);
+      let group = drawStab(obj, tr);
+      two.add(group);
 
-      // two.update();
+      obj.setTwoObj(group)
+
+      selected_element.group = group
+      obj.isSelected = false
+
+      two.update();
 
 
       // buttons_control.reset();

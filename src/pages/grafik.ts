@@ -121,7 +121,7 @@ const draw_wert = {
     wert: ''
 }
 
-let opacity = 0.5
+export let opacity = 0.5
 
 const style_txt = {
     family: 'system-ui, sans-serif',
@@ -147,7 +147,7 @@ const style_txt_lager = {
     weight: 'bold'
 };
 
-const style_txt_knotenlast = {
+export const style_txt_knotenlast = {
     family: 'system-ui, sans-serif',
     size: 14,
     fill: '#dc0000',
@@ -161,7 +161,7 @@ const style_txt_knotenlast_element = {
     weight: 'bold'
 };
 
-const style_pfeil = {
+export const style_pfeil = {
     b: 20,
     h: 10,
     linewidth: 2,

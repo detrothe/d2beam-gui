@@ -571,6 +571,8 @@ export function rechnen(flag = 1) {
     // read_elements();
     read_kombinationen();
 
+    init_maxValues_eload();
+
     // read_nodal_loads();
 
     // TO DO
@@ -1119,6 +1121,19 @@ function find_maxValues_eloads(ieload: number) {
         }
         console.log("@@@@   @@@ maxValue_eload_komb: ", iKomb, maxValue_eload_komb[iKomb])
     }
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function init_maxValues_eload() {
+    //-----------------------------------------------------------------------------------------------------------
+
+maxValue_eload = new Array(nlastfaelle).fill(0.0)
+
+// jetzt die max. Streckenlasten bei Kombinationen bestimmen
+
+if (nkombinationen > 0) maxValue_eload_komb = new Array(nkombinationen).fill(0.0)
+
+find_maxValues_eloads(neloads);
 }
 
 //---------------------------------------------------------------------------------------------------------------

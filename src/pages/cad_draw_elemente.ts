@@ -5,6 +5,8 @@ import { System, STABWERK, TNode, TLoads, alertdialog } from './rechnen'
 import { CTrans } from './trans';
 import { myFormat } from './utility';
 import { TCAD_Stab } from './CCAD_element';
+import { draw_elementlasten } from './cad_draw_elementlasten';
+import { two } from './cad';
 
 
 
@@ -80,14 +82,14 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     group.add(line2);
 
 
-    let xm = (tr.xPix(x1) + tr.xPix(x2)) / 2. + (sinus * 11 + cosinus * 17) // devicePixelRatio
-    let zm = (tr.zPix(z1) + tr.zPix(z2)) / 2. - (cosinus * 11 - sinus * 17) // devicePixelRatio
+    let xm = (tr.xPix(x1) + tr.xPix(x2)) / 2. + (sinus * 11 + cosinus * 1) // devicePixelRatio  war 17
+    let zm = (tr.zPix(z1) + tr.zPix(z2)) / 2. - (cosinus * 11 - sinus * 1) // devicePixelRatio
 
     //console.log("qname", obj.name_querschnitt, xm, zm)
     let str = obj.name_querschnitt
     const txt1 = new Two.Text(str, xm, zm, style_txt)
     txt1.fill = '#000000'
-    txt1.alignment = 'left'
+    txt1.alignment = 'center'
     txt1.baseline = 'middle'
     txt1.rotation = alpha
     group.add(txt1);
@@ -96,6 +98,11 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
         let gr = draw_stab_gelenke(obj as TCAD_Stab, tr);
         group.add(gr)
     }
+
+    if ( obj.nStreckenlasten > 0) {
+          let gr=draw_elementlasten(two,tr,obj)
+          group.add(gr)
+        }
 
     return group;
 }
@@ -479,7 +486,7 @@ export function draw_knotenlast(two: Two, tr: CTrans, load: TLoads, x: number, z
 
 
 //--------------------------------------------------------------------------------------------------------
-function draw_arrow(_two: Two, tr: CTrans, x1: number, z1: number, x2: number, z2: number, styles?: any) {
+export function draw_arrow(_two: Two, tr: CTrans, x1: number, z1: number, x2: number, z2: number, styles?: any) {
     //----------------------------------------------------------------------------------------------------
 
     let b = 20, h = 10, linewidth = 2, color = '#000000'
@@ -555,7 +562,7 @@ function draw_arrow(_two: Two, tr: CTrans, x1: number, z1: number, x2: number, z
 
 
 //--------------------------------------------------------------------------------------------------------
-function draw_moment_arrow(_two: Two, tr: CTrans, x0: number, z0: number, vorzeichen: number, radius: number, styles?: any) {
+export function draw_moment_arrow(_two: Two, tr: CTrans, x0: number, z0: number, vorzeichen: number, radius: number, styles?: any) {
     //----------------------------------------------------------------------------------------------------
     let b = 20, h = 10
     let x = 0.0, z = 0.0, linewidth = 2, color = '#000000'
