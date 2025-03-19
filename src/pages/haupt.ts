@@ -71,10 +71,10 @@ import {
 //import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 import { click_zurueck_cad, init_cad, init_two_cad } from "./cad";
 import { cad_buttons } from "./cad_buttons";
-import { show_property_dialog } from "./cad_contextmenu";
+import { abbruch_property_dialog, show_property_dialog } from "./cad_contextmenu";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 18-März-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 19-März-2025, ";
 //########################################################################################################################
 
 
@@ -320,6 +320,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               <sl-menu-item value="add_eload">add E-Lasten</sl-menu-item>
               <sl-divider></sl-divider>
               <sl-menu-item value="delete">Löschen</sl-menu-item>
+              <sl-menu-item value="abbruch"  @click="${abbruch_property_dialog}">Abbruch</sl-menu-item>
             </sl-menu>
         </div>
 

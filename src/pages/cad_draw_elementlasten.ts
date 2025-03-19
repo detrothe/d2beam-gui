@@ -144,6 +144,7 @@ export function draw_elementlasten(two: Two, tr: CTrans, obj: TCAD_Stab) {
                     x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
                     x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
 
+                    (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
                     //console.log("pL...", pL, pR, x, z)
 
@@ -172,24 +173,27 @@ export function draw_elementlasten(two: Two, tr: CTrans, obj: TCAD_Stab) {
                         xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
                         zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
                         let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
-                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                         txt.alignment = 'center'
                         txt.baseline = 'middle'
                         txt.rotation = obj.alpha
+                        group.add(txt)
                     } else {
                         xpix = xtr[3] + 5
                         zpix = ztr[3] - 5
                         let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
-                        let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                         txt.alignment = 'left'
                         txt.baseline = 'top'
+                        group.add(txt)
 
                         xpix = xtr[2] + 5
                         zpix = ztr[2] - 5
                         str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
-                        txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
+                        txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                         txt.alignment = 'left'
                         txt.baseline = 'top'
+                        group.add(txt)
                     }
 
                     dp = pMax // - pMin

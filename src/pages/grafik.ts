@@ -76,7 +76,7 @@ let draw_dyn_eigenform = 1
 
 let flag_eingabe = 1
 
-let devicePixelRatio =  window.devicePixelRatio
+let devicePixelRatio = window.devicePixelRatio
 
 let scaleFactor_panel = 1.0
 let show_labels = false;
@@ -399,6 +399,16 @@ export function init_two(svg_id = 'artboard') {
 
 }
 
+//--------------------------------------------------------------------------------------------------------
+export function init_panel() {
+    //----------------------------------------------------------------------------------------------------
+
+    if (drawPanel === 0) {
+        myPanel();
+        drawPanel = 1;
+    }
+}
+
 //--------------------------------------------------------------------------------------------------- i n i t _ g r a f i k
 
 export function init_grafik(flag: number) {
@@ -426,10 +436,7 @@ export function init_grafik(flag: number) {
     centerX_last = 0.0
     centerY_last = 0.0
 
-    if (drawPanel === 0) {
-        myPanel();
-        drawPanel = 1;
-    }
+    init_panel()
     two = null;
 
 

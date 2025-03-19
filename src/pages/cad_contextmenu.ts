@@ -6,13 +6,37 @@ import { TCAD_Stab } from "./CCAD_element";
 import { default_querschnitt, nQuerschnittSets, querschnittset } from "./querschnitte";
 
 //--------------------------------------------------------------------------------------------------------
+export function abbruch_property_dialog() {
+    //----------------------------------------------------------------------------------------------------
+    buttons_control.reset();
+
+    let divi = document.getElementById("id_context_menu");
+    divi!.style.display = 'none';
+
+   // stab unselektiert neu zeichnen
+   if (selected_element.group) {
+    console.log("selected_element.group",selected_element.group)
+    two.remove(selected_element.group);
+//    two.update();
+}
+    // let group = picked_obj.getTwoObj();
+    // console.log("group picked_obj",group)
+    // two.remove(group);
+
+    let group = drawStab(picked_obj as TCAD_Stab, tr);
+    two.add(group)
+    picked_obj.setTwoObj(group);
+    picked_obj.isSelected = false
+    two.update();
+}
+
+//--------------------------------------------------------------------------------------------------------
 export function show_property_dialog() {
     //----------------------------------------------------------------------------------------------------
 
     //console.log("in show_property_dialog")
 
     let divi = document.getElementById("id_context_menu");
-
     divi!.style.display = 'none';
 
     const el = document.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
@@ -37,10 +61,10 @@ export function show_property_dialog() {
     (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).showModal();
 
 
-    if (selected_element.group) {
-        two.remove(selected_element.group);
-        two.update();
-    }
+    // if (selected_element.group) {
+    //     two.remove(selected_element.group);
+    //     two.update();
+    // }
 
 
 }
@@ -73,19 +97,19 @@ function dialog_stab_eigenschaften_closed(this: any, e: any) {
         // Element neu zeichnen
         (picked_obj as TCAD_Stab).set_gelenke(gelenke)
 
-        let group = picked_obj.getTwoObj();
-        two.remove(group);
-
-        group = drawStab(picked_obj as TCAD_Stab, tr);
-        two.add(group)
-        picked_obj.setTwoObj(group);
-        two.update();
-
     } else {
         // Abbruch
-        //let el = document.getElementById('id_cad_lager_button') as HTMLButtonElement;
 
         buttons_control.reset();
         //el.removeEventListener('keydown', keydown);
     }
+    // stab unselektiert neu zeichnen
+    let group = picked_obj.getTwoObj();
+    console.log("two.remove group",two.remove(group));
+
+    group = drawStab(picked_obj as TCAD_Stab, tr);
+    two.add(group)
+    picked_obj.setTwoObj(group);
+    picked_obj.isSelected = false
+    two.update();
 }

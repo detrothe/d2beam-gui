@@ -606,6 +606,12 @@ function penDown(ev: PointerEvent) {
 
       select_element(xc, zc);
 
+
+   } else if (buttons_control.elementlast_eingabe_aktiv) {
+      let xc = tr.xWorld(ev.offsetX);
+      let zc = tr.zWorld(ev.offsetY);
+
+      add_elementlast(xc, zc);
    }
    else if (buttons_control.cad_eingabe_aktiv) {
       if (input_started === 0) {

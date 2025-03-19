@@ -112,6 +112,9 @@ export function abstandPunktGerade_2D(p1x: number, p1y: number, p2x: number, p2y
     //console.log("eta", eta)
     if ( eta < 0.0 || eta > 1.0 ) return abstand;
 
+    let lambda = (-ay * bx + ax * by) / det
+    console.log("lambda",lambda)
+
     // cross product
 
     cBetrag = Math.abs(ax * by - ay * bx);

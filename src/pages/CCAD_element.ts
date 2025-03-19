@@ -157,11 +157,27 @@ export class TCAD_Streckenlast extends TCADElLast {
     art = 0  // 0=senkrecht auf Stab, 1=
     pL = 0.0
     pR = 0.0
+    x: number[] = Array(4)   // Weltkoordinaten der gezeichneten Streckenbelastung
+    z: number[] = Array(4)
 
     constructor(lf: number, art: number, pa: number, pe: number) {
         super(lf, 0)
         this.art = art
         this.pL = pa
         this.pR = pe
+    }
+
+    set_drawLast_xz(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            this.x[i] = x[i]
+            this.z[i] = z[i]
+        }
+    }
+
+    get_drawLast_xz(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            x[i] = this.x[i]
+            z[i] = this.z[i]
+        }
     }
 }

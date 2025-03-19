@@ -15,7 +15,7 @@ import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CTruss } from "./truss"
 import { CSpring } from "./feder"
 import { CKoppelfeder } from "./koppelfeder"
-import { init_grafik, drawsystem, init_two } from "./grafik";
+import { init_grafik, drawsystem, init_two, init_panel } from "./grafik";
 import { show_controller_THIIO, show_controller_bettung, show_controller_results, show_controller_truss } from "./mypanelgui"
 import { ausgabe, ausgabe_kombinationen_Th_I_O, dyn_ausgabe } from "./ausgabe"
 import { AlertDialog } from "../pages/confirm_dialog";
@@ -385,6 +385,8 @@ export function setSystem(system: number) {
     //-----------------------------------------------------------------------------------------------------------
     System = system;
 
+    init_panel()
+
     if (system === 0) {
         show_controller_truss(true);
         showColumnsForStabwerk();
@@ -592,6 +594,7 @@ export function rechnen(flag = 1) {
         if (fatal_error || fehler > 0) {
             write('\nEingabefehler bitte erst beheben')
         } else {
+            init_panel();
             calculate();
             if (THIIO_flag === 0) show_controller_THIIO(false);
             else show_controller_THIIO(true);
