@@ -14,14 +14,18 @@ import "../components/dr-dialog_knotenlast";
 import "../components/dr-dialog_elementlasten";
 
 import { TLoads, TNode } from "./rechnen";
-import { abstandPunktGerade_2D } from "./lib";
+import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knotenlast, draw_lager } from "./cad_draw_elemente";
-import { TCADElement } from "./CCAD_element";
+import { TCAD_Stab, TCAD_Streckenlast, TCADElement } from "./CCAD_element";
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 
 //export let pick_element = false
 
 export let picked_obj: TCADElement;
+
+let mode_elementlast_aendern = false;
+let index_ellast = -1
+let obj_ellast: any
 
 class Cbuttons_control {
   pick_element = false;
@@ -264,6 +268,7 @@ export function delete_element(xc: number, zc: number) {
   let lager_gefunden = false
   let index_lager = -1
   let knotenlast_gefunden = false
+  let elementlast_gefunden = false
   let index_knlast = -1
 
   let xpix = tr.xPix(xc)
@@ -279,6 +284,30 @@ export function delete_element(xc: number, zc: number) {
           min_abstand = abstand;
           index = i;
           stab_gefunden = true
+        }
+      }
+
+      // Schleife über alle Elementlasten
+
+      if (obj.nStreckenlasten > 0) {
+
+        for (let j = 0; j < obj.elast.length; j++) {
+          let typ = obj.elast[j].typ
+          if (typ === 0) { // Streckenlast
+
+            let x = Array(4)
+            let z = Array(4);
+            (obj.elast[j] as TCAD_Streckenlast).get_drawLast_xz(x, z);
+
+            let inside = test_point_inside_area_2D(x, z, xc, zc)
+            console.log("select_element, inside ", inside)
+            if (inside) {
+              elementlast_gefunden = true
+              obj_ellast = obj
+              index_ellast = j
+            }
+          }
+
         }
       }
     }
@@ -308,7 +337,20 @@ export function delete_element(xc: number, zc: number) {
 
   console.log('ABSTAND', min_abstand, index, lager_gefunden);
 
-  if (lager_gefunden) {
+  if (elementlast_gefunden) {
+    (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL = 1.0;
+
+    obj_ellast.elast.splice(index_ellast, 1);
+    obj_ellast.nStreckenlasten--;
+    let group = obj_ellast.getTwoObj();
+    console.log("two.remove group", two.remove(group));
+
+    group = drawStab(obj_ellast as TCAD_Stab, tr);
+    two.add(group)
+    obj_ellast.setTwoObj(group);
+    two.update();
+  }
+  else if (lager_gefunden) {
     let obj = list.removeAt(index_lager);
     two.remove(obj.two_obj);
     two.update();
@@ -352,7 +394,9 @@ export function select_element(xc: number, zc: number) {
   let lager_gefunden = false
   let index_lager = -1
   let knotenlast_gefunden = false
+  let elementlast_gefunden = false
   let index_knlast = -1
+
 
   let xpix = tr.xPix(xc)
   let zpix = tr.zPix(zc)
@@ -368,6 +412,30 @@ export function select_element(xc: number, zc: number) {
           min_abstand = abstand;
           index = i;
           stab_gefunden = true
+        }
+      }
+
+      // Schleife über alle Elementlasten
+
+      if (obj.nStreckenlasten > 0) {
+
+        for (let j = 0; j < obj.elast.length; j++) {
+          let typ = obj.elast[j].typ
+          if (typ === 0) { // Streckenlast
+
+            let x = Array(4)
+            let z = Array(4);
+            (obj.elast[j] as TCAD_Streckenlast).get_drawLast_xz(x, z);
+
+            let inside = test_point_inside_area_2D(x, z, xc, zc)
+            console.log("select_element, inside ", inside)
+            if (inside) {
+              elementlast_gefunden = true
+              obj_ellast = obj
+              index_ellast = j
+            }
+          }
+
         }
       }
     }
@@ -397,7 +465,25 @@ export function select_element(xc: number, zc: number) {
 
   console.log('ABSTAND', min_abstand, index, lager_gefunden);
 
-  if (lager_gefunden) {
+  if (elementlast_gefunden) {
+
+    let pa = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL
+    let pe = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pR
+    let lf = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall
+    let art = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art
+
+    const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
+
+    ele.set_lastfall(lf)
+    ele.set_pa(pa)
+    ele.set_pe(pe)
+    ele.set_art(art)
+
+    mode_elementlast_aendern = true
+
+    showDialog_elementlast()
+  }
+  else if (lager_gefunden) {
     gefunden = true
     let obj = list.getAt(index_lager);
     picked_obj = obj
@@ -819,6 +905,8 @@ function dialog_elementlast_closed(this: any, e: any) {
   if (returnValue === "ok") {
     //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
     console.log("sieht gut aus");
+
+    if (mode_elementlast_aendern) update_elementlast();
   } else {
     // Abbruch
     (ele?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).removeEventListener("close", dialog_elementlast_closed);
@@ -826,4 +914,32 @@ function dialog_elementlast_closed(this: any, e: any) {
     // knoten_eingabe_beenden();
     buttons_control.reset()
   }
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function update_elementlast() {
+  //-------------------------------------------------------------------------------------------------------------
+
+  mode_elementlast_aendern = false
+
+  const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
+
+  let lf = ele.get_lastfall()
+  let pa = ele.get_pa()
+  let pe = ele.get_pe()
+  let art = ele.get_art();
+
+  (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL = pa;
+  (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pR = pe;
+  (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall = lf;
+  (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art = art;
+
+  let group = obj_ellast.getTwoObj();
+  two.remove(group)
+  group = drawStab(obj_ellast as TCAD_Stab, tr);
+  two.add(group)
+  obj_ellast.setTwoObj(group);
+  two.update();
+
+  buttons_control.reset();
 }

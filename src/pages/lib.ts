@@ -110,10 +110,10 @@ export function abstandPunktGerade_2D(p1x: number, p1y: number, p2x: number, p2y
 
     let eta = (ax * bx + ay * by) / det
     //console.log("eta", eta)
-    if ( eta < 0.0 || eta > 1.0 ) return abstand;
+    if (eta < 0.0 || eta > 1.0) return abstand;
 
     let lambda = (-ay * bx + ax * by) / det
-    console.log("lambda",lambda)
+    console.log("lambda", lambda)
 
     // cross product
 
@@ -132,5 +132,49 @@ export function crossProd(a: number[], b: number[], c: number[]): void
     c[X] = a[Y] * b[Z] - a[Z] * b[Y];
     c[Y] = a[Z] * b[X] - a[X] * b[Z];
     c[Z] = a[X] * b[Y] - a[Y] * b[X];
+
+}
+
+/*
+    Inside Area. 2D Version
+*/
+//-------------------------------------------------------------------------------------------------------
+export function test_point_inside_area_2D(x: number[], y: number[], pQx: number, pQy: number): boolean
+//-------------------------------------------------------------------------------------------------------
+{
+    console.log("in test_point_inside_area_2D")
+    let dx: number, dy: number, bx: number, by: number;
+
+    let inside = true
+    let len = x.length
+
+    for (let i = 0; i < len; i++) {
+
+        if (i < len - 1) {
+            dx = x[i + 1] - x[i];
+            dy = y[i + 1] - y[i];
+        } else {
+            dx = x[0] - x[i];
+            dy = y[0] - y[i];
+        }
+
+        let det = dx * dx + dy * dy
+
+        if (Math.abs(det) < 1.e-12) continue;         // Geradenpunkte sind zu nahe beieinander
+
+        bx = pQx - x[i];
+        by = pQy - y[i];
+
+        let eta = (dx * bx + dy * by) / det
+        //console.log("eta", eta)
+        if (eta < 0.0 || eta > 1.0) continue;
+
+        let lambda = (-dy * bx + dx * by) / det
+        console.log("lambda", lambda)
+
+        if (lambda > 0.0) inside = false
+
+    }
+    return inside;
 
 }

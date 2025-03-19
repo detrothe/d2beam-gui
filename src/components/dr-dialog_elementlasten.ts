@@ -207,6 +207,25 @@ export class drDialogElementlasten extends LitElement {
     return wert;
   }
 
+
+  set_lastfall(wert: number) {
+    let el = (this.shadowRoot?.getElementById("id_lf") as HTMLInputElement);
+    el.value = String(wert)
+  }
+  set_art(wert: number) {
+    let el = (this.shadowRoot?.getElementById("id_art") as HTMLInputElement);
+    el.value = String(wert)
+  }
+
+  set_pa(wert: number) {
+    let el = (this.shadowRoot?.getElementById("id_pa") as HTMLInputElement);
+    el.value = String(wert)
+  }
+  set_pe(wert: number) {
+    let el = (this.shadowRoot?.getElementById("id_pe") as HTMLInputElement);
+    el.value = String(wert)
+  }
+
   _handleChange() {
     console.log("_handleChange")
     let wert = (this.shadowRoot?.getElementById("id_radio_group") as SlRadioGroup).value
