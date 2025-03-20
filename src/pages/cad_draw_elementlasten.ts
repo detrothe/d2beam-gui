@@ -122,338 +122,379 @@ export function draw_elementlasten(two: Two, tr: CTrans, obj: TCAD_Stab) {
                 let typ = obj.elast[j].typ
                 if (typ === 0) { // Streckenlast
 
-                    // if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === lf_show[iLoop])) {
-
-                    //     if (eload[ieload].art === 0) {
-
                     let p_L = (obj.elast[j] as TCAD_Streckenlast).pL
                     let p_R = (obj.elast[j] as TCAD_Streckenlast).pR
 
-                    console.log("in draw_elementlasten", p_L, p_R)
+                    // if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === lf_show[iLoop])) {
 
-                    pL = p_L * scalefactor * fact[iLoop]
-                    pR = p_R * scalefactor * fact[iLoop]
+                    if ((obj.elast[j] as TCAD_Streckenlast).art === 0) {
 
-                    pMax = Math.max(0.0, pL, pR)
-                    pMin = Math.min(0.0, pL, pR)
+                        console.log("in draw_elementlasten", p_L, p_R)
 
-                    a += Math.abs(pMin)
+                        pL = p_L * scalefactor * fact[iLoop]
+                        pR = p_R * scalefactor * fact[iLoop]
 
-                    x[0] = x1 + si * a; z[0] = z1 - co * a;
-                    x[1] = x2 + si * a; z[1] = z2 - co * a;
-                    x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
-                    x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
+                        pMax = Math.max(0.0, pL, pR)
+                        pMin = Math.min(0.0, pL, pR)
 
-                    (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+                        a += Math.abs(pMin)
 
-                    //console.log("pL...", pL, pR, x, z)
+                        x[0] = x1 + si * a; z[0] = z1 - co * a;
+                        x[1] = x2 + si * a; z[1] = z2 - co * a;
+                        x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
+                        x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
 
-                    var vertices = [];
-                    for (let i = 0; i < 4; i++) {
-                        xtr[i] = tr.xPix(x[i])
-                        ztr[i] = tr.zPix(z[i])
-                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+
+                        //console.log("pL...", pL, pR, x, z)
+
+                        var vertices = [];
+                        for (let i = 0; i < 4; i++) {
+                            xtr[i] = tr.xPix(x[i])
+                            ztr[i] = tr.zPix(z[i])
+                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                        }
+
+                        let flaeche = new Two.Path(vertices);
+                        flaeche.fill = color_load;
+                        flaeche.opacity = opacity
+                        group.add(flaeche)
+
+                        if (Math.abs(pL) > 0.0) {
+                            let gr = draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            group.add(gr)
+                        }
+                        if (Math.abs(pR) > 0.0) {
+                            let gr = draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
+                            group.add(gr)
+                        }
+
+                        if (p_L === p_R) {
+                            xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+                            zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'center'
+                            txt.baseline = 'middle'
+                            txt.rotation = obj.alpha
+                            group.add(txt)
+                        } else {
+                            xpix = xtr[3] + 5
+                            zpix = ztr[3] - 5
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                            group.add(txt)
+
+                            xpix = xtr[2] + 5
+                            zpix = ztr[2] - 5
+                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
+                            txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                            group.add(txt)
+                        }
+
+                        dp = pMax // - pMin
+                        a = a + dp + a_spalt
                     }
 
-                    let flaeche = new Two.Path(vertices);
-                    flaeche.fill = color_load;
-                    flaeche.opacity = opacity
-                    group.add(flaeche)
+                    else if ((obj.elast[j] as TCAD_Streckenlast).art === 1) {      // Streckenlast z-Richtung
+                        //console.log('Streckenlast in z-Richtung', eload[ieload].pL, eload[ieload].pL, scalefactor, fact[iLoop])
 
-                    if (Math.abs(pL) > 0.0) {
-                        let gr = draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
-                        group.add(gr)
+                        pL = p_L * scalefactor * fact[iLoop]
+                        pR = p_R * scalefactor * fact[iLoop]
+
+                        //if (!(eload[ieload].lf === 1 && eload[ieload].pL === 0.0 && eload[ieload].pR === 0.0)) {
+
+                        pMax = Math.max(0.0, pL, pR)
+                        pMin = Math.min(0.0, pL, pR)
+
+                        a += Math.abs(pMin)   //* co
+
+                        x[0] = x1 + si * a; z[0] = z1 - a * co;    // /
+                        x[1] = x2 + si * a; z[1] = z2 - a * co;
+                        x[2] = x[1]; z[2] = z[1] - pR;
+                        x[3] = x[0]; z[3] = z[0] - pL;
+
+                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+
+                        var vertices = [];
+                        for (let i = 0; i < 4; i++) {
+                            xtr[i] = tr.xPix(x[i])
+                            ztr[i] = tr.zPix(z[i])
+                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                        }
+
+                        let flaeche = new Two.Path(vertices);
+                        flaeche.fill = color_load;
+                        flaeche.opacity = opacity
+                        group.add(flaeche)
+
+                        if (Math.abs(pL) > 0.0) {
+                            let gr = draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            group.add(gr)
+                        }
+                        if (Math.abs(pR) > 0.0) {
+                            let gr = draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
+                            group.add(gr)
+                        }
+
+                        if (p_L === p_R) {
+                            xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+                            zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'center'
+                            txt.baseline = 'middle'
+                            txt.rotation = obj.alpha
+                            group.add(txt)
+
+                        } else {
+                            xpix = xtr[3] + 5
+                            zpix = ztr[3] - 5
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                            group.add(txt)
+
+                            xpix = xtr[2] + 5
+                            zpix = ztr[2] - 5
+                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
+                            txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                            group.add(txt)
+                        }
+
+                        dp = pMax * co // - pMin
+                        a = a + dp + a_spalt
+
                     }
-                    if (Math.abs(pR) > 0.0) {
-                        let gr = draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
-                        group.add(gr)
+
+
+                    else if ((obj.elast[j] as TCAD_Streckenlast).art === 2) {      // Streckenlast z-Richtung, Projektion
+
+                        pL = p_L * scalefactor * fact[iLoop]
+                        pR = p_R * scalefactor * fact[iLoop]
+
+                        let zm = (z1 + z2) / 2
+
+                        pMax = Math.max(0.0, pL, pR)
+                        pMin = Math.min(0.0, pL, pR)
+
+                        az_projektion += Math.abs(pMin)
+
+                        x[0] = x1; z[0] = zm - az_projektion;
+                        x[1] = x2; z[1] = zm - az_projektion;
+                        x[2] = x[1]; z[2] = z[1] - pR;
+                        x[3] = x[0]; z[3] = z[0] - pL;
+
+                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+
+                        var vertices = [];
+                        for (let i = 0; i < 4; i++) {
+                            xtr[i] = tr.xPix(x[i])
+                            ztr[i] = tr.zPix(z[i])
+                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                        }
+
+                        let flaeche = new Two.Path(vertices);
+                        flaeche.fill = color_load;
+                        flaeche.opacity = opacity
+                        group.add(flaeche)
+
+                        if (Math.abs(pL) > 0.0) {
+                            let gr = draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            group.add(gr)
+                        }
+                        if (Math.abs(pR) > 0.0) {
+                            let gr = draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
+                            group.add(gr)
+                        }
+
+                        if (p_L === p_R) {
+                            xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+                            zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'center'
+                            txt.baseline = 'middle'
+                            group.add(txt)
+                            //txt.rotation = obj.alpha
+                        } else {
+                            xpix = xtr[3] + 5
+                            zpix = ztr[3] - 5
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                            group.add(txt)
+
+                            xpix = xtr[2] + 5
+                            zpix = ztr[2] - 5
+                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
+                            txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                            group.add(txt)
+                        }
+
+                        dp = pMax
+                        az_projektion += dp + a_spalt
                     }
 
-                    if (p_L === p_R) {
-                        xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
-                        zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                        let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
-                        let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'center'
-                        txt.baseline = 'middle'
-                        txt.rotation = obj.alpha
-                        group.add(txt)
-                    } else {
-                        xpix = xtr[3] + 5
-                        zpix = ztr[3] - 5
-                        let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
-                        let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
-                        group.add(txt)
 
-                        xpix = xtr[2] + 5
-                        zpix = ztr[2] - 5
-                        str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
-                        txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
-                        group.add(txt)
+                    else if ((obj.elast[j] as TCAD_Streckenlast).art === 3) {      // Streckenlast x-Richtung
+
+                        pL = p_L * scalefactor * fact[iLoop]
+                        pR = p_R * scalefactor * fact[iLoop]
+
+                        pMax = Math.max(0.0, pL, pR)
+                        pMin = Math.min(0.0, pL, pR)
+
+                        console.log("S I N U S ", si)
+                        if (si < 0.0) a += Math.abs(pMax * si);
+                        else a += Math.abs(pMin * si);   //  * si
+
+                        x[0] = x1 + a * si; z[0] = z1 - co * a;  // / si
+                        x[1] = x2 + a * si; z[1] = z2 - co * a;
+                        x[2] = x[1] + pR; z[2] = z[1];
+                        x[3] = x[0] + pL; z[3] = z[0];
+
+                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+
+                        const vertices = [];
+                        for (let i = 0; i < 4; i++) {
+                            xtr[i] = tr.xPix(x[i])
+                            ztr[i] = tr.zPix(z[i])
+                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                        }
+
+                        let flaeche = new Two.Path(vertices);
+                        flaeche.fill = color_load;
+                        flaeche.opacity = opacity
+                        group.add(flaeche)
+
+                        let line = new Two.Line(xtr[0], ztr[0], xtr[1], ztr[1]);
+                        line.linewidth = 2;
+                        group.add(line)
+
+                        if (Math.abs(pL) > 0.0) {
+                            let gr = draw_arrow(two, tr, x[0], z[0], x[3], z[3], style_pfeil)
+                            group.add(gr)
+                        }
+                        if (Math.abs(pR) > 0.0) {
+                            let gr = draw_arrow(two, tr, x[1], z[1], x[2], z[2], style_pfeil)
+                            group.add(gr)
+                        }
+
+                        if (p_L === p_R) {
+                            xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+                            zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'center'
+                            txt.baseline = 'middle'
+                            txt.rotation = obj.alpha
+                            group.add(txt)
+                        } else {
+                            xpix = xtr[3] + 5
+                            zpix = ztr[3] - 5
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                            group.add(txt)
+
+                            xpix = xtr[2] + 5
+                            zpix = ztr[2] - 5
+                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
+                            txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                            group.add(txt)
+                        }
+
+                        if (si < 0.0) dp = pMin * si;
+                        else dp = pMax * si;
+                        a = a + dp + a_spalt
                     }
 
-                    dp = pMax // - pMin
-                    a = a + dp + a_spalt
+
+                    else if ((obj.elast[j] as TCAD_Streckenlast).art === 4) {      // Streckenlast x-Richtung, Projektion
+
+                        pL = p_L * scalefactor * fact[iLoop]
+                        pR = p_R * scalefactor * fact[iLoop]
+
+                        let xm = (x1 + x2) / 2
+
+                        pMax = Math.max(0.0, pL, pR)
+                        pMin = Math.min(0.0, pL, pR)
+
+                        ax_projektion += Math.abs(pMin)
+
+                        x[0] = xm + ax_projektion; z[0] = z1;
+                        x[1] = xm + ax_projektion; z[1] = z2;
+                        x[2] = x[1] + pR; z[2] = z[1];
+                        x[3] = x[0] + pL; z[3] = z[0];
+
+                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+
+                        const vertices = [];
+                        for (let i = 0; i < 4; i++) {
+                            xtr[i] = tr.xPix(x[i])
+                            ztr[i] = tr.zPix(z[i])
+                            vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                        }
+
+                        let flaeche = new Two.Path(vertices);
+                        flaeche.fill = color_load;
+                        flaeche.opacity = opacity
+                        group.add(flaeche)
+
+                        if (Math.abs(pL) > 0.0) {
+                            let gr = draw_arrow(two, tr, x[0], z[0], x[3], z[3], style_pfeil)
+                            group.add(gr)
+                        }
+                        if (Math.abs(pR) > 0.0) {
+                            let gr = draw_arrow(two, tr, x[1], z[1], x[2], z[2], style_pfeil)
+                            group.add(gr)
+                        }
+
+                        if (p_L === p_R) {
+                            xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+                            zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'center'
+                            txt.baseline = 'middle'
+                            group.add(txt)
+                            //txt.rotation = obj.alpha
+                        } else {
+                            xpix = xtr[3] + 5
+                            zpix = ztr[3] - 5
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                            group.add(txt)
+
+                            xpix = xtr[2] + 5
+                            zpix = ztr[2] - 5
+                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
+                            txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                            group.add(txt)
+                        }
+
+                        dp = pMax
+                        ax_projektion += dp + a_spalt
+                    }
                 }
-
-                // else if (eload[ieload].art === 1) {      // Streckenlast z-Richtung
-                //     //console.log('Streckenlast in z-Richtung', eload[ieload].pL, eload[ieload].pL, scalefactor, fact[iLoop])
-
-                //     pL = eload[ieload].pL * scalefactor * fact[iLoop]
-                //     pR = eload[ieload].pR * scalefactor * fact[iLoop]
-
-                //     if (!(eload[ieload].lf === 1 && eload[ieload].pL === 0.0 && eload[ieload].pR === 0.0)) {
-
-                //         pMax = Math.max(0.0, pL, pR)
-                //         pMin = Math.min(0.0, pL, pR)
-
-                //         a += Math.abs(pMin)   //* co
-
-                //         x[0] = x1 + si * a; z[0] = z1 - a * co;    // /
-                //         x[1] = x2 + si * a; z[1] = z2 - a * co;
-                //         x[2] = x[1]; z[2] = z[1] - pR;
-                //         x[3] = x[0]; z[3] = z[0] - pL;
-
-
-                //         //console.log("pL...", pL, pR, pMax, pMin, x, z)
-
-                //         var vertices = [];
-                //         for (let i = 0; i < 4; i++) {
-                //             xtr[i] = tr.xPix(x[i])
-                //             ztr[i] = tr.zPix(z[i])
-                //             vertices.push(new Two.Anchor(xtr[i], ztr[i]));
-                //         }
-
-                //         let flaeche = two.makePath(vertices);
-                //         flaeche.fill = color_load;
-                //         flaeche.opacity = opacity
-
-                //         if (Math.abs(pL) > 0.0) draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
-                //         if (Math.abs(pR) > 0.0) draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
-
-                //         if (eload[ieload].pL === eload[ieload].pR) {
-                //             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
-                //             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                //             let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                //             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //             txt.alignment = 'center'
-                //             txt.baseline = 'middle'
-                //             txt.rotation = obj.alpha
-
-                //         } else {
-                //             xpix = xtr[3] + 5
-                //             zpix = ztr[3] - 5
-                //             let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                //             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //             txt.alignment = 'left'
-                //             txt.baseline = 'top'
-
-                //             xpix = xtr[2] + 5
-                //             zpix = ztr[2] - 5
-                //             str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
-                //             txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //             txt.alignment = 'left'
-                //             txt.baseline = 'top'
-                //         }
-
-                //         dp = pMax * co // - pMin
-                //         a = a + dp + a_spalt
-                //     }
-                // }
-
-                // else if (eload[ieload].art === 2) {      // Streckenlast z-Richtung, Projektion
-
-                //     pL = eload[ieload].pL * scalefactor * fact[iLoop]
-                //     pR = eload[ieload].pR * scalefactor * fact[iLoop]
-
-                //     let zm = (z1 + z2) / 2
-
-                //     pMax = Math.max(0.0, pL, pR)
-                //     pMin = Math.min(0.0, pL, pR)
-
-                //     az_projektion += Math.abs(pMin)
-
-                //     x[0] = x1; z[0] = zm - az_projektion;
-                //     x[1] = x2; z[1] = zm - az_projektion;
-                //     x[2] = x[1]; z[2] = z[1] - pR;
-                //     x[3] = x[0]; z[3] = z[0] - pL;
-
-
-                //     //console.log("pL...", pL, pR, x, z)
-
-                //     var vertices = [];
-                //     for (let i = 0; i < 4; i++) {
-                //         xtr[i] = tr.xPix(x[i])
-                //         ztr[i] = tr.zPix(z[i])
-                //         vertices.push(new Two.Anchor(xtr[i], ztr[i]));
-                //     }
-
-                //     let flaeche = two.makePath(vertices);
-                //     flaeche.fill = color_load;
-                //     flaeche.opacity = opacity
-
-                //     if (Math.abs(pL) > 0.0) draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
-                //     if (Math.abs(pR) > 0.0) draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
-
-                //     if (eload[ieload].pL === eload[ieload].pR) {
-                //         xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
-                //         zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                //         let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                //         let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //         txt.alignment = 'center'
-                //         txt.baseline = 'middle'
-                //         //txt.rotation = obj.alpha
-                //     } else {
-                //         xpix = xtr[3] + 5
-                //         zpix = ztr[3] - 5
-                //         let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                //         let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //         txt.alignment = 'left'
-                //         txt.baseline = 'top'
-
-                //         xpix = xtr[2] + 5
-                //         zpix = ztr[2] - 5
-                //         str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
-                //         txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //         txt.alignment = 'left'
-                //         txt.baseline = 'top'
-                //     }
-
-                //     dp = pMax
-                //     az_projektion += dp + a_spalt
-                // }
-
-                // else if (eload[ieload].art === 3) {      // Streckenlast x-Richtung
-
-                //     pL = eload[ieload].pL * scalefactor * fact[iLoop]
-                //     pR = eload[ieload].pR * scalefactor * fact[iLoop]
-
-                //     pMax = Math.max(0.0, pL, pR)
-                //     pMin = Math.min(0.0, pL, pR)
-
-                //     console.log("S I N U S ", si)
-                //     if (si < 0.0) a += Math.abs(pMax * si);
-                //     else a += Math.abs(pMin * si);   //  * si
-
-                //     x[0] = x1 + a * si; z[0] = z1 - co * a;  // / si
-                //     x[1] = x2 + a * si; z[1] = z2 - co * a;
-                //     x[2] = x[1] + pR; z[2] = z[1];
-                //     x[3] = x[0] + pL; z[3] = z[0];
-
-
-                //     //console.log("pL...", pL, pR, x, z)
-
-                //     const vertices = [];
-                //     for (let i = 0; i < 4; i++) {
-                //         xtr[i] = tr.xPix(x[i])
-                //         ztr[i] = tr.zPix(z[i])
-                //         vertices.push(new Two.Anchor(xtr[i], ztr[i]));
-                //     }
-
-                //     let flaeche = two.makePath(vertices);
-                //     flaeche.fill = color_load;
-                //     flaeche.opacity = opacity
-
-                //     let line = two.makeLine(xtr[0], ztr[0], xtr[1], ztr[1]);
-                //     line.linewidth = 2;
-
-                //     if (Math.abs(pL) > 0.0) draw_arrow(two, tr, x[0], z[0], x[3], z[3], style_pfeil)
-                //     if (Math.abs(pR) > 0.0) draw_arrow(two, tr, x[1], z[1], x[2], z[2], style_pfeil)
-
-                //     if (eload[ieload].pL === eload[ieload].pR) {
-                //         xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
-                //         zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                //         let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                //         let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //         txt.alignment = 'center'
-                //         txt.baseline = 'middle'
-                //         txt.rotation = obj.alpha
-                //     } else {
-                //         xpix = xtr[3] + 5
-                //         zpix = ztr[3] - 5
-                //         let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                //         let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //         txt.alignment = 'left'
-                //         txt.baseline = 'top'
-
-                //         xpix = xtr[2] + 5
-                //         zpix = ztr[2] - 5
-                //         str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
-                //         txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //         txt.alignment = 'left'
-                //         txt.baseline = 'top'
-                //     }
-
-                //     if (si < 0.0) dp = pMin * si;
-                //     else dp = pMax * si;
-                //     a = a + dp + a_spalt
-                // }
-
-                // else if (eload[ieload].art === 4) {      // Streckenlast x-Richtung, Projektion
-
-                //     pL = eload[ieload].pL * scalefactor * fact[iLoop]
-                //     pR = eload[ieload].pR * scalefactor * fact[iLoop]
-
-                //     let xm = (x1 + x2) / 2
-
-                //     pMax = Math.max(0.0, pL, pR)
-                //     pMin = Math.min(0.0, pL, pR)
-
-                //     ax_projektion += Math.abs(pMin)
-
-                //     x[0] = xm + ax_projektion; z[0] = z1;
-                //     x[1] = xm + ax_projektion; z[1] = z2;
-                //     x[2] = x[1] + pR; z[2] = z[1];
-                //     x[3] = x[0] + pL; z[3] = z[0];
-
-
-                //     //console.log("pL4...", ieload, pL, pR, scalefactor, x, z)
-
-                //     const vertices = [];
-                //     for (let i = 0; i < 4; i++) {
-                //         xtr[i] = tr.xPix(x[i])
-                //         ztr[i] = tr.zPix(z[i])
-                //         vertices.push(new Two.Anchor(xtr[i], ztr[i]));
-                //     }
-
-                //     let flaeche = two.makePath(vertices);
-                //     flaeche.fill = color_load;
-                //     flaeche.opacity = opacity
-
-                //     if (Math.abs(pL) > 0.0) draw_arrow(two, tr, x[0], z[0], x[3], z[3], style_pfeil)
-                //     if (Math.abs(pR) > 0.0) draw_arrow(two, tr, x[1], z[1], x[2], z[2], style_pfeil)
-
-                //     if (eload[ieload].pL === eload[ieload].pR) {
-                //         xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
-                //         zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                //         let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                //         let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //         txt.alignment = 'center'
-                //         txt.baseline = 'middle'
-                //         //txt.rotation = obj.alpha
-                //     } else {
-                //         xpix = xtr[3] + 5
-                //         zpix = ztr[3] - 5
-                //         let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
-                //         let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //         txt.alignment = 'left'
-                //         txt.baseline = 'top'
-
-                //         xpix = xtr[2] + 5
-                //         zpix = ztr[2] - 5
-                //         str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
-                //         txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //         txt.alignment = 'left'
-                //         txt.baseline = 'top'
-                //     }
-
-                //     dp = pMax
-                //     ax_projektion += dp + a_spalt
-                // }
 
                 // else if (eload[ieload].art === 5 || eload[ieload].art === 9 || eload[ieload].art === 10) {      // Temperatur, Vorspannung, Spannschloss
 

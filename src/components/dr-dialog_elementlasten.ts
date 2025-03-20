@@ -1,4 +1,4 @@
-import { SlRadioGroup } from "@shoelace-style/shoelace";
+import { SlRadioGroup, SlSelect } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
@@ -106,7 +106,7 @@ export class drDialogElementlasten extends LitElement {
 
       /* Styling der geöffneten Popup-Box */
       dialog[open] {
-        width: 16rem;
+        width: 28rem;
         background: #fffbf0;
         border: thin solid #e7c157;
         margin: 5rem auto;
@@ -133,7 +133,7 @@ export class drDialogElementlasten extends LitElement {
         <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="" />
       </p>
 
-      <sl-radio-group id="id_radio_group" label="Wähle eine Option" name="a" value="1"  @sl-change="${this._handleChange}">
+      <sl-radio-group id="id_radio_group" label="Wähle eine Option" name="a" value="1" @sl-change="${this._handleChange}">
         <sl-radio value="1">Streckenlasten</sl-radio>
         <sl-radio value="2">Einzellasten</sl-radio>
         <sl-radio value="3">Temperatur</sl-radio>
@@ -143,8 +143,15 @@ export class drDialogElementlasten extends LitElement {
 
       <div id="id_streckenlast">
         <p>
-          Art:
-          <input type="number" id="id_art" name="art" pattern="[0-9.,eE+-]*" value="" />
+          <!-- Art: -->
+          <!-- <input type="number" id="id_art" name="art" pattern="[0-9.,eE+-]*" value="" /> -->
+          <sl-select id="id_art" label="Art:" value='0'>
+            <sl-option value="0">Trapezstreckenlast senkrecht auf Stab</sl-option>
+            <sl-option value="1">Trapezstreckenlast in globaler z-Richtung</sl-option>
+            <sl-option value="2">Trapezstreckenlast in globaler z-Richtung, Projektion</sl-option>
+            <sl-option value="3">Trapezstreckenlast in globaler x-Richtung</sl-option>
+            <sl-option value="4">Trapezstreckenlast in globaler x-Richtung, Projektion</sl-option>
+          </sl-select>
         </p>
         <p>
           p<sub>a</sub>:
@@ -158,7 +165,7 @@ export class drDialogElementlasten extends LitElement {
 
       <form method="dialog">
         <!-- <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
-            <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
+        <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
         <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
       </form>
     </dialog>`;
@@ -187,12 +194,13 @@ export class drDialogElementlasten extends LitElement {
   }
 
   get_lastfall() {
-    let el = (this.shadowRoot?.getElementById("id_lf") as HTMLInputElement);
-    return Number(el.value)
+    let el = this.shadowRoot?.getElementById("id_lf") as HTMLInputElement;
+    return Number(el.value);
   }
   get_art() {
-    let el = (this.shadowRoot?.getElementById("id_art") as HTMLInputElement);
-    return Number(el.value)
+    let el = this.shadowRoot?.getElementById("id_art") as SlSelect;
+    console.log("gewählte Belastungsart = ", el.value)
+    return Number(el.value);
   }
 
   get_pa() {
@@ -207,36 +215,34 @@ export class drDialogElementlasten extends LitElement {
     return wert;
   }
 
-
   set_lastfall(wert: number) {
-    let el = (this.shadowRoot?.getElementById("id_lf") as HTMLInputElement);
-    el.value = String(wert)
+    let el = this.shadowRoot?.getElementById("id_lf") as HTMLInputElement;
+    el.value = String(wert);
   }
   set_art(wert: number) {
-    let el = (this.shadowRoot?.getElementById("id_art") as HTMLInputElement);
-    el.value = String(wert)
+    let el = this.shadowRoot?.getElementById("id_art") as HTMLInputElement;
+    el.value = String(wert);
   }
 
   set_pa(wert: number) {
-    let el = (this.shadowRoot?.getElementById("id_pa") as HTMLInputElement);
-    el.value = String(wert)
+    let el = this.shadowRoot?.getElementById("id_pa") as HTMLInputElement;
+    el.value = String(wert);
   }
   set_pe(wert: number) {
-    let el = (this.shadowRoot?.getElementById("id_pe") as HTMLInputElement);
-    el.value = String(wert)
+    let el = this.shadowRoot?.getElementById("id_pe") as HTMLInputElement;
+    el.value = String(wert);
   }
 
   _handleChange() {
-    console.log("_handleChange")
-    let wert = (this.shadowRoot?.getElementById("id_radio_group") as SlRadioGroup).value
-    console.log("id_radio_group ", wert)
-    if (wert === '1') {
-      let el = (this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement);
-      el.style.display = 'block';
-    }
-    else {
-      let el = (this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement);
-      el.style.display = 'none';
+    console.log("_handleChange");
+    let wert = (this.shadowRoot?.getElementById("id_radio_group") as SlRadioGroup).value;
+    console.log("id_radio_group ", wert);
+    if (wert === "1") {
+      let el = this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement;
+      el.style.display = "block";
+    } else {
+      let el = this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement;
+      el.style.display = "none";
     }
   }
 }

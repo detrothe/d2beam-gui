@@ -145,7 +145,8 @@ export function test_point_inside_area_2D(x: number[], y: number[], pQx: number,
     console.log("in test_point_inside_area_2D")
     let dx: number, dy: number, bx: number, by: number;
 
-    let inside = true
+    //let inside = true
+    let outside = false
     let len = x.length
 
     for (let i = 0; i < len; i++) {
@@ -160,21 +161,25 @@ export function test_point_inside_area_2D(x: number[], y: number[], pQx: number,
 
         let det = dx * dx + dy * dy
 
-        if (Math.abs(det) < 1.e-12) continue;         // Geradenpunkte sind zu nahe beieinander
-
+        if (Math.abs(det) < 1.e-12) {
+            outside = true
+            continue;         // Geradenpunkte sind zu nahe beieinander, sollte eigentlich nicht passieren
+        }
         bx = pQx - x[i];
         by = pQy - y[i];
 
-        let eta = (dx * bx + dy * by) / det
-        //console.log("eta", eta)
-        if (eta < 0.0 || eta > 1.0) continue;
-
+        // let eta = (dx * bx + dy * by) / det
+        // //console.log("eta", eta)
+        // if (eta < 0.0 || eta > 1.0) {
+        //     outside = true
+        //     continue;
+        // }
         let lambda = (-dy * bx + dx * by) / det
         console.log("lambda", lambda)
 
-        if (lambda > 0.0) inside = false
+        if (lambda > 0.0) outside = true
 
     }
-    return inside;
+    return !outside;
 
 }

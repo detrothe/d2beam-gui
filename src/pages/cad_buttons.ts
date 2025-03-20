@@ -453,9 +453,9 @@ export function select_element(xc: number, zc: number) {
             let x = Array(4)
             let z = Array(4);
             (obj.elast[j] as TCAD_Streckenlast).get_drawLast_xz(x, z);
-
+console.log("xz",x,z)
             let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element, inside ", inside)
+            console.log("select_element, inside ", i,inside)
             if (inside) {
               elementlast_gefunden = true
               obj_ellast = obj
