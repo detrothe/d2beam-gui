@@ -106,7 +106,7 @@ export class drDialogElementlasten extends LitElement {
 
       /* Styling der geöffneten Popup-Box */
       dialog[open] {
-        width: 28rem;
+        width: 20rem;
         background: #fffbf0;
         border: thin solid #e7c157;
         margin: 5rem auto;
@@ -141,16 +141,18 @@ export class drDialogElementlasten extends LitElement {
         <sl-radio value="5">Spannschloss</sl-radio>
       </sl-radio-group>
 
+      <hr>
+
       <div id="id_streckenlast">
         <p>
           <!-- Art: -->
           <!-- <input type="number" id="id_art" name="art" pattern="[0-9.,eE+-]*" value="" /> -->
-          <sl-select id="id_art" label="Art:" value='0'>
-            <sl-option value="0">Trapezstreckenlast senkrecht auf Stab</sl-option>
-            <sl-option value="1">Trapezstreckenlast in globaler z-Richtung</sl-option>
-            <sl-option value="2">Trapezstreckenlast in globaler z-Richtung, Projektion</sl-option>
-            <sl-option value="3">Trapezstreckenlast in globaler x-Richtung</sl-option>
-            <sl-option value="4">Trapezstreckenlast in globaler x-Richtung, Projektion</sl-option>
+          <sl-select id="id_art" label="Art der Trapezstreckenlast :" value='0'>
+            <sl-option value="0">senkrecht auf Stab</sl-option>
+            <sl-option value="1">in globaler z-Richtung</sl-option>
+            <sl-option value="2">in globaler z-Richtung, Projektion</sl-option>
+            <sl-option value="3">in globaler x-Richtung</sl-option>
+            <sl-option value="4">in globaler x-Richtung, Projektion</sl-option>
           </sl-select>
         </p>
         <p>
@@ -160,6 +162,18 @@ export class drDialogElementlasten extends LitElement {
           p<sub>e</sub>:
           <input type="number" id="id_pe" name="pa" pattern="[0-9.,eE+-]*" value="" />
           [kN/m]
+        </p>
+      </div>
+
+      <div id="id_temperatur" style="display:none;">
+        <p>Temperatur an Unter- und Oberseite</p>
+        <p>
+          T<sub>u</sub>:
+          <input type="number" id="id_Tu" name="Tu" pattern="[0-9.,eE+-]*" value="" />
+          [°]<br />
+          T<sub>o</sub>:
+          <input type="number" id="id_To" name="To" pattern="[0-9.,eE+-]*" value="" />
+          [°]
         </p>
       </div>
 
@@ -235,14 +249,19 @@ export class drDialogElementlasten extends LitElement {
 
   _handleChange() {
     console.log("_handleChange");
+    let el = this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement;
+    el.style.display = "none";
+    el = this.shadowRoot?.getElementById("id_temperatur") as HTMLDivElement;
+    el.style.display = "none";
+
     let wert = (this.shadowRoot?.getElementById("id_radio_group") as SlRadioGroup).value;
     console.log("id_radio_group ", wert);
     if (wert === "1") {
-      let el = this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement;
+      el = this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement;
       el.style.display = "block";
-    } else {
-      let el = this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement;
-      el.style.display = "none";
+    } else    if (wert === "3") {
+      el = this.shadowRoot?.getElementById("id_temperatur") as HTMLDivElement;
+      el.style.display = "block";
     }
   }
 }
