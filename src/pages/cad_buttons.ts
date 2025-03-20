@@ -16,7 +16,7 @@ import "../components/dr-dialog_elementlasten";
 import { TLoads, TNode } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knotenlast, draw_lager } from "./cad_draw_elemente";
-import { TCAD_Stab, TCAD_Streckenlast, TCADElement } from "./CCAD_element";
+import { TCAD_Stab, TCAD_Streckenlast, TCADElement, TCADElLast } from "./CCAD_element";
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 
 //export let pick_element = false
@@ -70,6 +70,16 @@ class Cbuttons_control {
     //   two.remove (selected_element.group)
     //   two.update()
     // }
+  }
+}
+
+class CDelElLast {
+  ellast = true;
+  obj_element: TCAD_Stab;
+  obj_elast: TCADElLast
+  constructor(obj_element: TCAD_Stab, obj_elast: TCADElLast) {
+    this.obj_element = obj_element
+    this.obj_elast = obj_elast
   }
 }
 
@@ -202,26 +212,38 @@ export function reDo_button() {
     console.log("redo", obj);
 
     let group: any
-    if (obj.elTyp === CAD_STAB) {
-      group = drawStab(obj, tr);
+
+    if (obj.ellast) {
+      console.log("Es handelt sich um eine Elementlast")
+      obj.obj_element.elast.push(obj.obj_elast)
+      obj.obj_element.nStreckenlasten++;
+      console.log("neuer Stab", obj.obj_element)
+      two.remove(obj.obj_element.two_obj);
+      group = drawStab(obj.obj_element, tr);
       two.add(group);
+      obj.obj_element.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
+    } else {
+      if (obj.elTyp === CAD_STAB) {
+        group = drawStab(obj, tr);
+        two.add(group);
+      }
+      else if (obj.elTyp === CAD_LAGER) {
+        let node = new TNode();
+        // node.x = obj.x1;
+        // node.z = obj.z1;
+        node = obj.node
+        group = draw_lager(two, tr, node)
+      }
+      else if (obj.elTyp === CAD_KNLAST) {
+        let load = new TLoads();
+        load = obj.knlast
+        console.log("load", obj.x1, obj.z1, load)
+        group = draw_knotenlast(two, tr, load, obj.x1, obj.z1, 1.0, 0)
+        two.add(group);
+      }
+      obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
+      list.append(obj);
     }
-    else if (obj.elTyp === CAD_LAGER) {
-      let node = new TNode();
-      // node.x = obj.x1;
-      // node.z = obj.z1;
-      node = obj.node
-      group = draw_lager(two, tr, node)
-    }
-    else if (obj.elTyp === CAD_KNLAST) {
-      let load = new TLoads();
-      load = obj.knlast
-      console.log("load", obj.x1, obj.z1, load)
-      group = draw_knotenlast(two, tr, load, obj.x1, obj.z1, 1.0, 0)
-      two.add(group);
-    }
-    obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
-    list.append(obj);
 
     two.update();
   }
@@ -338,7 +360,11 @@ export function delete_element(xc: number, zc: number) {
   console.log('ABSTAND', min_abstand, index, lager_gefunden);
 
   if (elementlast_gefunden) {
-    (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL = 1.0;
+    //(obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL = 1.0;
+
+    let obj_strLast = obj_ellast.elast[index_ellast]
+    console.log("obj_strLast", obj_strLast)
+    let undo_obj = new CDelElLast(obj_ellast, obj_strLast);
 
     obj_ellast.elast.splice(index_ellast, 1);
     obj_ellast.nStreckenlasten--;
@@ -349,6 +375,7 @@ export function delete_element(xc: number, zc: number) {
     two.add(group)
     obj_ellast.setTwoObj(group);
     two.update();
+    undoList.append(undo_obj);
   }
   else if (lager_gefunden) {
     let obj = list.removeAt(index_lager);
@@ -942,4 +969,6 @@ function update_elementlast() {
   two.update();
 
   buttons_control.reset();
+
+
 }
