@@ -16,7 +16,7 @@ import "../components/dr-dialog_elementlasten";
 import { TLoads, TNode } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knotenlast, draw_lager } from "./cad_draw_elemente";
-import { TCAD_Stab, TCAD_Streckenlast, TCADElement, TCADElLast } from "./CCAD_element";
+import { TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCADElement, TCADElLast } from "./CCAD_element";
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 
 //export let pick_element = false
@@ -216,7 +216,7 @@ export function reDo_button() {
     if (obj.ellast) {
       console.log("Es handelt sich um eine Elementlast")
       obj.obj_element.elast.push(obj.obj_elast)
-      obj.obj_element.nStreckenlasten++;
+      //obj.obj_element.nStreckenlasten++;
       console.log("neuer Stab", obj.obj_element)
       two.remove(obj.obj_element.two_obj);
       group = drawStab(obj.obj_element, tr);
@@ -311,26 +311,23 @@ export function delete_element(xc: number, zc: number) {
 
       // Schleife über alle Elementlasten
 
-      if (obj.nStreckenlasten > 0) {
+      for (let j = 0; j < obj.elast.length; j++) {
+        let typ = obj.elast[j].typ
+        if (typ === 0 || typ === 2) { // Streckenlast, Temperatur
 
-        for (let j = 0; j < obj.elast.length; j++) {
-          let typ = obj.elast[j].typ
-          if (typ === 0) { // Streckenlast
+          let x = Array(4)
+          let z = Array(4);
+          (obj.elast[j] as TCADElLast).get_drawLast_xz(x, z);
 
-            let x = Array(4)
-            let z = Array(4);
-            (obj.elast[j] as TCAD_Streckenlast).get_drawLast_xz(x, z);
-
-            let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element, inside ", inside)
-            if (inside) {
-              elementlast_gefunden = true
-              obj_ellast = obj
-              index_ellast = j
-            }
+          let inside = test_point_inside_area_2D(x, z, xc, zc)
+          console.log("select_element, inside ", inside)
+          if (inside) {
+            elementlast_gefunden = true
+            obj_ellast = obj
+            index_ellast = j
           }
-
         }
+
       }
     }
     else if (obj.elTyp === CAD_LAGER) {
@@ -367,7 +364,7 @@ export function delete_element(xc: number, zc: number) {
     let undo_obj = new CDelElLast(obj_ellast, obj_strLast);
 
     obj_ellast.elast.splice(index_ellast, 1);
-    obj_ellast.nStreckenlasten--;
+    //obj_ellast.nStreckenlasten--;
     let group = obj_ellast.getTwoObj();
     console.log("two.remove group", two.remove(group));
 
@@ -444,25 +441,23 @@ export function select_element(xc: number, zc: number) {
 
       // Schleife über alle Elementlasten
 
-      if (obj.nStreckenlasten > 0) {
+      for (let j = 0; j < obj.elast.length; j++) {
+        let typ = obj.elast[j].typ
 
-        for (let j = 0; j < obj.elast.length; j++) {
-          let typ = obj.elast[j].typ
-          if (typ === 0) { // Streckenlast
+        if (typ === 0 || typ === 2) { // Streckenlast, Temperatur
 
-            let x = Array(4)
-            let z = Array(4);
-            (obj.elast[j] as TCAD_Streckenlast).get_drawLast_xz(x, z);
-console.log("xz",x,z)
-            let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element, inside ", i,inside)
-            if (inside) {
-              elementlast_gefunden = true
-              obj_ellast = obj
-              index_ellast = j
-            }
+          let x = Array(4)
+          let z = Array(4);
+
+          (obj.elast[j] as TCADElLast).get_drawLast_xz(x, z);
+          //console.log("xz", x, z)
+          let inside = test_point_inside_area_2D(x, z, xc, zc)
+          console.log("select_element, inside ", i, inside)
+          if (inside) {
+            elementlast_gefunden = true
+            obj_ellast = obj
+            index_ellast = j
           }
-
         }
       }
     }
@@ -602,16 +597,26 @@ export function add_elementlast(xc: number, zc: number) {
     if (list.size > 0) {
       gefunden = true
 
-      let obj = list.getAt(index);
+      let obj = list.getAt(index) as TCAD_Stab;
       const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
 
       let lf = ele.get_lastfall()
-      let pa = ele.get_pa()
-      let pe = ele.get_pe()
-      let art = ele.get_art()
 
-      console.log("in add_elementlast ", index, lf, art, pa, pe)
-      obj.add_streckenlast(lf, art, pa, pe)
+      let typ = ele.get_typ();
+
+      if (typ === 0) {   // Streckenlast
+        let pa = ele.get_pa()
+        let pe = ele.get_pe()
+        let art = ele.get_art()
+
+        console.log("in add_elementlast ", index, lf, art, pa, pe)
+        obj.add_streckenlast(lf, art, pa, pe)
+      }
+      else if (typ === 2) {
+        let To = ele.get_To()
+        let Tu = ele.get_Tu()
+        obj.add_temperaturlast(lf, To, Tu)
+      }
 
       two.remove(obj.two_obj);
       let group = drawStab(obj, tr);
@@ -952,14 +957,26 @@ function update_elementlast() {
   const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
 
   let lf = ele.get_lastfall()
-  let pa = ele.get_pa()
-  let pe = ele.get_pe()
-  let art = ele.get_art();
 
-  (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL = pa;
-  (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pR = pe;
-  (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall = lf;
-  (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art = art;
+  let typ = (obj_ellast.elast[index_ellast] as TCADElLast).typ
+
+  if (typ === 0) {   // Streckenlasten
+    let pa = ele.get_pa()
+    let pe = ele.get_pe()
+    let art = ele.get_art();
+
+    (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL = pa;
+    (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pR = pe;
+    (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall = lf;
+    (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art = art;
+  }
+  else if (typ === 2) {    // Temperatur
+    let To = ele.get_To();
+    let Tu = ele.get_Tu();
+
+    (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).To = To;
+    (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).Tu = Tu;
+  }
 
   let group = obj_ellast.getTwoObj();
   two.remove(group)

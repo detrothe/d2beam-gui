@@ -74,7 +74,7 @@ import { cad_buttons } from "./cad_buttons";
 import { abbruch_property_dialog, show_property_dialog } from "./cad_contextmenu";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.c, 20-März-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 21-März-2025, ";
 //########################################################################################################################
 
 
@@ -446,7 +446,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           Anzahl Elemente:
 
           <dr-button-pm id="id_button_nelem" nel="${nelem_init}" inputid="nelem"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
 
         <table>
@@ -475,7 +475,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           Anzahl Koppelfedern:
 
           <dr-button-pm id="id_button_nkoppelfedern" nel="${nkoppelfedern_init}" inputid="nkoppelfedern"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
 
         <dr-tabelle
@@ -507,7 +507,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                 <p>
                   Anzahl Knoten:
                   <dr-button-pm id="id_button_nnodes" nel="${nnodes_init}" inputid="nnodes"></dr-button-pm>
-                  <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+                  <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
                 </p>
               </td>
               <td>
@@ -544,7 +544,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <p>
           Anzahl Knoten mit<br />vorgebenenen Verformungen:
           <dr-button-pm id="id_button_nnodedisps" nel="${nnodedisps_init}" inputid="nnodedisps"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
 
         <dr-tabelle
@@ -563,7 +563,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           Anzahl Knotenlasten:
 
           <dr-button-pm id="id_button_nnodalloads" nel="${nnodalloads_init}" inputid="nnodalloads"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
           <br /><br />
         </p>
         <dr-tabelle
@@ -597,7 +597,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             inputid="nelemloads"
             @change=${berechnungErforderlich}
           ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
         <dr-tabelle
           id="id_streckenlasten_tabelle"
@@ -620,7 +620,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             inputid="nelemloads"
             @change=${berechnungErforderlich}
           ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
 
         <dr-tabelle
@@ -644,7 +644,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             inputid="nelemloads"
             @change=${berechnungErforderlich}
           ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
 
         <dr-tabelle
@@ -667,7 +667,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             inputid="nvorspannungen"
             @change=${berechnungErforderlich}
           ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
 
         <dr-tabelle
@@ -690,7 +690,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             inputid="nspannschloesser"
             @change=${berechnungErforderlich}
           ></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
 
         <dr-tabelle
@@ -811,7 +811,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <p>
           Anzahl Stabvorverformungen:
           <dr-button-pm id="id_button_nstabvorverformungen" nel="${nstabvorverfomungen_init}" inputid="nstabvorverformungen"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
         <dr-tabelle
           id="id_stabvorverfomungen_tabelle"

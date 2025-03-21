@@ -3,8 +3,12 @@ import { drButtonPM } from "../components/dr-button-pm";
 import { CAD_KNLAST, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { CADNodes } from "./cad_node";
-import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCADElement } from "./CCAD_element";
-import { alertdialog, element, eload, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, node, nstreckenlasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen, set_nlastfaelle, set_nloads, set_nnodes, set_nnodesTotal, set_ntotalEloads, TElement, TElLoads, TLoads, TNode } from "./rechnen";
+import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCADElement, TCADElLast } from "./CCAD_element";
+import {
+    alertdialog, element, eload, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, node,
+    nstreckenlasten, ntemperaturlasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
+    set_nlastfaelle, set_nloads, set_nnodes, set_nnodesTotal, set_ntotalEloads, TElement, TElLoads, TLoads, TNode
+} from "./rechnen";
 import { myFormat, myFormat_en, write } from "./utility";
 
 export function cad_rechnen() {
@@ -269,36 +273,59 @@ export function cad_rechnen() {
         }
 
         let nStreckenlasten = 0
+        let nTemperaturlasten = 0
         for (let i = 0; i < list.size; i++) {
             let obj = list.getAt(i) as TCAD_Stab;
             if (obj.elTyp === CAD_STAB) {
-                nStreckenlasten = nStreckenlasten + obj.nStreckenlasten;
-                console.log("nStreckenlasten", obj.nStreckenlasten, nStreckenlasten)
+                for (let j = 0; j < obj.elast.length; j++) {
+                    let typ = obj.elast[j].typ
+                    if (typ === 0) {
+                        nStreckenlasten++;
+                    } else if (typ === 2) {
+                        nTemperaturlasten++
+                    }
+                }
             }
         }
+        console.log("nTemperaturlasten,nStreckenlasten", nTemperaturlasten, nStreckenlasten)
 
-        console.log("final nstreckenlasten", nStreckenlasten)
+        // Streckenlasten
         let el = document.getElementById("id_button_nstreckenlasten") as drButtonPM;
         el.setValue(nStreckenlasten);
 
-        const elTab = document.getElementById("id_streckenlasten_tabelle");
-        elTab?.setAttribute("nzeilen", String(nStreckenlasten));
-        elTab?.setAttribute("clear", "0");
+        const elTabStreckenlast = document.getElementById("id_streckenlasten_tabelle");
+        elTabStreckenlast?.setAttribute("nzeilen", String(nStreckenlasten));
+        elTabStreckenlast?.setAttribute("clear", "0");
 
-        let tabelle = elTab?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+        let tabelleStreckenlast = elTabStreckenlast?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+        // Temperaturlasten
+        el = document.getElementById("id_button_ntemperaturlasten") as drButtonPM;
+        el.setValue(nTemperaturlasten);
+
+        const elTabTemplast = document.getElementById("id_temperaturlasten_tabelle");
+        elTabTemplast?.setAttribute("nzeilen", String(nTemperaturlasten));
+        elTabTemplast?.setAttribute("clear", "0");
+
+        let tabelleTemplast = elTabTemplast?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
 
         let ielem = nelem_Balken
-        let irow = 1
+        let irowStreckenlast = 1
+        let irowTemplast = 1
         for (let i = 0; i < list.size; i++) {
             let obj = list.getAt(i) as TCAD_Stab;
             if (obj.elTyp === CAD_STAB) {
 
                 if (obj.elast.length > 0) {
                     for (let j = 0; j < obj.elast.length; j++) {
+
+                        let lf = (obj.elast[j] as TCADElLast).lastfall
+
                         let typ = obj.elast[j].typ
                         if (typ === 0) { // Streckenlast
 
-                            let lf = (obj.elast[j] as TCAD_Streckenlast).lastfall
+
                             let art = (obj.elast[j] as TCAD_Streckenlast).art
                             let pL = (obj.elast[j] as TCAD_Streckenlast).pL
                             let pR = (obj.elast[j] as TCAD_Streckenlast).pR
@@ -311,17 +338,40 @@ export function cad_rechnen() {
                             eload[ielem].pR = pR
                             ielem++;
 
-                            let child = tabelle.rows[irow].cells[1].firstElementChild as HTMLInputElement;
+                            let child = tabelleStreckenlast.rows[irowStreckenlast].cells[1].firstElementChild as HTMLInputElement;
                             child.value = String(obj.elNo)
-                            child = tabelle.rows[irow].cells[2].firstElementChild as HTMLInputElement;
+                            child = tabelleStreckenlast.rows[irowStreckenlast].cells[2].firstElementChild as HTMLInputElement;
                             child.value = String(lf)
-                            child = tabelle.rows[irow].cells[3].firstElementChild as HTMLInputElement;
+                            child = tabelleStreckenlast.rows[irowStreckenlast].cells[3].firstElementChild as HTMLInputElement;
                             child.value = String(art)
-                            child = tabelle.rows[irow].cells[4].firstElementChild as HTMLInputElement;
+                            child = tabelleStreckenlast.rows[irowStreckenlast].cells[4].firstElementChild as HTMLInputElement;
                             child.value = String(pL)
-                            child = tabelle.rows[irow].cells[5].firstElementChild as HTMLInputElement;
+                            child = tabelleStreckenlast.rows[irowStreckenlast].cells[5].firstElementChild as HTMLInputElement;
                             child.value = String(pR)
-                            irow++;
+                            irowStreckenlast++;
+                        }
+                        else if (typ === 2) {
+
+                            let To = (obj.elast[j] as TCAD_Temperaturlast).To
+                            let Tu = (obj.elast[j] as TCAD_Temperaturlast).Tu
+                            //console.log("typeof", typeof obj.elast[j], lf)
+                            eload.push(new TElLoads())
+                            eload[ielem].element = obj.elNo - 1
+                            eload[ielem].lf = lf
+                            eload[ielem].art = 5
+                            eload[ielem].To = To
+                            eload[ielem].Tu = Tu
+                            ielem++;
+
+                            let child = tabelleTemplast.rows[irowTemplast].cells[1].firstElementChild as HTMLInputElement;
+                            child.value = String(obj.elNo)
+                            child = tabelleTemplast.rows[irowTemplast].cells[2].firstElementChild as HTMLInputElement;
+                            child.value = String(lf)
+                            child = tabelleTemplast.rows[irowTemplast].cells[3].firstElementChild as HTMLInputElement;
+                            child.value = String(Tu)
+                            child = tabelleTemplast.rows[irowTemplast].cells[4].firstElementChild as HTMLInputElement;
+                            child.value = String(To)
+                            irowTemplast++;
                         }
 
                     }
@@ -329,8 +379,8 @@ export function cad_rechnen() {
             }
         }
 
-        set_neloads(nelem_Balken + nStreckenlasten);
-        set_ntotalEloads(nelem_Balken + nStreckenlasten)
+        set_neloads(nelem_Balken + nStreckenlasten + nTemperaturlasten);
+        set_ntotalEloads(nelem_Balken + nStreckenlasten + nTemperaturlasten)
     }
 
 

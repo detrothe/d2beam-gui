@@ -1,6 +1,6 @@
 import Two from "two.js"
 import { CTrans } from "./trans"
-import { TCAD_Stab, TCAD_Streckenlast } from "./CCAD_element"
+import { TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast } from "./CCAD_element"
 import { opacity, style_pfeil, style_txt_knotenlast } from "./grafik"
 import { myFormat } from "./utility"
 import { CAD_STAB, list } from "./cad"
@@ -496,50 +496,54 @@ export function draw_elementlasten(two: Two, tr: CTrans, obj: TCAD_Stab) {
                     }
                 }
 
-                // else if (eload[ieload].art === 5 || eload[ieload].art === 9 || eload[ieload].art === 10) {      // Temperatur, Vorspannung, Spannschloss
+                else if (typ === 2 /*eload[ieload].art === 5 || eload[ieload].art === 9 || eload[ieload].art === 10*/) {      // Temperatur, Vorspannung, Spannschloss
 
-                //     pL = slmax / 20.
-                //     pR = slmax / 20.
+                    let To = (obj.elast[j] as TCAD_Temperaturlast).To
+                    let Tu = (obj.elast[j] as TCAD_Temperaturlast).Tu
 
-                //     pMax = Math.max(0.0, pL, pR)
-                //     pMin = Math.min(0.0, pL, pR)
+                    pL = slmax / 20.
+                    pR = slmax / 20.
 
-                //     a += Math.abs(pMin)
+                    pMax = Math.max(0.0, pL, pR)
+                    pMin = Math.min(0.0, pL, pR)
 
-                //     x[0] = x1 + si * a; z[0] = z1 - co * a;
-                //     x[1] = x2 + si * a; z[1] = z2 - co * a;
-                //     x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
-                //     x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
+                    a += Math.abs(pMin)
 
-                //     //console.log("pL TEMP ...", pL, pR, x, z)
+                    x[0] = x1 + si * a; z[0] = z1 - co * a;
+                    x[1] = x2 + si * a; z[1] = z2 - co * a;
+                    x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
+                    x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
 
-                //     const vertices = [];
-                //     for (let i = 0; i < 4; i++) {
-                //         xtr[i] = tr.xPix(x[i])
-                //         ztr[i] = tr.zPix(z[i])
-                //         vertices.push(new Two.Anchor(xtr[i], ztr[i]));
-                //     }
+                    (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
-                //     let flaeche = two.makePath(vertices);
-                //     flaeche.fill = color_load;
-                //     flaeche.opacity = opacity;
+                    const vertices = [];
+                    for (let i = 0; i < 4; i++) {
+                        xtr[i] = tr.xPix(x[i])
+                        ztr[i] = tr.zPix(z[i])
+                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                    }
 
+                    let flaeche = new Two.Path(vertices);
+                    flaeche.fill = color_load;
+                    flaeche.opacity = opacity;
+                    group.add(flaeche)
 
-                //     xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4.
-                //     zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4.
-                //     let str: string;
-                //     if (eload[ieload].art === 5) str = "Tu= " + eload[ieload].Tu * fact[iLoop] + "°/To= " + eload[ieload].To * fact[iLoop] + "°";
-                //     else if (eload[ieload].art === 9) str = "σv= " + eload[ieload].sigmaV * fact[iLoop] / 1000 + " N/mm²";
-                //     else str = "Δs= " + eload[ieload].delta_s * fact[iLoop] * 1000 + " mm";
-                //     //str = myFormat(Math.abs(eload[ieload].pR), 1, 2)
-                //     let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                //     txt.alignment = 'center'
-                //     txt.baseline = 'middle'
-                //     txt.rotation = obj.alpha
+                    xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4.
+                    zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4.
+                    let str: string = '';
+                    if (typ === 2) str = "Tu= " + Tu * fact[iLoop] + "°/To= " + To * fact[iLoop] + "°";
+                    // else if (eload[ieload].art === 9) str = "σv= " + eload[ieload].sigmaV * fact[iLoop] / 1000 + " N/mm²";
+                    // else str = "Δs= " + eload[ieload].delta_s * fact[iLoop] * 1000 + " mm";
 
-                //     dp = pMax // - pMin
-                //     a = a + dp + a_spalt
-                // }
+                    let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'center'
+                    txt.baseline = 'middle'
+                    txt.rotation = obj.alpha
+                    group.add(txt)
+
+                    dp = pMax // - pMin
+                    a = a + dp + a_spalt
+                }
                 // else if (eload[ieload].art === 6) {      // Einzellast oder/und Moment
 
                 //     let plength = 35, delta = 12

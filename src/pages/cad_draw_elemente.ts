@@ -99,7 +99,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
         group.add(gr)
     }
 
-    if ( obj.nStreckenlasten > 0) {
+    if ( obj.elast.length > 0) {
           let gr=draw_elementlasten(two,tr,obj)
           group.add(gr)
         }

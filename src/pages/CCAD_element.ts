@@ -52,7 +52,7 @@ export class TCAD_Stab extends TCADElement {
     alpha = 0.0
 
     elast = [] as TCADElLast[];
-    nStreckenlasten = 0
+    //nStreckenlasten = 0
 
     constructor(obj: any, x1: number, z1: number, x2: number, z2: number, index1: number, index2: number, qname: string, elTyp: number) {
         super(obj, x1, z1, index1, elTyp);
@@ -85,10 +85,16 @@ export class TCAD_Stab extends TCADElement {
     //―――――――――――――――――――――――――――――――――――――――――――――
     add_streckenlast(lf: number, art: number, pa: number, pe: number): void {
         this.elast.push(new TCAD_Streckenlast(lf, art, pa, pe))
-        this.nStreckenlasten++;
+        //this.nStreckenlasten++;
         console.log("add_streckenlast, lf,art= ", lf, art, pa, pe)
     }
 
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    add_temperaturlast(lf: number, To: number, Tu: number): void {
+        this.elast.push(new TCAD_Temperaturlast(lf, To, Tu))
+        //this.nStreckenlasten++;
+        console.log("add_streckenlast, lf,art= ", lf, To, Tu)
+    }
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――
@@ -143,28 +149,12 @@ export class TCADElLast {
     isSelected = false;
     typ = 0               // 0=Streckenlast, 1=Einzelllast, 2=Temperatur
 
-    constructor(lf: number, typ: number) {
-        this.lastfall = lf
-        this.typ = typ
-    }
-
-}
-
-//―――――――――――――――――――――――――――――――――――――――――――――
-export class TCAD_Streckenlast extends TCADElLast {
-    //―――――――――――――――――――――――――――――――――――――――――
-
-    art = 0  // 0=senkrecht auf Stab, 1=
-    pL = 0.0
-    pR = 0.0
     x: number[] = Array(4)   // Weltkoordinaten der gezeichneten Streckenbelastung
     z: number[] = Array(4)
 
-    constructor(lf: number, art: number, pa: number, pe: number) {
-        super(lf, 0)
-        this.art = art
-        this.pL = pa
-        this.pR = pe
+    constructor(lf: number, typ: number) {
+        this.lastfall = lf
+        this.typ = typ
     }
 
     set_drawLast_xz(x: number[], z: number[]) {
@@ -180,4 +170,38 @@ export class TCAD_Streckenlast extends TCADElLast {
             z[i] = this.z[i]
         }
     }
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――
+export class TCAD_Streckenlast extends TCADElLast {
+    //―――――――――――――――――――――――――――――――――――――――――
+
+    art = 0  // 0=senkrecht auf Stab, 1=
+    pL = 0.0
+    pR = 0.0
+
+    constructor(lf: number, art: number, pa: number, pe: number) {
+        super(lf, 0)
+        this.art = art
+        this.pL = pa
+        this.pR = pe
+    }
+
+}
+
+
+//―――――――――――――――――――――――――――――――――――――――――――――
+export class TCAD_Temperaturlast extends TCADElLast {
+    //―――――――――――――――――――――――――――――――――――――――――
+
+
+    To = 0.0
+    Tu = 0.0
+
+    constructor(lf: number, To: number, Tu: number) {
+        super(lf, 2)
+        this.To = To
+        this.Tu = Tu
+    }
+
 }

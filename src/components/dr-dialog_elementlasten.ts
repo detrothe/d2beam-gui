@@ -133,12 +133,12 @@ export class drDialogElementlasten extends LitElement {
         <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="" />
       </p>
 
-      <sl-radio-group id="id_radio_group" label="Wähle eine Option" name="a" value="1" @sl-change="${this._handleChange}">
-        <sl-radio value="1">Streckenlasten</sl-radio>
-        <sl-radio value="2">Einzellasten</sl-radio>
-        <sl-radio value="3">Temperatur</sl-radio>
-        <sl-radio value="4">Vorspannung</sl-radio>
-        <sl-radio value="5">Spannschloss</sl-radio>
+      <sl-radio-group id="id_typ" label="Wähle eine Option" name="a" value="0" @sl-change="${this._handleChange}">
+        <sl-radio value="0">Streckenlasten</sl-radio>
+        <sl-radio value="1">Einzellasten</sl-radio>
+        <sl-radio value="2">Temperatur</sl-radio>
+        <sl-radio value="3">Vorspannung</sl-radio>
+        <sl-radio value="4">Spannschloss</sl-radio>
       </sl-radio-group>
 
       <hr>
@@ -216,6 +216,11 @@ export class drDialogElementlasten extends LitElement {
     console.log("gewählte Belastungsart = ", el.value)
     return Number(el.value);
   }
+  get_typ() {
+    let el = this.shadowRoot?.getElementById("id_typ") as SlSelect;
+    //console.log("gewählte Belastungsart = ", el.value)
+    return Number(el.value);
+  }
 
   get_pa() {
     const shadow = this.shadowRoot;
@@ -226,6 +231,18 @@ export class drDialogElementlasten extends LitElement {
   get_pe() {
     const shadow = this.shadowRoot;
     let wert = Number((shadow?.getElementById("id_pe") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+
+  get_Tu() {
+    const shadow = this.shadowRoot;
+    //console.log("id_x", (shadow?.getElementById("id_x") as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById("id_Tu") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+  get_To() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_To") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
 
@@ -247,6 +264,15 @@ export class drDialogElementlasten extends LitElement {
     el.value = String(wert);
   }
 
+  set_Tu(wert: number) {
+    let el = this.shadowRoot?.getElementById("id_Tu") as HTMLInputElement;
+    el.value = String(wert);
+  }
+  set_To(wert: number) {
+    let el = this.shadowRoot?.getElementById("id_To") as HTMLInputElement;
+    el.value = String(wert);
+  }
+
   _handleChange() {
     console.log("_handleChange");
     let el = this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement;
@@ -254,12 +280,12 @@ export class drDialogElementlasten extends LitElement {
     el = this.shadowRoot?.getElementById("id_temperatur") as HTMLDivElement;
     el.style.display = "none";
 
-    let wert = (this.shadowRoot?.getElementById("id_radio_group") as SlRadioGroup).value;
+    let wert = (this.shadowRoot?.getElementById("id_typ") as SlRadioGroup).value;
     console.log("id_radio_group ", wert);
-    if (wert === "1") {
+    if (wert === "0") {
       el = this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement;
       el.style.display = "block";
-    } else    if (wert === "3") {
+    } else    if (wert === "2") {
       el = this.shadowRoot?.getElementById("id_temperatur") as HTMLDivElement;
       el.style.display = "block";
     }
