@@ -56,6 +56,7 @@ let mouseDz = 0.0;
 let zoomIsActive = false;
 
 let isPen = false;
+let isTouch = false
 
 let centerX = 0.0;
 let centerY = 0.0;
@@ -172,6 +173,9 @@ export function Stab_button(ev: Event) {
    //----------------------------------------------------------------------------------------------------
 
    console.log('in Stab_button', ev);
+   let div = document.getElementById("id_cad_group") as HTMLDivElement
+   let h = div!.getBoundingClientRect()
+   console.log("hoehe des div", h)
 
    let el = document.getElementById('id_cad_stab_button') as HTMLButtonElement;
 
@@ -349,6 +353,8 @@ export function init_two_cad(svg_id = 'artboard_cad') {
 //--------------------------------------------------------------------------------------------------- i n i t _ c a d
 
 export function init_cad(_flag: number) {
+
+
    let show_selection = true;
    let height = 0;
 
@@ -508,6 +514,8 @@ export function init_cad(_flag: number) {
 
    // stab_eingabe_aktiv = false
    // cad_eingabe_aktiv = false
+
+
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -518,9 +526,11 @@ function pointerdown(ev: PointerEvent) {
 
    ev.preventDefault();
 
+   isPen = false;
+   isTouch = false
+
    switch (ev.pointerType) {
       case 'mouse':
-         isPen = false;
          mousedown(ev);
          break;
       case 'pen':
@@ -529,9 +539,9 @@ function pointerdown(ev: PointerEvent) {
          mousedown(ev);
          break;
       case 'touch':
-         isPen = true;
-         penDown(ev);
-         mousedown(ev);
+         isTouch = true;
+         //penDown(ev);
+         //mousedown(ev);
          break;
    }
 }
@@ -543,9 +553,11 @@ function pointermove(ev: PointerEvent) {
 
    ev.preventDefault();
 
+   isPen = false;
+   isTouch = false
+
    switch (ev.pointerType) {
       case 'mouse':
-         isPen = false;
          mousemove(ev);
          break;
       case 'pen':
@@ -553,7 +565,7 @@ function pointermove(ev: PointerEvent) {
          mousemove(ev);
          break;
       case 'touch':
-         isPen = true;
+         isTouch = true;
          mousemove(ev);
          break;
    }
@@ -566,9 +578,11 @@ function pointerup(ev: PointerEvent) {
 
    ev.preventDefault();
 
+   isPen = false;
+   isTouch = false;
+
    switch (ev.pointerType) {
       case 'mouse':
-         isPen = false;
          if (ev.button === 2 && input_started === 0) {
             // test Element unter Maus
             test_for_cad_element(ev);
@@ -582,8 +596,10 @@ function pointerup(ev: PointerEvent) {
          if (buttons_control.n_input_points > 1) mouseup(ev);
          break;
       case 'touch':
-         isPen = true;
-         if (buttons_control.n_input_points > 1) mouseup(ev);
+         isTouch = true;
+         if (input_started === 0) penDown(ev);
+         else if (buttons_control.n_input_points > 1) mouseup(ev);
+         //         if (buttons_control.n_input_points > 1) mouseup(ev);
          break;
    }
 }
@@ -594,22 +610,29 @@ function penDown(ev: PointerEvent) {
    console.log('in penDown', ev);
 
    ev.preventDefault();
+
+   let dxy = 0.0
+   if (isTouch) dxy = -100 / devicePixelRatio;
+
+   let xo = ev.offsetX + dxy
+   let yo = ev.offsetY + dxy
+
    if (buttons_control.pick_element) {
-      let xc = tr.xWorld(ev.offsetX);
-      let zc = tr.zWorld(ev.offsetY);
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
 
       delete_element(xc, zc);
 
    } else if (buttons_control.select_element) {
-      let xc = tr.xWorld(ev.offsetX);
-      let zc = tr.zWorld(ev.offsetY);
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
 
       select_element(xc, zc);
 
 
    } else if (buttons_control.elementlast_eingabe_aktiv) {
-      let xc = tr.xWorld(ev.offsetX);
-      let zc = tr.zWorld(ev.offsetY);
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
 
       add_elementlast(xc, zc);
    }
@@ -618,8 +641,8 @@ function penDown(ev: PointerEvent) {
          input_active = true;
          input_started = 1;
 
-         let xc = tr.xWorld(ev.offsetX);
-         let zc = tr.zWorld(ev.offsetY);
+         let xc = tr.xWorld(xo);
+         let zc = tr.zWorld(yo);
 
          // find next CAD node
 
@@ -659,8 +682,8 @@ function penDown(ev: PointerEvent) {
                start_x_wc = xRasterPoint;
                start_z_wc = zRasterPoint;
             } else {
-               start_x = ev.offsetX;
-               start_y = ev.offsetY;
+               start_x = xo;
+               start_y = yo;
                start_x_wc = xc;
                start_z_wc = zc;
             }
@@ -755,20 +778,26 @@ function mousemove(ev: MouseEvent) {
 
    //console.log(document.elementFromPoint(ev.offsetX, ev.offsetY));
 
+   let dxy = 0.0
+   if (isTouch) dxy = -100 / devicePixelRatio;
+
+   let xo = ev.offsetX + dxy
+   let yo = ev.offsetY + dxy
+
    two.remove(cursorLineh);
    two.remove(cursorLinev);
    let len = tr.Pix0(getFangweite());
    cursorLineh = two.makeLine(
-      ev.offsetX - len,
-      ev.offsetY,
-      ev.offsetX + len,
-      ev.offsetY
+      xo - len,
+      yo,
+      xo + len,
+      yo
    );
    cursorLinev = two.makeLine(
-      ev.offsetX,
-      ev.offsetY - len,
-      ev.offsetX,
-      ev.offsetY + len
+      xo,
+      yo - len,
+      xo,
+      yo + len
    );
 
    if (buttons_control.cad_eingabe_aktiv) {
@@ -795,8 +824,8 @@ function mousemove(ev: MouseEvent) {
       if (txt_mouseCoord) {
          two.remove(txt_mouseCoord);
       }
-      let xc = tr.xWorld(ev.offsetX);
-      let zc = tr.zWorld(ev.offsetY);
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
       let txt = 'x: ' + myFormat(xc, 2, 2) + ' | z: ' + myFormat(zc, 2, 2);
       txt_mouseCoord = two.makeText(
          txt,
@@ -858,27 +887,34 @@ function mouseup(ev: any) {
    centerX_last = centerX;
    centerY_last = centerY;
 
+
+   let dxy = 0.0
+   if (isTouch) dxy = -100 / devicePixelRatio;
+
+   let xo = ev.offsetX + dxy
+   let yo = ev.offsetY + dxy
+
    if (buttons_control.pick_element) {
-      let xc = tr.xWorld(ev.offsetX);
-      let zc = tr.zWorld(ev.offsetY);
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
 
       delete_element(xc, zc);
 
    } else if (buttons_control.select_element) {
-      let xc = tr.xWorld(ev.offsetX);
-      let zc = tr.zWorld(ev.offsetY);
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
 
       select_element(xc, zc);
 
    } else if (buttons_control.elementlast_eingabe_aktiv) {
-      let xc = tr.xWorld(ev.offsetX);
-      let zc = tr.zWorld(ev.offsetY);
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
 
       add_elementlast(xc, zc);
 
    } else
       if (buttons_control.cad_eingabe_aktiv) {
-         if (ev.button === 0 || isPen) {
+         if (ev.button === 0 || isPen || isTouch) {
             // Linker Mausbutton
             if (input_started === 0) {
                input_active = true;
@@ -892,8 +928,8 @@ function mouseup(ev: any) {
                   two.remove(nodePoint);
                   foundNodePoint = false;
                }
-               let xc = tr.xWorld(ev.offsetX);
-               let zc = tr.zWorld(ev.offsetY);
+               let xc = tr.xWorld(xo);
+               let zc = tr.zWorld(yo);
                // find next CAD node
 
                let index = find_nearest_cad_node(xc, zc);
@@ -1068,8 +1104,8 @@ function mouseup(ev: any) {
                   two.remove(rasterPoint);
                   foundRasterPoint = false;
                } else {
-                  end_x = ev.offsetX;
-                  end_y = ev.offsetY;
+                  end_x = xo;
+                  end_y = yo;
                   end_x_wc = tr.xWorld(ev.offsetX);
                   end_z_wc = tr.zWorld(ev.offsetY);
                }

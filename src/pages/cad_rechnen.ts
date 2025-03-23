@@ -11,7 +11,13 @@ import {
 } from "./rechnen";
 import { myFormat, myFormat_en, write } from "./utility";
 
+
+
 export function cad_rechnen() {
+
+    let fatal_error = false;
+
+
     // Markiere alle Knoten /Punkte, an denen Stäbe hängen
 
     for (let i = 0; i < CADNodes.length; i++) CADNodes[i].nel = 0  // init
@@ -321,7 +327,10 @@ export function cad_rechnen() {
                     for (let j = 0; j < obj.elast.length; j++) {
 
                         let lf = (obj.elast[j] as TCADElLast).lastfall
-
+                        if (lf > nlastfaelle) {
+                            fatal_error = true;
+                            write('Stab ' + obj.elNo + ', Lastfall einer Elementlast ist größer als in Tab Kombinationen definiert: ' + lf + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+                        }
                         let typ = obj.elast[j].typ
                         if (typ === 0) { // Streckenlast
 
@@ -383,5 +392,6 @@ export function cad_rechnen() {
         set_ntotalEloads(nelem_Balken + nStreckenlasten + nTemperaturlasten)
     }
 
+    return fatal_error;
 
 }

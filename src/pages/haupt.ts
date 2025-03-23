@@ -72,9 +72,11 @@ import {
 import { click_zurueck_cad, init_cad, init_two_cad } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { abbruch_property_dialog, show_property_dialog } from "./cad_contextmenu";
+import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
+import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 21-März-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 23-März-2025, ";
 //########################################################################################################################
 
 
@@ -305,14 +307,14 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
-      <sl-tab-panel name="tab-cad">
+      <sl-tab-panel name="tab-cad" id="id_tab-cad">
         <div id="id_cad" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0;cursor:none">
           <!-- width:100vw; ;width:300px;height:300px; -->
           <div id="id_cad_group">
           </div>
 
-          <button id="id_button_zurueck_cad">Fullscreen</button>
-          <select name="querschnitt_default" id="id_querschnitt_default" title="default Querschnitt"></select>
+          <!-- <button id="id_button_zurueck_cad">Fullscreen</button> -->
+          <!-- <select name="querschnitt_default" id="id_querschnitt_default" title="default Querschnitt"></select> -->
 
           <div id="id_context_menu" style="position:absolute;top:100;display:none;">
             <sl-menu style="max-width: 200px;">
@@ -1182,12 +1184,12 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   const el_zurueck_grafik = document.getElementById("id_button_zurueck_grafik");
   el_zurueck_grafik?.addEventListener("click", click_zurueck_grafik);
 
-  const el_zurueck_cad = document.getElementById("id_button_zurueck_cad");
-  el_zurueck_cad?.addEventListener("click", click_zurueck_cad);
+  // const el_zurueck_cad = document.getElementById("id_button_zurueck_cad");
+  // el_zurueck_cad?.addEventListener("click", click_zurueck_cad);
 
 
-  const el_def_quer = document.getElementById("id_querschnitt_default");
-  el_def_quer?.addEventListener("change", change_def_querschnitt);
+  // const el_def_quer = document.getElementById("id_querschnitt_default");
+  // el_def_quer?.addEventListener("change", change_def_querschnitt);
 
   document?.getElementById("id_button_copy_svg")?.addEventListener("click", copy_svg, false);
 
@@ -1247,6 +1249,30 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
     }
   });
 
+  let tt = document.getElementById("id_tab-cad") as SlTabPanel;
+  tt.updateComplete.then(() => {
+    console.log("Tab CAD is complete"); // true
+
+  });
+  let div_cad_group = document.getElementById("id_tab-cad") as HTMLDivElement
+  div_cad_group!.addEventListener("load", (event) => {
+    // @ts-ignore
+    console.log("load", event)
+    let hoehe = div_cad_group!.getBoundingClientRect()
+    console.log("hoehe div id_cad_group", hoehe)
+  });
+
+  let ttt = document.getElementById("id_sl_tab_group") as SlTabGroup;
+  ttt!.addEventListener("sl-tab-show", (event) => {
+    // @ts-ignore
+    console.log("sl-tab-show", event)
+    //  let hoehe = div_cad_group!.getBoundingClientRect()
+    //  console.log("hoehe div id_cad_group", hoehe)
+    let div = document.getElementById("id_cad_group") as HTMLDivElement
+    let h = div!.getBoundingClientRect()
+    console.log("Rect des div", h)
+  });
+
   // addEventListener("resize", function () {
   //   ("RESIZE")
   //   write ("resize " + this.window.innerHeight)
@@ -1276,9 +1302,10 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
   // initTabellenLoop();
   console.log("vor init_tabellen in haupt");
-  init_tabellen();
 
   cad_buttons();
+
+  init_tabellen();
 
   init_two_cad();
   init_cad(0);

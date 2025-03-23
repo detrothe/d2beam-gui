@@ -387,7 +387,7 @@ input[type='number'] {
    color: #f1f1f1;
 }
 
-#id_querschnitt_default {
+/* #id_querschnitt_default {
    position: absolute;
    top: 3.125rem;
    left: 6rem;
@@ -398,7 +398,8 @@ input[type='number'] {
    width: 8rem;
    border-color:"DodgerBlue";
    color:"DodgerBlue";
-}
+} */
+
 .confirm-dialog-button {
    background-color: rgb(234, 231, 231);
    color: #1a1a1e;

@@ -1,7 +1,8 @@
 
 import {
   list, undoList, Stab_button, Lager_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST,
-  keydown, CAD_STAB, CAD_LAGER, selected_element, CAD_ELLAST
+  keydown, CAD_STAB, CAD_LAGER, selected_element, CAD_ELLAST,
+  click_zurueck_cad
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -18,6 +19,7 @@ import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knotenlast, draw_lager } from "./cad_draw_elemente";
 import { TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCADElement, TCADElLast } from "./CCAD_element";
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
+import { change_def_querschnitt } from "./querschnitte";
 
 //export let pick_element = false
 
@@ -90,6 +92,24 @@ export function cad_buttons() {
   //----------------------------------------------------------------------------------------------------
 
   let div = document.getElementById("id_cad_group") as HTMLDivElement;
+
+
+  const zurueck_button = document.createElement("button");
+
+  zurueck_button.value = "zurueck";
+  zurueck_button.className = "btn";
+  zurueck_button.innerHTML = 'Fullscreen';
+  zurueck_button.addEventListener("click", click_zurueck_cad);
+  zurueck_button.title = "zurück";
+
+  const querschnitt_default_select = document.createElement("select");
+
+  //querschnitt_default_select.value = "";
+  querschnitt_default_select.className = "btn";
+  //querschnitt_default_select.innerHTML = 'Fullscreen';
+  querschnitt_default_select.addEventListener("click", change_def_querschnitt);
+  querschnitt_default_select.title = "aktiver Querschnitt";
+  querschnitt_default_select.id="id_querschnitt_default"
 
   const undo_button = document.createElement("button");
 
@@ -186,6 +206,24 @@ export function cad_buttons() {
   div.appendChild(lager_button);
   div.appendChild(knotlast_button);
   div.appendChild(ellast_button);
+  let br = document.createElement("br");
+  div.appendChild(br);
+  div.appendChild(zurueck_button);
+  div.appendChild(querschnitt_default_select);
+
+  //let div_cad_group = document.getElementById("id_cad_group") as HTMLDivElement
+  undo_button!.addEventListener("focus", (event) => {
+    // @ts-ignore
+    console.log("focus", event)
+    let hoehe = undo_button!.getBoundingClientRect()
+    console.log("hoehe div undo_button", hoehe)
+  });
+
+  // let hoehe = div.getBoundingClientRect().height
+  // console.log("hoehe", hoehe)
+
+  // let querschnitt_default = document.getElementById("id_querschnitt_default") as HTMLSelectElement;
+  // querschnitt_default.style.top = String(hoehe)
 }
 
 //--------------------------------------------------------------------------------------------------------

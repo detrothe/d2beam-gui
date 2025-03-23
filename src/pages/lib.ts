@@ -161,10 +161,8 @@ export function test_point_inside_area_2D(x: number[], y: number[], pQx: number,
 
         let det = dx * dx + dy * dy
 
-        if (Math.abs(det) < 1.e-12) {
-            outside = true
-            continue;         // Geradenpunkte sind zu nahe beieinander, sollte eigentlich nicht passieren
-        }
+        if (Math.abs(det) < 1.e-12) continue;
+
         bx = pQx - x[i];
         by = pQy - y[i];
 

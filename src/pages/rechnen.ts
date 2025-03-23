@@ -566,7 +566,7 @@ export function rechnen(flag = 1) {
     console.log("== intAt, art", intArt, art, ndivsl)
     console.log("== maxU", maxU_node, maxU_dir, maxU_schief, neigv)
 
-    cad_rechnen();
+    fatal_error=cad_rechnen();
     // return;
 
     // read_nodes();
