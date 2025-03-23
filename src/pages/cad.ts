@@ -239,9 +239,7 @@ export function lager_eingabe_beenden() {
 export function click_zurueck_cad() {
    //----------------------------------------------------------------------------------------------------
 
-   let elb = document.getElementById(
-      'id_button_zurueck_cad'
-   ) as HTMLButtonElement;
+   let elb = document.getElementById('id_button_zurueck_cad') as HTMLButtonElement;
    let ele = document.getElementById('id_cad') as HTMLDivElement;
 
    if (fullscreen) {

@@ -101,6 +101,7 @@ export function cad_buttons() {
   zurueck_button.innerHTML = 'Fullscreen';
   zurueck_button.addEventListener("click", click_zurueck_cad);
   zurueck_button.title = "zurück";
+  zurueck_button.id = "id_button_zurueck_cad"
 
   const querschnitt_default_select = document.createElement("select");
 
@@ -109,7 +110,7 @@ export function cad_buttons() {
   //querschnitt_default_select.innerHTML = 'Fullscreen';
   querschnitt_default_select.addEventListener("click", change_def_querschnitt);
   querschnitt_default_select.title = "aktiver Querschnitt";
-  querschnitt_default_select.id="id_querschnitt_default"
+  querschnitt_default_select.id = "id_querschnitt_default"
 
   const undo_button = document.createElement("button");
 
