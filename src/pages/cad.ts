@@ -157,9 +157,13 @@ function getFangweite() {
 }
 //--------------------------------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------------------------------
 export function two_cad_update() { two.update(); }
+//--------------------------------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------------------------------
 export function redraw_stab(obj: TCAD_Stab) {
+   //-----------------------------------------------------------------------------------------------------
 
    let group = obj.getTwoObj();
    two.remove(group);
@@ -812,9 +816,32 @@ function mousemove(ev: MouseEvent) {
       }
 
       if (input_started === 1) {
-         rubberband = two.makeLine(start_x, start_y, ev.offsetX, ev.offsetY);
-         rubberband.linewidth = 1; /// devicePixelRatio;
-         rubberband.dashes = [2, 2];
+         rubberband = new Two.Group();
+         let band = new Two.Line(start_x, start_y, xo, yo);
+         band.linewidth = 1; /// devicePixelRatio;
+         band.dashes = [2, 2];
+         rubberband.add(band);
+
+         let dx = xo - start_x
+         let dy = yo - start_y
+         let sl = Math.sqrt(dx * dx + dy * dy)
+
+         let sinus = dy / sl;
+         let cosinus = dx / sl;
+         let alpha = Math.atan2(dy, dx)
+
+         let xm = (xo + start_x) / 2. + (sinus * 11 + cosinus * 1) // devicePixelRatio  war 17
+         let zm = (yo + start_y) / 2. - (cosinus * 11 - sinus * 1) // devicePixelRatio
+
+         let str = 'L=' + myFormat(tr.World0(sl), 2, 2)+'m'
+         const txt1 = two.makeText(str, xm, zm, style_txt)
+         txt1.fill = '#000000'
+         txt1.alignment = 'center'
+         txt1.baseline = 'middle'
+         txt1.rotation = alpha
+         rubberband.add(txt1);
+
+         two.add(rubberband);
 
          rubberband_drawn = true;
       }
