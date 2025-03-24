@@ -17,7 +17,7 @@ import "../components/dr-dialog_elementlasten";
 import { TLoads, TNode } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knotenlast, draw_lager } from "./cad_draw_elemente";
-import { TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCADElement, TCADElLast } from "./CCAD_element";
+import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCADElement, TCADElLast } from "./CCAD_element";
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 import { change_def_querschnitt } from "./querschnitte";
 
@@ -28,6 +28,12 @@ export let picked_obj: TCADElement;
 let mode_elementlast_aendern = false;
 let index_ellast = -1
 let obj_ellast: any
+
+let mode_knotenlast_aendern = false;
+let obj_knlast: any
+
+let mode_knotenlager_aendern = false;
+let obj_knlager: any
 
 class Cbuttons_control {
   pick_element = false;
@@ -470,7 +476,6 @@ export function select_element(xc: number, zc: number) {
   let index_lager = -1
   let knotenlast_gefunden = false
   let elementlast_gefunden = false
-  let index_knlast = -1
 
 
   let xpix = tr.xPix(xc)
@@ -520,6 +525,7 @@ export function select_element(xc: number, zc: number) {
         if (zpix > rect.top && zpix < rect.bottom) {
           lager_gefunden = true
           index_lager = i;
+          obj_knlager = obj
         }
       }
     }
@@ -530,7 +536,8 @@ export function select_element(xc: number, zc: number) {
       if (xpix > rect.left && xpix < rect.right) {
         if (zpix > rect.top && zpix < rect.bottom) {
           knotenlast_gefunden = true
-          index_knlast = i;
+          //index_knlast = i;
+          obj_knlast = obj
         }
       }
     }
@@ -557,19 +564,34 @@ export function select_element(xc: number, zc: number) {
     showDialog_elementlast()
   }
   else if (lager_gefunden) {
+    console.log("Knotenlager gefunden")
     gefunden = true
-    let obj = list.getAt(index_lager);
-    picked_obj = obj
-    // two.remove(obj.two_obj);
-    // two.update();
-    // undoList.append(obj);
+    picked_obj = obj_knlager
+    mode_knotenlager_aendern = true;
+
+    let node = (obj_knlager as TCAD_Lager).node
+    //console.log("Lager node", node)
+    write_lager_dialog(node)
+    //   const el = document.getElementById("id_dialog_lager");
+    // console.log("id_dialog_lager", el);
+
+    // (el?.shadowRoot?.getElementById("dialog_lager") as HTMLDialogElement).n
+    showDialog_lager()
+
     buttons_control.reset();
   }
   else if (knotenlast_gefunden) {
     gefunden = true
+    console.log("Knotenlast gefunden")
 
-    let obj = list.getAt(index_knlast);
-    picked_obj = obj
+    // let knlast = new TLoads();
+    // let lf = (obj_knlast as TCAD_Knotenlast).knlast
+
+    write_knotenlast_dialog((obj_knlast as TCAD_Knotenlast).knlast)
+    showDialog_knotenlast()
+
+    picked_obj = obj_knlast
+    mode_knotenlast_aendern = true
     // two.remove(obj.two_obj);
     // two.update();
     // undoList.append(obj);
@@ -577,7 +599,6 @@ export function select_element(xc: number, zc: number) {
   }
   else if (index >= 0 && min_abstand < 0.25) {
     if (list.size > 0) {
-      gefunden = true
 
       //console.log("two.obj", obj)
       let obj = list.getAt(index);
@@ -593,16 +614,23 @@ export function select_element(xc: number, zc: number) {
       buttons_control.reset();
       gefunden = true
       picked_obj = obj;
+
+      let divi = document.getElementById("id_context_menu");
+
+      divi!.style.left = xpix + 'px';
+      divi!.style.top = zpix + 'px';
+      divi!.style.display = 'block';
+
     }
   }
 
-  if (gefunden) {
-    let divi = document.getElementById("id_context_menu");
+  // if (gefunden) {
+  //   let divi = document.getElementById("id_context_menu");
 
-    divi!.style.left = xpix + 'px';
-    divi!.style.top = zpix + 'px';
-    divi!.style.display = 'block';
-  }
+  //   divi!.style.left = xpix + 'px';
+  //   divi!.style.top = zpix + 'px';
+  //   divi!.style.display = 'block';
+  // }
 
 }
 
@@ -727,7 +755,9 @@ function dialog_lager_closed(this: any, e: any) {
 
   if (returnValue === "ok") {
     //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
-    console.log("sieht gut aus");
+    console.log("sieht gut aus", mode_knotenlager_aendern);
+    if (mode_knotenlager_aendern) update_knotenlager();
+
   } else {
     // Abbruch
     lager_eingabe_beenden();
@@ -756,8 +786,44 @@ export function read_lager_dialog(node: TNode) {
   const lphi = elem.checked;
   if (lphi) node.L_org[2] = 1;
   else node.L_org[2] = 0;
+
+  let elemi = el?.shadowRoot?.getElementById("id_alpha") as HTMLInputElement;
+  node.phi=+elemi.value
 }
 
+
+//---------------------------------------------------------------------------------------------------------------
+export function write_lager_dialog(node: TNode) {
+  //-----------------------------------------------------------------------------------------------------------
+
+  const el = document.getElementById("id_dialog_lager") as HTMLDialogElement;
+
+  console.log("write_lager_dialog, node.L_org=", node.L_org);
+
+  let elem = el?.shadowRoot?.getElementById("id_Lx") as SlCheckbox;
+  if (node.L_org[0] === 1) {
+    elem.checked = true
+  } else {
+    elem.checked = false
+  }
+
+  elem = el?.shadowRoot?.getElementById("id_Lz") as SlCheckbox;
+  if (node.L_org[1] === 1) {
+    elem.checked = true
+  } else {
+    elem.checked = false
+  }
+
+  elem = el?.shadowRoot?.getElementById("id_Lphi") as SlCheckbox;
+  if (node.L_org[2] === 1) {
+    elem.checked = true
+  } else {
+    elem.checked = false
+  }
+
+  let elemi = el?.shadowRoot?.getElementById("id_alpha") as HTMLInputElement;
+  elemi.value=String(node.phi)
+}
 
 export function showDialog_knoten() {
   //------------------------------------------------------------------------------------------------------------
@@ -896,6 +962,7 @@ function dialog_knotenlast_closed(this: any, e: any) {
   if (returnValue === "ok") {
     //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
     console.log("sieht gut aus");
+    if (mode_knotenlast_aendern) update_knotenlast();
   } else {
     // Abbruch
     (ele?.shadowRoot?.getElementById("dialog_knotenlast") as HTMLDialogElement).removeEventListener("close", dialog_knotenlast_closed);
@@ -928,6 +995,28 @@ export function read_knotenlast_dialog(knlast: TLoads) {
 
 }
 
+
+//---------------------------------------------------------------------------------------------------------------
+export function write_knotenlast_dialog(knlast: TLoads) {
+  //-----------------------------------------------------------------------------------------------------------
+
+  const el = document.getElementById("id_dialog_knotenlast") as HTMLDialogElement;
+
+  //console.log("read_knotenlast_dialog, el=", el);
+  let elem = el?.shadowRoot?.getElementById("id_lf") as HTMLInputElement;
+  //console.log("lf=", elem.value);
+  elem.value = String(knlast.lf)
+
+  elem = el?.shadowRoot?.getElementById("id_px") as HTMLInputElement;
+  elem.value = String(knlast.Px)
+
+  elem = el?.shadowRoot?.getElementById("id_pz") as HTMLInputElement;
+  elem.value = String(knlast.Pz)
+
+  elem = el?.shadowRoot?.getElementById("id_my") as HTMLInputElement;
+  elem.value = String(knlast.p[2])
+
+}
 
 //--------------------------------------------------------------------------------------------------------
 export function Elementlast_button(_ev: Event) {
@@ -1038,5 +1127,53 @@ function update_elementlast() {
 
   buttons_control.reset();
 
+
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function update_knotenlast() {
+  //-------------------------------------------------------------------------------------------------------------
+
+  mode_elementlast_aendern = false
+
+  //const ele = document.getElementById("id_dialog_knotenlast") as drDialogElementlasten;
+
+  let knlast = new TLoads();
+  read_knotenlast_dialog(knlast)
+  obj_knlast.knlast = knlast
+
+  let group = obj_knlast.getTwoObj();
+  two.remove(group)
+  group = draw_knotenlast(two, tr, knlast, obj_knlast.x1, obj_knlast.z1, 1, 0);
+  two.add(group);
+
+  obj_knlast.setTwoObj(group);
+  two.update();
+
+  buttons_control.reset();
+
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function update_knotenlager() {
+  //-------------------------------------------------------------------------------------------------------------
+
+  mode_knotenlager_aendern = false
+
+  //const ele = document.getElementById("id_dialog_lager") as drDialogElementlasten;
+
+  read_lager_dialog((obj_knlager as TCAD_Lager).node)
+
+  console.log("update_knotenlager",(obj_knlager as TCAD_Lager).node)
+  let group = obj_knlager.getTwoObj();
+  two.remove(group)
+  group = draw_lager(two, tr, (obj_knlager as TCAD_Lager).node)
+  two.add(group);
+
+  obj_knlager.setTwoObj(group);
+  two.update();
+
+  buttons_control.reset();
 
 }

@@ -97,7 +97,7 @@ export function cad_rechnen() {
             let obj = list.getAt(i) as TCAD_Lager;
             if (obj.elTyp === CAD_LAGER) {
                 let index = obj.index1;
-                console.log("CAD-LAger ", index)
+                console.log("CAD-Lager ", index)
                 if (index > -1) {
                     let ind = CADNodes[index].index_FE
                     console.log("ind", ind)
@@ -109,6 +109,9 @@ export function cad_rechnen() {
                             node[ind].L_org[j] = node[ind].L[j] = 1
                         }
                     }
+                    let child = tabelle.rows[ind + 1].cells[6].firstElementChild as HTMLInputElement;
+                    child.value = String(obj.node.phi)
+                    node[ind].phi = obj.node.phi
                 } else {
                     alertdialog("ok", "Lager " + (+i + 1) + "hängt an keinem Knoten, FATAL ERROR");
                 }

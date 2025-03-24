@@ -134,7 +134,7 @@ export class drDialogKnotenlast extends LitElement {
 
       <p>
         Lastfall:
-        <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="" />
+        <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="1" />
       </p>
       <p>
         Px:

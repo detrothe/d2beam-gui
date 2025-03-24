@@ -130,7 +130,7 @@ export class drDialogElementlasten extends LitElement {
 
       <p>
         Lastfall:
-        <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="" />
+        <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="1" />
       </p>
 
       <sl-radio-group id="id_typ" label="Wähle eine Option" name="a" value="0" @sl-change="${this._handleChange}">
