@@ -992,8 +992,8 @@ function mouseup(ev: any) {
                      start_x_wc = xRasterPoint;
                      start_z_wc = zRasterPoint;
                   } else {
-                     start_x = ev.offsetX;
-                     start_y = ev.offsetY;
+                     start_x = xo;
+                     start_y = yo;
                      start_x_wc = xc;
                      start_z_wc = zc;
                   }
@@ -1131,8 +1131,8 @@ function mouseup(ev: any) {
                } else {
                   end_x = xo;
                   end_y = yo;
-                  end_x_wc = tr.xWorld(ev.offsetX);
-                  end_z_wc = tr.zWorld(ev.offsetY);
+                  end_x_wc = tr.xWorld(xo);
+                  end_z_wc = tr.zWorld(yo);
                }
 
                // if (foundRasterPoint) {

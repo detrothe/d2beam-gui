@@ -174,7 +174,12 @@ export function cad_rechnen() {
                     element[ielem].alpha = Math.atan2(dz, dx)
                 }
 
-                for (let i = 0; i < 6; i++) element[ielem].gelenk[i] = obj.gelenk[i]
+                for (let i = 0; i < 6; i++) element[ielem].gelenk[i] = obj.gelenk[i];
+                element[ielem].nGelenke = obj.nGelenke;
+
+                element[ielem].aL = obj.aL
+                element[ielem].aR = obj.aR
+                element[ielem].k_0 = obj.k_0
 
                 ielem++
 
@@ -193,6 +198,12 @@ export function cad_rechnen() {
                         child.value = '1'
                     }
                 }
+                child = tabelle.rows[ielem].cells[11].firstElementChild as HTMLInputElement;
+                child.value = String(obj.aL)
+                child = tabelle.rows[ielem].cells[12].firstElementChild as HTMLInputElement;
+                child.value = String(obj.aR)
+                child = tabelle.rows[ielem].cells[13].firstElementChild as HTMLInputElement;
+                child.value = String(obj.k_0)
 
             }
         }

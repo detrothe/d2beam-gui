@@ -150,7 +150,7 @@ export function cad_buttons() {
 
   knoten_button.value = "Knoten";
   knoten_button.className = "btn";
-  knoten_button.innerHTML = "Knoten";
+  knoten_button.innerHTML = '<i class = "fa fa-square"></i>';
   knoten_button.addEventListener("click", Knoten_button);
   // stab_button.addEventListener('keydown', keydown);
   knoten_button.title = "Eingabe Knoten";
@@ -198,6 +198,17 @@ export function cad_buttons() {
   ellast_button.title = "Eingabe Elementlasten";
   ellast_button.id = "id_cad_elementlast_button";
 
+
+  const cog_button = document.createElement("button");
+
+  cog_button.value = "Einstellungen";
+  cog_button.className = "btn";
+  cog_button.innerHTML = '<i class = "fa fa-cog"></i>';
+  cog_button.addEventListener("click", Knoten_button);
+  // stab_button.addEventListener('keydown', keydown);
+  cog_button.title = "Einstellungen";
+  cog_button.id = "id_cad_cog_button";
+
   div.appendChild(undo_button);
   div.appendChild(redo_button);
   div.appendChild(trash_button);
@@ -207,6 +218,7 @@ export function cad_buttons() {
   div.appendChild(lager_button);
   div.appendChild(knotlast_button);
   div.appendChild(ellast_button);
+  div.appendChild(cog_button);
   let br = document.createElement("br");
   div.appendChild(br);
   div.appendChild(zurueck_button);

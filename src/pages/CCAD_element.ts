@@ -45,11 +45,13 @@ export class TCAD_Stab extends TCADElement {
     name_querschnitt = ''
     nGelenke = 0
     gelenk = Array(6).fill(0)
-    aL = 0.0
-    aR = 0.0
     sinus = 0.0
     cosinus = 1.0
     alpha = 0.0
+
+    aL = 0.0                             // starres Stabende limks (Stabanfang)
+    aR = 0.0                             // starres Stabende rechts
+    k_0 = 0.0                            // Bettungsmodul nach Winkler
 
     elast = [] as TCADElLast[];
     //nStreckenlasten = 0
@@ -69,6 +71,11 @@ export class TCAD_Stab extends TCADElement {
     }
 
     //―――――――――――――――――――――――――――――――――――――――――――――
+    get_name_querschnitt() {
+        return this.name_querschnitt
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
     set_gelenke(gelenk: boolean[]) {
 
         this.nGelenke = 0
@@ -80,6 +87,49 @@ export class TCAD_Stab extends TCADElement {
             else this.gelenk[i] = 0;
         }
 
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    get_gelenke() {
+
+        let gelenk: boolean[] = Array(6)
+
+        for (let i = 0; i < 6; i++) {
+            if (this.gelenk[i] === 1) gelenk[i] = true;
+            else gelenk[i] = false;
+        }
+
+        return gelenk;
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    set_starrA(wert:number) {
+        this.aL = wert;
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    get_starrA() {
+        return this.aL;
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    set_starrE(wert:number) {
+        this.aR = wert;
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    get_starrE() {
+        return this.aR;
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    set_bettung(wert:number) {
+        this.k_0 = wert;
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    get_bettung() {
+        return this.k_0;
     }
 
     //―――――――――――――――――――――――――――――――――――――――――――――

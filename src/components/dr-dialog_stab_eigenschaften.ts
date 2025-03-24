@@ -269,7 +269,7 @@ export class drDialogStabEigenschaften extends LitElement {
   }
 
   //---------------------------------------------------------------------------------------------------------------
-  getValueStarrA() {
+  getStarrA() {
     //-------------------------------------------------------------------------------------------------------------
 
     const shadow = this.shadowRoot;
@@ -277,11 +277,40 @@ export class drDialogStabEigenschaften extends LitElement {
     let wert = Number((shadow?.getElementById("id_a") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
-  getValueZ() {
+
+  getStarrE() {
     const shadow = this.shadowRoot;
-    console.log("id_z", (shadow?.getElementById("id_z") as HTMLInputElement).value);
-    let wert = Number((shadow?.getElementById("id_z") as HTMLInputElement).value.replace(/,/g, "."));
+    console.log("id_e", (shadow?.getElementById("id_e") as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById("id_e") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
+  }
+
+  //---------------------------------------------------------------------------------------------------------------
+  setStarrA(wert: number) {
+    //-------------------------------------------------------------------------------------------------------------
+    (this.shadowRoot?.getElementById("id_a") as HTMLInputElement).value = String(wert);
+  }
+
+  //---------------------------------------------------------------------------------------------------------------
+  setStarrE(wert: number) {
+    //-------------------------------------------------------------------------------------------------------------
+    (this.shadowRoot?.getElementById("id_e") as HTMLInputElement).value = String(wert);
+  }
+
+  //---------------------------------------------------------------------------------------------------------------
+  getBettung() {
+    //-------------------------------------------------------------------------------------------------------------
+
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_kb") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+
+
+  //---------------------------------------------------------------------------------------------------------------
+  setBettung(wert: number) {
+    //-------------------------------------------------------------------------------------------------------------
+    (this.shadowRoot?.getElementById("id_kb") as HTMLInputElement).value = String(wert);
   }
 
   //---------------------------------------------------------------------------------------------------------------
@@ -366,7 +395,7 @@ export class drDialogStabEigenschaften extends LitElement {
   getGelenke() {
     //-------------------------------------------------------------------------------------------------------------
 
-    let gelenke:boolean[] = Array(6)
+    let gelenke: boolean[] = Array(6)
 
     const shadow = this.shadowRoot;
     let el = shadow?.getElementById("id_Na") as SlCheckbox;
@@ -384,5 +413,27 @@ export class drDialogStabEigenschaften extends LitElement {
 
     //console.log("id_na", el.checked)
     return gelenke;
+  }
+
+
+  //---------------------------------------------------------------------------------------------------------------
+  setGelenke(gelenke: boolean[]) {
+    //-------------------------------------------------------------------------------------------------------------
+
+
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById("id_Na") as SlCheckbox;
+    el.checked = gelenke[0];
+    el = shadow?.getElementById("id_Va") as SlCheckbox;
+    el.checked = gelenke[1];
+    el = shadow?.getElementById("id_Ma") as SlCheckbox;
+    el.checked = gelenke[2];
+    el = shadow?.getElementById("id_Ne") as SlCheckbox;
+    el.checked = gelenke[3];
+    el = shadow?.getElementById("id_Ve") as SlCheckbox;
+    el.checked = gelenke[4];
+    el = shadow?.getElementById("id_Me") as SlCheckbox;
+    el.checked = gelenke[5];
+
   }
 }

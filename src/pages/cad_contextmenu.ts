@@ -13,12 +13,12 @@ export function abbruch_property_dialog() {
     let divi = document.getElementById("id_context_menu");
     divi!.style.display = 'none';
 
-   // stab unselektiert neu zeichnen
-   if (selected_element.group) {
-    console.log("selected_element.group",selected_element.group)
-    two.remove(selected_element.group);
-//    two.update();
-}
+    // stab unselektiert neu zeichnen
+    if (selected_element.group) {
+        console.log("selected_element.group", selected_element.group)
+        two.remove(selected_element.group);
+        //    two.update();
+    }
     // let group = picked_obj.getTwoObj();
     // console.log("group picked_obj",group)
     // two.remove(group);
@@ -53,7 +53,14 @@ export function show_property_dialog() {
 
     el.setQuerschnittNames(names);
     //el.selectOption(1)
-    el.selectOptionByName(default_querschnitt)
+    el.selectOptionByName((picked_obj as TCAD_Stab).get_name_querschnitt());
+    let gelenke: boolean[] = Array(6)
+    gelenke = (picked_obj as TCAD_Stab).get_gelenke()
+    el.setGelenke(gelenke);
+
+    el.setStarrA((picked_obj as TCAD_Stab).get_starrA())
+    el.setStarrE((picked_obj as TCAD_Stab).get_starrE())
+    el.setBettung((picked_obj as TCAD_Stab).get_bettung())
 
     console.log("shadow", el?.shadowRoot?.getElementById("dialog_stabeigenschaften")),
         (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).addEventListener("close", dialog_stab_eigenschaften_closed);
@@ -95,7 +102,11 @@ function dialog_stab_eigenschaften_closed(this: any, e: any) {
         let gelenke = Array(6)
         gelenke = el.getGelenke();
         // Element neu zeichnen
-        (picked_obj as TCAD_Stab).set_gelenke(gelenke)
+        (picked_obj as TCAD_Stab).set_gelenke(gelenke);
+
+        (picked_obj as TCAD_Stab).set_starrA(el.getStarrA());
+        (picked_obj as TCAD_Stab).set_starrE(el.getStarrE());
+        (picked_obj as TCAD_Stab).set_bettung(el.getBettung());
 
     } else {
         // Abbruch
@@ -103,9 +114,13 @@ function dialog_stab_eigenschaften_closed(this: any, e: any) {
         buttons_control.reset();
         //el.removeEventListener('keydown', keydown);
     }
+    if (selected_element.group) {
+        two.remove(selected_element.group);
+    }
+
     // stab unselektiert neu zeichnen
     let group = picked_obj.getTwoObj();
-    console.log("two.remove group",two.remove(group));
+    console.log("two.remove group", two.remove(group));
 
     group = drawStab(picked_obj as TCAD_Stab, tr);
     two.add(group)
