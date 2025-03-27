@@ -26,7 +26,7 @@ import { change_def_querschnitt } from "./querschnitte";
 import { drDialogKnoten } from "../components/dr-dialog_knoten";
 import { CTrans } from "./trans";
 import Two from "two.js";
-import { CADNodes, get_cad_node_X, get_cad_node_Z, remove_element_nodes } from "./cad_node";
+import { add_element_nodes, CADNodes, get_cad_node_X, get_cad_node_Z, remove_element_nodes } from "./cad_node";
 
 //export let pick_element = false
 
@@ -242,11 +242,11 @@ export function cad_buttons() {
   div.appendChild(querschnitt_default_select);
 
   //let div_cad_group = document.getElementById("id_cad_group") as HTMLDivElement
-  undo_button!.addEventListener("focus", (event) => {
+  undo_button!.addEventListener("focus", (_event) => {
     // @ts-ignore
-    console.log("focus", event)
+    //console.log("focus", event)
     let hoehe = undo_button!.getBoundingClientRect()
-    console.log("hoehe div undo_button", hoehe)
+    //console.log("hoehe div undo_button", hoehe)
   });
 
   // let hoehe = div.getBoundingClientRect().height
@@ -259,17 +259,20 @@ export function cad_buttons() {
 //--------------------------------------------------------------------------------------------------------
 export function unDo_button() {
   //----------------------------------------------------------------------------------------------------
+  console.log("unDo", list.size)
 
   if (list.size > 0) {
-    let obj = list.getTail().two_obj;
-    console.log("two.obj", obj);
+    let obj = list.getTail();
+    console.log("obj eltyp", obj.elTyp);
 
     if ((obj as TCAD_Element).elTyp === CAD_STAB) {
       remove_element_nodes((obj as TCAD_Stab).index1)
       remove_element_nodes((obj as TCAD_Stab).index2)
-    } else if ((obj as TCAD_Element).elTyp === CAD_LAGER) {
+    }
+    else if ((obj as TCAD_Element).elTyp === CAD_LAGER) {
       remove_element_nodes((obj as TCAD_Lager).index1)
-    } else if ((obj as TCAD_Element).elTyp === CAD_KNLAST) {
+    }
+    else if ((obj as TCAD_Element).elTyp === CAD_KNLAST) {
       remove_element_nodes((obj as TCAD_Knotenlast).index1)
     }
     else if ((obj as TCAD_Element).elTyp === CAD_KNOTEN) {
@@ -280,7 +283,7 @@ export function unDo_button() {
       }
     }
 
-    two.remove(obj);
+    two.remove(obj.two_obj);
     two.update();
 
     obj = list.removeTail();
@@ -292,10 +295,11 @@ export function unDo_button() {
 //--------------------------------------------------------------------------------------------------------
 export function reDo_button() {
   //----------------------------------------------------------------------------------------------------
+  console.log("reDo", undoList.size)
 
   if (undoList.size > 0) {
     let obj = undoList.removeTail();
-    console.log("redo", obj);
+    //console.log("redo", obj);
 
     let group: any
 
@@ -308,14 +312,18 @@ export function reDo_button() {
       group = drawStab(obj.obj_element, tr);
       two.add(group);
       obj.obj_element.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
-    } else {
+    }
+    else {
       if (obj.elTyp === CAD_STAB) {
         group = drawStab(obj, tr);
         two.add(group);
+        add_element_nodes(obj.index1);
+        add_element_nodes(obj.index2);
       }
       else if (obj.elTyp === CAD_LAGER) {
 
         group = draw_lager(two, tr, obj)
+        add_element_nodes(obj.index1);
       }
       else if (obj.elTyp === CAD_KNLAST) {
         let load = new TLoads();
@@ -323,9 +331,10 @@ export function reDo_button() {
         let index1 = obj.index1
         group = draw_knotenlast(tr, load, get_cad_node_X(index1), get_cad_node_Z(index1), 1.0, 0)
         two.add(group);
+        add_element_nodes(obj.index1);
       }
       else if (obj.elTyp === CAD_KNOTEN) {
-        console.log("KNOTEN ewDo", obj.x1, obj.z1)
+        //console.log("KNOTEN reDo", obj.x1, obj.z1)
 
         group = draw_knoten(obj, tr)
         two.add(group);
@@ -482,6 +491,7 @@ export function delete_element(xc: number, zc: number) {
     let obj = list.removeAt(index_lager);
     two.remove(obj.two_obj);
     two.update();
+    remove_element_nodes((obj as TCAD_Lager).index1)
     undoList.append(obj);
     buttons_control.reset();
   }
@@ -502,16 +512,18 @@ export function delete_element(xc: number, zc: number) {
     let obj = list.removeAt(index_knlast);
     two.remove(obj.two_obj);
     two.update();
+    remove_element_nodes((obj as TCAD_Knotenlast).index1)
     undoList.append(obj);
     buttons_control.reset();
   }
-  else if (index >= 0 && min_abstand < 0.25) {
+  else if (index >= 0 && min_abstand < 0.25) {          // Stab
     if (list.size > 0) {
       let obj = list.removeAt(index);
-      //console.log("two.obj", obj)
       two.remove(obj.two_obj);
-
       two.update();
+
+      remove_element_nodes((obj as TCAD_Stab).index1)
+      remove_element_nodes((obj as TCAD_Stab).index2)
 
       undoList.append(obj);
       buttons_control.reset();
@@ -860,9 +872,9 @@ export function read_lager_dialog(node: TNode) {
 
   const el = document.getElementById("id_dialog_lager") as HTMLDialogElement;
 
-  console.log("read_lager_dialog, el=", el);
+  //console.log("read_lager_dialog, el=", el);
   let elem = el?.shadowRoot?.getElementById("id_Lx") as SlCheckbox;
-  console.log("Lx=", elem.checked, elem.value);
+  //console.log("Lx=", elem.checked, elem.value);
   const lx = elem.checked;
   if (lx) node.L_org[0] = 1;
   else node.L_org[0] = 0;

@@ -88,12 +88,14 @@ export function get_cad_node_Z(index: number) {
 export function add_element_nodes(index: number): void {
     //--------------------------------------------------------------------------------------------
     CADNodes[index].nel++;
+    console.log("add_element_nodes", index, CADNodes[index].nel)
 }
 
 //------------------------------------------------------------------------------------------------
 export function remove_element_nodes(index: number): void {
     //--------------------------------------------------------------------------------------------
     CADNodes[index].nel--;
+    console.log("remove_element_nodes", index, CADNodes[index].nel)
 }
 
 //------------------------------------------------------------------------------------------------
