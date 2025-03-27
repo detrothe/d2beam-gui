@@ -1,11 +1,12 @@
 import { TLoads, TNode } from "./rechnen";
 
 //―――――――――――――――――――――――――――――――――――――――――――――
-export class TCADElement {
+export class TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――
 
     two_obj: any;
     qname: string = '';
+    className = 'TCAD_Element';
     isActive = true;
     isSelected = false;
 
@@ -36,7 +37,7 @@ export class TCADElement {
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――
-export class TCAD_Stab extends TCADElement {
+export class TCAD_Stab extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――
     elNo = -1
     x2: number = 0.0;
@@ -53,7 +54,7 @@ export class TCAD_Stab extends TCADElement {
     aR = 0.0                             // starres Stabende rechts
     k_0 = 0.0                            // Bettungsmodul nach Winkler
 
-    elast = [] as TCADElLast[];
+    elast = [] as TCAD_ElLast[];
     //nStreckenlasten = 0
 
     constructor(obj: any, x1: number, z1: number, x2: number, z2: number, index1: number, index2: number, qname: string, elTyp: number) {
@@ -103,7 +104,7 @@ export class TCAD_Stab extends TCADElement {
     }
 
     //―――――――――――――――――――――――――――――――――――――――――――――
-    set_starrA(wert:number) {
+    set_starrA(wert: number) {
         this.aL = wert;
     }
 
@@ -113,7 +114,7 @@ export class TCAD_Stab extends TCADElement {
     }
 
     //―――――――――――――――――――――――――――――――――――――――――――――
-    set_starrE(wert:number) {
+    set_starrE(wert: number) {
         this.aR = wert;
     }
 
@@ -123,7 +124,7 @@ export class TCAD_Stab extends TCADElement {
     }
 
     //―――――――――――――――――――――――――――――――――――――――――――――
-    set_bettung(wert:number) {
+    set_bettung(wert: number) {
         this.k_0 = wert;
     }
 
@@ -148,7 +149,7 @@ export class TCAD_Stab extends TCADElement {
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――
-export class TCAD_Lager extends TCADElement {
+export class TCAD_Lager extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――
 
     // L_org = [0, 0, 0]                               // Lagerbedingung  bei Eingabe unverändert
@@ -166,7 +167,7 @@ export class TCAD_Lager extends TCADElement {
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――
-export class TCAD_Knotenlast extends TCADElement {
+export class TCAD_Knotenlast extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――
 
     knlast: TLoads;
@@ -180,18 +181,19 @@ export class TCAD_Knotenlast extends TCADElement {
 
 
 //―――――――――――――――――――――――――――――――――――――――――――――
-export class TCAD_Knoten extends TCADElement {
+export class TCAD_Knoten extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――
 
 
     constructor(obj: any, x1: number, z1: number, index1: number, elTyp: number) {
         super(obj, x1, z1, index1, elTyp);
+        this.className = 'TCAD_Knoten'
 
     }
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――
-export class TCADElLast {
+export class TCAD_ElLast {
     //―――――――――――――――――――――――――――――――――――――――――
 
     lastfall = 1
@@ -223,7 +225,7 @@ export class TCADElLast {
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――
-export class TCAD_Streckenlast extends TCADElLast {
+export class TCAD_Streckenlast extends TCAD_ElLast {
     //―――――――――――――――――――――――――――――――――――――――――
 
     art = 0  // 0=senkrecht auf Stab, 1=
@@ -241,7 +243,7 @@ export class TCAD_Streckenlast extends TCADElLast {
 
 
 //―――――――――――――――――――――――――――――――――――――――――――――
-export class TCAD_Temperaturlast extends TCADElLast {
+export class TCAD_Temperaturlast extends TCAD_ElLast {
     //―――――――――――――――――――――――――――――――――――――――――
 
 

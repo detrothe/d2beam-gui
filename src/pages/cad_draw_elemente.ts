@@ -4,9 +4,10 @@ import { System, STABWERK, TNode, TLoads, alertdialog } from './rechnen'
 
 import { CTrans } from './trans';
 import { myFormat } from './utility';
-import { TCAD_Stab } from './CCAD_element';
+import { TCAD_Knoten, TCAD_Stab } from './CCAD_element';
 import { draw_elementlasten } from './cad_draw_elementlasten';
 import { two } from './cad';
+import { get_cad_node_X, get_cad_node_Z } from './cad_node';
 
 
 
@@ -49,8 +50,13 @@ const style_txt = {
 export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     //-------------------------------------------------------------------------------------------------------
 
-    let x1 = obj.x1, z1 = obj.z1, x2 = obj.x2, z2 = obj.z2
+    let x1 = get_cad_node_X(obj.index1)
+    let z1 = get_cad_node_Z(obj.index1)
+    let x2 = get_cad_node_X(obj.index2)
+    let z2 = get_cad_node_Z(obj.index2)
+
     let group = new Two.Group();
+
     let line1 = new Two.Line(tr.xPix(x1), tr.zPix(z1), tr.xPix(x2), tr.zPix(z2));
     line1.linewidth = 7 / devicePixelRatio;
     if (select) line1.stroke = '#ffd700'
@@ -99,10 +105,10 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
         group.add(gr)
     }
 
-    if ( obj.elast.length > 0) {
-          let gr=draw_elementlasten(two,tr,obj)
-          group.add(gr)
-        }
+    if (obj.elast.length > 0) {
+        let gr = draw_elementlasten(two, tr, obj)
+        group.add(gr)
+    }
 
     return group;
 }
@@ -928,6 +934,28 @@ export function draw_stab_gelenke(obj: TCAD_Stab, tr: CTrans) {
         line3.stroke = '#000000';
         group.add(line3)
     }
+
+    return group;
+}
+
+
+
+//-------------------------------------------------------------------------------------------------------
+export function draw_knoten(obj: TCAD_Knoten, tr: CTrans) {
+    //---------------------------------------------------------------------------------------------------
+
+    let group = new Two.Group();
+
+    let makeRoundedRectangle = new Two.RoundedRectangle(
+        tr.xPix(obj.x1),
+        tr.zPix(obj.z1),
+        15 / devicePixelRatio,
+        15 / devicePixelRatio,
+        4
+    );
+    makeRoundedRectangle.fill = '#dd1100';
+
+    group.add(makeRoundedRectangle)
 
     return group;
 }

@@ -1,3 +1,4 @@
+import { SlButton } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
@@ -84,12 +85,11 @@ export class drDialogKnoten extends LitElement {
         border-spacing: 0px;
         padding: 5px;
         margin: 5px;
-        background-color: rgb(207, 217, 21);
-        border-radius: 5px;
+        /*background-color: rgb(207, 217, 21);
+        border-radius: 5px; */
       }
-
+      /*
       td.selected {
-        /*background-color: rgb(206, 196, 46);*/
         color: rgb(13, 13, 13);
       }
 
@@ -97,7 +97,7 @@ export class drDialogKnoten extends LitElement {
         background-color: orange;
         color: darkslateblue;
       }
-
+      */
       /* Festlegung im Default-Stylesheet der Browser */
       dialog:not([open]) {
         display: none;
@@ -105,7 +105,7 @@ export class drDialogKnoten extends LitElement {
 
       /* Styling der geöffneten Popup-Box */
       dialog[open] {
-        width: 16rem;
+        width: 26rem;
         background: #fffbf0;
         border: thin solid #e7c157;
         margin: 5rem auto;
@@ -125,11 +125,9 @@ export class drDialogKnoten extends LitElement {
 
   render() {
     return html` <dialog id="dialog_knoten">
-      <h2>Neuer Knoten</h2>
 
-      <br />
       <p>
-        <b>Koordinaten eines neuen Knotens</b>
+        <b>Knotenkoordinaten</b>
       </p>
 
       <p>
@@ -144,9 +142,21 @@ export class drDialogKnoten extends LitElement {
       </p>
 
       <form method="dialog">
-        <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button>
-        <!--     <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>  -->
-        <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button>
+              </td>
+              <td>
+                <sl-button id="ok" value="ok" @click="${this._dialog_ok}">ok</sl-button>
+              </td>
+              <td>
+                <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </form>
     </dialog>`;
   }
@@ -163,7 +173,7 @@ export class drDialogKnoten extends LitElement {
     console.log("dialog_ok");
     const shadow = this.shadowRoot;
     if (shadow) {
-      //(shadow.getElementById("dialog_knoten") as HTMLDialogElement).close("ok");
+      (shadow.getElementById("dialog_knoten") as HTMLDialogElement).close("ok");
     }
   }
 
@@ -175,14 +185,30 @@ export class drDialogKnoten extends LitElement {
 
   getValueX() {
     const shadow = this.shadowRoot;
-    console.log("id_x", (shadow?.getElementById("id_x") as HTMLInputElement).value)
-    let wert = Number((shadow?.getElementById("id_x") as HTMLInputElement).value.replace(/,/g, '.'))
-    return wert
+    console.log("id_x", (shadow?.getElementById("id_x") as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById("id_x") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
   }
   getValueZ() {
     const shadow = this.shadowRoot;
-    console.log("id_z", (shadow?.getElementById("id_z") as HTMLInputElement).value)
-    let wert = Number((shadow?.getElementById("id_z") as HTMLInputElement).value.replace(/,/g, '.'))
-    return wert
+    console.log("id_z", (shadow?.getElementById("id_z") as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById("id_z") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+
+  set_mode(mode: boolean) {
+    if (mode) {
+      // Änderung
+      let el = this.shadowRoot?.getElementById("Anwenden") as SlButton;
+      el.style.display = "none";
+      el.style.width = "5rem";
+      el = this.shadowRoot?.getElementById("ok") as SlButton;
+      el.style.display = "block";
+    } else {
+      let el = this.shadowRoot?.getElementById("Anwenden") as SlButton;
+      el.style.display = "block";
+      el = this.shadowRoot?.getElementById("ok") as SlButton;
+      el.style.display = "none";
+    }
   }
 }

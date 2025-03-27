@@ -3,7 +3,7 @@ import { drButtonPM } from "../components/dr-button-pm";
 import { CAD_KNLAST, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { CADNodes } from "./cad_node";
-import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCADElement, TCADElLast } from "./CCAD_element";
+import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast } from "./CCAD_element";
 import {
     alertdialog, element, eload, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, node,
     nstreckenlasten, ntemperaturlasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
@@ -340,7 +340,7 @@ export function cad_rechnen() {
                 if (obj.elast.length > 0) {
                     for (let j = 0; j < obj.elast.length; j++) {
 
-                        let lf = (obj.elast[j] as TCADElLast).lastfall
+                        let lf = (obj.elast[j] as TCAD_ElLast).lastfall
                         if (lf > nlastfaelle) {
                             fatal_error = true;
                             write('Stab ' + obj.elNo + ', Lastfall einer Elementlast ist größer als in Tab Kombinationen definiert: ' + lf + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
