@@ -4,7 +4,7 @@ import { System, STABWERK, TNode, TLoads, alertdialog } from './rechnen'
 
 import { CTrans } from './trans';
 import { myFormat } from './utility';
-import { TCAD_Knoten, TCAD_Stab } from './CCAD_element';
+import { TCAD_Knoten, TCAD_Lager, TCAD_Stab } from './CCAD_element';
 import { draw_elementlasten } from './cad_draw_elementlasten';
 import { two } from './cad';
 import { get_cad_node_X, get_cad_node_Z } from './cad_node';
@@ -106,7 +106,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     }
 
     if (obj.elast.length > 0) {
-        let gr = draw_elementlasten(two, tr, obj)
+        let gr = draw_elementlasten( tr, obj)
         group.add(gr)
     }
 
@@ -116,11 +116,15 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_lager(two: Two, tr: CTrans, node: TNode) {
+export function draw_lager( two:Two,tr: CTrans, obj:TCAD_Lager) {
     //----------------------------------------------------------------------------------------------------
 
-    let x1 = Math.round(tr.xPix(node.x));
-    let z1 = Math.round(tr.zPix(node.z));
+    let node = obj.node;
+
+    let index1 = obj.index1
+
+    let x1 = Math.round(tr.xPix(get_cad_node_X(index1)));
+    let z1 = Math.round(tr.zPix(get_cad_node_Z(index1)));
     let phi = -node.phi * Math.PI / 180
 
     let group: any
@@ -350,7 +354,7 @@ export function draw_lager(two: Two, tr: CTrans, node: TNode) {
 }
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_knotenlast(two: Two, tr: CTrans, load: TLoads, x: number, z: number, fact: number, lf_show: number) {
+export function draw_knotenlast( tr: CTrans, load: TLoads, x: number, z: number, fact: number, lf_show: number) {
     //----------------------------------------------------------------------------------------------------
 
     let slmax = 10
@@ -428,10 +432,10 @@ export function draw_knotenlast(two: Two, tr: CTrans, load: TLoads, x: number, z
 
         wert = load.Px * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(two, tr, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
+            let gr = draw_arrow(tr, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
             group.add(gr)
         } else {
-            let gr = draw_arrow(two, tr, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+            let gr = draw_arrow( tr, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
             group.add(gr)
         }
         xpix = tr.xPix(x + delta + plength) + 5
@@ -447,10 +451,10 @@ export function draw_knotenlast(two: Two, tr: CTrans, load: TLoads, x: number, z
 
         wert = load.Pz * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(two, tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
+            let gr = draw_arrow( tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
             group.add(gr)
         } else {
-            let gr = draw_arrow(two, tr, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
+            let gr = draw_arrow( tr, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
             group.add(gr)
         }
 
@@ -469,10 +473,10 @@ export function draw_knotenlast(two: Two, tr: CTrans, load: TLoads, x: number, z
         let radius = style_pfeil_moment.radius;
         //console.log("Moment ", +inode + 1, wert)
         if (wert > 0.0) {
-            let gr = draw_moment_arrow(two, tr, x, z, 1.0, slmax / 50, style_pfeil_moment)
+            let gr = draw_moment_arrow( tr, x, z, 1.0, slmax / 50, style_pfeil_moment)
             group.add(gr)
         } else {
-            let gr = draw_moment_arrow(two, tr, x, z, -1.0, slmax / 50, style_pfeil_moment)
+            let gr = draw_moment_arrow( tr, x, z, -1.0, slmax / 50, style_pfeil_moment)
             group.add(gr)
         }
 
@@ -492,7 +496,7 @@ export function draw_knotenlast(two: Two, tr: CTrans, load: TLoads, x: number, z
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_arrow(_two: Two, tr: CTrans, x1: number, z1: number, x2: number, z2: number, styles?: any) {
+export function draw_arrow( tr: CTrans, x1: number, z1: number, x2: number, z2: number, styles?: any) {
     //----------------------------------------------------------------------------------------------------
 
     let b = 20, h = 10, linewidth = 2, color = '#000000'
@@ -568,7 +572,7 @@ export function draw_arrow(_two: Two, tr: CTrans, x1: number, z1: number, x2: nu
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_moment_arrow(_two: Two, tr: CTrans, x0: number, z0: number, vorzeichen: number, radius: number, styles?: any) {
+export function draw_moment_arrow( tr: CTrans, x0: number, z0: number, vorzeichen: number, radius: number, styles?: any) {
     //----------------------------------------------------------------------------------------------------
     let b = 20, h = 10
     let x = 0.0, z = 0.0, linewidth = 2, color = '#000000'
@@ -694,10 +698,13 @@ export function draw_stab_gelenke(obj: TCAD_Stab, tr: CTrans) {
     si = obj.sinus
     co = obj.cosinus
 
-    x1 = Math.round(tr.xPix(obj.x1 + co * aL));
-    z1 = Math.round(tr.zPix(obj.z1 + si * aL));
-    x2 = Math.round(tr.xPix(obj.x2 - co * aR));
-    z2 = Math.round(tr.zPix(obj.z2 - si * aR));
+    let index1 = obj.index1
+    let index2 = obj.index2
+
+    x1 = Math.round(tr.xPix(get_cad_node_X(index1) + co * aL));
+    z1 = Math.round(tr.zPix(get_cad_node_Z(index1) + si * aL));
+    x2 = Math.round(tr.xPix(get_cad_node_X(index2) - co * aR));
+    z2 = Math.round(tr.zPix(get_cad_node_Z(index2) - si * aR));
 
     if (obj.gelenk[2] > 0) {                         // Momentengelenk links
         dx = co * distL; //(a + radius)

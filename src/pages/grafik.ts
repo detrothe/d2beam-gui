@@ -3410,7 +3410,6 @@ function draw_lagerkraefte(two: Two) {
             } else {
                 wert = lagerkraefte._(i, 0, draw_lastfall - 1)
             }
-            //console.log("draw_lagerkraefte wert", wert, draw_lastfall)
 
             if (wert >= 0.0) {
                 //                draw_arrow(two, x + delta + plength, z, x + delta, z, style_pfeil_lager)
@@ -3434,13 +3433,10 @@ function draw_lagerkraefte(two: Two) {
                     wert = lagerkraefte._(i, 1, draw_lastfall - 1)
                 } else if (draw_lastfall <= nlastfaelle + nkombinationen) {
                     wert = lagerkraefte_kombi._(i, 1, draw_lastfall - 1 - nlastfaelle)
-                    //console.log("draw_lagerkraefte wert kombi", wert, draw_lastfall - 1 - nlastfaelle)
                 }
             } else {
                 wert = lagerkraefte._(i, 1, draw_lastfall - 1)
             }
-            //wert = lagerkraefte._(i, 1, draw_lastfall - 1)
-            //console.log("draw_lagerkraefte wert", wert)
 
             if (wert >= 0.0) {
                 //                draw_arrow(two, x, z + delta + plength, x, z + delta, style_pfeil_lager)
@@ -3471,8 +3467,6 @@ function draw_lagerkraefte(two: Two) {
                 } else {
                     wert = lagerkraefte._(i, 2, draw_lastfall - 1)
                 }
-                // wert = lagerkraefte._(i, 2, draw_lastfall - 1)
-                //console.log("draw_lagerkraefte wert", wert)
 
                 let vorzeichen = Math.sign(wert)
                 let radius = style_pfeil_lager.radius;

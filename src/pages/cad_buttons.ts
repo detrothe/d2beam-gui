@@ -3,7 +3,9 @@ import {
   list, undoList, Stab_button, Lager_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST,
   keydown, CAD_STAB, CAD_LAGER, selected_element, CAD_ELLAST,
   click_zurueck_cad,
-  redraw_stab
+  redraw_stab,
+  redraw_knotenlast,
+  redraw_lager
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -24,7 +26,7 @@ import { change_def_querschnitt } from "./querschnitte";
 import { drDialogKnoten } from "../components/dr-dialog_knoten";
 import { CTrans } from "./trans";
 import Two from "two.js";
-import { CADNodes, remove_element_nodes } from "./cad_node";
+import { CADNodes, get_cad_node_X, get_cad_node_Z, remove_element_nodes } from "./cad_node";
 
 //export let pick_element = false
 
@@ -265,6 +267,10 @@ export function unDo_button() {
     if ((obj as TCAD_Element).elTyp === CAD_STAB) {
       remove_element_nodes((obj as TCAD_Stab).index1)
       remove_element_nodes((obj as TCAD_Stab).index2)
+    } else if ((obj as TCAD_Element).elTyp === CAD_LAGER) {
+      remove_element_nodes((obj as TCAD_Lager).index1)
+    } else if ((obj as TCAD_Element).elTyp === CAD_KNLAST) {
+      remove_element_nodes((obj as TCAD_Knotenlast).index1)
     }
     else if ((obj as TCAD_Element).elTyp === CAD_KNOTEN) {
       let index = (obj as TCAD_Knoten).index1
@@ -308,17 +314,14 @@ export function reDo_button() {
         two.add(group);
       }
       else if (obj.elTyp === CAD_LAGER) {
-        let node = new TNode();
-        // node.x = obj.x1;
-        // node.z = obj.z1;
-        node = obj.node
-        group = draw_lager(two, tr, node)
+
+        group = draw_lager(two, tr, obj)
       }
       else if (obj.elTyp === CAD_KNLAST) {
         let load = new TLoads();
         load = obj.knlast
-        console.log("load", obj.x1, obj.z1, load)
-        group = draw_knotenlast(two, tr, load, obj.x1, obj.z1, 1.0, 0)
+        let index1 = obj.index1
+        group = draw_knotenlast(tr, load, get_cad_node_X(index1), get_cad_node_Z(index1), 1.0, 0)
         two.add(group);
       }
       else if (obj.elTyp === CAD_KNOTEN) {
@@ -1249,7 +1252,8 @@ function update_knotenlast() {
 
   let group = obj_knlast.getTwoObj();
   two.remove(group)
-  group = draw_knotenlast(two, tr, knlast, obj_knlast.x1, obj_knlast.z1, 1, 0);
+  let index1 = obj_knlast.index1
+  group = draw_knotenlast(tr, knlast, get_cad_node_X(index1), get_cad_node_Z(index1), 1, 0);
   two.add(group);
 
   obj_knlast.setTwoObj(group);
@@ -1273,7 +1277,7 @@ function update_knotenlager() {
   console.log("update_knotenlager", (obj_knlager as TCAD_Lager).node)
   let group = obj_knlager.getTwoObj();
   two.remove(group)
-  group = draw_lager(two, tr, (obj_knlager as TCAD_Lager).node)
+  group = draw_lager(two, tr, obj_knlager as TCAD_Lager)
   two.add(group);
 
   obj_knlager.setTwoObj(group);
@@ -1322,12 +1326,20 @@ export function update_knoten() {
   // Verschiebe alle Elemente an dem Knoten
 
   for (let i = 0; i < list.size; i++) {
-    let obj = list.getAt(i) as TCAD_Stab;
+    let obj = list.getAt(i) as TCAD_Element;
     if (obj.elTyp === CAD_STAB) {
-      if (index_obj_knoten === obj.index1) redraw_stab(obj);
-      if (index_obj_knoten === obj.index2) redraw_stab(obj);
-    } else  if (obj.elTyp === CAD_KNLAST) {
-      //if (index_obj_knoten === obj.index1) redraw_stab(obj);
+      if (index_obj_knoten === obj.index1) redraw_stab(obj as TCAD_Stab);
+      if (index_obj_knoten === (obj as TCAD_Stab).index2) redraw_stab(obj as TCAD_Stab);
+    }
+    else if (obj.elTyp === CAD_KNLAST) {
+      if (index_obj_knoten === obj.index1) {
+        redraw_knotenlast(obj as TCAD_Knotenlast);
+      }
+    }
+    else if (obj.elTyp === CAD_LAGER) {
+      if (index_obj_knoten === obj.index1) {
+        redraw_lager(obj as TCAD_Lager);
+      }
     }
   }
   two.update();

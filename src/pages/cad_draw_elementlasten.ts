@@ -5,9 +5,10 @@ import { opacity, style_pfeil, style_txt_knotenlast } from "./grafik"
 import { myFormat } from "./utility"
 import { CAD_STAB, list } from "./cad"
 import { draw_arrow } from "./cad_draw_elemente"
+import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_elementlasten(two: Two, tr: CTrans, obj: TCAD_Stab) {
+export function draw_elementlasten( tr: CTrans, obj: TCAD_Stab) {
     //----------------------------------------------------------------------------------------------------
 
     console.log("in draw_elementlasten", obj)
@@ -103,13 +104,16 @@ export function draw_elementlasten(two: Two, tr: CTrans, obj: TCAD_Stab) {
 
     //console.log("aL,aR", aL, aR)
 
+    let index1 = obj.index1
+    let index2 = obj.index2
+
     si = obj.sinus
     co = obj.cosinus
 
-    x1 = obj.x1 + co * aL;
-    z1 = obj.z1 + si * aL;
-    x2 = obj.x2 - co * aR;
-    z2 = obj.z2 - si * aR;
+    x1 = get_cad_node_X(index1) + co * aL;
+    z1 = get_cad_node_Z(index1) + si * aL;
+    x2 = get_cad_node_X(index2) - co * aR;
+    z2 = get_cad_node_Z(index2) - si * aR;
 
     for (let iLoop = 0; iLoop < nLoop; iLoop++) {
         //console.log("iLoop: ", iLoop)
@@ -161,11 +165,11 @@ export function draw_elementlasten(two: Two, tr: CTrans, obj: TCAD_Stab) {
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            let gr = draw_arrow( tr, x[3], z[3], x[0], z[0], style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
+                            let gr = draw_arrow(tr, x[2], z[2], x[1], z[1], style_pfeil)
                             group.add(gr)
                         }
 
@@ -233,11 +237,11 @@ export function draw_elementlasten(two: Two, tr: CTrans, obj: TCAD_Stab) {
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            let gr = draw_arrow( tr, x[3], z[3], x[0], z[0], style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
+                            let gr = draw_arrow( tr, x[2], z[2], x[1], z[1], style_pfeil)
                             group.add(gr)
                         }
 
@@ -307,11 +311,11 @@ export function draw_elementlasten(two: Two, tr: CTrans, obj: TCAD_Stab) {
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow(two, tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            let gr = draw_arrow(tr, x[3], z[3], x[0], z[0], style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow(two, tr, x[2], z[2], x[1], z[1], style_pfeil)
+                            let gr = draw_arrow( tr, x[2], z[2], x[1], z[1], style_pfeil)
                             group.add(gr)
                         }
 
@@ -383,11 +387,11 @@ export function draw_elementlasten(two: Two, tr: CTrans, obj: TCAD_Stab) {
                         group.add(line)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow(two, tr, x[0], z[0], x[3], z[3], style_pfeil)
+                            let gr = draw_arrow( tr, x[0], z[0], x[3], z[3], style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow(two, tr, x[1], z[1], x[2], z[2], style_pfeil)
+                            let gr = draw_arrow( tr, x[1], z[1], x[2], z[2], style_pfeil)
                             group.add(gr)
                         }
 
@@ -456,11 +460,11 @@ export function draw_elementlasten(two: Two, tr: CTrans, obj: TCAD_Stab) {
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow(two, tr, x[0], z[0], x[3], z[3], style_pfeil)
+                            let gr = draw_arrow( tr, x[0], z[0], x[3], z[3], style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow(two, tr, x[1], z[1], x[2], z[2], style_pfeil)
+                            let gr = draw_arrow( tr, x[1], z[1], x[2], z[2], style_pfeil)
                             group.add(gr)
                         }
 

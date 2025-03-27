@@ -162,7 +162,7 @@ export class drDialogKnoten extends LitElement {
   }
 
   _dialog_anwenden() {
-    console.log("dialog_anwenden");
+    //console.log("dialog_anwenden");
     const shadow = this.shadowRoot;
     if (shadow) {
       window.dispatchEvent(new Event("draw_cad_knoten"));
@@ -170,7 +170,7 @@ export class drDialogKnoten extends LitElement {
   }
 
   _dialog_ok() {
-    console.log("dialog_ok");
+    //console.log("dialog_ok");
     const shadow = this.shadowRoot;
     if (shadow) {
       (shadow.getElementById("dialog_knoten") as HTMLDialogElement).close("ok");
@@ -178,20 +178,20 @@ export class drDialogKnoten extends LitElement {
   }
 
   _dialog_abbruch() {
-    console.log("dialog_abbruch");
+    //console.log("dialog_abbruch");
     const shadow = this.shadowRoot;
     if (shadow) (shadow.getElementById("dialog_knoten") as HTMLDialogElement).close("cancel");
   }
 
   getValueX() {
     const shadow = this.shadowRoot;
-    console.log("id_x", (shadow?.getElementById("id_x") as HTMLInputElement).value);
+    //console.log("id_x", (shadow?.getElementById("id_x") as HTMLInputElement).value);
     let wert = Number((shadow?.getElementById("id_x") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
   getValueZ() {
     const shadow = this.shadowRoot;
-    console.log("id_z", (shadow?.getElementById("id_z") as HTMLInputElement).value);
+    //console.log("id_z", (shadow?.getElementById("id_z") as HTMLInputElement).value);
     let wert = Number((shadow?.getElementById("id_z") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
