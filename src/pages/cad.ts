@@ -535,14 +535,30 @@ export function init_cad(_flag: number) {
 
    console.log('list.size', list.size);
    for (let i = 0; i < list.size; i++) {
-      let obj: TCAD_Stab = list.getAt(i);
 
-      let group = drawStab(obj, tr);
-      two.add(group);
-      // console.log("obj", obj)
-      // let line = two.makeLine(tr.xPix(obj.x1), tr.zPix(obj.z1), tr.xPix(obj.x2), tr.zPix(obj.z2));
-      // line.linewidth = 2 /// devicePixelRatio;
-      obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
+      let obj: TCAD_Element = list.getAt(i);
+
+      if (obj.elTyp === CAD_KNOTEN) {
+         let group = draw_knoten(obj, tr)
+         two.add(group);
+         obj.setTwoObj(group);
+      }
+      else if (obj.elTyp === CAD_STAB) {
+         let group = drawStab(obj as TCAD_Stab, tr);
+         two.add(group);
+         obj.setTwoObj(group);
+      }
+      else if (obj.elTyp === CAD_LAGER) {
+         draw_lager(two, tr, obj as TCAD_Lager)
+      }
+      else if (obj.elTyp === CAD_KNLAST) {
+         let load = new TLoads();
+         load = (obj as TCAD_Knotenlast).knlast
+         let index1 = obj.index1
+         let group = draw_knotenlast(tr, load, get_cad_node_X(index1), get_cad_node_Z(index1), 1.0, 0)
+         two.add(group);
+         obj.setTwoObj(group);
+      }
    }
 
    two.update();
