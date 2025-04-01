@@ -76,7 +76,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 28-März-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 1-April-2025, ";
 //########################################################################################################################
 
 
@@ -310,7 +310,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <sl-tab-panel name="tab-cad" id="id_tab-cad">
         <div id="id_cad" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0;cursor:none">
           <!-- width:100vw; ;width:300px;height:300px; -->
-          <div id="id_cad_group">
+          <div id="id_cad_group" style="cursor: pointer">
           </div>
 
           <!-- <button id="id_button_zurueck_cad">Fullscreen</button> -->

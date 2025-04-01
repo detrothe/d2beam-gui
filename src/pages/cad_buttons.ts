@@ -226,6 +226,11 @@ export function cad_buttons() {
   cog_button.title = "Einstellungen";
   cog_button.id = "id_cad_cog_button";
 
+  const help_text = document.createElement("span");
+  help_text.innerHTML = "eine Hilfe"
+  help_text.className = "helptext";
+  help_text.id = "id_cad_helptext";
+
   div.appendChild(undo_button);
   div.appendChild(redo_button);
   div.appendChild(trash_button);
@@ -240,6 +245,7 @@ export function cad_buttons() {
   div.appendChild(br);
   div.appendChild(zurueck_button);
   div.appendChild(querschnitt_default_select);
+  div.appendChild(help_text);
 
   //let div_cad_group = document.getElementById("id_cad_group") as HTMLDivElement
   undo_button!.addEventListener("focus", (_event) => {

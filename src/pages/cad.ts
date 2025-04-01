@@ -387,13 +387,20 @@ export function init_two_cad(svg_id = 'artboard_cad') {
 
 //--------------------------------------------------------------------------------------------------- i n i t _ c a d
 
-export function init_cad(_flag: number) {
+export function init_cad(flag: number) {
 
 
    let show_selection = true;
    let height = 0;
 
-   //write('init_cad');
+   if (flag !== 2) {
+      zoomIsActive = false
+
+      centerX = 0.0
+      centerY = 0.0
+      centerX_last = 0.0
+      centerY_last = 0.0
+   }
 
    if (two) two.clear();
 
@@ -423,6 +430,11 @@ export function init_cad(_flag: number) {
    }
 
    (xminv = -1.0), (xmaxv = 10.0), (zminv = -1.0), (zmaxv = 10.0);
+
+   xminv -= centerX;
+   xmaxv -= centerX;
+   zminv -= centerY;
+   zmaxv -= centerY;
 
    if (tr === undefined) {
       console.log('in undefined');
@@ -795,21 +807,22 @@ function penDown(ev: PointerEvent) {
 function mousedown(ev: any) {
    //----------------------------------------------------------------------------------------------------
 
-   console.log('in mousedown', ev);
+   console.log('in mousedown', ev.button);
    ev.preventDefault();
 
    // if (!mouseMoveIsActive) {
    //domElement.addEventListener('mousemove', mousemove, false);
    //     mouseMoveIsActive = true
    // }
-   zoomIsActive = true;
+   if (ev.button === 1) {
+      zoomIsActive = true;
 
-   mouseOffsetX = ev.offsetX;
-   mouseOffsetY = ev.offsetY;
+      mouseOffsetX = ev.offsetX;
+      mouseOffsetY = ev.offsetY;
 
-   mouseDx = 0.0;
-   mouseDz = 0.0;
-
+      mouseDx = 0.0;
+      mouseDz = 0.0;
+   }
    //console.log("mouse_DownWX", mouse_DownWX, mouse_DownWY)
 
    //input_active = true
@@ -832,121 +845,136 @@ function mousemove(ev: MouseEvent) {
    ev.preventDefault();
 
    //console.log(document.elementFromPoint(ev.offsetX, ev.offsetY));
+   console.log("move", ev.button, zoomIsActive, ev.movementX, ev.movementY, ev.offsetX - mouseOffsetX, ev.offsetY - mouseOffsetY)
 
-   let dxy = 0.0
-   if (isTouch) dxy = -100 / devicePixelRatio;
+   if (zoomIsActive) {  // mittlere Maustaste gedrückt
+      mouseDx += ev.offsetX - mouseOffsetX
+      mouseDz += ev.offsetY - mouseOffsetY
+      centerX = centerX_last + tr.World0(mouseDx)
+      centerY = centerY_last + tr.World0(mouseDz)
+      console.log("move", ev.movementX, ev.movementY, ev.offsetX - mouseOffsetX, ev.offsetY - mouseOffsetY)
+      // two.translation.set(mouseDx,mouseDz)
+      mouseOffsetX = ev.offsetX
+      mouseOffsetY = ev.offsetY
+      // two.update();
+      init_cad(2)
+   }
+   else {
+      let dxy = 0.0
+      if (isTouch) dxy = -100 / devicePixelRatio;
 
-   let xo = ev.offsetX + dxy
-   let yo = ev.offsetY + dxy
+      let xo = ev.offsetX + dxy
+      let yo = ev.offsetY + dxy
 
-   two.remove(cursorLineh);
-   two.remove(cursorLinev);
-   let len = tr.Pix0(getFangweite());
-   cursorLineh = two.makeLine(
-      xo - len,
-      yo,
-      xo + len,
-      yo
-   );
-   cursorLinev = two.makeLine(
-      xo,
-      yo - len,
-      xo,
-      yo + len
-   );
-
-   if (buttons_control.cad_eingabe_aktiv) {
-      if (rubberband_drawn) {
-         two.remove(rubberband);
-      }
-      if (foundRasterPoint) {
-         two.remove(rasterPoint);
-         foundRasterPoint = false;
-      }
-      if (foundNodePoint) {
-         two.remove(nodePoint);
-         foundNodePoint = false;
-      }
-
-      if (input_started === 1) {
-         rubberband = new Two.Group();
-         let band = new Two.Line(start_x, start_y, xo, yo);
-         band.linewidth = 1; /// devicePixelRatio;
-         band.dashes = [2, 2];
-         rubberband.add(band);
-
-         let dx = xo - start_x
-         let dy = yo - start_y
-         let sl = Math.sqrt(dx * dx + dy * dy)
-
-         let sinus = dy / sl;
-         let cosinus = dx / sl;
-         let alpha = Math.atan2(dy, dx)
-
-         let xm = (xo + start_x) / 2. + (sinus * 11 + cosinus * 1) // devicePixelRatio  war 17
-         let zm = (yo + start_y) / 2. - (cosinus * 11 - sinus * 1) // devicePixelRatio
-
-         let str = 'L=' + myFormat(tr.World0(sl), 2, 2) + 'm'
-         const txt1 = two.makeText(str, xm, zm, style_txt)
-         txt1.fill = '#000000'
-         txt1.alignment = 'center'
-         txt1.baseline = 'middle'
-         txt1.rotation = alpha
-         rubberband.add(txt1);
-
-         two.add(rubberband);
-
-         rubberband_drawn = true;
-      }
-
-      if (txt_mouseCoord) {
-         two.remove(txt_mouseCoord);
-      }
-      let xc = tr.xWorld(xo);
-      let zc = tr.zWorld(yo);
-      let txt = 'x: ' + myFormat(xc, 2, 2) + ' | z: ' + myFormat(zc, 2, 2);
-      txt_mouseCoord = two.makeText(
-         txt,
-         two.width - 100,
-         two.height - 20,
-         style_txt
+      two.remove(cursorLineh);
+      two.remove(cursorLinev);
+      let len = tr.Pix0(getFangweite());
+      cursorLineh = two.makeLine(
+         xo - len,
+         yo,
+         xo + len,
+         yo
       );
-      txt_mouseCoord.fill = '#000000';
-      txt_mouseCoord.baseline = 'middle';
-      txt_mouseCoord.alignment = 'left';
+      cursorLinev = two.makeLine(
+         xo,
+         yo - len,
+         xo,
+         yo + len
+      );
 
-      // find next CAD node
+      if (buttons_control.cad_eingabe_aktiv) {
+         if (rubberband_drawn) {
+            two.remove(rubberband);
+         }
+         if (foundRasterPoint) {
+            two.remove(rasterPoint);
+            foundRasterPoint = false;
+         }
+         if (foundNodePoint) {
+            two.remove(nodePoint);
+            foundNodePoint = false;
+         }
 
-      let index = find_nearest_cad_node(xc, zc);
-      if (index > -1) {
-         nodePoint = two.makeRoundedRectangle(
-            tr.xPix(get_cad_node_X(index)),
-            tr.zPix(get_cad_node_Z(index)),
-            15 / devicePixelRatio,
-            15 / devicePixelRatio,
-            4
+         if (input_started === 1) {
+            rubberband = new Two.Group();
+            let band = new Two.Line(start_x, start_y, xo, yo);
+            band.linewidth = 1; /// devicePixelRatio;
+            band.dashes = [2, 2];
+            rubberband.add(band);
+
+            let dx = xo - start_x
+            let dy = yo - start_y
+            let sl = Math.sqrt(dx * dx + dy * dy)
+
+            let sinus = dy / sl;
+            let cosinus = dx / sl;
+            let alpha = Math.atan2(dy, dx)
+
+            let xm = (xo + start_x) / 2. + (sinus * 11 + cosinus * 1) // devicePixelRatio  war 17
+            let zm = (yo + start_y) / 2. - (cosinus * 11 - sinus * 1) // devicePixelRatio
+
+            let str = 'L=' + myFormat(tr.World0(sl), 2, 2) + 'm'
+            const txt1 = two.makeText(str, xm, zm, style_txt)
+            txt1.fill = '#000000'
+            txt1.alignment = 'center'
+            txt1.baseline = 'middle'
+            txt1.rotation = alpha
+            rubberband.add(txt1);
+
+            two.add(rubberband);
+
+            rubberband_drawn = true;
+         }
+
+         if (txt_mouseCoord) {
+            two.remove(txt_mouseCoord);
+         }
+         let xc = tr.xWorld(xo);
+         let zc = tr.zWorld(yo);
+         let txt = 'x: ' + myFormat(xc, 2, 2) + ' | z: ' + myFormat(zc, 2, 2);
+         txt_mouseCoord = two.makeText(
+            txt,
+            two.width - 100,
+            two.height - 20,
+            style_txt
          );
-         nodePoint.fill = '#001111';
-         foundNodePoint = true;
-         xNodePoint = get_cad_node_X(index);
-         zNodePoint = get_cad_node_Z(index);
-      } else {
-         // if (rubberband_drawn) {
-         let gefunden = findNextRasterPoint(xc, zc);
-         if (gefunden) {
-            rasterPoint = two.makeRectangle(
-               tr.xPix(xRasterPoint),
-               tr.zPix(zRasterPoint),
-               5,
-               5
+         txt_mouseCoord.fill = '#000000';
+         txt_mouseCoord.baseline = 'middle';
+         txt_mouseCoord.alignment = 'left';
+
+         // find next CAD node
+
+         let index = find_nearest_cad_node(xc, zc);
+         if (index > -1) {
+            nodePoint = two.makeRoundedRectangle(
+               tr.xPix(get_cad_node_X(index)),
+               tr.zPix(get_cad_node_Z(index)),
+               15 / devicePixelRatio,
+               15 / devicePixelRatio,
+               4
             );
-            rasterPoint.fill = '#0000ff';
-            rasterPoint.stroke = '#0000ff';
-            foundRasterPoint = true;
+            nodePoint.fill = '#001111';
+            foundNodePoint = true;
+            xNodePoint = get_cad_node_X(index);
+            zNodePoint = get_cad_node_Z(index);
+         } else {
+            // if (rubberband_drawn) {
+            let gefunden = findNextRasterPoint(xc, zc);
+            if (gefunden) {
+               rasterPoint = two.makeRectangle(
+                  tr.xPix(xRasterPoint),
+                  tr.zPix(zRasterPoint),
+                  5,
+                  5
+               );
+               rasterPoint.fill = '#0000ff';
+               rasterPoint.stroke = '#0000ff';
+               foundRasterPoint = true;
+            }
          }
       }
+      two.update();
    }
-   two.update();
 }
 
 //--------------------------------------------------------------------------------------------------------
