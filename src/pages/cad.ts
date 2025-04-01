@@ -53,6 +53,9 @@ let mouseOffsetY = 0.0;
 let mouseDx = 0.0;
 let mouseDz = 0.0;
 
+let mouseCounter = 0;
+let wheel_factor = 1.0
+
 let zoomIsActive = false;
 
 let isPen = false;
@@ -367,7 +370,7 @@ export function init_two_cad(svg_id = 'artboard_cad') {
    if (svg_id === 'artboard_cad') {
       domElement = two.renderer.domElement;
 
-      //     domElement.addEventListener('wheel', wheel, { passive: false });
+      domElement.addEventListener('wheel', wheel, { passive: false });
       domElement.addEventListener('pointerdown', pointerdown, false);
       domElement.addEventListener('pointerup', pointerup, false);
       domElement.addEventListener('pointermove', pointermove, false);
@@ -400,6 +403,9 @@ export function init_cad(flag: number) {
       centerY = 0.0
       centerX_last = 0.0
       centerY_last = 0.0
+      wheel_factor = 0.0   // 1.0
+
+
    }
 
    if (two) two.clear();
@@ -431,10 +437,18 @@ export function init_cad(flag: number) {
 
    (xminv = -1.0), (xmaxv = 10.0), (zminv = -1.0), (zmaxv = 10.0);
 
+   let dx = xmaxv - xminv
+   let dz = zmaxv - zminv
+
    xminv -= centerX;
    xmaxv -= centerX;
    zminv -= centerY;
    zmaxv -= centerY;
+
+   xminv = xminv - dx * wheel_factor / 2.
+   xmaxv = xmaxv + dx * wheel_factor / 2.
+   zminv = zminv - dz * wheel_factor / 2.
+   zmaxv = zmaxv + dz * wheel_factor / 2.
 
    if (tr === undefined) {
       console.log('in undefined');
@@ -581,6 +595,30 @@ export function init_cad(flag: number) {
 
 }
 
+
+//--------------------------------------------------------------------------------------------------------
+function wheel(ev: WheelEvent) {
+   //----------------------------------------------------------------------------------------------------
+
+   ev.preventDefault()
+
+   if (ev.deltaY > 0) {       // Bild wird kleiner
+      if (mouseCounter < 40) {
+         mouseCounter++;
+         wheel_factor = mouseCounter / 60.    //0.025;
+      }
+      //if (wheel_factor > 3) wheel_factor = 3.0
+   }
+   else if (ev.deltaY < 0) {   // zoom in, Detail
+      if (mouseCounter > -80) {
+         mouseCounter--;
+         wheel_factor = mouseCounter / 60.0;  //0.025;
+         //if (wheel_factor < 0.2) wheel_factor = 0.2
+      }
+   }
+   init_cad(2)
+}
+
 //--------------------------------------------------------------------------------------------------------
 function pointerdown(ev: PointerEvent) {
    //----------------------------------------------------------------------------------------------------
@@ -605,6 +643,15 @@ function pointerdown(ev: PointerEvent) {
          isTouch = true;
          //penDown(ev);
          //mousedown(ev);
+         if (!buttons_control.cad_eingabe_aktiv) {
+            zoomIsActive = true;
+
+            mouseOffsetX = ev.offsetX;
+            mouseOffsetY = ev.offsetY;
+
+            mouseDx = 0.0;
+            mouseDz = 0.0;
+         }
          break;
    }
 }
@@ -645,6 +692,7 @@ function pointerup(ev: PointerEvent) {
    isTouch = false;
 
    switch (ev.pointerType) {
+
       case 'mouse':
          if (ev.button === 2 && input_started === 0) {
             // test Element unter Maus
@@ -653,16 +701,26 @@ function pointerup(ev: PointerEvent) {
             mouseup(ev);
          }
          break;
+
       case 'pen':
          isPen = true;
          //if (input_started === 0) penDown(ev);
          if (buttons_control.n_input_points > 1) mouseup(ev);
          break;
+
       case 'touch':
          isTouch = true;
-         if (input_started === 0) penDown(ev);
-         else if (buttons_control.n_input_points > 1) mouseup(ev);
-         //         if (buttons_control.n_input_points > 1) mouseup(ev);
+         if (buttons_control.cad_eingabe_aktiv) {
+            if (input_started === 0) penDown(ev);
+            else if (buttons_control.n_input_points > 1) mouseup(ev);
+         }
+         else {
+            zoomIsActive = false;
+
+            centerX_last = centerX;
+            centerY_last = centerY;
+         }
+
          break;
    }
 }
@@ -814,7 +872,7 @@ function mousedown(ev: any) {
    //domElement.addEventListener('mousemove', mousemove, false);
    //     mouseMoveIsActive = true
    // }
-   if (ev.button === 1) {
+   if ((ev.button === 1) || (ev.button === 0 && !buttons_control.cad_eingabe_aktiv)) {
       zoomIsActive = true;
 
       mouseOffsetX = ev.offsetX;
