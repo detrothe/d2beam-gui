@@ -320,7 +320,7 @@ export function click_zurueck_grafik() {
 
 //--------------------------------------------------------------------------------------------------- i n i t _ t w o
 
-export function init_two(svg_id = 'artboard') {
+export function init_two(svg_id = 'artboard', setEvents=true) {
 
 
     if (two !== null) {
@@ -379,7 +379,7 @@ export function init_two(svg_id = 'artboard') {
 
     two = new Two(params).appendTo(artboard);
 
-    if (svg_id === 'artboard') {
+    if (svg_id === 'artboard' && setEvents) {
         domElement = two.renderer.domElement;
         //svgElement = two.render
         //console.log("domElement", domElement)
@@ -1011,6 +1011,8 @@ export function drawsystem(svg_id = 'artboard') {
     let breite: number
     let hoehe: number
     if (show_selection) {
+        console.log("document.documentElement",document.documentElement.clientWidth,window.innerWidth)
+        console.log("two=",two)
         two.width = document.documentElement.clientWidth;
         two.height = height
         breite = two.width;

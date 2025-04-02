@@ -46,7 +46,7 @@ import { reset_gui } from "./mypanelgui";
 import DetectOS from "./detectos";
 
 import { addListener_filesave } from "./dateien";
-import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik, reset_controlpanel_grafik } from "./grafik";
+import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik, reset_controlpanel_grafik, init_two } from "./grafik";
 import { myFormat, set_info, write } from "./utility";
 
 import { my_jspdf } from "./mypdf";
@@ -69,14 +69,14 @@ import {
 
 //import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 //import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
-import { click_zurueck_cad, init_cad, init_two_cad } from "./cad";
+import { init_cad, init_two_cad } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { abbruch_property_dialog, show_property_dialog } from "./cad_contextmenu";
 import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 2-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.c, 2-April-2025, ";
 //########################################################################################################################
 
 
@@ -151,14 +151,14 @@ const portrait = window.matchMedia("(orientation: portrait)");
 portrait.addEventListener("change", function (e) {
   if (e.matches) {
     // Portrait mode
-    //write("portrait mode")
-    drawsystem();
+    write("portrait mode")
     init_cad(0);
+    drawsystem();
   } else {
     // Landscape
-    //write("landscape mode")
-    drawsystem();
+    write("landscape mode")
     init_cad(0);
+    drawsystem();
   }
 });
 
@@ -1254,24 +1254,25 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
     console.log("Tab CAD is complete"); // true
 
   });
-  let div_cad_group = document.getElementById("id_tab-cad") as HTMLDivElement
-  div_cad_group!.addEventListener("load", (event) => {
-    // @ts-ignore
-    console.log("load", event)
-    let hoehe = div_cad_group!.getBoundingClientRect()
-    console.log("hoehe div id_cad_group", hoehe)
-  });
 
-  let ttt = document.getElementById("id_sl_tab_group") as SlTabGroup;
-  ttt!.addEventListener("sl-tab-show", (event) => {
-    // @ts-ignore
-    console.log("sl-tab-show", event)
-    //  let hoehe = div_cad_group!.getBoundingClientRect()
-    //  console.log("hoehe div id_cad_group", hoehe)
-    let div = document.getElementById("id_cad_group") as HTMLDivElement
-    let h = div!.getBoundingClientRect()
-    console.log("Rect des div", h)
-  });
+  // let div_cad_group = document.getElementById("id_tab-cad") as HTMLDivElement
+  // div_cad_group!.addEventListener("load", (event) => {
+  //   // @ts-ignore
+  //   console.log("load", event)
+  //   let hoehe = div_cad_group!.getBoundingClientRect()
+  //   console.log("hoehe div id_cad_group", hoehe)
+  // });
+
+  // let ttt = document.getElementById("id_sl_tab_group") as SlTabGroup;
+  // ttt!.addEventListener("sl-tab-show", (event) => {
+  //   // @ts-ignore
+  //   console.log("sl-tab-show", event)
+  //   //  let hoehe = div_cad_group!.getBoundingClientRect()
+  //   //  console.log("hoehe div id_cad_group", hoehe)
+  //   let div = document.getElementById("id_cad_group") as HTMLDivElement
+  //   let h = div!.getBoundingClientRect()
+  //   console.log("Rect des div", h)
+  // });
 
   // addEventListener("resize", function () {
   //   ("RESIZE")
@@ -1306,6 +1307,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   cad_buttons();
 
   init_tabellen();
+
+  init_two('artboard', false);
 
   init_two_cad();
   init_cad(0);

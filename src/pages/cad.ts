@@ -14,6 +14,8 @@ import {
    read_knotenlast_dialog,
    select_element,
    add_elementlast,
+   set_help_text,
+   delete_help_text,
 } from './cad_buttons';
 import { draw_knoten, draw_knotenlast, draw_lager, drawStab } from './cad_draw_elemente';
 
@@ -242,6 +244,7 @@ export function Stab_button(ev: Event) {
       // el.style.backgroundColor = 'DodgerBlue'
       buttons_control.reset();
       el.removeEventListener('keydown', keydown);
+      delete_help_text();
    } else {
       buttons_control.reset();
 
@@ -251,6 +254,7 @@ export function Stab_button(ev: Event) {
       buttons_control.typ_cad_element = CAD_STAB;
       el.addEventListener('keydown', keydown);
       buttons_control.n_input_points = 2;
+      set_help_text('Anfangsknoten eingeben');
    }
 }
 
@@ -455,6 +459,7 @@ export function init_cad(flag: number) {
       two.width = breite = 1500;
       two.height = hoehe = 1500;
    }
+   //write("width,height " + breite + ' | ' + hoehe);
 
    (xminv = -1.0), (xmaxv = 10.0), (zminv = -1.0), (zmaxv = 10.0);
 
@@ -674,8 +679,10 @@ function pointerdown(ev: PointerEvent) {
             mouseDx = 0.0;
             mouseDz = 0.0;
 
-            pointer.push(new CPointer(ev.pointerId, ev.isPrimary, ev.offsetX, ev.offsetY))
-            console.log("pointerdown, length", pointer.length, ev.pointerId)
+            if (pointer.length < 2) {
+               pointer.push(new CPointer(ev.pointerId, ev.isPrimary, ev.offsetX, ev.offsetY))
+               console.log("pointerdown, length", pointer.length, ev.pointerId)
+            }
          }
          break;
    }
@@ -721,9 +728,12 @@ function pointermove(ev: PointerEvent) {
                if (touchLoop === 1) {
 
                   let factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
-                  console.log("wheel_factor",factor,dx,dy)
+                  console.log("wheel_factor", factor, dx, dy)
                   if (factor > -1.3 && factor < 0.2) {
                      wheel_factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
+                  } else {
+                     touchLoop = 0
+                     wheel_factor_alt = wheel_factor
                   }
                   init_cad(2)
                } else {
@@ -787,6 +797,7 @@ function pointerup(ev: PointerEvent) {
             }
             console.log("pointerup, pointer length", pointer.length, memId)
          }
+         touchLoop = 0
          wheel_factor_alt = wheel_factor
 
          break;
@@ -1204,6 +1215,7 @@ function mouseup(ev: any) {
                      start_x_wc = xc;
                      start_z_wc = zc;
                   }
+                  set_help_text('Stabende eingeben');
                }
                if (buttons_control.n_input_points === 1) {
                   if (buttons_control.lager_eingabe_aktiv) {
@@ -1374,6 +1386,8 @@ function mouseup(ev: any) {
 
                obj.setTwoObj(group)
 
+               set_help_text('Stabanfang eingeben');
+
                //list.log()
             }
          }
@@ -1404,6 +1418,7 @@ export function keydown(ev: any) {
       input_active = false;
       rubberband_drawn = false;
       input_started = 0;
+      delete_help_text();
    }
 }
 
@@ -1717,4 +1732,26 @@ export function draw_cad_knoten() {
       alertdialog('ok', 'Knoten existiert bereits');
    }
 
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function reset_cad() {
+   //--------------------------------------------------------------------------------------------------------
+
+   mouseDx = 0.0
+   mouseDz = 0.0
+   wheel_factor = 0.0
+   wheel_factor_alt = 0.0
+   touchLoop = 0
+   mouseCounter = 0;
+
+   centerX = 0.0
+   centerY = 0.0
+   centerX_last = 0.0
+   centerY_last = 0.0
+
+   pointer.length = 0
+   zoomIsActive = false
+
+   init_cad(2);
 }

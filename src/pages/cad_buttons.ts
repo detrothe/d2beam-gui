@@ -5,7 +5,8 @@ import {
   click_zurueck_cad,
   redraw_stab,
   redraw_knotenlast,
-  redraw_lager
+  redraw_lager,
+  reset_cad
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -226,6 +227,17 @@ export function cad_buttons() {
   cog_button.title = "Einstellungen";
   cog_button.id = "id_cad_cog_button";
 
+
+  const refresh_button = document.createElement("button");
+
+  refresh_button.value = "refresh";
+  refresh_button.className = "btn";
+  refresh_button.innerHTML = '<i class = "fa fa-refresh"></i>';
+  refresh_button.addEventListener("click", reset_cad);
+  // stab_button.addEventListener('keydown', keydown);
+  refresh_button.title = "Reset Screen";
+  refresh_button.id = "id_cad_cog_button";
+
   const help_text = document.createElement("span");
   help_text.innerHTML = "eine Hilfe"
   help_text.className = "helptext";
@@ -241,6 +253,7 @@ export function cad_buttons() {
   div.appendChild(knotlast_button);
   div.appendChild(ellast_button);
   div.appendChild(cog_button);
+  div.appendChild(refresh_button);
   let br = document.createElement("br");
   div.appendChild(br);
   div.appendChild(zurueck_button);
@@ -260,6 +273,20 @@ export function cad_buttons() {
 
   // let querschnitt_default = document.getElementById("id_querschnitt_default") as HTMLSelectElement;
   // querschnitt_default.style.top = String(hoehe)
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function set_help_text(txt: string) {
+  //------------------------------------------------------------------------------------------------------
+  let el = document.getElementById("id_cad_helptext") as HTMLSpanElement
+  el.innerHTML = txt;
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function delete_help_text() {
+  //------------------------------------------------------------------------------------------------------
+  let el = document.getElementById("id_cad_helptext") as HTMLSpanElement
+  el.innerHTML = ' ';
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -359,11 +386,13 @@ export function delete_button() {
 
   if (buttons_control.pick_element) {
     buttons_control.reset();
+    delete_help_text();
   } else {
     let el = document.getElementById("id_cad_delete_button") as HTMLButtonElement;
     el.style.backgroundColor = "darkRed";
 
     buttons_control.pick_element = true;
+    set_help_text('Pick ein Element');
   }
 }
 
@@ -373,11 +402,13 @@ export function Select_button() {
 
   if (buttons_control.select_element) {
     buttons_control.reset();
+    delete_help_text();
   } else {
     let el = document.getElementById("id_cad_select_button") as HTMLButtonElement;
     el.style.backgroundColor = "darkRed";
 
     buttons_control.select_element = true;
+    set_help_text('Pick ein Element');
   }
 }
 
