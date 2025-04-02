@@ -46,7 +46,7 @@ let touchDy = 0.0
 let mouseCounter = 0;
 let firstTouch = true
 let curDiff = 0.0
-let curDiff_alt = 0.0
+//let curDiff_alt = 0.0
 let mouse_DownWX = 0.0
 let mouse_DownWY = 0.0
 let view_diagonale = 0.0
@@ -421,7 +421,7 @@ export function init_grafik(flag: number) {
     wheel_factor_alt = 0.0
     touchLoop = 0
     firstTouch = true
-    curDiff_alt = 0.0
+    //curDiff_alt = 0.0
     mouse_DownWX = 0.0
     mouse_DownWY = 0.0
 
@@ -699,7 +699,7 @@ function touchend(ev: TouchEvent) {
     //prevDiff = 0.0
     if (ev.touches.length === 1) {
         nFingers = 1
-        curDiff_alt = curDiff
+        //curDiff_alt = curDiff
         touchLoop = 0
     }
     if (ev.touches.length === 0) {

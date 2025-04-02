@@ -55,6 +55,10 @@ let mouseDz = 0.0;
 
 let mouseCounter = 0;
 let wheel_factor = 1.0
+let wheel_factor_alt = 0.0
+let touchLoop = 0
+let prevDiff = -1;
+let curDiff = 0.0
 
 let zoomIsActive = false;
 
@@ -65,6 +69,21 @@ let centerX = 0.0;
 let centerY = 0.0;
 let centerX_last = 0.0;
 let centerY_last = 0.0;
+
+class CPointer {
+   id = -1
+   isPrimary = false;
+   x = 0;
+   y = 0;
+
+   constructor(id: number, primary: boolean, x: number, y: number) {
+      this.id = id;
+      this.isPrimary = primary;
+      this.x = x;
+      this.y = y;
+   }
+}
+let pointer = [] as CPointer[]
 
 let rubberband: any = null;
 let input_active = false;
@@ -404,8 +423,10 @@ export function init_cad(flag: number) {
       centerX_last = 0.0
       centerY_last = 0.0
       wheel_factor = 0.0   // 1.0
+      wheel_factor_alt = 0.0
+      touchLoop = 0
 
-
+      pointer.length = 0
    }
 
    if (two) two.clear();
@@ -559,7 +580,7 @@ export function init_cad(flag: number) {
 
    // Zeichne vorhandenes System
 
-   console.log('list.size', list.size);
+   //console.log('list.size', list.size);
    for (let i = 0; i < list.size; i++) {
 
       let obj: TCAD_Element = list.getAt(i);
@@ -641,6 +662,7 @@ function pointerdown(ev: PointerEvent) {
          break;
       case 'touch':
          isTouch = true;
+         touchLoop = 0
          //penDown(ev);
          //mousedown(ev);
          if (!buttons_control.cad_eingabe_aktiv) {
@@ -651,6 +673,9 @@ function pointerdown(ev: PointerEvent) {
 
             mouseDx = 0.0;
             mouseDz = 0.0;
+
+            pointer.push(new CPointer(ev.pointerId, ev.isPrimary, ev.offsetX, ev.offsetY))
+            console.log("pointerdown, length", pointer.length, ev.pointerId)
          }
          break;
    }
@@ -676,7 +701,39 @@ function pointermove(ev: PointerEvent) {
          break;
       case 'touch':
          isTouch = true;
-         mousemove(ev);
+         if (buttons_control.cad_eingabe_aktiv) {
+            mousemove(ev);
+         }
+         else {
+            if (pointer.length === 2) {
+               for (let i = 0; i < pointer.length; i++) {
+                  if (ev.pointerId === pointer[i].id) {
+                     console.log("pointermove", pointer[i].id)
+                     pointer[i].x = ev.offsetX
+                     pointer[i].y = ev.offsetY
+                     break;
+                  }
+               }
+               let dx = pointer[0].x - pointer[1].x
+               let dy = pointer[0].y - pointer[1].y
+               curDiff = Math.sqrt(dx * dx + dy * dy) * 0.25;
+
+               if (touchLoop === 1) {
+
+                  let factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
+                  console.log("wheel_factor",factor,dx,dy)
+                  if (factor > -1.3 && factor < 0.2) {
+                     wheel_factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
+                  }
+                  init_cad(2)
+               } else {
+                  touchLoop = 1
+                  prevDiff = curDiff;
+               }
+            } else {
+               mousemove(ev);
+            }
+         }
          break;
    }
 }
@@ -690,6 +747,7 @@ function pointerup(ev: PointerEvent) {
 
    isPen = false;
    isTouch = false;
+   touchLoop = 0
 
    switch (ev.pointerType) {
 
@@ -719,7 +777,17 @@ function pointerup(ev: PointerEvent) {
 
             centerX_last = centerX;
             centerY_last = centerY;
+            let memId = 0
+            for (let i = 0; i < pointer.length; i++) {
+               if (ev.pointerId === pointer[i].id) {
+                  pointer.splice(i, 1);
+                  memId = ev.pointerId
+                  break;
+               }
+            }
+            console.log("pointerup, pointer length", pointer.length, memId)
          }
+         wheel_factor_alt = wheel_factor
 
          break;
    }
@@ -903,14 +971,14 @@ function mousemove(ev: MouseEvent) {
    ev.preventDefault();
 
    //console.log(document.elementFromPoint(ev.offsetX, ev.offsetY));
-   console.log("move", ev.button, zoomIsActive, ev.movementX, ev.movementY, ev.offsetX - mouseOffsetX, ev.offsetY - mouseOffsetY)
+   //console.log("move", ev.button, zoomIsActive, ev.movementX, ev.movementY, ev.offsetX - mouseOffsetX, ev.offsetY - mouseOffsetY)
 
    if (zoomIsActive) {  // mittlere Maustaste gedrückt
       mouseDx += ev.offsetX - mouseOffsetX
       mouseDz += ev.offsetY - mouseOffsetY
       centerX = centerX_last + tr.World0(mouseDx)
       centerY = centerY_last + tr.World0(mouseDz)
-      console.log("move", ev.movementX, ev.movementY, ev.offsetX - mouseOffsetX, ev.offsetY - mouseOffsetY)
+      //console.log("move", ev.movementX, ev.movementY, ev.offsetX - mouseOffsetX, ev.offsetY - mouseOffsetY)
       // two.translation.set(mouseDx,mouseDz)
       mouseOffsetX = ev.offsetX
       mouseOffsetY = ev.offsetY
