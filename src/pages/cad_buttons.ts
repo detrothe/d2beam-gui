@@ -58,6 +58,7 @@ class Cbuttons_control {
   elementlast_eingabe_aktiv = false;
   typ_cad_element = 0;
   n_input_points = 0;
+  button_pressed = false;
 
   reset() {
     this.pick_element = false;
@@ -70,6 +71,7 @@ class Cbuttons_control {
     this.elementlast_eingabe_aktiv = false;
     this.typ_cad_element = 0;
     this.n_input_points = 0;
+    this.button_pressed = false;
 
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
@@ -355,7 +357,7 @@ export function reDo_button() {
       }
       else if (obj.elTyp === CAD_LAGER) {
 
-        group = draw_lager( tr, obj)
+        group = draw_lager(tr, obj)
         two.add(group);
         add_element_nodes(obj.index1);
       }
@@ -394,6 +396,7 @@ export function delete_button() {
 
     buttons_control.pick_element = true;
     set_help_text('Pick ein Element');
+    buttons_control.button_pressed = true;
   }
 }
 
@@ -410,6 +413,7 @@ export function Select_button() {
 
     buttons_control.select_element = true;
     set_help_text('Pick ein Element');
+    buttons_control.button_pressed = true;
   }
 }
 
@@ -1026,6 +1030,7 @@ export function Knoten_button(ev: Event) {
     buttons_control.typ_cad_element = CAD_KNOTEN
     //el.addEventListener('keydown', keydown);
     buttons_control.n_input_points = 0
+    buttons_control.button_pressed = true;
 
     showDialog_knoten();
 
@@ -1065,6 +1070,7 @@ export function Knotenlast_button(_ev: Event) {
     buttons_control.typ_cad_element = CAD_KNLAST
     el.addEventListener('keydown', keydown);
     buttons_control.n_input_points = 1
+    buttons_control.button_pressed = true;
 
     showDialog_knotenlast();
 
@@ -1197,6 +1203,7 @@ export function Elementlast_button(_ev: Event) {
     buttons_control.typ_cad_element = CAD_ELLAST
     el.addEventListener('keydown', keydown);
     buttons_control.n_input_points = 1
+    buttons_control.button_pressed = true;
 
     showDialog_elementlast();
 
@@ -1327,7 +1334,7 @@ function update_knotenlager() {
   console.log("update_knotenlager", (obj_knlager as TCAD_Lager).node)
   let group = obj_knlager.getTwoObj();
   two.remove(group)
-  group = draw_lager( tr, obj_knlager as TCAD_Lager)
+  group = draw_lager(tr, obj_knlager as TCAD_Lager)
   two.add(group);
 
   obj_knlager.setTwoObj(group);

@@ -223,7 +223,7 @@ export function redraw_lager(obj: TCAD_Lager) {
    // let index1 = obj.index1
    // obj.node.x= get_cad_node_X(index1)
    // obj.node.z= get_cad_node_Z(index1)
-   group = draw_lager( tr, obj)
+   group = draw_lager(tr, obj)
 
    two.add(group);
    obj.setTwoObj(group);
@@ -255,6 +255,8 @@ export function Stab_button(ev: Event) {
       el.addEventListener('keydown', keydown);
       buttons_control.n_input_points = 2;
       set_help_text('Anfangsknoten eingeben');
+      buttons_control.button_pressed = true;
+
    }
 }
 
@@ -276,6 +278,7 @@ export function Lager_button(ev: Event) {
       buttons_control.typ_cad_element = CAD_LAGER;
       el.addEventListener('keydown', keydown);
       buttons_control.n_input_points = 1;
+      buttons_control.button_pressed = true;
 
       showDialog_lager();
 
@@ -601,7 +604,7 @@ export function init_cad(flag: number) {
          obj.setTwoObj(group);
       }
       else if (obj.elTyp === CAD_LAGER) {
-         let group=draw_lager( tr, obj as TCAD_Lager)
+         let group = draw_lager(tr, obj as TCAD_Lager)
          two.add(group);
          obj.setTwoObj(group);
       }
@@ -672,7 +675,8 @@ function pointerdown(ev: PointerEvent) {
          touchLoop = 0
          //penDown(ev);
          //mousedown(ev);
-         if (!buttons_control.cad_eingabe_aktiv) {
+         if (!(buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element)) {
+            //if (!buttons_control.button_pressed) {
             zoomIsActive = true;
 
             mouseOffsetX = ev.offsetX;
@@ -685,6 +689,7 @@ function pointerdown(ev: PointerEvent) {
                pointer.push(new CPointer(ev.pointerId, ev.isPrimary, ev.offsetX, ev.offsetY))
                console.log("pointerdown, length", pointer.length, ev.pointerId)
             }
+            //}
          }
          break;
    }
@@ -710,7 +715,7 @@ function pointermove(ev: PointerEvent) {
          break;
       case 'touch':
          isTouch = true;
-         if (buttons_control.cad_eingabe_aktiv) {
+         if ((buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element)) {
             mousemove(ev);
          }
          else {
@@ -780,11 +785,11 @@ function pointerup(ev: PointerEvent) {
 
       case 'touch':
          isTouch = true;
-         if (buttons_control.cad_eingabe_aktiv) {
+         if ((buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element)) {
             if (input_started === 0) penDown(ev);
             else if (buttons_control.n_input_points > 1) mouseup(ev);
          }
-         else {
+         else {     // if (!buttons_control.button_pressed)
             zoomIsActive = false;
 
             centerX_last = centerX;
@@ -906,7 +911,7 @@ function penDown(ev: PointerEvent) {
                   const el = new TCAD_Lager(group, start_x_wc, start_z_wc, index1, node, buttons_control.typ_cad_element);
                   list.append(el);
                   add_element_nodes(index1);
-                  group = draw_lager( tr, el);
+                  group = draw_lager(tr, el);
                   two.add(group);
                   el.setTwoObj(group)
                   two.update();
@@ -1236,7 +1241,7 @@ function mouseup(ev: any) {
                         const el = new TCAD_Lager(group, start_x_wc, start_z_wc, index1, node, buttons_control.typ_cad_element);
                         list.append(el);
                         add_element_nodes(index1);
-                        group = draw_lager( tr, el);
+                        group = draw_lager(tr, el);
                         two.add(group);
                         el.setTwoObj(group)
                         two.update();
