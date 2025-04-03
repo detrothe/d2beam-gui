@@ -149,7 +149,7 @@ export class drDialogLager extends LitElement {
 
             <td>k<sub>x'</sub>:</td>
             <td>
-              <input type="number" id="id_kx" name="kx" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" id="id_kx" name="kx" pattern="[0-9.,eE+-]*" value="" disabled/>
             </td>
             <td>kN/m</td>
           </tr>
@@ -159,7 +159,7 @@ export class drDialogLager extends LitElement {
             </td>
             <td>k<sub>z'</sub>:</td>
             <td>
-              <input type="number" id="id_kz" name="kz" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" id="id_kz" name="kz" pattern="[0-9.,eE+-]*" value="" disabled/>
             </td>
             <td>kN/m</td>
           </tr>
@@ -170,7 +170,7 @@ export class drDialogLager extends LitElement {
 
             <td>k<sub>&phi;</sub>:</td>
             <td>
-              <input type="number" id="id_kphi" name="kphi" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" id="id_kphi" name="kphi" pattern="[0-9.,eE+-]*" value="" disabled/>
             </td>
             <td>kNm/rad</td>
           </tr>

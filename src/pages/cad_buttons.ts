@@ -355,7 +355,8 @@ export function reDo_button() {
       }
       else if (obj.elTyp === CAD_LAGER) {
 
-        group = draw_lager(two, tr, obj)
+        group = draw_lager( tr, obj)
+        two.add(group);
         add_element_nodes(obj.index1);
       }
       else if (obj.elTyp === CAD_KNLAST) {
@@ -1326,7 +1327,7 @@ function update_knotenlager() {
   console.log("update_knotenlager", (obj_knlager as TCAD_Lager).node)
   let group = obj_knlager.getTwoObj();
   two.remove(group)
-  group = draw_lager(two, tr, obj_knlager as TCAD_Lager)
+  group = draw_lager( tr, obj_knlager as TCAD_Lager)
   two.add(group);
 
   obj_knlager.setTwoObj(group);

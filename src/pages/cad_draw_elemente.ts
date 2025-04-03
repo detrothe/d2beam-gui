@@ -116,7 +116,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_lager( two:Two,tr: CTrans, obj:TCAD_Lager) {
+export function draw_lager( tr: CTrans, obj:TCAD_Lager) {
     //----------------------------------------------------------------------------------------------------
 
     let node = obj.node;
@@ -127,24 +127,24 @@ export function draw_lager( two:Two,tr: CTrans, obj:TCAD_Lager) {
     let z1 = Math.round(tr.zPix(get_cad_node_Z(index1)));
     let phi = -node.phi * Math.PI / 180
 
-    let group: any
+    let group = new Two.Group();
 
     if (System === STABWERK) {
         if (((node.L_org[0] === 1) && (node.L_org[1] === 1) && (node.L_org[2] === 1)) ||
             ((node.kx > 0.0) && (node.kz > 0.0) && (node.L[2] === -1))) {  // Volleinspannung oder mit zwei Translkationsfedern
-            group = two.makeRectangle(x1, z1, 20, 20)
-            group.fill = '#dddddd';
-            group.scale = 1.0 / devicePixelRatio
-            group.rotation = phi
+            let rect = new Two.Rectangle(x1, z1, 20, 20)
+            rect.fill = '#dddddd';
+            rect.scale = 1.0 / devicePixelRatio
+            rect.rotation = phi
+            group.add(rect);
         }
         else if ((node.L[0] >= 0 || node.L_org[0] === -1) && (node.L_org[1] === 1) && (node.L_org[2] === 1)) {  // Einspannung, verschieblich in x-Richtung
 
-            group = two.makeGroup();
-            let rechteck = two.makeRectangle(0, 0, 20, 20)
+            let rechteck = new Two.Rectangle(0, 0, 20, 20)
             rechteck.fill = '#dddddd';
             group.add(rechteck)
 
-            let line = two.makeLine(-16, 15, 16, 15);
+            let line = new Two.Line(-16, 15, 16, 15);
             line.linewidth = 2;
 
             group.add(line)
@@ -157,12 +157,11 @@ export function draw_lager( two:Two,tr: CTrans, obj:TCAD_Lager) {
         }
         else if ((node.L_org[0] === 1) && (node.L[1] >= 0 || node.L_org[1] === -1) && (node.L_org[2] === 1)) {  // Einspannung, verschieblich in z-Richtung
 
-            group = two.makeGroup();
-            let rechteck = two.makeRectangle(0, 0, 20, 20)
+            let rechteck = new Two.Rectangle(0, 0, 20, 20)
             rechteck.fill = '#dddddd';
             group.add(rechteck)
 
-            let line = two.makeLine(-16, 15, 16, 15);
+            let line = new Two.Line(-16, 15, 16, 15);
             line.linewidth = 2;
 
             group.add(line)
@@ -173,16 +172,15 @@ export function draw_lager( two:Two,tr: CTrans, obj:TCAD_Lager) {
         }
         else if ((node.L[0] >= 0 || node.L_org[0] === -1) && (node.L[1] >= 0 || node.L_org[1] === -1) && (node.L_org[2] === 1)) {  // Einspannung, verschieblich in x-, z-Richtung
 
-            group = two.makeGroup();
-            let rechteck = two.makeRectangle(0, 0, 20, 20)
+            let rechteck = new Two.Rectangle(0, 0, 20, 20)
             rechteck.fill = '#dddddd';
             group.add(rechteck)
 
-            let line = two.makeLine(-16, 15, 12, 15);
+            let line = new Two.Line(-16, 15, 12, 15);
             line.linewidth = 2;
             group.add(line)
 
-            let line2 = two.makeLine(15, -16, 15, 12);
+            let line2 = new Two.Line(15, -16, 15, 12);
             line2.linewidth = 2;
             group.add(line2)
 
@@ -194,18 +192,19 @@ export function draw_lager( two:Two,tr: CTrans, obj:TCAD_Lager) {
 
         }
         else if ((node.L_org[0] === 1) && (node.L_org[1] === 1) && (node.L_org[2] === -1 || node.L[2] >= 0)) { // zweiwertiges Lager
-            group = two.makeGroup();
+
             //console.log("in zweiwertiges Lager")
-            var vertices = [];
+            let vertices = [];
             vertices.push(new Two.Anchor(0, 0));
             vertices.push(new Two.Anchor(-12, 20));
             vertices.push(new Two.Anchor(12, 20));
 
-            let flaeche = two.makePath(vertices);
+            let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
+            flaeche.closed=true;
             group.add(flaeche)
 
-            let line = two.makeLine(-18, 20, 18, 20);
+            let line = new Two.Line(-18, 20, 18, 20);
             line.linewidth = 2;
 
             group.add(line)
@@ -217,18 +216,19 @@ export function draw_lager( two:Two,tr: CTrans, obj:TCAD_Lager) {
 
         }
         else if ((node.L[0] >= 0 || node.L_org[0] === -1) && (node.L_org[1] === 1) && (node.L[2] >= 0 || node.L_org[2] === -1)) { // einwertiges horizontal verschieblisches Lager
-            group = two.makeGroup();
+
             //console.log("in einwertiges horizontal verschieblisches Lager")
             var vertices = [];
             vertices.push(new Two.Anchor(0, 0));
             vertices.push(new Two.Anchor(-12, 20));
             vertices.push(new Two.Anchor(12, 20));
 
-            let flaeche = two.makePath(vertices);
+            let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
+            flaeche.closed=true;
             group.add(flaeche)
 
-            let line = two.makeLine(-18, 25, 18, 25);
+            let line = new Two.Line(-18, 25, 18, 25);
             line.linewidth = 2;
 
             group.add(line)
@@ -240,18 +240,19 @@ export function draw_lager( two:Two,tr: CTrans, obj:TCAD_Lager) {
 
         }
         else if ((node.L_org[0] === 1) && (node.L[1] >= 0 || node.L_org[1] === -1) && (node.L[2] >= 0 || node.L_org[2] === -1)) { // einwertiges vertikal verschieblisches Lager
-            group = two.makeGroup();
+
             //console.log("in einwertiges vertikales verschieblisches Lager")
             var vertices = [];
             vertices.push(new Two.Anchor(0, 0));
             vertices.push(new Two.Anchor(-12, 20));
             vertices.push(new Two.Anchor(12, 20));
 
-            let flaeche = two.makePath(vertices);
+            let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
+            flaeche.closed=true;
             group.add(flaeche)
 
-            let line = two.makeLine(-18, 25, 18, 25);
+            let line = new Two.Line(-18, 25, 18, 25);
             line.linewidth = 2;
 
             group.add(line)
@@ -264,18 +265,19 @@ export function draw_lager( two:Two,tr: CTrans, obj:TCAD_Lager) {
         }
     } else {                     // Fachwerk
         if ((node.L[0] === -1) && (node.L[1] === -1)) { // zweiwertiges Lager
-            group = two.makeGroup();
+
             //console.log("in zweiwertiges Lager")
-            var vertices = [];
+            let vertices = [];
             vertices.push(new Two.Anchor(0, 0));
             vertices.push(new Two.Anchor(-12, 20));
             vertices.push(new Two.Anchor(12, 20));
 
-            let flaeche = two.makePath(vertices);
+            let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
+            flaeche.closed=true;
             group.add(flaeche)
 
-            let line = two.makeLine(-18, 20, 18, 20);
+            let line = new Two.Line(-18, 20, 18, 20);
             line.linewidth = 2;
 
             group.add(line)
@@ -287,18 +289,19 @@ export function draw_lager( two:Two,tr: CTrans, obj:TCAD_Lager) {
 
         }
         else if ((node.L[0] >= 0) && (node.L[1] === -1)) { // einwertiges horizontal verschieblisches Lager
-            group = two.makeGroup();
+
             //console.log("in einwertiges horizontal verschieblisches Lager")
             var vertices = [];
             vertices.push(new Two.Anchor(0, 0));
             vertices.push(new Two.Anchor(-12, 20));
             vertices.push(new Two.Anchor(12, 20));
 
-            let flaeche = two.makePath(vertices);
+            let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
+            flaeche.closed=true;
             group.add(flaeche)
 
-            let line = two.makeLine(-18, 25, 18, 25);
+            let line = new Two.Line(-18, 25, 18, 25);
             line.linewidth = 2;
 
             group.add(line)
@@ -310,18 +313,19 @@ export function draw_lager( two:Two,tr: CTrans, obj:TCAD_Lager) {
 
         }
         else if ((node.L[0] === -1) && (node.L[1] >= 0)) { // einwertiges vertikal verschieblisches Lager
-            group = two.makeGroup();
+
             //console.log("in einwertiges vertikales Lager")
             var vertices = [];
             vertices.push(new Two.Anchor(0, 0));
             vertices.push(new Two.Anchor(-12, 20));
             vertices.push(new Two.Anchor(12, 20));
 
-            let flaeche = two.makePath(vertices);
+            let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
+            flaeche.closed=true;
             group.add(flaeche)
 
-            let line = two.makeLine(-18, 25, 18, 25);
+            let line = new Two.Line(-18, 25, 18, 25);
             line.linewidth = 2;
 
             group.add(line)

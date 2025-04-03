@@ -223,7 +223,7 @@ export function redraw_lager(obj: TCAD_Lager) {
    // let index1 = obj.index1
    // obj.node.x= get_cad_node_X(index1)
    // obj.node.z= get_cad_node_Z(index1)
-   group = draw_lager(two, tr, obj)
+   group = draw_lager( tr, obj)
 
    two.add(group);
    obj.setTwoObj(group);
@@ -601,7 +601,9 @@ export function init_cad(flag: number) {
          obj.setTwoObj(group);
       }
       else if (obj.elTyp === CAD_LAGER) {
-         draw_lager(two, tr, obj as TCAD_Lager)
+         let group=draw_lager( tr, obj as TCAD_Lager)
+         two.add(group);
+         obj.setTwoObj(group);
       }
       else if (obj.elTyp === CAD_KNLAST) {
          let load = new TLoads();
@@ -904,7 +906,8 @@ function penDown(ev: PointerEvent) {
                   const el = new TCAD_Lager(group, start_x_wc, start_z_wc, index1, node, buttons_control.typ_cad_element);
                   list.append(el);
                   add_element_nodes(index1);
-                  group = draw_lager(two, tr, el);
+                  group = draw_lager( tr, el);
+                  two.add(group);
                   el.setTwoObj(group)
                   two.update();
                } else {
@@ -1233,7 +1236,8 @@ function mouseup(ev: any) {
                         const el = new TCAD_Lager(group, start_x_wc, start_z_wc, index1, node, buttons_control.typ_cad_element);
                         list.append(el);
                         add_element_nodes(index1);
-                        group = draw_lager(two, tr, el);
+                        group = draw_lager( tr, el);
+                        two.add(group);
                         el.setTwoObj(group)
                         two.update();
                      } else {
