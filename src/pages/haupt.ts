@@ -46,7 +46,7 @@ import { reset_gui } from "./mypanelgui";
 import DetectOS from "./detectos";
 
 import { addListener_filesave } from "./dateien";
-import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik, reset_controlpanel_grafik, init_two } from "./grafik";
+import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik, reset_controlpanel_grafik, init_two, init_grafik } from "./grafik";
 import { myFormat, set_info, write } from "./utility";
 
 import { my_jspdf } from "./mypdf";
@@ -76,7 +76,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 3-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.c, 3-April-2025, ";
 //########################################################################################################################
 
 
@@ -324,7 +324,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               <sl-menu-item value="delete">Löschen</sl-menu-item>
               <sl-menu-item value="abbruch"  @click="${abbruch_property_dialog}">Abbruch</sl-menu-item>
             </sl-menu>
-        </div>
+          </div>
 
           <div id="artboard_cad" style="margin:0;padding:0;"></div>
           <div id="svg_artboard_cad" style="margin:0;padding:0;display:none"></div>
@@ -340,7 +340,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
-      <sl-tab-panel name="tab-grafik">
+      <sl-tab-panel name="tab-grafik"  id="id_tab-grafik">
         <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0">
           <!-- width:100vw; ;width:300px;height:300px; -->
           <div id="panel_gui"></div>
@@ -358,7 +358,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           </div>
           <button id="id_button_zurueck_grafik">Fullscreen</button>
 
-          <div id="artboard" style="margin:0;padding:0;"></div>
+          <div id="artboard" style="margin:0;padding:0;background-color:#ffff00;"></div>
           <div id="svg_artboard" style="margin:0;padding:0;display:none"></div>
         </div>
       </sl-tab-panel>
@@ -1254,6 +1254,11 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
     console.log("Tab CAD is complete"); // true
 
   });
+  let ttt = document.getElementById("id_tab-grafik") as SlTabPanel;
+  ttt.updateComplete.then(() => {
+    console.log("Tab GRAFIK is complete"); // true
+    init_two('artboard', false);
+  });
 
   // let div_cad_group = document.getElementById("id_tab-cad") as HTMLDivElement
   // div_cad_group!.addEventListener("load", (event) => {
@@ -1308,10 +1313,12 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
   init_tabellen();
 
-  init_two('artboard', false);
 
   init_two_cad();
   init_cad(0);
+
+  //init_grafik(0);
+  //init_two('artboard', false);
 
   // let divi = document.getElementById("id_context_menu");
 
@@ -1828,4 +1835,5 @@ function elementTabelle_bettung_anzeigen(check: boolean) {
     for (let i = 13; i > 12; i--) el?.setAttribute("hide_column", String(i));
   }
 }
+
 

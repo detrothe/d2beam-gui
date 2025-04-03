@@ -320,8 +320,10 @@ export function click_zurueck_grafik() {
 
 //--------------------------------------------------------------------------------------------------- i n i t _ t w o
 
-export function init_two(svg_id = 'artboard', setEvents=true) {
+export function init_two(svg_id = 'artboard', setEvents = true) {
 
+    console.log(":::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+    console.log("init_two two",svg_id,two)
 
     if (two !== null) {
         // let parent = two.renderer.domElement.parentElement
@@ -330,13 +332,14 @@ export function init_two(svg_id = 'artboard', setEvents=true) {
         two.unbind('update')
         two.pause()
         two.removeEventListener()
-        two.clear()
+        console.log("two.clear",two.clear() );
 
         //two.bind('update')
         //        let parent = two.renderer.domElement.parentelement;
         //console.log("Parent ", parent)
         //if (parent) parent.removeChild(two.renderer.domElement);
     }
+
 
     if (domElement != null) {
         // domElement.removeEventListener('wheel', wheel, { passive: false });
@@ -437,7 +440,7 @@ export function init_grafik(flag: number) {
     centerY_last = 0.0
 
     init_panel()
-    two = null;
+    //two = null;
 
 
     //window.addEventListener('wheel', wheel, { passive: false });
@@ -1011,8 +1014,8 @@ export function drawsystem(svg_id = 'artboard') {
     let breite: number
     let hoehe: number
     if (show_selection) {
-        console.log("document.documentElement",document.documentElement.clientWidth,window.innerWidth)
-        console.log("two=",two)
+        //console.log("document.documentElement", document.documentElement.clientWidth, window.innerWidth)
+        //console.log("two=", two)
         two.width = document.documentElement.clientWidth;
         two.height = height
         breite = two.width;
