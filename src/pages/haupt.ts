@@ -76,7 +76,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.c, 3-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 5-April-2025, ";
 //########################################################################################################################
 
 
@@ -358,7 +358,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           </div>
           <button id="id_button_zurueck_grafik">Fullscreen</button>
 
-          <div id="artboard" style="margin:0;padding:0;background-color:#ffff00;"></div>
+          <div id="artboard" style="margin:0;padding:0;background-color:#ffffff;"></div>
           <div id="svg_artboard" style="margin:0;padding:0;display:none"></div>
         </div>
       </sl-tab-panel>
@@ -1257,7 +1257,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   let ttt = document.getElementById("id_tab-grafik") as SlTabPanel;
   ttt.updateComplete.then(() => {
     console.log("Tab GRAFIK is complete"); // true
-    init_two('artboard', false);
+    //init_two('artboard', false);
   });
 
   // let div_cad_group = document.getElementById("id_tab-cad") as HTMLDivElement

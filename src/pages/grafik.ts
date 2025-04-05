@@ -323,7 +323,7 @@ export function click_zurueck_grafik() {
 export function init_two(svg_id = 'artboard', setEvents = true) {
 
     console.log(":::::::::::::::::::::::::::::::::::::::::::::::::::::::")
-    console.log("init_two two",svg_id,two)
+    console.log("init_two two", svg_id, two)
 
     if (two !== null) {
         // let parent = two.renderer.domElement.parentElement
@@ -332,7 +332,7 @@ export function init_two(svg_id = 'artboard', setEvents = true) {
         two.unbind('update')
         two.pause()
         two.removeEventListener()
-        console.log("two.clear",two.clear() );
+        console.log("two.clear", two.clear());
 
         //two.bind('update')
         //        let parent = two.renderer.domElement.parentelement;
@@ -377,6 +377,7 @@ export function init_two(svg_id = 'artboard', setEvents = true) {
 
     if (svg_id === 'svg_artboard') params.type = Two.Types.svg
 
+    if (two) two.clear();
     two = null;
     const artboard = document.getElementById(svg_id) as any;
 
