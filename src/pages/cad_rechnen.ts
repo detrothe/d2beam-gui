@@ -2,6 +2,7 @@ import { drButtonPM } from "../components/dr-button-pm";
 
 import { CAD_KNLAST, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
+import { max_Lastfall } from "./cad_draw_elementlasten";
 import { CADNodes } from "./cad_node";
 import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast } from "./CCAD_element";
 import {
@@ -215,11 +216,11 @@ export function cad_rechnen() {
 
     {  // Tabellen für Lastfälle und Kombinationen initialisieren
 
-        set_nlastfaelle(1)
+        set_nlastfaelle(max_Lastfall)
         let el = document.getElementById("id_button_nlastfaelle") as drButtonPM;
-        el.setValue(1);
+        el.setValue(max_Lastfall);
         let elTab = document.getElementById("id_lastfaelle_tabelle");
-        elTab?.setAttribute("nzeilen", '1');
+        elTab?.setAttribute("nzeilen", String(max_Lastfall));
 
         set_nkombinationen(0)
         el = document.getElementById("id_button_nkombinationen") as drButtonPM;

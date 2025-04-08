@@ -106,7 +106,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     }
 
     if (obj.elast.length > 0) {
-        let gr = draw_elementlasten( tr, obj)
+        let gr = draw_elementlasten(tr, obj)
         group.add(gr)
     }
 
@@ -116,7 +116,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_lager( tr: CTrans, obj:TCAD_Lager) {
+export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
     //----------------------------------------------------------------------------------------------------
 
     let node = obj.node;
@@ -201,7 +201,7 @@ export function draw_lager( tr: CTrans, obj:TCAD_Lager) {
 
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
-            flaeche.closed=true;
+            flaeche.closed = true;
             group.add(flaeche)
 
             let line = new Two.Line(-18, 20, 18, 20);
@@ -225,7 +225,7 @@ export function draw_lager( tr: CTrans, obj:TCAD_Lager) {
 
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
-            flaeche.closed=true;
+            flaeche.closed = true;
             group.add(flaeche)
 
             let line = new Two.Line(-18, 25, 18, 25);
@@ -249,7 +249,7 @@ export function draw_lager( tr: CTrans, obj:TCAD_Lager) {
 
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
-            flaeche.closed=true;
+            flaeche.closed = true;
             group.add(flaeche)
 
             let line = new Two.Line(-18, 25, 18, 25);
@@ -274,7 +274,7 @@ export function draw_lager( tr: CTrans, obj:TCAD_Lager) {
 
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
-            flaeche.closed=true;
+            flaeche.closed = true;
             group.add(flaeche)
 
             let line = new Two.Line(-18, 20, 18, 20);
@@ -298,7 +298,7 @@ export function draw_lager( tr: CTrans, obj:TCAD_Lager) {
 
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
-            flaeche.closed=true;
+            flaeche.closed = true;
             group.add(flaeche)
 
             let line = new Two.Line(-18, 25, 18, 25);
@@ -322,7 +322,7 @@ export function draw_lager( tr: CTrans, obj:TCAD_Lager) {
 
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
-            flaeche.closed=true;
+            flaeche.closed = true;
             group.add(flaeche)
 
             let line = new Two.Line(-18, 25, 18, 25);
@@ -358,7 +358,7 @@ export function draw_lager( tr: CTrans, obj:TCAD_Lager) {
 }
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_knotenlast( tr: CTrans, load: TLoads, x: number, z: number, fact: number, lf_show: number) {
+export function draw_knotenlast(tr: CTrans, load: TLoads, x: number, z: number, fact: number, lf_show: number) {
     //----------------------------------------------------------------------------------------------------
 
     let slmax = 10
@@ -374,6 +374,10 @@ export function draw_knotenlast( tr: CTrans, load: TLoads, x: number, z: number,
     let group = new Two.Group();
 
     console.log("draw_knotenlast", x, z, plength, delta, load)
+
+    lf_show = load.lf - 1    // noch überarbeiten
+
+
     // let iLastfall = draw_lastfall
 
     // if (THIIO_flag === 0 && matprop_flag === 0) {
@@ -439,7 +443,7 @@ export function draw_knotenlast( tr: CTrans, load: TLoads, x: number, z: number,
             let gr = draw_arrow(tr, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
             group.add(gr)
         } else {
-            let gr = draw_arrow( tr, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+            let gr = draw_arrow(tr, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
             group.add(gr)
         }
         xpix = tr.xPix(x + delta + plength) + 5
@@ -455,10 +459,10 @@ export function draw_knotenlast( tr: CTrans, load: TLoads, x: number, z: number,
 
         wert = load.Pz * fact
         if (wert > 0.0) {
-            let gr = draw_arrow( tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
+            let gr = draw_arrow(tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
             group.add(gr)
         } else {
-            let gr = draw_arrow( tr, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
+            let gr = draw_arrow(tr, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
             group.add(gr)
         }
 
@@ -477,10 +481,10 @@ export function draw_knotenlast( tr: CTrans, load: TLoads, x: number, z: number,
         let radius = style_pfeil_moment.radius;
         //console.log("Moment ", +inode + 1, wert)
         if (wert > 0.0) {
-            let gr = draw_moment_arrow( tr, x, z, 1.0, slmax / 50, style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, 1.0, slmax / 50, style_pfeil_moment)
             group.add(gr)
         } else {
-            let gr = draw_moment_arrow( tr, x, z, -1.0, slmax / 50, style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, -1.0, slmax / 50, style_pfeil_moment)
             group.add(gr)
         }
 
@@ -500,7 +504,7 @@ export function draw_knotenlast( tr: CTrans, load: TLoads, x: number, z: number,
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_arrow( tr: CTrans, x1: number, z1: number, x2: number, z2: number, styles?: any) {
+export function draw_arrow(tr: CTrans, x1: number, z1: number, x2: number, z2: number, styles?: any) {
     //----------------------------------------------------------------------------------------------------
 
     let b = 20, h = 10, linewidth = 2, color = '#000000'
@@ -576,7 +580,7 @@ export function draw_arrow( tr: CTrans, x1: number, z1: number, x2: number, z2: 
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_moment_arrow( tr: CTrans, x0: number, z0: number, vorzeichen: number, radius: number, styles?: any) {
+export function draw_moment_arrow(tr: CTrans, x0: number, z0: number, vorzeichen: number, radius: number, styles?: any) {
     //----------------------------------------------------------------------------------------------------
     let b = 20, h = 10
     let x = 0.0, z = 0.0, linewidth = 2, color = '#000000'

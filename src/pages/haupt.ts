@@ -76,7 +76,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 5-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 8-April-2025, ";
 //########################################################################################################################
 
 
@@ -193,7 +193,7 @@ portrait.addEventListener("change", function (e) {
 
     <sl-tab-group id="id_sl_tab_group">
       <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">Haupt</sl-tab>
-      <sl-tab id="id_CAD" slot="nav" panel="tab-cad">CAD</sl-tab>
+      <sl-tab id="id_CAD" slot="nav" panel="tab-cad">System</sl-tab>
       <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
       <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
       <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>

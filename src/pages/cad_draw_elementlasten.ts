@@ -1,17 +1,102 @@
 import Two from "two.js"
 import { CTrans } from "./trans"
-import { TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast } from "./CCAD_element"
+import { TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast } from "./CCAD_element"
 import { opacity, style_pfeil, style_txt_knotenlast } from "./grafik"
 import { myFormat } from "./utility"
-import { CAD_STAB, list } from "./cad"
+import { CAD_KNLAST, CAD_STAB, list } from "./cad"
 import { draw_arrow } from "./cad_draw_elemente"
 import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
 
+class CMAXVALUESLOAD {
+    eload = 0.0
+    constructor() {
+        this.eload = 0.0
+    }
+
+}
+
+export let max_value_lasten = [] as CMAXVALUESLOAD[];
+
+export let max_Lastfall = 0
+export function zero_max_lastfall() { max_Lastfall = 0; }
+export function set_max_lastfall(lf: number) {
+    if (lf > max_Lastfall) {
+        for (let i = max_Lastfall; i < lf; i++) {
+            max_value_lasten.push(new CMAXVALUESLOAD);
+        }
+        max_Lastfall = lf;
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function find_max_Lastfall(): boolean {
+    //-----------------------------------------------------------------------------------------------------------
+
+    let max_Lastfall_old = max_Lastfall;
+    max_Lastfall = 0
+
+
+    for (let i = 0; i < list.size; i++) {
+        let obj = list.getAt(i) as TCAD_Element;
+        if (obj.elTyp === CAD_STAB) {
+            let neloads = (obj as TCAD_Stab).elast.length
+            if (neloads > 0) {
+                for (let j = 0; j < neloads; j++) {
+                    let lf = (obj as TCAD_Stab).elast[j].lastfall
+                    if (lf > max_Lastfall) max_Lastfall = lf
+                }
+            }
+        }
+        else if (obj.elTyp === CAD_KNLAST) {
+            let lf = (obj as TCAD_Knotenlast).knlast.lf
+            if (lf > max_Lastfall) max_Lastfall = lf
+        }
+    }
+    console.log("MAX LASTFALL", max_Lastfall)
+
+    if (max_Lastfall !== max_Lastfall_old) return true;    // Änderung der größten Lastfall nummer
+    else return false;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function find_maxValues_eloads() {
+    //-----------------------------------------------------------------------------------------------------------
+
+    max_value_lasten.length = 0
+
+    console.log("in find_maxValues_eloads, max_Lastfall",max_Lastfall)
+
+    for (let i = 0; i < max_Lastfall; i++) {
+        max_value_lasten.push(new CMAXVALUESLOAD);
+    }
+
+    for (let i = 0; i < list.size; i++) {
+        let obj = list.getAt(i) as TCAD_Stab;
+        if (obj.elTyp === CAD_STAB) {
+            let neloads = obj.elast.length
+            if (neloads > 0) {
+                for (let j = 0; j < neloads; j++) {
+                    let typ = (obj.elast[j] as TCAD_ElLast).typ
+                    let lf = obj.elast[j].lastfall
+                    if (typ === 0) { // Streckenlast
+                        if (Math.abs((obj.elast[j] as TCAD_Streckenlast).pL) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs((obj.elast[j] as TCAD_Streckenlast).pL);
+                        if (Math.abs((obj.elast[j] as TCAD_Streckenlast).pR) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs((obj.elast[j] as TCAD_Streckenlast).pR);
+                    }
+                }
+            }
+        }
+    }
+
+    for (let i=0;i<max_Lastfall;i++) {
+        console.log("max_value_lasten",max_value_lasten[i].eload)
+    }
+}
+
 //--------------------------------------------------------------------------------------------------------
-export function draw_elementlasten( tr: CTrans, obj: TCAD_Stab) {
+export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_elementlasten", obj)
+    //console.log("in draw_elementlasten", obj)
 
     let slmax = 10;
 
@@ -24,7 +109,7 @@ export function draw_elementlasten( tr: CTrans, obj: TCAD_Stab) {
     let x = Array(4), z = Array(4), xtr = Array(4), ztr = Array(4)
 
     let xpix: number, zpix: number, scalefactor = 1.0, nLoop = 0   //  lf_index = 0
-    let iLastfall = 1    //draw_lastfall
+    // let iLastfall =(obj.elast[j] as TCAD_Streckenlast).lastfall
     let fact = Array(1)     // nlastfaelle)
     let lf_show = Array(1)  // nlastfaelle)
 
@@ -32,7 +117,7 @@ export function draw_elementlasten( tr: CTrans, obj: TCAD_Stab) {
     nLoop = 1
     fact[0] = 1.0
     lf_show[0] = 0   //draw_lastfall - 1
-    scalefactor = slmax / 20 / 5  //maxValue_eload[draw_lastfall - 1]
+    // scalefactor = slmax / 20 / max_value_lasten[iLastfall - 1].eload
 
     // if (THIIO_flag === 0) {
     //     if (iLastfall <= nlastfaelle) {
@@ -124,6 +209,11 @@ export function draw_elementlasten( tr: CTrans, obj: TCAD_Stab) {
 
             for (let j = 0; j < obj.elast.length; j++) {
                 let typ = obj.elast[j].typ
+
+                let iLastfall = (obj.elast[j] as TCAD_Streckenlast).lastfall
+                console.log("SCALEFACTOR", iLastfall, max_value_lasten[iLastfall - 1].eload)
+                scalefactor = slmax / 20 / max_value_lasten[iLastfall - 1].eload
+
                 if (typ === 0) { // Streckenlast
 
                     let p_L = (obj.elast[j] as TCAD_Streckenlast).pL
@@ -133,7 +223,7 @@ export function draw_elementlasten( tr: CTrans, obj: TCAD_Stab) {
 
                     if ((obj.elast[j] as TCAD_Streckenlast).art === 0) {
 
-                        console.log("in draw_elementlasten", p_L, p_R)
+                        // console.log("in draw_elementlasten", p_L, p_R)
 
                         pL = p_L * scalefactor * fact[iLoop]
                         pR = p_R * scalefactor * fact[iLoop]
@@ -165,7 +255,7 @@ export function draw_elementlasten( tr: CTrans, obj: TCAD_Stab) {
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow( tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            let gr = draw_arrow(tr, x[3], z[3], x[0], z[0], style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
@@ -237,11 +327,11 @@ export function draw_elementlasten( tr: CTrans, obj: TCAD_Stab) {
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow( tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            let gr = draw_arrow(tr, x[3], z[3], x[0], z[0], style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow( tr, x[2], z[2], x[1], z[1], style_pfeil)
+                            let gr = draw_arrow(tr, x[2], z[2], x[1], z[1], style_pfeil)
                             group.add(gr)
                         }
 
@@ -315,7 +405,7 @@ export function draw_elementlasten( tr: CTrans, obj: TCAD_Stab) {
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow( tr, x[2], z[2], x[1], z[1], style_pfeil)
+                            let gr = draw_arrow(tr, x[2], z[2], x[1], z[1], style_pfeil)
                             group.add(gr)
                         }
 
@@ -387,11 +477,11 @@ export function draw_elementlasten( tr: CTrans, obj: TCAD_Stab) {
                         group.add(line)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow( tr, x[0], z[0], x[3], z[3], style_pfeil)
+                            let gr = draw_arrow(tr, x[0], z[0], x[3], z[3], style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow( tr, x[1], z[1], x[2], z[2], style_pfeil)
+                            let gr = draw_arrow(tr, x[1], z[1], x[2], z[2], style_pfeil)
                             group.add(gr)
                         }
 
@@ -460,11 +550,11 @@ export function draw_elementlasten( tr: CTrans, obj: TCAD_Stab) {
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow( tr, x[0], z[0], x[3], z[3], style_pfeil)
+                            let gr = draw_arrow(tr, x[0], z[0], x[3], z[3], style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow( tr, x[1], z[1], x[2], z[2], style_pfeil)
+                            let gr = draw_arrow(tr, x[1], z[1], x[2], z[2], style_pfeil)
                             group.add(gr)
                         }
 

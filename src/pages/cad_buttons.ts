@@ -28,6 +28,7 @@ import { drDialogKnoten } from "../components/dr-dialog_knoten";
 import { CTrans } from "./trans";
 import Two from "two.js";
 import { add_element_nodes, CADNodes, get_cad_node_X, get_cad_node_Z, remove_element_nodes } from "./cad_node";
+import { find_max_Lastfall, find_maxValues_eloads, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 
 //export let pick_element = false
 
@@ -303,12 +304,15 @@ export function unDo_button() {
     if ((obj as TCAD_Element).elTyp === CAD_STAB) {
       remove_element_nodes((obj as TCAD_Stab).index1)
       remove_element_nodes((obj as TCAD_Stab).index2)
+      find_max_Lastfall();
+      find_maxValues_eloads();
     }
     else if ((obj as TCAD_Element).elTyp === CAD_LAGER) {
       remove_element_nodes((obj as TCAD_Lager).index1)
     }
     else if ((obj as TCAD_Element).elTyp === CAD_KNLAST) {
       remove_element_nodes((obj as TCAD_Knotenlast).index1)
+      find_max_Lastfall();
     }
     else if ((obj as TCAD_Element).elTyp === CAD_KNOTEN) {
       let index = (obj as TCAD_Knoten).index1
@@ -347,6 +351,9 @@ export function reDo_button() {
       group = drawStab(obj.obj_element, tr);
       two.add(group);
       obj.obj_element.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
+
+      find_max_Lastfall();
+      find_maxValues_eloads();
     }
     else {
       if (obj.elTyp === CAD_STAB) {
@@ -368,6 +375,8 @@ export function reDo_button() {
         group = draw_knotenlast(tr, load, get_cad_node_X(index1), get_cad_node_Z(index1), 1.0, 0)
         two.add(group);
         add_element_nodes(obj.index1);
+
+        find_max_Lastfall();
       }
       else if (obj.elTyp === CAD_KNOTEN) {
         //console.log("KNOTEN reDo", obj.x1, obj.z1)
@@ -528,6 +537,9 @@ export function delete_element(xc: number, zc: number) {
     obj_ellast.setTwoObj(group);
     two.update();
     undoList.append(undo_obj);
+
+    find_max_Lastfall();
+    find_maxValues_eloads();
   }
   else if (lager_gefunden) {
     let obj = list.removeAt(index_lager);
@@ -557,6 +569,8 @@ export function delete_element(xc: number, zc: number) {
     remove_element_nodes((obj as TCAD_Knotenlast).index1)
     undoList.append(obj);
     buttons_control.reset();
+
+    find_max_Lastfall();
   }
   else if (index >= 0 && min_abstand < 0.25) {          // Stab
     if (list.size > 0) {
@@ -640,7 +654,7 @@ export function select_element(xc: number, zc: number) {
       if (xpix > rect.left && xpix < rect.right) {
         if (zpix > rect.top && zpix < rect.bottom) {
           lager_gefunden = true
-          index_lager = i;
+          index_lager = (obj as TCAD_Lager).index1;
           obj_knlager = obj
         }
       }
@@ -660,12 +674,13 @@ export function select_element(xc: number, zc: number) {
     else if (obj.elTyp === CAD_KNOTEN) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
-      console.log("rect Knoten", rect, xc, zc)
+      //console.log("rect Knoten", rect, xc, zc)
       if (xpix > rect.left && xpix < rect.right) {
         if (zpix > rect.top && zpix < rect.bottom) {
           knoten_gefunden = true
           obj_knoten = obj
-          index_obj_knoten = i
+          index_obj_knoten = (obj as TCAD_Knoten).index1
+          console.log("index_obj_knoten",index_obj_knoten)
 
         }
       }
@@ -824,6 +839,7 @@ export function add_elementlast(xc: number, zc: number) {
       const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
 
       let lf = ele.get_lastfall()
+      set_max_lastfall(lf);
 
       let typ = ele.get_typ();
 
@@ -834,6 +850,9 @@ export function add_elementlast(xc: number, zc: number) {
 
         console.log("in add_elementlast ", index, lf, art, pa, pe)
         obj.add_streckenlast(lf, art, pa, pe)
+
+        if (Math.abs(pa) > max_value_lasten[lf-1].eload) max_value_lasten[lf-1].eload = Math.abs(pa);
+        if (Math.abs(pe) > max_value_lasten[lf-1].eload) max_value_lasten[lf-1].eload = Math.abs(pe);
       }
       else if (typ === 2) {
         let To = ele.get_To()
@@ -1134,6 +1153,8 @@ export function read_knotenlast_dialog(knlast: TLoads) {
   console.log("lf=", elem.value);
   knlast.lf = +elem.value
 
+  set_max_lastfall(knlast.lf)
+
   elem = el?.shadowRoot?.getElementById("id_px") as HTMLInputElement;
   knlast.Px = +elem.value
 
@@ -1281,17 +1302,21 @@ function update_elementlast() {
 
     (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).To = To;
     (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).Tu = Tu;
+    (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).lastfall = lf;
   }
+
+  find_max_Lastfall();
+  find_maxValues_eloads();
 
   let group = obj_ellast.getTwoObj();
   two.remove(group)
   group = drawStab(obj_ellast as TCAD_Stab, tr);
   two.add(group)
   obj_ellast.setTwoObj(group);
+
   two.update();
 
   buttons_control.reset();
-
 
 }
 
@@ -1306,6 +1331,8 @@ function update_knotenlast() {
   let knlast = new TLoads();
   read_knotenlast_dialog(knlast)
   obj_knlast.knlast = knlast
+
+  find_max_Lastfall();
 
   let group = obj_knlast.getTwoObj();
   two.remove(group)
@@ -1385,7 +1412,8 @@ export function update_knoten() {
   for (let i = 0; i < list.size; i++) {
     let obj = list.getAt(i) as TCAD_Element;
     if (obj.elTyp === CAD_STAB) {
-      if (index_obj_knoten === obj.index1) redraw_stab(obj as TCAD_Stab);
+      console.log("update_knoten",index_obj_knoten,(obj as TCAD_Stab).index1,(obj as TCAD_Stab).index2)
+      if (index_obj_knoten === (obj as TCAD_Stab).index1) redraw_stab(obj as TCAD_Stab);
       if (index_obj_knoten === (obj as TCAD_Stab).index2) redraw_stab(obj as TCAD_Stab);
     }
     else if (obj.elTyp === CAD_KNLAST) {

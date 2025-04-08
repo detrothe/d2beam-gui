@@ -220,9 +220,6 @@ export function redraw_lager(obj: TCAD_Lager) {
    let group = obj.getTwoObj();
    two.remove(group);
 
-   // let index1 = obj.index1
-   // obj.node.x= get_cad_node_X(index1)
-   // obj.node.z= get_cad_node_Z(index1)
    group = draw_lager(tr, obj)
 
    two.add(group);
