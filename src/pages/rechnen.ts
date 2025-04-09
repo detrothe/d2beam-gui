@@ -1775,7 +1775,7 @@ export function init_tabellen() {
 
     // let el = document.getElementById('id_knoten_tabelle');
 
-    let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    // let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
     // (table.rows[1].cells[3].firstElementChild as HTMLInputElement).value = '1';
     // (table.rows[1].cells[4].firstElementChild as HTMLInputElement).value = '1';

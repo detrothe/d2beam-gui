@@ -10,7 +10,10 @@ import {
   CAD_EINSTELLUNGEN,
   set_raster_dx,
   set_raster_dz,
-  init_cad
+  init_cad,
+  set_dx_offset_touch,
+  set_dz_offset_touch,
+  set_touch_support
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -1126,10 +1129,13 @@ function dialog_einstellungen_closed(this: any, e: any) {
     // if (mode_knotenlast_aendern) update_knotenlast();
     let el = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
     console.log("dx drDialogEinstellungen", el.getValue_dx())
-    let dx = el.getValue_dx();
-    let dz=el.getValue_dz();
-    set_raster_dx(dx);
-    set_raster_dz(dz);
+
+    set_raster_dx(el.getValue_dx());
+    set_raster_dz(el.getValue_dz());
+    set_dx_offset_touch(el.get_dx_offset())
+    set_dz_offset_touch(el.get_dz_offset())
+    set_touch_support(!el.get_NO_touch_support())
+
     init_cad(2);
   } else {
     // Abbruch

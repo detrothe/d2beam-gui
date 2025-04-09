@@ -1,3 +1,4 @@
+import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
@@ -138,6 +139,21 @@ export class drDialogEinstellungen extends LitElement {
       </table>
 
       <p>
+        Cursor Offset bei Touch (Finger) Eingabe (bei 0 befindet sich der Cursor direkt unter dem Finger):
+      </p>
+      <p>
+        dx:
+        <input type="number" id="id_dx_offset" name="dx_offset" pattern="[0-9.,eE+-]*" value="-100" />
+        [-]
+      </p>
+      <p>
+        dz:
+        <input type="number" id="id_dz_offset" name="dz_offset" pattern="[0-9.,eE+-]*" value="-100" />
+      [-]
+      </p>
+
+
+      <p>
         Raster:
       </p>
       <p>
@@ -195,10 +211,21 @@ export class drDialogEinstellungen extends LitElement {
     return wert;
   }
 
-  getValueMy() {
+  get_dx_offset() {
     const shadow = this.shadowRoot;
-    console.log("id_my", (shadow?.getElementById("id_my") as HTMLInputElement).value);
-    let wert = Number((shadow?.getElementById("id_my") as HTMLInputElement).value.replace(/,/g, "."));
+    let wert = Number((shadow?.getElementById("id_dx_offset") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+
+  get_dz_offset() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_dz_offset") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+
+  get_NO_touch_support() {
+    const shadow = this.shadowRoot;
+    let wert = (shadow?.getElementById("id_NO_touch_support") as SlCheckbox).checked;
     return wert;
   }
 }

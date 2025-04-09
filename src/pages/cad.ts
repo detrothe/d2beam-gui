@@ -73,6 +73,14 @@ let centerY = 0.0;
 let centerX_last = 0.0;
 let centerY_last = 0.0;
 
+let dx_offset_touch = -100;
+let dz_offset_touch = -100;
+export function set_dx_offset_touch(dx: number) { dx_offset_touch = dx; }
+export function set_dz_offset_touch(dz: number) { dz_offset_touch = dz; }
+
+let touch_support = true;
+export function set_touch_support(wert: boolean) { touch_support = wert; }
+
 class CPointer {
    id = -1
    isPrimary = false;
@@ -717,7 +725,7 @@ function pointermove(ev: PointerEvent) {
       case 'touch':
          isTouch = true;
          if ((buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element)) {
-            mousemove(ev);
+            if (touch_support) mousemove(ev);
          }
          else {
             if (pointer.length === 2) {
@@ -787,8 +795,10 @@ function pointerup(ev: PointerEvent) {
       case 'touch':
          isTouch = true;
          if ((buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element)) {
-            if (input_started === 0) penDown(ev);
-            else if (buttons_control.n_input_points > 1) mouseup(ev);
+            if (touch_support) {
+               if (input_started === 0) penDown(ev);
+               else if (buttons_control.n_input_points > 1) mouseup(ev);
+            }
          }
          else {     // if (!buttons_control.button_pressed)
             zoomIsActive = false;
@@ -819,11 +829,15 @@ function penDown(ev: PointerEvent) {
 
    ev.preventDefault();
 
-   let dxy = 0.0
-   if (isTouch) dxy = -100 / devicePixelRatio;
 
-   let xo = ev.offsetX + dxy
-   let yo = ev.offsetY + dxy
+   let dx_offset = 0.0, dy_offset = 0.0;
+   if (isTouch) {
+      dx_offset = dx_offset_touch / devicePixelRatio;
+      dy_offset = dz_offset_touch / devicePixelRatio;
+   }
+
+   let xo = ev.offsetX + dx_offset
+   let yo = ev.offsetY + dy_offset
 
    if (buttons_control.pick_element) {
       let xc = tr.xWorld(xo);
@@ -1006,27 +1020,19 @@ function mousemove(ev: MouseEvent) {
       init_cad(2)
    }
    else {
-      let dxy = 0.0
-      if (isTouch) dxy = -100 / devicePixelRatio;
-
-      let xo = ev.offsetX + dxy
-      let yo = ev.offsetY + dxy
+      let dx_offset = 0.0, dy_offset = 0.0;
+      if (isTouch) {
+         dx_offset = dx_offset_touch / devicePixelRatio;
+         dy_offset = dz_offset_touch / devicePixelRatio;
+      }
+      let xo = ev.offsetX + dx_offset
+      let yo = ev.offsetY + dy_offset
 
       two.remove(cursorLineh);
       two.remove(cursorLinev);
       let len = tr.Pix0(getFangweite());
-      cursorLineh = two.makeLine(
-         xo - len,
-         yo,
-         xo + len,
-         yo
-      );
-      cursorLinev = two.makeLine(
-         xo,
-         yo - len,
-         xo,
-         yo + len
-      );
+      cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
+      cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
 
       if (buttons_control.cad_eingabe_aktiv) {
          if (rubberband_drawn) {
@@ -1139,12 +1145,14 @@ function mouseup(ev: any) {
    centerX_last = centerX;
    centerY_last = centerY;
 
+   let dx_offset = 0.0, dy_offset = 0.0;
+   if (isTouch) {
+      dx_offset = dx_offset_touch / devicePixelRatio;
+      dy_offset = dz_offset_touch / devicePixelRatio;
+   }
 
-   let dxy = 0.0
-   if (isTouch) dxy = -100 / devicePixelRatio;
-
-   let xo = ev.offsetX + dxy
-   let yo = ev.offsetY + dxy
+   let xo = ev.offsetX + dx_offset
+   let yo = ev.offsetY + dy_offset
 
    if (buttons_control.pick_element) {
       let xc = tr.xWorld(xo);

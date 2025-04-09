@@ -77,7 +77,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 9-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 9-April-2025, ";
 //########################################################################################################################
 
 
@@ -96,7 +96,7 @@ export const nnodalmass_init = "0";
 export let column_string_kombitabelle: string;
 export let typs_string_kombitabelle: string;
 //export let column_width_elementtabelle: string;
-const nkombiSpalten_init = "3"; // immer 1 mehr als nlastfaelle_init
+const nkombiSpalten_init = "2"; // immer 1 mehr als nlastfaelle_init
 const nnodedisps_init = "0";
 const dyn_neigv_init = "1";
 const nkoppelfedern_init = "0";
@@ -138,14 +138,14 @@ for (let i = 1; i <= Number(nlastfaelle_init); i++) {
   column_string_kombitabelle = column_string_kombitabelle + ', "Lf ' + i + '"';
 }
 column_string_kombitabelle = column_string_kombitabelle + "]";
-//console.log("column_string_kombitabelle", column_string_kombitabelle);
+console.log("column_string_kombitabelle", column_string_kombitabelle);
 
 typs_string_kombitabelle = '["-", "text"';
 for (let i = 1; i <= Number(nlastfaelle_init); i++) {
   typs_string_kombitabelle = typs_string_kombitabelle + ', "number"';
 }
 typs_string_kombitabelle = typs_string_kombitabelle + "]";
-//console.log("typs_string_kombitabelle", typs_string_kombitabelle);
+console.log("typs_string_kombitabelle", typs_string_kombitabelle);
 
 const portrait = window.matchMedia("(orientation: portrait)");
 

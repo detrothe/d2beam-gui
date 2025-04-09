@@ -222,11 +222,11 @@ export function cad_rechnen() {
         let elTab = document.getElementById("id_lastfaelle_tabelle");
         elTab?.setAttribute("nzeilen", String(max_Lastfall));
 
-        set_nkombinationen(0)
-        el = document.getElementById("id_button_nkombinationen") as drButtonPM;
-        el.setValue(0);
-        elTab = document.getElementById("id_kombinationen_tabelle");
-        elTab?.setAttribute("nzeilen", '0');
+        // set_nkombinationen(0)
+        // el = document.getElementById("id_button_nkombinationen") as drButtonPM;
+        // el.setValue(0);
+        // elTab = document.getElementById("id_kombinationen_tabelle");
+        // elTab?.setAttribute("nzeilen", '0');
     }
 
     // jetzt die Knotenlasten
