@@ -40,6 +40,7 @@ export const CAD_STAB = 2;
 export const CAD_KNLAST = 3;
 export const CAD_LAGER = 4;
 export const CAD_ELLAST = 5;
+export const CAD_EINSTELLUNGEN = 6;
 
 export let two: any = null;
 let domElement: any = null;
@@ -127,6 +128,9 @@ let rasterPoint: any = null;
 let nodePoint: any = null;
 let foundRasterPoint = false;
 let foundNodePoint = false;
+
+export function set_raster_dx(dx: number) { raster_dx = dx; }
+export function set_raster_dz(dz: number) { raster_dz = dz; }
 
 // let cad_eingabe_aktiv = false
 // let stab_eingabe_aktiv = false
@@ -1525,7 +1529,7 @@ function touchmove(ev: TouchEvent) {
 
 //------------------------------------------------------------------------------------------------
 function drawRaster() {
-   //--------------------------------------------------------------------------------------------
+   //---------------------------------------------------------------------------------------------
 
    let xp = 0.0,
       zp = 0.0,

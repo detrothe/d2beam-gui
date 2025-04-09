@@ -6,7 +6,11 @@ import {
   redraw_stab,
   redraw_knotenlast,
   redraw_lager,
-  reset_cad
+  reset_cad,
+  CAD_EINSTELLUNGEN,
+  set_raster_dx,
+  set_raster_dz,
+  init_cad
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -29,6 +33,7 @@ import { CTrans } from "./trans";
 import Two from "two.js";
 import { add_element_nodes, CADNodes, get_cad_node_X, get_cad_node_Z, remove_element_nodes } from "./cad_node";
 import { find_max_Lastfall, find_maxValues_eloads, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
+import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
 
 //export let pick_element = false
 
@@ -57,6 +62,7 @@ class Cbuttons_control {
   lager_eingabe_aktiv = false;
   knotenlast_eingabe_aktiv = false;
   elementlast_eingabe_aktiv = false;
+  einstellungen_eingabe_aktiv = false;
   typ_cad_element = 0;
   n_input_points = 0;
   button_pressed = false;
@@ -70,6 +76,7 @@ class Cbuttons_control {
     this.lager_eingabe_aktiv = false;
     this.knotenlast_eingabe_aktiv = false;
     this.elementlast_eingabe_aktiv = false;
+    this.einstellungen_eingabe_aktiv = false;
     this.typ_cad_element = 0;
     this.n_input_points = 0;
     this.button_pressed = false;
@@ -87,6 +94,8 @@ class Cbuttons_control {
     el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
     el = document.getElementById("id_cad_elementlast_button") as HTMLButtonElement;
+    el.style.backgroundColor = "DodgerBlue";
+    el = document.getElementById("id_cad_einstellungen_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
 
     // if ( selected_element.group !== null) {
@@ -225,10 +234,10 @@ export function cad_buttons() {
   cog_button.value = "Einstellungen";
   cog_button.className = "btn";
   cog_button.innerHTML = '<i class = "fa fa-cog"></i>';
-  cog_button.addEventListener("click", Knoten_button);
+  cog_button.addEventListener("click", Einstellungen_button);
   // stab_button.addEventListener('keydown', keydown);
   cog_button.title = "Einstellungen";
-  cog_button.id = "id_cad_cog_button";
+  cog_button.id = "id_cad_einstellungen_button";
 
 
   const refresh_button = document.createElement("button");
@@ -239,7 +248,7 @@ export function cad_buttons() {
   refresh_button.addEventListener("click", reset_cad);
   // stab_button.addEventListener('keydown', keydown);
   refresh_button.title = "Reset Screen";
-  refresh_button.id = "id_cad_cog_button";
+  refresh_button.id = "id_cad_refresh_button";
 
   const help_text = document.createElement("span");
   help_text.innerHTML = "eine Hilfe"
@@ -680,7 +689,7 @@ export function select_element(xc: number, zc: number) {
           knoten_gefunden = true
           obj_knoten = obj
           index_obj_knoten = (obj as TCAD_Knoten).index1
-          console.log("index_obj_knoten",index_obj_knoten)
+          console.log("index_obj_knoten", index_obj_knoten)
 
         }
       }
@@ -851,8 +860,8 @@ export function add_elementlast(xc: number, zc: number) {
         console.log("in add_elementlast ", index, lf, art, pa, pe)
         obj.add_streckenlast(lf, art, pa, pe)
 
-        if (Math.abs(pa) > max_value_lasten[lf-1].eload) max_value_lasten[lf-1].eload = Math.abs(pa);
-        if (Math.abs(pe) > max_value_lasten[lf-1].eload) max_value_lasten[lf-1].eload = Math.abs(pe);
+        if (Math.abs(pa) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pa);
+        if (Math.abs(pe) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pe);
       }
       else if (typ === 2) {
         let To = ele.get_To()
@@ -1056,6 +1065,81 @@ export function Knoten_button(ev: Event) {
   }
 
 }
+
+
+//--------------------------------------------------------------------------------------------------------
+export function Einstellungen_button(ev: Event) {
+  //----------------------------------------------------------------------------------------------------
+
+  console.log("in Einstellungen_button", ev)
+
+  let el = document.getElementById("id_cad_einstellungen_button") as HTMLButtonElement
+
+  if (buttons_control.einstellungen_eingabe_aktiv) {
+    buttons_control.reset()
+  } else {
+
+    el.style.backgroundColor = 'darkRed'
+    buttons_control.einstellungen_eingabe_aktiv = true
+    buttons_control.cad_eingabe_aktiv = false
+    buttons_control.typ_cad_element = CAD_EINSTELLUNGEN
+    //el.addEventListener('keydown', keydown);
+    buttons_control.n_input_points = 0
+    buttons_control.button_pressed = true;
+
+    showDialog_einstellungen();
+    buttons_control.reset()
+
+  }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------
+
+export function showDialog_einstellungen() {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("showDialog_einstellungen()");
+
+  const el = document.getElementById("id_dialog_einstellungen");
+  console.log("id_dialog_einstellungen", el);
+
+  console.log("shadow", el?.shadowRoot?.getElementById("dialog_einstellungen")),
+    (el?.shadowRoot?.getElementById("dialog_einstellungen") as HTMLDialogElement).addEventListener("close", dialog_einstellungen_closed);
+
+  (el?.shadowRoot?.getElementById("dialog_einstellungen") as HTMLDialogElement).showModal();
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_einstellungen_closed(this: any, e: any) {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("Event dialog_einstellungen_closed", e);
+  console.log("this", this);
+  const ele = document.getElementById("id_dialog_einstellungen") as HTMLDialogElement;
+
+  // ts-ignore
+  const returnValue = this.returnValue;
+
+  if (returnValue === "ok") {
+    //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+    console.log("sieht gut aus");
+    // if (mode_knotenlast_aendern) update_knotenlast();
+    let el = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
+    console.log("dx drDialogEinstellungen", el.getValue_dx())
+    let dx = el.getValue_dx();
+    let dz=el.getValue_dz();
+    set_raster_dx(dx);
+    set_raster_dz(dz);
+    init_cad(2);
+  } else {
+    // Abbruch
+    (ele?.shadowRoot?.getElementById("dialog_einstellungen") as HTMLDialogElement).removeEventListener("close", dialog_einstellungen_closed);
+
+    // knoten_eingabe_beenden();
+    buttons_control.reset()
+  }
+}
+
 
 // //--------------------------------------------------------------------------------------------------------
 // export function knoten_eingabe_beenden() {
@@ -1412,7 +1496,7 @@ export function update_knoten() {
   for (let i = 0; i < list.size; i++) {
     let obj = list.getAt(i) as TCAD_Element;
     if (obj.elTyp === CAD_STAB) {
-      console.log("update_knoten",index_obj_knoten,(obj as TCAD_Stab).index1,(obj as TCAD_Stab).index2)
+      console.log("update_knoten", index_obj_knoten, (obj as TCAD_Stab).index1, (obj as TCAD_Stab).index2)
       if (index_obj_knoten === (obj as TCAD_Stab).index1) redraw_stab(obj as TCAD_Stab);
       if (index_obj_knoten === (obj as TCAD_Stab).index2) redraw_stab(obj as TCAD_Stab);
     }
