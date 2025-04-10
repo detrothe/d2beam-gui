@@ -141,6 +141,13 @@ export class TCAD_Stab extends TCAD_Element {
     }
 
     //―――――――――――――――――――――――――――――――――――――――――――――
+    add_einzellast(lf: number, x: number, P: number, M: number): void {
+        this.elast.push(new TCAD_Einzellast(lf, x, P, M))
+        //this.nStreckenlasten++;
+        console.log("add_einzellast, lf,art= ", lf, x, P, M)
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
     add_temperaturlast(lf: number, To: number, Tu: number): void {
         this.elast.push(new TCAD_Temperaturlast(lf, To, Tu))
         //this.nStreckenlasten++;
@@ -241,6 +248,23 @@ export class TCAD_Streckenlast extends TCAD_ElLast {
 
 }
 
+//―――――――――――――――――――――――――――――――――――――――――――――
+export class TCAD_Einzellast extends TCAD_ElLast {
+    //―――――――――――――――――――――――――――――――――――――――――
+
+
+    xe = 0.0
+    P = 0.0
+    M = 0.0
+
+    constructor(lf: number, x: number, P: number, M: number) {
+        super(lf, 1)
+        this.xe = x
+        this.P = P
+        this.M = M
+    }
+
+}
 
 //―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Temperaturlast extends TCAD_ElLast {
@@ -254,6 +278,49 @@ export class TCAD_Temperaturlast extends TCAD_ElLast {
         super(lf, 2)
         this.To = To
         this.Tu = Tu
+    }
+
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――
+export class TCAD_Vorspannung extends TCAD_ElLast {
+    //―――――――――――――――――――――――――――――――――――――――――
+
+    sigmaV = 0.0
+
+    constructor(lf: number, sigmaV: number) {
+        super(lf, 3)
+        this.sigmaV = sigmaV
+    }
+
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――
+export class TCAD_Spannschloss extends TCAD_ElLast {
+    //―――――――――――――――――――――――――――――――――――――――――
+
+    ds = 0.0
+
+    constructor(lf: number, ds: number) {
+        super(lf, 4)
+        this.ds = ds
+    }
+
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――
+export class TCAD_Stabvorverformung extends TCAD_ElLast {
+    //―――――――――――――――――――――――――――――――――――――――――
+
+    w0a = 0.0
+    w0m = 0.0
+    w0e = 0.0
+
+    constructor(lf: number, w0a: number, w0m: number, w0e: number) {
+        super(lf, 5)
+        this.w0a = w0a
+        this.w0m = w0m
+        this.w0e = w0e
     }
 
 }

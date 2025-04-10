@@ -85,8 +85,8 @@ export class drDialogEinstellungen extends LitElement {
         border-spacing: 0px;
         padding: 5px;
         margin: 5px;
-        background-color: rgb(207, 217, 21);
-        border-radius: 5px;
+        /*background-color: rgb(207, 217, 21);
+        border-radius: 5px;*/
       }
 
       td.selected {
@@ -106,7 +106,7 @@ export class drDialogEinstellungen extends LitElement {
 
       /* Styling der geöffneten Popup-Box */
       dialog[open] {
-        width: 20rem;
+        width: 25rem;
         background: #fffbf0;
         border: thin solid #e7c157;
         margin: 5rem auto;
@@ -149,23 +149,45 @@ export class drDialogEinstellungen extends LitElement {
       <p>
         dz:
         <input type="number" id="id_dz_offset" name="dz_offset" pattern="[0-9.,eE+-]*" value="-100" />
-      [-]
+        [-]
       </p>
-
 
       <p>
         Raster:
       </p>
       <p>
         dx:
-        <input type="number" id="id_dx" name="dx" pattern="[0-9.,eE+-]*" value="0.25" />
+        <input type="number" id="id_dx" name="dx" pattern="[0-9.,eE+-]*" value="0.5" />
         [m]
       </p>
       <p>
         dz:
-        <input type="number" id="id_dz" name="dz" pattern="[0-9.,eE+-]*" value="0.25" />
+        <input type="number" id="id_dz" name="dz" pattern="[0-9.,eE+-]*" value="0.5" />
         [m]
       </p>
+
+      <p>Darzustellender Rasterbereich</p>
+
+      <table>
+        <tbody>
+          <tr>
+            <td>x<sub>min</sub></td>
+            <td><input type="number" id="id_xmin" name="xmin" pattern="[0-9.,eE+-]*" value="-1.0" /></td>
+            <td>[m]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>x<sub>max</sub></td>
+            <td><input type="number" id="id_xmax" name="xmax" pattern="[0-9.,eE+-]*" value="10.0" /></td>
+            <td>[m]</td>
+          </tr>
+          <tr>
+            <td>z<sub>min</sub></td>
+            <td><input type="number" id="id_zmin" name="zmin" pattern="[0-9.,eE+-]*" value="-1.0" /></td>
+            <td>[m]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>z<sub>max</sub></td>
+            <td><input type="number" id="id_zmax" name="zmax" pattern="[0-9.,eE+-]*" value="9.0" /></td>
+            <td>[m]</td>
+          </tr>
+        </tbody>
+      </table>
 
       <form method="dialog">
         <!--<sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
@@ -213,19 +235,44 @@ export class drDialogEinstellungen extends LitElement {
 
   get_dx_offset() {
     const shadow = this.shadowRoot;
-    let wert = Number((shadow?.getElementById("id_dx_offset") as HTMLInputElement).value.replace(/,/g, "."));
+    let wert = Math.abs(+(shadow?.getElementById("id_dx_offset") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
 
   get_dz_offset() {
     const shadow = this.shadowRoot;
-    let wert = Number((shadow?.getElementById("id_dz_offset") as HTMLInputElement).value.replace(/,/g, "."));
+    let wert = Math.abs(+(shadow?.getElementById("id_dz_offset") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
 
   get_NO_touch_support() {
     const shadow = this.shadowRoot;
     let wert = (shadow?.getElementById("id_NO_touch_support") as SlCheckbox).checked;
+    return wert;
+  }
+
+
+  get_raster_xmin() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_xmin") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+
+  get_raster_xmax() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_xmax") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+
+  get_raster_zmin() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_zmin") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+
+  get_raster_zmax() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_zmax") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
 }

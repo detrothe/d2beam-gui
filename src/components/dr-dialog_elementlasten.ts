@@ -85,8 +85,8 @@ export class drDialogElementlasten extends LitElement {
         border-spacing: 0px;
         padding: 5px;
         margin: 5px;
-        background-color: rgb(207, 217, 21);
-        border-radius: 5px;
+        /*background-color: rgb(207, 217, 21);
+        border-radius: 5px;*/
       }
 
       td.selected {
@@ -128,26 +128,27 @@ export class drDialogElementlasten extends LitElement {
     return html` <dialog id="dialog_elementlast">
       <h2>Elementlasten</h2>
 
-      <p>
-        Lastfall:
-        <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="1" />
-      </p>
-
       <sl-radio-group id="id_typ" label="Wähle eine Option" name="a" value="0" @sl-change="${this._handleChange}">
         <sl-radio value="0">Streckenlasten</sl-radio>
         <sl-radio value="1">Einzellasten</sl-radio>
         <sl-radio value="2">Temperatur</sl-radio>
         <sl-radio value="3">Vorspannung</sl-radio>
         <sl-radio value="4">Spannschloss</sl-radio>
+        <sl-radio value="5">Vorverformungen</sl-radio>
       </sl-radio-group>
 
-      <hr>
+      <hr />
+
+      <p>
+        Lastfall:
+        <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="1" />
+      </p>
 
       <div id="id_streckenlast">
         <p>
           <!-- Art: -->
           <!-- <input type="number" id="id_art" name="art" pattern="[0-9.,eE+-]*" value="" /> -->
-          <sl-select id="id_art" label="Art der Trapezstreckenlast :" value='0'>
+          <sl-select id="id_art" label="Art der Trapezstreckenlast :" value="0">
             <sl-option value="0">senkrecht auf Stab</sl-option>
             <sl-option value="1">in globaler z-Richtung</sl-option>
             <sl-option value="2">in globaler z-Richtung, Projektion</sl-option>
@@ -156,25 +157,89 @@ export class drDialogElementlasten extends LitElement {
           </sl-select>
         </p>
         <p>
-          p<sub>a</sub>:
+          p<sub>a</sub>
           <input type="number" id="id_pa" name="pa" pattern="[0-9.,eE+-]*" value="" />
           [kN/m]<br />
-          p<sub>e</sub>:
+          p<sub>e</sub>
           <input type="number" id="id_pe" name="pa" pattern="[0-9.,eE+-]*" value="" />
           [kN/m]
         </p>
       </div>
 
+      <div id="id_einzellast" style="display:none;">
+        <p>Einzellasten</p>
+        <table id="einstellungen_table">
+          <tbody>
+            <tr>
+              <td>x</td>
+              <td><input type="number" id="id_x" name="x" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td>[m]</td>
+            </tr>
+            <tr>
+              <td>P</td>
+              <td><input type="number" id="id_P" name="P" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td>[kN]</td>
+            </tr>
+            <tr>
+              <td>M</td>
+              <td><input type="number" id="id_M" name="M" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td>[kNm]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <div id="id_temperatur" style="display:none;">
         <p>Temperatur an Unter- und Oberseite</p>
         <p>
-          T<sub>u</sub>:
+          T<sub>u</sub>
           <input type="number" id="id_Tu" name="Tu" pattern="[0-9.,eE+-]*" value="" />
           [°]<br />
-          T<sub>o</sub>:
+          T<sub>o</sub>
           <input type="number" id="id_To" name="To" pattern="[0-9.,eE+-]*" value="" />
           [°]
         </p>
+      </div>
+
+      <div id="id_vorspannung" style="display:none;">
+        <p>Zentrische Vorspannung</p>
+        <p>
+          σ<sub>v</sub>
+          <input type="number" id="id_sigmaV" name="sigmaV" pattern="[0-9.,eE+-]*" value="" />
+          [N/mm²]
+        </p>
+      </div>
+
+      <div id="id_spannschloss" style="display:none;">
+        <p>Spannschloss</p>
+        <p>
+          &Delta;s
+          <input type="number" id="id_ds" name="ds" pattern="[0-9.,eE+-]*" value="" />
+          [mm]
+        </p>
+      </div>
+
+      <div id="id_vorverformungen" style="display:none;">
+        <p>Stabvorverformungen (nur bei Th.II.O.)</p>
+        <table id="einstellungen_table">
+          <tbody>
+            <tr>
+              <td>w<sub>0a</sub></td>
+              <td><input type="number" id="id_w0a" name="w0a" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td>[mm]</td>
+            </tr>
+            <tr>
+              <td>w<sub>0m</sub></td>
+              <td><input type="number" id="id_w0m" name="w0m" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td>[mm]</td>
+            </tr>
+            <tr>
+              <td>w<sub>0e</sub></td>
+              <td><input type="number" id="id_w0e" name="w0e" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td>[mm]</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <form method="dialog">
@@ -213,7 +278,7 @@ export class drDialogElementlasten extends LitElement {
   }
   get_art() {
     let el = this.shadowRoot?.getElementById("id_art") as SlSelect;
-    console.log("gewählte Belastungsart = ", el.value)
+    console.log("gewählte Belastungsart = ", el.value);
     return Number(el.value);
   }
   get_typ() {
@@ -245,6 +310,46 @@ export class drDialogElementlasten extends LitElement {
     let wert = Number((shadow?.getElementById("id_To") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
+  get_x() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_x") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+  get_P() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_P") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+  get_M() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_M") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+  get_sigmaV() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_sigmaV") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+  get_ds() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_ds") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+  get_w0a() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_w0a") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+  get_w0m() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_w0m") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+  get_w0e() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_w0e") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
 
   set_lastfall(wert: number) {
     let el = this.shadowRoot?.getElementById("id_lf") as HTMLInputElement;
@@ -273,20 +378,74 @@ export class drDialogElementlasten extends LitElement {
     el.value = String(wert);
   }
 
+  set_x(wert: number) {
+    let el = this.shadowRoot?.getElementById("id_x") as HTMLInputElement;
+    el.value = String(wert);
+  }
+  set_P(wert: number) {
+    let el = this.shadowRoot?.getElementById("id_P") as HTMLInputElement;
+    el.value = String(wert);
+  }
+  set_M(wert: number) {
+    let el = this.shadowRoot?.getElementById("id_M") as HTMLInputElement;
+    el.value = String(wert);
+  }
+  set_sigmaV(wert: number) {
+    let el = this.shadowRoot?.getElementById("id_sigmaV") as HTMLInputElement;
+    el.value = String(wert);
+  }
+  set_ds(wert: number) {
+    let el = this.shadowRoot?.getElementById("id_ds") as HTMLInputElement;
+    el.value = String(wert);
+  }
+  set_w0a(wert: number) {
+    let el = this.shadowRoot?.getElementById("id_w0a") as HTMLInputElement;
+    el.value = String(wert);
+  }
+  set_w0m(wert: number) {
+    let el = this.shadowRoot?.getElementById("id_w0m") as HTMLInputElement;
+    el.value = String(wert);
+  }
+  set_w0e(wert: number) {
+    let el = this.shadowRoot?.getElementById("id_w0e") as HTMLInputElement;
+    el.value = String(wert);
+  }
+
   _handleChange() {
     console.log("_handleChange");
     let el = this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement;
     el.style.display = "none";
+    el = this.shadowRoot?.getElementById("id_einzellast") as HTMLDivElement;
+    el.style.display = "none";
     el = this.shadowRoot?.getElementById("id_temperatur") as HTMLDivElement;
+    el.style.display = "none";
+    el = this.shadowRoot?.getElementById("id_vorspannung") as HTMLDivElement;
+    el.style.display = "none";
+    el = this.shadowRoot?.getElementById("id_spannschloss") as HTMLDivElement;
+    el.style.display = "none";
+    el = this.shadowRoot?.getElementById("id_vorverformungen") as HTMLDivElement;
     el.style.display = "none";
 
     let wert = (this.shadowRoot?.getElementById("id_typ") as SlRadioGroup).value;
     console.log("id_radio_group ", wert);
+
     if (wert === "0") {
       el = this.shadowRoot?.getElementById("id_streckenlast") as HTMLDivElement;
       el.style.display = "block";
-    } else    if (wert === "2") {
+    } else if (wert === "1") {
+      el = this.shadowRoot?.getElementById("id_einzellast") as HTMLDivElement;
+      el.style.display = "block";
+    } else if (wert === "2") {
       el = this.shadowRoot?.getElementById("id_temperatur") as HTMLDivElement;
+      el.style.display = "block";
+    } else if (wert === "3") {
+      el = this.shadowRoot?.getElementById("id_vorspannung") as HTMLDivElement;
+      el.style.display = "block";
+    } else if (wert === "4") {
+      el = this.shadowRoot?.getElementById("id_spannschloss") as HTMLDivElement;
+      el.style.display = "block";
+    } else if (wert === "5") {
+      el = this.shadowRoot?.getElementById("id_vorverformungen") as HTMLDivElement;
       el.style.display = "block";
     }
   }

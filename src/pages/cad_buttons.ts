@@ -13,7 +13,11 @@ import {
   init_cad,
   set_dx_offset_touch,
   set_dz_offset_touch,
-  set_touch_support
+  set_touch_support,
+  set_raster_xmin,
+  set_raster_xmax,
+  set_raster_zmin,
+  set_raster_zmax
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -866,10 +870,11 @@ export function add_elementlast(xc: number, zc: number) {
         if (Math.abs(pa) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pa);
         if (Math.abs(pe) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pe);
       }
+      else if (typ === 1) {
+        obj.add_einzellast(lf, ele.get_x(), ele.get_P(), ele.get_M())
+      }
       else if (typ === 2) {
-        let To = ele.get_To()
-        let Tu = ele.get_Tu()
-        obj.add_temperaturlast(lf, To, Tu)
+        obj.add_temperaturlast(lf, ele.get_To(), ele.get_Tu())
       }
 
       two.remove(obj.two_obj);
@@ -1135,6 +1140,11 @@ function dialog_einstellungen_closed(this: any, e: any) {
     set_dx_offset_touch(el.get_dx_offset())
     set_dz_offset_touch(el.get_dz_offset())
     set_touch_support(!el.get_NO_touch_support())
+
+    set_raster_xmin(el.get_raster_xmin());
+    set_raster_xmax(el.get_raster_xmax());
+    set_raster_zmin(el.get_raster_zmin());
+    set_raster_zmax(el.get_raster_zmax());
 
     init_cad(2);
   } else {

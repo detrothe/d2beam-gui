@@ -295,6 +295,11 @@ export function cad_rechnen() {
 
         let nStreckenlasten = 0
         let nTemperaturlasten = 0
+        let nEinzellasten=0
+        let nVorspannungen=0
+        let nSpannschloesser=0
+        let nStabvorverfomungen=0
+
         for (let i = 0; i < list.size; i++) {
             let obj = list.getAt(i) as TCAD_Stab;
             if (obj.elTyp === CAD_STAB) {
@@ -302,13 +307,21 @@ export function cad_rechnen() {
                     let typ = obj.elast[j].typ
                     if (typ === 0) {
                         nStreckenlasten++;
+                    } else if (typ === 1) {
+                        nEinzellasten++
                     } else if (typ === 2) {
                         nTemperaturlasten++
+                    } else if (typ === 3) {
+                        nVorspannungen++
+                    } else if (typ === 4) {
+                        nSpannschloesser++
+                    } else if (typ === 5) {
+                        nStabvorverfomungen++
                     }
                 }
             }
         }
-        console.log("nTemperaturlasten,nStreckenlasten", nTemperaturlasten, nStreckenlasten)
+        console.log("nTemperaturlasten,nStreckenlasten,...", nTemperaturlasten, nStreckenlasten,nEinzellasten,nVorspannungen,nSpannschloesser,nStabvorverfomungen)
 
         // Streckenlasten
         let el = document.getElementById("id_button_nstreckenlasten") as drButtonPM;
@@ -319,6 +332,17 @@ export function cad_rechnen() {
         elTabStreckenlast?.setAttribute("clear", "0");
 
         let tabelleStreckenlast = elTabStreckenlast?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+        // Einzellastenlasten
+        el = document.getElementById("id_button_neinzellasten") as drButtonPM;
+        el.setValue(nEinzellasten);
+
+        const elTabEinzellast = document.getElementById("id_einzellasten_tabelle");
+        elTabEinzellast?.setAttribute("nzeilen", String(nEinzellasten));
+        elTabEinzellast?.setAttribute("clear", "0");
+
+        let tabelleEinzellast = elTabEinzellast?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
 
         // Temperaturlasten
         el = document.getElementById("id_button_ntemperaturlasten") as drButtonPM;

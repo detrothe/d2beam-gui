@@ -139,6 +139,10 @@ let foundNodePoint = false;
 
 export function set_raster_dx(dx: number) { raster_dx = dx; }
 export function set_raster_dz(dz: number) { raster_dz = dz; }
+export function set_raster_xmin(xz: number) { raster_xmin = xz; }
+export function set_raster_xmax(xz: number) { raster_xmax = xz; }
+export function set_raster_zmin(xz: number) { raster_zmin = xz; }
+export function set_raster_zmax(xz: number) { raster_zmax = xz; }
 
 // let cad_eingabe_aktiv = false
 // let stab_eingabe_aktiv = false
@@ -1232,7 +1236,7 @@ function mouseup(ev: any) {
                      start_x_wc = xc;
                      start_z_wc = zc;
                   }
-                  set_help_text('Stabende eingeben');
+                  if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
                }
                if (buttons_control.n_input_points === 1) {
                   if (buttons_control.lager_eingabe_aktiv) {
@@ -1342,7 +1346,7 @@ function mouseup(ev: any) {
                   input_active = false;
                   rubberband_drawn = false;
                }
-            } else if (input_started === 1) {
+            } else if (input_started === 1) {          // Eingabe Stabende
                two.remove(rubberband);
 
                if (foundNodePoint) {
@@ -1379,23 +1383,13 @@ function mouseup(ev: any) {
                input_started = 0;
                input_active = false;
                rubberband_drawn = false;
-               let group = null
+               let group = null;
 
                let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
                let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
                add_element_nodes(index1);
                add_element_nodes(index2);
-               const obj = new TCAD_Stab(
-                  group,
-                  start_x_wc,
-                  start_z_wc,
-                  end_x_wc,
-                  end_z_wc,
-                  index1,
-                  index2,
-                  default_querschnitt,
-                  buttons_control.typ_cad_element
-               );
+               const obj = new TCAD_Stab(group, start_x_wc, start_z_wc, end_x_wc, end_z_wc, index1, index2, default_querschnitt, buttons_control.typ_cad_element);
                list.append(obj);
 
                group = drawStab(obj, tr);
@@ -1545,67 +1539,120 @@ function drawRaster() {
       zg = 0.0;
    const color = '#aaaaaa';
 
-   let size = 3 / devicePixelRatio;
+   // let size = 3 / devicePixelRatio;
 
    let nx = Math.abs(raster_xmax - raster_xmin) / raster_dx;
    let nz = Math.abs(raster_zmax - raster_zmin) / raster_dz;
    //qDebug() << "nx, ny : " << nx << ny << m_xRaster << m_yRaster;
    if (nx > 1000 || nz > 1000) return;
 
+   let raster_xmin_pix = tr.xPix(raster_xmin);
+   let raster_xmax_pix = tr.xPix(raster_xmax);
+   let raster_zmin_pix = tr.zPix(raster_zmin);
+   let raster_zmax_pix = tr.zPix(raster_zmax);
+
    while (zp <= raster_zmax) {
-      xp = 0.0;
-      while (xp <= raster_xmax) {
-         xg = xp;
-         zg = zp;
-         let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
-         rechteck.fill = color;
-         rechteck.stroke = color;
-         xp += raster_dx;
-      }
+      let zp_pix = tr.zPix(zp)
+      let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
+      line.stroke = color;
+      line.linewidth = 1;
+
       zp += raster_dz;
    }
 
    zp = -raster_dz;
    while (zp >= raster_zmin) {
-      xp = -raster_dx;
-      while (xp >= raster_xmin) {
-         xg = xp;
-         zg = zp;
-         let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
-         rechteck.fill = color;
-         rechteck.stroke = color;
-         xp -= raster_dx;
-      }
+      let zp_pix = tr.zPix(zp)
+      let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
+      line.stroke = color;
+      line.linewidth = 1;
+
       zp -= raster_dz;
    }
 
-   zp = 0.0;
-   while (zp <= raster_zmax) {
-      xp = -raster_dx;
-      while (xp >= raster_xmin) {
-         xg = xp;
-         zg = zp;
-         let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
-         rechteck.fill = color;
-         rechteck.stroke = color;
-         xp -= raster_dx;
-      }
-      zp += raster_dz;
+   xp = -raster_dx;
+   while (xp >= raster_xmin) {
+      let xp_pix = tr.xPix(xp)
+      let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
+      line.stroke = color;
+      line.linewidth = 1;
+
+      xp -= raster_dx;
    }
 
-   zp = -raster_dz;
-   while (zp >= raster_zmin) {
-      xp = 0.0;
-      while (xp <= raster_xmax) {
-         xg = xp;
-         zg = zp;
-         let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
-         rechteck.fill = color;
-         rechteck.stroke = color;
-         xp += raster_dx;
-      }
-      zp -= raster_dz;
+   xp = 0.0;
+   while (xp <= raster_xmax) {
+      let xp_pix = tr.xPix(xp)
+      let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
+      line.stroke = color;
+      line.linewidth = 1;
+
+      xp += raster_dx;
    }
+
+
+   // while (zp <= raster_zmax) {
+   //    xp = 0.0;
+   //    while (xp <= raster_xmax) {
+   //       xg = xp;
+   //       zg = zp;
+   //       let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
+   //       //rechteck.fill = color;
+   //       rechteck.stroke = color;
+   //       rechteck.linewidth = 1;
+   //       //rechteck.nostroke();
+   //       xp += raster_dx;
+   //    }
+   //    zp += raster_dz;
+   // }
+
+   // zp = -raster_dz;
+   // while (zp >= raster_zmin) {
+   //    xp = -raster_dx;
+   //    while (xp >= raster_xmin) {
+   //       xg = xp;
+   //       zg = zp;
+   //       let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
+   //       //rechteck.fill = color;
+   //       rechteck.stroke = color;
+   //       rechteck.linewidth = 1;
+   //       //rechteck.nostroke();
+   //       xp -= raster_dx;
+   //    }
+   //    zp -= raster_dz;
+   // }
+
+   // zp = 0.0;
+   // while (zp <= raster_zmax) {
+   //    xp = -raster_dx;
+   //    while (xp >= raster_xmin) {
+   //       xg = xp;
+   //       zg = zp;
+   //       let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
+   //       //rechteck.fill = color;
+   //       rechteck.stroke = color;
+   //       rechteck.linewidth = 1;
+   //       //rechteck.nostroke();
+   //       xp -= raster_dx;
+   //    }
+   //    zp += raster_dz;
+   // }
+
+   // zp = -raster_dz;
+   // while (zp >= raster_zmin) {
+   //    xp = 0.0;
+   //    while (xp <= raster_xmax) {
+   //       xg = xp;
+   //       zg = zp;
+   //       let rechteck = two.makeRectangle(tr.xPix(xg), tr.zPix(zg), size, size);
+   //       //rechteck.fill = color;
+   //       rechteck.stroke = color;
+   //       rechteck.linewidth = 1;
+   //       //rechteck.nostroke();
+   //       xp += raster_dx;
+   //    }
+   //    zp -= raster_dz;
+   // }
 }
 
 //-------------------------------------------------------------------------------------------------------
