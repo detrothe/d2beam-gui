@@ -153,7 +153,25 @@ export class TCAD_Stab extends TCAD_Element {
         //this.nStreckenlasten++;
         console.log("add_streckenlast, lf,art= ", lf, To, Tu)
     }
-}
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    add_vorspannung(lf: number, sigmaV: number): void {
+        this.elast.push(new TCAD_Vorspannung(lf, sigmaV))
+        //this.nStreckenlasten++;
+        console.log("add_vorspannung, lf,art= ", lf, sigmaV)
+    }
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    add_spannschloss(lf: number, ds: number): void {
+        this.elast.push(new TCAD_Spannschloss(lf, ds))
+        //this.nStreckenlasten++;
+        console.log("add_spannschloss, lf,art= ", lf, ds)
+    }
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    add_stabvorverformung(lf: number, w0a: number, w0m: number,w0e:number): void {
+        this.elast.push(new TCAD_Stabvorverformung(lf, w0a, w0m, w0e))
+        //this.nStreckenlasten++;
+        console.log("add_stabvorverformung, lf,art= ", lf, w0a, w0m, w0e)
+    }}
 
 //―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Lager extends TCAD_Element {

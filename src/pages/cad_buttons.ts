@@ -32,7 +32,7 @@ import "../components/dr-dialog_elementlasten";
 import { alertdialog, TLoads, TNode } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knoten, draw_knotenlast, draw_lager } from "./cad_draw_elemente";
-import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast } from "./CCAD_element";
+import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss } from "./CCAD_element";
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 import { change_def_querschnitt } from "./querschnitte";
 import { drDialogKnoten } from "../components/dr-dialog_knoten";
@@ -481,7 +481,7 @@ export function delete_element(xc: number, zc: number) {
 
       for (let j = 0; j < obj.elast.length; j++) {
         let typ = obj.elast[j].typ
-        if (typ === 0 || typ === 2) { // Streckenlast, Temperatur
+        if (typ === 0 || typ === 2 || typ === 3 || typ === 4) { // Streckenlast, Temperatur, Vorspannung, Spannschloss
 
           let x = Array(4)
           let z = Array(4);
@@ -646,7 +646,7 @@ export function select_element(xc: number, zc: number) {
       for (let j = 0; j < obj.elast.length; j++) {
         let typ = obj.elast[j].typ
 
-        if (typ === 0 || typ === 2) { // Streckenlast, Temperatur
+        if (typ === 0 || typ === 2 || typ === 3 || typ === 4) { // Streckenlast, Temperatur, Vorspannung, Spannschloss
 
           let x = Array(4)
           let z = Array(4);
@@ -707,17 +707,35 @@ export function select_element(xc: number, zc: number) {
 
   if (elementlast_gefunden) {
 
-    let pa = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL
-    let pe = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pR
-    let lf = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall
-    let art = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art
-
     const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
 
+    let lf = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall
     ele.set_lastfall(lf)
-    ele.set_pa(pa)
-    ele.set_pe(pe)
-    ele.set_art(art)
+
+    let typ = (obj_ellast.elast[index_ellast] as TCAD_ElLast).typ
+
+    if (typ === 0) {
+      let art = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art
+      let pa = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL
+      let pe = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pR
+      ele.set_pa(pa)
+      ele.set_pe(pe)
+      ele.set_art(art)
+    }
+    else if (typ === 2) {
+      let To = (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).To
+      let Tu = (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).Tu
+      ele.set_To(To)
+      ele.set_Tu(Tu)
+    }
+    else if (typ === 3) {
+      let sigmaV = (obj_ellast.elast[index_ellast] as TCAD_Vorspannung).sigmaV
+      ele.set_sigmaV(sigmaV)
+    }
+    else if (typ === 4) {
+      let ds = (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).ds
+      ele.set_sigmaV(ds)
+    }
 
     mode_elementlast_aendern = true
 
@@ -875,6 +893,15 @@ export function add_elementlast(xc: number, zc: number) {
       }
       else if (typ === 2) {
         obj.add_temperaturlast(lf, ele.get_To(), ele.get_Tu())
+      }
+      else if (typ === 3) {
+        obj.add_vorspannung(lf, ele.get_sigmaV())
+      }
+      else if (typ === 4) {
+        obj.add_spannschloss(lf, ele.get_ds())
+      }
+      else if (typ === 5) {
+        obj.add_stabvorverformung(lf, ele.get_w0a(), ele.get_w0m(), ele.get_w0e())
       }
 
       two.remove(obj.two_obj);
@@ -1403,6 +1430,18 @@ function update_elementlast() {
     (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).To = To;
     (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).Tu = Tu;
     (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).lastfall = lf;
+  }
+  else if (typ === 3) {    // Vorspannung
+    let sigmaV = ele.get_sigmaV();
+
+    (obj_ellast.elast[index_ellast] as TCAD_Vorspannung).sigmaV = sigmaV;
+    (obj_ellast.elast[index_ellast] as TCAD_Vorspannung).lastfall = lf;
+  }
+  else if (typ === 4) {    // Spannschloss
+    let ds = ele.get_ds();
+
+    (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).ds = ds;
+    (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).lastfall = lf;
   }
 
   find_max_Lastfall();

@@ -1,10 +1,10 @@
 import Two from "two.js"
 import { CTrans } from "./trans"
-import { TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast } from "./CCAD_element"
-import { opacity, style_pfeil, style_txt_knotenlast } from "./grafik"
+import { TCAD_Einzellast, TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Spannschloss, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Vorspannung } from "./CCAD_element"
+import { opacity, style_pfeil, style_pfeil_knotenlast_element, style_pfeil_moment_element, style_txt_knotenlast, style_txt_knotenlast_element } from "./grafik"
 import { myFormat } from "./utility"
 import { CAD_KNLAST, CAD_STAB, list } from "./cad"
-import { draw_arrow } from "./cad_draw_elemente"
+import { draw_arrow, draw_moment_arrow } from "./cad_draw_elemente"
 import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
 
 class CMAXVALUESLOAD {
@@ -64,7 +64,7 @@ export function find_maxValues_eloads() {
 
     max_value_lasten.length = 0
 
-    console.log("in find_maxValues_eloads, max_Lastfall",max_Lastfall)
+    console.log("in find_maxValues_eloads, max_Lastfall", max_Lastfall)
 
     for (let i = 0; i < max_Lastfall; i++) {
         max_value_lasten.push(new CMAXVALUESLOAD);
@@ -87,8 +87,8 @@ export function find_maxValues_eloads() {
         }
     }
 
-    for (let i=0;i<max_Lastfall;i++) {
-        console.log("max_value_lasten",max_value_lasten[i].eload)
+    for (let i = 0; i < max_Lastfall; i++) {
+        console.log("max_value_lasten", max_value_lasten[i].eload)
     }
 }
 
@@ -590,10 +590,18 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     }
                 }
 
-                else if (typ === 2 /*eload[ieload].art === 5 || eload[ieload].art === 9 || eload[ieload].art === 10*/) {      // Temperatur, Vorspannung, Spannschloss
+                else if (typ === 2 || typ === 3 || typ === 4) {      // Temperatur, Vorspannung, Spannschloss    /*eload[ieload].art === 5 || eload[ieload].art === 9 || eload[ieload].art === 10*/
 
-                    let To = (obj.elast[j] as TCAD_Temperaturlast).To
-                    let Tu = (obj.elast[j] as TCAD_Temperaturlast).Tu
+                    let To = 0, Tu = 0, sigmaV = 0, delta_s = 0
+
+                    if (typ === 2) {
+                        To = (obj.elast[j] as TCAD_Temperaturlast).To
+                        Tu = (obj.elast[j] as TCAD_Temperaturlast).Tu
+                    } else if (typ === 3) {
+                        sigmaV = (obj.elast[j] as TCAD_Vorspannung).sigmaV
+                    } else {
+                        delta_s = (obj.elast[j] as TCAD_Spannschloss).ds
+                    }
 
                     pL = slmax / 20.
                     pR = slmax / 20.
@@ -626,8 +634,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4.
                     let str: string = '';
                     if (typ === 2) str = "Tu= " + Tu * fact[iLoop] + "°/To= " + To * fact[iLoop] + "°";
-                    // else if (eload[ieload].art === 9) str = "σv= " + eload[ieload].sigmaV * fact[iLoop] / 1000 + " N/mm²";
-                    // else str = "Δs= " + eload[ieload].delta_s * fact[iLoop] * 1000 + " mm";
+                    else if (typ === 3) str = "σv= " + sigmaV * fact[iLoop]  + " N/mm²";
+                    else str = "Δs= " + delta_s * fact[iLoop]  + " mm";
 
                     let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                     txt.alignment = 'center'
@@ -638,50 +646,62 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     dp = pMax // - pMin
                     a = a + dp + a_spalt
                 }
-                // else if (eload[ieload].art === 6) {      // Einzellast oder/und Moment
+                else if (typ === 1) {   //eload[ieload].art === 6) {      // Einzellast oder/und Moment
 
-                //     let plength = 35, delta = 12
+                    let plength = 35, delta = 12
 
-                //     plength = tr.World0(2 * plength / devicePixelRatio)
-                //     delta = tr.World0(delta / devicePixelRatio)
+                    let x = (obj.elast[j] as TCAD_Einzellast).xe
+                    let P = (obj.elast[j] as TCAD_Einzellast).P
+                    let M = (obj.elast[j] as TCAD_Einzellast).M
 
-                //     if (eload[ieload].P != 0.0) {
-                //         let dpx = si * plength, dpz = co * plength
-                //         let ddx = si * delta, ddz = co * delta
-                //         let wert = eload[ieload].P * fact[iLoop]
-                //         let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
-                //         console.log("GRAFIK Einzellast", xl, zl, wert)
-                //         if (wert < 0.0) {
-                //             draw_arrow(two, tr, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast_element)
-                //         } else {
-                //             draw_arrow(two, tr, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast_element)
-                //         }
-                //         xpix = tr.xPix(xl + ddx + dpx) + 4
-                //         zpix = tr.zPix(zl - ddz - dpz) - 4
-                //         const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
-                //         const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast_element)
-                //         txt.alignment = 'left'
-                //         txt.baseline = 'top'
-                //     }
-                //     if (eload[ieload].M != 0.0) {
-                //         let wert = eload[ieload].M * fact[iLoop]
-                //         let vorzeichen = Math.sign(wert)
-                //         let xl = x1 + co * eload[ieload].x, zl = z1 + si * eload[ieload].x
-                //         let radius = style_pfeil_moment_element.radius;
-                //         console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
-                //         if (wert > 0.0) {
-                //             draw_moment_arrow(two, xl, zl, 1.0, radius, style_pfeil_moment_element)
-                //         } else {
-                //             draw_moment_arrow(two, xl, zl, -1.0, radius, style_pfeil_moment_element)
-                //         }
+                    plength = tr.World0(2 * plength / devicePixelRatio)
+                    delta = tr.World0(delta / devicePixelRatio)
 
-                //         xpix = tr.xPix(xl) - 10 / devicePixelRatio
-                //         zpix = tr.zPix(zl) + vorzeichen * radius + 12 * vorzeichen / devicePixelRatio
-                //         const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
-                //         const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast_element)
-                //         txt.alignment = 'right'
-                //     }
-                // }
+                    if (P != 0.0) {
+                        let dpx = si * plength, dpz = co * plength
+                        let ddx = si * delta, ddz = co * delta
+                        let wert = P * fact[iLoop]
+                        let xl = x1 + co * x, zl = z1 + si * x
+                        console.log("GRAFIK Einzellast", xl, zl, wert)
+                        if (wert < 0.0) {
+                            let gr = draw_arrow(tr, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast_element)
+                            group.add(gr)
+                            console.log("getBoundingClientRect draw Arrow",gr.getBoundingClientRect())
+                        } else {
+                            let gr = draw_arrow(tr, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast_element)
+                            group.add(gr)
+                            console.log("getBoundingClientRect draw Arrow",gr.getBoundingClientRect())
+                        }
+                        xpix = tr.xPix(xl + ddx + dpx) + 4
+                        zpix = tr.zPix(zl - ddz - dpz) - 4
+                        const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+                        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+                        group.add(txt)
+                    }
+                    if (M != 0.0) {
+                        let wert = M * fact[iLoop]
+                        let vorzeichen = Math.sign(wert)
+                        let xl = x1 + co * x, zl = z1 + si * x
+                        let radius = style_pfeil_moment_element.radius;
+                        console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
+                        if (wert > 0.0) {
+                            let gr = draw_moment_arrow(tr, xl, zl, 1.0, radius, style_pfeil_moment_element)
+                            group.add(gr)
+                        } else {
+                            let gr = draw_moment_arrow(tr, xl, zl, -1.0, radius, style_pfeil_moment_element)
+                            group.add(gr)
+                        }
+
+                        xpix = tr.xPix(xl) - 10 / devicePixelRatio
+                        zpix = tr.zPix(zl) + vorzeichen * radius + 12 * vorzeichen / devicePixelRatio
+                        const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+                        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
+                        txt.alignment = 'right'
+                        group.add(txt)
+                    }
+                }
             }
         }
     }

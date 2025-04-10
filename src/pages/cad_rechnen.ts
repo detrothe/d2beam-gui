@@ -4,7 +4,7 @@ import { CAD_KNLAST, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { max_Lastfall } from "./cad_draw_elementlasten";
 import { CADNodes } from "./cad_node";
-import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast } from "./CCAD_element";
+import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss } from "./CCAD_element";
 import {
     alertdialog, element, eload, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, node,
     nstreckenlasten, ntemperaturlasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
@@ -295,10 +295,10 @@ export function cad_rechnen() {
 
         let nStreckenlasten = 0
         let nTemperaturlasten = 0
-        let nEinzellasten=0
-        let nVorspannungen=0
-        let nSpannschloesser=0
-        let nStabvorverfomungen=0
+        let nEinzellasten = 0
+        let nVorspannungen = 0
+        let nSpannschloesser = 0
+        let nStabvorverfomungen = 0
 
         for (let i = 0; i < list.size; i++) {
             let obj = list.getAt(i) as TCAD_Stab;
@@ -321,7 +321,7 @@ export function cad_rechnen() {
                 }
             }
         }
-        console.log("nTemperaturlasten,nStreckenlasten,...", nTemperaturlasten, nStreckenlasten,nEinzellasten,nVorspannungen,nSpannschloesser,nStabvorverfomungen)
+        console.log("nTemperaturlasten,nStreckenlasten,...", nTemperaturlasten, nStreckenlasten, nEinzellasten, nVorspannungen, nSpannschloesser, nStabvorverfomungen)
 
         // Streckenlasten
         let el = document.getElementById("id_button_nstreckenlasten") as drButtonPM;
@@ -354,10 +354,33 @@ export function cad_rechnen() {
 
         let tabelleTemplast = elTabTemplast?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
+        // Vorspannung
+        el = document.getElementById("id_button_nvorspannungen") as drButtonPM;
+        el.setValue(nVorspannungen);
+
+        const elTabVorspannung = document.getElementById("id_vorspannungen_tabelle");
+        elTabVorspannung?.setAttribute("nzeilen", String(nVorspannungen));
+        elTabVorspannung?.setAttribute("clear", "0");
+
+        let tabelleVorspannung = elTabVorspannung?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+        // Spannschloss
+        el = document.getElementById("id_button_nspannschloesser") as drButtonPM;
+        el.setValue(nSpannschloesser);
+
+        const elTabSpannschloss = document.getElementById("id_spannschloesser_tabelle");
+        elTabSpannschloss?.setAttribute("nzeilen", String(nSpannschloesser));
+        elTabSpannschloss?.setAttribute("clear", "0");
+
+        let tabelleSpannschloss = elTabSpannschloss?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
 
         let ielem = nelem_Balken
         let irowStreckenlast = 1
         let irowTemplast = 1
+        let irowEinzellast = 1
+        let irowVorspannung = 1
+        let irowSpannschloss = 1
         for (let i = 0; i < list.size; i++) {
             let obj = list.getAt(i) as TCAD_Stab;
             if (obj.elTyp === CAD_STAB) {
@@ -398,6 +421,32 @@ export function cad_rechnen() {
                             child.value = String(pR)
                             irowStreckenlast++;
                         }
+                        else if (typ === 1) {
+                            let x = (obj.elast[j] as TCAD_Einzellast).xe
+                            let P = (obj.elast[j] as TCAD_Einzellast).P
+                            let M = (obj.elast[j] as TCAD_Einzellast).M
+
+                            eload.push(new TElLoads())
+                            eload[ielem].element = obj.elNo - 1
+                            eload[ielem].lf = lf
+                            eload[ielem].art = 6
+                            eload[ielem].x = x
+                            eload[ielem].P = P
+                            eload[ielem].M = M
+                            ielem++;
+
+                            let child = tabelleEinzellast.rows[irowEinzellast].cells[1].firstElementChild as HTMLInputElement;
+                            child.value = String(obj.elNo)
+                            child = tabelleEinzellast.rows[irowEinzellast].cells[2].firstElementChild as HTMLInputElement;
+                            child.value = String(lf)
+                            child = tabelleEinzellast.rows[irowEinzellast].cells[3].firstElementChild as HTMLInputElement;
+                            child.value = String(x)
+                            child = tabelleEinzellast.rows[irowEinzellast].cells[4].firstElementChild as HTMLInputElement;
+                            child.value = String(P)
+                            child = tabelleEinzellast.rows[irowEinzellast].cells[5].firstElementChild as HTMLInputElement;
+                            child.value = String(M)
+                            irowEinzellast++;
+                        }
                         else if (typ === 2) {
 
                             let To = (obj.elast[j] as TCAD_Temperaturlast).To
@@ -421,14 +470,51 @@ export function cad_rechnen() {
                             child.value = String(To)
                             irowTemplast++;
                         }
+                        else if (typ === 3) {
 
+                            let sigmaV = (obj.elast[j] as TCAD_Vorspannung).sigmaV
+
+                            eload.push(new TElLoads())
+                            eload[ielem].element = obj.elNo - 1
+                            eload[ielem].lf = lf
+                            eload[ielem].art = 9
+                            eload[ielem].sigmaV = sigmaV * 1000.0; //von MN/m² in kN/m²
+                            ielem++;
+
+                            let child = tabelleVorspannung.rows[irowVorspannung].cells[1].firstElementChild as HTMLInputElement;
+                            child.value = String(obj.elNo)
+                            child = tabelleVorspannung.rows[irowVorspannung].cells[2].firstElementChild as HTMLInputElement;
+                            child.value = String(lf)
+                            child = tabelleVorspannung.rows[irowVorspannung].cells[3].firstElementChild as HTMLInputElement;
+                            child.value = String(sigmaV)
+                            irowVorspannung++;
+                        }
+                        else if (typ === 4) {
+
+                            let ds = (obj.elast[j] as TCAD_Spannschloss).ds
+
+                            eload.push(new TElLoads())
+                            eload[ielem].element = obj.elNo - 1
+                            eload[ielem].lf = lf
+                            eload[ielem].art = 10
+                            eload[ielem].delta_s = ds / 1000.;  // von mm in m
+                            ielem++;
+
+                            let child = tabelleSpannschloss.rows[irowSpannschloss].cells[1].firstElementChild as HTMLInputElement;
+                            child.value = String(obj.elNo)
+                            child = tabelleSpannschloss.rows[irowSpannschloss].cells[2].firstElementChild as HTMLInputElement;
+                            child.value = String(lf)
+                            child = tabelleSpannschloss.rows[irowSpannschloss].cells[3].firstElementChild as HTMLInputElement;
+                            child.value = String(ds)
+                            irowSpannschloss++;
+                        }
                     }
                 }
             }
         }
 
-        set_neloads(nelem_Balken + nStreckenlasten + nTemperaturlasten);
-        set_ntotalEloads(nelem_Balken + nStreckenlasten + nTemperaturlasten)
+        set_neloads(nelem_Balken + nStreckenlasten + nTemperaturlasten + nEinzellasten + nVorspannungen + nSpannschloesser);
+        set_ntotalEloads(nelem_Balken + nStreckenlasten + nTemperaturlasten + nEinzellasten + nVorspannungen + nSpannschloesser)
     }
 
     return fatal_error;

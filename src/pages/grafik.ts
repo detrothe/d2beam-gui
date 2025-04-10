@@ -154,7 +154,7 @@ export const style_txt_knotenlast = {
     weight: 'bold'
 };
 
-const style_txt_knotenlast_element = {
+export const style_txt_knotenlast_element = {
     family: 'system-ui, sans-serif',
     size: 14,
     fill: '#ba0000',
@@ -191,7 +191,7 @@ const style_pfeil_knotenlast = {
     color: '#dc0000'
 }
 
-const style_pfeil_knotenlast_element = {
+export const style_pfeil_knotenlast_element = {
     a: 35,
     b: 25,
     h: 16,
@@ -208,7 +208,7 @@ const style_pfeil_moment = {
 }
 
 
-const style_pfeil_moment_element = {
+export const style_pfeil_moment_element = {
     radius: 40,
     b: 22,
     h: 14,
