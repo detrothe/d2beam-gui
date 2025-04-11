@@ -48,6 +48,29 @@ export function change_def_querschnitt() {
     write("default_querschnitt " + default_querschnitt)
 }
 //---------------------------------------------------------------------------------------------------------------
+export function removeAll_def_querschnitt() {
+    //---------------------------------------------------------------------------------------------------------------
+    let select = document.getElementById('id_querschnitt_default') as HTMLSelectElement;
+    let length = select.options.length;
+    for (let i = length - 1; i >= 0; i--) select.remove(i);
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export function remove_def_querschnitt(str: string) {
+    //---------------------------------------------------------------------------------------------------------------
+
+    let select = document.getElementById('id_querschnitt_default') as HTMLSelectElement;
+    let length = select.options.length;
+    for (let i = length - 1; i >= 0; i--) {
+        if (select.options.item(i)?.textContent === str) {
+            select.remove(i);
+            break;
+        }
+    }
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
 export function incr_querschnitts_zaehler() {
     //-----------------------------------------------------------------------------------------------------------
     querschnitts_zaehler++;
@@ -369,6 +392,8 @@ export async function contextmenu_querschnitt(ev: any) {
             //console.log("el.parentNode", el.parentNode.parentNode);
             //console.log("el.parentElement", el.parentElement.parentElement);
             element?.removeChild(el.parentElement.parentElement);
+
+            remove_def_querschnitt(qname);
         } else {
             const dialogAlert = new AlertDialog({
                 trueButton_Text: "ok",

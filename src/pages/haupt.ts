@@ -65,7 +65,8 @@ import {
 
 import {
   nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, set_dialog_querschnitt_new,
-  change_def_querschnitt
+  change_def_querschnitt,
+  removeAll_def_querschnitt
 } from "./querschnitte"
 
 //import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
@@ -77,7 +78,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 10-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 11-April-2025, ";
 //########################################################################################################################
 
 
@@ -1612,6 +1613,8 @@ export function clearTables() {
     let element = document.getElementById("id_tree_LQ") as any;
     element?.removeChild(element?.lastChild);
   }
+
+  removeAll_def_querschnitt();   // lösche Querschnitte in Button in Tab System
 }
 
 //---------------------------------------------------------------------------------------------------------------
