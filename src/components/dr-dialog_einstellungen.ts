@@ -139,16 +139,16 @@ export class drDialogEinstellungen extends LitElement {
       </table>
 
       <p>
-        Cursor Offset bei Touch (Finger) Eingabe (bei 0 befindet sich der Cursor direkt unter dem Finger):
+        Cursor Offset Faktor bei Touch (Finger) Eingabe (bei 0 befindet sich der Cursor direkt unter dem Finger):
       </p>
       <p>
-        dx:
-        <input type="number" id="id_dx_offset" name="dx_offset" pattern="[0-9.,eE+-]*" value="-100" />
+        Faktor für dx:
+        <input type="number" id="id_dx_offset_factor" name="dx_offset" pattern="[0-9.,eE+-]*" value="-1" />
         [-]
       </p>
       <p>
-        dz:
-        <input type="number" id="id_dz_offset" name="dz_offset" pattern="[0-9.,eE+-]*" value="-100" />
+        Faktor für dz:
+        <input type="number" id="id_dz_offset_factor" name="dz_offset" pattern="[0-9.,eE+-]*" value="-1" />
         [-]
       </p>
 
@@ -222,26 +222,26 @@ export class drDialogEinstellungen extends LitElement {
   getValue_dx() {
     const shadow = this.shadowRoot;
     //console.log("id_dx", (shadow?.getElementById("id_dx") as HTMLInputElement).value);
-    let wert = Number((shadow?.getElementById("id_dx") as HTMLInputElement).value.replace(/,/g, "."));
+    let wert = Math.abs(+(shadow?.getElementById("id_dx") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
 
   getValue_dz() {
     const shadow = this.shadowRoot;
     //console.log("id_dz", (shadow?.getElementById("id_dz") as HTMLInputElement).value);
-    let wert = Number((shadow?.getElementById("id_dz") as HTMLInputElement).value.replace(/,/g, "."));
+    let wert = Math.abs(+(shadow?.getElementById("id_dz") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
 
   get_dx_offset() {
     const shadow = this.shadowRoot;
-    let wert = Math.abs(+(shadow?.getElementById("id_dx_offset") as HTMLInputElement).value.replace(/,/g, "."));
+    let wert = +(shadow?.getElementById("id_dx_offset_factor") as HTMLInputElement).value.replace(/,/g, ".");
     return wert;
   }
 
   get_dz_offset() {
     const shadow = this.shadowRoot;
-    let wert = Math.abs(+(shadow?.getElementById("id_dz_offset") as HTMLInputElement).value.replace(/,/g, "."));
+    let wert = +(shadow?.getElementById("id_dz_offset_factor") as HTMLInputElement).value.replace(/,/g, ".");
     return wert;
   }
 

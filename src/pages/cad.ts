@@ -73,10 +73,12 @@ let centerY = 0.0;
 let centerX_last = 0.0;
 let centerY_last = 0.0;
 
-let dx_offset_touch = -100;
-let dz_offset_touch = -100;
-export function set_dx_offset_touch(dx: number) { dx_offset_touch = dx; }
-export function set_dz_offset_touch(dz: number) { dz_offset_touch = dz; }
+let dx_offset_touch = 0;
+let dz_offset_touch = 0;
+let dx_offset_touch_fact = -1;
+let dz_offset_touch_fact = -1;
+export function set_dx_offset_touch_factor(dx: number) { dx_offset_touch_fact = dx; }
+export function set_dz_offset_touch_factor(dz: number) { dz_offset_touch_fact = dz; }
 
 let touch_support = true;
 export function set_touch_support(wert: boolean) { touch_support = wert; }
@@ -674,6 +676,12 @@ export function init_cad(flag: number) {
 
    two.update();
 
+   // dx_offset_touch = -tr.Pix0(raster_dx) * devicePixelRatio;
+   // dz_offset_touch = -tr.Pix0(raster_dz) * devicePixelRatio;
+
+   dx_offset_touch = tr.Pix0(xmaxv - xminv) / 15 * devicePixelRatio * dx_offset_touch_fact;
+   dz_offset_touch = tr.Pix0(zmaxv - zminv) / 15 * devicePixelRatio * dz_offset_touch_fact;
+   console.log("dx_offset_touch", dx_offset_touch_fact)
    // stab_eingabe_aktiv = false
    // cad_eingabe_aktiv = false
 
@@ -875,6 +883,7 @@ function penDown(ev: PointerEvent) {
    ev.preventDefault();
 
 
+
    let dx_offset = 0.0, dy_offset = 0.0;
    if (isTouch) {
       dx_offset = dx_offset_touch / devicePixelRatio;
@@ -1052,7 +1061,7 @@ function mousemove(ev: MouseEvent) {
 
    ev.preventDefault();
 
-   //console.log(document.elementFromPoint(ev.offsetX, ev.offsetY));
+   // console.log("ev.offset", ev.offsetX, ev.offsetY);
    //console.log("move", ev.button, zoomIsActive, ev.movementX, ev.movementY, ev.offsetX - mouseOffsetX, ev.offsetY - mouseOffsetY)
 
    if (zoomIsActive) {  // mittlere Maustaste gedrückt
@@ -1430,19 +1439,27 @@ function mouseup(ev: any) {
                rubberband_drawn = false;
                let group = null;
 
-               let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
-               let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
-               add_element_nodes(index1);
-               add_element_nodes(index2);
-               const obj = new TCAD_Stab(group, start_x_wc, start_z_wc, end_x_wc, end_z_wc, index1, index2, default_querschnitt, buttons_control.typ_cad_element);
-               list.append(obj);
+               // Überprüfe Stablänge
+               let dx = end_x_wc - start_x_wc
+               let dz = end_z_wc - start_z_wc
+               let sl = Math.sqrt(dx * dx + dz * dz)
+               if (sl > 0.001) {
+                  let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
+                  let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
+                  add_element_nodes(index1);
+                  add_element_nodes(index2);
+                  const obj = new TCAD_Stab(group, start_x_wc, start_z_wc, end_x_wc, end_z_wc, index1, index2, default_querschnitt, buttons_control.typ_cad_element);
+                  list.append(obj);
 
-               group = drawStab(obj, tr);
-               two.add(group);
-               two.update();
+                  group = drawStab(obj, tr);
+                  two.add(group);
+                  two.update();
 
-               obj.setTwoObj(group)
-
+                  obj.setTwoObj(group)
+               }
+               else {
+                  alertdialog('ok', 'Stablänge zu klein = ' + sl + 'm');
+               }
                set_help_text('Stabanfang eingeben');
 
                //list.log()

@@ -11,8 +11,6 @@ import {
   set_raster_dx,
   set_raster_dz,
   init_cad,
-  set_dx_offset_touch,
-  set_dz_offset_touch,
   set_touch_support,
   set_raster_xmin,
   set_raster_xmax,
@@ -20,7 +18,9 @@ import {
   set_raster_zmax,
   rubberband_drawn,
   rubberband,
-  set_rubberband_drawn
+  set_rubberband_drawn,
+  set_dx_offset_touch_factor,
+  set_dz_offset_touch_factor
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -1174,8 +1174,8 @@ function dialog_einstellungen_closed(this: any, e: any) {
 
     set_raster_dx(el.getValue_dx());
     set_raster_dz(el.getValue_dz());
-    set_dx_offset_touch(el.get_dx_offset())
-    set_dz_offset_touch(el.get_dz_offset())
+    set_dx_offset_touch_factor(el.get_dx_offset())
+    set_dz_offset_touch_factor(el.get_dz_offset())
     set_touch_support(!el.get_NO_touch_support())
 
     set_raster_xmin(el.get_raster_xmin());
