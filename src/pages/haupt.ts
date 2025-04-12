@@ -71,14 +71,14 @@ import {
 
 //import { ConfirmDialog, AlertDialog } from "./confirm_dialog";
 //import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
-import { init_cad, init_two_cad } from "./cad";
+import { init_cad, init_two_cad, two_cad_clear } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { abbruch_property_dialog, show_property_dialog } from "./cad_contextmenu";
 import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 11-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 12-April-2025, ";
 //########################################################################################################################
 
 
@@ -1615,6 +1615,8 @@ export function clearTables() {
   }
 
   removeAll_def_querschnitt();   // lösche Querschnitte in Button in Tab System
+  two_cad_clear();
+
 }
 
 //---------------------------------------------------------------------------------------------------------------

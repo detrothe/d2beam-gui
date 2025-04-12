@@ -17,7 +17,10 @@ import {
   set_raster_xmin,
   set_raster_xmax,
   set_raster_zmin,
-  set_raster_zmax
+  set_raster_zmax,
+  rubberband_drawn,
+  rubberband,
+  set_rubberband_drawn
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -73,6 +76,7 @@ class Cbuttons_control {
   typ_cad_element = 0;
   n_input_points = 0;
   button_pressed = false;
+  input_started = 0
 
   reset() {
     this.pick_element = false;
@@ -87,6 +91,7 @@ class Cbuttons_control {
     this.typ_cad_element = 0;
     this.n_input_points = 0;
     this.button_pressed = false;
+    this.input_started = 0;
 
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
@@ -105,10 +110,13 @@ class Cbuttons_control {
     el = document.getElementById("id_cad_einstellungen_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
 
-    // if ( selected_element.group !== null) {
-    //   two.remove (selected_element.group)
-    //   two.update()
-    // }
+
+    if (rubberband_drawn) {
+      two.remove(rubberband);
+      set_rubberband_drawn(false);
+    }
+
+    set_help_text('    ');
   }
 }
 
@@ -945,6 +953,8 @@ export function showDialog_lager() {
   console.log("shadow", el?.shadowRoot?.getElementById("dialog_lager")),
     (el?.shadowRoot?.getElementById("dialog_lager") as HTMLDialogElement).addEventListener("close", dialog_lager_closed);
 
+  set_help_text('Knoten picken');
+
   (el?.shadowRoot?.getElementById("dialog_lager") as HTMLDialogElement).showModal();
 }
 
@@ -1241,6 +1251,8 @@ export function showDialog_knotenlast() {
   console.log("shadow", el?.shadowRoot?.getElementById("dialog_knotenlast")),
     (el?.shadowRoot?.getElementById("dialog_knotenlast") as HTMLDialogElement).addEventListener("close", dialog_knotenlast_closed);
 
+  set_help_text('Knoten picken');
+
   (el?.shadowRoot?.getElementById("dialog_knotenlast") as HTMLDialogElement).showModal();
 }
 
@@ -1372,6 +1384,8 @@ export function showDialog_elementlast() {
 
   console.log("shadow", el?.shadowRoot?.getElementById("dialog_elementlast"));
   (el?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).addEventListener("close", dialog_elementlast_closed);
+
+  set_help_text('Element picken');
 
   (el?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).showModal();
 }
