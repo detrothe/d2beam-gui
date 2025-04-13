@@ -20,7 +20,8 @@ import {
   rubberband,
   set_rubberband_drawn,
   set_dx_offset_touch_factor,
-  set_dz_offset_touch_factor
+  set_dz_offset_touch_factor,
+  CAD_INFO
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -73,6 +74,7 @@ class Cbuttons_control {
   knotenlast_eingabe_aktiv = false;
   elementlast_eingabe_aktiv = false;
   einstellungen_eingabe_aktiv = false;
+  info_eingabe_aktiv = false;
   typ_cad_element = 0;
   n_input_points = 0;
   button_pressed = false;
@@ -92,6 +94,7 @@ class Cbuttons_control {
     this.n_input_points = 0;
     this.button_pressed = false;
     this.input_started = 0;
+    this.info_eingabe_aktiv = false;
 
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
@@ -108,6 +111,8 @@ class Cbuttons_control {
     el = document.getElementById("id_cad_elementlast_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
     el = document.getElementById("id_cad_einstellungen_button") as HTMLButtonElement;
+    el.style.backgroundColor = "DodgerBlue";
+    el = document.getElementById("id_cad_info_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
 
 
@@ -265,6 +270,16 @@ export function cad_buttons() {
   refresh_button.title = "Reset Screen";
   refresh_button.id = "id_cad_refresh_button";
 
+  const info_button = document.createElement("button");
+
+  info_button.value = "refresh";
+  info_button.className = "btn";
+  info_button.innerHTML = '<i class = "fa fa-info"></i>';
+  info_button.addEventListener("click", Info_button);
+  // stab_button.addEventListener('keydown', keydown);
+  info_button.title = "Kurzanleitung & Information";
+  info_button.id = "id_cad_info_button";
+
   const help_text = document.createElement("span");
   help_text.innerHTML = "eine Hilfe"
   help_text.className = "helptext";
@@ -281,6 +296,7 @@ export function cad_buttons() {
   div.appendChild(ellast_button);
   div.appendChild(cog_button);
   div.appendChild(refresh_button);
+  div.appendChild(info_button);
   let br = document.createElement("br");
   div.appendChild(br);
   div.appendChild(zurueck_button);
@@ -1139,8 +1155,64 @@ export function Einstellungen_button(ev: Event) {
 
 }
 
-//---------------------------------------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------------------------------
+export function Info_button(ev: Event) {
+  //----------------------------------------------------------------------------------------------------
+
+  console.log("in Info_button", ev)
+
+  let el = document.getElementById("id_cad_info_button") as HTMLButtonElement
+
+  if (buttons_control.einstellungen_eingabe_aktiv) {
+    buttons_control.reset()
+  } else {
+
+    el.style.backgroundColor = 'darkRed'
+    buttons_control.info_eingabe_aktiv = true
+    buttons_control.cad_eingabe_aktiv = false
+    buttons_control.typ_cad_element = CAD_INFO
+    //el.addEventListener('keydown', keydown);
+    buttons_control.n_input_points = 0
+    buttons_control.button_pressed = true;
+
+    showDialog_info();
+    buttons_control.reset()
+
+  }
+
+}
+//---------------------------------------------------------------------------------------------------------------
+export function showDialog_info() {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("showDialog_info()");
+
+  const el = document.getElementById("id_dialog_info");
+  console.log("id_dialog_info", el);
+
+  console.log("shadow", el?.shadowRoot?.getElementById("dialog_info")),
+    (el?.shadowRoot?.getElementById("dialog_info") as HTMLDialogElement).addEventListener("close", dialog_info_closed);
+
+  (el?.shadowRoot?.getElementById("dialog_info") as HTMLDialogElement).showModal();
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_info_closed(this: any, e: any) {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("Event dialog_info_closed", e);
+  console.log("this", this);
+  const ele = document.getElementById("id_dialog_info") as HTMLDialogElement;
+
+  // ts-ignore
+  const returnValue = this.returnValue;
+
+  if (returnValue === "ok") {
+    console.log("alles ok")
+  }
+}
+
+//---------------------------------------------------------------------------------------------------------------
 export function showDialog_einstellungen() {
   //------------------------------------------------------------------------------------------------------------
   console.log("showDialog_einstellungen()");

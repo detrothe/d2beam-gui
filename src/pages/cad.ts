@@ -41,6 +41,7 @@ export const CAD_KNLAST = 3;
 export const CAD_LAGER = 4;
 export const CAD_ELLAST = 5;
 export const CAD_EINSTELLUNGEN = 6;
+export const CAD_INFO = 7;
 
 export let two: any = null;
 let domElement: any = null;
@@ -679,11 +680,10 @@ export function init_cad(flag: number) {
    // dx_offset_touch = -tr.Pix0(raster_dx) * devicePixelRatio;
    // dz_offset_touch = -tr.Pix0(raster_dz) * devicePixelRatio;
 
-   dx_offset_touch = tr.Pix0(xmaxv - xminv) / 15 * devicePixelRatio * dx_offset_touch_fact;
-   dz_offset_touch = tr.Pix0(zmaxv - zminv) / 15 * devicePixelRatio * dz_offset_touch_fact;
-   console.log("dx_offset_touch", dx_offset_touch_fact)
-   // stab_eingabe_aktiv = false
-   // cad_eingabe_aktiv = false
+   dx_offset_touch = tr.Pix0(xmaxv - xminv) / 10 * devicePixelRatio * dx_offset_touch_fact;
+   dz_offset_touch = tr.Pix0(zmaxv - zminv) / 10 * devicePixelRatio * dz_offset_touch_fact;
+   //console.log("dx_offset_touch", dx_offset_touch_fact)
+
 
 
 }
