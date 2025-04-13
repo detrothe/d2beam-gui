@@ -79,7 +79,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 13-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 13-April-2025, ";
 //########################################################################################################################
 
 
@@ -241,8 +241,11 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               <td>
                 <sl-button id="clear" value="clear" @click="${handleClick_neue_eingabe}">neue Eingabe beginnen</sl-button>
               </td>
+            </tr>
+            <tr>
+              <td></td>
               <td>
-                <sl-button id="id_check" value="check" @click="${handleClick_eingabe_ueberpruefen}">Eingabe prüfen</sl-button>
+                <sl-button id="id_check" value="check" @click="${handleClick_eingabe_ueberpruefen}" style="min-width:100%;">Eingabe prüfen</sl-button>
               </td>
             </tr>
             <tr>
@@ -271,6 +274,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               <td></td>
             </tr>
 
+            <!--
             <tr>
               <td title="nichtlineare Materialeigenschaften nur bei Koppelfedern möglich">&nbsp;&nbsp; Materialeigenschaften:</td>
               <td>
@@ -281,7 +285,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               </td>
               <td></td>
             </tr>
-
+    -->
             <tr>
               <td>
                &nbsp;
