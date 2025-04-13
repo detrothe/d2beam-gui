@@ -108,9 +108,11 @@ export class drDialogInfo extends LitElement {
       dialog[open] {
         min-width: 25rem;
         max-width: 40rem;
+        max-height:100%;
         background: #fffbf0;
         border: thin solid #e7c157;
-        margin: 5rem auto;
+        margin: 1rem auto;
+        overflow: scroll;
       }
 
       dialog::backdrop {
