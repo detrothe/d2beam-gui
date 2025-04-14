@@ -1,6 +1,6 @@
 import Two from "two.js"
 import { CTrans } from "./trans"
-import { TCAD_Einzellast, TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Spannschloss, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Vorspannung } from "./CCAD_element"
+import { TCAD_Einzellast, TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Spannschloss, TCAD_Stab, TCAD_Stabvorverformung, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Vorspannung } from "./CCAD_element"
 import { opacity, style_pfeil, style_pfeil_knotenlast_element, style_pfeil_moment_element, style_txt_knotenlast, style_txt_knotenlast_element } from "./grafik"
 import { myFormat } from "./utility"
 import { CAD_KNLAST, CAD_STAB, list } from "./cad"
@@ -634,8 +634,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4.
                     let str: string = '';
                     if (typ === 2) str = "Tu= " + Tu * fact[iLoop] + "°/To= " + To * fact[iLoop] + "°";
-                    else if (typ === 3) str = "σv= " + sigmaV * fact[iLoop]  + " N/mm²";
-                    else str = "Δs= " + delta_s * fact[iLoop]  + " mm";
+                    else if (typ === 3) str = "σv= " + sigmaV * fact[iLoop] + " N/mm²";
+                    else str = "Δs= " + delta_s * fact[iLoop] + " mm";
 
                     let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                     txt.alignment = 'center'
@@ -666,11 +666,11 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         if (wert < 0.0) {
                             let gr = draw_arrow(tr, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast_element)
                             group.add(gr)
-                            console.log("getBoundingClientRect draw Arrow",gr.getBoundingClientRect())
+                            console.log("getBoundingClientRect draw Arrow", gr.getBoundingClientRect())
                         } else {
                             let gr = draw_arrow(tr, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast_element)
                             group.add(gr)
-                            console.log("getBoundingClientRect draw Arrow",gr.getBoundingClientRect())
+                            console.log("getBoundingClientRect draw Arrow", gr.getBoundingClientRect())
                         }
                         xpix = tr.xPix(xl + ddx + dpx) + 4
                         zpix = tr.zPix(zl - ddz - dpz) - 4
@@ -701,6 +701,53 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         txt.alignment = 'right'
                         group.add(txt)
                     }
+                }
+                else if (typ === 5) {      // Stabvorverformung
+
+
+                    let w0a = (obj.elast[j] as TCAD_Stabvorverformung).w0a
+                    let w0m = (obj.elast[j] as TCAD_Stabvorverformung).w0m
+                    let w0e = (obj.elast[j] as TCAD_Stabvorverformung).w0e
+
+                    pL = slmax / 20.
+                    pR = slmax / 20.
+
+                    pMax = Math.max(0.0, pL, pR)
+                    pMin = Math.min(0.0, pL, pR)
+
+                    a += Math.abs(pMin)
+
+                    x[0] = x1 + si * a; z[0] = z1 - co * a;
+                    x[1] = x2 + si * a; z[1] = z2 - co * a;
+                    x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
+                    x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
+
+                    (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+
+                    const vertices = [];
+                    for (let i = 0; i < 4; i++) {
+                        xtr[i] = tr.xPix(x[i])
+                        ztr[i] = tr.zPix(z[i])
+                        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+                    }
+
+                    let flaeche = new Two.Path(vertices);
+                    flaeche.fill = color_load;
+                    flaeche.opacity = opacity;
+                    group.add(flaeche)
+
+                    xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4.
+                    zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4.
+                    let str = 'w0 a,m,e ' + w0a + ',' + w0m + ',' + w0e + 'mm';
+
+                    let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+                    txt.alignment = 'center'
+                    txt.baseline = 'middle'
+                    txt.rotation = obj.alpha
+                    group.add(txt)
+
+                    dp = pMax // - pMin
+                    a = a + dp + a_spalt
                 }
             }
         }

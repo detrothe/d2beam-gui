@@ -79,7 +79,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 13-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 14-April-2025, ";
 //########################################################################################################################
 
 
@@ -828,7 +828,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           id="id_stabvorverfomungen_tabelle"
           nzeilen="${nstabvorverfomungen_init}"
           nspalten="5"
-          columns='["No", "Element", "Lastfall", "w<sub>0a</sub> [cm]", "w<sub>0e</sub> [cm]", "w<sub>0m</sub> [cm]"]'
+          columns='["No", "Element", "Lastfall", "w<sub>0a</sub> [mm]", "w<sub>0e</sub> [mm]", "w<sub>0m</sub> [mm]"]'
         ></dr-tabelle>
       </sl-tab-panel>
 

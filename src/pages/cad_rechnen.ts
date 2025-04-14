@@ -2,19 +2,22 @@ import { drButtonPM } from "../components/dr-button-pm";
 
 import { CAD_KNLAST, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
-import { max_Lastfall } from "./cad_draw_elementlasten";
+import { max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
 import { CADNodes } from "./cad_node";
-import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss } from "./CCAD_element";
+import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung } from "./CCAD_element";
 import {
     alertdialog, element, eload, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, node,
     nstreckenlasten, ntemperaturlasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
-    set_nlastfaelle, set_nloads, set_nnodes, set_nnodesTotal, set_ntotalEloads, TElement, TElLoads, TLoads, TNode
+    set_nlastfaelle, set_nloads, set_nnodes, set_nnodesTotal, set_nstabvorverfomungen, set_ntotalEloads, stabvorverformung, TElement, TElLoads, TLoads, TNode,
+    TStabvorverformung
 } from "./rechnen";
 import { myFormat, myFormat_en, write } from "./utility";
 
 
 
 export function cad_rechnen() {
+
+    console.log("in cad_rechnen")
 
     let fatal_error = false;
 
@@ -216,7 +219,10 @@ export function cad_rechnen() {
 
     {  // Tabellen für Lastfälle und Kombinationen initialisieren
 
+        if (max_Lastfall === 0) set_max_lastfall(1);
+
         set_nlastfaelle(max_Lastfall)
+        console.log("set_nlastfaelle(max_Lastfall)",max_Lastfall,nlastfaelle)
         let el = document.getElementById("id_button_nlastfaelle") as drButtonPM;
         el.setValue(max_Lastfall);
         let elTab = document.getElementById("id_lastfaelle_tabelle");
@@ -323,6 +329,8 @@ export function cad_rechnen() {
         }
         console.log("nTemperaturlasten,nStreckenlasten,...", nTemperaturlasten, nStreckenlasten, nEinzellasten, nVorspannungen, nSpannschloesser, nStabvorverfomungen)
 
+        set_nstabvorverfomungen(nStabvorverfomungen);
+
         // Streckenlasten
         let el = document.getElementById("id_button_nstreckenlasten") as drButtonPM;
         el.setValue(nStreckenlasten);
@@ -375,12 +383,26 @@ export function cad_rechnen() {
         let tabelleSpannschloss = elTabSpannschloss?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
 
+        // Stabvorverformungen
+
+        stabvorverformung.length = 0
+        el = document.getElementById("id_button_nstabvorverformungen") as drButtonPM;
+        el.setValue(nStabvorverfomungen);
+
+        const elTabStabvorverformung = document.getElementById("id_stabvorverfomungen_tabelle");
+        elTabStabvorverformung?.setAttribute("nzeilen", String(nStabvorverfomungen));
+        elTabStabvorverformung?.setAttribute("clear", "0");
+
+        let tabelleStabvorverformung = elTabStabvorverformung?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
         let ielem = nelem_Balken
+        let iel_Verform = 0
         let irowStreckenlast = 1
         let irowTemplast = 1
         let irowEinzellast = 1
         let irowVorspannung = 1
         let irowSpannschloss = 1
+        let irowStabvorverformung = 1
         for (let i = 0; i < list.size; i++) {
             let obj = list.getAt(i) as TCAD_Stab;
             if (obj.elTyp === CAD_STAB) {
@@ -507,6 +529,33 @@ export function cad_rechnen() {
                             child = tabelleSpannschloss.rows[irowSpannschloss].cells[3].firstElementChild as HTMLInputElement;
                             child.value = String(ds)
                             irowSpannschloss++;
+                        }
+                        else if (typ === 5) {
+
+                            let w0a = (obj.elast[j] as TCAD_Stabvorverformung).w0a
+                            let w0m = (obj.elast[j] as TCAD_Stabvorverformung).w0m
+                            let w0e = (obj.elast[j] as TCAD_Stabvorverformung).w0e
+
+                            stabvorverformung.push(new TStabvorverformung())
+                            stabvorverformung[iel_Verform].element = obj.elNo - 1
+                            stabvorverformung[iel_Verform].lf = lf
+                            stabvorverformung[iel_Verform].p[0] = w0a / 1000.;  // von mm in m
+                            stabvorverformung[iel_Verform].p[1] = w0e / 1000.;  // von mm in m
+                            stabvorverformung[iel_Verform].p[2] = w0m / 1000.;  // von mm in m
+                            console.log("stabvorverformung[iel_Verform]",iel_Verform,'|',stabvorverformung[iel_Verform])
+                            iel_Verform++;
+
+                            let child = tabelleStabvorverformung.rows[irowStabvorverformung].cells[1].firstElementChild as HTMLInputElement;
+                            child.value = String(obj.elNo)
+                            child = tabelleStabvorverformung.rows[irowStabvorverformung].cells[2].firstElementChild as HTMLInputElement;
+                            child.value = String(lf)
+                            child = tabelleStabvorverformung.rows[irowStabvorverformung].cells[3].firstElementChild as HTMLInputElement;
+                            child.value = String(w0a)
+                            child = tabelleStabvorverformung.rows[irowStabvorverformung].cells[4].firstElementChild as HTMLInputElement;
+                            child.value = String(w0e)
+                            child = tabelleStabvorverformung.rows[irowStabvorverformung].cells[5].firstElementChild as HTMLInputElement;
+                            child.value = String(w0m)
+                            irowStabvorverformung++;
                         }
                     }
                 }
