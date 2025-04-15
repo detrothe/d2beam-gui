@@ -64,6 +64,7 @@ export class TCAD_Stab extends TCAD_Element {
         this.z2 = z2;
         this.index2 = index2;
         this.name_querschnitt = qname
+        this.className = 'TCAD_Stab'
     }
 
     //―――――――――――――――――――――――――――――――――――――――――――――
@@ -167,11 +168,12 @@ export class TCAD_Stab extends TCAD_Element {
         console.log("add_spannschloss, lf,art= ", lf, ds)
     }
     //―――――――――――――――――――――――――――――――――――――――――――――
-    add_stabvorverformung(lf: number, w0a: number, w0m: number,w0e:number): void {
+    add_stabvorverformung(lf: number, w0a: number, w0m: number, w0e: number): void {
         this.elast.push(new TCAD_Stabvorverformung(lf, w0a, w0m, w0e))
         //this.nStreckenlasten++;
         console.log("add_stabvorverformung, lf,art= ", lf, w0a, w0m, w0e)
-    }}
+    }
+}
 
 //―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Lager extends TCAD_Element {
@@ -188,6 +190,7 @@ export class TCAD_Lager extends TCAD_Element {
         super(obj, x1, z1, index1, elTyp);
 
         this.node = node;
+        this.className = 'TCAD_Lager'
     }
 }
 
@@ -201,6 +204,7 @@ export class TCAD_Knotenlast extends TCAD_Element {
         super(obj, x1, z1, index1, elTyp);
 
         this.knlast = knlast
+        this.className = 'TCAD_Knotenlast'
     }
 }
 
@@ -213,7 +217,7 @@ export class TCAD_Knoten extends TCAD_Element {
     constructor(obj: any, x1: number, z1: number, index1: number, elTyp: number) {
         super(obj, x1, z1, index1, elTyp);
         this.className = 'TCAD_Knoten'
-
+        this.className = 'TCAD_Knoten'
     }
 }
 
@@ -221,6 +225,7 @@ export class TCAD_Knoten extends TCAD_Element {
 export class TCAD_ElLast {
     //―――――――――――――――――――――――――――――――――――――――――
 
+    className = 'TCAD_ElLast'
     lastfall = 1
     isActive = true;
     isSelected = false;
@@ -262,6 +267,7 @@ export class TCAD_Streckenlast extends TCAD_ElLast {
         this.art = art
         this.pL = pa
         this.pR = pe
+        this.className = 'TCAD_Streckenlast'
     }
 
 }
@@ -280,6 +286,7 @@ export class TCAD_Einzellast extends TCAD_ElLast {
         this.xe = x
         this.P = P
         this.M = M
+        this.className = 'TCAD_Einzellast'
     }
 
 }
@@ -296,6 +303,7 @@ export class TCAD_Temperaturlast extends TCAD_ElLast {
         super(lf, 2)
         this.To = To
         this.Tu = Tu
+        this.className = 'TCAD_Temperaturlast'
     }
 
 }
@@ -309,6 +317,7 @@ export class TCAD_Vorspannung extends TCAD_ElLast {
     constructor(lf: number, sigmaV: number) {
         super(lf, 3)
         this.sigmaV = sigmaV
+        this.className = 'TCAD_Vorspannung'
     }
 
 }
@@ -322,6 +331,7 @@ export class TCAD_Spannschloss extends TCAD_ElLast {
     constructor(lf: number, ds: number) {
         super(lf, 4)
         this.ds = ds
+        this.className = 'TCAD_Spannschloss'
     }
 
 }
@@ -339,6 +349,7 @@ export class TCAD_Stabvorverformung extends TCAD_ElLast {
         this.w0a = w0a
         this.w0m = w0m
         this.w0e = w0e
+        this.className = 'TCAD_Stabvorverformung'
     }
 
 }
