@@ -65,6 +65,7 @@ let prevDiff = -1;
 let curDiff = 0.0
 
 let zoomIsActive = false;
+export function set_zoomIsActive(wert: boolean) { zoomIsActive = wert; }
 
 let isPen = false;
 let isTouch = false
@@ -98,6 +99,7 @@ class CPointer {
    }
 }
 let pointer = [] as CPointer[]
+export function reset_pointer_length() { pointer.length = 0; }
 
 export let rubberband: any = null;
 let input_active = false;
@@ -308,6 +310,8 @@ export function Stab_button(ev: Event) {
       buttons_control.n_input_points = 2;
       set_help_text('Anfangsknoten eingeben');
       buttons_control.button_pressed = true;
+      set_zoomIsActive(false);
+      pointer.length = 0
 
    }
 }
@@ -331,6 +335,8 @@ export function Lager_button(ev: Event) {
       el.addEventListener('keydown', keydown);
       buttons_control.n_input_points = 1;
       buttons_control.button_pressed = true;
+      set_zoomIsActive(false);
+      pointer.length = 0
 
       showDialog_lager();
 
@@ -737,7 +743,9 @@ function pointerdown(ev: PointerEvent) {
          touchLoop = 0
          //penDown(ev);
          //mousedown(ev);
-         if (!(buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element)) {
+         if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element) {
+            zoomIsActive = false;
+         } else {
             //if (!buttons_control.button_pressed) {
             zoomIsActive = true;
 
@@ -778,6 +786,7 @@ function pointermove(ev: PointerEvent) {
       case 'touch':
          isTouch = true;
          if ((buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element)) {
+            zoomIsActive = false;
             if (touch_support) mousemove(ev);
          }
          else {
@@ -847,7 +856,7 @@ function pointerup(ev: PointerEvent) {
 
       case 'touch':
          isTouch = true;
-         if ((buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element)) {
+         if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element) {
             if (touch_support) {
                if (buttons_control.input_started === 0) penDown(ev);
                else if (buttons_control.n_input_points > 1) mouseup(ev);

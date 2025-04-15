@@ -8,6 +8,7 @@ import { TCAD_Knoten, TCAD_Lager, TCAD_Stab } from './CCAD_element';
 import { draw_elementlasten } from './cad_draw_elementlasten';
 import { two } from './cad';
 import { get_cad_node_X, get_cad_node_Z } from './cad_node';
+import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 
 
 
@@ -127,6 +128,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
     let z1 = Math.round(tr.zPix(get_cad_node_Z(index1)));
     let phi = -node.phi * Math.PI / 180
 
+    let ele = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
+    let faktor = ele.get_faktor_lagersymbol() / devicePixelRatio
+
     let group = new Two.Group();
 
     if (System === STABWERK) {
@@ -134,7 +138,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             ((node.kx > 0.0) && (node.kz > 0.0) && (node.L[2] === -1))) {  // Volleinspannung oder mit zwei Translkationsfedern
             let rect = new Two.Rectangle(x1, z1, 20, 20)
             rect.fill = '#dddddd';
-            rect.scale = 1.0 / devicePixelRatio
+            rect.scale = 1.0 * faktor
             rect.rotation = phi
             group.add(rect);
         }
@@ -148,7 +152,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+            group.scale = 1.0 * faktor
 
             group.rotation = phi
 
@@ -165,7 +169,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+            group.scale = 1.0 * faktor
             group.rotation = 1.5708 + phi
             group.translation.set(x1, z1)
 
@@ -184,7 +188,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line2.linewidth = 2;
             group.add(line2)
 
-            group.scale = 1.0 / devicePixelRatio
+            group.scale = 1.0 * faktor
 
             group.rotation = phi
 
@@ -208,7 +212,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+            group.scale = 1.0 * faktor
 
             group.rotation = phi
 
@@ -232,7 +236,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+            group.scale = 1.0 * faktor
 
             group.rotation = phi
 
@@ -256,7 +260,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+            group.scale = 1.0 * faktor
 
 
             group.rotation = -1.5708 + phi
@@ -281,7 +285,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+            group.scale = 1.0 * faktor
 
             group.rotation = phi
 
@@ -305,7 +309,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+            group.scale = 1.0 * faktor
 
             group.rotation = phi
 
@@ -329,7 +333,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 / devicePixelRatio
+            group.scale = 1.0 * faktor
 
 
             group.rotation = -1.5708 + phi

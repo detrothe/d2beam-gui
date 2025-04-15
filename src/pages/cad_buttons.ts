@@ -21,7 +21,9 @@ import {
   set_rubberband_drawn,
   set_dx_offset_touch_factor,
   set_dz_offset_touch_factor,
-  CAD_INFO
+  CAD_INFO,
+  set_zoomIsActive,
+  reset_pointer_length
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -36,7 +38,7 @@ import "../components/dr-dialog_elementlasten";
 import { alertdialog, TLoads, TNode } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knoten, draw_knotenlast, draw_lager } from "./cad_draw_elemente";
-import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss } from "./CCAD_element";
+import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung } from "./CCAD_element";
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 import { change_def_querschnitt } from "./querschnitte";
 import { drDialogKnoten } from "../components/dr-dialog_knoten";
@@ -122,6 +124,8 @@ class Cbuttons_control {
     }
 
     set_help_text('    ');
+
+
   }
 }
 
@@ -446,6 +450,8 @@ export function delete_button() {
     buttons_control.pick_element = true;
     set_help_text('Pick ein Element');
     buttons_control.button_pressed = true;
+    set_zoomIsActive(false);
+    reset_pointer_length();
   }
 }
 
@@ -463,6 +469,8 @@ export function Select_button() {
     buttons_control.select_element = true;
     set_help_text('Pick ein Element');
     buttons_control.button_pressed = true;
+    set_zoomIsActive(false);
+    reset_pointer_length();
   }
 }
 
@@ -505,7 +513,7 @@ export function delete_element(xc: number, zc: number) {
 
       for (let j = 0; j < obj.elast.length; j++) {
         let typ = obj.elast[j].typ
-        if (typ === 0 || typ === 2 || typ === 3 || typ === 4) { // Streckenlast, Temperatur, Vorspannung, Spannschloss
+        if (typ === 0 || typ === 2 || typ === 3 || typ === 4|| typ === 5) { // Streckenlast, Temperatur, Vorspannung, Spannschloss, Stabvorverformung
 
           let x = Array(4)
           let z = Array(4);
@@ -670,7 +678,7 @@ export function select_element(xc: number, zc: number) {
       for (let j = 0; j < obj.elast.length; j++) {
         let typ = obj.elast[j].typ
 
-        if (typ === 0 || typ === 2 || typ === 3 || typ === 4) { // Streckenlast, Temperatur, Vorspannung, Spannschloss
+        if (typ === 0 || typ === 2 || typ === 3 || typ === 4 || typ === 5) { // Streckenlast, Temperatur, Vorspannung, Spannschloss, Stabvorverformung
 
           let x = Array(4)
           let z = Array(4);
@@ -759,6 +767,14 @@ export function select_element(xc: number, zc: number) {
     else if (typ === 4) {
       let ds = (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).ds
       ele.set_sigmaV(ds)
+    }
+    else if (typ === 5) {
+      let w0a = (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0a
+      let w0m = (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0m
+      let w0e = (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0e
+      ele.set_w0a(w0a)
+      ele.set_w0m(w0m)
+      ele.set_w0e(w0e)
     }
 
     mode_elementlast_aendern = true
@@ -1120,6 +1136,7 @@ export function Knoten_button(ev: Event) {
     //el.addEventListener('keydown', keydown);
     buttons_control.n_input_points = 0
     buttons_control.button_pressed = true;
+    reset_pointer_length();
 
     showDialog_knoten();
 
@@ -1299,6 +1316,8 @@ export function Knotenlast_button(_ev: Event) {
     el.addEventListener('keydown', keydown);
     buttons_control.n_input_points = 1
     buttons_control.button_pressed = true;
+    set_zoomIsActive(false);
+    reset_pointer_length();
 
     showDialog_knotenlast();
 
@@ -1436,6 +1455,8 @@ export function Elementlast_button(_ev: Event) {
     el.addEventListener('keydown', keydown);
     buttons_control.n_input_points = 1
     buttons_control.button_pressed = true;
+    set_zoomIsActive(false);
+    reset_pointer_length();
 
     showDialog_elementlast();
 
@@ -1528,6 +1549,13 @@ function update_elementlast() {
 
     (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).ds = ds;
     (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).lastfall = lf;
+  }
+  else if (typ === 5) {    // Stabvorverformung
+
+    (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0a = ele.get_w0a();
+    (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0m = ele.get_w0m();
+    (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0e = ele.get_w0e();
+    (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).lastfall = lf;
   }
 
   find_max_Lastfall();

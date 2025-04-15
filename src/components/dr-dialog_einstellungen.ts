@@ -135,6 +135,13 @@ export class drDialogEinstellungen extends LitElement {
               <sl-checkbox id="id_NO_touch_support">Keine Fingereingabe für System </sl-checkbox>
             </td>
           </tr>
+          <tr>
+            <td>
+              Faktor für Lagersymbole:
+              <input type="number" id="id_fact_lager" name="fact_lager" pattern="[0-9.,eE+-]*" value="1" />
+              [-]
+            </td>
+          </tr>
         </tbody>
       </table>
 
@@ -251,7 +258,6 @@ export class drDialogEinstellungen extends LitElement {
     return wert;
   }
 
-
   get_raster_xmin() {
     const shadow = this.shadowRoot;
     let wert = Number((shadow?.getElementById("id_xmin") as HTMLInputElement).value.replace(/,/g, "."));
@@ -273,6 +279,12 @@ export class drDialogEinstellungen extends LitElement {
   get_raster_zmax() {
     const shadow = this.shadowRoot;
     let wert = Number((shadow?.getElementById("id_zmax") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
+  }
+
+  get_faktor_lagersymbol() {
+    const shadow = this.shadowRoot;
+    let wert = +(shadow?.getElementById("id_fact_lager") as HTMLInputElement).value.replace(/,/g, ".");
     return wert;
   }
 }
