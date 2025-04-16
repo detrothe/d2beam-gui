@@ -16,7 +16,7 @@ import { nQuerschnittSets, set_querschnittszaehler, add_rechteck_querschnitt } f
 import { setSystem, System } from './rechnen'
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 import { CADNodes, TCADNode } from "./cad_node";
-import { TCAD_Element, TCAD_Stab } from "./CCAD_element";
+import { TCAD_Element, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
 import { init_cad, init_two_cad, list, two_cad_clear } from "./cad";
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
@@ -225,8 +225,28 @@ export function read_daten(eingabedaten: string) {
     list.size = 0
     for (let i = 0; i < jobj.elements.length; i++) {
         let element = (jobj.elements[i] as TCAD_Element)
-        //if (element.className = 'TCAD_Stab')
-        list.append(element as TCAD_Stab);
+        if (element.className === 'TCAD_Stab') {
+            const obj = new TCAD_Stab(null, jobj.elements[i].x1, jobj.elements[i].z1, jobj.elements[i].x2, jobj.elements[i].z2,
+                jobj.elements[i].index1, jobj.elements[i].index2, jobj.elements[i].name_querschnitt, jobj.elements[i].elTyp);
+            list.append(obj);
+            let neloads=jobj.elements[i].elast.length
+            for (let j=0;j<neloads;j++) {
+                if ( jobj.elements[i].elast[j].className === 'TCAD_Streckenlast') {
+                    obj.add_streckenlast(jobj.elements[i].elast[j].lf, jobj.elements[i].elast[j].art,
+                         jobj.elements[i].elast[j].pL, jobj.elements[i].elast[j].pR)
+                }
+            }
+        }
+        else if (element.className === 'TCAD_Lager') {
+            const obj = new TCAD_Lager(null, jobj.elements[i].x1, jobj.elements[i].z1,
+                jobj.elements[i].index1, jobj.elements[i].node, jobj.elements[i].elTyp);
+            list.append(obj);
+        }
+        else if (element.className === 'TCAD_Knotenlast') {
+            const obj = new TCAD_Knotenlast(null, jobj.elements[i].x1, jobj.elements[i].z1,
+                jobj.elements[i].index1, jobj.elements[i].knlast, jobj.elements[i].elTyp);
+            list.append(obj);
+        }
     }
 
     for (let i = 0; i < list.size; i++) {

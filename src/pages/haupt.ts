@@ -79,7 +79,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 //import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 15-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 16-April-2025, ";
 //########################################################################################################################
 
 
@@ -1731,8 +1731,8 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     elSel = document.getElementById("id_THIIO") as HTMLSelectElement;
     elSel.options[0].selected = true;
 
-    elSel = document.getElementById("id_matprop") as HTMLSelectElement;
-    elSel.options[0].selected = true;
+    // elSel = document.getElementById("id_matprop") as HTMLSelectElement;
+    // elSel.options[0].selected = true;
 
     resizeTables();
     clearTables();
