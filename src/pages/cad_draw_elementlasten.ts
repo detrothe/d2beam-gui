@@ -211,8 +211,10 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                 let typ = obj.elast[j].typ
 
                 let iLastfall = (obj.elast[j] as TCAD_Streckenlast).lastfall
-                console.log("SCALEFACTOR", iLastfall, max_value_lasten)
+                console.log("max_value_lasten", iLastfall, slmax, max_value_lasten.length)
+                console.log("eload",max_value_lasten[0].eload)
                 scalefactor = slmax / 20 / max_value_lasten[iLastfall - 1].eload
+console.log("scalefactor",scalefactor)
 
                 if (typ === 0) { // Streckenlast
 

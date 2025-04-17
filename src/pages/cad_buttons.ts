@@ -382,16 +382,25 @@ export function reDo_button() {
 
   if (undoList.size > 0) {
     let obj = undoList.removeTail();
-    //console.log("redo", obj);
+    console.log("redo", obj);
 
     let group: any
 
     if (obj.ellast) {
-      console.log("Es handelt sich um eine Elementlast")
+      console.log("Es handelt sich um eine Elementlast",obj.obj_elast)
       obj.obj_element.elast.push(obj.obj_elast)
       //obj.obj_element.nStreckenlasten++;
       console.log("neuer Stab", obj.obj_element)
       two.remove(obj.obj_element.two_obj);
+      console.log("max Lastfall", obj.obj_elast.lastfall)
+      let lf = obj.obj_elast.lastfall
+      set_max_lastfall(lf)
+      if ( obj.obj_elast.className === 'TCAD_Streckenlast') {
+        let pa =  obj.obj_elast.pL;
+        let pe =  obj.obj_elast.pR;
+        if (Math.abs(pa) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pa);
+        if (Math.abs(pe) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pe);
+      }
       group = drawStab(obj.obj_element, tr);
       two.add(group);
       obj.obj_element.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
@@ -513,7 +522,7 @@ export function delete_element(xc: number, zc: number) {
 
       for (let j = 0; j < obj.elast.length; j++) {
         let typ = obj.elast[j].typ
-        if (typ === 0 || typ === 2 || typ === 3 || typ === 4|| typ === 5) { // Streckenlast, Temperatur, Vorspannung, Spannschloss, Stabvorverformung
+        if (typ === 0 || typ === 2 || typ === 3 || typ === 4 || typ === 5) { // Streckenlast, Temperatur, Vorspannung, Spannschloss, Stabvorverformung
 
           let x = Array(4)
           let z = Array(4);
@@ -566,7 +575,7 @@ export function delete_element(xc: number, zc: number) {
     }
   }
 
-  console.log('ABSTAND', min_abstand, index, lager_gefunden);
+  console.log('ABSTAND', min_abstand, index, lager_gefunden, elementlast_gefunden);
 
   if (elementlast_gefunden) {
     //(obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL = 1.0;

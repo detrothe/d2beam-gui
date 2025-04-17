@@ -79,14 +79,14 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 //import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 17-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 17-April-2025, ";
 //########################################################################################################################
 
 
-export const nnodes_init = "3";
+export const nnodes_init = "0";
 export const nelem_init = "0";
-export const nnodalloads_init = "1";
-export const nstreckenlasten_init = "1";
+export const nnodalloads_init = "0";
+export const nstreckenlasten_init = "0";
 export const neinzellasten_init = "0";
 export const ntemperaturlasten_init = "0";
 export const nlastfaelle_init = "1";
@@ -199,16 +199,13 @@ portrait.addEventListener("change", function (e) {
       <sl-tab id="id_CAD" slot="nav" panel="tab-cad">System</sl-tab>
       <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
       <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
-      <sl-tab slot="nav" panel="tab-knoten">Knoten</sl-tab>
-      <sl-tab slot="nav" panel="tab-elemente">Elemente</sl-tab>
-      <sl-tab slot="nav" panel="tab-knotenlasten">Knotenlasten</sl-tab>
-      <sl-tab slot="nav" panel="tab-elementlasten">Elementlasten</sl-tab>
       <sl-tab slot="nav" panel="tab-stabvorverfomungen">Vorverformungen</sl-tab>
       <sl-tab id="id_tab_kombi" slot="nav" panel="tab-kombinationen">Kombinationen</sl-tab>
       <sl-tab slot="nav" panel="tab-ergebnisse">Ergebnisse</sl-tab>
       <sl-tab id="id_tab_mass" slot="nav" panel="tab-mass" disabled>Dynamik</sl-tab>
       <sl-tab slot="nav" panel="tab-pro">Pro</sl-tab>
       <sl-tab slot="nav" panel="tab-info">Info</sl-tab>
+      <sl-tab slot="nav" panel="tab-tabellen">Tabellen</sl-tab>
       <sl-tab slot="nav" panel="tab-einstellungen">ꔷꔷꔷ</sl-tab>
 
       <!--------------------------------------------------------------------------------------->
@@ -411,8 +408,77 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
       <!--------------------------------------------------------------------------------------->
 
-      <sl-tab-panel name="tab-elemente">
-        <p><b>Eingabe der Elemente</b> <br /></p>
+
+      <!--------------------------------------------------------------------------------------->
+
+      <sl-tab-panel name="tab-tabellen">
+
+      <h2>&nbsp;&nbsp;&nbsp;Hier nichts eintragen, Änderungen werden nicht berücksichtigt</h2>
+
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <p>
+                  <b>Knotenkoordinaten und Lager</b><br /><br />
+                  1 = starre Lagerung<br />
+                  0 oder leere Zelle = frei beweglich<br />
+                  > 1 = Federsteifigkeit in kN/m bzw. kNm/rad<br />
+                  <br />
+                  Drehung des Knotens (Lagers) im Gegenuhrzeigersinn positiv<br /><br />
+                </p>
+                <p>
+                  Anzahl Knoten:
+                  <dr-button-pm id="id_button_nnodes" nel="${nnodes_init}" inputid="nnodes"></dr-button-pm>
+                  <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
+                </p>
+              </td>
+              <td>
+                <img
+                  src="/assets/gedrehtes_lager.png"
+                  name="gedrehtes_lager"
+                  title="gedrehtes Lager"
+                  style="max-width:80%; width:${width_lager}px; height:auto; border:0px; margin: auto; display: block;"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <dr-tabelle
+                  id="id_knoten_tabelle"
+                  nzeilen="${nnodes_init}"
+                  nspalten="6"
+                  columns='["No", "x [m]", "z [m]", "L<sub>x</sub><br>(kN/m)", "L<sub>z</sub><br>(kN/m)", "L<sub>φ</sub><br>(kNm/rad)", "Winkel [°]"]'
+                  colwidth='["4","5","5","5","5","5","5"]'
+                ></dr-tabelle>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p><br /><b>Knotenverformungen</b><br /></p>
+        <p>zum Beispiel für Stützensenkungen</p>
+        <p>
+          Die Richtungen stimmen mit den Richtungen des zugehörigen gedrehten Lagerknotens überein.
+          <br />
+          Es sind nur in den Tabellenzellen Werte einzugeben, für die definierte Verformungen gewünscht werden.<br />
+          Die Zahl 0 entspricht einer starren Lagerung!
+        </p>
+        <p>
+          Anzahl Knoten mit<br />vorgebenenen Verformungen:
+          <dr-button-pm id="id_button_nnodedisps" nel="${nnodedisps_init}" inputid="nnodedisps"></dr-button-pm>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
+        </p>
+
+        <dr-tabelle
+          id="id_nnodedisps_tabelle"
+          nzeilen="${nnodedisps_init}"
+          nspalten="5"
+          columns='["No", "Knoten", "Lastfall", "u<sub>x&prime;0</sub> [mm]", "u<sub>z&prime;0</sub> [mm]", "φ<sub>0</sub> [mrad]"]'
+        ></dr-tabelle>
+
+        <!--                                                   E l e m e n t e -->
+        <p><b>Elemente</b> <br /></p>
         <p>
         <img  src="/assets/def_d2beam.png"
                   name="Definition_d2beam"
@@ -498,78 +564,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                   typs='["-", "number", "number", "text", "text", "text", "text", "text", "text"]'
         ></dr-tabelle>
 
-      </sl-tab-panel>
+        <!--                                                   K n o t e n l a s t e n -->
 
-      <!--------------------------------------------------------------------------------------->
-
-      <sl-tab-panel name="tab-knoten">
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <p>
-                  <b>Eingabe der Knotenkoordinaten und Lager</b><br /><br />
-                  1 = starre Lagerung<br />
-                  0 oder leere Zelle = frei beweglich<br />
-                  > 1 = Federsteifigkeit in kN/m bzw. kNm/rad<br />
-                  <br />
-                  Drehung des Knotens (Lagers) im Gegenuhrzeigersinn positiv<br /><br />
-                </p>
-                <p>
-                  Anzahl Knoten:
-                  <dr-button-pm id="id_button_nnodes" nel="${nnodes_init}" inputid="nnodes"></dr-button-pm>
-                  <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
-                </p>
-              </td>
-              <td>
-                <img
-                  src="/assets/gedrehtes_lager.png"
-                  name="gedrehtes_lager"
-                  title="gedrehtes Lager"
-                  style="max-width:80%; width:${width_lager}px; height:auto; border:0px; margin: auto; display: block;"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                <dr-tabelle
-                  id="id_knoten_tabelle"
-                  nzeilen="${nnodes_init}"
-                  nspalten="6"
-                  columns='["No", "x [m]", "z [m]", "L<sub>x</sub><br>(kN/m)", "L<sub>z</sub><br>(kN/m)", "L<sub>φ</sub><br>(kNm/rad)", "Winkel [°]"]'
-                  colwidth='["4","5","5","5","5","5","5"]'
-                ></dr-tabelle>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p><br /><b>Knotenverformungen</b><br /></p>
-        <p>zum Beispiel für Stützensenkungen</p>
-        <p>
-          Die Richtungen stimmen mit den Richtungen des zugehörigen gedrehten Lagerknotens überein.
-          <br />
-          Es sind nur in den Tabellenzellen Werte einzugeben, für die definierte Verformungen gewünscht werden.<br />
-          Die Zahl 0 entspricht einer starren Lagerung!
-        </p>
-        <p>
-          Anzahl Knoten mit<br />vorgebenenen Verformungen:
-          <dr-button-pm id="id_button_nnodedisps" nel="${nnodedisps_init}" inputid="nnodedisps"></dr-button-pm>
-          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
-        </p>
-
-        <dr-tabelle
-          id="id_nnodedisps_tabelle"
-          nzeilen="${nnodedisps_init}"
-          nspalten="5"
-          columns='["No", "Knoten", "Lastfall", "u<sub>x&prime;0</sub> [mm]", "u<sub>z&prime;0</sub> [mm]", "φ<sub>0</sub> [mrad]"]'
-        ></dr-tabelle>
-      </sl-tab-panel>
-
-      <!--------------------------------------------------------------------------------------->
-
-      <sl-tab-panel name="tab-knotenlasten"
-        ><p><b>Eingabe der Knotenlasten</b><br /><br /></p>
+        <p><b>Knotenlasten</b><br /><br /></p>
         <p>
           Anzahl Knotenlasten:
 
@@ -583,11 +580,10 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           nspalten="5"
           columns='["No", "Knoten", "Lastfall", "P<sub>x</sub> [kN]", "P<sub>z</sub> [kN]", "M<sub>y</sub> [kNm]"]'
         ></dr-tabelle>
-      </sl-tab-panel>
 
-      <!--------------------------------------------------------------------------------------->
-      <sl-tab-panel name="tab-elementlasten"
-        ><p>
+         <!--                                                   E l e m e n t l a s t e n -->
+
+        <p>
           <b>Eingabe der Streckenlasten</b><br /><br />
           Lastarten<br /><br />
           0 = Trapezstreckenlast senkrecht auf Stab<br />
@@ -710,7 +706,62 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           nspalten="3"
           columns='["No", "Element", "Lastfall", "&Delta;s [mm]"]'
         ></dr-tabelle>
+
+
+        <p>
+          <br />
+          <b>Stabvorverfomungen</b>
+        </p>
+        <p>
+          w<sub>0a</sub> = Vorverformung am Stabanfang, senkrecht zur Stabachse<br />
+          w<sub>0e</sub> = Vorverformung am Stabende, senkrecht zur Stabachse<br />
+          w<sub>0m</sub> = Stich in Stabmitte, w<sub>0m,gesamt</sub> =w<sub>0m</sub>
+          +(w<sub>0a</sub>+w<sub>0e</sub>)/2  &nbsp;(nicht bei Fachwerk)
+        </p>
+
+        <p>
+          Anzahl Stabvorverformungen:
+          <dr-button-pm id="id_button_nstabvorverformungen" nel="${nstabvorverfomungen_init}" inputid="nstabvorverformungen"></dr-button-pm>
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
+        </p>
+        <dr-tabelle
+          id="id_stabvorverfomungen_tabelle"
+          nzeilen="${nstabvorverfomungen_init}"
+          nspalten="5"
+          columns='["No", "Element", "Lastfall", "w<sub>0a</sub> [mm]", "w<sub>0e</sub> [mm]", "w<sub>0m</sub> [mm]"]'
+        ></dr-tabelle>
+
+
+
+      <p><b>Knotenmassen</b><br /><br /></p>
+
+      <p> M = Masse<br>
+        Θ<sub>y</sub> = Massenträgheitsmoment um y-Achse<br>
+      </p>
+
+      <p>
+          Anzahl Knotenmassen:
+
+          <dr-button-pm id="id_button_nnodalmass" nel="${nnodalmass_init}" inputid="nnodalmass"></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <br /><br />
+        </p>
+        <dr-tabelle
+          id="id_knotenmassen_tabelle"
+          nzeilen="${nnodalmass_init}"
+          nspalten="3"
+          columns='["No", "Knoten", "M [t]", "Θ<sub>y</sub> [tm²]"]'
+        ></dr-tabelle>
+
+
       </sl-tab-panel>
+
+      <!--------------------------------------------------------------------------------------->
+
+
+
+      <!--------------------------------------------------------------------------------------->
+
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-kombinationen">
@@ -808,28 +859,6 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           </tbody>
         </table>
 
-        <p>
-          <br />
-          <b>- Eingabe der Stabvorverfomungen</b>
-        </p>
-        <p>
-          w<sub>0a</sub> = Vorverformung am Stabanfang, senkrecht zur Stabachse<br />
-          w<sub>0e</sub> = Vorverformung am Stabende, senkrecht zur Stabachse<br />
-          w<sub>0m</sub> = Stich in Stabmitte, w<sub>0m,gesamt</sub> =w<sub>0m</sub>
-          +(w<sub>0a</sub>+w<sub>0e</sub>)/2  &nbsp;(nicht bei Fachwerk)
-        </p>
-
-        <p>
-          Anzahl Stabvorverformungen:
-          <dr-button-pm id="id_button_nstabvorverformungen" nel="${nstabvorverfomungen_init}" inputid="nstabvorverformungen"></dr-button-pm>
-          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
-        </p>
-        <dr-tabelle
-          id="id_stabvorverfomungen_tabelle"
-          nzeilen="${nstabvorverfomungen_init}"
-          nspalten="5"
-          columns='["No", "Element", "Lastfall", "w<sub>0a</sub> [mm]", "w<sub>0e</sub> [mm]", "w<sub>0m</sub> [mm]"]'
-        ></dr-tabelle>
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
@@ -1037,32 +1066,12 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <sl-tab-panel name="tab-mass">
 
 
-      <p>
+        <p>
           Anzahl Eigenwerte:
 
           <dr-button-pm id="id_button_dyn_neigv" nel="${dyn_neigv_init}" inputid="dyn_neigv"></dr-button-pm>
           <br /><br />
         </p>
-
-      <p><b>Eingabe der Knotenmassen</b><br /><br /></p>
-
-      <p> M = Masse<br>
-      Θ<sub>y</sub> = Massenträgheitsmoment um y-Achse<br>
-      </p>
-
-      <p>
-          Anzahl Knotenmassen:
-
-          <dr-button-pm id="id_button_nnodalmass" nel="${nnodalmass_init}" inputid="nnodalmass"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
-          <br /><br />
-        </p>
-        <dr-tabelle
-          id="id_knotenmassen_tabelle"
-          nzeilen="${nnodalmass_init}"
-          nspalten="3"
-          columns='["No", "Knoten", "M [t]", "Θ<sub>y</sub> [tm²]"]'
-        ></dr-tabelle>
 
 
     </sl-tab-panel>
@@ -1848,5 +1857,6 @@ function elementTabelle_bettung_anzeigen(check: boolean) {
     for (let i = 13; i > 12; i--) el?.setAttribute("hide_column", String(i));
   }
 }
+
 
 

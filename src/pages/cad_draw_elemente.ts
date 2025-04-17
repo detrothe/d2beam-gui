@@ -106,6 +106,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
         group.add(gr)
     }
 
+    console.log("in drawStab, Anzahl Elementlasten:", obj.elast.length)
     if (obj.elast.length > 0) {
         let gr = draw_elementlasten(tr, obj)
         group.add(gr)
