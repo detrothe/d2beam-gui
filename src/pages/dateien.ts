@@ -18,6 +18,7 @@ import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js"
 import { CADNodes, TCADNode } from "./cad_node";
 import { TCAD_Element, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
 import { init_cad, init_two_cad, list, two_cad_clear } from "./cad";
+import { CMAXVALUESLOAD, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
 
@@ -175,6 +176,7 @@ export function read_daten(eingabedaten: string) {
         console.log("textarea", txtarea.value);
         if (jobj.freetxt !== undefined) txtarea.value = jobj.freetxt;
 
+        set_max_lastfall(jobj.max_Lastfall);
     }
 
     endTime = performance.now();
@@ -229,11 +231,29 @@ export function read_daten(eingabedaten: string) {
             const obj = new TCAD_Stab(null, jobj.elements[i].x1, jobj.elements[i].z1, jobj.elements[i].x2, jobj.elements[i].z2,
                 jobj.elements[i].index1, jobj.elements[i].index2, jobj.elements[i].name_querschnitt, jobj.elements[i].elTyp);
             list.append(obj);
-            let neloads=jobj.elements[i].elast.length
-            for (let j=0;j<neloads;j++) {
-                if ( jobj.elements[i].elast[j].className === 'TCAD_Streckenlast') {
-                    obj.add_streckenlast(jobj.elements[i].elast[j].lf, jobj.elements[i].elast[j].art,
-                         jobj.elements[i].elast[j].pL, jobj.elements[i].elast[j].pR)
+            let neloads = jobj.elements[i].elast.length
+            for (let j = 0; j < neloads; j++) {
+                if (jobj.elements[i].elast[j].className === 'TCAD_Streckenlast') {
+                    obj.add_streckenlast(jobj.elements[i].elast[j].lastfall, jobj.elements[i].elast[j].art,
+                        jobj.elements[i].elast[j].pL, jobj.elements[i].elast[j].pR)
+                }
+                else if (jobj.elements[i].elast[j].className === 'TCAD_Einzellast') {
+                    obj.add_einzellast(jobj.elements[i].elast[j].lastfall, jobj.elements[i].elast[j].xe,
+                        jobj.elements[i].elast[j].P, jobj.elements[i].elast[j].M)
+                }
+                else if (jobj.elements[i].elast[j].className === 'TCAD_Temperaturlast') {
+                    obj.add_temperaturlast(jobj.elements[i].elast[j].lastfall, jobj.elements[i].elast[j].To,
+                        jobj.elements[i].elast[j].Tu)
+                }
+                else if (jobj.elements[i].elast[j].className === 'TCAD_Vorspannung') {
+                    obj.add_vorspannung(jobj.elements[i].elast[j].lastfall, jobj.elements[i].elast[j].sigmaV)
+                }
+                else if (jobj.elements[i].elast[j].className === 'TCAD_Spannschloss') {
+                    obj.add_spannschloss(jobj.elements[i].elast[j].lastfall, jobj.elements[i].elast[j].ds)
+                }
+                else if (jobj.elements[i].elast[j].className === 'TCAD_Stabvorverformung') {
+                    obj.add_stabvorverformung(jobj.elements[i].elast[j].lastfall, jobj.elements[i].elast[j].w0a,
+                        jobj.elements[i].elast[j].w0m, jobj.elements[i].elast[j].w0e)
                 }
             }
         }
@@ -254,6 +274,15 @@ export function read_daten(eingabedaten: string) {
         console.log("eingelesen", obj)
     };
 
+    max_value_lasten.length = 0
+    for (let i = 0; i < jobj.max_value_lasten.length; i++) {
+        max_value_lasten.push(new CMAXVALUESLOAD);
+        max_value_lasten[i].eload = jobj.max_value_lasten[i].eload;
+    }
+
+    for (let i = 0; i < jobj.max_value_lasten.length; i++) {
+        console.log("max_value_lasten[i].eload", max_value_lasten[i].eload)
+    }
 
     /*
         let el = document.getElementById('id_knoten_tabelle') as HTMLElement;
@@ -911,6 +940,7 @@ export function str_inputToJSON() {
         'niter_neigv': niter_neigv,
         'nelem_koppelfedern': nelem_koppelfedern,
         'freetxt': freetxt,
+        'max_Lastfall': max_Lastfall,
 
 
         // 'elem': elem,
@@ -929,6 +959,7 @@ export function str_inputToJSON() {
         'qswerte': qsWerte,
         'cadNodes': CADNodes,
         'elements': elements,
+        'max_value_lasten': max_value_lasten,
         // 'nodeDisp0': nodeDisp0,
         // 'nodalmass': nodalmass
     };

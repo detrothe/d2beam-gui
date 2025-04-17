@@ -7,7 +7,7 @@ import { CAD_KNLAST, CAD_STAB, list } from "./cad"
 import { draw_arrow, draw_moment_arrow } from "./cad_draw_elemente"
 import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
 
-class CMAXVALUESLOAD {
+export class CMAXVALUESLOAD {
     eload = 0.0
     constructor() {
         this.eload = 0.0
@@ -211,7 +211,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                 let typ = obj.elast[j].typ
 
                 let iLastfall = (obj.elast[j] as TCAD_Streckenlast).lastfall
-                console.log("SCALEFACTOR", iLastfall, max_value_lasten[iLastfall - 1].eload)
+                console.log("SCALEFACTOR", iLastfall, max_value_lasten)
                 scalefactor = slmax / 20 / max_value_lasten[iLastfall - 1].eload
 
                 if (typ === 0) { // Streckenlast
