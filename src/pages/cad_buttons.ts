@@ -1196,9 +1196,9 @@ export function showDialog_knoten() {
   console.log("showDialog_knoten()");
 
   const el = document.getElementById("id_dialog_knoten");
-  console.log("id_dialog_knoten", el);
+  // console.log("id_dialog_knoten", el);
 
-  console.log("shadow showDialog_knoten", el?.shadowRoot?.getElementById("dialog_knoten"));
+  // console.log("shadow showDialog_knoten", el?.shadowRoot?.getElementById("dialog_knoten"));
 
   (el?.shadowRoot?.getElementById("dialog_knoten") as HTMLDialogElement).addEventListener("close", dialog_knoten_closed);
 
@@ -1217,10 +1217,9 @@ function dialog_knoten_closed(this: any, e: any) {
   const returnValue = this.returnValue;
 
   if (returnValue === "ok") {
-    //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
-    console.log("sieht gut aus");
+    // console.log("sieht gut aus");
 
-    if (mode_knoten_aendern) update_knoten(0);
+    if (mode_knoten_aendern) update_knoten(0);  // es handelt sich um einen User Knoten
     else if (CADPunkt_gefunden) update_knoten(1);
 
   } else {

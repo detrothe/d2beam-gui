@@ -746,7 +746,7 @@ function pointerdown(ev: PointerEvent) {
          touchLoop = 0
          //penDown(ev);
          //mousedown(ev);
-         if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element) {
+         if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node) {
             zoomIsActive = false;
          } else {
             //if (!buttons_control.button_pressed) {
@@ -788,7 +788,7 @@ function pointermove(ev: PointerEvent) {
          break;
       case 'touch':
          isTouch = true;
-         if ((buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element)) {
+         if ((buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node)) {
             zoomIsActive = false;
             if (touch_support) mousemove(ev);
          }
@@ -859,7 +859,7 @@ function pointerup(ev: PointerEvent) {
 
       case 'touch':
          isTouch = true;
-         if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element) {
+         if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node) {
             if (touch_support) {
                if (buttons_control.input_started === 0) penDown(ev);
                else if (buttons_control.n_input_points > 1) mouseup(ev);
@@ -996,15 +996,21 @@ function penDown(ev: PointerEvent) {
 
                let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
                if (index1 > -1) {
-                  let group: any;
-                  const el = new TCAD_Lager(group, start_x_wc, start_z_wc, index1, node, buttons_control.typ_cad_element);
-                  list.append(el);
-                  add_element_nodes(index1);
-                  group = draw_lager(tr, el);
-                  two.add(group);
-                  el.setTwoObj(group)
-                  two.update();
-
+                  // Überprüfe, ob Knoten schon Lager hat
+                  let vorhanden = check_doppeltes_Lager(index1)
+                  if (vorhanden) {
+                     alertdialog('ok', 'Knoten hat schon ein Lager');
+                  }
+                  else {
+                     let group: any;
+                     const el = new TCAD_Lager(group, start_x_wc, start_z_wc, index1, node, buttons_control.typ_cad_element);
+                     list.append(el);
+                     add_element_nodes(index1);
+                     group = draw_lager(tr, el);
+                     two.add(group);
+                     el.setTwoObj(group)
+                     two.update();
+                  }
                } else {
                   console.log('Keinen Knoten gefunden');
                   alertdialog('ok', 'keinen Knoten gefunden');
@@ -1039,6 +1045,22 @@ function penDown(ev: PointerEvent) {
 }
 
 //--------------------------------------------------------------------------------------------------------
+function check_doppeltes_Lager(index1: number): boolean {
+   //-----------------------------------------------------------------------------------------------------
+
+   for (let i = 0; i < list.size; i++) {
+      let obj = list.getAt(i) as TCAD_Lager;
+      if (obj.elTyp === CAD_LAGER) {
+         if (obj.index1 === index1) {
+            return true
+            break;
+         }
+      }
+   }
+   return false;
+}
+
+//-------------------------------------------------------------------------------------------------------
 function mousedown(ev: any) {
    //----------------------------------------------------------------------------------------------------
 
@@ -1335,14 +1357,22 @@ function mouseup(ev: any) {
 
                   let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
                   if (index1 > -1) {
-                     let group: any;
-                     const el = new TCAD_Lager(group, start_x_wc, start_z_wc, index1, node, buttons_control.typ_cad_element);
-                     list.append(el);
-                     add_element_nodes(index1);
-                     group = draw_lager(tr, el);
-                     two.add(group);
-                     el.setTwoObj(group)
-                     two.update();
+                     // Überprüfe, ob Knoten schon Lager hat
+                     let vorhanden = check_doppeltes_Lager(index1)
+                     if (vorhanden) {
+                        alertdialog('ok', 'Knoten hat schon ein Lager');
+                     }
+                     else {
+
+                        let group: any;
+                        const el = new TCAD_Lager(group, start_x_wc, start_z_wc, index1, node, buttons_control.typ_cad_element);
+                        list.append(el);
+                        add_element_nodes(index1);
+                        group = draw_lager(tr, el);
+                        two.add(group);
+                        el.setTwoObj(group)
+                        two.update();
+                     }
                   } else {
                      console.log('Keinen Knoten gefunden');
                      alertdialog('ok', 'keinen Knoten gefunden');
