@@ -23,7 +23,8 @@ import {
   set_dz_offset_touch_factor,
   CAD_INFO,
   set_zoomIsActive,
-  reset_pointer_length
+  reset_pointer_length,
+  getFangweite
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -66,9 +67,13 @@ let mode_knoten_aendern = false;
 let obj_knoten: TCAD_Element;
 let index_obj_knoten = -1
 
+let CADPunkt_gefunden = false
+let index_CADPunkt = -1
+
 class Cbuttons_control {
   pick_element = false;
   select_element = false;
+  select_node = false;
   cad_eingabe_aktiv = false;
   knoten_eingabe_aktiv = false;
   stab_eingabe_aktiv = false;
@@ -85,6 +90,7 @@ class Cbuttons_control {
   reset() {
     this.pick_element = false;
     this.select_element = false;
+    this.select_node = false;
     this.cad_eingabe_aktiv = false;
     this.knoten_eingabe_aktiv = false;
     this.stab_eingabe_aktiv = false;
@@ -115,6 +121,8 @@ class Cbuttons_control {
     el = document.getElementById("id_cad_einstellungen_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
     el = document.getElementById("id_cad_info_button") as HTMLButtonElement;
+    el.style.backgroundColor = "DodgerBlue";
+    el = document.getElementById("id_cad_edit_knoten_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
 
 
@@ -210,6 +218,16 @@ export function cad_buttons() {
   knoten_button.title = "Eingabe Knoten";
   knoten_button.id = "id_cad_knoten_button";
 
+  const edit_knoten_button = document.createElement("button");
+
+  edit_knoten_button.value = "Knoten bearbeiten";
+  edit_knoten_button.className = "btn";
+  edit_knoten_button.innerHTML = '<i class = "fa fa-file-text-o"></i>';
+  edit_knoten_button.addEventListener("click", Edit_Knoten_button);
+  // stab_button.addEventListener('keydown', keydown);
+  edit_knoten_button.title = "Knoten bearbeiten";
+  edit_knoten_button.id = "id_cad_edit_knoten_button";
+
   const stab_button = document.createElement("button");
 
   stab_button.value = "Stab";
@@ -225,7 +243,7 @@ export function cad_buttons() {
 
   lager_button.value = "Lager";
   lager_button.className = "btn";
-  lager_button.innerHTML = "Lager";
+  lager_button.innerHTML = "Δ";
   lager_button.addEventListener("click", Lager_button);
   // stab_button.addEventListener('keydown', keydown);
   lager_button.title = "Eingabe Lager";
@@ -294,6 +312,7 @@ export function cad_buttons() {
   div.appendChild(trash_button);
   div.appendChild(select_button);
   div.appendChild(knoten_button);
+  div.appendChild(edit_knoten_button);
   div.appendChild(stab_button);
   div.appendChild(lager_button);
   div.appendChild(knotlast_button);
@@ -387,7 +406,7 @@ export function reDo_button() {
     let group: any
 
     if (obj.ellast) {
-      console.log("Es handelt sich um eine Elementlast",obj.obj_elast)
+      console.log("Es handelt sich um eine Elementlast", obj.obj_elast)
       obj.obj_element.elast.push(obj.obj_elast)
       //obj.obj_element.nStreckenlasten++;
       console.log("neuer Stab", obj.obj_element)
@@ -395,9 +414,9 @@ export function reDo_button() {
       console.log("max Lastfall", obj.obj_elast.lastfall)
       let lf = obj.obj_elast.lastfall
       set_max_lastfall(lf)
-      if ( obj.obj_elast.className === 'TCAD_Streckenlast') {
-        let pa =  obj.obj_elast.pL;
-        let pe =  obj.obj_elast.pR;
+      if (obj.obj_elast.className === 'TCAD_Streckenlast') {
+        let pa = obj.obj_elast.pL;
+        let pe = obj.obj_elast.pR;
         if (Math.abs(pa) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pa);
         if (Math.abs(pe) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pe);
       }
@@ -476,7 +495,7 @@ export function Select_button() {
     el.style.backgroundColor = "darkRed";
 
     buttons_control.select_element = true;
-    set_help_text('Pick ein Element');
+    set_help_text('Pick Element, Lager oder Last');
     buttons_control.button_pressed = true;
     set_zoomIsActive(false);
     reset_pointer_length();
@@ -646,6 +665,89 @@ export function delete_element(xc: number, zc: number) {
 
 }
 
+//--------------------------------------------------------------------------------------------------------
+export function select_node(xc: number, zc: number) {
+  //----------------------------------------------------------------------------------------------------
+
+  let knoten_gefunden = false
+  let gefunden = false;
+
+  CADPunkt_gefunden = false;
+  mode_knoten_aendern = false;
+
+
+  // Elementknoten finden
+
+  let fangweite2 = getFangweite() * getFangweite();
+
+  let abstand = 1e30
+  for (let i = 0; i < CADNodes.length; i++) {
+    if (CADNodes[i].isActive) {
+      let x = CADNodes[i].x
+      let z = CADNodes[i].z
+      let dx = xc - x
+      let dz = zc - z
+      let sl = dx * dx + dz * dz
+      if (sl < abstand && sl < fangweite2) {
+        abstand = sl
+        CADPunkt_gefunden = true
+        index_CADPunkt = i
+      }
+    }
+  }
+
+  let xpix = tr.xPix(xc)
+  let zpix = tr.zPix(zc)
+
+  for (let i = 0; i < list.size; i++) {
+    let obj = list.getAt(i) as any;
+    console.log("eltyp", obj.elTyp)
+    if (obj.elTyp === CAD_KNOTEN) {
+      let two_obj = obj.two_obj
+      let rect = two_obj.getBoundingClientRect();
+      //console.log("rect Knoten", rect, xc, zc)
+      if (xpix > rect.left && xpix < rect.right) {
+        if (zpix > rect.top && zpix < rect.bottom) {
+          knoten_gefunden = true
+          obj_knoten = obj
+          index_obj_knoten = (obj as TCAD_Knoten).index1
+          console.log("index_obj_knoten", index_obj_knoten)
+
+        }
+      }
+    }
+  }
+
+  if (knoten_gefunden) {
+    gefunden = true
+    console.log("Knoten gefunden")
+
+    write_knoten_dialog((obj_knoten as TCAD_Knoten));
+
+    (document.getElementById('id_dialog_knoten') as drDialogKnoten).set_mode(true);
+    showDialog_knoten();
+
+    picked_obj = obj_knoten
+    mode_knoten_aendern = true
+    buttons_control.reset();
+
+  }
+  else if (CADPunkt_gefunden) {
+    gefunden = true
+    console.log("CAD Knoten gefunden")
+
+    write_knoten_dialog_xz(CADNodes[index_CADPunkt].x, CADNodes[index_CADPunkt].z);
+
+    (document.getElementById('id_dialog_knoten') as drDialogKnoten).set_mode(true);
+    showDialog_knoten();
+
+    //picked_obj = obj_knoten
+    //mode_knoten_aendern = true
+    buttons_control.reset();
+
+  }
+
+}
 
 //--------------------------------------------------------------------------------------------------------
 export function select_element(xc: number, zc: number) {
@@ -661,19 +763,23 @@ export function select_element(xc: number, zc: number) {
   let index_lager = -1
   let knotenlast_gefunden = false
   let elementlast_gefunden = false
-  let knoten_gefunden = false
 
   let xpix = tr.xPix(xc)
   let zpix = tr.zPix(zc)
 
   let gefunden = false
+
+  mode_knoten_aendern = false;
+
+
+
   for (let i = 0; i < list.size; i++) {
     let obj = list.getAt(i) as any;
     console.log("eltyp", obj.elTyp)
 
     if (obj.elTyp === CAD_STAB) {
 
-      let abstand = abstandPunktGerade_2D(obj.x1, obj.z1, obj.x2, obj.z2, xc, zc);
+      let abstand = abstandPunktGerade_2D(get_cad_node_X(obj.index1), get_cad_node_Z(obj.index1), get_cad_node_X(obj.index2), get_cad_node_Z(obj.index2), xc, zc);
       if (abstand > -1.0) {
         if (abstand < min_abstand) {
           min_abstand = abstand;
@@ -728,23 +834,39 @@ export function select_element(xc: number, zc: number) {
         }
       }
     }
-    else if (obj.elTyp === CAD_KNOTEN) {
-      let two_obj = obj.two_obj
-      let rect = two_obj.getBoundingClientRect();
-      //console.log("rect Knoten", rect, xc, zc)
-      if (xpix > rect.left && xpix < rect.right) {
-        if (zpix > rect.top && zpix < rect.bottom) {
-          knoten_gefunden = true
-          obj_knoten = obj
-          index_obj_knoten = (obj as TCAD_Knoten).index1
-          console.log("index_obj_knoten", index_obj_knoten)
+    // else if (obj.elTyp === CAD_KNOTEN) {
+    //   let two_obj = obj.two_obj
+    //   let rect = two_obj.getBoundingClientRect();
+    //   //console.log("rect Knoten", rect, xc, zc)
+    //   if (xpix > rect.left && xpix < rect.right) {
+    //     if (zpix > rect.top && zpix < rect.bottom) {
+    //       knoten_gefunden = true
+    //       obj_knoten = obj
+    //       index_obj_knoten = (obj as TCAD_Knoten).index1
+    //       console.log("index_obj_knoten", index_obj_knoten)
 
-        }
-      }
-    }
+    //     }
+    //   }
+    // }
   }
 
   console.log('ABSTAND', min_abstand, index, lager_gefunden);
+
+  // if (knoten_gefunden) {
+  //   gefunden = true
+  //   console.log("Knoten gefunden")
+
+  //   write_knoten_dialog((obj_knoten as TCAD_Knoten));
+
+  //   (document.getElementById('id_dialog_knoten') as drDialogKnoten).set_mode(true);
+  //   showDialog_knoten();
+
+  //   picked_obj = obj_knoten
+  //   mode_knoten_aendern = true
+  //   buttons_control.reset();
+
+  // }
+  // else
 
   if (elementlast_gefunden) {
 
@@ -807,20 +929,6 @@ export function select_element(xc: number, zc: number) {
     showDialog_lager()
 
     buttons_control.reset();
-  }
-  else if (knoten_gefunden) {
-    gefunden = true
-    console.log("Knoten gefunden")
-
-    write_knoten_dialog((obj_knoten as TCAD_Knoten));
-
-    (document.getElementById('id_dialog_knoten') as drDialogKnoten).set_mode(true);
-    showDialog_knoten();
-
-    picked_obj = obj_knoten
-    mode_knoten_aendern = true
-    buttons_control.reset();
-
   }
   else if (knotenlast_gefunden) {
     gefunden = true
@@ -900,7 +1008,7 @@ export function add_elementlast(xc: number, zc: number) {
     let obj = list.getAt(i) as any;
     if (obj.elTyp === CAD_STAB) {
 
-      let abstand = abstandPunktGerade_2D(obj.x1, obj.z1, obj.x2, obj.z2, xc, zc);
+      let abstand = abstandPunktGerade_2D(get_cad_node_X(obj.index1), get_cad_node_Z(obj.index1), get_cad_node_X(obj.index2), get_cad_node_Z(obj.index2), xc, zc);
       if (abstand > -1.0) {
         if (abstand < min_abstand) {
           min_abstand = abstand;
@@ -1111,7 +1219,10 @@ function dialog_knoten_closed(this: any, e: any) {
   if (returnValue === "ok") {
     //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
     console.log("sieht gut aus");
-    if (mode_knoten_aendern) update_knoten();
+
+    if (mode_knoten_aendern) update_knoten(0);
+    else if (CADPunkt_gefunden) update_knoten(1);
+
   } else {
     // Abbruch
     (ele?.shadowRoot?.getElementById("dialog_knoten") as HTMLDialogElement).removeEventListener("close", dialog_knoten_closed);
@@ -1151,6 +1262,26 @@ export function Knoten_button(ev: Event) {
 
   }
 
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function Edit_Knoten_button() {
+  //----------------------------------------------------------------------------------------------------
+
+  if (buttons_control.select_element) {
+    buttons_control.reset();
+    delete_help_text();
+  } else {
+    let el = document.getElementById("id_cad_edit_knoten_button") as HTMLButtonElement;
+    el.style.backgroundColor = "darkRed";
+
+    buttons_control.select_node = true;
+    set_help_text('Pick Knoten');
+    buttons_control.button_pressed = true;
+    set_zoomIsActive(false);
+    reset_pointer_length();
+  }
 }
 
 
@@ -1442,6 +1573,20 @@ export function write_knoten_dialog(obj: TCAD_Knoten) {
 
 }
 
+//---------------------------------------------------------------------------------------------------------------
+export function write_knoten_dialog_xz(x: number, z: number) {
+  //-----------------------------------------------------------------------------------------------------------
+
+  const el = document.getElementById("id_dialog_knoten") as HTMLDialogElement;
+
+  let elem = el?.shadowRoot?.getElementById("id_x") as HTMLInputElement;
+  elem.value = String(x)
+
+  elem = el?.shadowRoot?.getElementById("id_z") as HTMLInputElement;
+  elem.value = String(z)
+
+}
+
 //--------------------------------------------------------------------------------------------------------
 export function Elementlast_button(_ev: Event) {
   //----------------------------------------------------------------------------------------------------
@@ -1635,10 +1780,12 @@ function update_knotenlager() {
 
 
 //---------------------------------------------------------------------------------------------------------------
-export function update_knoten() {
+export function update_knoten(flag = 0) {
   //-------------------------------------------------------------------------------------------------------------
 
+  let index = -1
   mode_knoten_aendern = false
+  CADPunkt_gefunden = false
 
   //const ele = document.getElementById("id_dialog_lager") as drDialogElementlasten;
 
@@ -1646,45 +1793,53 @@ export function update_knoten() {
   console.log('drDialogKnoten', ele.getValueX());
   console.log('drDialogKnoten', ele.getValueZ());
 
-  (obj_knoten as TCAD_Lager).x1 = ele.getValueX();
-  (obj_knoten as TCAD_Lager).z1 = ele.getValueZ();
+  if (flag === 0) {
+    (obj_knoten as TCAD_Lager).x1 = ele.getValueX();
+    (obj_knoten as TCAD_Lager).z1 = ele.getValueZ();
 
+    CADNodes[(obj_knoten as TCAD_Lager).index1].x = ele.getValueX();
+    CADNodes[(obj_knoten as TCAD_Lager).index1].z = ele.getValueZ();
 
-  CADNodes[(obj_knoten as TCAD_Lager).index1].x = ele.getValueX();
-  CADNodes[(obj_knoten as TCAD_Lager).index1].z = ele.getValueZ();
+    let group = obj_knoten.getTwoObj();
+    two.remove(group)
 
-  let group = obj_knoten.getTwoObj();
-  two.remove(group)
+    group = new Two.RoundedRectangle(
+      tr.xPix(obj_knoten.x1),
+      tr.zPix(obj_knoten.z1),
+      15 / devicePixelRatio,
+      15 / devicePixelRatio,
+      4
+    );
+    group.fill = '#dd1100';
 
-  group = new Two.RoundedRectangle(
-    tr.xPix(obj_knoten.x1),
-    tr.zPix(obj_knoten.z1),
-    15 / devicePixelRatio,
-    15 / devicePixelRatio,
-    4
-  );
-  group.fill = '#dd1100';
+    two.add(group);
 
-  two.add(group);
+    obj_knoten.setTwoObj(group);
 
-  obj_knoten.setTwoObj(group);
+    index = index_obj_knoten
+  }
+  else if (flag === 1) {
+    CADNodes[index_CADPunkt].x = ele.getValueX();
+    CADNodes[index_CADPunkt].z = ele.getValueZ();
+    index = index_CADPunkt
+  }
 
   // Verschiebe alle Elemente an dem Knoten
 
   for (let i = 0; i < list.size; i++) {
     let obj = list.getAt(i) as TCAD_Element;
     if (obj.elTyp === CAD_STAB) {
-      console.log("update_knoten", index_obj_knoten, (obj as TCAD_Stab).index1, (obj as TCAD_Stab).index2)
-      if (index_obj_knoten === (obj as TCAD_Stab).index1) redraw_stab(obj as TCAD_Stab);
-      if (index_obj_knoten === (obj as TCAD_Stab).index2) redraw_stab(obj as TCAD_Stab);
+      console.log("update_knoten", index, (obj as TCAD_Stab).index1, (obj as TCAD_Stab).index2)
+      if (index === (obj as TCAD_Stab).index1) redraw_stab(obj as TCAD_Stab);
+      if (index === (obj as TCAD_Stab).index2) redraw_stab(obj as TCAD_Stab);
     }
     else if (obj.elTyp === CAD_KNLAST) {
-      if (index_obj_knoten === obj.index1) {
+      if (index === obj.index1) {
         redraw_knotenlast(obj as TCAD_Knotenlast);
       }
     }
     else if (obj.elTyp === CAD_LAGER) {
-      if (index_obj_knoten === obj.index1) {
+      if (index === obj.index1) {
         redraw_lager(obj as TCAD_Lager);
       }
     }

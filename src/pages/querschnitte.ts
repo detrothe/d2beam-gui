@@ -263,11 +263,12 @@ export function add_new_cross_section(qName: string, id: string) {
     //console.log("ELE: >>", ele);
     ele?.setAttribute("add_new_option", "4");
 
-    let el = document.getElementById('id_querschnitt_default') as HTMLSelectElement;
+    let select = document.getElementById('id_querschnitt_default') as HTMLSelectElement;
     const opt1 = document.createElement("option");
     opt1.text = qName;
-    el.add(opt1);
+    select.add(opt1);
 
+    if (select.options.length === 1) default_querschnitt = qName
 }
 
 

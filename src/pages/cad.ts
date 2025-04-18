@@ -16,6 +16,7 @@ import {
    add_elementlast,
    set_help_text,
    delete_help_text,
+   select_node,
 } from './cad_buttons';
 import { draw_knoten, draw_knotenlast, draw_lager, drawStab } from './cad_draw_elemente';
 
@@ -143,6 +144,8 @@ let rasterPoint: any = null;
 let nodePoint: any = null;
 let foundRasterPoint = false;
 let foundNodePoint = false;
+let foundSelectNode = false;
+let selectNode: any = null;
 
 export function set_raster_dx(dx: number) { raster_dx = dx; }
 export function set_raster_dz(dz: number) { raster_dz = dz; }
@@ -199,7 +202,7 @@ window.addEventListener('draw_cad_knoten', draw_cad_knoten);
 // list.log();                               // would prompt 2 <-> Hello
 
 //--------------------------------------------------------------------------------------------------------
-function getFangweite() {
+export function getFangweite() {
    return 0.2;
 }
 //--------------------------------------------------------------------------------------------------------
@@ -914,6 +917,12 @@ function penDown(ev: PointerEvent) {
 
       select_element(xc, zc);
 
+   } else if (buttons_control.select_node) {
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
+
+      select_node(xc, zc);
+
 
    } else if (buttons_control.elementlast_eingabe_aktiv) {
       let xc = tr.xWorld(xo);
@@ -1100,6 +1109,11 @@ function mousemove(ev: MouseEvent) {
       cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
       cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
 
+      if (foundSelectNode) {
+         two.remove(selectNode);
+         foundSelectNode = false;
+      }
+
       if (buttons_control.cad_eingabe_aktiv) {
          if (rubberband_drawn) {
             two.remove(rubberband);
@@ -1164,13 +1178,7 @@ function mousemove(ev: MouseEvent) {
 
          let index = find_nearest_cad_node(xc, zc);
          if (index > -1) {
-            nodePoint = two.makeRoundedRectangle(
-               tr.xPix(get_cad_node_X(index)),
-               tr.zPix(get_cad_node_Z(index)),
-               15 / devicePixelRatio,
-               15 / devicePixelRatio,
-               4
-            );
+            nodePoint = two.makeRoundedRectangle(tr.xPix(get_cad_node_X(index)), tr.zPix(get_cad_node_Z(index)), 15 / devicePixelRatio, 15 / devicePixelRatio, 4);
             nodePoint.fill = '#001111';
             foundNodePoint = true;
             xNodePoint = get_cad_node_X(index);
@@ -1179,17 +1187,25 @@ function mousemove(ev: MouseEvent) {
             // if (rubberband_drawn) {
             let gefunden = findNextRasterPoint(xc, zc);
             if (gefunden) {
-               rasterPoint = two.makeRectangle(
-                  tr.xPix(xRasterPoint),
-                  tr.zPix(zRasterPoint),
-                  5,
-                  5
-               );
+               rasterPoint = two.makeRectangle(tr.xPix(xRasterPoint), tr.zPix(zRasterPoint), 5, 5);
                rasterPoint.fill = '#0000ff';
                rasterPoint.stroke = '#0000ff';
                foundRasterPoint = true;
             }
          }
+      }
+      else if (buttons_control.select_node) {
+         // Elementknoten finden
+
+         let xc = tr.xWorld(xo);
+         let zc = tr.zWorld(yo);
+
+         let index = find_nearest_cad_node(xc, zc);
+         if (index > -1) {
+            selectNode = two.makeRoundedRectangle(tr.xPix(get_cad_node_X(index)), tr.zPix(get_cad_node_Z(index)), 15 / devicePixelRatio, 15 / devicePixelRatio, 4);
+            foundSelectNode = true;
+         }
+
       }
       two.update();
    }
@@ -1232,249 +1248,255 @@ function mouseup(ev: any) {
 
       select_element(xc, zc);
 
+   } else if (buttons_control.select_node) {
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
+
+      select_node(xc, zc);
+
    } else if (buttons_control.elementlast_eingabe_aktiv) {
       let xc = tr.xWorld(xo);
       let zc = tr.zWorld(yo);
 
       add_elementlast(xc, zc);
 
-   } else
-      if (buttons_control.cad_eingabe_aktiv) {
-         if (ev.button === 0 || isPen || isTouch) {
-            // Linker Mausbutton
-            if (buttons_control.input_started === 0) {
-               input_active = true;
-               buttons_control.input_started = 1;
+   }
+   else if (buttons_control.cad_eingabe_aktiv) {
+      if (ev.button === 0 || isPen || isTouch) {
+         // Linker Mausbutton
+         if (buttons_control.input_started === 0) {
+            input_active = true;
+            buttons_control.input_started = 1;
 
-               if (foundRasterPoint) {
-                  two.remove(rasterPoint);
-                  foundRasterPoint = false;
-               }
-               if (foundNodePoint) {
-                  two.remove(nodePoint);
-                  foundNodePoint = false;
-               }
-               let xc = tr.xWorld(xo);
-               let zc = tr.zWorld(yo);
-               // find next CAD node
+            if (foundRasterPoint) {
+               two.remove(rasterPoint);
+               foundRasterPoint = false;
+            }
+            if (foundNodePoint) {
+               two.remove(nodePoint);
+               foundNodePoint = false;
+            }
+            let xc = tr.xWorld(xo);
+            let zc = tr.zWorld(yo);
+            // find next CAD node
 
-               let index = find_nearest_cad_node(xc, zc);
-               console.log('mouseup, index', index, xc, zc);
-               if (index > -1) {
-                  let x = get_cad_node_X(index);
-                  let z = get_cad_node_Z(index);
-                  nodePoint = two.makeRoundedRectangle(
-                     tr.xPix(x),
-                     tr.zPix(z),
-                     15 / devicePixelRatio,
-                     15 / devicePixelRatio,
-                     4
+            let index = find_nearest_cad_node(xc, zc);
+            console.log('mouseup, index', index, xc, zc);
+            if (index > -1) {
+               let x = get_cad_node_X(index);
+               let z = get_cad_node_Z(index);
+               nodePoint = two.makeRoundedRectangle(
+                  tr.xPix(x),
+                  tr.zPix(z),
+                  15 / devicePixelRatio,
+                  15 / devicePixelRatio,
+                  4
+               );
+               nodePoint.fill = '#001111';
+               foundNodePoint = true;
+               start_x = tr.xPix(x);
+               start_y = tr.zPix(z);
+               start_x_wc = x;
+               start_z_wc = z;
+               if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
+            } else {
+               let gefunden = findNextRasterPoint(xc, zc);
+               if (gefunden) {
+                  rasterPoint = two.makeRectangle(
+                     tr.xPix(xRasterPoint),
+                     tr.zPix(zRasterPoint),
+                     5,
+                     5
                   );
-                  nodePoint.fill = '#001111';
-                  foundNodePoint = true;
-                  start_x = tr.xPix(x);
-                  start_y = tr.zPix(z);
-                  start_x_wc = x;
-                  start_z_wc = z;
-                  if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
+                  rasterPoint.fill = '#0000ff';
+                  rasterPoint.stroke = '#0000ff';
+                  foundRasterPoint = true;
+                  start_x = tr.xPix(xRasterPoint);
+                  start_y = tr.zPix(zRasterPoint);
+                  start_x_wc = xRasterPoint;
+                  start_z_wc = zRasterPoint;
                } else {
-                  let gefunden = findNextRasterPoint(xc, zc);
-                  if (gefunden) {
-                     rasterPoint = two.makeRectangle(
-                        tr.xPix(xRasterPoint),
-                        tr.zPix(zRasterPoint),
-                        5,
-                        5
-                     );
-                     rasterPoint.fill = '#0000ff';
-                     rasterPoint.stroke = '#0000ff';
-                     foundRasterPoint = true;
-                     start_x = tr.xPix(xRasterPoint);
-                     start_y = tr.zPix(zRasterPoint);
-                     start_x_wc = xRasterPoint;
-                     start_z_wc = zRasterPoint;
+                  start_x = xo;
+                  start_y = yo;
+                  start_x_wc = xc;
+                  start_z_wc = zc;
+               }
+               if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
+            }
+            if (buttons_control.n_input_points === 1) {
+               if (buttons_control.lager_eingabe_aktiv) {
+                  //let group=two.makeRectangle(start_x,start_y,20,20);
+                  let node = new TNode();
+                  // node.L_org[0] = 1
+                  // node.L_org[1] = 1
+                  node.x = start_x_wc;
+                  node.z = start_z_wc;
+                  read_lager_dialog(node);
+
+                  let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+                  if (index1 > -1) {
+                     let group: any;
+                     const el = new TCAD_Lager(group, start_x_wc, start_z_wc, index1, node, buttons_control.typ_cad_element);
+                     list.append(el);
+                     add_element_nodes(index1);
+                     group = draw_lager(tr, el);
+                     two.add(group);
+                     el.setTwoObj(group)
+                     two.update();
                   } else {
-                     start_x = xo;
-                     start_y = yo;
-                     start_x_wc = xc;
-                     start_z_wc = zc;
+                     console.log('Keinen Knoten gefunden');
+                     alertdialog('ok', 'keinen Knoten gefunden');
                   }
-                  if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
                }
-               if (buttons_control.n_input_points === 1) {
-                  if (buttons_control.lager_eingabe_aktiv) {
-                     //let group=two.makeRectangle(start_x,start_y,20,20);
-                     let node = new TNode();
-                     // node.L_org[0] = 1
-                     // node.L_org[1] = 1
-                     node.x = start_x_wc;
-                     node.z = start_z_wc;
-                     read_lager_dialog(node);
+               if (buttons_control.knotenlast_eingabe_aktiv) {
+                  // Kotenlasten Eingabe
+                  // let gr = new Two.Group();
+                  // let line1 = new Two.Line(10, 10, 500, 500);
+                  // gr.add(line1);
+                  // let gr1 = new Two.Group();
+                  // let line2 = new Two.Line(500, 500, 500, 600);
+                  // gr1.add(line2);
+                  // gr1.translation.set(100, 0)
+                  // gr.add(gr1)
 
-                     let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
-                     if (index1 > -1) {
-                        let group: any;
-                        const el = new TCAD_Lager(group, start_x_wc, start_z_wc, index1, node, buttons_control.typ_cad_element);
-                        list.append(el);
-                        add_element_nodes(index1);
-                        group = draw_lager(tr, el);
-                        two.add(group);
-                        el.setTwoObj(group)
-                        two.update();
-                     } else {
-                        console.log('Keinen Knoten gefunden');
-                        alertdialog('ok', 'keinen Knoten gefunden');
-                     }
+                  // two.add(gr)
+                  // console.log("gr", gr)
+
+                  let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+                  if (index1 > -1) {
+                     let knlast = new TLoads();
+                     read_knotenlast_dialog(knlast);
+                     let group = draw_knotenlast(
+                        tr,
+                        knlast,
+                        get_cad_node_X(index1),
+                        get_cad_node_Z(index1),
+                        1,
+                        0
+                     );
+                     two.add(group);
+                     two.update();
+                     console.log('getBoundingClientRect', group.getBoundingClientRect());
+                     const el = new TCAD_Knotenlast(
+                        group,
+                        start_x_wc,
+                        start_z_wc,
+                        index1,
+                        knlast,
+                        buttons_control.typ_cad_element
+                     );
+                     list.append(el);
+                     add_element_nodes(index1);
+                  } else {
+                     console.log('Keinen Knoten gefunden');
+                     alertdialog('ok', 'keinen Knoten gefunden');
                   }
-                  if (buttons_control.knotenlast_eingabe_aktiv) {
-                     // Kotenlasten Eingabe
-                     // let gr = new Two.Group();
-                     // let line1 = new Two.Line(10, 10, 500, 500);
-                     // gr.add(line1);
-                     // let gr1 = new Two.Group();
-                     // let line2 = new Two.Line(500, 500, 500, 600);
-                     // gr1.add(line2);
-                     // gr1.translation.set(100, 0)
-                     // gr.add(gr1)
-
-                     // two.add(gr)
-                     // console.log("gr", gr)
-
-                     let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
-                     if (index1 > -1) {
-                        let knlast = new TLoads();
-                        read_knotenlast_dialog(knlast);
-                        let group = draw_knotenlast(
-                           tr,
-                           knlast,
-                           get_cad_node_X(index1),
-                           get_cad_node_Z(index1),
-                           1,
-                           0
-                        );
-                        two.add(group);
-                        two.update();
-                        console.log('getBoundingClientRect', group.getBoundingClientRect());
-                        const el = new TCAD_Knotenlast(
-                           group,
-                           start_x_wc,
-                           start_z_wc,
-                           index1,
-                           knlast,
-                           buttons_control.typ_cad_element
-                        );
-                        list.append(el);
-                        add_element_nodes(index1);
-                     } else {
-                        console.log('Keinen Knoten gefunden');
-                        alertdialog('ok', 'keinen Knoten gefunden');
-                     }
-                  }
-
-                  // if (buttons_control.elementlast_eingabe_aktiv) {
-
-
-                  // let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
-                  // if (index1 > -1) {
-                  //    let knlast = new TLoads();
-                  //    read_elementlast_dialog(knlast);
-                  //    let group = draw_knotenlast(
-                  //       two,
-                  //       tr,
-                  //       knlast,
-                  //       get_cad_node_X(index1),
-                  //       get_cad_node_Z(index1),
-                  //       1,
-                  //       0
-                  //    );
-                  //    two.add(group);
-                  //    two.update();
-                  //    console.log('getBoundingClientRect', group.getBoundingClientRect());
-                  //    const el = new TCAD_Knotenlast(
-                  //       group,
-                  //       start_x_wc,
-                  //       start_z_wc,
-                  //       index1,
-                  //       knlast,
-                  //       buttons_control.typ_cad_element
-                  //    );
-                  //    list.append(el);
-                  // } else {
-                  //    console.log('Keinen Knoten gefunden');
-                  //    alertdialog('ok', 'keinen Knoten gefunden');
-                  // }
-                  // }
-
-                  buttons_control.input_started = 0;
-                  input_active = false;
-                  rubberband_drawn = false;
-               }
-            } else if (buttons_control.input_started === 1) {          // Eingabe Stabende
-               two.remove(rubberband);
-
-               if (foundNodePoint) {
-                  end_x = tr.xPix(xNodePoint);
-                  end_y = tr.zPix(zNodePoint);
-                  end_x_wc = xNodePoint;
-                  end_z_wc = zNodePoint;
-
-                  two.remove(nodePoint);
-                  foundNodePoint = false;
-               } else if (foundRasterPoint) {
-                  end_x = tr.xPix(xRasterPoint);
-                  end_y = tr.zPix(zRasterPoint);
-                  end_x_wc = xRasterPoint;
-                  end_z_wc = zRasterPoint;
-
-                  two.remove(rasterPoint);
-                  foundRasterPoint = false;
-               } else {
-                  end_x = xo;
-                  end_y = yo;
-                  end_x_wc = tr.xWorld(xo);
-                  end_z_wc = tr.zWorld(yo);
                }
 
-               // if (foundRasterPoint) {
-               //     two.remove(rasterPoint);
-               //     foundRasterPoint = false;
+               // if (buttons_control.elementlast_eingabe_aktiv) {
+
+
+               // let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+               // if (index1 > -1) {
+               //    let knlast = new TLoads();
+               //    read_elementlast_dialog(knlast);
+               //    let group = draw_knotenlast(
+               //       two,
+               //       tr,
+               //       knlast,
+               //       get_cad_node_X(index1),
+               //       get_cad_node_Z(index1),
+               //       1,
+               //       0
+               //    );
+               //    two.add(group);
+               //    two.update();
+               //    console.log('getBoundingClientRect', group.getBoundingClientRect());
+               //    const el = new TCAD_Knotenlast(
+               //       group,
+               //       start_x_wc,
+               //       start_z_wc,
+               //       index1,
+               //       knlast,
+               //       buttons_control.typ_cad_element
+               //    );
+               //    list.append(el);
+               // } else {
+               //    console.log('Keinen Knoten gefunden');
+               //    alertdialog('ok', 'keinen Knoten gefunden');
                // }
-
-
-               //domElement.addEventListener("mouseover",testclick)
+               // }
 
                buttons_control.input_started = 0;
                input_active = false;
                rubberband_drawn = false;
-               let group = null;
-
-               // Überprüfe Stablänge
-               let dx = end_x_wc - start_x_wc
-               let dz = end_z_wc - start_z_wc
-               let sl = Math.sqrt(dx * dx + dz * dz)
-               if (sl > 0.001) {
-                  let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
-                  let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
-                  add_element_nodes(index1);
-                  add_element_nodes(index2);
-                  const obj = new TCAD_Stab(group, start_x_wc, start_z_wc, end_x_wc, end_z_wc, index1, index2, default_querschnitt, buttons_control.typ_cad_element);
-                  list.append(obj);
-
-                  group = drawStab(obj, tr);
-                  two.add(group);
-                  two.update();
-
-                  obj.setTwoObj(group)
-               }
-               else {
-                  alertdialog('ok', 'Stablänge zu klein = ' + sl + 'm');
-               }
-               set_help_text('Stabanfang eingeben');
-
-               //list.log()
             }
+         } else if (buttons_control.input_started === 1) {          // Eingabe Stabende
+            two.remove(rubberband);
+
+            if (foundNodePoint) {
+               end_x = tr.xPix(xNodePoint);
+               end_y = tr.zPix(zNodePoint);
+               end_x_wc = xNodePoint;
+               end_z_wc = zNodePoint;
+
+               two.remove(nodePoint);
+               foundNodePoint = false;
+            } else if (foundRasterPoint) {
+               end_x = tr.xPix(xRasterPoint);
+               end_y = tr.zPix(zRasterPoint);
+               end_x_wc = xRasterPoint;
+               end_z_wc = zRasterPoint;
+
+               two.remove(rasterPoint);
+               foundRasterPoint = false;
+            } else {
+               end_x = xo;
+               end_y = yo;
+               end_x_wc = tr.xWorld(xo);
+               end_z_wc = tr.zWorld(yo);
+            }
+
+            // if (foundRasterPoint) {
+            //     two.remove(rasterPoint);
+            //     foundRasterPoint = false;
+            // }
+
+
+            //domElement.addEventListener("mouseover",testclick)
+
+            buttons_control.input_started = 0;
+            input_active = false;
+            rubberband_drawn = false;
+            let group = null;
+
+            // Überprüfe Stablänge
+            let dx = end_x_wc - start_x_wc
+            let dz = end_z_wc - start_z_wc
+            let sl = Math.sqrt(dx * dx + dz * dz)
+            if (sl > 0.001) {
+               let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
+               let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
+               add_element_nodes(index1);
+               add_element_nodes(index2);
+               const obj = new TCAD_Stab(group, start_x_wc, start_z_wc, end_x_wc, end_z_wc, index1, index2, default_querschnitt, buttons_control.typ_cad_element);
+               list.append(obj);
+
+               group = drawStab(obj, tr);
+               two.add(group);
+               two.update();
+
+               obj.setTwoObj(group)
+            }
+            else {
+               alertdialog('ok', 'Stablänge zu klein = ' + sl + 'm');
+            }
+            set_help_text('Stabanfang eingeben');
+
+            //list.log()
          }
       }
+   }
 }
 
 //------------------------------------------------------------------------------------------------
