@@ -174,7 +174,7 @@ export function cad_buttons() {
   //querschnitt_default_select.value = "";
   querschnitt_default_select.className = "btn";
   //querschnitt_default_select.innerHTML = 'Fullscreen';
-  querschnitt_default_select.addEventListener("click", change_def_querschnitt);
+  querschnitt_default_select.addEventListener("change", change_def_querschnitt);
   querschnitt_default_select.title = "aktiver Querschnitt";
   querschnitt_default_select.id = "id_querschnitt_default"
 
@@ -524,6 +524,7 @@ export function delete_element(xc: number, zc: number) {
   let knoten_gefunden = false
   let index_knoten = -1
 
+  element_einzellast_gefunden = false
 
   let xpix = tr.xPix(xc)
   let zpix = tr.zPix(zc)
@@ -558,6 +559,39 @@ export function delete_element(xc: number, zc: number) {
             obj_ellast = obj
             index_ellast = j
           }
+        }
+        else if (typ === 1) {
+          if ((obj.elast[j] as TCAD_Einzellast).P !== 0.0) {
+            let x = Array(4)
+            let z = Array(4);
+
+            (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
+            //console.log("xz", x, z)
+            let inside = test_point_inside_area_2D(x, z, xc, zc)
+            console.log("select_element P, inside ", i, inside)
+            if (inside) {
+              element_einzellast_gefunden = true
+              obj_eleinzellast = obj
+              index_eleinzellast = j
+            }
+
+          }
+          if ((obj.elast[j] as TCAD_Einzellast).M !== 0.0) {
+            let x = Array(4)
+            let z = Array(4);
+
+            (obj.elast[j] as TCAD_Einzellast).get_drawLast_M_xz(x, z);
+            //console.log("xz", x, z)
+            let inside = test_point_inside_area_2D(x, z, xc, zc)
+            console.log("select_element M, inside ", i, inside)
+            if (inside) {
+              element_einzellast_gefunden = true
+              obj_ellast = obj
+              index_ellast = j
+            }
+
+          }
+
         }
 
       }
@@ -600,8 +634,14 @@ export function delete_element(xc: number, zc: number) {
 
   console.log('ABSTAND', min_abstand, index, lager_gefunden, elementlast_gefunden);
 
-  if (elementlast_gefunden) {
+
+  if (elementlast_gefunden || element_einzellast_gefunden) {
     //(obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL = 1.0;
+
+    if (element_einzellast_gefunden) {
+      obj_ellast = obj_eleinzellast
+      index_ellast = index_eleinzellast
+    }
 
     let obj_strLast = obj_ellast.elast[index_ellast]
     console.log("obj_strLast", obj_strLast)
