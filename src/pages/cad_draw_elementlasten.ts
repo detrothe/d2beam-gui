@@ -211,10 +211,10 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                 let typ = obj.elast[j].typ
 
                 let iLastfall = (obj.elast[j] as TCAD_Streckenlast).lastfall
-                console.log("max_value_lasten", iLastfall, slmax, max_value_lasten.length)
-                console.log("eload",max_value_lasten[0].eload)
+                //console.log("max_value_lasten", iLastfall, slmax, max_value_lasten.length)
+                //console.log("eload", max_value_lasten[0].eload)
                 scalefactor = slmax / 20 / max_value_lasten[iLastfall - 1].eload
-console.log("scalefactor",scalefactor)
+                //console.log("scalefactor", scalefactor)
 
                 if (typ === 0) { // Streckenlast
 
@@ -665,15 +665,34 @@ console.log("scalefactor",scalefactor)
                         let wert = P * fact[iLoop]
                         let xl = x1 + co * x, zl = z1 + si * x
                         console.log("GRAFIK Einzellast", xl, zl, wert)
+                        let rect: any
                         if (wert < 0.0) {
                             let gr = draw_arrow(tr, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast_element)
                             group.add(gr)
-                            console.log("getBoundingClientRect draw Arrow", gr.getBoundingClientRect())
+                            console.log("getBoundingClientRect draw Arrow", rect = gr.getBoundingClientRect())
                         } else {
                             let gr = draw_arrow(tr, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast_element)
                             group.add(gr)
-                            console.log("getBoundingClientRect draw Arrow", gr.getBoundingClientRect())
+                            console.log("getBoundingClientRect draw Arrow", rect = gr.getBoundingClientRect())
                         }
+
+                        // const vertices = [];
+                        xtr[0] = tr.xWorld(rect.left)
+                        ztr[0] = tr.zWorld(rect.top)
+                        xtr[1] = tr.xWorld(rect.left)
+                        ztr[1] = tr.zWorld(rect.bottom)
+                        xtr[2] = tr.xWorld(rect.left + rect.width)
+                        ztr[2] = tr.zWorld(rect.bottom)
+                        xtr[3] = tr.xWorld(rect.left + rect.width)
+                        ztr[3] = tr.zWorld(rect.top);
+
+                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(xtr, ztr)   // Koordinaten merken für Picken
+
+                        // let flaeche = new Two.Path(vertices);
+                        // flaeche.fill = color_load;
+                        // flaeche.opacity = opacity;
+                        // group.add(flaeche)
+
                         xpix = tr.xPix(xl + ddx + dpx) + 4
                         zpix = tr.zPix(zl - ddz - dpz) - 4
                         const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
@@ -688,13 +707,27 @@ console.log("scalefactor",scalefactor)
                         let xl = x1 + co * x, zl = z1 + si * x
                         let radius = style_pfeil_moment_element.radius;
                         console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
+                        let rect: any
                         if (wert > 0.0) {
                             let gr = draw_moment_arrow(tr, xl, zl, 1.0, radius, style_pfeil_moment_element)
                             group.add(gr)
+                            rect = gr.getBoundingClientRect()
                         } else {
                             let gr = draw_moment_arrow(tr, xl, zl, -1.0, radius, style_pfeil_moment_element)
                             group.add(gr)
+                            rect = gr.getBoundingClientRect()
                         }
+
+                        xtr[0] = tr.xWorld(rect.left)
+                        ztr[0] = tr.zWorld(rect.top)
+                        xtr[1] = tr.xWorld(rect.left)
+                        ztr[1] = tr.zWorld(rect.bottom)
+                        xtr[2] = tr.xWorld(rect.left + rect.width)
+                        ztr[2] = tr.zWorld(rect.bottom)
+                        xtr[3] = tr.xWorld(rect.left + rect.width)
+                        ztr[3] = tr.zWorld(rect.top);
+
+                        (obj.elast[j] as TCAD_Einzellast).set_drawLast_M_xz(xtr, ztr)   // Koordinaten merken für Picken
 
                         xpix = tr.xPix(xl) - 10 / devicePixelRatio
                         zpix = tr.zPix(zl) + vorzeichen * radius + 12 * vorzeichen / devicePixelRatio

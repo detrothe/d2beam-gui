@@ -281,6 +281,9 @@ export class TCAD_Einzellast extends TCAD_ElLast {
     P = 0.0
     M = 0.0
 
+    xM: number[] = Array(4)   // Weltkoordinaten des gezeichneten Momentenpfeils
+    zM: number[] = Array(4)
+
     constructor(lf: number, x: number, P: number, M: number) {
         super(lf, 1)
         this.xe = x
@@ -288,7 +291,19 @@ export class TCAD_Einzellast extends TCAD_ElLast {
         this.M = M
         this.className = 'TCAD_Einzellast'
     }
+    set_drawLast_M_xz(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            this.xM[i] = x[i]
+            this.zM[i] = z[i]
+        }
+    }
 
+    get_drawLast_M_xz(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            x[i] = this.xM[i]
+            z[i] = this.zM[i]
+        }
+    }
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――

@@ -286,6 +286,11 @@ export class drDialogElementlasten extends LitElement {
     //console.log("gewählte Belastungsart = ", el.value)
     return Number(el.value);
   }
+  set_typ(typ: string) {
+    let el = this.shadowRoot?.getElementById("id_typ") as SlSelect;
+    el.value = typ
+    this._handleChange();
+  }
 
   get_pa() {
     const shadow = this.shadowRoot;
