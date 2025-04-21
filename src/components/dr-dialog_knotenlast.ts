@@ -127,10 +127,6 @@ export class drDialogKnotenlast extends LitElement {
     return html` <dialog id="dialog_knotenlast">
       <h2>Neue Knotenlast</h2>
 
-      <br />
-      <p>
-        <b>Koordinaten eines neuen Knotens</b>
-      </p>
 
       <p>
         Lastfall:
@@ -145,7 +141,8 @@ export class drDialogKnotenlast extends LitElement {
         Pz:
         <input type="number" id="id_pz" name="pz" pattern="[0-9.,eE+-]*" value="" />
         [kN]
-      </p> <p>
+      </p>
+      <p id=id_MY>
         My:
         <input type="number" id="id_my" name="my" pattern="[0-9.,eE+-]*" value="" />
         [kNm]
@@ -200,4 +197,19 @@ export class drDialogKnotenlast extends LitElement {
     let wert = Number((shadow?.getElementById("id_my") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
+
+  set_system(system: number) {
+
+    if (system === 0) {
+      const shadow = this.shadowRoot;
+      let el = (shadow?.getElementById("id_MY") as HTMLTableRowElement);
+      el.style.display = 'block'
+    } else {
+      const shadow = this.shadowRoot;
+      let el = (shadow?.getElementById("id_MY") as HTMLTableRowElement);
+      el.style.display = 'none'
+    }
+
+  }
+
 }

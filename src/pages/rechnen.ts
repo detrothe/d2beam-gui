@@ -26,6 +26,8 @@ import {
     set_default_querschnitt, set_querschnitts_zaehler, add_new_cross_section,
     set_querschnittRechteck
 } from "./querschnitte";
+import { drDialogLager } from "../components/dr-dialog_lager";
+import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast";
 
 // import { read_daten } from "./dateien"
 
@@ -399,6 +401,13 @@ export function setSystem(system: number) {
         show_controller_truss(false);
         hideColumnsForFachwerk();
     }
+
+    let ele = document.getElementById('id_dialog_lager') as drDialogLager;
+    ele.set_system(system);
+
+     ele = document.getElementById('id_dialog_knotenlast') as drDialogKnotenlast;
+    ele.set_system(system);
+
 }
 
 //---------------------------------------------------------------------------------------------------------------

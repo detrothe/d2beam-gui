@@ -654,7 +654,7 @@ export function init_cad(flag: number) {
 
    // Zeichne vorhandenes System
 
-   console.log('init cad list.size', list.size);
+   //console.log('init cad list.size', list.size);
    for (let i = 0; i < list.size; i++) {
 
       let obj: TCAD_Element = list.getAt(i);

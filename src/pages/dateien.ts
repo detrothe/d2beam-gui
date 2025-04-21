@@ -537,7 +537,7 @@ function handleFileSelect_read() {
     }
 
     input.click();
-    console.log("nach click")
+    console.log("nach click in handleFileSelect_read")
 
 
 }

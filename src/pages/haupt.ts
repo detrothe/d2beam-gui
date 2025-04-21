@@ -78,7 +78,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 //import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v2.0.0.a, 21-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v2.0.0.b, 21-April-2025, ";
 //########################################################################################################################
 
 
@@ -196,11 +196,11 @@ portrait.addEventListener("change", function (e) {
     <sl-tab-group id="id_sl_tab_group">
       <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">Haupt</sl-tab>
       <sl-tab id="id_CAD" slot="nav" panel="tab-cad">System</sl-tab>
-      <sl-tab slot="nav" panel="tab-grafik">Grafik</sl-tab>
+      <sl-tab slot="nav" panel="tab-grafik">Ergebnisse</sl-tab>
       <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
       <sl-tab slot="nav" panel="tab-stabvorverfomungen">Vorverformungen</sl-tab>
       <sl-tab id="id_tab_kombi" slot="nav" panel="tab-kombinationen">Kombinationen</sl-tab>
-      <sl-tab slot="nav" panel="tab-ergebnisse">Ergebnisse</sl-tab>
+      <sl-tab slot="nav" panel="tab-ergebnisse">Ausdruck</sl-tab>
       <sl-tab id="id_tab_mass" slot="nav" panel="tab-mass" disabled>Dynamik</sl-tab>
       <sl-tab slot="nav" panel="tab-pro">Pro</sl-tab>
       <sl-tab slot="nav" panel="tab-info">Info</sl-tab>

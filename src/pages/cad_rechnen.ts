@@ -6,9 +6,9 @@ import { max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
 import { CADNodes } from "./cad_node";
 import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung } from "./CCAD_element";
 import {
-    alertdialog, element, eload, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, node,
+    alertdialog, element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, node,
     nstreckenlasten, ntemperaturlasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
-    set_nlastfaelle, set_nloads, set_nnodes, set_nnodesTotal, set_nstabvorverfomungen, set_ntotalEloads, stabvorverformung, TElement, TElLoads, TLoads, TNode,
+    set_nlastfaelle, set_nloads, set_nnodes, set_nnodesTotal, set_nstabvorverfomungen, set_ntotalEloads, stabvorverformung, System, TElement, TElLoads, TLoads, TNode,
     TStabvorverformung
 } from "./rechnen";
 import { myFormat, myFormat_en, write } from "./utility";
@@ -67,6 +67,7 @@ export function cad_rechnen() {
             node[nnodes].z = CADNodes[i].z
             node[nnodes].is_used = true
             CADNodes[i].index_FE = nnodes
+            if (System === FACHWERK) node[nnodes].L_org[2] = node[nnodes].L[2] = 1;   // Drehfreiheitsgrad festhalten
             inc_nnodes();
         }
     }
@@ -97,6 +98,9 @@ export function cad_rechnen() {
         // jetzt die Lager
 
 
+        let ndof = 3
+        if (System === FACHWERK) ndof = 2
+
         for (let i = 0; i < list.size; i++) {
             let obj = list.getAt(i) as TCAD_Lager;
             if (obj.elTyp === CAD_LAGER) {
@@ -106,7 +110,7 @@ export function cad_rechnen() {
                     let ind = CADNodes[index].index_FE
                     console.log("ind", ind)
                     if (ind < 0) alertdialog("ok", "Lager ind " + (ind) + "hängt an keinem Knoten, FATAL ERROR");
-                    for (let j = 0; j < 3; j++) {
+                    for (let j = 0; j < ndof; j++) {
                         if (obj.node.L_org[j] === 1) {
                             let child = tabelle.rows[ind + 1].cells[j + 3].firstElementChild as HTMLInputElement;
                             child.value = '1'
@@ -119,7 +123,6 @@ export function cad_rechnen() {
                 } else {
                     alertdialog("ok", "Lager " + (+i + 1) + "hängt an keinem Knoten, FATAL ERROR");
                 }
-
             }
         }
 
@@ -222,7 +225,7 @@ export function cad_rechnen() {
         if (max_Lastfall === 0) set_max_lastfall(1);
 
         set_nlastfaelle(max_Lastfall)
-        console.log("set_nlastfaelle(max_Lastfall)",max_Lastfall,nlastfaelle)
+        console.log("set_nlastfaelle(max_Lastfall)", max_Lastfall, nlastfaelle)
         let el = document.getElementById("id_button_nlastfaelle") as drButtonPM;
         el.setValue(max_Lastfall);
         let elTab = document.getElementById("id_lastfaelle_tabelle");
@@ -542,7 +545,7 @@ export function cad_rechnen() {
                             stabvorverformung[iel_Verform].p[0] = w0a / 1000.;  // von mm in m
                             stabvorverformung[iel_Verform].p[1] = w0e / 1000.;  // von mm in m
                             stabvorverformung[iel_Verform].p[2] = w0m / 1000.;  // von mm in m
-                            console.log("stabvorverformung[iel_Verform]",iel_Verform,'|',stabvorverformung[iel_Verform])
+                            console.log("stabvorverformung[iel_Verform]", iel_Verform, '|', stabvorverformung[iel_Verform])
                             iel_Verform++;
 
                             let child = tabelleStabvorverformung.rows[irowStabvorverformung].cells[1].firstElementChild as HTMLInputElement;

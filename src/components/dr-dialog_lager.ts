@@ -129,7 +129,7 @@ export class drDialogLager extends LitElement {
         Drehung des Knotens (Lagers), im Gegenuhrzeigersinn positiv
       </p>
       <p><input type="number" id="id_alpha" name="alpha" pattern="[0-9.,eE+-]*" value="0.0" />°</p>
-      <br /><br />
+      <br />
       <p>
         <b>Lagerbedingungen</b>
       </p>
@@ -163,7 +163,8 @@ export class drDialogLager extends LitElement {
             </td>
             <td>kN/m</td>
           </tr>
-          <tr>
+
+          <tr id=id_phi >
             <td>
               <sl-checkbox id="id_Lphi">L<sub>&phi;</sub></sl-checkbox>
             </td>
@@ -197,4 +198,18 @@ export class drDialogLager extends LitElement {
     const shadow = this.shadowRoot;
     if (shadow) (shadow.getElementById("dialog_lager") as HTMLDialogElement).close("cancel");
   }
+
+  set_system(system: number) {
+
+    const shadow = this.shadowRoot;
+    let el = (shadow?.getElementById("id_phi") as HTMLTableRowElement);
+
+    if (system === 0) {
+      el.style.display = 'table-row'
+    } else {
+      el.style.display = 'none'
+    }
+
+  }
+
 }

@@ -307,7 +307,7 @@ export function cad_buttons() {
   info_button.id = "id_cad_info_button";
 
   const help_text = document.createElement("span");
-  help_text.innerHTML = "eine Hilfe"
+  help_text.innerHTML = "grafische Eingabe System"
   help_text.className = "helptext";
   help_text.id = "id_cad_helptext";
 
@@ -1366,7 +1366,7 @@ export function Knoten_button(ev: Event) {
 export function Edit_Knoten_button() {
   //----------------------------------------------------------------------------------------------------
 
-  if (buttons_control.select_element) {
+  if (buttons_control.select_node) {
     buttons_control.reset();
     delete_help_text();
   } else {

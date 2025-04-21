@@ -6,7 +6,7 @@ import { CTrans } from './trans';
 import { myFormat } from './utility';
 import { TCAD_Knoten, TCAD_Lager, TCAD_Stab } from './CCAD_element';
 import { draw_elementlasten } from './cad_draw_elementlasten';
-import { two } from './cad';
+//import { two } from './cad';
 import { get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 
@@ -106,7 +106,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
         group.add(gr)
     }
 
-    console.log("in drawStab, Anzahl Elementlasten:", obj.elast.length)
+    //console.log("in drawStab, Anzahl Elementlasten:", obj.elast.length)
     if (obj.elast.length > 0) {
         let gr = draw_elementlasten(tr, obj)
         group.add(gr)
@@ -122,6 +122,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
     //----------------------------------------------------------------------------------------------------
 
     let node = obj.node;
+    console.log("in draw_lager",System, node)
 
     let index1 = obj.index1
 
@@ -269,7 +270,8 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
 
         }
     } else {                     // Fachwerk
-        if ((node.L[0] === -1) && (node.L[1] === -1)) { // zweiwertiges Lager
+        console.log("node",node)
+        if ((node.L_org[0] === 1) && (node.L_org[1] === 1)) { // zweiwertiges Lager
 
             //console.log("in zweiwertiges Lager")
             let vertices = [];
@@ -293,7 +295,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             group.translation.set(x1, z1)
 
         }
-        else if ((node.L[0] >= 0) && (node.L[1] === -1)) { // einwertiges horizontal verschieblisches Lager
+        else if ((node.L[0] >= 0) && (node.L_org[1] === 1)) { // einwertiges horizontal verschieblisches Lager
 
             //console.log("in einwertiges horizontal verschieblisches Lager")
             var vertices = [];
@@ -317,7 +319,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             group.translation.set(x1, z1)
 
         }
-        else if ((node.L[0] === -1) && (node.L[1] >= 0)) { // einwertiges vertikal verschieblisches Lager
+        else if ((node.L_org[0] === 1) && (node.L[1] >= 0)) { // einwertiges vertikal verschieblisches Lager
 
             //console.log("in einwertiges vertikales Lager")
             var vertices = [];
