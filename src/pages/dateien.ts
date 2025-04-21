@@ -17,8 +17,10 @@ import { setSystem, System } from './rechnen'
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 import { CADNodes, TCADNode } from "./cad_node";
 import { TCAD_Element, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
-import { init_cad, init_two_cad, list, two_cad_clear } from "./cad";
+import { init_cad, init_two_cad, list, raster_dx, raster_dz, raster_xmax, raster_xmin, raster_zmax, raster_zmin,
+    set_raster_dx, set_raster_dz, two_cad_clear,set_raster_xmin,set_raster_xmax,set_raster_zmin,set_raster_zmax } from "./cad";
 import { CMAXVALUESLOAD, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
+import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
 
@@ -201,6 +203,23 @@ export function read_daten(eingabedaten: string) {
     // el = document.getElementById("id_knotenlasten_tabelle");
     // el?.setAttribute("hide_column", String(5));
     //}
+
+    set_raster_dx(jobj.raster_dx)
+    set_raster_dz(jobj.raster_dz)
+    set_raster_xmin(jobj.raster_xmin)
+    set_raster_xmax(jobj.raster_xmax)
+    set_raster_zmin(jobj.raster_zmin)
+    set_raster_zmax(jobj.raster_zmax)
+
+    let ele = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
+    ele.set_raster_dx(jobj.raster_dx)
+    ele.set_raster_dz(jobj.raster_dz)
+
+    ele.set_raster_xmin(jobj.raster_xmin)
+    ele.set_raster_xmax(jobj.raster_xmax)
+    ele.set_raster_zmin(jobj.raster_zmin)
+    ele.set_raster_zmax(jobj.raster_zmax)
+
 
     let nQuerschnittSets = jobj.nquerschnittsets
     console.log('nQuerschnittSets', nQuerschnittSets)
@@ -945,6 +964,14 @@ export function str_inputToJSON() {
         'nelem_koppelfedern': nelem_koppelfedern,
         'freetxt': freetxt,
         'max_Lastfall': max_Lastfall,
+
+        'raster_dx': raster_dx,
+        'raster_dz': raster_dz,
+        'raster_xmin': raster_xmin,
+        'raster_xmax': raster_xmax,
+        'raster_zmin': raster_zmin,
+        'raster_zmax': raster_zmax,
+
 
 
         // 'elem': elem,

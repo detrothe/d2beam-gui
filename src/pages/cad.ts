@@ -130,11 +130,11 @@ let xminv = 0.0,
    zminv = 0.0,
    zmaxv = 0.0;
 
-let raster_xmin = -1.0,
+export let raster_xmin = -1.0,
    raster_xmax = 10.0,
    raster_zmin = -1.0,
    raster_zmax = 9.0;
-let raster_dx = 0.5,
+export let raster_dx = 0.5,
    raster_dz = 0.5;
 let xRasterPoint = 0.0,
    zRasterPoint = 0.0;

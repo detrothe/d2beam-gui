@@ -287,4 +287,36 @@ export class drDialogEinstellungen extends LitElement {
     let wert = +(shadow?.getElementById("id_fact_lager") as HTMLInputElement).value.replace(/,/g, ".");
     return wert;
   }
+
+
+  set_raster_dx(dx: number) {
+    let el = this.shadowRoot?.getElementById("id_dx") as HTMLInputElement;
+    el.value = String(dx);
+  }
+
+  set_raster_dz(dz: number) {
+    let el = this.shadowRoot?.getElementById("id_dz") as HTMLInputElement;
+    el.value = String(dz);
+  }
+
+
+  set_raster_xmin(xmin: number) {
+    let el = this.shadowRoot?.getElementById("id_xmin") as HTMLInputElement;
+    el.value = String(xmin);
+  }
+
+  set_raster_xmax(xmax: number) {
+    let el = this.shadowRoot?.getElementById("id_xmax") as HTMLInputElement;
+    el.value = String(xmax);
+  }
+
+  set_raster_zmin(zmin: number) {
+    let el = this.shadowRoot?.getElementById("id_zmin") as HTMLInputElement;
+    el.value = String(zmin);
+  }
+
+  set_raster_zmax(zmax: number) {
+    let el = this.shadowRoot?.getElementById("id_zmax") as HTMLInputElement;
+    el.value = String(zmax);
+  }
 }
