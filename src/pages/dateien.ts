@@ -516,6 +516,11 @@ function handleFileSelect_read() {
 
                     //let jobj = JSON.parse(e.target.result);
                     read_daten(e.target.result)
+
+                    init_two_cad();
+                    init_cad(0);
+                    reset_controlpanel_grafik();
+                    reset_gui();
                 };
             })(f);
 
@@ -525,10 +530,9 @@ function handleFileSelect_read() {
 
             set_current_filename(files[0].name);
 
-            reset_gui();
-            reset_controlpanel_grafik();
-            init_two_cad();
-            init_cad(0);
+            // reset_gui();
+            // reset_controlpanel_grafik();
+
         }
     }
 
