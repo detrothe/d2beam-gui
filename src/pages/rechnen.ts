@@ -80,6 +80,8 @@ export let P_delta = false;
 export let epsDisp_tol = 1.e-5
 export let epsForce_tol = 1.e-8
 export let nnodalMass: number = 0;
+export function set_nnodalMass(wert: number) { nnodalMass = wert; }
+
 export let eigenform_dyn = [] as number[][]
 export let maxValue_dyn_eigenform = [] as number[]
 export let dyn_neigv = 1;

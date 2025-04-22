@@ -275,6 +275,23 @@ export function redraw_knotenlast(obj: TCAD_Knotenlast) {
    obj.setTwoObj(group);
 }
 
+
+//--------------------------------------------------------------------------------------------------------
+export function redraw_knotenmasse(obj: TCAD_Knotenmasse) {
+   //-----------------------------------------------------------------------------------------------------
+
+   let group = obj.getTwoObj();
+   two.remove(group);
+
+   let masse = new TMass();
+   masse = obj.masse
+   let index1 = obj.index1
+   group = draw_knotenmasse(tr, masse, get_cad_node_X(index1), get_cad_node_Z(index1));
+
+   two.add(group);
+   obj.setTwoObj(group);
+}
+
 //--------------------------------------------------------------------------------------------------------
 export function redraw_lager(obj: TCAD_Lager) {
    //-----------------------------------------------------------------------------------------------------
@@ -681,6 +698,14 @@ export function init_cad(flag: number) {
          load = (obj as TCAD_Knotenlast).knlast
          let index1 = obj.index1
          let group = draw_knotenlast(tr, load, get_cad_node_X(index1), get_cad_node_Z(index1), 1.0, 0)
+         two.add(group);
+         obj.setTwoObj(group);
+      }
+      else if (obj.elTyp === CAD_KNMASSE) {
+         let masse = new TMass();
+         masse = (obj as TCAD_Knotenmasse).masse
+         let index1 = obj.index1
+         let group = draw_knotenmasse(tr, masse, get_cad_node_X(index1), get_cad_node_Z(index1))
          two.add(group);
          obj.setTwoObj(group);
       }

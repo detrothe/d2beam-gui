@@ -16,7 +16,7 @@ import { nQuerschnittSets, set_querschnittszaehler, add_rechteck_querschnitt } f
 import { setSystem, System } from './rechnen'
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 import { CADNodes, TCADNode } from "./cad_node";
-import { TCAD_Element, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
+import { TCAD_Element, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
 import {
     init_cad, init_two_cad, list, raster_dx, raster_dz, raster_xmax, raster_xmin, raster_zmax, raster_zmin,
     set_raster_dx, set_raster_dz, two_cad_clear, set_raster_xmin, set_raster_xmax, set_raster_zmin, set_raster_zmax
@@ -278,11 +278,15 @@ export function read_daten(eingabedaten: string) {
             }
         }
         else if (element.className === 'TCAD_Lager') {
-            const obj = new TCAD_Lager(null,                 jobj.elements[i].index1, jobj.elements[i].node, jobj.elements[i].elTyp);
+            const obj = new TCAD_Lager(null, jobj.elements[i].index1, jobj.elements[i].node, jobj.elements[i].elTyp);
             list.append(obj);
         }
         else if (element.className === 'TCAD_Knotenlast') {
-            const obj = new TCAD_Knotenlast(null,                 jobj.elements[i].index1, jobj.elements[i].knlast, jobj.elements[i].elTyp);
+            const obj = new TCAD_Knotenlast(null, jobj.elements[i].index1, jobj.elements[i].knlast, jobj.elements[i].elTyp);
+            list.append(obj);
+        }
+        else if (element.className === 'TCAD_Knotenmasse') {
+            const obj = new TCAD_Knotenmasse(null, jobj.elements[i].index1, jobj.elements[i].masse, jobj.elements[i].elTyp);
             list.append(obj);
         }
     }

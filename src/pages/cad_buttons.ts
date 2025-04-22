@@ -25,7 +25,8 @@ import {
   set_zoomIsActive,
   reset_pointer_length,
   getFangweite,
-  CAD_KNMASSE
+  CAD_KNMASSE,
+  redraw_knotenmasse
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -2126,6 +2127,11 @@ export function update_knoten(flag = 0) {
     else if (obj.elTyp === CAD_KNLAST) {
       if (index === obj.index1) {
         redraw_knotenlast(obj as TCAD_Knotenlast);
+      }
+    }
+    else if (obj.elTyp === CAD_KNMASSE) {
+      if (index === obj.index1) {
+        redraw_knotenmasse(obj as TCAD_Knotenmasse);
       }
     }
     else if (obj.elTyp === CAD_LAGER) {

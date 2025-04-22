@@ -1,14 +1,14 @@
 import { drButtonPM } from "../components/dr-button-pm";
 
-import { CAD_KNLAST, CAD_LAGER, CAD_STAB, list } from "./cad";
+import { CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
 import { CADNodes } from "./cad_node";
-import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung } from "./CCAD_element";
+import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenmasse } from "./CCAD_element";
 import {
-    alertdialog, element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, node,
+    alertdialog, element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, nodalmass, node,
     nstreckenlasten, ntemperaturlasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
-    set_nlastfaelle, set_nloads, set_nnodes, set_nnodesTotal, set_nstabvorverfomungen, set_ntotalEloads, stabvorverformung, System, TElement, TElLoads, TLoads, TNode,
+    set_nlastfaelle, set_nloads, set_nnodalMass, set_nnodes, set_nnodesTotal, set_nstabvorverfomungen, set_ntotalEloads, stabvorverformung, System, TElement, TElLoads, TLoads, TMass, TNode,
     TStabvorverformung
 } from "./rechnen";
 import { myFormat, myFormat_en, write } from "./utility";
@@ -29,11 +29,13 @@ export function cad_rechnen() {
     set_nelem_Balken_Bettung(0)
     set_nelem(0)
 
+    let nnodalMass = 0
     let nknlast = 0
     let elNo = 0
     for (let i = 0; i < list.size; i++) {
         let obj = list.getAt(i) as TCAD_Stab;
         if (obj.elTyp === CAD_KNLAST) nknlast++;
+        else if (obj.elTyp === CAD_KNMASSE) nnodalMass++;
         else if (obj.elTyp === CAD_STAB) {
             elNo++;
             obj.elNo = elNo;
@@ -567,6 +569,56 @@ export function cad_rechnen() {
 
         set_neloads(nelem_Balken + nStreckenlasten + nTemperaturlasten + nEinzellasten + nVorspannungen + nSpannschloesser);
         set_ntotalEloads(nelem_Balken + nStreckenlasten + nTemperaturlasten + nEinzellasten + nVorspannungen + nSpannschloesser)
+    }
+
+    //                  K n o t e n m a s s e n
+
+    {
+        let stadyn = 0
+
+        const sel = document.getElementById("id_stadyn") as HTMLSelectElement;
+        if (sel.value === '1') stadyn = 1;
+        set_nnodalMass(nnodalMass);
+
+        if (stadyn === 1 && nnodalMass > 0) {  // Dynamik
+
+            let el = document.getElementById("id_button_nnodalmass") as drButtonPM;
+            el.setValue(nnodalMass);
+
+            nodalmass.length = 0
+
+            const elTabKnotenmasse = document.getElementById("id_knotenmassen_tabelle");
+            elTabKnotenmasse?.setAttribute("nzeilen", String(nnodalMass));
+            elTabKnotenmasse?.setAttribute("clear", "0");
+
+            let tabelle = elTabKnotenmasse?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+            let nel = 0
+            for (let i = 0; i < list.size; i++) {
+                let obj = list.getAt(i) as TCAD_Knotenmasse;
+                if (obj.elTyp === CAD_KNMASSE) {
+                    nodalmass.push(new TMass())
+                    let index = obj.index1;
+                    let ind = CADNodes[index].index_FE
+                    if (ind > -1) {
+                        nodalmass[nel].mass = obj.masse.mass
+                        nodalmass[nel].theta = obj.masse.theta
+                        nodalmass[nel].node = ind
+                    }
+                    nel++
+
+                    let child = tabelle.rows[nel].cells[1].firstElementChild as HTMLInputElement;
+                    child.value = String(+ind + 1)
+                    child = tabelle.rows[nel].cells[2].firstElementChild as HTMLInputElement;
+                    child.value = String(obj.masse.mass)
+                    child = tabelle.rows[nel].cells[3].firstElementChild as HTMLInputElement;
+                    child.value = String(obj.masse.theta)
+                }
+
+            }
+        }
+
+
     }
 
     return fatal_error;

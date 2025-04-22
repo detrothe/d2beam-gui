@@ -122,7 +122,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
     //----------------------------------------------------------------------------------------------------
 
     let node = obj.node;
-    console.log("in draw_lager", System, node)
+    //console.log("in draw_lager", System, node)
 
     let index1 = obj.index1
 
