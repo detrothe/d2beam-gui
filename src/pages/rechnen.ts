@@ -310,7 +310,7 @@ export class TLoads {
     Pz = 0.0                                 // Last in globale z-Richtung
 }
 
-class TMass {
+export class TMass {
     node: number = -1
     mass = 0.0
     theta = 0.0

@@ -10,6 +10,8 @@ export class TCADNode {
     qname: string = ''
     isActive = true;
 
+    ID = 0;
+
     x: number = 0.0
     z: number = 0.0
 

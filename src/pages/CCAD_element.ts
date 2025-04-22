@@ -1,4 +1,4 @@
-import { TLoads, TNode } from "./rechnen";
+import { TLoads, TMass, TNode } from "./rechnen";
 
 //―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Element {
@@ -12,15 +12,13 @@ export class TCAD_Element {
 
     elTyp: number = 0; // 0 = 2 Knoten, 1 = Fachwerkstab, 3 = 3 Knoten, 3 = 4 Knoten
 
-    x1 = 0.0
-    z1 = 0.0;
+    // x1 = 0.0
+    // z1 = 0.0;
 
     index1 = -1;
 
-    constructor(obj: any, x1: number, z1: number, index1: number, elTyp: number) {
+    constructor(obj: any, index1: number, elTyp: number) {
         this.two_obj = obj;
-        this.x1 = x1;
-        this.z1 = z1;
         this.elTyp = elTyp;
         this.index1 = index1;
     }
@@ -37,11 +35,25 @@ export class TCAD_Element {
 }
 
 //―――――――――――――――――――――――――――――――――――――――――――――
+export class TCAD_Knotenmasse extends TCAD_Element {
+    //―――――――――――――――――――――――――――――――――――――――――
+
+    masse:TMass;
+
+    constructor(obj: any, index1: number, masse: TMass, elTyp: number) {
+        super(obj, index1, elTyp);
+
+        this.masse = masse
+        this.className = 'TCAD_Knotenmasse'
+    }
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Stab extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――
     elNo = -1
-    x2: number = 0.0;
-    z2: number = 0.0;
+    // x2: number = 0.0;
+    // z2: number = 0.0;
     index2 = -1;
     name_querschnitt = ''
     nGelenke = 0
@@ -57,11 +69,11 @@ export class TCAD_Stab extends TCAD_Element {
     elast = [] as TCAD_ElLast[];
     //nStreckenlasten = 0
 
-    constructor(obj: any, x1: number, z1: number, x2: number, z2: number, index1: number, index2: number, qname: string, elTyp: number) {
-        super(obj, x1, z1, index1, elTyp);
+    constructor(obj: any, index1: number, index2: number, qname: string, elTyp: number) {
+        super(obj, index1, elTyp);
 
-        this.x2 = x2;
-        this.z2 = z2;
+        // this.x2 = x2;
+        // this.z2 = z2;
         this.index2 = index2;
         this.name_querschnitt = qname
         this.className = 'TCAD_Stab'
@@ -186,8 +198,8 @@ export class TCAD_Lager extends TCAD_Element {
     nel: number = 0
     node: TNode                          // Anzahl der Elemente, die an dem Knoten hängen
 
-    constructor(obj: any, x1: number, z1: number, index1: number, node: TNode, elTyp: number) {
-        super(obj, x1, z1, index1, elTyp);
+    constructor(obj: any, index1: number, node: TNode, elTyp: number) {
+        super(obj, index1, elTyp);
 
         this.node = node;
         this.className = 'TCAD_Lager'
@@ -200,8 +212,8 @@ export class TCAD_Knotenlast extends TCAD_Element {
 
     knlast: TLoads;
 
-    constructor(obj: any, x1: number, z1: number, index1: number, knlast: TLoads, elTyp: number) {
-        super(obj, x1, z1, index1, elTyp);
+    constructor(obj: any, index1: number, knlast: TLoads, elTyp: number) {
+        super(obj, index1, elTyp);
 
         this.knlast = knlast
         this.className = 'TCAD_Knotenlast'
@@ -214,8 +226,8 @@ export class TCAD_Knoten extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――
 
 
-    constructor(obj: any, x1: number, z1: number, index1: number, elTyp: number) {
-        super(obj, x1, z1, index1, elTyp);
+    constructor(obj: any, index1: number, elTyp: number) {
+        super(obj, index1, elTyp);
         this.className = 'TCAD_Knoten'
         this.className = 'TCAD_Knoten'
     }

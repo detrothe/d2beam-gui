@@ -17,8 +17,10 @@ import { setSystem, System } from './rechnen'
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 import { CADNodes, TCADNode } from "./cad_node";
 import { TCAD_Element, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
-import { init_cad, init_two_cad, list, raster_dx, raster_dz, raster_xmax, raster_xmin, raster_zmax, raster_zmin,
-    set_raster_dx, set_raster_dz, two_cad_clear,set_raster_xmin,set_raster_xmax,set_raster_zmin,set_raster_zmax } from "./cad";
+import {
+    init_cad, init_two_cad, list, raster_dx, raster_dz, raster_xmax, raster_xmin, raster_zmax, raster_zmin,
+    set_raster_dx, set_raster_dz, two_cad_clear, set_raster_xmin, set_raster_xmax, set_raster_zmin, set_raster_zmax
+} from "./cad";
 import { CMAXVALUESLOAD, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
 
@@ -235,8 +237,8 @@ export function read_daten(eingabedaten: string) {
     }
     set_querschnittszaehler();
 
-    console.log("CADNotes length", jobj.cadNodes.length)
-    console.log("CADNotes", jobj.cadNodes)
+    // console.log("CADNotes length", jobj.cadNodes.length)
+    // console.log("CADNotes", jobj.cadNodes)
 
     for (let i = 0; i < jobj.cadNodes.length; i++) {
         let node = (jobj.cadNodes[i] as TCADNode)
@@ -247,8 +249,7 @@ export function read_daten(eingabedaten: string) {
     for (let i = 0; i < jobj.elements.length; i++) {
         let element = (jobj.elements[i] as TCAD_Element)
         if (element.className === 'TCAD_Stab') {
-            const obj = new TCAD_Stab(null, jobj.elements[i].x1, jobj.elements[i].z1, jobj.elements[i].x2, jobj.elements[i].z2,
-                jobj.elements[i].index1, jobj.elements[i].index2, jobj.elements[i].name_querschnitt, jobj.elements[i].elTyp);
+            const obj = new TCAD_Stab(null, jobj.elements[i].index1, jobj.elements[i].index2, jobj.elements[i].name_querschnitt, jobj.elements[i].elTyp);
             list.append(obj);
             let neloads = jobj.elements[i].elast.length
             for (let j = 0; j < neloads; j++) {
@@ -277,13 +278,11 @@ export function read_daten(eingabedaten: string) {
             }
         }
         else if (element.className === 'TCAD_Lager') {
-            const obj = new TCAD_Lager(null, jobj.elements[i].x1, jobj.elements[i].z1,
-                jobj.elements[i].index1, jobj.elements[i].node, jobj.elements[i].elTyp);
+            const obj = new TCAD_Lager(null,                 jobj.elements[i].index1, jobj.elements[i].node, jobj.elements[i].elTyp);
             list.append(obj);
         }
         else if (element.className === 'TCAD_Knotenlast') {
-            const obj = new TCAD_Knotenlast(null, jobj.elements[i].x1, jobj.elements[i].z1,
-                jobj.elements[i].index1, jobj.elements[i].knlast, jobj.elements[i].elTyp);
+            const obj = new TCAD_Knotenlast(null,                 jobj.elements[i].index1, jobj.elements[i].knlast, jobj.elements[i].elTyp);
             list.append(obj);
         }
     }

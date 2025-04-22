@@ -24,7 +24,8 @@ import {
   CAD_INFO,
   set_zoomIsActive,
   reset_pointer_length,
-  getFangweite
+  getFangweite,
+  CAD_KNMASSE
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -36,10 +37,10 @@ import "../components/dr-dialog_knoten";
 import "../components/dr-dialog_knotenlast";
 import "../components/dr-dialog_elementlasten";
 
-import { alertdialog, TLoads, TNode } from "./rechnen";
+import { alertdialog, TLoads, TMass, TNode } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
-import { drawStab, draw_knoten, draw_knotenlast, draw_lager } from "./cad_draw_elemente";
-import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Einzellast } from "./CCAD_element";
+import { drawStab, draw_knoten, draw_knotenlast, draw_knotenmasse, draw_lager } from "./cad_draw_elemente";
+import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Einzellast, TCAD_Knotenmasse } from "./CCAD_element";
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 import { change_def_querschnitt } from "./querschnitte";
 import { drDialogKnoten } from "../components/dr-dialog_knoten";
@@ -48,6 +49,7 @@ import Two from "two.js";
 import { add_element_nodes, CADNodes, get_cad_node_X, get_cad_node_Z, remove_element_nodes } from "./cad_node";
 import { find_max_Lastfall, find_maxValues_eloads, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
+import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 
 //export let pick_element = false
 
@@ -63,6 +65,9 @@ let obj_eleinzellast: any
 
 let mode_knotenlast_aendern = false;
 let obj_knlast: any
+
+let mode_knotenmasse_aendern = false;
+let obj_knmasse: any
 
 let mode_knotenlager_aendern = false;
 let obj_knlager: any
@@ -84,6 +89,7 @@ class Cbuttons_control {
   lager_eingabe_aktiv = false;
   knotenlast_eingabe_aktiv = false;
   elementlast_eingabe_aktiv = false;
+  knotenmasse_eingabe_aktiv = false;
   einstellungen_eingabe_aktiv = false;
   info_eingabe_aktiv = false;
   typ_cad_element = 0;
@@ -101,6 +107,7 @@ class Cbuttons_control {
     this.lager_eingabe_aktiv = false;
     this.knotenlast_eingabe_aktiv = false;
     this.elementlast_eingabe_aktiv = false;
+    this.knotenmasse_eingabe_aktiv = false;
     this.einstellungen_eingabe_aktiv = false;
     this.typ_cad_element = 0;
     this.n_input_points = 0;
@@ -119,6 +126,8 @@ class Cbuttons_control {
     el = document.getElementById("id_cad_knoten_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
     el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement;
+    el.style.backgroundColor = "DodgerBlue";
+    el = document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
     el = document.getElementById("id_cad_elementlast_button") as HTMLButtonElement;
     el.style.backgroundColor = "DodgerBlue";
@@ -275,6 +284,17 @@ export function cad_buttons() {
   ellast_button.id = "id_cad_elementlast_button";
 
 
+  const knotmass_button = document.createElement("button");
+
+  knotmass_button.value = "Knotenmasse";
+  knotmass_button.className = "btn";
+  knotmass_button.innerHTML = '<i class = "fa fa-circle"></i>';;
+  knotmass_button.addEventListener("click", Knotenmasse_button);
+  // stab_button.addEventListener('keydown', keydown);
+  knotmass_button.title = "Eingabe Knotenmassen";
+  knotmass_button.id = "id_cad_knotenmasse_button";
+
+
   const cog_button = document.createElement("button");
 
   cog_button.value = "Einstellungen";
@@ -321,6 +341,7 @@ export function cad_buttons() {
   div.appendChild(lager_button);
   div.appendChild(knotlast_button);
   div.appendChild(ellast_button);
+  div.appendChild(knotmass_button);
   div.appendChild(cog_button);
   div.appendChild(refresh_button);
   div.appendChild(info_button);
@@ -460,6 +481,13 @@ export function reDo_button() {
         group = draw_knoten(obj, tr)
         two.add(group);
       }
+      else if (obj.elTyp === CAD_KNMASSE) {
+        //console.log("KNOTEN reDo", obj.x1, obj.z1)
+
+        let index1 = obj.index1
+        group = draw_knotenmasse( tr, obj.mass, get_cad_node_X(index1), get_cad_node_Z(index1))
+        two.add(group);
+      }
       obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
       list.append(obj);
     }
@@ -523,6 +551,8 @@ export function delete_element(xc: number, zc: number) {
   let index_knlast = -1
   let knoten_gefunden = false
   let index_knoten = -1
+  let knotenmasse_gefunden = false
+  let index_knmasse = -1
 
   element_einzellast_gefunden = false
 
@@ -619,6 +649,18 @@ export function delete_element(xc: number, zc: number) {
       }
     }
 
+    else if (obj.elTyp === CAD_KNMASSE) {
+      let two_obj = obj.two_obj
+      let rect = two_obj.getBoundingClientRect();
+      console.log("rect Knotenmasse", rect, xc, zc)
+      if (xpix > rect.left && xpix < rect.right) {
+        if (zpix > rect.top && zpix < rect.bottom) {
+          knotenmasse_gefunden = true
+          index_knmasse = i;
+        }
+      }
+    }
+
     else if (obj.elTyp === CAD_KNOTEN) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
@@ -691,6 +733,15 @@ export function delete_element(xc: number, zc: number) {
     buttons_control.reset();
 
     find_max_Lastfall();
+  }
+  else if (knotenmasse_gefunden) {
+    let obj = list.removeAt(index_knmasse);
+    two.remove(obj.two_obj);
+    two.update();
+    remove_element_nodes((obj as TCAD_Knotenmasse).index1)
+    undoList.append(obj);
+    buttons_control.reset();
+
   }
   else if (index >= 0 && min_abstand < 0.25) {          // Stab
     if (list.size > 0) {
@@ -807,6 +858,7 @@ export function select_element(xc: number, zc: number) {
   let index_lager = -1
   let knotenlast_gefunden = false
   let elementlast_gefunden = false
+let knotenmasse_gefunden = false
 
   let xpix = tr.xPix(xc)
   let zpix = tr.zPix(zc)
@@ -908,6 +960,18 @@ export function select_element(xc: number, zc: number) {
           knotenlast_gefunden = true
           //index_knlast = i;
           obj_knlast = obj
+        }
+      }
+    }
+    else if (obj.elTyp === CAD_KNMASSE) {
+      let two_obj = obj.two_obj
+      let rect = two_obj.getBoundingClientRect();
+      console.log("rect Knotenmasse", rect, xc, zc)
+      if (xpix > rect.left && xpix < rect.right) {
+        if (zpix > rect.top && zpix < rect.bottom) {
+          knotenmasse_gefunden = true
+          //index_knlast = i;
+          obj_knmasse = obj
         }
       }
     }
@@ -1045,6 +1109,24 @@ export function select_element(xc: number, zc: number) {
     // undoList.append(obj);
     buttons_control.reset();
   }
+  else if (knotenmasse_gefunden) {
+    gefunden = true
+    console.log("Knotenmasse gefunden")
+
+    // let knlast = new TLoads();
+    // let lf = (obj_knlast as TCAD_Knotenlast).knlast
+
+    write_knotenmasse_dialog((obj_knmasse as TCAD_Knotenmasse).masse)
+    showDialog_knotenmasse()
+
+    picked_obj = obj_knmasse
+    mode_knotenmasse_aendern = true
+    // two.remove(obj.two_obj);
+    // two.update();
+    // undoList.append(obj);
+    buttons_control.reset();
+  }
+
   else if (index >= 0 && min_abstand < 0.25) {
     if (list.size > 0) {
 
@@ -1530,6 +1612,78 @@ function dialog_einstellungen_closed(this: any, e: any) {
 
 // }
 
+//--------------------------------------------------------------------------------------------------------
+export function Knotenmasse_button(_ev: Event) {
+  //----------------------------------------------------------------------------------------------------
+
+  //console.log("in Knotenmasse_button")
+
+  let el = document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement
+
+  if (buttons_control.knotenmasse_eingabe_aktiv) {
+
+    buttons_control.reset()
+    el.removeEventListener('keydown', keydown);
+  } else {
+    buttons_control.reset()
+    el.style.backgroundColor = 'darkRed'
+    buttons_control.knotenmasse_eingabe_aktiv = true
+    buttons_control.cad_eingabe_aktiv = true
+    buttons_control.typ_cad_element = CAD_KNMASSE
+    el.addEventListener('keydown', keydown);
+    buttons_control.n_input_points = 1
+    buttons_control.button_pressed = true;
+    set_zoomIsActive(false);
+    reset_pointer_length();
+
+    showDialog_knotenmasse();
+
+    // jetzt auf Pointer eingabe warten
+
+  }
+
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+
+export function showDialog_knotenmasse() {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("showDialog_knotenmasse()");
+
+  const el = document.getElementById("id_dialog_knotenmasse");
+  console.log("id_dialog_knotenmasse", el);
+
+  console.log("shadow", el?.shadowRoot?.getElementById("dialog_knotenmasse")),
+    (el?.shadowRoot?.getElementById("dialog_knotenmasse") as HTMLDialogElement).addEventListener("close", dialog_knotenmasse_closed);
+
+  set_help_text('Knoten picken');
+
+  (el?.shadowRoot?.getElementById("dialog_knotenmasse") as HTMLDialogElement).showModal();
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_knotenmasse_closed(this: any, e: any) {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("Event dialog_knotenmasse_closed", e);
+  console.log("this", this);
+  const ele = document.getElementById("id_dialog_knotenmasse") as HTMLDialogElement;
+
+  // ts-ignore
+  const returnValue = this.returnValue;
+
+  if (returnValue === "ok") {
+    //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+    console.log("sieht gut aus");
+    if (mode_knotenmasse_aendern) update_knotenmasse();
+  } else {
+    // Abbruch
+    (ele?.shadowRoot?.getElementById("dialog_knotenmasse") as HTMLDialogElement).removeEventListener("close", dialog_knotenmasse_closed);
+
+    buttons_control.reset()
+  }
+}
 
 //--------------------------------------------------------------------------------------------------------
 export function Knotenlast_button(_ev: Event) {
@@ -1656,6 +1810,31 @@ export function write_knotenlast_dialog(knlast: TLoads) {
 
 }
 
+
+//---------------------------------------------------------------------------------------------------------------
+export function read_knotenmasse_dialog(masse: TMass) {
+  //-----------------------------------------------------------------------------------------------------------
+
+  const el = document.getElementById("id_dialog_knotenmasse") as drDialogKnotenmasse;
+
+  console.log("read_knotenmasse_dialog, el=", el);
+
+  masse.mass = el.get_mass();
+  masse.theta = el.get_theta_y();
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+export function write_knotenmasse_dialog(masse: TMass) {
+  //-----------------------------------------------------------------------------------------------------------
+
+  const el = document.getElementById("id_dialog_knotenmasse") as drDialogKnotenmasse;
+
+  el.set_mass(masse.mass)
+  el.set_theta_y(masse.theta)
+
+}
+
 //---------------------------------------------------------------------------------------------------------------
 export function write_knoten_dialog(obj: TCAD_Knoten) {
   //-----------------------------------------------------------------------------------------------------------
@@ -1663,10 +1842,10 @@ export function write_knoten_dialog(obj: TCAD_Knoten) {
   const el = document.getElementById("id_dialog_knoten") as HTMLDialogElement;
 
   let elem = el?.shadowRoot?.getElementById("id_x") as HTMLInputElement;
-  elem.value = String(obj.x1)
+  elem.value = String(get_cad_node_X(obj.index1))
 
   elem = el?.shadowRoot?.getElementById("id_z") as HTMLInputElement;
-  elem.value = String(obj.z1)
+  elem.value = String(get_cad_node_Z(obj.index1))
 
 }
 
@@ -1905,8 +2084,8 @@ export function update_knoten(flag = 0) {
   console.log('drDialogKnoten', ele.getValueZ());
 
   if (flag === 0) {
-    (obj_knoten as TCAD_Lager).x1 = ele.getValueX();
-    (obj_knoten as TCAD_Lager).z1 = ele.getValueZ();
+    // (obj_knoten as TCAD_Lager).x1 = ele.getValueX();
+    // (obj_knoten as TCAD_Lager).z1 = ele.getValueZ();
 
     CADNodes[(obj_knoten as TCAD_Lager).index1].x = ele.getValueX();
     CADNodes[(obj_knoten as TCAD_Lager).index1].z = ele.getValueZ();
@@ -1915,8 +2094,8 @@ export function update_knoten(flag = 0) {
     two.remove(group)
 
     group = new Two.RoundedRectangle(
-      tr.xPix(obj_knoten.x1),
-      tr.zPix(obj_knoten.z1),
+      tr.xPix(get_cad_node_X(obj_knoten.index1)),
+      tr.zPix(get_cad_node_Z(obj_knoten.index1)),
       15 / devicePixelRatio,
       15 / devicePixelRatio,
       4
@@ -1955,6 +2134,32 @@ export function update_knoten(flag = 0) {
       }
     }
   }
+  two.update();
+
+  buttons_control.reset();
+
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function update_knotenmasse() {
+  //-------------------------------------------------------------------------------------------------------------
+
+  mode_knotenmasse_aendern = false
+
+  //const ele = document.getElementById("id_dialog_knotenlast") as drDialogElementlasten;
+
+  let knmass = new TMass();
+  read_knotenmasse_dialog(knmass)
+  obj_knmasse.masse = knmass
+
+  let group = obj_knmasse.getTwoObj();
+  two.remove(group)
+  let index1 = obj_knmasse.index1
+  group = draw_knotenmasse(tr, knmass, get_cad_node_X(index1), get_cad_node_Z(index1));
+  two.add(group);
+
+  obj_knmasse.setTwoObj(group);
   two.update();
 
   buttons_control.reset();

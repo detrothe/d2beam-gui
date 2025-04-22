@@ -1,6 +1,6 @@
 import Two from 'two.js'
 
-import { System, STABWERK, TNode, TLoads, alertdialog } from './rechnen'
+import { System, STABWERK, TNode, TLoads, alertdialog, TMass } from './rechnen'
 
 import { CTrans } from './trans';
 import { myFormat } from './utility';
@@ -122,7 +122,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
     //----------------------------------------------------------------------------------------------------
 
     let node = obj.node;
-    console.log("in draw_lager",System, node)
+    console.log("in draw_lager", System, node)
 
     let index1 = obj.index1
 
@@ -270,7 +270,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
 
         }
     } else {                     // Fachwerk
-        console.log("node",node)
+        console.log("node", node)
         if ((node.L_org[0] === 1) && (node.L_org[1] === 1)) { // zweiwertiges Lager
 
             //console.log("in zweiwertiges Lager")
@@ -969,8 +969,8 @@ export function draw_knoten(obj: TCAD_Knoten, tr: CTrans) {
     let group = new Two.Group();
 
     let makeRoundedRectangle = new Two.RoundedRectangle(
-        tr.xPix(obj.x1),
-        tr.zPix(obj.z1),
+        tr.xPix(get_cad_node_X(obj.index1)),
+        tr.zPix(get_cad_node_Z(obj.index1)),
         15 / devicePixelRatio,
         15 / devicePixelRatio,
         4
@@ -978,6 +978,23 @@ export function draw_knoten(obj: TCAD_Knoten, tr: CTrans) {
     makeRoundedRectangle.fill = '#dd1100';
 
     group.add(makeRoundedRectangle)
+
+    return group;
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function draw_knotenmasse(tr: CTrans, _mass:TMass, xm:number, zm:number) {
+    //----------------------------------------------------------------------------------------------------
+
+    let group = new Two.Group();
+
+    let x = Math.round(tr.xPix(xm));
+    let z = Math.round(tr.zPix(zm));
+    let circle = new Two.Circle(x, z, 14, 20)
+    circle.fill = '#ff3333'
+
+    group.add(circle);
 
     return group;
 }

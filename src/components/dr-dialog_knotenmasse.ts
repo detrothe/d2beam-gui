@@ -1,9 +1,9 @@
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
-@customElement("dr-dialog_knotenlast")
-export class drDialogKnotenlast extends LitElement {
-  @property({ type: String }) title = "neue Knotenlast";
+@customElement("dr-dialog_knotenmasse")
+export class drDialogKnotenmasse extends LitElement {
+  @property({ type: String }) title = "neue Knotenmasse";
 
   @property({ type: Number }) xValue = 0;
 
@@ -124,96 +124,68 @@ export class drDialogKnotenlast extends LitElement {
   //----------------------------------------------------------------------------------------------
 
   render() {
-    return html` <dialog id="dialog_knotenlast">
-      <h2>Neue Knotenlast</h2>
+    return html` <dialog id="dialog_knotenmasse">
+      <h2>Neue Knotenmasse</h2>
+
+
 
 
       <p>
-        Lastfall:
-        <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="1" />
-      </p>
-      <p>
-        Px:
-        <input type="number" id="id_px" name="px" pattern="[0-9.,eE+-]*" value="" />
-        [kN]
-      </p>
-      <p>
-        Pz:
-        <input type="number" id="id_pz" name="pz" pattern="[0-9.,eE+-]*" value="" />
-        [kN]
+        M:
+        <input type="number" id="id_M" name="M" pattern="[0-9.,eE+-]*" value="" />
+        [t]
       </p>
       <p id=id_MY>
-        My:
-        <input type="number" id="id_my" name="my" pattern="[0-9.,eE+-]*" value="" />
-        [kNm]
+        θ<sub>y</sub>:
+        <input type="number" id="id_thetay" name="thetay" pattern="[0-9.,eE+-]*" value="" />
+        [tm²]
       </p>
 
       <form method="dialog">
-        <!--<sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
         <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
         <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
       </form>
     </dialog>`;
   }
 
-  _dialog_anwenden() {
-    console.log("dialog_anwenden");
-    const shadow = this.shadowRoot;
-    if (shadow) {
-      window.dispatchEvent(new Event("draw_cad_knoten"));
-    }
-  }
-
   _dialog_ok() {
     console.log("dialog_ok");
     const shadow = this.shadowRoot;
     if (shadow) {
-      (shadow.getElementById("dialog_knotenlast") as HTMLDialogElement).close("ok");
+      (shadow.getElementById("dialog_knotenmasse") as HTMLDialogElement).close("ok");
     }
   }
 
   _dialog_abbruch() {
     console.log("dialog_abbruch");
     const shadow = this.shadowRoot;
-    if (shadow) (shadow.getElementById("dialog_knotenlast") as HTMLDialogElement).close("cancel");
+    if (shadow) (shadow.getElementById("dialog_knotenmasse") as HTMLDialogElement).close("cancel");
   }
 
-  get_Px() {
+  get_mass() {
     const shadow = this.shadowRoot;
-    //console.log("id_px", (shadow?.getElementById("id_px") as HTMLInputElement).value);
-    let wert = Number((shadow?.getElementById("id_px") as HTMLInputElement).value.replace(/,/g, "."));
+    let wert = Number((shadow?.getElementById("id_M") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
 
-  get_Pz() {
+  get_theta_y() {
     const shadow = this.shadowRoot;
-    // console.log("id_pz", (shadow?.getElementById("id_pz") as HTMLInputElement).value);
-    let wert = Number((shadow?.getElementById("id_pz") as HTMLInputElement).value.replace(/,/g, "."));
+    let wert = Number((shadow?.getElementById("id_thetay") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
 
   }
-  get_My() {
-    const shadow = this.shadowRoot;
-    // console.log("id_my", (shadow?.getElementById("id_my") as HTMLInputElement).value);
-    let wert = Number((shadow?.getElementById("id_my") as HTMLInputElement).value.replace(/,/g, "."));
-    return wert;
+
+
+  set_mass(mass:number) {
+    let el = this.shadowRoot?.getElementById("id_M") as HTMLInputElement;
+    el.value = String(mass);
   }
 
-  set_Px(Px: number) {
-    let el = this.shadowRoot?.getElementById("id_px") as HTMLInputElement;
-    el.value = String(Px);
+  set_theta_y(theta:number) {
+    let el = this.shadowRoot?.getElementById("id_thetay") as HTMLInputElement;
+    el.value = String(theta);
   }
 
-  set_Pz(Pz: number) {
-    let el = this.shadowRoot?.getElementById("id_pz") as HTMLInputElement;
-    el.value = String(Pz);
-
-  }
-
-  set_My(My: number) {
-    let el = this.shadowRoot?.getElementById("id_my") as HTMLInputElement;
-    el.value = String(My);
-  }
 
   set_system(system: number) {
 

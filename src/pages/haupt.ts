@@ -35,6 +35,7 @@ import "../components/dr-dialog_neue_eingabe";
 import "../components/dr-dialog_lager";
 import "../components/dr-dialog_knoten";
 import "../components/dr-dialog_knotenlast";
+import "../components/dr-dialog_knotenmasse";
 import "../components/dr-dialog_elementlasten";
 import "../components/dr-dialog_stab_eigenschaften";
 import "../components/dr-dialog_einstellungen";
@@ -78,7 +79,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 //import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.0.0.b, 21-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.0.0.b, 22-April-2025, ";
 //########################################################################################################################
 
 
@@ -338,6 +339,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <dr-dialog_knoten id="id_dialog_knoten"></dr-dialog_knoten>
         <dr-dialog_knotenlast id="id_dialog_knotenlast"></dr-dialog_knotenlast>
         <dr-dialog_elementlasten id="id_dialog_elementlast"></dr-dialog_elementlasten>
+        <dr-dialog_knotenmasse id="id_dialog_knotenmasse"></dr-dialog_knotenmasse>
         <dr-dialog_stab_eigenschaften id="id_dialog_stab_eigenschaften"></dr-dialog_stab_eigenschaften>
         <dr-dialog_einstellungen id="id_dialog_einstellungen"></dr-dialog_einstellungen>
         <dr-dialog_info id="id_dialog_info"></dr-dialog_info>
