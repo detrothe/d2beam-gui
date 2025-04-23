@@ -346,11 +346,13 @@ export function cad_buttons() {
   div.appendChild(cog_button);
   div.appendChild(refresh_button);
   div.appendChild(info_button);
+  div.appendChild(help_text);
   let br = document.createElement("br");
   div.appendChild(br);
   div.appendChild(zurueck_button);
+  br = document.createElement("br");
+  div.appendChild(br);
   div.appendChild(querschnitt_default_select);
-  div.appendChild(help_text);
 
   //let div_cad_group = document.getElementById("id_cad_group") as HTMLDivElement
   undo_button!.addEventListener("focus", (_event) => {

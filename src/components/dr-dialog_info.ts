@@ -147,6 +147,7 @@ export class drDialogInfo extends LitElement {
         <b>Rasterbereich</b><br />
         Der unter <i>Einstellungen GUI</i> einstellbare Rasterbereich dient nur zur Orientierung bei der Eingabe. Im Normalfall wird er so eingestellt, dass das gesamte System darin dargestellt werden kann.
       </p>
+      <p>Weitere Informationen zur grafischen Eingabe findest du im Tab Info.</p>
 
       <form method="dialog">
         <sl-button id="OK" value="ok" @click="${this._dialog_ok}">ok</sl-button>

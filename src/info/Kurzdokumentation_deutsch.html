@@ -91,9 +91,10 @@
 
 <body lang="de-DE" link="#0000ff" vlink="#800000" dir="ltr">
 	<h1 class="western">Inhaltsverzeichnis</h1>
-	<p class="western"><a href="#uebersicht">Übersicht</a><br>
+	<p class="western">
+		<a href="#uebersicht">Übersicht</a><br>
+		<a href="#gui">Grafische Eingabe</a><br>
 		<a href="#vorzeichen">Koordinatensystem und Vorzeichen</a><br>
-		<a href="#beispiel">Beispiel</a><br>
 		<a href="#hinweiseApp">Hinweise zur Bedienung der App</a><br>
 		<a href="#darstellung_2D">Darstellungen 2D</a><br>
 		<a href="#svg">Grafik speichern </a><br>
@@ -171,14 +172,119 @@
 				werden nur die Lastkombinationen gerechnet.
 			</p>
 
-
-
-
 	</ul>
 	<p>
-
 		<br /><br />
 	</p>
+
+	<h2 class="western" id="gui">
+		<a href="#">Grafische Eingabe</a>
+	</h2>
+
+<p>Die Eingabe des statischen Systems erfolgt im Tab System. Je nach vorhandener Hardware kann mit der Maus, dem Stift
+	oder dem Finger eingegeben werden.
+</p>
+<p>
+
+	Folgenden Punkte sind bei der Eingabe zu beachten:
+<ul>
+	<li>Die Querschnitte werden im Tab Querschnitte definiert. Mindestens ein Querschnitt sollte vor der Eingabe der
+		Stäbe erstellt werden.
+		Änderungen sind nachträglich in diesem Tab möglich.
+	</li>
+	<li>
+		Bei Berechnungen nach Theorie II. Ordung werden nur Kombinationen der Lastfälle berechnet, die vor der
+		Berechnung im Tab Kombinationen
+		definiert werden müssen.
+	</li>
+	<li>Die Eingabe des Systems findet im Tab System statt.</li>
+	<li>
+		Die eigentliche Berechnung wird im Tab Haupt gestartet. Nach erfolgreicher Berechnung können im Tab Ergebnisse
+		die Verformungen,
+		Schnittgrößen etc. dargestellt werden.
+	</li>
+</ul>
+</p>
+<p> <b>Erläuterungen zu den Icons im Tab System</b></p>
+<p>
+	<img src="/assets/gui-icons/undo.png" name="undo" title="undo button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Undo Button: Löscht das zuletzt erstellte Element (Knoten, Stab, Lager, Knotenlast oder Elementlast)
+	und speichert es im internen Papierkorb.
+</p>
+<p>
+	<img src="/assets/gui-icons/redo.png" name="redo" title="redo button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Redo Button: Holt das zuletzt in den Papierkorb gestellte Element zurück.
+</p>
+<p>
+	<img src="/assets/gui-icons/loeschen.png" name="loeschen" title="löschen button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Löschen Button: Löscht ein anzuklickendes Element und speichert es im internen Papierkorb.
+</p>
+<p>
+	<img src="/assets/gui-icons/select.png" name="select" title="select button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Select Button: Es ist ein vorhandenes Element anzuklicken. Danach erscheint ein Dialog, in dem Änderungen
+	vorgenommen werdn können.
+</p>
+<p>
+	<img src="/assets/gui-icons/knoten.png" name="knoten" title="knoten button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Knoten Button: Eingabe von Knotenkoordinaten (x,z) mithilfe eines Dialogs. Hinweis: Die Eingabe von Knoten ist nur
+	erforderlich, wenn ein Stabknoten nicht in die Schnittpunkte der Rasterlinien fällt.
+</p>
+<p>
+	<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Edit Knoten Button: Die Koordinaten (x,z) von vorhandenen Knoten können hier geändert werden.
+</p>
+<p>
+	<img src="/assets/gui-icons/lager.png" name="lager" title="lager button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Lager Button: Eingabe von Lagern. Hinweis: Lager können nur an vorhandene Knoten gesetzt werden.
+</p>
+<p>
+	<img src="/assets/gui-icons/einstellungen.png" name="einstellungen" title="einstellungen button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Einstellungen Button: Hier können Einstellungen vorgenommen werden, die für die grafische Eingabe nützlich sind.
+</p>
+<p>
+	<img src="/assets/gui-icons/reset.png" name="reset" title="reset button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Reset Button: Das System wird neu gezeichnet. Zoom und Drag werden zurückgesetzt.
+</p>
+<p>
+	<img src="/assets/gui-icons/default_querschnitt.png" name="default_querschnitt" title="default_querschnitt button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Default_Querschnitt Button: Der angezeigte Querschnittsname wird bei der nächsten Stabeingabe verwendet. Es können über den Tab
+	Querschnitt beliebig viele Querschnitte definiert werden.
+</p>
+<p>
+	<img src="/assets/gui-icons/stab.png" name="stab" title="stab button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Stab Button: Ein Stab wird durch Anfangs- und Endknoten definiert. Es gelten folgende Fangregeln: Zuerst wird innerhalb der
+	Fangweite (Die Längen der Cursorlinien zeigen die Fangweite an) ein mit dem Knoten Button eingegebener Knoten gesucht. Wird nichts
+	gefunden, dann werden die blauen Rasterpunkte verwendet. Wird auch hier nichts innerhalb der Fangweite gefunden, dann gilt die
+	aktuelle Stelle des Cursors.
+</p>
+<p>
+	<img src="/assets/gui-icons/knotenlast.png" name="knotenlast" title="knotenlast button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Knotenlast Button: Eingabe von Knotenlasten. Hinweis: Knotenlasten können nur an vorhandene Knoten gesetzt werden.
+</p>
+<p>
+	<img src="/assets/gui-icons/elementlast.png" name="elementlast" title="element button"
+		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+	Elementlast Button: Eingabe von Stablasten. Hinweis: Stablasten können nur auf vorhandene Stäbe wirken.
+</p>
+
+
+
+<p>
+	<br /><br />
+</p>
+
 	<h2 class="western" id="vorzeichen">
 		<a href="#">Koordinatensystem und Vorzeichen</a>
 	</h2>
@@ -199,17 +305,10 @@
 			style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;" />
 			<p style="text-align: center;">Lagerfedern gedreht</p>
 
-	<h1 class="western" id="beispiel">
-		<a href="#">Beispiel</a>
-	</h1>
-	<h2 class="western"> Kragarm </h2>
-	<p>
-		Beim Programmstart wird ein einfaches System automatisch geladen und ausgeführt, so dass die Berechnungsergebnisse
-		direkt untersucht werden können.
-	</p>
+
 
 	<p>
-	<h1 class="western" id="hinweiseApp"><a href="#">Hinweise zur Bedienung der App</a></h1>
+	<h1 class="western" id="hinweiseApp"><a href="#">Weitere Hinweise zur Bedienung der App</a></h1>
 	</p>
 	<p>
 	<h2 class="western">Eingabe</h2>
