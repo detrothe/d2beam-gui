@@ -7,7 +7,7 @@ import { CADNodes } from "./cad_node";
 import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenmasse } from "./CCAD_element";
 import {
     alertdialog, element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, nodalmass, node,
-    nstreckenlasten, ntemperaturlasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
+    nstreckenlasten, ntemperaturlasten, set_maxU_node, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
     set_nlastfaelle, set_nloads, set_nnodalMass, set_nnodes, set_nnodesTotal, set_nstabvorverfomungen, set_ntotalEloads, stabvorverformung, System, TElement, TElLoads, TLoads, TMass, TNode,
     TStabvorverformung
 } from "./rechnen";
@@ -569,6 +569,27 @@ export function cad_rechnen() {
 
         set_neloads(nelem_Balken + nStreckenlasten + nTemperaturlasten + nEinzellasten + nVorspannungen + nSpannschloesser);
         set_ntotalEloads(nelem_Balken + nStreckenlasten + nTemperaturlasten + nEinzellasten + nVorspannungen + nSpannschloesser)
+    }
+
+    //                  V o r v e r f o r m u n g e n
+
+    {
+        let el = document.getElementById('id_maxu_node_ID') as HTMLInputElement;
+        let maxU_node_ID = Number(el.value);
+        console.log("id_maxu_node_ID|", el.value, '|', maxU_node_ID)
+
+        if (maxU_node_ID > 0) {
+            for (let i = 0; i < CADNodes.length; i++) {
+                if (maxU_node_ID === CADNodes[i].ID) {
+                    set_maxU_node(CADNodes[i].index_FE + 1)
+                    console.log("maxU_node für Schiefstellung", CADNodes[i].index_FE + 1)
+                    break;
+                }
+            }
+        }
+        else {
+            set_maxU_node(0);
+        }
     }
 
     //                  K n o t e n m a s s e n

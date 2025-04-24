@@ -120,6 +120,7 @@ export let nodalmass = [] as TMass[]
 export let dyn_omega = [] as number[]
 export let maxU_schief = 0.03
 export let maxU_node = -1
+export function set_maxU_node(wert: number) { maxU_node = wert; }
 export let maxU_dir = 1
 
 export let nur_eingabe_ueberpruefen = false;
@@ -407,7 +408,7 @@ export function setSystem(system: number) {
     let ele = document.getElementById('id_dialog_lager') as drDialogLager;
     ele.set_system(system);
 
-     ele = document.getElementById('id_dialog_knotenlast') as drDialogKnotenlast;
+    ele = document.getElementById('id_dialog_knotenlast') as drDialogKnotenlast;
     ele.set_system(system);
 
 }
@@ -520,9 +521,9 @@ export function rechnen(flag = 1) {
     // el = document.getElementById('id_matprop') as HTMLSelectElement;
     matprop_flag = 0   //Number(el.value);
 
-    el = document.getElementById('id_maxu_node') as HTMLInputElement;
-    //console.log("id_maxu_node|",el.value,'|')
-    maxU_node = Number(el.value);
+    // el = document.getElementById('id_maxu_node_ID') as HTMLInputElement;
+    //console.log("id_maxu_node_ID|",el.value,'|')
+    // maxU_node = Number(el.value);
 
     el = document.getElementById('id_maxu_dir') as HTMLSelectElement;
     maxU_dir = Number(el.value);

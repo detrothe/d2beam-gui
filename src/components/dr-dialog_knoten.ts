@@ -6,7 +6,8 @@ import { property, customElement } from "lit/decorators.js";
 export class drDialogKnoten extends LitElement {
   @property({ type: String }) title = "neuer Knoten";
 
-  @property({ type: Number }) xValue = 0;
+  @property({ type: Number }) ID = 0;
+
 
   static get styles() {
     return css`
@@ -141,6 +142,8 @@ export class drDialogKnoten extends LitElement {
         [m]
       </p>
 
+      <p id="id_ID" title='ID wird bei TH.II.O. im Tab Vorverformungen benötigt'>Knoten ID : ${this.ID}</p>
+
       <form method="dialog">
         <table>
           <tbody>
@@ -196,6 +199,11 @@ export class drDialogKnoten extends LitElement {
     return wert;
   }
 
+  set_ID(ID: number) {
+    this.ID = ID;
+    console.log("new ID",this.ID)
+  }
+
   set_mode(mode: boolean) {
     if (mode) {
       // Änderung
@@ -204,11 +212,15 @@ export class drDialogKnoten extends LitElement {
       el.style.width = "5rem";
       el = this.shadowRoot?.getElementById("ok") as SlButton;
       el.style.display = "block";
+      let elp = this.shadowRoot?.getElementById("id_ID") as HTMLParagraphElement;
+      elp.style.display = "block";
     } else {
       let el = this.shadowRoot?.getElementById("Anwenden") as SlButton;
       el.style.display = "block";
       el = this.shadowRoot?.getElementById("ok") as SlButton;
       el.style.display = "none";
+      let elp = this.shadowRoot?.getElementById("id_ID") as HTMLParagraphElement;
+      elp.style.display = "none";
     }
   }
 }

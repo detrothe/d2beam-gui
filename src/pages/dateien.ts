@@ -15,7 +15,7 @@ import { get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_len
 import { nQuerschnittSets, set_querschnittszaehler, add_rechteck_querschnitt } from "./querschnitte"
 import { setSystem, System } from './rechnen'
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
-import { CADNodes, TCADNode } from "./cad_node";
+import { CADNodes, set_ID_counter, TCADNode } from "./cad_node";
 import { TCAD_Element, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
 import {
     init_cad, init_two_cad, list, raster_dx, raster_dz, raster_xmax, raster_xmin, raster_zmax, raster_zmin,
@@ -154,8 +154,8 @@ export function read_daten(eingabedaten: string) {
             els.options[jobj.maxU_dir].selected = true;
         }
 
-        let eli = document.getElementById('id_maxu_node') as HTMLInputElement;
-        if (jobj.maxU_node !== undefined) eli.value = jobj.maxU_node;
+        let eli = document.getElementById('id_maxu_node_ID') as HTMLInputElement;
+        if (jobj.maxU_node_ID !== undefined) eli.value = jobj.maxU_node_ID;
 
         eli = document.getElementById('id_maxu_schief') as HTMLInputElement;
         if (jobj.maxU_schief !== undefined) eli.value = jobj.maxU_schief;
@@ -244,6 +244,7 @@ export function read_daten(eingabedaten: string) {
         let node = (jobj.cadNodes[i] as TCADNode)
         CADNodes.push(node)
     }
+    set_ID_counter();
 
     list.size = 0
     for (let i = 0; i < jobj.elements.length; i++) {
@@ -306,169 +307,7 @@ export function read_daten(eingabedaten: string) {
         console.log("max_value_lasten[i].eload", max_value_lasten[i].eload)
     }
 
-    /*
-        let el = document.getElementById('id_knoten_tabelle') as HTMLElement;
-        let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        let nSpalten = tabelle.rows[0].cells.length;
 
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.node[i - 1][j - 1];
-            }
-        }
-
-        el = document.getElementById('id_element_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nSpalten = tabelle.rows[0].cells.length;
-
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.elem[i - 1][j - 1];
-                //console.log("Element Table ", jobj.elem[i - 1][j - 1])
-            }
-        }
-
-        el = document.getElementById('id_koppelfedern_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nSpalten = tabelle.rows[0].cells.length;
-
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.koppelfedern[i - 1][j - 1];
-                //console.log("Element Table ", jobj.elem[i - 1][j - 1])
-            }
-        }
-
-
-        el = document.getElementById('id_knotenlasten_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-        nSpalten = tabelle.rows[0].cells.length;
-
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.nodalLoad[i - 1][j - 1];
-            }
-        }
-
-        el = document.getElementById('id_streckenlasten_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-        nSpalten = tabelle.rows[0].cells.length;
-
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.streckenlasten[i - 1][j - 1];
-            }
-        }
-
-        el = document.getElementById('id_einzellasten_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-        nSpalten = tabelle.rows[0].cells.length;
-
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.einzellasten[i - 1][j - 1];
-            }
-        }
-
-        el = document.getElementById('id_temperaturlasten_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-        nSpalten = tabelle.rows[0].cells.length;
-
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.tempLoad[i - 1][j - 1];
-            }
-        }
-
-        el = document.getElementById('id_vorspannungen_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-        nSpalten = tabelle.rows[0].cells.length;
-
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.sigvload[i - 1][j - 1];
-            }
-        }
-
-        el = document.getElementById('id_spannschloesser_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-        nSpalten = tabelle.rows[0].cells.length;
-
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.spannload[i - 1][j - 1];
-            }
-        }
-
-        el = document.getElementById('id_stabvorverfomungen_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-        nSpalten = tabelle.rows[0].cells.length;
-
-        if (version < 2) {            // ohne Lastfall
-            for (i = 1; i < tabelle.rows.length; i++) {
-                let child = tabelle.rows[i].cells[1].firstElementChild as HTMLInputElement;
-                child.value = jobj.stabvorverformung[i - 1][0];
-                child = tabelle.rows[i].cells[2].firstElementChild as HTMLInputElement;
-                child.value = '1';
-
-                for (j = 3; j < 6; j++) {
-                    child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                    child.value = jobj.stabvorverformung[i - 1][j - 2];
-                }
-            }
-        } else {
-            for (i = 1; i < tabelle.rows.length; i++) {
-                for (j = 1; j < nSpalten; j++) {
-                    let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                    child.value = jobj.stabvorverformung[i - 1][j - 1];
-                }
-            }
-        }
-
-        el = document.getElementById('id_nnodedisps_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-        nSpalten = tabelle.rows[0].cells.length;
-
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.nodeDisp0[i - 1][j - 1];
-            }
-        }
-
-        console.log("loadcases", jobj.loadcases)
-        if (jobj.loadcases !== undefined) {
-            console.log("in loadcases")
-            el = document.getElementById('id_lastfaelle_tabelle') as HTMLElement;
-            tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-            nSpalten = tabelle.rows[0].cells.length;
-
-            for (i = 1; i < tabelle.rows.length; i++) {
-                for (j = 1; j < nSpalten; j++) {
-                    let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                    child.value = jobj.loadcases[i - 1][j - 1];
-                }
-            }
-        }
-    */
     let el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
     let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
@@ -480,19 +319,6 @@ export function read_daten(eingabedaten: string) {
             child.value = jobj.combination[i - 1][j - 1];
         }
     }
-
-    /*
-        el = document.getElementById('id_knotenmassen_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nSpalten = tabelle.rows[0].cells.length;
-
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.nodalmass[i - 1][j - 1];
-            }
-        }
-    */
 
     endTime = performance.now();
     write('done read_daten ' + String(endTime - startTime))
@@ -646,7 +472,7 @@ async function handleFileSelect_save() {
 export function str_inputToJSON() {
 
 
-    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, epsForce_tol, stadyn, dyn_neigv;
+    let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node_ID, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, epsForce_tol, stadyn, dyn_neigv;
     let eig_solver, niter_neigv, nelem_koppelfedern, matprop_flag;
 
     let el = document.getElementById('id_button_nteilungen') as any;
@@ -667,8 +493,8 @@ export function str_inputToJSON() {
     el = document.getElementById('id_button_dyn_neigv') as any;
     dyn_neigv = el.nel
 
-    el = document.getElementById('id_maxu_node') as HTMLSelectElement;
-    maxU_node = el.value;
+    el = document.getElementById('id_maxu_node_ID') as HTMLSelectElement;
+    maxU_node_ID = el.value;
 
     el = document.getElementById('id_maxu_dir') as HTMLSelectElement;
     maxU_dir = el.value;
@@ -950,7 +776,7 @@ export function str_inputToJSON() {
         'n_iter': n_iterationen,
         'THIIO_flag': THIIO_flag,
         'matprop_flag': matprop_flag,
-        'maxU_node': maxU_node,
+        'maxU_node_ID': maxU_node_ID,
         'maxU_dir': maxU_dir,
         'maxU_schief': maxU_schief,
         'neigv': neigv,

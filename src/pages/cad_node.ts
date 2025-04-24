@@ -3,7 +3,9 @@ import { getFangweite, two } from "./cad";
 
 export let CADNodes = [] as TCADNode[]
 
-let min_abstand = 0.2 * 0.2
+let min_abstand = 0.01 * 0.01
+
+let ID_counter = 0
 
 export class TCADNode {
     two_obj: any
@@ -21,6 +23,8 @@ export class TCADNode {
     constructor(x: number, z: number) {
         this.x = x
         this.z = z
+        ID_counter++;
+        this.ID = ID_counter;
     }
 
 
@@ -32,7 +36,7 @@ export function add_cad_node(x: number, z: number, option = 0) {
 
     let index = -1
 
-    min_abstand = 0.2 * 0.2
+    min_abstand = 0.01 * 0.01
 
     for (let i = 0; i < CADNodes.length; i++) {
         let dx = CADNodes[i].x - x
@@ -60,7 +64,7 @@ export function find_nearest_cad_node(x: number, z: number) {
     //--------------------------------------------------------------------------------------------
 
     let index = -1
-    min_abstand = getFangweite()*getFangweite()
+    min_abstand = getFangweite() * getFangweite()
 
     for (let i = 0; i < CADNodes.length; i++) {
         let dx = CADNodes[i].x - x
@@ -110,4 +114,22 @@ export function zero_nel(index: number): void {
 export function get_nel(index: number) {
     //--------------------------------------------------------------------------------------------
     return CADNodes[index].nel;
+}
+
+//------------------------------------------------------------------------------------------------
+export function get_ID(index: number) {
+    //--------------------------------------------------------------------------------------------
+    return CADNodes[index].ID;
+}
+
+
+//------------------------------------------------------------------------------------------------
+export function set_ID_counter() {
+    //--------------------------------------------------------------------------------------------
+
+    ID_counter = 0
+
+    for (let i = 0; i < CADNodes.length; i++) {
+        if (CADNodes[i].ID > ID_counter) ID_counter = CADNodes[i].ID
+    }
 }

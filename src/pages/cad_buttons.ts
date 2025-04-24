@@ -47,7 +47,7 @@ import { change_def_querschnitt } from "./querschnitte";
 import { drDialogKnoten } from "../components/dr-dialog_knoten";
 import { CTrans } from "./trans";
 import Two from "two.js";
-import { add_element_nodes, CADNodes, get_cad_node_X, get_cad_node_Z, remove_element_nodes } from "./cad_node";
+import { add_element_nodes, CADNodes, get_cad_node_X, get_cad_node_Z, get_ID, remove_element_nodes } from "./cad_node";
 import { find_max_Lastfall, find_maxValues_eloads, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
@@ -837,6 +837,7 @@ export function select_node(xc: number, zc: number) {
     write_knoten_dialog_xz(CADNodes[index_CADPunkt].x, CADNodes[index_CADPunkt].z);
 
     (document.getElementById('id_dialog_knoten') as drDialogKnoten).set_mode(true);
+    (document.getElementById('id_dialog_knoten') as drDialogKnoten).set_ID(CADNodes[index_CADPunkt].ID);
     showDialog_knoten();
 
     //picked_obj = obj_knoten
@@ -1850,6 +1851,8 @@ export function write_knoten_dialog(obj: TCAD_Knoten) {
   elem = el?.shadowRoot?.getElementById("id_z") as HTMLInputElement;
   elem.value = String(get_cad_node_Z(obj.index1))
 
+  let dialog = document.getElementById("id_dialog_knoten") as drDialogKnoten;
+  dialog.set_ID(get_ID(obj.index1));
 }
 
 //---------------------------------------------------------------------------------------------------------------

@@ -79,7 +79,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 //import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.0.a, 23-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.1.a, 24-April-2025, ";
 //########################################################################################################################
 
 
@@ -814,14 +814,14 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <tbody>
             <tr>
               <td title="0 oder leer = automatische Skalierung auf den Größtwert aus der Eigenwertberechnung">
-                Knoten :
+                Knoten ID:
               </td>
               <td>
                 <input
                   type="number"
                   step="1"
-                  id="id_maxu_node"
-                  name="maxu_node"
+                  id="id_maxu_node_ID"
+                  name="maxu_node_ID"
                   class="input_tab"
                   pattern="[0-9.,eE+-]*"
                   value=""
@@ -1011,7 +1011,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
         <hr />
         <p>
-          <!-- <input type="checkbox" id="id_glsystem_darstellen" />Gleichungssystem darstellen  -->
+
           <sl-checkbox id="id_glsystem_darstellen"><b>Gleichungssystem darstellen</b></sl-checkbox>
           <br /><br />
           &nbsp;&nbsp;Zeige :
@@ -1021,46 +1021,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <div id="id_elementsteifigkeit"></div>
         <div id="id_gleichungssystem"></div>
 
-        <!--
-        <table id="querschnittwerte_table">
-          <tbody>
-            <tr>
-              <td>Anzahl Integrationspunkte :</td>
-              <td>
-                <input
-                  type="number"
-                  step="any"
-                  id="id_ndivsl"
-                  name="ndivsl"
-                  class="input_tab"
-                  pattern="[0-9.,eE+-]*"
-                  value="7"
-                  @change=${berechnungErforderlich}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Art der Integration :</td>
-              <td>
-                <select name="intart" id="id_intart">
-                  <option value="0">Gauss-Legendre</option>
-                  <option value="1" selected>Newton Codes</option>
-                  <option value="2">Lobatto</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>Art innere Knoten :</td>
-              <td>
-                <select name="art" id="id_art">
-                  <option value="0">u, w</option>
-                  <option value="1" selected>u, w, φ</option>
-                </select>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-    -->
+
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
@@ -1717,7 +1678,7 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     els = document.getElementById("id_eig_solver_option") as SlSelect;
     els.setAttribute("value", "1");
 
-    eli = document.getElementById("id_maxu_node") as HTMLInputElement;
+    eli = document.getElementById("id_maxu_node_ID") as HTMLInputElement;
     eli.value = "";
 
     let elSel = document.getElementById("id_maxu_dir") as HTMLSelectElement;
