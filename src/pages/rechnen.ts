@@ -408,8 +408,8 @@ export function setSystem(system: number) {
     let ele = document.getElementById('id_dialog_lager') as drDialogLager;
     ele.set_system(system);
 
-    ele = document.getElementById('id_dialog_knotenlast') as drDialogKnotenlast;
-    ele.set_system(system);
+    let ele1 = document.getElementById('id_dialog_knotenlast') as drDialogKnotenlast;
+    ele1.set_system(system);
 
 }
 
@@ -1687,14 +1687,14 @@ function calc_neq_and_springs() {
 
     for (i = 0; i < nnodesTotal; i++) {
 
-        let kx = 0.0, kz = 0.0, kphi = 0.0
-        if (node[i].L[0] > 1.0) kx = node[i].L[0];
-        if (node[i].L[1] > 1.0) kz = node[i].L[1];
-        if (node[i].L[2] > 1.0) kphi = node[i].L[2];
+        // let kx = 0.0, kz = 0.0, kphi = 0.0
+        // if (node[i].L[0] > 1.0) kx = node[i].L[0];
+        // if (node[i].L[1] > 1.0) kz = node[i].L[1];
+        // if (node[i].L[2] > 1.0) kphi = node[i].L[2];
 
-        node[i].kx = kx
-        node[i].kz = kz
-        node[i].kphi = kphi
+        // node[i].kx = kx
+        // node[i].kz = kz
+        // node[i].kphi = kphi
 
         // for (j = 0; j < 3; j++) {
         //     if (Math.abs(node[i].L[j]) === 1) {
@@ -1704,6 +1704,10 @@ function calc_neq_and_springs() {
         //         neq = neq + 1;
         //     }
         // }
+
+        let kx = node[i].kx
+        let kz = node[i].kz
+        let kphi = node[i].kphi
 
         let phi = node[i].phi * Math.PI / 180.0
         node[i].co = Math.cos(phi)

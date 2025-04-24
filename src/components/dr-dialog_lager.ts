@@ -1,3 +1,4 @@
+import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
@@ -123,7 +124,7 @@ export class drDialogLager extends LitElement {
 
   render() {
     return html` <dialog id="dialog_lager">
-      <h2>Neues Knotenlager</h2>
+      <h2>Knotenlager</h2>
 
       <p>
         Drehung des Knotens (Lagers), im Gegenuhrzeigersinn positiv
@@ -137,41 +138,43 @@ export class drDialogLager extends LitElement {
       <table id="lager_table">
         <thead>
           <tr>
-            <td>Lager starr</td>
+            <td style="text-align: center;">Lager starr</td>
+            <td style="text-align: center;">&nbsp;&nbsp;oder&nbsp;&nbsp;</td>
             <td colspan="3" style="text-align: center;">Federkonstante</td>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>
-              <sl-checkbox id="id_Lx">L<sub>x'</sub></sl-checkbox>
+            <td style="text-align: center;">
+              <sl-checkbox id="id_Lx" @click="${this._checkbox_Lx}">L<sub>x'</sub></sl-checkbox>
             </td>
-
+            <td>&nbsp;</td>
             <td>k<sub>x'</sub>:</td>
             <td>
-              <input type="number" id="id_kx" name="kx" pattern="[0-9.,eE+-]*" value="" disabled/>
+              <input type="number" id="id_kx" name="kx" pattern="[0-9.,eE+-]*" value="" />
             </td>
             <td>kN/m</td>
           </tr>
           <tr>
-            <td>
-              <sl-checkbox id="id_Lz">L<sub>z'</sub></sl-checkbox>
+            <td style="text-align: center;">
+              <sl-checkbox id="id_Lz" @click="${this._checkbox_Lz}">L<sub>z'</sub></sl-checkbox>
             </td>
+            <td>&nbsp;</td>
             <td>k<sub>z'</sub>:</td>
             <td>
-              <input type="number" id="id_kz" name="kz" pattern="[0-9.,eE+-]*" value="" disabled/>
+              <input type="number" id="id_kz" name="kz" pattern="[0-9.,eE+-]*" value="" />
             </td>
             <td>kN/m</td>
           </tr>
 
-          <tr id=id_phi >
-            <td>
-              <sl-checkbox id="id_Lphi">L<sub>&phi;</sub></sl-checkbox>
+          <tr id="id_phi">
+            <td style="text-align: center;">
+              <sl-checkbox id="id_Lphi" @click="${this._checkbox_Lphi}">L<sub>&phi;</sub></sl-checkbox>
             </td>
-
+            <td>&nbsp;</td>
             <td>k<sub>&phi;</sub>:</td>
             <td>
-              <input type="number" id="id_kphi" name="kphi" pattern="[0-9.,eE+-]*" value="" disabled/>
+              <input type="number" id="id_kphi" name="kphi" pattern="[0-9.,eE+-]*" value="" />
             </td>
             <td>kNm/rad</td>
           </tr>
@@ -200,16 +203,40 @@ export class drDialogLager extends LitElement {
   }
 
   set_system(system: number) {
-
     const shadow = this.shadowRoot;
-    let el = (shadow?.getElementById("id_phi") as HTMLTableRowElement);
+    let el = shadow?.getElementById("id_phi") as HTMLTableRowElement;
 
     if (system === 0) {
-      el.style.display = 'table-row'
+      el.style.display = "table-row";
     } else {
-      el.style.display = 'none'
+      el.style.display = "none";
     }
-
   }
 
+  _checkbox_Lx() {
+    let el = this.shadowRoot?.getElementById("id_Lx") as SlCheckbox;
+    if (el.checked) {
+      (this.shadowRoot?.getElementById("id_kx") as HTMLInputElement).disabled = true;
+    } else {
+      (this.shadowRoot?.getElementById("id_kx") as HTMLInputElement).disabled = false;
+    }
+  }
+
+  _checkbox_Lz() {
+    let el = this.shadowRoot?.getElementById("id_Lz") as SlCheckbox;
+    if (el.checked) {
+      (this.shadowRoot?.getElementById("id_kz") as HTMLInputElement).disabled = true;
+    } else {
+      (this.shadowRoot?.getElementById("id_kz") as HTMLInputElement).disabled = false;
+    }
+  }
+
+  _checkbox_Lphi() {
+    let el = this.shadowRoot?.getElementById("id_Lphi") as SlCheckbox;
+    if (el.checked) {
+      (this.shadowRoot?.getElementById("id_kphi") as HTMLInputElement).disabled = true;
+    } else {
+      (this.shadowRoot?.getElementById("id_kphi") as HTMLInputElement).disabled = false;
+    }
+  }
 }

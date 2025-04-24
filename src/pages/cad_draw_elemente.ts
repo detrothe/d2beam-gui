@@ -138,10 +138,12 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
     if (System === STABWERK) {
         if (((node.L_org[0] === 1) && (node.L_org[1] === 1) && (node.L_org[2] === 1)) ||
             ((node.kx > 0.0) && (node.kz > 0.0) && (node.L[2] === -1))) {  // Volleinspannung oder mit zwei Translkationsfedern
-            let rect = new Two.Rectangle(x1, z1, 20, 20)
+            let rect = new Two.Rectangle(0.0, 0.0, 20, 20)
             rect.fill = '#dddddd';
-            rect.scale = 1.0 * faktor
-            rect.rotation = phi
+            //rect.scale = 1.0 * faktor
+            // rect.rotation = phi
+            // group.translation.set(x1, z1)
+
             group.add(rect);
         }
         else if ((node.L[0] >= 0 || node.L_org[0] === -1) && (node.L_org[1] === 1) && (node.L_org[2] === 1)) {  // Einspannung, verschieblich in x-Richtung
@@ -154,11 +156,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 * faktor
-
-            group.rotation = phi
-
-            group.translation.set(x1, z1)
+            //group.scale = 1.0 * faktor
+            // group.rotation = phi
+            // group.translation.set(x1, z1)
 
         }
         else if ((node.L_org[0] === 1) && (node.L[1] >= 0 || node.L_org[1] === -1) && (node.L_org[2] === 1)) {  // Einspannung, verschieblich in z-Richtung
@@ -167,13 +167,13 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             rechteck.fill = '#dddddd';
             group.add(rechteck)
 
-            let line = new Two.Line(-16, 15, 16, 15);
+            let line = new Two.Line(15, -16, 16, 15);
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 * faktor
-            group.rotation = 1.5708 + phi
-            group.translation.set(x1, z1)
+            //group.scale = 1.0 * faktor
+            // group.rotation = phi   // 1.5708 +
+            // group.translation.set(x1, z1)
 
         }
         else if ((node.L[0] >= 0 || node.L_org[0] === -1) && (node.L[1] >= 0 || node.L_org[1] === -1) && (node.L_org[2] === 1)) {  // Einspannung, verschieblich in x-, z-Richtung
@@ -190,11 +190,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line2.linewidth = 2;
             group.add(line2)
 
-            group.scale = 1.0 * faktor
-
-            group.rotation = phi
-
-            group.translation.set(x1, z1)
+            //group.scale = 1.0 * faktor
+            // group.rotation = phi
+            // group.translation.set(x1, z1)
 
         }
         else if ((node.L_org[0] === 1) && (node.L_org[1] === 1) && (node.L_org[2] === -1 || node.L[2] >= 0)) { // zweiwertiges Lager
@@ -214,11 +212,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 * faktor
-
-            group.rotation = phi
-
-            group.translation.set(x1, z1)
+            //group.scale = 1.0 * faktor
+            // group.rotation = phi
+            // group.translation.set(x1, z1)
 
         }
         else if ((node.L[0] >= 0 || node.L_org[0] === -1) && (node.L_org[1] === 1) && (node.L[2] >= 0 || node.L_org[2] === -1)) { // einwertiges horizontal verschieblisches Lager
@@ -238,11 +234,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 * faktor
-
-            group.rotation = phi
-
-            group.translation.set(x1, z1)
+            //group.scale = 1.0 * faktor
+            // group.rotation = phi
+            // group.translation.set(x1, z1)
 
         }
         else if ((node.L_org[0] === 1) && (node.L[1] >= 0 || node.L_org[1] === -1) && (node.L[2] >= 0 || node.L_org[2] === -1)) { // einwertiges vertikal verschieblisches Lager
@@ -250,23 +244,21 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             //console.log("in einwertiges vertikales verschieblisches Lager")
             var vertices = [];
             vertices.push(new Two.Anchor(0, 0));
-            vertices.push(new Two.Anchor(-12, 20));
-            vertices.push(new Two.Anchor(12, 20));
+            vertices.push(new Two.Anchor(20, -12));
+            vertices.push(new Two.Anchor(20, 12));
 
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
             flaeche.closed = true;
             group.add(flaeche)
 
-            let line = new Two.Line(-18, 25, 18, 25);
+            let line = new Two.Line(25, -18, 25, 18);
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 * faktor
-
-
-            group.rotation = -1.5708 + phi
-            group.translation.set(x1, z1)
+            //group.scale = 1.0 * faktor
+            // group.rotation = phi   // -1.5708 +
+            // group.translation.set(x1, z1)
 
         }
     } else {                     // Fachwerk
@@ -288,11 +280,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 * faktor
-
-            group.rotation = phi
-
-            group.translation.set(x1, z1)
+            //group.scale = 1.0 * faktor
+            // group.rotation = phi
+            // group.translation.set(x1, z1)
 
         }
         else if ((node.L[0] >= 0) && (node.L_org[1] === 1)) { // einwertiges horizontal verschieblisches Lager
@@ -312,11 +302,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 * faktor
-
-            group.rotation = phi
-
-            group.translation.set(x1, z1)
+            //group.scale = 1.0 * faktor
+            // group.rotation = phi
+            // group.translation.set(x1, z1)
 
         }
         else if ((node.L_org[0] === 1) && (node.L[1] >= 0)) { // einwertiges vertikal verschieblisches Lager
@@ -336,29 +324,34 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            group.scale = 1.0 * faktor
-
-
-            group.rotation = -1.5708 + phi
-            group.translation.set(x1, z1)
+            //group.scale = 1.0 * faktor
+            // group.rotation = -1.5708 + phi
+            // group.translation.set(x1, z1)
 
         }
 
     }
 
-    // if (node.kx > 0.0) {
-    //     draw_feder(two, node.x, node.z, -1.5707963 + phi)
-    // }
+    if (node.kx > 0.0 && node.L_org[0] === 0) {
+        let gr = draw_feder('x')    // -1.5707963 +
+        group.add(gr)
+    }
 
-    // if (node.kz > 0.0) {
-    //     draw_feder(two, node.x, node.z, phi)
-    // }
+    if (node.kz > 0.0 && node.L_org[1] === 0) {
+        let gr = draw_feder('z')
+        group.add(gr)
+    }
 
-    // if (System === STABWERK) {
-    //     if (node.kphi > 0.0) {
-    //         draw_drehfeder(two, node.x, node.z)
-    //     }
-    // }
+    if (System === STABWERK) {
+        if (node.kphi > 0.0 && node.L_org[2] === 0) {
+            let gr = draw_drehfeder(tr)
+            group.add(gr)
+        }
+    }
+
+    group.scale = faktor
+    group.rotation = phi
+    group.translation.set(x1, z1)
 
     return group
 
@@ -984,7 +977,7 @@ export function draw_knoten(obj: TCAD_Knoten, tr: CTrans) {
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_knotenmasse(tr: CTrans, _mass:TMass, xm:number, zm:number) {
+export function draw_knotenmasse(tr: CTrans, _mass: TMass, xm: number, zm: number) {
     //----------------------------------------------------------------------------------------------------
 
     let group = new Two.Group();
@@ -995,6 +988,139 @@ export function draw_knotenmasse(tr: CTrans, _mass:TMass, xm:number, zm:number) 
     circle.fill = '#ff3333'
 
     group.add(circle);
+
+    return group;
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+function draw_feder( dir: string) {
+    //----------------------------------------------------------------------------------------------------
+
+    let x = Array(7)
+    let z = Array(7)
+    let x8, z8, x9, z9
+
+    let a = 6
+    let b = 4
+    let c = 6
+    let d = 10
+
+    if (dir === 'x') {
+        x[0] = 0.0
+        z[0] = 0.0
+        x[1] = x[0] + d
+        z[1] = z[0]
+        x[2] = x[1] + b
+        z[2] = z[1] + c
+        x[3] = x[2] + b
+        z[3] = z[2] + -2 * c
+        x[4] = x[3] + b
+        z[4] = z[3] + 2 * c
+        x[5] = x[4] + b
+        z[5] = z[4] - c
+        x[6] = x[5] + a
+        z[6] = z[5]
+        x8 = x[6]
+        z8 = z[6] + 2 * c
+        x9 = x[6]
+        z9 = z[6] - 2 * c
+    }
+    else if (dir === 'z') {
+        x[0] = 0.0
+        z[0] = 0.0
+        x[1] = x[0]
+        z[1] = z[0] + d
+        x[2] = x[1] + c
+        z[2] = z[1] + b
+        x[3] = x[2] + -2 * c
+        z[3] = z[2] + b
+        x[4] = x[3] + 2 * c
+        z[4] = z[3] + b
+        x[5] = x[4] - c
+        z[5] = z[4] + b
+        x[6] = x[5]
+        z[6] = z[5] + a
+        x8 = x[6] + 2 * c
+        z8 = z[6]
+        x9 = x[6] - 2 * c
+        z9 = z[6]
+    }
+
+    let group = new Two.Group();
+
+    var vertices = [];
+    for (let i = 0; i < 7; i++) {
+        vertices.push(new Two.Vector(x[i], z[i]));
+    }
+    // @ts-ignore
+    let spring = new Two.Path(vertices);
+    spring.closed = false
+    //dreieck.fill = color;
+    //dreieck.stroke = color;
+    spring.linewidth = 2;
+
+    group.add(spring)
+
+    let line = new Two.Line(x8, z8, x9, z9);
+    line.linewidth = 2;
+
+    group.add(line)
+    line.scale = 1.0 / devicePixelRatio
+    // line.rotation = alpha
+    // line.translation.set(tr.xPix(x0), tr.zPix(z0))
+
+    return group;
+
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+function draw_drehfeder(tr: CTrans) {
+    //----------------------------------------------------------------------------------------------------
+
+    let alpha: number, dalpha: number, teilung = 12
+    let linewidth = 2
+    let radius = 25 // devicePixelRatio
+    let x: number, z: number
+
+    let radiusW = tr.World0(radius)
+
+    let group = new Two.Group();
+
+    var vertices = [];
+
+    //console.log("in draw_drehfeder", radius, x0, z0)
+
+    dalpha = Math.PI / (teilung)
+    alpha = 0.0   // -1.5707963
+    for (let i = 0; i <= teilung; i++) {
+        x = tr.Pix0(-radiusW * Math.sin(alpha))
+        z = tr.Pix0(radiusW * Math.cos(alpha)) + radius
+        //console.log("DREHFEDER x,z ", x, z)
+        vertices.push(new Two.Anchor(x, z));
+        alpha += dalpha
+    }
+
+
+    let curve = new Two.Path(vertices, false, true)
+    curve.linewidth = linewidth;
+    //curve.stroke = color;
+    curve.noFill()
+    //curve.fill="rgba(255,0,0,50);"
+    //curve.translation.set(tr.xPix(x0), tr.zPix(z0 + radiusW / devicePixelRatio))
+
+    group.add(curve)
+
+    let z1 = (25 - 8) + radius // devicePixelRatio
+    let z2 = (25 + 8) + radius  // devicePixelRatio
+    let line = new Two.Line(0, z1, 0, z2);
+    line.linewidth = linewidth;
+    //line.translation.set(tr.xPix(x0), tr.zPix(z0 + radiusW / devicePixelRatio))
+
+    group.add(line)
+
+    group.scale = 1.0 / devicePixelRatio
 
     return group;
 }

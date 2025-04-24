@@ -113,10 +113,27 @@ export function cad_rechnen() {
                     console.log("ind", ind)
                     if (ind < 0) alertdialog("ok", "Lager ind " + (ind) + "hängt an keinem Knoten, FATAL ERROR");
                     for (let j = 0; j < ndof; j++) {
+                        let child = tabelle.rows[ind + 1].cells[j + 3].firstElementChild as HTMLInputElement;
                         if (obj.node.L_org[j] === 1) {
-                            let child = tabelle.rows[ind + 1].cells[j + 3].firstElementChild as HTMLInputElement;
                             child.value = '1'
                             node[ind].L_org[j] = node[ind].L[j] = 1
+                        }
+                        else {
+                            if (j === 0) {
+                                child.value = String(node[ind].kx)
+                                node[ind].L_org[j] = node[ind].L[j] = obj.node.kx
+                                node[ind].kx = obj.node.kx
+                            }
+                            else if (j === 1) {
+                                child.value = String(node[ind].kz)
+                                node[ind].L_org[j] = node[ind].L[j] = obj.node.kz
+                                node[ind].kz = obj.node.kz
+                            }
+                            else if (j === 2) {
+                                child.value = String(node[ind].kphi)
+                                node[ind].L_org[j] = node[ind].L[j] = obj.node.kphi
+                                node[ind].kphi = obj.node.kphi
+                            }
                         }
                     }
                     let child = tabelle.rows[ind + 1].cells[6].firstElementChild as HTMLInputElement;

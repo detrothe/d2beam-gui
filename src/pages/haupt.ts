@@ -49,8 +49,8 @@ import { reset_gui } from "./mypanelgui";
 import DetectOS from "./detectos";
 
 import { addListener_filesave } from "./dateien";
-import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik, reset_controlpanel_grafik, init_two, init_grafik } from "./grafik";
-import { myFormat, set_info, write } from "./utility";
+import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik, reset_controlpanel_grafik } from "./grafik";
+import { set_info, write } from "./utility";
 
 import { my_jspdf } from "./mypdf";
 
@@ -67,7 +67,6 @@ import {
 
 import {
   nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, set_dialog_querschnitt_new,
-  change_def_querschnitt,
   removeAll_def_querschnitt
 } from "./querschnitte"
 
@@ -79,7 +78,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 //import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.1.a, 24-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.1.b, 24-April-2025, ";
 //########################################################################################################################
 
 

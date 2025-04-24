@@ -488,7 +488,7 @@ export function reDo_button() {
         //console.log("KNOTEN reDo", obj.x1, obj.z1)
 
         let index1 = obj.index1
-        group = draw_knotenmasse( tr, obj.mass, get_cad_node_X(index1), get_cad_node_Z(index1))
+        group = draw_knotenmasse(tr, obj.mass, get_cad_node_X(index1), get_cad_node_Z(index1))
         two.add(group);
       }
       obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
@@ -862,7 +862,7 @@ export function select_element(xc: number, zc: number) {
   let index_lager = -1
   let knotenlast_gefunden = false
   let elementlast_gefunden = false
-let knotenmasse_gefunden = false
+  let knotenmasse_gefunden = false
 
   let xpix = tr.xPix(xc)
   let zpix = tr.zPix(zc)
@@ -1322,20 +1322,30 @@ export function read_lager_dialog(node: TNode) {
 
   //console.log("read_lager_dialog, el=", el);
   let elem = el?.shadowRoot?.getElementById("id_Lx") as SlCheckbox;
-  //console.log("Lx=", elem.checked, elem.value);
-  const lx = elem.checked;
-  if (lx) node.L_org[0] = 1;
+  let elFeder = el?.shadowRoot?.getElementById("id_kx") as HTMLInputElement;
+
+  if (elem.checked) node.L_org[0] = 1;
   else node.L_org[0] = 0;
+  if (elFeder.value !== '') node.kx = +elFeder.value.replace(/,/g, '.');
+  else node.kx = 0;
 
   elem = el?.shadowRoot?.getElementById("id_Lz") as SlCheckbox;
-  const lz = elem.checked;
-  if (lz) node.L_org[1] = 1;
+  elFeder = el?.shadowRoot?.getElementById("id_kz") as HTMLInputElement;
+
+  if (elem.checked) node.L_org[1] = 1;
   else node.L_org[1] = 0;
+  if (elFeder.value !== '') node.kz = +elFeder.value.replace(/,/g, '.');
+  else node.kz = 0;
+
 
   elem = el?.shadowRoot?.getElementById("id_Lphi") as SlCheckbox;
-  const lphi = elem.checked;
-  if (lphi) node.L_org[2] = 1;
+  elFeder = el?.shadowRoot?.getElementById("id_kphi") as HTMLInputElement;
+
+  if (elem.checked) node.L_org[2] = 1;
   else node.L_org[2] = 0;
+
+  if (elFeder.value !== '') node.kphi = +elFeder.value.replace(/,/g, '.');
+  else node.kphi = 0;
 
   let elemi = el?.shadowRoot?.getElementById("id_alpha") as HTMLInputElement;
   node.phi = +elemi.value
@@ -1351,25 +1361,34 @@ export function write_lager_dialog(node: TNode) {
   console.log("write_lager_dialog, node.L_org=", node.L_org);
 
   let elem = el?.shadowRoot?.getElementById("id_Lx") as SlCheckbox;
+  let elFeder = el?.shadowRoot?.getElementById("id_kx") as HTMLInputElement;
   if (node.L_org[0] === 1) {
     elem.checked = true
   } else {
     elem.checked = false
   }
+  if (node.kx === 0.0) elFeder.value = '';
+  else elFeder.value = String(node.kx);
 
   elem = el?.shadowRoot?.getElementById("id_Lz") as SlCheckbox;
+  elFeder = el?.shadowRoot?.getElementById("id_kz") as HTMLInputElement;
   if (node.L_org[1] === 1) {
     elem.checked = true
   } else {
     elem.checked = false
   }
+  if (node.kz === 0.0) elFeder.value = '';
+  else elFeder.value = String(node.kz);
 
   elem = el?.shadowRoot?.getElementById("id_Lphi") as SlCheckbox;
+  elFeder = el?.shadowRoot?.getElementById("id_kphi") as HTMLInputElement;
   if (node.L_org[2] === 1) {
     elem.checked = true
   } else {
     elem.checked = false
   }
+  if (node.kphi === 0.0) elFeder.value = '';
+  else elFeder.value = String(node.kphi);
 
   let elemi = el?.shadowRoot?.getElementById("id_alpha") as HTMLInputElement;
   elemi.value = String(node.phi)

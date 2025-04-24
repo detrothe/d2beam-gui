@@ -125,7 +125,7 @@ export class drDialogKnotenmasse extends LitElement {
 
   render() {
     return html` <dialog id="dialog_knotenmasse">
-      <h2>Neue Knotenmasse</h2>
+      <h2>Knotenmasse</h2>
 
 
 
