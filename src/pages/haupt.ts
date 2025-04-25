@@ -78,7 +78,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 //import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.1.b, 24-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.2.a, 25-April-2025, ";
 //########################################################################################################################
 
 
@@ -802,10 +802,16 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-stabvorverfomungen">
         <p>
-          <b> Folgende Eingaben werden nur bei Berechnungen nach Theorie II. Ordnung berücksichtigt</b>
+          <b> Die Schiefstellung des Systems wird nur bei Berechnungen nach Theorie II. Ordnung berücksichtigt</b>
         </p>
-        <br />
-        <p>
+
+        <p> Hinweis: Die Knoten-ID wird im Knotendialog im Tab System angezeigt, wenn du den <i>Knoten bearbeiten</i> Button
+            <img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
+            style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+             wählst und einen Knoten anklickst.
+          </p>
+          <br />
+          <p>
           <b>- Schiefstellung des gesamten Systems mithilfe der ersten Eigenform</b>
         </p>
 
@@ -813,7 +819,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <tbody>
             <tr>
               <td title="0 oder leer = automatische Skalierung auf den Größtwert aus der Eigenwertberechnung">
-                Knoten ID:
+                Knoten-ID:
               </td>
               <td>
                 <input
@@ -858,6 +864,28 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
           </tbody>
         </table>
+
+
+        <p><br /><b>Knotenverformungen</b> (Th.I.O. und Th.II.O.)<br /></p>
+        <p>zum Beispiel für Stützensenkungen</p>
+        <p>
+          Die Richtungen stimmen mit den Richtungen des zugehörigen gedrehten Lagerknotens überein.
+          <br />
+          Es sind nur in den Tabellenzellen Werte einzugeben, für die definierte Verformungen gewünscht werden.<br />
+          Die Zahl 0 entspricht einer starren Lagerung!
+        </p>
+        <p>
+          Anzahl Knoten mit<br />vorgebenenen Verformungen:
+          <dr-button-pm id="id_button_nnodedisps_gui" nel="${nnodedisps_init}" inputid="nnodedisps_gui"></dr-button-pm>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+        </p>
+
+        <dr-tabelle
+          id="id_nnodedisps_tabelle_gui"
+          nzeilen="${nnodedisps_init}"
+          nspalten="5"
+          columns='["No", "Knoten-ID", "Lastfall", "u<sub>x&prime;0</sub> [mm]", "u<sub>z&prime;0</sub> [mm]", "φ<sub>0</sub> [mrad]"]'
+        ></dr-tabelle>
 
       </sl-tab-panel>
 
@@ -1400,6 +1428,14 @@ function calculate() {
 export function resizeTables() {
   //---------------------------------------------------------------------------------------------------------------
   {
+    const el_knoten = document.getElementById("id_button_nnodedisps_gui");
+    const nnodes = (el_knoten?.shadowRoot?.getElementById("nnodedisps_gui") as HTMLInputElement).value;
+
+    const el = document.getElementById("id_nnodedisps_tabelle_gui");
+    //console.log("EL: >>", el);
+    el?.setAttribute("nzeilen", nnodes);
+  }
+  {
     const el_knoten = document.getElementById("id_button_nnodes");
     const nnodes = (el_knoten?.shadowRoot?.getElementById("nnodes") as HTMLInputElement).value;
 
@@ -1818,6 +1854,7 @@ function elementTabelle_bettung_anzeigen(check: boolean) {
     for (let i = 13; i > 12; i--) el?.setAttribute("hide_column", String(i));
   }
 }
+
 
 
 

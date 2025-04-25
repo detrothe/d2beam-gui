@@ -88,6 +88,7 @@ export let dyn_neigv = 1;
 
 export let neigv: number = 2;
 export let nNodeDisps = 0;
+export function set_nNodeDisps(wert: number) { nNodeDisps = wert; }
 export let keineKonvergenzErreicht = false;
 export let keineKonvergenzErreicht_eigv = false;
 export let alpha_cr_2_low = false;
@@ -228,7 +229,7 @@ export class TNode {
 }
 
 
-class TNodeDisp {                                   // Knotenzwangsverformungen, analog zu Knotenkräften
+export class TNodeDisp {                                   // Knotenzwangsverformungen, analog zu Knotenkräften
     node = 0                                        // werden aber mit TElDisp0 wie Elementlasten verarbeitet
     lf = 0
     dispx0 = 0.0                                    // Knotenvorverformungen gedreht in Richtung eines gedrehten Lagers
@@ -429,6 +430,8 @@ export function hideColumnsForFachwerk() {
     el?.setAttribute("hide_column", String(4));
     el = document.getElementById("id_nnodedisps_tabelle");
     el?.setAttribute("hide_column", String(5));
+    el = document.getElementById("id_nnodedisps_tabelle_gui");
+    el?.setAttribute("hide_column", String(5));
 
     const checkbox_gelenk = document.getElementById("id_gelenke_anzeigen") as SlCheckbox;
     checkbox_gelenk.disabled = true;
@@ -452,6 +455,8 @@ export function showColumnsForStabwerk() {
     el = document.getElementById("id_stabvorverfomungen_tabelle");
     el?.setAttribute("show_column", String(4));
     el = document.getElementById("id_nnodedisps_tabelle");
+    el?.setAttribute("show_column", String(5));
+    el = document.getElementById("id_nnodedisps_tabelle_gui");
     el?.setAttribute("show_column", String(5));
 
     const checkbox_gelenk = document.getElementById("id_gelenke_anzeigen") as SlCheckbox;
@@ -806,7 +811,7 @@ function read_nodes() {
         nodeDisp0.push(new TNodeDisp)
     }
 
-    el = document.getElementById('id_nnodedisps_tabelle');
+    el = document.getElementById('id_nnodedisps_tabelle_gui');
     table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
     nRowTab = table.rows.length;

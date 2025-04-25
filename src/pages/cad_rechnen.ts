@@ -7,11 +7,13 @@ import { CADNodes } from "./cad_node";
 import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenmasse } from "./CCAD_element";
 import {
     alertdialog, element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, nodalmass, node,
+    nodeDisp0,
     nstreckenlasten, ntemperaturlasten, set_maxU_node, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
-    set_nlastfaelle, set_nloads, set_nnodalMass, set_nnodes, set_nnodesTotal, set_nstabvorverfomungen, set_ntotalEloads, stabvorverformung, System, TElement, TElLoads, TLoads, TMass, TNode,
+    set_nlastfaelle, set_nloads, set_nnodalMass, set_nNodeDisps, set_nnodes, set_nnodesTotal, set_nstabvorverfomungen, set_ntotalEloads, stabvorverformung, System, TElement, TElLoads, TLoads, TMass, TNode,
+    TNodeDisp,
     TStabvorverformung
 } from "./rechnen";
-import { myFormat, myFormat_en, write } from "./utility";
+import { myFormat, myFormat_en, testNumber, write } from "./utility";
 
 
 
@@ -607,6 +609,93 @@ export function cad_rechnen() {
         else {
             set_maxU_node(0);
         }
+    }
+
+    //                  d e f i n i e r t e    K n o t e n v e r f o r m u n g e n
+
+    {
+
+        let el = document.getElementById('id_button_nnodedisps_gui') as any;
+        let nNodeDisps = Number(el.nel);
+        set_nNodeDisps(nNodeDisps);
+
+        nodeDisp0.length = 0
+        for (let i = 0; i < nNodeDisps; i++) {
+            nodeDisp0.push(new TNodeDisp)
+        }
+
+        el = document.getElementById('id_nnodedisps_tabelle_gui');
+        let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+        let nRowTab = table.rows.length;
+        let nColTab = table.rows[0].cells.length;
+
+        let shad = el?.shadowRoot?.getElementById('mytable')
+
+        for (let izeile = 1; izeile < nRowTab; izeile++) {
+            let iz = izeile - 1
+            for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+                let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+                let wert = child.value;
+                console.log('NODE Knotenverformungen i:1', nnodes, izeile, ispalte, wert, wert.length);
+                if (ispalte === 1) {
+                    let node_ID = Number(testNumber(wert, izeile, ispalte, shad));
+                    for (let i = 0; i < CADNodes.length; i++) {
+                        if (node_ID === CADNodes[i].ID) {
+                            nodeDisp0[iz].node = CADNodes[i].index_FE
+                            console.log("node für Knotenverformung", CADNodes[i].index_FE + 1)
+                            break;
+                        }
+                    }
+                }
+                else if (ispalte === 2) {
+                    nodeDisp0[iz].lf = Number(testNumber(wert, izeile, ispalte, shad));
+                    set_max_lastfall(nodeDisp0[iz].lf);
+                }
+                else if (ispalte === 3) {
+                    if (wert.length === 0) nodeDisp0[iz].dispL[0] = false; else nodeDisp0[iz].dispL[0] = true;     // true=definierte Knotenverformung
+                    nodeDisp0[iz].dispx0 = Number(testNumber(wert, izeile, ispalte, shad));
+                }
+                else if (ispalte === 4) {
+                    if (wert.length === 0) nodeDisp0[iz].dispL[1] = false; else nodeDisp0[iz].dispL[1] = true;
+                    nodeDisp0[iz].dispz0 = Number(testNumber(wert, izeile, ispalte, shad));
+                }
+                else if (ispalte === 5) {
+                    if (wert.length === 0) nodeDisp0[iz].dispL[2] = false; else nodeDisp0[iz].dispL[2] = true;
+                    nodeDisp0[iz].phi0 = Number(testNumber(wert, izeile, ispalte, shad));
+                }
+
+            }
+        }
+
+
+        el = document.getElementById("id_button_nnodedisps") as drButtonPM;
+        el.setValue(nNodeDisps);
+
+
+        const elTabnodedisp = document.getElementById("id_nnodedisps_tabelle");
+        elTabnodedisp?.setAttribute("nzeilen", String(nNodeDisps));
+        elTabnodedisp?.setAttribute("clear", "0");
+
+        shad = elTabnodedisp?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+        for (let izeile = 1; izeile < nRowTab; izeile++) {
+            let iz = izeile - 1
+
+            let child = shad.rows[izeile].cells[1].firstElementChild as HTMLInputElement;
+            child.value = String(nodeDisp0[iz].node + 1)
+            child = shad.rows[izeile].cells[2].firstElementChild as HTMLInputElement;
+            child.value = String(nodeDisp0[iz].lf)
+            child = shad.rows[izeile].cells[3].firstElementChild as HTMLInputElement;
+            if (nodeDisp0[iz].dispL[0]) child.value = String(nodeDisp0[iz].dispx0);
+            child = shad.rows[izeile].cells[4].firstElementChild as HTMLInputElement;
+            if (nodeDisp0[iz].dispL[1]) child.value = String(nodeDisp0[iz].dispz0)
+            child = shad.rows[izeile].cells[5].firstElementChild as HTMLInputElement;
+            if (nodeDisp0[iz].dispL[2]) child.value = String(nodeDisp0[iz].phi0)
+
+        }
+
+
     }
 
     //                  K n o t e n m a s s e n

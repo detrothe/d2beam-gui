@@ -13,7 +13,7 @@ import { reset_controlpanel_grafik } from './grafik'
 
 import { get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length } from "./querschnitte"
 import { nQuerschnittSets, set_querschnittszaehler, add_rechteck_querschnitt } from "./querschnitte"
-import { setSystem, System } from './rechnen'
+import { alertdialog, setSystem, System } from './rechnen'
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 import { CADNodes, set_ID_counter, TCADNode } from "./cad_node";
 import { TCAD_Element, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
@@ -42,7 +42,12 @@ export function read_daten(eingabedaten: string) {
     let jobj = JSON.parse(eingabedaten);
     //console.log("und zurück", jobj);
 
-    let version = jobj.version;
+    //let version = jobj.version;
+    let creator = jobj.created_by;
+    if (creator !== 'd2beam-gui') {
+        alertdialog("ok", "Die gewählte Datei ist NICHT für dieses Programm erstellt worden");
+        return;
+    }
 
     // in Tabelle schreiben
     {
@@ -121,7 +126,7 @@ export function read_daten(eingabedaten: string) {
         else slel.setAttribute("value", jobj.eig_solver)
 
 
-        el = document.getElementById('id_button_nnodedisps') as drButtonPM;
+        el = document.getElementById('id_button_nnodedisps_gui') as drButtonPM;
         if (jobj.nNodeDisps === undefined) el.setValue(0);
         else el.setValue(jobj.nNodeDisps);
 
@@ -237,6 +242,19 @@ export function read_daten(eingabedaten: string) {
     }
     set_querschnittszaehler();
 
+    {
+        let el = document.getElementById('id_nnodedisps_tabelle_gui') as HTMLElement;
+        let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+        let nSpalten = tabelle.rows[0].cells.length;
+
+        for (i = 1; i < tabelle.rows.length; i++) {
+            for (j = 1; j < nSpalten; j++) {
+                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+                child.value = jobj.nodeDisp0[i - 1][j - 1];
+            }
+        }
+    }
     // console.log("CADNotes length", jobj.cadNodes.length)
     // console.log("CADNotes", jobj.cadNodes)
 
@@ -702,36 +720,41 @@ export function str_inputToJSON() {
             kombination[i][j] = child.value
         }
     }
+
+    el = document.getElementById('id_nnodedisps_tabelle_gui') as HTMLElement;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
+    const nNodeDisps = nZeilen
+    const nodeDisp0 = Array.from(Array(nZeilen), () => new Array(nSpalten));
+
+    for (i = 0; i < nZeilen; i++) {
+        for (j = 0; j < nSpalten; j++) {
+            let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+            nodeDisp0[i][j] = child.value
+            console.log("i,j",i,j,child.value)
+            if ( j=== 1) {
+                let lf = +child.value
+                set_max_lastfall(lf);  // Fall tritt ein, wenn noch nicht gerechnet wurde
+            }
+        }
+    }
+
     /*
-        el = document.getElementById('id_nnodedisps_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const nNodeDisps = nZeilen
-        const nodeDisp0 = Array.from(Array(nZeilen), () => new Array(nSpalten));
+            el = document.getElementById('id_knotenmassen_tabelle') as HTMLElement;
+            tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+            nZeilen = tabelle.rows.length - 1;
+            nSpalten = tabelle.rows[0].cells.length - 1;
+            const nnodalmass = nZeilen
+            const nodalmass = Array.from(Array(nZeilen), () => new Array(nSpalten));
 
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                nodeDisp0[i][j] = child.value
+            for (i = 0; i < nZeilen; i++) {
+                for (j = 0; j < nSpalten; j++) {
+                    let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
+                    nodalmass[i][j] = child.value
+                }
             }
-        }
-
-
-        el = document.getElementById('id_knotenmassen_tabelle') as HTMLElement;
-        tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-        nZeilen = tabelle.rows.length - 1;
-        nSpalten = tabelle.rows[0].cells.length - 1;
-        const nnodalmass = nZeilen
-        const nodalmass = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
-            for (j = 0; j < nSpalten; j++) {
-                let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                nodalmass[i][j] = child.value
-            }
-        }
-    */
+        */
     let qsClassName = new Array(nQuerschnittSets)
     let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(12));
 
@@ -751,7 +774,7 @@ export function str_inputToJSON() {
         console.log("zuruec", zuruec)
     };
 
-
+    if (max_Lastfall === 0) set_max_lastfall(1);
 
     let polyData = {
 
@@ -780,7 +803,7 @@ export function str_inputToJSON() {
         'maxU_dir': maxU_dir,
         'maxU_schief': maxU_schief,
         'neigv': neigv,
-        // 'nNodeDisps': nNodeDisps,
+        'nNodeDisps': nNodeDisps,
         'P_delta': P_delta,
         'ausgabe_SG': ausgabe_SG,
         'epsDisp_tol': epsDisp_tol,
@@ -820,7 +843,7 @@ export function str_inputToJSON() {
         'cadNodes': CADNodes,
         'elements': elements,
         'max_value_lasten': max_value_lasten,
-        // 'nodeDisp0': nodeDisp0,
+        'nodeDisp0': nodeDisp0,
         // 'nodalmass': nodalmass
     };
 
