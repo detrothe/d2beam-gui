@@ -29,6 +29,10 @@ export class drDialogElementlasten extends LitElement {
         padding: 0.4rem;
       }
 
+      sl-radio {
+        color: black;
+      }
+
       @media (prefers-color-scheme: dark) {
         button,
         select {
@@ -85,6 +89,7 @@ export class drDialogElementlasten extends LitElement {
         border-spacing: 0px;
         padding: 5px;
         margin: 5px;
+        color:black;
         /*background-color: rgb(207, 217, 21);
         border-radius: 5px;*/
       }

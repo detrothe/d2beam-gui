@@ -85,6 +85,7 @@ export class drDialogLager extends LitElement {
         margin: 5px;
         background-color: rgb(207, 217, 21);
         border-radius: 5px;
+        color: black;
       }
 
       td.selected {
