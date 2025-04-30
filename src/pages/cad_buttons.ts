@@ -168,6 +168,7 @@ export function cad_buttons() {
   //----------------------------------------------------------------------------------------------------
 
   let div = document.getElementById("id_cad_group") as HTMLDivElement;
+  let div2 = document.getElementById("id_cad_group2") as HTMLDivElement;
 
 
   const zurueck_button = document.createElement("button");
@@ -347,12 +348,18 @@ export function cad_buttons() {
   div.appendChild(refresh_button);
   div.appendChild(info_button);
   div.appendChild(help_text);
+
+  let h = div!.getBoundingClientRect()
+  console.log("Höhe des div", h)
+
   let br = document.createElement("br");
-  div.appendChild(br);
-  div.appendChild(zurueck_button);
+  //div.appendChild(br);
+  div2.appendChild(zurueck_button);
   br = document.createElement("br");
-  div.appendChild(br);
-  div.appendChild(querschnitt_default_select);
+  div2.appendChild(br);
+  div2.appendChild(querschnitt_default_select);
+
+  div2.style.top = String(h)
 
   //let div_cad_group = document.getElementById("id_cad_group") as HTMLDivElement
   undo_button!.addEventListener("focus", (_event) => {

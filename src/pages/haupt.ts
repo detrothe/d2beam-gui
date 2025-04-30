@@ -75,10 +75,11 @@ import { init_cad, init_two_cad, two_cad_clear } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { abbruch_property_dialog, show_property_dialog } from "./cad_contextmenu";
 import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
+import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 //import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.2.a, 25-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.3.a, 30-April-2025, ";
 //########################################################################################################################
 
 
@@ -314,8 +315,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <div id="id_cad" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0;cursor:none">
           <!-- width:100vw; ;width:300px;height:300px; -->
           <div id="id_cad_group" style="cursor: pointer">
+          <div id="id_cad_group2" style="cursor: pointer"></div>
           </div>
-
           <!-- <button id="id_button_zurueck_cad">Fullscreen</button> -->
           <!-- <select name="querschnitt_default" id="id_querschnitt_default" title="default Querschnitt"></select> -->
 
@@ -329,7 +330,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             </sl-menu>
           </div>
 
-          <div id="artboard_cad" style="margin:0;padding:0;"></div>
+          <div id="artboard_cad" style="margin:0;padding:0;z-index:100"></div>
           <div id="svg_artboard_cad" style="margin:0;padding:0;display:none"></div>
 
         </div>
@@ -1259,7 +1260,10 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   let tt = document.getElementById("id_tab-cad") as SlTabPanel;
   tt.updateComplete.then(() => {
     console.log("Tab CAD is complete"); // true
+    let div = document.getElementById("id_cad_group") as HTMLDivElement;
 
+    let h = div!.getBoundingClientRect()
+    console.log("update complete Höhe des div", h)
   });
   let ttt = document.getElementById("id_tab-grafik") as SlTabPanel;
   ttt.updateComplete.then(() => {
@@ -1275,8 +1279,19 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   //   console.log("hoehe div id_cad_group", hoehe)
   // });
 
-  // let ttt = document.getElementById("id_sl_tab_group") as SlTabGroup;
-  // ttt!.addEventListener("sl-tab-show", (event) => {
+  let ttt1 = document.getElementById("id_sl_tab_group") as SlTabGroup;
+  ttt1!.addEventListener("sl-tab-show", (event) => {
+    // @ts-ignore
+    console.log("sl-tab-show", event)
+    //  let hoehe = div_cad_group!.getBoundingClientRect()
+    //  console.log("hoehe div id_cad_group", hoehe)
+    let div = document.getElementById("id_cad_group2") as HTMLDivElement
+    let h = div!.getBoundingClientRect()
+    console.log("Rect des div id_cad_group2", h)
+  });
+
+  // let ttt1 = document.getElementById("id_cad_group") as SlTabGroup;
+  // ttt1!.addEventListener("resize", (event) => {
   //   // @ts-ignore
   //   console.log("sl-tab-show", event)
   //   //  let hoehe = div_cad_group!.getBoundingClientRect()
@@ -1285,6 +1300,23 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   //   let h = div!.getBoundingClientRect()
   //   console.log("Rect des div", h)
   // });
+
+  const resizeObserver = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      // console.log("entry.borderBoxSize", entry.borderBoxSize)
+      // console.log("entry.contentRect", entry.contentRect)
+      // console.log("entry.contentBoxSize", entry.contentBoxSize)
+
+      let t2 = document.getElementById("id_cad_group2") as SlTabGroup;
+      let bottom = entry.contentRect.bottom;
+      console.log("bottom", bottom)
+      t2.style.top = String(bottom) + 'px'
+
+    }
+  });
+
+  let ob_t1 = document.getElementById("id_cad_group") as SlTabGroup;
+  resizeObserver.observe(ob_t1);
 
   // addEventListener("resize", function () {
   //   ("RESIZE")

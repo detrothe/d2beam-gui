@@ -33,8 +33,8 @@ body {
     background-color: #181818;
     color: white;
 */
-      background-color: #f5f5f5;
-      color: black;
+      background-color: rgb(64, 64, 64);
+      color: white;
 
       font-size: 1rem;
    }
@@ -231,6 +231,16 @@ input[type='number'] {
    position: absolute;
    top: 2px;
    /* var(--abst_gl_v);*/
+   left: 2px;
+   /*z-index: 90;*/
+   margin: 0;
+   padding: 0;
+   font-size: 1rem;
+}
+
+#id_cad_group2 {
+   position: absolute;
+   top: 20px;
    left: 2px;
    z-index: 90;
    margin: 0;

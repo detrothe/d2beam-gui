@@ -247,7 +247,7 @@ export function add_new_cross_section(qName: string, id: string) {
     //div.id='div_add_cross_section'
     div.style.display = "flex";
     div.style.alignItems = "center";
-    div.style.backgroundColor = "#f5f5f5";
+    //div.style.backgroundColor = "#f5f5f5";
     div.style.border = "0px";
 
     div.appendChild(quer_button);
