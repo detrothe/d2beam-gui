@@ -79,7 +79,7 @@ import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-g
 //import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.3.a, 30-April-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.3.b, 30-April-2025, ";
 //########################################################################################################################
 
 

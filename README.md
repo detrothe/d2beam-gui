@@ -5,6 +5,7 @@ This is a simple 2D frame analysis app. It can solve linear elastic systems on y
 
 ## Features
 
+- CAD like Grafical input for mouse, pen or finger
 - Timoshenko and Bernoulli beam theory
 - first and second order analysis
 - pre-deformations, imperfections
@@ -16,4 +17,4 @@ This is a simple 2D frame analysis app. It can solve linear elastic systems on y
 
 ## Try it
 
-You can try the current test version at https://d2beam.netlify.app 😊.
+You can try the current test version at https://d2beam-gui.netlify.app 😊.
