@@ -306,13 +306,13 @@ export function redraw_lager(obj: TCAD_Lager) {
 }
 
 //--------------------------------------------------------------------------------------------------------
-export function Stab_button(ev: Event) {
+export function Stab_button(_ev: Event) {
    //----------------------------------------------------------------------------------------------------
 
-   console.log('in Stab_button', ev);
-   let div = document.getElementById("id_cad_group") as HTMLDivElement
-   let h = div!.getBoundingClientRect()
-   console.log("hoehe des div", h)
+   // console.log('in Stab_button', ev);
+   // let div = document.getElementById("id_cad_group") as HTMLDivElement
+   // let h = div!.getBoundingClientRect()
+   // console.log("hoehe des div", h)
 
    let el = document.getElementById('id_cad_stab_button') as HTMLButtonElement;
 
@@ -765,14 +765,16 @@ function pointerdown(ev: PointerEvent) {
          break;
       case 'pen':
          isPen = true;
-         penDown(ev);
-         mousedown(ev);
+         if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node) {
+            zoomIsActive = false;
+         }
+         // penDown(ev);
+         // mousedown(ev);
          break;
       case 'touch':
          isTouch = true;
          touchLoop = 0
-         //penDown(ev);
-         //mousedown(ev);
+
          if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node) {
             zoomIsActive = false;
          } else {
@@ -811,7 +813,11 @@ function pointermove(ev: PointerEvent) {
          break;
       case 'pen':
          isPen = true;
-         mousemove(ev);
+         if ((buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node)) {
+            zoomIsActive = false;
+            mousemove(ev);
+         }
+         //         mousemove(ev);
          break;
       case 'touch':
          isTouch = true;
@@ -881,7 +887,9 @@ function pointerup(ev: PointerEvent) {
       case 'pen':
          isPen = true;
          //if (buttons_control.input_started === 0) penDown(ev);
-         if (buttons_control.n_input_points > 1) mouseup(ev);
+         // alt if (buttons_control.n_input_points > 1) mouseup(ev);
+         if (buttons_control.input_started === 0) penDown(ev);
+         else if (buttons_control.n_input_points > 1) mouseup(ev);
          break;
 
       case 'touch':
@@ -1449,7 +1457,7 @@ function mouseup(ev: any) {
                   }
                }
                else if (buttons_control.knotenmasse_eingabe_aktiv) {
-console.log("KNotenmasse eingabe aktiv")
+                  console.log("KNotenmasse eingabe aktiv")
 
                   let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
                   if (index1 > -1) {

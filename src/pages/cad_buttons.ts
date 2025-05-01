@@ -116,28 +116,29 @@ class Cbuttons_control {
     this.input_started = 0;
     this.info_eingabe_aktiv = false;
 
+    let backgroundColor = "DodgerBlue"
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
-    el.style.backgroundColor = "DodgerBlue";
+    el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_lager_button") as HTMLButtonElement;
-    el.style.backgroundColor = "DodgerBlue";
+    el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_delete_button") as HTMLButtonElement;
-    el.style.backgroundColor = "DodgerBlue";
+    el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_select_button") as HTMLButtonElement;
-    el.style.backgroundColor = "DodgerBlue";
+    el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_knoten_button") as HTMLButtonElement;
-    el.style.backgroundColor = "DodgerBlue";
+    el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement;
-    el.style.backgroundColor = "DodgerBlue";
+    el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement;
-    el.style.backgroundColor = "DodgerBlue";
+    el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_elementlast_button") as HTMLButtonElement;
-    el.style.backgroundColor = "DodgerBlue";
+    el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_einstellungen_button") as HTMLButtonElement;
-    el.style.backgroundColor = "DodgerBlue";
+    el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_info_button") as HTMLButtonElement;
-    el.style.backgroundColor = "DodgerBlue";
+    el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_edit_knoten_button") as HTMLButtonElement;
-    el.style.backgroundColor = "DodgerBlue";
+    el.style.backgroundColor = backgroundColor;
 
 
     if (rubberband_drawn) {
@@ -350,7 +351,7 @@ export function cad_buttons() {
   div.appendChild(help_text);
 
   let h = div!.getBoundingClientRect()
-  console.log("Höhe des div", h)
+  // console.log("Höhe des div", h)
 
   let br = document.createElement("br");
   //div.appendChild(br);
@@ -362,18 +363,13 @@ export function cad_buttons() {
   div2.style.top = String(h)
 
   //let div_cad_group = document.getElementById("id_cad_group") as HTMLDivElement
-  undo_button!.addEventListener("focus", (_event) => {
-    // @ts-ignore
-    //console.log("focus", event)
-    let hoehe = undo_button!.getBoundingClientRect()
-    //console.log("hoehe div undo_button", hoehe)
-  });
+  // undo_button!.addEventListener("focus", (_event) => {
+  //   // @ts-ignore
+  //   //console.log("focus", event)
+  //   let hoehe = undo_button!.getBoundingClientRect()
+  //   //console.log("hoehe div undo_button", hoehe)
+  // });
 
-  // let hoehe = div.getBoundingClientRect().height
-  // console.log("hoehe", hoehe)
-
-  // let querschnitt_default = document.getElementById("id_querschnitt_default") as HTMLSelectElement;
-  // querschnitt_default.style.top = String(hoehe)
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -510,10 +506,12 @@ export function reDo_button() {
 export function delete_button() {
   //----------------------------------------------------------------------------------------------------
 
+
   if (buttons_control.pick_element) {
     buttons_control.reset();
     delete_help_text();
   } else {
+    buttons_control.reset();
     let el = document.getElementById("id_cad_delete_button") as HTMLButtonElement;
     el.style.backgroundColor = "darkRed";
 
@@ -529,10 +527,12 @@ export function delete_button() {
 export function Select_button() {
   //----------------------------------------------------------------------------------------------------
 
+
   if (buttons_control.select_element) {
     buttons_control.reset();
     delete_help_text();
   } else {
+    buttons_control.reset();
     let el = document.getElementById("id_cad_select_button") as HTMLButtonElement;
     el.style.backgroundColor = "darkRed";
 
@@ -1724,9 +1724,9 @@ export function Knotenlast_button(_ev: Event) {
   let el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement
 
   if (buttons_control.knotenlast_eingabe_aktiv) {
+    buttons_control.reset()
 
     let el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement
-    buttons_control.reset()
     el.removeEventListener('keydown', keydown);
   } else {
     buttons_control.reset()
@@ -1904,9 +1904,8 @@ export function Elementlast_button(_ev: Event) {
   let el = document.getElementById("id_cad_elementlast_button") as HTMLButtonElement
 
   if (buttons_control.elementlast_eingabe_aktiv) {
-
-    //let el = document.getElementById("id_cad_elementlast_button") as HTMLButtonElement
     buttons_control.reset()
+
     el.removeEventListener('keydown', keydown);
   } else {
     buttons_control.reset()
