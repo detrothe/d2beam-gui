@@ -2,6 +2,8 @@ import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
+import '../styles/dr-dialog.css';
+
 @customElement("dr-dialog_info")
 export class drDialogInfo extends LitElement {
   @property({ type: String }) title = "Informationen";
@@ -109,7 +111,7 @@ export class drDialogInfo extends LitElement {
         min-width: 25rem;
         max-width: 40rem;
         max-height:100%;
-        background: #fffbf0;
+        background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
         border: thin solid #e7c157;
         margin: 1rem auto;
         overflow: scroll;

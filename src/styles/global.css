@@ -455,7 +455,7 @@ input[type="number"] {
 }
 
 .btn {
-  background-color: DodgerBlue;
+  background-color: light-dark(DodgerBlue,rgb(64, 64, 64));
   border: none;
   color: white;
   padding: 0.4375rem 0.75rem;

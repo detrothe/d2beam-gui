@@ -53,6 +53,7 @@ import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 
 //export let pick_element = false
+let backgroundColor_button = 'rgb(64, 64, 64)';
 
 export let picked_obj: TCAD_Element;
 
@@ -116,7 +117,7 @@ class Cbuttons_control {
     this.input_started = 0;
     this.info_eingabe_aktiv = false;
 
-    let backgroundColor = "DodgerBlue"
+    let backgroundColor = backgroundColor_button
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
     el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_lager_button") as HTMLButtonElement;
