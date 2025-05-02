@@ -111,6 +111,7 @@ export class drDialogKnotenlast extends LitElement {
         background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
         border: thin solid #e7c157;
         margin: 5rem auto;
+        font-size:1rem;
       }
 
       dialog::backdrop {

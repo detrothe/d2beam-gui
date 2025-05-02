@@ -2,7 +2,7 @@ import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
-import '../styles/dr-dialog.css';
+import "../styles/dr-dialog.css";
 
 @customElement("dr-dialog_einstellungen")
 export class drDialogEinstellungen extends LitElement {
@@ -113,6 +113,7 @@ export class drDialogEinstellungen extends LitElement {
         background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
         border: thin solid #e7c157;
         margin: 5rem auto;
+        font-size: 1rem;
       }
 
       dialog::backdrop {
@@ -291,7 +292,6 @@ export class drDialogEinstellungen extends LitElement {
     return wert;
   }
 
-
   set_raster_dx(dx: number) {
     let el = this.shadowRoot?.getElementById("id_dx") as HTMLInputElement;
     el.value = String(dx);
@@ -301,7 +301,6 @@ export class drDialogEinstellungen extends LitElement {
     let el = this.shadowRoot?.getElementById("id_dz") as HTMLInputElement;
     el.value = String(dz);
   }
-
 
   set_raster_xmin(xmin: number) {
     let el = this.shadowRoot?.getElementById("id_xmin") as HTMLInputElement;

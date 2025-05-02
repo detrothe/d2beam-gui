@@ -115,6 +115,7 @@ export class drDialogInfo extends LitElement {
         border: thin solid #e7c157;
         margin: 1rem auto;
         overflow: scroll;
+        font-size:1rem;
       }
 
       dialog::backdrop {
