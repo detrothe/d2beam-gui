@@ -2,6 +2,8 @@ import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
+import '../styles/dr-dialog.css';
+
 @customElement("dr-dialog_lager")
 export class drDialogLager extends LitElement {
   @property({ type: String }) title = "neues Lager";
@@ -83,7 +85,7 @@ export class drDialogLager extends LitElement {
         border-spacing: 0px;
         padding: 5px;
         margin: 5px;
-        background-color: rgb(207, 217, 21);
+        background-color: light-dark(var(--table-bgcolor-light),var(--table-bgcolor-dark));
         border-radius: 5px;
         color: black;
       }
@@ -105,8 +107,8 @@ export class drDialogLager extends LitElement {
 
       /* Styling der geöffneten Popup-Box */
       dialog[open] {
-        width: 32rem;
-        background: #fffbf0;
+        width: 25rem;
+        background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
         border: thin solid #e7c157;
         margin: 5rem auto;
       }

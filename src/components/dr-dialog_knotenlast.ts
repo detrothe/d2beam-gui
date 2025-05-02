@@ -1,6 +1,8 @@
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
+import '../styles/dr-dialog.css';
+
 @customElement("dr-dialog_knotenlast")
 export class drDialogKnotenlast extends LitElement {
   @property({ type: String }) title = "neue Knotenlast";
@@ -106,7 +108,7 @@ export class drDialogKnotenlast extends LitElement {
       /* Styling der geöffneten Popup-Box */
       dialog[open] {
         width: 16rem;
-        background: #fffbf0;
+        background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
         border: thin solid #e7c157;
         margin: 5rem auto;
       }

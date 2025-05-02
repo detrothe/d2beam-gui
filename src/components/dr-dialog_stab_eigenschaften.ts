@@ -2,6 +2,8 @@ import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
+import '../styles/dr-dialog.css';
+
 @customElement("dr-dialog_stab_eigenschaften")
 export class drDialogStabEigenschaften extends LitElement {
   @property({ type: String }) title = "Stab Eigenschaften";
@@ -88,7 +90,8 @@ export class drDialogStabEigenschaften extends LitElement {
         border-spacing: 0px;
         padding: 5px;
         margin: 5px;
-        background-color: rgb(207, 217, 21);
+        background-color: light-dark(var(--table-bgcolor-light),var(--table-bgcolor-dark));
+        color:black;
         border-radius: 5px;
       }
 
@@ -110,7 +113,7 @@ export class drDialogStabEigenschaften extends LitElement {
       /* Styling der geöffneten Popup-Box */
       dialog[open] {
         width: 19rem;
-        background: #fffbf0;
+        background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
         border: thin solid #e7c157;
         margin: 5rem auto;
       }
@@ -123,7 +126,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
   constructor() {
     super();
-    this.qname = []
+    this.qname = [];
   }
 
   //----------------------------------------------------------------------------------------------
@@ -138,7 +141,6 @@ export class drDialogStabEigenschaften extends LitElement {
 
       <p>
         <select name="querschnitt" id="id_querschnitt"></select>
-
       </p>
       <table id="stab_table">
         <thead>
@@ -189,7 +191,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
             <td>k<sub>x,e</sub>:</td>
             <td>
-              <input type="number" id="id_kxe" name="kxe" pattern="[0-9.,eE+-]*" value="" disabled/>
+              <input type="number" id="id_kxe" name="kxe" pattern="[0-9.,eE+-]*" value="" disabled />
             </td>
             <td>kN/m</td>
           </tr>
@@ -200,7 +202,7 @@ export class drDialogStabEigenschaften extends LitElement {
             </td>
             <td>k<sub>z,e</sub>:</td>
             <td>
-              <input type="number" id="id_kze" name="kze" pattern="[0-9.,eE+-]*" value="" disabled/>
+              <input type="number" id="id_kze" name="kze" pattern="[0-9.,eE+-]*" value="" disabled />
             </td>
             <td>kN/m</td>
           </tr>
@@ -211,11 +213,10 @@ export class drDialogStabEigenschaften extends LitElement {
 
             <td>k<sub>&phi;,e</sub>:</td>
             <td>
-              <input type="number" id="id_kphi_e" name="kphi_e" pattern="[0-9.,eE+-]*" value="" disabled/>
+              <input type="number" id="id_kphi_e" name="kphi_e" pattern="[0-9.,eE+-]*" value="" disabled />
             </td>
             <td>kNm/rad</td>
           </tr>
-
         </tbody>
       </table>
 
@@ -306,7 +307,6 @@ export class drDialogStabEigenschaften extends LitElement {
     return wert;
   }
 
-
   //---------------------------------------------------------------------------------------------------------------
   setBettung(wert: number) {
     //-------------------------------------------------------------------------------------------------------------
@@ -320,15 +320,13 @@ export class drDialogStabEigenschaften extends LitElement {
 
     const shadow = this.shadowRoot;
     let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
-    let option = document.createElement('option');
+    let option = document.createElement("option");
 
     option.value = option.textContent = this.qname[this.nOptions];
     el.appendChild(option);
 
     this.nOptions++;
-
   }
-
 
   //---------------------------------------------------------------------------------------------------------------
   setQuerschnittNames(name: string[]) {
@@ -342,7 +340,7 @@ export class drDialogStabEigenschaften extends LitElement {
     for (let i = 0; i < name.length; i++) {
       this.qname[i] = name[i];
 
-      let option = document.createElement('option');
+      let option = document.createElement("option");
 
       option.value = option.textContent = this.qname[i];
 
@@ -387,15 +385,15 @@ export class drDialogStabEigenschaften extends LitElement {
     let name = el.children.item(index)?.textContent;
     //console.log("in getSelectedOptionByName",index,name)
 
-    if (typeof name === 'string') return name;
-    else return ''
+    if (typeof name === "string") return name;
+    else return "";
   }
 
   //---------------------------------------------------------------------------------------------------------------
   getGelenke() {
     //-------------------------------------------------------------------------------------------------------------
 
-    let gelenke: boolean[] = Array(6)
+    let gelenke: boolean[] = Array(6);
 
     const shadow = this.shadowRoot;
     let el = shadow?.getElementById("id_Na") as SlCheckbox;
@@ -415,11 +413,9 @@ export class drDialogStabEigenschaften extends LitElement {
     return gelenke;
   }
 
-
   //---------------------------------------------------------------------------------------------------------------
   setGelenke(gelenke: boolean[]) {
     //-------------------------------------------------------------------------------------------------------------
-
 
     const shadow = this.shadowRoot;
     let el = shadow?.getElementById("id_Na") as SlCheckbox;
@@ -434,6 +430,5 @@ export class drDialogStabEigenschaften extends LitElement {
     el.checked = gelenke[4];
     el = shadow?.getElementById("id_Me") as SlCheckbox;
     el.checked = gelenke[5];
-
   }
 }
