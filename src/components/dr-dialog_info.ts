@@ -114,7 +114,7 @@ export class drDialogInfo extends LitElement {
         background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
         border: thin solid #e7c157;
         margin: auto;
-        overflow: scroll;
+        overflow-y: auto;
         font-size:1rem;
         max-height:90vh;
 
