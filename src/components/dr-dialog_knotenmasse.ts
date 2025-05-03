@@ -110,8 +110,9 @@ export class drDialogKnotenmasse extends LitElement {
         width: 16rem;
         background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
         border: thin solid #e7c157;
-        margin: 5rem auto;
         font-size:1rem;
+        max-height: 90vh;
+        overflow-y: auto;
       }
 
       dialog::backdrop {
