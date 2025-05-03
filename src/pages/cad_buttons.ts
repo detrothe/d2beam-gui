@@ -553,7 +553,7 @@ export function delete_element(xc: number, zc: number) {
   if (list.size === 0) return;
 
   let min_abstand = 1e30;
-  let index = -1;
+  let index_stab = -1;
   let stab_gefunden = false
   let lager_gefunden = false
   let index_lager = -1
@@ -574,11 +574,11 @@ export function delete_element(xc: number, zc: number) {
     let obj = list.getAt(i) as any;
     if (obj.elTyp === CAD_STAB) {
 
-      let abstand = abstandPunktGerade_2D(obj.x1, obj.z1, obj.x2, obj.z2, xc, zc);
+      let abstand = abstandPunktGerade_2D(get_cad_node_X(obj.index1), get_cad_node_Z(obj.index1), get_cad_node_X(obj.index2), get_cad_node_Z(obj.index2), xc, zc);
       if (abstand > -1.0) {
         if (abstand < min_abstand) {
           min_abstand = abstand;
-          index = i;
+          index_stab = i;
           stab_gefunden = true
         }
       }
@@ -685,7 +685,7 @@ export function delete_element(xc: number, zc: number) {
     }
   }
 
-  console.log('ABSTAND', min_abstand, index, lager_gefunden, elementlast_gefunden);
+  console.log('ABSTAND', min_abstand, index_stab, lager_gefunden, elementlast_gefunden);
 
 
   if (elementlast_gefunden || element_einzellast_gefunden) {
@@ -754,9 +754,9 @@ export function delete_element(xc: number, zc: number) {
     buttons_control.reset();
 
   }
-  else if (index >= 0 && min_abstand < 0.25) {          // Stab
+  else if (stab_gefunden && min_abstand < 0.25) {          // Stab   index >= 0 && min_abstand < 0.25
     if (list.size > 0) {
-      let obj = list.removeAt(index);
+      let obj = list.removeAt(index_stab);
       two.remove(obj.two_obj);
       two.update();
 
