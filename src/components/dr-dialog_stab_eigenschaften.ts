@@ -117,8 +117,8 @@ export class drDialogStabEigenschaften extends LitElement {
         border: thin solid #e7c157;
         /*margin: 5rem auto;*/
         font-size: 1rem;
-        max-height:90vh;
-        overflow-y:auto;
+        max-height: 90vh;
+        overflow-y: auto;
       }
 
       dialog::backdrop {
