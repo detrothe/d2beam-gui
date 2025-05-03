@@ -19,7 +19,8 @@ export class drDialogElementlasten extends LitElement {
       }
 
       p,
-      h2 {
+      h2,
+      sl-radio-group {
         color: black;
       }
 

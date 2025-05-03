@@ -1,7 +1,7 @@
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
-import '../styles/dr-dialog.css';
+import "../styles/dr-dialog.css";
 
 @customElement("dr-dialog_knotenlast")
 export class drDialogKnotenlast extends LitElement {
@@ -86,8 +86,7 @@ export class drDialogKnotenlast extends LitElement {
         border-spacing: 0px;
         padding: 5px;
         margin: 5px;
-        background-color: rgb(207, 217, 21);
-        border-radius: 5px;
+        color: black;
       }
 
       td.selected {
@@ -110,7 +109,7 @@ export class drDialogKnotenlast extends LitElement {
         width: 16rem;
         background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
         border: thin solid #e7c157;
-        font-size:1rem;
+        font-size: 1rem;
         max-height: 90vh;
         overflow-y: auto;
       }
@@ -129,28 +128,29 @@ export class drDialogKnotenlast extends LitElement {
 
   render() {
     return html` <dialog id="dialog_knotenlast">
-      <h2>Neue Knotenlast</h2>
+      <h2>Knotenlast</h2>
 
+      <table id="einstellungen_table">
+        <tbody>
+          <tr>
+            <td>Lastfall:</td>
+            <td><input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="1" /></td>
+          </tr>
+          <tr>
+            <td>Px:</td>
+            <td><input type="number" id="id_px" name="px" pattern="[0-9.,eE+-]*" value="" /> [kN]</td>
+          </tr>
+          <tr>
+            <td>Pz:</td>
+            <td><input type="number" id="id_pz" name="pz" pattern="[0-9.,eE+-]*" value="" /> [kN]</td>
+          </tr>
 
-      <p>
-        Lastfall:
-        <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="1" />
-      </p>
-      <p>
-        Px:
-        <input type="number" id="id_px" name="px" pattern="[0-9.,eE+-]*" value="" />
-        [kN]
-      </p>
-      <p>
-        Pz:
-        <input type="number" id="id_pz" name="pz" pattern="[0-9.,eE+-]*" value="" />
-        [kN]
-      </p>
-      <p id=id_MY>
-        My:
-        <input type="number" id="id_my" name="my" pattern="[0-9.,eE+-]*" value="" />
-        [kNm]
-      </p>
+          <tr id="id_MY">
+            <td>My:</td>
+            <td><input type="number" id="id_my" name="my" pattern="[0-9.,eE+-]*" value="" /> [kNm]</td>
+          </tr>
+        </tbody>
+      </table>
 
       <form method="dialog">
         <!--<sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
@@ -194,7 +194,6 @@ export class drDialogKnotenlast extends LitElement {
     // console.log("id_pz", (shadow?.getElementById("id_pz") as HTMLInputElement).value);
     let wert = Number((shadow?.getElementById("id_pz") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
-
   }
   get_My() {
     const shadow = this.shadowRoot;
@@ -211,7 +210,6 @@ export class drDialogKnotenlast extends LitElement {
   set_Pz(Pz: number) {
     let el = this.shadowRoot?.getElementById("id_pz") as HTMLInputElement;
     el.value = String(Pz);
-
   }
 
   set_My(My: number) {
@@ -220,17 +218,14 @@ export class drDialogKnotenlast extends LitElement {
   }
 
   set_system(system: number) {
-
     if (system === 0) {
       const shadow = this.shadowRoot;
-      let el = (shadow?.getElementById("id_MY") as HTMLElement);
-      el.style.display = 'block'
+      let el = shadow?.getElementById("id_MY") as HTMLElement;
+      el.style.display = "block";
     } else {
       const shadow = this.shadowRoot;
-      let el = (shadow?.getElementById("id_MY") as HTMLElement);
-      el.style.display = 'none'
+      let el = shadow?.getElementById("id_MY") as HTMLElement;
+      el.style.display = "none";
     }
-
   }
-
 }
