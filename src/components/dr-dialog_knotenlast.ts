@@ -218,13 +218,13 @@ export class drDialogKnotenlast extends LitElement {
   }
 
   set_system(system: number) {
+
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById("id_MY") as HTMLTableRowElement;
+
     if (system === 0) {
-      const shadow = this.shadowRoot;
-      let el = shadow?.getElementById("id_MY") as HTMLElement;
-      el.style.display = "block";
+      el.style.display = "table-row";
     } else {
-      const shadow = this.shadowRoot;
-      let el = shadow?.getElementById("id_MY") as HTMLElement;
       el.style.display = "none";
     }
   }

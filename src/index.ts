@@ -26,8 +26,8 @@ if (isAndroid) {
 
     window.addEventListener('load', () => {
         input = window.localStorage.getItem('current_input');
-        // write('LOAD  current input = ' + input.length)
-        console.log('LOAD  current input = ', input.length)
+        //write('Android, LOAD  current input = ' + input.length)
+        //console.log('LOAD  current input = ', input.length)
         if (input.length > 0) {
             autoEingabeLesen();
             // read_daten(input);
@@ -47,7 +47,7 @@ if (isAndroid) {
         // Google Chrome < 119 requires returnValue to be set.
         //event.returnValue = true;
 
-        //write("beforeunload")
+        write("Android, beforeunload")
 
         window.localStorage.setItem('current_input', str_inputToJSON());
 
@@ -126,7 +126,7 @@ if (isAndroid) {
         event.preventDefault();
         // Google Chrome < 119 requires returnValue to be set.
         event.returnValue = true;
-        console.log("beforeunload", navigator.userAgent)
+        //console.log("else, beforeunload", navigator.userAgent)
 
 
         // if (dbPromise) {
@@ -134,7 +134,9 @@ if (isAndroid) {
         //     dbPromise = null;
         // }
 
-        window.localStorage.setItem('current_input', str_inputToJSON());
+        let output = str_inputToJSON();
+        //console.log("inputToJSON", output)
+        window.localStorage.setItem('current_input', output);
 
     });
 
@@ -164,8 +166,8 @@ if (isAndroid) {
 
     window.addEventListener('load', () => {
         input = window.localStorage.getItem('current_input');
-        //write('LOAD  current input = ' + input.length)
-        console.log('LOAD  current input = ', input.length)
+        //write('else, LOAD  current input = ' + input.length)
+        //console.log('LOAD  current input = ', input.length)
         if (input.length > 0) {
             autoEingabeLesen();
         }

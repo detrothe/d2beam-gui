@@ -665,16 +665,31 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let wert = P * fact[iLoop]
                         let xl = x1 + co * x, zl = z1 + si * x
                         console.log("GRAFIK Einzellast", xl, zl, wert)
-                        let rect: any
+                        let grp = new Two.Group();
+
                         if (wert < 0.0) {
                             let gr = draw_arrow(tr, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast_element)
-                            group.add(gr)
-                            console.log("getBoundingClientRect draw Arrow", rect = gr.getBoundingClientRect())
+                            //group.add(gr)
+                            grp.add(gr)
+                            //console.log("getBoundingClientRect draw Arrow", rect = gr.getBoundingClientRect())
                         } else {
                             let gr = draw_arrow(tr, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast_element)
-                            group.add(gr)
-                            console.log("getBoundingClientRect draw Arrow", rect = gr.getBoundingClientRect())
+                            //group.add(gr)
+                            grp.add(gr)
+                            //console.log("getBoundingClientRect draw Arrow", rect = gr.getBoundingClientRect())
                         }
+
+                        xpix = tr.xPix(xl + ddx + dpx) + 4
+                        zpix = tr.zPix(zl - ddz - dpz) - 4
+                        const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+                        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
+                        txt.alignment = 'left'
+                        txt.baseline = 'top'
+                        //group.add(txt)
+                        grp.add(txt)
+                        let rect = grp.getBoundingClientRect()
+
+                        group.add(grp)
 
                         // const vertices = [];
                         xtr[0] = tr.xWorld(rect.left)
@@ -693,13 +708,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         // flaeche.opacity = opacity;
                         // group.add(flaeche)
 
-                        xpix = tr.xPix(xl + ddx + dpx) + 4
-                        zpix = tr.zPix(zl - ddz - dpz) - 4
-                        const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
-                        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
-                        group.add(txt)
+
                     }
                     if (M != 0.0) {
                         let wert = M * fact[iLoop]
@@ -707,16 +716,26 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let xl = x1 + co * x, zl = z1 + si * x
                         let radius = style_pfeil_moment_element.radius;
                         console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
-                        let rect: any
+                        let grp = new Two.Group();
+
                         if (wert > 0.0) {
                             let gr = draw_moment_arrow(tr, xl, zl, 1.0, radius, style_pfeil_moment_element)
-                            group.add(gr)
-                            rect = gr.getBoundingClientRect()
+                            grp.add(gr)
                         } else {
                             let gr = draw_moment_arrow(tr, xl, zl, -1.0, radius, style_pfeil_moment_element)
-                            group.add(gr)
-                            rect = gr.getBoundingClientRect()
+                            grp.add(gr)
                         }
+
+                        xpix = tr.xPix(xl) - 10 / devicePixelRatio
+                        zpix = tr.zPix(zl) + vorzeichen * radius + 12 * vorzeichen / devicePixelRatio
+                        const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+                        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
+                        txt.alignment = 'right'
+                        grp.add(txt)
+
+                        group.add(grp);
+
+                        let rect = grp.getBoundingClientRect()
 
                         xtr[0] = tr.xWorld(rect.left)
                         ztr[0] = tr.zWorld(rect.top)
@@ -729,12 +748,6 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         (obj.elast[j] as TCAD_Einzellast).set_drawLast_M_xz(xtr, ztr)   // Koordinaten merken für Picken
 
-                        xpix = tr.xPix(xl) - 10 / devicePixelRatio
-                        zpix = tr.zPix(zl) + vorzeichen * radius + 12 * vorzeichen / devicePixelRatio
-                        const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
-                        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
-                        txt.alignment = 'right'
-                        group.add(txt)
                     }
                 }
                 else if (typ === 5) {      // Stabvorverformung
