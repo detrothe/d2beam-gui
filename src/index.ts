@@ -25,7 +25,7 @@ let input: any;
 if (isAndroid) {
 
     window.addEventListener('load', () => {
-        input = window.localStorage.getItem('current_input');
+        input = window.localStorage.getItem('current_input_D2BEAM_GUI');
         //write('Android, LOAD  current input = ' + input.length)
         //console.log('LOAD  current input = ', input.length)
         if (input.length > 0) {
@@ -49,7 +49,7 @@ if (isAndroid) {
 
         write("Android, beforeunload")
 
-        window.localStorage.setItem('current_input', str_inputToJSON());
+        window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
 
     });
 
@@ -136,7 +136,7 @@ if (isAndroid) {
 
         let output = str_inputToJSON();
         //console.log("inputToJSON", output)
-        window.localStorage.setItem('current_input', output);
+        window.localStorage.setItem('current_input_D2BEAM_GUI', output);
 
     });
 
@@ -165,7 +165,7 @@ if (isAndroid) {
     // });
 
     window.addEventListener('load', () => {
-        input = window.localStorage.getItem('current_input');
+        input = window.localStorage.getItem('current_input_D2BEAM_GUI');
         //write('else, LOAD  current input = ' + input.length)
         //console.log('LOAD  current input = ', input.length)
         if (input.length > 0) {
