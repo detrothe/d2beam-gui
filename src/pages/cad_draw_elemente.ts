@@ -102,6 +102,16 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     txt1.rotation = alpha
     group.add(txt1);
 
+    // Knoten zeichnen
+
+    let knSize = 9 / devicePixelRatio;
+    let kn1 = new Two.Rectangle(tr.xPix(x1), tr.zPix(z1), knSize, knSize)
+    kn1.fill = 'black'
+    group.add(kn1);
+    let kn2 = new Two.Rectangle(tr.xPix(x2), tr.zPix(z2), knSize, knSize)
+    kn2.fill = 'black'
+    group.add(kn2);
+
     if (obj.nGelenke > 0) {
         let gr = draw_stab_gelenke(obj as TCAD_Stab, tr);
         group.add(gr)

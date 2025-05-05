@@ -49,7 +49,7 @@ import { reset_gui } from "./mypanelgui";
 import DetectOS from "./detectos";
 
 import { addListener_filesave } from "./dateien";
-import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik, reset_controlpanel_grafik } from "./grafik";
+import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik, reset_controlpanel_grafik, click_pan_button_grafik } from "./grafik";
 import { set_info, write } from "./utility";
 
 import { my_jspdf } from "./mypdf";
@@ -77,7 +77,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.5.b, 5-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.5.c, 5-Mai-2025, ";
 //########################################################################################################################
 
 
@@ -362,6 +362,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             </div>
           </div>
           <button id="id_button_zurueck_grafik">Fullscreen</button>
+          <button id="id_button_pan_grafik">Pan</button>
 
           <div id="artboard" style="margin:0;padding:0;background-color:#ffffff;"></div>
           <div id="svg_artboard" style="margin:0;padding:0;display:none"></div>
@@ -1189,6 +1190,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   el_select_dyn_eigenvalue?.addEventListener("change", select_dyn_eigenvalue_changed);
   const el_zurueck_grafik = document.getElementById("id_button_zurueck_grafik");
   el_zurueck_grafik?.addEventListener("click", click_zurueck_grafik);
+  const el_pan_button = document.getElementById('id_button_pan_grafik') as HTMLButtonElement;
+  el_pan_button?.addEventListener("click", click_pan_button_grafik);
 
   // const el_zurueck_cad = document.getElementById("id_button_zurueck_cad");
   // el_zurueck_cad?.addEventListener("click", click_zurueck_cad);

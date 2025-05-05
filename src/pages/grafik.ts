@@ -52,6 +52,8 @@ let mouse_DownWY = 0.0
 let view_diagonale = 0.0
 let isPen = false
 let grafik_top = 0
+let allow_pan_grafik = true;
+
 
 let centerX = 0.0
 let centerY = 0.0
@@ -318,6 +320,22 @@ export function click_zurueck_grafik() {
 
 }
 
+//--------------------------------------------------------------------------------------------------------
+export function click_pan_button_grafik() {
+    //----------------------------------------------------------------------------------------------------
+
+    allow_pan_grafik = !allow_pan_grafik;
+
+    const el_pan_button = document.getElementById('id_button_pan_grafik') as HTMLButtonElement;
+
+    if (allow_pan_grafik) {
+        el_pan_button.style.color = 'white'
+    } else {
+        el_pan_button.style.color = 'grey'
+    }
+
+}
+
 //--------------------------------------------------------------------------------------------------- i n i t _ t w o
 
 export function init_two(svg_id = 'artboard', setEvents = true) {
@@ -561,6 +579,8 @@ export function init_grafik(flag: number) {
         }
     }
 
+    const el_pan_button = document.getElementById('id_button_pan_grafik') as HTMLButtonElement;
+
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -646,23 +666,29 @@ function touchmove(ev: TouchEvent) {
             y = ev.touches[0].clientY - grafik_top
             draw_werte(x, y);
         } else {
+            if (allow_pan_grafik) {
+                if (touchLoop === 1) {
+                    mouseDx += x - touchDx
+                    mouseDz += y - touchDy
+                    // console.log("finger 1", mouseDx, mouseDz, touchLoop)
+                    touchDx = x
+                    touchDy = y
 
-            if (touchLoop === 1) {
-                mouseDx += x - touchDx
-                mouseDz += y - touchDy
-                // console.log("finger 1", mouseDx, mouseDz, touchLoop)
-                touchDx = x
-                touchDy = y
-
-                centerX = centerX_last + tr.World0(mouseDx)
-                centerY = centerY_last + tr.World0(mouseDz)
-                drawsystem()
-            } else {
-                touchLoop = 1
-                touchDx = x
-                touchDy = y
-                mouseDx = 0.0
-                mouseDz = 0.0
+                    centerX = centerX_last + tr.World0(mouseDx)
+                    centerY = centerY_last + tr.World0(mouseDz)
+                    drawsystem()
+                } else {
+                    touchLoop = 1
+                    touchDx = x
+                    touchDy = y
+                    mouseDx = 0.0
+                    mouseDz = 0.0
+                }
+            }
+            else {
+                x = ev.touches[0].clientX
+                y = ev.touches[0].clientY - grafik_top
+                draw_werte(x, y);
             }
         }
 
@@ -763,17 +789,15 @@ function mousedown(ev: any) {
     //console.log('in mousedown', ev)
     ev.preventDefault()
 
-    // if (!mouseMoveIsActive) {
-    //domElement.addEventListener('mousemove', mousemove, false);
-    //     mouseMoveIsActive = true
-    // }
-    zoomIsActive = true
+    if (allow_pan_grafik) {
+        zoomIsActive = true
 
-    mouseOffsetX = ev.offsetX
-    mouseOffsetY = ev.offsetY
+        mouseOffsetX = ev.offsetX
+        mouseOffsetY = ev.offsetY
 
-    mouseDx = 0.0
-    mouseDz = 0.0
+        mouseDx = 0.0
+        mouseDz = 0.0
+    }
 
     //console.log("mouse_DownWX", mouse_DownWX, mouse_DownWY)
 }

@@ -796,7 +796,7 @@ function pointerdown(ev: PointerEvent) {
          break;
    }
 
-   if (isTouch || isPen) {
+   if (isTouch || isPen) {   // Cursor anzeigen
 
       let dx_offset = 0.0, dy_offset = 0.0;
       if (isTouch) {
