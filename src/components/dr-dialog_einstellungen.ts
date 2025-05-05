@@ -156,7 +156,7 @@ export class drDialogEinstellungen extends LitElement {
       </p>
       <p>
         Faktor für dx:
-        <input type="number" id="id_dx_offset_factor" name="dx_offset" pattern="[0-9.,eE+-]*" value="-1" />
+        <input type="number" id="id_dx_offset_factor" name="dx_offset" pattern="[0-9.,eE+-]*" value="0" />
         [-]
       </p>
       <p>

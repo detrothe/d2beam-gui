@@ -78,8 +78,8 @@ let centerY = 0.0;
 let centerX_last = 0.0;
 let centerY_last = 0.0;
 
-let dx_offset_touch = 0;
-let dz_offset_touch = 0;
+export let dx_offset_touch = 0;
+export let dz_offset_touch = 0;
 let dx_offset_touch_fact = -1;
 let dz_offset_touch_fact = -1;
 export function set_dx_offset_touch_factor(dx: number) { dx_offset_touch_fact = dx; }
@@ -716,8 +716,8 @@ export function init_cad(flag: number) {
    // dx_offset_touch = -tr.Pix0(raster_dx) * devicePixelRatio;
    // dz_offset_touch = -tr.Pix0(raster_dz) * devicePixelRatio;
 
-   dx_offset_touch = tr.Pix0(xmaxv - xminv) / 10 * devicePixelRatio * dx_offset_touch_fact;
-   dz_offset_touch = tr.Pix0(zmaxv - zminv) / 10 * devicePixelRatio * dz_offset_touch_fact;
+   dx_offset_touch = tr.Pix0(xmaxv - xminv) / 7 * devicePixelRatio * dx_offset_touch_fact;
+   dz_offset_touch = tr.Pix0(zmaxv - zminv) / 7 * devicePixelRatio * dz_offset_touch_fact;
    //console.log("dx_offset_touch", dx_offset_touch_fact)
 
 

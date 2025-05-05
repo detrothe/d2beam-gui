@@ -16,6 +16,7 @@ import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
 //import { colorToRgbNumber } from '@tweakpane/core';
 import { app } from "./haupt";
 import { saveAs } from 'file-saver';
+import { dx_offset_touch, dz_offset_touch } from './cad';
 
 export let svg_pdf_ratio = 1.0
 
@@ -70,6 +71,10 @@ let xminw = 0.0, xmaxw = 0.0, zminw = 0.0, zmaxw = 0.0
 let xmint = 0.0, xmaxt = 0.0, zmint = 0.0, zmaxt = 0.0
 
 let tr: CTrans
+
+let cursorLineh: any = null;
+let cursorLinev: any = null;
+let cursorWert: any = null;
 
 let drawPanel = 0
 let draw_lastfall = 1
@@ -662,9 +667,14 @@ function touchmove(ev: TouchEvent) {
         let y = (ev.touches[0].clientY)
         //        console.log("finger 1",dx,dy,touchLoop)
         if (isPen) {
-            x = ev.touches[0].clientX
-            y = ev.touches[0].clientY - grafik_top
-            draw_werte(x, y);
+            let xo = ev.touches[0].clientX
+            let yo = ev.touches[0].clientY - grafik_top
+            if (cursorLineh) two.remove(cursorLineh);
+            if (cursorLinev) two.remove(cursorLinev);
+            let len = view_diagonale / 20  //tr.Pix0(view_diagonale / 20);
+            cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
+            cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
+            draw_werte(xo, yo);
         } else {
             if (allow_pan_grafik) {
                 if (touchLoop === 1) {
@@ -688,7 +698,20 @@ function touchmove(ev: TouchEvent) {
             else {
                 x = ev.touches[0].clientX
                 y = ev.touches[0].clientY - grafik_top
-                draw_werte(x, y);
+
+                let dx_offset = dx_offset_touch / devicePixelRatio;
+                let dy_offset = dz_offset_touch / devicePixelRatio;
+
+                let xo = x + dx_offset
+                let yo = y + dy_offset
+
+                if (cursorLineh) two.remove(cursorLineh);
+                if (cursorLinev) two.remove(cursorLinev);
+                let len = view_diagonale / 20  //tr.Pix0(view_diagonale / 20);
+                cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
+                cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
+
+                draw_werte(xo, yo);
             }
         }
 
@@ -826,32 +849,36 @@ function mousemove(ev: MouseEvent) {
     }
     else {
         if (werte.length > 0) {
-            let index = -1
-            let x0 = ev.offsetX, z0 = ev.offsetY
-            let mind = 1.e30
-            //console.log("werte.length", werte.length,ev.clientX,ev.clientY,tr.xPix(0.0),tr.zPix(0.0))
-            for (let i = 0; i < werte.length; i++) {
-                let dx = x0 - werte[i].x
-                let dz = z0 - werte[i].z
-                let d = dx * dx + dz * dz
+            let x0 = ev.offsetX
+            let y0 = ev.offsetY
+            draw_werte(x0, y0);
+            // let index = -1
+            // let x0 = ev.offsetX
+            // let z0 = ev.offsetY
+            // let mind = 1.e30
+            // //console.log("werte.length", werte.length,ev.clientX,ev.clientY,tr.xPix(0.0),tr.zPix(0.0))
+            // for (let i = 0; i < werte.length; i++) {
+            //     let dx = x0 - werte[i].x
+            //     let dz = z0 - werte[i].z
+            //     let d = dx * dx + dz * dz
 
-                if (d < mind && d < (view_diagonale / 10) ** 2) {
-                    mind = d
-                    index = i
-                }
-            }
-            if (index > -1) {
-                //console.log('gefunden', index, werte[index].wert, mind, view_diagonale/5)
-                draw_wert.found = true
-                draw_wert.x = werte[index].x
-                draw_wert.y = werte[index].z
-                draw_wert.wert = werte[index].wert
-                drawsystem()
-            }
-            else {
-                draw_wert.found = false
-                drawsystem()
-            }
+            //     if (d < mind && d < (view_diagonale / 10) ** 2) {
+            //         mind = d
+            //         index = i
+            //     }
+            // }
+            // if (index > -1) {
+            //     //console.log('gefunden', index, werte[index].wert, mind, view_diagonale/5)
+            //     draw_wert.found = true
+            //     draw_wert.x = werte[index].x
+            //     draw_wert.y = werte[index].z
+            //     draw_wert.wert = werte[index].wert
+            //     drawsystem()
+            // }
+            // else {
+            //     draw_wert.found = false
+            //     drawsystem()
+            // }
 
         }
     }
@@ -889,7 +916,7 @@ function draw_werte(x0: number, z0: number) {
             let dz = z0 - werte[i].z
             let d = dx * dx + dz * dz
 
-            if (d < mind && d < (view_diagonale / 10) ** 2) {
+            if (d < mind && d < (view_diagonale / 20) ** 2) {
                 mind = d
                 index = i
             }
@@ -900,11 +927,48 @@ function draw_werte(x0: number, z0: number) {
             draw_wert.x = werte[index].x
             draw_wert.y = werte[index].z
             draw_wert.wert = werte[index].wert
-            drawsystem()
+            //drawsystem()
+
+            {      // Beschriftung Verformungen, Zustandslinien über MouseMove
+
+                if (cursorWert) two.remove(cursorWert);
+
+                let group = new Two.Group();
+
+                let rect = new Two.Rectangle(draw_wert.x + 60 + 4, draw_wert.y - 7, 120, 20)
+                rect.fill = 'white'
+                rect.stroke = 'white'
+                rect.linewidth = 1
+                group.add(rect)
+                //rect.opacity = 0.1
+                let txt = new Two.Text(draw_wert.wert, draw_wert.x + 5, draw_wert.y - 5, style_txt_werte)
+                txt.alignment = 'left'
+                txt.baseline = 'middle'
+                group.add(txt)
+                let box = txt.getBoundingClientRect()
+                // console.log('getBoundingClientRect', box.width, box.height)
+                rect.width = box.width
+                // rect.x = 500
+                rect.position.x = draw_wert.x + 4 + box.width / 2
+                let radius = 4 / devicePixelRatio
+                let kreis = new Two.Circle(draw_wert.x, draw_wert.y, radius, 12)
+                kreis.fill = '#ff0000';
+                group.add(kreis)
+                draw_wert.found = false
+                two.add(group)
+                cursorWert = group;
+            }
+
+            two.update();
         }
         else {
             draw_wert.found = false
-            drawsystem()
+            if (cursorWert) two.remove(cursorWert);
+            cursorWert = null;
+            //write ("cursorWert",cursorWert);
+
+            //drawsystem()
+            two.update();
         }
 
     }
@@ -2377,26 +2441,26 @@ export function drawsystem(svg_id = 'artboard') {
         }
     }
 
-    if (draw_wert.found) {      // Beschriftung Verformungen, Zustandslinien über MouseMove
+    // if (draw_wert.found) {      // Beschriftung Verformungen, Zustandslinien über MouseMove
 
-        let rect = two.makeRectangle(draw_wert.x + 60 + 4, draw_wert.y - 7, 120, 20)
-        rect.fill = 'white'
-        rect.stroke = 'white'
-        rect.linewidth = 1
-        //rect.opacity = 0.1
-        let txt = two.makeText(draw_wert.wert, draw_wert.x + 5, draw_wert.y - 5, style_txt_werte)
-        txt.alignment = 'left'
-        txt.baseline = 'middle'
-        let box = txt.getBoundingClientRect()
-        // console.log('getBoundingClientRect', box.width, box.height)
-        rect.width = box.width
-        // rect.x = 500
-        rect.position.x = draw_wert.x + 4 + box.width / 2
-        let radius = 4 / devicePixelRatio
-        let kreis = two.makeCircle(draw_wert.x, draw_wert.y, radius, 10)
-        kreis.fill = '#ff0000';
-        draw_wert.found = false
-    }
+    //     let rect = two.makeRectangle(draw_wert.x + 60 + 4, draw_wert.y - 7, 120, 20)
+    //     rect.fill = 'white'
+    //     rect.stroke = 'white'
+    //     rect.linewidth = 1
+    //     //rect.opacity = 0.1
+    //     let txt = two.makeText(draw_wert.wert, draw_wert.x + 5, draw_wert.y - 5, style_txt_werte)
+    //     txt.alignment = 'left'
+    //     txt.baseline = 'middle'
+    //     let box = txt.getBoundingClientRect()
+    //     // console.log('getBoundingClientRect', box.width, box.height)
+    //     rect.width = box.width
+    //     // rect.x = 500
+    //     rect.position.x = draw_wert.x + 4 + box.width / 2
+    //     let radius = 4 / devicePixelRatio
+    //     let kreis = two.makeCircle(draw_wert.x, draw_wert.y, radius, 10)
+    //     kreis.fill = '#ff0000';
+    //     draw_wert.found = false
+    // }
 
     //console.log("vor update")
 
