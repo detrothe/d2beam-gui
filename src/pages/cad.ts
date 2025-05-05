@@ -811,6 +811,7 @@ function pointerdown(ev: PointerEvent) {
       let len = tr.Pix0(getFangweite());
       cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
       cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
+      two.update();
    }
 }
 
