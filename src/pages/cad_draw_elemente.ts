@@ -137,7 +137,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
 function draw_bettungsmodul(obj: TCAD_Stab, tr: CTrans) {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in draw_bettungsmodul")
+    //console.log("in draw_bettungsmodul")
 
     let slmax = 10;
 

@@ -70,14 +70,14 @@ import {
   removeAll_def_querschnitt
 } from "./querschnitte"
 
-import { init_cad, init_two_cad, two_cad_clear } from "./cad";
+import { click_pan_button_cad, init_cad, init_two_cad, two_cad_clear } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { abbruch_property_dialog, show_property_dialog } from "./cad_contextmenu";
 import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.5.c, 5-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.5.d, 5-Mai-2025, ";
 //########################################################################################################################
 
 
@@ -317,6 +317,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           </div>
           <!-- <button id="id_button_zurueck_cad">Fullscreen</button> -->
           <!-- <select name="querschnitt_default" id="id_querschnitt_default" title="default Querschnitt"></select> -->
+          <button id="id_button_pan_cad">Pan</button>
 
           <div id="id_context_menu" style="position:absolute;top:100;display:none;">
             <sl-menu style="max-width: 200px;">
@@ -1190,8 +1191,12 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   el_select_dyn_eigenvalue?.addEventListener("change", select_dyn_eigenvalue_changed);
   const el_zurueck_grafik = document.getElementById("id_button_zurueck_grafik");
   el_zurueck_grafik?.addEventListener("click", click_zurueck_grafik);
-  const el_pan_button = document.getElementById('id_button_pan_grafik') as HTMLButtonElement;
-  el_pan_button?.addEventListener("click", click_pan_button_grafik);
+  const el_pan_button_grafik = document.getElementById('id_button_pan_grafik') as HTMLButtonElement;
+  el_pan_button_grafik?.addEventListener("click", click_pan_button_grafik);
+  el_pan_button_grafik.innerHTML = '<i class = "fa fa-arrows"></i>';
+  const el_pan_button_cad = document.getElementById('id_button_pan_cad') as HTMLButtonElement;
+  el_pan_button_cad?.addEventListener("click", click_pan_button_cad);
+  el_pan_button_cad.innerHTML = '<i class = "fa fa-arrows"></i>';
 
   // const el_zurueck_cad = document.getElementById("id_button_zurueck_cad");
   // el_zurueck_cad?.addEventListener("click", click_zurueck_cad);
@@ -1356,6 +1361,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
   init_two_cad();
   init_cad(0);
+
 
   //init_grafik(0);
   //init_two('artboard', false);

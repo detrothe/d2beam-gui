@@ -397,15 +397,30 @@ input[type="number"] {
 #id_button_pan_grafik {
   position: absolute;
   bottom: 1rem;
-  left: 0.25rem;
+  left: 0.5rem;
   z-index: 5;
   margin: 0;
-  padding: 0.3125rem;
+  /*padding: 0.3125rem;*/
+  padding: 0.4375rem 0.75rem;
+  border: none;
   font-size: 1rem;
   background-color: #181818;
   color: #f1f1f1;
 }
 
+#id_button_pan_cad {
+  position: absolute;
+  bottom: 1rem;
+  left: 0.5rem;
+  z-index: 5;
+  margin: 0;
+  /*padding: 0.3125rem;*/
+  padding: 0.4375rem 0.75rem;
+  font-size: 1rem;
+  border: none;
+  background-color: light-dark(DodgerBlue,rgb(64, 64, 64));
+  color: #f1f1f1;
+}
 /* #id_querschnitt_default {
    position: absolute;
    top: 3.125rem;
@@ -474,7 +489,7 @@ input[type="number"] {
   padding: 0.4375rem 0.75rem;
   font-size: 1rem;
   cursor: pointer;
-  margin-left: 1rem;
+  margin-left: 0.25rem;
   margin-bottom: 0.1875rem;
   margin-top: 0.1875rem;
   border-radius: 3px;

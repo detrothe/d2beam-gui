@@ -73,6 +73,8 @@ export function set_zoomIsActive(wert: boolean) { zoomIsActive = wert; }
 let isPen = false;
 let isTouch = false
 
+let allow_pan_cad = true;
+
 let centerX = 0.0;
 let centerY = 0.0;
 let centerX_last = 0.0;
@@ -411,6 +413,22 @@ export function click_zurueck_cad() {
    init_cad(0);
 }
 
+
+//--------------------------------------------------------------------------------------------------------
+export function click_pan_button_cad() {
+   //----------------------------------------------------------------------------------------------------
+
+   allow_pan_cad = !allow_pan_cad;
+
+   const el_pan_button = document.getElementById('id_button_pan_cad') as HTMLButtonElement;
+
+   if (allow_pan_cad) {
+      el_pan_button.style.color = 'white'
+   } else {
+      el_pan_button.style.color = 'grey'
+   }
+
+}
 //--------------------------------------------------------------------------------------------------- i n i t _ t w o _ c a d
 
 export function init_two_cad(svg_id = 'artboard_cad') {
@@ -778,8 +796,8 @@ function pointerdown(ev: PointerEvent) {
          if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node) {
             zoomIsActive = false;
          } else {
-            //if (!buttons_control.button_pressed) {
-            zoomIsActive = true;
+            // if (allow_pan_cad) {
+            if (allow_pan_cad) zoomIsActive = true;
 
             mouseOffsetX = ev.offsetX;
             mouseOffsetY = ev.offsetY;
@@ -791,7 +809,7 @@ function pointerdown(ev: PointerEvent) {
                pointer.push(new CPointer(ev.pointerId, ev.isPrimary, ev.offsetX, ev.offsetY))
                console.log("pointerdown, length", pointer.length, ev.pointerId)
             }
-            //}
+            // }
          }
          break;
    }
@@ -1143,13 +1161,15 @@ function mousedown(ev: any) {
    //     mouseMoveIsActive = true
    // }
    if ((ev.button === 1) || (ev.button === 0 && !buttons_control.cad_eingabe_aktiv)) {
-      zoomIsActive = true;
+      if (allow_pan_cad) {
+         zoomIsActive = true;
 
-      mouseOffsetX = ev.offsetX;
-      mouseOffsetY = ev.offsetY;
+         mouseOffsetX = ev.offsetX;
+         mouseOffsetY = ev.offsetY;
 
-      mouseDx = 0.0;
-      mouseDz = 0.0;
+         mouseDx = 0.0;
+         mouseDz = 0.0;
+      }
    }
    //console.log("mouse_DownWX", mouse_DownWX, mouse_DownWY)
 
@@ -1199,16 +1219,21 @@ function mousemove(ev: MouseEvent) {
 
       if (cursorLineh) two.remove(cursorLineh);
       if (cursorLinev) two.remove(cursorLinev);
-      let len = tr.Pix0(getFangweite());
-      cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
-      cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
+
 
       if (foundSelectNode) {
          two.remove(selectNode);
          foundSelectNode = false;
       }
 
+      //if (buttons_control.cad_eingabe_aktiv || buttons_control.select_node) {
+         let len = tr.Pix0(getFangweite());
+         cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
+         cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
+      //}
+
       if (buttons_control.cad_eingabe_aktiv) {
+
          if (rubberband_drawn) {
             two.remove(rubberband);
          }

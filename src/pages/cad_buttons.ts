@@ -1107,7 +1107,7 @@ export function select_element(xc: number, zc: number) {
 
     showDialog_lager()
 
-    buttons_control.reset();
+    // buttons_control.reset();
   }
   else if (knotenlast_gefunden) {
     gefunden = true
@@ -1158,7 +1158,7 @@ export function select_element(xc: number, zc: number) {
       two.update();
 
       // undoList.append(obj);
-      buttons_control.reset();
+      //buttons_control.reset();
       gefunden = true
       picked_obj = obj;
 
@@ -2101,7 +2101,7 @@ function update_knotenlager() {
   obj_knlager.setTwoObj(group);
   two.update();
 
-  buttons_control.reset();
+  // buttons_control.reset();
 
 }
 

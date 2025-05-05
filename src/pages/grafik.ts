@@ -584,7 +584,7 @@ export function init_grafik(flag: number) {
         }
     }
 
-    const el_pan_button = document.getElementById('id_button_pan_grafik') as HTMLButtonElement;
+    //const el_pan_button = document.getElementById('id_button_pan_grafik') as HTMLButtonElement;
 
 }
 
