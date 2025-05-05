@@ -13,7 +13,7 @@ import { reset_controlpanel_grafik } from './grafik'
 
 import { get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length } from "./querschnitte"
 import { nQuerschnittSets, set_querschnittszaehler, add_rechteck_querschnitt } from "./querschnitte"
-import { alertdialog, setSystem, System } from './rechnen'
+import { alertdialog, maxBettung, set_maxBettung, setSystem, System } from './rechnen'
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 import { CADNodes, set_ID_counter, TCADNode } from "./cad_node";
 import { TCAD_Element, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
@@ -227,6 +227,8 @@ export function read_daten(eingabedaten: string) {
     ele.set_raster_zmin(jobj.raster_zmin)
     ele.set_raster_zmax(jobj.raster_zmax)
 
+    if (jobj.maxBettung === undefined) set_maxBettung(0.0);
+    else set_maxBettung(jobj.maxBettung);
 
     let nQuerschnittSets = jobj.nquerschnittsets
     console.log('nQuerschnittSets', nQuerschnittSets)
@@ -269,6 +271,15 @@ export function read_daten(eingabedaten: string) {
         let element = (jobj.elements[i] as TCAD_Element)
         if (element.className === 'TCAD_Stab') {
             const obj = new TCAD_Stab(null, jobj.elements[i].index1, jobj.elements[i].index2, jobj.elements[i].name_querschnitt, jobj.elements[i].elTyp);
+            obj.k_0 = jobj.elements[i].k_0
+            obj.aL = jobj.elements[i].aL
+            obj.aR = jobj.elements[i].aR
+            obj.nGelenke = jobj.elements[i].nGelenke
+            obj.gelenk = jobj.elements[i].gelenk
+            obj.sinus = jobj.elements[i].sinus
+            obj.cosinus = jobj.elements[i].cosinus
+            obj.alpha = jobj.elements[i].alpha
+
             list.append(obj);
             let neloads = jobj.elements[i].elast.length
             for (let j = 0; j < neloads; j++) {
@@ -732,8 +743,8 @@ export function str_inputToJSON() {
         for (j = 0; j < nSpalten; j++) {
             let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
             nodeDisp0[i][j] = child.value
-            console.log("i,j",i,j,child.value)
-            if ( j=== 1) {
+            console.log("i,j", i, j, child.value)
+            if (j === 1) {
                 let lf = +child.value
                 set_max_lastfall(lf);  // Fall tritt ein, wenn noch nicht gerechnet wurde
             }
@@ -824,7 +835,7 @@ export function str_inputToJSON() {
         'raster_zmin': raster_zmin,
         'raster_zmax': raster_zmax,
 
-
+        'maxBettung': maxBettung,
 
         // 'elem': elem,
         // 'koppelfedern': koppelfedern,

@@ -70,16 +70,14 @@ import {
   removeAll_def_querschnitt
 } from "./querschnitte"
 
-//import SlButton from "@shoelace-style/shoelace/dist/components/button/button.js";
 import { init_cad, init_two_cad, two_cad_clear } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { abbruch_property_dialog, show_property_dialog } from "./cad_contextmenu";
 import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
-//import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.4.f, 3-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.5.a, 5-Mai-2025, ";
 //########################################################################################################################
 
 

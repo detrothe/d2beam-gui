@@ -1,6 +1,6 @@
 import Two from 'two.js'
 
-import { System, STABWERK, TNode, TLoads, alertdialog, TMass } from './rechnen'
+import { System, STABWERK, TNode, TLoads, alertdialog, TMass, maxBettung, set_maxBettung } from './rechnen'
 
 import { CTrans } from './trans';
 import { myFormat } from './utility';
@@ -9,6 +9,7 @@ import { draw_elementlasten } from './cad_draw_elementlasten';
 //import { two } from './cad';
 import { get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
+import { opacity } from './grafik';
 
 
 
@@ -106,11 +107,70 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
         group.add(gr)
     }
 
+    if (obj.k_0 !== 0.0) {
+        if (Math.abs(obj.k_0) > maxBettung) set_maxBettung(Math.abs(obj.k_0))
+        let gr = draw_bettungsmodul(obj, tr)  // Bettung darstellen
+        group.add(gr)
+    }
     //console.log("in drawStab, Anzahl Elementlasten:", obj.elast.length)
+
     if (obj.elast.length > 0) {
         let gr = draw_elementlasten(tr, obj)
         group.add(gr)
     }
+
+    return group;
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+function draw_bettungsmodul(obj: TCAD_Stab, tr: CTrans) {
+    //----------------------------------------------------------------------------------------------------
+
+    console.log("in draw_bettungsmodul")
+
+    let slmax = 10;
+
+    let group = new Two.Group();
+
+    let x = Array(4), z = Array(4), xtr = Array(4), ztr = Array(4)
+    let si = obj.sinus
+    let co = obj.cosinus
+    let a = -slmax / 150.
+    let p = obj.k_0 * slmax / 40 / maxBettung
+    const color_load = '#ffc680';
+
+    let index1 = obj.index1
+    let index2 = obj.index2
+    let x1 = get_cad_node_X(index1);
+    let z1 = get_cad_node_Z(index1);
+    let x2 = get_cad_node_X(index2);
+    let z2 = get_cad_node_Z(index2);
+    x[0] = x1 + si * a; z[0] = z1 - co * a;
+    x[1] = x2 + si * a; z[1] = z2 - co * a;
+    x[2] = x[1] - si * p; z[2] = z[1] + co * p;
+    x[3] = x[0] - si * p; z[3] = z[0] + co * p;
+
+    var vertices = [];
+    for (let i = 0; i < 4; i++) {
+        xtr[i] = tr.xPix(x[i])
+        ztr[i] = tr.zPix(z[i])
+        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+    }
+
+    let flaeche = new Two.Path(vertices);
+    flaeche.fill = color_load;
+    flaeche.opacity = opacity
+    group.add(flaeche)
+
+    let xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
+    let zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
+    let str = myFormat(Math.abs(obj.k_0), 1, 2) + ' kN/m²'
+    let txt = new Two.Text(str, xpix, zpix, style_txt)
+    txt.alignment = 'center'
+    txt.baseline = 'middle'
+    txt.rotation = obj.alpha
+    group.add(txt)
 
     return group;
 }
@@ -994,7 +1054,7 @@ export function draw_knotenmasse(tr: CTrans, _mass: TMass, xm: number, zm: numbe
 
 
 //--------------------------------------------------------------------------------------------------------
-function draw_feder( dir: string) {
+function draw_feder(dir: string) {
     //----------------------------------------------------------------------------------------------------
 
     let x = Array(7)

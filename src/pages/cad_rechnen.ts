@@ -8,8 +8,8 @@ import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Tempera
 import {
     alertdialog, element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, nodalmass, node,
     nodeDisp0,
-    nstreckenlasten, ntemperaturlasten, set_maxU_node, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
-    set_nlastfaelle, set_nloads, set_nnodalMass, set_nNodeDisps, set_nnodes, set_nnodesTotal, set_nstabvorverfomungen, set_ntotalEloads, stabvorverformung, System, TElement, TElLoads, TLoads, TMass, TNode,
+    nstreckenlasten, ntemperaturlasten, set_maxBettung, set_maxU_node, set_neinzellasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
+    set_nlastfaelle, set_nloads, set_nnodalMass, set_nNodeDisps, set_nnodes, set_nnodesTotal, set_nspannschloesser, set_nstabvorverfomungen, set_nstreckenlasten, set_ntemperaturlasten, set_ntotalEloads, set_nvorspannungen, stabvorverformung, System, TElement, TElLoads, TLoads, TMass, TNode,
     TNodeDisp,
     TStabvorverformung
 } from "./rechnen";
@@ -162,9 +162,10 @@ export function cad_rechnen() {
         //elTab?.setAttribute("clear", "0");
     }
 
-
-
     {
+        let nelem_Balken_Bettung = 0
+        let maxBettung = 0
+
         let el = document.getElementById('id_element_tabelle') as HTMLElement;
         let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
@@ -211,6 +212,10 @@ export function cad_rechnen() {
                 element[ielem].aL = obj.aL
                 element[ielem].aR = obj.aR
                 element[ielem].k_0 = obj.k_0
+                if (obj.k_0 !== 0.0) {
+                    nelem_Balken_Bettung++;
+                    if (Math.abs(obj.k_0) > maxBettung) maxBettung = Math.abs(obj.k_0)
+                }
 
                 ielem++
 
@@ -239,6 +244,8 @@ export function cad_rechnen() {
             }
         }
 
+        set_nelem_Balken_Bettung(nelem_Balken_Bettung);
+        set_maxBettung(maxBettung);
     }
 
     {  // Tabellen für Lastfälle und Kombinationen initialisieren
@@ -358,6 +365,7 @@ export function cad_rechnen() {
         // Streckenlasten
         let el = document.getElementById("id_button_nstreckenlasten") as drButtonPM;
         el.setValue(nStreckenlasten);
+        set_nstreckenlasten(nStreckenlasten);
 
         const elTabStreckenlast = document.getElementById("id_streckenlasten_tabelle");
         elTabStreckenlast?.setAttribute("nzeilen", String(nStreckenlasten));
@@ -368,6 +376,7 @@ export function cad_rechnen() {
         // Einzellastenlasten
         el = document.getElementById("id_button_neinzellasten") as drButtonPM;
         el.setValue(nEinzellasten);
+        set_neinzellasten(nEinzellasten);
 
         const elTabEinzellast = document.getElementById("id_einzellasten_tabelle");
         elTabEinzellast?.setAttribute("nzeilen", String(nEinzellasten));
@@ -379,6 +388,7 @@ export function cad_rechnen() {
         // Temperaturlasten
         el = document.getElementById("id_button_ntemperaturlasten") as drButtonPM;
         el.setValue(nTemperaturlasten);
+        set_ntemperaturlasten(nTemperaturlasten);
 
         const elTabTemplast = document.getElementById("id_temperaturlasten_tabelle");
         elTabTemplast?.setAttribute("nzeilen", String(nTemperaturlasten));
@@ -389,6 +399,7 @@ export function cad_rechnen() {
         // Vorspannung
         el = document.getElementById("id_button_nvorspannungen") as drButtonPM;
         el.setValue(nVorspannungen);
+        set_nvorspannungen(nVorspannungen);
 
         const elTabVorspannung = document.getElementById("id_vorspannungen_tabelle");
         elTabVorspannung?.setAttribute("nzeilen", String(nVorspannungen));
@@ -399,6 +410,7 @@ export function cad_rechnen() {
         // Spannschloss
         el = document.getElementById("id_button_nspannschloesser") as drButtonPM;
         el.setValue(nSpannschloesser);
+        set_nspannschloesser(nSpannschloesser);
 
         const elTabSpannschloss = document.getElementById("id_spannschloesser_tabelle");
         elTabSpannschloss?.setAttribute("nzeilen", String(nSpannschloesser));

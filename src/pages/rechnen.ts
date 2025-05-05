@@ -155,14 +155,20 @@ export let maxdisp_all = 0.0
 export let maxpress_all = 0.0
 
 export let maxBettung = 0.0
+export function set_maxBettung(wert: number) { maxBettung = wert; }
 
 export let xmin = -50.0, zmin = -50.0, xmax = 50.0, zmax = 50.0, slmax = 0.0;
 
 export let nstreckenlasten = 0;
+export function set_nstreckenlasten(wert: number) { nstreckenlasten = wert; }
 export let neinzellasten = 0;
+export function set_neinzellasten(wert: number) { neinzellasten = wert; }
 export let ntemperaturlasten = 0;
+export function set_ntemperaturlasten(wert: number) { ntemperaturlasten = wert; }
 export let nvorspannungen = 0;
+export function set_nvorspannungen(wert: number) { nvorspannungen = wert; }
 export let nspannschloesser = 0;
+export function set_nspannschloesser(wert: number) { nspannschloesser = wert; }
 
 export let stm = [] as number[][];
 export let U_ = [] as number[];
