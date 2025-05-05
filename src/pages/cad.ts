@@ -795,6 +795,23 @@ function pointerdown(ev: PointerEvent) {
          }
          break;
    }
+
+   if (isTouch || isPen) {
+
+      let dx_offset = 0.0, dy_offset = 0.0;
+      if (isTouch) {
+         dx_offset = dx_offset_touch / devicePixelRatio;
+         dy_offset = dz_offset_touch / devicePixelRatio;
+      }
+      let xo = ev.offsetX + dx_offset
+      let yo = ev.offsetY + dy_offset
+
+      if (cursorLineh) two.remove(cursorLineh);
+      if (cursorLinev) two.remove(cursorLinev);
+      let len = tr.Pix0(getFangweite());
+      cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
+      cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
+   }
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -1171,19 +1188,19 @@ function mousemove(ev: MouseEvent) {
    }
    else {
 
-         let dx_offset = 0.0, dy_offset = 0.0;
-         if (isTouch) {
-            dx_offset = dx_offset_touch / devicePixelRatio;
-            dy_offset = dz_offset_touch / devicePixelRatio;
-         }
-         let xo = ev.offsetX + dx_offset
-         let yo = ev.offsetY + dy_offset
+      let dx_offset = 0.0, dy_offset = 0.0;
+      if (isTouch) {
+         dx_offset = dx_offset_touch / devicePixelRatio;
+         dy_offset = dz_offset_touch / devicePixelRatio;
+      }
+      let xo = ev.offsetX + dx_offset
+      let yo = ev.offsetY + dy_offset
 
-         if (cursorLineh) two.remove(cursorLineh);
-         if (cursorLinev) two.remove(cursorLinev);
-         let len = tr.Pix0(getFangweite());
-         cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
-         cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
+      if (cursorLineh) two.remove(cursorLineh);
+      if (cursorLinev) two.remove(cursorLinev);
+      let len = tr.Pix0(getFangweite());
+      cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
+      cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
 
       if (foundSelectNode) {
          two.remove(selectNode);
