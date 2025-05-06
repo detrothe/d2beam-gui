@@ -77,7 +77,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.5.a, 6-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.5.b, 6-Mai-2025, ";
 //########################################################################################################################
 
 
@@ -209,6 +209,14 @@ portrait.addEventListener("change", function (e) {
       <!--------------------------------------------------------------------------------------->
 
       <sl-tab-panel name="tab-haupt">
+
+       <!--
+          <video  height="150" controls >
+          <source src="assets/video/einfuehrung.mp4" type="video/mp4" >
+          Einfuehrungsvideo
+          </video>  Einfuehrungsvideo
+       -->
+
         <p><div id="id_current_filename">&nbsp;&nbsp;aktueller Dateiname: ${currentFilename}<br /></div>
         </p>
         <p>
