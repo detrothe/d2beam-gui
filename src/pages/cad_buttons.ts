@@ -24,9 +24,10 @@ import {
   CAD_INFO,
   set_zoomIsActive,
   reset_pointer_length,
-  getFangweite,
   CAD_KNMASSE,
-  redraw_knotenmasse
+  redraw_knotenmasse,
+  set_fangweite_cursor,
+  get_fangweite_cursor
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -789,7 +790,7 @@ export function select_node(xc: number, zc: number) {
 
   // Elementknoten finden
 
-  let fangweite2 = getFangweite() * getFangweite();
+  let fangweite2 = get_fangweite_cursor() * get_fangweite_cursor();
 
   let abstand = 1e30
   for (let i = 0; i < CADNodes.length; i++) {
@@ -890,7 +891,19 @@ export function select_element(xc: number, zc: number) {
     let obj = list.getAt(i) as any;
     console.log("eltyp", obj.elTyp)
 
-    if (obj.elTyp === CAD_STAB) {
+    if (obj.elTyp === CAD_KNLAST) {
+      let two_obj = obj.two_obj
+      let rect = two_obj.getBoundingClientRect();
+      console.log("rect Knotenlast", rect, xc, zc)
+      if (xpix > rect.left && xpix < rect.right) {
+        if (zpix > rect.top && zpix < rect.bottom) {
+          knotenlast_gefunden = true
+          //index_knlast = i;
+          obj_knlast = obj
+        }
+      }
+    }
+    else if (obj.elTyp === CAD_STAB) {
 
       let abstand = abstandPunktGerade_2D(get_cad_node_X(obj.index1), get_cad_node_Z(obj.index1), get_cad_node_X(obj.index2), get_cad_node_Z(obj.index2), xc, zc);
       if (abstand > -1.0) {
@@ -968,18 +981,6 @@ export function select_element(xc: number, zc: number) {
         }
       }
     }
-    else if (obj.elTyp === CAD_KNLAST) {
-      let two_obj = obj.two_obj
-      let rect = two_obj.getBoundingClientRect();
-      console.log("rect Knotenlast", rect, xc, zc)
-      if (xpix > rect.left && xpix < rect.right) {
-        if (zpix > rect.top && zpix < rect.bottom) {
-          knotenlast_gefunden = true
-          //index_knlast = i;
-          obj_knlast = obj
-        }
-      }
-    }
     else if (obj.elTyp === CAD_KNMASSE) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
@@ -1026,7 +1027,22 @@ export function select_element(xc: number, zc: number) {
   // }
   // else
 
-  if (element_einzellast_gefunden) {
+  if (knotenlast_gefunden) {
+    gefunden = true
+    console.log("Knotenlast gefunden")
+
+    // let knlast = new TLoads();
+    // let lf = (obj_knlast as TCAD_Knotenlast).knlast
+
+    write_knotenlast_dialog((obj_knlast as TCAD_Knotenlast).knlast)
+    showDialog_knotenlast()
+
+    picked_obj = obj_knlast
+    mode_knotenlast_aendern = true
+
+    // buttons_control.reset();
+  }
+  else if (element_einzellast_gefunden) {
 
     const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
 
@@ -1109,23 +1125,7 @@ export function select_element(xc: number, zc: number) {
 
     // buttons_control.reset();
   }
-  else if (knotenlast_gefunden) {
-    gefunden = true
-    console.log("Knotenlast gefunden")
 
-    // let knlast = new TLoads();
-    // let lf = (obj_knlast as TCAD_Knotenlast).knlast
-
-    write_knotenlast_dialog((obj_knlast as TCAD_Knotenlast).knlast)
-    showDialog_knotenlast()
-
-    picked_obj = obj_knlast
-    mode_knotenlast_aendern = true
-    // two.remove(obj.two_obj);
-    // two.update();
-    // undoList.append(obj);
-    buttons_control.reset();
-  }
   else if (knotenmasse_gefunden) {
     gefunden = true
     console.log("Knotenmasse gefunden")
@@ -1138,10 +1138,8 @@ export function select_element(xc: number, zc: number) {
 
     picked_obj = obj_knmasse
     mode_knotenmasse_aendern = true
-    // two.remove(obj.two_obj);
-    // two.update();
-    // undoList.append(obj);
-    buttons_control.reset();
+
+    // buttons_control.reset();
   }
 
   else if (index >= 0 && min_abstand < 0.25) {
@@ -1157,7 +1155,6 @@ export function select_element(xc: number, zc: number) {
 
       two.update();
 
-      // undoList.append(obj);
       //buttons_control.reset();
       gefunden = true
       picked_obj = obj;
@@ -1627,6 +1624,8 @@ function dialog_einstellungen_closed(this: any, e: any) {
     set_raster_zmin(el.get_raster_zmin());
     set_raster_zmax(el.get_raster_zmax());
 
+    set_fangweite_cursor(el.get_fangweite_cursor());
+
     init_cad(2);
   } else {
     // Abbruch
@@ -2050,7 +2049,7 @@ function update_elementlast() {
 
   two.update();
 
-  buttons_control.reset();
+  //buttons_control.reset();
 
 }
 
@@ -2077,7 +2076,7 @@ function update_knotenlast() {
   obj_knlast.setTwoObj(group);
   two.update();
 
-  buttons_control.reset();
+  //buttons_control.reset();
 
 }
 
@@ -2133,11 +2132,11 @@ export function update_knoten(flag = 0) {
     group = new Two.RoundedRectangle(
       tr.xPix(get_cad_node_X(obj_knoten.index1)),
       tr.zPix(get_cad_node_Z(obj_knoten.index1)),
-      15 / devicePixelRatio,
-      15 / devicePixelRatio,
+      11 / devicePixelRatio,
+      11 / devicePixelRatio,
       4
     );
-    group.fill = '#dd1100';
+    group.fill = 'black';
 
     two.add(group);
 
@@ -2178,7 +2177,7 @@ export function update_knoten(flag = 0) {
   }
   two.update();
 
-  buttons_control.reset();
+  //buttons_control.reset();
 
 }
 
@@ -2204,7 +2203,7 @@ function update_knotenmasse() {
   obj_knmasse.setTwoObj(group);
   two.update();
 
-  buttons_control.reset();
+  //buttons_control.reset();
 
 }
 

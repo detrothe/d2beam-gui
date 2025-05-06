@@ -1,5 +1,5 @@
 import Two from 'two.js'
-import { getFangweite, two } from "./cad";
+import {  get_fangweite_cursor, two } from "./cad";
 
 export let CADNodes = [] as TCADNode[]
 
@@ -64,7 +64,7 @@ export function find_nearest_cad_node(x: number, z: number) {
     //--------------------------------------------------------------------------------------------
 
     let index = -1
-    min_abstand = getFangweite() * getFangweite()
+    min_abstand = get_fangweite_cursor() * get_fangweite_cursor()
 
     for (let i = 0; i < CADNodes.length; i++) {
         let dx = CADNodes[i].x - x

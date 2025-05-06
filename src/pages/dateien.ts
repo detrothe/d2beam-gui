@@ -19,7 +19,9 @@ import { CADNodes, set_ID_counter, TCADNode } from "./cad_node";
 import { TCAD_Element, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
 import {
     init_cad, init_two_cad, list, raster_dx, raster_dz, raster_xmax, raster_xmin, raster_zmax, raster_zmin,
-    set_raster_dx, set_raster_dz, two_cad_clear, set_raster_xmin, set_raster_xmax, set_raster_zmin, set_raster_zmax
+    set_raster_dx, set_raster_dz, two_cad_clear, set_raster_xmin, set_raster_xmax, set_raster_zmin, set_raster_zmax,
+    set_fangweite_cursor,
+    get_fangweite_cursor
 } from "./cad";
 import { CMAXVALUESLOAD, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
@@ -218,6 +220,7 @@ export function read_daten(eingabedaten: string) {
     set_raster_zmin(jobj.raster_zmin)
     set_raster_zmax(jobj.raster_zmax)
 
+
     let ele = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
     ele.set_raster_dx(jobj.raster_dx)
     ele.set_raster_dz(jobj.raster_dz)
@@ -226,6 +229,15 @@ export function read_daten(eingabedaten: string) {
     ele.set_raster_xmax(jobj.raster_xmax)
     ele.set_raster_zmin(jobj.raster_zmin)
     ele.set_raster_zmax(jobj.raster_zmax)
+
+    if ( jobj.fangweite_cursor === undefined) {
+        set_fangweite_cursor(0.25);
+        ele.set_fangweite_cursor(0.25)
+    } else {
+         set_fangweite_cursor(jobj.fangweite_cursor);
+         ele.set_fangweite_cursor(jobj.fangweite_cursor)
+    }
+
 
     if (jobj.maxBettung === undefined) set_maxBettung(0.0);
     else set_maxBettung(jobj.maxBettung);
@@ -834,6 +846,7 @@ export function str_inputToJSON() {
         'raster_xmax': raster_xmax,
         'raster_zmin': raster_zmin,
         'raster_zmax': raster_zmax,
+        'fangweite_cursor': get_fangweite_cursor(),
 
         'maxBettung': maxBettung,
 

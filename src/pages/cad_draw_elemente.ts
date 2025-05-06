@@ -1034,11 +1034,11 @@ export function draw_knoten(obj: TCAD_Knoten, tr: CTrans) {
     let makeRoundedRectangle = new Two.RoundedRectangle(
         tr.xPix(get_cad_node_X(obj.index1)),
         tr.zPix(get_cad_node_Z(obj.index1)),
-        15 / devicePixelRatio,
-        15 / devicePixelRatio,
+        11 / devicePixelRatio,
+        11 / devicePixelRatio,
         4
     );
-    makeRoundedRectangle.fill = '#dd1100';
+    makeRoundedRectangle.fill = 'black';
 
     group.add(makeRoundedRectangle)
 

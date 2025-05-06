@@ -52,6 +52,10 @@ export let tr: CTrans;
 
 let devicePixelRatio = 1;
 
+let fangweite_cursor = 0.25;
+export function set_fangweite_cursor(wert: number) { fangweite_cursor = wert; }
+export function get_fangweite_cursor() { return fangweite_cursor; }
+
 let fullscreen = false;
 let grafik_top = 0;
 
@@ -82,7 +86,7 @@ let centerY_last = 0.0;
 
 export let dx_offset_touch = 0;
 export let dz_offset_touch = 0;
-let dx_offset_touch_fact = -1;
+let dx_offset_touch_fact = 0;
 let dz_offset_touch_fact = -1;
 export function set_dx_offset_touch_factor(dx: number) { dx_offset_touch_fact = dx; }
 export function set_dz_offset_touch_factor(dz: number) { dz_offset_touch_fact = dz; }
@@ -111,19 +115,15 @@ let input_active = false;
 export let rubberband_drawn = false;
 export function set_rubberband_drawn(wert: boolean) { rubberband_drawn = wert; }
 
-// let input_x = 0
-// let input_y = 0
-let start_x = 0,
-   end_x = 0;
-let start_y = 0,
-   end_y = 0;
-// let touchstart_x = 0, touchend_x = 0
-// let touchstart_y = 0, touchend_y = 0
-//let input_started = 0;
-let start_x_wc = 0,
-   end_x_wc = 0; // x-z im Weltkoordinatensystem
-let start_z_wc = 0,
-   end_z_wc = 0;
+
+let start_x = 0
+let start_y = 0
+
+
+let start_x_wc = 0
+let end_x_wc = 0; // x-z im Weltkoordinatensystem
+let start_z_wc = 0
+let end_z_wc = 0;
 
 let cursorLineh: any = null;
 let cursorLinev: any = null;
@@ -185,30 +185,9 @@ export let undoList: LinkedList = new LinkedList(); // Empty undo list
 
 window.addEventListener('draw_cad_knoten', draw_cad_knoten);
 
-// list.append(1);                           // 1
-// list.prepend('Hello');                    // Hello <-> 1
-// list.prepend(2);                          // 2 <-> Hello <-> 1
-// list.append('Here I am');                 // 2 <-> Hello <-> 1 <-> Here I am
-// list.insertAt('x', 2);                    // 2 <-> Hello <-> x <-> 1 <-> Here I am
-// list.insertAt(5, 0);                      // 5 <-> 2 <-> Hello <-> x <-> 1 <-> Here I am
-// console.log(list.getHead());              // would prompt 5
-// console.log(list.getAt(0));               // would prompt 5
-// console.log(list.getTail());              // would prompt Here I am
-// console.log(list.getAt(4))                // would prompt 1
-// console.log(list.removeHead());           // would prompt 5
-//                                           // then 2 <-> Hello <-> x <-> 1 <-> Here I am
-// console.log(list.removeTail());           // would pompt Here I am
-//                                           // then 2 <-> Hello <-> x <-> 1
-// console.log(list.removeAt(3));            // would prompt 1
-//                                           // then 2 <-> Hello <-> x
-// console.log(list.removeAt(1));            // would prompt Hello
-//                                           // then 2 <-> x
-// list.log();                               // would prompt 2 <-> Hello
 
 //--------------------------------------------------------------------------------------------------------
-export function getFangweite() {
-   return 0.2;
-}
+
 //--------------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------------
@@ -826,7 +805,7 @@ function pointerdown(ev: PointerEvent) {
 
       if (cursorLineh) two.remove(cursorLineh);
       if (cursorLinev) two.remove(cursorLinev);
-      let len = tr.Pix0(getFangweite());
+      let len = tr.Pix0(fangweite_cursor);
       cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
       cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
       two.update();
@@ -1227,9 +1206,9 @@ function mousemove(ev: MouseEvent) {
       }
 
       //if (buttons_control.cad_eingabe_aktiv || buttons_control.select_node) {
-         let len = tr.Pix0(getFangweite());
-         cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
-         cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
+      let len = tr.Pix0(fangweite_cursor);
+      cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
+      cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
       //}
 
       if (buttons_control.cad_eingabe_aktiv) {
@@ -1529,24 +1508,24 @@ function mouseup(ev: any) {
             two.remove(rubberband);
 
             if (foundNodePoint) {
-               end_x = tr.xPix(xNodePoint);
-               end_y = tr.zPix(zNodePoint);
+               // end_x = tr.xPix(xNodePoint);
+               // end_y = tr.zPix(zNodePoint);
                end_x_wc = xNodePoint;
                end_z_wc = zNodePoint;
 
                two.remove(nodePoint);
                foundNodePoint = false;
             } else if (foundRasterPoint) {
-               end_x = tr.xPix(xRasterPoint);
-               end_y = tr.zPix(zRasterPoint);
+               // end_x = tr.xPix(xRasterPoint);
+               // end_y = tr.zPix(zRasterPoint);
                end_x_wc = xRasterPoint;
                end_z_wc = zRasterPoint;
 
                two.remove(rasterPoint);
                foundRasterPoint = false;
             } else {
-               end_x = xo;
-               end_y = yo;
+               // end_x = xo;
+               // end_y = yo;
                end_x_wc = tr.xWorld(xo);
                end_z_wc = tr.zWorld(yo);
             }
@@ -1844,7 +1823,7 @@ function findNextRasterPoint(xl: number, yl: number) {
    let gefunden = false;
 
    slmin = 1e30;
-   rahm = getFangweite();
+   rahm = fangweite_cursor;
    fangweite2 = rahm * rahm;
 
    if (xl >= 0.0) {

@@ -114,8 +114,8 @@ export class drDialogEinstellungen extends LitElement {
         border: thin solid #e7c157;
         /*margin: 5rem auto;*/
         font-size: 1rem;
-        max-height:90vh;
-        overflow-y:auto;
+        max-height: 90vh;
+        overflow-y: auto;
       }
 
       dialog::backdrop {
@@ -137,13 +137,21 @@ export class drDialogEinstellungen extends LitElement {
       <table id="einstellungen_table">
         <tbody>
           <tr>
-            <td>
-              <sl-checkbox id="id_NO_touch_support">Keine Fingereingabe für System </sl-checkbox>
+            <td colspan='2'>
+              <sl-checkbox id="id_NO_touch_support">Keine Fingererkennung für Systemeingabe </sl-checkbox>
             </td>
           </tr>
           <tr>
             <td>
+              Fangweite Cursor:
+            </td>
+            <td><input type="number" id="id_fangweite_cursor" name="fang_cursor" pattern="[0-9.,eE+-]*" value="0.25" /> [m]</td>
+          </tr>
+          <tr>
+            <td>
               Faktor für Lagersymbole:
+            </td>
+            <td>
               <input type="number" id="id_fact_lager" name="fact_lager" pattern="[0-9.,eE+-]*" value="1" />
               [-]
             </td>
@@ -322,5 +330,15 @@ export class drDialogEinstellungen extends LitElement {
   set_raster_zmax(zmax: number) {
     let el = this.shadowRoot?.getElementById("id_zmax") as HTMLInputElement;
     el.value = String(zmax);
+  }
+
+  set_fangweite_cursor(fw: number) {
+    let el = this.shadowRoot?.getElementById("id_fangweite_cursor") as HTMLInputElement;
+    el.value = String(fw);
+  }
+
+  get_fangweite_cursor(): number {
+    let wert = (this.shadowRoot?.getElementById("id_fangweite_cursor") as HTMLInputElement).value.replace(/,/g, ".");
+    return +wert;
   }
 }
