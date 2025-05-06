@@ -217,7 +217,7 @@ portrait.addEventListener("change", function (e) {
           </video>  Einfuehrungsvideo
        -->
         <p>
-         <sl-button id="intro_video" value="video" variant="primary" @click="${show_video}" style='width:20rem;color:"DodgerBlue";'><b>zeige Einführungsvideo</b></sl-button>
+         <sl-button id="intro_video" value="video" variant="primary"  outline @click="${show_video}" style='width:20rem;color:"DodgerBlue";'><b>zeige Einführungsvideo</b></sl-button>
         </p>
 
         <p><div id="id_current_filename">&nbsp;&nbsp;aktueller Dateiname: ${currentFilename}<br /></div>
