@@ -469,8 +469,8 @@ export function dialog_querschnitt_closed(_e: any) {
 
                 // Name des Querschnitts in Querschnitts-tree (tab Querschnitte) ändern
                 const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
-                console.log("dialog_querschnitt_item_id", dialog_querschnitt_item_id);
-                console.log("dialog_querschnitt_index, qname", dialog_querschnitt_index, qname); // , el.textContent
+                //console.log("dialog_querschnitt_item_id", dialog_querschnitt_item_id);
+                //console.log("dialog_querschnitt_index, qname", dialog_querschnitt_index, qname); // , el.textContent
 
                 if (el.textContent !== qname) {
                     let old_name = el.textContent
@@ -485,9 +485,10 @@ export function dialog_querschnitt_closed(_e: any) {
 
                     let eld = document.getElementById('id_querschnitt_default') as HTMLSelectElement;
                     for (const option of eld.options) {
-                        console.log("OPTIONS", option.value, option.textContent, option.text)
+                        //console.log("OPTIONS", option.value, option.textContent, option.text)
                         if (option.textContent === old_name) {
                             option.textContent = qname
+                            if (default_querschnitt === old_name) default_querschnitt = qname;
                         }
                     }
 
