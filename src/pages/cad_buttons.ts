@@ -340,6 +340,10 @@ export function cad_buttons() {
   help_text.className = "helptext";
   help_text.id = "id_cad_helptext";
 
+  div.appendChild(help_text);
+  let br = document.createElement("br");
+  div.appendChild(br);
+
   div.appendChild(undo_button);
   div.appendChild(redo_button);
   div.appendChild(trash_button);
@@ -354,13 +358,10 @@ export function cad_buttons() {
   div.appendChild(cog_button);
   div.appendChild(refresh_button);
   div.appendChild(info_button);
-  div.appendChild(help_text);
 
   let h = div!.getBoundingClientRect()
   // console.log("Höhe des div", h)
 
-  let br = document.createElement("br");
-  //div.appendChild(br);
   div2.appendChild(zurueck_button);
   br = document.createElement("br");
   div2.appendChild(br);

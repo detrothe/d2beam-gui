@@ -504,13 +504,13 @@ input[type="number"] {
   background-color: white;
   border: none;
   color: DodgerBlue;
-  padding: 0.4375rem 0.75rem;
-  font-size: 1rem;
+  /*padding: 0.4375rem 0.75rem;*/
+  font-size: 0.875rem;
   cursor: pointer;
   margin-left: 1rem;
   margin-bottom: 0.1875rem;
   margin-top: 0.1875rem;
-  border-radius: 3px;
+  /*border-radius: 3px;*/
 }
 /*
 .output_table_ein {
