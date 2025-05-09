@@ -77,7 +77,7 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.6.b, 9-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.6.c, 9-Mai-2025, ";
 //########################################################################################################################
 
 let hostname=window.location.hostname

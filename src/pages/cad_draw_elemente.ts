@@ -331,7 +331,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             group.add(line)
 
         }
-        else if ((node.L[0] >= 0) && (node.L_org[1] === 1)) { // einwertiges horizontal verschieblisches Lager
+        else if ((node.L_org[0] >= 0) && (node.L_org[1] === 1)) { // einwertiges horizontal verschieblisches Lager
 
             //console.log("in einwertiges horizontal verschieblisches Lager")
             var vertices = [];
@@ -350,20 +350,20 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             group.add(line)
 
         }
-        else if ((node.L_org[0] === 1) && (node.L[1] >= 0)) { // einwertiges vertikal verschieblisches Lager
+        else if ((node.L_org[0] === 1) && (node.L_org[1] >= 0)) { // einwertiges vertikal verschieblisches Lager
 
             //console.log("in einwertiges vertikales Lager")
             var vertices = [];
             vertices.push(new Two.Anchor(0, 0));
-            vertices.push(new Two.Anchor(-12, 20));
-            vertices.push(new Two.Anchor(12, 20));
+            vertices.push(new Two.Anchor(20, -12));
+            vertices.push(new Two.Anchor(20, 12));
 
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
             flaeche.closed = true;
             group.add(flaeche)
 
-            let line = new Two.Line(-18, 25, 18, 25);
+            let line = new Two.Line(25, -18, 25, 18);
             line.linewidth = 2;
 
             group.add(line)

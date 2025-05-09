@@ -1316,10 +1316,6 @@ function mouseup(ev: any) {
    console.log('in mouseup', ev.button);
    ev.preventDefault();
 
-   //if (!needMouseMoveForInfo) {
-   //domElement.removeEventListener('mousemove', mousemove, false);
-   //    mouseMoveIsActive = false
-   // }
    zoomIsActive = false;
 
    centerX_last = centerX;
@@ -1507,58 +1503,54 @@ function mouseup(ev: any) {
          } else if (buttons_control.input_started === 1) {          // Eingabe Stabende
             two.remove(rubberband);
 
-            if (foundNodePoint) {
-               // end_x = tr.xPix(xNodePoint);
-               // end_y = tr.zPix(zNodePoint);
-               end_x_wc = xNodePoint;
-               end_z_wc = zNodePoint;
+            if (buttons_control.stab_eingabe_aktiv) {
 
-               two.remove(nodePoint);
-               foundNodePoint = false;
-            } else if (foundRasterPoint) {
-               // end_x = tr.xPix(xRasterPoint);
-               // end_y = tr.zPix(zRasterPoint);
-               end_x_wc = xRasterPoint;
-               end_z_wc = zRasterPoint;
+               if (foundNodePoint) {
+                  end_x_wc = xNodePoint;
+                  end_z_wc = zNodePoint;
 
-               two.remove(rasterPoint);
-               foundRasterPoint = false;
-            } else {
-               // end_x = xo;
-               // end_y = yo;
-               end_x_wc = tr.xWorld(xo);
-               end_z_wc = tr.zWorld(yo);
+                  two.remove(nodePoint);
+                  foundNodePoint = false;
+               } else if (foundRasterPoint) {
+                  end_x_wc = xRasterPoint;
+                  end_z_wc = zRasterPoint;
+
+                  two.remove(rasterPoint);
+                  foundRasterPoint = false;
+               } else {
+                  end_x_wc = tr.xWorld(xo);
+                  end_z_wc = tr.zWorld(yo);
+               }
+
+
+               buttons_control.input_started = 0;
+               input_active = false;
+               rubberband_drawn = false;
+               let group = null;
+
+               // Überprüfe Stablänge
+               let dx = end_x_wc - start_x_wc
+               let dz = end_z_wc - start_z_wc
+               let sl = Math.sqrt(dx * dx + dz * dz)
+               if (sl > 0.001) {
+                  let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
+                  let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
+                  add_element_nodes(index1);
+                  add_element_nodes(index2);
+                  const obj = new TCAD_Stab(group, index1, index2, default_querschnitt, buttons_control.typ_cad_element);
+                  list.append(obj);
+
+                  group = drawStab(obj, tr);
+                  two.add(group);
+                  two.update();
+
+                  obj.setTwoObj(group)
+               }
+               else {
+                  alertdialog('ok', 'Stablänge zu klein = ' + sl + 'm');
+               }
+               set_help_text('Stabanfang eingeben');
             }
-
-
-            buttons_control.input_started = 0;
-            input_active = false;
-            rubberband_drawn = false;
-            let group = null;
-
-            // Überprüfe Stablänge
-            let dx = end_x_wc - start_x_wc
-            let dz = end_z_wc - start_z_wc
-            let sl = Math.sqrt(dx * dx + dz * dz)
-            if (sl > 0.001) {
-               let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
-               let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
-               add_element_nodes(index1);
-               add_element_nodes(index2);
-               const obj = new TCAD_Stab(group, index1, index2, default_querschnitt, buttons_control.typ_cad_element);
-               list.append(obj);
-
-               group = drawStab(obj, tr);
-               two.add(group);
-               two.update();
-
-               obj.setTwoObj(group)
-            }
-            else {
-               alertdialog('ok', 'Stablänge zu klein = ' + sl + 'm');
-            }
-            set_help_text('Stabanfang eingeben');
-
             //list.log()
          }
       }
