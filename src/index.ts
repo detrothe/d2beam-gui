@@ -26,7 +26,7 @@ if (isAndroid) {
 
     window.addEventListener('load', () => {
         input = window.localStorage.getItem('current_input_D2BEAM_GUI');
-        //write('Android, LOAD  current input = ' + input.length)
+        write('Android, LOAD  current input = ' + input.length)
         //console.log('LOAD  current input = ', input.length)
         if (input.length > 0) {
             autoEingabeLesen();
@@ -42,8 +42,8 @@ if (isAndroid) {
     //     //     event.preventDefault();
     //     // })
 
-    window.addEventListener('beforeunload', function () {
-        //event.preventDefault();
+    window.addEventListener('beforeunload', function (event) {
+        event.preventDefault();
         // Google Chrome < 119 requires returnValue to be set.
         //event.returnValue = true;
 
@@ -57,7 +57,10 @@ if (isAndroid) {
         //write(navigator.userAgent);
         //write('Android visibilitychange = ' + document.visibilityState)
         // fires when user switches tabs, apps, goes to homescreen, etc.
-        if (document.visibilityState === 'hidden') { write('Android hidden') }
+        if (document.visibilityState === 'hidden') {
+            write('Android hidden')
+            window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
+        }
 
         // fires when app transitions from prerender, user returns to the app / tab.
         if (document.visibilityState === 'visible') { write('Android visible') }
@@ -207,7 +210,7 @@ async function autoEingabeLesen() {
         init_cad(0);
         reset_controlpanel_grafik();
         reset_gui();
-        rechnen(1)
+        //rechnen(1)
     }
 
 }
