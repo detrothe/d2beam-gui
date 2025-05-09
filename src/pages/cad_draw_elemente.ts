@@ -201,7 +201,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
     let phi = -node.phi * Math.PI / 180
 
     let ele = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
-    let faktor = ele.get_faktor_lagersymbol() / devicePixelRatio
+    let faktor = ele.get_faktor_lagersymbol() / Math.min(devicePixelRatio, 1.5)
 
     let group = new Two.Group();
 
@@ -210,9 +210,6 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             ((node.kx > 0.0) && (node.kz > 0.0) && (node.L[2] === -1))) {  // Volleinspannung oder mit zwei Translkationsfedern
             let rect = new Two.Rectangle(0.0, 0.0, 20, 20)
             rect.fill = '#dddddd';
-            //rect.scale = 1.0 * faktor
-            // rect.rotation = phi
-            // group.translation.set(x1, z1)
 
             group.add(rect);
         }
@@ -226,9 +223,6 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            //group.scale = 1.0 * faktor
-            // group.rotation = phi
-            // group.translation.set(x1, z1)
 
         }
         else if ((node.L_org[0] === 1) && (node.L[1] >= 0 || node.L_org[1] === -1) && (node.L_org[2] === 1)) {  // Einspannung, verschieblich in z-Richtung
@@ -241,9 +235,6 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            //group.scale = 1.0 * faktor
-            // group.rotation = phi   // 1.5708 +
-            // group.translation.set(x1, z1)
 
         }
         else if ((node.L[0] >= 0 || node.L_org[0] === -1) && (node.L[1] >= 0 || node.L_org[1] === -1) && (node.L_org[2] === 1)) {  // Einspannung, verschieblich in x-, z-Richtung
@@ -260,9 +251,6 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line2.linewidth = 2;
             group.add(line2)
 
-            //group.scale = 1.0 * faktor
-            // group.rotation = phi
-            // group.translation.set(x1, z1)
 
         }
         else if ((node.L_org[0] === 1) && (node.L_org[1] === 1) && (node.L_org[2] === -1 || node.L[2] >= 0)) { // zweiwertiges Lager
@@ -282,9 +270,6 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            //group.scale = 1.0 * faktor
-            // group.rotation = phi
-            // group.translation.set(x1, z1)
 
         }
         else if ((node.L[0] >= 0 || node.L_org[0] === -1) && (node.L_org[1] === 1) && (node.L[2] >= 0 || node.L_org[2] === -1)) { // einwertiges horizontal verschieblisches Lager
@@ -304,9 +289,6 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            //group.scale = 1.0 * faktor
-            // group.rotation = phi
-            // group.translation.set(x1, z1)
 
         }
         else if ((node.L_org[0] === 1) && (node.L[1] >= 0 || node.L_org[1] === -1) && (node.L[2] >= 0 || node.L_org[2] === -1)) { // einwertiges vertikal verschieblisches Lager
@@ -326,9 +308,6 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            //group.scale = 1.0 * faktor
-            // group.rotation = phi   // -1.5708 +
-            // group.translation.set(x1, z1)
 
         }
     } else {                     // Fachwerk
@@ -350,9 +329,6 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            //group.scale = 1.0 * faktor
-            // group.rotation = phi
-            // group.translation.set(x1, z1)
 
         }
         else if ((node.L[0] >= 0) && (node.L_org[1] === 1)) { // einwertiges horizontal verschieblisches Lager
@@ -372,9 +348,6 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            //group.scale = 1.0 * faktor
-            // group.rotation = phi
-            // group.translation.set(x1, z1)
 
         }
         else if ((node.L_org[0] === 1) && (node.L[1] >= 0)) { // einwertiges vertikal verschieblisches Lager
@@ -394,9 +367,6 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             line.linewidth = 2;
 
             group.add(line)
-            //group.scale = 1.0 * faktor
-            // group.rotation = -1.5708 + phi
-            // group.translation.set(x1, z1)
 
         }
 

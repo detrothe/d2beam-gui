@@ -138,8 +138,10 @@ export function read_daten(eingabedaten: string) {
         else els.value = jobj.stadyn;
         if (jobj.stadyn === '1') { // Dynamik : tab clickbar machen
             (document.getElementById("id_tab_mass") as SlSelect).disabled = false;
+            (document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement).style.display = 'inline-block';
         } else {
             (document.getElementById("id_tab_mass") as SlSelect).disabled = true;
+            (document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement).style.display = 'none';
         }
 
         els = document.getElementById('id_THIIO') as HTMLSelectElement;

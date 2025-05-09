@@ -77,8 +77,10 @@ import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.6.a, 9-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.6.b, 9-Mai-2025, ";
 //########################################################################################################################
+
+let hostname=window.location.hostname
 
 
 export const nnodes_init = "0";
@@ -217,7 +219,7 @@ portrait.addEventListener("change", function (e) {
           </video>  Einfuehrungsvideo
        -->
         <p>
-         <sl-button id="intro_video" value="video" variant="primary"  outline @click="${show_video}" style='width:20rem;color:"DodgerBlue";'><b>zeige Einführungsvideo</b></sl-button>
+         <sl-button id="intro_video" value="video" variant="primary"  outline @click="${show_video}" style='width:20rem;color:"DodgerBlue";'><b>zeige Einführungsvideos</b></sl-button>
         </p>
 
         <p><div id="id_current_filename">&nbsp;&nbsp;aktueller Dateiname: ${currentFilename}<br /></div>
@@ -315,6 +317,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
         <div id="id_container" class="footer" >${theFooter}
           <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
+          , ${hostname}
         </div>
 
       </sl-tab-panel>
@@ -1780,6 +1783,7 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     elSel = document.getElementById("id_stadyn") as HTMLSelectElement;
     elSel.value = "0";
+    (document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement).style.display = 'none';
 
     const id_mass = document.getElementById("id_tab_mass") as SlSelect;
     id_mass.disabled = true;
@@ -1858,8 +1862,15 @@ function berechnungsart_changed() {
   // console.log("berechnungsart_changed");
   const sel = document.getElementById("id_stadyn") as HTMLSelectElement;
   const id_mass = document.getElementById("id_tab_mass") as SlSelect;
-  if (sel.value === "0") id_mass.disabled = true;
-  else id_mass.disabled = false;
+  const id_btn_mass = document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement;
+  if (sel.value === "0") {
+    id_mass.disabled = true;
+    id_btn_mass.style.display = 'none';
+  }
+  else {
+    id_mass.disabled = false;
+    id_btn_mass.style.display = 'inline-block';
+  }
   berechnungErforderlich();
 }
 

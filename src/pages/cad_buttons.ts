@@ -302,6 +302,7 @@ export function cad_buttons() {
   // stab_button.addEventListener('keydown', keydown);
   knotmass_button.title = "Eingabe Knotenmassen";
   knotmass_button.id = "id_cad_knotenmasse_button";
+  knotmass_button.style.display = 'none'
 
 
   const cog_button = document.createElement("button");
@@ -327,7 +328,7 @@ export function cad_buttons() {
 
   const info_button = document.createElement("button");
 
-  info_button.value = "refresh";
+  info_button.value = "info";
   info_button.className = "btn";
   info_button.innerHTML = '<i class = "fa fa-info"></i>';
   info_button.addEventListener("click", Info_button);
