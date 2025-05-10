@@ -94,7 +94,10 @@ export function read_daten(eingabedaten: string) {
         el.setValue(0);
 
         el = document.getElementById('id_button_nlastfaelle') as drButtonPM;
-        el.setValue(1);
+        el.setValue(jobj.nloadcases);
+
+        el = document.getElementById('id_button_nkombinationen') as drButtonPM;
+        el.setValue(jobj.ncombinations);
 
         el = document.getElementById('id_button_nstabvorverformungen') as drButtonPM;
         el.setValue(0);
@@ -236,12 +239,12 @@ export function read_daten(eingabedaten: string) {
     ele.set_raster_zmin(jobj.raster_zmin)
     ele.set_raster_zmax(jobj.raster_zmax)
 
-    if ( jobj.fangweite_cursor === undefined) {
+    if (jobj.fangweite_cursor === undefined) {
         set_fangweite_cursor(0.25);
         ele.set_fangweite_cursor(0.25)
     } else {
-         set_fangweite_cursor(jobj.fangweite_cursor);
-         ele.set_fangweite_cursor(jobj.fangweite_cursor)
+        set_fangweite_cursor(jobj.fangweite_cursor);
+        ele.set_fangweite_cursor(jobj.fangweite_cursor)
     }
 
 
@@ -275,6 +278,37 @@ export function read_daten(eingabedaten: string) {
             }
         }
     }
+    {
+        {
+            if (jobj.loadcases !== undefined) {
+                console.log("in loadcases")
+                let el = document.getElementById('id_lastfaelle_tabelle') as HTMLElement;
+                let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+                let nSpalten = tabelle.rows[0].cells.length;
+
+                for (i = 1; i < tabelle.rows.length; i++) {
+                    for (j = 1; j < nSpalten; j++) {
+                        let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+                        child.value = jobj.loadcases[i - 1][j - 1];
+                    }
+                }
+            }
+
+            let el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
+            let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+
+            let nSpalten = tabelle.rows[0].cells.length;
+
+            for (i = 1; i < tabelle.rows.length; i++) {
+                for (j = 1; j < nSpalten; j++) {
+                    let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+                    child.value = jobj.combination[i - 1][j - 1];
+                }
+            }
+        }
+    }
+
     // console.log("CADNotes length", jobj.cadNodes.length)
     // console.log("CADNotes", jobj.cadNodes)
 
@@ -721,11 +755,11 @@ export function str_inputToJSON() {
             stabvorverformung[i][j] = child.value
         }
     }
-
+*/
     el = document.getElementById('id_lastfaelle_tabelle') as HTMLElement;
-    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    nZeilen = tabelle.rows.length - 1;
-    nSpalten = tabelle.rows[0].cells.length - 1;
+    let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    let nZeilen = tabelle.rows.length - 1;
+    let nSpalten = tabelle.rows[0].cells.length - 1;
     const nlastfaelle = nZeilen
     const lastfaelle = Array.from(Array(nZeilen), () => new Array(nSpalten));
 
@@ -735,11 +769,11 @@ export function str_inputToJSON() {
             lastfaelle[i][j] = child.value
         }
     }
-*/
+
     el = document.getElementById('id_kombinationen_tabelle') as HTMLElement;
-    let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    let nZeilen = tabelle.rows.length - 1;
-    let nSpalten = tabelle.rows[0].cells.length - 1;
+    tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    nZeilen = tabelle.rows.length - 1;
+    nSpalten = tabelle.rows[0].cells.length - 1;
     const nkombinationen = nZeilen
     const kombination = Array.from(Array(nZeilen), () => new Array(nSpalten));
 
@@ -820,7 +854,7 @@ export function str_inputToJSON() {
         // 'ntempload': ntemperaturlasten,
         // 'nvorspannungen': nvorspannungen,
         // 'nspannschloesser': nspannschloesser,
-        // 'nloadcases': nlastfaelle,
+        'nloadcases': nlastfaelle,
         'ncombinations': nkombinationen,
         'nquerschnittsets': nQuerschnittSets,
         // 'nstabvorverfomungen': nStabvorverfomungen,
@@ -866,7 +900,7 @@ export function str_inputToJSON() {
         // 'sigvload': sigvload,
         // 'spannload': spannload,
         // 'stabvorverformung': stabvorverformung,
-        // 'loadcases': lastfaelle,
+        'loadcases': lastfaelle,
         'combination': kombination,
         'qsclassname': qsClassName,
         'qswerte': qsWerte,
