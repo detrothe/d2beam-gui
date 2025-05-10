@@ -180,24 +180,24 @@ export class drDialogKnotenmasse extends LitElement {
   }
 
 
-  set_mass(mass:number) {
+  set_mass(mass: number) {
     let el = this.shadowRoot?.getElementById("id_M") as HTMLInputElement;
     el.value = String(mass);
   }
 
-  set_theta_y(theta:number) {
+  set_theta_y(theta: number) {
     let el = this.shadowRoot?.getElementById("id_thetay") as HTMLInputElement;
     el.value = String(theta);
   }
 
 
-  set_system(system: number) {
+  set_system(stadyn: number) {
 
-    if (system === 0) {
+    if (stadyn === 0) {                  // Statik
       const shadow = this.shadowRoot;
       let el = (shadow?.getElementById("id_MY") as HTMLElement);
       el.style.display = 'block'
-    } else {
+    } else {                             // Dynamik
       const shadow = this.shadowRoot;
       let el = (shadow?.getElementById("id_MY") as HTMLElement);
       el.style.display = 'none'
