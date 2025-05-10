@@ -78,7 +78,7 @@ import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-g
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.7.a, 10-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.7.b, 10-Mai-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
@@ -1864,7 +1864,7 @@ function berechnungsart_changed() {
   const sel = document.getElementById("id_stadyn") as HTMLSelectElement;
   const id_mass = document.getElementById("id_tab_mass") as SlSelect;
   const id_btn_mass = document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement;
-  let ele = document.getElementById('id_cad_knotenmasse_button') as drDialogKnotenmasse;
+  let ele = document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse;
 
   if (sel.value === "0") {
     id_mass.disabled = true;
