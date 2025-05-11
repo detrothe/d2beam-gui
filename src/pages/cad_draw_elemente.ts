@@ -3,14 +3,14 @@ import Two from 'two.js'
 import { System, STABWERK, TNode, TLoads, alertdialog, TMass, maxBettung, set_maxBettung } from './rechnen'
 
 import { CTrans } from './trans';
-import { myFormat } from './utility';
+import { myFormat, write } from './utility';
 import { TCAD_Knoten, TCAD_Lager, TCAD_Stab } from './CCAD_element';
 import { draw_elementlasten } from './cad_draw_elementlasten';
 //import { two } from './cad';
 import { get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { opacity } from './grafik';
-
+import { slmax_cad } from './cad';
 
 
 const style_pfeil_knotenlast = {
@@ -139,7 +139,7 @@ function draw_bettungsmodul(obj: TCAD_Stab, tr: CTrans) {
 
     //console.log("in draw_bettungsmodul")
 
-    let slmax = 10;
+    let slmax = slmax_cad;
 
     let group = new Two.Group();
 
@@ -401,7 +401,8 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
 export function draw_knotenlast(tr: CTrans, load: TLoads, x: number, z: number, fact: number, lf_show: number) {
     //----------------------------------------------------------------------------------------------------
 
-    let slmax = 10
+    let slmax = 2 * slmax_cad;
+
     let plength = 35 /*slmax / 20.*/, delta = 12 //slmax / 200.0
     let xpix: number, zpix: number
     let wert: number
@@ -582,6 +583,7 @@ export function draw_arrow(tr: CTrans, x1: number, z1: number, x2: number, z2: n
     //console.log("0.0", Math.round(tr.xPix(0.0)));
 
     if (calc_a) a = Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)) - b;
+
     // write('sl : ', sl)
     // write('tr.Pix0 : ', tr.Pix0(sl))
     // write('div', Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)))

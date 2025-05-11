@@ -138,6 +138,9 @@ export let raster_xmin = -1.0,
    raster_xmax = 10.0,
    raster_zmin = -1.0,
    raster_zmax = 9.0;
+
+export let slmax_cad = 10.0;
+
 export let raster_dx = 0.5,
    raster_dz = 0.5;
 let xRasterPoint = 0.0,
@@ -667,6 +670,8 @@ export function init_cad(flag: number) {
       txt1.alignment = 'center';
    }
    drawRaster();
+
+   slmax_cad = Math.sqrt((raster_xmax - raster_xmin) ** 2 + (raster_zmax - raster_zmin) ** 2)
 
    // Zeichne vorhandenes System
 

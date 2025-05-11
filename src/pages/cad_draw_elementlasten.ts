@@ -3,7 +3,7 @@ import { CTrans } from "./trans"
 import { TCAD_Einzellast, TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Spannschloss, TCAD_Stab, TCAD_Stabvorverformung, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Vorspannung } from "./CCAD_element"
 import { opacity, style_pfeil, style_pfeil_knotenlast_element, style_pfeil_moment_element, style_txt_knotenlast, style_txt_knotenlast_element } from "./grafik"
 import { myFormat } from "./utility"
-import { CAD_KNLAST, CAD_STAB, list } from "./cad"
+import { CAD_KNLAST, CAD_STAB, list, slmax_cad } from "./cad"
 import { draw_arrow, draw_moment_arrow } from "./cad_draw_elemente"
 import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
 
@@ -98,7 +98,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
     //console.log("in draw_elementlasten", obj)
 
-    let slmax = 10;
+    let slmax = slmax_cad/1.5;
 
     let x1: number, x2: number, z1: number, z2: number, si: number, co: number, xi: number, zi: number
     let dp: number, pMax: number, pMin: number
