@@ -30,6 +30,7 @@ import {
    find_nearest_cad_node,
    get_cad_node_X,
    get_cad_node_Z,
+   zero_offset_nodes,
 } from './cad_node';
 //import { AlertDialog } from './confirm_dialog';
 import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Element, TCAD_Knotenmasse } from './CCAD_element';
@@ -253,7 +254,7 @@ export function redraw_knotenlast(obj: TCAD_Knotenlast) {
    let knlast = new TLoads();
    knlast = obj.knlast
    let index1 = obj.index1
-   group = draw_knotenlast(tr, knlast, get_cad_node_X(index1), get_cad_node_Z(index1), 1, 0);
+   group = draw_knotenlast(tr, knlast, index1, 1, 0);
 
    two.add(group);
    obj.setTwoObj(group);
@@ -675,6 +676,8 @@ export function init_cad(flag: number) {
 
    // Zeichne vorhandenes System
 
+   zero_offset_nodes();
+
    //console.log('init cad list.size', list.size);
    for (let i = 0; i < list.size; i++) {
 
@@ -699,7 +702,7 @@ export function init_cad(flag: number) {
          let load = new TLoads();
          load = (obj as TCAD_Knotenlast).knlast
          let index1 = obj.index1
-         let group = draw_knotenlast(tr, load, get_cad_node_X(index1), get_cad_node_Z(index1), 1.0, 0)
+         let group = draw_knotenlast(tr, load, index1, 1.0, 0, true)
          two.add(group);
          obj.setTwoObj(group);
       }
@@ -1079,7 +1082,7 @@ function penDown(ev: PointerEvent) {
                if (index1 > -1) {
                   let knlast = new TLoads();
                   read_knotenlast_dialog(knlast);
-                  let group = draw_knotenlast(tr, knlast, get_cad_node_X(index1), get_cad_node_Z(index1), 1, 0);
+                  let group = draw_knotenlast(tr, knlast, index1, 1, 0, true);
                   two.add(group);
                   two.update();
                   console.log('getBoundingClientRect', group.getBoundingClientRect());
@@ -1461,14 +1464,7 @@ function mouseup(ev: any) {
                   if (index1 > -1) {
                      let knlast = new TLoads();
                      read_knotenlast_dialog(knlast);
-                     let group = draw_knotenlast(
-                        tr,
-                        knlast,
-                        get_cad_node_X(index1),
-                        get_cad_node_Z(index1),
-                        1,
-                        0
-                     );
+                     let group = draw_knotenlast(tr, knlast, index1, 1, 0, true);
                      two.add(group);
                      two.update();
                      console.log('getBoundingClientRect', group.getBoundingClientRect());

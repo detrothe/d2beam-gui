@@ -364,7 +364,7 @@ export function cad_buttons() {
   let h = div!.getBoundingClientRect()
   // console.log("Höhe des div", h)
 
-//  br = document.createElement("br");
+  //  br = document.createElement("br");
   //div2.appendChild(br);
   div2.appendChild(querschnitt_default_select);
 
@@ -484,7 +484,7 @@ export function reDo_button() {
         let load = new TLoads();
         load = obj.knlast
         let index1 = obj.index1
-        group = draw_knotenlast(tr, load, get_cad_node_X(index1), get_cad_node_Z(index1), 1.0, 0)
+        group = draw_knotenlast(tr, load, index1, 1.0, 0)
         two.add(group);
         add_element_nodes(obj.index1);
 
@@ -2072,7 +2072,7 @@ function update_knotenlast() {
   let group = obj_knlast.getTwoObj();
   two.remove(group)
   let index1 = obj_knlast.index1
-  group = draw_knotenlast(tr, knlast, get_cad_node_X(index1), get_cad_node_Z(index1), 1, 0);
+  group = draw_knotenlast(tr, knlast, index1, 1, 0);
   two.add(group);
 
   obj_knlast.setTwoObj(group);

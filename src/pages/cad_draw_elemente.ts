@@ -7,7 +7,7 @@ import { myFormat, write } from './utility';
 import { TCAD_Knoten, TCAD_Lager, TCAD_Stab } from './CCAD_element';
 import { draw_elementlasten } from './cad_draw_elementlasten';
 //import { two } from './cad';
-import { get_cad_node_X, get_cad_node_Z } from './cad_node';
+import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { opacity } from './grafik';
 import { slmax_cad } from './cad';
@@ -398,7 +398,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
 }
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_knotenlast(tr: CTrans, load: TLoads, x: number, z: number, fact: number, lf_show: number) {
+export function draw_knotenlast(tr: CTrans, load: TLoads, index1: number, fact: number, lf_show: number, new_flag = false) {
     //----------------------------------------------------------------------------------------------------
 
     let slmax = 2 * slmax_cad;
@@ -408,6 +408,8 @@ export function draw_knotenlast(tr: CTrans, load: TLoads, x: number, z: number, 
     let wert: number
     let nLoop = 0
 
+    let x = get_cad_node_X(index1)
+    let z = get_cad_node_Z(index1)
 
     plength = tr.World0(2 * plength / devicePixelRatio)
     delta = tr.World0(delta / devicePixelRatio)
@@ -479,6 +481,7 @@ export function draw_knotenlast(tr: CTrans, load: TLoads, x: number, z: number, 
     if (load.Px != 0.0 && load.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
 
+        x += CADNodes[index1].offset_Px
         wert = load.Px * fact
         if (wert > 0.0) {
             let gr = draw_arrow(tr, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
@@ -494,10 +497,16 @@ export function draw_knotenlast(tr: CTrans, load: TLoads, x: number, z: number, 
         txt.alignment = 'left'
         txt.baseline = 'top'
         group.add(txt)
+
+        if (new_flag) {
+            CADNodes[index1].offset_Px += plength
+        }
     }
     if (load.Pz != 0.0 && load.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
 
+        x = get_cad_node_X(index1)
+        z -= CADNodes[index1].offset_Pz
         wert = load.Pz * fact
         if (wert > 0.0) {
             let gr = draw_arrow(tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
@@ -514,6 +523,10 @@ export function draw_knotenlast(tr: CTrans, load: TLoads, x: number, z: number, 
         txt.alignment = 'left'
         txt.baseline = 'top'
         group.add(txt)
+
+        if (new_flag) {
+            CADNodes[index1].offset_Pz += plength
+        }
     }
     if (load.p[2] != 0.0 && load.lf - 1 === lf_show) {
 

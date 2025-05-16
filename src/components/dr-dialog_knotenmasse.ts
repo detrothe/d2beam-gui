@@ -1,7 +1,7 @@
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
-import '../styles/dr-dialog.css';
+import "../styles/dr-dialog.css";
 
 @customElement("dr-dialog_knotenmasse")
 export class drDialogKnotenmasse extends LitElement {
@@ -110,7 +110,7 @@ export class drDialogKnotenmasse extends LitElement {
         width: 16rem;
         background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
         border: thin solid #e7c157;
-        font-size:1rem;
+        font-size: 1rem;
         max-height: 90vh;
         overflow-y: auto;
       }
@@ -131,15 +131,12 @@ export class drDialogKnotenmasse extends LitElement {
     return html` <dialog id="dialog_knotenmasse">
       <h2>Knotenmasse</h2>
 
-
-
-
       <p>
         M:
         <input type="number" id="id_M" name="M" pattern="[0-9.,eE+-]*" value="" />
         [t]
       </p>
-      <p id=id_MY>
+      <p id="id_MY">
         θ<sub>y</sub>:
         <input type="number" id="id_thetay" name="thetay" pattern="[0-9.,eE+-]*" value="" />
         [tm²]
@@ -176,9 +173,7 @@ export class drDialogKnotenmasse extends LitElement {
     const shadow = this.shadowRoot;
     let wert = Number((shadow?.getElementById("id_thetay") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
-
   }
-
 
   set_mass(mass: number) {
     let el = this.shadowRoot?.getElementById("id_M") as HTMLInputElement;
@@ -190,19 +185,17 @@ export class drDialogKnotenmasse extends LitElement {
     el.value = String(theta);
   }
 
-
   set_system(stadyn: number) {
-
-    if (stadyn === 0) {                  // Statik
+    if (stadyn === 0) {
+      // Statik
       const shadow = this.shadowRoot;
-      let el = (shadow?.getElementById("id_MY") as HTMLElement);
-      el.style.display = 'block'
-    } else {                             // Dynamik
+      let el = shadow?.getElementById("id_MY") as HTMLElement;
+      el.style.display = "block";
+    } else {
+      // Dynamik
       const shadow = this.shadowRoot;
-      let el = (shadow?.getElementById("id_MY") as HTMLElement);
-      el.style.display = 'none'
+      let el = shadow?.getElementById("id_MY") as HTMLElement;
+      el.style.display = "none";
     }
-
   }
-
 }

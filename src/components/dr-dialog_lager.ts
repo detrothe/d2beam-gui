@@ -2,7 +2,7 @@ import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
-import '../styles/dr-dialog.css';
+import "../styles/dr-dialog.css";
 
 @customElement("dr-dialog_lager")
 export class drDialogLager extends LitElement {
@@ -85,7 +85,7 @@ export class drDialogLager extends LitElement {
         border-spacing: 0px;
         padding: 5px;
         margin: 5px;
-        background-color: light-dark(var(--table-bgcolor-light),var(--table-bgcolor-dark));
+        background-color: light-dark(var(--table-bgcolor-light), var(--table-bgcolor-dark));
         border-radius: 5px;
         color: black;
       }
@@ -110,7 +110,7 @@ export class drDialogLager extends LitElement {
         width: 25rem;
         background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
         border: thin solid #e7c157;
-        font-size:1rem;
+        font-size: 1rem;
         max-height: 90vh;
         overflow-y: auto;
       }
