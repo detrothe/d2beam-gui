@@ -481,10 +481,10 @@ export function reDo_button() {
         add_element_nodes(obj.index1);
       }
       else if (obj.elTyp === CAD_KNLAST) {
-        let load = new TLoads();
-        load = obj.knlast
+        // let load = new TLoads();
+        // load = obj.knlast
         let index1 = obj.index1
-        group = draw_knotenlast(tr, load, index1, 1.0, 0)
+        group = draw_knotenlast(tr, obj, index1, 1.0, 0)
         two.add(group);
         add_element_nodes(obj.index1);
 
@@ -895,15 +895,37 @@ export function select_element(xc: number, zc: number) {
 
     if (obj.elTyp === CAD_KNLAST) {
       let two_obj = obj.two_obj
-      let rect = two_obj.getBoundingClientRect();
-      console.log("rect Knotenlast", rect, xc, zc)
-      if (xpix > rect.left && xpix < rect.right) {
-        if (zpix > rect.top && zpix < rect.bottom) {
-          knotenlast_gefunden = true
-          //index_knlast = i;
-          obj_knlast = obj
-        }
+
+      let x = Array(4)
+      let z = Array(4);
+
+      (obj as TCAD_Knotenlast).get_drawLast_Px(x, z);
+      //console.log("xz", x, z)
+      let inside = test_point_inside_area_2D(x, z, xc, zc)
+      console.log("select_element Px, inside ", i, inside)
+      if (inside) {
+        knotenlast_gefunden = true
+        obj_knlast = obj
       }
+
+
+      (obj as TCAD_Knotenlast).get_drawLast_Pz(x, z);
+      //console.log("xz", x, z)
+      inside = test_point_inside_area_2D(x, z, xc, zc)
+      console.log("select_element Pz, inside ", i, inside)
+      if (inside) {
+        knotenlast_gefunden = true
+        obj_knlast = obj
+      }
+      // let rect = two_obj.getBoundingClientRect();
+      // console.log("rect Knotenlast", rect, xc, zc)
+      // if (xpix > rect.left && xpix < rect.right) {
+      //   if (zpix > rect.top && zpix < rect.bottom) {
+      //     knotenlast_gefunden = true
+      //     //index_knlast = i;
+      //     obj_knlast = obj
+      //   }
+      // }
     }
     else if (obj.elTyp === CAD_STAB) {
 
@@ -2072,11 +2094,13 @@ function update_knotenlast() {
   let group = obj_knlast.getTwoObj();
   two.remove(group)
   let index1 = obj_knlast.index1
-  group = draw_knotenlast(tr, knlast, index1, 1, 0);
+  group = draw_knotenlast(tr, obj_knlast, index1, 1, 0);
   two.add(group);
 
   obj_knlast.setTwoObj(group);
   two.update();
+
+  init_cad(2);
 
   //buttons_control.reset();
 

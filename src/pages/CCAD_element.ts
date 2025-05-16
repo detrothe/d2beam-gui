@@ -38,7 +38,7 @@ export class TCAD_Element {
 export class TCAD_Knotenmasse extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――
 
-    masse:TMass;
+    masse: TMass;
 
     constructor(obj: any, index1: number, masse: TMass, elTyp: number) {
         super(obj, index1, elTyp);
@@ -212,11 +212,61 @@ export class TCAD_Knotenlast extends TCAD_Element {
 
     knlast: TLoads;
 
+    xPx: number[] = Array(4)   // Weltkoordinaten der gezeichneten Px Last
+    zPx: number[] = Array(4)
+    xPz: number[] = Array(4)   // Weltkoordinaten der gezeichneten Pz Last
+    zPz: number[] = Array(4)
+    xMy: number[] = Array(4)   // Weltkoordinaten des gezeichneten Momentenpfeils
+    zMy: number[] = Array(4)
+
     constructor(obj: any, index1: number, knlast: TLoads, elTyp: number) {
         super(obj, index1, elTyp);
 
         this.knlast = knlast
         this.className = 'TCAD_Knotenlast'
+    }
+
+
+    set_drawLast_Px(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            this.xPx[i] = x[i]
+            this.zPx[i] = z[i]
+        }
+    }
+
+    get_drawLast_Px(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            x[i] = this.xPx[i]
+            z[i] = this.zPx[i]
+        }
+    }
+
+    set_drawLast_Pz(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            this.xPz[i] = x[i]
+            this.zPz[i] = z[i]
+        }
+    }
+
+    get_drawLast_Pz(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            x[i] = this.xPz[i]
+            z[i] = this.zPz[i]
+        }
+    }
+
+    set_drawLast_My(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            this.xMy[i] = x[i]
+            this.zMy[i] = z[i]
+        }
+    }
+
+    get_drawLast_My(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            x[i] = this.xMy[i]
+            z[i] = this.zMy[i]
+        }
     }
 }
 

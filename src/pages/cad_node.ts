@@ -145,6 +145,10 @@ export function set_ID_counter() {
 export function zero_offset_nodes() {
     //--------------------------------------------------------------------------------------------
 
-    for (let i = 0; i < CADNodes.length; i++) CADNodes[i].zero_offset();
+    for (let i = 0; i < CADNodes.length; i++) {
+        CADNodes[i].offset_Px = 0.0
+        CADNodes[i].offset_Pz = 0.0
+        CADNodes[i].offset_My = 0.0
+    }
 
 }

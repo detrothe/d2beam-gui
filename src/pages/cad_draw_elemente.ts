@@ -4,7 +4,7 @@ import { System, STABWERK, TNode, TLoads, alertdialog, TMass, maxBettung, set_ma
 
 import { CTrans } from './trans';
 import { myFormat, write } from './utility';
-import { TCAD_Knoten, TCAD_Lager, TCAD_Stab } from './CCAD_element';
+import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab } from './CCAD_element';
 import { draw_elementlasten } from './cad_draw_elementlasten';
 //import { two } from './cad';
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
@@ -398,7 +398,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
 }
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_knotenlast(tr: CTrans, load: TLoads, index1: number, fact: number, lf_show: number, new_flag = false) {
+export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number, fact: number, lf_show: number, new_flag = false) {
     //----------------------------------------------------------------------------------------------------
 
     let slmax = 2 * slmax_cad;
@@ -408,15 +408,16 @@ export function draw_knotenlast(tr: CTrans, load: TLoads, index1: number, fact: 
     let wert: number
     let nLoop = 0
 
-    let x = get_cad_node_X(index1)
-    let z = get_cad_node_Z(index1)
+    let xtr = Array(4), ztr = Array(4)
 
     plength = tr.World0(2 * plength / devicePixelRatio)
     delta = tr.World0(delta / devicePixelRatio)
 
+    let load = obj.knlast
+
     let group = new Two.Group();
 
-    console.log("draw_knotenlast", x, z, plength, delta, load)
+    //console.log("draw_knotenlast", x, z, plength, delta, load)
 
     lf_show = load.lf - 1    // noch überarbeiten
 
@@ -480,23 +481,43 @@ export function draw_knotenlast(tr: CTrans, load: TLoads, index1: number, fact: 
 
     if (load.Px != 0.0 && load.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+        let x = get_cad_node_X(index1) + CADNodes[index1].offset_Px
+        let z = get_cad_node_Z(index1)
+        let grp = new Two.Group();
 
-        x += CADNodes[index1].offset_Px
         wert = load.Px * fact
         if (wert > 0.0) {
             let gr = draw_arrow(tr, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
-            group.add(gr)
+            grp.add(gr)
         } else {
             let gr = draw_arrow(tr, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
-            group.add(gr)
+            grp.add(gr)
         }
+
         xpix = tr.xPix(x + delta + plength) + 5
         zpix = tr.zPix(z) - 5
         const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'left'
         txt.baseline = 'top'
-        group.add(txt)
+        grp.add(txt)
+
+        group.add(grp)
+
+        let rect = grp.getBoundingClientRect()
+
+        xtr[0] = tr.xWorld(rect.left)
+        ztr[0] = tr.zWorld(rect.top)
+        xtr[1] = tr.xWorld(rect.left)
+        ztr[1] = tr.zWorld(rect.bottom)
+        xtr[2] = tr.xWorld(rect.left + rect.width)
+        ztr[2] = tr.zWorld(rect.bottom)
+        xtr[3] = tr.xWorld(rect.left + rect.width)
+        ztr[3] = tr.zWorld(rect.top);
+
+        obj.set_drawLast_Px(xtr, ztr)   // Koordinaten merken für Picken
+
+
 
         if (new_flag) {
             CADNodes[index1].offset_Px += plength
@@ -504,16 +525,17 @@ export function draw_knotenlast(tr: CTrans, load: TLoads, index1: number, fact: 
     }
     if (load.Pz != 0.0 && load.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+        let x = get_cad_node_X(index1)
+        let z = get_cad_node_Z(index1) - CADNodes[index1].offset_Pz
+     let grp = new Two.Group();
 
-        x = get_cad_node_X(index1)
-        z -= CADNodes[index1].offset_Pz
         wert = load.Pz * fact
         if (wert > 0.0) {
             let gr = draw_arrow(tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
-            group.add(gr)
+            grp.add(gr)
         } else {
             let gr = draw_arrow(tr, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
-            group.add(gr)
+            grp.add(gr)
         }
 
         xpix = tr.xPix(x) + 5
@@ -522,7 +544,22 @@ export function draw_knotenlast(tr: CTrans, load: TLoads, index1: number, fact: 
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'left'
         txt.baseline = 'top'
-        group.add(txt)
+        grp.add(txt)
+
+        group.add(grp)
+
+        let rect = grp.getBoundingClientRect()
+
+        xtr[0] = tr.xWorld(rect.left)
+        ztr[0] = tr.zWorld(rect.top)
+        xtr[1] = tr.xWorld(rect.left)
+        ztr[1] = tr.zWorld(rect.bottom)
+        xtr[2] = tr.xWorld(rect.left + rect.width)
+        ztr[2] = tr.zWorld(rect.bottom)
+        xtr[3] = tr.xWorld(rect.left + rect.width)
+        ztr[3] = tr.zWorld(rect.top);
+
+        obj.set_drawLast_Pz(xtr, ztr)   // Koordinaten merken für Picken
 
         if (new_flag) {
             CADNodes[index1].offset_Pz += plength
@@ -530,16 +567,20 @@ export function draw_knotenlast(tr: CTrans, load: TLoads, index1: number, fact: 
     }
     if (load.p[2] != 0.0 && load.lf - 1 === lf_show) {
 
+        let x = get_cad_node_X(index1) - CADNodes[index1].offset_My
+        let z = get_cad_node_Z(index1)
+             let grp = new Two.Group();
+
         wert = load.p[2] * fact
         let vorzeichen = Math.sign(wert)
         let radius = style_pfeil_moment.radius;
         //console.log("Moment ", +inode + 1, wert)
         if (wert > 0.0) {
             let gr = draw_moment_arrow(tr, x, z, 1.0, slmax / 50, style_pfeil_moment)
-            group.add(gr)
+            grp.add(gr)
         } else {
             let gr = draw_moment_arrow(tr, x, z, -1.0, slmax / 50, style_pfeil_moment)
-            group.add(gr)
+            grp.add(gr)
         }
 
         xpix = tr.xPix(x) - 10 / devicePixelRatio
@@ -549,7 +590,26 @@ export function draw_knotenlast(tr: CTrans, load: TLoads, index1: number, fact: 
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'right'
         //txt.baseline = 'bottom'
-        group.add(txt)
+        grp.add(txt)
+
+        group.add(grp)
+
+        let rect = grp.getBoundingClientRect()
+
+        xtr[0] = tr.xWorld(rect.left)
+        ztr[0] = tr.zWorld(rect.top)
+        xtr[1] = tr.xWorld(rect.left)
+        ztr[1] = tr.zWorld(rect.bottom)
+        xtr[2] = tr.xWorld(rect.left + rect.width)
+        ztr[2] = tr.zWorld(rect.bottom)
+        xtr[3] = tr.xWorld(rect.left + rect.width)
+        ztr[3] = tr.zWorld(rect.top);
+
+        obj.set_drawLast_My(xtr, ztr)   // Koordinaten merken für Picken
+
+        if (new_flag) {
+            CADNodes[index1].offset_My += plength
+        }
     }
 
     return group;
