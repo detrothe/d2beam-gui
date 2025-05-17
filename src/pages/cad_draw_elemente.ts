@@ -14,7 +14,7 @@ import { slmax_cad } from './cad';
 
 
 const style_pfeil_knotenlast = {
-    a: 35,
+    a: 50,
     b: 25,
     h: 16,
     linewidth: 7,
@@ -403,7 +403,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
     let slmax = 2 * slmax_cad;
 
-    let plength = 35 /*slmax / 20.*/, delta = 12 //slmax / 200.0
+    let plength = 50 /*35 slmax / 20.*/, delta = 12 //slmax / 200.0
     let xpix: number, zpix: number
     let wert: number
     let nLoop = 0
@@ -413,6 +413,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
     plength = tr.World0(2 * plength / devicePixelRatio)
     delta = tr.World0(delta / devicePixelRatio)
 
+    let pLength_My = 0.8 * tr.World0(70 / devicePixelRatio)
+
     let load = obj.knlast
 
     let group = new Two.Group();
@@ -421,63 +423,6 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
     lf_show = load.lf - 1    // noch überarbeiten
 
-
-    // let iLastfall = draw_lastfall
-
-    // if (THIIO_flag === 0 && matprop_flag === 0) {
-    //     if (iLastfall <= nlastfaelle) {
-    //         //lf_index = iLastfall - 1
-    //         nLoop = 1
-    //         fact[0] = 1.0
-    //         lf_show[0] = draw_lastfall - 1
-    //         //scalefactor = slmax / 20 / maxValue_eload[draw_lastfall - 1]
-
-    //     } else if (iLastfall <= nlastfaelle + nkombinationen) {
-    //         //lf_index = iLastfall - 1
-    //         let ikomb = iLastfall - 1 - nlastfaelle
-    //         console.log("Kombination THIO, ikomb: ", ikomb, maxValue_eload_komb[ikomb])
-    //         //scalefactor = slmax / 20 / maxValue_eload_komb[ikomb]
-    //         nLoop = 0
-
-    //         for (let i = 0; i < nlastfaelle; i++) {
-    //             if (kombiTabelle[ikomb][i] !== 0.0) {
-    //                 //console.log("kombitabelle", i, ikomb, kombiTabelle[ikomb][i])
-    //                 fact[nLoop] = kombiTabelle[ikomb][i];
-    //                 lf_show[nLoop] = i
-    //                 nLoop++;
-    //             }
-    //         }
-    //     } else {
-    //         nLoop = 0
-    //     }
-    // }
-    // else if (THIIO_flag === 1 || matprop_flag > 0) {
-
-    //     if (iLastfall <= nkombinationen) {
-    //         //lf_index = iLastfall - 1
-    //         let ikomb = iLastfall - 1
-    //         //scalefactor = slmax / 20 / maxValue_eload_komb[ikomb]
-    //         nLoop = 0
-
-    //         for (let i = 0; i < nlastfaelle; i++) {
-    //             if (kombiTabelle[ikomb][i] !== 0.0) {
-    //                 fact[nLoop] = kombiTabelle[ikomb][i];
-    //                 lf_show[nLoop] = i
-    //                 nLoop++;
-    //             }
-    //         }
-
-    //     } else {
-    //         nLoop = 0
-    //     }
-    // }
-
-
-
-    // let inode = load.node
-    // let x = node[inode].x;
-    // let z = node[inode].z;
-    //console.log("load[i]", i, load)
 
     if (load.Px != 0.0 && load.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
@@ -494,8 +439,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
             grp.add(gr)
         }
 
-        xpix = tr.xPix(x + delta + plength) + 5
-        zpix = tr.zPix(z) - 5
+        xpix = tr.xPix(x + delta)  //  + plength/2
+        zpix = tr.zPix(z) + 9
         const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'left'
@@ -527,7 +472,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
         let x = get_cad_node_X(index1)
         let z = get_cad_node_Z(index1) - CADNodes[index1].offset_Pz
-     let grp = new Two.Group();
+        let grp = new Two.Group();
 
         wert = load.Pz * fact
         if (wert > 0.0) {
@@ -569,12 +514,12 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         let x = get_cad_node_X(index1) - CADNodes[index1].offset_My
         let z = get_cad_node_Z(index1)
-             let grp = new Two.Group();
+        let grp = new Two.Group();
 
         wert = load.p[2] * fact
         let vorzeichen = Math.sign(wert)
         let radius = style_pfeil_moment.radius;
-        //console.log("Moment ", +inode + 1, wert)
+        console.log("Moment radius", radius)
         if (wert > 0.0) {
             let gr = draw_moment_arrow(tr, x, z, 1.0, slmax / 50, style_pfeil_moment)
             grp.add(gr)
@@ -608,7 +553,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         obj.set_drawLast_My(xtr, ztr)   // Koordinaten merken für Picken
 
         if (new_flag) {
-            CADNodes[index1].offset_My += plength
+            CADNodes[index1].offset_My += pLength_My
         }
     }
 
@@ -656,7 +601,7 @@ export function draw_arrow(tr: CTrans, x1: number, z1: number, x2: number, z2: n
     //console.log("0.0", Math.round(tr.xPix(0.0)));
 
     if (calc_a) a = Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)) - b;
-
+    //console.log("aaaaaaa",a,b,calc_a,sl,tr.xPix(sl),tr.xPix(0.0),tr.Pix0(sl))
     // write('sl : ', sl)
     // write('tr.Pix0 : ', tr.Pix0(sl))
     // write('div', Math.round(tr.xPix(sl)) - Math.round(tr.xPix(0.0)))

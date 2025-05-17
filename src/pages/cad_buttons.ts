@@ -507,7 +507,8 @@ export function reDo_button() {
       list.append(obj);
     }
 
-    two.update();
+    init_cad(2);
+    //two.update();
   }
 }
 
@@ -657,14 +658,44 @@ export function delete_element(xc: number, zc: number) {
       }
     }
     else if (obj.elTyp === CAD_KNLAST) {
-      let two_obj = obj.two_obj
-      let rect = two_obj.getBoundingClientRect();
-      console.log("rect Knotenlast", rect, xc, zc)
-      if (xpix > rect.left && xpix < rect.right) {
-        if (zpix > rect.top && zpix < rect.bottom) {
-          knotenlast_gefunden = true
-          index_knlast = i;
-        }
+      // let two_obj = obj.two_obj
+      // let rect = two_obj.getBoundingClientRect();
+      // console.log("rect Knotenlast", rect, xc, zc)
+      // if (xpix > rect.left && xpix < rect.right) {
+      //   if (zpix > rect.top && zpix < rect.bottom) {
+      //     knotenlast_gefunden = true
+      //     index_knlast = i;
+      //   }
+      // }
+
+      let x = Array(4)
+      let z = Array(4);
+
+      (obj as TCAD_Knotenlast).get_drawLast_Px(x, z);
+      //console.log("xz", x, z)
+      let inside = test_point_inside_area_2D(x, z, xc, zc)
+      console.log("select_element Px, inside ", i, inside)
+      if (inside) {
+        knotenlast_gefunden = true
+        index_knlast = i;
+      }
+
+      (obj as TCAD_Knotenlast).get_drawLast_Pz(x, z);
+      //console.log("xz", x, z)
+      inside = test_point_inside_area_2D(x, z, xc, zc)
+      console.log("select_element Pz, inside ", i, inside)
+      if (inside) {
+        knotenlast_gefunden = true
+        index_knlast = i;
+      }
+
+      (obj as TCAD_Knotenlast).get_drawLast_My(x, z);
+      //console.log("xz", x, z)
+      inside = test_point_inside_area_2D(x, z, xc, zc)
+      console.log("select_element My, inside ", i, inside)
+      if (inside) {
+        knotenlast_gefunden = true
+        index_knlast = i;
       }
     }
 
@@ -894,7 +925,6 @@ export function select_element(xc: number, zc: number) {
     console.log("eltyp", obj.elTyp)
 
     if (obj.elTyp === CAD_KNLAST) {
-      let two_obj = obj.two_obj
 
       let x = Array(4)
       let z = Array(4);
@@ -908,7 +938,6 @@ export function select_element(xc: number, zc: number) {
         obj_knlast = obj
       }
 
-
       (obj as TCAD_Knotenlast).get_drawLast_Pz(x, z);
       //console.log("xz", x, z)
       inside = test_point_inside_area_2D(x, z, xc, zc)
@@ -917,15 +946,16 @@ export function select_element(xc: number, zc: number) {
         knotenlast_gefunden = true
         obj_knlast = obj
       }
-      // let rect = two_obj.getBoundingClientRect();
-      // console.log("rect Knotenlast", rect, xc, zc)
-      // if (xpix > rect.left && xpix < rect.right) {
-      //   if (zpix > rect.top && zpix < rect.bottom) {
-      //     knotenlast_gefunden = true
-      //     //index_knlast = i;
-      //     obj_knlast = obj
-      //   }
-      // }
+
+      (obj as TCAD_Knotenlast).get_drawLast_My(x, z);
+      //console.log("xz", x, z)
+      inside = test_point_inside_area_2D(x, z, xc, zc)
+      console.log("select_element My, inside ", i, inside)
+      if (inside) {
+        knotenlast_gefunden = true
+        obj_knlast = obj
+      }
+
     }
     else if (obj.elTyp === CAD_STAB) {
 
