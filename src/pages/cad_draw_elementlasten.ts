@@ -220,8 +220,6 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
             let typ = obj.elast[i].typ
             if (typ === 1) {       // Einzellast oder/und Moment
                 let xi = (obj.elast[i] as TCAD_Einzellast).xe
-                // let P = (obj.elast[j] as TCAD_Einzellast).P
-                // let M = (obj.elast[j] as TCAD_Einzellast).M
                 for (let j = i + 1; j < obj.elast.length; j++) {
                     let typ = obj.elast[j].typ
                     if (typ === 1) {       // Einzellast oder/und Moment
@@ -235,8 +233,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
             }
         }
 
-        console.log("anzahl_x", anzahl_x)
-        console.log("base_x", base_x)
+        // console.log("anzahl_x", anzahl_x)
+        // console.log("base_x", base_x)
     }
 
     for (let iLoop = 0; iLoop < nLoop; iLoop++) {
@@ -733,7 +731,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         }
 
                         xpix = tr.xPix(xl + ddx + dpx) + 5
-                        zpix = tr.zPix(zl - ddz - dpz) + 9
+                        zpix = tr.zPix(zl - ddz - dpz) + 9 / devicePixelRatio;
                         const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
                         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
                         txt.alignment = 'left'
@@ -781,7 +779,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         }
 
                         xpix = tr.xPix(xl) - 10 / devicePixelRatio
-                        zpix = tr.zPix(zl) + vorzeichen * radius + 12 * vorzeichen / devicePixelRatio
+                        zpix = tr.zPix(zl) + (vorzeichen * radius + 12 * vorzeichen )/ devicePixelRatio
                         const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
                         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
                         txt.alignment = 'right'
