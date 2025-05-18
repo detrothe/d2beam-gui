@@ -19,6 +19,8 @@ import { reset_gui } from './pages/mypanelgui';
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log("isAndroid =", isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
 
+console.log("userAgent",navigator.userAgent);
+
 // let dbPromise: any;
 let input: any;
 

@@ -98,7 +98,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
     //console.log("in draw_elementlasten", obj)
 
-    let slmax = slmax_cad/1.5;
+    let slmax = slmax_cad / 1.5;
 
     let x1: number, x2: number, z1: number, z2: number, si: number, co: number, xi: number, zi: number
     let dp: number, pMax: number, pMin: number
@@ -184,6 +184,12 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
     ax_projektion = 0.0
     az_projektion = 0.0
 
+
+    let ae = slmax / 100.
+    let ae_spalt = ae
+    let ae_x = [] as number[]
+    let base_x = [] as number[]
+
     aL = obj.aL
     aR = obj.aR
 
@@ -199,6 +205,39 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
     z1 = get_cad_node_Z(index1) + si * aL;
     x2 = get_cad_node_X(index2) - co * aR;
     z2 = get_cad_node_Z(index2) - si * aR;
+
+
+    // überprüfe, ob es mehrere Einzellasten an gleicher Stelle x gibt
+
+    if (obj.elast.length > 0) {
+
+        let anzahl_x = Array(obj.elast.length).fill(0)
+        base_x = Array(obj.elast.length).fill(-1)
+
+        ae_x = Array(obj.elast.length).fill(0)
+
+        for (let i = 0; i < obj.elast.length; i++) {
+            let typ = obj.elast[i].typ
+            if (typ === 1) {       // Einzellast oder/und Moment
+                let xi = (obj.elast[i] as TCAD_Einzellast).xe
+                // let P = (obj.elast[j] as TCAD_Einzellast).P
+                // let M = (obj.elast[j] as TCAD_Einzellast).M
+                for (let j = i + 1; j < obj.elast.length; j++) {
+                    let typ = obj.elast[j].typ
+                    if (typ === 1) {       // Einzellast oder/und Moment
+                        let xj = (obj.elast[j] as TCAD_Einzellast).xe
+                        if (Math.abs(xj - xi) < 0.001) {
+                            anzahl_x[i]++;
+                            base_x[j] = i
+                        }
+                    }
+                }
+            }
+        }
+
+        console.log("anzahl_x", anzahl_x)
+        console.log("base_x", base_x)
+    }
 
     for (let iLoop = 0; iLoop < nLoop; iLoop++) {
         //console.log("iLoop: ", iLoop)
@@ -651,36 +690,50 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                 else if (typ === 1) {   //eload[ieload].art === 6) {      // Einzellast oder/und Moment
 
                     let plength = 35, delta = 12
+                    let marker = tr.World0(10 / devicePixelRatio)
 
                     let x = (obj.elast[j] as TCAD_Einzellast).xe
                     let P = (obj.elast[j] as TCAD_Einzellast).P
                     let M = (obj.elast[j] as TCAD_Einzellast).M
 
+                    let xM1 = x1 + co * x + si * marker;
+                    let zM1 = z1 + si * x - co * marker;
+                    let xM2 = x1 + co * x - si * marker;
+                    let zM2 = z1 + si * x + co * marker;
+
+                    let line1 = new Two.Line(tr.xPix(xM1), tr.zPix(zM1), tr.xPix(xM2), tr.zPix(zM2));
+                    line1.linewidth = 3 / devicePixelRatio;
+                    group.add(line1);
+
+
+                    let shift = 0
                     plength = tr.World0(2 * plength / devicePixelRatio)
                     delta = tr.World0(delta / devicePixelRatio)
 
+                    if (base_x[j] > -1) {
+                        shift = ae_x[base_x[j]]
+                    }
                     if (P != 0.0) {
-                        let dpx = si * plength, dpz = co * plength
-                        let ddx = si * delta, ddz = co * delta
+                        let dpx = si * plength
+                        let dpz = co * plength
+                        let ddx = si * (delta + shift)
+                        let ddz = co * (delta + shift)
                         let wert = P * fact[iLoop]
-                        let xl = x1 + co * x, zl = z1 + si * x
+                        let xl = x1 + co * x
+                        let zl = z1 + si * x
                         console.log("GRAFIK Einzellast", xl, zl, wert)
                         let grp = new Two.Group();
 
                         if (wert < 0.0) {
                             let gr = draw_arrow(tr, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast_element)
-                            //group.add(gr)
                             grp.add(gr)
-                            //console.log("getBoundingClientRect draw Arrow", rect = gr.getBoundingClientRect())
                         } else {
                             let gr = draw_arrow(tr, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast_element)
-                            //group.add(gr)
                             grp.add(gr)
-                            //console.log("getBoundingClientRect draw Arrow", rect = gr.getBoundingClientRect())
                         }
 
-                        xpix = tr.xPix(xl + ddx + dpx) + 4
-                        zpix = tr.zPix(zl - ddz - dpz) - 4
+                        xpix = tr.xPix(xl + ddx + dpx) + 5
+                        zpix = tr.zPix(zl - ddz - dpz) + 9
                         const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
                         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
                         txt.alignment = 'left'
@@ -713,7 +766,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     if (M != 0.0) {
                         let wert = M * fact[iLoop]
                         let vorzeichen = Math.sign(wert)
-                        let xl = x1 + co * x, zl = z1 + si * x
+                        let xl = x1 + co * x + si * (shift + (delta + plength) / 2)
+                        let zl = z1 + si * x - co * (shift + (delta + plength) / 2)
                         let radius = style_pfeil_moment_element.radius;
                         console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
                         let grp = new Two.Group();
@@ -749,6 +803,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         (obj.elast[j] as TCAD_Einzellast).set_drawLast_M_xz(xtr, ztr)   // Koordinaten merken für Picken
 
                     }
+                    ae_x[j] += plength + delta + shift
+
                 }
                 else if (typ === 5) {      // Stabvorverformung
 

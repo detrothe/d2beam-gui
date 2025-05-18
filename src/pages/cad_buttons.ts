@@ -1014,8 +1014,8 @@ export function select_element(xc: number, zc: number) {
             console.log("select_element M, inside ", i, inside)
             if (inside) {
               element_einzellast_gefunden = true
-              obj_ellast = obj
-              index_ellast = j
+              obj_eleinzellast = obj
+              index_eleinzellast = j
             }
 
           }
