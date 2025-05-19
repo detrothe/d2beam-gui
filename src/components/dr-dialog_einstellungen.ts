@@ -302,7 +302,7 @@ export class drDialogEinstellungen extends LitElement {
 
   get_faktor_lagersymbol() {
     const shadow = this.shadowRoot;
-    let wert = +(shadow?.getElementById("id_fact_lager") as HTMLInputElement).value.replace(/,/g, ".");
+    let wert = Math.abs(+(shadow?.getElementById("id_fact_lager") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
   }
 
@@ -343,8 +343,8 @@ export class drDialogEinstellungen extends LitElement {
   }
 
   get_fangweite_cursor(): number {
-    let wert = (this.shadowRoot?.getElementById("id_fangweite_cursor") as HTMLInputElement).value.replace(/,/g, ".");
-    return +wert;
+    let wert = Math.abs(+(this.shadowRoot?.getElementById("id_fangweite_cursor") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
   }
 
   set_faktor_lagersymbol(fw: number) {
@@ -385,11 +385,11 @@ export class drDialogEinstellungen extends LitElement {
       wert = Math.abs(+(shadow?.getElementById("id_fact_lager") as HTMLInputElement).value.replace(/,/g, "."));
       window.localStorage.setItem('cad_id_fact_lager', String(wert));
 
-      wert = Math.abs(+(shadow?.getElementById("id_dx_offset_factor") as HTMLInputElement).value.replace(/,/g, "."));
-      window.localStorage.setItem('cad_id_dx_offset_factor', String(wert));
+      let swert = (shadow?.getElementById("id_dx_offset_factor") as HTMLInputElement).value.replace(/,/g, ".");
+      window.localStorage.setItem('cad_id_dx_offset_factor', swert);
 
-      wert = Math.abs(+(shadow?.getElementById("id_dz_offset_factor") as HTMLInputElement).value.replace(/,/g, "."));
-      window.localStorage.setItem('cad_id_dz_offset_factor', String(wert));
+      swert = (shadow?.getElementById("id_dz_offset_factor") as HTMLInputElement).value.replace(/,/g, ".");
+      window.localStorage.setItem('cad_id_dz_offset_factor', swert);
 
       wert = Math.abs(+(shadow?.getElementById("id_dx") as HTMLInputElement).value.replace(/,/g, "."));
       window.localStorage.setItem('cad_id_dx', String(wert));
@@ -399,7 +399,7 @@ export class drDialogEinstellungen extends LitElement {
       wert = Math.abs(+(shadow?.getElementById("id_dz") as HTMLInputElement).value.replace(/,/g, "."));
       window.localStorage.setItem('cad_id_dz', String(wert));
 
-      let swert = (shadow?.getElementById("id_xmin") as HTMLInputElement).value.replace(/,/g, ".");
+      swert = (shadow?.getElementById("id_xmin") as HTMLInputElement).value.replace(/,/g, ".");
       window.localStorage.setItem('cad_id_xmin', swert);
 
       swert = (shadow?.getElementById("id_xmax") as HTMLInputElement).value.replace(/,/g, ".");
