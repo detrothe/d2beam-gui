@@ -529,7 +529,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         }
 
         xpix = tr.xPix(x) - 10 / devicePixelRatio
-        zpix = tr.zPix(z) + vorzeichen * radius + 15 * vorzeichen / devicePixelRatio
+        zpix = tr.zPix(z) + (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
         //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
         const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
