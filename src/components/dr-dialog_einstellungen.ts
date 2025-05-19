@@ -137,7 +137,7 @@ export class drDialogEinstellungen extends LitElement {
       <table id="einstellungen_table">
         <tbody>
           <tr>
-            <td colspan='2'>
+            <td colspan="2">
               <sl-checkbox id="id_NO_touch_support">Keine Fingererkennung für Systemeingabe </sl-checkbox>
             </td>
           </tr>
@@ -209,6 +209,10 @@ export class drDialogEinstellungen extends LitElement {
           </tr>
         </tbody>
       </table>
+
+      <sl-button id="id_cad_saveLocalStorage"  @click="${this._saveLocalStorage}">
+        Auswahl als Standardwerte im Browser speichern
+      </sl-button>
 
       <form method="dialog">
         <!--<sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
@@ -304,6 +308,7 @@ export class drDialogEinstellungen extends LitElement {
 
   set_raster_dx(dx: number) {
     let el = this.shadowRoot?.getElementById("id_dx") as HTMLInputElement;
+    console.log("set_raster_dx",dx,String(dx),el)
     el.value = String(dx);
   }
 
@@ -340,5 +345,72 @@ export class drDialogEinstellungen extends LitElement {
   get_fangweite_cursor(): number {
     let wert = (this.shadowRoot?.getElementById("id_fangweite_cursor") as HTMLInputElement).value.replace(/,/g, ".");
     return +wert;
+  }
+
+  set_faktor_lagersymbol(fw: number) {
+    let el = this.shadowRoot?.getElementById("id_fact_lager") as HTMLInputElement;
+    el.value = String(fw);
+  }
+
+  set_dx_offset(fw: number) {
+    let el = this.shadowRoot?.getElementById("id_dx_offset_factor") as HTMLInputElement;
+    el.value = String(fw);
+  }
+
+  set_dz_offset(fw: number) {
+    let el = this.shadowRoot?.getElementById("id_dz_offset_factor") as HTMLInputElement;
+    el.value = String(fw);
+  }
+
+  set_NO_touch_support(value:boolean) {
+    let el = this.shadowRoot?.getElementById("id_NO_touch_support") as SlCheckbox;
+    el.checked = value;
+    // const shadow = this.shadowRoot;
+    // let wert = (shadow?.getElementById("id_NO_touch_support") as SlCheckbox).checked;
+    // return wert;
+  }
+
+  //----------------------------------------------------------------------------------------------
+  _saveLocalStorage() {
+    //------------------------------------------------------------------------------------------
+
+    const shadow = this.shadowRoot;
+    if (shadow) {
+      let bwert = (shadow?.getElementById("id_NO_touch_support") as SlCheckbox).checked;
+      window.localStorage.setItem('cad_NO_touch_support', String(bwert));
+
+      let wert = Math.abs(+(shadow?.getElementById("id_fangweite_cursor") as HTMLInputElement).value.replace(/,/g, "."));
+      window.localStorage.setItem('cad_id_fangweite_cursor', String(wert));
+
+      wert = Math.abs(+(shadow?.getElementById("id_fact_lager") as HTMLInputElement).value.replace(/,/g, "."));
+      window.localStorage.setItem('cad_id_fact_lager', String(wert));
+
+      wert = Math.abs(+(shadow?.getElementById("id_dx_offset_factor") as HTMLInputElement).value.replace(/,/g, "."));
+      window.localStorage.setItem('cad_id_dx_offset_factor', String(wert));
+
+      wert = Math.abs(+(shadow?.getElementById("id_dz_offset_factor") as HTMLInputElement).value.replace(/,/g, "."));
+      window.localStorage.setItem('cad_id_dz_offset_factor', String(wert));
+
+      wert = Math.abs(+(shadow?.getElementById("id_dx") as HTMLInputElement).value.replace(/,/g, "."));
+      window.localStorage.setItem('cad_id_dx', String(wert));
+
+      console.log("saveLocalStorage_CAD, cad_id_dx", wert, bwert)
+
+      wert = Math.abs(+(shadow?.getElementById("id_dz") as HTMLInputElement).value.replace(/,/g, "."));
+      window.localStorage.setItem('cad_id_dz', String(wert));
+
+      let swert = (shadow?.getElementById("id_xmin") as HTMLInputElement).value.replace(/,/g, ".");
+      window.localStorage.setItem('cad_id_xmin', swert);
+
+      swert = (shadow?.getElementById("id_xmax") as HTMLInputElement).value.replace(/,/g, ".");
+      window.localStorage.setItem('cad_id_xmax', swert);
+
+      swert = (shadow?.getElementById("id_zmin") as HTMLInputElement).value.replace(/,/g, ".");
+      window.localStorage.setItem('cad_id_zmin', swert);
+
+      swert = (shadow?.getElementById("id_zmax") as HTMLInputElement).value.replace(/,/g, ".");
+      window.localStorage.setItem('cad_id_zmax', swert);
+
+    }
   }
 }

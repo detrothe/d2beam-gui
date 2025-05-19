@@ -3,8 +3,10 @@
 // import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 
 import { testeZahl } from "./utility.js";
-import { touch_support_table,set_touch_support_table } from './globals';
+import { touch_support_table, set_touch_support_table } from './globals';
 import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
+import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen.js";
+import { set_dx_offset_touch_factor, set_dz_offset_touch_factor, set_fangweite_cursor, set_raster_dx, set_raster_dz, set_raster_xmax, set_raster_xmin, set_raster_zmax, set_raster_zmin, set_touch_support } from "./cad.js";
 //console.log("vor getElementId")
 //document.getElementById("unitLength")?.addEventListener('change', einstellungen);
 //document.getElementById("id_body_width")?.addEventListener('change', set_body_width);
@@ -468,6 +470,79 @@ function set_font_size_root(em: string) {
     //r.style.setProperty('--sl-line-height-normal', '14px');
 }
 
+
+//----------------------------------------------------------------------------------------------
+export function readLocalStorage_cad() {
+    //------------------------------------------------------------------------------------------
+
+
+    let ele = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
+
+    let valueb = window.localStorage.getItem('cad_NO_touch_support')
+    console.log("cad_NO_touch_support", valueb)
+    if (valueb !== null) {
+        if (valueb === 'true') {
+            ele.set_NO_touch_support(true)
+            set_touch_support(false)
+        } else {
+            ele.set_NO_touch_support(false)
+            set_touch_support(true)
+        }
+    }
+
+    let value = window.localStorage.getItem('cad_id_fangweite_cursor')
+    if (value !== null) {
+        ele.set_fangweite_cursor(Number(value))
+        set_fangweite_cursor(Number(value));
+    }
+    value = window.localStorage.getItem('cad_id_fact_lager')
+    if (value !== null) ele.set_faktor_lagersymbol(Number(value))
+
+    value = window.localStorage.getItem('cad_id_dx_offset_factor')
+    if (value !== null) {
+        ele.set_dx_offset(Number(value))
+        set_dx_offset_touch_factor(Number(value))
+    }
+    value = window.localStorage.getItem('cad_id_dz_offset_factor')
+    if (value !== null) {
+        ele.set_dz_offset(Number(value))
+        set_dz_offset_touch_factor(Number(value))
+    }
+
+    value = window.localStorage.getItem('cad_id_dx')
+    if (value !== null) {
+        ele.set_raster_dx(Number(value))
+        set_raster_dx(Number(value));
+    }
+    value = window.localStorage.getItem('cad_id_dz')
+    if (value !== null) {
+        ele.set_raster_dz(Number(value))
+        set_raster_dz(Number(value));
+    }
+    value = window.localStorage.getItem('cad_id_xmin')
+    if (value !== null) {
+        ele.set_raster_xmin(Number(value))
+        set_raster_xmin(Number(value));
+    }
+    value = window.localStorage.getItem('cad_id_xmax')
+    if (value !== null) {
+        ele.set_raster_xmax(Number(value))
+        set_raster_xmax(Number(value));
+    }
+    value = window.localStorage.getItem('cad_id_zmin')
+    if (value !== null) {
+        ele.set_raster_zmin(Number(value))
+        set_raster_zmin(Number(value));
+    }
+    value = window.localStorage.getItem('cad_id_zmax')
+    if (value !== null) {
+        ele.set_raster_zmax(Number(value))
+        set_raster_zmax(Number(value));
+    }
+
+
+
+}
 
 console.log("exit einstellungen")
 

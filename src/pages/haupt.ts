@@ -24,7 +24,7 @@ import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js"
 import "./globals";
 import { berechnungErforderlich, set_touch_support_table } from "./globals";
 
-import { add_listeners_einstellungen, readLocalStorage } from "./einstellungen";
+import { add_listeners_einstellungen, readLocalStorage, readLocalStorage_cad } from "./einstellungen";
 
 import "../components/dr-button-pm";
 
@@ -78,7 +78,7 @@ import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-g
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.9.c, 19-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.9.d, 19-Mai-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
@@ -1285,6 +1285,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
     let h = div!.getBoundingClientRect()
     console.log("update complete Höhe des div", h)
+    readLocalStorage_cad();
+    init_two_cad();
+    init_cad(0);
   });
   let ttt = document.getElementById("id_tab-grafik") as SlTabPanel;
   ttt.updateComplete.then(() => {
@@ -1374,9 +1377,10 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   init_tabellen();
 
 
-  init_two_cad();
-  init_cad(0);
+  // init_two_cad();
+  // init_cad(0);
 
+  //  readLocalStorage_cad();
 
   //init_grafik(0);
   //init_two('artboard', false);
