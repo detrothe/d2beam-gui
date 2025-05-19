@@ -55,9 +55,10 @@ import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 
 //export let pick_element = false
 let backgroundColor_button = 'rgb(64, 64, 64)';
+let backgroundColor_button_light = 'rgb(64, 64, 64)';
 
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-  backgroundColor_button = 'DodgerBlue'
+  backgroundColor_button = backgroundColor_button_light;
 }
 
 export let picked_obj: TCAD_Element;

@@ -78,7 +78,7 @@ import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-g
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.9.a, 19-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.9.b, 19-Mai-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
@@ -328,7 +328,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <div id="id_cad" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0;cursor:none">
           <!-- width:100vw; ;width:300px;height:300px; -->
           <div id="id_cad_group" style="cursor: pointer">
-          <div id="id_cad_group2" style="cursor: pointer"></div>
+              <div id="id_cad_group2" style="cursor: pointer"></div>
           </div>
           <!-- <button id="id_button_zurueck_cad">Fullscreen</button> -->
           <!-- <select name="querschnitt_default" id="id_querschnitt_default" title="default Querschnitt"></select> -->

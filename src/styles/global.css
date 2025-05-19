@@ -6,6 +6,8 @@
   --font-family: sans-serif;
   --fsize: 1em;
   font-size: var(--fsize);
+  --button_cad: rgb(64,64,64);
+  --group_cad: rgb(90, 90, 90);
 }
 /*
 :root,
@@ -233,16 +235,18 @@ input[type="number"] {
   margin: 0;
   padding: 0;
   font-size: 1rem;
+  background-color: var(--group_cad);
 }
 
 #id_cad_group2 {
   position: absolute;
   top: 20px;
-  left: 2px;
+  left: 0px;
   z-index: 90;
   margin: 0;
   padding: 0;
   font-size: 1rem;
+  background-color: var(--group_cad);
 }
 
 #id_div_select_lc {
@@ -418,7 +422,7 @@ input[type="number"] {
   padding: 0.4375rem 0.75rem;
   font-size: 1rem;
   border: none;
-  background-color: light-dark(DodgerBlue,rgb(64, 64, 64));
+  background-color: light-dark(var(--button_cad),rgb(64, 64, 64));
   color: #f1f1f1;
 }
 /* #id_querschnitt_default {
@@ -483,7 +487,7 @@ input[type="number"] {
 }
 
 .btn {
-  background-color: light-dark(DodgerBlue,rgb(64, 64, 64));
+  background-color: light-dark(var(--button_cad),rgb(64, 64, 64));
   border: none;
   color: white;
   padding: 0.4375rem 0.75rem;
@@ -495,15 +499,16 @@ input[type="number"] {
   border-radius: 3px;
 }
 
-/* Darker background on mouse-over */
+/* Darker background on mouse-over
 .btn:hover {
   background-color: RoyalBlue;
 }
+*/
 
 .helptext {
-  background-color: white;
+  background-color: var(--group_cad);
   border: none;
-  color: DodgerBlue;
+  color: white;
   /*padding: 0.4375rem 0.75rem;*/
   font-size: 0.875rem;
   cursor: pointer;
