@@ -394,8 +394,6 @@ export class drDialogEinstellungen extends LitElement {
       wert = Math.abs(+(shadow?.getElementById("id_dx") as HTMLInputElement).value.replace(/,/g, "."));
       window.localStorage.setItem('cad_id_dx', String(wert));
 
-      console.log("saveLocalStorage_CAD, cad_id_dx", wert, bwert)
-
       wert = Math.abs(+(shadow?.getElementById("id_dz") as HTMLInputElement).value.replace(/,/g, "."));
       window.localStorage.setItem('cad_id_dz', String(wert));
 

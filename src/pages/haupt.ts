@@ -78,7 +78,7 @@ import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-g
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.9.e, 19-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v0.9.9, 19-Mai-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname

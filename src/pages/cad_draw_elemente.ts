@@ -1126,7 +1126,7 @@ function draw_feder(dir: string) {
     line.linewidth = 2;
 
     group.add(line)
-    line.scale = 1.0 / devicePixelRatio
+    //line.scale = 1.0 / devicePixelRatio
     // line.rotation = alpha
     // line.translation.set(tr.xPix(x0), tr.zPix(z0))
 
@@ -1180,7 +1180,7 @@ function draw_drehfeder(tr: CTrans) {
 
     group.add(line)
 
-    group.scale = 1.0 / devicePixelRatio
+    //group.scale = 1.0 / devicePixelRatio
 
     return group;
 }
