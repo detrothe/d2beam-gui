@@ -671,31 +671,35 @@ export function delete_element(xc: number, zc: number) {
       let x = Array(4)
       let z = Array(4);
 
-      (obj as TCAD_Knotenlast).get_drawLast_Px(x, z);
-      //console.log("xz", x, z)
-      let inside = test_point_inside_area_2D(x, z, xc, zc)
-      console.log("select_element Px, inside ", i, inside)
-      if (inside) {
-        knotenlast_gefunden = true
-        index_knlast = i;
+      if ((obj as TCAD_Knotenlast).knlast.Px !== 0.0) {
+        (obj as TCAD_Knotenlast).get_drawLast_Px(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        console.log("select_element Px, inside ", i, inside)
+        if (inside) {
+          knotenlast_gefunden = true
+          index_knlast = i;
+        }
       }
-
-      (obj as TCAD_Knotenlast).get_drawLast_Pz(x, z);
-      //console.log("xz", x, z)
-      inside = test_point_inside_area_2D(x, z, xc, zc)
-      console.log("select_element Pz, inside ", i, inside)
-      if (inside) {
-        knotenlast_gefunden = true
-        index_knlast = i;
+      if ((obj as TCAD_Knotenlast).knlast.Pz !== 0.0) {
+        (obj as TCAD_Knotenlast).get_drawLast_Pz(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        console.log("select_element Pz, inside ", i, inside)
+        if (inside) {
+          knotenlast_gefunden = true
+          index_knlast = i;
+        }
       }
-
-      (obj as TCAD_Knotenlast).get_drawLast_My(x, z);
-      //console.log("xz", x, z)
-      inside = test_point_inside_area_2D(x, z, xc, zc)
-      console.log("select_element My, inside ", i, inside)
-      if (inside) {
-        knotenlast_gefunden = true
-        index_knlast = i;
+      if ((obj as TCAD_Knotenlast).knlast.p[2] !== 0.0) {
+        (obj as TCAD_Knotenlast).get_drawLast_My(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        console.log("select_element My, inside ", i, inside)
+        if (inside) {
+          knotenlast_gefunden = true
+          index_knlast = i;
+        }
       }
     }
 
@@ -929,33 +933,38 @@ export function select_element(xc: number, zc: number) {
       let x = Array(4)
       let z = Array(4);
 
-      (obj as TCAD_Knotenlast).get_drawLast_Px(x, z);
-      //console.log("xz", x, z)
-      let inside = test_point_inside_area_2D(x, z, xc, zc)
-      console.log("select_element Px, inside ", i, inside)
-      if (inside) {
-        knotenlast_gefunden = true
-        obj_knlast = obj
+      if ((obj as TCAD_Knotenlast).knlast.Px !== 0.0) {
+        (obj as TCAD_Knotenlast).get_drawLast_Px(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        console.log("select_element Px KNLAST, inside ", i, inside)
+        if (inside) {
+          knotenlast_gefunden = true
+          obj_knlast = obj
+        }
       }
 
-      (obj as TCAD_Knotenlast).get_drawLast_Pz(x, z);
-      //console.log("xz", x, z)
-      inside = test_point_inside_area_2D(x, z, xc, zc)
-      console.log("select_element Pz, inside ", i, inside)
-      if (inside) {
-        knotenlast_gefunden = true
-        obj_knlast = obj
+      if ((obj as TCAD_Knotenlast).knlast.Pz !== 0.0) {
+        (obj as TCAD_Knotenlast).get_drawLast_Pz(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        console.log("select_element Pz KNLAST, inside ", i, inside)
+        if (inside) {
+          knotenlast_gefunden = true
+          obj_knlast = obj
+        }
       }
 
-      (obj as TCAD_Knotenlast).get_drawLast_My(x, z);
-      //console.log("xz", x, z)
-      inside = test_point_inside_area_2D(x, z, xc, zc)
-      console.log("select_element My, inside ", i, inside)
-      if (inside) {
-        knotenlast_gefunden = true
-        obj_knlast = obj
+      if ((obj as TCAD_Knotenlast).knlast.p[2] !== 0.0) {
+        (obj as TCAD_Knotenlast).get_drawLast_My(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        console.log("select_element My KNLAST, inside ", i, inside)
+        if (inside) {
+          knotenlast_gefunden = true
+          obj_knlast = obj
+        }
       }
-
     }
     else if (obj.elTyp === CAD_STAB) {
 
@@ -996,7 +1005,7 @@ export function select_element(xc: number, zc: number) {
             (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
             //console.log("xz", x, z)
             let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element P, inside ", i, inside)
+            console.log("select_element P typ 1, inside ", i, inside)
             if (inside) {
               element_einzellast_gefunden = true
               obj_eleinzellast = obj
@@ -1011,7 +1020,7 @@ export function select_element(xc: number, zc: number) {
             (obj.elast[j] as TCAD_Einzellast).get_drawLast_M_xz(x, z);
             //console.log("xz", x, z)
             let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element M, inside ", i, inside)
+            console.log("select_element M typ 1, inside ", i, inside)
             if (inside) {
               element_einzellast_gefunden = true
               obj_eleinzellast = obj
@@ -2114,6 +2123,8 @@ function update_knotenlast() {
   mode_elementlast_aendern = false
 
   //const ele = document.getElementById("id_dialog_knotenlast") as drDialogElementlasten;
+
+  obj_knlast.zero_drawLasten();
 
   let knlast = new TLoads();
   read_knotenlast_dialog(knlast)

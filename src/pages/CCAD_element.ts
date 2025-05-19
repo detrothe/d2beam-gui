@@ -212,12 +212,12 @@ export class TCAD_Knotenlast extends TCAD_Element {
 
     knlast: TLoads;
 
-    xPx: number[] = Array(4)   // Weltkoordinaten der gezeichneten Px Last
-    zPx: number[] = Array(4)
-    xPz: number[] = Array(4)   // Weltkoordinaten der gezeichneten Pz Last
-    zPz: number[] = Array(4)
-    xMy: number[] = Array(4)   // Weltkoordinaten des gezeichneten Momentenpfeils
-    zMy: number[] = Array(4)
+    xPx: number[] = Array(4).fill(0.0)   // Weltkoordinaten der gezeichneten Px Last
+    zPx: number[] = Array(4).fill(0.0)
+    xPz: number[] = Array(4).fill(0.0)   // Weltkoordinaten der gezeichneten Pz Last
+    zPz: number[] = Array(4).fill(0.0)
+    xMy: number[] = Array(4).fill(0.0)   // Weltkoordinaten des gezeichneten Momentenpfeils
+    zMy: number[] = Array(4).fill(0.0)
 
     constructor(obj: any, index1: number, knlast: TLoads, elTyp: number) {
         super(obj, index1, elTyp);
@@ -268,7 +268,17 @@ export class TCAD_Knotenlast extends TCAD_Element {
             z[i] = this.zMy[i]
         }
     }
+
+    zero_drawLasten() {
+        this.xPx.fill(0.0)
+        this.zPx.fill(0.0)
+        this.xPz.fill(0.0)
+        this.zPz.fill(0.0)
+        this.xMy.fill(0.0)
+        this.zMy.fill(0.0)
+    }
 }
+
 
 
 //―――――――――――――――――――――――――――――――――――――――――――――
@@ -293,8 +303,8 @@ export class TCAD_ElLast {
     isSelected = false;
     typ = 0               // 0=Streckenlast, 1=Einzelllast, 2=Temperatur
 
-    x: number[] = Array(4)   // Weltkoordinaten der gezeichneten Streckenbelastung
-    z: number[] = Array(4)
+    x: number[] = Array(4).fill(0.0)   // Weltkoordinaten der gezeichneten Streckenbelastung
+    z: number[] = Array(4).fill(0.0)
 
     constructor(lf: number, typ: number) {
         this.lastfall = lf
@@ -343,8 +353,8 @@ export class TCAD_Einzellast extends TCAD_ElLast {
     P = 0.0
     M = 0.0
 
-    xM: number[] = Array(4)   // Weltkoordinaten des gezeichneten Momentenpfeils
-    zM: number[] = Array(4)
+    xM: number[] = Array(4).fill(0.0)   // Weltkoordinaten des gezeichneten Momentenpfeils
+    zM: number[] = Array(4).fill(0.0)
 
     constructor(lf: number, x: number, P: number, M: number) {
         super(lf, 1)

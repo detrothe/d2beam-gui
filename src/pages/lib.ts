@@ -142,7 +142,7 @@ export function crossProd(a: number[], b: number[], c: number[]): void
 export function test_point_inside_area_2D(x: number[], y: number[], pQx: number, pQy: number): boolean
 //-------------------------------------------------------------------------------------------------------
 {
-    console.log("in test_point_inside_area_2D")
+    //console.log("in test_point_inside_area_2D")
     let dx: number, dy: number, bx: number, by: number;
 
     //let inside = true
@@ -160,6 +160,7 @@ export function test_point_inside_area_2D(x: number[], y: number[], pQx: number,
         }
 
         let det = dx * dx + dy * dy
+        if (isNaN(det)) continue;
 
         if (Math.abs(det) < 1.e-12) continue;
 
@@ -173,7 +174,7 @@ export function test_point_inside_area_2D(x: number[], y: number[], pQx: number,
         //     continue;
         // }
         let lambda = (-dy * bx + dx * by) / det
-        console.log("lambda", lambda)
+        //console.log("lambda", lambda, det)
 
         if (lambda > 0.0) outside = true
 

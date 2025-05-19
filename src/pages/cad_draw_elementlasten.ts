@@ -754,11 +754,6 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(xtr, ztr)   // Koordinaten merken für Picken
 
-                        // let flaeche = new Two.Path(vertices);
-                        // flaeche.fill = color_load;
-                        // flaeche.opacity = opacity;
-                        // group.add(flaeche)
-
 
                     }
                     if (M != 0.0) {
