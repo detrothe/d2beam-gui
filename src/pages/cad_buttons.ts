@@ -1545,10 +1545,12 @@ export function Knoten_button(ev: Event) {
 export function Edit_Knoten_button() {
   //----------------------------------------------------------------------------------------------------
 
+
   if (buttons_control.select_node) {
     buttons_control.reset();
     delete_help_text();
   } else {
+    buttons_control.reset();
     let el = document.getElementById("id_cad_edit_knoten_button") as HTMLButtonElement;
     el.style.backgroundColor = "darkRed";
 
