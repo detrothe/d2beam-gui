@@ -138,7 +138,7 @@ export class drDialogEinstellungen extends LitElement {
         <tbody>
           <tr>
             <td colspan="2">
-              <sl-checkbox id="id_NO_touch_support">Keine Fingererkennung für Systemeingabe </sl-checkbox>
+              <sl-checkbox id="id_NO_touch_support">Keine Fingererkennung bei Stiftbenutzung für Systemeingabe </sl-checkbox>
             </td>
           </tr>
           <tr>
