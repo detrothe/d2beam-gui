@@ -5,7 +5,7 @@ import { System, STABWERK, TNode, TLoads, alertdialog, TMass, maxBettung, set_ma
 import { CTrans } from './trans';
 import { myFormat, write } from './utility';
 import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab } from './CCAD_element';
-import { draw_elementlasten } from './cad_draw_elementlasten';
+import { draw_elementlasten, max_Lastfall } from './cad_draw_elementlasten';
 //import { two } from './cad';
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
@@ -416,6 +416,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
     let pLength_My = 0.8 * tr.World0(70 / devicePixelRatio)
 
     let load = obj.knlast
+    let iLastfall = load.lf
 
     let group = new Two.Group();
 
@@ -441,7 +442,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         xpix = tr.xPix(x + delta)  //  + plength/2
         zpix = tr.zPix(z) + 9
-        const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+        let str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+        if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'left'
         txt.baseline = 'top'
@@ -485,7 +487,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         xpix = tr.xPix(x) + 5
         zpix = tr.zPix(z - delta - plength) + 5
-        const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+        let str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+        if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'left'
         txt.baseline = 'top'
@@ -531,7 +534,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         xpix = tr.xPix(x) - 10 / devicePixelRatio
         zpix = tr.zPix(z) + (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
         //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
-        const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+        let str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+        if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'right'
         //txt.baseline = 'bottom'
