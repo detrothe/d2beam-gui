@@ -1130,12 +1130,12 @@ export function select_element(xc: number, zc: number) {
   else if (elementlast_gefunden) {
 
     const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
-    ele.set_typ('0')
 
     let lf = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall
     ele.set_lastfall(lf)
 
     let typ = (obj_ellast.elast[index_ellast] as TCAD_ElLast).typ
+    ele.set_typ(String(typ))
 
     if (typ === 0) {
       let art = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art
