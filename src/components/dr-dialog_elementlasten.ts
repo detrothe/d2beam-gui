@@ -254,7 +254,7 @@ export class drDialogElementlasten extends LitElement {
 
       <form method="dialog">
         <!-- <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
-        <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
+        <sl-button id="OK" value="ok" @click="${this._dialog_ok}">ok</sl-button>
         <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
       </form>
     </dialog>`;
@@ -463,5 +463,7 @@ export class drDialogElementlasten extends LitElement {
       el = this.shadowRoot?.getElementById("id_vorverformungen") as HTMLDivElement;
       el.style.display = "block";
     }
+
+    this.shadowRoot?.getElementById("OK")?.focus();
   }
 }
