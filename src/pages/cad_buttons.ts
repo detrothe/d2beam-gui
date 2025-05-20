@@ -62,6 +62,7 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matc
 }
 
 export let picked_obj: TCAD_Element;
+export let index_stab = -1
 
 let mode_elementlast_aendern = false;
 let element_einzellast_gefunden = false
@@ -563,7 +564,6 @@ export function delete_element(xc: number, zc: number) {
   if (list.size === 0) return;
 
   let min_abstand = 1e30;
-  let index_stab = -1;
   let stab_gefunden = false
   let lager_gefunden = false
   let index_lager = -1
@@ -575,6 +575,7 @@ export function delete_element(xc: number, zc: number) {
   let knotenmasse_gefunden = false
   let index_knmasse = -1
 
+  index_stab = -1;
   element_einzellast_gefunden = false
 
   let xpix = tr.xPix(xc)
@@ -908,7 +909,6 @@ export function select_element(xc: number, zc: number) {
   if (list.size === 0) return;
 
   let min_abstand = 1e30;
-  let index = -1;
   let stab_gefunden = false
   let lager_gefunden = false
   let index_lager = -1
@@ -923,6 +923,7 @@ export function select_element(xc: number, zc: number) {
 
   mode_knoten_aendern = false;
 
+  index_stab = -1;
   element_einzellast_gefunden = false
 
   for (let i = 0; i < list.size; i++) {
@@ -973,7 +974,7 @@ export function select_element(xc: number, zc: number) {
       if (abstand > -1.0) {
         if (abstand < min_abstand) {
           min_abstand = abstand;
-          index = i;
+          index_stab = i;
           stab_gefunden = true
         }
       }
@@ -1073,7 +1074,7 @@ export function select_element(xc: number, zc: number) {
     // }
   }
 
-  console.log('ABSTAND', min_abstand, index, lager_gefunden);
+  console.log('ABSTAND', min_abstand, index_stab, lager_gefunden);
 
   // if (knoten_gefunden) {
   //   gefunden = true
@@ -1206,11 +1207,11 @@ export function select_element(xc: number, zc: number) {
     // buttons_control.reset();
   }
 
-  else if (index >= 0 && min_abstand < 0.25) {
+  else if (index_stab >= 0 && min_abstand < 0.25) {
     if (list.size > 0) {
 
       //console.log("two.obj", obj)
-      let obj = list.getAt(index);
+      let obj = list.getAt(index_stab);
       two.remove(obj.two_obj);
       let group = drawStab(obj, tr, true);
       two.add(group);

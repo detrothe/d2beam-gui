@@ -735,7 +735,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let wert = P * fact[iLoop]
                         let xl = x1 + co * x
                         let zl = z1 + si * x
-                        console.log("GRAFIK Einzellast", xl, zl, wert)
+                        //console.log("GRAFIK Einzellast", xl, zl, wert)
                         let grp = new Two.Group();
 
                         if (wert < 0.0) {
@@ -779,7 +779,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let xl = x1 + co * x + si * (shift + (delta + plength) / 2)
                         let zl = z1 + si * x - co * (shift + (delta + plength) / 2)
                         let radius = style_pfeil_moment_element.radius;
-                        console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
+                        //console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
                         let grp = new Two.Group();
 
                         if (wert > 0.0) {

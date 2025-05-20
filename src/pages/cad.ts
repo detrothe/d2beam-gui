@@ -1160,6 +1160,7 @@ function mousedown(ev: any) {
          mouseDz = 0.0;
       }
    }
+
    //console.log("mouse_DownWX", mouse_DownWX, mouse_DownWY)
 
    //input_active = true
@@ -1887,29 +1888,14 @@ function test_for_cad_element(ev: any) {
    let xc = tr.xWorld(ev.offsetX);
    let zc = tr.zWorld(ev.offsetY);
 
-   let min_abstand = Math.min(raster_dx, raster_dz) / 2;
-   let index = -1;
-   for (let i = 0; i < list.size; i++) {
-      let obj = list.getAt(i);
-      let abstand = abstandPunktGerade_2D(
-         obj.x1,
-         obj.z1,
-         obj.x2,
-         obj.z2,
-         xc,
-         zc
-      );
-      console.log('abstand', abstand);
-      if (abstand > -1.0) {
-         if (abstand < min_abstand) {
-            min_abstand = abstand;
-            index = i;
-         }
-      }
-   }
-   //if (index >= 0 && min_abstand < 0.25) {
+   buttons_control.reset();
+   buttons_control.select_element = true;
+   delete_help_text();
+   set_zoomIsActive(false);
+   reset_pointer_length();
 
-   console.log('rechte Maustaste, gefunden index= ', index, min_abstand);
+   select_element(xc, zc);
+
 }
 
 

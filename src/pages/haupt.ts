@@ -72,13 +72,13 @@ import {
 
 import { click_pan_button_cad, init_cad, init_two_cad, two_cad_clear } from "./cad";
 import { cad_buttons } from "./cad_buttons";
-import { abbruch_property_dialog, show_property_dialog } from "./cad_contextmenu";
+import { abbruch_property_dialog, delete_element_dialog, show_add_elload_dialog, show_property_dialog } from "./cad_contextmenu";
 import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v0.9.9, 20-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.0.0, 20-Mai-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
@@ -337,9 +337,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <div id="id_context_menu" style="position:absolute;top:100;display:none;">
             <sl-menu style="max-width: 200px;">
               <sl-menu-item value="properties" @click="${show_property_dialog}">Eigenschaften</sl-menu-item>
-              <sl-menu-item value="add_eload">add E-Lasten</sl-menu-item>
+              <sl-menu-item value="add_eload" @click="${show_add_elload_dialog}">add E-Lasten</sl-menu-item>
               <sl-divider></sl-divider>
-              <sl-menu-item value="delete">Löschen</sl-menu-item>
+              <sl-menu-item value="delete"  @click="${delete_element_dialog}">Löschen</sl-menu-item>
               <sl-menu-item value="abbruch"  @click="${abbruch_property_dialog}">Abbruch</sl-menu-item>
             </sl-menu>
           </div>
