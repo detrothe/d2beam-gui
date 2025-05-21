@@ -195,7 +195,20 @@ if (isAndroid) {
 
 
 
-} else {
+}
+else if (yourOS === 'iOS') {
+
+    window.addEventListener('load', () => {
+        input = window.localStorage.getItem('current_input_D2BEAM_GUI');
+        //write('iOS, LOAD  current input = ' + input.length)
+        //console.log('LOAD  current input = ', input.length)
+        if (input.length > 0) {
+            autoEingabeLesen();
+        }
+    });
+
+}
+else {
 
     // Damit man nicht versehentlich das Browserfenster löscht und Eingaben verliert
 
@@ -218,21 +231,24 @@ if (isAndroid) {
     });
 
 
-    document.addEventListener('visibilitychange', function () {
-        //write(navigator.userAgent);
-        //write('Android visibilitychange = ' + document.visibilityState)
-        // fires when user switches tabs, apps, goes to homescreen, etc.
-        if (document.visibilityState === 'hidden') {
-            write('visibility changed to hidden')
-            window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
-        }
+    // document.addEventListener('visibilitychange', function () {
+    //     //write(navigator.userAgent);
+    //     //write('Android visibilitychange = ' + document.visibilityState)
+    //     // fires when user switches tabs, apps, goes to homescreen, etc.
+    //     if (document.visibilityState === 'hidden') {
+    //         write('visibility changed to hidden')
+    //         window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
+    //     }
 
-        // fires when app transitions from prerender, user returns to the app / tab.
-        if (document.visibilityState === 'visible') {
-            write('visibility changed to visible');
-            //init_cad(2);
-        }
-    });
+    //     // fires when app transitions from prerender, user returns to the app / tab.
+    //     if (document.visibilityState === 'visible') {
+    //         write('visibility changed to visible');
+    //         //init_cad(2);
+    //     }
+    // });
+
+
+
     // if ('launchQueue' in window) {
     //     console.log('File Handling API is supported!');
 
@@ -258,11 +274,13 @@ if (isAndroid) {
     // });
 
     window.addEventListener('load', () => {
-        input = window.localStorage.getItem('current_input_D2BEAM_GUI');
-        //write('else, LOAD  current input = ' + input.length)
-        //console.log('LOAD  current input = ', input.length)
-        if (input.length > 0) {
-            autoEingabeLesen();
+        if (yourOS !== 'iOS') {
+            input = window.localStorage.getItem('current_input_D2BEAM_GUI');
+            write('else, LOAD  current input = ' + input.length)
+            //console.log('LOAD  current input = ', input.length)
+            if (input.length > 0) {
+                autoEingabeLesen();
+            }
         }
     });
 
@@ -293,6 +311,8 @@ async function autoEingabeLesen() {
         question_Text: 'letzte (automatisch) gespeicherte Eingabe einlesen'
     });
     const letzteEinlesen = await dialog.confirm();
+
+    write("letzteEinlesen= " + letzteEinlesen)
 
     if (letzteEinlesen) {
         read_daten(input);

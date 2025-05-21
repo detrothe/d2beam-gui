@@ -75,10 +75,9 @@ import { cad_buttons } from "./cad_buttons";
 import { abbruch_property_dialog, delete_element_dialog, show_add_elload_dialog, show_property_dialog } from "./cad_contextmenu";
 import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
-import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.0.0.a, 21-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.0.0.b, 21-Mai-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
@@ -1868,17 +1867,17 @@ function berechnungsart_changed() {
   const sel = document.getElementById("id_stadyn") as HTMLSelectElement;
   const id_mass = document.getElementById("id_tab_mass") as SlSelect;
   const id_btn_mass = document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement;
-  let ele = document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse;
+  //let ele = document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse;
 
   if (sel.value === "0") {
     id_mass.disabled = true;
     id_btn_mass.style.display = 'none';
-    ele.set_system(0);
+    //ele.set_system(0);
   }
   else {
     id_mass.disabled = false;
     id_btn_mass.style.display = 'inline-block';
-    ele.set_system(1);
+    //ele.set_system(1);
   }
   berechnungErforderlich();
 }

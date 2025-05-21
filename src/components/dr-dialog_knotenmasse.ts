@@ -185,14 +185,14 @@ export class drDialogKnotenmasse extends LitElement {
     el.value = String(theta);
   }
 
-  set_system(stadyn: number) {
-    if (stadyn === 0) {
-      // Statik
+  set_system(system: number) {
+    console.log("set_system ", system)
+    if (system === 0) { // Stabwerk
       const shadow = this.shadowRoot;
       let el = shadow?.getElementById("id_MY") as HTMLElement;
       el.style.display = "block";
     } else {
-      // Dynamik
+      // Fachwerk
       const shadow = this.shadowRoot;
       let el = shadow?.getElementById("id_MY") as HTMLElement;
       el.style.display = "none";

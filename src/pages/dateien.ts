@@ -143,12 +143,12 @@ export function read_daten(eingabedaten: string) {
         if (jobj.stadyn === '1') { // Dynamik : tab clickbar machen
             (document.getElementById("id_tab_mass") as SlSelect).disabled = false;
             (document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement).style.display = 'inline-block';
-            (document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse).set_system(1);
+//            (document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse).set_system(1);
 
         } else {
             (document.getElementById("id_tab_mass") as SlSelect).disabled = true;
             (document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement).style.display = 'none';
-            (document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse).set_system(0);
+//            (document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse).set_system(0);
         }
 
         els = document.getElementById('id_THIIO') as HTMLSelectElement;

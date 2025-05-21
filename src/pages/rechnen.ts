@@ -28,6 +28,7 @@ import {
 } from "./querschnitte";
 import { drDialogLager } from "../components/dr-dialog_lager";
 import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast";
+import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 
 // import { read_daten } from "./dateien"
 
@@ -417,6 +418,9 @@ export function setSystem(system: number) {
 
     let ele1 = document.getElementById('id_dialog_knotenlast') as drDialogKnotenlast;
     ele1.set_system(system);
+
+    let elm = document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse;
+    elm.set_system(system);
 
 }
 
