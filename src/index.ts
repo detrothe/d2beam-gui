@@ -12,14 +12,14 @@ import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
 import { rechnen } from './pages/rechnen'
 import { ConfirmDialog } from './pages/confirm_dialog';
-import { init_cad, init_two_cad } from './pages/cad';
+import { init_cad, init_two_cad, two_cad_update } from './pages/cad';
 import { reset_controlpanel_grafik } from './pages/grafik';
 import { reset_gui } from './pages/mypanelgui';
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log("isAndroid =", isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
 
-console.log("userAgent",navigator.userAgent);
+console.log("userAgent", navigator.userAgent);
 
 // let dbPromise: any;
 let input: any;
@@ -65,7 +65,10 @@ if (isAndroid) {
         }
 
         // fires when app transitions from prerender, user returns to the app / tab.
-        if (document.visibilityState === 'visible') { write('Android visible') }
+        if (document.visibilityState === 'visible') {
+            write('Android visible');
+            two_cad_update();
+        }
     });
 
     //     window.addEventListener('beforeunload', function (event) {
