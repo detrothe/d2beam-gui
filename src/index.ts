@@ -207,6 +207,22 @@ else if (yourOS === 'iOS') {
         }
     });
 
+    document.addEventListener('visibilitychange', function () {
+        //write(navigator.userAgent);
+        //write('Android visibilitychange = ' + document.visibilityState)
+        // fires when user switches tabs, apps, goes to homescreen, etc.
+        if (document.visibilityState === 'hidden') {
+            write('visibility changed to hidden')
+            window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
+        }
+
+        // fires when app transitions from prerender, user returns to the app / tab.
+        if (document.visibilityState === 'visible') {
+            write('visibility changed to visible');
+            //init_cad(2);
+        }
+    });
+
 }
 else {
 
