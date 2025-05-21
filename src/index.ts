@@ -20,6 +20,74 @@ const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log("isAndroid =", isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
 
 console.log("userAgent", navigator.userAgent);
+console.log('navigator ', navigator)
+//write('navigator: ' + navigator.maxTouchPoints + ' | ' + navigator.platform + ' | ' + navigator.userAgent)
+
+function getBrowserName(userAgent: string) {
+    // The order matters here, and this may report false positives for unlisted browsers.
+
+    if (userAgent.includes("Firefox")) {
+        // "Mozilla/5.0 (X11; Linux i686; rv:104.0) Gecko/20100101 Firefox/104.0"
+        return "Mozilla Firefox";
+    } else if (userAgent.includes("SamsungBrowser")) {
+        // "Mozilla/5.0 (Linux; Android 9; SAMSUNG SM-G955F Build/PPR1.180610.011) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/9.4 Chrome/67.0.3396.87 Mobile Safari/537.36"
+        return "Samsung Internet";
+    } else if (userAgent.includes("Opera") || userAgent.includes("OPR")) {
+        // "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_5_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36 OPR/90.0.4480.54"
+        return "Opera";
+    } else if (userAgent.includes("Edge")) {
+        // "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299"
+        return "Microsoft Edge (Legacy)";
+    } else if (userAgent.includes("Edg")) {
+        // "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36 Edg/104.0.1293.70"
+        return "Microsoft Edge (Chromium)";
+    } else if (userAgent.includes("Chrome")) {
+        // "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+        return "Google Chrome or Chromium";
+    } else if (userAgent.includes("Safari")) {
+        // "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Mobile/15E148 Safari/604.1"
+        return "Apple Safari";
+    } else {
+        return "unknown";
+    }
+}
+
+function getOS(): string {
+    const userAgent = window.navigator.userAgent,
+        platform = window.navigator.platform,
+        macosPlatforms = ['macOS', 'Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
+        windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
+        iosPlatforms = ['iPhone', 'iPad', 'iPod'];
+    let os = 'undefined';
+
+    if (macosPlatforms.indexOf(platform) !== -1) {
+        os = 'Mac OS';
+    } else if (iosPlatforms.indexOf(platform) !== -1) {
+        os = 'iOS';
+    } else if (windowsPlatforms.indexOf(platform) !== -1) {
+        os = 'Windows';
+    } else if (/Android/.test(userAgent)) {
+        os = 'Android';
+    } else if (/Linux/.test(platform)) {
+        os = 'Linux';
+    }
+
+    return os;
+}
+
+const browserName = getBrowserName(navigator.userAgent);
+console.log(`You are using: ${browserName}`);
+write('dein Browser: ' + browserName);
+const maxTouchPoints = navigator.maxTouchPoints;
+
+let yourOS: string;
+if (browserName === 'Apple Safari' && maxTouchPoints > 0) {
+    yourOS = 'iOS';
+} else {
+    yourOS = getOS();
+}
+write('dein OS: ' + yourOS);
+
 
 // let dbPromise: any;
 let input: any;
@@ -135,7 +203,7 @@ if (isAndroid) {
         event.preventDefault();
         // Google Chrome < 119 requires returnValue to be set.
         event.returnValue = true;
-        //console.log("else, beforeunload", navigator.userAgent)
+        console.log("else, beforeunload", navigator.userAgent)
 
 
         // if (dbPromise) {
@@ -149,6 +217,22 @@ if (isAndroid) {
 
     });
 
+
+    document.addEventListener('visibilitychange', function () {
+        write(navigator.userAgent);
+        write('Android visibilitychange = ' + document.visibilityState)
+        // fires when user switches tabs, apps, goes to homescreen, etc.
+        if (document.visibilityState === 'hidden') {
+            write('visibilitychange hidden')
+            //window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
+        }
+
+        // fires when app transitions from prerender, user returns to the app / tab.
+        if (document.visibilityState === 'visible') {
+            write('visibilitychange visible');
+            //init_cad(2);
+        }
+    });
     // if ('launchQueue' in window) {
     //     console.log('File Handling API is supported!');
 
