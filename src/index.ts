@@ -96,7 +96,7 @@ if (isAndroid) {
 
     window.addEventListener('load', () => {
         input = window.localStorage.getItem('current_input_D2BEAM_GUI');
-        write('Android, LOAD  current input = ' + input.length)
+        //write('Android, LOAD  current input = ' + input.length)
         //console.log('LOAD  current input = ', input.length)
         if (input.length > 0) {
             autoEingabeLesen();
@@ -117,7 +117,7 @@ if (isAndroid) {
         // Google Chrome < 119 requires returnValue to be set.
         //event.returnValue = true;
 
-        write("Android, beforeunload")
+        //write("Android, beforeunload")
 
         window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
 
@@ -128,13 +128,13 @@ if (isAndroid) {
         //write('Android visibilitychange = ' + document.visibilityState)
         // fires when user switches tabs, apps, goes to homescreen, etc.
         if (document.visibilityState === 'hidden') {
-            write('Android hidden')
+            //write('Android hidden')
             window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
         }
 
         // fires when app transitions from prerender, user returns to the app / tab.
         if (document.visibilityState === 'visible') {
-            write('Android visible');
+            //write('Android visible');
             //two_cad_update();
             init_cad(2);
         }
@@ -212,13 +212,13 @@ else if (yourOS === 'iOS') {
         //write('Android visibilitychange = ' + document.visibilityState)
         // fires when user switches tabs, apps, goes to homescreen, etc.
         if (document.visibilityState === 'hidden') {
-            write('visibility changed to hidden')
+            //write('visibility changed to hidden')
             window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
         }
 
         // fires when app transitions from prerender, user returns to the app / tab.
         if (document.visibilityState === 'visible') {
-            write('visibility changed to visible');
+            //write('visibility changed to visible');
             //init_cad(2);
         }
     });
@@ -292,7 +292,7 @@ else {
     window.addEventListener('load', () => {
         if (yourOS !== 'iOS') {
             input = window.localStorage.getItem('current_input_D2BEAM_GUI');
-            write('else, LOAD  current input = ' + input.length)
+            //write('else, LOAD  current input = ' + input.length)
             //console.log('LOAD  current input = ', input.length)
             if (input.length > 0) {
                 autoEingabeLesen();
@@ -328,7 +328,7 @@ async function autoEingabeLesen() {
     });
     const letzteEinlesen = await dialog.confirm();
 
-    write("letzteEinlesen= " + letzteEinlesen)
+    //write("letzteEinlesen= " + letzteEinlesen)
 
     if (letzteEinlesen) {
         read_daten(input);
