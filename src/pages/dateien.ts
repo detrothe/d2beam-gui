@@ -7,7 +7,7 @@ import { app, clearTables, currentFilename, set_current_filename } from "./haupt
 //import { testeZahl } from "./utility";
 import { resizeTables } from "./haupt";
 import { saveAs } from 'file-saver';
-import { write } from './utility'
+import { myFormat, write } from './utility'
 import { reset_gui } from './mypanelgui'
 import { reset_controlpanel_grafik } from './grafik'
 
@@ -200,15 +200,16 @@ export function read_daten(eingabedaten: string) {
     }
 
     endTime = performance.now();
-    write('vor resizeTables ' + String(endTime - startTime))
+
+    write('vor resizeTables: ' + myFormat(endTime - startTime, 2, 3) + ' msec')
     startTime = performance.now();
     resizeTables();
     endTime = performance.now();
-    write('time used for resizeTables ' + String(endTime - startTime))
+    write('time used for resizeTables: ' + myFormat(endTime - startTime, 2, 3) + ' msec')
     startTime = performance.now();
     clearTables();
     endTime = performance.now();
-    write("time used for clearTables " + String(endTime - startTime))
+    write("time used for clearTables: " + myFormat(endTime - startTime, 2, 3) + ' msec')
     startTime = performance.now();
 
     //if (jobj.system === 1) {
@@ -402,7 +403,7 @@ export function read_daten(eingabedaten: string) {
     }
 
     endTime = performance.now();
-    write('done read_daten ' + String(endTime - startTime))
+    write('done read_daten: ' + myFormat(endTime - startTime, 2, 3) + ' msec')
 }
 
 //------------------------------------------------------------------------------------------------
