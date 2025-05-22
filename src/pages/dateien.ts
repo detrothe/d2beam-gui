@@ -13,7 +13,7 @@ import { reset_controlpanel_grafik } from './grafik'
 
 import { get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length } from "./querschnitte"
 import { nQuerschnittSets, set_querschnittszaehler, add_rechteck_querschnitt } from "./querschnitte"
-import { alertdialog, maxBettung, set_maxBettung, setSystem, System } from './rechnen'
+import { alertdialog, maxBettung, set_maxBettung, setSystem, System, TLoads } from './rechnen'
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 import { CADNodes, set_ID_counter, TCADNode } from "./cad_node";
 import { TCAD_Element, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
@@ -106,7 +106,7 @@ export function read_daten(eingabedaten: string) {
         el.setValue(0);
 
         el = document.getElementById('id_button_dyn_neigv') as drButtonPM;
-        el.setValue(1);
+        el.setValue(jobj.dyn_neigv);
 
 
 
@@ -143,12 +143,12 @@ export function read_daten(eingabedaten: string) {
         if (jobj.stadyn === '1') { // Dynamik : tab clickbar machen
             (document.getElementById("id_tab_mass") as SlSelect).disabled = false;
             (document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement).style.display = 'inline-block';
-//            (document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse).set_system(1);
+            //            (document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse).set_system(1);
 
         } else {
             (document.getElementById("id_tab_mass") as SlSelect).disabled = true;
             (document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement).style.display = 'none';
-//            (document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse).set_system(0);
+            //            (document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse).set_system(0);
         }
 
         els = document.getElementById('id_THIIO') as HTMLSelectElement;
@@ -365,8 +365,23 @@ export function read_daten(eingabedaten: string) {
             list.append(obj);
         }
         else if (element.className === 'TCAD_Knotenlast') {
-            const obj = new TCAD_Knotenlast(null, jobj.elements[i].index1, jobj.elements[i].knlast, jobj.elements[i].elTyp);
-            list.append(obj);
+            if (jobj.elements[i].knlast.alpha === undefined) {
+                let knlast = new TLoads();
+                knlast.Px_org = knlast.Px = jobj.elements[i].knlast.Px;
+                knlast.Pz_org = knlast.Pz = jobj.elements[i].knlast.Pz;
+                knlast.node = jobj.elements[i].knlast.node;
+                knlast.lf = jobj.elements[i].knlast.lf;
+                knlast.p[2] = jobj.elements[i].knlast.p[2];
+                knlast.alpha = 0.0;
+
+                const obj = new TCAD_Knotenlast(null, jobj.elements[i].index1, knlast, jobj.elements[i].elTyp);
+                list.append(obj);
+            }
+            else {
+                const obj = new TCAD_Knotenlast(null, jobj.elements[i].index1, jobj.elements[i].knlast, jobj.elements[i].elTyp);
+                list.append(obj);
+            }
+
         }
         else if (element.className === 'TCAD_Knotenmasse') {
             const obj = new TCAD_Knotenmasse(null, jobj.elements[i].index1, jobj.elements[i].masse, jobj.elements[i].elTyp);
@@ -843,7 +858,7 @@ export function str_inputToJSON() {
     let polyData = {
 
         'created_by': 'd2beam-gui',
-        'version': 0,
+        'version': 1,
 
         // 'unit_length': current_unit_length,
         'system': system,

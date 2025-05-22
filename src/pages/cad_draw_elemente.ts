@@ -48,6 +48,13 @@ const style_txt = {
 };
 
 
+const style_pfeil = {
+    b: 25,
+    h: 16,
+    linewidth: 7,
+    color: '#dc0000'
+}
+
 //-------------------------------------------------------------------------------------------------------
 export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     //-------------------------------------------------------------------------------------------------------
@@ -425,18 +432,18 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
     lf_show = load.lf - 1    // noch überarbeiten
 
 
-    if (load.Px != 0.0 && load.lf - 1 === lf_show) {
+    if (load.Px_org != 0.0 && load.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
         let x = get_cad_node_X(index1) + CADNodes[index1].offset_Px
         let z = get_cad_node_Z(index1)
         let grp = new Two.Group();
 
-        wert = load.Px * fact
+        wert = load.Px_org * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(tr, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
+            let gr = draw_arrow(tr, x + delta, z, x + delta + plength, z, style_pfeil)
             grp.add(gr)
         } else {
-            let gr = draw_arrow(tr, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+            let gr = draw_arrow(tr, x + delta + plength, z, x + delta, z, style_pfeil)
             grp.add(gr)
         }
 
@@ -470,18 +477,18 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
             CADNodes[index1].offset_Px += plength
         }
     }
-    if (load.Pz != 0.0 && load.lf - 1 === lf_show) {
+    if (load.Pz_org != 0.0 && load.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
         let x = get_cad_node_X(index1)
         let z = get_cad_node_Z(index1) - CADNodes[index1].offset_Pz
         let grp = new Two.Group();
 
-        wert = load.Pz * fact
+        wert = load.Pz_org * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
+            let gr = draw_arrow(tr, x, z - delta - plength, x, z - delta, style_pfeil)
             grp.add(gr)
         } else {
-            let gr = draw_arrow(tr, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
+            let gr = draw_arrow(tr, x, z - delta, x, z - delta - plength, style_pfeil)
             grp.add(gr)
         }
 

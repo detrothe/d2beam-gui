@@ -133,20 +133,24 @@ export class drDialogKnotenlast extends LitElement {
       <table id="einstellungen_table">
         <tbody>
           <tr>
-            <td>Lastfall:</td>
+            <td>Lastfall :</td>
             <td><input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="1" /></td>
           </tr>
           <tr>
-            <td>Px:</td>
+            <td title="Winkel im Gegenuhrzeigersinn positiv">alpha :</td>
+            <td><input type="number" id="id_alpha" name="alpha" pattern="[0-9.,eE+-]*" value="0.0" />[°]</td>
+          </tr>
+          <tr>
+            <td>P<sub>x'</sub> :</td>
             <td><input type="number" id="id_px" name="px" pattern="[0-9.,eE+-]*" value="" /> [kN]</td>
           </tr>
           <tr>
-            <td>Pz:</td>
+            <td>P<sub>z'</sub> :</td>
             <td><input type="number" id="id_pz" name="pz" pattern="[0-9.,eE+-]*" value="" /> [kN]</td>
           </tr>
 
           <tr id="id_MY">
-            <td>My:</td>
+            <td>M<sub>y</sub> :</td>
             <td><input type="number" id="id_my" name="my" pattern="[0-9.,eE+-]*" value="" /> [kNm]</td>
           </tr>
         </tbody>
@@ -182,6 +186,16 @@ export class drDialogKnotenlast extends LitElement {
     if (shadow) (shadow.getElementById("dialog_knotenlast") as HTMLDialogElement).close("cancel");
   }
 
+  get_lastfall() {
+    let el = this.shadowRoot?.getElementById("id_lf") as HTMLInputElement;
+    return Number(el.value);
+  }
+
+  set_lastfall(wert: number) {
+    let el = this.shadowRoot?.getElementById("id_lf") as HTMLInputElement;
+    el.value = String(wert);
+  }
+
   get_Px() {
     const shadow = this.shadowRoot;
     //console.log("id_px", (shadow?.getElementById("id_px") as HTMLInputElement).value);
@@ -215,6 +229,17 @@ export class drDialogKnotenlast extends LitElement {
   set_My(My: number) {
     let el = this.shadowRoot?.getElementById("id_my") as HTMLInputElement;
     el.value = String(My);
+  }
+
+  set_alpha(alpha: number) {
+    let el = this.shadowRoot?.getElementById("id_alpha") as HTMLInputElement;
+    el.value = String(alpha);
+  }
+
+  get_alpha() {
+    const shadow = this.shadowRoot;
+    let wert = Number((shadow?.getElementById("id_alpha") as HTMLInputElement).value.replace(/,/g, "."));
+    return wert;
   }
 
   set_system(system: number) {

@@ -52,6 +52,7 @@ import { add_element_nodes, CADNodes, get_cad_node_X, get_cad_node_Z, get_ID, re
 import { find_max_Lastfall, find_maxValues_eloads, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
+import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast";
 
 //export let pick_element = false
 let backgroundColor_button = 'rgb(64, 64, 64)';
@@ -673,7 +674,7 @@ export function delete_element(xc: number, zc: number) {
       let x = Array(4)
       let z = Array(4);
 
-      if ((obj as TCAD_Knotenlast).knlast.Px !== 0.0) {
+      if ((obj as TCAD_Knotenlast).knlast.Px_org !== 0.0) {
         (obj as TCAD_Knotenlast).get_drawLast_Px(x, z);
         //console.log("xz", x, z)
         let inside = test_point_inside_area_2D(x, z, xc, zc)
@@ -683,7 +684,7 @@ export function delete_element(xc: number, zc: number) {
           index_knlast = i;
         }
       }
-      if ((obj as TCAD_Knotenlast).knlast.Pz !== 0.0) {
+      if ((obj as TCAD_Knotenlast).knlast.Pz_org !== 0.0) {
         (obj as TCAD_Knotenlast).get_drawLast_Pz(x, z);
         //console.log("xz", x, z)
         let inside = test_point_inside_area_2D(x, z, xc, zc)
@@ -935,7 +936,7 @@ export function select_element(xc: number, zc: number) {
       let x = Array(4)
       let z = Array(4);
 
-      if ((obj as TCAD_Knotenlast).knlast.Px !== 0.0) {
+      if ((obj as TCAD_Knotenlast).knlast.Px_org !== 0.0) {
         (obj as TCAD_Knotenlast).get_drawLast_Px(x, z);
         //console.log("xz", x, z)
         let inside = test_point_inside_area_2D(x, z, xc, zc)
@@ -946,7 +947,7 @@ export function select_element(xc: number, zc: number) {
         }
       }
 
-      if ((obj as TCAD_Knotenlast).knlast.Pz !== 0.0) {
+      if ((obj as TCAD_Knotenlast).knlast.Pz_org !== 0.0) {
         (obj as TCAD_Knotenlast).get_drawLast_Pz(x, z);
         //console.log("xz", x, z)
         let inside = test_point_inside_area_2D(x, z, xc, zc)
@@ -1329,8 +1330,8 @@ export function add_elementlast(xc: number, zc: number) {
       selected_element.group = group
       obj.isSelected = false
 
-      two.update();
-
+      // two.update();
+      init_cad(2);
 
       // buttons_control.reset();
       gefunden = true
@@ -1869,23 +1870,28 @@ function dialog_knotenlast_closed(this: any, e: any) {
 export function read_knotenlast_dialog(knlast: TLoads) {
   //-----------------------------------------------------------------------------------------------------------
 
-  const el = document.getElementById("id_dialog_knotenlast") as HTMLDialogElement;
+  const el = document.getElementById("id_dialog_knotenlast") as drDialogKnotenlast;
 
-  console.log("read_knotenlast_dialog, el=", el);
-  let elem = el?.shadowRoot?.getElementById("id_lf") as HTMLInputElement;
-  console.log("lf=", elem.value);
-  knlast.lf = +elem.value
+  knlast.lf = el.get_lastfall();
 
   set_max_lastfall(knlast.lf)
 
-  elem = el?.shadowRoot?.getElementById("id_px") as HTMLInputElement;
-  knlast.Px = +elem.value
+  knlast.Px_org = el.get_Px();
+  knlast.Pz_org = el.get_Pz();
 
-  elem = el?.shadowRoot?.getElementById("id_pz") as HTMLInputElement;
-  knlast.Pz = +elem.value
+  knlast.p[2] = el.get_My()
 
-  elem = el?.shadowRoot?.getElementById("id_my") as HTMLInputElement;
-  knlast.p[2] = +elem.value
+  knlast.alpha = el.get_alpha();
+
+  // Transformation in x-z Koordinatensystem
+
+  let phi = knlast.alpha * Math.PI / 180
+
+  let si = Math.sin(phi)
+  let co = Math.cos(phi)
+
+  knlast.Px = co * knlast.Px_org + si * knlast.Pz_org
+  knlast.Pz = -si * knlast.Px_org + co * knlast.Pz_org
 
 }
 
@@ -1894,24 +1900,15 @@ export function read_knotenlast_dialog(knlast: TLoads) {
 export function write_knotenlast_dialog(knlast: TLoads) {
   //-----------------------------------------------------------------------------------------------------------
 
-  const el = document.getElementById("id_dialog_knotenlast") as HTMLDialogElement;
+  const el = document.getElementById("id_dialog_knotenlast") as drDialogKnotenlast;
 
-  //console.log("read_knotenlast_dialog, el=", el);
-  let elem = el?.shadowRoot?.getElementById("id_lf") as HTMLInputElement;
-  //console.log("lf=", elem.value);
-  elem.value = String(knlast.lf)
-
-  elem = el?.shadowRoot?.getElementById("id_px") as HTMLInputElement;
-  elem.value = String(knlast.Px)
-
-  elem = el?.shadowRoot?.getElementById("id_pz") as HTMLInputElement;
-  elem.value = String(knlast.Pz)
-
-  elem = el?.shadowRoot?.getElementById("id_my") as HTMLInputElement;
-  elem.value = String(knlast.p[2])
+  el.set_lastfall(knlast.lf)
+  el.set_Px(knlast.Px_org)
+  el.set_Pz(knlast.Pz_org)
+  el.set_My(knlast.p[2])
+  el.set_alpha(knlast.alpha)
 
 }
-
 
 //---------------------------------------------------------------------------------------------------------------
 export function read_knotenmasse_dialog(masse: TMass) {

@@ -319,6 +319,9 @@ export class TLoads {
     p = [0.0, 0.0, 0.0]
     Px = 0.0                                 // Last in globale x-Richtung
     Pz = 0.0                                 // Last in globale z-Richtung
+    alpha = 0.0
+    Px_org = 0.0                             // im gedrehten Koordinatensystem des Eingabedialogs
+    Pz_org = 0.0
 }
 
 export class TMass {
