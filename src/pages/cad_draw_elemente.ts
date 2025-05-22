@@ -410,20 +410,27 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
     let slmax = 2 * slmax_cad;
 
-    let plength = 50 /*35 slmax / 20.*/, delta = 12 //slmax / 200.0
+    let plength = slmax / 50 /*35 slmax / 20.*/, delta = 12 //slmax / 200.0
     let xpix: number, zpix: number
     let wert: number
     let nLoop = 0
 
     let xtr = Array(4), ztr = Array(4)
+    let x0, z0, x1, z1
 
-    plength = tr.World0(2 * plength / devicePixelRatio)
+    //plength = tr.World0(2 * plength / devicePixelRatio)
     delta = tr.World0(delta / devicePixelRatio)
 
     let pLength_My = 0.8 * tr.World0(70 / devicePixelRatio)
 
     let load = obj.knlast
     let iLastfall = load.lf
+
+    let phi = load.alpha * Math.PI / 180
+
+    let si = Math.sin(phi)
+    let co = Math.cos(phi)
+
 
     let group = new Two.Group();
 
@@ -436,24 +443,33 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
         let x = get_cad_node_X(index1) + CADNodes[index1].offset_Px
         let z = get_cad_node_Z(index1)
+
+        x0 = x + co * delta
+        z0 = z - si * delta
+        x1 = x + co * (delta + plength)
+        z1 = z - si * (delta + plength)
+
         let grp = new Two.Group();
 
         wert = load.Px_org * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(tr, x + delta, z, x + delta + plength, z, style_pfeil)
+            let gr = draw_arrow(tr, x0, z0, x1, z1, style_pfeil)
             grp.add(gr)
         } else {
-            let gr = draw_arrow(tr, x + delta + plength, z, x + delta, z, style_pfeil)
+            let gr = draw_arrow(tr, x1, z1, x0, z0, style_pfeil)
             grp.add(gr)
         }
 
-        xpix = tr.xPix(x + delta)  //  + plength/2
-        zpix = tr.zPix(z) + 9
+        // xpix = tr.xPix(x + delta)  //  + plength/2
+        // zpix = tr.zPix(z) + 9
+        xpix = tr.xPix((x0 + x1) / 2) + 9 * si
+        zpix = tr.zPix((z0 + z1) / 2) + 9 * co
         let str = myFormat(Math.abs(wert), 1, 2) + 'kN'
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
-        txt.alignment = 'left'
+        txt.alignment = 'center'
         txt.baseline = 'top'
+        txt.rotation = -phi
         grp.add(txt)
 
         group.add(grp)
@@ -483,22 +499,31 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         let z = get_cad_node_Z(index1) - CADNodes[index1].offset_Pz
         let grp = new Two.Group();
 
+        x0 = x - si * (delta + plength)
+        z0 = z - co * (delta + plength)
+        x1 = x - si * delta
+        z1 = z - co * delta
+
+
         wert = load.Pz_org * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(tr, x, z - delta - plength, x, z - delta, style_pfeil)
+            let gr = draw_arrow(tr, x0, z0, x1, z1, style_pfeil)
             grp.add(gr)
         } else {
-            let gr = draw_arrow(tr, x, z - delta, x, z - delta - plength, style_pfeil)
+            let gr = draw_arrow(tr, x1, z1, x0, z0, style_pfeil)
             grp.add(gr)
         }
 
-        xpix = tr.xPix(x) + 5
-        zpix = tr.zPix(z - delta - plength) + 5
+        // xpix = tr.xPix(x) + 5
+        // zpix = tr.zPix(z - delta - plength) + 5
+        xpix = tr.xPix((x0 + x1) / 2) - 9 * co
+        zpix = tr.zPix((z0 + z1) / 2) + 9 * si
         let str = myFormat(Math.abs(wert), 1, 2) + 'kN'
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
-        txt.alignment = 'left'
+        txt.alignment = 'center'
         txt.baseline = 'top'
+        txt.rotation = Math.PI / 2 - phi
         grp.add(txt)
 
         group.add(grp)
