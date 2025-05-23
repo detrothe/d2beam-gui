@@ -1,11 +1,19 @@
 import Two from "two.js"
 import { CTrans } from "./trans"
 import { TCAD_Einzellast, TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Spannschloss, TCAD_Stab, TCAD_Stabvorverformung, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Vorspannung } from "./CCAD_element"
-import { opacity, style_pfeil, style_pfeil_knotenlast_element, style_pfeil_moment_element, style_txt_knotenlast, style_txt_knotenlast_element } from "./grafik"
+import { opacity, style_pfeil, style_pfeil_moment_element, style_txt_knotenlast, style_txt_knotenlast_element } from "./grafik"
 import { myFormat } from "./utility"
 import { CAD_KNLAST, CAD_STAB, list, slmax_cad } from "./cad"
 import { draw_arrow, draw_moment_arrow } from "./cad_draw_elemente"
 import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
+
+
+const style_pfeil_knotenlast_element = {
+    b: 25,
+    h: 16,
+    linewidth: 7,
+    color: '#ba0000'
+}
 
 export class CMAXVALUESLOAD {
     eload = 0.0
@@ -703,7 +711,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                 }
                 else if (typ === 1) {   //eload[ieload].art === 6) {      // Einzellast oder/und Moment
 
-                    let plength = 35, delta = 12
+                    let plength = tr.Pix0(slmax_cad / 70) /*35*/, delta = 12
                     let marker = tr.World0(10 / devicePixelRatio)
 
                     let x = (obj.elast[j] as TCAD_Einzellast).xe
@@ -771,27 +779,32 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(xtr, ztr)   // Koordinaten merken für Picken
 
-
                     }
                     if (M != 0.0) {
                         let wert = M * fact[iLoop]
                         let vorzeichen = Math.sign(wert)
-                        let xl = x1 + co * x + si * (shift + (delta + plength) / 2)
-                        let zl = z1 + si * x - co * (shift + (delta + plength) / 2)
-                        let radius = style_pfeil_moment_element.radius;
+                        let xl = x1 + co * x + si * (shift + (delta / 20 + plength) / 2)
+                        let zl = z1 + si * x - co * (shift + (delta / 20 + plength) / 2)
+                        // let radius = style_pfeil_moment_element.radius;
+                        let radius = tr.Pix0(slmax_cad / 90)    //style_pfeil_moment.radius;
                         //console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
                         let grp = new Two.Group();
 
                         if (wert > 0.0) {
                             let gr = draw_moment_arrow(tr, xl, zl, 1.0, radius, style_pfeil_moment_element)
                             grp.add(gr)
+                            xpix = tr.xPix(xl - Math.sin(Math.PI / 5) * slmax_cad / 90 / devicePixelRatio) // - 10 / devicePixelRatio
+                            zpix = tr.zPix(zl + Math.cos(Math.PI / 5) * slmax_cad / 90 / devicePixelRatio) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+
                         } else {
                             let gr = draw_moment_arrow(tr, xl, zl, -1.0, radius, style_pfeil_moment_element)
                             grp.add(gr)
+                            // xpix = tr.xPix(xl) - 10 / devicePixelRatio
+                            // zpix = tr.zPix(zl) + (vorzeichen * radius + 12 * vorzeichen) / devicePixelRatio
+                            xpix = tr.xPix(xl - Math.sin(Math.PI / 5) * slmax_cad / 90 / devicePixelRatio) // - 10 / devicePixelRatio
+                            zpix = tr.zPix(zl - Math.cos(Math.PI / 5) * slmax_cad / 90 / devicePixelRatio) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
                         }
 
-                        xpix = tr.xPix(xl) - 10 / devicePixelRatio
-                        zpix = tr.zPix(zl) + (vorzeichen * radius + 12 * vorzeichen) / devicePixelRatio
                         let str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
                         if (max_Lastfall > 1) str = iLastfall + '|' + str
                         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)

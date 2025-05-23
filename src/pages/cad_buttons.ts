@@ -1694,6 +1694,10 @@ function dialog_einstellungen_closed(this: any, e: any) {
 
     set_fangweite_cursor(el.get_fangweite_cursor());
 
+    if (el.get_raster_xmax() - el.get_raster_xmin() <= 0.0 || el.get_raster_zmax() - el.get_raster_zmin() <= 0.0) {
+      alertdialog("ok", "Der darzustellende Rasterbereich enthält unzulässige Werte");
+    }
+
     init_cad(2);
   } else {
     // Abbruch

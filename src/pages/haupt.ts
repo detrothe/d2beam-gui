@@ -75,9 +75,10 @@ import { cad_buttons } from "./cad_buttons";
 import { abbruch_property_dialog, delete_element_dialog, show_add_elload_dialog, show_property_dialog } from "./cad_contextmenu";
 import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
+import { set_max_lastfall } from "./cad_draw_elementlasten";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.0.1.a, 22-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.0.1.a, 23-Mai-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
@@ -1744,6 +1745,8 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     el = document.getElementById("id_button_nlastfaelle") as drButtonPM;
     el.setValue(1);
+    set_max_lastfall(1);
+
     el = document.getElementById("id_button_nkombinationen") as drButtonPM;
     el.setValue(0);
     el = document.getElementById("id_button_nstabvorverformungen") as drButtonPM;

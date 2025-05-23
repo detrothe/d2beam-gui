@@ -1,6 +1,6 @@
 import Two from 'two.js'
 
-import { System, STABWERK, TNode, TLoads, alertdialog, TMass, maxBettung, set_maxBettung } from './rechnen'
+import { System, STABWERK, TMass, maxBettung, set_maxBettung } from './rechnen'
 
 import { CTrans } from './trans';
 import { myFormat, write } from './utility';
@@ -422,6 +422,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
     delta = tr.World0(delta / devicePixelRatio)
 
     let pLength_My = 0.8 * tr.World0(70 / devicePixelRatio)
+    let txt_abstand = 9 / devicePixelRatio
 
     let load = obj.knlast
     let iLastfall = load.lf
@@ -462,8 +463,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         // xpix = tr.xPix(x + delta)  //  + plength/2
         // zpix = tr.zPix(z) + 9
-        xpix = tr.xPix((x0 + x1) / 2) + 9 * si
-        zpix = tr.zPix((z0 + z1) / 2) + 9 * co
+        xpix = tr.xPix((x0 + x1) / 2) + txt_abstand * si
+        zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * co
         let str = myFormat(Math.abs(wert), 1, 2) + 'kN'
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
@@ -516,8 +517,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         // xpix = tr.xPix(x) + 5
         // zpix = tr.zPix(z - delta - plength) + 5
-        xpix = tr.xPix((x0 + x1) / 2) - 9 * co
-        zpix = tr.zPix((z0 + z1) / 2) + 9 * si
+        xpix = tr.xPix((x0 + x1) / 2) - txt_abstand * co
+        zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * si
         let str = myFormat(Math.abs(wert), 1, 2) + 'kN'
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
@@ -553,24 +554,26 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         wert = load.p[2] * fact
         let vorzeichen = Math.sign(wert)
-        let radius = style_pfeil_moment.radius;
-        console.log("Moment radius", radius)
+        let radius = tr.Pix0(slmax / 90)    //style_pfeil_moment.radius;
+        //console.log("Moment radius", radius)
         if (wert > 0.0) {
-            let gr = draw_moment_arrow(tr, x, z, 1.0, slmax / 50, style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, 1.0, tr.Pix0(slmax / 90), style_pfeil_moment)
             grp.add(gr)
+            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90 / devicePixelRatio) // - 10 / devicePixelRatio
+            zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90 / devicePixelRatio) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
         } else {
-            let gr = draw_moment_arrow(tr, x, z, -1.0, slmax / 50, style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, -1.0, tr.Pix0(slmax / 90), style_pfeil_moment)
             grp.add(gr)
+            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90 / devicePixelRatio) // - 10 / devicePixelRatio
+            zpix = tr.zPix(z - Math.cos(Math.PI / 5) * slmax / 90 / devicePixelRatio) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
         }
 
-        xpix = tr.xPix(x) - 10 / devicePixelRatio
-        zpix = tr.zPix(z) + (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
         //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
         let str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'right'
-        //txt.baseline = 'bottom'
+        txt.baseline = 'top'
         grp.add(txt)
 
         group.add(grp)
@@ -685,7 +688,7 @@ export function draw_moment_arrow(tr: CTrans, x0: number, z0: number, vorzeichen
     if (styles) {
         //console.log("styles", styles)
         if (styles.linewidth) linewidth = styles.linewidth
-        if (styles.radius) radius = styles.radius
+        //if (styles.radius) radius = styles.radius
         if (styles.b) b = styles.b
         if (styles.h) h = styles.h
         if (styles.color) color = styles.color
