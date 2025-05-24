@@ -554,18 +554,18 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         wert = load.p[2] * fact
         let vorzeichen = Math.sign(wert)
-        let radius = tr.Pix0(slmax / 90)    //style_pfeil_moment.radius;
+        let radius = tr.Pix0(slmax / 90 * devicePixelRatio)    //style_pfeil_moment.radius;
         //console.log("Moment radius", radius)
         if (wert > 0.0) {
-            let gr = draw_moment_arrow(tr, x, z, 1.0, tr.Pix0(slmax / 90), style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, 1.0, radius, style_pfeil_moment)
             grp.add(gr)
-            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90 / devicePixelRatio) // - 10 / devicePixelRatio
-            zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90 / devicePixelRatio) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90 ) // - 10 / devicePixelRatio
+            zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90 ) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
         } else {
             let gr = draw_moment_arrow(tr, x, z, -1.0, tr.Pix0(slmax / 90), style_pfeil_moment)
             grp.add(gr)
-            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90 / devicePixelRatio) // - 10 / devicePixelRatio
-            zpix = tr.zPix(z - Math.cos(Math.PI / 5) * slmax / 90 / devicePixelRatio) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90 ) // - 10 / devicePixelRatio
+            zpix = tr.zPix(z - Math.cos(Math.PI / 5) * slmax / 90 ) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
         }
 
         //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio

@@ -730,6 +730,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                     let shift = 0
                     plength = tr.World0(2 * plength / devicePixelRatio)
+                    plength = slmax_cad / 25
                     delta = tr.World0(delta / devicePixelRatio)
 
                     if (base_x[j] > -1) {
@@ -783,26 +784,26 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     if (M != 0.0) {
                         let wert = M * fact[iLoop]
                         let vorzeichen = Math.sign(wert)
-                        let xl = x1 + co * x + si * (shift + (delta / 20 + plength) / 2)
-                        let zl = z1 + si * x - co * (shift + (delta / 20 + plength) / 2)
+                        let xl = x1 + co * x + si * (shift + delta + plength / 2)
+                        let zl = z1 + si * x - co * (shift + delta + plength / 2)
                         // let radius = style_pfeil_moment_element.radius;
-                        let radius = tr.Pix0(slmax_cad / 90)    //style_pfeil_moment.radius;
+                        let radius = tr.Pix0(slmax_cad / 50 * devicePixelRatio)    //style_pfeil_moment.radius;
                         //console.log("GRAFIK, Moment, radius ", wert, tr.World0(radius))
                         let grp = new Two.Group();
 
                         if (wert > 0.0) {
                             let gr = draw_moment_arrow(tr, xl, zl, 1.0, radius, style_pfeil_moment_element)
                             grp.add(gr)
-                            xpix = tr.xPix(xl - Math.sin(Math.PI / 5) * slmax_cad / 90 / devicePixelRatio) // - 10 / devicePixelRatio
-                            zpix = tr.zPix(zl + Math.cos(Math.PI / 5) * slmax_cad / 90 / devicePixelRatio) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+                            xpix = tr.xPix(xl - Math.sin(Math.PI / 5) * slmax_cad / 50 ) // - 10 / devicePixelRatio
+                            zpix = tr.zPix(zl + Math.cos(Math.PI / 5) * slmax_cad / 50 ) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
 
                         } else {
                             let gr = draw_moment_arrow(tr, xl, zl, -1.0, radius, style_pfeil_moment_element)
                             grp.add(gr)
                             // xpix = tr.xPix(xl) - 10 / devicePixelRatio
                             // zpix = tr.zPix(zl) + (vorzeichen * radius + 12 * vorzeichen) / devicePixelRatio
-                            xpix = tr.xPix(xl - Math.sin(Math.PI / 5) * slmax_cad / 90 / devicePixelRatio) // - 10 / devicePixelRatio
-                            zpix = tr.zPix(zl - Math.cos(Math.PI / 5) * slmax_cad / 90 / devicePixelRatio) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+                            xpix = tr.xPix(xl - Math.sin(Math.PI / 5) * slmax_cad / 50 ) // - 10 / devicePixelRatio
+                            zpix = tr.zPix(zl - Math.cos(Math.PI / 5) * slmax_cad / 50 ) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
                         }
 
                         let str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
