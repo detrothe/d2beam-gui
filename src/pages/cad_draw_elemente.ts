@@ -18,7 +18,7 @@ const style_pfeil_knotenlast = {
     b: 25,
     h: 16,
     linewidth: 7,
-    color: '#dc0000'
+    color: '#ba0000'
 }
 
 
@@ -27,13 +27,13 @@ const style_pfeil_moment = {
     b: 25,
     h: 16,
     linewidth: 7,
-    color: '#dc0000'
+    color: '#ba0000'
 }
 
 const style_txt_knotenlast = {
     family: 'system-ui, sans-serif',
     size: 14,
-    fill: '#dc0000',
+    fill: '#ba0000',
     weight: 'bold'
 };
 
@@ -52,7 +52,7 @@ const style_pfeil = {
     b: 25,
     h: 16,
     linewidth: 7,
-    color: '#dc0000'
+    color: '#ba0000'
 }
 
 //-------------------------------------------------------------------------------------------------------

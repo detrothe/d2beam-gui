@@ -764,13 +764,16 @@ function pointerdown(ev: PointerEvent) {
    isPen = false;
    isTouch = false
 
+   let eingabe = buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node
+   //console.log("eingabe", eingabe)
+
    switch (ev.pointerType) {
       case 'mouse':
          mousedown(ev);
          break;
       case 'pen':
          isPen = true;
-         if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node) {
+         if (eingabe) {
             zoomIsActive = false;
          }
          // penDown(ev);
@@ -780,7 +783,7 @@ function pointerdown(ev: PointerEvent) {
          isTouch = true;
          touchLoop = 0
 
-         if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node) {
+         if (eingabe) {
             zoomIsActive = false;
          } else {
             // if (allow_pan_cad) {
@@ -801,7 +804,7 @@ function pointerdown(ev: PointerEvent) {
          break;
    }
 
-   if (isTouch || isPen) {   // Cursor anzeigen
+   if (eingabe && (isTouch || isPen)) {   // Cursor anzeigen
 
       let dx_offset = 0.0, dy_offset = 0.0;
       if (isTouch) {
@@ -830,13 +833,15 @@ function pointermove(ev: PointerEvent) {
    isPen = false;
    isTouch = false
 
+   let eingabe = buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node
+
    switch (ev.pointerType) {
       case 'mouse':
          mousemove(ev);
          break;
       case 'pen':
          isPen = true;
-         if ((buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node)) {
+         if (eingabe) {
             zoomIsActive = false;
             mousemove(ev);
          }
@@ -844,7 +849,7 @@ function pointermove(ev: PointerEvent) {
          break;
       case 'touch':
          isTouch = true;
-         if ((buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node)) {
+         if (eingabe) {
             zoomIsActive = false;
             if (touch_support) mousemove(ev);
          }
@@ -862,6 +867,9 @@ function pointermove(ev: PointerEvent) {
                let dy = pointer[0].y - pointer[1].y
                curDiff = Math.sqrt(dx * dx + dy * dy) * 0.25;
 
+               let xm = (pointer[0].x + pointer[1].x) / 2
+               let ym = (pointer[0].y + pointer[1].y) / 2
+
                if (touchLoop === 1) {
 
                   let factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
@@ -872,10 +880,21 @@ function pointermove(ev: PointerEvent) {
                      touchLoop = 0
                      wheel_factor_alt = wheel_factor
                   }
+
+                  mouseDx += xm - mouseOffsetX
+                  mouseDz += ym - mouseOffsetY
+
+                  centerX = centerX_last + tr.World0(mouseDx)
+                  centerY = centerY_last + tr.World0(mouseDz)
+                  mouseOffsetX = xm
+                  mouseOffsetY = ym
+
                   init_cad(2)
                } else {
                   touchLoop = 1
                   prevDiff = curDiff;
+                  mouseOffsetX = xm
+                  mouseOffsetY = ym
                }
             } else {
                mousemove(ev);
