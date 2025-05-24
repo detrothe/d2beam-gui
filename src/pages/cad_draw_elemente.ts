@@ -562,7 +562,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
             xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90 ) // - 10 / devicePixelRatio
             zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90 ) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
         } else {
-            let gr = draw_moment_arrow(tr, x, z, -1.0, tr.Pix0(slmax / 90), style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, -1.0, radius, style_pfeil_moment)
             grp.add(gr)
             xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90 ) // - 10 / devicePixelRatio
             zpix = tr.zPix(z - Math.cos(Math.PI / 5) * slmax / 90 ) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
