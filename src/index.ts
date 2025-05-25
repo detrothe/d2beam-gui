@@ -92,6 +92,9 @@ write('dein OS: ' + yourOS);
 // let dbPromise: any;
 let input: string | null;
 
+input = ''
+
+
 if (isAndroid) {
 
     window.addEventListener('load', () => {
@@ -234,18 +237,16 @@ else {
         event.returnValue = true;
         console.log("else, beforeunload", navigator.userAgent)
 
-
         // if (dbPromise) {
         //     dbPromise.then(db => db.close());
         //     dbPromise = null;
         // }
 
         let output = str_inputToJSON();
-        //console.log("inputToJSON", output)
+        console.log("inputToJSON", output)
         window.localStorage.setItem('current_input_D2BEAM_GUI', output);
 
     });
-
 
     // document.addEventListener('visibilitychange', function () {
     //     //write(navigator.userAgent);
@@ -290,14 +291,14 @@ else {
     // });
 
     window.addEventListener('load', () => {
-        if (yourOS !== 'iOS') {
-            input = window.localStorage.getItem('current_input_D2BEAM_GUI');
-            //write('else, LOAD  current input = ' + input.length)
-            //console.log('LOAD  current input = ', input.length)
-            if (input !== null && input.length > 0) {
-                autoEingabeLesen();
-            }
+        //if (yourOS !== 'iOS') {
+        input = window.localStorage.getItem('current_input_D2BEAM_GUI');
+        //write('else, LOAD  current input = ' + input.length)
+        //console.log('LOAD  current input = ', input.length)
+        if (input !== null && input.length > 0) {
+            autoEingabeLesen();
         }
+        //}
     });
 
     // document.addEventListener("readystatechange", (event: any) => {
@@ -310,25 +311,26 @@ else {
 
 }
 
-async function handleFiles(files: any) {
-    for (const file of files) {
-        const blob = await file.getFile();
-        blob.handle = file;
-        const text = await blob.text();
+// async function handleFiles(files: any) {
+//     for (const file of files) {
+//         const blob = await file.getFile();
+//         blob.handle = file;
+//         const text = await blob.text();
 
-        console.log(`${file.name} handled, content: ${text}`);
-    }
-}
+//         console.log(`${file.name} handled, content: ${text}`);
+//     }
+// }
 
-async function autoEingabeLesen() {
-    const dialog = new ConfirmDialog({
-        trueButton_Text: 'ja',
-        falseButton_Text: 'nein',
-        question_Text: 'letzte (automatisch) gespeicherte Eingabe einlesen'
-    });
-    const letzteEinlesen = await dialog.confirm();
+/*async*/ function autoEingabeLesen() {
+    // const dialog = new ConfirmDialog({
+    //     trueButton_Text: 'ja',
+    //     falseButton_Text: 'nein',
+    //     question_Text: 'letzte (automatisch) gespeicherte Eingabe einlesen'
+    // });
+    // const letzteEinlesen = await dialog.confirm();
 
     //write("letzteEinlesen= " + letzteEinlesen)
+    const letzteEinlesen = true
 
     if (letzteEinlesen) {
         if (input !== null) read_daten(input);

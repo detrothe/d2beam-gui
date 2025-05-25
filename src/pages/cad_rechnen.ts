@@ -295,6 +295,9 @@ export function cad_rechnen() {
                         load[nel].Px = obj.knlast.Px
                         load[nel].Pz = obj.knlast.Pz
                         load[nel].p[2] = obj.knlast.p[2]
+                        load[nel].Px_org = obj.knlast.Px_org
+                        load[nel].Pz_org = obj.knlast.Pz_org
+                        load[nel].alpha = obj.knlast.alpha
                         load[nel].node = ind
                     }
                     nel++

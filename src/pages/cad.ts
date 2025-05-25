@@ -621,56 +621,89 @@ export function init_cad(flag: number) {
       let rand = tr.World0(20 / devicePixelRatio);
       let xl = x_min + rand; //dx * 0.05
       let zl = z_max - rand;
-      let line1 = two.makeLine(
-         tr.xPix(xl),
-         tr.zPix(z_min + dz * 0.05),
-         tr.xPix(xl),
-         tr.zPix(z_max - dz * 0.05)
-      );
+      let line1 = two.makeLine(tr.xPix(xl), tr.zPix(z_min + dz * 0.05), tr.xPix(xl), tr.zPix(z_max - dz * 0.05));
       line1.linewidth = 1;
 
-      let line2 = two.makeLine(
-         tr.xPix(x_min),
-         tr.zPix(0.0),
-         tr.xPix(x_min + rand),
-         tr.zPix(0.0)
-      );
+      let line2 = two.makeLine(tr.xPix(x_min), tr.zPix(0.0), tr.xPix(x_min + rand), tr.zPix(0.0));
       line2.linewidth = 1;
-      let txt = two.makeText(
-         '0',
-         tr.xPix(x_min + rand) + 4 / devicePixelRatio,
-         tr.zPix(0.0),
-         style_txt
-      );
+      let txt = two.makeText('0', tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(0.0), style_txt);
       txt.fill = '#000000';
       txt.baseline = 'middle';
       txt.alignment = 'left';
 
+      if (myFormat(raster_zmin, 1, 2) !== myFormat(0.0, 1, 2)) {
+         line2 = two.makeLine(tr.xPix(x_min), tr.zPix(raster_zmin), tr.xPix(x_min + rand), tr.zPix(raster_zmin));
+         line2.linewidth = 1;
+         txt = two.makeText(myFormat(raster_zmin, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(raster_zmin), style_txt)
+         txt.fill = '#000000'
+         txt.baseline = 'middle'
+         txt.alignment = 'left'
+      }
+
+      if (myFormat(raster_zmax, 1, 2) != myFormat(0.0, 1, 2)) {
+         line2 = two.makeLine(tr.xPix(x_min), tr.zPix(raster_zmax), tr.xPix(x_min + rand), tr.zPix(raster_zmax));
+         line2.linewidth = 1;
+         txt = two.makeText(myFormat(raster_zmax, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(raster_zmax), style_txt)
+         txt.fill = '#000000'
+         txt.baseline = 'middle'
+         txt.alignment = 'left'
+      }
+
       //unten
 
-      let line3 = two.makeLine(
-         tr.xPix(x_min + dx * 0.05),
-         tr.zPix(zl),
-         tr.xPix(x_max - dx * 0.05),
-         tr.zPix(zl)
-      );
+      let line3 = two.makeLine(tr.xPix(x_min + dx * 0.05), tr.zPix(zl), tr.xPix(x_max - dx * 0.05), tr.zPix(zl));
       line3.linewidth = 1;
-      let line4 = two.makeLine(
-         tr.xPix(0.0),
-         tr.zPix(z_max),
-         tr.xPix(0.0),
-         tr.zPix(z_max - rand)
-      );
+      let line4 = two.makeLine(tr.xPix(0.0), tr.zPix(z_max), tr.xPix(0.0), tr.zPix(z_max - rand));
       line4.linewidth = 1;
-      let txt1 = two.makeText(
-         '0',
-         tr.xPix(0.0),
-         tr.zPix(z_max - rand) - 4 / devicePixelRatio,
-         style_txt
-      );
+      let txt1 = two.makeText('0', tr.xPix(0.0), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt);
       txt1.fill = '#000000';
       txt1.baseline = 'baseline';
       txt1.alignment = 'center';
+
+      if (myFormat(raster_xmax, 1, 2) != myFormat(0.0, 1, 2)) {
+         let line5 = two.makeLine(tr.xPix(raster_xmax), tr.zPix(z_max), tr.xPix(raster_xmax), tr.zPix(z_max - rand));
+         line5.linewidth = 1;
+         txt1 = two.makeText(myFormat(raster_xmax, 1, 2), tr.xPix(raster_xmax), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
+         txt1.fill = '#000000'
+         txt1.baseline = 'baseline'
+         txt1.alignment = 'center'
+      }
+
+      if (myFormat(raster_xmin, 1, 2) != myFormat(0.0, 1, 2)) {
+         let line5 = two.makeLine(tr.xPix(raster_xmin), tr.zPix(z_max), tr.xPix(raster_xmin), tr.zPix(z_max - rand));
+         line5.linewidth = 1;
+         txt1 = two.makeText(myFormat(raster_xmin, 1, 2), tr.xPix(raster_xmin), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
+         txt1.fill = '#000000'
+         txt1.baseline = 'baseline'
+         txt1.alignment = 'center'
+      }
+
+      // Mitte
+
+      {
+         let xmean = (xminv + xmaxv) / 2
+         //xmean = Number(xmean.toFixed(1))
+         let line5 = two.makeLine(tr.xPix(xmean), tr.zPix(z_max), tr.xPix(xmean), tr.zPix(z_max - rand));
+         line5.linewidth = 2;
+         line5.stroke = 'dodgerblue'
+         txt1 = two.makeText(myFormat(xmean, 1, 2), tr.xPix(xmean), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
+         txt1.fill = '#000000'
+         txt1.baseline = 'baseline'
+         txt1.alignment = 'center'
+      }
+
+      {
+         let zmean = (zminv + zmaxv) / 2
+         //zmean = Number(zmean.toFixed(1))
+         let line2 = two.makeLine(tr.xPix(x_min), tr.zPix(zmean), tr.xPix(x_min + rand), tr.zPix(zmean));
+         line2.linewidth = 2;
+         line2.stroke = 'dodgerblue'
+         txt = two.makeText(myFormat(zmean, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(zmean), style_txt)
+         txt.fill = '#000000'
+         txt.baseline = 'middle'
+         txt.alignment = 'left'
+      }
+
    }
    drawRaster();
 

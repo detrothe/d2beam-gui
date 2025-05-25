@@ -3202,11 +3202,14 @@ function draw_knotenkraefte(two: Two) {
     let xpix: number, zpix: number
     let wert: number
     let nLoop = 0
+    let x0, z0, x1, z1
+    let txt_abstand = 9 / devicePixelRatio
+
 
     let fact = Array(nlastfaelle)
     let lf_show = Array(nlastfaelle)
 
-    //console.log("in draw_knotenkraefte, draw_lastfall", draw_lastfall, nloads)
+    console.log("in draw_knotenkraefte, draw_lastfall", draw_lastfall, nloads)
     // const out = document.getElementById('output') as HTMLTextAreaElement;
     // if (out) {
     //     out.value += "plength= " + plength + "\n";
@@ -3277,39 +3280,68 @@ function draw_knotenkraefte(two: Two) {
             let inode = load[i].node
             let x = node[inode].x;
             let z = node[inode].z;
+
+            let phi = load[i].alpha * Math.PI / 180
+
+            let si = Math.sin(phi)
+            let co = Math.cos(phi)
+
             //console.log("load[i]", i, load)
-            if (load[i].Px != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
+            if (load[i].Px_org != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
                 //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
 
-                wert = load[i].Px * fact[iLoop]
+                x0 = x + co * delta
+                z0 = z - si * delta
+                x1 = x + co * (delta + plength)
+                z1 = z - si * (delta + plength)
+
+                wert = load[i].Px_org * fact[iLoop]
+                console.log("wert", x0, z0, x1, z1)
                 if (wert > 0.0) {
-                    draw_arrow(two, tr, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
+                    //draw_arrow(two, tr, x + delta, z, x + delta + plength, z, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x0, z0, x1, z1, style_pfeil_knotenlast)
                 } else {
-                    draw_arrow(two, tr, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+                    //draw_arrow(two, tr, x + delta + plength, z, x + delta, z, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x1, z1, x0, z0, style_pfeil_knotenlast)
                 }
                 xpix = tr.xPix(x + delta + plength) + 5
                 zpix = tr.zPix(z) - 5
+                xpix = tr.xPix((x0 + x1) / 2) + txt_abstand * si
+                zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * co
                 const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
                 const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                txt.alignment = 'left'
+                txt.alignment = 'center'
                 txt.baseline = 'top'
+                txt.rotation = -phi
+
             }
-            if (load[i].Pz != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
+            if (load[i].Pz_org != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
                 //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
 
-                wert = load[i].Pz * fact[iLoop]
+                x0 = x - si * (delta + plength)
+                z0 = z - co * (delta + plength)
+                x1 = x - si * delta
+                z1 = z - co * delta
+
+                wert = load[i].Pz_org * fact[iLoop]
                 if (wert > 0.0) {
-                    draw_arrow(two, tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
+                    //draw_arrow(two, tr, x, z - delta - plength, x, z - delta, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x0, z0, x1, z1, style_pfeil_knotenlast)
                 } else {
-                    draw_arrow(two, tr, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
+                    draw_arrow(two, tr, x1, z1, x0, z0, style_pfeil_knotenlast)
+                    //draw_arrow(two, tr, x, z - delta, x, z - delta - plength, style_pfeil_knotenlast)
                 }
 
-                xpix = tr.xPix(x) + 5
-                zpix = tr.zPix(z - delta - plength) + 5
+                // xpix = tr.xPix(x) + 5
+                // zpix = tr.zPix(z - delta - plength) + 5
+                xpix = tr.xPix((x0 + x1) / 2) - txt_abstand * co
+                zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * si
+
                 const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
                 const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
-                txt.alignment = 'left'
+                txt.alignment = 'center'
                 txt.baseline = 'top'
+                txt.rotation = Math.PI / 2 - phi
             }
             if (load[i].p[2] != 0.0 && load[i].lf - 1 === lf_show[iLoop]) {
 
@@ -3324,7 +3356,7 @@ function draw_knotenkraefte(two: Two) {
                 }
 
                 xpix = tr.xPix(x) - 10 / devicePixelRatio
-                zpix = tr.zPix(z) + vorzeichen *(radius + 15) / devicePixelRatio
+                zpix = tr.zPix(z) + vorzeichen * (radius + 15) / devicePixelRatio
                 //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
                 const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
                 const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
