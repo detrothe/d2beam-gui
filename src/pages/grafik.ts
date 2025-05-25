@@ -1179,7 +1179,7 @@ export function drawsystem(svg_id = 'artboard') {
         // zmint = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
         // zmaxt = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
         //write('wheel_factor ', wheel_factor)
-        //console.log('wheel_factor ', wheel_factor)
+        console.log('wheel_factor grafik', wheel_factor)
 
         xmint = xmin0 - dx * wheel_factor / 2.
         xmaxt = xmax0 + dx * wheel_factor / 2.
@@ -3180,7 +3180,7 @@ function draw_elementlasten(two: Two) {
                             }
 
                             xpix = tr.xPix(xl) - 10 / devicePixelRatio
-                            zpix = tr.zPix(zl) + vorzeichen * radius + 12 * vorzeichen / devicePixelRatio
+                            zpix = tr.zPix(zl) + vorzeichen * (radius + 12) / devicePixelRatio
                             const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
                             const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast_element)
                             txt.alignment = 'right'
@@ -3324,7 +3324,7 @@ function draw_knotenkraefte(two: Two) {
                 }
 
                 xpix = tr.xPix(x) - 10 / devicePixelRatio
-                zpix = tr.zPix(z) + vorzeichen * radius + 15 * vorzeichen / devicePixelRatio
+                zpix = tr.zPix(z) + vorzeichen *(radius + 15) / devicePixelRatio
                 //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
                 const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
                 const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)

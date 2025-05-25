@@ -565,6 +565,8 @@ export function init_cad(flag: number) {
    zminv = zminv - dz * wheel_factor / 2.
    zmaxv = zmaxv + dz * wheel_factor / 2.
 
+   //console.log("wheel_factor", wheel_factor, xminv, xmaxv, zminv, zmaxv)
+
    if (tr === undefined) {
       console.log('in undefined');
       tr = new CTrans(xminv, zminv, xmaxv, zmaxv, breite, hoehe);
@@ -737,14 +739,14 @@ function wheel(ev: WheelEvent) {
    ev.preventDefault()
 
    if (ev.deltaY > 0) {       // Bild wird kleiner
-      if (mouseCounter < 40) {
+      if (mouseCounter < 60) {
          mouseCounter++;
          wheel_factor = mouseCounter / 60.    //0.025;
       }
       //if (wheel_factor > 3) wheel_factor = 3.0
    }
    else if (ev.deltaY < 0) {   // zoom in, Detail
-      if (mouseCounter > -80) {
+      if (mouseCounter > -59) {
          mouseCounter--;
          wheel_factor = mouseCounter / 60.0;  //0.025;
          //if (wheel_factor < 0.2) wheel_factor = 0.2
@@ -873,9 +875,10 @@ function pointermove(ev: PointerEvent) {
                if (touchLoop === 1) {
 
                   let factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
-                  console.log("wheel_factor", factor, dx, dy)
-                  if (factor > -1.3 && factor < 0.2) {
-                     wheel_factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
+                  if (factor > -0.95 && factor < 0.5) {
+                     wheel_factor = factor //prevDiff / curDiff - 1.0 + wheel_factor_alt
+                     //if (wheel_factor < -0.99) wheel_factor = -0.99
+                     //console.log("pointermove, wheel_factor", wheel_factor, wheel_factor_alt, factor)
                   } else {
                      touchLoop = 0
                      wheel_factor_alt = wheel_factor

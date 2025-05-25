@@ -138,9 +138,9 @@ export class drDialogInfo extends LitElement {
 
       <p>
         <b>Eingabe mit dem Finger bei einem Touchscreen</b><br />
-        Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor neben dem Finger. Platziere den Eingabefinger auf dem Screen und bewege ihn zu der gewünschten Stelle, und hebe ihn dann vom Screen ab. Das Anheben des Fingers hat hier die
-        gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann ist der Finger wieder auf den Bildschirm zu setzen und an die gewünschte Stelle zu bewegen. Das erneute
-        Anheben beendet die Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors kannst du unter <i>Einstellungen GUI</i> ändern.
+        Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor neben dem Finger. Platziere den Eingabefinger auf dem Screen und bewege den <b>Cursor</b> zu der gewünschten Stelle, und hebe dann den Finger vom Screen ab. Das Anheben des Fingers hat hier die
+        gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann ist der Finger wieder auf den Bildschirm zu setzen und den Cursor an die gewünschte Stelle zu bewegen. Das erneute
+        Anheben beendet die Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom Finger kannst du unter <i>Einstellungen GUI</i> ändern.
       </p>
       <p>
         <b>Knoteneingabe und Rasterlinien</b><br />

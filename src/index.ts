@@ -90,7 +90,7 @@ write('dein OS: ' + yourOS);
 
 
 // let dbPromise: any;
-let input: any;
+let input: string | null;
 
 if (isAndroid) {
 
@@ -98,7 +98,7 @@ if (isAndroid) {
         input = window.localStorage.getItem('current_input_D2BEAM_GUI');
         //write('Android, LOAD  current input = ' + input.length)
         //console.log('LOAD  current input = ', input.length)
-        if (input.length > 0) {
+        if (input !== null && input.length > 0) {
             autoEingabeLesen();
             // read_daten(input);
             // rechnen(1)
@@ -202,7 +202,7 @@ else if (yourOS === 'iOS') {
         input = window.localStorage.getItem('current_input_D2BEAM_GUI');
         //write('iOS, LOAD  current input = ' + input.length)
         //console.log('LOAD  current input = ', input.length)
-        if (input.length > 0) {
+        if (input !== null && input.length > 0) {
             autoEingabeLesen();
         }
     });
@@ -294,7 +294,7 @@ else {
             input = window.localStorage.getItem('current_input_D2BEAM_GUI');
             //write('else, LOAD  current input = ' + input.length)
             //console.log('LOAD  current input = ', input.length)
-            if (input.length > 0) {
+            if (input !== null && input.length > 0) {
                 autoEingabeLesen();
             }
         }
@@ -331,7 +331,7 @@ async function autoEingabeLesen() {
     //write("letzteEinlesen= " + letzteEinlesen)
 
     if (letzteEinlesen) {
-        read_daten(input);
+        if (input !== null) read_daten(input);
         init_two_cad();
         init_cad(0);
         reset_controlpanel_grafik();

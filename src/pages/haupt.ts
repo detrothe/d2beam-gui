@@ -78,7 +78,7 @@ import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-g
 import { set_max_lastfall } from "./cad_draw_elementlasten";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.0.1.b, 24-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.0.1.a, 25-Mai-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
