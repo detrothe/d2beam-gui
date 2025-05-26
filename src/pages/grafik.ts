@@ -191,7 +191,7 @@ const style_pfeil_lager = {
 }
 
 const style_pfeil_knotenlast = {
-    a: 35,
+    /*a: 35,*/
     b: 25,
     h: 16,
     linewidth: 7,
