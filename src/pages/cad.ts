@@ -1745,17 +1745,12 @@ function touchmove(ev: TouchEvent) {
 function drawRaster() {
    //---------------------------------------------------------------------------------------------
 
-   let xp = 0.0,
-      zp = 0.0,
-      xg = 0.0,
-      zg = 0.0;
    const color = '#aaaaaa';
 
    // let size = 3 / devicePixelRatio;
 
    let nx = Math.abs(raster_xmax - raster_xmin) / raster_dx;
    let nz = Math.abs(raster_zmax - raster_zmin) / raster_dz;
-   //qDebug() << "nx, ny : " << nx << ny << m_xRaster << m_yRaster;
    if (nx > 1000 || nz > 1000) return;
 
    let raster_xmin_pix = tr.xPix(raster_xmin);
@@ -1763,42 +1758,51 @@ function drawRaster() {
    let raster_zmin_pix = tr.zPix(raster_zmin);
    let raster_zmax_pix = tr.zPix(raster_zmax);
 
-   while (zp <= raster_zmax) {
-      let zp_pix = tr.zPix(zp)
-      let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
-      line.stroke = color;
-      line.linewidth = 1;
+   // horizontale Linien
 
+   let zp = 0.0
+   while (zp <= raster_zmax) {
+      if (zp >= raster_zmin) {
+         let zp_pix = tr.zPix(zp)
+         let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
+         line.stroke = color;
+         line.linewidth = 1;
+      }
       zp += raster_dz;
    }
 
    zp = -raster_dz;
    while (zp >= raster_zmin) {
-      let zp_pix = tr.zPix(zp)
-      let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
-      line.stroke = color;
-      line.linewidth = 1;
-
+      if (zp <= raster_zmax) {
+         let zp_pix = tr.zPix(zp)
+         let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
+         line.stroke = color;
+         line.linewidth = 1;
+      }
       zp -= raster_dz;
    }
 
-   xp = -raster_dx;
-   while (xp >= raster_xmin) {
-      let xp_pix = tr.xPix(xp)
-      let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
-      line.stroke = color;
-      line.linewidth = 1;
+   // vertikale Linien
 
+   let xp = -raster_dx;
+   while (xp >= raster_xmin) {
+      if (xp <= raster_xmax) {
+         let xp_pix = tr.xPix(xp)
+         let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
+         line.stroke = color;
+         line.linewidth = 1;
+      }
       xp -= raster_dx;
    }
 
    xp = 0.0;
    while (xp <= raster_xmax) {
-      let xp_pix = tr.xPix(xp)
-      let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
-      line.stroke = color;
-      line.linewidth = 1;
-
+      if (xp >= raster_xmin) {
+         let xp_pix = tr.xPix(xp)
+         let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
+         line.stroke = color;
+         line.linewidth = 1;
+      }
       xp += raster_dx;
    }
 
