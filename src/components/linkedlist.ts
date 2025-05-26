@@ -1,3 +1,5 @@
+import { berechnungErforderlich } from "../pages/globals";
+
 class Node {
     data: any;
     next: Node | null;
@@ -23,6 +25,7 @@ export class LinkedList {
 
     // add a data to the end of the list (TAIL)
     append(data: any): void {
+        berechnungErforderlich(true);
         const newNode: Node = new Node(data);
         if (this.tail) {
             this.tail.next = newNode;
@@ -37,6 +40,7 @@ export class LinkedList {
 
     // add data to the start of the list (HEAD)
     prepend(data: any): void {
+        berechnungErforderlich(true);
         const newNode: Node = new Node(data);
         if (this.head) {
             this.head.prev = newNode;
@@ -51,6 +55,7 @@ export class LinkedList {
 
     // insert data at a specific position
     insertAt(data: any, position: number): void {
+        berechnungErforderlich(true);
         if (position < 0 || position > this.size - 1) {
             throw Error('Position ' + position + ' is not in the list');
         }
@@ -78,6 +83,7 @@ export class LinkedList {
 
     // remove a node at a specific position ad return its data
     removeAt(position: number): any {
+        berechnungErforderlich(true);
         if (position < 0 || position > this.size - 1) {
             throw Error('Position ' + position + ' is not in the list');
         }
@@ -118,7 +124,7 @@ export class LinkedList {
         if (this.size == 0) {
             throw Error('No head in an empty list');
         }
-        this.current_pos=0
+        this.current_pos = 0
         return (this.head as Node).data;
     }
 
@@ -135,6 +141,7 @@ export class LinkedList {
         if (this.size == 0) {
             throw Error('No head in an empty list');
         }
+        berechnungErforderlich(true);
         const data: any = (this.head as Node).data;
         this.head = (this.head as Node).next;
         if (this.head) {
@@ -151,6 +158,7 @@ export class LinkedList {
         if (this.size == 0) {
             throw Error('No tail in an empty list');
         }
+        berechnungErforderlich(true);
         const data: any = (this.tail as Node).data;
         this.tail = (this.tail as Node).prev;
         if (this.tail) {

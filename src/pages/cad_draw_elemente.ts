@@ -488,8 +488,6 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         obj.set_drawLast_Px(xtr, ztr)   // Koordinaten merken für Picken
 
-
-
         if (new_flag) {
             CADNodes[index1].offset_Px += plength
         }

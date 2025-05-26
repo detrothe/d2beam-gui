@@ -6,6 +6,7 @@ import { draw_stab_gelenke, drawStab } from "./cad_draw_elemente";
 import { max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 import { remove_element_nodes } from "./cad_node";
 import { TCAD_Stab } from "./CCAD_element";
+import { berechnungErforderlich } from "./globals";
 import { default_querschnitt, nQuerschnittSets, querschnittset } from "./querschnitte";
 
 //--------------------------------------------------------------------------------------------------------
@@ -105,13 +106,14 @@ function dialog_stab_eigenschaften_closed(this: any, e: any) {
         (picked_obj as TCAD_Stab).set_name_querschnitt(el.getSelectedOptionByName())
         let gelenke = Array(6)
         gelenke = el.getGelenke();
-        // Element neu zeichnen
+
         (picked_obj as TCAD_Stab).set_gelenke(gelenke);
 
         (picked_obj as TCAD_Stab).set_starrA(el.getStarrA());
         (picked_obj as TCAD_Stab).set_starrE(el.getStarrE());
         (picked_obj as TCAD_Stab).set_bettung(el.getBettung());
 
+        berechnungErforderlich(true);
     } else {
         // Abbruch
 
@@ -125,7 +127,7 @@ function dialog_stab_eigenschaften_closed(this: any, e: any) {
 
     // stab unselektiert neu zeichnen
     let group = picked_obj.getTwoObj();
-    console.log("two.remove group", two.remove(group));
+    two.remove(group);
 
     group = drawStab(picked_obj as TCAD_Stab, tr);
     two.add(group)

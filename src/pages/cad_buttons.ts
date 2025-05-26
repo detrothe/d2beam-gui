@@ -53,6 +53,7 @@ import { find_max_Lastfall, find_maxValues_eloads, max_Lastfall, max_value_laste
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast";
+import { berechnungErforderlich } from "./globals";
 
 //export let pick_element = false
 let backgroundColor_button = 'rgb(64, 64, 64)';
@@ -2117,7 +2118,7 @@ function update_elementlast() {
 
   two.update();
 
-  //buttons_control.reset();
+  berechnungErforderlich(true);
 
 }
 
@@ -2148,7 +2149,7 @@ function update_knotenlast() {
 
   init_cad(2);
 
-  //buttons_control.reset();
+  berechnungErforderlich(true);
 
 }
 
@@ -2172,7 +2173,7 @@ function update_knotenlager() {
   obj_knlager.setTwoObj(group);
   two.update();
 
-  // buttons_control.reset();
+  berechnungErforderlich(true);
 
 }
 
@@ -2249,7 +2250,7 @@ export function update_knoten(flag = 0) {
   }
   two.update();
 
-  //buttons_control.reset();
+  berechnungErforderlich(true);
 
 }
 
@@ -2275,7 +2276,7 @@ function update_knotenmasse() {
   obj_knmasse.setTwoObj(group);
   two.update();
 
-  //buttons_control.reset();
+  berechnungErforderlich(true);
 
 }
 

@@ -4,7 +4,7 @@ export let touch_support_table = false;
 
 let txt_berechnung = "Neue Berechnung erforderlich"
 
-export function berechnungErfolgreich(wert:any) {
+export function berechnungErfolgreich(wert:boolean) {
     berechnung_erfolgreich = wert;
     //document.getElementById("resize")?.setAttribute('disabled', 'true')
 //    document.getElementById("rechnen")!.style.color = "#000000"
