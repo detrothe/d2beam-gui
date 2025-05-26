@@ -3,7 +3,7 @@ import { CTrans } from "./trans"
 import { TCAD_Einzellast, TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Spannschloss, TCAD_Stab, TCAD_Stabvorverformung, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Vorspannung } from "./CCAD_element"
 import { opacity, style_pfeil, style_pfeil_moment_element, style_txt_knotenlast, style_txt_knotenlast_element } from "./grafik"
 import { myFormat } from "./utility"
-import { CAD_KNLAST, CAD_STAB, list, slmax_cad } from "./cad"
+import { CAD_KNLAST, CAD_STAB, list, slmax_cad, unit_force, unit_moment } from "./cad"
 import { draw_arrow, draw_moment_arrow } from "./cad_draw_elemente"
 import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
 
@@ -757,7 +757,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         xpix = tr.xPix(xl + ddx + dpx) + 5
                         zpix = tr.zPix(zl - ddz - dpz) + 9 / devicePixelRatio;
-                        let str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+                        let str = myFormat(Math.abs(wert), 1, 2) + unit_force
                         if (max_Lastfall > 1) str = iLastfall + '|' + str
                         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
                         txt.alignment = 'left'
@@ -806,7 +806,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                             zpix = tr.zPix(zl - Math.cos(Math.PI / 5) * slmax_cad / 50 ) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
                         }
 
-                        let str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+                        let str = myFormat(Math.abs(wert), 1, 2) + unit_moment
                         if (max_Lastfall > 1) str = iLastfall + '|' + str
                         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
                         txt.alignment = 'right'

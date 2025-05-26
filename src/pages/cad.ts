@@ -95,6 +95,21 @@ export function set_dz_offset_touch_factor(dz: number) { dz_offset_touch_fact = 
 let touch_support = true;
 export function set_touch_support(wert: boolean) { touch_support = wert; }
 
+export let unit_force = 'kN';
+export let unit_moment = 'kNm';
+
+export let show_units = true;
+export function set_show_units(wert: boolean) {
+   show_units = wert;
+   if (wert) {
+      unit_force = 'kN';
+      unit_moment = 'kNm';
+   } else {
+      unit_force = '';
+      unit_moment = '';
+   }
+}
+
 class CPointer {
    id = -1
    isPrimary = false;

@@ -27,7 +27,8 @@ import {
   CAD_KNMASSE,
   redraw_knotenmasse,
   set_fangweite_cursor,
-  get_fangweite_cursor
+  get_fangweite_cursor,
+  set_show_units
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -1694,6 +1695,7 @@ function dialog_einstellungen_closed(this: any, e: any) {
     set_raster_zmax(el.get_raster_zmax());
 
     set_fangweite_cursor(el.get_fangweite_cursor());
+    set_show_units(!el.get_show_units())
 
     if (el.get_raster_xmax() - el.get_raster_xmin() <= 0.0 || el.get_raster_zmax() - el.get_raster_zmin() <= 0.0) {
       alertdialog("ok", "Der darzustellende Rasterbereich enthält unzulässige Werte");

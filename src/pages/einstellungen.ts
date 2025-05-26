@@ -6,7 +6,7 @@ import { testeZahl } from "./utility.js";
 import { touch_support_table, set_touch_support_table } from './globals';
 import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen.js";
-import { set_dx_offset_touch_factor, set_dz_offset_touch_factor, set_fangweite_cursor, set_raster_dx, set_raster_dz, set_raster_xmax, set_raster_xmin, set_raster_zmax, set_raster_zmin, set_touch_support } from "./cad.js";
+import { set_dx_offset_touch_factor, set_dz_offset_touch_factor, set_fangweite_cursor, set_raster_dx, set_raster_dz, set_raster_xmax, set_raster_xmin, set_raster_zmax, set_raster_zmin, set_show_units, set_touch_support } from "./cad.js";
 //console.log("vor getElementId")
 //document.getElementById("unitLength")?.addEventListener('change', einstellungen);
 //document.getElementById("id_body_width")?.addEventListener('change', set_body_width);
@@ -487,6 +487,18 @@ export function readLocalStorage_cad() {
         } else {
             ele.set_NO_touch_support(false)
             set_touch_support(true)
+        }
+    }
+
+    valueb = window.localStorage.getItem('cad_NO_units')
+    console.log("cad_NO_units", valueb, !!valueb)
+    if (valueb !== null) {
+        if (valueb === 'true') {
+            ele.set_show_units(true)
+            set_show_units(false)
+        } else {
+            ele.set_show_units(false)
+            set_show_units(true)
         }
     }
 

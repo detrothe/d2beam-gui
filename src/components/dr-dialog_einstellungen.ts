@@ -141,6 +141,11 @@ export class drDialogEinstellungen extends LitElement {
               <sl-checkbox id="id_NO_touch_support">Keine Fingererkennung bei Stiftbenutzung für Systemeingabe </sl-checkbox>
             </td>
           </tr>
+           <tr>
+            <td colspan="2">
+              <sl-checkbox id="id_NO_units">keine Einheiten anzeigen in Grafik </sl-checkbox>
+            </td>
+          </tr>
           <tr>
             <td>
               Fangweite Cursor:
@@ -276,6 +281,12 @@ export class drDialogEinstellungen extends LitElement {
     return wert;
   }
 
+  get_show_units() {
+    const shadow = this.shadowRoot;
+    let wert = (shadow?.getElementById("id_NO_units") as SlCheckbox).checked;
+    return wert;
+  }
+
   get_raster_xmin() {
     const shadow = this.shadowRoot;
     let wert = Number((shadow?.getElementById("id_xmin") as HTMLInputElement).value.replace(/,/g, "."));
@@ -370,6 +381,11 @@ export class drDialogEinstellungen extends LitElement {
     // return wert;
   }
 
+  set_show_units(value:boolean) {
+    let el = this.shadowRoot?.getElementById("id_NO_units") as SlCheckbox;
+    el.checked = value;
+  }
+
   //----------------------------------------------------------------------------------------------
   _saveLocalStorage() {
     //------------------------------------------------------------------------------------------
@@ -378,6 +394,9 @@ export class drDialogEinstellungen extends LitElement {
     if (shadow) {
       let bwert = (shadow?.getElementById("id_NO_touch_support") as SlCheckbox).checked;
       window.localStorage.setItem('cad_NO_touch_support', String(bwert));
+
+      bwert = (shadow?.getElementById("id_NO_units") as SlCheckbox).checked;
+      window.localStorage.setItem('cad_NO_units', String(bwert));
 
       let wert = Math.abs(+(shadow?.getElementById("id_fangweite_cursor") as HTMLInputElement).value.replace(/,/g, "."));
       window.localStorage.setItem('cad_id_fangweite_cursor', String(wert));

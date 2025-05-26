@@ -16,7 +16,7 @@ import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
 //import { colorToRgbNumber } from '@tweakpane/core';
 import { app } from "./haupt";
 import { saveAs } from 'file-saver';
-import { dx_offset_touch, dz_offset_touch } from './cad';
+import { dx_offset_touch, dz_offset_touch, unit_force, unit_moment } from './cad';
 
 export let svg_pdf_ratio = 1.0
 
@@ -3162,7 +3162,7 @@ function draw_elementlasten(two: Two) {
                             }
                             xpix = tr.xPix(xl + ddx + dpx) + 4
                             zpix = tr.zPix(zl - ddz - dpz) - 4
-                            const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+                            const str = myFormat(Math.abs(wert), 1, 2) + unit_force
                             const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast_element)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
@@ -3181,7 +3181,7 @@ function draw_elementlasten(two: Two) {
 
                             xpix = tr.xPix(xl) - 10 / devicePixelRatio
                             zpix = tr.zPix(zl) + vorzeichen * (radius + 12) / devicePixelRatio
-                            const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+                            const str = myFormat(Math.abs(wert), 1, 2) + unit_moment
                             const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast_element)
                             txt.alignment = 'right'
                         }
@@ -3308,7 +3308,7 @@ function draw_knotenkraefte(two: Two) {
                 zpix = tr.zPix(z) - 5
                 xpix = tr.xPix((x0 + x1) / 2) + txt_abstand * si
                 zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * co
-                const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+                const str = myFormat(Math.abs(wert), 1, 2) + unit_force
                 const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                 txt.alignment = 'center'
                 txt.baseline = 'top'
@@ -3337,7 +3337,7 @@ function draw_knotenkraefte(two: Two) {
                 xpix = tr.xPix((x0 + x1) / 2) - txt_abstand * co
                 zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * si
 
-                const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+                const str = myFormat(Math.abs(wert), 1, 2) + unit_force
                 const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                 txt.alignment = 'center'
                 txt.baseline = 'top'
@@ -3358,7 +3358,7 @@ function draw_knotenkraefte(two: Two) {
                 xpix = tr.xPix(x) - 10 / devicePixelRatio
                 zpix = tr.zPix(z) + vorzeichen * (radius + 15) / devicePixelRatio
                 //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
-                const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+                const str = myFormat(Math.abs(wert), 1, 2) + unit_moment
                 const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                 txt.alignment = 'right'
                 //txt.baseline = 'bottom'
@@ -3547,7 +3547,7 @@ function draw_lagerkraefte(two: Two) {
 
             xpix = tr.xPix(x + (delta + plength) * Math.cos(-alpha)) + 5
             zpix = tr.zPix(z + (delta + plength) * Math.sin(-alpha)) - 5
-            const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+            const str = myFormat(Math.abs(wert), 1, 2) + unit_force
             const txt = two.makeText(str, xpix, zpix, style_txt_lager)
             txt.alignment = 'left'
             txt.baseline = 'top'
@@ -3575,7 +3575,7 @@ function draw_lagerkraefte(two: Two) {
 
             xpix = tr.xPix(x + (delta + plength) * Math.cos(-alpha + 1.5707963)) + 5
             zpix = tr.zPix(z + (delta + plength) * Math.sin(-alpha + 1.5707963)) + 5
-            const str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+            const str = myFormat(Math.abs(wert), 1, 2) + unit_force
             const txt = two.makeText(str, xpix, zpix, style_txt_lager)
             txt.alignment = 'left'
             txt.baseline = 'top'
@@ -3605,7 +3605,7 @@ function draw_lagerkraefte(two: Two) {
 
                 xpix = tr.xPix(x) - 10 / devicePixelRatio
                 zpix = tr.zPix(z) + vorzeichen * (radius + 15) / devicePixelRatio
-                const str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+                const str = myFormat(Math.abs(wert), 1, 2) + unit_moment
                 const txt = two.makeText(str, xpix, zpix, style_txt_lager)
                 txt.alignment = 'right'
                 //txt.baseline = 'top'

@@ -10,7 +10,7 @@ import { draw_elementlasten, max_Lastfall } from './cad_draw_elementlasten';
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { opacity } from './grafik';
-import { slmax_cad } from './cad';
+import { slmax_cad, unit_force, unit_moment } from './cad';
 
 
 const style_pfeil_knotenlast = {
@@ -465,7 +465,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         // zpix = tr.zPix(z) + 9
         xpix = tr.xPix((x0 + x1) / 2) + txt_abstand * si
         zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * co
-        let str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+        let str = myFormat(Math.abs(wert), 1, 2) + unit_force
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'center'
@@ -517,7 +517,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         // zpix = tr.zPix(z - delta - plength) + 5
         xpix = tr.xPix((x0 + x1) / 2) - txt_abstand * co
         zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * si
-        let str = myFormat(Math.abs(wert), 1, 2) + 'kN'
+        let str = myFormat(Math.abs(wert), 1, 2) + unit_force
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'center'
@@ -567,7 +567,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         }
 
         //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
-        let str = myFormat(Math.abs(wert), 1, 2) + 'kNm'
+        let str = myFormat(Math.abs(wert), 1, 2) + unit_moment
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'right'
