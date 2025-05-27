@@ -770,10 +770,10 @@ export function init_cad(flag: number) {
 
    // dx_offset_touch = -tr.Pix0(raster_dx) * devicePixelRatio;
    // dz_offset_touch = -tr.Pix0(raster_dz) * devicePixelRatio;
-
-   dx_offset_touch = tr.Pix0(xmaxv - xminv) / 7 * devicePixelRatio * dx_offset_touch_fact * devicePixelRatio;
-   dz_offset_touch = tr.Pix0(zmaxv - zminv) / 7 * devicePixelRatio * dz_offset_touch_fact * devicePixelRatio;
-   //console.log("dx_offset_touch", dx_offset_touch_fact)
+   let sl = Math.sqrt((xmaxv - xminv) ** 2 + (zmaxv - zminv) ** 2)
+   dx_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dx_offset_touch_fact * devicePixelRatio;
+   dz_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dz_offset_touch_fact * devicePixelRatio;
+   write("dxz_offset_touch " + dx_offset_touch + '  ' + dz_offset_touch)
 
 
 
