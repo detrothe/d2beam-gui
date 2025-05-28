@@ -559,7 +559,7 @@ export function init_cad(flag: number) {
       two.width = breite = 1500;
       two.height = hoehe = 1500;
    }
-   //write("width,height " + breite + ' | ' + hoehe);
+   write("width,height " + breite + ' | ' + hoehe);
 
    // (xminv = -1.0), (xmaxv = 10.0), (zminv = -1.0), (zmaxv = 10.0);
    xminv = raster_xmin
@@ -770,10 +770,13 @@ export function init_cad(flag: number) {
 
    // dx_offset_touch = -tr.Pix0(raster_dx) * devicePixelRatio;
    // dz_offset_touch = -tr.Pix0(raster_dz) * devicePixelRatio;
-   let sl = Math.sqrt((xmaxv - xminv) ** 2 + (zmaxv - zminv) ** 2)
-   dx_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dx_offset_touch_fact //* devicePixelRatio;
-   dz_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
-   write("dxz_offset_touch " + dx_offset_touch + '  ' + dz_offset_touch +'  ' + devicePixelRatio)
+   // let sl = Math.sqrt((xmaxv - xminv) ** 2 + (zmaxv - zminv) ** 2)
+   let sl = Math.sqrt(breite * breite + hoehe * hoehe)
+   dx_offset_touch = sl / 10 * devicePixelRatio * dx_offset_touch_fact //* devicePixelRatio;
+   dz_offset_touch = sl / 10 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
+//   dx_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dx_offset_touch_fact //* devicePixelRatio;
+//   dz_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
+   write("dxz_offset_touch " + dx_offset_touch + '  ' + dz_offset_touch + '  ' + devicePixelRatio)
 
 
 
