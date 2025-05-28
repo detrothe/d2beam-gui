@@ -944,7 +944,7 @@ function pointermove(ev: PointerEvent) {
                   //    touchLoop = 0
                   //    wheel_factor_alt = wheel_factor
                   // }
-                  deltaXY = -tr.World0((curDiff - prevDiff) * devicePixelRatio) + deltaXY_alt
+                  deltaXY = -tr.World0((curDiff - prevDiff)) + deltaXY_alt
 
                   mouseDx += xm - mouseOffsetX
                   mouseDz += ym - mouseOffsetY
