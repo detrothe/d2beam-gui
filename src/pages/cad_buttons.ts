@@ -768,7 +768,7 @@ export function delete_element(xc: number, zc: number) {
     two.update();
     remove_element_nodes((obj as TCAD_Lager).index1)
     undoList.append(obj);
-    buttons_control.reset();
+    // buttons_control.reset();
   }
   else if (knoten_gefunden) {
     let obj = list.getAt(index_knoten);
@@ -778,7 +778,7 @@ export function delete_element(xc: number, zc: number) {
       two.remove(obj.two_obj);
       two.update();
       undoList.append(obj);
-      buttons_control.reset();
+      //buttons_control.reset();
     } else {
       alertdialog("ok", "An dem Knoten hängen noch andere Elemente, erst diese löschen");
     }
@@ -789,7 +789,7 @@ export function delete_element(xc: number, zc: number) {
     two.update();
     remove_element_nodes((obj as TCAD_Knotenlast).index1)
     undoList.append(obj);
-    buttons_control.reset();
+    //buttons_control.reset();
 
     find_max_Lastfall();
   }
@@ -799,7 +799,7 @@ export function delete_element(xc: number, zc: number) {
     two.update();
     remove_element_nodes((obj as TCAD_Knotenmasse).index1)
     undoList.append(obj);
-    buttons_control.reset();
+    //buttons_control.reset();
 
   }
   else if (stab_gefunden && min_abstand < 0.25) {          // Stab   index >= 0 && min_abstand < 0.25
@@ -812,7 +812,7 @@ export function delete_element(xc: number, zc: number) {
       remove_element_nodes((obj as TCAD_Stab).index2)
 
       undoList.append(obj);
-      buttons_control.reset();
+      //buttons_control.reset();
     }
   }
 
