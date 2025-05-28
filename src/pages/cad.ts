@@ -72,6 +72,9 @@ let touchLoop = 0
 let prevDiff = -1;
 let curDiff = 0.0
 
+let deltaXY = 0.0
+let deltaXY_alt = 0.0
+
 let zoomIsActive = false;
 export function set_zoomIsActive(wert: boolean) { zoomIsActive = wert; }
 
@@ -559,7 +562,7 @@ export function init_cad(flag: number) {
       two.width = breite = 1500;
       two.height = hoehe = 1500;
    }
-   write("width,height " + breite + ' | ' + hoehe);
+   //write("width,height " + breite + ' | ' + hoehe);
 
    // (xminv = -1.0), (xmaxv = 10.0), (zminv = -1.0), (zmaxv = 10.0);
    xminv = raster_xmin
@@ -575,15 +578,20 @@ export function init_cad(flag: number) {
    zminv -= centerY;
    zmaxv -= centerY;
 
-   xminv = xminv - dx * wheel_factor / 2.
-   xmaxv = xmaxv + dx * wheel_factor / 2.
-   zminv = zminv - dz * wheel_factor / 2.
-   zmaxv = zmaxv + dz * wheel_factor / 2.
+   // xminv = xminv - dx * wheel_factor / 2.
+   // xmaxv = xmaxv + dx * wheel_factor / 2.
+   // zminv = zminv - dz * wheel_factor / 2.
+   // zmaxv = zmaxv + dz * wheel_factor / 2.
 
-   //console.log("wheel_factor", wheel_factor, xminv, xmaxv, zminv, zmaxv)
+   xminv = xminv - deltaXY / 2.
+   xmaxv = xmaxv + deltaXY / 2.
+   zminv = zminv - deltaXY / 2.
+   zmaxv = zmaxv + deltaXY / 2.
+
+   //console.log("wheel_factor", wheel_factor, deltaXY, xminv, xmaxv, zminv, zmaxv)
 
    if (tr === undefined) {
-      console.log('in undefined');
+      //console.log('in undefined');
       tr = new CTrans(xminv, zminv, xmaxv, zmaxv, breite, hoehe);
    } else {
       //if (init) {
@@ -774,9 +782,9 @@ export function init_cad(flag: number) {
    let sl = Math.sqrt(breite * breite + hoehe * hoehe)
    dx_offset_touch = sl / 10 * devicePixelRatio * dx_offset_touch_fact //* devicePixelRatio;
    dz_offset_touch = sl / 10 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
-//   dx_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dx_offset_touch_fact //* devicePixelRatio;
-//   dz_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
-   write("dxz_offset_touch " + dx_offset_touch + '  ' + dz_offset_touch + '  ' + devicePixelRatio)
+   //   dx_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dx_offset_touch_fact //* devicePixelRatio;
+   //   dz_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
+   //write("dxz_offset_touch " + dx_offset_touch + '  ' + dz_offset_touch + '  ' + devicePixelRatio)
 
 
 
@@ -790,18 +798,20 @@ function wheel(ev: WheelEvent) {
    ev.preventDefault()
 
    if (ev.deltaY > 0) {       // Bild wird kleiner
-      if (mouseCounter < 60) {
-         mouseCounter++;
-         wheel_factor = mouseCounter / 60.    //0.025;
-      }
+      //if (mouseCounter < 60) {
+      mouseCounter++;
+      wheel_factor = mouseCounter / 60.    //0.025;
+      deltaXY += tr.World0(20)
+      //}
       //if (wheel_factor > 3) wheel_factor = 3.0
    }
    else if (ev.deltaY < 0) {   // zoom in, Detail
-      if (mouseCounter > -59) {
-         mouseCounter--;
-         wheel_factor = mouseCounter / 60.0;  //0.025;
-         //if (wheel_factor < 0.2) wheel_factor = 0.2
-      }
+      //if (mouseCounter > -59) {
+      mouseCounter--;
+      wheel_factor = mouseCounter / 60.0;  //0.025;
+      //if (wheel_factor < 0.2) wheel_factor = 0.2
+      deltaXY -= tr.World0(20)
+      //}
    }
    init_cad(2)
 }
@@ -918,22 +928,23 @@ function pointermove(ev: PointerEvent) {
                }
                let dx = pointer[0].x - pointer[1].x
                let dy = pointer[0].y - pointer[1].y
-               curDiff = Math.sqrt(dx * dx + dy * dy) * 0.25;
+               curDiff = Math.sqrt(dx * dx + dy * dy) //* 0.25;
 
                let xm = (pointer[0].x + pointer[1].x) / 2
                let ym = (pointer[0].y + pointer[1].y) / 2
 
                if (touchLoop === 1) {
 
-                  let factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
-                  if (factor > -0.95 && factor < 0.5) {
-                     wheel_factor = factor //prevDiff / curDiff - 1.0 + wheel_factor_alt
-                     //if (wheel_factor < -0.99) wheel_factor = -0.99
-                     //console.log("pointermove, wheel_factor", wheel_factor, wheel_factor_alt, factor)
-                  } else {
-                     touchLoop = 0
-                     wheel_factor_alt = wheel_factor
-                  }
+                  // let factor = prevDiff / curDiff - 1.0 + wheel_factor_alt
+                  // if (factor > -0.95 && factor < 0.5) {
+                  //    wheel_factor = factor //prevDiff / curDiff - 1.0 + wheel_factor_alt
+                  //    //if (wheel_factor < -0.99) wheel_factor = -0.99
+                  //    //console.log("pointermove, wheel_factor", wheel_factor, wheel_factor_alt, factor)
+                  // } else {
+                  //    touchLoop = 0
+                  //    wheel_factor_alt = wheel_factor
+                  // }
+                  deltaXY = -tr.World0((curDiff - prevDiff) * devicePixelRatio) + deltaXY_alt
 
                   mouseDx += xm - mouseOffsetX
                   mouseDz += ym - mouseOffsetY
@@ -1014,6 +1025,7 @@ function pointerup(ev: PointerEvent) {
          }
          touchLoop = 0
          wheel_factor_alt = wheel_factor
+         deltaXY_alt = deltaXY
 
          break;
    }
@@ -1284,16 +1296,18 @@ function mousemove(ev: MouseEvent) {
       if (cursorLinev) two.remove(cursorLinev);
 
 
+
       if (foundSelectNode) {
          two.remove(selectNode);
          foundSelectNode = false;
       }
 
       //if (buttons_control.cad_eingabe_aktiv || buttons_control.select_node) {
+      //if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node) {
       let len = tr.Pix0(fangweite_cursor);
       cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
       cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
-      //}
+      // }
 
       if (buttons_control.cad_eingabe_aktiv) {
 
@@ -2026,6 +2040,9 @@ export function reset_cad() {
    mouseDz = 0.0
    wheel_factor = 0.0
    wheel_factor_alt = 0.0
+   deltaXY = 0.0
+   deltaXY_alt = 0.0
+
    touchLoop = 0
    mouseCounter = 0;
 
