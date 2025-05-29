@@ -773,7 +773,7 @@ export function delete_element(xc: number, zc: number) {
   else if (knoten_gefunden) {
     let obj = list.getAt(index_knoten);
     let index = (obj as TCAD_Knoten).index1
-    if (CADNodes[index].nel === 0) {
+    if (CADNodes[index].nel === 1) {
       obj = list.removeAt(index_knoten);
       two.remove(obj.two_obj);
       two.update();
