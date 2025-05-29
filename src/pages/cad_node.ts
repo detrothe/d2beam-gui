@@ -56,6 +56,7 @@ export function add_cad_node(x: number, z: number, option = 0) {
         }
     }
 
+
     if (index === -1) {
         let node = new TCADNode(x, z);
         CADNodes.push(node);

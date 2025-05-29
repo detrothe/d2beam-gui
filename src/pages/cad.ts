@@ -2010,10 +2010,12 @@ export function draw_cad_knoten() {
 
    let index = add_cad_node(x, z);
 
-   //write('index draw_cad_knoten ' + index);
+   console.log('index draw_cad_knoten ', index);
    if (index === -1) {
 
       let index1 = CADNodes.length - 1;
+      add_element_nodes(index1)
+
       let group = new Two.Group();
 
       const obj = new TCAD_Knoten(group, index1, CAD_KNOTEN);
@@ -2055,4 +2057,14 @@ export function reset_cad() {
    zoomIsActive = false
 
    init_cad(2);
+
+   for (let i = 0; i < CADNodes.length; i++) {
+      let x = CADNodes[i].x;
+      let z = CADNodes[i].z;
+      console.log("makecircle", i, tr.xPix(x), tr.zPix(z))
+      let circle = two.makeCircle(tr.xPix(x), tr.zPix(z), 14, 20)
+      circle.fill = 'none'
+   }
+   two.update();
+
 }
