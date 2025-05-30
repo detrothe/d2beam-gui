@@ -2061,9 +2061,11 @@ export function reset_cad() {
    for (let i = 0; i < CADNodes.length; i++) {
       let x = CADNodes[i].x;
       let z = CADNodes[i].z;
-      console.log("makecircle", i, tr.xPix(x), tr.zPix(z))
+      console.log("circle nel=", i, CADNodes[i].nel)
       let circle = two.makeCircle(tr.xPix(x), tr.zPix(z), 14, 20)
       circle.fill = 'none'
+      if (CADNodes[i].nel === 0) circle.stroke = 'red'
+      if (CADNodes[i].nel < 0) circle.stroke = 'blue'
    }
    two.update();
 

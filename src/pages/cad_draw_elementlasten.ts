@@ -26,7 +26,7 @@ export class CMAXVALUESLOAD {
 export let max_value_lasten = [] as CMAXVALUESLOAD[];
 
 export let max_Lastfall = 0
-export function zero_max_lastfall() { max_Lastfall = 0; }
+export function zero_max_lastfall() { max_Lastfall = 0; max_value_lasten.length = 0 }
 export function set_max_lastfall(lf: number) {
     if (lf > max_Lastfall) {
         for (let i = max_Lastfall; i < lf; i++) {
@@ -794,16 +794,16 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         if (wert > 0.0) {
                             let gr = draw_moment_arrow(tr, xl, zl, 1.0, radius, style_pfeil_moment_element)
                             grp.add(gr)
-                            xpix = tr.xPix(xl - Math.sin(Math.PI / 5) * slmax_cad / 50 ) // - 10 / devicePixelRatio
-                            zpix = tr.zPix(zl + Math.cos(Math.PI / 5) * slmax_cad / 50 ) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+                            xpix = tr.xPix(xl - Math.sin(Math.PI / 5) * slmax_cad / 50) // - 10 / devicePixelRatio
+                            zpix = tr.zPix(zl + Math.cos(Math.PI / 5) * slmax_cad / 50) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
 
                         } else {
                             let gr = draw_moment_arrow(tr, xl, zl, -1.0, radius, style_pfeil_moment_element)
                             grp.add(gr)
                             // xpix = tr.xPix(xl) - 10 / devicePixelRatio
                             // zpix = tr.zPix(zl) + (vorzeichen * radius + 12 * vorzeichen) / devicePixelRatio
-                            xpix = tr.xPix(xl - Math.sin(Math.PI / 5) * slmax_cad / 50 ) // - 10 / devicePixelRatio
-                            zpix = tr.zPix(zl - Math.cos(Math.PI / 5) * slmax_cad / 50 ) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+                            xpix = tr.xPix(xl - Math.sin(Math.PI / 5) * slmax_cad / 50) // - 10 / devicePixelRatio
+                            zpix = tr.zPix(zl - Math.cos(Math.PI / 5) * slmax_cad / 50) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
                         }
 
                         let str = myFormat(Math.abs(wert), 1, 2) + unit_moment

@@ -75,10 +75,10 @@ import { cad_buttons } from "./cad_buttons";
 import { abbruch_property_dialog, delete_element_dialog, show_add_elload_dialog, show_property_dialog } from "./cad_contextmenu";
 import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
-import { set_max_lastfall } from "./cad_draw_elementlasten";
+import { set_max_lastfall, zero_max_lastfall } from "./cad_draw_elementlasten";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.2.0, 29-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.2.1,a, 30-Mai-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
@@ -248,7 +248,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <tr>
               <td></td>
               <td>
-                <sl-button id="clear" value="clear" @click="${handleClick_neue_eingabe}">neue Eingabe beginnen</sl-button>
+                <sl-button id="clear" value="clear" @click="${button_neue_eingabe}">neue Eingabe beginnen</sl-button>
               </td>
             </tr>
             <tr>
@@ -1691,9 +1691,9 @@ export function clearTables() {
 
 //---------------------------------------------------------------------------------------------------------------
 
-function handleClick_neue_eingabe() {
+function button_neue_eingabe() {
   //------------------------------------------------------------------------------------------------------------
-  console.log("handleClick_neue_eingabe()");
+  console.log("button_neue_eingabe()");
 
   const el = document.getElementById("id_dialog_neue_eingabe");
   // console.log('id_dialog_neue_eingabe', el);
@@ -1728,10 +1728,10 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     let el = document.getElementById("id_button_nnodes") as drButtonPM;
     console.log("el id_button_nnodes", el);
-    el.setValue(2);
+    el.setValue(0);
 
     el = document.getElementById("id_button_nelem") as drButtonPM;
-    el.setValue(1);
+    el.setValue(0);
     el = document.getElementById("id_button_nnodalloads") as drButtonPM;
     el.setValue(0);
     el = document.getElementById("id_button_nstreckenlasten") as drButtonPM;
@@ -1745,8 +1745,9 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     el = document.getElementById("id_button_nlastfaelle") as drButtonPM;
     el.setValue(1);
-    set_max_lastfall(1);
-
+    zero_max_lastfall();
+    set_max_lastfall(1)
+;
     el = document.getElementById("id_button_nkombinationen") as drButtonPM;
     el.setValue(0);
     el = document.getElementById("id_button_nstabvorverformungen") as drButtonPM;
