@@ -1,10 +1,10 @@
 import { drButtonPM } from "../components/dr-button-pm";
 
-import { CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_STAB, list } from "./cad";
+import { CAD_KNLAST, CAD_KNMASSE, CAD_KNOTEN, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
 import { max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
 import { CADNodes } from "./cad_node";
-import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenmasse } from "./CCAD_element";
+import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenmasse, TCAD_Knoten } from "./CCAD_element";
 import {
     alertdialog, element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, nodalmass, node,
     nodeDisp0,
@@ -761,6 +761,21 @@ export function cad_rechnen() {
         }
 
 
+    }
+
+
+    // User-Knoten korrigieren
+
+    for (let i = 0; i < list.size; i++) {
+        let obj = list.getAt(i) as TCAD_Knoten;
+        if (obj.elTyp === CAD_KNOTEN) {
+            let index = obj.index1;
+            if (index > -1) {
+                CADNodes[index].nel++;
+            } else {
+                alertdialog("ok", "User-Knoten " + (+i + 1) + "hat keinen Index, FATAL ERROR");
+            }
+        }
     }
 
     return fatal_error;
