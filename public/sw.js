@@ -1,6 +1,8 @@
 importScripts(
-    'https://storage.googleapis.com/workbox-cdn/releases/7.3.0/workbox-sw.js'
+   'https://storage.googleapis.com/workbox-cdn/releases/7.3.0/workbox-sw.js'
 );
+
+const version = '1.2.3.1';
 /*
 // This is your Service Worker, you can put any of your custom Service Worker
 // code in this file, above the `precacheAndRoute` line.
