@@ -3,6 +3,7 @@ importScripts(
 );
 
 const version = '1.2.3.1';
+console.log('Version', version);
 /*
 // This is your Service Worker, you can put any of your custom Service Worker
 // code in this file, above the `precacheAndRoute` line.
@@ -60,3 +61,4 @@ const updateName = async (event) => {
 }
 */
 workbox.precaching.precacheAndRoute(self.__WB_MANIFEST || []);
+
