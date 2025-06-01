@@ -215,8 +215,8 @@ export class drRechteckQuerSchnitt extends LitElement {
         width: 30rem;
         background: #fffbf0;
         border: thin solid #e7c157;
-        /*border-radius: 6px;
-        margin: 4rem auto;*/
+        border-radius: 6px;
+        /*margin: 4rem auto;*/
         max-height: 90vh;
         overflow-y: auto;
       }
