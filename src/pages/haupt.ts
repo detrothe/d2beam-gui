@@ -418,7 +418,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
         </sl-tree>
 
-        <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt>
+        <!-- <dr-layerquerschnitt id="id_dialog"></dr-layerquerschnitt> -->
         <dr-rechteckquerschnitt id="id_dialog_rechteck"></dr-rechteckquerschnitt>
       </sl-tab-panel>
 
