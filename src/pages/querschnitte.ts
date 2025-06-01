@@ -83,20 +83,20 @@ export function set_querschnittszaehler() {
     for (let i = 0; i < nQuerschnittSets; i++) {
         let id = querschnittset[i].id
         let txtArray = id.split("-");
-        console.log("txtArray", txtArray)
+        //console.log("txtArray", txtArray)
         if (Number(txtArray[1]) > querschnitts_zaehler) querschnitts_zaehler = Number(txtArray[1])
     }
-    console.log("querschnitts_zaehler", querschnitts_zaehler)
+    //console.log("querschnitts_zaehler", querschnitts_zaehler)
 }
 
 //---------------------------------------------------------------------------------------------------------------
 export function check_if_name_exists(name: string) {
     //-----------------------------------------------------------------------------------------------------------
     for (let i = 0; i < nQuerschnittSets; i++) {
-        console.log("check_if_name_exists", i, name, querschnittset[i].name)
+        //console.log("check_if_name_exists", i, name, querschnittset[i].name)
         if (name === querschnittset[i].name) return true;
     }
-    console.log("exit check_if_name_exists")
+    //console.log("exit check_if_name_exists")
     return false;
 }
 

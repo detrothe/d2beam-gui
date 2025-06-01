@@ -217,6 +217,8 @@ export class drRechteckQuerSchnitt extends LitElement {
         border: thin solid #e7c157;
         border-radius: 6px;
         margin: 4rem auto;
+        max-height: 90vh;
+        overflow-y: auto;
       }
 
       dialog::backdrop {

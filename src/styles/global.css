@@ -380,9 +380,10 @@ input[type="number"] {
   /*background-color: darkkhaki;*/
 }
 
-.c_hilfe {
-  /*text-align: left;*/
+/* .c_hilfe {
+  text-align: left;
 }
+ */
 
 #id_button_zurueck_grafik {
   position: absolute;

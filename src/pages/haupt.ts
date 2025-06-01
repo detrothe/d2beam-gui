@@ -78,7 +78,7 @@ import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-g
 import { set_max_lastfall, zero_max_lastfall } from "./cad_draw_elementlasten";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.2.3, 31-Mai-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.2.4, 1-Juni-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
@@ -394,8 +394,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         >
         -->
         <p>
-          <br />
-          <sl-button id="open-dialog_rechteck" @click="${click_neuer_querschnitt_rechteck}">&nbsp;&nbsp;neuer Querschnitt</sl-button>
+          <br />&nbsp;&nbsp;
+          <sl-button id="open-dialog_rechteck" @click="${click_neuer_querschnitt_rechteck}">neuer Querschnitt</sl-button>
           <br /><br />
         </p>
         <sl-tree class="custom-icons">
