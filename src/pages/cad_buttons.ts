@@ -2128,7 +2128,7 @@ function update_elementlast() {
 function update_knotenlast() {
   //-------------------------------------------------------------------------------------------------------------
 
-  mode_elementlast_aendern = false
+  mode_knotenlast_aendern = false
 
   //const ele = document.getElementById("id_dialog_knotenlast") as drDialogElementlasten;
 
