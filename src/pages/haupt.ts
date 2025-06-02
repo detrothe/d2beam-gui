@@ -79,7 +79,7 @@ import { set_max_lastfall, zero_max_lastfall } from "./cad_draw_elementlasten";
 import { reset_cad_nodes } from "./cad_node";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.2.4, 2-Juni-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.2.5, 2-Juni-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
@@ -1640,7 +1640,7 @@ export function clearTables() {
   let el = document.getElementById("id_knoten_tabelle");
   el?.setAttribute("clear", "0");
 
-  el = document.getElementById("id_nnodedisps_tabelle");
+  el = document.getElementById("id_nnodedisps_tabelle_gui");
   el?.setAttribute("clear", "0");
 
   el = document.getElementById("id_element_tabelle");
@@ -1730,7 +1730,8 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     let el = document.getElementById("id_button_nnodes") as drButtonPM;
     console.log("el id_button_nnodes", el);
     el.setValue(0);
-
+    el = document.getElementById("id_button_nnodedisps_gui") as drButtonPM;
+    el.setValue(0);
     el = document.getElementById("id_button_nelem") as drButtonPM;
     el.setValue(0);
     el = document.getElementById("id_button_nnodalloads") as drButtonPM;
@@ -1748,7 +1749,7 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     el.setValue(1);
     zero_max_lastfall();
     set_max_lastfall(1)
-;
+      ;
     el = document.getElementById("id_button_nkombinationen") as drButtonPM;
     el.setValue(0);
     el = document.getElementById("id_button_nstabvorverformungen") as drButtonPM;
