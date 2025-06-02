@@ -714,11 +714,9 @@ export function cad_rechnen() {
         let elTab = document.getElementById("id_lastfaelle_tabelle");
         elTab?.setAttribute("nzeilen", String(max_Lastfall));
 
-        // set_nkombinationen(0)
-        // el = document.getElementById("id_button_nkombinationen") as drButtonPM;
-        // el.setValue(0);
-        // elTab = document.getElementById("id_kombinationen_tabelle");
-        // elTab?.setAttribute("nzeilen", '0');
+        let el_komb = document.getElementById("id_kombinationen_tabelle");
+        el_komb?.setAttribute("nspalten", String(Number(max_Lastfall) + 1)); // +1 wegen Kommentarspalte
+
     }
 
     //                  K n o t e n m a s s e n
