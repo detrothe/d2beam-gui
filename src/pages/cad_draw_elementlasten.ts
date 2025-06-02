@@ -26,7 +26,12 @@ export class CMAXVALUESLOAD {
 export let max_value_lasten = [] as CMAXVALUESLOAD[];
 
 export let max_Lastfall = 0
-export function zero_max_lastfall() { max_Lastfall = 0; max_value_lasten.length = 0 }
+
+export function zero_max_lastfall() {
+    max_Lastfall = 0;
+    max_value_lasten.length = 0;
+}
+
 export function set_max_lastfall(lf: number) {
     if (lf > max_Lastfall) {
         for (let i = max_Lastfall; i < lf; i++) {
@@ -34,6 +39,14 @@ export function set_max_lastfall(lf: number) {
         }
         max_Lastfall = lf;
     }
+}
+
+export function new_max_lastfall(lf: number) {
+    let div = max_Lastfall - lf
+    for (let i = 0; i < div; i++) {
+        max_value_lasten.pop();
+    }
+    max_Lastfall = lf;
 }
 
 //---------------------------------------------------------------------------------------------------------------

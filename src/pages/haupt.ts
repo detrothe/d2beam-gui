@@ -76,9 +76,10 @@ import { abbruch_property_dialog, delete_element_dialog, show_add_elload_dialog,
 import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
 import { set_max_lastfall, zero_max_lastfall } from "./cad_draw_elementlasten";
+import { reset_cad_nodes } from "./cad_node";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.2.4,a, 1-Juni-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.2.4,a, 2-Juni-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
@@ -254,7 +255,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td></td>
               <td>
-                <sl-button id="id_check" value="check" @click="${handleClick_eingabe_ueberpruefen}" style="min-width:100%;">Eingabe prüfen</sl-button>
+                <sl-button id="id_check" value="check" @click="${button_eingabe_ueberpruefen}" style="min-width:100%;">Eingabe prüfen</sl-button>
               </td>
             </tr>
             <tr>
@@ -1807,6 +1808,8 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     reset_gui();
     reset_controlpanel_grafik();
 
+    reset_cad_nodes();
+
     if (system === 1) {
       el = document.getElementById("id_button_nteilungen") as drButtonPM;
       el.setValue(1);
@@ -1832,9 +1835,9 @@ export function set_current_filename(name: string) {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-function handleClick_eingabe_ueberpruefen() {
+function button_eingabe_ueberpruefen() {
   //-------------------------------------------------------------------------------------------------------------
-  console.log("handleClick_eingabe_ueberpruefen()");
+  console.log("button_eingabe_ueberpruefen()");
 
   resizeTables();
   rechnen(0);

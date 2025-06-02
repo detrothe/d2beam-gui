@@ -15,7 +15,7 @@ import { get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_len
 import { nQuerschnittSets, set_querschnittszaehler, add_rechteck_querschnitt } from "./querschnitte"
 import { alertdialog, maxBettung, set_maxBettung, setSystem, System, TLoads } from './rechnen'
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
-import { CADNodes, set_ID_counter, TCADNode } from "./cad_node";
+import { CADNodes, reset_ID_counter, TCADNode } from "./cad_node";
 import { TCAD_Element, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
 import {
     init_cad, init_two_cad, list, raster_dx, raster_dz, raster_xmax, raster_xmin, raster_zmax, raster_zmin,
@@ -317,7 +317,7 @@ export function read_daten(eingabedaten: string) {
         let node = (jobj.cadNodes[i] as TCADNode)
         CADNodes.push(node)
     }
-    set_ID_counter();
+    reset_ID_counter();
 
     list.size = 0
     for (let i = 0; i < jobj.elements.length; i++) {

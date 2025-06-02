@@ -2,11 +2,11 @@ import { drButtonPM } from "../components/dr-button-pm";
 
 import { CAD_KNLAST, CAD_KNMASSE, CAD_KNOTEN, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { cad_buttons } from "./cad_buttons";
-import { max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
+import { max_Lastfall, new_max_lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
 import { CADNodes } from "./cad_node";
 import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenmasse, TCAD_Knoten } from "./CCAD_element";
 import {
-    alertdialog, element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nlastfaelle, nnodes, nodalmass, node,
+    alertdialog, element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nnodes, nodalmass, node,
     nodeDisp0,
     nstreckenlasten, ntemperaturlasten, set_maxBettung, set_maxU_node, set_neinzellasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
     set_nlastfaelle, set_nloads, set_nnodalMass, set_nNodeDisps, set_nnodes, set_nnodesTotal, set_nspannschloesser, set_nstabvorverfomungen, set_nstreckenlasten, set_ntemperaturlasten, set_ntotalEloads, set_nvorspannungen, stabvorverformung, System, TElement, TElLoads, TLoads, TMass, TNode,
@@ -22,6 +22,7 @@ export function cad_rechnen() {
     console.log("in cad_rechnen")
 
     let fatal_error = false;
+    let check_max_lastfall = 0
 
 
     // Markiere alle Knoten /Punkte, an denen Stäbe hängen
@@ -248,24 +249,6 @@ export function cad_rechnen() {
         set_maxBettung(maxBettung);
     }
 
-    {  // Tabellen für Lastfälle und Kombinationen initialisieren
-
-        if (max_Lastfall === 0) set_max_lastfall(1);
-
-        set_nlastfaelle(max_Lastfall)
-        console.log("set_nlastfaelle(max_Lastfall)", max_Lastfall, nlastfaelle)
-        let el = document.getElementById("id_button_nlastfaelle") as drButtonPM;
-        el.setValue(max_Lastfall);
-        let elTab = document.getElementById("id_lastfaelle_tabelle");
-        elTab?.setAttribute("nzeilen", String(max_Lastfall));
-
-        // set_nkombinationen(0)
-        // el = document.getElementById("id_button_nkombinationen") as drButtonPM;
-        // el.setValue(0);
-        // elTab = document.getElementById("id_kombinationen_tabelle");
-        // elTab?.setAttribute("nzeilen", '0');
-    }
-
     // jetzt die Knotenlasten
 
     {
@@ -299,6 +282,8 @@ export function cad_rechnen() {
                         load[nel].Pz_org = obj.knlast.Pz_org
                         load[nel].alpha = obj.knlast.alpha
                         load[nel].node = ind
+                        if (obj.knlast.lf > check_max_lastfall) check_max_lastfall = obj.knlast.lf;
+
                     }
                     nel++
 
@@ -450,10 +435,12 @@ export function cad_rechnen() {
                     for (let j = 0; j < obj.elast.length; j++) {
 
                         let lf = (obj.elast[j] as TCAD_ElLast).lastfall
-                        if (lf > nlastfaelle) {
-                            fatal_error = true;
-                            write('Stab ' + obj.elNo + ', Lastfall einer Elementlast ist größer als in Tab Kombinationen definiert: ' + lf + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
-                        }
+                        // if (lf > nlastfaelle) {
+                        //     fatal_error = true;
+                        //     write('Stab ' + obj.elNo + ', Lastfall einer Elementlast ist größer als in Tab Kombinationen definiert: ' + lf + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+                        // }
+                        if (lf > check_max_lastfall) check_max_lastfall = lf;
+
                         let typ = obj.elast[j].typ
                         if (typ === 0) { // Streckenlast
 
@@ -666,6 +653,7 @@ export function cad_rechnen() {
                 else if (ispalte === 2) {
                     nodeDisp0[iz].lf = Number(testNumber(wert, izeile, ispalte, shad));
                     set_max_lastfall(nodeDisp0[iz].lf);
+                    if (nodeDisp0[iz].lf > check_max_lastfall) check_max_lastfall = nodeDisp0[iz].lf;
                 }
                 else if (ispalte === 3) {
                     if (wert.length === 0) nodeDisp0[iz].dispL[0] = false; else nodeDisp0[iz].dispL[0] = true;     // true=definierte Knotenverformung
@@ -711,6 +699,26 @@ export function cad_rechnen() {
         }
 
 
+    }
+
+    {  // Tabellen für Lastfälle und Kombinationen initialisieren
+
+        if (max_Lastfall === 0) set_max_lastfall(1);
+
+        if (check_max_lastfall < max_Lastfall) new_max_lastfall(check_max_lastfall);  // es wurden Lastfälle gelöscht
+
+        set_nlastfaelle(max_Lastfall)
+        console.log("set_nlastfaelle(max_Lastfall)", check_max_lastfall)
+        let el = document.getElementById("id_button_nlastfaelle") as drButtonPM;
+        el.setValue(max_Lastfall);
+        let elTab = document.getElementById("id_lastfaelle_tabelle");
+        elTab?.setAttribute("nzeilen", String(max_Lastfall));
+
+        // set_nkombinationen(0)
+        // el = document.getElementById("id_button_nkombinationen") as drButtonPM;
+        // el.setValue(0);
+        // elTab = document.getElementById("id_kombinationen_tabelle");
+        // elTab?.setAttribute("nzeilen", '0');
     }
 
     //                  K n o t e n m a s s e n
