@@ -79,7 +79,7 @@ import { set_max_lastfall, zero_max_lastfall } from "./cad_draw_elementlasten";
 import { reset_cad_nodes } from "./cad_node";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.2.5, 2-Juni-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.2.6,a, 3-Juni-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname
@@ -156,12 +156,12 @@ const portrait = window.matchMedia("(orientation: portrait)");
 portrait.addEventListener("change", function (e) {
   if (e.matches) {
     // Portrait mode
-    write("portrait mode")
+    //write("portrait mode")
     init_cad(0);
     drawsystem();
   } else {
     // Landscape
-    write("landscape mode")
+    // write("landscape mode")
     init_cad(0);
     drawsystem();
   }

@@ -5066,7 +5066,7 @@ function reset_grafik() {
     centerX_last = 0.0
     centerY_last = 0.0
 
-    console.log("reset_grafik=")
+    //console.log("reset_grafik=")
     drawsystem();
 }
 
