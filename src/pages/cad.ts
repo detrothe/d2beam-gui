@@ -801,7 +801,7 @@ function wheel(ev: WheelEvent) {
       //if (mouseCounter < 60) {
       mouseCounter++;
       wheel_factor = mouseCounter / 60.    //0.025;
-      deltaXY += tr.World0(20)
+      deltaXY += tr.World0(30)
       //}
       //if (wheel_factor > 3) wheel_factor = 3.0
    }
@@ -810,7 +810,7 @@ function wheel(ev: WheelEvent) {
       mouseCounter--;
       wheel_factor = mouseCounter / 60.0;  //0.025;
       //if (wheel_factor < 0.2) wheel_factor = 0.2
-      deltaXY -= tr.World0(20)
+      deltaXY -= tr.World0(30)
       //}
    }
    init_cad(2)
