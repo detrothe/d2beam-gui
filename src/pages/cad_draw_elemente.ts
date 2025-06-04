@@ -119,6 +119,11 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     kn2.fill = 'black'
     group.add(kn2);
 
+    if (obj.aL > 0.0 || obj.aR > 0.0) {
+        let gr = draw_stab_starre_Enden(obj as TCAD_Stab, tr);
+        group.add(gr)
+    }
+
     if (obj.nGelenke > 0) {
         let gr = draw_stab_gelenke(obj as TCAD_Stab, tr);
         group.add(gr)
@@ -557,13 +562,13 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         if (wert > 0.0) {
             let gr = draw_moment_arrow(tr, x, z, 1.0, radius, style_pfeil_moment)
             grp.add(gr)
-            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90 ) // - 10 / devicePixelRatio
-            zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90 ) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
+            zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
         } else {
             let gr = draw_moment_arrow(tr, x, z, -1.0, radius, style_pfeil_moment)
             grp.add(gr)
-            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90 ) // - 10 / devicePixelRatio
-            zpix = tr.zPix(z - Math.cos(Math.PI / 5) * slmax / 90 ) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
+            zpix = tr.zPix(z - Math.cos(Math.PI / 5) * slmax / 90) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
         }
 
         //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
@@ -778,6 +783,46 @@ export function draw_moment_arrow(tr: CTrans, x0: number, z0: number, vorzeichen
     }
 
     return group;
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function draw_stab_starre_Enden(obj: TCAD_Stab, tr: CTrans) {
+    //----------------------------------------------------------------------------------------------------
+
+    let group = new Two.Group();
+
+    let aL = obj.aL
+    let aR = obj.aR
+    let si = obj.sinus
+    let co = obj.cosinus
+
+    let index1 = obj.index1
+    let index2 = obj.index2
+
+    if (aL > 0.0) {
+        let x1 = tr.xPix(get_cad_node_X(index1));
+        let z1 = tr.zPix(get_cad_node_Z(index1));
+        let x1L = tr.xPix(get_cad_node_X(index1) + co * aL);
+        let z1L = tr.zPix(get_cad_node_Z(index1) + si * aL);
+
+        let line = new Two.Line(x1, z1, x1L, z1L);
+        line.linewidth = 10 / devicePixelRatio;
+        group.add(line);
+    }
+
+    if (aR > 0.0) {
+        let x2 = tr.xPix(get_cad_node_X(index2));
+        let z2 = tr.zPix(get_cad_node_Z(index2));
+        let x2R = Math.round(tr.xPix(get_cad_node_X(index2) - co * aR));
+        let z2R = Math.round(tr.zPix(get_cad_node_Z(index2) - si * aR));
+
+        let line = new Two.Line(x2R, z2R, x2, z2);
+        line.linewidth = 10 / devicePixelRatio;
+        group.add(line);
+    }
+    return group;
+
 }
 
 

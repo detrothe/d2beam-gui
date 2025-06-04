@@ -137,15 +137,25 @@ export class drDialogEinstellungen extends LitElement {
       <table id="einstellungen_table">
         <tbody>
           <tr>
-            <td colspan="2">
+            <td >
               <sl-checkbox id="id_NO_touch_support">Keine Fingererkennung bei Stiftbenutzung für Systemeingabe </sl-checkbox>
             </td>
           </tr>
-           <tr>
-            <td colspan="2">
+          <tr>
+            <td >
               <sl-checkbox id="id_NO_units">keine Einheiten anzeigen in Grafik </sl-checkbox>
             </td>
           </tr>
+          <tr>
+            <td >
+              <sl-checkbox id="id_penLikeTouch">Stifteingabe wie Fingereingabe </sl-checkbox>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table >
+        <tbody>
           <tr>
             <td>
               Fangweite Cursor:
@@ -215,7 +225,7 @@ export class drDialogEinstellungen extends LitElement {
         </tbody>
       </table>
 
-      <sl-button id="id_cad_saveLocalStorage"  @click="${this._saveLocalStorage}">
+      <sl-button id="id_cad_saveLocalStorage" @click="${this._saveLocalStorage}">
         Auswahl als Standardwerte im Browser speichern
       </sl-button>
 
@@ -287,6 +297,12 @@ export class drDialogEinstellungen extends LitElement {
     return wert;
   }
 
+  get_penLikeTouch() {
+    const shadow = this.shadowRoot;
+    let wert = (shadow?.getElementById("id_penLikeTouch") as SlCheckbox).checked;
+    return wert;
+  }
+
   get_raster_xmin() {
     const shadow = this.shadowRoot;
     let wert = Number((shadow?.getElementById("id_xmin") as HTMLInputElement).value.replace(/,/g, "."));
@@ -319,7 +335,7 @@ export class drDialogEinstellungen extends LitElement {
 
   set_raster_dx(dx: number) {
     let el = this.shadowRoot?.getElementById("id_dx") as HTMLInputElement;
-    console.log("set_raster_dx",dx,String(dx),el)
+    console.log("set_raster_dx", dx, String(dx), el);
     el.value = String(dx);
   }
 
@@ -373,7 +389,7 @@ export class drDialogEinstellungen extends LitElement {
     el.value = String(fw);
   }
 
-  set_NO_touch_support(value:boolean) {
+  set_NO_touch_support(value: boolean) {
     let el = this.shadowRoot?.getElementById("id_NO_touch_support") as SlCheckbox;
     el.checked = value;
     // const shadow = this.shadowRoot;
@@ -381,8 +397,13 @@ export class drDialogEinstellungen extends LitElement {
     // return wert;
   }
 
-  set_show_units(value:boolean) {
+  set_show_units(value: boolean) {
     let el = this.shadowRoot?.getElementById("id_NO_units") as SlCheckbox;
+    el.checked = value;
+  }
+
+  set_penLikeTouch(value: boolean) {
+    let el = this.shadowRoot?.getElementById("id_penLikeTouch") as SlCheckbox;
     el.checked = value;
   }
 
@@ -393,41 +414,43 @@ export class drDialogEinstellungen extends LitElement {
     const shadow = this.shadowRoot;
     if (shadow) {
       let bwert = (shadow?.getElementById("id_NO_touch_support") as SlCheckbox).checked;
-      window.localStorage.setItem('cad_NO_touch_support', String(bwert));
+      window.localStorage.setItem("cad_NO_touch_support", String(bwert));
 
       bwert = (shadow?.getElementById("id_NO_units") as SlCheckbox).checked;
-      window.localStorage.setItem('cad_NO_units', String(bwert));
+      window.localStorage.setItem("cad_NO_units", String(bwert));
+
+      bwert = (shadow?.getElementById("id_penLikeTouch") as SlCheckbox).checked;
+      window.localStorage.setItem("cad_penLikeTouch", String(bwert));
 
       let wert = Math.abs(+(shadow?.getElementById("id_fangweite_cursor") as HTMLInputElement).value.replace(/,/g, "."));
-      window.localStorage.setItem('cad_id_fangweite_cursor', String(wert));
+      window.localStorage.setItem("cad_id_fangweite_cursor", String(wert));
 
       wert = Math.abs(+(shadow?.getElementById("id_fact_lager") as HTMLInputElement).value.replace(/,/g, "."));
-      window.localStorage.setItem('cad_id_fact_lager', String(wert));
+      window.localStorage.setItem("cad_id_fact_lager", String(wert));
 
       let swert = (shadow?.getElementById("id_dx_offset_factor") as HTMLInputElement).value.replace(/,/g, ".");
-      window.localStorage.setItem('cad_id_dx_offset_factor', swert);
+      window.localStorage.setItem("cad_id_dx_offset_factor", swert);
 
       swert = (shadow?.getElementById("id_dz_offset_factor") as HTMLInputElement).value.replace(/,/g, ".");
-      window.localStorage.setItem('cad_id_dz_offset_factor', swert);
+      window.localStorage.setItem("cad_id_dz_offset_factor", swert);
 
       wert = Math.abs(+(shadow?.getElementById("id_dx") as HTMLInputElement).value.replace(/,/g, "."));
-      window.localStorage.setItem('cad_id_dx', String(wert));
+      window.localStorage.setItem("cad_id_dx", String(wert));
 
       wert = Math.abs(+(shadow?.getElementById("id_dz") as HTMLInputElement).value.replace(/,/g, "."));
-      window.localStorage.setItem('cad_id_dz', String(wert));
+      window.localStorage.setItem("cad_id_dz", String(wert));
 
       swert = (shadow?.getElementById("id_xmin") as HTMLInputElement).value.replace(/,/g, ".");
-      window.localStorage.setItem('cad_id_xmin', swert);
+      window.localStorage.setItem("cad_id_xmin", swert);
 
       swert = (shadow?.getElementById("id_xmax") as HTMLInputElement).value.replace(/,/g, ".");
-      window.localStorage.setItem('cad_id_xmax', swert);
+      window.localStorage.setItem("cad_id_xmax", swert);
 
       swert = (shadow?.getElementById("id_zmin") as HTMLInputElement).value.replace(/,/g, ".");
-      window.localStorage.setItem('cad_id_zmin', swert);
+      window.localStorage.setItem("cad_id_zmin", swert);
 
       swert = (shadow?.getElementById("id_zmax") as HTMLInputElement).value.replace(/,/g, ".");
-      window.localStorage.setItem('cad_id_zmax', swert);
-
+      window.localStorage.setItem("cad_id_zmax", swert);
     }
   }
 }

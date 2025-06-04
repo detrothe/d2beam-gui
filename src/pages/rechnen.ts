@@ -3393,6 +3393,27 @@ function berechne_kombinationen() {
         //console.log("max_S_kombi, iKomb=", iKomb, max_S_kombi[0][iKomb], max_S_kombi[1][iKomb], max_S_kombi[2][iKomb], max_disp_kombi[iKomb])
     }
 
+    // starre Stabenden
+
+    for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
+
+        for (let ielem = 0; ielem < nelem_Balken; ielem++) {
+            if (el[ielem].isActive) {
+                for (let iteil = 0; iteil < 2; iteil++) {
+                    ug = 0.0
+                    wg = 0.0
+                    for (let iLastfall = 0; iLastfall < nlastfaelle; iLastfall++) {
+
+                        ug += el[ielem].u_starr[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                        wg += el[ielem].w_starr[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                    }
+                    el[ielem].u_komb_starr[iKomb][iteil] = ug
+                    el[ielem].w_komb_starr[iKomb][iteil] = wg
+                }
+            }
+        }
+    }
+
     //console.log("MAX_ALL", maxM_all, maxV_all, maxN_all, maxdisp_all, maxpress_all)
 
 

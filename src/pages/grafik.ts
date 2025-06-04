@@ -1340,6 +1340,36 @@ export function drawsystem(svg_id = 'artboard') {
                 // console.log("wL", wL)
                 // console.log("phiL", phiL)
 
+                if (element[ielem].aL > 0.0) {
+                    let uS = Array(2), wS = Array(2)
+                    element[ielem].get_elementSchnittgroesse_u_w_starr(uS, wS, lf_index + loop, show_gesamtverformung);
+
+                    let xx1 = stab[ielem].x1 + uS[0] * scalefactor
+                    let zz1 = stab[ielem].z1 + wS[0] * scalefactor
+                    uG = element[ielem].cosinus * uL[0] - element[ielem].sinus * wL[0]
+                    wG = element[ielem].sinus * uL[0] + element[ielem].cosinus * wL[0]
+                    x = element[ielem].x_[0]
+                    xx2 = xs1 + x * element[ielem].cosinus + uG * scalefactor
+                    zz2 = zs1 + x * element[ielem].sinus + wG * scalefactor
+                    let line1 = two.makeLine(tr.xPix(xx1), tr.zPix(zz1), tr.xPix(xx2), tr.zPix(zz2));
+                    line1.linewidth = 7;
+                }
+
+                if (element[ielem].aR > 0.0) {
+                    let uS = Array(2), wS = Array(2)
+                    element[ielem].get_elementSchnittgroesse_u_w_starr(uS, wS, lf_index + loop, show_gesamtverformung);
+                    let xx1 = stab[ielem].x2 + uS[1] * scalefactor
+                    let zz1 = stab[ielem].z2 + wS[1] * scalefactor
+                    let nt=nelTeilungen-1
+                    uG = element[ielem].cosinus * uL[nt] - element[ielem].sinus * wL[nt]
+                    wG = element[ielem].sinus * uL[nt] + element[ielem].cosinus * wL[nt]
+                    x = element[ielem].x_[nt]
+                    xx2 = xs1 + x * element[ielem].cosinus + uG * scalefactor
+                    zz2 = zs1 + x * element[ielem].sinus + wG * scalefactor
+                    let line1 = two.makeLine(tr.xPix(xx1), tr.zPix(zz1), tr.xPix(xx2), tr.zPix(zz2));
+                    line1.linewidth = 7;
+                }
+
                 xx2 = 0.0; zz2 = 0.0
                 for (let i = 0; i < nelTeilungen; i++) {
                     // Nu[0] = (1.0 - x / sl);

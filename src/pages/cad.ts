@@ -22,7 +22,6 @@ import {
 import { draw_knoten, draw_knotenlast, draw_knotenmasse, draw_lager, drawStab } from './cad_draw_elemente';
 
 import '../components/dr-dialog_knoten';
-//import { drDialogKnoten } from '../components/dr-dialog_knoten';
 import {
    add_cad_node,
    add_element_nodes,
@@ -79,7 +78,9 @@ let zoomIsActive = false;
 export function set_zoomIsActive(wert: boolean) { zoomIsActive = wert; }
 
 let isPen = false;
-let isTouch = false
+let isTouch = false;
+let penLikeTouch = false;
+export function set_penLikeTouch(wert: boolean) { penLikeTouch = wert; }
 
 let allow_pan_cad = true;
 
@@ -841,6 +842,10 @@ function pointerdown(ev: PointerEvent) {
          }
          // penDown(ev);
          // mousedown(ev);
+         if (!penLikeTouch) {
+            if (buttons_control.input_started === 0) penDown(ev);
+            else if (buttons_control.n_input_points > 1) mouseup(ev);
+         }
          break;
       case 'touch':
          isTouch = true;
@@ -995,8 +1000,13 @@ function pointerup(ev: PointerEvent) {
          isPen = true;
          //if (buttons_control.input_started === 0) penDown(ev);
          // alt if (buttons_control.n_input_points > 1) mouseup(ev);
-         if (buttons_control.input_started === 0) penDown(ev);
-         else if (buttons_control.n_input_points > 1) mouseup(ev);
+         if (penLikeTouch) {
+            if (buttons_control.input_started === 0) penDown(ev);
+            else if (buttons_control.n_input_points > 1) mouseup(ev);
+         }
+         else {
+            if (buttons_control.n_input_points > 1) mouseup(ev);
+         }
          break;
 
       case 'touch':

@@ -91,6 +91,10 @@ export class CTimoshenko_beam extends CElement {
     phi_ = [] as number[][]
     bettung_ = [] as number[][]
 
+    u_starr = [] as number[][]          // Verformungen bei starren Enden, globale Richtung
+    w_starr = [] as number[][]
+
+
     N_komb = [] as number[][]         // Schnittgrößen entlang Stab, lokal, aus Kombinationen
     V_komb = [] as number[][]
     M_komb = [] as number[][]
@@ -101,6 +105,12 @@ export class CTimoshenko_beam extends CElement {
     phi_komb = [] as number[][]
     phiG_komb = [] as number[][]
     bettung_komb = [] as number[][]
+
+    u_komb_starr = [] as number[][]         // Verformungen entlang Stab, lokale Richtung
+    uG_komb_starr = [] as number[][]         // Verformungen entlang Stab, lokale Richtung
+    w_komb_starr = [] as number[][]
+    wG_komb_starr = [] as number[][]
+
 
     Nb_komb = [] as number[][]         // Bemessungs(Nachweis)-Schnittgrößen entlang Stab, lokal, aus Kombinationen
     Vb_komb = [] as number[][]
@@ -484,6 +494,9 @@ export class CTimoshenko_beam extends CElement {
             this.w_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
             this.phi_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
             this.bettung_ = Array.from(Array(n), () => new Array(this.nTeilungen).fill(0.0));
+
+            this.u_starr = Array.from(Array(n), () => new Array(2).fill(0.0));
+            this.w_starr = Array.from(Array(n), () => new Array(2).fill(0.0));
         }
 
         if (nkombinationen > 0) {
@@ -497,6 +510,11 @@ export class CTimoshenko_beam extends CElement {
             this.phi_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.phiG_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.bettung_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
+
+            this.u_komb_starr = Array.from(Array(nkombinationen), () => new Array(2).fill(0.0));
+            this.uG_komb_starr = Array.from(Array(nkombinationen), () => new Array(2).fill(0.0));
+            this.w_komb_starr = Array.from(Array(nkombinationen), () => new Array(2).fill(0.0));
+            this.wG_komb_starr = Array.from(Array(nkombinationen), () => new Array(2).fill(0.0));
 
             this.Nb_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.Vb_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
@@ -1675,6 +1693,7 @@ export class CTimoshenko_beam extends CElement {
             // console.log("edisp0", this.edisp0)
         }
 
+
         if (this.k_0 > 0.0) { // gebetteter Balken, nur Anfangs- und Endwerte werden ausgegeben
 
             console.log("k0 > 0, el teilungen", this.nTeilungen)
@@ -1744,6 +1763,7 @@ export class CTimoshenko_beam extends CElement {
         else {
 
             //let d_x = this.sl / (nelTeilungen)
+
             let x = 0.0
             let dV = 0.0, dM = 0.0
 
@@ -1805,6 +1825,16 @@ export class CTimoshenko_beam extends CElement {
                 // normale Elementlasten hinzufügen
 
                 if (THIIO_flag === 0 && matprop_flag === 0) {
+
+                    if (this.aL > 0.0) {
+                        console.log("u_starr", this.u_starr, this.u)
+                        this.u_starr[iLastf][0] = this.u[0]
+                        this.w_starr[iLastf][0] = this.u[1]
+                    }
+                    if (this.aR > 0.0) {
+                        this.u_starr[iLastf][1] = this.u[3]
+                        this.w_starr[iLastf][1] = this.u[4]
+                    }
 
                     for (let ieload = 0; ieload < neloads; ieload++) {
                         if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === iLastf)) {
@@ -2014,6 +2044,14 @@ export class CTimoshenko_beam extends CElement {
                                 Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
                                 phix -= Nphi[0] * edisp0[1] + Nphi[1] * edisp0[2] + Nphi[2] * edisp0[4] + Nphi[3] * edisp0[5];  // im Uhrzeigersinn
 
+                                if (this.aL > 0.0) {
+                                    this.u_starr[iLastf][0] += this.cosinus * edisp0[0] - this.sinus * edisp0[1]
+                                    this.w_starr[iLastf][0] += this.sinus * edisp0[0] + this.cosinus * edisp0[1]
+                                }
+                                if (this.aR > 0.0) {
+                                    this.u_starr[iLastf][1] += this.cosinus * edisp0[3] - this.sinus * edisp0[4]
+                                    this.w_starr[iLastf][1] += this.sinus * edisp0[3] + this.cosinus * edisp0[4]
+                                }
                             }
                         }
                     }
@@ -2047,6 +2085,16 @@ export class CTimoshenko_beam extends CElement {
 
                 }
                 else if (THIIO_flag === 1 || matprop_flag > 0) { // ikomb=iLastf
+
+                    if (this.aL > 0.0) {
+                        console.log("u_starr", this.u_starr, this.u)
+                        this.u_komb_starr[iLastf][0] = this.uG_komb_starr[iLastf][0] = this.u[0]
+                        this.w_komb_starr[iLastf][0] = this.wG_komb_starr[iLastf][0] = this.u[1]
+                    }
+                    if (this.aR > 0.0) {
+                        this.u_komb_starr[iLastf][1] = this.uG_komb_starr[iLastf][1] = this.u[3]
+                        this.w_komb_starr[iLastf][1] = this.wG_komb_starr[iLastf][1] = this.u[4]
+                    }
 
                     for (let ieload = 0; ieload < neloads; ieload++) {
 
@@ -2269,22 +2317,43 @@ export class CTimoshenko_beam extends CElement {
                                         }
                                     }
                                 }
-                                // else if (eload[ieload].art === 8) {         // Knotenverformung
-                                //     let edisp0 = Array(6)
-                                //     for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
-                                //     //console.log("ART=8,edisp0", edisp0)
+                                else if (eload[ieload].art === 8) {         // Knotenverformung
 
-                                //     Nu[0] = (1.0 - x / sl);
-                                //     Nu[1] = x / sl
-                                //     Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
-                                //     Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
-                                //     Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
-                                //     Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-                                //     ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[3]
-                                //     let wx0 = Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
-                                //     //Mx = Mx - this.NL * (wx0 - wL)
-                                //     wx += wx0
-                                // }
+                                    let edisp0 = Array(6)
+                                    for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
+
+                                    // wL += eload[ieload].dispL0[1] * kombiTabelle[iLastf][index];
+                                    // for (let i = 0; i < 6; i++)  edisp[i] += eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
+                                    // wLG += eload[ieload].dispL0[1] * kombiTabelle[iLastf][index];
+                                    // for (let i = 0; i < 6; i++)  edispG[i] += eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
+
+                                    if (this.aL > 0.0) {
+                                        this.u_komb_starr[iLastf][0] += this.cosinus * edisp0[0] - this.sinus * edisp0[1]
+                                        this.w_komb_starr[iLastf][0] += this.sinus * edisp0[0] + this.cosinus * edisp0[1]
+                                        this.uG_komb_starr[iLastf][0] += this.cosinus * edisp0[0] - this.sinus * edisp0[1]
+                                        this.wG_komb_starr[iLastf][0] += this.sinus * edisp0[0] + this.cosinus * edisp0[1]
+                                    }
+                                    if (this.aR > 0.0) {
+                                        this.u_komb_starr[iLastf][1] += this.cosinus * edisp0[3] - this.sinus * edisp0[4]
+                                        this.w_komb_starr[iLastf][1] += this.sinus * edisp0[3] + this.cosinus * edisp0[4]
+                                        this.uG_komb_starr[iLastf][1] += this.cosinus * edisp0[3] - this.sinus * edisp0[4]
+                                        this.wG_komb_starr[iLastf][1] += this.sinus * edisp0[3] + this.cosinus * edisp0[4]
+                                    }
+                                    //     let edisp0 = Array(6)
+                                    //     for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
+                                    //     //console.log("ART=8,edisp0", edisp0)
+
+                                    //     Nu[0] = (1.0 - x / sl);
+                                    //     Nu[1] = x / sl
+                                    //     Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+                                    //     Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+                                    //     Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+                                    //     Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+                                    //     ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[3]
+                                    //     let wx0 = Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
+                                    //     //Mx = Mx - this.NL * (wx0 - wL)
+                                    //     wx += wx0
+                                }
                             }
                         }
                     }
@@ -2434,5 +2503,34 @@ export class CTimoshenko_beam extends CElement {
         }
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    get_elementSchnittgroesse_u_w_starr(ux: number[], wx: number[], iLastf: number, gesamt: boolean) {
+
+
+        if (THIIO_flag === 0 && matprop_flag === 0) {
+            if (iLastf < nlastfaelle) {
+                for (let i = 0; i < 2; i++) {
+                    ux[i] = this.u_starr[iLastf][i]
+                    wx[i] = this.w_starr[iLastf][i]
+                }
+            } else {
+                for (let i = 0; i < 2; i++) {
+                    ux[i] = this.u_komb_starr[iLastf - nlastfaelle][i]
+                    wx[i] = this.w_komb_starr[iLastf - nlastfaelle][i]
+                }
+            }
+        } else {
+            for (let i = 0; i < 2; i++) {
+                if (gesamt) {
+                    ux[i] = this.uG_komb_starr[iLastf][i]
+                    wx[i] = this.wG_komb_starr[iLastf][i];
+                } else {
+                    ux[i] = this.u_komb_starr[iLastf][i]
+                    wx[i] = this.w_komb_starr[iLastf][i];
+                }
+            }
+        }
+    }
 
 }
