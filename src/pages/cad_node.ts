@@ -58,6 +58,10 @@ export function add_cad_node(x: number, z: number, option = 0) {
 
 
     if (index === -1) {
+        x = Math.round(x * 1000.0) / 1000.0
+        z = Math.round(z * 1000.0) / 1000.0
+        console.log("x,z", x, z)
+
         let node = new TCADNode(x, z);
         CADNodes.push(node);
         if (option > 0) return CADNodes.length - 1;
