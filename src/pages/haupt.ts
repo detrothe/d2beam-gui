@@ -41,6 +41,7 @@ import "../components/dr-dialog_elementlasten";
 import "../components/dr-dialog_stab_eigenschaften";
 import "../components/dr-dialog_einstellungen";
 import "../components/dr-dialog_info";
+import "../components/dr-drawer_1";
 
 import { drButtonPM } from "../components/dr-button-pm";
 import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt";
@@ -338,7 +339,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
 
           <sl-drawer label="Drawer" class="drawer-overview" style="cursor:pointer">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            <dr-drawer_1 id="id_drawer_1"></dr-drawer_1>
             <sl-button slot="footer" variant="primary">Close</sl-button>
           </sl-drawer>
 
