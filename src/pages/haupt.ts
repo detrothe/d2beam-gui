@@ -17,6 +17,7 @@ import "@shoelace-style/shoelace/dist/components/option/option.js";
 import "@shoelace-style/shoelace/dist/components/menu/menu";
 import "@shoelace-style/shoelace/dist/components/menu-item/menu-item";
 import "@shoelace-style/shoelace/dist/components/divider/divider";
+import "@shoelace-style/shoelace/dist/components/drawer/drawer";
 
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 
@@ -56,19 +57,9 @@ import { my_jspdf } from "./mypdf";
 
 //import { init_contextmenu } from '../components/dr-tabelle';
 
-import {
-  rechnen,
-  init_tabellen,
-  show_gleichungssystem,
-  setSystem,
-  System,
-  hideColumnsForFachwerk,
-} from "./rechnen";
+import { rechnen, init_tabellen, show_gleichungssystem, setSystem, System, hideColumnsForFachwerk } from "./rechnen";
 
-import {
-  nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, set_dialog_querschnitt_new,
-  removeAll_def_querschnitt
-} from "./querschnitte"
+import { nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, set_dialog_querschnitt_new, removeAll_def_querschnitt } from "./querschnitte";
 
 import { click_pan_button_cad, init_cad, init_two_cad, two_cad_clear } from "./cad";
 import { cad_buttons } from "./cad_buttons";
@@ -79,11 +70,10 @@ import { set_max_lastfall, zero_max_lastfall } from "./cad_draw_elementlasten";
 import { reset_cad_nodes } from "./cad_node";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.3.0,c, 4-Juni-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.4.0,a, 5-Juni-2025, ";
 //########################################################################################################################
 
-let hostname = window.location.hostname
-
+let hostname = window.location.hostname;
 
 export const nnodes_init = "0";
 export const nelem_init = "0";
@@ -335,6 +325,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <!-- <select name="querschnitt_default" id="id_querschnitt_default" title="default Querschnitt"></select> -->
           <button id="id_button_pan_cad">Pan</button>
 
+
           <div id="id_context_menu" style="position:absolute;top:100;display:none;">
             <sl-menu style="max-width: 200px;">
               <sl-menu-item value="properties" @click="${show_property_dialog}">Eigenschaften</sl-menu-item>
@@ -344,6 +335,13 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               <sl-menu-item value="abbruch"  @click="${abbruch_property_dialog}">Abbruch</sl-menu-item>
             </sl-menu>
           </div>
+
+
+          <sl-drawer label="Drawer" class="drawer-overview" style="cursor:pointer">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            <sl-button slot="footer" variant="primary">Close</sl-button>
+          </sl-drawer>
+
 
           <div id="artboard_cad" style="margin:0;padding:0;z-index:100"></div>
           <div id="svg_artboard_cad" style="margin:0;padding:0;display:none"></div>
@@ -1207,16 +1205,15 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   el_select_dyn_eigenvalue?.addEventListener("change", select_dyn_eigenvalue_changed);
   const el_zurueck_grafik = document.getElementById("id_button_zurueck_grafik");
   el_zurueck_grafik?.addEventListener("click", click_zurueck_grafik);
-  const el_pan_button_grafik = document.getElementById('id_button_pan_grafik') as HTMLButtonElement;
+  const el_pan_button_grafik = document.getElementById("id_button_pan_grafik") as HTMLButtonElement;
   el_pan_button_grafik?.addEventListener("click", click_pan_button_grafik);
   el_pan_button_grafik.innerHTML = '<i class = "fa fa-arrows"></i>';
-  const el_pan_button_cad = document.getElementById('id_button_pan_cad') as HTMLButtonElement;
+  const el_pan_button_cad = document.getElementById("id_button_pan_cad") as HTMLButtonElement;
   el_pan_button_cad?.addEventListener("click", click_pan_button_cad);
   el_pan_button_cad.innerHTML = '<i class = "fa fa-arrows"></i>';
 
   // const el_zurueck_cad = document.getElementById("id_button_zurueck_cad");
   // el_zurueck_cad?.addEventListener("click", click_zurueck_cad);
-
 
   // const el_def_quer = document.getElementById("id_querschnitt_default");
   // el_def_quer?.addEventListener("change", change_def_querschnitt);
@@ -1284,8 +1281,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
     console.log("Tab CAD is complete"); // true
     let div = document.getElementById("id_cad_group") as HTMLDivElement;
 
-    let h = div!.getBoundingClientRect()
-    console.log("update complete Höhe des div", h)
+    let h = div!.getBoundingClientRect();
+    console.log("update complete Höhe des div", h);
     readLocalStorage_cad();
     init_two_cad();
     init_cad(0);
@@ -1307,12 +1304,12 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   let ttt1 = document.getElementById("id_sl_tab_group") as SlTabGroup;
   ttt1!.addEventListener("sl-tab-show", (event) => {
     // @ts-ignore
-    console.log("sl-tab-show", event)
+    console.log("sl-tab-show", event);
     //  let hoehe = div_cad_group!.getBoundingClientRect()
     //  console.log("hoehe div id_cad_group", hoehe)
-    let div = document.getElementById("id_cad_group2") as HTMLDivElement
-    let h = div!.getBoundingClientRect()
-    console.log("Rect des div id_cad_group2", h)
+    let div = document.getElementById("id_cad_group2") as HTMLDivElement;
+    let h = div!.getBoundingClientRect();
+    console.log("Rect des div id_cad_group2", h);
   });
 
   // let ttt1 = document.getElementById("id_cad_group") as SlTabGroup;
@@ -1334,9 +1331,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
       let t2 = document.getElementById("id_cad_group2") as SlTabGroup;
       let bottom = entry.contentRect.bottom;
-      console.log("bottom", bottom)
-      t2.style.top = String(bottom) + 'px'
-
+      console.log("bottom", bottom);
+      t2.style.top = String(bottom) + "px";
     }
   });
 
@@ -1377,7 +1373,6 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
   init_tabellen();
 
-
   // init_two_cad();
   // init_cad(0);
 
@@ -1392,6 +1387,11 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
   // divi.style.top = '500px';
 
   //rechnen(1);
+  //const openButton = drawer?.nextElementSibling;
+  //const closeButton = drawer?.querySelector('sl-button[variant="primary"]');
+
+  //openButton?.addEventListener('click', () => drawer.show());
+  //closeButton?.addEventListener('click', () => drawer.hide());
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1685,9 +1685,8 @@ export function clearTables() {
     element?.removeChild(element?.lastChild);
   }
 
-  removeAll_def_querschnitt();   // lösche Querschnitte in Button in Tab System
+  removeAll_def_querschnitt(); // lösche Querschnitte in Button in Tab System
   two_cad_clear();
-
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1748,8 +1747,7 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     el = document.getElementById("id_button_nlastfaelle") as drButtonPM;
     el.setValue(1);
     zero_max_lastfall();
-    set_max_lastfall(1)
-      ;
+    set_max_lastfall(1);
     el = document.getElementById("id_button_nkombinationen") as drButtonPM;
     el.setValue(0);
     el = document.getElementById("id_button_nstabvorverformungen") as drButtonPM;
@@ -1793,7 +1791,7 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
 
     elSel = document.getElementById("id_stadyn") as HTMLSelectElement;
     elSel.value = "0";
-    (document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement).style.display = 'none';
+    (document.getElementById("id_cad_knotenmasse_button") as HTMLButtonElement).style.display = "none";
 
     const id_mass = document.getElementById("id_tab_mass") as SlSelect;
     id_mass.disabled = true;
@@ -1879,12 +1877,11 @@ function berechnungsart_changed() {
 
   if (sel.value === "0") {
     id_mass.disabled = true;
-    id_btn_mass.style.display = 'none';
+    id_btn_mass.style.display = "none";
     //ele.set_system(0);
-  }
-  else {
+  } else {
     id_mass.disabled = false;
-    id_btn_mass.style.display = 'inline-block';
+    id_btn_mass.style.display = "inline-block";
     //ele.set_system(1);
   }
   berechnungErforderlich();
@@ -1932,12 +1929,10 @@ function elementTabelle_bettung_anzeigen(check: boolean) {
   }
 }
 
-
 //---------------------------------------------------------------------------------------------------------------
 function show_video() {
   //---------------------------------------------------------------------------------------------------------------
 
-  window.open('https://d2beam-gui.statikverstehen.de/videos/videos.html', '_blank')
-
+  window.open("https://d2beam-gui.statikverstehen.de/videos/videos.html", "_blank");
 }
 

@@ -29,12 +29,14 @@ import {
   set_fangweite_cursor,
   get_fangweite_cursor,
   set_show_units,
-  set_penLikeTouch
+  set_penLikeTouch,
+  CAD_DRAWER
 } from "./cad";
 
 import { two, tr } from "./cad";
 import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
+import "@shoelace-style/shoelace/dist/components/drawer/drawer";
 
 import "../components/dr-dialog_lager";
 import "../components/dr-dialog_knoten";
@@ -105,6 +107,7 @@ class Cbuttons_control {
   knotenmasse_eingabe_aktiv = false;
   einstellungen_eingabe_aktiv = false;
   info_eingabe_aktiv = false;
+  drawer_eingabe_aktiv = false;
   typ_cad_element = 0;
   n_input_points = 0;
   button_pressed = false;
@@ -127,6 +130,7 @@ class Cbuttons_control {
     this.button_pressed = false;
     this.input_started = 0;
     this.info_eingabe_aktiv = false;
+    this.drawer_eingabe_aktiv = false;
 
     let backgroundColor = backgroundColor_button
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
@@ -150,6 +154,8 @@ class Cbuttons_control {
     el = document.getElementById("id_cad_info_button") as HTMLButtonElement;
     el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_edit_knoten_button") as HTMLButtonElement;
+    el.style.backgroundColor = backgroundColor;
+    el = document.getElementById("id_cad_drawer_button") as HTMLButtonElement;
     el.style.backgroundColor = backgroundColor;
 
 
@@ -342,6 +348,19 @@ export function cad_buttons() {
   info_button.title = "Kurzanleitung & Information";
   info_button.id = "id_cad_info_button";
 
+
+
+  const drawer_button = document.createElement("button");
+
+  drawer_button.value = "drawer";
+  drawer_button.className = "btn";
+  drawer_button.innerHTML = 'M';
+  drawer_button.addEventListener("click", Drawer_button);
+  // stab_button.addEventListener('keydown', keydown);
+  drawer_button.title = "Mehr Aktivitäten";
+  drawer_button.id = "id_cad_drawer_button";
+
+
   const help_text = document.createElement("span");
   help_text.innerHTML = "grafische Eingabe System"
   help_text.className = "helptext";
@@ -366,6 +385,7 @@ export function cad_buttons() {
   div.appendChild(cog_button);
   div.appendChild(refresh_button);
   div.appendChild(info_button);
+  div.appendChild(drawer_button);
 
   let h = div!.getBoundingClientRect()
   // console.log("Höhe des div", h)
@@ -1604,7 +1624,7 @@ export function Info_button(ev: Event) {
 
   let el = document.getElementById("id_cad_info_button") as HTMLButtonElement
 
-  if (buttons_control.einstellungen_eingabe_aktiv) {
+  if (buttons_control.info_eingabe_aktiv) {
     buttons_control.reset()
   } else {
 
@@ -1622,6 +1642,45 @@ export function Info_button(ev: Event) {
   }
 
 }
+
+
+//--------------------------------------------------------------------------------------------------------
+export function Drawer_button(ev: Event) {
+  //----------------------------------------------------------------------------------------------------
+
+  const drawer = document.querySelector('.drawer-overview');
+  const closeButton = drawer?.querySelector('sl-button[variant="primary"]');
+  //@ts-ignore
+
+  console.log("in drawer_button", drawer)
+
+  let el = document.getElementById("id_cad_drawer_button") as HTMLButtonElement
+
+  if (buttons_control.drawer_eingabe_aktiv) {
+    //@ts-ignore
+    if (drawer !== null) drawer.hide()
+
+    buttons_control.reset()
+  } else {
+
+    el.style.backgroundColor = 'darkRed'
+    buttons_control.drawer_eingabe_aktiv = true
+    buttons_control.cad_eingabe_aktiv = false
+    buttons_control.typ_cad_element = CAD_DRAWER
+    //el.addEventListener('keydown', keydown);
+    buttons_control.n_input_points = 0
+    buttons_control.button_pressed = true;
+
+    //@ts-ignore
+    closeButton?.addEventListener('click', () => drawer.hide());
+    //@ts-ignore
+    if (drawer !== null) drawer.show()
+    buttons_control.reset()
+
+  }
+
+}
+
 //---------------------------------------------------------------------------------------------------------------
 export function showDialog_info() {
   //------------------------------------------------------------------------------------------------------------

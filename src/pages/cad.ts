@@ -45,6 +45,7 @@ export const CAD_ELLAST = 5;
 export const CAD_EINSTELLUNGEN = 6;
 export const CAD_INFO = 7;
 export const CAD_KNMASSE = 8;
+export const CAD_DRAWER = 9;
 
 export let two: any = null;
 let domElement: any = null;
