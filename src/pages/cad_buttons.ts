@@ -1645,12 +1645,11 @@ export function Info_button(ev: Event) {
 
 
 //--------------------------------------------------------------------------------------------------------
-export function Drawer_button(ev: Event) {
+export function Drawer_button(_ev: Event) {
   //----------------------------------------------------------------------------------------------------
 
   const drawer = document.querySelector('.drawer-overview');
   const closeButton = drawer?.querySelector('sl-button[variant="primary"]');
-  //@ts-ignore
 
   console.log("in drawer_button", drawer)
 
