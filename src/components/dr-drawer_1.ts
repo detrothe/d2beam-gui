@@ -1,7 +1,7 @@
 import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
-import { set_help_text } from "../pages/cad_buttons";
+import { Messen_button, set_help_text } from "../pages/cad_buttons";
 
 
 
@@ -167,7 +167,7 @@ export class drDrawer_1 extends LitElement {
     //console.log("Button messen geklickt", drawer)
     //@ts-ignore
     if (drawer !== null) drawer.hide();
-    set_help_text('Pick ersten Knoten');
+    Messen_button();
   }
 
 }

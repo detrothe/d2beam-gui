@@ -46,6 +46,7 @@ export const CAD_EINSTELLUNGEN = 6;
 export const CAD_INFO = 7;
 export const CAD_KNMASSE = 8;
 export const CAD_DRAWER = 9;
+export const CAD_MESSEN = 10;
 
 export let two: any = null;
 let domElement: any = null;
@@ -1526,6 +1527,8 @@ function mouseup(ev: any) {
                }
                if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
             }
+            if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
+
             if (buttons_control.n_input_points === 1) {
                if (buttons_control.lager_eingabe_aktiv) {
                   //let group=two.makeRectangle(start_x,start_y,20,20);
@@ -1607,29 +1610,29 @@ function mouseup(ev: any) {
          } else if (buttons_control.input_started === 1) {          // Eingabe Stabende
             two.remove(rubberband);
 
+            if (foundNodePoint) {
+               end_x_wc = xNodePoint;
+               end_z_wc = zNodePoint;
+
+               two.remove(nodePoint);
+               foundNodePoint = false;
+            } else if (foundRasterPoint) {
+               end_x_wc = xRasterPoint;
+               end_z_wc = zRasterPoint;
+
+               two.remove(rasterPoint);
+               foundRasterPoint = false;
+            } else {
+               end_x_wc = tr.xWorld(xo);
+               end_z_wc = tr.zWorld(yo);
+            }
+
+            buttons_control.input_started = 0;
+            input_active = false;
+            rubberband_drawn = false;
+
             if (buttons_control.stab_eingabe_aktiv) {
 
-               if (foundNodePoint) {
-                  end_x_wc = xNodePoint;
-                  end_z_wc = zNodePoint;
-
-                  two.remove(nodePoint);
-                  foundNodePoint = false;
-               } else if (foundRasterPoint) {
-                  end_x_wc = xRasterPoint;
-                  end_z_wc = zRasterPoint;
-
-                  two.remove(rasterPoint);
-                  foundRasterPoint = false;
-               } else {
-                  end_x_wc = tr.xWorld(xo);
-                  end_z_wc = tr.zWorld(yo);
-               }
-
-
-               buttons_control.input_started = 0;
-               input_active = false;
-               rubberband_drawn = false;
                let group = null;
 
                // Überprüfe Stablänge
@@ -1654,6 +1657,12 @@ function mouseup(ev: any) {
                   alertdialog('ok', 'Stablänge zu klein = ' + sl + 'm');
                }
                set_help_text('Stabanfang eingeben');
+            }
+            else if (buttons_control.messen_aktiv) {
+               let dx = end_x_wc - start_x_wc
+               let dz = end_z_wc - start_z_wc
+               let sl = Math.sqrt(dx * dx + dz * dz)
+               console.log("Abstand zwischen den 2 Punkten beträgt = ", sl)
             }
             //list.log()
          }

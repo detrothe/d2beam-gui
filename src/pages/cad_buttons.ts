@@ -30,7 +30,8 @@ import {
   get_fangweite_cursor,
   set_show_units,
   set_penLikeTouch,
-  CAD_DRAWER
+  CAD_DRAWER,
+  CAD_MESSEN
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -106,6 +107,7 @@ class Cbuttons_control {
   elementlast_eingabe_aktiv = false;
   knotenmasse_eingabe_aktiv = false;
   einstellungen_eingabe_aktiv = false;
+  messen_aktiv = false;
   info_eingabe_aktiv = false;
   drawer_eingabe_aktiv = false;
   typ_cad_element = 0;
@@ -131,6 +133,7 @@ class Cbuttons_control {
     this.input_started = 0;
     this.info_eingabe_aktiv = false;
     this.drawer_eingabe_aktiv = false;
+    this.messen_aktiv = false;
 
     let backgroundColor = backgroundColor_button
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
@@ -1645,8 +1648,38 @@ export function Info_button(ev: Event) {
 
 
 //--------------------------------------------------------------------------------------------------------
+export function Messen_button() {
+  //----------------------------------------------------------------------------------------------------
+
+  console.log("in Messen_button")
+
+  //  let el = document.getElementById("id_cad_info_button") as HTMLButtonElement
+
+  if (buttons_control.messen_aktiv) {
+    buttons_control.reset()
+  } else {
+    buttons_control.reset()
+    //  el.style.backgroundColor = 'darkRed'
+    buttons_control.messen_aktiv = true
+    buttons_control.cad_eingabe_aktiv = true
+    buttons_control.typ_cad_element = CAD_MESSEN
+    set_help_text('ersten Knoten picken');
+    //el.addEventListener('keydown', keydown);
+    buttons_control.n_input_points = 2
+    buttons_control.button_pressed = true;
+
+    //showDialog_info();
+    //buttons_control.reset()
+
+  }
+
+}
+
+//--------------------------------------------------------------------------------------------------------
 export function Drawer_button(_ev: Event) {
   //----------------------------------------------------------------------------------------------------
+
+   buttons_control.reset();
 
   const drawer = document.querySelector('.drawer-overview');
   const closeButton = drawer?.querySelector('sl-button[variant="primary"]');
@@ -1674,7 +1707,7 @@ export function Drawer_button(_ev: Event) {
     closeButton?.addEventListener('click', () => drawer.hide());
     //@ts-ignore
     if (drawer !== null) drawer.show()
-    buttons_control.reset()
+    //buttons_control.reset()
 
   }
 
