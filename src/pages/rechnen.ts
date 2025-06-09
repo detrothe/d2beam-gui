@@ -29,6 +29,7 @@ import {
 import { drDialogLager } from "../components/dr-dialog_lager";
 import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast";
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
+import { drDialogStabEigenschaften } from "../components/dr-dialog_stab_eigenschaften";
 
 // import { read_daten } from "./dateien"
 
@@ -424,6 +425,9 @@ export function setSystem(system: number) {
 
     let elm = document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse;
     elm.set_system(system);
+
+    let els = document.getElementById('id_dialog_stab_eigenschaften') as drDialogStabEigenschaften;
+    els.set_system(system);
 
 }
 

@@ -145,102 +145,106 @@ export class drDialogStabEigenschaften extends LitElement {
       <p>
         <select name="querschnitt" id="id_querschnitt"></select>
       </p>
-      <table id="stab_table">
-        <thead>
-          <tr>
-            <td>Gelenke</td>
-            <td colspan="2" style="text-align: center;">Federkonstante</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <sl-checkbox id="id_Na">N<sub>a</sub></sl-checkbox>
-            </td>
 
-            <td>k<sub>x,a</sub>:</td>
-            <td>
-              <input type="number" id="id_kxa" name="kxa" pattern="[0-9.,eE+-]*" value="" disabled />
-            </td>
-            <td>kN/m</td>
-          </tr>
+      <div id="id_div">
+        <table id="stab_table">
+          <thead>
+            <tr>
+              <td>Gelenke</td>
+              <td colspan="2" style="text-align: center;">Federkonstante</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <sl-checkbox id="id_Na">N<sub>a</sub></sl-checkbox>
+              </td>
 
-          <tr>
-            <td>
-              <sl-checkbox id="id_Va">V<sub>a</sub></sl-checkbox>
-            </td>
-            <td>k<sub>z,a</sub>:</td>
-            <td>
-              <input type="number" id="id_kza" name="kza" pattern="[0-9.,eE+-]*" value="" disabled />
-            </td>
-            <td>kN/m</td>
-          </tr>
-          <tr>
-            <td>
-              <sl-checkbox id="id_Ma">M<sub>a</sub></sl-checkbox>
-            </td>
+              <td>k<sub>x,a</sub>:</td>
+              <td>
+                <input type="number" id="id_kxa" name="kxa" pattern="[0-9.,eE+-]*" value="" disabled />
+              </td>
+              <td>kN/m</td>
+            </tr>
 
-            <td>k<sub>&phi;,a</sub>:</td>
-            <td>
-              <input type="number" id="id_kphi_a" name="kphi_a" pattern="[0-9.,eE+-]*" value="" disabled />
-            </td>
-            <td>kNm/rad</td>
-          </tr>
+            <tr>
+              <td>
+                <sl-checkbox id="id_Va">V<sub>a</sub></sl-checkbox>
+              </td>
+              <td>k<sub>z,a</sub>:</td>
+              <td>
+                <input type="number" id="id_kza" name="kza" pattern="[0-9.,eE+-]*" value="" disabled />
+              </td>
+              <td>kN/m</td>
+            </tr>
+            <tr>
+              <td>
+                <sl-checkbox id="id_Ma">M<sub>a</sub></sl-checkbox>
+              </td>
 
-          <tr>
-            <td>
-              <sl-checkbox id="id_Ne">N<sub>e</sub></sl-checkbox>
-            </td>
+              <td>k<sub>&phi;,a</sub>:</td>
+              <td>
+                <input type="number" id="id_kphi_a" name="kphi_a" pattern="[0-9.,eE+-]*" value="" disabled />
+              </td>
+              <td>kNm/rad</td>
+            </tr>
 
-            <td>k<sub>x,e</sub>:</td>
-            <td>
-              <input type="number" id="id_kxe" name="kxe" pattern="[0-9.,eE+-]*" value="" disabled />
-            </td>
-            <td>kN/m</td>
-          </tr>
+            <tr>
+              <td>
+                <sl-checkbox id="id_Ne">N<sub>e</sub></sl-checkbox>
+              </td>
 
-          <tr>
-            <td>
-              <sl-checkbox id="id_Ve">V<sub>e</sub></sl-checkbox>
-            </td>
-            <td>k<sub>z,e</sub>:</td>
-            <td>
-              <input type="number" id="id_kze" name="kze" pattern="[0-9.,eE+-]*" value="" disabled />
-            </td>
-            <td>kN/m</td>
-          </tr>
-          <tr>
-            <td>
-              <sl-checkbox id="id_Me">M<sub>e</sub></sl-checkbox>
-            </td>
+              <td>k<sub>x,e</sub>:</td>
+              <td>
+                <input type="number" id="id_kxe" name="kxe" pattern="[0-9.,eE+-]*" value="" disabled />
+              </td>
+              <td>kN/m</td>
+            </tr>
 
-            <td>k<sub>&phi;,e</sub>:</td>
-            <td>
-              <input type="number" id="id_kphi_e" name="kphi_e" pattern="[0-9.,eE+-]*" value="" disabled />
-            </td>
-            <td>kNm/rad</td>
-          </tr>
-        </tbody>
-      </table>
+            <tr>
+              <td>
+                <sl-checkbox id="id_Ve">V<sub>e</sub></sl-checkbox>
+              </td>
+              <td>k<sub>z,e</sub>:</td>
+              <td>
+                <input type="number" id="id_kze" name="kze" pattern="[0-9.,eE+-]*" value="" disabled />
+              </td>
+              <td>kN/m</td>
+            </tr>
+            <tr>
+              <td>
+                <sl-checkbox id="id_Me">M<sub>e</sub></sl-checkbox>
+              </td>
 
-      <p><b>Starre Stabenden</b></p>
-      <p>
-        starr a:
-        <input type="number" id="id_a" name="a" pattern="[0-9.,eE+-]*" value="" />
-        [m]
-      </p>
-      <p>
-        starr e:
-        <input type="number" id="id_e" name="e" pattern="[0-9.,eE+-]*" value="" />
-        [m]
-      </p>
+              <td>k<sub>&phi;,e</sub>:</td>
+              <td>
+                <input type="number" id="id_kphi_e" name="kphi_e" pattern="[0-9.,eE+-]*" value="" disabled />
+              </td>
+              <td>kNm/rad</td>
+            </tr>
+          </tbody>
+        </table>
 
-      <p><b>Stabbettung</b></p>
-      <p>
-        k<sub>b</sub>:
-        <input type="number" id="id_kb" name="kb" pattern="[0-9.,eE+-]*" value="" />
-        [kN/m²]
-      </p>
+        <p><b>Starre Stabenden</b></p>
+        <p>
+          starr a:
+          <input type="number" id="id_a" name="a" pattern="[0-9.,eE+-]*" value="" />
+          [m]
+        </p>
+        <p>
+          starr e:
+          <input type="number" id="id_e" name="e" pattern="[0-9.,eE+-]*" value="" />
+          [m]
+        </p>
+
+        <p><b>Stabbettung</b></p>
+        <p>
+          k<sub>b</sub>:
+          <input type="number" id="id_kb" name="kb" pattern="[0-9.,eE+-]*" value="" />
+          [kN/m²]
+        </p>
+      </div>
+
 
       <form method="dialog">
         <!-- <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
@@ -434,4 +438,18 @@ export class drDialogStabEigenschaften extends LitElement {
     el = shadow?.getElementById("id_Me") as SlCheckbox;
     el.checked = gelenke[5];
   }
+
+  set_system(system: number) {
+
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById("id_div") as HTMLDivElement;
+
+    console.log("set_system stab eigenschaften", system, el)
+    if (system === 0) {
+      el.style.display = "block";
+    } else {
+      el.style.display = "none";
+    }
+  }
+
 }
