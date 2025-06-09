@@ -22,7 +22,7 @@ export function cad_rechnen() {
     console.log("in cad_rechnen")
 
     let fatal_error = false;
-    let check_max_lastfall = 0
+    let check_max_lastfall = 1   // für Eigengewichtslastfall
 
 
     // Markiere alle Knoten /Punkte, an denen Stäbe hängen
