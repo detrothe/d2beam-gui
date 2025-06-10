@@ -1197,15 +1197,21 @@ function penDown(ev: PointerEvent) {
 
                let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
                if (index1 > -1) {
-                  let masse = new TMass();
-                  read_knotenmasse_dialog(masse);
-                  let group = draw_knotenmasse(tr, masse, get_cad_node_X(index1), get_cad_node_Z(index1));
-                  two.add(group);
-                  two.update();
-                  console.log('getBoundingClientRect', group.getBoundingClientRect());
-                  const el = new TCAD_Knotenmasse(group, index1, masse, buttons_control.typ_cad_element);
-                  list.append(el);
-                  add_element_nodes(index1);
+                  let vorhanden = check_doppelte_Masse(index1)
+                  if (vorhanden) {
+                     alertdialog('ok', 'Knoten hat schon eine Knotenmasse');
+                  }
+                  else {
+                     let masse = new TMass();
+                     read_knotenmasse_dialog(masse);
+                     let group = draw_knotenmasse(tr, masse, get_cad_node_X(index1), get_cad_node_Z(index1));
+                     two.add(group);
+                     two.update();
+                     console.log('getBoundingClientRect', group.getBoundingClientRect());
+                     const el = new TCAD_Knotenmasse(group, index1, masse, buttons_control.typ_cad_element);
+                     list.append(el);
+                     add_element_nodes(index1);
+                  }
                } else {
                   console.log('Keinen Knoten gefunden');
                   alertdialog('ok', 'keinen Knoten gefunden');
@@ -1226,6 +1232,22 @@ function check_doppeltes_Lager(index1: number): boolean {
    for (let i = 0; i < list.size; i++) {
       let obj = list.getAt(i) as TCAD_Lager;
       if (obj.elTyp === CAD_LAGER) {
+         if (obj.index1 === index1) {
+            return true
+            break;
+         }
+      }
+   }
+   return false;
+}
+
+//--------------------------------------------------------------------------------------------------------
+function check_doppelte_Masse(index1: number): boolean {
+   //-----------------------------------------------------------------------------------------------------
+
+   for (let i = 0; i < list.size; i++) {
+      let obj = list.getAt(i) as TCAD_Knotenmasse;
+      if (obj.elTyp === CAD_KNMASSE) {
          if (obj.index1 === index1) {
             return true
             break;
@@ -1554,7 +1576,7 @@ function mouseup(ev: any) {
                         add_element_nodes(index1);
                         group = draw_lager(tr, el);
                         two.add(group);
-                        el.setTwoObj(group)
+                        el.setTwoObj(group);
                         two.update();
                      }
                   } else {
@@ -1583,19 +1605,25 @@ function mouseup(ev: any) {
                   }
                }
                else if (buttons_control.knotenmasse_eingabe_aktiv) {
-                  console.log("KNotenmasse eingabe aktiv")
+                  console.log("Knotenmasse eingabe aktiv")
 
                   let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
                   if (index1 > -1) {
-                     let masse = new TMass();
-                     read_knotenmasse_dialog(masse);
-                     let group = draw_knotenmasse(tr, masse, get_cad_node_X(index1), get_cad_node_Z(index1));
-                     two.add(group);
-                     two.update();
-                     console.log('getBoundingClientRect', group.getBoundingClientRect());
-                     const el = new TCAD_Knotenmasse(group, index1, masse, buttons_control.typ_cad_element);
-                     list.append(el);
-                     add_element_nodes(index1);
+                     let vorhanden = check_doppelte_Masse(index1)
+                     if (vorhanden) {
+                        alertdialog('ok', 'Knoten hat schon eine Knotenmasse');
+                     }
+                     else {
+                        let masse = new TMass();
+                        read_knotenmasse_dialog(masse);
+                        let group = draw_knotenmasse(tr, masse, get_cad_node_X(index1), get_cad_node_Z(index1));
+                        two.add(group);
+                        two.update();
+                        console.log('getBoundingClientRect', group.getBoundingClientRect());
+                        const el = new TCAD_Knotenmasse(group, index1, masse, buttons_control.typ_cad_element);
+                        list.append(el);
+                        add_element_nodes(index1);
+                     }
                   } else {
                      console.log('Keinen Knoten gefunden');
                      alertdialog('ok', 'keinen Knoten gefunden');

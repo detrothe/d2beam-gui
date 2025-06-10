@@ -446,12 +446,16 @@ export function unDo_button() {
       remove_element_nodes((obj as TCAD_Knotenlast).index1)
       find_max_Lastfall();
     }
+    else if ((obj as TCAD_Element).elTyp === CAD_KNMASSE) {
+      remove_element_nodes((obj as TCAD_Knotenmasse).index1)
+    }
     else if ((obj as TCAD_Element).elTyp === CAD_KNOTEN) {
       let index = (obj as TCAD_Knoten).index1
-      if (CADNodes[index].nel != 0) {
+      if (CADNodes[index].nel > 1) {
         alertdialog("ok", "An dem Knoten hängen noch andere Elemente, erst diese löschen");
         return;
       }
+      remove_element_nodes((obj as TCAD_Knoten).index1)
     }
 
     two.remove(obj.two_obj);
@@ -521,7 +525,7 @@ export function reDo_button() {
       }
       else if (obj.elTyp === CAD_KNOTEN) {
         //console.log("KNOTEN reDo", obj.x1, obj.z1)
-
+        add_element_nodes(obj.index1);
         group = draw_knoten(obj, tr)
         two.add(group);
       }
@@ -531,6 +535,7 @@ export function reDo_button() {
         let index1 = obj.index1
         group = draw_knotenmasse(tr, obj.mass, get_cad_node_X(index1), get_cad_node_Z(index1))
         two.add(group);
+        add_element_nodes(index1);
       }
       obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
       list.append(obj);
@@ -802,6 +807,7 @@ export function delete_element(xc: number, zc: number) {
       two.remove(obj.two_obj);
       two.update();
       undoList.append(obj);
+      remove_element_nodes((obj as TCAD_Knoten).index1)
       //buttons_control.reset();
     } else {
       alertdialog("ok", "An dem Knoten hängen noch andere Elemente, erst diese löschen");
@@ -1679,7 +1685,7 @@ export function Messen_button() {
 export function Drawer_button(_ev: Event) {
   //----------------------------------------------------------------------------------------------------
 
-   buttons_control.reset();
+  buttons_control.reset();
 
   const drawer = document.querySelector('.drawer-overview');
   const closeButton = drawer?.querySelector('sl-button[variant="primary"]');
