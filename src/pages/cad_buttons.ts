@@ -158,8 +158,8 @@ class Cbuttons_control {
     el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_edit_knoten_button") as HTMLButtonElement;
     el.style.backgroundColor = backgroundColor;
-    el = document.getElementById("id_cad_drawer_button") as HTMLButtonElement;
-    el.style.backgroundColor = backgroundColor;
+    // el = document.getElementById("id_cad_drawer_button") as HTMLButtonElement;
+    // el.style.backgroundColor = backgroundColor;
 
 
     if (rubberband_drawn) {
@@ -388,7 +388,7 @@ export function cad_buttons() {
   div.appendChild(cog_button);
   div.appendChild(refresh_button);
   div.appendChild(info_button);
-  div.appendChild(drawer_button);
+  //div.appendChild(drawer_button);
 
   let h = div!.getBoundingClientRect()
   // console.log("Höhe des div", h)
