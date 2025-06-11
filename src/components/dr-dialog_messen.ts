@@ -163,6 +163,15 @@ export class drDialogMessen extends LitElement {
             </td>
             <td>m</td>
           </tr>
+           <tr>
+            <td>
+              Winkel α =
+            </td>
+            <td>
+              <span id="id_alpha"></span>
+            </td>
+            <td>°</td>
+          </tr>
         </tbody>
       </table>
 
@@ -202,12 +211,16 @@ export class drDialogMessen extends LitElement {
     const shadow = this.shadowRoot;
     //console.log("id_x", (shadow?.getElementById("id_x") as HTMLInputElement).value);
     let el = this.shadowRoot?.getElementById("id_dx") as HTMLSpanElement;
-    el.innerHTML = myFormat(dx,1,3);
+    el.innerHTML = myFormat(dx, 1, 3);
     el = this.shadowRoot?.getElementById("id_dz") as HTMLSpanElement;
-    el.innerHTML = myFormat(dz,1,3);
+    el.innerHTML = myFormat(dz, 1, 3);
 
-    let sl = Math.sqrt(dx*dx+dz*dz)
+    let sl = Math.sqrt(dx * dx + dz * dz)
     el = this.shadowRoot?.getElementById("id_sl") as HTMLSpanElement;
-    el.innerHTML = myFormat(sl,1,3)
+    el.innerHTML = myFormat(sl, 1, 3)
+
+    let alpha = Math.atan2(dz, dx) * 180.0 / Math.PI;
+    el = this.shadowRoot?.getElementById("id_alpha") as HTMLSpanElement;
+    el.innerHTML = myFormat(alpha, 1, 3)
   }
 }

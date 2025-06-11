@@ -323,6 +323,10 @@ export function Stab_button(_ev: Event) {
    // let h = div!.getBoundingClientRect()
    // console.log("hoehe des div", h)
 
+   if (default_querschnitt.length === 0) {
+      alertdialog('ok', 'Es ist noch kein Querschnitt definiert');
+      return;
+   }
    let el = document.getElementById('id_cad_stab_button') as HTMLButtonElement;
 
    if (buttons_control.stab_eingabe_aktiv) {
