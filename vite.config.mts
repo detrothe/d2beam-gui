@@ -7,7 +7,7 @@ export default defineConfig({
   base: "/",
   build: {
     sourcemap: false,
-    chunkSizeWarningLimit:3000,
+    chunkSizeWarningLimit:4000,
     assetsDir: "code",
     target: ["esnext", "edge100", "firefox100", "chrome100", "safari18"],
   },
@@ -15,7 +15,7 @@ export default defineConfig({
     VitePWA({
       strategies: "injectManifest",
       injectManifest: {
-        maximumFileSizeToCacheInBytes: 3000000,
+        maximumFileSizeToCacheInBytes: 4000000,
         swSrc: 'public/sw.js',
         swDest: 'dist/sw.js',
         globDirectory: 'dist',
