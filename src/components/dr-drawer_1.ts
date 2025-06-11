@@ -167,6 +167,7 @@ export class drDrawer_1 extends LitElement {
     //console.log("Button messen geklickt", drawer)
     //@ts-ignore
     if (drawer !== null) drawer.hide();
+    console.log("drawer",drawer)
     Messen_button();
   }
 

@@ -18,6 +18,8 @@ import {
    delete_help_text,
    select_node,
    read_knotenmasse_dialog,
+   drawer_1_control,
+   showDialog_messen,
 } from './cad_buttons';
 import { draw_knoten, draw_knotenlast, draw_knotenmasse, draw_lager, drawStab } from './cad_draw_elemente';
 
@@ -36,6 +38,7 @@ import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Element, TCAD
 import { Group } from 'two.js/src/group';
 import { default_querschnitt, set_default_querschnitt } from './querschnitte';
 import { drDialogKnoten } from '../components/dr-dialog_knoten';
+import { drDialogMessen } from '../components/dr-dialog_messen';
 
 export const CAD_KNOTEN = 1;
 export const CAD_STAB = 2;
@@ -329,6 +332,7 @@ export function Stab_button(_ev: Event) {
       delete_help_text();
    } else {
       buttons_control.reset();
+      drawer_1_control.reset();
 
       el.style.backgroundColor = 'darkRed';
       buttons_control.stab_eingabe_aktiv = true;
@@ -356,6 +360,7 @@ export function Lager_button(ev: Event) {
       lager_eingabe_beenden();
    } else {
       buttons_control.reset();
+      drawer_1_control.reset();
       el.style.backgroundColor = 'darkRed';
       buttons_control.lager_eingabe_aktiv = true;
       buttons_control.cad_eingabe_aktiv = true;
@@ -1525,6 +1530,7 @@ function mouseup(ev: any) {
                start_x_wc = x;
                start_z_wc = z;
                if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
+               else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
             } else {
                let gefunden = findNextRasterPoint(xc, zc);
                if (gefunden) {
@@ -1548,8 +1554,8 @@ function mouseup(ev: any) {
                   start_z_wc = zc;
                }
                if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
+               else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
             }
-            if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
 
             if (buttons_control.n_input_points === 1) {
                if (buttons_control.lager_eingabe_aktiv) {
@@ -1691,6 +1697,13 @@ function mouseup(ev: any) {
                let dz = end_z_wc - start_z_wc
                let sl = Math.sqrt(dx * dx + dz * dz)
                console.log("Abstand zwischen den 2 Punkten beträgt = ", sl)
+
+               const el = document.getElementById("id_dialog_messen") as drDialogMessen;
+               el.set_dxdz(dx, dz);
+               showDialog_messen();
+
+               set_help_text('ersten Punkt picken');
+
             }
             //list.log()
          }

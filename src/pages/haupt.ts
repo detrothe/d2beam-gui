@@ -42,6 +42,7 @@ import "../components/dr-dialog_stab_eigenschaften";
 import "../components/dr-dialog_einstellungen";
 import "../components/dr-dialog_info";
 import "../components/dr-drawer_1";
+import "../components/dr-dialog_messen";
 
 import { drButtonPM } from "../components/dr-button-pm";
 import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt";
@@ -63,7 +64,7 @@ import { rechnen, init_tabellen, show_gleichungssystem, setSystem, System, hideC
 import { nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, set_dialog_querschnitt_new, removeAll_def_querschnitt } from "./querschnitte";
 
 import { click_pan_button_cad, init_cad, init_two_cad, two_cad_clear } from "./cad";
-import { cad_buttons } from "./cad_buttons";
+import { cad_buttons, close_drawer_1 } from "./cad_buttons";
 import { abbruch_property_dialog, delete_element_dialog, show_add_elload_dialog, show_property_dialog } from "./cad_contextmenu";
 import SlTabPanel from "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import SlTabGroup from "@shoelace-style/shoelace/dist/components/tab-group/tab-group.js";
@@ -71,7 +72,7 @@ import { set_max_lastfall, zero_max_lastfall } from "./cad_draw_elementlasten";
 import { reset_cad_nodes } from "./cad_node";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.3.1, 10-Juni-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.3.2, 11-Juni-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -338,9 +339,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           </div>
 
 
-          <sl-drawer label="Drawer" class="drawer-overview" style="cursor:pointer">
+          <sl-drawer label="Mehr Aktivitäten" class="drawer-overview" style="cursor:pointer">
             <dr-drawer_1 id="id_drawer_1"></dr-drawer_1>
-            <sl-button slot="footer" variant="primary">Close</sl-button>
+            <sl-button slot="footer" variant="primary" @click="${close_drawer_1}">Close</sl-button>
           </sl-drawer>
 
 
@@ -357,6 +358,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <dr-dialog_stab_eigenschaften id="id_dialog_stab_eigenschaften"></dr-dialog_stab_eigenschaften>
         <dr-dialog_einstellungen id="id_dialog_einstellungen"></dr-dialog_einstellungen>
         <dr-dialog_info id="id_dialog_info"></dr-dialog_info>
+        <dr-dialog_messen id="id_dialog_messen"></dr-dialog_messen>
 
       </sl-tab-panel>
 

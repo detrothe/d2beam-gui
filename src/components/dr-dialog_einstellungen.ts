@@ -154,6 +154,8 @@ export class drDialogEinstellungen extends LitElement {
         </tbody>
       </table>
 
+      <hr>
+
       <table >
         <tbody>
           <tr>
@@ -174,6 +176,8 @@ export class drDialogEinstellungen extends LitElement {
         </tbody>
       </table>
 
+      <hr>
+
       <p>
         Cursor Offset Faktor bei Touch (Finger) Eingabe (bei 0 befindet sich der Cursor direkt unter dem Finger):
       </p>
@@ -187,6 +191,8 @@ export class drDialogEinstellungen extends LitElement {
         <input type="number" id="id_dz_offset_factor" name="dz_offset" pattern="[0-9.,eE+-]*" value="-1" />
         [-]
       </p>
+
+      <hr>
 
       <p>
         Raster:
@@ -225,9 +231,11 @@ export class drDialogEinstellungen extends LitElement {
         </tbody>
       </table>
 
-      <sl-button id="id_cad_saveLocalStorage" @click="${this._saveLocalStorage}">
-        Auswahl als Standardwerte im Browser speichern
-      </sl-button>
+      <p>
+        <sl-button id="id_cad_saveLocalStorage" @click="${this._saveLocalStorage}">
+          Auswahl als Standardwerte im Browser speichern
+        </sl-button>
+      </p>
 
       <form method="dialog">
         <!--<sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->

@@ -43,6 +43,7 @@ import "../components/dr-dialog_lager";
 import "../components/dr-dialog_knoten";
 import "../components/dr-dialog_knotenlast";
 import "../components/dr-dialog_elementlasten";
+import "../components/dr-dialog_messen";
 
 import { alertdialog, TLoads, TMass, TNode } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
@@ -95,6 +96,16 @@ let index_obj_knoten = -1
 let CADPunkt_gefunden = false
 let index_CADPunkt = -1
 
+class CDrawer_1_control {
+  drawer_eingabe_aktiv = false;
+
+  reset() {
+    this.drawer_eingabe_aktiv = false;
+    let el = document.getElementById("id_cad_drawer_button") as HTMLButtonElement;
+    el.style.backgroundColor = backgroundColor_button;
+  }
+}
+
 class Cbuttons_control {
   pick_element = false;
   select_element = false;
@@ -109,7 +120,6 @@ class Cbuttons_control {
   einstellungen_eingabe_aktiv = false;
   messen_aktiv = false;
   info_eingabe_aktiv = false;
-  drawer_eingabe_aktiv = false;
   typ_cad_element = 0;
   n_input_points = 0;
   button_pressed = false;
@@ -132,7 +142,6 @@ class Cbuttons_control {
     this.button_pressed = false;
     this.input_started = 0;
     this.info_eingabe_aktiv = false;
-    this.drawer_eingabe_aktiv = false;
     this.messen_aktiv = false;
 
     let backgroundColor = backgroundColor_button
@@ -158,9 +167,6 @@ class Cbuttons_control {
     el.style.backgroundColor = backgroundColor;
     el = document.getElementById("id_cad_edit_knoten_button") as HTMLButtonElement;
     el.style.backgroundColor = backgroundColor;
-    // el = document.getElementById("id_cad_drawer_button") as HTMLButtonElement;
-    // el.style.backgroundColor = backgroundColor;
-
 
     if (rubberband_drawn) {
       two.remove(rubberband);
@@ -168,7 +174,6 @@ class Cbuttons_control {
     }
 
     set_help_text('    ');
-
 
   }
 }
@@ -184,6 +189,7 @@ class CDelElLast {
 }
 
 export const buttons_control = new Cbuttons_control();
+export const drawer_1_control = new CDrawer_1_control();
 
 //--------------------------------------------------------------------------------------------------------
 export function cad_buttons() {
@@ -388,7 +394,7 @@ export function cad_buttons() {
   div.appendChild(cog_button);
   div.appendChild(refresh_button);
   div.appendChild(info_button);
-  //div.appendChild(drawer_button);
+  div.appendChild(drawer_button);
 
   let h = div!.getBoundingClientRect()
   // console.log("Höhe des div", h)
@@ -556,6 +562,7 @@ export function delete_button() {
     delete_help_text();
   } else {
     buttons_control.reset();
+    drawer_1_control.reset();
     let el = document.getElementById("id_cad_delete_button") as HTMLButtonElement;
     el.style.backgroundColor = "darkRed";
 
@@ -577,6 +584,7 @@ export function Select_button() {
     delete_help_text();
   } else {
     buttons_control.reset();
+    drawer_1_control.reset();
     let el = document.getElementById("id_cad_select_button") as HTMLButtonElement;
     el.style.backgroundColor = "darkRed";
 
@@ -1558,7 +1566,8 @@ export function Knoten_button(ev: Event) {
   } else {
     (document.getElementById('id_dialog_knoten') as drDialogKnoten).set_mode(false); // Dialog mit 'Anwenden' Button
 
-    buttons_control.reset()
+    buttons_control.reset();
+    drawer_1_control.reset();
     el.style.backgroundColor = 'darkRed'
     buttons_control.knoten_eingabe_aktiv = true
     buttons_control.cad_eingabe_aktiv = false
@@ -1636,7 +1645,7 @@ export function Info_button(ev: Event) {
   if (buttons_control.info_eingabe_aktiv) {
     buttons_control.reset()
   } else {
-
+    drawer_1_control.reset();
     el.style.backgroundColor = 'darkRed'
     buttons_control.info_eingabe_aktiv = true
     buttons_control.cad_eingabe_aktiv = false
@@ -1669,7 +1678,7 @@ export function Messen_button() {
     buttons_control.messen_aktiv = true
     buttons_control.cad_eingabe_aktiv = true
     buttons_control.typ_cad_element = CAD_MESSEN
-    set_help_text('ersten Knoten picken');
+    set_help_text('ersten Punkt picken');
     //el.addEventListener('keydown', keydown);
     buttons_control.n_input_points = 2
     buttons_control.button_pressed = true;
@@ -1679,6 +1688,53 @@ export function Messen_button() {
 
   }
 
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+export function showDialog_messen() {
+  //------------------------------------------------------------------------------------------------------------
+
+  const el = document.getElementById("id_dialog_messen");
+  console.log("id_dialog_messen", el);
+
+  console.log("shadow", el?.shadowRoot?.getElementById("dialog_messen"));
+  (el?.shadowRoot?.getElementById("dialog_messen") as HTMLDialogElement).addEventListener("close", dialog_messen_closed);
+
+  (el?.shadowRoot?.getElementById("dialog_messen") as HTMLDialogElement).showModal();
+
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_messen_closed(this: any, e: any) {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("Event dialog_messen_closed", e);
+  console.log("this", this);
+  const ele = document.getElementById("id_dialog_messen") as HTMLDialogElement;
+
+  // ts-ignore
+  const returnValue = this.returnValue;
+
+  if (returnValue === "ok") {
+    //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+    console.log("sieht gut aus");
+
+  } else {
+    // Abbruch
+    (ele?.shadowRoot?.getElementById("dialog_messen") as HTMLDialogElement).removeEventListener("close", dialog_messen_closed);
+
+    // knoten_eingabe_beenden();
+    buttons_control.reset();
+    drawer_1_control.reset();
+
+  }
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function close_drawer_1() {
+  //------------------------------------------------------------------------------------------------------
+  drawer_1_control.reset()
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -1694,15 +1750,17 @@ export function Drawer_button(_ev: Event) {
 
   let el = document.getElementById("id_cad_drawer_button") as HTMLButtonElement
 
-  if (buttons_control.drawer_eingabe_aktiv) {
+  if (drawer_1_control.drawer_eingabe_aktiv) {
     //@ts-ignore
     if (drawer !== null) drawer.hide()
 
-    buttons_control.reset()
+    drawer_1_control.reset()
   } else {
 
+    drawer_1_control.reset()
+
     el.style.backgroundColor = 'darkRed'
-    buttons_control.drawer_eingabe_aktiv = true
+    drawer_1_control.drawer_eingabe_aktiv = true
     buttons_control.cad_eingabe_aktiv = false
     buttons_control.typ_cad_element = CAD_DRAWER
     //el.addEventListener('keydown', keydown);
@@ -1713,7 +1771,6 @@ export function Drawer_button(_ev: Event) {
     closeButton?.addEventListener('click', () => drawer.hide());
     //@ts-ignore
     if (drawer !== null) drawer.show()
-    //buttons_control.reset()
 
   }
 
@@ -1834,7 +1891,8 @@ export function Knotenmasse_button(_ev: Event) {
     buttons_control.reset()
     el.removeEventListener('keydown', keydown);
   } else {
-    buttons_control.reset()
+    buttons_control.reset();
+    drawer_1_control.reset();
     el.style.backgroundColor = 'darkRed'
     buttons_control.knotenmasse_eingabe_aktiv = true
     buttons_control.cad_eingabe_aktiv = true
@@ -1908,7 +1966,8 @@ export function Knotenlast_button(_ev: Event) {
     let el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement
     el.removeEventListener('keydown', keydown);
   } else {
-    buttons_control.reset()
+    buttons_control.reset();
+    drawer_1_control.reset();
     el.style.backgroundColor = 'darkRed'
     buttons_control.knotenlast_eingabe_aktiv = true
     buttons_control.cad_eingabe_aktiv = true
@@ -2083,7 +2142,8 @@ export function Elementlast_button(_ev: Event) {
 
     el.removeEventListener('keydown', keydown);
   } else {
-    buttons_control.reset()
+    buttons_control.reset();
+    drawer_1_control.reset();
     el.style.backgroundColor = 'darkRed'
     buttons_control.elementlast_eingabe_aktiv = true
     buttons_control.cad_eingabe_aktiv = true
