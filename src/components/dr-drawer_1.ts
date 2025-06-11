@@ -2,8 +2,7 @@ import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 import { Messen_button, set_help_text } from "../pages/cad_buttons";
-
-
+import { Bemassung_parallel_button } from "../pages/cad_bemassung";
 
 @customElement("dr-drawer_1")
 export class drDrawer_1 extends LitElement {
@@ -103,12 +102,12 @@ export class drDrawer_1 extends LitElement {
       }
 
       /* Festlegung im Default-Stylesheet der Browser */
-     /*  dialog:not([open]) {
+      /*  dialog:not([open]) {
         display: none;
       } */
 
       /* Styling der geöffneten Popup-Box */
-     /*  dialog[open] {
+      /*  dialog[open] {
         min-width: 25rem;
         max-width: 40rem;
         max-height:100%;
@@ -135,40 +134,31 @@ export class drDrawer_1 extends LitElement {
 
   render() {
     return html`
-
-       <sl-button id="id_messen" value="0" @click="${this._messen}">Messen</sl-button>
-
-      <h2>Kurzinformationen GUI</h2>
-
       <p>
-        <b>Eingabe mit dem Finger bei einem Touchscreen</b><br />
-        Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor neben dem Finger. Platziere den Eingabefinger auf dem Screen und bewege den <b>Cursor</b> zu der gewünschten Stelle, und hebe dann den Finger vom Screen ab. Das Anheben des Fingers hat hier die
-        gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann ist der Finger wieder auf den Bildschirm zu setzen und den Cursor an die gewünschte Stelle zu bewegen. Das erneute
-        Anheben beendet die Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom Finger kannst du unter <i>Einstellungen GUI</i> ändern.
+        <sl-button id="id_messen" value="0" @click="${this._messen}">Messen</sl-button>
       </p>
       <p>
-        <b>Knoteneingabe und Rasterlinien</b><br />
-        Die Eingabe von Knoten über den Dialog ist nicht zwingend erforderlich. Bei der Eingabe von Stabanfang und -ende wird zuerst nach einem Knoten innerhalb der Fangweite (Die Linienlängen des Cursors geben das Fangfenster an.) gesucht. Wird kein
-        Knoten gefunden, wird der nächste Rasterpunkt (Schnittpunkt der Rasterlinien) gewählt, sofern er innerhalb des Fangfensters des Cursors liegt. Ein gefundener Rasterpunkt wird als blaues Rechteck angezeigt. Sonst werden die Koordinaten des Cursors genommen.
-        Der Abstand der Rasterlinien kann unter <i>Einstellungen GUI</i> ändert werden.
+        <sl-button id="id_bemassung_parallel" value="0" @click="${this._bemassung_parallel}">Bemassung parallel</sl-button>
       </p>
-      <p>
-        <b>Rasterbereich</b><br />
-        Der unter <i>Einstellungen GUI</i> einstellbare Rasterbereich dient nur zur Orientierung bei der Eingabe. Im Normalfall wird er so eingestellt, dass das gesamte System darin dargestellt werden kann.
-      </p>
-      <p>Weitere Informationen zur grafischen Eingabe findest du im Tab Info.</p>
 
-     `;
+
+
+    `;
   }
 
-
   _messen() {
-    const drawer = document.querySelector('.drawer-overview');
+    const drawer = document.querySelector(".drawer-overview");
     //console.log("Button messen geklickt", drawer)
     //@ts-ignore
     if (drawer !== null) drawer.hide();
-    console.log("drawer",drawer)
+    console.log("drawer", drawer);
     Messen_button();
   }
 
+  _bemassung_parallel() {
+    const drawer = document.querySelector(".drawer-overview");
+    //@ts-ignore
+    if (drawer !== null) drawer.hide();
+    Bemassung_parallel_button();
+  }
 }

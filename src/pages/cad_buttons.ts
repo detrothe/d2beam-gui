@@ -119,6 +119,7 @@ class Cbuttons_control {
   knotenmasse_eingabe_aktiv = false;
   einstellungen_eingabe_aktiv = false;
   messen_aktiv = false;
+  bemassung_aktiv=false;
   info_eingabe_aktiv = false;
   typ_cad_element = 0;
   n_input_points = 0;
@@ -143,6 +144,7 @@ class Cbuttons_control {
     this.input_started = 0;
     this.info_eingabe_aktiv = false;
     this.messen_aktiv = false;
+    this.bemassung_aktiv=false;
 
     let backgroundColor = backgroundColor_button
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;

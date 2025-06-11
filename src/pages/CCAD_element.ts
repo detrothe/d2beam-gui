@@ -289,7 +289,6 @@ export class TCAD_Knoten extends TCAD_Element {
     constructor(obj: any, index1: number, elTyp: number) {
         super(obj, index1, elTyp);
         this.className = 'TCAD_Knoten'
-        this.className = 'TCAD_Knoten'
     }
 }
 
@@ -439,4 +438,19 @@ export class TCAD_Stabvorverformung extends TCAD_ElLast {
         this.className = 'TCAD_Stabvorverformung'
     }
 
+}
+
+
+
+//―――――――――――――――――――――――――――――――――――――――――――――
+export class TCAD_Bemassung extends TCAD_Element {
+    //―――――――――――――――――――――――――――――――――――――――――
+
+     index2 = -1;
+
+    constructor(obj: any, index1: number, index2: number, elTyp: number) {
+        super(obj, index1, elTyp);
+        this.className = 'TCAD_Bemassung'
+        this.index2=index2;
+    }
 }

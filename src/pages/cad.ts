@@ -51,6 +51,10 @@ export const CAD_KNMASSE = 8;
 export const CAD_DRAWER = 9;
 export const CAD_MESSEN = 10;
 
+export const CAD_BEMASSUNG_PARALLEL = 11;
+export const CAD_BEMASSUNG_X = 12;
+export const CAD_BEMASSUNG_Z = 13;
+
 export let two: any = null;
 let domElement: any = null;
 export let tr: CTrans;
@@ -149,6 +153,8 @@ let start_x_wc = 0
 let end_x_wc = 0; // x-z im Weltkoordinatensystem
 let start_z_wc = 0
 let end_z_wc = 0;
+let pkt3_x_wc = 0
+let pkt3_z_wc = 0;
 
 let cursorLineh: any = null;
 let cursorLinev: any = null;
@@ -1535,7 +1541,12 @@ function mouseup(ev: any) {
                start_z_wc = z;
                if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
                else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
+               else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
             } else {
+               if (buttons_control.bemassung_aktiv) {
+                  alertdialog('ok', 'keinen Knoten gepickt');
+                  return;
+               }
                let gefunden = findNextRasterPoint(xc, zc);
                if (gefunden) {
                   rasterPoint = two.makeRectangle(
@@ -1559,6 +1570,7 @@ function mouseup(ev: any) {
                }
                if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
                else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
+               else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
             }
 
             if (buttons_control.n_input_points === 1) {
@@ -1647,6 +1659,7 @@ function mouseup(ev: any) {
             }
          } else if (buttons_control.input_started === 1) {          // Eingabe Stabende
             two.remove(rubberband);
+            rubberband_drawn = false;
 
             if (foundNodePoint) {
                end_x_wc = xNodePoint;
@@ -1654,20 +1667,27 @@ function mouseup(ev: any) {
 
                two.remove(nodePoint);
                foundNodePoint = false;
-            } else if (foundRasterPoint) {
-               end_x_wc = xRasterPoint;
-               end_z_wc = zRasterPoint;
-
-               two.remove(rasterPoint);
-               foundRasterPoint = false;
             } else {
-               end_x_wc = tr.xWorld(xo);
-               end_z_wc = tr.zWorld(yo);
+               if (buttons_control.bemassung_aktiv) {
+                  alertdialog('ok', 'keinen Knoten gepickt');
+                  return;
+               }
+               if (foundRasterPoint) {
+                  end_x_wc = xRasterPoint;
+                  end_z_wc = zRasterPoint;
+
+                  two.remove(rasterPoint);
+                  foundRasterPoint = false;
+               } else {
+                  end_x_wc = tr.xWorld(xo);
+                  end_z_wc = tr.zWorld(yo);
+               }
             }
 
-            buttons_control.input_started = 0;
-            input_active = false;
-            rubberband_drawn = false;
+            if (buttons_control.n_input_points === 2) {
+               buttons_control.input_started = 0;
+               input_active = false;
+            }
 
             if (buttons_control.stab_eingabe_aktiv) {
 
@@ -1709,7 +1729,37 @@ function mouseup(ev: any) {
                set_help_text('ersten Punkt picken');
 
             }
-            //list.log()
+            else if (buttons_control.bemassung_aktiv) {
+               set_help_text('Masslinienpunkt picken');
+               buttons_control.input_started = 2;
+            }
+
+         }
+         else if (buttons_control.input_started === 2) {
+
+            if (foundRasterPoint) {
+               pkt3_x_wc = xRasterPoint;
+               pkt3_z_wc = zRasterPoint;
+
+               two.remove(rasterPoint);
+               foundRasterPoint = false;
+            } else {
+               pkt3_x_wc = tr.xWorld(xo);
+               pkt3_z_wc = tr.zWorld(yo);
+            }
+
+            if (buttons_control.bemassung_aktiv) {
+               set_help_text('ersten Knoten picken');
+               let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+               let index2 = find_nearest_cad_node(end_x_wc, end_z_wc);
+               console.log("Bemassung index1-2", index1, index2)
+            }
+
+            if (buttons_control.n_input_points === 3) {
+               buttons_control.input_started = 0;
+               input_active = false;
+            }
+
          }
       }
    }
