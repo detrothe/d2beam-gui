@@ -31,6 +31,7 @@ import {
    find_nearest_cad_node,
    get_cad_node_X,
    get_cad_node_Z,
+   remove_element_nodes,
    zero_offset_nodes,
 } from './cad_node';
 //import { AlertDialog } from './confirm_dialog';
@@ -39,6 +40,7 @@ import { Group } from 'two.js/src/group';
 import { default_querschnitt, set_default_querschnitt } from './querschnitte';
 import { drDialogKnoten } from '../components/dr-dialog_knoten';
 import { drDialogMessen } from '../components/dr-dialog_messen';
+import { add_bemassung, drawBemassung, recalc_abstand, TCAD_Bemassung } from './cad_bemassung';
 
 export const CAD_KNOTEN = 1;
 export const CAD_STAB = 2;
@@ -51,9 +53,7 @@ export const CAD_KNMASSE = 8;
 export const CAD_DRAWER = 9;
 export const CAD_MESSEN = 10;
 
-export const CAD_BEMASSUNG_PARALLEL = 11;
-export const CAD_BEMASSUNG_X = 12;
-export const CAD_BEMASSUNG_Z = 13;
+export const CAD_BEMASSUNG = 11;
 
 export let two: any = null;
 let domElement: any = null;
@@ -200,7 +200,7 @@ export function set_raster_zmax(xz: number) { raster_zmax = xz; }
 
 export let picked_element = -1;
 
-const style_txt = {
+export const style_txt = {
    family: 'system-ui, sans-serif',
    size: 14,
    fill: 'black',
@@ -316,6 +316,28 @@ export function redraw_lager(obj: TCAD_Lager) {
 
    group = draw_lager(tr, obj)
 
+   two.add(group);
+   obj.setTwoObj(group);
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function redraw_bemassung(obj: TCAD_Bemassung) {
+   //-----------------------------------------------------------------------------------------------------
+
+   console.log("in redraw_bemassung")
+
+   let group = obj.getTwoObj();
+   two.remove(group);
+
+   // remove nodes
+
+   remove_element_nodes((obj as TCAD_Bemassung).index3)
+   remove_element_nodes((obj as TCAD_Bemassung).index4)
+
+   recalc_abstand(obj as TCAD_Bemassung);
+
+   group = drawBemassung(obj as TCAD_Bemassung, tr, true);
    two.add(group);
    obj.setTwoObj(group);
 }
@@ -790,6 +812,11 @@ export function init_cad(flag: number) {
          two.add(group);
          obj.setTwoObj(group);
       }
+      else if (obj.elTyp === CAD_BEMASSUNG) {
+         let group = drawBemassung(obj as TCAD_Bemassung, tr)
+         two.add(group);
+         obj.setTwoObj(group);
+      }
    }
 
    two.update();
@@ -1130,6 +1157,8 @@ function penDown(ev: PointerEvent) {
             start_x_wc = x;
             start_z_wc = z;
             if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
+            else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
+            else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
          } else {
             let gefunden = findNextRasterPoint(xc, zc);
             if (gefunden) {
@@ -1154,6 +1183,8 @@ function penDown(ev: PointerEvent) {
                start_z_wc = zc;
             }
             if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
+            else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
+            else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
          }
 
          if (buttons_control.n_input_points === 1) {
@@ -1398,6 +1429,16 @@ function mousemove(ev: MouseEvent) {
             txt1.rotation = alpha
             rubberband.add(txt1);
 
+            two.add(rubberband);
+
+            rubberband_drawn = true;
+         }
+         else if (buttons_control.input_started === 2) {
+            rubberband = new Two.Group();
+            let band = new Two.Line(start_x, start_y, xo, yo);
+            band.linewidth = 1; /// devicePixelRatio;
+            band.dashes = [2, 2];
+            rubberband.add(band);
             two.add(rubberband);
 
             rubberband_drawn = true;
@@ -1737,7 +1778,14 @@ function mouseup(ev: any) {
          }
          else if (buttons_control.input_started === 2) {
 
-            if (foundRasterPoint) {
+            if (foundNodePoint) {
+               pkt3_x_wc = xNodePoint;
+               pkt3_z_wc = zNodePoint;
+
+               two.remove(nodePoint);
+               foundNodePoint = false;
+            }
+            else if (foundRasterPoint) {
                pkt3_x_wc = xRasterPoint;
                pkt3_z_wc = zRasterPoint;
 
@@ -1750,12 +1798,16 @@ function mouseup(ev: any) {
 
             if (buttons_control.bemassung_aktiv) {
                set_help_text('ersten Knoten picken');
-               let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
-               let index2 = find_nearest_cad_node(end_x_wc, end_z_wc);
+               let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
+               let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
                console.log("Bemassung index1-2", index1, index2)
+               let group = add_bemassung(tr, index1, index2, pkt3_x_wc, pkt3_z_wc, buttons_control.art);
+               two.add(group);
+               two.update();
             }
 
             if (buttons_control.n_input_points === 3) {
+
                buttons_control.input_started = 0;
                input_active = false;
             }
@@ -2176,7 +2228,7 @@ export function reset_cad() {
    for (let i = 0; i < CADNodes.length; i++) {
       let x = CADNodes[i].x;
       let z = CADNodes[i].z;
-      console.log("circle nel=", i, CADNodes[i].nel)
+      //console.log("circle nel=", i, CADNodes[i].nel)
       let circle = two.makeCircle(tr.xPix(x), tr.zPix(z), 14, 20)
       circle.fill = 'none'
       if (CADNodes[i].nel === 0) circle.stroke = 'red'

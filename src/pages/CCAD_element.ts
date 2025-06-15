@@ -442,15 +442,15 @@ export class TCAD_Stabvorverformung extends TCAD_ElLast {
 
 
 
-//―――――――――――――――――――――――――――――――――――――――――――――
-export class TCAD_Bemassung extends TCAD_Element {
-    //―――――――――――――――――――――――――――――――――――――――――
+// //―――――――――――――――――――――――――――――――――――――――――――――
+// export class TCAD_Bemassung extends TCAD_Element {
+//     //―――――――――――――――――――――――――――――――――――――――――
 
-     index2 = -1;
+//      index2 = -1;
 
-    constructor(obj: any, index1: number, index2: number, elTyp: number) {
-        super(obj, index1, elTyp);
-        this.className = 'TCAD_Bemassung'
-        this.index2=index2;
-    }
-}
+//     constructor(obj: any, index1: number, index2: number, elTyp: number) {
+//         super(obj, index1, elTyp);
+//         this.className = 'TCAD_Bemassung'
+//         this.index2=index2;
+//     }
+// }

@@ -31,7 +31,9 @@ import {
   set_show_units,
   set_penLikeTouch,
   CAD_DRAWER,
-  CAD_MESSEN
+  CAD_MESSEN,
+  CAD_BEMASSUNG,
+  redraw_bemassung
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -60,6 +62,7 @@ import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast";
 import { berechnungErforderlich } from "./globals";
+import { TCAD_Bemassung } from "./cad_bemassung";
 
 //export let pick_element = false
 let backgroundColor_button = 'rgb(64, 64, 64)';
@@ -119,12 +122,13 @@ class Cbuttons_control {
   knotenmasse_eingabe_aktiv = false;
   einstellungen_eingabe_aktiv = false;
   messen_aktiv = false;
-  bemassung_aktiv=false;
+  bemassung_aktiv = false;
   info_eingabe_aktiv = false;
   typ_cad_element = 0;
   n_input_points = 0;
   button_pressed = false;
-  input_started = 0
+  input_started = 0;
+  art = -1;
 
   reset() {
     this.pick_element = false;
@@ -144,7 +148,8 @@ class Cbuttons_control {
     this.input_started = 0;
     this.info_eingabe_aktiv = false;
     this.messen_aktiv = false;
-    this.bemassung_aktiv=false;
+    this.bemassung_aktiv = false;
+    this.art = -1;
 
     let backgroundColor = backgroundColor_button
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
@@ -456,6 +461,10 @@ export function unDo_button() {
     }
     else if ((obj as TCAD_Element).elTyp === CAD_KNMASSE) {
       remove_element_nodes((obj as TCAD_Knotenmasse).index1)
+    }
+    else if ((obj as TCAD_Element).elTyp === CAD_BEMASSUNG) {
+      remove_element_nodes((obj as TCAD_Knotenlast).index1)
+      find_max_Lastfall();
     }
     else if ((obj as TCAD_Element).elTyp === CAD_KNOTEN) {
       let index = (obj as TCAD_Knoten).index1
@@ -2409,6 +2418,10 @@ export function update_knoten(flag = 0) {
       if (index === obj.index1) {
         redraw_lager(obj as TCAD_Lager);
       }
+    }
+    else if (obj.elTyp === CAD_BEMASSUNG) {
+      //console.log("update_knoten", index, (obj as TCAD_Stab).index1, (obj as TCAD_Stab).index2)
+      if (index === (obj as TCAD_Bemassung).index1 || index === (obj as TCAD_Bemassung).index2) redraw_bemassung(obj as TCAD_Bemassung);
     }
   }
   two.update();

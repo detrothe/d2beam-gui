@@ -26,6 +26,7 @@ import {
 import { CMAXVALUESLOAD, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
+import { TCAD_Bemassung } from "./cad_bemassung";
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
 
@@ -385,6 +386,12 @@ export function read_daten(eingabedaten: string) {
         }
         else if (element.className === 'TCAD_Knotenmasse') {
             const obj = new TCAD_Knotenmasse(null, jobj.elements[i].index1, jobj.elements[i].masse, jobj.elements[i].elTyp);
+            list.append(obj);
+        }
+        else if (element.className === 'TCAD_Bemassung') {
+            console.log("jobj.elements[i].b",jobj.elements[i].b)
+            const obj = new TCAD_Bemassung(null, jobj.elements[i].index1, jobj.elements[i].index2, jobj.elements[i].b, jobj.elements[i].elTyp);
+            // obj.set_art(jobj.elements[i].art)
             list.append(obj);
         }
     }
