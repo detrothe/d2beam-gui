@@ -62,7 +62,7 @@ import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast";
 import { berechnungErforderlich } from "./globals";
-import { TCAD_Bemassung } from "./cad_bemassung";
+import { drawBemassung, TCAD_Bemassung } from "./cad_bemassung";
 
 //export let pick_element = false
 let backgroundColor_button = 'rgb(64, 64, 64)';
@@ -462,10 +462,6 @@ export function unDo_button() {
     else if ((obj as TCAD_Element).elTyp === CAD_KNMASSE) {
       remove_element_nodes((obj as TCAD_Knotenmasse).index1)
     }
-    else if ((obj as TCAD_Element).elTyp === CAD_BEMASSUNG) {
-      remove_element_nodes((obj as TCAD_Knotenlast).index1)
-      find_max_Lastfall();
-    }
     else if ((obj as TCAD_Element).elTyp === CAD_KNOTEN) {
       let index = (obj as TCAD_Knoten).index1
       if (CADNodes[index].nel > 1) {
@@ -473,6 +469,14 @@ export function unDo_button() {
         return;
       }
       remove_element_nodes((obj as TCAD_Knoten).index1)
+    }
+    else if ((obj as TCAD_Element).elTyp === CAD_BEMASSUNG) {
+      console.log("obj",obj)
+      console.log("undo", (obj as TCAD_Bemassung).index1, (obj as TCAD_Bemassung).index3, (obj as TCAD_Bemassung).index4)
+      remove_element_nodes((obj as TCAD_Bemassung).index1)
+      remove_element_nodes((obj as TCAD_Bemassung).index2)
+      remove_element_nodes((obj as TCAD_Bemassung).index3)
+      remove_element_nodes((obj as TCAD_Bemassung).index4)
     }
 
     two.remove(obj.two_obj);
@@ -554,6 +558,15 @@ export function reDo_button() {
         two.add(group);
         add_element_nodes(index1);
       }
+      else if (obj.elTyp === CAD_BEMASSUNG) {
+        group = drawBemassung(obj, tr);
+        two.add(group);
+        add_element_nodes(obj.index1);
+        add_element_nodes(obj.index2);
+        add_element_nodes(obj.index3);
+        add_element_nodes(obj.index4);
+      }
+
       obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
       list.append(obj);
     }
@@ -617,6 +630,7 @@ export function delete_element(xc: number, zc: number) {
   let min_abstand = 1e30;
   let stab_gefunden = false
   let lager_gefunden = false
+  let bemassung_gefunden = false
   let index_lager = -1
   let knotenlast_gefunden = false
   let elementlast_gefunden = false
@@ -625,6 +639,8 @@ export function delete_element(xc: number, zc: number) {
   let index_knoten = -1
   let knotenmasse_gefunden = false
   let index_knmasse = -1
+  let index_bemassung = -1
+  let min_abstand_bemassung = 1e30;
 
   index_stab = -1;
   element_einzellast_gefunden = false
@@ -779,6 +795,20 @@ export function delete_element(xc: number, zc: number) {
         }
       }
     }
+
+    else if (obj.elTyp === CAD_BEMASSUNG) {
+
+      console.log("index3,4", obj.index3, obj.index4)
+      let abstand = abstandPunktGerade_2D(get_cad_node_X(obj.index3), get_cad_node_Z(obj.index3), get_cad_node_X(obj.index4), get_cad_node_Z(obj.index4), xc, zc);
+      if (abstand > -1.0) {
+        if (abstand < min_abstand_bemassung) {
+          min_abstand_bemassung = abstand;
+          index_bemassung = i;
+          bemassung_gefunden = true
+        }
+      }
+      console.log("delete bemassung gefunden", min_abstand_bemassung)
+    }
   }
 
   console.log('ABSTAND', min_abstand, index_stab, lager_gefunden, elementlast_gefunden);
@@ -864,7 +894,20 @@ export function delete_element(xc: number, zc: number) {
       //buttons_control.reset();
     }
   }
+  else if (bemassung_gefunden && min_abstand_bemassung < 0.25) {          // Stab   index >= 0 && min_abstand < 0.25
+    if (list.size > 0) {
+      let obj = list.removeAt(index_bemassung);
+      two.remove(obj.two_obj);
+      two.update();
 
+      remove_element_nodes((obj as TCAD_Bemassung).index1)
+      remove_element_nodes((obj as TCAD_Bemassung).index2)
+      remove_element_nodes((obj as TCAD_Bemassung).index3)
+      remove_element_nodes((obj as TCAD_Bemassung).index4)
+
+      undoList.append(obj);
+    }
+  }
 
 }
 

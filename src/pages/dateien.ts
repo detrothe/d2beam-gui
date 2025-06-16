@@ -389,9 +389,11 @@ export function read_daten(eingabedaten: string) {
             list.append(obj);
         }
         else if (element.className === 'TCAD_Bemassung') {
-            console.log("jobj.elements[i].b",jobj.elements[i].b)
+            console.log("jobj.elements[i].b", jobj.elements[i].b)
             const obj = new TCAD_Bemassung(null, jobj.elements[i].index1, jobj.elements[i].index2, jobj.elements[i].b, jobj.elements[i].elTyp);
-            // obj.set_art(jobj.elements[i].art)
+            obj.set_art(jobj.elements[i].art)
+            obj.set_index3(jobj.elements[i].index3)
+            obj.set_index4(jobj.elements[i].index4)
             list.append(obj);
         }
     }

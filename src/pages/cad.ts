@@ -1130,8 +1130,6 @@ function penDown(ev: PointerEvent) {
    }
    else if (buttons_control.cad_eingabe_aktiv) {
       if (buttons_control.input_started === 0) {
-         input_active = true;
-         buttons_control.input_started = 1;
 
          let xc = tr.xWorld(xo);
          let zc = tr.zWorld(yo);
@@ -1162,7 +1160,7 @@ function penDown(ev: PointerEvent) {
          } else {
             if (buttons_control.bemassung_aktiv) {
                alertdialog('ok', 'keinen Knoten gepickt');
-               buttons_control.input_started = 0;
+               //buttons_control.input_started = 0;
                return;
             }
             let gefunden = findNextRasterPoint(xc, zc);
@@ -1191,6 +1189,8 @@ function penDown(ev: PointerEvent) {
             else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
             else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
          }
+         input_active = true;
+         buttons_control.input_started = 1;
 
          if (buttons_control.n_input_points === 1) {
             if (buttons_control.lager_eingabe_aktiv) {
@@ -1552,8 +1552,6 @@ function mouseup(ev: any) {
       if (ev.button === 0 || isPen || isTouch) {
          // Linker Mausbutton
          if (buttons_control.input_started === 0) {
-            input_active = true;
-            buttons_control.input_started = 1;
 
             if (foundRasterPoint) {
                two.remove(rasterPoint);
@@ -1572,13 +1570,7 @@ function mouseup(ev: any) {
             if (index > -1) {
                let x = get_cad_node_X(index);
                let z = get_cad_node_Z(index);
-               nodePoint = two.makeRoundedRectangle(
-                  tr.xPix(x),
-                  tr.zPix(z),
-                  15 / devicePixelRatio,
-                  15 / devicePixelRatio,
-                  4
-               );
+               nodePoint = two.makeRoundedRectangle(tr.xPix(x), tr.zPix(z), 15 / devicePixelRatio, 15 / devicePixelRatio, 4);
                nodePoint.fill = '#001111';
                foundNodePoint = true;
                start_x = tr.xPix(x);
@@ -1591,7 +1583,7 @@ function mouseup(ev: any) {
             } else {
                if (buttons_control.bemassung_aktiv) {
                   alertdialog('ok', 'keinen Knoten gepickt');
-                  buttons_control.input_started = 0;
+                  //buttons_control.input_started = 0;
                   return;
                }
                let gefunden = findNextRasterPoint(xc, zc);
@@ -1619,6 +1611,8 @@ function mouseup(ev: any) {
                else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
                else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
             }
+            input_active = true;
+            buttons_control.input_started = 1;
 
             if (buttons_control.n_input_points === 1) {
                if (buttons_control.lager_eingabe_aktiv) {
@@ -2239,6 +2233,10 @@ export function reset_cad() {
       circle.fill = 'none'
       if (CADNodes[i].nel === 0) circle.stroke = 'red'
       if (CADNodes[i].nel < 0) circle.stroke = 'blue'
+      const txt1 = two.makeText(String(CADNodes[i].nel), tr.xPix(x), tr.zPix(z), style_txt)
+      txt1.fill = '#000000'
+      txt1.alignment = 'left'
+      txt1.baseline = 'bottom'
    }
    two.update();
 

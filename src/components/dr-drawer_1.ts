@@ -2,7 +2,7 @@ import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 import { Messen_button, set_help_text } from "../pages/cad_buttons";
-import { Bemassung_parallel_button } from "../pages/cad_bemassung";
+import { Bemassung_horizontal_button, Bemassung_parallel_button } from "../pages/cad_bemassung";
 
 @customElement("dr-drawer_1")
 export class drDrawer_1 extends LitElement {
@@ -140,7 +140,9 @@ export class drDrawer_1 extends LitElement {
       <p>
         <sl-button id="id_bemassung_parallel" value="0" @click="${this._bemassung_parallel}">Bemassung parallel</sl-button>
       </p>
-
+      <p>
+        <sl-button id="id_bemassung_x" value="0" @click="${this._bemassung_x}">Bemassung horizontal</sl-button>
+      </p>
 
 
     `;
@@ -160,5 +162,12 @@ export class drDrawer_1 extends LitElement {
     //@ts-ignore
     if (drawer !== null) drawer.hide();
     Bemassung_parallel_button();
+  }
+
+  _bemassung_x() {
+    const drawer = document.querySelector(".drawer-overview");
+    //@ts-ignore
+    if (drawer !== null) drawer.hide();
+    Bemassung_horizontal_button();
   }
 }
