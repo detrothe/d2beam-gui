@@ -1162,6 +1162,7 @@ function penDown(ev: PointerEvent) {
          } else {
             if (buttons_control.bemassung_aktiv) {
                alertdialog('ok', 'keinen Knoten gepickt');
+               buttons_control.input_started = 0;
                return;
             }
             let gefunden = findNextRasterPoint(xc, zc);
@@ -1590,6 +1591,7 @@ function mouseup(ev: any) {
             } else {
                if (buttons_control.bemassung_aktiv) {
                   alertdialog('ok', 'keinen Knoten gepickt');
+                  buttons_control.input_started = 0;
                   return;
                }
                let gefunden = findNextRasterPoint(xc, zc);
