@@ -1160,6 +1160,10 @@ function penDown(ev: PointerEvent) {
             else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
             else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
          } else {
+            if (buttons_control.bemassung_aktiv) {
+               alertdialog('ok', 'keinen Knoten gepickt');
+               return;
+            }
             let gefunden = findNextRasterPoint(xc, zc);
             if (gefunden) {
                rasterPoint = two.makeRectangle(
