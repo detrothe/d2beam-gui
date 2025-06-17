@@ -881,7 +881,7 @@ export function delete_element(xc: number, zc: number) {
     //buttons_control.reset();
 
   }
-  else if (stab_gefunden && min_abstand < 0.25) {          // Stab   index >= 0 && min_abstand < 0.25
+  else if (stab_gefunden && min_abstand < get_fangweite_cursor()) {          // Stab   index >= 0 && min_abstand < 0.25
     if (list.size > 0) {
       let obj = list.removeAt(index_stab);
       two.remove(obj.two_obj);
@@ -894,7 +894,7 @@ export function delete_element(xc: number, zc: number) {
       //buttons_control.reset();
     }
   }
-  else if (bemassung_gefunden && min_abstand_bemassung < 0.25) {          // Stab   index >= 0 && min_abstand < 0.25
+  else if (bemassung_gefunden && min_abstand_bemassung < get_fangweite_cursor()) {          // Stab   index >= 0 && min_abstand < 0.25
     if (list.size > 0) {
       let obj = list.removeAt(index_bemassung);
       two.remove(obj.two_obj);
@@ -1189,18 +1189,13 @@ export function select_element(xc: number, zc: number) {
 
   if (knotenlast_gefunden) {
     gefunden = true
-    console.log("Knotenlast gefunden")
-
-    // let knlast = new TLoads();
-    // let lf = (obj_knlast as TCAD_Knotenlast).knlast
+    //console.log("Knotenlast gefunden")
 
     write_knotenlast_dialog((obj_knlast as TCAD_Knotenlast).knlast)
     showDialog_knotenlast()
 
     picked_obj = obj_knlast
     mode_knotenlast_aendern = true
-
-    // buttons_control.reset();
   }
   else if (element_einzellast_gefunden) {
 
@@ -1283,7 +1278,6 @@ export function select_element(xc: number, zc: number) {
 
     showDialog_lager()
 
-    // buttons_control.reset();
   }
 
   else if (knotenmasse_gefunden) {
@@ -1299,10 +1293,9 @@ export function select_element(xc: number, zc: number) {
     picked_obj = obj_knmasse
     mode_knotenmasse_aendern = true
 
-    // buttons_control.reset();
   }
 
-  else if (index_stab >= 0 && min_abstand < 0.25) {
+  else if (index_stab >= 0 && min_abstand < get_fangweite_cursor()) {
     if (list.size > 0) {
 
       //console.log("two.obj", obj)

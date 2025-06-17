@@ -6,7 +6,7 @@ import { TCAD_Element } from "./CCAD_element";
 import { crossProd } from "./lib";
 import { CTrans } from "./trans";
 import { myFormat } from "./utility";
-import { style_txt_knotenlast } from "./grafik";
+
 
 const PARALLEL = 1;
 const HORIZONTAL = 2;
@@ -63,6 +63,12 @@ export function add_bemassung(tr: CTrans, index1: number, index2: number, x3: nu
     b[1] = z3 - get_cad_node_Z(index1)
     b[2] = 0
   }
+  else if (art === VERTIKAL) {
+    b[0] = x3 - get_cad_node_X(index1)
+    b[1] = 0
+    b[2] = 0
+  }
+
   const obj = new TCAD_Bemassung(group, index1, index2, b, buttons_control.typ_cad_element);
   obj.set_art(art);
   list.append(obj);
@@ -183,6 +189,7 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
   dz = z2 - z1;
 
   if (art === PARALLEL) {
+
     let b = [0, 0, 0];
     b[X] = obj.b[X]
     b[Y] = obj.b[Y]
@@ -241,6 +248,7 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
 
   }
   else if (art === HORIZONTAL) {
+
     p1xNew = x1; p1yNew = obj.b[Y] + z1; p1zNew = 0;
     p2xNew = x2; p2yNew = obj.b[Y] + z1; p2zNew = 0;
 
@@ -255,6 +263,23 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
     dsl = Math.abs(dx);
     cosinus = 1
 
+  }
+  else if (art === VERTIKAL) {
+
+    p1xNew = obj.b[X] + x1; p1yNew = z1; p1zNew = 0;
+    p2xNew = obj.b[X] + x1; p2yNew = z2; p2zNew = 0;
+
+    let vorzeichen = Math.abs(obj.b[X] + x1 - x1) / (obj.b[X] + x1 - x1);
+
+    pe1x = p1xNew + vorzeichen * ueberstand; pe1y = p1yNew;
+    pe2x = p2xNew + vorzeichen * ueberstand; pe2y = p2yNew;
+
+    pa1x = x1 + vorzeichen * ueberstand; pa1y = z1;
+    pa2x = x2 + vorzeichen * ueberstand; pa2y = z2;
+
+    dsl = Math.abs(dz);
+    sinus = 1;
+    alpha = -Math.PI / 2.0
   }
 
   if (save) {   // neue Eingabe
@@ -314,12 +339,10 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
 
 
 //------------------------------------------------------------------------------------------------------
-export function Bemassung_parallel_button() {
+export function Bemassung_button(art: number) {
   //----------------------------------------------------------------------------------------------------
 
-  console.log("in Bemassung_parallel_button")
-
-  //  let el = document.getElementById("id_cad_info_button") as HTMLButtonElement
+  console.log("in Bemassung_button")
 
   if (buttons_control.bemassung_aktiv) {
     buttons_control.reset()
@@ -327,7 +350,7 @@ export function Bemassung_parallel_button() {
     buttons_control.reset()
     //  el.style.backgroundColor = 'darkRed'
     buttons_control.bemassung_aktiv = true
-    buttons_control.art = PARALLEL
+    buttons_control.art = art
     buttons_control.cad_eingabe_aktiv = true
     buttons_control.typ_cad_element = CAD_BEMASSUNG
     set_help_text('ersten Knoten picken');
@@ -338,28 +361,4 @@ export function Bemassung_parallel_button() {
   }
 }
 
-//------------------------------------------------------------------------------------------------------
-export function Bemassung_horizontal_button() {
-  //----------------------------------------------------------------------------------------------------
 
-  console.log("in Bemassung_horizontal_button")
-
-  //  let el = document.getElementById("id_cad_info_button") as HTMLButtonElement
-
-  if (buttons_control.bemassung_aktiv) {
-    buttons_control.reset()
-  } else {
-    buttons_control.reset()
-    //  el.style.backgroundColor = 'darkRed'
-    buttons_control.bemassung_aktiv = true
-    buttons_control.art = HORIZONTAL
-    buttons_control.cad_eingabe_aktiv = true
-    buttons_control.typ_cad_element = CAD_BEMASSUNG
-    set_help_text('ersten Knoten picken');
-    //el.addEventListener('keydown', keydown);
-    buttons_control.n_input_points = 3
-    buttons_control.button_pressed = true;
-
-  }
-
-}

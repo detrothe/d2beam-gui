@@ -888,6 +888,7 @@ function pointerdown(ev: PointerEvent) {
          // mousedown(ev);
          if (!penLikeTouch) {
             if (buttons_control.input_started === 0) penDown(ev);
+            else if (buttons_control.bemassung_aktiv && buttons_control.input_started === 2) break;
             else if (buttons_control.n_input_points > 1) mouseup(ev);
          }
          break;
@@ -909,7 +910,7 @@ function pointerdown(ev: PointerEvent) {
 
             if (pointer.length < 2) {
                pointer.push(new CPointer(ev.pointerId, ev.isPrimary, ev.offsetX, ev.offsetY))
-               console.log("pointerdown, length", pointer.length, ev.pointerId)
+               //console.log("pointerdown, length", pointer.length, ev.pointerId)
             }
             // }
          }
@@ -1021,7 +1022,7 @@ function pointermove(ev: PointerEvent) {
 //--------------------------------------------------------------------------------------------------------
 function pointerup(ev: PointerEvent) {
    //----------------------------------------------------------------------------------------------------
-   console.log('in pointerup', ev.button);
+   //console.log('in pointerup', ev.button);
 
    ev.preventDefault();
 
@@ -1088,7 +1089,7 @@ function pointerup(ev: PointerEvent) {
 //--------------------------------------------------------------------------------------------------------
 function penDown(ev: PointerEvent) {
    //----------------------------------------------------------------------------------------------------
-   console.log('in penDown', ev);
+   //console.log('in penDown', ev);
 
    ev.preventDefault();
 
@@ -1312,7 +1313,7 @@ function check_doppelte_Masse(index1: number): boolean {
 function mousedown(ev: any) {
    //----------------------------------------------------------------------------------------------------
 
-   console.log('in mousedown', ev.button);
+   //console.log('in mousedown', ev.button);
    ev.preventDefault();
 
    // if (!mouseMoveIsActive) {
@@ -1506,7 +1507,7 @@ function mousemove(ev: MouseEvent) {
 function mouseup(ev: any) {
    //----------------------------------------------------------------------------------------------------
 
-   console.log('in mouseup', ev.button);
+   //console.log('in mouseup', ev.button);
    ev.preventDefault();
 
    zoomIsActive = false;
@@ -1566,7 +1567,7 @@ function mouseup(ev: any) {
             // find next CAD node
 
             let index = find_nearest_cad_node(xc, zc);
-            console.log('mouseup, index', index, xc, zc);
+            // console.log('mouseup, index', index, xc, zc);
             if (index > -1) {
                let x = get_cad_node_X(index);
                let z = get_cad_node_Z(index);
@@ -1643,7 +1644,6 @@ function mouseup(ev: any) {
                         two.update();
                      }
                   } else {
-                     console.log('Keinen Knoten gefunden');
                      alertdialog('ok', 'keinen Knoten gefunden');
                   }
                }
@@ -1663,12 +1663,11 @@ function mouseup(ev: any) {
                      add_element_nodes(index1);
                      two.update();
                   } else {
-                     console.log('Keinen Knoten gefunden');
                      alertdialog('ok', 'keinen Knoten gefunden');
                   }
                }
                else if (buttons_control.knotenmasse_eingabe_aktiv) {
-                  console.log("Knotenmasse eingabe aktiv")
+                  //console.log("Knotenmasse eingabe aktiv")
 
                   let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
                   if (index1 > -1) {
@@ -1682,13 +1681,12 @@ function mouseup(ev: any) {
                         let group = draw_knotenmasse(tr, masse, get_cad_node_X(index1), get_cad_node_Z(index1));
                         two.add(group);
                         two.update();
-                        console.log('getBoundingClientRect', group.getBoundingClientRect());
+                        //console.log('getBoundingClientRect', group.getBoundingClientRect());
                         const el = new TCAD_Knotenmasse(group, index1, masse, buttons_control.typ_cad_element);
                         list.append(el);
                         add_element_nodes(index1);
                      }
                   } else {
-                     console.log('Keinen Knoten gefunden');
                      alertdialog('ok', 'keinen Knoten gefunden');
                   }
                }
@@ -1761,7 +1759,7 @@ function mouseup(ev: any) {
                let dx = end_x_wc - start_x_wc
                let dz = end_z_wc - start_z_wc
                let sl = Math.sqrt(dx * dx + dz * dz)
-               console.log("Abstand zwischen den 2 Punkten beträgt = ", sl)
+               //console.log("Abstand zwischen den 2 Punkten beträgt = ", sl)
 
                const el = document.getElementById("id_dialog_messen") as drDialogMessen;
                el.set_dxdz(dx, dz);
@@ -1800,7 +1798,7 @@ function mouseup(ev: any) {
                set_help_text('ersten Knoten picken');
                let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
                let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
-               console.log("Bemassung index1-2", index1, index2)
+               //console.log("Bemassung index1-2", index1, index2)
                let group = add_bemassung(tr, index1, index2, pkt3_x_wc, pkt3_z_wc, buttons_control.art);
                two.add(group);
                two.update();
@@ -1821,17 +1819,9 @@ function mouseup(ev: any) {
 export function keydown(ev: any) {
    //--------------------------------------------------------------------------------------------
 
-   console.log('KEYDOWN ' + ev.target.type + ' | ' + ev);
+   //console.log('KEYDOWN ' + ev.target.type + ' | ' + ev);
 
-   console.log(
-      'KEYDOWN, keycode, key, code: ',
-      ev.keyCode,
-      ev.key,
-      ev.code
-      //ev.target.id,
-      //ev.target.offsetParent.offsetParent.id,
-      //ev.target.type
-   );
+   //console.log('KEYDOWN, keycode, key, code: ', ev.keyCode, ev.key, ev.code);
 
    if (ev.key === 'Escape') {
       if (rubberband_drawn) {
@@ -1906,7 +1896,7 @@ function touchstart(ev: TouchEvent) {
 //--------------------------------------------------------------------------------------------------------
 function touchend(ev: TouchEvent) {
    //----------------------------------------------------------------------------------------------------
-   console.log('in touchend', ev.touches.length);
+   //console.log('in touchend', ev.touches.length);
    //write("in touchend " + ev.touches.length + " | " + buttons_control.input_started);
 
    ev.preventDefault();
