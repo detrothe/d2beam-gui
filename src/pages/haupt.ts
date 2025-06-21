@@ -72,7 +72,7 @@ import { set_max_lastfall, zero_max_lastfall } from "./cad_draw_elementlasten";
 import { reset_cad_nodes } from "./cad_node";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.3.2,a, 17-Juni-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.3.2,a, 21-Juni-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -339,7 +339,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           </div>
 
 
-          <sl-drawer label="Mehr Aktivitäten" class="drawer-overview" style="cursor:pointer">
+          <sl-drawer label="Mehr Aktivitäten" class="drawer-overview" style="cursor:pointer;--size:20rem">
             <dr-drawer_1 id="id_drawer_1"></dr-drawer_1>
             <sl-button slot="footer" variant="primary" @click="${close_drawer_1}">Close</sl-button>
           </sl-drawer>
