@@ -200,6 +200,18 @@ export function set_raster_zmax(xz: number) { raster_zmax = xz; }
 
 export let picked_element = -1;
 
+let show_raster = true;
+export function set_show_raster(wert: boolean) {
+   show_raster = wert;
+   init_cad(2);
+}
+
+export let show_stab_qname = true;
+export function set_show_stab_qname(wert: boolean) {
+   show_stab_qname = wert;
+   init_cad(2);
+}
+
 export const style_txt = {
    family: 'system-ui, sans-serif',
    size: 14,
@@ -768,7 +780,7 @@ export function init_cad(flag: number) {
       }
 
    }
-   drawRaster();
+   if (show_raster) drawRaster();
 
    slmax_cad = Math.sqrt((raster_xmax - raster_xmin) ** 2 + (raster_zmax - raster_zmin) ** 2)
 

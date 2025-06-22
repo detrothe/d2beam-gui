@@ -10,7 +10,7 @@ import { draw_elementlasten, max_Lastfall } from './cad_draw_elementlasten';
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { opacity } from './grafik';
-import { slmax_cad, unit_force, unit_moment } from './cad';
+import { show_stab_qname, slmax_cad, unit_force, unit_moment } from './cad';
 
 
 const style_pfeil_knotenlast = {
@@ -101,13 +101,15 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     let zm = (tr.zPix(z1) + tr.zPix(z2)) / 2. - (cosinus * 11 - sinus * 1) // devicePixelRatio
 
     //console.log("qname", obj.name_querschnitt, xm, zm)
-    let str = obj.name_querschnitt
-    const txt1 = new Two.Text(str, xm, zm, style_txt)
-    txt1.fill = '#000000'
-    txt1.alignment = 'center'
-    txt1.baseline = 'middle'
-    txt1.rotation = alpha
-    group.add(txt1);
+    if (show_stab_qname) {
+        let str = obj.name_querschnitt
+        const txt1 = new Two.Text(str, xm, zm, style_txt)
+        txt1.fill = '#000000'
+        txt1.alignment = 'center'
+        txt1.baseline = 'middle'
+        txt1.rotation = alpha
+        group.add(txt1);
+    }
 
     // Knoten zeichnen
 
