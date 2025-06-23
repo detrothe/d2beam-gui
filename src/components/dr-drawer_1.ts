@@ -3,7 +3,7 @@ import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 import { Messen_button } from "../pages/cad_buttons";
 import { Bemassung_button } from "../pages/cad_bemassung";
-import { set_show_elementlasten, set_show_knotenlasten, set_show_raster, set_show_stab_qname } from "../pages/cad";
+import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_raster, set_show_stab_qname } from "../pages/cad";
 
 @customElement("dr-drawer_1")
 export class drDrawer_1 extends LitElement {
@@ -17,11 +17,6 @@ export class drDrawer_1 extends LitElement {
       label {
         font-size: 1rem;
         width: 6rem;
-      }
-
-      p,
-      h2 {
-        color: black;
       }
 
       button,
@@ -102,29 +97,7 @@ export class drDrawer_1 extends LitElement {
         color: darkslateblue;
       }
 
-      /* Festlegung im Default-Stylesheet der Browser */
-      /*  dialog:not([open]) {
-        display: none;
-      } */
-
-      /* Styling der geöffneten Popup-Box */
-      /*  dialog[open] {
-        min-width: 25rem;
-        max-width: 40rem;
-        max-height:100%;
-        background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
-        border: thin solid #e7c157;
-        margin: auto;
-        overflow-y: auto;
-        font-size:1rem;
-        max-height:90vh;
-
-      }
-
-      dialog::backdrop {
-        background: hsl(201 50% 40% /0.5);
-      } */
-    `;
+      `;
   }
 
   constructor() {
@@ -148,14 +121,16 @@ export class drDrawer_1 extends LitElement {
         <sl-button id="id_bemassung_z" value="0" @click="${this._bemassung_z}">Bemassung vertikal</sl-button>
       </p>
       <p>
-        <b>Ausblenden</b><br>
+        <b>Ausblenden</b><br />
         <sl-checkbox id="id_show_raster" @click="${this._checkbox_raster}">Rasterlinien </sl-checkbox>
-        <br>
+        <br />
         <sl-checkbox id="id_show_stab_name" @click="${this._checkbox_stab_name}">Stab Querschnittsname </sl-checkbox>
-        <br>
+        <br />
         <sl-checkbox id="id_show_knotenlasten" @click="${this._checkbox_knotenlasten}">Knotenlasten </sl-checkbox>
-        <br>
+        <br />
         <sl-checkbox id="id_show_elementlasten" @click="${this._checkbox_elementlasten}">Elementlasten </sl-checkbox>
+        <br />
+        <sl-checkbox id="id_show_bemassung" @click="${this._checkbox_bemassung}">Bemaßung </sl-checkbox>
       </p>
     `;
   }
@@ -193,36 +168,44 @@ export class drDrawer_1 extends LitElement {
   _checkbox_raster() {
     let el = this.shadowRoot?.getElementById("id_show_raster") as SlCheckbox;
     if (el.checked) {
-      set_show_raster(false)
+      set_show_raster(false);
     } else {
-      set_show_raster(true)
+      set_show_raster(true);
     }
   }
 
   _checkbox_stab_name() {
     let el = this.shadowRoot?.getElementById("id_show_stab_name") as SlCheckbox;
     if (el.checked) {
-      set_show_stab_qname(false)
+      set_show_stab_qname(false);
     } else {
-      set_show_stab_qname(true)
+      set_show_stab_qname(true);
     }
   }
 
   _checkbox_knotenlasten() {
     let el = this.shadowRoot?.getElementById("id_show_knotenlasten") as SlCheckbox;
     if (el.checked) {
-      set_show_knotenlasten(false)
+      set_show_knotenlasten(false);
     } else {
-      set_show_knotenlasten(true)
+      set_show_knotenlasten(true);
     }
   }
 
   _checkbox_elementlasten() {
     let el = this.shadowRoot?.getElementById("id_show_elementlasten") as SlCheckbox;
     if (el.checked) {
-      set_show_elementlasten(false)
+      set_show_elementlasten(false);
     } else {
-      set_show_elementlasten(true)
+      set_show_elementlasten(true);
+    }
+  }
+  _checkbox_bemassung() {
+    let el = this.shadowRoot?.getElementById("id_show_bemassung") as SlCheckbox;
+    if (el.checked) {
+      set_show_bemassung(false);
+    } else {
+      set_show_bemassung(true);
     }
   }
 }

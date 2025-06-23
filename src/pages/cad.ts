@@ -224,6 +224,12 @@ export function set_show_elementlasten(wert: boolean) {
    init_cad(2);
 }
 
+export let show_bemassung = true;
+export function set_show_bemassung(wert: boolean) {
+   show_bemassung = wert;
+   init_cad(2);
+}
+
 export const style_txt = {
    family: 'system-ui, sans-serif',
    size: 14,
@@ -820,13 +826,11 @@ export function init_cad(flag: number) {
          two.add(group);
          obj.setTwoObj(group);
       }
-      else if (obj.elTyp === CAD_KNLAST) {
-         if (show_knotenlasten) {
-            let index1 = obj.index1
-            let group = draw_knotenlast(tr, (obj as TCAD_Knotenlast), index1, 1.0, 0, true)
-            two.add(group);
-            obj.setTwoObj(group);
-         }
+      else if (obj.elTyp === CAD_KNLAST && show_knotenlasten) {
+         let index1 = obj.index1
+         let group = draw_knotenlast(tr, (obj as TCAD_Knotenlast), index1, 1.0, 0, true)
+         two.add(group);
+         obj.setTwoObj(group);
       }
       else if (obj.elTyp === CAD_KNMASSE) {
          let masse = new TMass();
@@ -836,7 +840,7 @@ export function init_cad(flag: number) {
          two.add(group);
          obj.setTwoObj(group);
       }
-      else if (obj.elTyp === CAD_BEMASSUNG) {
+      else if (obj.elTyp === CAD_BEMASSUNG && show_bemassung) {
          let group = drawBemassung(obj as TCAD_Bemassung, tr)
          two.add(group);
          obj.setTwoObj(group);

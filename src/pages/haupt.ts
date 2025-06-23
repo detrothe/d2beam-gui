@@ -43,6 +43,7 @@ import "../components/dr-dialog_einstellungen";
 import "../components/dr-dialog_info";
 import "../components/dr-drawer_1";
 import "../components/dr-dialog_messen";
+import "../components/dr-dialog_bemassung";
 
 import { drButtonPM } from "../components/dr-button-pm";
 import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt";
@@ -72,7 +73,7 @@ import { set_max_lastfall, zero_max_lastfall } from "./cad_draw_elementlasten";
 import { reset_cad_nodes } from "./cad_node";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.3.2,b, 23-Juni-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.3.2,c, 23-Juni-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -359,6 +360,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <dr-dialog_einstellungen id="id_dialog_einstellungen"></dr-dialog_einstellungen>
         <dr-dialog_info id="id_dialog_info"></dr-dialog_info>
         <dr-dialog_messen id="id_dialog_messen"></dr-dialog_messen>
+        <dr-dialog_bemassung id="id_dialog_bemassung"></dr-dialog_bemassung>
 
       </sl-tab-panel>
 

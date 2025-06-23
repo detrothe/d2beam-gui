@@ -37,7 +37,8 @@ import {
   CAD_BEMASSUNG,
   redraw_bemassung,
   show_elementlasten,
-  show_knotenlasten
+  show_knotenlasten,
+  show_bemassung
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -50,6 +51,7 @@ import "../components/dr-dialog_knoten";
 import "../components/dr-dialog_knotenlast";
 import "../components/dr-dialog_elementlasten";
 import "../components/dr-dialog_messen";
+import "../components/dr-dialog_bemassung";
 
 import { alertdialog, TLoads, TMass, TNode } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
@@ -67,6 +69,7 @@ import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast";
 import { berechnungErforderlich } from "./globals";
 import { drawBemassung, TCAD_Bemassung } from "./cad_bemassung";
+import { drDialogBemassung } from "../components/dr-dialog_bemassung";
 
 //export let pick_element = false
 let backgroundColor_button = 'rgb(64, 64, 64)';
@@ -102,6 +105,8 @@ let index_obj_knoten = -1
 
 let CADPunkt_gefunden = false
 let index_CADPunkt = -1
+
+let obj_bemassung: any = null;
 
 class CDrawer_1_control {
   drawer_eingabe_aktiv = false;
@@ -799,7 +804,7 @@ export function delete_element(xc: number, zc: number) {
       }
     }
 
-    else if (obj.elTyp === CAD_BEMASSUNG) {
+    else if (obj.elTyp === CAD_BEMASSUNG && show_bemassung) {
 
       console.log("index3,4", obj.index3, obj.index4)
       let abstand = abstandPunktGerade_2D(get_cad_node_X(obj.index3), get_cad_node_Z(obj.index3), get_cad_node_X(obj.index4), get_cad_node_Z(obj.index4), xc, zc);
@@ -1014,6 +1019,10 @@ export function select_element(xc: number, zc: number) {
   let elementlast_gefunden = false
   let knotenmasse_gefunden = false
 
+  let bemassung_gefunden = false
+  obj_bemassung = null;
+  let min_abstand_bemassung = 1e30;
+
   let xpix = tr.xPix(xc)
   let zpix = tr.zPix(zc)
 
@@ -1156,6 +1165,20 @@ export function select_element(xc: number, zc: number) {
           obj_knmasse = obj
         }
       }
+    }
+
+    else if (obj.elTyp === CAD_BEMASSUNG && show_bemassung) {
+
+      console.log("index3,4", obj.index3, obj.index4)
+      let abstand = abstandPunktGerade_2D(get_cad_node_X(obj.index3), get_cad_node_Z(obj.index3), get_cad_node_X(obj.index4), get_cad_node_Z(obj.index4), xc, zc);
+      if (abstand > -1.0) {
+        if (abstand < min_abstand_bemassung) {
+          min_abstand_bemassung = abstand;
+          obj_bemassung = obj;
+          bemassung_gefunden = true
+        }
+      }
+      console.log("delete bemassung gefunden", min_abstand_bemassung)
     }
     // else if (obj.elTyp === CAD_KNOTEN) {
     //   let two_obj = obj.two_obj
@@ -1321,6 +1344,25 @@ export function select_element(xc: number, zc: number) {
       divi!.style.left = xpix + 'px';
       divi!.style.top = zpix + 'px';
       divi!.style.display = 'block';
+
+    }
+  }
+  else if (bemassung_gefunden && min_abstand_bemassung < get_fangweite_cursor()) {          // Stab   index >= 0 && min_abstand < 0.25
+    if (list.size > 0) {
+
+      gefunden = true
+      console.log("Bemassung gefunden")
+
+      const el = document.getElementById("id_dialog_bemassung") as drDialogBemassung;
+      console.log("el id_dialog_bemassung", el)
+      let hl = obj_bemassung.get_hilfsline();
+      console.log("hl", hl)
+      el.set_hilfslinie(hl);
+      showDialog_bemassung();
+
+      picked_obj = obj_knmasse
+      mode_knotenmasse_aendern = true
+
 
     }
   }
@@ -1559,6 +1601,50 @@ export function write_lager_dialog(node: TNode) {
 
   let elemi = el?.shadowRoot?.getElementById("id_alpha") as HTMLInputElement;
   elemi.value = String(node.phi)
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+
+export function showDialog_bemassung() {
+  //------------------------------------------------------------------------------------------------------------
+  console.log("showDialog_bemassung()");
+
+  const el = document.getElementById("id_dialog_bemassung");
+  console.log("id_dialog_bemassung", el);
+
+  (el?.shadowRoot?.getElementById("dialog_bemassung") as HTMLDialogElement).addEventListener("close", dialog_bemassung_closed);
+
+  (el?.shadowRoot?.getElementById("dialog_bemassung") as HTMLDialogElement).showModal();
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_bemassung_closed(this: any, _e: any) {
+  //------------------------------------------------------------------------------------------------------------
+  // console.log("Event dialog_lager_closed", e);
+  // console.log("this", this);
+  const ele = document.getElementById("id_dialog_bemassung") as HTMLDialogElement;
+
+  // ts-ignore
+  const returnValue = this.returnValue;
+
+  (ele?.shadowRoot?.getElementById("dialog_bemassung") as HTMLDialogElement).removeEventListener("close", dialog_bemassung_closed);
+
+  if (returnValue === "ok") {
+    //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+    console.log("sieht gut aus, bemassung closed");
+
+    const el = document.getElementById("id_dialog_bemassung") as drDialogBemassung;
+    console.log("el id_dialog_bemassung", el)
+    let hl = el.get_hilfslinie();
+    console.log("hl", hl)
+    obj_bemassung.set_hilfsline(hl);
+    init_cad(2);
+
+  } else {
+    // Abbruch
+    //lager_eingabe_beenden();
+  }
 }
 
 export function showDialog_knoten() {

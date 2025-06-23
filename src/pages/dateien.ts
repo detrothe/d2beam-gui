@@ -394,6 +394,7 @@ export function read_daten(eingabedaten: string) {
             obj.set_art(jobj.elements[i].art)
             obj.set_index3(jobj.elements[i].index3)
             obj.set_index4(jobj.elements[i].index4)
+            if (jobj.elements[i].hilfslinie === undefined) obj.set_hilfsline(1); else obj.set_hilfsline(jobj.elements[i].hilfslinie);
             list.append(obj);
         }
     }

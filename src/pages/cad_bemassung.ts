@@ -21,6 +21,7 @@ export class TCAD_Bemassung extends TCAD_Element {
   index4 = -1;
   art = -1;
   b = [0, 0, 0];
+  hilfslinie = 1;   // 0 = lang 1 = kurz
 
   constructor(obj: any, index1: number, index2: number, b: number[], elTyp: number) {
     super(obj, index1, elTyp);
@@ -41,9 +42,16 @@ export class TCAD_Bemassung extends TCAD_Element {
   set_index4(index4: number) {
     this.index4 = index4;
   }
+
+  set_hilfsline(wert: number) {
+    this.hilfslinie = wert;
+  }
+
+  get_hilfsline() {
+    return this.hilfslinie;
+  }
+
 }
-
-
 
 //--------------------------------------------------------------------------------------------------------
 export function add_bemassung(tr: CTrans, index1: number, index2: number, x3: number, z3: number, art: number) {
@@ -177,8 +185,9 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
   let dsl = 0, sinus = 0, cosinus = 0, alpha = 0
 
   let art = obj.art;
-  //console.log("art=",art)
-  let ueberstand = slmax_cad / 90 / devicePixelRatio;
+
+  let ueberstand = slmax_cad / 120;
+  let m_strich = obj.get_hilfsline();
 
   let x1 = get_cad_node_X(obj.index1)
   let z1 = get_cad_node_Z(obj.index1)
@@ -231,8 +240,6 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
     pe2x = p2xNew + b[X];
     pe2y = p2yNew + b[Y];
 
-    let m_strich = 1;
-
     if (m_strich == 0) {
       pa1x = x1 + b[X], pa1y = z1 + b[Y], pa1z = 0 + b[Z];
       pa2x = x2 + b[X], pa2y = z2 + b[Y], pa2z = 0 + b[Z];
@@ -257,9 +264,14 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
     pe1x = p1xNew; pe1y = p1yNew + vorzeichen * ueberstand;
     pe2x = p2xNew; pe2y = p2yNew + vorzeichen * ueberstand;
 
-    pa1x = x1; pa1y = z1 + vorzeichen * ueberstand;
-    pa2x = x2; pa2y = z2 + vorzeichen * ueberstand;
 
+    if (m_strich == 0) {
+      pa1x = x1; pa1y = z1 + 2.0 * vorzeichen * ueberstand;
+      pa2x = x2; pa2y = z2 + 2.0 * vorzeichen * ueberstand;
+    } else {
+      pa1x = x1; pa1y = p1yNew - vorzeichen * ueberstand;
+      pa2x = x2; pa2y = p1yNew - vorzeichen * ueberstand;
+    }
     dsl = Math.abs(dx);
     cosinus = 1
 
@@ -274,9 +286,13 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
     pe1x = p1xNew + vorzeichen * ueberstand; pe1y = p1yNew;
     pe2x = p2xNew + vorzeichen * ueberstand; pe2y = p2yNew;
 
-    pa1x = x1 + vorzeichen * ueberstand; pa1y = z1;
-    pa2x = x2 + vorzeichen * ueberstand; pa2y = z2;
-
+    if (m_strich == 0) {
+      pa1x = x1 + 2.0 * vorzeichen * ueberstand; pa1y = z1;
+      pa2x = x2 + 2.0 * vorzeichen * ueberstand; pa2y = z2;
+    } else {
+      pa1x = p1xNew - vorzeichen * ueberstand; pa1y = z1;
+      pa2x = p2xNew - vorzeichen * ueberstand; pa2y = z2;
+    }
     dsl = Math.abs(dz);
     sinus = 1;
     alpha = -Math.PI / 2.0
