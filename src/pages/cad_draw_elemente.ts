@@ -10,7 +10,7 @@ import { draw_elementlasten, max_Lastfall } from './cad_draw_elementlasten';
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { opacity } from './grafik';
-import { show_stab_qname, slmax_cad, unit_force, unit_moment } from './cad';
+import { show_elementlasten, show_stab_qname, slmax_cad, unit_force, unit_moment } from './cad';
 
 
 const style_pfeil_knotenlast = {
@@ -138,7 +138,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     }
     //console.log("in drawStab, Anzahl Elementlasten:", obj.elast.length)
 
-    if (obj.elast.length > 0) {
+    if (obj.elast.length > 0 && show_elementlasten) {
         let gr = draw_elementlasten(tr, obj)
         group.add(gr)
     }

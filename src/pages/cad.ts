@@ -212,6 +212,18 @@ export function set_show_stab_qname(wert: boolean) {
    init_cad(2);
 }
 
+export let show_knotenlasten = true;
+export function set_show_knotenlasten(wert: boolean) {
+   show_knotenlasten = wert;
+   init_cad(2);
+}
+
+export let show_elementlasten = true;
+export function set_show_elementlasten(wert: boolean) {
+   show_elementlasten = wert;
+   init_cad(2);
+}
+
 export const style_txt = {
    family: 'system-ui, sans-serif',
    size: 14,
@@ -809,12 +821,12 @@ export function init_cad(flag: number) {
          obj.setTwoObj(group);
       }
       else if (obj.elTyp === CAD_KNLAST) {
-         // let load = new TLoads();
-         // load = (obj as TCAD_Knotenlast).knlast
-         let index1 = obj.index1
-         let group = draw_knotenlast(tr, (obj as TCAD_Knotenlast), index1, 1.0, 0, true)
-         two.add(group);
-         obj.setTwoObj(group);
+         if (show_knotenlasten) {
+            let index1 = obj.index1
+            let group = draw_knotenlast(tr, (obj as TCAD_Knotenlast), index1, 1.0, 0, true)
+            two.add(group);
+            obj.setTwoObj(group);
+         }
       }
       else if (obj.elTyp === CAD_KNMASSE) {
          let masse = new TMass();

@@ -1,4 +1,6 @@
 
+
+
 import {
   list, undoList, Stab_button, Lager_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST,
   keydown, CAD_STAB, CAD_LAGER, selected_element, CAD_ELLAST,
@@ -33,7 +35,9 @@ import {
   CAD_DRAWER,
   CAD_MESSEN,
   CAD_BEMASSUNG,
-  redraw_bemassung
+  redraw_bemassung,
+  show_elementlasten,
+  show_knotenlasten
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -370,7 +374,7 @@ export function cad_buttons() {
 
   drawer_button.value = "drawer";
   drawer_button.className = "btn";
-  drawer_button.innerHTML = 'M';
+  drawer_button.innerHTML = 'A';
   drawer_button.addEventListener("click", Drawer_button);
   // stab_button.addEventListener('keydown', keydown);
   drawer_button.title = "Mehr Aktivitäten";
@@ -471,7 +475,7 @@ export function unDo_button() {
       remove_element_nodes((obj as TCAD_Knoten).index1)
     }
     else if ((obj as TCAD_Element).elTyp === CAD_BEMASSUNG) {
-      console.log("obj",obj)
+      console.log("obj", obj)
       console.log("undo", (obj as TCAD_Bemassung).index1, (obj as TCAD_Bemassung).index3, (obj as TCAD_Bemassung).index4)
       remove_element_nodes((obj as TCAD_Bemassung).index1)
       remove_element_nodes((obj as TCAD_Bemassung).index2)
@@ -663,56 +667,55 @@ export function delete_element(xc: number, zc: number) {
 
       // Schleife über alle Elementlasten
 
-      for (let j = 0; j < obj.elast.length; j++) {
-        let typ = obj.elast[j].typ
-        if (typ === 0 || typ === 2 || typ === 3 || typ === 4 || typ === 5) { // Streckenlast, Temperatur, Vorspannung, Spannschloss, Stabvorverformung
+      if (show_elementlasten) {
+        for (let j = 0; j < obj.elast.length; j++) {
+          let typ = obj.elast[j].typ
+          if (typ === 0 || typ === 2 || typ === 3 || typ === 4 || typ === 5) { // Streckenlast, Temperatur, Vorspannung, Spannschloss, Stabvorverformung
 
-          let x = Array(4)
-          let z = Array(4);
-          (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
-
-          let inside = test_point_inside_area_2D(x, z, xc, zc)
-          console.log("select_element, inside ", inside)
-          if (inside) {
-            elementlast_gefunden = true
-            obj_ellast = obj
-            index_ellast = j
-          }
-        }
-        else if (typ === 1) {
-          if ((obj.elast[j] as TCAD_Einzellast).P !== 0.0) {
             let x = Array(4)
             let z = Array(4);
-
             (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
-            //console.log("xz", x, z)
+
             let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element P, inside ", i, inside)
+            console.log("select_element, inside ", inside)
             if (inside) {
-              element_einzellast_gefunden = true
-              obj_eleinzellast = obj
-              index_eleinzellast = j
+              elementlast_gefunden = true
+              obj_ellast = obj
+              index_ellast = j
             }
-
           }
-          if ((obj.elast[j] as TCAD_Einzellast).M !== 0.0) {
-            let x = Array(4)
-            let z = Array(4);
+          else if (typ === 1) {
+            if ((obj.elast[j] as TCAD_Einzellast).P !== 0.0) {
+              let x = Array(4)
+              let z = Array(4);
 
-            (obj.elast[j] as TCAD_Einzellast).get_drawLast_M_xz(x, z);
-            //console.log("xz", x, z)
-            let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element M, inside ", i, inside)
-            if (inside) {
-              element_einzellast_gefunden = true
-              obj_eleinzellast = obj
-              index_eleinzellast = j
+              (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
+              //console.log("xz", x, z)
+              let inside = test_point_inside_area_2D(x, z, xc, zc)
+              console.log("select_element P, inside ", i, inside)
+              if (inside) {
+                element_einzellast_gefunden = true
+                obj_eleinzellast = obj
+                index_eleinzellast = j
+              }
+
             }
+            if ((obj.elast[j] as TCAD_Einzellast).M !== 0.0) {
+              let x = Array(4)
+              let z = Array(4);
 
+              (obj.elast[j] as TCAD_Einzellast).get_drawLast_M_xz(x, z);
+              //console.log("xz", x, z)
+              let inside = test_point_inside_area_2D(x, z, xc, zc)
+              console.log("select_element M, inside ", i, inside)
+              if (inside) {
+                element_einzellast_gefunden = true
+                obj_eleinzellast = obj
+                index_eleinzellast = j
+              }
+            }
           }
-
         }
-
       }
     }
     else if (obj.elTyp === CAD_LAGER) {
@@ -726,7 +729,7 @@ export function delete_element(xc: number, zc: number) {
         }
       }
     }
-    else if (obj.elTyp === CAD_KNLAST) {
+    else if (obj.elTyp === CAD_KNLAST && show_knotenlasten) {
       // let two_obj = obj.two_obj
       // let rect = two_obj.getBoundingClientRect();
       // console.log("rect Knotenlast", rect, xc, zc)
@@ -1025,7 +1028,7 @@ export function select_element(xc: number, zc: number) {
     let obj = list.getAt(i) as any;
     console.log("eltyp", obj.elTyp)
 
-    if (obj.elTyp === CAD_KNLAST) {
+    if (obj.elTyp === CAD_KNLAST && show_knotenlasten) {
 
       let x = Array(4)
       let z = Array(4);
@@ -1076,56 +1079,57 @@ export function select_element(xc: number, zc: number) {
 
       // Schleife über alle Elementlasten
 
-      for (let j = 0; j < obj.elast.length; j++) {
-        let typ = obj.elast[j].typ
+      if (show_elementlasten) {
+        for (let j = 0; j < obj.elast.length; j++) {
+          let typ = obj.elast[j].typ
 
-        if (typ === 0 || typ === 2 || typ === 3 || typ === 4 || typ === 5) { // Streckenlast, Temperatur, Vorspannung, Spannschloss, Stabvorverformung
+          if (typ === 0 || typ === 2 || typ === 3 || typ === 4 || typ === 5) { // Streckenlast, Temperatur, Vorspannung, Spannschloss, Stabvorverformung
 
-          let x = Array(4)
-          let z = Array(4);
-
-          (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
-          //console.log("xz", x, z)
-          let inside = test_point_inside_area_2D(x, z, xc, zc)
-          console.log("select_element, inside ", i, inside)
-          if (inside) {
-            elementlast_gefunden = true
-            obj_ellast = obj
-            index_ellast = j
-          }
-        }
-        else if (typ === 1) {
-          if ((obj.elast[j] as TCAD_Einzellast).P !== 0.0) {
             let x = Array(4)
             let z = Array(4);
 
             (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
             //console.log("xz", x, z)
             let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element P typ 1, inside ", i, inside)
+            console.log("select_element, inside ", i, inside)
             if (inside) {
-              element_einzellast_gefunden = true
-              obj_eleinzellast = obj
-              index_eleinzellast = j
+              elementlast_gefunden = true
+              obj_ellast = obj
+              index_ellast = j
             }
-
           }
-          if ((obj.elast[j] as TCAD_Einzellast).M !== 0.0) {
-            let x = Array(4)
-            let z = Array(4);
+          else if (typ === 1) {
+            if ((obj.elast[j] as TCAD_Einzellast).P !== 0.0) {
+              let x = Array(4)
+              let z = Array(4);
 
-            (obj.elast[j] as TCAD_Einzellast).get_drawLast_M_xz(x, z);
-            //console.log("xz", x, z)
-            let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element M typ 1, inside ", i, inside)
-            if (inside) {
-              element_einzellast_gefunden = true
-              obj_eleinzellast = obj
-              index_eleinzellast = j
+              (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
+              //console.log("xz", x, z)
+              let inside = test_point_inside_area_2D(x, z, xc, zc)
+              console.log("select_element P typ 1, inside ", i, inside)
+              if (inside) {
+                element_einzellast_gefunden = true
+                obj_eleinzellast = obj
+                index_eleinzellast = j
+              }
+
             }
+            if ((obj.elast[j] as TCAD_Einzellast).M !== 0.0) {
+              let x = Array(4)
+              let z = Array(4);
 
+              (obj.elast[j] as TCAD_Einzellast).get_drawLast_M_xz(x, z);
+              //console.log("xz", x, z)
+              let inside = test_point_inside_area_2D(x, z, xc, zc)
+              console.log("select_element M typ 1, inside ", i, inside)
+              if (inside) {
+                element_einzellast_gefunden = true
+                obj_eleinzellast = obj
+                index_eleinzellast = j
+              }
+
+            }
           }
-
         }
       }
     }

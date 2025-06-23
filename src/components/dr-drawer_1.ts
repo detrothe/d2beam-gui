@@ -1,9 +1,9 @@
 import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
-import { Messen_button, set_help_text } from "../pages/cad_buttons";
+import { Messen_button } from "../pages/cad_buttons";
 import { Bemassung_button } from "../pages/cad_bemassung";
-import { set_show_raster, set_show_stab_qname } from "../pages/cad";
+import { set_show_elementlasten, set_show_knotenlasten, set_show_raster, set_show_stab_qname } from "../pages/cad";
 
 @customElement("dr-drawer_1")
 export class drDrawer_1 extends LitElement {
@@ -153,9 +153,9 @@ export class drDrawer_1 extends LitElement {
         <br>
         <sl-checkbox id="id_show_stab_name" @click="${this._checkbox_stab_name}">Stab Querschnittsname </sl-checkbox>
         <br>
-        <sl-checkbox id="id_show_knotenlasten">Knotenlasten </sl-checkbox>
+        <sl-checkbox id="id_show_knotenlasten" @click="${this._checkbox_knotenlasten}">Knotenlasten </sl-checkbox>
         <br>
-        <sl-checkbox id="id_show_elementlasten">Elementlasten </sl-checkbox>
+        <sl-checkbox id="id_show_elementlasten" @click="${this._checkbox_elementlasten}">Elementlasten </sl-checkbox>
       </p>
     `;
   }
@@ -205,6 +205,24 @@ export class drDrawer_1 extends LitElement {
       set_show_stab_qname(false)
     } else {
       set_show_stab_qname(true)
+    }
+  }
+
+  _checkbox_knotenlasten() {
+    let el = this.shadowRoot?.getElementById("id_show_knotenlasten") as SlCheckbox;
+    if (el.checked) {
+      set_show_knotenlasten(false)
+    } else {
+      set_show_knotenlasten(true)
+    }
+  }
+
+  _checkbox_elementlasten() {
+    let el = this.shadowRoot?.getElementById("id_show_elementlasten") as SlCheckbox;
+    if (el.checked) {
+      set_show_elementlasten(false)
+    } else {
+      set_show_elementlasten(true)
     }
   }
 }
