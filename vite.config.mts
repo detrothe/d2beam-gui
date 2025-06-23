@@ -20,12 +20,12 @@ export default defineConfig({
         swDest: 'dist/sw.js',
         globDirectory: 'dist',
         globPatterns: [
-          '**/*.{html,js,css,json,png,svg}',
+          '**/*.{html,js,css,json,png,svg,ttf,otf,woff,woff2,eot}',
         ],
       },
       workbox: {
         globPatterns: [
-          '**/*.{html,js,css,json,png,svg,otf,woff,woff2,eot}',
+          '**/*.{html,js,css,json,png,ttf,otf,woff,woff2,eot}',
         ]
       },
       injectRegister: false,
@@ -40,10 +40,6 @@ export default defineConfig({
         {
           src: 'd2beam_wasm.*',
           dest: '.'
-        },
-        {
-          src: 'public/assets/font-awesome/fonts/fontawesome-webfont.ttf',
-          dest: './assets/font-awesome/fonts/'
         },
         {
           src: 'src/info/Kurzdokumentation_deutsch.html',
