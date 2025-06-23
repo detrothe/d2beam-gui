@@ -25,7 +25,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: [
-          '**/*.{html,js,css,json,png,svg}',
+          '**/*.{html,js,css,json,png,svg,otf,woff,woff2,ttf,eot}',
         ]
       },
       injectRegister: false,
