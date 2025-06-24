@@ -591,7 +591,7 @@ export function init_cad(flag: number) {
    let show_selection = true;
    let height = 0;
 
-   if (flag !== 2) {
+   if (flag < 2) {
       zoomIsActive = false
 
       centerX = 0.0
@@ -702,7 +702,8 @@ export function init_cad(flag: number) {
       );
       txt.fill = '#0000bb';
    }
-   {
+   if (flag !== 3 ) {
+
       const [x_min, x_max, z_min, z_max] = tr.getMinMax();
 
       let dx = x_max - x_min;

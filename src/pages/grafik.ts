@@ -16,7 +16,7 @@ import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
 //import { colorToRgbNumber } from '@tweakpane/core';
 import { app } from "./haupt";
 import { saveAs } from 'file-saver';
-import { dx_offset_touch, dz_offset_touch, unit_force, unit_moment } from './cad';
+import { dx_offset_touch, dz_offset_touch, init_cad, init_two_cad, unit_force, unit_moment } from './cad';
 
 export let svg_pdf_ratio = 1.0
 
@@ -5204,7 +5204,7 @@ export async function copy_svg() {
         if (app.hasFSAccess && app.isMac) {
 
             filename = window.prompt(
-                "Name der Datei mit Extension, z.B. duennqs.svg\nDie Datei wird im Default Download Ordner gespeichert", 'd2beam.svg'
+                "Name der Datei mit Extension, z.B. d2beam.svg\nDie Datei wird im Default Download Ordner gespeichert", 'd2beam.svg'
             );
         }
         else if (app.hasFSAccess) {
@@ -5257,6 +5257,100 @@ export async function copy_svg() {
         //console.log("redraw screen artboard")
         init_two('artboard');
         drawsystem();
+    }
+
+}
+
+
+
+//---------------------------------------------------------------------------------------------------
+export async function copy_svg_cad() {
+    //-----------------------------------------------------------------------------------------------
+
+    //let svg = svgElement;
+    console.log("copy_svg_cad")
+    const elem1 = document.getElementById('artboard_cad') as any;
+
+    if (elem1) {
+
+
+        init_two_cad('svg_artboard_cad');
+        init_cad(3);
+        const elem = document.getElementById('svg_artboard_cad') as any;
+
+
+        // svg = svg.replace(/\r?\n|\r/g, "").trim();
+        // svg = svg.substring(0, svg.indexOf("</svg>")) + "</svg>";
+        // // @ts-ignore
+        // svg = svg.replaceAll("  ", "");
+
+        // const preface = '<?xml version="1.0" standalone="no"?>\r\n';
+        // const svgBlob = new Blob([preface, svg], { type: "image/svg+xml;charset=utf-8" });
+
+        const svgBlob = new Blob([elem.innerHTML], { type: "image/svg+xml;charset=utf-8" });  //
+
+        console.log("svgBlob.type", svgBlob.type)
+
+        navigator.clipboard.writeText(elem.innerHTML)   // für inkscape
+
+        let filename: any = 'd2beam_cad.svg'
+
+        if (app.hasFSAccess && app.isMac) {
+
+            filename = window.prompt(
+                "Name der Datei mit Extension, z.B. d2beam_cad.svg\nDie Datei wird im Default Download Ordner gespeichert", 'd2beam_cad.svg'
+            );
+        }
+        else if (app.hasFSAccess) {
+
+            try {
+                // @ts-ignore
+                const fileHandle = await window.showSaveFilePicker({
+                    suggestedName: currentFilenameSVG,
+                    startIn: lastFileHandleSVG,
+                    types: [{
+                        description: "svg file",
+                        accept: { "text/plain": [".svg"] }   //   image/svg+xml (.svg)
+                    }]
+                });
+                console.log("fileHandle SVG", fileHandle)
+                lastFileHandleSVG = fileHandle
+                currentFilenameSVG = fileHandle.name
+
+                const fileStream = await fileHandle.createWritable();
+                //console.log("fileStream=",fileStream);
+
+                // (C) WRITE FILE
+                await fileStream.write(svgBlob);
+                await fileStream.close();
+
+            } catch (error: any) {
+                //alert(error.name);
+                alert(error.message);
+            }
+
+            // Zeichnung auf Bildschirm wieder herstellen
+
+            //console.log("redraw screen artboard")
+            init_two_cad('artboard_cad');
+            init_cad(2);
+
+            return
+        }
+
+        // für den Rest des Feldes
+
+        try {
+            saveAs(svgBlob, filename);
+        } catch (error: any) {
+            alert(error.message);
+        }
+
+        // Zeichnung auf Bildschirm wieder herstellen
+
+        //console.log("redraw screen artboard")
+        init_two_cad('artboard_cad');
+        init_cad(2);
     }
 
 }
