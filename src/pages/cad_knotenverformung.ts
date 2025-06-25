@@ -103,6 +103,7 @@ export function read_knotenverformung_dialog(nodeDisp: CNodeDisp) {
     const el = document.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
 
     nodeDisp.lf = el.get_lastfall();
+    console.log("LASTFALL", nodeDisp.lf)
 
     set_max_lastfall(nodeDisp.lf)
 
@@ -115,14 +116,14 @@ export function read_knotenverformung_dialog(nodeDisp: CNodeDisp) {
 
 //---------------------------------------------------------------------------------------------------------------
 export function write_knotenverformung_dialog(nodeDisp: CNodeDisp) {
-  //-----------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------
 
-  const el = document.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
+    const el = document.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
 
-  el.set_lastfall(nodeDisp.lf)
-  el.set_ux0(nodeDisp.dispx0)
-  el.set_uz0(nodeDisp.dispz0)
-  el.set_phi0(nodeDisp.phi0)
+    el.set_lastfall(nodeDisp.lf)
+    el.set_ux0(nodeDisp.dispx0)
+    el.set_uz0(nodeDisp.dispz0)
+    el.set_phi0(nodeDisp.phi0)
 
 }
 
@@ -331,29 +332,29 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
 function update_knotenverformung() {
     //-----------------------------------------------------------------------------------------------------------
 
-      set_mode_knotenverformung_aendern(false);
+    set_mode_knotenverformung_aendern(false);
 
 
-      obj_knotverform.zero_drawLasten();
+    obj_knotverform.zero_drawLasten();
 
-      let nodeDisp = new CNodeDisp();
-      read_knotenverformung_dialog(nodeDisp)
-      obj_knotverform.nodeDisp  = nodeDisp
+    let nodeDisp = new CNodeDisp();
+    read_knotenverformung_dialog(nodeDisp)
+    obj_knotverform.nodeDisp = nodeDisp
 
-      find_max_Lastfall();
+    find_max_Lastfall();
 
-      let group = obj_knotverform.getTwoObj();
-      two.remove(group)
-      let index1 = obj_knotverform.index1
-      group = draw_knotenverformung(tr, obj_knotverform, 1, 0);
-      two.add(group);
+    let group = obj_knotverform.getTwoObj();
+    two.remove(group)
+    let index1 = obj_knotverform.index1
+    group = draw_knotenverformung(tr, obj_knotverform, 1, 0);
+    two.add(group);
 
-      obj_knotverform.setTwoObj(group);
-      two.update();
+    obj_knotverform.setTwoObj(group);
+    two.update();
 
-      init_cad(2);
+    init_cad(2);
 
-      berechnungErforderlich(true);
+    berechnungErforderlich(true);
 
 }
 

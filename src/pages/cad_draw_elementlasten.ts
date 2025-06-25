@@ -1,9 +1,9 @@
 import Two from "two.js"
 import { CTrans } from "./trans"
-import { TCAD_Einzellast, TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Spannschloss, TCAD_Stab, TCAD_Stabvorverformung, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Vorspannung } from "./CCAD_element"
+import { TCAD_Einzellast, TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Knotenverformung, TCAD_Spannschloss, TCAD_Stab, TCAD_Stabvorverformung, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Vorspannung } from "./CCAD_element"
 import { opacity, style_pfeil, style_pfeil_moment_element, style_txt_knotenlast, style_txt_knotenlast_element } from "./grafik"
 import { myFormat } from "./utility"
-import { CAD_KNLAST, CAD_STAB, list, slmax_cad, unit_force, unit_moment } from "./cad"
+import { CAD_KNLAST, CAD_KNOTVERFORMUNG, CAD_STAB, list, slmax_cad, unit_force, unit_moment } from "./cad"
 import { draw_arrow, draw_moment_arrow } from "./cad_draw_elemente"
 import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
 
@@ -70,6 +70,10 @@ export function find_max_Lastfall(): boolean {
         }
         else if (obj.elTyp === CAD_KNLAST) {
             let lf = (obj as TCAD_Knotenlast).knlast.lf
+            if (lf > max_Lastfall) max_Lastfall = lf
+        }
+        else if (obj.elTyp === CAD_KNOTVERFORMUNG) {
+            let lf = (obj as TCAD_Knotenverformung).nodeDisp.lf
             if (lf > max_Lastfall) max_Lastfall = lf
         }
     }

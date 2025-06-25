@@ -1,10 +1,11 @@
 import { drButtonPM } from "../components/dr-button-pm";
 
-import { CAD_KNLAST, CAD_KNMASSE, CAD_KNOTEN, CAD_KNOTVERFORMUNG, CAD_LAGER, CAD_STAB, list } from "./cad";
+import { CAD_BEMASSUNG, CAD_KNLAST, CAD_KNMASSE, CAD_KNOTEN, CAD_KNOTVERFORMUNG, CAD_LAGER, CAD_STAB, list } from "./cad";
+import { TCAD_Bemassung } from "./cad_bemassung";
 import { cad_buttons } from "./cad_buttons";
 import { max_Lastfall, new_max_lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
 import { CADNodes } from "./cad_node";
-import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenmasse, TCAD_Knoten, TCAD_Knotenverformung } from "./CCAD_element";
+import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenmasse, TCAD_Knoten, TCAD_Knotenverformung, TCAD_Element } from "./CCAD_element";
 import {
     alertdialog, element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nnodes, nodalmass, node,
     nodeDisp0,
@@ -648,7 +649,8 @@ export function cad_rechnen() {
                 if (ind > -1) {
                     nodeDisp0[nel].node = ind
                     nodeDisp0[nel].lf = obj.nodeDisp.lf
-                     if (nodeDisp0[nel].lf > check_max_lastfall) check_max_lastfall = nodeDisp0[nel].lf;
+                    if (nodeDisp0[nel].lf > check_max_lastfall) check_max_lastfall = nodeDisp0[nel].lf;
+
                     let wert = obj.nodeDisp.dispx0;
                     if (wert.length === 0) nodeDisp0[nel].dispL[0] = false; else nodeDisp0[nel].dispL[0] = true;     // true=definierte Knotenverformung
                     nodeDisp0[nel].dispx0 = Number(wert.replace(/,/g, "."));
@@ -753,6 +755,7 @@ export function cad_rechnen() {
 
         if (max_Lastfall === 0) set_max_lastfall(1);
 
+        console.log("check_max_lastfall , max_Lastfall", check_max_lastfall, max_Lastfall)
         if (check_max_lastfall < max_Lastfall) new_max_lastfall(check_max_lastfall);  // es wurden Lastfälle gelöscht
 
         set_nlastfaelle(max_Lastfall)
@@ -821,13 +824,40 @@ export function cad_rechnen() {
     // User-Knoten korrigieren
 
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Knoten;
-        if (obj.elTyp === CAD_KNOTEN) {
+        let obj = list.getAt(i) as TCAD_Element;
+        if (obj.elTyp === CAD_KNOTEN || obj.elTyp === CAD_KNLAST || obj.elTyp === CAD_KNOTVERFORMUNG
+            || obj.elTyp === CAD_LAGER || obj.elTyp === CAD_KNMASSE) {
             let index = obj.index1;
             if (index > -1) {
                 CADNodes[index].nel++;
             } else {
                 alertdialog("ok", "User-Knoten " + (+i + 1) + "hat keinen Index, FATAL ERROR");
+            }
+        }
+        else   if (obj.elTyp === CAD_BEMASSUNG) {
+            let index = obj.index1;
+            if (index > -1) {
+                CADNodes[index].nel++;
+            } else {
+                alertdialog("ok", "Bemassung " + (+i + 1) + "hat keinen Index1, FATAL ERROR");
+            }
+            index = (obj as TCAD_Bemassung).index2;
+            if (index > -1) {
+                CADNodes[index].nel++;
+            } else {
+                alertdialog("ok", "Bemassung " + (+i + 1) + "hat keinen Index2, FATAL ERROR");
+            }
+            index = (obj as TCAD_Bemassung).index3;
+            if (index > -1) {
+                CADNodes[index].nel++;
+            } else {
+                alertdialog("ok", "Bemassung " + (+i + 1) + "hat keinen Index3, FATAL ERROR");
+            }
+            index = (obj as TCAD_Bemassung).index4;
+            if (index > -1) {
+                CADNodes[index].nel++;
+            } else {
+                alertdialog("ok", "Bemassung " + (+i + 1) + "hat keinen Index4, FATAL ERROR");
             }
         }
     }
