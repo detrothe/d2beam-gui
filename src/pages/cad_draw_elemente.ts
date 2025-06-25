@@ -22,7 +22,7 @@ const style_pfeil_knotenlast = {
 }
 
 
-const style_pfeil_moment = {
+export const style_pfeil_moment = {
     radius: 50,
     b: 25,
     h: 16,
@@ -30,7 +30,7 @@ const style_pfeil_moment = {
     color: '#ba0000'
 }
 
-const style_txt_knotenlast = {
+export const style_txt_knotenlast = {
     family: 'system-ui, sans-serif',
     size: 14,
     fill: '#ba0000',
@@ -48,7 +48,7 @@ const style_txt = {
 };
 
 
-const style_pfeil = {
+export const style_pfeil = {
     b: 25,
     h: 16,
     linewidth: 7,

@@ -16,7 +16,7 @@ import { nQuerschnittSets, set_querschnittszaehler, add_rechteck_querschnitt } f
 import { alertdialog, maxBettung, set_maxBettung, setSystem, System, TLoads } from './rechnen'
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 import { CADNodes, reset_ID_counter, TCADNode } from "./cad_node";
-import { TCAD_Element, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
+import { TCAD_Element, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Knotenverformung, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
 import {
     init_cad, init_two_cad, list, raster_dx, raster_dz, raster_xmax, raster_xmin, raster_zmax, raster_zmin,
     set_raster_dx, set_raster_dz, two_cad_clear, set_raster_xmin, set_raster_xmax, set_raster_zmin, set_raster_zmax,
@@ -133,9 +133,9 @@ export function read_daten(eingabedaten: string) {
         else slel.setAttribute("value", jobj.eig_solver)
 
 
-        el = document.getElementById('id_button_nnodedisps_gui') as drButtonPM;
-        if (jobj.nNodeDisps === undefined) el.setValue(0);
-        else el.setValue(jobj.nNodeDisps);
+        // el = document.getElementById('id_button_nnodedisps_gui') as drButtonPM;
+        // if (jobj.nNodeDisps === undefined) el.setValue(0);
+        // else el.setValue(jobj.nNodeDisps);
 
 
         let els = document.getElementById('id_stadyn') as HTMLSelectElement;
@@ -267,19 +267,19 @@ export function read_daten(eingabedaten: string) {
     }
     set_querschnittszaehler();
 
-    {
-        let el = document.getElementById('id_nnodedisps_tabelle_gui') as HTMLElement;
-        let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+    // {
+    //     let el = document.getElementById('id_nnodedisps_tabelle_gui') as HTMLElement;
+    //     let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-        let nSpalten = tabelle.rows[0].cells.length;
+    //     let nSpalten = tabelle.rows[0].cells.length;
 
-        for (i = 1; i < tabelle.rows.length; i++) {
-            for (j = 1; j < nSpalten; j++) {
-                let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
-                child.value = jobj.nodeDisp0[i - 1][j - 1];
-            }
-        }
-    }
+    //     for (i = 1; i < tabelle.rows.length; i++) {
+    //         for (j = 1; j < nSpalten; j++) {
+    //             let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
+    //             child.value = jobj.nodeDisp0[i - 1][j - 1];
+    //         }
+    //     }
+    // }
     {
         {
             if (jobj.loadcases !== undefined) {
@@ -395,6 +395,10 @@ export function read_daten(eingabedaten: string) {
             obj.set_index3(jobj.elements[i].index3)
             obj.set_index4(jobj.elements[i].index4)
             if (jobj.elements[i].hilfslinie === undefined) obj.set_hilfsline(1); else obj.set_hilfsline(jobj.elements[i].hilfslinie);
+            list.append(obj);
+        }
+        else if (element.className === 'TCAD_Knotenverformung') {
+            const obj = new TCAD_Knotenverformung(null, jobj.elements[i].index1, jobj.elements[i].nodeDisp, jobj.elements[i].elTyp);
             list.append(obj);
         }
     }

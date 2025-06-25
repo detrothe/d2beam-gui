@@ -326,11 +326,11 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
   group.add(circle);
 
   line = new Two.Line(tr.xPix(pa1x), tr.zPix(pa1y), tr.xPix(pe1x), tr.zPix(pe1y));
-  line.linewidth = 2 / devicePixelRatio;
+  line.linewidth = 1 / devicePixelRatio;
   group.add(line);
 
   line = new Two.Line(tr.xPix(pa2x), tr.zPix(pa2y), tr.xPix(pe2x), tr.zPix(pe2y));
-  line.linewidth = 2 / devicePixelRatio;
+  line.linewidth = 1 / devicePixelRatio;
   group.add(line);
 
 

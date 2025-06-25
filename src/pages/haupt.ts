@@ -44,6 +44,7 @@ import "../components/dr-dialog_info";
 import "../components/dr-drawer_1";
 import "../components/dr-dialog_messen";
 import "../components/dr-dialog_bemassung";
+import "../components/dr-dialog_knotenverformung";
 
 import { drButtonPM } from "../components/dr-button-pm";
 import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt";
@@ -73,7 +74,7 @@ import { set_max_lastfall, zero_max_lastfall } from "./cad_draw_elementlasten";
 import { reset_cad_nodes } from "./cad_node";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.3.2,h, 24-Juni-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.3.2,a, 25-Juni-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -194,7 +195,7 @@ portrait.addEventListener("change", function (e) {
       <sl-tab id="id_CAD" slot="nav" panel="tab-cad">System</sl-tab>
       <sl-tab slot="nav" panel="tab-grafik">Ergebnisse</sl-tab>
       <sl-tab id="id_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
-      <sl-tab slot="nav" panel="tab-stabvorverfomungen">Vorverformungen</sl-tab>
+      <sl-tab slot="nav" panel="tab-schiefstellung">Vorverformungen</sl-tab>
       <sl-tab id="id_tab_kombi" slot="nav" panel="tab-kombinationen">Kombinationen</sl-tab>
       <sl-tab slot="nav" panel="tab-ergebnisse">Ausdruck</sl-tab>
       <sl-tab id="id_tab_mass" slot="nav" panel="tab-mass" disabled>Dynamik</sl-tab>
@@ -361,6 +362,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <dr-dialog_info id="id_dialog_info"></dr-dialog_info>
         <dr-dialog_messen id="id_dialog_messen"></dr-dialog_messen>
         <dr-dialog_bemassung id="id_dialog_bemassung"></dr-dialog_bemassung>
+        <dr-dialog_knotenverformung id="id_dialog_knotenverformung"></dr-dialog_knotenverformung>
 
       </sl-tab-panel>
 
@@ -820,7 +822,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       </sl-tab-panel>
 
       <!--------------------------------------------------------------------------------------->
-      <sl-tab-panel name="tab-stabvorverfomungen">
+      <sl-tab-panel name="tab-schiefstellung">
         <p>
           <b> Die Schiefstellung des Systems wird nur bei Berechnungen nach Theorie II. Ordnung berücksichtigt</b>
         </p>
@@ -884,28 +886,6 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
           </tbody>
         </table>
-
-
-        <p><br /><b>Knotenverformungen</b> (Th.I.O. und Th.II.O.)<br /></p>
-        <p>zum Beispiel für Stützensenkungen</p>
-        <p>
-          Die Richtungen stimmen mit den Richtungen des zugehörigen gedrehten Lagerknotens überein.
-          <br />
-          Es sind nur in den Tabellenzellen Werte einzugeben, für die definierte Verformungen gewünscht werden.<br />
-          Die Zahl 0 entspricht einer starren Lagerung!
-        </p>
-        <p>
-          Anzahl Knoten mit<br />vorgebenenen Verformungen:
-          <dr-button-pm id="id_button_nnodedisps_gui" nel="${nnodedisps_init}" inputid="nnodedisps_gui"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
-        </p>
-
-        <dr-tabelle
-          id="id_nnodedisps_tabelle_gui"
-          nzeilen="${nnodedisps_init}"
-          nspalten="5"
-          columns='["No", "Knoten-ID", "Lastfall", "u<sub>x&prime;0</sub> [mm]", "u<sub>z&prime;0</sub> [mm]", "φ<sub>0</sub> [mrad]"]'
-        ></dr-tabelle>
 
       </sl-tab-panel>
 
@@ -1491,14 +1471,14 @@ function calculate() {
 //---------------------------------------------------------------------------------------------------------------
 export function resizeTables() {
   //---------------------------------------------------------------------------------------------------------------
-  {
-    const el_knoten = document.getElementById("id_button_nnodedisps_gui");
-    const nnodes = (el_knoten?.shadowRoot?.getElementById("nnodedisps_gui") as HTMLInputElement).value;
+  // {
+  //   const el_knoten = document.getElementById("id_button_nnodedisps_gui");
+  //   const nnodes = (el_knoten?.shadowRoot?.getElementById("nnodedisps_gui") as HTMLInputElement).value;
 
-    const el = document.getElementById("id_nnodedisps_tabelle_gui");
-    //console.log("EL: >>", el);
-    el?.setAttribute("nzeilen", nnodes);
-  }
+  //   const el = document.getElementById("id_nnodedisps_tabelle_gui");
+  //   //console.log("EL: >>", el);
+  //   el?.setAttribute("nzeilen", nnodes);
+  // }
   {
     const el_knoten = document.getElementById("id_button_nnodes");
     const nnodes = (el_knoten?.shadowRoot?.getElementById("nnodes") as HTMLInputElement).value;
@@ -1645,8 +1625,8 @@ export function clearTables() {
   let el = document.getElementById("id_knoten_tabelle");
   el?.setAttribute("clear", "0");
 
-  el = document.getElementById("id_nnodedisps_tabelle_gui");
-  el?.setAttribute("clear", "0");
+  // el = document.getElementById("id_nnodedisps_tabelle_gui");
+  // el?.setAttribute("clear", "0");
 
   el = document.getElementById("id_element_tabelle");
   el?.setAttribute("clear", "0");
@@ -1734,8 +1714,8 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     let el = document.getElementById("id_button_nnodes") as drButtonPM;
     console.log("el id_button_nnodes", el);
     el.setValue(0);
-    el = document.getElementById("id_button_nnodedisps_gui") as drButtonPM;
-    el.setValue(0);
+    // el = document.getElementById("id_button_nnodedisps_gui") as drButtonPM;
+    // el.setValue(0);
     el = document.getElementById("id_button_nelem") as drButtonPM;
     el.setValue(0);
     el = document.getElementById("id_button_nnodalloads") as drButtonPM;
@@ -1940,4 +1920,3 @@ function show_video() {
 
   window.open("https://d2beam-gui.statikverstehen.de/videos/videos.html", "_blank");
 }
-

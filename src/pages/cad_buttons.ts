@@ -38,7 +38,8 @@ import {
   redraw_bemassung,
   show_elementlasten,
   show_knotenlasten,
-  show_bemassung
+  show_bemassung,
+  CAD_KNOTVERFORMUNG
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -52,11 +53,12 @@ import "../components/dr-dialog_knotenlast";
 import "../components/dr-dialog_elementlasten";
 import "../components/dr-dialog_messen";
 import "../components/dr-dialog_bemassung";
+import "../components/dr-dialog_knotenverformung";
 
-import { alertdialog, TLoads, TMass, TNode } from "./rechnen";
+import { alertdialog, TLoads, TMass, TNode, TNodeDisp } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knoten, draw_knotenlast, draw_knotenmasse, draw_lager } from "./cad_draw_elemente";
-import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Einzellast, TCAD_Knotenmasse } from "./CCAD_element";
+import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Einzellast, TCAD_Knotenmasse, TCAD_Knotenverformung } from "./CCAD_element";
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 import { change_def_querschnitt } from "./querschnitte";
 import { drDialogKnoten } from "../components/dr-dialog_knoten";
@@ -70,6 +72,8 @@ import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast";
 import { berechnungErforderlich } from "./globals";
 import { drawBemassung, TCAD_Bemassung } from "./cad_bemassung";
 import { drDialogBemassung } from "../components/dr-dialog_bemassung";
+import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
+import { draw_knotenverformung } from "./cad_knotenverformung";
 
 //export let pick_element = false
 let backgroundColor_button = 'rgb(64, 64, 64)';
@@ -130,6 +134,7 @@ class Cbuttons_control {
   elementlast_eingabe_aktiv = false;
   knotenmasse_eingabe_aktiv = false;
   einstellungen_eingabe_aktiv = false;
+  knotenverformung_eingabe_aktiv = false;
   messen_aktiv = false;
   bemassung_aktiv = false;
   info_eingabe_aktiv = false;
@@ -151,6 +156,7 @@ class Cbuttons_control {
     this.elementlast_eingabe_aktiv = false;
     this.knotenmasse_eingabe_aktiv = false;
     this.einstellungen_eingabe_aktiv = false;
+    this.knotenverformung_eingabe_aktiv = false;
     this.typ_cad_element = 0;
     this.n_input_points = 0;
     this.button_pressed = false;
@@ -468,6 +474,10 @@ export function unDo_button() {
       remove_element_nodes((obj as TCAD_Knotenlast).index1)
       find_max_Lastfall();
     }
+    else if ((obj as TCAD_Element).elTyp === CAD_KNOTVERFORMUNG) {
+      remove_element_nodes((obj as TCAD_Knotenverformung).index1)
+      find_max_Lastfall();
+    }
     else if ((obj as TCAD_Element).elTyp === CAD_KNMASSE) {
       remove_element_nodes((obj as TCAD_Knotenmasse).index1)
     }
@@ -544,10 +554,15 @@ export function reDo_button() {
         add_element_nodes(obj.index1);
       }
       else if (obj.elTyp === CAD_KNLAST) {
-        // let load = new TLoads();
-        // load = obj.knlast
         let index1 = obj.index1
         group = draw_knotenlast(tr, obj, index1, 1.0, 0)
+        two.add(group);
+        add_element_nodes(obj.index1);
+
+        find_max_Lastfall();
+      }
+       else if (obj.elTyp === CAD_KNOTVERFORMUNG) {
+        group = draw_knotenverformung(tr, obj, 1.0, 0)
         two.add(group);
         add_element_nodes(obj.index1);
 
@@ -1971,7 +1986,6 @@ function dialog_einstellungen_closed(this: any, e: any) {
   if (returnValue === "ok") {
     //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
     console.log("sieht gut aus");
-    // if (mode_knotenlast_aendern) update_knotenlast();
     let el = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
     console.log("dx drDialogEinstellungen", el.getValue_dx())
 
@@ -2299,7 +2313,7 @@ export function Elementlast_button(_ev: Event) {
 
 }
 
-//---------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------
 
 export function showDialog_elementlast() {
   //------------------------------------------------------------------------------------------------------------
@@ -2581,5 +2595,6 @@ function update_knotenmasse() {
   berechnungErforderlich(true);
 
 }
+
 
 

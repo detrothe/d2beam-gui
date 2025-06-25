@@ -4,7 +4,7 @@ import { CTrans } from './trans';
 import { draw_arrow_alpha } from './grafik';
 import { myFormat, write } from './utility';
 import { LinkedList } from '../components/linkedlist';
-import { alertdialog, TLoads, TMass, TNode } from './rechnen';
+import { alertdialog, TLoads, TMass, TNode, TNodeDisp } from './rechnen';
 import { abstandPunktGerade_2D } from './lib';
 import {
    delete_element,
@@ -35,12 +35,13 @@ import {
    zero_offset_nodes,
 } from './cad_node';
 //import { AlertDialog } from './confirm_dialog';
-import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Element, TCAD_Knotenmasse } from './CCAD_element';
+import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Element, TCAD_Knotenmasse, TCAD_Knotenverformung } from './CCAD_element';
 import { Group } from 'two.js/src/group';
 import { default_querschnitt, set_default_querschnitt } from './querschnitte';
 import { drDialogKnoten } from '../components/dr-dialog_knoten';
 import { drDialogMessen } from '../components/dr-dialog_messen';
 import { add_bemassung, drawBemassung, recalc_abstand, TCAD_Bemassung } from './cad_bemassung';
+import { CNodeDisp, draw_knotenverformung, read_knotenverformung_dialog } from './cad_knotenverformung';
 
 export const CAD_KNOTEN = 1;
 export const CAD_STAB = 2;
@@ -54,6 +55,7 @@ export const CAD_DRAWER = 9;
 export const CAD_MESSEN = 10;
 
 export const CAD_BEMASSUNG = 11;
+export const CAD_KNOTVERFORMUNG = 12;
 
 export let two: any = null;
 let domElement: any = null;
@@ -702,7 +704,7 @@ export function init_cad(flag: number) {
       );
       txt.fill = '#0000bb';
    }
-   if (flag !== 3 ) {
+   if (flag !== 3) {
 
       const [x_min, x_max, z_min, z_max] = tr.getMinMax();
 
@@ -843,6 +845,11 @@ export function init_cad(flag: number) {
       }
       else if (obj.elTyp === CAD_BEMASSUNG && show_bemassung) {
          let group = drawBemassung(obj as TCAD_Bemassung, tr)
+         two.add(group);
+         obj.setTwoObj(group);
+      }
+      else if (obj.elTyp === CAD_KNOTVERFORMUNG && show_bemassung) {
+         let group = draw_knotenverformung(tr, obj as TCAD_Knotenverformung, 1.0, 0, true)
          two.add(group);
          obj.setTwoObj(group);
       }
@@ -1715,6 +1722,25 @@ function mouseup(ev: any) {
                         list.append(el);
                         add_element_nodes(index1);
                      }
+                  } else {
+                     alertdialog('ok', 'keinen Knoten gefunden');
+                  }
+               }
+               else if (buttons_control.knotenverformung_eingabe_aktiv) {
+
+                  let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+                  if (index1 > -1) {
+                     let nodeDisp = new CNodeDisp();
+                     read_knotenverformung_dialog(nodeDisp);
+                     const el = new TCAD_Knotenverformung(null, index1, nodeDisp, buttons_control.typ_cad_element);
+
+                     let group = draw_knotenverformung(tr, el, 1, 0, true);
+                     two.add(group);
+                     //console.log('getBoundingClientRect', group.getBoundingClientRect());
+                     el.setTwoObj(group)
+                     list.append(el);
+                     add_element_nodes(index1);
+                     two.update();
                   } else {
                      alertdialog('ok', 'keinen Knoten gefunden');
                   }

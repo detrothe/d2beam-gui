@@ -1,3 +1,4 @@
+import { CNodeDisp } from "./cad_knotenverformung";
 import { TLoads, TMass, TNode } from "./rechnen";
 
 //―――――――――――――――――――――――――――――――――――――――――――――
@@ -440,6 +441,79 @@ export class TCAD_Stabvorverformung extends TCAD_ElLast {
 
 }
 
+
+//―――――――――――――――――――――――――――――――――――――――――――――
+export class TCAD_Knotenverformung extends TCAD_Element {
+    //―――――――――――――――――――――――――――――――――――――――――
+
+    nodeDisp: CNodeDisp;
+
+    xux: number[] = Array(4).fill(0.0)   // Weltkoordinaten der gezeichneten ux Last
+    zux: number[] = Array(4).fill(0.0)
+    xuz: number[] = Array(4).fill(0.0)   // Weltkoordinaten der gezeichneten uz Last
+    zuz: number[] = Array(4).fill(0.0)
+    xphi: number[] = Array(4).fill(0.0)   // Weltkoordinaten des gezeichneten phi Pfeils
+    zphi: number[] = Array(4).fill(0.0)
+
+    constructor(obj: any, index1: number, nodeDisp: CNodeDisp, elTyp: number) {
+        super(obj, index1, elTyp);
+
+        this.nodeDisp = nodeDisp
+        this.className = 'TCAD_Knotenverformung'
+    }
+
+
+    set_drawLast_ux0(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            this.xux[i] = x[i]
+            this.zux[i] = z[i]
+        }
+    }
+
+    get_drawLast_ux0(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            x[i] = this.xux[i]
+            z[i] = this.zux[i]
+        }
+    }
+
+    set_drawLast_uz0(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            this.xuz[i] = x[i]
+            this.zuz[i] = z[i]
+        }
+    }
+
+    get_drawLast_uz0(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            x[i] = this.xuz[i]
+            z[i] = this.zuz[i]
+        }
+    }
+
+    set_drawLast_phi0(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            this.xphi[i] = x[i]
+            this.zphi[i] = z[i]
+        }
+    }
+
+    get_drawLast_phi0(x: number[], z: number[]) {
+        for (let i = 0; i < 4; i++) {
+            x[i] = this.xphi[i]
+            z[i] = this.zphi[i]
+        }
+    }
+
+    zero_drawLasten() {
+        this.xux.fill(0.0)
+        this.zux.fill(0.0)
+        this.xuz.fill(0.0)
+        this.zuz.fill(0.0)
+        this.xphi.fill(0.0)
+        this.zphi.fill(0.0)
+    }
+}
 
 
 // //―――――――――――――――――――――――――――――――――――――――――――――

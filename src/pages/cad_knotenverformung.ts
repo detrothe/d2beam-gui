@@ -1,0 +1,346 @@
+import Two from "two.js";
+import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
+import { CAD_KNOTVERFORMUNG, reset_pointer_length, set_zoomIsActive, slmax_cad } from "./cad";
+import { buttons_control, set_help_text } from "./cad_buttons";
+import { max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
+import { TCAD_Knotenverformung } from "./CCAD_element";
+import { TNodeDisp } from "./rechnen";
+import { CTrans } from "./trans";
+import { CADNodes, get_cad_node_X, get_cad_node_Z } from "./cad_node";
+import { draw_arrow, draw_moment_arrow, style_pfeil, style_pfeil_moment, style_txt_knotenlast } from "./cad_draw_elemente";
+import { myFormat } from "./utility";
+
+
+export class CNodeDisp {                                   // Knotenzwangsverformungen, analog zu Knotenkräften
+    node = 0                                        // werden aber mit TElDisp0 wie Elementlasten verarbeitet
+    lf = 0
+    dispx0 = ''                                    // Knotenvorverformungen gedreht in Richtung eines gedrehten Lagers
+    dispz0 = ''
+    phi0 = ''
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function Knotenverformung_button() {
+    //----------------------------------------------------------------------------------------------------
+
+    //console.log("in Knotenlast_button", buttons_control.knotenlast_eingabe_aktiv,ev)
+
+    //let el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement
+
+    if (buttons_control.knotenverformung_eingabe_aktiv) {
+        buttons_control.reset()
+
+        // let el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement
+        // el.removeEventListener('keydown', keydown);
+    } else {
+        buttons_control.reset();
+        //drawer_1_control.reset();
+        //el.style.backgroundColor = 'darkRed'
+        buttons_control.knotenverformung_eingabe_aktiv = true
+        buttons_control.cad_eingabe_aktiv = true
+        buttons_control.typ_cad_element = CAD_KNOTVERFORMUNG
+        //el.addEventListener('keydown', keydown);
+        buttons_control.n_input_points = 1
+        buttons_control.button_pressed = true;
+        set_zoomIsActive(false);
+        reset_pointer_length();
+
+        showDialog_knotenverformung();
+
+        // jetzt auf Pointer eingabe warten
+
+    }
+
+}
+
+//--------------------------------------------------------------------------------------------------------------
+
+export function showDialog_knotenverformung() {
+    //------------------------------------------------------------------------------------------------------------
+    console.log("dialog_knotenverformung_closed()");
+
+    const el = document.getElementById("id_dialog_knotenverformung");
+    console.log("id_dialog_knotenverformung", el);
+
+    console.log("shadow", el?.shadowRoot?.getElementById("dialog_knotenverformung")),
+        (el?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).addEventListener("close", dialog_knotenverformung_closed);
+
+    set_help_text('Knoten picken');
+
+    (el?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).showModal();
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_knotenverformung_closed(this: any, e: any) {
+    //------------------------------------------------------------------------------------------------------------
+    console.log("Event dialog_knotenverformung_closed", e);
+    console.log("this", this);
+    const ele = document.getElementById("id_dialog_knotenverformung") as HTMLDialogElement;
+
+    // ts-ignore
+    const returnValue = this.returnValue;
+
+    if (returnValue === "ok") {
+        //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+        console.log("sieht gut aus");
+        //if (mode_knotenlast_aendern) update_knotenlast();
+    } else {
+        // Abbruch
+        (ele?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).removeEventListener("close", dialog_knotenverformung_closed);
+
+        // knoten_eingabe_beenden();
+        buttons_control.reset()
+    }
+}
+
+
+
+//---------------------------------------------------------------------------------------------------------------
+export function read_knotenverformung_dialog(nodeDisp: CNodeDisp) {
+    //-----------------------------------------------------------------------------------------------------------
+
+    const el = document.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
+
+    nodeDisp.lf = el.get_lastfall();
+
+    set_max_lastfall(nodeDisp.lf)
+
+    nodeDisp.dispx0 = el.get_ux0();
+    nodeDisp.dispz0 = el.get_uz0();
+    nodeDisp.phi0 = el.get_phi0();
+
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fact: number, lf_show: number, new_flag = false) {
+    //----------------------------------------------------------------------------------------------------
+
+    let slmax = 2 * slmax_cad;
+
+    let plength = slmax / 50 /*35 slmax / 20.*/, delta = 12 //slmax / 200.0
+    let xpix: number, zpix: number
+    let wert: number
+    let nLoop = 0
+
+    let xtr = Array(4), ztr = Array(4)
+    let x0, z0, x1, z1
+
+    //plength = tr.World0(2 * plength / devicePixelRatio)
+    delta = tr.World0(delta / devicePixelRatio)
+
+    let pLength_My = 0.8 * tr.World0(70 / devicePixelRatio)
+    let txt_abstand = 9 / devicePixelRatio
+
+    let nodeDisp = obj.nodeDisp;
+    let iLastfall = nodeDisp.lf
+
+    let index1 = obj.index1;
+    // let phi = load.alpha * Math.PI / 180
+
+    // let si = Math.sin(phi)
+    // let co = Math.cos(phi)
+
+    let phi = 0
+    let si = 0
+    let co = 1
+
+    let group = new Two.Group();
+
+    //console.log("draw_knotenlast", x, z, plength, delta, load)
+
+    lf_show = nodeDisp.lf - 1    // noch überarbeiten
+
+
+    if (nodeDisp.dispx0.length > 0 && nodeDisp.lf - 1 === lf_show) {
+        //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+        let x = get_cad_node_X(index1) + CADNodes[index1].offset_Px
+        let z = get_cad_node_Z(index1)
+
+        x0 = x + co * delta
+        z0 = z - si * delta
+        x1 = x + co * (delta + plength)
+        z1 = z - si * (delta + plength)
+
+        let grp = new Two.Group();
+
+        wert = Number(nodeDisp.dispx0.replace(/,/g, ".")) * fact
+        if (wert > 0.0) {
+            let gr = draw_arrow(tr, x0, z0, x1, z1, style_pfeil)
+            grp.add(gr)
+        } else {
+            let gr = draw_arrow(tr, x1, z1, x0, z0, style_pfeil)
+            grp.add(gr)
+        }
+
+        // xpix = tr.xPix(x + delta)  //  + plength/2
+        // zpix = tr.zPix(z) + 9
+        xpix = tr.xPix((x0 + x1) / 2) + txt_abstand * si
+        zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * co
+        let str = myFormat(Math.abs(wert), 1, 2) + 'mm'   //unit_force
+        if (max_Lastfall > 1) str = iLastfall + '|' + str
+        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+        txt.alignment = 'center'
+        txt.baseline = 'top'
+        txt.rotation = -phi
+        grp.add(txt)
+
+        group.add(grp)
+
+        let rect = grp.getBoundingClientRect()
+
+        xtr[0] = tr.xWorld(rect.left)
+        ztr[0] = tr.zWorld(rect.top)
+        xtr[1] = tr.xWorld(rect.left)
+        ztr[1] = tr.zWorld(rect.bottom)
+        xtr[2] = tr.xWorld(rect.left + rect.width)
+        ztr[2] = tr.zWorld(rect.bottom)
+        xtr[3] = tr.xWorld(rect.left + rect.width)
+        ztr[3] = tr.zWorld(rect.top);
+
+        obj.set_drawLast_ux0(xtr, ztr)   // Koordinaten merken für Picken
+
+        if (new_flag) {
+            CADNodes[index1].offset_Px += plength
+        }
+    }
+
+    if (nodeDisp.dispz0.length > 0 && nodeDisp.lf - 1 === lf_show) {
+        //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
+        let x = get_cad_node_X(index1)
+        let z = get_cad_node_Z(index1) - CADNodes[index1].offset_Pz
+        let grp = new Two.Group();
+
+        x0 = x - si * (delta + plength)
+        z0 = z - co * (delta + plength)
+        x1 = x - si * delta
+        z1 = z - co * delta
+
+
+        wert = Number(nodeDisp.dispz0.replace(/,/g, ".")) * fact
+        if (wert > 0.0) {
+            let gr = draw_arrow(tr, x0, z0, x1, z1, style_pfeil)
+            grp.add(gr)
+        } else {
+            let gr = draw_arrow(tr, x1, z1, x0, z0, style_pfeil)
+            grp.add(gr)
+        }
+
+        // xpix = tr.xPix(x) + 5
+        // zpix = tr.zPix(z - delta - plength) + 5
+        xpix = tr.xPix((x0 + x1) / 2) - txt_abstand * co
+        zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * si
+        let str = myFormat(Math.abs(wert), 1, 2) + 'mm'  //unit_force
+        if (max_Lastfall > 1) str = iLastfall + '|' + str
+        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+        txt.alignment = 'center'
+        txt.baseline = 'top'
+        txt.rotation = Math.PI / 2 - phi
+        grp.add(txt)
+
+        group.add(grp)
+
+        let rect = grp.getBoundingClientRect()
+
+        xtr[0] = tr.xWorld(rect.left)
+        ztr[0] = tr.zWorld(rect.top)
+        xtr[1] = tr.xWorld(rect.left)
+        ztr[1] = tr.zWorld(rect.bottom)
+        xtr[2] = tr.xWorld(rect.left + rect.width)
+        ztr[2] = tr.zWorld(rect.bottom)
+        xtr[3] = tr.xWorld(rect.left + rect.width)
+        ztr[3] = tr.zWorld(rect.top);
+
+        obj.set_drawLast_uz0(xtr, ztr)   // Koordinaten merken für Picken
+
+        if (new_flag) {
+            CADNodes[index1].offset_Pz += plength
+        }
+    }
+
+    if (nodeDisp.phi0.length > 0 && nodeDisp.lf - 1 === lf_show) {
+
+        let x = get_cad_node_X(index1) - CADNodes[index1].offset_My
+        let z = get_cad_node_Z(index1)
+        let grp = new Two.Group();
+
+        wert = Number(nodeDisp.phi0.replace(/,/g, ".")) * fact
+        let vorzeichen = Math.sign(wert)
+        let radius = tr.Pix0(slmax / 90 * devicePixelRatio)    //style_pfeil_moment.radius;
+        //console.log("Moment radius", radius)
+        if (wert > 0.0) {
+            let gr = draw_moment_arrow(tr, x, z, 1.0, radius, style_pfeil_moment)
+            grp.add(gr)
+            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
+            zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+        } else {
+            let gr = draw_moment_arrow(tr, x, z, -1.0, radius, style_pfeil_moment)
+            grp.add(gr)
+            xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
+            zpix = tr.zPix(z - Math.cos(Math.PI / 5) * slmax / 90) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+        }
+
+        //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
+        let str = myFormat(Math.abs(wert), 1, 2) + '°'  //unit_moment
+        if (max_Lastfall > 1) str = iLastfall + '|' + str
+        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
+        txt.alignment = 'right'
+        txt.baseline = 'top'
+        grp.add(txt)
+
+        group.add(grp)
+
+        let rect = grp.getBoundingClientRect()
+
+        xtr[0] = tr.xWorld(rect.left)
+        ztr[0] = tr.zWorld(rect.top)
+        xtr[1] = tr.xWorld(rect.left)
+        ztr[1] = tr.zWorld(rect.bottom)
+        xtr[2] = tr.xWorld(rect.left + rect.width)
+        ztr[2] = tr.zWorld(rect.bottom)
+        xtr[3] = tr.xWorld(rect.left + rect.width)
+        ztr[3] = tr.zWorld(rect.top);
+
+        obj.set_drawLast_phi0(xtr, ztr)   // Koordinaten merken für Picken
+
+        if (new_flag) {
+            CADNodes[index1].offset_My += pLength_My
+        }
+    }
+
+    return group;
+
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function update_knotenverformung() {
+    //-----------------------------------------------------------------------------------------------------------
+
+    //   mode_knotenlast_aendern = false
+
+
+    //   obj_knlast.zero_drawLasten();
+
+    //   let knlast = new TLoads();
+    //   read_knotenlast_dialog(knlast)
+    //   obj_knlast.knlast = knlast
+
+    //   find_max_Lastfall();
+
+    //   let group = obj_knlast.getTwoObj();
+    //   two.remove(group)
+    //   let index1 = obj_knlast.index1
+    //   group = draw_knotenlast(tr, obj_knlast, index1, 1, 0);
+    //   two.add(group);
+
+    //   obj_knlast.setTwoObj(group);
+    //   two.update();
+
+    //   init_cad(2);
+
+    //   berechnungErforderlich(true);
+
+}
+

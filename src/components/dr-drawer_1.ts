@@ -5,6 +5,7 @@ import { Messen_button } from "../pages/cad_buttons";
 import { Bemassung_button } from "../pages/cad_bemassung";
 import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_raster, set_show_stab_qname } from "../pages/cad";
 import { copy_svg_cad } from "../pages/grafik";
+import { Knotenverformung_button } from "../pages/cad_knotenverformung";
 
 @customElement("dr-drawer_1")
 export class drDrawer_1 extends LitElement {
@@ -109,6 +110,9 @@ export class drDrawer_1 extends LitElement {
   render() {
     return html`
       <p>
+        <sl-button id="id_knotverform" value="0" @click="${this._knotverform}">Knotenverformung</sl-button>
+      </p>
+       <p>
         <sl-button id="id_messen" value="0" @click="${this._messen}">Messen</sl-button>
       </p>
       <p>
@@ -216,5 +220,12 @@ export class drDrawer_1 extends LitElement {
 
   _svg() {
     copy_svg_cad();
+  }
+
+  _knotverform() {
+    const drawer = document.querySelector(".drawer-overview");
+    //@ts-ignore
+    if (drawer !== null) drawer.hide();
+    Knotenverformung_button();
   }
 }
