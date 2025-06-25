@@ -39,7 +39,8 @@ import {
   show_elementlasten,
   show_knotenlasten,
   show_bemassung,
-  CAD_KNOTVERFORMUNG
+  CAD_KNOTVERFORMUNG,
+  show_knotenverformung
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -73,7 +74,7 @@ import { berechnungErforderlich } from "./globals";
 import { drawBemassung, TCAD_Bemassung } from "./cad_bemassung";
 import { drDialogBemassung } from "../components/dr-dialog_bemassung";
 import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
-import { draw_knotenverformung } from "./cad_knotenverformung";
+import { draw_knotenverformung, showDialog_knotenverformung, write_knotenverformung_dialog } from "./cad_knotenverformung";
 
 //export let pick_element = false
 let backgroundColor_button = 'rgb(64, 64, 64)';
@@ -109,6 +110,10 @@ let index_obj_knoten = -1
 
 let CADPunkt_gefunden = false
 let index_CADPunkt = -1
+
+export let mode_knotenverformung_aendern = false;
+export function set_mode_knotenverformung_aendern(wert: boolean) { mode_knotenverformung_aendern = wert; }
+export let obj_knotverform: any
 
 let obj_bemassung: any = null;
 
@@ -561,7 +566,7 @@ export function reDo_button() {
 
         find_max_Lastfall();
       }
-       else if (obj.elTyp === CAD_KNOTVERFORMUNG) {
+      else if (obj.elTyp === CAD_KNOTVERFORMUNG) {
         group = draw_knotenverformung(tr, obj, 1.0, 0)
         two.add(group);
         add_element_nodes(obj.index1);
@@ -662,6 +667,9 @@ export function delete_element(xc: number, zc: number) {
   let knoten_gefunden = false
   let index_knoten = -1
   let knotenmasse_gefunden = false
+  let knotenverformung_gefunden = false
+  let index_knotenverformung = -1;
+
   let index_knmasse = -1
   let index_bemassung = -1
   let min_abstand_bemassung = 1e30;
@@ -767,7 +775,7 @@ export function delete_element(xc: number, zc: number) {
         (obj as TCAD_Knotenlast).get_drawLast_Px(x, z);
         //console.log("xz", x, z)
         let inside = test_point_inside_area_2D(x, z, xc, zc)
-        console.log("select_element Px, inside ", i, inside)
+        //console.log("select_element Px, inside ", i, inside)
         if (inside) {
           knotenlast_gefunden = true
           index_knlast = i;
@@ -777,7 +785,7 @@ export function delete_element(xc: number, zc: number) {
         (obj as TCAD_Knotenlast).get_drawLast_Pz(x, z);
         //console.log("xz", x, z)
         let inside = test_point_inside_area_2D(x, z, xc, zc)
-        console.log("select_element Pz, inside ", i, inside)
+        //console.log("select_element Pz, inside ", i, inside)
         if (inside) {
           knotenlast_gefunden = true
           index_knlast = i;
@@ -787,10 +795,49 @@ export function delete_element(xc: number, zc: number) {
         (obj as TCAD_Knotenlast).get_drawLast_My(x, z);
         //console.log("xz", x, z)
         let inside = test_point_inside_area_2D(x, z, xc, zc)
-        console.log("select_element My, inside ", i, inside)
+        //console.log("select_element My, inside ", i, inside)
         if (inside) {
           knotenlast_gefunden = true
           index_knlast = i;
+        }
+      }
+    }
+
+    else if (obj.elTyp === CAD_KNOTVERFORMUNG && show_knotenverformung) {
+
+      let x = Array(4)
+      let z = Array(4);
+
+      if ((obj as TCAD_Knotenverformung).nodeDisp.dispx0.length !== 0) {
+        (obj as TCAD_Knotenverformung).get_drawLast_ux0(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        //console.log("select_element Px KNLAST, inside ", i, inside)
+        if (inside) {
+          knotenverformung_gefunden = true
+          index_knotenverformung = i
+        }
+      }
+
+      if ((obj as TCAD_Knotenverformung).nodeDisp.dispz0.length !== 0) {
+        (obj as TCAD_Knotenverformung).get_drawLast_uz0(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        //console.log("select_element Pz KNLAST, inside ", i, inside)
+        if (inside) {
+          knotenverformung_gefunden = true
+          index_knotenverformung = i
+        }
+      }
+
+      if ((obj as TCAD_Knotenverformung).nodeDisp.phi0.length !== 0) {
+        (obj as TCAD_Knotenverformung).get_drawLast_phi0(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        //console.log("select_element My KNLAST, inside ", i, inside)
+        if (inside) {
+          knotenverformung_gefunden = true
+          index_knotenverformung = i
         }
       }
     }
@@ -892,6 +939,15 @@ export function delete_element(xc: number, zc: number) {
     remove_element_nodes((obj as TCAD_Knotenlast).index1)
     undoList.append(obj);
     //buttons_control.reset();
+
+    find_max_Lastfall();
+  }
+  else if (knotenverformung_gefunden) {
+    let obj = list.removeAt(index_knotenverformung);
+    two.remove(obj.two_obj);
+    two.update();
+    remove_element_nodes((obj as TCAD_Knotenverformung).index1)
+    undoList.append(obj);
 
     find_max_Lastfall();
   }
@@ -1033,6 +1089,7 @@ export function select_element(xc: number, zc: number) {
   let knotenlast_gefunden = false
   let elementlast_gefunden = false
   let knotenmasse_gefunden = false
+  let knotenverformung_gefunden = false
 
   let bemassung_gefunden = false
   obj_bemassung = null;
@@ -1044,6 +1101,7 @@ export function select_element(xc: number, zc: number) {
   let gefunden = false
 
   mode_knoten_aendern = false;
+  mode_knotenverformung_aendern = false;
 
   index_stab = -1;
   element_einzellast_gefunden = false
@@ -1090,6 +1148,45 @@ export function select_element(xc: number, zc: number) {
         }
       }
     }
+    else if (obj.elTyp === CAD_KNOTVERFORMUNG && show_knotenverformung) {
+
+      let x = Array(4)
+      let z = Array(4);
+
+      if ((obj as TCAD_Knotenverformung).nodeDisp.dispx0.length !== 0) {
+        (obj as TCAD_Knotenverformung).get_drawLast_ux0(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        //console.log("select_element Px KNLAST, inside ", i, inside)
+        if (inside) {
+          knotenverformung_gefunden = true
+          obj_knotverform = obj
+        }
+      }
+
+      if ((obj as TCAD_Knotenverformung).nodeDisp.dispz0.length !== 0) {
+        (obj as TCAD_Knotenverformung).get_drawLast_uz0(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        //console.log("select_element Pz KNLAST, inside ", i, inside)
+        if (inside) {
+          knotenverformung_gefunden = true
+          obj_knotverform = obj
+        }
+      }
+
+      if ((obj as TCAD_Knotenverformung).nodeDisp.phi0.length !== 0) {
+        (obj as TCAD_Knotenverformung).get_drawLast_phi0(x, z);
+        //console.log("xz", x, z)
+        let inside = test_point_inside_area_2D(x, z, xc, zc)
+        //console.log("select_element My KNLAST, inside ", i, inside)
+        if (inside) {
+          knotenverformung_gefunden = true
+          obj_knotverform = obj
+        }
+      }
+    }
+
     else if (obj.elTyp === CAD_STAB) {
 
       let abstand = abstandPunktGerade_2D(get_cad_node_X(obj.index1), get_cad_node_Z(obj.index1), get_cad_node_X(obj.index2), get_cad_node_Z(obj.index2), xc, zc);
@@ -1238,6 +1335,16 @@ export function select_element(xc: number, zc: number) {
 
     picked_obj = obj_knlast
     mode_knotenlast_aendern = true
+  }
+  else if (knotenverformung_gefunden) {
+    gefunden = true
+    //console.log("knotenverformung gefunden")
+
+    write_knotenverformung_dialog((obj_knotverform as TCAD_Knotenverformung).nodeDisp)
+    showDialog_knotenverformung();
+
+    picked_obj = obj_knotverform
+    mode_knotenverformung_aendern = true
   }
   else if (element_einzellast_gefunden) {
 

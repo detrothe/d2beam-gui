@@ -1,14 +1,14 @@
 import Two from "two.js";
 import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
-import { CAD_KNOTVERFORMUNG, reset_pointer_length, set_zoomIsActive, slmax_cad } from "./cad";
-import { buttons_control, set_help_text } from "./cad_buttons";
-import { max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
+import { CAD_KNOTVERFORMUNG, init_cad, reset_pointer_length, set_zoomIsActive, slmax_cad, tr, two } from "./cad";
+import { buttons_control, mode_knotenverformung_aendern, obj_knotverform, set_help_text, set_mode_knotenverformung_aendern } from "./cad_buttons";
+import { find_max_Lastfall, max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
 import { TCAD_Knotenverformung } from "./CCAD_element";
-import { TNodeDisp } from "./rechnen";
 import { CTrans } from "./trans";
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from "./cad_node";
 import { draw_arrow, draw_moment_arrow, style_pfeil, style_pfeil_moment, style_txt_knotenlast } from "./cad_draw_elemente";
 import { myFormat } from "./utility";
+import { berechnungErforderlich } from "./globals";
 
 
 export class CNodeDisp {                                   // Knotenzwangsverformungen, analog zu Knotenkräften
@@ -84,7 +84,7 @@ function dialog_knotenverformung_closed(this: any, e: any) {
     if (returnValue === "ok") {
         //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
         console.log("sieht gut aus");
-        //if (mode_knotenlast_aendern) update_knotenlast();
+        if (mode_knotenverformung_aendern) update_knotenverformung();
     } else {
         // Abbruch
         (ele?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).removeEventListener("close", dialog_knotenverformung_closed);
@@ -112,6 +112,19 @@ export function read_knotenverformung_dialog(nodeDisp: CNodeDisp) {
 
 }
 
+
+//---------------------------------------------------------------------------------------------------------------
+export function write_knotenverformung_dialog(nodeDisp: CNodeDisp) {
+  //-----------------------------------------------------------------------------------------------------------
+
+  const el = document.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
+
+  el.set_lastfall(nodeDisp.lf)
+  el.set_ux0(nodeDisp.dispx0)
+  el.set_uz0(nodeDisp.dispz0)
+  el.set_phi0(nodeDisp.phi0)
+
+}
 
 //--------------------------------------------------------------------------------------------------------
 export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fact: number, lf_show: number, new_flag = false) {
@@ -282,7 +295,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         }
 
         //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
-        let str = myFormat(Math.abs(wert), 1, 2) + '°'  //unit_moment
+        let str = myFormat(Math.abs(wert), 1, 2) + 'mrad'  //unit_moment
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'right'
@@ -318,29 +331,29 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
 function update_knotenverformung() {
     //-----------------------------------------------------------------------------------------------------------
 
-    //   mode_knotenlast_aendern = false
+      set_mode_knotenverformung_aendern(false);
 
 
-    //   obj_knlast.zero_drawLasten();
+      obj_knotverform.zero_drawLasten();
 
-    //   let knlast = new TLoads();
-    //   read_knotenlast_dialog(knlast)
-    //   obj_knlast.knlast = knlast
+      let nodeDisp = new CNodeDisp();
+      read_knotenverformung_dialog(nodeDisp)
+      obj_knotverform.nodeDisp  = nodeDisp
 
-    //   find_max_Lastfall();
+      find_max_Lastfall();
 
-    //   let group = obj_knlast.getTwoObj();
-    //   two.remove(group)
-    //   let index1 = obj_knlast.index1
-    //   group = draw_knotenlast(tr, obj_knlast, index1, 1, 0);
-    //   two.add(group);
+      let group = obj_knotverform.getTwoObj();
+      two.remove(group)
+      let index1 = obj_knotverform.index1
+      group = draw_knotenverformung(tr, obj_knotverform, 1, 0);
+      two.add(group);
 
-    //   obj_knlast.setTwoObj(group);
-    //   two.update();
+      obj_knotverform.setTwoObj(group);
+      two.update();
 
-    //   init_cad(2);
+      init_cad(2);
 
-    //   berechnungErforderlich(true);
+      berechnungErforderlich(true);
 
 }
 

@@ -232,6 +232,12 @@ export function set_show_bemassung(wert: boolean) {
    init_cad(2);
 }
 
+export let show_knotenverformung = true;
+export function set_show_knotenverformung(wert: boolean) {
+   show_knotenverformung = wert;
+   init_cad(2);
+}
+
 export const style_txt = {
    family: 'system-ui, sans-serif',
    size: 14,
@@ -1305,6 +1311,26 @@ function penDown(ev: PointerEvent) {
                   alertdialog('ok', 'keinen Knoten gefunden');
                }
             }
+            else if (buttons_control.knotenverformung_eingabe_aktiv) {
+
+               let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+               if (index1 > -1) {
+                  let nodeDisp = new CNodeDisp();
+                  read_knotenverformung_dialog(nodeDisp);
+                  const el = new TCAD_Knotenverformung(null, index1, nodeDisp, buttons_control.typ_cad_element);
+
+                  let group = draw_knotenverformung(tr, el, 1, 0, true);
+                  two.add(group);
+                  //console.log('getBoundingClientRect', group.getBoundingClientRect());
+                  el.setTwoObj(group)
+                  list.append(el);
+                  add_element_nodes(index1);
+                  two.update();
+               } else {
+                  alertdialog('ok', 'keinen Knoten gefunden');
+               }
+            }
+
             buttons_control.input_started = 0;
             input_active = false;
             rubberband_drawn = false;
