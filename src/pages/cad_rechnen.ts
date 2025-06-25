@@ -648,6 +648,7 @@ export function cad_rechnen() {
                 if (ind > -1) {
                     nodeDisp0[nel].node = ind
                     nodeDisp0[nel].lf = obj.nodeDisp.lf
+                     if (nodeDisp0[nel].lf > check_max_lastfall) check_max_lastfall = nodeDisp0[nel].lf;
                     let wert = obj.nodeDisp.dispx0;
                     if (wert.length === 0) nodeDisp0[nel].dispL[0] = false; else nodeDisp0[nel].dispL[0] = true;     // true=definierte Knotenverformung
                     nodeDisp0[nel].dispx0 = Number(wert.replace(/,/g, "."));
