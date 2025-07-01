@@ -1,4 +1,4 @@
-import Two from 'two.js'
+import Two, { BoundingBox } from 'two.js'
 
 import { System, STABWERK, TMass, maxBettung, set_maxBettung } from './rechnen'
 
@@ -11,6 +11,7 @@ import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { opacity } from './grafik';
 import { show_elementlasten, show_stab_qname, slmax_cad, unit_force, unit_moment } from './cad';
+import { buttons_control } from './cad_buttons';
 
 
 const style_pfeil_knotenlast = {
@@ -429,7 +430,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
     delta = tr.World0(delta / devicePixelRatio)
 
     let pLength_My = 0.8 * tr.World0(70 / devicePixelRatio)
-    let txt_abstand = 9 / devicePixelRatio
+    let txt_abstand = 9 / devicePixelRatio + 8
 
     let load = obj.knlast
     let iLastfall = load.lf
@@ -476,13 +477,17 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'center'
-        txt.baseline = 'top'
+        txt.baseline = 'middle'
         txt.rotation = -phi
+        //let rectText = txt.getBoundingClientRect()
+        //console.log("RECTTEXT", rectText)
+        // group.add(draw_BoundingClientRect(rectText))
         grp.add(txt)
 
         group.add(grp)
 
         let rect = grp.getBoundingClientRect()
+        //console.log("RECTTEXT", rectText)
 
         xtr[0] = tr.xWorld(rect.left)
         ztr[0] = tr.zWorld(rect.top)
@@ -494,6 +499,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         ztr[3] = tr.zWorld(rect.top);
 
         obj.set_drawLast_Px(xtr, ztr)   // Koordinaten merken für Picken
+
+        if (buttons_control.show_boundingRect) group.add(draw_BoundingClientRect_xz(tr, xtr, ztr))
 
         if (new_flag) {
             CADNodes[index1].offset_Px += plength
@@ -528,7 +535,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'center'
-        txt.baseline = 'top'
+        txt.baseline = 'middle'
         txt.rotation = Math.PI / 2 - phi
         grp.add(txt)
 
@@ -546,6 +553,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         ztr[3] = tr.zWorld(rect.top);
 
         obj.set_drawLast_Pz(xtr, ztr)   // Koordinaten merken für Picken
+        if (buttons_control.show_boundingRect) group.add(draw_BoundingClientRect_xz(tr, xtr, ztr))
 
         if (new_flag) {
             CADNodes[index1].offset_Pz += plength
@@ -565,7 +573,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
             let gr = draw_moment_arrow(tr, x, z, 1.0, radius, style_pfeil_moment)
             grp.add(gr)
             xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
-            zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+            zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90) + 10 * vorzeichen / devicePixelRatio + 8 * vorzeichen   // 8*vorzeichen = halbe Zeichehöhe
         } else {
             let gr = draw_moment_arrow(tr, x, z, -1.0, radius, style_pfeil_moment)
             grp.add(gr)
@@ -578,7 +586,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'right'
-        txt.baseline = 'top'
+        txt.baseline = 'middle'
         grp.add(txt)
 
         group.add(grp)
@@ -595,6 +603,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         ztr[3] = tr.zWorld(rect.top);
 
         obj.set_drawLast_My(xtr, ztr)   // Koordinaten merken für Picken
+        if (buttons_control.show_boundingRect) group.add(draw_BoundingClientRect_xz(tr, xtr, ztr))
 
         if (new_flag) {
             CADNodes[index1].offset_My += pLength_My
@@ -1265,6 +1274,68 @@ function draw_drehfeder(tr: CTrans) {
     group.add(line)
 
     //group.scale = 1.0 / devicePixelRatio
+
+    return group;
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function draw_BoundingClientRect_xz(tr: CTrans, x: number[], z: number[]) {
+    //----------------------------------------------------------------------------------------------------
+
+    let group = new Two.Group();
+
+    let xtr = Array(5), ztr = Array(5)
+
+    let vertices = [];
+    for (let i = 0; i < 4; i++) {
+        xtr[i] = tr.xPix(x[i])
+        ztr[i] = tr.zPix(z[i])
+        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+    }
+    xtr[4] = tr.xPix(x[0])
+    ztr[4] = tr.zPix(z[0])
+    vertices.push(new Two.Anchor(xtr[4], ztr[4]));
+
+    let flaeche = new Two.Path(vertices);
+    flaeche.fill = 'none';
+    flaeche.opacity = opacity
+    group.add(flaeche)
+
+    return group;
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function draw_BoundingClientRect(rect: BoundingBox) {
+    //----------------------------------------------------------------------------------------------------
+
+    let group = new Two.Group();
+
+    let xtr = Array(5), ztr = Array(5)
+
+    xtr[0] = rect.left
+    ztr[0] = rect.top
+    xtr[1] = rect.left
+    ztr[1] = rect.bottom
+    xtr[2] = rect.left + rect.width
+    ztr[2] = rect.bottom
+    xtr[3] = rect.left + rect.width
+    ztr[3] = rect.top;
+    xtr[4] = xtr[0]
+    ztr[4] = ztr[0]
+
+    let vertices = [];
+    for (let i = 0; i < 5; i++) {
+
+        vertices.push(new Two.Anchor(xtr[i], ztr[i]));
+    }
+
+
+    let flaeche = new Two.Path(vertices);
+    flaeche.fill = 'none';
+    flaeche.opacity = opacity
+    group.add(flaeche)
 
     return group;
 }

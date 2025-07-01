@@ -1839,8 +1839,7 @@ function mouseup(ev: any) {
             else if (buttons_control.messen_aktiv) {
                let dx = end_x_wc - start_x_wc
                let dz = end_z_wc - start_z_wc
-               let sl = Math.sqrt(dx * dx + dz * dz)
-               //console.log("Abstand zwischen den 2 Punkten beträgt = ", sl)
+               //let sl = Math.sqrt(dx * dx + dz * dz)
 
                const el = document.getElementById("id_dialog_messen") as drDialogMessen;
                el.set_dxdz(dx, dz);
@@ -1850,8 +1849,19 @@ function mouseup(ev: any) {
 
             }
             else if (buttons_control.bemassung_aktiv) {
-               set_help_text('Masslinienpunkt picken');
-               buttons_control.input_started = 2;
+               let dx = end_x_wc - start_x_wc
+               let dz = end_z_wc - start_z_wc
+               let sl = Math.sqrt(dx * dx + dz * dz)
+               if (sl > 0.001) {
+                  set_help_text('Masslinienpunkt picken');
+                  buttons_control.input_started = 2;
+               }
+               else {
+                  alertdialog('ok', 'Maßlänge zu klein = ' + sl + 'm');
+                  buttons_control.input_started = 1;
+                  set_help_text('zweiten Knoten picken');
+               }
+
             }
 
          }

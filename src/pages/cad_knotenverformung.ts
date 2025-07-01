@@ -6,7 +6,7 @@ import { find_max_Lastfall, max_Lastfall, set_max_lastfall } from "./cad_draw_el
 import { TCAD_Knotenverformung } from "./CCAD_element";
 import { CTrans } from "./trans";
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from "./cad_node";
-import { draw_arrow, draw_moment_arrow, style_pfeil, style_pfeil_moment, style_txt_knotenlast } from "./cad_draw_elemente";
+import { draw_arrow, draw_BoundingClientRect_xz, draw_moment_arrow, style_pfeil, style_pfeil_moment, style_txt_knotenlast } from "./cad_draw_elemente";
 import { myFormat } from "./utility";
 import { berechnungErforderlich } from "./globals";
 
@@ -145,7 +145,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
     delta = tr.World0(delta / devicePixelRatio)
 
     let pLength_My = 0.8 * tr.World0(70 / devicePixelRatio)
-    let txt_abstand = 9 / devicePixelRatio
+    let txt_abstand = 9 / devicePixelRatio + 8
 
     let nodeDisp = obj.nodeDisp;
     let iLastfall = nodeDisp.lf
@@ -196,7 +196,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'center'
-        txt.baseline = 'top'
+        txt.baseline = 'middle'
         txt.rotation = -phi
         grp.add(txt)
 
@@ -214,6 +214,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         ztr[3] = tr.zWorld(rect.top);
 
         obj.set_drawLast_ux0(xtr, ztr)   // Koordinaten merken für Picken
+        if (buttons_control.show_boundingRect) group.add(draw_BoundingClientRect_xz(tr, xtr, ztr))
 
         if (new_flag) {
             CADNodes[index1].offset_Px += plength
@@ -249,7 +250,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'center'
-        txt.baseline = 'top'
+        txt.baseline = 'middle'
         txt.rotation = Math.PI / 2 - phi
         grp.add(txt)
 
@@ -267,6 +268,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         ztr[3] = tr.zWorld(rect.top);
 
         obj.set_drawLast_uz0(xtr, ztr)   // Koordinaten merken für Picken
+        if (buttons_control.show_boundingRect) group.add(draw_BoundingClientRect_xz(tr, xtr, ztr))
 
         if (new_flag) {
             CADNodes[index1].offset_Pz += plength
@@ -287,7 +289,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
             let gr = draw_moment_arrow(tr, x, z, 1.0, radius, style_pfeil_moment)
             grp.add(gr)
             xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
-            zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
+            zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90) + 10 * vorzeichen / devicePixelRatio + 8 * vorzeichen   // 8*vorzeichen = halbe Zeichehöhe
         } else {
             let gr = draw_moment_arrow(tr, x, z, -1.0, radius, style_pfeil_moment)
             grp.add(gr)
@@ -300,7 +302,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'right'
-        txt.baseline = 'top'
+        txt.baseline = 'middle'
         grp.add(txt)
 
         group.add(grp)
@@ -317,6 +319,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         ztr[3] = tr.zWorld(rect.top);
 
         obj.set_drawLast_phi0(xtr, ztr)   // Koordinaten merken für Picken
+        if (buttons_control.show_boundingRect) group.add(draw_BoundingClientRect_xz(tr, xtr, ztr))
 
         if (new_flag) {
             CADNodes[index1].offset_My += pLength_My

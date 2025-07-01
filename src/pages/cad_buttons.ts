@@ -148,6 +148,7 @@ class Cbuttons_control {
   button_pressed = false;
   input_started = 0;
   art = -1;
+  show_boundingRect = false;
 
   reset() {
     this.pick_element = false;
@@ -170,6 +171,7 @@ class Cbuttons_control {
     this.messen_aktiv = false;
     this.bemassung_aktiv = false;
     this.art = -1;
+    this.show_boundingRect = false;
 
     let backgroundColor = backgroundColor_button
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
@@ -202,6 +204,7 @@ class Cbuttons_control {
 
     set_help_text('    ');
 
+    init_cad(2);
   }
 }
 
@@ -622,8 +625,11 @@ export function delete_button() {
     buttons_control.pick_element = true;
     set_help_text('Pick ein Element');
     buttons_control.button_pressed = true;
+    buttons_control.show_boundingRect = true;
+
     set_zoomIsActive(false);
     reset_pointer_length();
+    init_cad(2)
   }
 }
 
@@ -644,8 +650,11 @@ export function Select_button() {
     buttons_control.select_element = true;
     set_help_text('Pick Element, Lager oder Last');
     buttons_control.button_pressed = true;
+    buttons_control.show_boundingRect = true;
+
     set_zoomIsActive(false);
     reset_pointer_length();
+    init_cad(2)
   }
 }
 
