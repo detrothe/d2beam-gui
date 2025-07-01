@@ -114,28 +114,40 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
 
     // Knoten zeichnen
 
-    let knSize = 9 / devicePixelRatio;
-    let kn1 = new Two.Rectangle(tr.xPix(x1), tr.zPix(z1), knSize, knSize)
-    kn1.fill = 'black'
-    group.add(kn1);
-    let kn2 = new Two.Rectangle(tr.xPix(x2), tr.zPix(z2), knSize, knSize)
-    kn2.fill = 'black'
-    group.add(kn2);
+    if (System === 0) {   // Stabwerk
 
-    if (obj.aL > 0.0 || obj.aR > 0.0) {
-        let gr = draw_stab_starre_Enden(obj as TCAD_Stab, tr);
-        group.add(gr)
+        let knSize = 9 / devicePixelRatio;
+        let kn1 = new Two.Rectangle(tr.xPix(x1), tr.zPix(z1), knSize, knSize)
+        kn1.fill = 'black'
+        group.add(kn1);
+        let kn2 = new Two.Rectangle(tr.xPix(x2), tr.zPix(z2), knSize, knSize)
+        kn2.fill = 'black'
+        group.add(kn2);
+
+        if (obj.aL > 0.0 || obj.aR > 0.0) {
+            let gr = draw_stab_starre_Enden(obj as TCAD_Stab, tr);
+            group.add(gr)
+        }
+
+        if (obj.nGelenke > 0) {
+            let gr = draw_stab_gelenke(obj as TCAD_Stab, tr);
+            group.add(gr)
+        }
+
+        if (obj.k_0 !== 0.0) {
+            if (Math.abs(obj.k_0) > maxBettung) set_maxBettung(Math.abs(obj.k_0))
+            let gr = draw_bettungsmodul(obj, tr)  // Bettung darstellen
+            group.add(gr)
+        }
     }
-
-    if (obj.nGelenke > 0) {
-        let gr = draw_stab_gelenke(obj as TCAD_Stab, tr);
-        group.add(gr)
-    }
-
-    if (obj.k_0 !== 0.0) {
-        if (Math.abs(obj.k_0) > maxBettung) set_maxBettung(Math.abs(obj.k_0))
-        let gr = draw_bettungsmodul(obj, tr)  // Bettung darstellen
-        group.add(gr)
+    else {           // Fachwerk
+        let knSize = 6 / devicePixelRatio;
+        let circle = new Two.Circle(tr.xPix(x1), tr.zPix(z1), knSize, 8)
+        circle.fill = '#ffffff'
+        group.add(circle);
+        circle = new Two.Circle(tr.xPix(x2), tr.zPix(z2), knSize, 8)
+        circle.fill = '#ffffff'
+        group.add(circle);
     }
     //console.log("in drawStab, Anzahl Elementlasten:", obj.elast.length)
 
