@@ -4,8 +4,9 @@ import { TCAD_Einzellast, TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Knote
 import { opacity, style_pfeil, style_pfeil_moment_element, style_txt_knotenlast, style_txt_knotenlast_element } from "./grafik"
 import { myFormat } from "./utility"
 import { CAD_KNLAST, CAD_KNOTVERFORMUNG, CAD_STAB, list, slmax_cad, unit_force, unit_moment } from "./cad"
-import { draw_arrow, draw_moment_arrow } from "./cad_draw_elemente"
+import { draw_arrow, draw_BoundingClientRect_xz, draw_moment_arrow } from "./cad_draw_elemente"
 import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
+import { buttons_control } from "./cad_buttons"
 
 
 const style_pfeil_knotenlast_element = {
@@ -796,6 +797,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         ztr[3] = tr.zWorld(rect.top);
 
                         (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(xtr, ztr)   // Koordinaten merken für Picken
+                        if (buttons_control.show_boundingRect) group.add(draw_BoundingClientRect_xz(tr, xtr, ztr))
 
                     }
                     if (M != 0.0) {
@@ -843,6 +845,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         ztr[3] = tr.zWorld(rect.top);
 
                         (obj.elast[j] as TCAD_Einzellast).set_drawLast_M_xz(xtr, ztr)   // Koordinaten merken für Picken
+                        if (buttons_control.show_boundingRect) group.add(draw_BoundingClientRect_xz(tr, xtr, ztr))
 
                     }
                     ae_x[j] += plength + delta + shift
