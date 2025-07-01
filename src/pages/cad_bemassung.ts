@@ -6,6 +6,7 @@ import { TCAD_Element } from "./CCAD_element";
 import { crossProd } from "./lib";
 import { CTrans } from "./trans";
 import { myFormat } from "./utility";
+import { draw_BoundingClientRect_xz } from "./cad_draw_elemente";
 
 
 const PARALLEL = 1;
@@ -22,6 +23,9 @@ export class TCAD_Bemassung extends TCAD_Element {
   art = -1;
   b = [0, 0, 0];
   hilfslinie = 1;   // 0 = lang 1 = kurz
+
+  x: number[] = Array(4).fill(0.0)   // Weltkoordinaten der gezeichneten Streckenbelastung
+  z: number[] = Array(4).fill(0.0)
 
   constructor(obj: any, index1: number, index2: number, b: number[], elTyp: number) {
     super(obj, index1, elTyp);
@@ -49,6 +53,20 @@ export class TCAD_Bemassung extends TCAD_Element {
 
   get_hilfsline() {
     return this.hilfslinie;
+  }
+
+  set_txt_xz(x: number[], z: number[]) {
+    for (let i = 0; i < 4; i++) {
+      this.x[i] = x[i]
+      this.z[i] = z[i]
+    }
+  }
+
+  get_txt_xz(x: number[], z: number[]) {
+    for (let i = 0; i < 4; i++) {
+      x[i] = this.x[i]
+      z[i] = this.z[i]
+    }
   }
 
 }
@@ -333,6 +351,7 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
   line.linewidth = 1 / devicePixelRatio;
   group.add(line);
 
+  let grp = new Two.Group();
 
   let xm = tr.xPix((p1xNew + p2xNew) / 2) + (sinus * 11 + cosinus * 1) // devicePixelRatio  war 17
   let zm = tr.zPix((p1yNew + p2yNew) / 2) - (cosinus * 11 - sinus * 1)
@@ -343,7 +362,25 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
   txt1.alignment = 'center'
   txt1.baseline = 'middle'
   txt1.rotation = alpha
-  group.add(txt1);
+  grp.add(txt1);
+
+  let xtr = Array(4), ztr = Array(4)
+  let rect = grp.getBoundingClientRect()
+
+  xtr[0] = tr.xWorld(rect.left)
+  ztr[0] = tr.zWorld(rect.top)
+  xtr[1] = tr.xWorld(rect.left)
+  ztr[1] = tr.zWorld(rect.bottom)
+  xtr[2] = tr.xWorld(rect.left + rect.width)
+  ztr[2] = tr.zWorld(rect.bottom)
+  xtr[3] = tr.xWorld(rect.left + rect.width)
+  ztr[3] = tr.zWorld(rect.top);
+
+  obj.set_txt_xz(xtr, ztr)   // Koordinaten merken für Picken
+
+  if (buttons_control.show_boundingRect) group.add(draw_BoundingClientRect_xz(tr, xtr, ztr))
+
+  group.add(grp)
 
   return group;
 

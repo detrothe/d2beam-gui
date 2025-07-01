@@ -886,6 +886,20 @@ export function delete_element(xc: number, zc: number) {
           bemassung_gefunden = true
         }
       }
+
+      let x = Array(4)
+      let z = Array(4);
+
+      (obj as TCAD_Bemassung).get_txt_xz(x, z);
+      //console.log("xz", x, z)
+      let inside = test_point_inside_area_2D(x, z, xc, zc)
+      console.log("select_bemassung, inside ", i, inside)
+      if (inside) {
+        bemassung_gefunden = true
+        min_abstand_bemassung = 0.0
+        index_bemassung = i
+      }
+
       console.log("delete bemassung gefunden", min_abstand_bemassung)
     }
   }
@@ -1299,6 +1313,23 @@ export function select_element(xc: number, zc: number) {
           bemassung_gefunden = true
         }
       }
+
+
+      let x = Array(4)
+      let z = Array(4);
+
+      (obj as TCAD_Bemassung).get_txt_xz(x, z);
+      //console.log("xz", x, z)
+      let inside = test_point_inside_area_2D(x, z, xc, zc)
+      console.log("select_bemassung, inside ", i, inside)
+      if (inside) {
+        bemassung_gefunden = true
+        obj_bemassung = obj;
+        min_abstand_bemassung = 0.0
+
+      }
+
+
       console.log("delete bemassung gefunden", min_abstand_bemassung)
     }
     // else if (obj.elTyp === CAD_KNOTEN) {
