@@ -1439,9 +1439,9 @@ export class CTruss extends CElement {
 
                         if (eload[ieload].art === 8) {         // Knotenverformung
                             wL += eload[ieload].dispL0[1] * kombiTabelle[iLastf][index];
-                            for (let i = 0; i < 6; i++)  edisp[i] += eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
+                            for (let i = 0; i < 4; i++)  edisp[i] += eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
                             wLG += eload[ieload].dispL0[1] * kombiTabelle[iLastf][index];
-                            for (let i = 0; i < 6; i++)  edispG[i] += eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
+                            for (let i = 0; i < 4; i++)  edispG[i] += eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
                         }
                     }
                 }
@@ -1704,12 +1704,14 @@ export class CTruss extends CElement {
 
                             Nu[0] = (1.0 - x / sl);
                             Nu[1] = x / sl
-                            Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
-                            Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
-                            Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
-                            Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
+                            Nw[0] = (1.0 - x / sl);
+                            Nw[1] = x / sl
+                            // Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
+                            // Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
+                            // Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
+                            // Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
                             ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[2]
-                            //wx += Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
+                            wx += Nw[0] * edisp0[1] + Nw[1] * edisp0[3];
                         }
                     }
                 }
