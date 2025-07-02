@@ -236,6 +236,8 @@ const style_pfeil_koord = {
 //--------------------------------------------------------------------------------------------------------
 export function reset_controlpanel_grafik() {
     //----------------------------------------------------------------------------------------------------
+    console.log("in reset_controlpanel_grafik")
+
     scaleFactor_panel = 1.0
     show_labels = false;
     show_systemlinien = true;
@@ -2176,14 +2178,14 @@ export function drawsystem(svg_id = 'artboard') {
 
             if (!stab[ielem].isActive) continue
 
-            if (flag_eingabe === 0) {
+            if (flag_eingabe === 0) {                        // 0 = Eingabe überprüfen
                 x1 = Math.round(tr.xPix(stab[ielem].x1));
                 z1 = Math.round(tr.zPix(stab[ielem].z1));
                 x2 = Math.round(tr.xPix(stab[ielem].x2));
                 z2 = Math.round(tr.zPix(stab[ielem].z2));
 
                 let line = two.makeLine(x1, z1, x2, z2);
-                if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
+                if (onlyLabels) line.linewidth = 8 / devicePixelRatio;
                 else line.linewidth = 5 / devicePixelRatio;
 
                 // gestrichelte Faser
@@ -2233,7 +2235,7 @@ export function drawsystem(svg_id = 'artboard') {
                     //console.log("elem", ielem, x1, z1, x2, z2)
 
                     let line = two.makeLine(x1, z1, x2, z2);
-                    if (onlyLabels) line.linewidth = 10 / devicePixelRatio;
+                    if (onlyLabels) line.linewidth = 8 / devicePixelRatio;
                     else if (show_verformungen || show_eigenformen || show_dyn_eigenformen || show_schiefstellung || show_stabvorverformung) line.linewidth = 2 / devicePixelRatio;
                     else line.linewidth = 5 / devicePixelRatio;
 
@@ -2413,7 +2415,7 @@ export function drawsystem(svg_id = 'artboard') {
 
     if (show_knotenmassen && show_selection) draw_knotenmassen(two);
 
-    draw_lager(two);
+    draw_lager(two, onlyLabels);
 
     if (show_systemlinien || !show_selection) {
         //if (flag_eingabe != 0 || nur_eingabe_ueberpruefen)
@@ -2622,7 +2624,7 @@ function draw_dyn_eigenformen(_frameCount: any, _timeDelta: any) {
             }
         }
 
-        draw_lager(two);
+        draw_lager(two, false);
 
         for (let ielem = 0; ielem < nelem; ielem++) {
 
@@ -3657,7 +3659,7 @@ function draw_lagerkraefte(two: Two) {
 }
 
 //--------------------------------------------------------------------------------------------------------
-function draw_lager(two: Two) {
+function draw_lager(two: Two, onlyLabels: boolean) {
     //----------------------------------------------------------------------------------------------------
 
     for (let i = 0; i < nnodes; i++) {
@@ -3667,6 +3669,15 @@ function draw_lager(two: Two) {
         let phi = -node[i].phi * Math.PI / 180
 
         if (System === STABWERK) {
+
+            // Knoten zeichnen
+
+            let knSize = 7 / devicePixelRatio;
+            if (onlyLabels) knSize = 9 / devicePixelRatio;
+            let kn1 = two.makeRectangle(x1, z1, knSize, knSize)
+            kn1.fill = 'black'
+
+
             if (((node[i].L_org[0] === 1) && (node[i].L_org[1] === 1) && (node[i].L_org[2] === 1)) ||
                 ((node[i].kx > 0.0) && (node[i].kz > 0.0) && (node[i].L[2] === -1))) {  // Volleinspannung oder mit zwei Translkationsfedern
                 let rechteck = two.makeRectangle(x1, z1, 20, 20)
@@ -4726,8 +4737,8 @@ function draw_systemlinien_grafik() {
 function draw_verformungen_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    //console.log("in draw_verformungen_grafik");
     show_verformungen = !show_verformungen;
+    console.log("in draw_verformungen_grafik",show_verformungen);
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 

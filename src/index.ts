@@ -336,8 +336,8 @@ else {
         if (input !== null) read_daten(input);
         init_two_cad();
         init_cad(0);
-        reset_controlpanel_grafik();
         reset_gui();
+        reset_controlpanel_grafik();
         //rechnen(1)
     }
 
