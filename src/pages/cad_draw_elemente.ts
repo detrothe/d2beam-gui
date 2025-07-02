@@ -397,6 +397,11 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
 
         }
 
+        let knSize = 6 / devicePixelRatio;
+        let circle = new Two.Circle(0, 0, knSize, 8)
+        circle.fill = '#ffffff'
+        group.add(circle);
+
     }
 
     if (node.kx > 0.0 && node.L_org[0] === 0) {

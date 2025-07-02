@@ -1360,7 +1360,7 @@ export function drawsystem(svg_id = 'artboard') {
                     element[ielem].get_elementSchnittgroesse_u_w_starr(uS, wS, lf_index + loop, show_gesamtverformung);
                     let xx1 = stab[ielem].x2 + uS[1] * scalefactor
                     let zz1 = stab[ielem].z2 + wS[1] * scalefactor
-                    let nt=nelTeilungen-1
+                    let nt = nelTeilungen - 1
                     uG = element[ielem].cosinus * uL[nt] - element[ielem].sinus * wL[nt]
                     wG = element[ielem].sinus * uL[nt] + element[ielem].cosinus * wL[nt]
                     x = element[ielem].x_[nt]
@@ -1502,9 +1502,10 @@ export function drawsystem(svg_id = 'artboard') {
 
 
             let scalefactor = 0.1 * slmax / maxValue_eigv[ikomb - 1][draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
-
+            if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] < 0.01) scalefactor = 0.1 * slmax
             scalefactor *= scaleFactor_panel
 
+            write('scalefactor = ' + scalefactor + ' | ' + maxValue_eigv[ikomb - 1][draw_eigenform - 1])
             //console.log("scalefaktor", scalefactor, slmax, maxValue_lf[draw_eigenform - 1].disp)
             //console.log("draw_eigenform", draw_eigenform, ikomb)
 
@@ -3799,8 +3800,9 @@ function draw_lager(two: Two) {
 
             }
         } else {                     // Fachwerk
+            let group = two.makeGroup();
             if ((node[i].L[0] === -1) && (node[i].L[1] === -1)) { // zweiwertiges Lager
-                let group = two.makeGroup();
+                //let group = two.makeGroup();
                 //console.log("in zweiwertiges Lager")
                 var vertices = [];
                 vertices.push(new Two.Anchor(0, 0));
@@ -3819,11 +3821,11 @@ function draw_lager(two: Two) {
 
                 group.rotation = phi
 
-                group.translation.set(x1, z1)
+                //group.translation.set(x1, z1)
 
             }
             else if ((node[i].L[0] >= 0) && (node[i].L[1] === -1)) { // einwertiges horizontal verschieblisches Lager
-                let group = two.makeGroup();
+
                 //console.log("in einwertiges horizontal verschieblisches Lager")
                 var vertices = [];
                 vertices.push(new Two.Anchor(0, 0));
@@ -3842,11 +3844,11 @@ function draw_lager(two: Two) {
 
                 group.rotation = phi
 
-                group.translation.set(x1, z1)
+                //group.translation.set(x1, z1)
 
             }
             else if ((node[i].L[0] === -1) && (node[i].L[1] >= 0)) { // einwertiges vertikal verschieblisches Lager
-                let group = two.makeGroup();
+                //let group = two.makeGroup();
                 //console.log("in einwertiges vertikales Lager")
                 var vertices = [];
                 vertices.push(new Two.Anchor(0, 0));
@@ -3865,9 +3867,17 @@ function draw_lager(two: Two) {
 
 
                 group.rotation = -1.5708 + phi
-                group.translation.set(x1, z1)
+                //group.translation.set(x1, z1)
 
             }
+
+            let knSize = 6 / devicePixelRatio;
+            let circle = two.makeCircle(0, 0, knSize, 8)
+            circle.fill = '#ffffff'
+            group.add(circle);
+
+            group.translation.set(x1, z1)
+
 
         }
 
