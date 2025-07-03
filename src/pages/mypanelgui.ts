@@ -84,7 +84,6 @@ export function myPanel() {
     });
 
     controller_disp = gui.add(obj, 'verformung').name(verformungen).onChange(() => {
-        console.log("draw_verformungen_grafik onChange")
         window.dispatchEvent(new Event("draw_verformungen_grafik"));
     });
 
@@ -266,7 +265,5 @@ export function show_controller_bettung(wert: boolean) {
 //--------------------------------------------------------------------------------------------------------
 export function reset_gui() {
     //----------------------------------------------------------------------------------------------------
-    console.log("vor reset:gui")
     gui.reset();
-    console.log("nach reset:gui")
 }
