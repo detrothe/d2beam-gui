@@ -16,7 +16,7 @@ import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
 //import { colorToRgbNumber } from '@tweakpane/core';
 import { app } from "./haupt";
 import { saveAs } from 'file-saver';
-import { dx_offset_touch, dz_offset_touch, init_cad, init_two_cad, unit_force, unit_moment } from './cad';
+import { dx_offset_touch, dz_offset_touch, faktor_lagersymbol, init_cad, init_two_cad, unit_force, unit_moment } from './cad';
 
 export let svg_pdf_ratio = 1.0
 
@@ -3662,6 +3662,8 @@ function draw_lagerkraefte(two: Two) {
 function draw_lager(two: Two, onlyLabels: boolean) {
     //----------------------------------------------------------------------------------------------------
 
+        let faktor = faktor_lagersymbol / Math.min(devicePixelRatio, 1.5)
+
     for (let i = 0; i < nnodes; i++) {
 
         let x1 = Math.round(tr.xPix(node[i].x));
@@ -3811,7 +3813,9 @@ function draw_lager(two: Two, onlyLabels: boolean) {
 
             }
         } else {                     // Fachwerk
+
             let group = two.makeGroup();
+
             if ((node[i].L[0] === -1) && (node[i].L[1] === -1)) { // zweiwertiges Lager
                 //let group = two.makeGroup();
                 //console.log("in zweiwertiges Lager")
@@ -3828,10 +3832,9 @@ function draw_lager(two: Two, onlyLabels: boolean) {
                 line.linewidth = 2;
 
                 group.add(line)
-                group.scale = 1.0 / devicePixelRatio
 
-                group.rotation = phi
-
+                //group.scale = 1.0 / devicePixelRatio
+                //group.rotation = phi
                 //group.translation.set(x1, z1)
 
             }
@@ -3851,10 +3854,9 @@ function draw_lager(two: Two, onlyLabels: boolean) {
                 line.linewidth = 2;
 
                 group.add(line)
-                group.scale = 1.0 / devicePixelRatio
 
-                group.rotation = phi
-
+                //group.scale = 1.0 / devicePixelRatio
+                //group.rotation = phi
                 //group.translation.set(x1, z1)
 
             }
@@ -3863,30 +3865,31 @@ function draw_lager(two: Two, onlyLabels: boolean) {
                 //console.log("in einwertiges vertikales Lager")
                 var vertices = [];
                 vertices.push(new Two.Anchor(0, 0));
-                vertices.push(new Two.Anchor(-12, 20));
-                vertices.push(new Two.Anchor(12, 20));
+                vertices.push(new Two.Anchor(20, -12));
+                vertices.push(new Two.Anchor(20, 12));
 
                 let flaeche = two.makePath(vertices);
                 flaeche.fill = '#dddddd';
                 group.add(flaeche)
 
-                let line = two.makeLine(-18, 25, 18, 25);
+                let line = two.makeLine(25, -18, 25, 18);
                 line.linewidth = 2;
 
                 group.add(line)
-                group.scale = 1.0 / devicePixelRatio
 
-
-                group.rotation = -1.5708 + phi
+                //group.scale = 1.0 / devicePixelRatio
+                //group.rotation = -1.5708 + phi
                 //group.translation.set(x1, z1)
 
             }
 
-            let knSize = 6 / devicePixelRatio;
+            let knSize = 6 // devicePixelRatio;
             let circle = two.makeCircle(0, 0, knSize, 8)
             circle.fill = '#ffffff'
             group.add(circle);
 
+            group.scale = faktor // 1.0 / devicePixelRatio
+            group.rotation = phi
             group.translation.set(x1, z1)
 
 
@@ -4738,7 +4741,7 @@ function draw_verformungen_grafik() {
     //----------------------------------------------------------------------------------------------------
 
     show_verformungen = !show_verformungen;
-    console.log("in draw_verformungen_grafik",show_verformungen);
+    console.log("in draw_verformungen_grafik", show_verformungen);
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 

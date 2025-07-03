@@ -3,7 +3,7 @@ import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 import { Messen_button } from "../pages/cad_buttons";
 import { Bemassung_button } from "../pages/cad_bemassung";
-import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_raster, set_show_stab_qname } from "../pages/cad";
+import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_raster, set_show_stab_qname } from "../pages/cad";
 import { copy_svg_cad } from "../pages/grafik";
 import { Knotenverformung_button } from "../pages/cad_knotenverformung";
 
@@ -134,6 +134,8 @@ export class drDrawer_1 extends LitElement {
         <br />
         <sl-checkbox id="id_show_elementlasten" @click="${this._checkbox_elementlasten}">Elementlasten </sl-checkbox>
         <br />
+        <sl-checkbox id="id_show_knotenmassen" @click="${this._checkbox_knotenmassen}">Knotenmassen </sl-checkbox>
+        <br />
         <sl-checkbox id="id_show_bemassung" @click="${this._checkbox_bemassung}">Bemaßung </sl-checkbox>
       </p>
 
@@ -206,6 +208,15 @@ export class drDrawer_1 extends LitElement {
       set_show_elementlasten(false);
     } else {
       set_show_elementlasten(true);
+    }
+  }
+
+  _checkbox_knotenmassen() {
+    let el = this.shadowRoot?.getElementById("id_show_knotenmassen") as SlCheckbox;
+    if (el.checked) {
+      set_show_knotenmassen(false);
+    } else {
+      set_show_knotenmassen(true);
     }
   }
 

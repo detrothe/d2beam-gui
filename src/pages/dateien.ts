@@ -36,6 +36,7 @@ import {
     set_raster_zmax,
     set_fangweite_cursor,
     get_fangweite_cursor,
+    set_faktor_lagersymbol,
 } from "./cad";
 import { CMAXVALUESLOAD, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
@@ -243,6 +244,8 @@ export function read_daten(eingabedaten: string) {
     set_raster_xmax(jobj.raster_xmax);
     set_raster_zmin(jobj.raster_zmin);
     set_raster_zmax(jobj.raster_zmax);
+    if (jobj.faktor_lagersymbol === undefined) set_faktor_lagersymbol(1.0);
+    else set_faktor_lagersymbol(jobj.faktor_lagersymbol);
 
     let ele = document.getElementById("id_dialog_einstellungen") as drDialogEinstellungen;
     ele.set_raster_dx(jobj.raster_dx);
@@ -540,7 +543,7 @@ async function handleFileSelect_save() {
             await fileStream.close();
 
             set_current_filename(fileHandle.name);
-        } catch (error:any) {
+        } catch (error: any) {
             //alert(error.name);
             alert(error.message);
         }
@@ -556,7 +559,7 @@ async function handleFileSelect_save() {
         try {
             saveAs(myFile);
             set_current_filename(filename);
-        } catch (error:any) {
+        } catch (error: any) {
             //alert(error.name);
             alert(error.message);
         }

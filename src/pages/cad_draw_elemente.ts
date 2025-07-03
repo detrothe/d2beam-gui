@@ -10,7 +10,7 @@ import { draw_elementlasten, max_Lastfall } from './cad_draw_elementlasten';
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { opacity } from './grafik';
-import { show_elementlasten, show_stab_qname, slmax_cad, unit_force, unit_moment } from './cad';
+import { faktor_lagersymbol, show_elementlasten, show_stab_qname, slmax_cad, unit_force, unit_moment } from './cad';
 import { buttons_control } from './cad_buttons';
 
 
@@ -141,7 +141,8 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
         }
     }
     else {           // Fachwerk
-        let knSize = 6 / devicePixelRatio;
+        let faktor = faktor_lagersymbol / Math.min(devicePixelRatio, 1.5)
+        let knSize = faktor * 6 // / devicePixelRatio;
         let circle = new Two.Circle(tr.xPix(x1), tr.zPix(z1), knSize, 8)
         circle.fill = '#ffffff'
         group.add(circle);
@@ -227,8 +228,8 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
     let z1 = Math.round(tr.zPix(get_cad_node_Z(index1)));
     let phi = -node.phi * Math.PI / 180
 
-    let ele = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
-    let faktor = ele.get_faktor_lagersymbol() / Math.min(devicePixelRatio, 1.5)
+    //let ele = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
+    let faktor = faktor_lagersymbol / Math.min(devicePixelRatio, 1.5)
 
     let group = new Two.Group();
 
@@ -397,7 +398,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
 
         }
 
-        let knSize = 6 / devicePixelRatio;
+        let knSize =  6 // devicePixelRatio;
         let circle = new Two.Circle(0, 0, knSize, 8)
         circle.fill = '#ffffff'
         group.add(circle);

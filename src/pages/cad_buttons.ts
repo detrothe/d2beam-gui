@@ -40,7 +40,9 @@ import {
   show_knotenlasten,
   show_bemassung,
   CAD_KNOTVERFORMUNG,
-  show_knotenverformung
+  show_knotenverformung,
+  set_faktor_lagersymbol,
+  show_knotenmassen
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -851,7 +853,7 @@ export function delete_element(xc: number, zc: number) {
       }
     }
 
-    else if (obj.elTyp === CAD_KNMASSE) {
+    else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
       console.log("rect Knotenmasse", rect, xc, zc)
@@ -1289,7 +1291,7 @@ export function select_element(xc: number, zc: number) {
         }
       }
     }
-    else if (obj.elTyp === CAD_KNMASSE) {
+    else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
       console.log("rect Knotenmasse", rect, xc, zc)
@@ -2150,6 +2152,7 @@ function dialog_einstellungen_closed(this: any, e: any) {
     set_fangweite_cursor(el.get_fangweite_cursor());
     set_show_units(!el.get_show_units());
     set_penLikeTouch(el.get_penLikeTouch());
+    set_faktor_lagersymbol(el.get_faktor_lagersymbol());
 
     if (el.get_raster_xmax() - el.get_raster_xmin() <= 0.0 || el.get_raster_zmax() - el.get_raster_zmin() <= 0.0) {
       alertdialog("ok", "Der darzustellende Rasterbereich enthält unzulässige Werte");

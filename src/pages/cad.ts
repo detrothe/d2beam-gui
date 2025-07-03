@@ -200,6 +200,9 @@ export function set_raster_zmax(xz: number) { raster_zmax = xz; }
 // let typ_cad_element = 0
 // let n_input_points = 0
 
+export let faktor_lagersymbol = 1.0
+export function set_faktor_lagersymbol(wert: number) { faktor_lagersymbol = wert; }
+
 export let picked_element = -1;
 
 let show_raster = true;
@@ -223,6 +226,12 @@ export function set_show_knotenlasten(wert: boolean) {
 export let show_elementlasten = true;
 export function set_show_elementlasten(wert: boolean) {
    show_elementlasten = wert;
+   init_cad(2);
+}
+
+export let show_knotenmassen = true;
+export function set_show_knotenmassen(wert: boolean) {
+   show_knotenmassen = wert;
    init_cad(2);
 }
 
@@ -841,7 +850,7 @@ export function init_cad(flag: number) {
          two.add(group);
          obj.setTwoObj(group);
       }
-      else if (obj.elTyp === CAD_KNMASSE) {
+      else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
          let masse = new TMass();
          masse = (obj as TCAD_Knotenmasse).masse
          let index1 = obj.index1
