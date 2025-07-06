@@ -1867,6 +1867,7 @@ function mouseup(ev: any) {
                let dx = end_x_wc - start_x_wc
                let dz = end_z_wc - start_z_wc
                let sl = Math.sqrt(dx * dx + dz * dz)
+               let fehler = false;
                if (buttons_control.art === 1) {
                   if (sl > 0.001) {
                      set_help_text('Masslinienpunkt picken');
@@ -1874,6 +1875,7 @@ function mouseup(ev: any) {
                   }
                   else {
                      alertdialog('ok', 'Maßlänge zu klein = ' + sl + 'm');
+                     fehler = true;
                      buttons_control.input_started = 1;
                      set_help_text('zweiten Knoten picken');
                   }
@@ -1886,6 +1888,7 @@ function mouseup(ev: any) {
                   else {
                      alertdialog('ok', 'Maßlänge dx zu klein = ' + Math.abs(dx) + 'm');
                      buttons_control.input_started = 1;
+                     fehler = true;
                      set_help_text('zweiten Knoten picken');
                   }
                }
@@ -1897,8 +1900,13 @@ function mouseup(ev: any) {
                   else {
                      alertdialog('ok', 'Maßlänge dz zu klein = ' + Math.abs(dz) + 'm');
                      buttons_control.input_started = 1;
+                     fehler = true;
                      set_help_text('zweiten Knoten picken');
                   }
+               }
+               if (fehler && isPen) {
+                  buttons_control.input_started = 0;
+                  set_help_text('ersten Knoten picken');
                }
             }
 

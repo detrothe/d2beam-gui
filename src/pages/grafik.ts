@@ -1507,7 +1507,7 @@ export function drawsystem(svg_id = 'artboard') {
             if (maxValue_eigv[ikomb - 1][draw_eigenform - 1] < 0.01) scalefactor = 0.1 * slmax
             scalefactor *= scaleFactor_panel
 
-            write('scalefactor = ' + scalefactor + ' | ' + maxValue_eigv[ikomb - 1][draw_eigenform - 1])
+            //write('scalefactor = ' + scalefactor + ' | ' + maxValue_eigv[ikomb - 1][draw_eigenform - 1])
             //console.log("scalefaktor", scalefactor, slmax, maxValue_lf[draw_eigenform - 1].disp)
             //console.log("draw_eigenform", draw_eigenform, ikomb)
 
@@ -1611,7 +1611,7 @@ export function drawsystem(svg_id = 'artboard') {
 
             let u = 0.0, w = 0.0, uG: number, wG: number
             let edispL: number[] = new Array(6)
-            let ikomb = draw_lastfall
+            //let ikomb = draw_lastfall
             let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
             let xmem = 0.0, zmem = 0.0
 
