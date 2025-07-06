@@ -42,7 +42,8 @@ import {
   CAD_KNOTVERFORMUNG,
   show_knotenverformung,
   set_faktor_lagersymbol,
-  show_knotenmassen
+  show_knotenmassen,
+  show_lager
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -757,7 +758,7 @@ export function delete_element(xc: number, zc: number) {
         }
       }
     }
-    else if (obj.elTyp === CAD_LAGER) {
+    else if (obj.elTyp === CAD_LAGER && show_lager) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
       console.log("rect Lager", rect, xc, zc)
@@ -1279,7 +1280,7 @@ export function select_element(xc: number, zc: number) {
         }
       }
     }
-    else if (obj.elTyp === CAD_LAGER) {
+    else if (obj.elTyp === CAD_LAGER && show_lager) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
       console.log("rect Lager", rect, xc, zc)

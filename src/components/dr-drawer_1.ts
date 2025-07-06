@@ -3,7 +3,7 @@ import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 import { Messen_button } from "../pages/cad_buttons";
 import { Bemassung_button } from "../pages/cad_bemassung";
-import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_raster, set_show_stab_qname } from "../pages/cad";
+import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_lager, set_show_raster, set_show_stab_qname } from "../pages/cad";
 import { copy_svg_cad } from "../pages/grafik";
 import { Knotenverformung_button } from "../pages/cad_knotenverformung";
 
@@ -130,6 +130,8 @@ export class drDrawer_1 extends LitElement {
         <br />
         <sl-checkbox id="id_show_stab_name" @click="${this._checkbox_stab_name}">Stab Querschnittsname </sl-checkbox>
         <br />
+        <sl-checkbox id="id_show_lager" @click="${this._checkbox_lager}">Lager</sl-checkbox>
+        <br />
         <sl-checkbox id="id_show_knotenlasten" @click="${this._checkbox_knotenlasten}">Knotenlasten </sl-checkbox>
         <br />
         <sl-checkbox id="id_show_elementlasten" @click="${this._checkbox_elementlasten}">Elementlasten </sl-checkbox>
@@ -229,6 +231,14 @@ export class drDrawer_1 extends LitElement {
     }
   }
 
+  _checkbox_lager() {
+    let el = this.shadowRoot?.getElementById("id_show_lager") as SlCheckbox;
+    if (el.checked) {
+      set_show_lager(false);
+    } else {
+      set_show_lager(true);
+    }
+  }
   _svg() {
     copy_svg_cad();
   }

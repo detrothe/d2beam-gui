@@ -241,6 +241,12 @@ export function set_show_bemassung(wert: boolean) {
    init_cad(2);
 }
 
+export let show_lager = true;
+export function set_show_lager(wert: boolean) {
+   show_lager = wert;
+   init_cad(2);
+}
+
 export let show_knotenverformung = true;
 export function set_show_knotenverformung(wert: boolean) {
    show_knotenverformung = wert;
@@ -839,7 +845,7 @@ export function init_cad(flag: number) {
          two.add(group);
          obj.setTwoObj(group);
       }
-      else if (obj.elTyp === CAD_LAGER) {
+      else if (obj.elTyp === CAD_LAGER && show_lager) {
          let group = draw_lager(tr, obj as TCAD_Lager)
          two.add(group);
          obj.setTwoObj(group);
@@ -1861,16 +1867,39 @@ function mouseup(ev: any) {
                let dx = end_x_wc - start_x_wc
                let dz = end_z_wc - start_z_wc
                let sl = Math.sqrt(dx * dx + dz * dz)
-               if (sl > 0.001) {
-                  set_help_text('Masslinienpunkt picken');
-                  buttons_control.input_started = 2;
+               if (buttons_control.art === 1) {
+                  if (sl > 0.001) {
+                     set_help_text('Masslinienpunkt picken');
+                     buttons_control.input_started = 2;
+                  }
+                  else {
+                     alertdialog('ok', 'Maßlänge zu klein = ' + sl + 'm');
+                     buttons_control.input_started = 1;
+                     set_help_text('zweiten Knoten picken');
+                  }
                }
-               else {
-                  alertdialog('ok', 'Maßlänge zu klein = ' + sl + 'm');
-                  buttons_control.input_started = 1;
-                  set_help_text('zweiten Knoten picken');
+               else if (buttons_control.art === 2) {
+                  if (Math.abs(dx) > 0.001) {
+                     set_help_text('Masslinienpunkt picken');
+                     buttons_control.input_started = 2;
+                  }
+                  else {
+                     alertdialog('ok', 'Maßlänge dx zu klein = ' + Math.abs(dx) + 'm');
+                     buttons_control.input_started = 1;
+                     set_help_text('zweiten Knoten picken');
+                  }
                }
-
+               else if (buttons_control.art === 3) {
+                  if (Math.abs(dz) > 0.001) {
+                     set_help_text('Masslinienpunkt picken');
+                     buttons_control.input_started = 2;
+                  }
+                  else {
+                     alertdialog('ok', 'Maßlänge dz zu klein = ' + Math.abs(dz) + 'm');
+                     buttons_control.input_started = 1;
+                     set_help_text('zweiten Knoten picken');
+                  }
+               }
             }
 
          }
