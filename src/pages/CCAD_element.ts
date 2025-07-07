@@ -220,6 +220,13 @@ export class TCAD_Knotenlast extends TCAD_Element {
     xMy: number[] = Array(4).fill(0.0)   // Weltkoordinaten des gezeichneten Momentenpfeils
     zMy: number[] = Array(4).fill(0.0)
 
+    posX_Px = 0
+    posZ_Px = 0
+    posX_Pz = 0
+    posZ_Pz = 0
+    posX_Mx = 0
+    posZ_Mx = 0
+
     constructor(obj: any, index1: number, knlast: TLoads, elTyp: number) {
         super(obj, index1, elTyp);
 

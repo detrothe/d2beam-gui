@@ -1,6 +1,6 @@
 import Two from "two.js";
 import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
-import { CAD_KNOTVERFORMUNG, init_cad, reset_pointer_length, set_zoomIsActive, slmax_cad, tr, two } from "./cad";
+import { CAD_KNOTVERFORMUNG, init_cad, reset_pointer_length, set_zoomIsActive, slmax_cad, timer, tr, two } from "./cad";
 import { buttons_control, mode_knotenverformung_aendern, obj_knotverform, set_help_text, set_mode_knotenverformung_aendern } from "./cad_buttons";
 import { find_max_Lastfall, max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
 import { TCAD_Knotenverformung } from "./CCAD_element";
@@ -181,10 +181,10 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
 
         wert = Number(nodeDisp.dispx0.replace(/,/g, ".")) * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(tr, x0, z0, x1, z1, style_pfeil)
+            let gr = draw_arrow(tr, x0, z0, x1, z1, timer.element_selected, style_pfeil)
             grp.add(gr)
         } else {
-            let gr = draw_arrow(tr, x1, z1, x0, z0, style_pfeil)
+            let gr = draw_arrow(tr, x1, z1, x0, z0, timer.element_selected, style_pfeil)
             grp.add(gr)
         }
 
@@ -235,10 +235,10 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
 
         wert = Number(nodeDisp.dispz0.replace(/,/g, ".")) * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(tr, x0, z0, x1, z1, style_pfeil)
+            let gr = draw_arrow(tr, x0, z0, x1, z1, timer.element_selected, style_pfeil)
             grp.add(gr)
         } else {
-            let gr = draw_arrow(tr, x1, z1, x0, z0, style_pfeil)
+            let gr = draw_arrow(tr, x1, z1, x0, z0, timer.element_selected, style_pfeil)
             grp.add(gr)
         }
 
@@ -286,12 +286,12 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         let radius = tr.Pix0(slmax / 90 * devicePixelRatio)    //style_pfeil_moment.radius;
         //console.log("Moment radius", radius)
         if (wert > 0.0) {
-            let gr = draw_moment_arrow(tr, x, z, 1.0, radius, style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, 1.0, radius, timer.element_selected, style_pfeil_moment)
             grp.add(gr)
             xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
             zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90) + 10 * vorzeichen / devicePixelRatio + 8 * vorzeichen   // 8*vorzeichen = halbe Zeichehöhe
         } else {
-            let gr = draw_moment_arrow(tr, x, z, -1.0, radius, style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, -1.0, radius, timer.element_selected, style_pfeil_moment)
             grp.add(gr)
             xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
             zpix = tr.zPix(z - Math.cos(Math.PI / 5) * slmax / 90) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio

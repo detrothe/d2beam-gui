@@ -159,12 +159,12 @@ export class drDialogBemassung extends LitElement {
     if (shadow) (shadow.getElementById("dialog_bemassung") as HTMLDialogElement).close("cancel");
   }
 
-  get_hilfslinie() {
+  get_art_hilfslinie() {
     let el = this.shadowRoot?.getElementById("id_art") as SlSelect;
     return Number(el.value);
   }
 
-  set_hilfslinie(wert: number) {
+  set_art_hilfslinie(wert: number) {
     let el = this.shadowRoot?.getElementById("id_art") as HTMLInputElement;
     el.value = String(wert);
   }

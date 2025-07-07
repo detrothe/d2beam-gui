@@ -10,7 +10,7 @@ import { draw_elementlasten, max_Lastfall } from './cad_draw_elementlasten';
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { opacity } from './grafik';
-import { faktor_lagersymbol, show_elementlasten, show_stab_qname, slmax_cad, unit_force, unit_moment } from './cad';
+import { faktor_lagersymbol, select_color, show_elementlasten, show_stab_qname, slmax_cad, timer, unit_force, unit_moment } from './cad';
 import { buttons_control } from './cad_buttons';
 
 
@@ -69,7 +69,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
 
     let line1 = new Two.Line(tr.xPix(x1), tr.zPix(z1), tr.xPix(x2), tr.zPix(z2));
     line1.linewidth = 7 / devicePixelRatio;
-    if (select) line1.stroke = '#ffd700'
+    if (select) line1.stroke = select_color;
     group.add(line1);
 
     // gestrichelte Faser
@@ -237,6 +237,10 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
         if (((node.L_org[0] === 1) && (node.L_org[1] === 1) && (node.L_org[2] === 1)) ||
             ((node.kx > 0.0) && (node.kz > 0.0) && (node.L[2] === -1))) {  // Volleinspannung oder mit zwei Translkationsfedern
             let rect = new Two.Rectangle(0.0, 0.0, 20, 20)
+            if (timer.element_selected) {
+                rect.stroke = select_color;
+                rect.linewidth = 2;
+            }
             rect.fill = '#dddddd';
 
             group.add(rect);
@@ -245,11 +249,19 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
 
             let rechteck = new Two.Rectangle(0, 0, 20, 20)
             rechteck.fill = '#dddddd';
+            if (timer.element_selected) {
+                rechteck.stroke = select_color;
+                rechteck.linewidth = 2;
+            }
+
             group.add(rechteck)
 
             let line = new Two.Line(-16, 15, 16, 15);
             line.linewidth = 2;
-
+            if (timer.element_selected) {
+                line.stroke = select_color;
+                line.linewidth = 3;
+            }
             group.add(line)
 
         }
@@ -257,11 +269,19 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
 
             let rechteck = new Two.Rectangle(0, 0, 20, 20)
             rechteck.fill = '#dddddd';
+            if (timer.element_selected) {
+                rechteck.stroke = select_color;
+                rechteck.linewidth = 2;
+            }
+
             group.add(rechteck)
 
             let line = new Two.Line(15, -16, 16, 15);
             line.linewidth = 2;
-
+            if (timer.element_selected) {
+                line.stroke = select_color;
+                line.linewidth = 3;
+            }
             group.add(line)
 
         }
@@ -269,14 +289,27 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
 
             let rechteck = new Two.Rectangle(0, 0, 20, 20)
             rechteck.fill = '#dddddd';
+            if (timer.element_selected) {
+                rechteck.stroke = select_color;
+                rechteck.linewidth = 2;
+            }
+
             group.add(rechteck)
 
             let line = new Two.Line(-16, 15, 12, 15);
             line.linewidth = 2;
+            if (timer.element_selected) {
+                line.stroke = select_color;
+                line.linewidth = 3;
+            }
             group.add(line)
 
             let line2 = new Two.Line(15, -16, 15, 12);
             line2.linewidth = 2;
+            if (timer.element_selected) {
+                line2.stroke = select_color;
+                line2.linewidth = 3;
+            }
             group.add(line2)
 
 
@@ -292,11 +325,18 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
             flaeche.closed = true;
+            if (timer.element_selected) {
+                flaeche.stroke = select_color;
+                flaeche.linewidth = 2;
+            }
             group.add(flaeche)
 
             let line = new Two.Line(-18, 20, 18, 20);
             line.linewidth = 2;
-
+            if (timer.element_selected) {
+                line.stroke = select_color;
+                line.linewidth = 3;
+            }
             group.add(line)
 
         }
@@ -311,11 +351,18 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
             flaeche.closed = true;
+            if (timer.element_selected) {
+                flaeche.stroke = select_color;
+                flaeche.linewidth = 2;
+            }
             group.add(flaeche)
 
             let line = new Two.Line(-18, 25, 18, 25);
             line.linewidth = 2;
-
+            if (timer.element_selected) {
+                line.stroke = select_color;
+                line.linewidth = 3;
+            }
             group.add(line)
 
         }
@@ -330,11 +377,18 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
             flaeche.closed = true;
+            if (timer.element_selected) {
+                flaeche.stroke = select_color;
+                flaeche.linewidth = 2;
+            }
             group.add(flaeche)
 
             let line = new Two.Line(25, -18, 25, 18);
             line.linewidth = 2;
-
+            if (timer.element_selected) {
+                line.stroke = select_color;
+                line.linewidth = 3;
+            }
             group.add(line)
 
         }
@@ -351,11 +405,18 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
             flaeche.closed = true;
+            if (timer.element_selected) {
+                flaeche.stroke = select_color;
+                flaeche.linewidth = 2;
+            }
             group.add(flaeche)
 
             let line = new Two.Line(-18, 20, 18, 20);
             line.linewidth = 2;
-
+            if (timer.element_selected) {
+                line.stroke = select_color;
+                line.linewidth = 3;
+            }
             group.add(line)
 
         }
@@ -370,11 +431,18 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
             flaeche.closed = true;
+            if (timer.element_selected) {
+                flaeche.stroke = select_color;
+                flaeche.linewidth = 2;
+            }
             group.add(flaeche)
 
             let line = new Two.Line(-18, 25, 18, 25);
             line.linewidth = 2;
-
+            if (timer.element_selected) {
+                line.stroke = select_color;
+                line.linewidth = 3;
+            }
             group.add(line)
 
         }
@@ -389,18 +457,29 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             let flaeche = new Two.Path(vertices);
             flaeche.fill = '#dddddd';
             flaeche.closed = true;
+            if (timer.element_selected) {
+                flaeche.stroke = select_color;
+                flaeche.linewidth = 2;
+            }
             group.add(flaeche)
 
             let line = new Two.Line(25, -18, 25, 18);
             line.linewidth = 2;
-
+            if (timer.element_selected) {
+                line.stroke = select_color;
+                line.linewidth = 3;
+            }
             group.add(line)
 
         }
 
-        let knSize =  6 // devicePixelRatio;
+        let knSize = 6 // devicePixelRatio;
         let circle = new Two.Circle(0, 0, knSize, 8)
         circle.fill = '#ffffff'
+        if (timer.element_selected) {
+            circle.stroke = select_color;
+            circle.linewidth = 2;
+        }
         group.add(circle);
 
     }
@@ -442,7 +521,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
     let nLoop = 0
 
     let xtr = Array(4), ztr = Array(4)
-    let x0, z0, x1, z1
+    let x = 0, z = 0, x0 = 0, z0 = 0, x1 = 0, z1 = 0
 
     //plength = tr.World0(2 * plength / devicePixelRatio)
     delta = tr.World0(delta / devicePixelRatio)
@@ -468,8 +547,13 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
     if (load.Px_org != 0.0 && load.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
-        let x = get_cad_node_X(index1) + CADNodes[index1].offset_Px
-        let z = get_cad_node_Z(index1)
+        if (timer.element_selected) {
+            x = obj.posX_Px
+            z = obj.posZ_Px
+        } else {
+            x = obj.posX_Px = get_cad_node_X(index1) + CADNodes[index1].offset_Px
+            z = obj.posZ_Px = get_cad_node_Z(index1)
+        }
 
         x0 = x + co * delta
         z0 = z - si * delta
@@ -480,10 +564,10 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         wert = load.Px_org * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(tr, x0, z0, x1, z1, style_pfeil)
+            let gr = draw_arrow(tr, x0, z0, x1, z1, timer.element_selected,style_pfeil)
             grp.add(gr)
         } else {
-            let gr = draw_arrow(tr, x1, z1, x0, z0, style_pfeil)
+            let gr = draw_arrow(tr, x1, z1, x0, z0, timer.element_selected,style_pfeil)
             grp.add(gr)
         }
 
@@ -526,8 +610,13 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
     }
     if (load.Pz_org != 0.0 && load.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
-        let x = get_cad_node_X(index1)
-        let z = get_cad_node_Z(index1) - CADNodes[index1].offset_Pz
+        if (timer.element_selected) {
+            x = obj.posX_Pz
+            z = obj.posZ_Pz
+        } else {
+            x = obj.posX_Pz = get_cad_node_X(index1)
+            z = obj.posZ_Pz = get_cad_node_Z(index1) - CADNodes[index1].offset_Pz
+        }
         let grp = new Two.Group();
 
         x0 = x - si * (delta + plength)
@@ -538,10 +627,10 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         wert = load.Pz_org * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(tr, x0, z0, x1, z1, style_pfeil)
+            let gr = draw_arrow(tr, x0, z0, x1, z1, timer.element_selected,style_pfeil)
             grp.add(gr)
         } else {
-            let gr = draw_arrow(tr, x1, z1, x0, z0, style_pfeil)
+            let gr = draw_arrow(tr, x1, z1, x0, z0, timer.element_selected,style_pfeil)
             grp.add(gr)
         }
 
@@ -579,8 +668,13 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
     }
     if (load.p[2] != 0.0 && load.lf - 1 === lf_show) {
 
-        let x = get_cad_node_X(index1) - CADNodes[index1].offset_My
-        let z = get_cad_node_Z(index1)
+        if (timer.element_selected) {
+            x = obj.posX_Mx
+            z = obj.posZ_Mx
+        } else {
+            x = obj.posX_Mx = get_cad_node_X(index1) - CADNodes[index1].offset_My
+            z = obj.posZ_Mx = get_cad_node_Z(index1)
+        }
         let grp = new Two.Group();
 
         wert = load.p[2] * fact
@@ -588,12 +682,12 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         let radius = tr.Pix0(slmax / 90 * devicePixelRatio)    //style_pfeil_moment.radius;
         //console.log("Moment radius", radius)
         if (wert > 0.0) {
-            let gr = draw_moment_arrow(tr, x, z, 1.0, radius, style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, 1.0, radius, timer.element_selected,style_pfeil_moment)
             grp.add(gr)
             xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
             zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90) + 10 * vorzeichen / devicePixelRatio + 8 * vorzeichen   // 8*vorzeichen = halbe Zeichehöhe
         } else {
-            let gr = draw_moment_arrow(tr, x, z, -1.0, radius, style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, -1.0, radius, timer.element_selected,style_pfeil_moment)
             grp.add(gr)
             xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
             zpix = tr.zPix(z - Math.cos(Math.PI / 5) * slmax / 90) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
@@ -634,7 +728,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_arrow(tr: CTrans, x1: number, z1: number, x2: number, z2: number, styles?: any) {
+export function draw_arrow(tr: CTrans, x1: number, z1: number, x2: number, z2: number, element_selected:boolean,styles?: any) {
     //----------------------------------------------------------------------------------------------------
 
     let b = 20, h = 10, linewidth = 2, color = '#000000'
@@ -687,8 +781,11 @@ export function draw_arrow(tr: CTrans, x1: number, z1: number, x2: number, z2: n
     let group = new Two.Group();
     let line = new Two.Line(0, 0, a, 0);
     line.linewidth = linewidth;
-    line.stroke = color;
-
+    if (element_selected) {
+        line.stroke = select_color;
+    } else {
+        line.stroke = color;
+    }
     group.add(line)
 
     var vertices = [];
@@ -697,10 +794,14 @@ export function draw_arrow(tr: CTrans, x1: number, z1: number, x2: number, z2: n
     vertices.push(new Two.Vector(a, h / 2));
     // @ts-ignore
     let dreieck = new Two.Path(vertices);
-    dreieck.fill = color;
-    dreieck.stroke = color;
+    if (element_selected) {
+        dreieck.fill = select_color;
+        dreieck.stroke = select_color;
+    } else {
+        dreieck.fill = color;
+        dreieck.stroke = color;
+    }
     dreieck.linewidth = 1;
-
     group.add(dreieck)
     group.rotation = alpha
     group.translation.set(x0, z0)
@@ -711,7 +812,7 @@ export function draw_arrow(tr: CTrans, x1: number, z1: number, x2: number, z2: n
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_moment_arrow(tr: CTrans, x0: number, z0: number, vorzeichen: number, radius: number, styles?: any) {
+export function draw_moment_arrow(tr: CTrans, x0: number, z0: number, vorzeichen: number, radius: number, element_selected:boolean, styles?: any) {
     //----------------------------------------------------------------------------------------------------
     let b = 20, h = 10
     let x = 0.0, z = 0.0, linewidth = 2, color = '#000000'
@@ -750,16 +851,13 @@ export function draw_moment_arrow(tr: CTrans, x0: number, z0: number, vorzeichen
 
 
         let curve = new Two.Path(vertices, false, true)
+        if (element_selected) {
+            curve.stroke = select_color;
+        } else {
+            curve.stroke = color;
+        }
         curve.linewidth = linewidth;
-        curve.stroke = color;
-        //curve.fill = '#00ffffff';
-        //curve.opacity = 0;
-        //curve.noFill()
-        //curve.fillOpacity=0.25
         curve.fill = "none"
-        //curve.fill="rgba(0,0,0,0)"
-
-
         group.add(curve)
 
         vertices.length = 0;
@@ -768,8 +866,13 @@ export function draw_moment_arrow(tr: CTrans, x0: number, z0: number, vorzeichen
         vertices.push(new Two.Vector(0, h / 2 + tr.Pix0(radius)));
         // @ts-ignore
         let dreieck = new Two.Path(vertices);
-        dreieck.fill = color;
-        dreieck.stroke = color;
+        if (element_selected) {
+            dreieck.fill = select_color;
+            dreieck.stroke = select_color;
+        } else {
+            dreieck.fill = color;
+            dreieck.stroke = color;
+        }
         dreieck.linewidth = 1;
         //    dreieck.translation.set(0.0,0.0) //tr.Pix0(radius))
 
@@ -790,8 +893,12 @@ export function draw_moment_arrow(tr: CTrans, x0: number, z0: number, vorzeichen
 
 
         let curve = new Two.Path(vertices, false, true)
+        if (element_selected) {
+            curve.stroke = select_color;
+        } else {
+            curve.stroke = color;
+        }
         curve.linewidth = linewidth;
-        curve.stroke = color;
         curve.noFill()
 
         group.add(curve)
@@ -802,8 +909,13 @@ export function draw_moment_arrow(tr: CTrans, x0: number, z0: number, vorzeichen
         vertices.push(new Two.Vector(0, h / 2 - tr.Pix0(radius)));
         // @ts-ignore
         let dreieck = new Two.Path(vertices);
-        dreieck.fill = color;
-        dreieck.stroke = color;
+        if (element_selected) {
+            dreieck.fill = select_color;
+            dreieck.stroke = select_color;
+        } else {
+            dreieck.fill = color;
+            dreieck.stroke = color;
+        }
         dreieck.linewidth = 1;
 
         group.add(dreieck)
@@ -1156,8 +1268,13 @@ export function draw_knotenmasse(tr: CTrans, _mass: TMass, xm: number, zm: numbe
     let x = Math.round(tr.xPix(xm));
     let z = Math.round(tr.zPix(zm));
     let circle = new Two.Circle(x, z, 14, 20)
-    circle.fill = '#ff3333'
-
+    if (timer.element_selected) {
+        circle.stroke = select_color;
+        circle.linewidth = 3;
+        circle.fill = '#dddddd'
+    } else {
+        circle.fill = '#ff3333'
+    }
     group.add(circle);
 
     return group;
@@ -1229,12 +1346,22 @@ function draw_feder(dir: string) {
     spring.closed = false
     //dreieck.fill = color;
     //dreieck.stroke = color;
-    spring.linewidth = 2;
+    if (timer.element_selected) {
+        spring.stroke = select_color;
+        spring.linewidth = 3;
+    } else {
+        spring.linewidth = 2;
+    }
 
     group.add(spring)
 
     let line = new Two.Line(x8, z8, x9, z9);
-    line.linewidth = 2;
+    if (timer.element_selected) {
+        line.stroke = select_color;
+        line.linewidth = 3;
+    } else {
+        line.linewidth = 2;
+    }
 
     group.add(line)
     //line.scale = 1.0 / devicePixelRatio
@@ -1280,7 +1407,10 @@ function draw_drehfeder(tr: CTrans) {
     curve.noFill()
     //curve.fill="rgba(255,0,0,50);"
     //curve.translation.set(tr.xPix(x0), tr.zPix(z0 + radiusW / devicePixelRatio))
-
+    if (timer.element_selected) {
+        curve.stroke = select_color;
+        curve.linewidth = 3;
+    }
     group.add(curve)
 
     let z1 = (25 - 8) + radius // devicePixelRatio
@@ -1288,7 +1418,10 @@ function draw_drehfeder(tr: CTrans) {
     let line = new Two.Line(0, z1, 0, z2);
     line.linewidth = linewidth;
     //line.translation.set(tr.xPix(x0), tr.zPix(z0 + radiusW / devicePixelRatio))
-
+    if (timer.element_selected) {
+        line.stroke = select_color;
+        line.linewidth = 3;
+    }
     group.add(line)
 
     //group.scale = 1.0 / devicePixelRatio

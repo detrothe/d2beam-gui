@@ -3,7 +3,7 @@ import { CTrans } from "./trans"
 import { TCAD_Einzellast, TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Knotenverformung, TCAD_Spannschloss, TCAD_Stab, TCAD_Stabvorverformung, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Vorspannung } from "./CCAD_element"
 import { opacity, style_pfeil, style_pfeil_moment_element, style_txt_knotenlast, style_txt_knotenlast_element } from "./grafik"
 import { myFormat } from "./utility"
-import { CAD_KNLAST, CAD_KNOTVERFORMUNG, CAD_STAB, list, slmax_cad, unit_force, unit_moment } from "./cad"
+import { CAD_KNLAST, CAD_KNOTVERFORMUNG, CAD_STAB, list, select_color, slmax_cad, timer, unit_force, unit_moment } from "./cad"
 import { draw_arrow, draw_BoundingClientRect_xz, draw_moment_arrow } from "./cad_draw_elemente"
 import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
 import { buttons_control } from "./cad_buttons"
@@ -125,6 +125,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
     //console.log("in draw_elementlasten", obj)
 
     let slmax = slmax_cad / 1.5;
+    let element_selected = false;
 
     let x1: number, x2: number, z1: number, z2: number, si: number, co: number, xi: number, zi: number
     let dp: number, pMax: number, pMin: number
@@ -279,6 +280,11 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                 scalefactor = slmax / 20 / max_value_lasten[iLastfall - 1].eload
                 //console.log("scalefactor", scalefactor)
 
+                if (timer.element_selected && timer.index_ellast === j) {
+                    element_selected = true;
+                } else {
+                    element_selected = false;
+                }
                 if (typ === 0) { // Streckenlast
 
                     let p_L = (obj.elast[j] as TCAD_Streckenlast).pL
@@ -317,14 +323,18 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let flaeche = new Two.Path(vertices);
                         flaeche.fill = color_load;
                         flaeche.opacity = opacity
+                        if (timer.element_selected && timer.index_ellast === j) {
+                            flaeche.stroke = select_color;
+                            flaeche.linewidth = 3;
+                        }
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow(tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            let gr = draw_arrow(tr, x[3], z[3], x[0], z[0], element_selected, style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow(tr, x[2], z[2], x[1], z[1], style_pfeil)
+                            let gr = draw_arrow(tr, x[2], z[2], x[1], z[1], element_selected, style_pfeil)
                             group.add(gr)
                         }
 
@@ -395,11 +405,11 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow(tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            let gr = draw_arrow(tr, x[3], z[3], x[0], z[0], element_selected, style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow(tr, x[2], z[2], x[1], z[1], style_pfeil)
+                            let gr = draw_arrow(tr, x[2], z[2], x[1], z[1], element_selected, style_pfeil)
                             group.add(gr)
                         }
 
@@ -472,11 +482,11 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow(tr, x[3], z[3], x[0], z[0], style_pfeil)
+                            let gr = draw_arrow(tr, x[3], z[3], x[0], z[0], element_selected, style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow(tr, x[2], z[2], x[1], z[1], style_pfeil)
+                            let gr = draw_arrow(tr, x[2], z[2], x[1], z[1], element_selected, style_pfeil)
                             group.add(gr)
                         }
 
@@ -551,11 +561,11 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         group.add(line)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow(tr, x[0], z[0], x[3], z[3], style_pfeil)
+                            let gr = draw_arrow(tr, x[0], z[0], x[3], z[3], element_selected, style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow(tr, x[1], z[1], x[2], z[2], style_pfeil)
+                            let gr = draw_arrow(tr, x[1], z[1], x[2], z[2], element_selected, style_pfeil)
                             group.add(gr)
                         }
 
@@ -627,11 +637,11 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow(tr, x[0], z[0], x[3], z[3], style_pfeil)
+                            let gr = draw_arrow(tr, x[0], z[0], x[3], z[3], element_selected, style_pfeil)
                             group.add(gr)
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow(tr, x[1], z[1], x[2], z[2], style_pfeil)
+                            let gr = draw_arrow(tr, x[1], z[1], x[2], z[2], element_selected, style_pfeil)
                             group.add(gr)
                         }
 
@@ -766,10 +776,10 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let grp = new Two.Group();
 
                         if (wert < 0.0) {
-                            let gr = draw_arrow(tr, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, style_pfeil_knotenlast_element)
+                            let gr = draw_arrow(tr, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, element_selected, style_pfeil_knotenlast_element)
                             grp.add(gr)
                         } else {
-                            let gr = draw_arrow(tr, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, style_pfeil_knotenlast_element)
+                            let gr = draw_arrow(tr, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, element_selected, style_pfeil_knotenlast_element)
                             grp.add(gr)
                         }
 
@@ -811,13 +821,13 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let grp = new Two.Group();
 
                         if (wert > 0.0) {
-                            let gr = draw_moment_arrow(tr, xl, zl, 1.0, radius, style_pfeil_moment_element)
+                            let gr = draw_moment_arrow(tr, xl, zl, 1.0, radius, element_selected, style_pfeil_moment_element)
                             grp.add(gr)
                             xpix = tr.xPix(xl - Math.sin(Math.PI / 5) * slmax_cad / 50) // - 10 / devicePixelRatio
                             zpix = tr.zPix(zl + Math.cos(Math.PI / 5) * slmax_cad / 50) + 10 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
 
                         } else {
-                            let gr = draw_moment_arrow(tr, xl, zl, -1.0, radius, style_pfeil_moment_element)
+                            let gr = draw_moment_arrow(tr, xl, zl, -1.0, radius, element_selected, style_pfeil_moment_element)
                             grp.add(gr)
                             // xpix = tr.xPix(xl) - 10 / devicePixelRatio
                             // zpix = tr.zPix(zl) + (vorzeichen * radius + 12 * vorzeichen) / devicePixelRatio

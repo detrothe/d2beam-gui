@@ -1,5 +1,5 @@
 import Two from "two.js";
-import { CAD_BEMASSUNG, list, slmax_cad, style_txt } from "./cad"
+import { CAD_BEMASSUNG, list, select_color, slmax_cad, style_txt, timer } from "./cad"
 import { buttons_control, set_help_text } from "./cad_buttons"
 import { add_cad_node, add_element_nodes, get_cad_node_X, get_cad_node_Z } from "./cad_node";
 import { TCAD_Element } from "./CCAD_element";
@@ -333,6 +333,10 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
 
   let line = new Two.Line(tr.xPix(p1xNew), tr.zPix(p1yNew), tr.xPix(p2xNew), tr.zPix(p2yNew));
   line.linewidth = 2 / devicePixelRatio;
+  if (timer.element_selected) {
+    line.stroke = select_color;
+    line.linewidth = 3;
+  }
   group.add(line);
 
   let circle = new Two.Circle(tr.xPix(p1xNew), tr.zPix(p1yNew), 5 / devicePixelRatio, 6)
@@ -361,6 +365,8 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
   txt1.fill = '#000000'
   txt1.alignment = 'center'
   txt1.baseline = 'middle'
+  if (timer.element_selected) txt1.stroke = select_color;
+
   txt1.rotation = alpha
   grp.add(txt1);
 

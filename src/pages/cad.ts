@@ -20,6 +20,7 @@ import {
    read_knotenmasse_dialog,
    drawer_1_control,
    showDialog_messen,
+   show_selected_element,
 } from './cad_buttons';
 import { draw_knoten, draw_knotenlast, draw_knotenmasse, draw_lager, drawStab } from './cad_draw_elemente';
 
@@ -266,6 +267,16 @@ class Tselected_element {
    group: any = null
 };
 export const selected_element = new Tselected_element
+
+export const timer = {
+   id: -1,
+   set: false,
+   xc: -1,
+   zc: -1,
+   element_selected: false,
+   index_ellast: -1,
+};
+export const select_color = '#ff7f50'  //'#ffa000'
 
 export let list: LinkedList = new LinkedList(); // Empty list
 export let undoList: LinkedList = new LinkedList(); // Empty undo list
@@ -613,6 +624,13 @@ export function init_cad(flag: number) {
 
    let show_selection = true;
    let height = 0;
+
+   if (timer.set) {
+      window.clearTimeout(timer.id);
+      timer.set = false;
+   }
+   timer.element_selected = false;
+
 
    if (flag < 2) {
       zoomIsActive = false
@@ -1433,6 +1451,15 @@ function mousemove(ev: MouseEvent) {
    // console.log("ev.offset", ev.offsetX, ev.offsetY);
    //console.log("move", ev.button, zoomIsActive, ev.movementX, ev.movementY, ev.offsetX - mouseOffsetX, ev.offsetY - mouseOffsetY)
 
+   if (timer.set) {
+      window.clearTimeout(timer.id);
+      timer.set = false;
+   }
+   if (timer.element_selected) {
+      timer.element_selected = false;
+      init_cad(2);
+   }
+
    if (zoomIsActive) {  // mittlere Maustaste gedrückt
       mouseDx += ev.offsetX - mouseOffsetX
       mouseDz += ev.offsetY - mouseOffsetY
@@ -1576,6 +1603,14 @@ function mousemove(ev: MouseEvent) {
          }
 
       }
+      else if (buttons_control.select_element || buttons_control.pick_element) {
+         //console.log("### setting timeout", buttons_control.select_element, buttons_control.pick_element)
+         timer.id = window.setTimeout(timer_function, 500);
+         timer.set = true;
+         timer.xc = tr.xWorld(xo);
+         timer.zc = tr.zWorld(yo);
+      }
+
       two.update();
    }
 }
@@ -2366,5 +2401,16 @@ export function reset_cad() {
       txt1.baseline = 'bottom'
    }
    two.update();
+
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function timer_function() {
+   //--------------------------------------------------------------------------------------------------------
+
+   console.log("timer_function", timer.id)
+
+   show_selected_element(timer.xc, timer.zc)
 
 }
