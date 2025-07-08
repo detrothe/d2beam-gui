@@ -206,6 +206,9 @@ class Cbuttons_control {
       set_rubberband_drawn(false);
     }
 
+    timer.element_selected = false;
+    timer.index_ellast = -1;
+
     set_help_text('    ');
 
     init_cad(2);
@@ -2754,6 +2757,8 @@ function update_knotenmasse() {
 export function show_selected_element(xc: number, zc: number) {
   //----------------------------------------------------------------------------------------------------
 
+  timer.element_selected = false;
+
   console.log("select_element")
   if (list.size === 0) return;
 
@@ -3019,23 +3024,35 @@ export function show_selected_element(xc: number, zc: number) {
   }
   else if (element_einzellast_gefunden) {
 
-    const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
+    // const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
 
-    let lf = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).lastfall
-    ele.set_lastfall(lf)
-    let x = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).xe
-    let P = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).P
-    let M = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).M
-    ele.set_x(x)
-    ele.set_P(P)
-    ele.set_M(M)
-    ele.set_typ('1')
-    mode_elementlast_aendern = true
+    // let lf = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).lastfall
+    // ele.set_lastfall(lf)
+    // let x = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).xe
+    // let P = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).P
+    // let M = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).M
+    // ele.set_x(x)
+    // ele.set_P(P)
+    // ele.set_M(M)
+    // ele.set_typ('1')
+    // mode_elementlast_aendern = true
 
-    obj_ellast = obj_eleinzellast
-    index_ellast = index_eleinzellast
+    // obj_ellast = obj_eleinzellast
+    // index_ellast = index_eleinzellast
 
-    showDialog_elementlast()
+    // showDialog_elementlast()
+
+    console.log("element_einzellast_gefunden")
+    timer.element_selected = true;
+    two.remove(obj_eleinzellast.two_obj);
+    //console.log("obj_ellast.elast[index_ellast]", obj_ellast.elast[index_ellast])
+    timer.index_ellast = index_eleinzellast;
+    let group = draw_elementlasten(tr, obj_eleinzellast)
+    two.add(group);
+    selected_element.group = group
+    obj_eleinzellast.isSelected = true
+    two.update();
+
   }
   else if (elementlast_gefunden) {
 

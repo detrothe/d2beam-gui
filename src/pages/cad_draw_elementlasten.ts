@@ -323,7 +323,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let flaeche = new Two.Path(vertices);
                         flaeche.fill = color_load;
                         flaeche.opacity = opacity
-                        if (timer.element_selected && timer.index_ellast === j) {
+                        if (element_selected) {
                             flaeche.stroke = select_color;
                             flaeche.linewidth = 3;
                         }
@@ -402,6 +402,10 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let flaeche = new Two.Path(vertices);
                         flaeche.fill = color_load;
                         flaeche.opacity = opacity
+                        if (element_selected) {
+                            flaeche.stroke = select_color;
+                            flaeche.linewidth = 3;
+                        }
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
@@ -479,6 +483,10 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let flaeche = new Two.Path(vertices);
                         flaeche.fill = color_load;
                         flaeche.opacity = opacity
+                        if (element_selected) {
+                            flaeche.stroke = select_color;
+                            flaeche.linewidth = 3;
+                        }
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
@@ -554,6 +562,10 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let flaeche = new Two.Path(vertices);
                         flaeche.fill = color_load;
                         flaeche.opacity = opacity
+                        if (element_selected) {
+                            flaeche.stroke = select_color;
+                            flaeche.linewidth = 3;
+                        }
                         group.add(flaeche)
 
                         let line = new Two.Line(xtr[0], ztr[0], xtr[1], ztr[1]);
@@ -634,6 +646,10 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let flaeche = new Two.Path(vertices);
                         flaeche.fill = color_load;
                         flaeche.opacity = opacity
+                        if (element_selected) {
+                            flaeche.stroke = select_color;
+                            flaeche.linewidth = 3;
+                        }
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
@@ -718,6 +734,10 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     let flaeche = new Two.Path(vertices);
                     flaeche.fill = color_load;
                     flaeche.opacity = opacity;
+                    if (element_selected) {
+                        flaeche.stroke = select_color;
+                        flaeche.linewidth = 3;
+                    }
                     group.add(flaeche)
 
                     xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4.
@@ -893,6 +913,10 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     let flaeche = new Two.Path(vertices);
                     flaeche.fill = color_load;
                     flaeche.opacity = opacity;
+                    if (element_selected) {
+                        flaeche.stroke = select_color;
+                        flaeche.linewidth = 3;
+                    }
                     group.add(flaeche)
 
                     xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4.
