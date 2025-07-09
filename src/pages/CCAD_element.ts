@@ -462,6 +462,13 @@ export class TCAD_Knotenverformung extends TCAD_Element {
     xphi: number[] = Array(4).fill(0.0)   // Weltkoordinaten des gezeichneten phi Pfeils
     zphi: number[] = Array(4).fill(0.0)
 
+    posX_dispx0 = 0
+    posZ_dispx0 = 0
+    posX_dispz0 = 0
+    posZ_dispz0 = 0
+    posX_phi0 = 0
+    posZ_phi0 = 0
+
     constructor(obj: any, index1: number, nodeDisp: CNodeDisp, elTyp: number) {
         super(obj, index1, elTyp);
 

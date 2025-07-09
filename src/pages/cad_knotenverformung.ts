@@ -1,15 +1,29 @@
 import Two from "two.js";
 import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
-import { CAD_KNOTVERFORMUNG, init_cad, reset_pointer_length, set_zoomIsActive, slmax_cad, timer, tr, two } from "./cad";
+import { CAD_KNOTVERFORMUNG, init_cad, reset_pointer_length, select_color, set_zoomIsActive, slmax_cad, timer, tr, two } from "./cad";
 import { buttons_control, mode_knotenverformung_aendern, obj_knotverform, set_help_text, set_mode_knotenverformung_aendern } from "./cad_buttons";
 import { find_max_Lastfall, max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
 import { TCAD_Knotenverformung } from "./CCAD_element";
 import { CTrans } from "./trans";
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from "./cad_node";
-import { draw_arrow, draw_BoundingClientRect_xz, draw_moment_arrow, style_pfeil, style_pfeil_moment, style_txt_knotenlast } from "./cad_draw_elemente";
+import { draw_arrow, draw_BoundingClientRect_xz, draw_moment_arrow, style_pfeil_moment } from "./cad_draw_elemente";
 import { myFormat } from "./utility";
 import { berechnungErforderlich } from "./globals";
 
+
+const style_pfeil = {
+    b: 25,
+    h: 16,
+    linewidth: 7,
+    color: '#0000ba'
+}
+
+const style_txt_knotenlast = {
+    family: 'system-ui, sans-serif',
+    size: 14,
+    fill: '#0000ba',
+    weight: 'bold'
+};
 
 export class CNodeDisp {                                   // Knotenzwangsverformungen, analog zu Knotenkräften
     node = 0                                        // werden aber mit TElDisp0 wie Elementlasten verarbeitet
@@ -139,7 +153,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
     let nLoop = 0
 
     let xtr = Array(4), ztr = Array(4)
-    let x0, z0, x1, z1
+    let x = 0, z = 0, x0 = 0, z0 = 0, x1 = 0, z1 = 0
 
     //plength = tr.World0(2 * plength / devicePixelRatio)
     delta = tr.World0(delta / devicePixelRatio)
@@ -169,9 +183,13 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
 
     if (nodeDisp.dispx0.length > 0 && nodeDisp.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
-        let x = get_cad_node_X(index1) + CADNodes[index1].offset_Px
-        let z = get_cad_node_Z(index1)
-
+        if (timer.element_selected) {
+            x = obj.posX_dispx0
+            z = obj.posZ_dispx0
+        } else {
+            x = obj.posX_dispx0 = get_cad_node_X(index1) + CADNodes[index1].offset_Px
+            z = obj.posZ_dispx0 = get_cad_node_Z(index1)
+        }
         x0 = x + co * delta
         z0 = z - si * delta
         x1 = x + co * (delta + plength)
@@ -198,6 +216,8 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         txt.alignment = 'center'
         txt.baseline = 'middle'
         txt.rotation = -phi
+        if (timer.element_selected) txt.stroke = select_color;
+
         grp.add(txt)
 
         group.add(grp)
@@ -223,8 +243,13 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
 
     if (nodeDisp.dispz0.length > 0 && nodeDisp.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
-        let x = get_cad_node_X(index1)
-        let z = get_cad_node_Z(index1) - CADNodes[index1].offset_Pz
+        if (timer.element_selected) {
+            x = obj.posX_dispz0
+            z = obj.posZ_dispz0
+        } else {
+            x = obj.posX_dispz0 = get_cad_node_X(index1)
+            z = obj.posZ_dispz0 = get_cad_node_Z(index1) - CADNodes[index1].offset_Pz
+        }
         let grp = new Two.Group();
 
         x0 = x - si * (delta + plength)
@@ -252,6 +277,8 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         txt.alignment = 'center'
         txt.baseline = 'middle'
         txt.rotation = Math.PI / 2 - phi
+        if (timer.element_selected) txt.stroke = select_color;
+
         grp.add(txt)
 
         group.add(grp)
@@ -277,8 +304,13 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
 
     if (nodeDisp.phi0.length > 0 && nodeDisp.lf - 1 === lf_show) {
 
-        let x = get_cad_node_X(index1) - CADNodes[index1].offset_My
-        let z = get_cad_node_Z(index1)
+        if (timer.element_selected) {
+            x = obj.posX_phi0
+            z = obj.posZ_phi0
+        } else {
+            x = obj.posX_phi0 = get_cad_node_X(index1) - CADNodes[index1].offset_My
+            z = obj.posZ_phi0 = get_cad_node_Z(index1)
+        }
         let grp = new Two.Group();
 
         wert = Number(nodeDisp.phi0.replace(/,/g, ".")) * fact
@@ -303,6 +335,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'right'
         txt.baseline = 'middle'
+        if (timer.element_selected) txt.stroke = select_color;
         grp.add(txt)
 
         group.add(grp)

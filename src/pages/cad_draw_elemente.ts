@@ -564,10 +564,10 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         wert = load.Px_org * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(tr, x0, z0, x1, z1, timer.element_selected,style_pfeil)
+            let gr = draw_arrow(tr, x0, z0, x1, z1, timer.element_selected, style_pfeil)
             grp.add(gr)
         } else {
-            let gr = draw_arrow(tr, x1, z1, x0, z0, timer.element_selected,style_pfeil)
+            let gr = draw_arrow(tr, x1, z1, x0, z0, timer.element_selected, style_pfeil)
             grp.add(gr)
         }
 
@@ -581,6 +581,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         txt.alignment = 'center'
         txt.baseline = 'middle'
         txt.rotation = -phi
+        if (timer.element_selected) txt.stroke = select_color;
+
         //let rectText = txt.getBoundingClientRect()
         //console.log("RECTTEXT", rectText)
         // group.add(draw_BoundingClientRect(rectText))
@@ -627,10 +629,10 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
         wert = load.Pz_org * fact
         if (wert > 0.0) {
-            let gr = draw_arrow(tr, x0, z0, x1, z1, timer.element_selected,style_pfeil)
+            let gr = draw_arrow(tr, x0, z0, x1, z1, timer.element_selected, style_pfeil)
             grp.add(gr)
         } else {
-            let gr = draw_arrow(tr, x1, z1, x0, z0, timer.element_selected,style_pfeil)
+            let gr = draw_arrow(tr, x1, z1, x0, z0, timer.element_selected, style_pfeil)
             grp.add(gr)
         }
 
@@ -644,6 +646,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         txt.alignment = 'center'
         txt.baseline = 'middle'
         txt.rotation = Math.PI / 2 - phi
+        if (timer.element_selected) txt.stroke = select_color;
+
         grp.add(txt)
 
         group.add(grp)
@@ -682,12 +686,12 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         let radius = tr.Pix0(slmax / 90 * devicePixelRatio)    //style_pfeil_moment.radius;
         //console.log("Moment radius", radius)
         if (wert > 0.0) {
-            let gr = draw_moment_arrow(tr, x, z, 1.0, radius, timer.element_selected,style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, 1.0, radius, timer.element_selected, style_pfeil_moment)
             grp.add(gr)
             xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
             zpix = tr.zPix(z + Math.cos(Math.PI / 5) * slmax / 90) + 10 * vorzeichen / devicePixelRatio + 8 * vorzeichen   // 8*vorzeichen = halbe Zeichehöhe
         } else {
-            let gr = draw_moment_arrow(tr, x, z, -1.0, radius, timer.element_selected,style_pfeil_moment)
+            let gr = draw_moment_arrow(tr, x, z, -1.0, radius, timer.element_selected, style_pfeil_moment)
             grp.add(gr)
             xpix = tr.xPix(x - Math.sin(Math.PI / 5) * slmax / 90) // - 10 / devicePixelRatio
             zpix = tr.zPix(z - Math.cos(Math.PI / 5) * slmax / 90) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
@@ -699,6 +703,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'right'
         txt.baseline = 'middle'
+        if (timer.element_selected) txt.stroke = select_color;
+
         grp.add(txt)
 
         group.add(grp)
@@ -728,7 +734,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_arrow(tr: CTrans, x1: number, z1: number, x2: number, z2: number, element_selected:boolean,styles?: any) {
+export function draw_arrow(tr: CTrans, x1: number, z1: number, x2: number, z2: number, element_selected: boolean, styles?: any) {
     //----------------------------------------------------------------------------------------------------
 
     let b = 20, h = 10, linewidth = 2, color = '#000000'
@@ -812,7 +818,7 @@ export function draw_arrow(tr: CTrans, x1: number, z1: number, x2: number, z2: n
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_moment_arrow(tr: CTrans, x0: number, z0: number, vorzeichen: number, radius: number, element_selected:boolean, styles?: any) {
+export function draw_moment_arrow(tr: CTrans, x0: number, z0: number, vorzeichen: number, radius: number, element_selected: boolean, styles?: any) {
     //----------------------------------------------------------------------------------------------------
     let b = 20, h = 10
     let x = 0.0, z = 0.0, linewidth = 2, color = '#000000'
