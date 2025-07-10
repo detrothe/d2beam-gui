@@ -2127,7 +2127,7 @@ function drawRaster() {
          let zp_pix = tr.zPix(zp)
          let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
          line.stroke = color;
-         line.linewidth = 1;
+         line.linewidth = 1 / devicePixelRatio;
       }
       zp += raster_dz;
    }
@@ -2138,7 +2138,7 @@ function drawRaster() {
          let zp_pix = tr.zPix(zp)
          let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
          line.stroke = color;
-         line.linewidth = 1;
+         line.linewidth = 1 / devicePixelRatio;
       }
       zp -= raster_dz;
    }
@@ -2151,7 +2151,7 @@ function drawRaster() {
          let xp_pix = tr.xPix(xp)
          let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
          line.stroke = color;
-         line.linewidth = 1;
+         line.linewidth = 1 / devicePixelRatio;
       }
       xp -= raster_dx;
    }
@@ -2162,7 +2162,7 @@ function drawRaster() {
          let xp_pix = tr.xPix(xp)
          let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
          line.stroke = color;
-         line.linewidth = 1;
+         line.linewidth = 1 / devicePixelRatio;
       }
       xp += raster_dx;
    }
