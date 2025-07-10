@@ -2547,11 +2547,11 @@ async function calculate() {
 
                         if (el[ielem].isActive) {
 
-                            console.log("ELEMENTLASTEN,ielem", ielem)
+                            //console.log("ELEMENTLASTEN,ielem", ielem)
                             for (let ieload = 0; ieload < neloads; ieload++) {
                                 if (eload[ieload].element === ielem) {
                                     const index = eload[ieload].lf - 1
-                                    console.log("elem kombi index,art", index, kombiTabelle[iKomb - 1][index], eload[ieload].art)
+                                    //console.log("elem kombi index,art", index, kombiTabelle[iKomb - 1][index], eload[ieload].art)
                                     if (kombiTabelle[iKomb - 1][index] !== 0.0) {
 
                                         if (eload[ieload].art === 8) el[ielem].berechneElementlasten(ieload)
@@ -2599,13 +2599,13 @@ async function calculate() {
                         const index = eload[ieload].lf - 1
                         if (kombiTabelle[iKomb - 1][index] !== 0.0) {
                             if ((eload[ieload].art === 8)) {         // && (eload[ieload].lf === iLastfall)
-                                console.log("VORDEFINIERTE VERFORMUNGEN", eload[ieload].ieq0)
+                                //console.log("VORDEFINIERTE VERFORMUNGEN", eload[ieload].ieq0)
 
                                 for (let k = 0; k < 3; k++) {
 
                                     if (eload[ieload].ieq0[k] >= 0) {
                                         let ieq = eload[ieload].ieq0[k]
-                                        console.log("I E Q ", ieq)
+                                        //console.log("I E Q ", ieq)
                                         for (i = 0; i < neq; i++) {
                                             stiff[i][ieq] = 0.0   // Spalte streichen
                                             stiff[ieq][i] = 0.0   // Zeile streichen
@@ -2784,11 +2784,11 @@ async function calculate() {
                                     ieq = i;
                                 }
                             }
-                            console.log("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU umax=", umax)
+                            //console.log("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU umax=", umax)
 
                         } else {
                             ieq = node[maxU_node - 1].L[maxU_dir]
-                            console.log("schief", ieq, u[ieq])
+                            //console.log("schief", ieq, u[ieq])
                             umax = Math.abs(u[ieq])
                         }
 
@@ -2798,7 +2798,7 @@ async function calculate() {
                             if (vorzeichen_U === 0.0) vorzeichen_U = 1.0
                             let vorzeichen_umax = Math.sign(u[ieq])
                             let faktor = vorzeichen_U * vorzeichen_umax * maxU_schief / umax
-                            console.log("vorzeichen", vorzeichen_U, vorzeichen_umax, faktor)
+                            //console.log("vorzeichen", vorzeichen_U, vorzeichen_umax, faktor)
                             for (i = 0; i < neq; i++) {
                                 pg[i] = u[i] * faktor
                                 if (Math.abs(pg[i]) > pg_max) pg_max = Math.abs(pg[i])
