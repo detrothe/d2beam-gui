@@ -37,6 +37,10 @@ import {
     set_fangweite_cursor,
     get_fangweite_cursor,
     set_faktor_lagersymbol,
+    set_raster_offset_x,
+    set_raster_offset_z,
+    raster_offset_x,
+    raster_offset_z,
 } from "./cad";
 import { CMAXVALUESLOAD, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
@@ -247,9 +251,20 @@ export function read_daten(eingabedaten: string) {
     if (jobj.faktor_lagersymbol === undefined) set_faktor_lagersymbol(1.0);
     else set_faktor_lagersymbol(jobj.faktor_lagersymbol);
 
+    if (jobj.raster_offset_x === undefined) {
+        set_raster_offset_x(0.0);
+        set_raster_offset_z(0.0);
+    } else {
+        set_raster_offset_x(jobj.raster_offset_x);
+        set_raster_offset_z(jobj.raster_offset_z);
+    }
+
     let ele = document.getElementById("id_dialog_einstellungen") as drDialogEinstellungen;
     ele.set_raster_dx(jobj.raster_dx);
     ele.set_raster_dz(jobj.raster_dz);
+
+    ele.set_rasterOffset_x(jobj.raster_offset_x);
+    ele.set_rasterOffset_z(jobj.raster_offset_z);
 
     ele.set_raster_xmin(jobj.raster_xmin);
     ele.set_raster_xmax(jobj.raster_xmax);
@@ -900,6 +915,8 @@ export function str_inputToJSON() {
 
         raster_dx: raster_dx,
         raster_dz: raster_dz,
+        raster_offset_x: raster_offset_x,
+        raster_offset_z: raster_offset_z,
         raster_xmin: raster_xmin,
         raster_xmax: raster_xmax,
         raster_zmin: raster_zmin,

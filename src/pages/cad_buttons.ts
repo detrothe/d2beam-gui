@@ -44,7 +44,9 @@ import {
   set_faktor_lagersymbol,
   show_knotenmassen,
   show_lager,
-  timer
+  timer,
+  set_raster_offset_x,
+  set_raster_offset_z
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -2141,10 +2143,10 @@ function dialog_einstellungen_closed(this: any, e: any) {
     //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
     console.log("sieht gut aus");
     let el = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
-    console.log("dx drDialogEinstellungen", el.getValue_dx())
+    //console.log("dx drDialogEinstellungen", el.getRaster_dx())
 
-    set_raster_dx(el.getValue_dx());
-    set_raster_dz(el.getValue_dz());
+    set_raster_dx(el.getRaster_dx());
+    set_raster_dz(el.getRaster_dz());
     set_dx_offset_touch_factor(el.get_dx_offset())
     set_dz_offset_touch_factor(el.get_dz_offset())
     set_touch_support(!el.get_NO_touch_support())
@@ -2153,6 +2155,9 @@ function dialog_einstellungen_closed(this: any, e: any) {
     set_raster_xmax(el.get_raster_xmax());
     set_raster_zmin(el.get_raster_zmin());
     set_raster_zmax(el.get_raster_zmax());
+
+    set_raster_offset_x(el.get_rasterOffset_x());
+    set_raster_offset_z(el.get_rasterOffset_z());
 
     set_fangweite_cursor(el.get_fangweite_cursor());
     set_show_units(!el.get_show_units());

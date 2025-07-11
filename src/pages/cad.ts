@@ -173,14 +173,15 @@ export let raster_xmin = -1.0,
    raster_zmin = -1.0,
    raster_zmax = 9.0;
 
+export let raster_offset_x = 0.0;
+export let raster_offset_z = 0.0;
+
 export let slmax_cad = 10.0;
 
-export let raster_dx = 0.5,
-   raster_dz = 0.5;
-let xRasterPoint = 0.0,
-   zRasterPoint = 0.0;
-let xNodePoint = 0.0,
-   zNodePoint = 0.0;
+export let raster_dx = 0.5, raster_dz = 0.5;
+let xRasterPoint = 0.0, zRasterPoint = 0.0;
+let xNodePoint = 0.0, zNodePoint = 0.0;
+
 let rasterPoint: any = null;
 let nodePoint: any = null;
 let foundRasterPoint = false;
@@ -194,6 +195,8 @@ export function set_raster_xmin(xz: number) { raster_xmin = xz; }
 export function set_raster_xmax(xz: number) { raster_xmax = xz; }
 export function set_raster_zmin(xz: number) { raster_zmin = xz; }
 export function set_raster_zmax(xz: number) { raster_zmax = xz; }
+export function set_raster_offset_x(x: number) { raster_offset_x = x; }
+export function set_raster_offset_z(z: number) { raster_offset_z = z; }
 
 // let cad_eingabe_aktiv = false
 // let stab_eingabe_aktiv = false
@@ -1560,12 +1563,7 @@ function mousemove(ev: MouseEvent) {
          let xc = tr.xWorld(xo);
          let zc = tr.zWorld(yo);
          let txt = 'x: ' + myFormat(xc, 2, 2) + ' | z: ' + myFormat(zc, 2, 2);
-         txt_mouseCoord = two.makeText(
-            txt,
-            two.width - 100,
-            two.height - 20,
-            style_txt
-         );
+         txt_mouseCoord = two.makeText(txt, two.width - 100, two.height - 20, style_txt);
          txt_mouseCoord.fill = '#000000';
          txt_mouseCoord.baseline = 'middle';
          txt_mouseCoord.alignment = 'left';
@@ -2106,6 +2104,7 @@ function touchmove(ev: TouchEvent) {
 function drawRaster() {
    //---------------------------------------------------------------------------------------------
 
+   console.log("raster_offset_xz",raster_offset_x,raster_offset_z)
    const color = '#aaaaaa';
 
    // let size = 3 / devicePixelRatio;
@@ -2121,7 +2120,7 @@ function drawRaster() {
 
    // horizontale Linien
 
-   let zp = 0.0
+   let zp = raster_offset_z
    while (zp <= raster_zmax) {
       if (zp >= raster_zmin) {
          let zp_pix = tr.zPix(zp)
@@ -2132,7 +2131,7 @@ function drawRaster() {
       zp += raster_dz;
    }
 
-   zp = -raster_dz;
+   zp = raster_offset_z - raster_dz;
    while (zp >= raster_zmin) {
       if (zp <= raster_zmax) {
          let zp_pix = tr.zPix(zp)
@@ -2145,7 +2144,7 @@ function drawRaster() {
 
    // vertikale Linien
 
-   let xp = -raster_dx;
+   let xp = raster_offset_x - raster_dx;
    while (xp >= raster_xmin) {
       if (xp <= raster_xmax) {
          let xp_pix = tr.xPix(xp)
@@ -2156,7 +2155,7 @@ function drawRaster() {
       xp -= raster_dx;
    }
 
-   xp = 0.0;
+   xp = raster_offset_x;
    while (xp <= raster_xmax) {
       if (xp >= raster_xmin) {
          let xp_pix = tr.xPix(xp)
@@ -2245,19 +2244,21 @@ function findNextRasterPoint(xl: number, yl: number) {
    fangweite2 = rahm * rahm;
 
    if (xl >= 0.0) {
-      x1 = Math.trunc(xl / raster_dx) * raster_dx;
+      x1 = Math.trunc((xl - raster_offset_x) / raster_dx) * raster_dx + raster_offset_x;
       x2 = x1 + raster_dx;
    } else {
-      x2 = Math.trunc(xl / raster_dx) * raster_dx;
+      x2 = Math.trunc((xl - raster_offset_x) / raster_dx) * raster_dx + raster_offset_x;
       x1 = x2 - raster_dx;
    }
    if (yl >= 0.0) {
-      y1 = Math.trunc(yl / raster_dz) * raster_dz;
+      y1 = Math.trunc((yl - raster_offset_z) / raster_dz) * raster_dz + raster_offset_z;
       y2 = y1 + raster_dz;
    } else {
-      y2 = Math.trunc(yl / raster_dz) * raster_dz;
+      y2 = Math.trunc((yl - raster_offset_z) / raster_dz) * raster_dz + raster_offset_z;
       y1 = y2 - raster_dz;
    }
+
+   console.log("x1,x2,y1,y2",x1,x2,y1,y2)
 
    sl2 = (x1 - xl) * (x1 - xl) + (y1 - yl) * (y1 - yl);
    if (sl2 < fangweite2) {
