@@ -74,7 +74,7 @@ import { set_max_lastfall, zero_max_lastfall } from "./cad_draw_elementlasten";
 import { reset_cad_nodes } from "./cad_node";
 
 //########################################################################################################################
-let theFooter = "2D structural analysis of frames and trusses, v1.4.2.a, 11-Juli-2025, ";
+let theFooter = "2D structural analysis of frames and trusses, v1.4.2.a, 14-Juli-2025, ";
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -180,7 +180,7 @@ portrait.addEventListener("change", function (e) {
 {
   //const template = html`  // verwenden, wenn ohne renderbefore, siehe unten
 
-  console.log("vor template");
+  // console.log("vor template");
 
   const template = () => html`
     <style>

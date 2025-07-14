@@ -2104,7 +2104,7 @@ function touchmove(ev: TouchEvent) {
 function drawRaster() {
    //---------------------------------------------------------------------------------------------
 
-   console.log("raster_offset_xz",raster_offset_x,raster_offset_z)
+   console.log("raster_offset_xz", raster_offset_x, raster_offset_z)
    const color = '#aaaaaa';
 
    // let size = 3 / devicePixelRatio;
@@ -2243,14 +2243,14 @@ function findNextRasterPoint(xl: number, yl: number) {
    rahm = fangweite_cursor;
    fangweite2 = rahm * rahm;
 
-   if (xl >= 0.0) {
+   if (xl - raster_offset_x >= 0.0) {
       x1 = Math.trunc((xl - raster_offset_x) / raster_dx) * raster_dx + raster_offset_x;
       x2 = x1 + raster_dx;
    } else {
       x2 = Math.trunc((xl - raster_offset_x) / raster_dx) * raster_dx + raster_offset_x;
       x1 = x2 - raster_dx;
    }
-   if (yl >= 0.0) {
+   if (yl - raster_offset_z >= 0.0) {                  // yl >= 0.0 && (yl - raster_offset_z > 0)
       y1 = Math.trunc((yl - raster_offset_z) / raster_dz) * raster_dz + raster_offset_z;
       y2 = y1 + raster_dz;
    } else {
@@ -2258,7 +2258,7 @@ function findNextRasterPoint(xl: number, yl: number) {
       y1 = y2 - raster_dz;
    }
 
-   console.log("x1,x2,y1,y2",x1,x2,y1,y2)
+   //console.log("x1,x2,y1,y2", xl, yl, ' | ', x1, x2, ' | ', y1, y2)
 
    sl2 = (x1 - xl) * (x1 - xl) + (y1 - yl) * (y1 - yl);
    if (sl2 < fangweite2) {
@@ -2388,20 +2388,23 @@ export function reset_cad() {
 
    init_cad(2);
 
-   for (let i = 0; i < CADNodes.length; i++) {
-      let x = CADNodes[i].x;
-      let z = CADNodes[i].z;
-      //console.log("circle nel=", i, CADNodes[i].nel)
-      let circle = two.makeCircle(tr.xPix(x), tr.zPix(z), 14, 20)
-      circle.fill = 'none'
-      if (CADNodes[i].nel === 0) circle.stroke = 'red'
-      if (CADNodes[i].nel < 0) circle.stroke = 'blue'
-      const txt1 = two.makeText(String(CADNodes[i].nel), tr.xPix(x), tr.zPix(z), style_txt)
-      txt1.fill = '#000000'
-      txt1.alignment = 'left'
-      txt1.baseline = 'bottom'
+   if (process.env.NODE_ENV === "development") {
+
+      for (let i = 0; i < CADNodes.length; i++) {
+         let x = CADNodes[i].x;
+         let z = CADNodes[i].z;
+         //console.log("circle nel=", i, CADNodes[i].nel)
+         let circle = two.makeCircle(tr.xPix(x), tr.zPix(z), 14, 20)
+         circle.fill = 'none'
+         if (CADNodes[i].nel === 0) circle.stroke = 'red'
+         if (CADNodes[i].nel < 0) circle.stroke = 'blue'
+         const txt1 = two.makeText(String(CADNodes[i].nel), tr.xPix(x), tr.zPix(z), style_txt)
+         txt1.fill = '#000000'
+         txt1.alignment = 'left'
+         txt1.baseline = 'bottom'
+      }
+      two.update();
    }
-   two.update();
 
 }
 

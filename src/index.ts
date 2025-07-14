@@ -10,8 +10,8 @@ if (process.env.NODE_ENV !== "development") {
 import './pages/haupt';
 import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
-import { rechnen } from './pages/rechnen'
-import { ConfirmDialog } from './pages/confirm_dialog';
+// import { rechnen } from './pages/rechnen'
+// import { ConfirmDialog } from './pages/confirm_dialog';
 import { init_cad, init_two_cad } from './pages/cad';
 import { reset_controlpanel_grafik } from './pages/grafik';
 import { reset_gui } from './pages/mypanelgui';
