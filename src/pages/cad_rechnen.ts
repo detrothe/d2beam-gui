@@ -477,11 +477,19 @@ export function cad_rechnen() {
                         }
                         else if (typ === 1) {
                             let x = (obj.elast[j] as TCAD_Einzellast).xe
+
+                            let elemNo = obj.elNo - 1
+                            if (x - 0.0001 > element[elemNo].sl) {
+                                write("Angriffspunkt Einzellast auf Stab " + String(elemNo + 1) + " ist größer Stablänge, siehe Tab Tabellen")
+                                fatal_error = true;
+                            } else {
+                                if (x > element[elemNo].sl) x = element[elemNo].sl;
+                            }
                             let P = (obj.elast[j] as TCAD_Einzellast).P
                             let M = (obj.elast[j] as TCAD_Einzellast).M
 
                             eload.push(new TElLoads())
-                            eload[ielem].element = obj.elNo - 1
+                            eload[ielem].element = elemNo
                             eload[ielem].lf = lf
                             eload[ielem].art = 6
                             eload[ielem].x = x
@@ -834,7 +842,7 @@ export function cad_rechnen() {
                 alertdialog("ok", "User-Knoten " + (+i + 1) + "hat keinen Index, FATAL ERROR");
             }
         }
-        else   if (obj.elTyp === CAD_BEMASSUNG) {
+        else if (obj.elTyp === CAD_BEMASSUNG) {
             let index = obj.index1;
             if (index > -1) {
                 CADNodes[index].nel++;

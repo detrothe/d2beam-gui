@@ -82,7 +82,6 @@ import { drDialogBemassung } from "../components/dr-dialog_bemassung";
 import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
 import { draw_knotenverformung, showDialog_knotenverformung, write_knotenverformung_dialog } from "./cad_knotenverformung";
 
-//export let pick_element = false
 let backgroundColor_button = 'rgb(64, 64, 64)';
 let backgroundColor_button_light = 'rgb(64, 64, 64)';
 
@@ -134,7 +133,7 @@ class CDrawer_1_control {
 }
 
 class Cbuttons_control {
-  pick_element = false;
+  delete_element = false;
   select_element = false;
   select_node = false;
   cad_eingabe_aktiv = false;
@@ -157,7 +156,7 @@ class Cbuttons_control {
   show_boundingRect = false;
 
   reset() {
-    this.pick_element = false;
+    this.delete_element = false;
     this.select_element = false;
     this.select_node = false;
     this.cad_eingabe_aktiv = false;
@@ -622,7 +621,7 @@ export function delete_button() {
   //----------------------------------------------------------------------------------------------------
 
 
-  if (buttons_control.pick_element) {
+  if (buttons_control.delete_element) {
     buttons_control.reset();
     delete_help_text();
   } else {
@@ -631,7 +630,7 @@ export function delete_button() {
     let el = document.getElementById("id_cad_delete_button") as HTMLButtonElement;
     el.style.backgroundColor = "darkRed";
 
-    buttons_control.pick_element = true;
+    buttons_control.delete_element = true;
     set_help_text('Pick ein Element');
     buttons_control.button_pressed = true;
     buttons_control.show_boundingRect = true;
@@ -673,6 +672,8 @@ export function delete_element(xc: number, zc: number) {
 
   console.log("delete_element")
   if (list.size === 0) return;
+
+  let gefunden = false
 
   let min_abstand = 1e30;
   let stab_gefunden = false
@@ -723,7 +724,7 @@ export function delete_element(xc: number, zc: number) {
             (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
 
             let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element, inside ", inside)
+            //console.log("select_element, inside ", inside)
             if (inside) {
               elementlast_gefunden = true
               obj_ellast = obj
@@ -738,7 +739,7 @@ export function delete_element(xc: number, zc: number) {
               (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
               //console.log("xz", x, z)
               let inside = test_point_inside_area_2D(x, z, xc, zc)
-              console.log("select_element P, inside ", i, inside)
+              //console.log("select_element P, inside ", i, inside)
               if (inside) {
                 element_einzellast_gefunden = true
                 obj_eleinzellast = obj
@@ -753,7 +754,7 @@ export function delete_element(xc: number, zc: number) {
               (obj.elast[j] as TCAD_Einzellast).get_drawLast_M_xz(x, z);
               //console.log("xz", x, z)
               let inside = test_point_inside_area_2D(x, z, xc, zc)
-              console.log("select_element M, inside ", i, inside)
+              //console.log("select_element M, inside ", i, inside)
               if (inside) {
                 element_einzellast_gefunden = true
                 obj_eleinzellast = obj
@@ -767,7 +768,7 @@ export function delete_element(xc: number, zc: number) {
     else if (obj.elTyp === CAD_LAGER && show_lager) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
-      console.log("rect Lager", rect, xc, zc)
+      //console.log("rect Lager", rect, xc, zc)
       if (xpix > rect.left && xpix < rect.right) {
         if (zpix > rect.top && zpix < rect.bottom) {
           lager_gefunden = true
@@ -776,15 +777,6 @@ export function delete_element(xc: number, zc: number) {
       }
     }
     else if (obj.elTyp === CAD_KNLAST && show_knotenlasten) {
-      // let two_obj = obj.two_obj
-      // let rect = two_obj.getBoundingClientRect();
-      // console.log("rect Knotenlast", rect, xc, zc)
-      // if (xpix > rect.left && xpix < rect.right) {
-      //   if (zpix > rect.top && zpix < rect.bottom) {
-      //     knotenlast_gefunden = true
-      //     index_knlast = i;
-      //   }
-      // }
 
       let x = Array(4)
       let z = Array(4);
@@ -863,7 +855,7 @@ export function delete_element(xc: number, zc: number) {
     else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
-      console.log("rect Knotenmasse", rect, xc, zc)
+      //console.log("rect Knotenmasse", rect, xc, zc)
       if (xpix > rect.left && xpix < rect.right) {
         if (zpix > rect.top && zpix < rect.bottom) {
           knotenmasse_gefunden = true
@@ -875,7 +867,7 @@ export function delete_element(xc: number, zc: number) {
     else if (obj.elTyp === CAD_KNOTEN) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
-      console.log("rect Knotenlast", rect, xc, zc)
+      //console.log("rect Knotenlast", rect, xc, zc)
       if (xpix > rect.left && xpix < rect.right) {
         if (zpix > rect.top && zpix < rect.bottom) {
           knoten_gefunden = true
@@ -886,7 +878,7 @@ export function delete_element(xc: number, zc: number) {
 
     else if (obj.elTyp === CAD_BEMASSUNG && show_bemassung) {
 
-      console.log("index3,4", obj.index3, obj.index4)
+      //console.log("index3,4", obj.index3, obj.index4)
       let abstand = abstandPunktGerade_2D(get_cad_node_X(obj.index3), get_cad_node_Z(obj.index3), get_cad_node_X(obj.index4), get_cad_node_Z(obj.index4), xc, zc);
       if (abstand > -1.0) {
         if (abstand < min_abstand_bemassung) {
@@ -902,14 +894,14 @@ export function delete_element(xc: number, zc: number) {
       (obj as TCAD_Bemassung).get_txt_xz(x, z);
       //console.log("xz", x, z)
       let inside = test_point_inside_area_2D(x, z, xc, zc)
-      console.log("select_bemassung, inside ", i, inside)
+      //console.log("select_bemassung, inside ", i, inside)
       if (inside) {
         bemassung_gefunden = true
         min_abstand_bemassung = 0.0
         index_bemassung = i
       }
 
-      console.log("delete bemassung gefunden", min_abstand_bemassung)
+      //console.log("delete bemassung gefunden", min_abstand_bemassung)
     }
   }
 
@@ -941,6 +933,7 @@ export function delete_element(xc: number, zc: number) {
 
     find_max_Lastfall();
     find_maxValues_eloads();
+    gefunden = true;
   }
   else if (lager_gefunden) {
     let obj = list.removeAt(index_lager);
@@ -949,6 +942,7 @@ export function delete_element(xc: number, zc: number) {
     remove_element_nodes((obj as TCAD_Lager).index1)
     undoList.append(obj);
     // buttons_control.reset();
+    gefunden = true;
   }
   else if (knoten_gefunden) {
     let obj = list.getAt(index_knoten);
@@ -960,6 +954,7 @@ export function delete_element(xc: number, zc: number) {
       undoList.append(obj);
       remove_element_nodes((obj as TCAD_Knoten).index1)
       //buttons_control.reset();
+      gefunden = true;
     } else {
       alertdialog("ok", "An dem Knoten hängen noch andere Elemente, erst diese löschen");
     }
@@ -973,6 +968,7 @@ export function delete_element(xc: number, zc: number) {
     //buttons_control.reset();
 
     find_max_Lastfall();
+    gefunden = true;
   }
   else if (knotenverformung_gefunden) {
     let obj = list.removeAt(index_knotenverformung);
@@ -982,6 +978,7 @@ export function delete_element(xc: number, zc: number) {
     undoList.append(obj);
 
     find_max_Lastfall();
+    gefunden = true;
   }
   else if (knotenmasse_gefunden) {
     let obj = list.removeAt(index_knmasse);
@@ -990,7 +987,7 @@ export function delete_element(xc: number, zc: number) {
     remove_element_nodes((obj as TCAD_Knotenmasse).index1)
     undoList.append(obj);
     //buttons_control.reset();
-
+    gefunden = true;
   }
   else if (stab_gefunden && min_abstand < get_fangweite_cursor()) {          // Stab   index >= 0 && min_abstand < 0.25
     if (list.size > 0) {
@@ -1003,6 +1000,7 @@ export function delete_element(xc: number, zc: number) {
 
       undoList.append(obj);
       //buttons_control.reset();
+      gefunden = true;
     }
   }
   else if (bemassung_gefunden && min_abstand_bemassung < get_fangweite_cursor()) {          // Stab   index >= 0 && min_abstand < 0.25
@@ -1017,8 +1015,11 @@ export function delete_element(xc: number, zc: number) {
       remove_element_nodes((obj as TCAD_Bemassung).index4)
 
       undoList.append(obj);
+      gefunden = true;
     }
   }
+
+  if (gefunden) init_cad(2);
 
 }
 
@@ -1140,7 +1141,7 @@ export function select_element(xc: number, zc: number) {
 
   for (let i = 0; i < list.size; i++) {
     let obj = list.getAt(i) as any;
-    console.log("eltyp", obj.elTyp)
+    //console.log("eltyp", obj.elTyp)
 
     if (obj.elTyp === CAD_KNLAST && show_knotenlasten) {
 
@@ -1151,7 +1152,7 @@ export function select_element(xc: number, zc: number) {
         (obj as TCAD_Knotenlast).get_drawLast_Px(x, z);
         //console.log("xz", x, z)
         let inside = test_point_inside_area_2D(x, z, xc, zc)
-        console.log("select_element Px KNLAST, inside ", i, inside)
+        //console.log("select_element Px KNLAST, inside ", i, inside)
         if (inside) {
           knotenlast_gefunden = true
           obj_knlast = obj
@@ -1162,7 +1163,7 @@ export function select_element(xc: number, zc: number) {
         (obj as TCAD_Knotenlast).get_drawLast_Pz(x, z);
         //console.log("xz", x, z)
         let inside = test_point_inside_area_2D(x, z, xc, zc)
-        console.log("select_element Pz KNLAST, inside ", i, inside)
+        //console.log("select_element Pz KNLAST, inside ", i, inside)
         if (inside) {
           knotenlast_gefunden = true
           obj_knlast = obj
@@ -1173,7 +1174,7 @@ export function select_element(xc: number, zc: number) {
         (obj as TCAD_Knotenlast).get_drawLast_My(x, z);
         //console.log("xz", x, z)
         let inside = test_point_inside_area_2D(x, z, xc, zc)
-        console.log("select_element My KNLAST, inside ", i, inside)
+        //console.log("select_element My KNLAST, inside ", i, inside)
         if (inside) {
           knotenlast_gefunden = true
           obj_knlast = obj
@@ -1244,7 +1245,7 @@ export function select_element(xc: number, zc: number) {
             (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
             //console.log("xz", x, z)
             let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element, inside ", i, inside)
+            //console.log("select_element, inside ", i, inside)
             if (inside) {
               elementlast_gefunden = true
               obj_ellast = obj
@@ -1259,7 +1260,7 @@ export function select_element(xc: number, zc: number) {
               (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
               //console.log("xz", x, z)
               let inside = test_point_inside_area_2D(x, z, xc, zc)
-              console.log("select_element P typ 1, inside ", i, inside)
+              //console.log("select_element P typ 1, inside ", i, inside)
               if (inside) {
                 element_einzellast_gefunden = true
                 obj_eleinzellast = obj
@@ -1274,7 +1275,7 @@ export function select_element(xc: number, zc: number) {
               (obj.elast[j] as TCAD_Einzellast).get_drawLast_M_xz(x, z);
               //console.log("xz", x, z)
               let inside = test_point_inside_area_2D(x, z, xc, zc)
-              console.log("select_element M typ 1, inside ", i, inside)
+              //console.log("select_element M typ 1, inside ", i, inside)
               if (inside) {
                 element_einzellast_gefunden = true
                 obj_eleinzellast = obj
@@ -1289,7 +1290,7 @@ export function select_element(xc: number, zc: number) {
     else if (obj.elTyp === CAD_LAGER && show_lager) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
-      console.log("rect Lager", rect, xc, zc)
+      //console.log("rect Lager", rect, xc, zc)
       if (xpix > rect.left && xpix < rect.right) {
         if (zpix > rect.top && zpix < rect.bottom) {
           lager_gefunden = true
@@ -1301,11 +1302,10 @@ export function select_element(xc: number, zc: number) {
     else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
-      console.log("rect Knotenmasse", rect, xc, zc)
+      //console.log("rect Knotenmasse", rect, xc, zc)
       if (xpix > rect.left && xpix < rect.right) {
         if (zpix > rect.top && zpix < rect.bottom) {
           knotenmasse_gefunden = true
-          //index_knlast = i;
           obj_knmasse = obj
         }
       }
@@ -1323,14 +1323,13 @@ export function select_element(xc: number, zc: number) {
         }
       }
 
-
       let x = Array(4)
       let z = Array(4);
 
       (obj as TCAD_Bemassung).get_txt_xz(x, z);
       //console.log("xz", x, z)
       let inside = test_point_inside_area_2D(x, z, xc, zc)
-      console.log("select_bemassung, inside ", i, inside)
+      //console.log("select_bemassung, inside ", i, inside)
       if (inside) {
         bemassung_gefunden = true
         obj_bemassung = obj;
@@ -1338,42 +1337,13 @@ export function select_element(xc: number, zc: number) {
 
       }
 
-
-      console.log("delete bemassung gefunden", min_abstand_bemassung)
     }
-    // else if (obj.elTyp === CAD_KNOTEN) {
-    //   let two_obj = obj.two_obj
-    //   let rect = two_obj.getBoundingClientRect();
-    //   //console.log("rect Knoten", rect, xc, zc)
-    //   if (xpix > rect.left && xpix < rect.right) {
-    //     if (zpix > rect.top && zpix < rect.bottom) {
-    //       knoten_gefunden = true
-    //       obj_knoten = obj
-    //       index_obj_knoten = (obj as TCAD_Knoten).index1
-    //       console.log("index_obj_knoten", index_obj_knoten)
 
-    //     }
-    //   }
-    // }
   }
 
   console.log('ABSTAND', min_abstand, index_stab, lager_gefunden);
 
-  // if (knoten_gefunden) {
-  //   gefunden = true
-  //   console.log("Knoten gefunden")
 
-  //   write_knoten_dialog((obj_knoten as TCAD_Knoten));
-
-  //   (document.getElementById('id_dialog_knoten') as drDialogKnoten).set_mode(true);
-  //   showDialog_knoten();
-
-  //   picked_obj = obj_knoten
-  //   mode_knoten_aendern = true
-  //   buttons_control.reset();
-
-  // }
-  // else
 
   if (knotenlast_gefunden) {
     gefunden = true
@@ -1385,6 +1355,7 @@ export function select_element(xc: number, zc: number) {
     picked_obj = obj_knlast
     mode_knotenlast_aendern = true
   }
+
   else if (knotenverformung_gefunden) {
     gefunden = true
     //console.log("knotenverformung gefunden")
@@ -1395,6 +1366,7 @@ export function select_element(xc: number, zc: number) {
     picked_obj = obj_knotverform
     mode_knotenverformung_aendern = true
   }
+
   else if (element_einzellast_gefunden) {
 
     const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
@@ -1411,10 +1383,14 @@ export function select_element(xc: number, zc: number) {
     mode_elementlast_aendern = true
 
     obj_ellast = obj_eleinzellast
-    index_ellast = index_eleinzellast
+    index_ellast = index_eleinzellast;
+
+    (document.getElementById('id_dialog_elementlast') as drDialogElementlasten).set_display_group_typ(false);
 
     showDialog_elementlast()
+    gefunden = true
   }
+
   else if (elementlast_gefunden) {
 
     const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
@@ -1456,10 +1432,15 @@ export function select_element(xc: number, zc: number) {
       ele.set_w0e(w0e)
     }
 
-    mode_elementlast_aendern = true
+    mode_elementlast_aendern = true;
+
+    (document.getElementById('id_dialog_elementlast') as drDialogElementlasten).set_display_group_typ(false);
 
     showDialog_elementlast()
+
+    gefunden = true
   }
+
   else if (lager_gefunden) {
     console.log("Knotenlager gefunden")
     gefunden = true
@@ -1469,10 +1450,6 @@ export function select_element(xc: number, zc: number) {
     let node = (obj_knlager as TCAD_Lager).node
     //console.log("Lager node", node)
     write_lager_dialog(node);
-    //   const el = document.getElementById("id_dialog_lager");
-    // console.log("id_dialog_lager", el);
-
-    // (el?.shadowRoot?.getElementById("dialog_lager") as HTMLDialogElement).n
 
     showDialog_lager()
 
@@ -1518,6 +1495,7 @@ export function select_element(xc: number, zc: number) {
 
     }
   }
+
   else if (bemassung_gefunden && min_abstand_bemassung < get_fangweite_cursor()) {          // Stab   index >= 0 && min_abstand < 0.25
     if (list.size > 0) {
 
@@ -1537,6 +1515,8 @@ export function select_element(xc: number, zc: number) {
 
     }
   }
+
+  if (gefunden) init_cad(2);
 
   // if (gefunden) {
   //   let divi = document.getElementById("id_context_menu");
@@ -2447,6 +2427,7 @@ export function Elementlast_button(_ev: Event) {
   //console.log("in Knotenlast_button", buttons_control.knotenlast_eingabe_aktiv,ev)
 
   let el = document.getElementById("id_cad_elementlast_button") as HTMLButtonElement
+  (document.getElementById("id_dialog_elementlast") as drDialogElementlasten).set_display_group_typ(true);
 
   if (buttons_control.elementlast_eingabe_aktiv) {
     buttons_control.reset()
@@ -2477,17 +2458,18 @@ export function Elementlast_button(_ev: Event) {
 
 export function showDialog_elementlast() {
   //------------------------------------------------------------------------------------------------------------
-  console.log("showDialog_elementlast()");
+  //console.log("showDialog_elementlast()");
 
-  const el = document.getElementById("id_dialog_elementlast");
-  console.log("id_dialog_elementlast", el);
+  const el = (document.getElementById("id_dialog_elementlast") as drDialogElementlasten).shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement;
 
-  console.log("shadow", el?.shadowRoot?.getElementById("dialog_elementlast"));
-  (el?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).addEventListener("close", dialog_elementlast_closed);
+  //console.log("shadow", el?.shadowRoot?.getElementById("dialog_elementlast"));
+  // (el?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).addEventListener("close", dialog_elementlast_closed);
+  el.addEventListener("close", dialog_elementlast_closed);
 
   set_help_text('Element picken');
 
-  (el?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).showModal();
+  //(el?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).showModal();
+  el.showModal();
 }
 
 
@@ -2522,6 +2504,7 @@ function update_elementlast() {
   mode_elementlast_aendern = false
 
   const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
+  ele.set_display_group_typ(true);
 
   let lf = ele.get_lastfall()
 

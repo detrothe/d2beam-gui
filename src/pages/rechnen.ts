@@ -30,6 +30,7 @@ import { drDialogLager } from "../components/dr-dialog_lager";
 import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast";
 import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse";
 import { drDialogStabEigenschaften } from "../components/dr-dialog_stab_eigenschaften";
+import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 
 // import { read_daten } from "./dateien"
 
@@ -429,6 +430,9 @@ export function setSystem(system: number) {
     let els = document.getElementById('id_dialog_stab_eigenschaften') as drDialogStabEigenschaften;
     els.set_system(system);
 
+    let ele2 = document.getElementById('id_dialog_elementlast') as drDialogElementlasten;
+    console.log("drDialogElementlasten",ele2)
+    ele2.set_system(system);
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -495,6 +499,7 @@ export function incr_neq() {
 export function rechnen(flag = 1) {
     //-----------------------------------------------------------------------------------------------------------
 
+    // flag = 0 : Eingabe überprüfen
     console.log("in rechnen");
 
     (document.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
@@ -644,7 +649,7 @@ export function rechnen(flag = 1) {
             show_controller_results(true);
             if (nelem_Balken_Bettung > 0) show_controller_bettung(true); else show_controller_bettung(false);
         }
-    } else {
+    } else { // Eingabe überprüfen
 
         nur_eingabe_ueberpruefen = true
 

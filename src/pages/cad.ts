@@ -715,6 +715,15 @@ export function init_cad(flag: number) {
    }
 
    {
+
+      if (show_raster) {
+         let knSize = 8 / devicePixelRatio;
+         let circle = two.makeCircle(tr.xPix(raster_offset_x), tr.zPix(raster_offset_z), knSize, 8)
+         circle.fill = 'none'
+         circle.stroke = '#40e800';
+         circle.linewidth = 2 / devicePixelRatio;
+
+      }
       // Koordinatenursprung darstellen
 
       draw_arrow_alpha(two, tr, 0.0, 0.0, 0.0, -1.0, {
@@ -950,7 +959,7 @@ function pointerdown(ev: PointerEvent) {
    isPen = false;
    isTouch = false
 
-   let eingabe = buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node
+   let eingabe = buttons_control.cad_eingabe_aktiv || buttons_control.delete_element || buttons_control.select_element || buttons_control.select_node
    //console.log("eingabe", eingabe)
 
    switch (ev.pointerType) {
@@ -1024,7 +1033,7 @@ function pointermove(ev: PointerEvent) {
    isPen = false;
    isTouch = false
 
-   let eingabe = buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node
+   let eingabe = buttons_control.cad_eingabe_aktiv || buttons_control.delete_element || buttons_control.select_element || buttons_control.select_node
 
    switch (ev.pointerType) {
       case 'mouse':
@@ -1134,7 +1143,7 @@ function pointerup(ev: PointerEvent) {
 
       case 'touch':
          isTouch = true;
-         if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node) {
+         if (buttons_control.cad_eingabe_aktiv || buttons_control.delete_element || buttons_control.select_element || buttons_control.select_node) {
             if (touch_support) {
                if (buttons_control.input_started === 0) penDown(ev);
                else if (buttons_control.n_input_points > 1) mouseup(ev);
@@ -1182,7 +1191,7 @@ function penDown(ev: PointerEvent) {
    let xo = ev.offsetX + dx_offset
    let yo = ev.offsetY + dy_offset
 
-   if (buttons_control.pick_element) {
+   if (buttons_control.delete_element) {
       let xc = tr.xWorld(xo);
       let zc = tr.zWorld(yo);
 
@@ -1495,8 +1504,6 @@ function mousemove(ev: MouseEvent) {
          foundSelectNode = false;
       }
 
-      //if (buttons_control.cad_eingabe_aktiv || buttons_control.select_node) {
-      //if (buttons_control.cad_eingabe_aktiv || buttons_control.pick_element || buttons_control.select_element || buttons_control.select_node) {
       let len = tr.Pix0(fangweite_cursor);
       cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
       cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
@@ -1601,9 +1608,8 @@ function mousemove(ev: MouseEvent) {
          }
 
       }
-      else if (buttons_control.select_element || buttons_control.pick_element) {
-         //console.log("### setting timeout", buttons_control.select_element, buttons_control.pick_element)
-         timer.id = window.setTimeout(timer_function, 500);
+      else if (buttons_control.select_element || buttons_control.delete_element) {
+         timer.id = window.setTimeout(timer_function, 300);
          timer.set = true;
          timer.xc = tr.xWorld(xo);
          timer.zc = tr.zWorld(yo);
@@ -1634,7 +1640,7 @@ function mouseup(ev: any) {
    let xo = ev.offsetX + dx_offset
    let yo = ev.offsetY + dy_offset
 
-   if (buttons_control.pick_element) {
+   if (buttons_control.delete_element) {
       let xc = tr.xWorld(xo);
       let zc = tr.zWorld(yo);
 

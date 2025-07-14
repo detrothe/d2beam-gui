@@ -1,4 +1,4 @@
-import { SlRadioGroup, SlSelect } from "@shoelace-style/shoelace";
+import { SlRadioButton, SlRadioGroup, SlSelect } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 
@@ -140,7 +140,7 @@ export class drDialogElementlasten extends LitElement {
 
       <sl-radio-group id="id_typ" label="Wähle eine Option" name="a" value="0" @sl-change="${this._handleChange}">
         <sl-radio value="0">Streckenlasten</sl-radio>
-        <sl-radio value="1">Einzellasten</sl-radio>
+        <sl-radio id="id_typ_einzellasten" value="1">Einzellasten</sl-radio>
         <sl-radio value="2">Temperatur</sl-radio>
         <sl-radio value="3">Vorspannung</sl-radio>
         <sl-radio value="4">Spannschloss</sl-radio>
@@ -465,5 +465,31 @@ export class drDialogElementlasten extends LitElement {
     }
 
     this.shadowRoot?.getElementById("OK")?.focus();
+  }
+
+
+  set_system(system: number) {
+    console.log("ßßßßßßßßßß ßßßßßß set_system", system)
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById("id_typ_einzellasten") as SlRadioButton;
+
+    if (system === 0) {
+      el.disabled = false;
+
+    } else {
+      el.disabled = true;
+    }
+  }
+
+  set_display_group_typ(value: boolean) {
+
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById("id_typ") as SlRadioGroup;
+
+    if (value) {
+      el.style.display = 'block';
+    } else {
+      el.style.display = 'none';
+    }
   }
 }
