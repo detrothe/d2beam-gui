@@ -212,6 +212,8 @@ class Cbuttons_control {
 
     set_help_text('    ');
 
+    init_obj_mode();
+
     init_cad(2);
   }
 }
@@ -228,6 +230,45 @@ class CDelElLast {
 
 export const buttons_control = new Cbuttons_control();
 export const drawer_1_control = new CDrawer_1_control();
+
+
+//--------------------------------------------------------------------------------------------------------
+function init_obj_mode() {
+  //--------------------------------------------------------------------------------------------------------
+
+  (picked_obj as any) = null;
+  index_stab = -1
+
+  mode_elementlast_aendern = false;
+  element_einzellast_gefunden = false
+
+  index_ellast = -1
+  obj_ellast = null;
+  index_eleinzellast = -1
+  obj_eleinzellast = null;
+
+  mode_knotenlast_aendern = false;
+  obj_knlast = null;
+
+  mode_knotenmasse_aendern = false;
+  obj_knmasse = null;
+
+  mode_knotenlager_aendern = false;
+  obj_knlager = null;
+
+  mode_knoten_aendern = false;
+  (obj_knoten as any) = null;
+  index_obj_knoten = -1
+
+  CADPunkt_gefunden = false
+  index_CADPunkt = -1
+
+  obj_knotverform = null;
+
+  obj_bemassung = null;
+
+  mode_knotenverformung_aendern = false;
+}
 
 //--------------------------------------------------------------------------------------------------------
 export function cad_buttons() {
@@ -693,8 +734,9 @@ export function delete_element(xc: number, zc: number) {
   let index_bemassung = -1
   let min_abstand_bemassung = 1e30;
 
-  index_stab = -1;
-  element_einzellast_gefunden = false
+  // index_stab = -1;
+  // element_einzellast_gefunden = false
+  init_obj_mode();
 
   let xpix = tr.xPix(xc)
   let zpix = tr.zPix(zc)
@@ -1030,8 +1072,9 @@ export function select_node(xc: number, zc: number) {
   let knoten_gefunden = false
   let gefunden = false;
 
-  CADPunkt_gefunden = false;
-  mode_knoten_aendern = false;
+  init_obj_mode();
+  // CADPunkt_gefunden = false;
+  // mode_knoten_aendern = false;
 
 
   // Elementknoten finden
@@ -1116,16 +1159,16 @@ export function select_element(xc: number, zc: number) {
   if (list.size === 0) return;
 
   let min_abstand = 1e30;
-  let stab_gefunden = false
+  //let stab_gefunden = false
   let lager_gefunden = false
-  let index_lager = -1
+  //let index_lager = -1
   let knotenlast_gefunden = false
   let elementlast_gefunden = false
   let knotenmasse_gefunden = false
   let knotenverformung_gefunden = false
 
   let bemassung_gefunden = false
-  obj_bemassung = null;
+  //obj_bemassung = null;
   let min_abstand_bemassung = 1e30;
 
   let xpix = tr.xPix(xc)
@@ -1133,11 +1176,12 @@ export function select_element(xc: number, zc: number) {
 
   let gefunden = false
 
-  mode_knoten_aendern = false;
-  mode_knotenverformung_aendern = false;
+  init_obj_mode();
+  // mode_knoten_aendern = false;
+  //  mode_knotenverformung_aendern = false;
 
-  index_stab = -1;
-  element_einzellast_gefunden = false
+  // index_stab = -1;
+  // element_einzellast_gefunden = false
 
   for (let i = 0; i < list.size; i++) {
     let obj = list.getAt(i) as any;
@@ -1227,7 +1271,7 @@ export function select_element(xc: number, zc: number) {
         if (abstand < min_abstand) {
           min_abstand = abstand;
           index_stab = i;
-          stab_gefunden = true
+          //stab_gefunden = true
         }
       }
 
@@ -1294,7 +1338,7 @@ export function select_element(xc: number, zc: number) {
       if (xpix > rect.left && xpix < rect.right) {
         if (zpix > rect.top && zpix < rect.bottom) {
           lager_gefunden = true
-          index_lager = (obj as TCAD_Lager).index1;
+          //index_lager = (obj as TCAD_Lager).index1;
           obj_knlager = obj
         }
       }
