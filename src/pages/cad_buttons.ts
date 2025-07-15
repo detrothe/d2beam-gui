@@ -81,6 +81,7 @@ import { drawBemassung, TCAD_Bemassung } from "./cad_bemassung";
 import { drDialogBemassung } from "../components/dr-dialog_bemassung";
 import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
 import { draw_knotenverformung, showDialog_knotenverformung, write_knotenverformung_dialog } from "./cad_knotenverformung";
+import { drDrawer_1 } from "../components/dr-drawer_1";
 
 let backgroundColor_button = 'rgb(64, 64, 64)';
 let backgroundColor_button_light = 'rgb(64, 64, 64)';
@@ -2080,7 +2081,12 @@ export function Drawer_button(_ev: Event) {
 
   console.log("in drawer_button", drawer)
 
+  let el1 = document.getElementById("id_drawer_1") as drDrawer_1
+  el1.init_loadcases(max_Lastfall);
+
   let el = document.getElementById("id_cad_drawer_button") as HTMLButtonElement
+
+
 
   if (drawer_1_control.drawer_eingabe_aktiv) {
     //@ts-ignore
