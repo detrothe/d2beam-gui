@@ -3,7 +3,7 @@ import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 import { Messen_button } from '../pages/cad_buttons';
 import { Bemassung_button } from '../pages/cad_bemassung';
-import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_lager, set_show_raster, set_show_stab_qname } from '../pages/cad';
+import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_lager, set_show_lastfall, set_show_raster, set_show_stab_qname } from '../pages/cad';
 import { copy_svg_cad } from '../pages/grafik';
 import { Knotenverformung_button } from '../pages/cad_knotenverformung';
 
@@ -295,6 +295,9 @@ export class drDrawer_1 extends LitElement {
   }
 
   _select_loadcase_changed() {
-    console.log("loadcase changed")
+
+    let el = this.shadowRoot?.getElementById('id_select_loadcase') as HTMLSelectElement;
+    //console.log("loadcase changed", el.value)
+    set_show_lastfall(Number(el.value));
   }
 }

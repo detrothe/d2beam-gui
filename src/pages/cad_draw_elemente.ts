@@ -10,7 +10,7 @@ import { draw_elementlasten, max_Lastfall } from './cad_draw_elementlasten';
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { opacity } from './grafik';
-import { faktor_lagersymbol, select_color, show_elementlasten, show_stab_qname, slmax_cad, timer, unit_force, unit_moment } from './cad';
+import { faktor_lagersymbol, select_color, show_elementlasten, show_lastfall, show_stab_qname, slmax_cad, timer, unit_force, unit_moment } from './cad';
 import { buttons_control } from './cad_buttons';
 
 
@@ -540,7 +540,8 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
     let group = new Two.Group();
 
-    //console.log("draw_knotenlast", x, z, plength, delta, load)
+    if (show_lastfall > 0) if (show_lastfall !== iLastfall) return group;
+
 
     lf_show = load.lf - 1    // noch überarbeiten
 

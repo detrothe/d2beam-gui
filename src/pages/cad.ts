@@ -54,7 +54,6 @@ export const CAD_INFO = 7;
 export const CAD_KNMASSE = 8;
 export const CAD_DRAWER = 9;
 export const CAD_MESSEN = 10;
-
 export const CAD_BEMASSUNG = 11;
 export const CAD_KNOTVERFORMUNG = 12;
 
@@ -257,6 +256,11 @@ export function set_show_knotenverformung(wert: boolean) {
    init_cad(2);
 }
 
+export let show_lastfall= 0;
+export function set_show_lastfall(wert: number) {
+   show_lastfall = wert;
+   init_cad(2);
+}
 export const style_txt = {
    family: 'system-ui, sans-serif',
    size: 14,

@@ -1,6 +1,6 @@
 import Two from "two.js";
 import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
-import { CAD_KNOTVERFORMUNG, init_cad, reset_pointer_length, select_color, set_zoomIsActive, slmax_cad, timer, tr, two } from "./cad";
+import { CAD_KNOTVERFORMUNG, init_cad, reset_pointer_length, select_color, set_zoomIsActive, show_lastfall, slmax_cad, timer, tr, two } from "./cad";
 import { buttons_control, mode_knotenverformung_aendern, obj_knotverform, set_help_text, set_mode_knotenverformung_aendern } from "./cad_buttons";
 import { find_max_Lastfall, max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
 import { TCAD_Knotenverformung } from "./CCAD_element";
@@ -165,10 +165,6 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
     let iLastfall = nodeDisp.lf
 
     let index1 = obj.index1;
-    // let phi = load.alpha * Math.PI / 180
-
-    // let si = Math.sin(phi)
-    // let co = Math.cos(phi)
 
     let phi = 0
     let si = 0
@@ -176,7 +172,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
 
     let group = new Two.Group();
 
-    //console.log("draw_knotenlast", x, z, plength, delta, load)
+    if (show_lastfall > 0) if (show_lastfall !== iLastfall) return group;
 
     lf_show = nodeDisp.lf - 1    // noch überarbeiten
 
