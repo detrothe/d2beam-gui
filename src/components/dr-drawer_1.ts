@@ -9,14 +9,13 @@ import { Knotenverformung_button } from '../pages/cad_knotenverformung';
 
 @customElement('dr-drawer_1')
 export class drDrawer_1 extends LitElement {
-  @property({ type: String }) title = 'Drawer_1';
+   @property({ type: String }) title = 'Drawer_1';
 
-  @property({ type: Number }) xValue = 0;
-  @property({ type: Number }) nLastfaelle = 0;
+   @property({ type: Number }) xValue = 0;
+   @property({ type: Number }) nLastfaelle = 0;
 
-
-  static get styles() {
-    return css`
+   static get styles() {
+      return css`
          input,
          label {
             font-size: 1rem;
@@ -100,17 +99,24 @@ export class drDrawer_1 extends LitElement {
             background-color: orange;
             color: darkslateblue;
          }
+
+         #id_select_loadcase {
+            /*margin: 0;
+            padding: 0.3125rem;*/
+            font-size: 1rem;
+            height: 2rem;
+         }
       `;
-  }
+   }
 
-  constructor() {
-    super();
-  }
+   constructor() {
+      super();
+   }
 
-  //----------------------------------------------------------------------------------------------
+   //----------------------------------------------------------------------------------------------
 
-  render() {
-    return html`
+   render() {
+      return html`
          <p>
             <sl-button id="id_knotverform" value="0" @click="${this._knotverform}">Knotenverformung</sl-button>
          </p>
@@ -144,7 +150,7 @@ export class drDrawer_1 extends LitElement {
          </p>
          <p>
             <label for="id_select_loadcase">Zeige :</label>
-            <select id="id_select_loadcase"  @change="${this._select_loadcase_changed}">
+            <select id="id_select_loadcase" @change="${this._select_loadcase_changed}">
                <option value="alle">alle</option>
                <option value="1">Lastfall 1</option>
             </select>
@@ -154,150 +160,145 @@ export class drDrawer_1 extends LitElement {
             <sl-button id="id_svg" value="0" @click="${this._svg}">System als svg-Datei speichern</sl-button>
          </p>
       `;
-  }
+   }
 
-  _messen() {
-    const drawer = document.querySelector('.drawer-overview');
-    //console.log("Button messen geklickt", drawer)
-    //@ts-ignore
-    if (drawer !== null) drawer.hide();
-    console.log('drawer', drawer);
-    Messen_button();
-  }
+   _messen() {
+      const drawer = document.querySelector('.drawer-overview');
+      //console.log("Button messen geklickt", drawer)
+      //@ts-ignore
+      if (drawer !== null) drawer.hide();
+      console.log('drawer', drawer);
+      Messen_button();
+   }
 
-  _bemassung_parallel() {
-    const drawer = document.querySelector('.drawer-overview');
-    //@ts-ignore
-    if (drawer !== null) drawer.hide();
-    Bemassung_button(1);
-  }
+   _bemassung_parallel() {
+      const drawer = document.querySelector('.drawer-overview');
+      //@ts-ignore
+      if (drawer !== null) drawer.hide();
+      Bemassung_button(1);
+   }
 
-  _bemassung_x() {
-    const drawer = document.querySelector('.drawer-overview');
-    //@ts-ignore
-    if (drawer !== null) drawer.hide();
-    Bemassung_button(2);
-  }
+   _bemassung_x() {
+      const drawer = document.querySelector('.drawer-overview');
+      //@ts-ignore
+      if (drawer !== null) drawer.hide();
+      Bemassung_button(2);
+   }
 
-  _bemassung_z() {
-    const drawer = document.querySelector('.drawer-overview');
-    //@ts-ignore
-    if (drawer !== null) drawer.hide();
-    Bemassung_button(3);
-  }
+   _bemassung_z() {
+      const drawer = document.querySelector('.drawer-overview');
+      //@ts-ignore
+      if (drawer !== null) drawer.hide();
+      Bemassung_button(3);
+   }
 
-  _checkbox_raster() {
-    let el = this.shadowRoot?.getElementById('id_show_raster') as SlCheckbox;
-    if (el.checked) {
-      set_show_raster(false);
-    } else {
-      set_show_raster(true);
-    }
-  }
-
-  _checkbox_stab_name() {
-    let el = this.shadowRoot?.getElementById('id_show_stab_name') as SlCheckbox;
-    if (el.checked) {
-      set_show_stab_qname(false);
-    } else {
-      set_show_stab_qname(true);
-    }
-  }
-
-  _checkbox_knotenlasten() {
-    let el = this.shadowRoot?.getElementById('id_show_knotenlasten') as SlCheckbox;
-    if (el.checked) {
-      set_show_knotenlasten(false);
-    } else {
-      set_show_knotenlasten(true);
-    }
-  }
-
-  _checkbox_elementlasten() {
-    let el = this.shadowRoot?.getElementById('id_show_elementlasten') as SlCheckbox;
-    if (el.checked) {
-      set_show_elementlasten(false);
-    } else {
-      set_show_elementlasten(true);
-    }
-  }
-
-  _checkbox_knotenmassen() {
-    let el = this.shadowRoot?.getElementById('id_show_knotenmassen') as SlCheckbox;
-    if (el.checked) {
-      set_show_knotenmassen(false);
-    } else {
-      set_show_knotenmassen(true);
-    }
-  }
-
-  _checkbox_bemassung() {
-    let el = this.shadowRoot?.getElementById('id_show_bemassung') as SlCheckbox;
-    if (el.checked) {
-      set_show_bemassung(false);
-    } else {
-      set_show_bemassung(true);
-    }
-  }
-
-  _checkbox_lager() {
-    let el = this.shadowRoot?.getElementById('id_show_lager') as SlCheckbox;
-    if (el.checked) {
-      set_show_lager(false);
-    } else {
-      set_show_lager(true);
-    }
-  }
-  _svg() {
-    copy_svg_cad();
-  }
-
-  _knotverform() {
-    const drawer = document.querySelector('.drawer-overview');
-    //@ts-ignore
-    if (drawer !== null) drawer.hide();
-    Knotenverformung_button();
-  }
-
-  init_loadcases(nlastfaelle: number) {
-
-    console.log("init_loadcases", nlastfaelle)
-
-    if (this.nLastfaelle !== nlastfaelle) {
-
-      const el_select = this.shadowRoot?.getElementById('id_select_loadcase') as HTMLSelectElement;
-
-      while (el_select.hasChildNodes()) {
-        // alte Optionen entfernen
-        // @ts-ignore
-        el_select.removeChild(el_select?.lastChild);
+   _checkbox_raster() {
+      let el = this.shadowRoot?.getElementById('id_show_raster') as SlCheckbox;
+      if (el.checked) {
+         set_show_raster(false);
+      } else {
+         set_show_raster(true);
       }
+   }
 
-      console.log("el_select", el_select)
-
-      let option = document.createElement('option');
-      option.value = String('alle');
-      option.textContent = 'alle Lastfälle';
-      option.selected = true;
-      el_select.appendChild(option);
-
-      for (let i = 1; i <= nlastfaelle; i++) {
-        option = document.createElement('option');
-        option.value = String(i);
-        option.textContent = 'Lastfall ' + i;
-        el_select.appendChild(option);
+   _checkbox_stab_name() {
+      let el = this.shadowRoot?.getElementById('id_show_stab_name') as SlCheckbox;
+      if (el.checked) {
+         set_show_stab_qname(false);
+      } else {
+         set_show_stab_qname(true);
       }
-      console.log("neu el_select", el_select)
-      this.nLastfaelle = nlastfaelle;
+   }
 
-    }
+   _checkbox_knotenlasten() {
+      let el = this.shadowRoot?.getElementById('id_show_knotenlasten') as SlCheckbox;
+      if (el.checked) {
+         set_show_knotenlasten(false);
+      } else {
+         set_show_knotenlasten(true);
+      }
+   }
 
-  }
+   _checkbox_elementlasten() {
+      let el = this.shadowRoot?.getElementById('id_show_elementlasten') as SlCheckbox;
+      if (el.checked) {
+         set_show_elementlasten(false);
+      } else {
+         set_show_elementlasten(true);
+      }
+   }
 
-  _select_loadcase_changed() {
+   _checkbox_knotenmassen() {
+      let el = this.shadowRoot?.getElementById('id_show_knotenmassen') as SlCheckbox;
+      if (el.checked) {
+         set_show_knotenmassen(false);
+      } else {
+         set_show_knotenmassen(true);
+      }
+   }
 
-    let el = this.shadowRoot?.getElementById('id_select_loadcase') as HTMLSelectElement;
-    //console.log("loadcase changed", el.value)
-    set_show_lastfall(Number(el.value));
-  }
+   _checkbox_bemassung() {
+      let el = this.shadowRoot?.getElementById('id_show_bemassung') as SlCheckbox;
+      if (el.checked) {
+         set_show_bemassung(false);
+      } else {
+         set_show_bemassung(true);
+      }
+   }
+
+   _checkbox_lager() {
+      let el = this.shadowRoot?.getElementById('id_show_lager') as SlCheckbox;
+      if (el.checked) {
+         set_show_lager(false);
+      } else {
+         set_show_lager(true);
+      }
+   }
+   _svg() {
+      copy_svg_cad();
+   }
+
+   _knotverform() {
+      const drawer = document.querySelector('.drawer-overview');
+      //@ts-ignore
+      if (drawer !== null) drawer.hide();
+      Knotenverformung_button();
+   }
+
+   init_loadcases(nlastfaelle: number) {
+      console.log('init_loadcases', nlastfaelle);
+
+      if (this.nLastfaelle !== nlastfaelle) {
+         const el_select = this.shadowRoot?.getElementById('id_select_loadcase') as HTMLSelectElement;
+
+         while (el_select.hasChildNodes()) {
+            // alte Optionen entfernen
+            // @ts-ignore
+            el_select.removeChild(el_select?.lastChild);
+         }
+
+         console.log('el_select', el_select);
+
+         let option = document.createElement('option');
+         option.value = String('alle');
+         option.textContent = 'alle Lastfälle';
+         option.selected = true;
+         el_select.appendChild(option);
+
+         for (let i = 1; i <= nlastfaelle; i++) {
+            option = document.createElement('option');
+            option.value = String(i);
+            option.textContent = 'Lastfall ' + i;
+            el_select.appendChild(option);
+         }
+         console.log('neu el_select', el_select);
+         this.nLastfaelle = nlastfaelle;
+      }
+   }
+
+   _select_loadcase_changed() {
+      let el = this.shadowRoot?.getElementById('id_select_loadcase') as HTMLSelectElement;
+      //console.log("loadcase changed", el.value)
+      set_show_lastfall(Number(el.value));
+   }
 }
