@@ -1122,7 +1122,7 @@ export function select_node(xc: number, zc: number) {
 
   if (knoten_gefunden) {
     gefunden = true
-    console.log("Knoten gefunden")
+    console.log("Knoten gefunden ", CADPunkt_gefunden)
 
     write_knoten_dialog((obj_knoten as TCAD_Knoten));
 
@@ -1131,12 +1131,11 @@ export function select_node(xc: number, zc: number) {
 
     picked_obj = obj_knoten
     mode_knoten_aendern = true
-    buttons_control.reset();
 
   }
   else if (CADPunkt_gefunden) {
     gefunden = true
-    console.log("CAD Knoten gefunden")
+    console.log("CAD Punkt gefunden")
 
     write_knoten_dialog_xz(CADNodes[index_CADPunkt].x, CADNodes[index_CADPunkt].z);
 
@@ -1144,9 +1143,7 @@ export function select_node(xc: number, zc: number) {
     (document.getElementById('id_dialog_knoten') as drDialogKnoten).set_ID(CADNodes[index_CADPunkt].ID);
     showDialog_knoten();
 
-    //picked_obj = obj_knoten
-    //mode_knoten_aendern = true
-    buttons_control.reset();
+    console.log("und vorbei an showDialog_knoten")
 
   }
 
@@ -1859,23 +1856,22 @@ export function showDialog_knoten() {
 
 
 //---------------------------------------------------------------------------------------------------------------
-function dialog_knoten_closed(this: any, e: any) {
+function dialog_knoten_closed(this: any, _e: any) {
   //------------------------------------------------------------------------------------------------------------
-  console.log("Event dialog_knoten_closed", e);
-  console.log("this", this);
-  const ele = document.getElementById("id_dialog_knoten") as HTMLDialogElement;
+  //console.log("Event dialog_knoten_closed", e);
+  //console.log("this", this);
 
-  // ts-ignore
-  const returnValue = this.returnValue;
+  //const returnValue = this.returnValue;
 
-  if (returnValue === "ok") {
-    // console.log("sieht gut aus");
+  if (this.returnValue === "ok") {
+    //console.log("sieht gut aus", mode_knoten_aendern, CADPunkt_gefunden);
 
     if (mode_knoten_aendern) update_knoten(0);  // es handelt sich um einen User Knoten
     else if (CADPunkt_gefunden) update_knoten(1);
 
-  } else {
-    // Abbruch
+  } else {    // Abbruch
+
+    const ele = document.getElementById("id_dialog_knoten") as HTMLDialogElement;
     (ele?.shadowRoot?.getElementById("dialog_knoten") as HTMLDialogElement).removeEventListener("close", dialog_knoten_closed);
 
     // knoten_eingabe_beenden();

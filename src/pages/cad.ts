@@ -2114,7 +2114,7 @@ function touchmove(ev: TouchEvent) {
 function drawRaster() {
    //---------------------------------------------------------------------------------------------
 
-   console.log("raster_offset_xz", raster_offset_x, raster_offset_z)
+   //console.log("raster_offset_xz", raster_offset_x, raster_offset_z)
    const color = '#aaaaaa';
 
    // let size = 3 / devicePixelRatio;
