@@ -168,17 +168,17 @@ let xminv = 0.0,
    zminv = 0.0,
    zmaxv = 0.0;
 
-export let raster_xmin = -1.0,
-   raster_xmax = 10.0,
-   raster_zmin = -1.0,
-   raster_zmax = 9.0;
+export let raster_xmin = -15.0,
+   raster_xmax = 15.0,
+   raster_zmin = -10.0,
+   raster_zmax = 10.0;
 
 export let raster_offset_x = 0.0;
 export let raster_offset_z = 0.0;
 
 export let slmax_cad = 10.0;
 
-export let raster_dx = 0.5, raster_dz = 0.5;
+export let raster_dx = 1.0, raster_dz = 1.0;
 let xRasterPoint = 0.0, zRasterPoint = 0.0;
 let xNodePoint = 0.0, zNodePoint = 0.0;
 

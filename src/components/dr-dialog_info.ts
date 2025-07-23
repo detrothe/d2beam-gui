@@ -138,14 +138,18 @@ export class drDialogInfo extends LitElement {
 
       <p>
         <b>Eingabe mit dem Finger bei einem Touchscreen</b><br />
-        Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor neben dem Finger. Platziere den Eingabefinger auf dem Screen und bewege den <b>Cursor</b> zu der gewünschten Stelle, und hebe dann den Finger vom Screen ab. Das Anheben des Fingers hat hier die
-        gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann ist der Finger wieder auf den Bildschirm zu setzen und den Cursor an die gewünschte Stelle zu bewegen. Das erneute
+        Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor neben dem Finger. Platziere den Eingabefinger auf dem Screen und bewege
+        den <b>Cursor</b> zu der gewünschten Stelle, und hebe dann den Finger vom Screen ab. Das Anheben des Fingers hat hier die
+        gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann ist
+        der Finger wieder auf den Bildschirm zu setzen und den Cursor an die gewünschte Stelle zu bewegen. Das erneute
         Anheben beendet die Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom Finger kannst du unter <i>Einstellungen GUI</i> ändern.
       </p>
       <p>
         <b>Knoteneingabe und Rasterlinien</b><br />
-        Die Eingabe von Knoten über den Dialog ist nicht zwingend erforderlich. Bei der Eingabe von Stabanfang und -ende wird zuerst nach einem Knoten innerhalb der Fangweite (Die Linienlängen des Cursors geben das Fangfenster an.) gesucht. Wird kein
-        Knoten gefunden, wird der nächste Rasterpunkt (Schnittpunkt der Rasterlinien) gewählt, sofern er innerhalb des Fangfensters des Cursors liegt. Ein gefundener Rasterpunkt wird als blaues Rechteck angezeigt. Sonst werden die Koordinaten des Cursors genommen.
+        Die Eingabe von Knoten über den Dialog ist nicht zwingend erforderlich. Bei der Eingabe von Stabanfang und -ende wird zuerst nach einem
+        vorhandenen Knoten innerhalb der Fangweite (Die Linienlängen des Cursors geben das Fangfenster an.) gesucht. Wird kein
+        Knoten gefunden, wird der nächste Rasterpunkt (Schnittpunkt der Rasterlinien) gewählt, sofern er innerhalb des Fangfensters des Cursors liegt.
+        Ein gefundener Rasterpunkt wird als blaues Rechteck angezeigt. Andernfalls werden die Koordinaten des Cursors genommen.
         Der Abstand der Rasterlinien kann unter <i>Einstellungen GUI</i> ändert werden.
       </p>
       <p>
