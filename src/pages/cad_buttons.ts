@@ -123,6 +123,9 @@ export let obj_knotverform: any
 
 let obj_bemassung: any = null;
 
+let right_mousebutton_pressed = false;
+export function set_right_mousebutton_pressed(wert: boolean) { right_mousebutton_pressed = wert; }
+
 class CDrawer_1_control {
   drawer_eingabe_aktiv = false;
 
@@ -1528,6 +1531,7 @@ export function select_element(xc: number, zc: number) {
       //buttons_control.reset();
       gefunden = true
       picked_obj = obj;
+      console.log("picked obj", picked_obj)
 
       let divi = document.getElementById("id_context_menu");
 
@@ -1558,7 +1562,13 @@ export function select_element(xc: number, zc: number) {
     }
   }
 
-  if (gefunden) init_cad(2);
+  if (gefunden) {
+    if (right_mousebutton_pressed) {
+      right_mousebutton_pressed = false;
+      buttons_control.select_element = false;
+    }
+    init_cad(2);
+  }
 
   // if (gefunden) {
   //   let divi = document.getElementById("id_context_menu");
@@ -1766,8 +1776,10 @@ export function write_lager_dialog(node: TNode) {
   let elFeder = el?.shadowRoot?.getElementById("id_kx") as HTMLInputElement;
   if (node.L_org[0] === 1) {
     elem.checked = true
+    elFeder.disabled = true
   } else {
     elem.checked = false
+    elFeder.disabled = false
   }
   if (node.kx === 0.0) elFeder.value = '';
   else elFeder.value = String(node.kx);
@@ -1776,8 +1788,10 @@ export function write_lager_dialog(node: TNode) {
   elFeder = el?.shadowRoot?.getElementById("id_kz") as HTMLInputElement;
   if (node.L_org[1] === 1) {
     elem.checked = true
+    elFeder.disabled = true
   } else {
     elem.checked = false
+    elFeder.disabled = false
   }
   if (node.kz === 0.0) elFeder.value = '';
   else elFeder.value = String(node.kz);
@@ -1786,8 +1800,10 @@ export function write_lager_dialog(node: TNode) {
   elFeder = el?.shadowRoot?.getElementById("id_kphi") as HTMLInputElement;
   if (node.L_org[2] === 1) {
     elem.checked = true
+    elFeder.disabled = true
   } else {
     elem.checked = false
+    elFeder.disabled = false
   }
   if (node.kphi === 0.0) elFeder.value = '';
   else elFeder.value = String(node.kphi);

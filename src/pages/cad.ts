@@ -21,6 +21,7 @@ import {
    drawer_1_control,
    showDialog_messen,
    show_selected_element,
+   set_right_mousebutton_pressed,
 } from './cad_buttons';
 import { draw_knoten, draw_knotenlast, draw_knotenmasse, draw_lager, drawStab } from './cad_draw_elemente';
 
@@ -256,7 +257,7 @@ export function set_show_knotenverformung(wert: boolean) {
    init_cad(2);
 }
 
-export let show_lastfall= 0;
+export let show_lastfall = 0;
 export function set_show_lastfall(wert: number) {
    show_lastfall = wert;
    init_cad(2);
@@ -1126,6 +1127,7 @@ function pointerup(ev: PointerEvent) {
       case 'mouse':
          if (ev.button === 2 && buttons_control.input_started === 0) {
             // test Element unter Maus
+            set_right_mousebutton_pressed(true);
             test_for_cad_element(ev);
          } else {
             mouseup(ev);
@@ -2123,16 +2125,22 @@ function drawRaster() {
    let nz = Math.abs(raster_zmax - raster_zmin) / raster_dz;
    if (nx > 1000 || nz > 1000) return;
 
-   let raster_xmin_pix = tr.xPix(raster_xmin);
-   let raster_xmax_pix = tr.xPix(raster_xmax);
-   let raster_zmin_pix = tr.zPix(raster_zmin);
-   let raster_zmax_pix = tr.zPix(raster_zmax);
+   let a = 50
+   let raster_xmin_pix = tr.xPix(-a);
+   let raster_xmax_pix = tr.xPix(a);
+   let raster_zmin_pix = tr.zPix(-a);
+   let raster_zmax_pix = tr.zPix(a);
+
+   // let raster_xmin_pix = tr.xPix(raster_xmin);
+   // let raster_xmax_pix = tr.xPix(raster_xmax);
+   // let raster_zmin_pix = tr.zPix(raster_zmin);
+   // let raster_zmax_pix = tr.zPix(raster_zmax);
 
    // horizontale Linien
 
    let zp = raster_offset_z
-   while (zp <= raster_zmax) {
-      if (zp >= raster_zmin) {
+   while (zp <= a) {
+      if (zp >= -a) {
          let zp_pix = tr.zPix(zp)
          let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
          line.stroke = color;
@@ -2142,8 +2150,8 @@ function drawRaster() {
    }
 
    zp = raster_offset_z - raster_dz;
-   while (zp >= raster_zmin) {
-      if (zp <= raster_zmax) {
+   while (zp >= -a) {
+      if (zp <= a) {
          let zp_pix = tr.zPix(zp)
          let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
          line.stroke = color;
@@ -2155,8 +2163,8 @@ function drawRaster() {
    // vertikale Linien
 
    let xp = raster_offset_x - raster_dx;
-   while (xp >= raster_xmin) {
-      if (xp <= raster_xmax) {
+   while (xp >= -a) {
+      if (xp <= a) {
          let xp_pix = tr.xPix(xp)
          let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
          line.stroke = color;
@@ -2166,8 +2174,8 @@ function drawRaster() {
    }
 
    xp = raster_offset_x;
-   while (xp <= raster_xmax) {
-      if (xp >= raster_xmin) {
+   while (xp <= a) {
+      if (xp >= -a) {
          let xp_pix = tr.xPix(xp)
          let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
          line.stroke = color;
@@ -2176,6 +2184,56 @@ function drawRaster() {
       xp += raster_dx;
    }
 
+
+   //   // horizontale Linien
+
+   // let zp = raster_offset_z
+   // while (zp <= raster_zmax) {
+   //    if (zp >= raster_zmin) {
+   //       let zp_pix = tr.zPix(zp)
+   //       let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
+   //       line.stroke = color;
+   //       line.linewidth = 1 / devicePixelRatio;
+   //    }
+   //    zp += raster_dz;
+   // }
+
+   // zp = raster_offset_z - raster_dz;
+   // while (zp >= raster_zmin) {
+   //    if (zp <= raster_zmax) {
+   //       let zp_pix = tr.zPix(zp)
+   //       let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
+   //       line.stroke = color;
+   //       line.linewidth = 1 / devicePixelRatio;
+   //    }
+   //    zp -= raster_dz;
+   // }
+
+   // // vertikale Linien
+
+   // let xp = raster_offset_x - raster_dx;
+   // while (xp >= raster_xmin) {
+   //    if (xp <= raster_xmax) {
+   //       let xp_pix = tr.xPix(xp)
+   //       let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
+   //       line.stroke = color;
+   //       line.linewidth = 1 / devicePixelRatio;
+   //    }
+   //    xp -= raster_dx;
+   // }
+
+   // xp = raster_offset_x;
+   // while (xp <= raster_xmax) {
+   //    if (xp >= raster_xmin) {
+   //       let xp_pix = tr.xPix(xp)
+   //       let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
+   //       line.stroke = color;
+   //       line.linewidth = 1 / devicePixelRatio;
+   //    }
+   //    xp += raster_dx;
+   // }
+
+   //--------------------------------------------------------------------------------------------------------
 
    // while (zp <= raster_zmax) {
    //    xp = 0.0;

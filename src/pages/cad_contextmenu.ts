@@ -39,7 +39,7 @@ export function abbruch_property_dialog() {
 export function show_property_dialog() {
     //----------------------------------------------------------------------------------------------------
 
-    //console.log("in show_property_dialog")
+    console.log("in show_property_dialog",picked_obj)
 
     let divi = document.getElementById("id_context_menu");
     divi!.style.display = 'none';
@@ -71,13 +71,6 @@ export function show_property_dialog() {
         (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).addEventListener("close", dialog_stab_eigenschaften_closed);
 
     (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).showModal();
-
-
-    // if (selected_element.group) {
-    //     two.remove(selected_element.group);
-    //     two.update();
-    // }
-
 
 }
 //---------------------------------------------------------------------------------------------------------------
