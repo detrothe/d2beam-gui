@@ -2121,26 +2121,32 @@ function drawRaster() {
 
    // let size = 3 / devicePixelRatio;
 
-   let nx = Math.abs(raster_xmax - raster_xmin) / raster_dx;
-   let nz = Math.abs(raster_zmax - raster_zmin) / raster_dz;
+   const [x_min, x_max, z_min, z_max] = tr.getMinMax();
+
+   let nx = Math.abs(x_max - x_min) / raster_dx;
+   let nz = Math.abs(z_max - z_min) / raster_dz;
    if (nx > 1000 || nz > 1000) return;
 
-   let a = 50
-   let raster_xmin_pix = tr.xPix(-a);
-   let raster_xmax_pix = tr.xPix(a);
-   let raster_zmin_pix = tr.zPix(-a);
-   let raster_zmax_pix = tr.zPix(a);
+   // let nx = Math.abs(raster_xmax - raster_xmin) / raster_dx;
+   // let nz = Math.abs(raster_zmax - raster_zmin) / raster_dz;
+   // if (nx > 1000 || nz > 1000) return;
 
-   // let raster_xmin_pix = tr.xPix(raster_xmin);
-   // let raster_xmax_pix = tr.xPix(raster_xmax);
-   // let raster_zmin_pix = tr.zPix(raster_zmin);
-   // let raster_zmax_pix = tr.zPix(raster_zmax);
+   // let a = 50
+   // let raster_xmin_pix = tr.xPix(-a);
+   // let raster_xmax_pix = tr.xPix(a);
+   // let raster_zmin_pix = tr.zPix(-a);
+   // let raster_zmax_pix = tr.zPix(a);
+
+   let raster_xmin_pix = tr.xPix(x_min);
+   let raster_xmax_pix = tr.xPix(x_max);
+   let raster_zmin_pix = tr.zPix(z_min);
+   let raster_zmax_pix = tr.zPix(z_max);
 
    // horizontale Linien
 
    let zp = raster_offset_z
-   while (zp <= a) {
-      if (zp >= -a) {
+   while (zp <= z_max) {
+      if (zp >= z_min) {
          let zp_pix = tr.zPix(zp)
          let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
          line.stroke = color;
@@ -2150,8 +2156,8 @@ function drawRaster() {
    }
 
    zp = raster_offset_z - raster_dz;
-   while (zp >= -a) {
-      if (zp <= a) {
+   while (zp >= z_min) {
+      if (zp <= z_max) {
          let zp_pix = tr.zPix(zp)
          let line = two.makeLine(raster_xmin_pix, zp_pix, raster_xmax_pix, zp_pix);
          line.stroke = color;
@@ -2163,8 +2169,8 @@ function drawRaster() {
    // vertikale Linien
 
    let xp = raster_offset_x - raster_dx;
-   while (xp >= -a) {
-      if (xp <= a) {
+   while (xp >= x_min) {
+      if (xp <= x_max) {
          let xp_pix = tr.xPix(xp)
          let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
          line.stroke = color;
@@ -2174,8 +2180,8 @@ function drawRaster() {
    }
 
    xp = raster_offset_x;
-   while (xp <= a) {
-      if (xp >= -a) {
+   while (xp <= x_max) {
+      if (xp >= x_min) {
          let xp_pix = tr.xPix(xp)
          let line = two.makeLine(xp_pix, raster_zmin_pix, xp_pix, raster_zmax_pix);
          line.stroke = color;
@@ -2185,7 +2191,7 @@ function drawRaster() {
    }
 
 
-   //   // horizontale Linien
+   // // horizontale Linien
 
    // let zp = raster_offset_z
    // while (zp <= raster_zmax) {

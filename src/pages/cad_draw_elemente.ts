@@ -8,7 +8,7 @@ import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab } from './CCAD_elem
 import { draw_elementlasten, max_Lastfall } from './cad_draw_elementlasten';
 //import { two } from './cad';
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
-import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
+//import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { opacity } from './grafik';
 import { faktor_lagersymbol, select_color, show_elementlasten, show_lastfall, show_stab_qname, slmax_cad, timer, unit_force, unit_moment } from './cad';
 import { buttons_control } from './cad_buttons';

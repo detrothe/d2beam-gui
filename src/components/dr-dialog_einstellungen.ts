@@ -223,7 +223,7 @@ export class drDialogEinstellungen extends LitElement {
             </tbody>
          </table>
 
-         <p>Darzustellender Rasterbereich</p>
+         <p>Initial darzustellender Rasterbereich</p>
 
          <table>
             <tbody>
