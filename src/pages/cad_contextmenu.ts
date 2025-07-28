@@ -39,7 +39,7 @@ export function abbruch_property_dialog() {
 export function show_property_dialog() {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in show_property_dialog",picked_obj)
+    console.log("in show_property_dialog", picked_obj)
 
     let divi = document.getElementById("id_context_menu");
     divi!.style.display = 'none';
@@ -66,6 +66,8 @@ export function show_property_dialog() {
     el.setStarrA((picked_obj as TCAD_Stab).get_starrA())
     el.setStarrE((picked_obj as TCAD_Stab).get_starrE())
     el.setBettung((picked_obj as TCAD_Stab).get_bettung())
+
+    el.set_stabtyp((picked_obj as TCAD_Stab).get_stabtyp())
 
     console.log("shadow", el?.shadowRoot?.getElementById("dialog_stabeigenschaften")),
         (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).addEventListener("close", dialog_stab_eigenschaften_closed);
@@ -105,6 +107,8 @@ function dialog_stab_eigenschaften_closed(this: any, e: any) {
         (picked_obj as TCAD_Stab).set_starrA(el.getStarrA());
         (picked_obj as TCAD_Stab).set_starrE(el.getStarrE());
         (picked_obj as TCAD_Stab).set_bettung(el.getBettung());
+
+        (picked_obj as TCAD_Stab).set_stabtyp(el.get_stabtyp());
 
         berechnungErforderlich(true);
     } else {

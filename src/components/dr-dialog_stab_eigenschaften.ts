@@ -1,130 +1,131 @@
-import { SlCheckbox } from "@shoelace-style/shoelace";
-import { LitElement, css, html } from "lit";
-import { property, customElement } from "lit/decorators.js";
+import { SlCheckbox, SlSelect } from '@shoelace-style/shoelace';
+import { LitElement, css, html } from 'lit';
+import { property, customElement } from 'lit/decorators.js';
 
-import "../styles/dr-dialog.css";
+import '../styles/dr-dialog.css';
 
-@customElement("dr-dialog_stab_eigenschaften")
+@customElement('dr-dialog_stab_eigenschaften')
 export class drDialogStabEigenschaften extends LitElement {
-  @property({ type: String }) title = "Stab Eigenschaften";
+  @property({ type: String }) title = 'Stab Eigenschaften';
 
   @property({ type: Number }) xValue = 0;
   @property({ type: Array }) qname: string[];
 
   nOptions = 0;
+  system = 0;
 
   static get styles() {
     return css`
-      input,
-      label {
-        font-size: 1rem;
-        width: 6rem;
-      }
+         input,
+         label {
+            font-size: 1rem;
+            width: 6rem;
+         }
 
-      p,
-      h2 {
-        color: black;
-      }
+         p,
+         h2 {
+            color: black;
+         }
 
-      button,
-      select {
-        font-size: 0.875rem;
-        border-radius: 4px;
-        border-width: 1px;
-        padding: 0.4rem;
-      }
+         button,
+         select {
+            font-size: 0.875rem;
+            border-radius: 4px;
+            border-width: 1px;
+            padding: 0.4rem;
+         }
 
-      @media (prefers-color-scheme: dark) {
-        button,
-        select {
-          border-color: #43434a;
-          color: #b6b6be;
-          background-color: #1a1a1e;
-        }
-      }
+         @media (prefers-color-scheme: dark) {
+            button,
+            select {
+               border-color: #43434a;
+               color: #b6b6be;
+               background-color: #1a1a1e;
+            }
+         }
 
-      @media (prefers-color-scheme: light) {
-        button,
-        select {
-          border-color: #303030;
-          color: #444;
-        }
-      }
+         @media (prefers-color-scheme: light) {
+            button,
+            select {
+               border-color: #303030;
+               color: #444;
+            }
+         }
 
-      button:active {
-        background-color: darkorange;
-      }
+         button:active {
+            background-color: darkorange;
+         }
 
-      input[type="number"]::-webkit-inner-spin-button,
-      input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
+         input[type='number']::-webkit-inner-spin-button,
+         input[type='number']::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+         }
 
-      /* Firefox */
-      input[type="number"] {
-        -moz-appearance: textfield;
-      }
+         /* Firefox */
+         input[type='number'] {
+            -moz-appearance: textfield;
+         }
 
-      .input_int {
-        width: 3.125rem;
-        margin: 0;
-        padding: 1px;
-        border-top: 1px solid #444;
-        border-bottom: 1px solid #444;
-        border-left: 0;
-        border-right: 0;
-        border-radius: 0;
-        text-align: center;
-      }
+         .input_int {
+            width: 3.125rem;
+            margin: 0;
+            padding: 1px;
+            border-top: 1px solid #444;
+            border-bottom: 1px solid #444;
+            border-left: 0;
+            border-right: 0;
+            border-radius: 0;
+            text-align: center;
+         }
 
-      td,
-      th {
-        padding: 2px;
-        margin: 3px;
-        /*width: 10em;*/
-      }
+         td,
+         th {
+            padding: 2px;
+            margin: 3px;
+            /*width: 10em;*/
+         }
 
-      table {
-        border: none;
-        border-spacing: 0px;
-        padding: 5px;
-        margin: 5px;
-        background-color: light-dark(var(--table-bgcolor-light), var(--table-bgcolor-dark));
-        color: black;
-        border-radius: 5px;
-      }
+         table {
+            border: none;
+            border-spacing: 0px;
+            padding: 5px;
+            margin: 5px;
+            background-color: light-dark(var(--table-bgcolor-light), var(--table-bgcolor-dark));
+            color: black;
+            border-radius: 5px;
+         }
 
-      td.selected {
-        /*background-color: rgb(206, 196, 46);*/
-        color: rgb(13, 13, 13);
-      }
+         td.selected {
+            /*background-color: rgb(206, 196, 46);*/
+            color: rgb(13, 13, 13);
+         }
 
-      td.highlight {
-        background-color: orange;
-        color: darkslateblue;
-      }
+         td.highlight {
+            background-color: orange;
+            color: darkslateblue;
+         }
 
-      /* Festlegung im Default-Stylesheet der Browser */
-      dialog:not([open]) {
-        display: none;
-      }
+         /* Festlegung im Default-Stylesheet der Browser */
+         dialog:not([open]) {
+            display: none;
+         }
 
-      /* Styling der geöffneten Popup-Box */
-      dialog[open] {
-        width: 19rem;
-        background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
-        border: thin solid #e7c157;
-        /*margin: 5rem auto;*/
-        font-size: 1rem;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
+         /* Styling der geöffneten Popup-Box */
+         dialog[open] {
+            width: 19rem;
+            background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
+            border: thin solid #e7c157;
+            /*margin: 5rem auto;*/
+            font-size: 1rem;
+            max-height: 90vh;
+            overflow-y: auto;
+         }
 
-      dialog::backdrop {
-        background: hsl(201 50% 40% /0.5);
-      }
-    `;
+         dialog::backdrop {
+            background: hsl(201 50% 40% /0.5);
+         }
+      `;
   }
 
   constructor() {
@@ -136,173 +137,193 @@ export class drDialogStabEigenschaften extends LitElement {
 
   render() {
     return html` <dialog id="dialog_stabeigenschaften">
-      <h2>Stab-Eigenschaften</h2>
+         <h2>Stab-Eigenschaften</h2>
 
-      <p>
-        <b>Querschnitt</b>
-      </p>
+         <p>
+            <b>Querschnitt</b>
+         </p>
 
-      <p>
-        <select name="querschnitt" id="id_querschnitt"></select>
-      </p>
+         <p>
+            <select name="querschnitt" id="id_querschnitt"></select>
+         </p>
 
-      <div id="id_div">
-        <table id="stab_table">
-          <thead>
-            <tr>
-              <td>Gelenke</td>
-              <td colspan="2" style="text-align: center;">Federkonstante</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <sl-checkbox id="id_Na">N<sub>a</sub></sl-checkbox>
-              </td>
+          <p>
+            <b>Art des Stabes</b>
+         </p>
+         <p>
+            <sl-select value="0" id="id_stabtyp">
+               <sl-option value="0" @click=${this.show_div}> Biegestab d2beam </sl-option>
+               <sl-option value="1" @click=${this.show_div}>FW-Stab Zug + Druck</sl-option>
+               <sl-option value="2" @click=${this.show_div}>FW-Stab nur Zug</sl-option>
+               <sl-option value="3" @click=${this.show_div}>FW-Stab nur Druck</sl-option>
+            </sl-select>
 
-              <td>k<sub>x,a</sub>:</td>
-              <td>
-                <input type="number" id="id_kxa" name="kxa" pattern="[0-9.,eE+-]*" value="" disabled />
-              </td>
-              <td>kN/m</td>
-            </tr>
+            <sl-select value="1" id="id_stabtyp_FW">
+               <sl-option value="1" @click=${this.show_div}>FW-Stab Zug + Druck</sl-option>
+               <sl-option value="2" @click=${this.show_div}>FW-Stab nur Zug</sl-option>
+               <sl-option value="3" @click=${this.show_div}>FW-Stab nur Druck</sl-option>
+            </sl-select>
+         </p>
 
-            <tr>
-              <td>
-                <sl-checkbox id="id_Va">V<sub>a</sub></sl-checkbox>
-              </td>
-              <td>k<sub>z,a</sub>:</td>
-              <td>
-                <input type="number" id="id_kza" name="kza" pattern="[0-9.,eE+-]*" value="" disabled />
-              </td>
-              <td>kN/m</td>
-            </tr>
-            <tr>
-              <td>
-                <sl-checkbox id="id_Ma">M<sub>a</sub></sl-checkbox>
-              </td>
+         <div id="id_div">
+            <table id="stab_table">
+               <thead>
+                  <tr>
+                     <td>Gelenke</td>
+                     <td colspan="2" style="text-align: center;">
+                        Federkonstante
+                     </td>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td>
+                        <sl-checkbox id="id_Na">N<sub>a</sub></sl-checkbox>
+                     </td>
 
-              <td>k<sub>&phi;,a</sub>:</td>
-              <td>
-                <input type="number" id="id_kphi_a" name="kphi_a" pattern="[0-9.,eE+-]*" value="" disabled />
-              </td>
-              <td>kNm/rad</td>
-            </tr>
+                     <td>k<sub>x,a</sub>:</td>
+                     <td>
+                        <input type="number" id="id_kxa" name="kxa" pattern="[0-9.,eE+-]*" value="" disabled />
+                     </td>
+                     <td>kN/m</td>
+                  </tr>
 
-            <tr>
-              <td>
-                <sl-checkbox id="id_Ne">N<sub>e</sub></sl-checkbox>
-              </td>
+                  <tr>
+                     <td>
+                        <sl-checkbox id="id_Va">V<sub>a</sub></sl-checkbox>
+                     </td>
+                     <td>k<sub>z,a</sub>:</td>
+                     <td>
+                        <input type="number" id="id_kza" name="kza" pattern="[0-9.,eE+-]*" value="" disabled />
+                     </td>
+                     <td>kN/m</td>
+                  </tr>
+                  <tr>
+                     <td>
+                        <sl-checkbox id="id_Ma">M<sub>a</sub></sl-checkbox>
+                     </td>
 
-              <td>k<sub>x,e</sub>:</td>
-              <td>
-                <input type="number" id="id_kxe" name="kxe" pattern="[0-9.,eE+-]*" value="" disabled />
-              </td>
-              <td>kN/m</td>
-            </tr>
+                     <td>k<sub>&phi;,a</sub>:</td>
+                     <td>
+                        <input type="number" id="id_kphi_a" name="kphi_a" pattern="[0-9.,eE+-]*" value="" disabled />
+                     </td>
+                     <td>kNm/rad</td>
+                  </tr>
 
-            <tr>
-              <td>
-                <sl-checkbox id="id_Ve">V<sub>e</sub></sl-checkbox>
-              </td>
-              <td>k<sub>z,e</sub>:</td>
-              <td>
-                <input type="number" id="id_kze" name="kze" pattern="[0-9.,eE+-]*" value="" disabled />
-              </td>
-              <td>kN/m</td>
-            </tr>
-            <tr>
-              <td>
-                <sl-checkbox id="id_Me">M<sub>e</sub></sl-checkbox>
-              </td>
+                  <tr>
+                     <td>
+                        <sl-checkbox id="id_Ne">N<sub>e</sub></sl-checkbox>
+                     </td>
 
-              <td>k<sub>&phi;,e</sub>:</td>
-              <td>
-                <input type="number" id="id_kphi_e" name="kphi_e" pattern="[0-9.,eE+-]*" value="" disabled />
-              </td>
-              <td>kNm/rad</td>
-            </tr>
-          </tbody>
-        </table>
+                     <td>k<sub>x,e</sub>:</td>
+                     <td>
+                        <input type="number" id="id_kxe" name="kxe" pattern="[0-9.,eE+-]*" value="" disabled />
+                     </td>
+                     <td>kN/m</td>
+                  </tr>
 
-        <p><b>Starre Stabenden</b></p>
-        <p>
-          starr a:
-          <input type="number" id="id_a" name="a" pattern="[0-9.,eE+-]*" value="" />
-          [m]
-        </p>
-        <p>
-          starr e:
-          <input type="number" id="id_e" name="e" pattern="[0-9.,eE+-]*" value="" />
-          [m]
-        </p>
+                  <tr>
+                     <td>
+                        <sl-checkbox id="id_Ve">V<sub>e</sub></sl-checkbox>
+                     </td>
+                     <td>k<sub>z,e</sub>:</td>
+                     <td>
+                        <input type="number" id="id_kze" name="kze" pattern="[0-9.,eE+-]*" value="" disabled />
+                     </td>
+                     <td>kN/m</td>
+                  </tr>
+                  <tr>
+                     <td>
+                        <sl-checkbox id="id_Me">M<sub>e</sub></sl-checkbox>
+                     </td>
 
-        <p><b>Stabbettung</b></p>
-        <p>
-          k<sub>b</sub>:
-          <input type="number" id="id_kb" name="kb" pattern="[0-9.,eE+-]*" value="" />
-          [kN/m²]
-        </p>
-      </div>
+                     <td>k<sub>&phi;,e</sub>:</td>
+                     <td>
+                        <input type="number" id="id_kphi_e" name="kphi_e" pattern="[0-9.,eE+-]*" value="" disabled />
+                     </td>
+                     <td>kNm/rad</td>
+                  </tr>
+               </tbody>
+            </table>
 
+            <p><b>Starre Stabenden</b></p>
+            <p>
+               starr a:
+               <input type="number" id="id_a" name="a" pattern="[0-9.,eE+-]*" value="" />
+               [m]
+            </p>
+            <p>
+               starr e:
+               <input type="number" id="id_e" name="e" pattern="[0-9.,eE+-]*" value="" />
+               [m]
+            </p>
 
-      <form method="dialog">
-        <!-- <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
-        <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
-        <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
-      </form>
-    </dialog>`;
+            <p><b>Stabbettung</b></p>
+            <p>
+               k<sub>b</sub>:
+               <input type="number" id="id_kb" name="kb" pattern="[0-9.,eE+-]*" value="" />
+               [kN/m²]
+            </p>
+         </div>
+
+         <form method="dialog">
+            <!-- <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
+            <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
+            <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+         </form>
+      </dialog>`;
   }
 
   _dialog_anwenden() {
-    console.log("dialog_anwenden");
+    console.log('dialog_anwenden');
     const shadow = this.shadowRoot;
     if (shadow) {
-      window.dispatchEvent(new Event("draw_cad_knoten"));
+      window.dispatchEvent(new Event('draw_cad_knoten'));
     }
   }
 
   _dialog_ok() {
-    console.log("dialog_ok");
+    console.log('dialog_ok');
     const shadow = this.shadowRoot;
     if (shadow) {
-      (shadow.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).close("ok");
+      (shadow.getElementById('dialog_stabeigenschaften') as HTMLDialogElement).close('ok');
     }
   }
 
   _dialog_abbruch() {
-    console.log("dialog_abbruch");
+    console.log('dialog_abbruch');
     const shadow = this.shadowRoot;
-    if (shadow) (shadow.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).close("cancel");
+    if (shadow) (shadow.getElementById('dialog_stabeigenschaften') as HTMLDialogElement).close('cancel');
   }
+
 
   //---------------------------------------------------------------------------------------------------------------
   getStarrA() {
     //-------------------------------------------------------------------------------------------------------------
 
     const shadow = this.shadowRoot;
-    console.log("id_a", (shadow?.getElementById("id_a") as HTMLInputElement).value);
-    let wert = Number((shadow?.getElementById("id_a") as HTMLInputElement).value.replace(/,/g, "."));
+    console.log('id_a', (shadow?.getElementById('id_a') as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById('id_a') as HTMLInputElement).value.replace(/,/g, '.'));
     return wert;
   }
 
   getStarrE() {
     const shadow = this.shadowRoot;
-    console.log("id_e", (shadow?.getElementById("id_e") as HTMLInputElement).value);
-    let wert = Number((shadow?.getElementById("id_e") as HTMLInputElement).value.replace(/,/g, "."));
+    console.log('id_e', (shadow?.getElementById('id_e') as HTMLInputElement).value);
+    let wert = Number((shadow?.getElementById('id_e') as HTMLInputElement).value.replace(/,/g, '.'));
     return wert;
   }
 
   //---------------------------------------------------------------------------------------------------------------
   setStarrA(wert: number) {
     //-------------------------------------------------------------------------------------------------------------
-    (this.shadowRoot?.getElementById("id_a") as HTMLInputElement).value = String(wert);
+    (this.shadowRoot?.getElementById('id_a') as HTMLInputElement).value = String(wert);
   }
 
   //---------------------------------------------------------------------------------------------------------------
   setStarrE(wert: number) {
     //-------------------------------------------------------------------------------------------------------------
-    (this.shadowRoot?.getElementById("id_e") as HTMLInputElement).value = String(wert);
+    (this.shadowRoot?.getElementById('id_e') as HTMLInputElement).value = String(wert);
   }
 
   //---------------------------------------------------------------------------------------------------------------
@@ -310,14 +331,14 @@ export class drDialogStabEigenschaften extends LitElement {
     //-------------------------------------------------------------------------------------------------------------
 
     const shadow = this.shadowRoot;
-    let wert = Number((shadow?.getElementById("id_kb") as HTMLInputElement).value.replace(/,/g, "."));
+    let wert = Number((shadow?.getElementById('id_kb') as HTMLInputElement).value.replace(/,/g, '.'));
     return wert;
   }
 
   //---------------------------------------------------------------------------------------------------------------
   setBettung(wert: number) {
     //-------------------------------------------------------------------------------------------------------------
-    (this.shadowRoot?.getElementById("id_kb") as HTMLInputElement).value = String(wert);
+    (this.shadowRoot?.getElementById('id_kb') as HTMLInputElement).value = String(wert);
   }
 
   //---------------------------------------------------------------------------------------------------------------
@@ -326,8 +347,8 @@ export class drDialogStabEigenschaften extends LitElement {
     this.qname[this.nOptions] = name;
 
     const shadow = this.shadowRoot;
-    let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
-    let option = document.createElement("option");
+    let el = shadow?.getElementById('id_querschnitt') as HTMLSelectElement;
+    let option = document.createElement('option');
 
     option.value = option.textContent = this.qname[this.nOptions];
     el.appendChild(option);
@@ -340,14 +361,14 @@ export class drDialogStabEigenschaften extends LitElement {
     //-------------------------------------------------------------------------------------------------------------
 
     const shadow = this.shadowRoot;
-    let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
+    let el = shadow?.getElementById('id_querschnitt') as HTMLSelectElement;
     //    for (let i = 0; i < this.nOptions; i++) el.removeChild(el.lastChild);
     for (let i = el.children.length - 1; i >= 0; i--) el.remove(i);
 
     for (let i = 0; i < name.length; i++) {
       this.qname[i] = name[i];
 
-      let option = document.createElement("option");
+      let option = document.createElement('option');
 
       option.value = option.textContent = this.qname[i];
 
@@ -362,7 +383,7 @@ export class drDialogStabEigenschaften extends LitElement {
     //-------------------------------------------------------------------------------------------------------------
 
     const shadow = this.shadowRoot;
-    let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
+    let el = shadow?.getElementById('id_querschnitt') as HTMLSelectElement;
 
     el.selectedIndex = index;
   }
@@ -372,7 +393,7 @@ export class drDialogStabEigenschaften extends LitElement {
     //-------------------------------------------------------------------------------------------------------------
 
     const shadow = this.shadowRoot;
-    let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
+    let el = shadow?.getElementById('id_querschnitt') as HTMLSelectElement;
 
     for (let i = 0; i < el.children.length; i++) {
       if (el.children.item(i)?.textContent === name) {
@@ -386,14 +407,14 @@ export class drDialogStabEigenschaften extends LitElement {
   getSelectedOptionByName(): string {
     //-------------------------------------------------------------------------------------------------------------
     const shadow = this.shadowRoot;
-    let el = shadow?.getElementById("id_querschnitt") as HTMLSelectElement;
+    let el = shadow?.getElementById('id_querschnitt') as HTMLSelectElement;
 
     let index = el.selectedIndex;
     let name = el.children.item(index)?.textContent;
     //console.log("in getSelectedOptionByName",index,name)
 
-    if (typeof name === "string") return name;
-    else return "";
+    if (typeof name === 'string') return name;
+    else return '';
   }
 
   //---------------------------------------------------------------------------------------------------------------
@@ -403,17 +424,17 @@ export class drDialogStabEigenschaften extends LitElement {
     let gelenke: boolean[] = Array(6);
 
     const shadow = this.shadowRoot;
-    let el = shadow?.getElementById("id_Na") as SlCheckbox;
+    let el = shadow?.getElementById('id_Na') as SlCheckbox;
     gelenke[0] = el.checked;
-    el = shadow?.getElementById("id_Va") as SlCheckbox;
+    el = shadow?.getElementById('id_Va') as SlCheckbox;
     gelenke[1] = el.checked;
-    el = shadow?.getElementById("id_Ma") as SlCheckbox;
+    el = shadow?.getElementById('id_Ma') as SlCheckbox;
     gelenke[2] = el.checked;
-    el = shadow?.getElementById("id_Ne") as SlCheckbox;
+    el = shadow?.getElementById('id_Ne') as SlCheckbox;
     gelenke[3] = el.checked;
-    el = shadow?.getElementById("id_Ve") as SlCheckbox;
+    el = shadow?.getElementById('id_Ve') as SlCheckbox;
     gelenke[4] = el.checked;
-    el = shadow?.getElementById("id_Me") as SlCheckbox;
+    el = shadow?.getElementById('id_Me') as SlCheckbox;
     gelenke[5] = el.checked;
 
     //console.log("id_na", el.checked)
@@ -425,31 +446,87 @@ export class drDialogStabEigenschaften extends LitElement {
     //-------------------------------------------------------------------------------------------------------------
 
     const shadow = this.shadowRoot;
-    let el = shadow?.getElementById("id_Na") as SlCheckbox;
+    let el = shadow?.getElementById('id_Na') as SlCheckbox;
     el.checked = gelenke[0];
-    el = shadow?.getElementById("id_Va") as SlCheckbox;
+    el = shadow?.getElementById('id_Va') as SlCheckbox;
     el.checked = gelenke[1];
-    el = shadow?.getElementById("id_Ma") as SlCheckbox;
+    el = shadow?.getElementById('id_Ma') as SlCheckbox;
     el.checked = gelenke[2];
-    el = shadow?.getElementById("id_Ne") as SlCheckbox;
+    el = shadow?.getElementById('id_Ne') as SlCheckbox;
     el.checked = gelenke[3];
-    el = shadow?.getElementById("id_Ve") as SlCheckbox;
+    el = shadow?.getElementById('id_Ve') as SlCheckbox;
     el.checked = gelenke[4];
-    el = shadow?.getElementById("id_Me") as SlCheckbox;
+    el = shadow?.getElementById('id_Me') as SlCheckbox;
     el.checked = gelenke[5];
   }
 
+  //---------------------------------------------------------------------------------------------------------------
   set_system(system: number) {
+    //-------------------------------------------------------------------------------------------------------------
 
+    this.system = system;
     const shadow = this.shadowRoot;
-    let el = shadow?.getElementById("id_div") as HTMLDivElement;
+    let el = shadow?.getElementById('id_div') as HTMLDivElement;
+    let el_typ = shadow?.getElementById('id_stabtyp') as SlSelect;
+    let el_typ_FW = shadow?.getElementById('id_stabtyp_FW') as SlSelect;
 
-    console.log("set_system stab eigenschaften", system, el)
+    console.log('set_system stab eigenschaften', system, el);
     if (system === 0) {
-      el.style.display = "block";
+      el.style.display = 'block';
+      el_typ.style.display = 'block';
+      el_typ_FW.style.display = 'none';
     } else {
-      el.style.display = "none";
+      el.style.display = 'none';
+      el_typ.style.display = 'none';
+      el_typ_FW.style.display = 'block';
     }
   }
 
+
+  //---------------------------------------------------------------------------------------------------------------
+  show_div() {
+    //-------------------------------------------------------------------------------------------------------------
+
+    const shadow = this.shadowRoot;
+    let el = shadow?.getElementById('id_div') as HTMLDivElement;
+
+    if (this.system === 0) {   // Stabwerk
+      let el_typ = shadow?.getElementById('id_stabtyp') as SlSelect;
+      if (el_typ.value === '0') el.style.display = 'block';
+      else el.style.display = 'none';
+    } else {  // Fachwerk
+    }
+  }
+
+  //---------------------------------------------------------------------------------------------------------------
+  set_stabtyp(typ: number) {
+    //---------------------------------------------------------------------------------------------------------------
+
+    const shadow = this.shadowRoot;
+    if (this.system === 0) {   // Stabwerk
+      let el_typ = shadow?.getElementById('id_stabtyp') as SlSelect;
+      el_typ.value = String(typ);
+      this.show_div();
+    } else {
+      let el_typ_FW = shadow?.getElementById('id_stabtyp_FW') as SlSelect;
+      el_typ_FW.value = String(typ);
+    }
+  }
+
+  //---------------------------------------------------------------------------------------------------------------
+  get_stabtyp() {
+    //---------------------------------------------------------------------------------------------------------------
+    let value = '';
+
+    const shadow = this.shadowRoot;
+    if (this.system === 0) {   // Stabwerk
+      let el_typ = shadow?.getElementById('id_stabtyp') as SlSelect;
+      value = el_typ.value[0];
+      console.log('get_stabtyp', value, el_typ.value)
+    } else {
+      let el_typ_FW = shadow?.getElementById('id_stabtyp_FW') as SlSelect;
+      value = el_typ_FW.value[0];
+    }
+    return Number(value)
+  }
 }

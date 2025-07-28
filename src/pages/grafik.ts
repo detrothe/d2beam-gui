@@ -1187,7 +1187,7 @@ export function drawsystem(svg_id = 'artboard') {
         // zmint = zmin * (1 + wheel_factor) / 2. + zmax * (1. - wheel_factor) / 2.
         // zmaxt = zmin * (1 - wheel_factor) / 2. + zmax * (1. + wheel_factor) / 2.
         //write('wheel_factor ', wheel_factor)
-        console.log('wheel_factor grafik', wheel_factor)
+        // console.log('wheel_factor grafik', wheel_factor)
 
         // xmint = xmin0 - dx * wheel_factor / 2.
         // xmaxt = xmax0 + dx * wheel_factor / 2.

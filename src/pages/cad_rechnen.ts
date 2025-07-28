@@ -223,6 +223,8 @@ export function cad_rechnen() {
                     nelem_Balken_Bettung++;
                     if (Math.abs(obj.k_0) > maxBettung) maxBettung = Math.abs(obj.k_0)
                 }
+                element[ielem].elTyp = obj.get_stabtyp();
+                console.log("stab typ",element[ielem].elTyp)
 
                 ielem++
 
@@ -230,6 +232,8 @@ export function cad_rechnen() {
                 console.log("CHILD", child)
                 child.value = obj.name_querschnitt
                 //child.innerHTML = obj.name_querschnitt
+                child = tabelle.rows[ielem].cells[2].firstElementChild as HTMLInputElement;
+                child.value = String(+obj.get_stabtyp())
                 child = tabelle.rows[ielem].cells[3].firstElementChild as HTMLInputElement;
                 child.value = String(+nod1 + 1)
                 child = tabelle.rows[ielem].cells[4].firstElementChild as HTMLInputElement;

@@ -3,7 +3,8 @@ import { CElement } from "./element"
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
     nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung,
-    stadyn, eigenform_dyn, stabvorverformung_komb, R_internal
+    stadyn, eigenform_dyn, stabvorverformung_komb, R_internal,
+    matprop_flag
 } from "./rechnen"
 
 //import { BubbleSort } from "./lib"
@@ -14,9 +15,15 @@ export class CTruss extends CElement {
 
     neqeG = 4
 
+    stabtyp = 1   //  = zug + Druck, 2 = nur Zug, 3 = nur Druck
+
     ielem = -1
     nknoten = 2
     isActive = true
+
+    e_tang = 0.0
+    is_plastic = false
+
     emodul = 0.0
     gmodul = 0.0
     querdehnzahl = 0.0
@@ -109,10 +116,20 @@ export class CTruss extends CElement {
 
 
     //---------------------------------------------------------------------------------------------
+    reset_element(): void {   // zu Beginn jeder Kombination aufrufen
+
+        this.normalkraft = 0.0
+
+        this.e_tang = this.emodul
+        this.is_plastic = false
+    }
+
+    //---------------------------------------------------------------------------------------------
     setQuerschnittsdaten(emodul: number, Iy: number, area: number, wichte: number, ks: number, querdehnzahl: number, schubfaktor: number,
         height: number, zso: number, alphaT: number) {
 
         this.emodul = emodul
+        this.e_tang = emodul
         this.Iy = Iy
         this.area = area
         this.wichte = wichte
@@ -487,7 +504,7 @@ export class CTruss extends CElement {
 
         const sl = this.sl
 
-        let EAL = this.emodul * this.area / sl
+        let EAL = this.e_tang * this.area / sl
 
         this.estm[0][0] = EAL
         this.estm[0][1] = 0.0
@@ -572,9 +589,11 @@ export class CTruss extends CElement {
 
         let sum: number
         let j: number, k: number
-        const help = Array.from(Array(6), () => new Array(this.neqeG));
+        const help = Array.from(Array(4), () => new Array(this.neqeG));
 
         //console.log("berechneElementsteifigkeitsmatrix", theorie, this.normalkraft)
+
+        this.berechneLokaleElementsteifigkeitmatrix()
 
         if (theorie === 0) {
 
@@ -790,8 +809,11 @@ export class CTruss extends CElement {
     //---------------------------------------------------------------------------------------------
     berechneInterneKraefte(ielem: number, iLastf: number, iter: number, u: number[]) {
 
+        console.log("Berechne Interne Kräfte    T R U S S ")
+
         let ieq: number, i: number, j: number, k: number
         let sum: number
+        let Fi = Array(4).fill(0)
 
         for (j = 0; j < this.neqeG; j++) {                           // Stabverformungen
             ieq = this.lm[j]
@@ -809,23 +831,25 @@ export class CTruss extends CElement {
             for (k = 0; k < this.neqeG; k++) {
                 sum += this.estiffG[j][k] * this.u[k]
             }
-            this.F[j] = sum
+            this.F[j] = Fi[j] = sum
         }
 
         //console.log("this.F[]", this.F)
 
         // internen Kraftvektor berechnen für Iterationen
 
-        for (j = 0; j < this.neqeG; j++) {
-            ieq = this.lm[j]
-            if (ieq >= 0) {
-                R_internal[ieq] += this.F[j]
+        if (this.stabtyp === 1) {
+            for (j = 0; j < this.neqeG; j++) {
+                ieq = this.lm[j]
+                if (ieq >= 0) {
+                    R_internal[ieq] += this.F[j]
+                }
             }
         }
 
         // normale Elementlasten hinzufügen
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
 
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastf)) {
@@ -837,7 +861,7 @@ export class CTruss extends CElement {
                 }
             }
         }
-        else if (THIIO_flag === 1) { // ikomb=iLastf
+        else if (THIIO_flag === 1 || matprop_flag > 0) { // ikomb=iLastf
 
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if (eload[ieload].element === ielem) {
@@ -860,6 +884,7 @@ export class CTruss extends CElement {
 
         }
 
+
         //console.log("element F global ", this.F)
 
         // TODO ?? Bei gedrehten Lagern erst ins x,z Koordinatensystem zurückdrehen, siehe Excel ab Zeile 434
@@ -876,6 +901,7 @@ export class CTruss extends CElement {
 
         for (i = 0; i < 2; i++) this.FL[i] = -this.FL[i];  // Linke Seite Vorzeichen nach KGV
 
+
         //console.log('lokale Schnittgrößen, Element', (ielem + 1), this.FL)
 
         if (THIIO_flag === 0) {
@@ -883,6 +909,56 @@ export class CTruss extends CElement {
         } else {
             this.normalkraft = this.FL[0]
             if (this.normalkraft > 0.0) this.normalkraft = 0.0           // keine Zugversteifung
+        }
+
+        console.log("TRUSS", matprop_flag, this.stabtyp, this.FL)
+        if (matprop_flag > 0 && this.stabtyp > 1) {    // nichtlinear
+
+            if (this.stabtyp === 2) {   // nur Zug
+                console.log("in nur Zugstab")
+                if (this.FL[0] < 0.0 || this.FL[2] < 0.0) {
+                    for (i = 0; i < 4; i++) {
+                        this.FL[i] = 0.0;
+                        this.F[i] = 0.0;
+                    }
+                    this.e_tang = 0.0
+                    this.is_plastic = true
+                    this.normalkraft = 0.0
+                } else {
+                    this.is_plastic = false
+                    this.e_tang = this.emodul
+
+                    for (j = 0; j < 4; j++) {
+                        ieq = this.lm[j]
+                        if (ieq >= 0) {
+                            R_internal[ieq] += Fi[j]
+                        }
+                    }
+                }
+            }
+
+            if (this.stabtyp === 3) {   // nur Druck
+                console.log("in nur Druckstab")
+                if (this.FL[0] > 0.0 || this.FL[2] > 0.0) {
+                    for (i = 0; i < 4; i++) {
+                        this.FL[i] = 0.0;
+                        this.F[i] = 0.0;
+                    }
+                    this.e_tang = 0.0
+                    this.is_plastic = true
+                    this.normalkraft = 0.0
+                } else {
+                    this.is_plastic = false
+                    this.e_tang = this.emodul
+
+                    for (j = 0; j < 4; j++) {
+                        ieq = this.lm[j]
+                        if (ieq >= 0) {
+                            R_internal[ieq] += Fi[j]
+                        }
+                    }
+                }
+            }
         }
 
         //console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
@@ -1418,7 +1494,7 @@ export class CTruss extends CElement {
 
         //console.log("ETA", eta)
 
-        if (THIIO_flag === 0) {      // Theorie I. Ordnung
+        if (THIIO_flag === 0 && matprop_flag === 0) {      // Theorie I. Ordnung und Nichtlinear
             for (let i = 0; i < 4; i++) edisp[i] = this.edispL[i]
         }
         else {      // Theorie II. Ordnung
@@ -1507,7 +1583,7 @@ export class CTruss extends CElement {
 
             // normale Elementlasten hinzufügen
 
-            if (THIIO_flag === 0) {
+            if (THIIO_flag === 0 && matprop_flag === 0) {
 
                 for (let ieload = 0; ieload < neloads; ieload++) {
                     if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === iLastf)) {
@@ -1731,7 +1807,7 @@ export class CTruss extends CElement {
                 this.phi_[iLastf][iteil] = 0.0  //phix
 
             }
-            else if (THIIO_flag === 1) { // ikomb=iLastf
+            else if (THIIO_flag === 1 || matprop_flag > 0) { // ikomb=iLastf
 
                 for (let ieload = 0; ieload < neloads; ieload++) {
 
@@ -2004,7 +2080,7 @@ export class CTruss extends CElement {
     //---------------------------------------------------------------------------------------------
     get_elementSchnittgroesse_Moment(Mx: number[], iLastf: number) {
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++)  Mx[i] = this.M_[iLastf][i]
 
@@ -2020,7 +2096,7 @@ export class CTruss extends CElement {
     get_elementSchnittgroesse_Querkraft(Vx: number[], iLastf: number, use_gleichgewichtSG: boolean) {
 
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++)  Vx[i] = this.V_[iLastf][i]
 
@@ -2040,7 +2116,7 @@ export class CTruss extends CElement {
     get_elementSchnittgroesse_Normalkraft(Nx: number[], iLastf: number, use_gleichgewichtSG: boolean) {
 
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++)  Nx[i] = this.N_[iLastf][i]
 
@@ -2060,7 +2136,7 @@ export class CTruss extends CElement {
     get_elementSchnittgroesse_u_w_phi(ux: number[], wx: number[], phix: number[], iLastf: number, gesamt: boolean) {
 
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
             if (iLastf < nlastfaelle) {
                 for (let i = 0; i < this.nTeilungen; i++) {
                     ux[i] = this.u_[iLastf][i]

@@ -431,7 +431,7 @@ export function setSystem(system: number) {
     els.set_system(system);
 
     let ele2 = document.getElementById('id_dialog_elementlast') as drDialogElementlasten;
-    console.log("drDialogElementlasten",ele2)
+    console.log("drDialogElementlasten", ele2)
     ele2.set_system(system);
 }
 
@@ -545,8 +545,8 @@ export function rechnen(flag = 1) {
     el = document.getElementById('id_THIIO') as HTMLSelectElement;
     THIIO_flag = Number(el.value);
 
-    // el = document.getElementById('id_matprop') as HTMLSelectElement;
-    matprop_flag = 0   //Number(el.value);
+    el = document.getElementById('id_matprop') as HTMLSelectElement;
+    matprop_flag = Number(el.value);
 
     // el = document.getElementById('id_maxu_node_ID') as HTMLInputElement;
     //console.log("id_maxu_node_ID|",el.value,'|')
@@ -2055,7 +2055,11 @@ async function calculate() {
 
         console.log("el", el)
         if (System === STABWERK) {
-            if (element[ielem].elTyp === 1) el.push(new CTruss());
+            if (element[ielem].elTyp > 0 && element[ielem].elTyp < 4) {
+                el.push(new CTruss());
+                el[ielem].stabtyp = element[ielem].elTyp;
+                console.log("el.stabtyp", el.stabtyp, element[ielem].elTyp)
+            }
             else el.push(new CTimoshenko_beam());
 
         } else el.push(new CTruss());

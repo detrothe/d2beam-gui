@@ -74,7 +74,7 @@ import { set_max_lastfall, zero_max_lastfall } from './cad_draw_elementlasten';
 import { reset_cad_nodes } from './cad_node';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.4.2, 23-Juli-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.4.3,a, 28-Juli-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -278,7 +278,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               <td></td>
             </tr>
 
-            <!--
+
             <tr>
               <td title="nichtlineare Materialeigenschaften nur bei Koppelfedern möglich">&nbsp;&nbsp; Materialeigenschaften:</td>
               <td>
@@ -289,7 +289,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               </td>
               <td></td>
             </tr>
-    -->
+
             <tr>
               <td>
                &nbsp;
@@ -1791,8 +1791,8 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     elSel = document.getElementById('id_THIIO') as HTMLSelectElement;
     elSel.options[0].selected = true;
 
-    // elSel = document.getElementById("id_matprop") as HTMLSelectElement;
-    // elSel.options[0].selected = true;
+    elSel = document.getElementById("id_matprop") as HTMLSelectElement;
+    elSel.options[0].selected = true;
 
     readLocalStorage_cad();
 

@@ -174,12 +174,12 @@ export function read_daten(eingabedaten: string) {
             els.options[jobj.THIIO_flag].selected = true;
         }
 
-        // els = document.getElementById('id_matprop') as HTMLSelectElement;
-        // if (jobj.matprop_flag === undefined) {
-        //     els.options[0].selected = true;
-        // } else {
-        //     els.options[jobj.matprop_flag].selected = true;
-        // }
+        els = document.getElementById('id_matprop') as HTMLSelectElement;
+        if (jobj.matprop_flag === undefined) {
+            els.options[0].selected = true;
+        } else {
+            els.options[jobj.matprop_flag].selected = true;
+        }
 
         els = document.getElementById("id_maxu_dir") as HTMLSelectElement;
         if (jobj.maxU_dir !== undefined) {
@@ -362,6 +362,7 @@ export function read_daten(eingabedaten: string) {
             obj.sinus = jobj.elements[i].sinus;
             obj.cosinus = jobj.elements[i].cosinus;
             obj.alpha = jobj.elements[i].alpha;
+            obj.stabTyp=jobj.elements[i].stabTyp;
 
             list.append(obj);
             let neloads = jobj.elements[i].elast.length;
@@ -599,7 +600,7 @@ export function str_inputToJSON() {
     THIIO_flag = el.value;
 
     el = document.getElementById("id_matprop") as HTMLSelectElement;
-    matprop_flag = "0"; //el.value;
+    matprop_flag = el.value;
 
     el = document.getElementById("id_stadyn") as HTMLSelectElement;
     stadyn = el.value;

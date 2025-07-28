@@ -53,6 +53,7 @@ export class TCAD_Knotenmasse extends TCAD_Element {
 export class TCAD_Stab extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――
     elNo = -1
+    stabTyp = 0;
     // x2: number = 0.0;
     // z2: number = 0.0;
     index2 = -1;
@@ -145,6 +146,16 @@ export class TCAD_Stab extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――――――
     get_bettung() {
         return this.k_0;
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    set_stabtyp(wert: number) {
+        this.stabTyp = wert;
+    }
+
+    //―――――――――――――――――――――――――――――――――――――――――――――
+    get_stabtyp() {
+        return this.stabTyp;
     }
 
     //―――――――――――――――――――――――――――――――――――――――――――――
