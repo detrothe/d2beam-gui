@@ -122,15 +122,17 @@ function dialog_stab_eigenschaften_closed(this: any, e: any) {
         selected_element.group = null;
     }
 
-    // stab unselektiert neu zeichnen
-    let group = picked_obj.getTwoObj();
-    two.remove(group);
 
-    group = drawStab(picked_obj as TCAD_Stab, tr);
-    two.add(group)
-    picked_obj.setTwoObj(group);
-    picked_obj.isSelected = false
-    two.update();
+    // stab unselektiert neu zeichnen
+
+    // let group = picked_obj.getTwoObj();
+    // two.remove(group);
+
+    // group = drawStab(picked_obj as TCAD_Stab, tr);
+    // two.add(group)
+    // picked_obj.setTwoObj(group);
+    // picked_obj.isSelected = false
+    // two.update();
 }
 
 
