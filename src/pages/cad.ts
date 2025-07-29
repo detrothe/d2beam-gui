@@ -168,7 +168,7 @@ let xminv = 0.0,
    zminv = 0.0,
    zmaxv = 0.0;
 
-export let raster_xmin = -15.0,
+export let raster_xmin = -1.0,
    raster_xmax = 15.0,
    raster_zmin = -10.0,
    raster_zmax = 10.0;
