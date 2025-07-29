@@ -151,18 +151,18 @@ export class drDialogStabEigenschaften extends LitElement {
             <b>Art des Stabes</b>
          </p>
          <p>
-            <sl-select value="0" id="id_stabtyp">
-               <sl-option value="0" @click=${this.show_div}> Biegestab d2beam </sl-option>
-               <sl-option value="1" @click=${this.show_div}>FW-Stab Zug + Druck</sl-option>
-               <sl-option value="2" @click=${this.show_div}>FW-Stab nur Zug</sl-option>
-               <sl-option value="3" @click=${this.show_div}>FW-Stab nur Druck</sl-option>
-            </sl-select>
+            <select value="0" id="id_stabtyp">
+               <option value="0" selected @click=${this.show_div}> Biegestab d2beam </option>
+               <option value="1" @click=${this.show_div}>FW-Stab Zug + Druck</option>
+               <option value="2" @click=${this.show_div}>FW-Stab nur Zug</option>
+               <option value="3" @click=${this.show_div}>FW-Stab nur Druck</option>
+            </select>
 
-            <sl-select value="1" id="id_stabtyp_FW">
-               <sl-option value="1" @click=${this.show_div}>FW-Stab Zug + Druck</sl-option>
-               <sl-option value="2" @click=${this.show_div}>FW-Stab nur Zug</sl-option>
-               <sl-option value="3" @click=${this.show_div}>FW-Stab nur Druck</sl-option>
-            </sl-select>
+            <select value="1" id="id_stabtyp_FW">
+               <option value="1" selected @click=${this.show_div}>FW-Stab Zug + Druck</option>
+               <option value="2" @click=${this.show_div}>FW-Stab nur Zug</option>
+               <option value="3" @click=${this.show_div}>FW-Stab nur Druck</option>
+            </select>
          </p>
 
          <div id="id_div">
@@ -491,7 +491,7 @@ export class drDialogStabEigenschaften extends LitElement {
     let el = shadow?.getElementById('id_div') as HTMLDivElement;
 
     if (this.system === 0) {   // Stabwerk
-      let el_typ = shadow?.getElementById('id_stabtyp') as SlSelect;
+      let el_typ = shadow?.getElementById('id_stabtyp') as HTMLSelectElement;
       if (el_typ.value === '0') el.style.display = 'block';
       else el.style.display = 'none';
     } else {  // Fachwerk
@@ -504,11 +504,11 @@ export class drDialogStabEigenschaften extends LitElement {
 
     const shadow = this.shadowRoot;
     if (this.system === 0) {   // Stabwerk
-      let el_typ = shadow?.getElementById('id_stabtyp') as SlSelect;
+      let el_typ = shadow?.getElementById('id_stabtyp') as HTMLSelectElement;
       el_typ.value = String(typ);
       this.show_div();
     } else {
-      let el_typ_FW = shadow?.getElementById('id_stabtyp_FW') as SlSelect;
+      let el_typ_FW = shadow?.getElementById('id_stabtyp_FW') as HTMLSelectElement;
       el_typ_FW.value = String(typ);
     }
   }
@@ -520,12 +520,12 @@ export class drDialogStabEigenschaften extends LitElement {
 
     const shadow = this.shadowRoot;
     if (this.system === 0) {   // Stabwerk
-      let el_typ = shadow?.getElementById('id_stabtyp') as SlSelect;
-      value = el_typ.value[0];
+      let el_typ = shadow?.getElementById('id_stabtyp') as HTMLSelectElement;
+      value = el_typ.value;
       console.log('get_stabtyp', value, el_typ.value)
     } else {
-      let el_typ_FW = shadow?.getElementById('id_stabtyp_FW') as SlSelect;
-      value = el_typ_FW.value[0];
+      let el_typ_FW = shadow?.getElementById('id_stabtyp_FW') as HTMLSelectElement;
+      value = el_typ_FW.value;
     }
     return Number(value)
   }

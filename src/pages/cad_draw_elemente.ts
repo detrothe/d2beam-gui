@@ -124,19 +124,26 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
         kn2.fill = 'black'
         group.add(kn2);
 
-        if (obj.aL > 0.0 || obj.aR > 0.0) {
-            let gr = draw_stab_starre_Enden(obj as TCAD_Stab, tr);
-            group.add(gr)
-        }
+        if (obj.stabTyp === 0) {
+            if (obj.aL > 0.0 || obj.aR > 0.0) {
+                let gr = draw_stab_starre_Enden(obj as TCAD_Stab, tr);
+                group.add(gr)
+            }
 
-        if (obj.nGelenke > 0) {
-            let gr = draw_stab_gelenke(obj as TCAD_Stab, tr);
-            group.add(gr)
-        }
+            if (obj.nGelenke > 0) {
+                let gr = draw_stab_gelenke(obj as TCAD_Stab, tr);
+                group.add(gr)
+            }
 
-        if (obj.k_0 !== 0.0) {
-            if (Math.abs(obj.k_0) > maxBettung) set_maxBettung(Math.abs(obj.k_0))
-            let gr = draw_bettungsmodul(obj, tr)  // Bettung darstellen
+            if (obj.k_0 !== 0.0) {
+                if (Math.abs(obj.k_0) > maxBettung) set_maxBettung(Math.abs(obj.k_0))
+                let gr = draw_bettungsmodul(obj, tr)  // Bettung darstellen
+                group.add(gr)
+            }
+        }
+        else if (obj.stabTyp > 0 && obj.stabTyp < 4) {
+
+            let gr = draw_FWstab_gelenke(obj as TCAD_Stab, tr);
             group.add(gr)
         }
     }
@@ -393,7 +400,7 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
 
         }
     } else {                     // Fachwerk
-        console.log("node", node)
+
         if ((node.L_org[0] === 1) && (node.L_org[1] === 1)) { // zweiwertiges Lager
 
             //console.log("in zweiwertiges Lager")
@@ -1243,6 +1250,54 @@ export function draw_stab_gelenke(obj: TCAD_Stab, tr: CTrans) {
     return group;
 }
 
+
+//--------------------------------------------------------------------------------------------------------
+export function draw_FWstab_gelenke(obj: TCAD_Stab, tr: CTrans) {
+    //----------------------------------------------------------------------------------------------------
+
+    let x1: number, x2: number, z1: number, z2: number, dx: number, dz: number, si: number, co: number
+    let xp1: number, zp1: number, xp2: number, zp2: number, dist: number, aa: number, distL: number, distR: number
+    let radius = 8 / devicePixelRatio, a = 10 / devicePixelRatio, l_n = 20 / devicePixelRatio
+
+    let group = new Two.Group();
+
+    let aL = 0.0
+    let aR = 0.0
+
+    distL = a + radius;
+    distR = a + radius;
+
+
+    si = obj.sinus
+    co = obj.cosinus
+
+    let index1 = obj.index1
+    let index2 = obj.index2
+
+    x1 = Math.round(tr.xPix(get_cad_node_X(index1) + co * aL));
+    z1 = Math.round(tr.zPix(get_cad_node_Z(index1) + si * aL));
+    x2 = Math.round(tr.xPix(get_cad_node_X(index2) - co * aR));
+    z2 = Math.round(tr.zPix(get_cad_node_Z(index2) - si * aR));
+
+
+    dx = co * distL; //(a + radius)
+    dz = si * distL; //(a + radius)
+    let kreis = new Two.Circle(x1 + dx, z1 + dz, radius, 10)
+    kreis.fill = '#ffffff';
+    kreis.linewidth = 2 / devicePixelRatio;
+    distL += radius
+    group.add(kreis)
+
+    dx = co * distR; //(a + radius)
+    dz = si * distR; //(a + radius)
+    kreis = new Two.Circle(x2 - dx, z2 - dz, radius, 10)
+    kreis.fill = '#ffffff';
+    kreis.linewidth = 2 / devicePixelRatio;
+    distR += radius
+    group.add(kreis)
+
+    return group;
+}
 
 
 //-------------------------------------------------------------------------------------------------------

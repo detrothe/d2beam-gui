@@ -2058,11 +2058,13 @@ async function calculate() {
             if (element[ielem].elTyp > 0 && element[ielem].elTyp < 4) {
                 el.push(new CTruss());
                 el[ielem].stabtyp = element[ielem].elTyp;
-                console.log("el.stabtyp", el.stabtyp, element[ielem].elTyp)
             }
             else el.push(new CTimoshenko_beam());
 
-        } else el.push(new CTruss());
+        } else {
+            el.push(new CTruss());
+            el[ielem].stabtyp = element[ielem].elTyp;
+        }
 
         el[ielem].setQuerschnittsdaten(emodul, Iy, area, wichte, ks, querdehnzahl, schubfaktor, height, zso, alphaT)
         el[ielem].initialisiereElementdaten(ielem)
