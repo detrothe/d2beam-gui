@@ -1,5 +1,5 @@
 import { CNodeDisp } from "./cad_knotenverformung";
-import { TLoads, TMass, TNode } from "./rechnen";
+import { System, TLoads, TMass, TNode } from "./rechnen";
 
 //―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Element {
@@ -54,8 +54,7 @@ export class TCAD_Stab extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――
     elNo = -1
     stabTyp = 0;
-    // x2: number = 0.0;
-    // z2: number = 0.0;
+
     index2 = -1;
     name_querschnitt = ''
     nGelenke = 0
@@ -69,16 +68,14 @@ export class TCAD_Stab extends TCAD_Element {
     k_0 = 0.0                            // Bettungsmodul nach Winkler
 
     elast = [] as TCAD_ElLast[];
-    //nStreckenlasten = 0
 
     constructor(obj: any, index1: number, index2: number, qname: string, elTyp: number) {
         super(obj, index1, elTyp);
 
-        // this.x2 = x2;
-        // this.z2 = z2;
         this.index2 = index2;
         this.name_querschnitt = qname
         this.className = 'TCAD_Stab'
+        if (System === 1) this.stabTyp = 1;
     }
 
     //―――――――――――――――――――――――――――――――――――――――――――――
