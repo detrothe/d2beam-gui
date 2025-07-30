@@ -1501,6 +1501,7 @@ export function drawsystem(svg_id = 'artboard') {
             let ikomb = draw_lastfall
             let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
             let xmem = 0.0, zmem = 0.0
+            let dz = 0, si = 0, co = 0
 
 
             let scalefactor = 0.1 * slmax / maxValue_eigv[ikomb - 1][draw_eigenform - 1]    //maxValue_komb[iLastfall - 1].disp
@@ -1517,16 +1518,38 @@ export function drawsystem(svg_id = 'artboard') {
 
                 maxU = 0.0
 
-                x1 = Math.round(tr.xPix(element[ielem].x1));
-                z1 = Math.round(tr.zPix(element[ielem].z1));
-                x2 = Math.round(tr.xPix(element[ielem].x2));
-                z2 = Math.round(tr.zPix(element[ielem].z2));
+                let aL = stab[ielem].aL
+                let aR = stab[ielem].aR
+
+                let si = stab[ielem].sinus
+                let co = stab[ielem].cosinus
+
+
+                let xs1 = stab[ielem].x1 + co * aL;
+                let zs1 = stab[ielem].z1 + si * aL;
+                // let xs2 = stab[ielem].x2 - co * aR;
+                // let zs2 = stab[ielem].z2 - si * aR;
+
+                // x1 = Math.round(tr.xPix(element[ielem].x1));
+                // z1 = Math.round(tr.zPix(element[ielem].z1));
+                // x2 = Math.round(tr.xPix(element[ielem].x2));
+                // z2 = Math.round(tr.zPix(element[ielem].z2));
 
                 element[ielem].get_edispL_eigenform(edispL, ikomb, draw_eigenform)
 
-                dx = element[ielem].sl / nelTeilungen
-                eta = element[ielem].eta
+                // if (element[ielem].aL > 0 || element[ielem].aR > 0) {
+                //     dx = element[ielem].x2 - element[ielem].x1
+                //     dz = element[ielem].z2 - element[ielem].z1
+                //     sl = Math.sqrt(dx * dx + dz * dz)
+                //     si = dz / sl
+                //     co = dx / sl
+                // } else {
                 sl = element[ielem].sl
+                //     si = element[ielem].sinus
+                //     co = element[ielem].cosinus
+                // }
+                dx = sl / nelTeilungen
+                eta = element[ielem].eta
                 nenner = sl ** 3 + 12 * eta * sl
 
                 x = 0.0; xx2 = 0.0; zz2 = 0.0
@@ -1542,7 +1565,7 @@ export function drawsystem(svg_id = 'artboard') {
                             Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
                             u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
                             w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
-                        } else if (stab[ielem].elTyp === 1) {
+                        } else if (stab[ielem].elTyp > 0 && stab[ielem].elTyp < 4) {
                             Nu[0] = (1.0 - x / sl);
                             Nu[1] = x / sl
                             u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
@@ -1557,17 +1580,15 @@ export function drawsystem(svg_id = 'artboard') {
                         u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
                         w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
                     }
-                    uG = element[ielem].cosinus * u - element[ielem].sinus * w
-                    wG = element[ielem].sinus * u + element[ielem].cosinus * w
+                    uG = co * u - si * w
+                    wG = si * u + co * w
 
-                    //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
                     xx1 = xx2; zz1 = zz2;
-                    xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
-                    zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                    xx2 = xs1 + x * co + uG * scalefactor
+                    zz2 = zs1 + x * si + wG * scalefactor
                     xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
-                    //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
+
                     if (i > 0) {
-                        //console.log("line", xx1, zz1, xx2, zz2)
                         let line = two.makeLine(xx1, zz1, xx2, zz2);
                         line.linewidth = 5;
                     }
@@ -1578,8 +1599,8 @@ export function drawsystem(svg_id = 'artboard') {
                         maxU = dispG
                         x_max = xx2
                         z_max = zz2
-                        xmem = tr.xPix(element[ielem].x1 + x * element[ielem].cosinus)
-                        zmem = tr.zPix(element[ielem].z1 + x * element[ielem].sinus)
+                        xmem = tr.xPix(element[ielem].x1 + x * co)
+                        zmem = tr.zPix(element[ielem].z1 + x * si)
                     }
 
                     x = x + dx
@@ -1671,7 +1692,7 @@ export function drawsystem(svg_id = 'artboard') {
                             Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
                             u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
                             w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
-                        } else if (stab[ielem].elTyp === 1) {
+                        } else if (stab[ielem].elTyp > 0 && stab[ielem].elTyp < 4) {
                             Nu[0] = (1.0 - x / sl);
                             Nu[1] = x / sl
                             u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
@@ -1759,6 +1780,18 @@ export function drawsystem(svg_id = 'artboard') {
                 // x2 = Math.round(tr.xPix(element[ielem].x2));
                 // z2 = Math.round(tr.zPix(element[ielem].z2));
 
+                let aL = stab[ielem].aL
+                let aR = stab[ielem].aR
+
+                let si = stab[ielem].sinus
+                let co = stab[ielem].cosinus
+
+
+                let xs1 = stab[ielem].x1 + co * aL;
+                let zs1 = stab[ielem].z1 + si * aL;
+                // let xs2 = stab[ielem].x2 - co * aR;
+                // let zs2 = stab[ielem].z2 - si * aR;
+
                 element[ielem].get_edispL_schiefstellung(edispL, ikomb - 1)
 
                 dx = element[ielem].sl / nelTeilungen
@@ -1779,7 +1812,7 @@ export function drawsystem(svg_id = 'artboard') {
                             Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
                             u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
                             w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
-                        } else if (stab[ielem].elTyp === 1) {
+                        } else if (stab[ielem].elTyp > 0 && stab[ielem].elTyp < 4) {
                             Nu[0] = (1.0 - x / sl);
                             Nu[1] = x / sl
                             u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
@@ -1800,8 +1833,8 @@ export function drawsystem(svg_id = 'artboard') {
 
                     //console.log("x, w", x, uG, wG, tr.xPix(uG * scalefactor), tr.zPix(wG * scalefactor))
                     xx1 = xx2; zz1 = zz2;
-                    xx2 = element[ielem].x1 + x * element[ielem].cosinus + uG * scalefactor
-                    zz2 = element[ielem].z1 + x * element[ielem].sinus + wG * scalefactor
+                    xx2 = xs1 + x * element[ielem].cosinus + uG * scalefactor
+                    zz2 = zs1 + x * element[ielem].sinus + wG * scalefactor
                     xx2 = tr.xPix(xx2); zz2 = tr.zPix(zz2)
                     //console.log("x+x", x1, x * element[ielem].cosinus, z1, x * element[ielem].sinus)
                     if (i > 0) {
@@ -1961,6 +1994,67 @@ export function drawsystem(svg_id = 'artboard') {
                         else if (show_normalkraftlinien) element[ielem].get_elementSchnittgroesse_Normalkraft(sg, lf_index + loop, show_gleichgewichtSG);
                         //console.log("GRAFIK  Mx,Vx or N", nelTeilungen, sg)
 
+
+                        if (aL > 0.0) {
+                            let wert = 0;
+                            let xx0 = tr.xPix(stab[ielem].x1)
+                            let zz0 = tr.zPix(stab[ielem].z1)
+                            if (show_momentenlinien) {
+                                let sgV: number[] = new Array(nelTeilungen)
+                                element[ielem].get_elementSchnittgroesse_Querkraft(sgV, lf_index + loop, show_gleichgewichtSG);
+                                wert = sg[0] - sgV[0] * aL;
+                                xx1 = tr.xPix(stab[ielem].x1 - si * wert * scalefactor)
+                                zz1 = tr.zPix(stab[ielem].z1 + co * wert * scalefactor)
+                            }
+                            else {
+                                xx1 = tr.xPix(stab[ielem].x1 - si * sg[0] * scalefactor)
+                                zz1 = tr.zPix(stab[ielem].z1 + co * sg[0] * scalefactor)
+                                wert = sg[0]
+                            }
+                            xx2 = tr.xPix(xs1 - si * sg[0] * scalefactor)
+                            zz2 = tr.zPix(zs1 + co * sg[0] * scalefactor)
+                            let line = two.makeLine(xx0, zz0, xx1, zz1);
+                            line.linewidth = 1;
+                            line = two.makeLine(xx1, zz1, xx2, zz2);
+                            line.linewidth = 1;
+
+                            werte.push(new TWerte())
+                            werte[index_werte].x = xx1
+                            werte[index_werte].z = zz1
+                            werte[index_werte].wert = myFormat(wert, 1, 2) + ' ' + unit
+                            index_werte++
+                        }
+
+                        if (aR > 0.0) {
+                            let wert = 0;
+                            let xx0 = tr.xPix(stab[ielem].x2)
+                            let zz0 = tr.zPix(stab[ielem].z2)
+                            if (show_momentenlinien) {
+                                let sgV: number[] = new Array(nelTeilungen)
+                                element[ielem].get_elementSchnittgroesse_Querkraft(sgV, lf_index + loop, show_gleichgewichtSG);
+                                wert = sg[nelTeilungen - 1] + sgV[nelTeilungen - 1] * aR;
+                                xx1 = tr.xPix(stab[ielem].x2 - si * wert * scalefactor)
+                                zz1 = tr.zPix(stab[ielem].z2 + co * wert * scalefactor)
+                            }
+                            else {
+                                xx1 = tr.xPix(stab[ielem].x2 - si * sg[nelTeilungen - 1] * scalefactor)
+                                zz1 = tr.zPix(stab[ielem].z2 + co * sg[nelTeilungen - 1] * scalefactor)
+                                wert = sg[0]
+                            }
+                            xx2 = tr.xPix(xs2 - si * sg[nelTeilungen - 1] * scalefactor)
+                            zz2 = tr.zPix(zs2 + co * sg[nelTeilungen - 1] * scalefactor)
+                            let line = two.makeLine(xx0, zz0, xx1, zz1);
+                            line.linewidth = 1;
+                            line = two.makeLine(xx1, zz1, xx2, zz2);
+                            line.linewidth = 1;
+
+                            werte.push(new TWerte())
+                            werte[index_werte].x = xx1
+                            werte[index_werte].z = zz1
+                            werte[index_werte].wert = myFormat(wert, 1, 2) + ' ' + unit
+                            index_werte++
+                        }
+
                         //let group = two.makeGroup();
                         let vertices = [];
                         vertices.push(new Two.Anchor(x1, z1));
@@ -1975,7 +2069,7 @@ export function drawsystem(svg_id = 'artboard') {
                         werte.push(new TWerte())
                         werte[index_werte].x = xx1
                         werte[index_werte].z = zz1
-                        werte[index_werte].wert = myFormat(sgL, 1, 1) + unit
+                        werte[index_werte].wert = myFormat(sgL, 1, 2) + ' ' + unit
                         index_werte++
 
                         if (sgL > valueLeftPos) {
@@ -2077,7 +2171,7 @@ export function drawsystem(svg_id = 'artboard') {
                             werte.push(new TWerte())
                             werte[index_werte].x = xx2
                             werte[index_werte].z = zz2
-                            werte[index_werte].wert = myFormat(sgR, 1, 1) + unit
+                            werte[index_werte].wert = myFormat(sgR, 1, 2) + ' ' + unit
                             index_werte++
 
                             xx1 = xx2
@@ -2420,6 +2514,7 @@ export function drawsystem(svg_id = 'artboard') {
     if (show_systemlinien || !show_selection) {
         //if (flag_eingabe != 0 || nur_eingabe_ueberpruefen)
         draw_gelenke(two);
+        draw_FW_gelenke(two);
     }
 
     // Koppelfedern darstellen
@@ -4170,6 +4265,61 @@ function draw_gelenke(two: Two) {
         }
     }
 }
+
+
+//--------------------------------------------------------------------------------------------------------
+function draw_FW_gelenke(two: Two) {
+    //----------------------------------------------------------------------------------------------------
+
+    let x1: number, x2: number, z1: number, z2: number, dx: number, dz: number, si: number, co: number
+    let xp1: number, zp1: number, xp2: number, zp2: number, dist: number, aa: number, distL: number, distR: number
+    let radius = 8 / devicePixelRatio, a = 10 / devicePixelRatio, l_n = 20 / devicePixelRatio
+
+    if (System === 1) return;
+
+    for (let ielem = 0; ielem < nelem; ielem++) {
+
+        if (!stab[ielem].isActive) continue
+
+        if (stab[ielem].elTyp > 0 && stab[ielem].elTyp < 4) {
+
+            let aL = 0.0
+            let aR = 0.0
+
+            distL = a + radius;
+            distR = a + radius;
+
+
+            si = stab[ielem].sinus
+            co = stab[ielem].cosinus
+
+            x1 = Math.round(tr.xPix(stab[ielem].x1 + co * aL));
+            z1 = Math.round(tr.zPix(stab[ielem].z1 + si * aL));
+            x2 = Math.round(tr.xPix(stab[ielem].x2 - co * aR));
+            z2 = Math.round(tr.zPix(stab[ielem].z2 - si * aR));
+
+            // Momentengelenk links
+            dx = co * distL; //(a + radius)
+            dz = si * distL; //(a + radius)
+            let kreis = two.makeCircle(x1 + dx, z1 + dz, radius, 10)
+            kreis.fill = '#ffffff';
+            kreis.linewidth = 2 / devicePixelRatio;
+            distL += radius
+
+
+            // Momentengelenk rechts
+            dx = stab[ielem].cosinus * distR; //(a + radius)
+            dz = stab[ielem].sinus * distR; //(a + radius)
+            kreis = two.makeCircle(x2 - dx, z2 - dz, radius, 10)
+            kreis.fill = '#ffffff';
+            kreis.linewidth = 2 / devicePixelRatio;
+            distR += radius
+
+
+        }
+    }
+}
+
 
 //--------------------------------------------------------------------------------------------------------
 export function draw_arrow(two: Two, tr: CTrans, x1: number, z1: number, x2: number, z2: number, styles?: any) {
