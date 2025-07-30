@@ -362,7 +362,10 @@ export function read_daten(eingabedaten: string) {
             obj.sinus = jobj.elements[i].sinus;
             obj.cosinus = jobj.elements[i].cosinus;
             obj.alpha = jobj.elements[i].alpha;
-            obj.stabTyp=jobj.elements[i].stabTyp;
+            if (jobj.elements[i].stabTyp === undefined) {
+                if (System === 0) obj.stabTyp = 0;
+                else obj.stabTyp = 1;
+            } else obj.stabTyp = jobj.elements[i].stabTyp;
 
             list.append(obj);
             let neloads = jobj.elements[i].elast.length;

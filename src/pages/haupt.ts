@@ -74,7 +74,7 @@ import { set_max_lastfall, zero_max_lastfall } from './cad_draw_elementlasten';
 import { reset_cad_nodes } from './cad_node';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.4.3,a, 30-Juli-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.4.3,b, 30-Juli-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
