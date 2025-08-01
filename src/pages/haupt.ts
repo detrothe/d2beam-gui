@@ -75,7 +75,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.4.3,b, 1-August-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.4.3,c, 1-August-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -289,7 +289,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                 </select>
               </td>
               <td>
-                  <button class="btn" @click="${info_Materialeigenschaften}"><i class="fa fa-info"></i></button>
+                  <button class="btn_small" @click="${info_Materialeigenschaften}"><i class="fa fa-info"></i></button>
               </td>
             </tr>
 
@@ -919,7 +919,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-ergebnisse"
         ><p><sl-button id="id_create_pdf" @click="${create_pdf}">erstelle pdf-Datei</sl-button></p>
-        <b>&nbsp;Eingabeprotokoll</b>
+        <p><b>Eingabeprotokoll</b></p>
         <div id="id_results"></div>
       </sl-tab-panel>
 
@@ -1039,7 +1039,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               </sl-select>
               </td>
               <td>
-                <button class="btn" @click="${info_Eigenwertberechnung}"><i class="fa fa-info"></i></button>
+                <button class="btn_small" @click="${info_Eigenwertberechnung}"><i class="fa fa-info"></i></button>
               </td>
             </tr>
 
