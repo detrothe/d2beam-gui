@@ -179,6 +179,8 @@ export let R_ = [] as number[];
 
 export let R_internal = [] as number[];
 
+export let U_total = [] as number[];   // enthält auch Knotenverformungen
+
 export let print_mass = [] as number[][];
 
 export let stabvorverformung_komb = [] as TStabvorverformung_komb[][]
@@ -1916,18 +1918,17 @@ async function calculate() {
         maxValue_w0.length = 0
         maxValue_w0 = Array(nkombinationen).fill(0.0)
 
-        console.log("nstabvorverfomungen THIIO", nstabvorverfomungen)
-        //console.log("stabvorverformung_komb", stabvorverformung_komb[0])
+        //console.log("nstabvorverfomungen THIIO", nstabvorverfomungen)
         for (ielem = 0; ielem < nelem; ielem++) {
             for (let ikomb = 0; ikomb < nkombinationen; ikomb++) {
                 stabvorverformung_komb[ielem][ikomb].w0a = 0.0
                 stabvorverformung_komb[ielem][ikomb].w0e = 0.0
                 stabvorverformung_komb[ielem][ikomb].w0m = 0.0
                 for (i = 0; i < nstabvorverfomungen; i++) {
-                    console.log("stabvorverformung[i].element", stabvorverformung[i].element, ielem)
+                    //console.log("stabvorverformung[i].element", stabvorverformung[i].element, ielem)
                     if (stabvorverformung[i].element === ielem) {
                         const index = stabvorverformung[i].lf - 1
-                        console.log("kombiTabelle", ielem, ikomb, i, index, kombiTabelle[ikomb][index])
+                        //console.log("kombiTabelle", ielem, ikomb, i, index, kombiTabelle[ikomb][index])
                         stabvorverformung_komb[ielem][ikomb].w0a += stabvorverformung[i].p[0] * kombiTabelle[ikomb][index]
                         stabvorverformung_komb[ielem][ikomb].w0e += stabvorverformung[i].p[1] * kombiTabelle[ikomb][index]
                         stabvorverformung_komb[ielem][ikomb].w0m += stabvorverformung[i].p[2] * kombiTabelle[ikomb][index]
@@ -1951,7 +1952,7 @@ async function calculate() {
         for (i = 0; i < nelem; i++) {
             for (j = 0; j < nkombinationen; j++) console.log('stabvorverformung_komb, ielem, ikomb', i, j, stabvorverformung_komb[i][j]);
         }
-        console.log("stabvorverformung_komb[i][j]", stabvorverformung_komb)
+        //console.log("stabvorverformung_komb[i][j]", stabvorverformung_komb)
     }
 
 
@@ -3374,7 +3375,7 @@ function berechne_kombinationen() {
                         ug += el[ielem].u_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                         wg += el[ielem].w_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                         phi += el[ielem].phi_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
-                        if (System === 0) {
+                        if (System === 0 && el[ielem].elTyp === 0) {
                             if (ielem < nelem_Balken) press += el[ielem].bettung_[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall];
                         }
                         //console.log("mom...", iteil, iLastfall, mom, quer, norm)
@@ -3393,7 +3394,7 @@ function berechne_kombinationen() {
                     el[ielem].u_komb[iKomb][iteil] = ug
                     el[ielem].w_komb[iKomb][iteil] = wg
                     el[ielem].phi_komb[iKomb][iteil] = phi
-                    if (System === 0) {
+                    if (System === 0 && el[ielem].elTyp === 0) {
                         if (ielem < nelem_Balken) el[ielem].bettung_komb[iKomb][iteil] = press
                     }
 
@@ -3416,7 +3417,7 @@ function berechne_kombinationen() {
         for (let iKomb = 0; iKomb < nkombinationen; iKomb++) {
 
             for (let ielem = 0; ielem < nelem_Balken; ielem++) {
-                if (el[ielem].isActive) {
+                if (el[ielem].isActive && el[ielem].elTyp === 0) {
                     for (let iteil = 0; iteil < 2; iteil++) {
                         ug = 0.0
                         wg = 0.0
@@ -4054,6 +4055,8 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
     let u_gesamt = new Array(neq)
     let R_last = new Array(neq)
 
+    U_total = Array(neq).fill(0.0)
+
 
     for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
 
@@ -4239,6 +4242,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                 du[i] = dR[i];
                 u[i] = u_gesamt[i] = u_gesamt[i] + du[i];
                 U_[i] = du[i];
+                U_total[i] = u_gesamt[i];
             }
 
             for (i = 0; i < neq; i++) {
@@ -4252,6 +4256,34 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
             let force: number[] = Array(6)
             R_internal.fill(0.0)
 
+            // Addiere Knotenverformungen, sofern vorhanden
+
+            for (let ieload = 0; ieload < neloads; ieload++) {
+                const index = eload[ieload].lf - 1
+                if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                    if ((eload[ieload].art === 8)) {
+                        console.log("VORDEFINIERTE VERFORMUNGEN", eload[ieload].ieq0)
+
+                        if (eload[ieload].ieq0[0] >= 0) {
+                            let ieq = eload[ieload].ieq0[0]
+                            console.log("I E Q ", ieq)
+                            U_total[ieq] += eload[ieload].dispx0 * kombiTabelle[iKomb - 1][index]
+                        }
+                        if (eload[ieload].ieq0[1] >= 0) {
+                            let ieq = eload[ieload].ieq0[1]
+                            console.log("I E Q ", ieq)
+                            U_total[ieq] += eload[ieload].dispz0 * kombiTabelle[iKomb - 1][index]
+                        }
+                        if (eload[ieload].ieq0[2] >= 0) {
+                            let ieq = eload[ieload].ieq0[2]
+                            console.log("I E Q ", ieq)
+                            U_total[ieq] += eload[ieload].phi0 * kombiTabelle[iKomb - 1][index]
+                        }
+                    }
+                }
+            }
+
+            console.log("U_TOTAL", u, U_total)
 
             for (ielem = 0; ielem < nelemTotal; ielem++) {
                 if (el[ielem].isActive) {
@@ -4377,11 +4409,11 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                                 ieq = i;
                             }
                         }
-                        console.log("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU umax=", umax)
+                        //console.log("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU umax=", umax)
 
                     } else {
                         ieq = node[maxU_node - 1].L[maxU_dir]
-                        console.log("schief", ieq, u[ieq])
+                        //console.log("schief", ieq, u[ieq])
                         umax = Math.abs(u[ieq])
                     }
 
@@ -4391,7 +4423,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                         if (vorzeichen_U === 0.0) vorzeichen_U = 1.0
                         let vorzeichen_umax = Math.sign(u[ieq])
                         let faktor = vorzeichen_U * vorzeichen_umax * maxU_schief / umax
-                        console.log("vorzeichen", vorzeichen_U, vorzeichen_umax, faktor)
+                        //console.log("vorzeichen", vorzeichen_U, vorzeichen_umax, faktor)
                         for (i = 0; i < neq; i++) {
                             pg[i] = u[i] * faktor
                             if (Math.abs(pg[i]) > pg_max) pg_max = Math.abs(pg[i])

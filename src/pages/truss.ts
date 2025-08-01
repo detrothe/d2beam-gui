@@ -4,7 +4,8 @@ import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
     nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung,
     stadyn, eigenform_dyn, stabvorverformung_komb, R_internal,
-    matprop_flag
+    matprop_flag,
+    U_total
 } from "./rechnen"
 
 //import { BubbleSort } from "./lib"
@@ -814,6 +815,7 @@ export class CTruss extends CElement {
         let ieq: number, i: number, j: number, k: number
         let sum: number
         let Fi = Array(4).fill(0)
+        let U0 = Array(4).fill(0.0)
 
         for (j = 0; j < this.neqeG; j++) {                           // Stabverformungen
             ieq = this.lm[j]
@@ -821,10 +823,11 @@ export class CTruss extends CElement {
                 this.u[j] = 0
             } else {
                 this.u[j] = u[ieq]
+                if (matprop_flag > 0) U0[j] = U_total[ieq]
             }
         }
 
-        //console.log("this.u[]", this.neqeG, this.u)
+        console.log("this.u[]", ielem, iter, this.neqeG, this.u, U0)
 
         for (j = 0; j < this.neqeG; j++) {
             sum = 0.0
@@ -911,12 +914,35 @@ export class CTruss extends CElement {
             if (this.normalkraft > 0.0) this.normalkraft = 0.0           // keine Zugversteifung
         }
 
+
+        //console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
+
+        for (i = 0; i < 4; i++) { // Verformungen lokal
+            sum = 0.0
+            for (j = 0; j < this.neqeG; j++) {
+                sum += this.transU[i][j] * this.u[j]
+            }
+            this.edispL[i] = sum
+        }
+
         console.log("TRUSS", matprop_flag, this.stabtyp, this.FL)
         if (matprop_flag > 0 && this.stabtyp > 1) {    // nichtlinear
 
+            let u0 = Array(4);
+            for (i = 0; i < 4; i++) { // Verformungen lokal
+                sum = 0.0
+                for (j = 0; j < 4; j++) {
+                    sum += this.transU[i][j] * U0[j]
+                }
+                u0[i] = sum
+            }
+
+            let du = u0[2] - u0[0];
+            console.log("in nur", ielem, iter, ' du= ', du * 1000)
+
             if (this.stabtyp === 2) {   // nur Zug
-                console.log("in nur Zugstab")
-                if (this.FL[0] < 0.0 || this.FL[2] < 0.0) {
+                //console.log("in nur Zugstab", ielem, iter, du*1000, this.FL[0], this.FL[2], this.edispL)
+                if (du < 0.0) {
                     for (i = 0; i < 4; i++) {
                         this.FL[i] = 0.0;
                         this.F[i] = 0.0;
@@ -938,8 +964,8 @@ export class CTruss extends CElement {
             }
 
             if (this.stabtyp === 3) {   // nur Druck
-                console.log("in nur Druckstab")
-                if (this.FL[0] > 0.0 || this.FL[2] > 0.0) {
+                //console.log("in nur Druckstab", ielem, iter, du*1000, this.FL[0], this.FL[2], this.edispL)
+                if (du > 0.0) {
                     for (i = 0; i < 4; i++) {
                         this.FL[i] = 0.0;
                         this.F[i] = 0.0;
@@ -959,16 +985,6 @@ export class CTruss extends CElement {
                     }
                 }
             }
-        }
-
-        //console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
-
-        for (i = 0; i < 4; i++) { // Verformungen lokal
-            sum = 0.0
-            for (j = 0; j < this.neqeG; j++) {
-                sum += this.transU[i][j] * this.u[j]
-            }
-            this.edispL[i] = sum
         }
 
         this.NL = this.FL[0]                               // Verformungen, Schnittgrößen am Stabanfang für Zustandslinien
@@ -1132,56 +1148,6 @@ export class CTruss extends CElement {
             eload[ieload].re[3] = 0.0
 
         }
-        // else if (eload[ieload].art === 6) {              // Einzellast ooder Moment
-
-        //     const x = eload[ieload].x
-        //     const P = eload[ieload].P
-        //     const M = eload[ieload].M
-        //     const eta = this.eta
-        //     const EI = this.emodul * this.Iy
-        //     const alf = 12 * sl * eta + sl3
-        //     console.log("Einzellast", x, P, M)
-
-        //     eload[ieload].CwP = -((36 * x ** 2 - 36 * sl * x) * P * eta ** 2 + (-3 * x ** 4 + 6 * sl * x ** 3 - 3 * sl3 * x) * P * eta + (x ** 6 - 3 * sl * x ** 5 + 3 * sl2 * x ** 4 - sl3 * x ** 3) * P) / 3 / alf / EI;
-        //     eload[ieload].CphiP = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * P) / 2 / alf / EI;
-        //     console.log("EINZELLAST P, C1, C2 in [mm, mrad]", eload[ieload].CwP * 1000., eload[ieload].CphiP * 1000.)
-        //     eload[ieload].CwM = ((2 * x ** 5 - 5 * sl * x ** 4 + 4 * sl2 * x ** 3 - sl3 * x ** 2) * M) / 2 / alf / EI
-        //     eload[ieload].CphiM = -((12 * x ** 2 - 12 * sl * x) * M * eta + (3 * x ** 4 - 6 * sl * x ** 3 + 4 * sl2 * x ** 2 - sl3 * x) * M) / alf / EI
-        //     console.log("EINZELMOMENT M, C1, C2 in [mm, mrad]", eload[ieload].CwM * 1000., eload[ieload].CphiM * 1000.)
-
-        //     eload[ieload].re[0] = 0.0
-        //     eload[ieload].re[3] = 0.0
-
-
-        //     //eload[ieload].re[1] = (12 * (x - sl) * P * eta + (-2 * x ** 3 + 3 * sl * x ** 2 - sl3) * P) / alf
-        //     //eload[ieload].re[4] = -eload[ieload].re[1] - P
-
-        //     //eload[ieload].re[2] = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / alf
-        //     //eload[ieload].re[5] = eload[ieload].re[4] * sl + P * x - eload[ieload].re[2]
-
-        //     const VL_P = (12 * (x - sl) * P * eta + (-2 * x ** 3 + 3 * sl * x ** 2 - sl3) * P) / alf
-        //     const VR_P = -VL_P - P
-
-        //     const ML_P = -(6 * (x - sl) * x * P * eta + (-sl * x ** 3 + 2 * sl2 * x ** 2 - sl3 * x) * P) / alf
-        //     const MR_P = VR_P * sl + P * x - ML_P
-
-        //     console.log("EINZELLAST", VL_P, VR_P, ML_P, MR_P)
-
-        //     const VL_M = (6 * (x ** 2 - sl * x) * M) / alf
-        //     const VR_M = -VL_M
-
-        //     const ML_M = (12 * (x - sl) * M * eta + (-3 * sl * x ** 2 + 4 * sl2 * x - sl3) * M) / alf
-        //     const MR_M = -ML_M - M - VL_M * sl
-        //     console.log("EINZELMOMENT", VL_M, VR_M, ML_M, MR_M)
-
-        //     eload[ieload].re[1] = VL_P + VL_M
-        //     eload[ieload].re[4] = VR_P + VR_M
-
-        //     eload[ieload].re[2] = ML_P + ML_M
-        //     eload[ieload].re[5] = MR_P + MR_M
-
-        //     console.log("EINZELLAST + MOMENT", eload[ieload].re[1], eload[ieload].re[4], eload[ieload].re[2], eload[ieload].re[5])
-        // }
 
         else if (eload[ieload].art === 8) {              // Knotenverformungen
 
@@ -1320,48 +1286,6 @@ export class CTruss extends CElement {
     }
 
 
-    /*
-        //---------------------------------------------------------------------------------------------
-        stmglenk(estm: number[][], zeile: number) {
-
-            let iz: number, i: number, j: number
-            const estm_neu = Array.from(Array(6), () => new Array(6));
-            let div: number
-
-            div = estm[zeile][zeile]
-            for (iz = 0; iz < 6; iz++) {
-                for (i = 0; i < 6; i++) {
-                    estm_neu[iz][i] = estm[iz][i] - estm[iz][zeile] * estm[zeile][i] / div
-                }
-            }
-
-            for (i = 0; i < 6; i++) {
-                for (j = 0; j < 6; j++) {
-                    estm[i][j] = estm_neu[i][j]
-                }
-            }
-
-        }
-
-        //---------------------------------------------------------------------------------------------
-        elrglenk(estm: number[][], el_r: number[], zeile: number) {
-
-            let iz: number, i: number
-            let elr_neu = new Array(6)
-            let div: number
-
-
-            div = estm[zeile][zeile]
-            for (iz = 0; iz < 6; iz++) {
-                elr_neu[iz] = el_r[iz] - estm[iz][zeile] * el_r[zeile] / div
-            }
-
-            for (i = 0; i < 6; i++) {
-                el_r[i] = elr_neu[i]
-            }
-
-        }
-    */
     //---------------------------------------------------------------------------------------------
     get_edispL(edispL: number[], iLastfall: number) {
 
@@ -1713,66 +1637,6 @@ export class CTruss extends CElement {
 
                         }
 
-                        // else if (eload[ieload].art === 6) {         // Einzellast oder Moment
-
-                        //     const xP = eload[ieload].x
-                        //     const P = eload[ieload].P
-                        //     const M = eload[ieload].M
-                        //     let edisp = Array(6).fill(0.0);
-
-                        //     if (iteil > 0) {
-                        //         let xxx = Math.abs(x - this.x_[iteil - 1])
-                        //         let xxxx = Math.abs(x - eload[ieload].x)
-                        //         //If (x > eload(ieload).xP) Or (x = x_(j - 1) And x = eload(ieload).xP) Then
-                        //         if ((x > xP) || (xxx < 0.000000000001 && xxxx < 0.000000000001)) {
-
-                        //             Vx = Vx - P
-                        //             Mx = Mx - M - P * (x - xP)
-                        //             edisp[1] = eload[ieload].CwP + eload[ieload].CwM; edisp[2] = eload[ieload].CphiP + eload[ieload].CphiM;
-
-                        //             const xx = x - xP;
-                        //             const xx2 = xx * xx
-                        //             const sl = this.sl - xP
-                        //             const nenner = sl ** 3 + 12. * eta * sl
-                        //             Nw[0] = (2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx + sl ** 3 + 12. * eta * sl) / nenner;
-                        //             Nw[1] = -((sl * xx ** 3 + (-2. * sl ** 2 - 6. * eta) * xx ** 2 + (sl ** 3 + 6. * eta * sl) * xx) / nenner);
-                        //             Nw[2] = -((2. * xx ** 3 - 3. * sl * xx ** 2 - 12. * eta * xx) / nenner);
-                        //             Nw[3] = -((sl * xx ** 3 + (6. * eta - sl ** 2) * xx ** 2 - 6. * eta * sl * xx) / nenner);
-                        //             wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
-                        //             Nphi[0] = 6.0 * (sl * xx - xx2) / nenner
-                        //             Nphi[1] = (3 * sl * xx2 + (-12 * eta - 4 * sl ** 2) * xx + 12 * sl * eta + sl ** 3) / nenner
-                        //             Nphi[2] = -6.0 * (sl * xx - xx2) / nenner
-                        //             Nphi[3] = (3 * sl * xx2 + (12 * eta - 2 * sl ** 2) * xx) / nenner
-                        //             phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
-
-                        //             //console.log("Nw,edisp", wx, edisp, Nw)
-                        //         } else {
-                        //             edisp[4] = eload[ieload].CwP + eload[ieload].CwM; edisp[5] = eload[ieload].CphiP + eload[ieload].CphiM;
-                        //             const sl = xP
-                        //             const sl2 = sl * sl
-                        //             const nenner = sl ** 3 + 12. * eta * sl
-                        //             Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
-                        //             Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
-                        //             Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
-                        //             Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-                        //             wx += Nw[0] * edisp[1] + Nw[1] * edisp[2] + Nw[2] * edisp[4] + Nw[3] * edisp[5];
-                        //             //console.log("Nw,edisp", wx, edisp, Nw)
-                        //             Nphi[0] = 6.0 * (sl * x - x2) / nenner
-                        //             Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl2 * sl) / nenner
-                        //             Nphi[2] = -6.0 * (sl * x - x2) / nenner
-                        //             Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
-                        //             phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
-
-                        //         }
-
-                        //     }
-                        //     else {
-                        //         if (Math.abs(x - xP) < 0.000000000001) {
-                        //             Vx = Vx - P
-                        //             Mx = Mx - M
-                        //         }
-                        //     }
-                        // }
                         else if (eload[ieload].art === 8) {         // Knotenverformung
 
                             let edisp0 = Array(4)
