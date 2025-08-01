@@ -133,7 +133,7 @@ export function read_daten(eingabedaten: string) {
         else el.setValue(Math.max(jobj.nelteilungen, 1));
 
         el = document.getElementById("id_button_niter") as drButtonPM;
-        if (jobj.n_iter === undefined) el.setValue(5);
+        if (jobj.n_iter === undefined) el.setValue(10);
         else el.setValue(Math.max(jobj.n_iter, 2));
 
         let slel = document.getElementById("id_P_delta_option") as SlSelect;

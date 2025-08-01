@@ -72,9 +72,10 @@ import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import { set_max_lastfall, zero_max_lastfall } from './cad_draw_elementlasten';
 import { reset_cad_nodes } from './cad_node';
+import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.4.3,a, 1-August-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.4.3,b, 1-August-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -280,14 +281,16 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
 
             <tr>
-              <td title="nichtlineare Materialeigenschaften nur bei Koppelfedern möglich">&nbsp;&nbsp; Materialeigenschaften:</td>
+              <td title="Option 'nichtlinear' nur bei FW-Stäben, die nur Zug- oder Druckkräfte übertragen können, anwenden">&nbsp;&nbsp; Materialeigenschaften:</td>
               <td>
                 <select name="matprop" id="id_matprop" style="min-width:100%;" onchange="berechnungErforderlich()">
                   <option value="0" selected>linear</option>
                   <option value="1">nichtlinear</option>
                 </select>
               </td>
-              <td></td>
+              <td>
+                  <button class="btn" @click="${info_Materialeigenschaften}"><i class="fa fa-info"></i></button>
+              </td>
             </tr>
 
             <tr>
@@ -788,7 +791,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-kombinationen">
         <p>
-          <b> Eingabe der Lastfälle und Kombinationen</b>
+          <b> Eingabe der Lastfälle</b>
         </p>
         <p>
           Anzahl Lastfälle:
@@ -803,6 +806,23 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           colwidth='["10","20"]'
           typs='["-", "text"]'
         ></dr-tabelle>
+
+        <br>
+
+        <p>
+          <b> Eingabe der Kombinationen</b>
+        </p>
+        <p>
+          <b> und der Multiplikatoren (Lastfaktoren), mit denen die einzelnen Lastfälle multipliziert werden sollen.</b>
+        </p>
+        <p>
+          Eine leere Zelle oder null bedeutet, dass der Lastfall nicht an der Kombination beteiligt ist.<br>
+          Ein Kommentar ist optional.
+        </p>
+        <p>
+          Bei Theorie I.Ordnung und linearen Materialeigenschaften sind Kombinationen optional. Bei Theorie II. Ordnung und/oder nichtlinearen
+          Materialeigenschaften muss mindestens eine Kombination definiert sein.
+        </p>
 
         <p>
           Anzahl Kombinationen:
@@ -905,7 +925,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-pro">
-        <p><b>Einstellungen D2beam Element</b><br /><br /></p>
+        <p><b>Einstellungen </b><br /><br /></p>
 
         <table>
           <tbody>
@@ -1017,6 +1037,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                  <sl-option value='0' @click=${berechnungErforderlich} >GNU GSL QR Methode</sl-option>
                  <sl-option value='1' @click=${berechnungErforderlich} >simultane Vektoriteration</sl-option>
               </sl-select>
+              </td>
+              <td>
+                <button class="btn" @click="${info_Eigenwertberechnung}"><i class="fa fa-info"></i></button>
               </td>
             </tr>
 
@@ -1746,7 +1769,7 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     el.setValue(0);
 
     el = document.getElementById('id_button_niter') as drButtonPM;
-    el.setValue(5);
+    el.setValue(10);
 
     el = document.getElementById('id_button_nnodalmass') as drButtonPM;
     el.setValue(0);
