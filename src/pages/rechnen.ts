@@ -4351,7 +4351,8 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                         if (ieq === -1) {
                             disp[j] = 0
                         } else {
-                            disp[j] = u[ieq] * 1000     // Umrechnung in mm und mrad
+                            // ?? disp[j] = u[ieq] * 1000     // Umrechnung in mm und mrad
+                            disp[j] = U_total[ieq] * 1000     // Umrechnung in mm und mrad
                         }
                     }
 
@@ -4362,26 +4363,26 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
 
                     // Knotenverformungen wieder einarbeiten
 
-                    for (j = 0; j < nNodeDisps; j++) {
-                        for (let ieload = 0; ieload < neloads; ieload++) {
-                            const index = eload[ieload].lf - 1
-                            if (kombiTabelle[iKomb - 1][index] !== 0.0) {
-                                if (nodeDisp0[j].node === i) {
-                                    //console.log("<<<<<<<<<<<<<<< nNodeDisps >>>>>>>>>>>>>", i, nodeDisp0[j].lf, iKomb)
-                                    if (nodeDisp0[j].dispx0 !== 0) {
-                                        disp[0] = nodeDisp0[j].dispx0 * kombiTabelle[iKomb - 1][index]
-                                    }
-                                    if (nodeDisp0[j].dispz0 !== 0) {
-                                        disp[1] = nodeDisp0[j].dispz0 * kombiTabelle[iKomb - 1][index]
-                                    }
-                                    if (nodeDisp0[j].phi0 !== 0) {
-                                        disp[2] = nodeDisp0[j].phi0 * kombiTabelle[iKomb - 1][index]
-                                    }
+                    // for (j = 0; j < nNodeDisps; j++) {
+                    //     for (let ieload = 0; ieload < neloads; ieload++) {
+                    //         const index = eload[ieload].lf - 1
+                    //         if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                    //             if (nodeDisp0[j].node === i) {
+                    //                 //console.log("<<<<<<<<<<<<<<< nNodeDisps >>>>>>>>>>>>>", i, nodeDisp0[j].lf, iKomb)
+                    //                 if (nodeDisp0[j].dispx0 !== 0) {
+                    //                     disp[0] = nodeDisp0[j].dispx0 * kombiTabelle[iKomb - 1][index]
+                    //                 }
+                    //                 if (nodeDisp0[j].dispz0 !== 0) {
+                    //                     disp[1] = nodeDisp0[j].dispz0 * kombiTabelle[iKomb - 1][index]
+                    //                 }
+                    //                 if (nodeDisp0[j].phi0 !== 0) {
+                    //                     disp[2] = nodeDisp0[j].phi0 * kombiTabelle[iKomb - 1][index]
+                    //                 }
 
-                                }
-                            }
-                        }
-                    }
+                    //             }
+                    //         }
+                    //     }
+                    // }
                     for (j = 0; j < 3; j++) disp_print.set(i + 1, j + 1, iKomb, disp[j])
 
                 }
