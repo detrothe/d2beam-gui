@@ -827,7 +827,7 @@ export class CTruss extends CElement {
             }
         }
 
-        console.log("this.u[]", ielem, iter, this.neqeG, this.u, U0)
+        //console.log("this.u[]", ielem, iter, this.neqeG, this.u, U0)
 
         for (j = 0; j < this.neqeG; j++) {
             sum = 0.0
@@ -925,7 +925,7 @@ export class CTruss extends CElement {
             this.edispL[i] = sum
         }
 
-        console.log("TRUSS", matprop_flag, this.stabtyp, this.FL)
+        //console.log("TRUSS", matprop_flag, this.stabtyp, this.FL)
         if (matprop_flag > 0 && this.stabtyp > 1) {    // nichtlinear
 
             let u0 = Array(4);
@@ -938,7 +938,7 @@ export class CTruss extends CElement {
             }
 
             let du = u0[2] - u0[0];
-            console.log("in nur", ielem, iter, ' du= ', du * 1000)
+            //console.log("in nur", ielem, iter, ' du= ', du * 1000)
 
             if (this.stabtyp === 2) {   // nur Zug
                 //console.log("in nur Zugstab", ielem, iter, du*1000, this.FL[0], this.FL[2], this.edispL)
@@ -1170,7 +1170,7 @@ export class CTruss extends CElement {
                 }
                 eload[ieload].re[j] = sum
             }
-            console.log("LASTVEKTOR 8 ", eload[ieload].re)
+            console.log("TRUSS LASTVEKTOR 8 ", ieload, eload[ieload].re)
             console.log("dispL0", eload[ieload].dispL0)
         }
 

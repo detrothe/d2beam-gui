@@ -511,23 +511,24 @@ input[type="number"] {
 }
 
 .btn_small {
-  background-color: light-dark(var(--button_cad), rgb(64, 64, 64));
+  background-color: light-dark(#f8f8f8, rgb(64, 64, 64));
   border: none;
-  color: white;
-  padding: 0.4375rem 0.75rem;
+  color:  light-dark( rgb(64, 64, 64), white);
+  padding: 0.3rem 0.6rem;  /* 0.4375 0.75rem;*/
   font-size: 1rem;
   cursor: pointer;
   margin-left: 0.25rem;
+  margin-right: 0rem;
   margin-bottom: 0.0rem;
   margin-top: 0.0rem;
   border-radius: 3px;
 }
 
-/* Darker background on mouse-over
-.btn:hover {
+/* Darker background on mouse-over */
+.btn_small:hover {
   background-color: RoyalBlue;
 }
-*/
+
 
 .helptext {
   background-color: var(--group_cad);

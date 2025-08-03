@@ -4055,7 +4055,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
     let u_gesamt = new Array(neq)
     let R_last = new Array(neq)
 
-    U_total = Array(neq).fill(0.0)
+    U_total = new Array(neq).fill(0.0)
 
 
     for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
@@ -4079,6 +4079,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
         for (iter = 0; iter < n_iterationen; iter++) {
 
             console.log("_________________  I T E R  = ", iter, " ___________________")
+            console.log("nodedosp0", nodeDisp0.length)
 
             for (i = 0; i < neq; i++) stiff[i].fill(0.0);
             for (i = 0; i < nnodesTotal; i++) lagerkraft[i].fill(0.0)
@@ -4258,37 +4259,60 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
 
             // Addiere Knotenverformungen, sofern vorhanden
 
-            for (let ieload = 0; ieload < neloads; ieload++) {
-                const index = eload[ieload].lf - 1
-                if (kombiTabelle[iKomb - 1][index] !== 0.0) {
-                    if ((eload[ieload].art === 8)) {
-                        console.log("VORDEFINIERTE VERFORMUNGEN", eload[ieload].ieq0)
+            // for (let ieload = 0; ieload < neloads; ieload++) {
+            //     const index = eload[ieload].lf - 1
+            //     if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+            //         if ((eload[ieload].art === 8)) {
+            //             console.log("VORDEFINIERTE VERFORMUNGEN", ieload, eload[ieload].ieq0, eload[ieload].dispx0,kombiTabelle[iKomb - 1][index],index )
 
-                        if (eload[ieload].ieq0[0] >= 0) {
-                            let ieq = eload[ieload].ieq0[0]
-                            console.log("I E Q ", ieq)
-                            U_total[ieq] += eload[ieload].dispx0 * kombiTabelle[iKomb - 1][index]
-                        }
-                        if (eload[ieload].ieq0[1] >= 0) {
-                            let ieq = eload[ieload].ieq0[1]
-                            console.log("I E Q ", ieq)
-                            U_total[ieq] += eload[ieload].dispz0 * kombiTabelle[iKomb - 1][index]
-                        }
-                        if (eload[ieload].ieq0[2] >= 0) {
-                            let ieq = eload[ieload].ieq0[2]
-                            console.log("I E Q ", ieq)
-                            U_total[ieq] += eload[ieload].phi0 * kombiTabelle[iKomb - 1][index]
-                        }
+            //             if (eload[ieload].ieq0[0] >= 0) {
+            //                 let ieq = eload[ieload].ieq0[0]
+            //                 console.log("I E Q 0", ieq)
+            //                 U_total[ieq] += eload[ieload].dispx0 * kombiTabelle[iKomb - 1][index]
+            //             }
+            //             if (eload[ieload].ieq0[1] >= 0) {
+            //                 let ieq = eload[ieload].ieq0[1]
+            //                 console.log("I E Q 1", ieq)
+            //                 U_total[ieq] += eload[ieload].dispz0 * kombiTabelle[iKomb - 1][index]
+            //             }
+            //             if (eload[ieload].ieq0[2] >= 0) {
+            //                 let ieq = eload[ieload].ieq0[2]
+            //                 console.log("I E Q 2", ieq)
+            //                 U_total[ieq] += eload[ieload].phi0 * kombiTabelle[iKomb - 1][index]
+            //             }
+            //         }
+            //     }
+            // }
+
+
+            for (j = 0; j < nNodeDisps; j++) {
+
+                let index = nodeDisp0[j].lf - 1
+                if (kombiTabelle[iKomb - 1][index] !== 0.0) {
+                    //console.log("<<<<<<<<<<<<<<< nNodeDisps >>>>>>>>>>>>>", i, nodeDisp0[j].lf, iKomb)
+                    if (nodeDisp0[j].dispL[0]) {
+                        let ieq = node[nodeDisp0[j].node].L[0]
+                        U_total[ieq] += nodeDisp0[j].dispx0 * kombiTabelle[iKomb - 1][index] / 1000
+                    }
+                    if (nodeDisp0[j].dispL[1]) {
+                        let ieq = node[nodeDisp0[j].node].L[1]
+                        U_total[ieq] += nodeDisp0[j].dispz0 * kombiTabelle[iKomb - 1][index] / 1000
+                    }
+                    if (nodeDisp0[j].dispL[2]) {
+                        let ieq = node[nodeDisp0[j].node].L[2]
+                        U_total[ieq] += nodeDisp0[j].phi0 * kombiTabelle[iKomb - 1][index] / 1000
                     }
                 }
             }
 
-            console.log("U_TOTAL", u, U_total)
+
+
+            //console.log("U_TOTAL", u, U_total)
 
             for (ielem = 0; ielem < nelemTotal; ielem++) {
                 if (el[ielem].isActive) {
                     force = el[ielem].berechneInterneKraefte(ielem, iKomb, iter, u);
-                    console.log("force", force)
+                    //console.log("force", force)
                     for (i = 0; i < 6; i++) stabendkraefte.set(i + 1, ielem + 1, iKomb, force[i]);
 
                     el[ielem].berechneLagerkraefte();
@@ -4378,7 +4402,6 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                     //                 if (nodeDisp0[j].phi0 !== 0) {
                     //                     disp[2] = nodeDisp0[j].phi0 * kombiTabelle[iKomb - 1][index]
                     //                 }
-
                     //             }
                     //         }
                     //     }

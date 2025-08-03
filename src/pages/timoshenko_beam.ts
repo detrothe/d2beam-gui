@@ -991,7 +991,7 @@ export class CTimoshenko_beam extends CElement {
 
         // normale Elementlasten hinzufügen
 
-        if (THIIO_flag === 0) {
+        if (THIIO_flag === 0 && matprop_flag === 0) {
 
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if ((eload[ieload].element === ielem) && (eload[ieload].lf === iLastf)) {
@@ -1003,7 +1003,7 @@ export class CTimoshenko_beam extends CElement {
                 }
             }
         }
-        else if (THIIO_flag === 1) { // ikomb=iLastf
+        else if (THIIO_flag === 1 || matprop_flag > 0) { // ikomb=iLastf
 
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if (eload[ieload].element === ielem) {
