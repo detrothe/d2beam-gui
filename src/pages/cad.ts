@@ -1062,7 +1062,7 @@ function pointermove(ev: PointerEvent) {
             if (pointer.length === 2) {
                for (let i = 0; i < pointer.length; i++) {
                   if (ev.pointerId === pointer[i].id) {
-                     console.log("pointermove", pointer[i].id)
+                     //console.log("pointermove", pointer[i].id)
                      pointer[i].x = ev.offsetX
                      pointer[i].y = ev.offsetY
                      break;

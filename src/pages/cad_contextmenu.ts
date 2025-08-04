@@ -1,6 +1,6 @@
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 import { drDialogStabEigenschaften } from "../components/dr-dialog_stab_eigenschaften";
-import { CAD_ELLAST, keydown, list, reset_pointer_length, selected_element, set_zoomIsActive, tr, two, undoList } from "./cad";
+import { CAD_ELLAST, init_cad, keydown, list, reset_pointer_length, selected_element, set_zoomIsActive, tr, two, undoList } from "./cad";
 import { buttons_control, index_stab, picked_obj } from "./cad_buttons";
 import { draw_stab_gelenke, drawStab } from "./cad_draw_elemente";
 import { max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
@@ -111,6 +111,8 @@ function dialog_stab_eigenschaften_closed(this: any, e: any) {
         (picked_obj as TCAD_Stab).set_stabtyp(el.get_stabtyp());
 
         berechnungErforderlich(true);
+        init_cad(2);
+
     } else {
         // Abbruch
 

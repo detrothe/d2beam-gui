@@ -3421,13 +3421,16 @@ function berechne_kombinationen() {
                     for (let iteil = 0; iteil < 2; iteil++) {
                         ug = 0.0
                         wg = 0.0
+                        phi=0.0
                         for (let iLastfall = 0; iLastfall < nlastfaelle; iLastfall++) {
 
                             ug += el[ielem].u_starr[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                             wg += el[ielem].w_starr[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
+                            phi += el[ielem].phi_starr[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
                         }
                         el[ielem].u_komb_starr[iKomb][iteil] = ug
                         el[ielem].w_komb_starr[iKomb][iteil] = wg
+                        el[ielem].phi_komb_starr[iKomb][iteil] = phi
                     }
                 }
             }

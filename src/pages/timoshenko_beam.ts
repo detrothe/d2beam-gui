@@ -93,6 +93,7 @@ export class CTimoshenko_beam extends CElement {
 
     u_starr = [] as number[][]          // Verformungen bei starren Enden, globale Richtung
     w_starr = [] as number[][]
+    phi_starr = [] as number[][]
 
 
     N_komb = [] as number[][]         // Schnittgrößen entlang Stab, lokal, aus Kombinationen
@@ -110,6 +111,8 @@ export class CTimoshenko_beam extends CElement {
     uG_komb_starr = [] as number[][]         // Verformungen entlang Stab, lokale Richtung
     w_komb_starr = [] as number[][]
     wG_komb_starr = [] as number[][]
+    phi_komb_starr = [] as number[][]         // Verformungen entlang Stab, lokale Richtung
+    phiG_komb_starr = [] as number[][]         // Verformungen entlang Stab, lokale Richtung
 
 
     Nb_komb = [] as number[][]         // Bemessungs(Nachweis)-Schnittgrößen entlang Stab, lokal, aus Kombinationen
@@ -497,6 +500,7 @@ export class CTimoshenko_beam extends CElement {
 
             this.u_starr = Array.from(Array(n), () => new Array(2).fill(0.0));
             this.w_starr = Array.from(Array(n), () => new Array(2).fill(0.0));
+            this.phi_starr = Array.from(Array(n), () => new Array(2).fill(0.0));
         }
 
         if (nkombinationen > 0) {
@@ -515,6 +519,8 @@ export class CTimoshenko_beam extends CElement {
             this.uG_komb_starr = Array.from(Array(nkombinationen), () => new Array(2).fill(0.0));
             this.w_komb_starr = Array.from(Array(nkombinationen), () => new Array(2).fill(0.0));
             this.wG_komb_starr = Array.from(Array(nkombinationen), () => new Array(2).fill(0.0));
+            this.phi_komb_starr = Array.from(Array(nkombinationen), () => new Array(2).fill(0.0));
+            this.phiG_komb_starr = Array.from(Array(nkombinationen), () => new Array(2).fill(0.0));
 
             this.Nb_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
             this.Vb_komb = Array.from(Array(nkombinationen), () => new Array(this.nTeilungen).fill(0.0));
@@ -1878,10 +1884,12 @@ export class CTimoshenko_beam extends CElement {
                         console.log("u_starr", this.u_starr, this.u)
                         this.u_starr[iLastf][0] = this.u[0]
                         this.w_starr[iLastf][0] = this.u[1]
+                        this.phi_starr[iLastf][0] = this.u[2]
                     }
                     if (this.aR > 0.0) {
                         this.u_starr[iLastf][1] = this.u[3]
                         this.w_starr[iLastf][1] = this.u[4]
+                        this.phi_starr[iLastf][1] = this.u[5]
                     }
 
                     for (let ieload = 0; ieload < neloads; ieload++) {
@@ -2095,10 +2103,12 @@ export class CTimoshenko_beam extends CElement {
                                 if (this.aL > 0.0) {
                                     this.u_starr[iLastf][0] += this.cosinus * edisp0[0] - this.sinus * edisp0[1]
                                     this.w_starr[iLastf][0] += this.sinus * edisp0[0] + this.cosinus * edisp0[1]
+                                    this.phi_starr[iLastf][0] += edisp0[2]
                                 }
                                 if (this.aR > 0.0) {
                                     this.u_starr[iLastf][1] += this.cosinus * edisp0[3] - this.sinus * edisp0[4]
                                     this.w_starr[iLastf][1] += this.sinus * edisp0[3] + this.cosinus * edisp0[4]
+                                    this.phi_starr[iLastf][1] +=  edisp0[5]
                                 }
                             }
                         }
@@ -2138,10 +2148,12 @@ export class CTimoshenko_beam extends CElement {
                         console.log("u_starr", this.u_starr, this.u)
                         this.u_komb_starr[iLastf][0] = this.uG_komb_starr[iLastf][0] = this.u[0]
                         this.w_komb_starr[iLastf][0] = this.wG_komb_starr[iLastf][0] = this.u[1]
+                        this.phi_komb_starr[iLastf][0] = this.phiG_komb_starr[iLastf][0] = this.u[2]
                     }
                     if (this.aR > 0.0) {
                         this.u_komb_starr[iLastf][1] = this.uG_komb_starr[iLastf][1] = this.u[3]
                         this.w_komb_starr[iLastf][1] = this.wG_komb_starr[iLastf][1] = this.u[4]
+                        this.phi_komb_starr[iLastf][1] = this.phiG_komb_starr[iLastf][1] = this.u[5]
                     }
 
                     for (let ieload = 0; ieload < neloads; ieload++) {
@@ -2553,7 +2565,7 @@ export class CTimoshenko_beam extends CElement {
 
 
     //---------------------------------------------------------------------------------------------
-    get_elementSchnittgroesse_u_w_starr(ux: number[], wx: number[], iLastf: number, gesamt: boolean) {
+    get_elementSchnittgroesse_u_w_starr(ux: number[], wx: number[], phix: number[], iLastf: number, gesamt: boolean) {
 
 
         if (THIIO_flag === 0 && matprop_flag === 0) {
@@ -2561,11 +2573,13 @@ export class CTimoshenko_beam extends CElement {
                 for (let i = 0; i < 2; i++) {
                     ux[i] = this.u_starr[iLastf][i]
                     wx[i] = this.w_starr[iLastf][i]
+                    phix[i] = this.phi_starr[iLastf][i]
                 }
             } else {
                 for (let i = 0; i < 2; i++) {
                     ux[i] = this.u_komb_starr[iLastf - nlastfaelle][i]
                     wx[i] = this.w_komb_starr[iLastf - nlastfaelle][i]
+                    phix[i] = this.phi_komb_starr[iLastf - nlastfaelle][i]
                 }
             }
         } else {
@@ -2573,9 +2587,11 @@ export class CTimoshenko_beam extends CElement {
                 if (gesamt) {
                     ux[i] = this.uG_komb_starr[iLastf][i]
                     wx[i] = this.wG_komb_starr[iLastf][i];
+                    phix[i] = this.phiG_komb_starr[iLastf][i];
                 } else {
                     ux[i] = this.u_komb_starr[iLastf][i]
                     wx[i] = this.w_komb_starr[iLastf][i];
+                    phix[i] = this.phi_komb_starr[iLastf][i];
                 }
             }
         }
