@@ -2,7 +2,7 @@ import { CAD_COPY_SELECTED, CAD_SELECT_MULTI, CAD_STAB, list, tr, two } from "./
 import { buttons_control, set_help_text } from "./cad_buttons"
 import { drawStab } from "./cad_draw_elemente"
 import { add_cad_node, add_element_nodes, get_cad_node_X, get_cad_node_Z } from "./cad_node"
-import { TCAD_Element, TCAD_Stab } from "./CCAD_element"
+import { TCAD_Element, TCAD_Stab, TCAD_ElLast, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung } from "./CCAD_element"
 
 
 
@@ -106,6 +106,40 @@ export function copy_selected(dx0: number, dz0: number) {
                     two.add(group);
 
                     stab_obj.setTwoObj(group)
+
+                    stab_obj.k_0 = (obj as TCAD_Stab).k_0;
+                    stab_obj.aL = (obj as TCAD_Stab).aL;
+                    stab_obj.aR = (obj as TCAD_Stab).aR;
+                    stab_obj.nGelenke = (obj as TCAD_Stab).nGelenke;
+                    stab_obj.gelenk = (obj as TCAD_Stab).gelenk;
+                    stab_obj.sinus = (obj as TCAD_Stab).sinus;
+                    stab_obj.cosinus = (obj as TCAD_Stab).cosinus;
+                    stab_obj.alpha = (obj as TCAD_Stab).alpha;
+                    stab_obj.stabTyp = (obj as TCAD_Stab).stabTyp;
+
+                    let neloads = (obj as TCAD_Stab).elast.length;
+                    for (let j = 0; j < neloads; j++) {
+                        if ((obj as TCAD_Stab).elast[j].className === "TCAD_Streckenlast") {
+                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Streckenlast
+                            stab_obj.add_streckenlast(ob.lastfall, ob.art, ob.pL, ob.pR);
+                        } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Einzellast") {
+                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Einzellast
+                            stab_obj.add_einzellast(ob.lastfall, ob.xe, ob.P, ob.M);
+                        } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Temperaturlast") {
+                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Temperaturlast
+                            stab_obj.add_temperaturlast(ob.lastfall, ob.To, ob.Tu);
+                        } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Vorspannung") {
+                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Vorspannung
+                            stab_obj.add_vorspannung(ob.lastfall, ob.sigmaV);
+                        } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Spannschloss") {
+                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Spannschloss
+                            stab_obj.add_spannschloss(ob.lastfall, ob.ds);
+                        } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Stabvorverformung") {
+                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Stabvorverformung
+                            stab_obj.add_stabvorverformung(ob.lastfall, ob.w0a, ob.w0m, ob.w0e);
+                        }
+                    }
+
                     dx += dx0;
                     dz += dz0;
                 }
