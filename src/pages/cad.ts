@@ -1227,6 +1227,13 @@ function penDown(ev: PointerEvent) {
 
       add_elementlast(xc, zc);
    }
+   else if (buttons_control.select_multi_aktiv) {
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
+
+      select_element(xc, zc);
+   }
+
    else if (buttons_control.cad_eingabe_aktiv) {
       if (buttons_control.input_started === 0) {
 
@@ -1256,6 +1263,7 @@ function penDown(ev: PointerEvent) {
             if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
             else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
             else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
+            else if (buttons_control.copy_selected_aktiv) set_help_text('Pfeilspitze picken');
          } else {
             if (buttons_control.bemassung_aktiv) {
                alertdialog('ok', 'keinen Knoten gepickt');
@@ -1287,6 +1295,7 @@ function penDown(ev: PointerEvent) {
             if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
             else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
             else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
+            else if (buttons_control.copy_selected_aktiv) set_help_text('Pfeilspitze picken');
          }
          input_active = true;
          buttons_control.input_started = 1;
@@ -1682,6 +1691,7 @@ function mouseup(ev: any) {
       select_element(xc, zc);
 
    }
+
    else if (buttons_control.cad_eingabe_aktiv) {
       if (ev.button === 0 || isPen || isTouch) {
          // Linker Mausbutton
@@ -1971,7 +1981,7 @@ function mouseup(ev: any) {
                let dx = end_x_wc - start_x_wc
                let dz = end_z_wc - start_z_wc
 
-               copy_selected(dx,dz);
+               copy_selected(dx, dz);
                //set_help_text('ende');
                buttons_control.reset();
 
