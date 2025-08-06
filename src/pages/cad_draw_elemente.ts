@@ -10,7 +10,7 @@ import { draw_elementlasten, max_Lastfall } from './cad_draw_elementlasten';
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
 //import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { opacity } from './grafik';
-import { faktor_lagersymbol, select_color, show_elementlasten, show_lastfall, show_stab_qname, slmax_cad, timer, unit_force, unit_moment } from './cad';
+import { faktor_lagersymbol, multiselect_color, select_color, show_elementlasten, show_lastfall, show_stab_qname, slmax_cad, timer, unit_force, unit_moment } from './cad';
 import { buttons_control } from './cad_buttons';
 
 
@@ -70,6 +70,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     let line1 = new Two.Line(tr.xPix(x1), tr.zPix(z1), tr.xPix(x2), tr.zPix(z2));
     line1.linewidth = 7 / devicePixelRatio;
     if (select) line1.stroke = select_color;
+    else if ( obj.multiSelected) line1.stroke = multiselect_color;
     group.add(line1);
 
     // gestrichelte Faser

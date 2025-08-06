@@ -2472,9 +2472,11 @@ async function calculate() {
             eigenform_container_u.length = 0
             for (let i = 0; i < nkombinationen; i++) {
                 let a = new TFArray3D(1, nnodesTotal, 1, 3, 1, neigv)
+                a.zero();
                 eigenform_container_node.push(a)
 
                 let b = new TFArray2D(0, neq - 1, 1, neigv)
+                b.zero();
                 eigenform_container_u.push(b)
             }
             alpha_cr = Array.from(Array(nkombinationen), () => new Array(neigv).fill(0.0));
@@ -2786,48 +2788,57 @@ async function calculate() {
                     }
                     if (iter === 0) {     // Schiefstellung
 
-                        eigenwertberechnung(iKomb, stiff, stiff_sig, u, 0)
+                        if (neigv > 0) {
 
-                        let umax = 0.0, ieq = -1
-                        if (maxU_node === 0 || maxU_node > nnodes) {
+                            eigenwertberechnung(iKomb, stiff, stiff_sig, u, 0);
 
-                            for (i = 0; i < neq; i++) {
-                                if (Math.abs(u[i]) > umax) {
-                                    umax = Math.abs(u[i]);
-                                    ieq = i;
+                            let umax = 0.0, ieq = -1
+                            if (maxU_node === 0 || maxU_node > nnodes) {
+
+                                for (i = 0; i < neq; i++) {
+                                    if (Math.abs(u[i]) > umax) {
+                                        umax = Math.abs(u[i]);
+                                        ieq = i;
+                                    }
                                 }
+                                //console.log("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU umax=", umax)
+
+                            } else {
+                                ieq = node[maxU_node - 1].L[maxU_dir]
+                                //console.log("schief", ieq, u[ieq])
+                                umax = Math.abs(u[ieq])
                             }
-                            //console.log("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU umax=", umax)
 
-                        } else {
-                            ieq = node[maxU_node - 1].L[maxU_dir]
-                            //console.log("schief", ieq, u[ieq])
-                            umax = Math.abs(u[ieq])
-                        }
+                            let pg_max = 0.0
+                            if (umax > 0.0) {
+                                let vorzeichen_U = Math.sign(u_lf[ieq][iKomb - 1])
+                                if (vorzeichen_U === 0.0) vorzeichen_U = 1.0
+                                let vorzeichen_umax = Math.sign(u[ieq])
+                                let faktor = vorzeichen_U * vorzeichen_umax * maxU_schief / umax
+                                //console.log("vorzeichen", vorzeichen_U, vorzeichen_umax, faktor)
+                                for (i = 0; i < neq; i++) {
+                                    pg[i] = u[i] * faktor
+                                    if (Math.abs(pg[i]) > pg_max) pg_max = Math.abs(pg[i])
+                                }
+                            } else {
+                                pg.fill(0.0)
+                            }
 
-                        let pg_max = 0.0
-                        if (umax > 0.0) {
-                            let vorzeichen_U = Math.sign(u_lf[ieq][iKomb - 1])
-                            if (vorzeichen_U === 0.0) vorzeichen_U = 1.0
-                            let vorzeichen_umax = Math.sign(u[ieq])
-                            let faktor = vorzeichen_U * vorzeichen_umax * maxU_schief / umax
-                            //console.log("vorzeichen", vorzeichen_U, vorzeichen_umax, faktor)
                             for (i = 0; i < neq; i++) {
-                                pg[i] = u[i] * faktor
-                                if (Math.abs(pg[i]) > pg_max) pg_max = Math.abs(pg[i])
+                                u0_komb[i][iKomb - 1] = pg[i]
                             }
+                            maxValue_u0[iKomb - 1].ieq = ieq
+                            maxValue_u0[iKomb - 1].u0 = pg_max
+
+                            //console.log("pg", pg)
                         } else {
-                            pg.fill(0.0)
+                            u.fill(0.0);
+                            for (i = 0; i < neq; i++) {
+                                u0_komb[i][iKomb - 1] = pg[i]
+                            }
+                            maxValue_u0[iKomb - 1].ieq = 0
+                            maxValue_u0[iKomb - 1].u0 = 0.0
                         }
-
-                        for (i = 0; i < neq; i++) {
-                            u0_komb[i][iKomb - 1] = pg[i]
-                        }
-                        maxValue_u0[iKomb - 1].ieq = ieq
-                        maxValue_u0[iKomb - 1].u0 = pg_max
-
-                        //console.log("pg", pg)
-
 
                     }
 
@@ -2904,7 +2915,7 @@ async function calculate() {
 
                 // Berechnung alpha_cr, Knickformen
 
-                eigenwertberechnung(iKomb, stiff, stiff_sig, u, 1)
+                if (neigv > 0) eigenwertberechnung(iKomb, stiff, stiff_sig, u, 1);
 
                 ausgabe(iKomb, newDiv)
 
@@ -3177,6 +3188,8 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
                 k++;
             }
         }
+        //console.log("kstiff_array",kstiff_array)
+
         let kstiff_ptr = Module._malloc(kstiff_array.length * bytes_8);
         Module.HEAPF64.set(kstiff_array, kstiff_ptr / bytes_8);
 
@@ -3198,6 +3211,7 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
         if (eig_solver === 0) {
             status = c_gsl_eigenwert(kstiff_sig_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv)
         } else if (eig_solver === 1) {
+            console.log("c_simvektoriteration", neq, neigv, niter_neigv)
             status = c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv, niter_neigv);
         }
         write("Status der Eigenwertberechnung = " + status)
@@ -3421,7 +3435,7 @@ function berechne_kombinationen() {
                     for (let iteil = 0; iteil < 2; iteil++) {
                         ug = 0.0
                         wg = 0.0
-                        phi=0.0
+                        phi = 0.0
                         for (let iLastfall = 0; iLastfall < nlastfaelle; iLastfall++) {
 
                             ug += el[ielem].u_starr[iLastfall][iteil] * kombiTabelle[iKomb][iLastfall]
@@ -4535,7 +4549,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
 
         // Berechnung alpha_cr, Knickformen
 
-        if (THIIO_flag > 0) eigenwertberechnung(iKomb, stiff, stiff_sig, u, 1)
+        if (THIIO_flag > 0 && neigv > 0) eigenwertberechnung(iKomb, stiff, stiff_sig, u, 1)
 
         ausgabe(iKomb, newDiv)
 

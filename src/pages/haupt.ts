@@ -75,7 +75,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.4.3,a, 4-August-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.5.0,a, 6-August-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -991,7 +991,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               &nbsp;Anzahl Knickfiguren :
               </td>
               <td>
-              <dr-button-pm id="id_neigv" nel="1" minValue="1" inputid="neigv"  @change=${berechnungErforderlich}></dr-button-pm>
+              <dr-button-pm id="id_neigv" nel="1" minValue="0" inputid="neigv"  @change=${berechnungErforderlich}></dr-button-pm>
                 <!-- <input
                   type="number"
                   step="1"

@@ -44,6 +44,7 @@ import { drDialogKnoten } from '../components/dr-dialog_knoten';
 import { drDialogMessen } from '../components/dr-dialog_messen';
 import { add_bemassung, drawBemassung, recalc_abstand, TCAD_Bemassung } from './cad_bemassung';
 import { CNodeDisp, draw_knotenverformung, read_knotenverformung_dialog } from './cad_knotenverformung';
+import { copy_selected } from './cad_select';
 
 export const CAD_KNOTEN = 1;
 export const CAD_STAB = 2;
@@ -57,6 +58,9 @@ export const CAD_DRAWER = 9;
 export const CAD_MESSEN = 10;
 export const CAD_BEMASSUNG = 11;
 export const CAD_KNOTVERFORMUNG = 12;
+
+export const CAD_SELECT_MULTI = 13;
+export const CAD_COPY_SELECTED = 14;
 
 export let two: any = null;
 let domElement: any = null;
@@ -285,6 +289,7 @@ export const timer = {
    index_ellast: -1,
 };
 export const select_color = '#ff7f50'  //'#ffa000'
+export const multiselect_color = '#84b56e'
 
 export let list: LinkedList = new LinkedList(); // Empty list
 export let undoList: LinkedList = new LinkedList(); // Empty undo list
@@ -1670,6 +1675,12 @@ function mouseup(ev: any) {
 
       add_elementlast(xc, zc);
 
+   } else if (buttons_control.select_multi_aktiv) {
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
+
+      select_element(xc, zc);
+
    }
    else if (buttons_control.cad_eingabe_aktiv) {
       if (ev.button === 0 || isPen || isTouch) {
@@ -1703,6 +1714,7 @@ function mouseup(ev: any) {
                if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
                else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
                else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
+               else if (buttons_control.copy_selected_aktiv) set_help_text('Pfeilspitze picken');
             } else {
                if (buttons_control.bemassung_aktiv) {
                   alertdialog('ok', 'keinen Knoten gepickt');
@@ -1733,6 +1745,7 @@ function mouseup(ev: any) {
                if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
                else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
                else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
+               else if (buttons_control.copy_selected_aktiv) set_help_text('Pfeilspitze picken');
             }
             input_active = true;
             buttons_control.input_started = 1;
@@ -1954,6 +1967,15 @@ function mouseup(ev: any) {
                   set_help_text('ersten Knoten picken');
                }
             }
+            else if (buttons_control.copy_selected_aktiv) {
+               let dx = end_x_wc - start_x_wc
+               let dz = end_z_wc - start_z_wc
+
+               copy_selected(dx,dz);
+               //set_help_text('ende');
+               buttons_control.reset();
+
+            }
 
          }
          else if (buttons_control.input_started === 2) {
@@ -2024,79 +2046,14 @@ function touchstart(ev: TouchEvent) {
 
    ev.preventDefault();
 
-   //     if (isPen) return;
-
-   //     console.log("in touchstart " + ev.touches.length + " | " + buttons_control.input_started)
-   //     if (ev.touches.length === 1) {
-   //         if (buttons_control.input_started === 0) {
-   //             input_active = true
-   //             buttons_control.input_started = 1
-   //             touchstart_x = ev.touches[0].clientX
-   //             touchstart_y = ev.touches[0].clientY - grafik_top
-   //         }
-   //     }
 }
-
-//--------------------------------------------------------------------------------------------------------
-// function myTouchStart(ev: PointerEvent) {
-//----------------------------------------------------------------------------------------------------
-
-// console.log("myPointerEvent", ev)
-// ev.preventDefault();
-
-//     if (isPen) return;
-
-//     if (cad_eingabe_aktiv) {
-
-//         if (buttons_control.input_started === 0) {
-//             input_active = true
-//             buttons_control.input_started = 1
-
-//             let xc = tr.xWorld(ev.offsetX)
-//             let zc = tr.zWorld(ev.offsetY)
-//             let gefunden = findNextRasterPoint(xc, zc)
-//             if (gefunden) {
-//                 rasterPoint = two.makeRectangle(tr.xPix(xRasterPoint), tr.zPix(zRasterPoint), 5, 5);
-//                 rasterPoint.fill = '#0000ff';
-//                 rasterPoint.stroke = "#0000ff";
-//                 foundRasterPoint = true;
-//                 touchstart_x = tr.xPix(xRasterPoint)
-//                 touchstart_y = tr.zPix(zRasterPoint)
-//                 start_x_wc = xRasterPoint
-//                 start_z_wc = zRasterPoint
-//             } else {
-//                 touchstart_x = ev.offsetX
-//                 touchstart_y = ev.offsetY
-//                 start_x_wc = xc
-//                 start_z_wc = zc
-//             }
-//         }
-//     }
-
-// }
 
 //--------------------------------------------------------------------------------------------------------
 function touchend(ev: TouchEvent) {
    //----------------------------------------------------------------------------------------------------
-   //console.log('in touchend', ev.touches.length);
-   //write("in touchend " + ev.touches.length + " | " + buttons_control.input_started);
 
    ev.preventDefault();
-   //     if (isPen) return;
 
-   //     // if (ev.touches.length === 0) {
-   //     //     if (buttons_control.input_started === 1) {
-   //     input_active = false
-   //     buttons_control.input_started = 0
-   //     //write("touchstart_x_y " + touchstart_x + " | " + touchstart_y);
-
-   //     //write("touchend_x_y " + touchend_x + " | " + touchend_y);
-   //     let line1 = two.makeLine(touchstart_x, touchstart_y, touchend_x, touchend_y);
-   //     line1.linewidth = 2 /// devicePixelRatio;
-
-   //     two.update();
-   //     //     }
-   //     // }
 }
 
 // //--------------------------------------------------------------------------------------------------------
@@ -2104,12 +2061,7 @@ function touchmove(ev: TouchEvent) {
    //----------------------------------------------------------------------------------------------------
 
    ev.preventDefault();
-   //     if (isPen) return;
 
-   //     //console.log("in touchmove", ev);
-
-   //     touchend_x = ev.touches[0].clientX;
-   //     touchend_y = ev.touches[0].clientY - grafik_top;
 }
 
 //------------------------------------------------------------------------------------------------

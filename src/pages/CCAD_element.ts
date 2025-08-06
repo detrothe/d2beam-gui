@@ -10,6 +10,7 @@ export class TCAD_Element {
     className = 'TCAD_Element';
     isActive = true;
     isSelected = false;
+    multiSelected = false;
 
     elTyp: number = 0; // 0 = 2 Knoten, 1 = Fachwerkstab, 3 = 3 Knoten, 3 = 4 Knoten
 

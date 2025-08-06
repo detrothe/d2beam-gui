@@ -6,6 +6,7 @@ import { Bemassung_button } from '../pages/cad_bemassung';
 import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_lager, set_show_lastfall, set_show_raster, set_show_stab_qname } from '../pages/cad';
 import { copy_svg_cad } from '../pages/grafik';
 import { Knotenverformung_button } from '../pages/cad_knotenverformung';
+import { copy_selected_button, select_multi_button, unselect_all_button } from '../pages/cad_select';
 
 @customElement('dr-drawer_1')
 export class drDrawer_1 extends LitElement {
@@ -159,6 +160,22 @@ export class drDrawer_1 extends LitElement {
          <p>
             <sl-button id="id_svg" value="0" @click="${this._svg}">System als svg-Datei speichern</sl-button>
          </p>
+
+          <p>
+            <sl-button id="id_select_multi" value="0" @click="${this._select_multi}">selektiere mehrere Elemente</sl-button>
+         </p>
+
+          <p>
+            <sl-button id="id_unselect_all" value="0" @click="${this._unselect_all}">unselektiere alle Elemente</sl-button>
+         </p>
+
+          <p>
+            <sl-button id="id_copy_selected" value="0" @click="${this._copy_selected}">Kopiere selektierte Elemente</sl-button>
+         </p>
+
+          <p>
+            <sl-button id="id_edit_selected" value="0" @click="${this._edit_selected}">Editiere selektierte Elemente</sl-button>
+         </p>
       `;
    }
 
@@ -169,6 +186,34 @@ export class drDrawer_1 extends LitElement {
       if (drawer !== null) drawer.hide();
       console.log('drawer', drawer);
       Messen_button();
+   }
+
+   _select_multi() {
+      const drawer = document.querySelector('.drawer-overview');
+      //@ts-ignore
+      if (drawer !== null) drawer.hide();
+      select_multi_button(1);
+   }
+
+   _unselect_all() {
+      const drawer = document.querySelector('.drawer-overview');
+      //@ts-ignore
+      if (drawer !== null) drawer.hide();
+      unselect_all_button();
+   }
+
+   _copy_selected() {
+      const drawer = document.querySelector('.drawer-overview');
+      //@ts-ignore
+      if (drawer !== null) drawer.hide();
+      copy_selected_button();
+   }
+
+   _edit_selected() {
+      const drawer = document.querySelector('.drawer-overview');
+      //@ts-ignore
+      if (drawer !== null) drawer.hide();
+      Bemassung_button(1);
    }
 
    _bemassung_parallel() {

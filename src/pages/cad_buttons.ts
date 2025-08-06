@@ -159,6 +159,11 @@ class Cbuttons_control {
   art = -1;
   show_boundingRect = false;
 
+  select_multi_aktiv = false;
+  unselect_all_aktiv = false;
+  copy_selected_aktiv = false;
+  edit_selected_aktiv = false;
+
   reset() {
     this.delete_element = false;
     this.select_element = false;
@@ -181,6 +186,12 @@ class Cbuttons_control {
     this.bemassung_aktiv = false;
     this.art = -1;
     this.show_boundingRect = false;
+
+    this.select_multi_aktiv = false;
+    this.unselect_all_aktiv = false;
+    this.copy_selected_aktiv = false;
+    this.edit_selected_aktiv = false;
+
 
     let backgroundColor = backgroundColor_button
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
@@ -331,7 +342,7 @@ export function cad_buttons() {
   select_button.className = "btn";
   select_button.innerHTML = '<i class = "fa fa-hand-pointer-o"></i>';
   select_button.addEventListener("click", Select_button);
-  select_button.title = "Element auswählen/selektieren";
+  select_button.title = "Element auswählen und danach editieren";
   select_button.id = "id_cad_select_button";
 
   const knoten_button = document.createElement("button");
@@ -1388,195 +1399,204 @@ export function select_element(xc: number, zc: number) {
 
   console.log('ABSTAND', min_abstand, index_stab, lager_gefunden);
 
+  if (buttons_control.select_element) {
 
-
-  if (knotenlast_gefunden) {
-    gefunden = true
-    //console.log("Knotenlast gefunden")
-
-    write_knotenlast_dialog((obj_knlast as TCAD_Knotenlast).knlast)
-    showDialog_knotenlast()
-
-    picked_obj = obj_knlast
-    mode_knotenlast_aendern = true
-  }
-
-  else if (knotenverformung_gefunden) {
-    gefunden = true
-    //console.log("knotenverformung gefunden")
-
-    write_knotenverformung_dialog((obj_knotverform as TCAD_Knotenverformung).nodeDisp)
-    showDialog_knotenverformung();
-
-    picked_obj = obj_knotverform
-    mode_knotenverformung_aendern = true
-  }
-
-  else if (element_einzellast_gefunden) {
-
-    const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
-
-    let lf = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).lastfall
-    ele.set_lastfall(lf)
-    let x = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).xe
-    let P = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).P
-    let M = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).M
-    ele.set_x(x)
-    ele.set_P(P)
-    ele.set_M(M)
-    ele.set_typ('1')
-    mode_elementlast_aendern = true
-
-    obj_ellast = obj_eleinzellast
-    index_ellast = index_eleinzellast;
-
-    (document.getElementById('id_dialog_elementlast') as drDialogElementlasten).set_display_group_typ(false);
-
-    showDialog_elementlast()
-    gefunden = true
-  }
-
-  else if (elementlast_gefunden) {
-
-    const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
-
-    let lf = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall
-    ele.set_lastfall(lf)
-
-    let typ = (obj_ellast.elast[index_ellast] as TCAD_ElLast).typ
-    ele.set_typ(String(typ))
-
-    if (typ === 0) {
-      let art = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art
-      let pa = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL
-      let pe = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pR
-      ele.set_pa(pa)
-      ele.set_pe(pe)
-      ele.set_art(art)
-    }
-    else if (typ === 2) {
-      let To = (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).To
-      let Tu = (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).Tu
-      ele.set_To(To)
-      ele.set_Tu(Tu)
-    }
-    else if (typ === 3) {
-      let sigmaV = (obj_ellast.elast[index_ellast] as TCAD_Vorspannung).sigmaV
-      ele.set_sigmaV(sigmaV)
-    }
-    else if (typ === 4) {
-      let ds = (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).ds
-      ele.set_sigmaV(ds)
-    }
-    else if (typ === 5) {
-      let w0a = (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0a
-      let w0m = (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0m
-      let w0e = (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0e
-      ele.set_w0a(w0a)
-      ele.set_w0m(w0m)
-      ele.set_w0e(w0e)
-    }
-
-    mode_elementlast_aendern = true;
-
-    (document.getElementById('id_dialog_elementlast') as drDialogElementlasten).set_display_group_typ(false);
-
-    showDialog_elementlast()
-
-    gefunden = true
-  }
-
-  else if (lager_gefunden) {
-    console.log("Knotenlager gefunden")
-    gefunden = true
-    picked_obj = obj_knlager
-    mode_knotenlager_aendern = true;
-
-    let node = (obj_knlager as TCAD_Lager).node
-    //console.log("Lager node", node)
-    write_lager_dialog(node);
-
-    showDialog_lager()
-
-  }
-
-  else if (knotenmasse_gefunden) {
-    gefunden = true
-    console.log("Knotenmasse gefunden")
-
-    // let knlast = new TLoads();
-    // let lf = (obj_knlast as TCAD_Knotenlast).knlast
-
-    write_knotenmasse_dialog((obj_knmasse as TCAD_Knotenmasse).masse)
-    showDialog_knotenmasse()
-
-    picked_obj = obj_knmasse
-    mode_knotenmasse_aendern = true
-
-  }
-
-  else if (index_stab >= 0 && min_abstand < get_fangweite_cursor()) {
-    if (list.size > 0) {
-
-      //console.log("two.obj", obj)
-      let obj = list.getAt(index_stab);
-      two.remove(obj.two_obj);
-      let group = drawStab(obj, tr, true);
-      two.add(group);
-      selected_element.group = group
-      obj.isSelected = true
-
-      two.update();
-
-      //buttons_control.reset();
+    if (knotenlast_gefunden) {
       gefunden = true
-      picked_obj = obj;
-      console.log("picked obj", picked_obj)
+      //console.log("Knotenlast gefunden")
 
-      let divi = document.getElementById("id_context_menu");
+      write_knotenlast_dialog((obj_knlast as TCAD_Knotenlast).knlast)
+      showDialog_knotenlast()
 
-      divi!.style.left = xpix + 'px';
-      divi!.style.top = zpix + 'px';
-      divi!.style.display = 'block';
-
+      picked_obj = obj_knlast
+      mode_knotenlast_aendern = true
     }
-  }
 
-  else if (bemassung_gefunden && min_abstand_bemassung < get_fangweite_cursor()) {          // Stab   index >= 0 && min_abstand < 0.25
-    if (list.size > 0) {
+    else if (knotenverformung_gefunden) {
+      gefunden = true
+      //console.log("knotenverformung gefunden")
+
+      write_knotenverformung_dialog((obj_knotverform as TCAD_Knotenverformung).nodeDisp)
+      showDialog_knotenverformung();
+
+      picked_obj = obj_knotverform
+      mode_knotenverformung_aendern = true
+    }
+
+    else if (element_einzellast_gefunden) {
+
+      const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
+
+      let lf = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).lastfall
+      ele.set_lastfall(lf)
+      let x = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).xe
+      let P = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).P
+      let M = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).M
+      ele.set_x(x)
+      ele.set_P(P)
+      ele.set_M(M)
+      ele.set_typ('1')
+      mode_elementlast_aendern = true
+
+      obj_ellast = obj_eleinzellast
+      index_ellast = index_eleinzellast;
+
+      (document.getElementById('id_dialog_elementlast') as drDialogElementlasten).set_display_group_typ(false);
+
+      showDialog_elementlast()
+      gefunden = true
+    }
+
+    else if (elementlast_gefunden) {
+
+      const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
+
+      let lf = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall
+      ele.set_lastfall(lf)
+
+      let typ = (obj_ellast.elast[index_ellast] as TCAD_ElLast).typ
+      ele.set_typ(String(typ))
+
+      if (typ === 0) {
+        let art = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art
+        let pa = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL
+        let pe = (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pR
+        ele.set_pa(pa)
+        ele.set_pe(pe)
+        ele.set_art(art)
+      }
+      else if (typ === 2) {
+        let To = (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).To
+        let Tu = (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).Tu
+        ele.set_To(To)
+        ele.set_Tu(Tu)
+      }
+      else if (typ === 3) {
+        let sigmaV = (obj_ellast.elast[index_ellast] as TCAD_Vorspannung).sigmaV
+        ele.set_sigmaV(sigmaV)
+      }
+      else if (typ === 4) {
+        let ds = (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).ds
+        ele.set_sigmaV(ds)
+      }
+      else if (typ === 5) {
+        let w0a = (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0a
+        let w0m = (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0m
+        let w0e = (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0e
+        ele.set_w0a(w0a)
+        ele.set_w0m(w0m)
+        ele.set_w0e(w0e)
+      }
+
+      mode_elementlast_aendern = true;
+
+      (document.getElementById('id_dialog_elementlast') as drDialogElementlasten).set_display_group_typ(false);
+
+      showDialog_elementlast()
 
       gefunden = true
-      console.log("Bemassung gefunden")
+    }
 
-      const el = document.getElementById("id_dialog_bemassung") as drDialogBemassung;
-      console.log("el id_dialog_bemassung", el)
-      let hl = obj_bemassung.get_hilfsline();
-      console.log("hl", hl)
-      el.set_art_hilfslinie(hl);
-      showDialog_bemassung();
+    else if (lager_gefunden) {
+      console.log("Knotenlager gefunden")
+      gefunden = true
+      picked_obj = obj_knlager
+      mode_knotenlager_aendern = true;
+
+      let node = (obj_knlager as TCAD_Lager).node
+      //console.log("Lager node", node)
+      write_lager_dialog(node);
+
+      showDialog_lager()
+
+    }
+
+    else if (knotenmasse_gefunden) {
+      gefunden = true
+      console.log("Knotenmasse gefunden")
+
+      // let knlast = new TLoads();
+      // let lf = (obj_knlast as TCAD_Knotenlast).knlast
+
+      write_knotenmasse_dialog((obj_knmasse as TCAD_Knotenmasse).masse)
+      showDialog_knotenmasse()
 
       picked_obj = obj_knmasse
       mode_knotenmasse_aendern = true
 
+    }
 
+    else if (index_stab >= 0 && min_abstand < get_fangweite_cursor()) {
+      if (list.size > 0) {
+
+        //console.log("two.obj", obj)
+        let obj = list.getAt(index_stab);
+        two.remove(obj.two_obj);
+        let group = drawStab(obj, tr, true);
+        two.add(group);
+        selected_element.group = group
+        obj.isSelected = true
+
+        two.update();
+
+        //buttons_control.reset();
+        gefunden = true
+        picked_obj = obj;
+        console.log("picked obj", picked_obj)
+
+        let divi = document.getElementById("id_context_menu");
+
+        divi!.style.left = xpix + 'px';
+        divi!.style.top = zpix + 'px';
+        divi!.style.display = 'block';
+
+      }
+    }
+
+    else if (bemassung_gefunden && min_abstand_bemassung < get_fangweite_cursor()) {          // Stab   index >= 0 && min_abstand < 0.25
+      if (list.size > 0) {
+
+        gefunden = true
+        console.log("Bemassung gefunden")
+
+        const el = document.getElementById("id_dialog_bemassung") as drDialogBemassung;
+        console.log("el id_dialog_bemassung", el)
+        let hl = obj_bemassung.get_hilfsline();
+        console.log("hl", hl)
+        el.set_art_hilfslinie(hl);
+        showDialog_bemassung();
+
+        picked_obj = obj_knmasse
+        mode_knotenmasse_aendern = true
+
+
+      }
+    }
+
+    if (gefunden) {
+      if (right_mousebutton_pressed) {
+        right_mousebutton_pressed = false;
+        buttons_control.select_element = false;
+      }
+      init_cad(2);
     }
   }
 
-  if (gefunden) {
-    if (right_mousebutton_pressed) {
-      right_mousebutton_pressed = false;
-      buttons_control.select_element = false;
+  else if (buttons_control.select_multi_aktiv) {
+
+    if (index_stab >= 0 && min_abstand < get_fangweite_cursor()) {
+      if (list.size > 0) {
+
+        let obj = list.getAt(index_stab);
+        two.remove(obj.two_obj);
+        obj.multiSelected = true
+        let group = drawStab(obj, tr, false);
+        two.add(group);
+
+        two.update();
+      }
     }
-    init_cad(2);
   }
-
-  // if (gefunden) {
-  //   let divi = document.getElementById("id_context_menu");
-
-  //   divi!.style.left = xpix + 'px';
-  //   divi!.style.top = zpix + 'px';
-  //   divi!.style.display = 'block';
-  // }
 
 }
 
