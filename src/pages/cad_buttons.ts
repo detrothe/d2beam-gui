@@ -1582,6 +1582,11 @@ export function select_element(xc: number, zc: number) {
     }
   }
 
+  // -----------------------  M U L T I S E L E C T  ------------------------------------
+  // -----------------------  M U L T I S E L E C T  ------------------------------------
+  // -----------------------  M U L T I S E L E C T  ------------------------------------
+
+
   else if (buttons_control.select_multi_aktiv) {
 
     if (index_stab >= 0 && min_abstand < get_fangweite_cursor()) {
@@ -1595,6 +1600,19 @@ export function select_element(xc: number, zc: number) {
 
         two.update();
       }
+    }
+    else if (elementlast_gefunden) {
+
+
+      let group = obj_ellast.getTwoObj();
+      two.remove(group)
+      obj_ellast.elast[index_ellast].multiSelected = true
+      group = drawStab(obj_ellast as TCAD_Stab, tr);
+      two.add(group)
+      obj_ellast.setTwoObj(group);
+
+      two.update();
+
     }
   }
 

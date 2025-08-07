@@ -3,7 +3,7 @@ import { CTrans } from "./trans"
 import { TCAD_Einzellast, TCAD_Element, TCAD_ElLast, TCAD_Knotenlast, TCAD_Knotenverformung, TCAD_Spannschloss, TCAD_Stab, TCAD_Stabvorverformung, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Vorspannung } from "./CCAD_element"
 import { opacity, style_pfeil, style_pfeil_moment_element, style_txt_knotenlast, style_txt_knotenlast_element } from "./grafik"
 import { myFormat } from "./utility"
-import { CAD_KNLAST, CAD_KNOTVERFORMUNG, CAD_STAB, list, select_color, show_lastfall, slmax_cad, timer, unit_force, unit_moment } from "./cad"
+import { CAD_KNLAST, CAD_KNOTVERFORMUNG, CAD_STAB, list, multiselect_color, select_color, show_lastfall, slmax_cad, timer, unit_force, unit_moment } from "./cad"
 import { draw_arrow, draw_BoundingClientRect_xz, draw_moment_arrow } from "./cad_draw_elemente"
 import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
 import { buttons_control } from "./cad_buttons"
@@ -323,7 +323,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         }
 
                         let flaeche = new Two.Path(vertices);
-                        flaeche.fill = color_load;
+                         if ( obj.elast[j].multiSelected) flaeche.fill = multiselect_color;
+                        else flaeche.fill = color_load;
                         flaeche.opacity = opacity
                         if (element_selected) {
                             flaeche.stroke = select_color;

@@ -317,6 +317,7 @@ export class TCAD_ElLast {
     lastfall = 1
     isActive = true;
     isSelected = false;
+    multiSelected = false;
     typ = 0               // 0=Streckenlast, 1=Einzelllast, 2=Temperatur
 
     x: number[] = Array(4).fill(0.0)   // Weltkoordinaten der gezeichneten Streckenbelastung
