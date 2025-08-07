@@ -121,18 +121,39 @@ export class drDrawer_1 extends LitElement {
          <p>
             <sl-button id="id_knotverform" value="0" @click="${this._knotverform}">Knotenverformung</sl-button>
          </p>
+
+         <p>
+            <sl-button id="id_select_multi" value="0" @click="${this._select_multi}">selektiere mehrere Elemente</sl-button>
+         </p>
+
+         <p>
+            <sl-button id="id_unselect_all" value="0" @click="${this._unselect_all}">unselektiere alle Elemente</sl-button>
+         </p>
+
+         <p>
+            <sl-button id="id_copy_selected" value="0" @click="${this._copy_selected}">Kopiere selektierte Elemente</sl-button>
+         </p>
+
+         <p>
+            <sl-button id="id_edit_selected" value="0" @click="${this._edit_selected}">Editiere selektierte Elemente</sl-button>
+         </p>
+
          <p>
             <sl-button id="id_messen" value="0" @click="${this._messen}">Messen</sl-button>
          </p>
+
          <p>
             <sl-button id="id_bemassung_parallel" value="0" @click="${this._bemassung_parallel}">Bemassung parallel</sl-button>
          </p>
+
          <p>
             <sl-button id="id_bemassung_x" value="0" @click="${this._bemassung_x}">Bemassung horizontal</sl-button>
          </p>
+
          <p>
             <sl-button id="id_bemassung_z" value="0" @click="${this._bemassung_z}">Bemassung vertikal</sl-button>
          </p>
+
          <p>
             <b>Ausblenden</b><br />
             <sl-checkbox id="id_show_raster" @click="${this._checkbox_raster}">Rasterlinien </sl-checkbox>
@@ -159,22 +180,6 @@ export class drDrawer_1 extends LitElement {
 
          <p>
             <sl-button id="id_svg" value="0" @click="${this._svg}">System als svg-Datei speichern</sl-button>
-         </p>
-
-          <p>
-            <sl-button id="id_select_multi" value="0" @click="${this._select_multi}">selektiere mehrere Elemente</sl-button>
-         </p>
-
-          <p>
-            <sl-button id="id_unselect_all" value="0" @click="${this._unselect_all}">unselektiere alle Elemente</sl-button>
-         </p>
-
-          <p>
-            <sl-button id="id_copy_selected" value="0" @click="${this._copy_selected}">Kopiere selektierte Elemente</sl-button>
-         </p>
-
-          <p>
-            <sl-button id="id_edit_selected" value="0" @click="${this._edit_selected}">Editiere selektierte Elemente</sl-button>
          </p>
       `;
    }

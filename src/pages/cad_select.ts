@@ -1,13 +1,17 @@
+import { drDialogKopieren } from "../components/dr-dialog_kopieren"
 import { CAD_COPY_SELECTED, CAD_SELECT_MULTI, CAD_STAB, list, tr, two } from "./cad"
 import { buttons_control, set_help_text } from "./cad_buttons"
 import { drawStab } from "./cad_draw_elemente"
 import { add_cad_node, add_element_nodes, get_cad_node_X, get_cad_node_Z } from "./cad_node"
-import { TCAD_Element, TCAD_Stab, TCAD_ElLast, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung } from "./CCAD_element"
+import { TCAD_Element, TCAD_Stab, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung } from "./CCAD_element"
 
 
 
-
-
+let ncopies = 1;
+let dx_copy = 0;
+let dz_copy = 0;
+let copy_option = 1;
+let copy_eload = false;
 
 
 
@@ -68,6 +72,7 @@ export function copy_selected_button() {
         buttons_control.n_input_points = 2
         buttons_control.button_pressed = true;
 
+        showDialog_kopieren();
     }
 
 }
@@ -78,7 +83,7 @@ export function copy_selected(dx0: number, dz0: number) {
     //----------------------------------------------------------------------------------------------------
 
     console.log("in copy_selected", dx0, dz0)
-    let ncopies = 3;
+    if (ncopies < 1) return;
 
     for (let i = 0; i < list.size; i++) {
         let obj = list.getAt(i) as TCAD_Element;
@@ -117,26 +122,29 @@ export function copy_selected(dx0: number, dz0: number) {
                     stab_obj.alpha = (obj as TCAD_Stab).alpha;
                     stab_obj.stabTyp = (obj as TCAD_Stab).stabTyp;
 
-                    let neloads = (obj as TCAD_Stab).elast.length;
-                    for (let j = 0; j < neloads; j++) {
-                        if ((obj as TCAD_Stab).elast[j].className === "TCAD_Streckenlast") {
-                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Streckenlast
-                            stab_obj.add_streckenlast(ob.lastfall, ob.art, ob.pL, ob.pR);
-                        } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Einzellast") {
-                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Einzellast
-                            stab_obj.add_einzellast(ob.lastfall, ob.xe, ob.P, ob.M);
-                        } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Temperaturlast") {
-                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Temperaturlast
-                            stab_obj.add_temperaturlast(ob.lastfall, ob.To, ob.Tu);
-                        } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Vorspannung") {
-                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Vorspannung
-                            stab_obj.add_vorspannung(ob.lastfall, ob.sigmaV);
-                        } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Spannschloss") {
-                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Spannschloss
-                            stab_obj.add_spannschloss(ob.lastfall, ob.ds);
-                        } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Stabvorverformung") {
-                            let ob = (obj as TCAD_Stab).elast[j] as TCAD_Stabvorverformung
-                            stab_obj.add_stabvorverformung(ob.lastfall, ob.w0a, ob.w0m, ob.w0e);
+                    if (copy_eload) {
+
+                        let neloads = (obj as TCAD_Stab).elast.length;
+                        for (let j = 0; j < neloads; j++) {
+                            if ((obj as TCAD_Stab).elast[j].className === "TCAD_Streckenlast") {
+                                let ob = (obj as TCAD_Stab).elast[j] as TCAD_Streckenlast
+                                stab_obj.add_streckenlast(ob.lastfall, ob.art, ob.pL, ob.pR);
+                            } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Einzellast") {
+                                let ob = (obj as TCAD_Stab).elast[j] as TCAD_Einzellast
+                                stab_obj.add_einzellast(ob.lastfall, ob.xe, ob.P, ob.M);
+                            } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Temperaturlast") {
+                                let ob = (obj as TCAD_Stab).elast[j] as TCAD_Temperaturlast
+                                stab_obj.add_temperaturlast(ob.lastfall, ob.To, ob.Tu);
+                            } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Vorspannung") {
+                                let ob = (obj as TCAD_Stab).elast[j] as TCAD_Vorspannung
+                                stab_obj.add_vorspannung(ob.lastfall, ob.sigmaV);
+                            } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Spannschloss") {
+                                let ob = (obj as TCAD_Stab).elast[j] as TCAD_Spannschloss
+                                stab_obj.add_spannschloss(ob.lastfall, ob.ds);
+                            } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Stabvorverformung") {
+                                let ob = (obj as TCAD_Stab).elast[j] as TCAD_Stabvorverformung
+                                stab_obj.add_stabvorverformung(ob.lastfall, ob.w0a, ob.w0m, ob.w0e);
+                            }
                         }
                     }
 
@@ -151,4 +159,59 @@ export function copy_selected(dx0: number, dz0: number) {
 
 
 
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+
+export function showDialog_kopieren() {
+    //------------------------------------------------------------------------------------------------------------
+
+    console.log("showDialog_kopieren()");
+
+    const el = document.getElementById("id_dialog_kopieren");
+    console.log("id_dialog_kopieren", el);
+
+    console.log("shadow", el?.shadowRoot?.getElementById("dialog_kopieren")),
+        (el?.shadowRoot?.getElementById("dialog_kopieren") as HTMLDialogElement).addEventListener("close", dialog_kopieren_closed);
+
+    //set_help_text('Knoten picken');
+
+    (el?.shadowRoot?.getElementById("dialog_kopieren") as HTMLDialogElement).showModal();
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_kopieren_closed(this: any, e: any) {
+    //------------------------------------------------------------------------------------------------------------
+    console.log("Event dialog_kopieren_closed", e);
+    console.log("this", this);
+    const ele = document.getElementById("id_dialog_kopieren") as HTMLDialogElement;
+
+    // ts-ignore
+    const returnValue = this.returnValue;
+
+    (ele?.shadowRoot?.getElementById("dialog_kopieren") as HTMLDialogElement).removeEventListener("close", dialog_kopieren_closed);
+
+    if (returnValue === "ok") {
+        console.log("sieht gut aus");
+
+        const el = document.getElementById("id_dialog_kopieren") as drDialogKopieren;
+
+        ncopies = el.get_ncopies();
+        copy_eload = el.get_copy_eload();
+
+        copy_option = el.get_option();
+        if (copy_option === 0) {
+            dx_copy = el.get_dx();
+            dz_copy = el.get_dz();
+            copy_selected(dx_copy, dz_copy);
+            buttons_control.reset();
+        }
+
+    } else {
+        // Abbruch
+        //lager_eingabe_beenden();
+        buttons_control.reset();
+
+    }
 }
