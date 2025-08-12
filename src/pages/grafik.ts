@@ -3348,7 +3348,7 @@ function draw_knotenkraefte(two: Two) {
     let fact = Array(nlastfaelle)
     let lf_show = Array(nlastfaelle)
 
-    console.log("in draw_knotenkraefte, draw_lastfall", draw_lastfall, nloads)
+    //console.log("in draw_knotenkraefte, draw_lastfall", draw_lastfall, nloads)
     // const out = document.getElementById('output') as HTMLTextAreaElement;
     // if (out) {
     //     out.value += "plength= " + plength + "\n";

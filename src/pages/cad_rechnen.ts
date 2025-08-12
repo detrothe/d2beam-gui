@@ -98,7 +98,7 @@ export function cad_rechnen() {
         let nSpalten = tabelle.rows[0].cells.length;
 
         for (let i = 1; i < tabelle.rows.length; i++) {
-            console.log("node-xz", node[i - 1].x, node[i - 1].z)
+            //console.log("node-xz", node[i - 1].x, node[i - 1].z)
             for (let j = 1; j < 3; j++) {
                 let child = tabelle.rows[i].cells[j].firstElementChild as HTMLInputElement;
                 if (j === 1) child.value = myFormat_en(node[i - 1].x, 2, 3);
@@ -116,10 +116,10 @@ export function cad_rechnen() {
             let obj = list.getAt(i) as TCAD_Lager;
             if (obj.elTyp === CAD_LAGER) {
                 let index = obj.index1;
-                console.log("CAD-Lager ", index)
+                //console.log("CAD-Lager ", index)
                 if (index > -1) {
                     let ind = CADNodes[index].index_FE
-                    console.log("ind", ind)
+                    //console.log("ind", ind)
                     if (ind < 0) alertdialog("ok", "Lager ind " + (ind) + "hängt an keinem Knoten, FATAL ERROR");
                     for (let j = 0; j < ndof; j++) {
                         let child = tabelle.rows[ind + 1].cells[j + 3].firstElementChild as HTMLInputElement;
@@ -224,12 +224,12 @@ export function cad_rechnen() {
                     if (Math.abs(obj.k_0) > maxBettung) maxBettung = Math.abs(obj.k_0)
                 }
                 element[ielem].elTyp = obj.get_stabtyp();
-                console.log("stab typ",element[ielem].elTyp)
+                //console.log("stab typ",element[ielem].elTyp)
 
                 ielem++
 
                 let child = tabelle.rows[ielem].cells[1].firstElementChild as HTMLInputElement;
-                console.log("CHILD", child)
+                //console.log("CHILD", child)
                 child.value = obj.name_querschnitt
                 //child.innerHTML = obj.name_querschnitt
                 child = tabelle.rows[ielem].cells[2].firstElementChild as HTMLInputElement;

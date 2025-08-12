@@ -111,8 +111,8 @@ export class CTruss extends CElement {
     x_: number[] = []
 
 
-    ich_bin(ielem: number) {
-        console.log("Ich bin ein Truss Element , No ", ielem)
+    ich_bin(_ielem: number) {
+        //console.log("Ich bin ein Truss Element , No ", ielem)
     }
 
 
@@ -810,7 +810,7 @@ export class CTruss extends CElement {
     //---------------------------------------------------------------------------------------------
     berechneInterneKraefte(ielem: number, iLastf: number, iter: number, u: number[]) {
 
-        console.log("Berechne Interne Kräfte    T R U S S ")
+        //console.log("Berechne Interne Kräfte    T R U S S ")
 
         let ieq: number, i: number, j: number, k: number
         let sum: number
@@ -1201,7 +1201,7 @@ export class CTruss extends CElement {
             eload[ieload].el_r[j] = sum
         }
 
-        console.log("elementload global ", eload[ieload].el_r)
+        //console.log("elementload global ", eload[ieload].el_r)
 
     }
 
@@ -1223,7 +1223,7 @@ export class CTruss extends CElement {
             }
         }
 
-        console.log("dispG", dispG)
+        //console.log("dispG", dispG)
 
         for (i = 0; i < 4; i++) {
             sum = 0.0

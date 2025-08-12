@@ -951,7 +951,7 @@ function read_nodal_mass() {
             else if (ispalte === 3) nodalmass[izeile - 1].theta = Number(testNumber(wert, izeile, ispalte, shad));
         }
 
-        console.log("nodalmass", izeile, nodalmass[izeile - 1])
+        //console.log("nodalmass", izeile, nodalmass[izeile - 1])
     }
 }
 
@@ -964,7 +964,7 @@ function find_maxValues_eloads(ieload: number) {
     for (let i = 0; i < ieload; i++) {
         let lf = eload[i].lf - 1
         let art = eload[i].art
-        console.log("art=", art, lf)
+        //console.log("art=", art, lf)
         if (art >= 0 && art <= 4) {
             if (Math.abs(eload[i].pL) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pL)
             if (Math.abs(eload[i].pR) > maxValue_eload[lf]) maxValue_eload[lf] = Math.abs(eload[i].pR)
@@ -1949,9 +1949,9 @@ async function calculate() {
             }
         }
 
-        for (i = 0; i < nelem; i++) {
-            for (j = 0; j < nkombinationen; j++) console.log('stabvorverformung_komb, ielem, ikomb', i, j, stabvorverformung_komb[i][j]);
-        }
+        // for (i = 0; i < nelem; i++) {
+        //     for (j = 0; j < nkombinationen; j++) console.log('stabvorverformung_komb, ielem, ikomb', i, j, stabvorverformung_komb[i][j]);
+        // }
         //console.log("stabvorverformung_komb[i][j]", stabvorverformung_komb)
     }
 
@@ -2055,7 +2055,7 @@ async function calculate() {
 
         }
 
-        console.log("el", el)
+        //console.log("el", el)
         if (System === STABWERK) {
             if (element[ielem].elTyp > 0 && element[ielem].elTyp < 4) {
                 el.push(new CTruss());
@@ -2636,7 +2636,7 @@ async function calculate() {
 
 
                     for (i = 0; i < neq; i++) {
-                        console.log("R", i, R[i])
+                        //console.log("R", i, R[i])
                         R_[i] = R[i];
                     }
 
@@ -2677,7 +2677,7 @@ async function calculate() {
                     for (i = 0; i < neq; i++) U_[i] = R[i];
 
                     for (i = 0; i < neq; i++) {
-                        console.log("U", i, u[i] * 1000.0)    // in mm, mrad
+                        //console.log("U", i, u[i] * 1000.0)    // in mm, mrad
                         u_lf[i][iKomb - 1] = u[i]
                     }
 
@@ -2846,9 +2846,9 @@ async function calculate() {
 
                 }  // ende iter
 
-                if (maxValue_u0[iKomb - 1].ieq >= 0) {
-                    console.log("==== pg_max", maxValue_u0[iKomb - 1].ieq, maxValue_u0[iKomb - 1].u0, u0_komb[maxValue_u0[iKomb - 1].ieq][iKomb - 1])
-                }
+                // if (maxValue_u0[iKomb - 1].ieq >= 0) {
+                //     console.log("==== pg_max", maxValue_u0[iKomb - 1].ieq, maxValue_u0[iKomb - 1].u0, u0_komb[maxValue_u0[iKomb - 1].ieq][iKomb - 1])
+                // }
 
                 for (ielem = 0; ielem < nelem_Balken + nelem_koppelfedern; ielem++) {
                     if (el[ielem].isActive) el[ielem].berechneElementSchnittgroessen(ielem, iKomb - 1);
@@ -2869,12 +2869,12 @@ async function calculate() {
                 if (nNodeDisps > 0) {
                     for (let k = 0; k < nNodeDisps; k++) {
                         let index = nodeDisp0[k].lf - 1
-                        console.log("nodeDisp0 index", k, index, iKomb, kombiTabelle[iKomb - 1][index])
+                        //console.log("nodeDisp0 index", k, index, iKomb, kombiTabelle[iKomb - 1][index])
                         if (kombiTabelle[iKomb - 1][index] !== 0.0) {
                             for (let j = 0; j < 3; j++) {
                                 if (nodeDisp0[k].dispL[j]) {
                                     nodi = nodeDisp0[k].node
-                                    console.log("nodeDisp0Force", k, j, iKomb, lagerkraft[nodi][j])
+                                    //console.log("nodeDisp0Force", k, j, iKomb, lagerkraft[nodi][j])
                                     nodeDisp0Force.set(k, j, iKomb - 1, -lagerkraft[nodi][j]);
                                     if (node[nodi].L_org[j] !== 1) lagerkraft[nodi][j] = 0.0   // kein starres Lager
                                 }
@@ -2887,7 +2887,7 @@ async function calculate() {
                     for (i = 0; i < nelem_Federn; i++) {
 
                         let iFeder = i + nelem_Balken
-                        console.log("FEDER hängt an Knoten", el[iFeder].nod)
+                        //console.log("FEDER hängt an Knoten", el[iFeder].nod)
                         nodi = el[iFeder].nod
                         for (let j = 0; j < 3; j++) {
                             // if (nNodeDisps > 0) {
@@ -3220,7 +3220,7 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
         //c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv);
 
         let omega_array = new Float64Array(Module.HEAPF64.buffer, omega_ptr, neigv);
-        console.log("omega", omega_array[0], omega_array[1]);
+        //console.log("omega", omega_array[0], omega_array[1]);
 
         for (i = 0; i < neigv; i++) {
             let alphaCr = omega_array[i] ** 2
@@ -4179,7 +4179,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                 for (ielem = 0; ielem < nelem; ielem++) {
                     if (el[ielem].isActive) {
                         el[ielem].berechneElementlasten_Vorverformung(pel, pg, iKomb - 1)
-                        console.log("P E L", ielem, pel)
+                        //console.log("P E L", ielem, pel)
 
                         for (j = 0; j < el[ielem].neqeG; j++) {
                             lmj = el[ielem].lm[j]
@@ -4225,9 +4225,9 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                 R_[i] = R[i];
                 //console.log("R,Ri,dR", i, R[i], R_internal[i], dR[i], u[i])
             }
-            console.log("dR[]", dR)
-            console.log("R[]", R)
-            console.log("R_internal[]", R_internal)
+            // console.log("dR[]", dR)
+            // console.log("R[]", R)
+            // console.log("R_internal[]", R_internal)
 
             for (i = 0; i < neq; i++) {
                 for (j = 0; j < neq; j++) {
@@ -4267,8 +4267,8 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                 //console.log("U", i, u[i] * 1000.0)    // in mm, mrad
                 u_lf[i][iKomb - 1] = u[i]
             }
-            console.log("U[]", u)
-            console.log("dU[]", U_)
+            // console.log("U[]", u)
+            // console.log("dU[]", U_)
             // Rückrechnung
 
             let force: number[] = Array(6)
@@ -4488,9 +4488,9 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
 
         }  // ende iter
 
-        if (maxValue_u0[iKomb - 1].ieq >= 0) {
-            console.log("==== pg_max", maxValue_u0[iKomb - 1].ieq, maxValue_u0[iKomb - 1].u0, u0_komb[maxValue_u0[iKomb - 1].ieq][iKomb - 1])
-        }
+        // if (maxValue_u0[iKomb - 1].ieq >= 0) {
+        //     console.log("==== pg_max", maxValue_u0[iKomb - 1].ieq, maxValue_u0[iKomb - 1].u0, u0_komb[maxValue_u0[iKomb - 1].ieq][iKomb - 1])
+        // }
 
         for (ielem = 0; ielem < nelem_Balken + nelem_koppelfedern; ielem++) {
             if (el[ielem].isActive) el[ielem].berechneElementSchnittgroessen(ielem, iKomb - 1);
@@ -4511,12 +4511,12 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
         if (nNodeDisps > 0) {
             for (let k = 0; k < nNodeDisps; k++) {
                 let index = nodeDisp0[k].lf - 1
-                console.log("nodeDisp0 index", k, index, iKomb, kombiTabelle[iKomb - 1][index])
+                //console.log("nodeDisp0 index", k, index, iKomb, kombiTabelle[iKomb - 1][index])
                 if (kombiTabelle[iKomb - 1][index] !== 0.0) {
                     for (let j = 0; j < 3; j++) {
                         if (nodeDisp0[k].dispL[j]) {
                             nodi = nodeDisp0[k].node
-                            console.log("nodeDisp0Force", k, j, iKomb, lagerkraft[nodi][j])
+                            //console.log("nodeDisp0Force", k, j, iKomb, lagerkraft[nodi][j])
                             nodeDisp0Force.set(k, j, iKomb - 1, -lagerkraft[nodi][j]);
                             if (node[nodi].L_org[j] !== 1) lagerkraft[nodi][j] = 0.0   // kein starres Lager
                         }
@@ -4529,7 +4529,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
             for (i = 0; i < nelem_Federn; i++) {
 
                 let iFeder = i + nelem_Balken + nelem_koppelfedern
-                console.log("FEDER hängt an Knoten", el[iFeder].nod)
+                //console.log("FEDER hängt an Knoten", el[iFeder].nod)
                 nodi = el[iFeder].nod
                 for (let j = 0; j < 3; j++) {
                     if (node[nodi].L_org[j] > 1) lagerkraft[nodi][j] = stabendkraefte._(j + 1, iFeder + 1, iKomb);

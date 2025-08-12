@@ -130,8 +130,8 @@ export class CTimoshenko_beam extends CElement {
     x_: number[] = []
 
 
-    ich_bin(ielem: number) {
-        console.log("Ich bin ein Timoshenko Element , No ", ielem)
+    ich_bin(_ielem: number) {
+        //console.log("Ich bin ein Timoshenko Element , No ", ielem)
     }
 
 
@@ -747,7 +747,7 @@ export class CTimoshenko_beam extends CElement {
         let j: number, k: number
         const help = Array.from(Array(6), () => new Array(this.neqeG));
 
-        console.log("berechneElementsteifigkeitsmatrix", theorie, this.normalkraft)
+        //console.log("berechneElementsteifigkeitsmatrix", theorie, this.normalkraft)
 
         if (theorie === 0) {
 
@@ -934,7 +934,7 @@ export class CTimoshenko_beam extends CElement {
                 this.estiff_sig[j][k] = -sum * this.normalkraft
             }
         }
-        console.log("NORMALKRAFT", this.normalkraft)
+        //console.log("NORMALKRAFT", this.normalkraft)
     }
 
     //---------------------------------------------------------------------------------------------
@@ -1056,7 +1056,7 @@ export class CTimoshenko_beam extends CElement {
             if (this.normalkraft > 0.0) this.normalkraft = 0.0           // keine Zugversteifung
         }
 
-        console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
+        //console.log("N O R M A L K R A F T von Element ", ielem, " = ", this.normalkraft)
 
         for (i = 0; i < 6; i++) { // Verformungen lokal
             sum = 0.0
@@ -2145,7 +2145,7 @@ export class CTimoshenko_beam extends CElement {
                 else if (THIIO_flag === 1 || matprop_flag > 0) { // ikomb=iLastf
 
                     if (this.aL > 0.0) {
-                        console.log("u_starr", this.u_starr, this.u)
+                        //console.log("u_starr", this.u_starr, this.u)
                         this.u_komb_starr[iLastf][0] = this.uG_komb_starr[iLastf][0] = this.u[0]
                         this.w_komb_starr[iLastf][0] = this.wG_komb_starr[iLastf][0] = this.u[1]
                         this.phi_komb_starr[iLastf][0] = this.phiG_komb_starr[iLastf][0] = this.u[2]
