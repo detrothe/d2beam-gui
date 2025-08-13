@@ -1,5 +1,6 @@
 import { drDialogKopieren } from "../components/dr-dialog_kopieren"
-import { CAD_COPY_SELECTED, CAD_SELECT_MULTI, CAD_STAB, list, tr, two } from "./cad"
+import { drDialogSelektTyp } from "../components/dr-dialog_selekt_typ"
+import { CAD_COPY_SELECTED, CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_SELECT_MULTI, CAD_STAB, list, tr, two } from "./cad"
 import { buttons_control, set_help_text } from "./cad_buttons"
 import { drawStab } from "./cad_draw_elemente"
 import { add_cad_node, add_element_nodes, get_cad_node_X, get_cad_node_Z } from "./cad_node"
@@ -77,6 +78,19 @@ export function copy_selected_button() {
 
 }
 
+
+//------------------------------------------------------------------------------------------------------
+export function select_typ_button() {
+    //----------------------------------------------------------------------------------------------------
+
+
+    buttons_control.reset()
+
+
+    showDialog_selekt_typ();
+
+
+}
 
 //------------------------------------------------------------------------------------------------------
 export function copy_selected(dx0: number, dz0: number) {
@@ -211,6 +225,60 @@ function dialog_kopieren_closed(this: any, e: any) {
     } else {
         // Abbruch
         //lager_eingabe_beenden();
+        buttons_control.reset();
+
+    }
+}
+
+
+
+//---------------------------------------------------------------------------------------------------------------
+
+export function showDialog_selekt_typ() {
+    //------------------------------------------------------------------------------------------------------------
+
+    console.log("showDialog_selekt_typ()");
+
+    const el = document.getElementById("id_dialog_selekt_typ");
+
+    //console.log("shadow", el?.shadowRoot?.getElementById("dialog_selekt_typ")),
+    (el?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).addEventListener("close", dialog_selekt_typ_closed);
+
+    //set_help_text('Knoten picken');
+
+    (el?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).showModal();
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_selekt_typ_closed(this: any, e: any) {
+    //------------------------------------------------------------------------------------------------------------
+    console.log("Event dialog_selekt_typ_closed", e);
+    console.log("this", this);
+    const ele = document.getElementById("id_dialog_selekt_typ") as HTMLDialogElement;
+
+    // ts-ignore
+    const returnValue = this.returnValue;
+
+    (ele?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).removeEventListener("close", dialog_selekt_typ_closed);
+
+    if (returnValue === "ok") {
+        console.log("sieht gut aus");
+
+        const el = document.getElementById("id_dialog_selekt_typ") as drDialogSelektTyp;
+
+        let eltyp = el.get_option();
+
+        for (let i = 0; i < list.size; i++) {
+            let obj = list.getAt(i) as TCAD_Element;
+            if (obj.elTyp === CAD_STAB && eltyp == 0) obj.multiSelected = true;
+            else if (obj.elTyp === CAD_KNLAST && eltyp === 2) obj.multiSelected = true;
+            else if (obj.elTyp === CAD_LAGER && eltyp === 3) obj.multiSelected = true;
+            else if (obj.elTyp === CAD_KNMASSE && eltyp === 4) obj.multiSelected = true;
+
+        }
+        buttons_control.reset();
+    } else {
+        // Abbruch
         buttons_control.reset();
 
     }

@@ -46,6 +46,7 @@ import '../components/dr-dialog_messen';
 import '../components/dr-dialog_bemassung';
 import '../components/dr-dialog_knotenverformung';
 import '../components/dr-dialog_kopieren';
+import '../components/dr-dialog_selekt_typ';
 
 import { drButtonPM } from '../components/dr-button-pm';
 import { drRechteckQuerSchnitt } from '../components/dr-dialog-rechteckquerschnitt';
@@ -76,7 +77,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.5.0,a, 12-August-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.5.0,a, 13-August-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -368,6 +369,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <dr-dialog_bemassung id="id_dialog_bemassung"></dr-dialog_bemassung>
         <dr-dialog_knotenverformung id="id_dialog_knotenverformung"></dr-dialog_knotenverformung>
         <dr-dialog_kopieren id="id_dialog_kopieren"></dr-dialog_kopieren>
+        <dr-dialog_selekt_typ id="id_dialog_selekt_typ"></dr-dialog_selekt_typ>
 
       </sl-tab-panel>
 
