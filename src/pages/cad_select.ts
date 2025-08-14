@@ -1,7 +1,7 @@
 import { drDialogKopieren } from "../components/dr-dialog_kopieren"
 import { drDialogSelektTyp } from "../components/dr-dialog_selekt_typ"
 import { CAD_COPY_SELECTED, CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_SELECT_MULTI, CAD_STAB, list, tr, two } from "./cad"
-import { buttons_control, set_help_text } from "./cad_buttons"
+import { buttons_control, drawer_1_control, set_help_text } from "./cad_buttons"
 import { drawStab } from "./cad_draw_elemente"
 import { add_cad_node, add_element_nodes, get_cad_node_X, get_cad_node_Z } from "./cad_node"
 import { TCAD_Element, TCAD_Stab, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung } from "./CCAD_element"
@@ -50,7 +50,9 @@ export function unselect_all_button() {
         obj.multiSelected = false;
     }
 
-    buttons_control.reset()
+    buttons_control.reset();
+    drawer_1_control.reset();
+
 
 }
 
@@ -215,19 +217,21 @@ function dialog_kopieren_closed(this: any, e: any) {
         copy_eload = el.get_copy_eload();
 
         copy_option = el.get_option();
+
         if (copy_option === 0) {
             dx_copy = el.get_dx();
             dz_copy = el.get_dz();
             copy_selected(dx_copy, dz_copy);
             buttons_control.reset();
+            drawer_1_control.reset();
         }
-
-    } else {
-        // Abbruch
-        //lager_eingabe_beenden();
-        buttons_control.reset();
-
     }
+    else {
+        buttons_control.reset();
+        drawer_1_control.reset();
+    }
+
+
 }
 
 
@@ -276,10 +280,9 @@ function dialog_selekt_typ_closed(this: any, e: any) {
             else if (obj.elTyp === CAD_KNMASSE && eltyp === 4) obj.multiSelected = true;
 
         }
-        buttons_control.reset();
-    } else {
-        // Abbruch
-        buttons_control.reset();
-
     }
+
+    buttons_control.reset();
+    drawer_1_control.reset();
+
 }

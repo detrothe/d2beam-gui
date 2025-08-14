@@ -134,6 +134,7 @@ export let art = 1;
 export let intArt = 2;
 export let THIIO_flag = 0;
 export let stadyn = 0;
+export function set_stadyn(wert: number) { stadyn = wert; };
 export let System = 0;             // Stabwerk = 0, Fachwerk = 1
 export let matprop_flag = 0;       // Materialeigenschaften 0=linear, 1=nichtlinear
 

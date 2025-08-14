@@ -650,7 +650,7 @@ export function reDo_button() {
         //console.log("KNOTEN reDo", obj.x1, obj.z1)
 
         let index1 = obj.index1
-        group = draw_knotenmasse(tr, obj.mass, get_cad_node_X(index1), get_cad_node_Z(index1))
+        group = draw_knotenmasse(tr, obj, get_cad_node_X(index1), get_cad_node_Z(index1))
         two.add(group);
         add_element_nodes(index1);
       }
@@ -1589,7 +1589,28 @@ export function select_element(xc: number, zc: number) {
 
   else if (buttons_control.select_multi_aktiv) {
 
-    if (index_stab >= 0 && min_abstand < get_fangweite_cursor()) {
+    if (knotenmasse_gefunden) {
+
+      two.remove(obj_knmasse.two_obj);
+      obj_knmasse.multiSelected = true
+      let index1 = obj_knmasse.index1
+      let group = draw_knotenmasse(tr, obj_knmasse, get_cad_node_X(index1), get_cad_node_Z(index1))
+      two.add(group);
+
+      two.update();
+    }
+    else if (knotenlast_gefunden) {
+
+      two.remove(obj_knlast.two_obj);
+      obj_knlast.multiSelected = true
+      let index1 = obj_knlast.index1
+      let group = draw_knotenlast(tr, obj_knlast, index1, 1.0, 0, true)
+      two.add(group);
+
+      two.update();
+    }
+
+    else if (index_stab >= 0 && min_abstand < get_fangweite_cursor()) {
       if (list.size > 0) {
 
         let obj = list.getAt(index_stab);
@@ -1603,7 +1624,6 @@ export function select_element(xc: number, zc: number) {
     }
     else if (elementlast_gefunden) {
 
-
       let group = obj_ellast.getTwoObj();
       two.remove(group)
       obj_ellast.elast[index_ellast].multiSelected = true
@@ -1614,10 +1634,11 @@ export function select_element(xc: number, zc: number) {
       two.update();
 
     }
+
+
+
   }
-
 }
-
 
 //--------------------------------------------------------------------------------------------------------
 export function add_elementlast(xc: number, zc: number) {
@@ -2827,7 +2848,7 @@ function update_knotenmasse() {
   let group = obj_knmasse.getTwoObj();
   two.remove(group)
   let index1 = obj_knmasse.index1
-  group = draw_knotenmasse(tr, knmass, get_cad_node_X(index1), get_cad_node_Z(index1));
+  group = draw_knotenmasse(tr, obj_knmasse, get_cad_node_X(index1), get_cad_node_Z(index1));
   two.add(group);
 
   obj_knmasse.setTwoObj(group);

@@ -4,7 +4,7 @@ import { CTrans } from './trans';
 import { draw_arrow_alpha } from './grafik';
 import { myFormat, write } from './utility';
 import { LinkedList } from '../components/linkedlist';
-import { alertdialog, TLoads, TMass, TNode, TNodeDisp } from './rechnen';
+import { alertdialog, stadyn, TLoads, TMass, TNode, TNodeDisp } from './rechnen';
 import { abstandPunktGerade_2D } from './lib';
 import {
    delete_element,
@@ -375,10 +375,10 @@ export function redraw_knotenmasse(obj: TCAD_Knotenmasse) {
    let group = obj.getTwoObj();
    two.remove(group);
 
-   let masse = new TMass();
-   masse = obj.masse
+   // let masse = new TMass();
+   // masse = obj.masse
    let index1 = obj.index1
-   group = draw_knotenmasse(tr, masse, get_cad_node_X(index1), get_cad_node_Z(index1));
+   group = draw_knotenmasse(tr, obj, get_cad_node_X(index1), get_cad_node_Z(index1));
 
    two.add(group);
    obj.setTwoObj(group);
@@ -896,14 +896,6 @@ export function init_cad(flag: number) {
          two.add(group);
          obj.setTwoObj(group);
       }
-      else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
-         let masse = new TMass();
-         masse = (obj as TCAD_Knotenmasse).masse
-         let index1 = obj.index1
-         let group = draw_knotenmasse(tr, masse, get_cad_node_X(index1), get_cad_node_Z(index1))
-         two.add(group);
-         obj.setTwoObj(group);
-      }
       else if (obj.elTyp === CAD_BEMASSUNG && show_bemassung) {
          let group = drawBemassung(obj as TCAD_Bemassung, tr)
          two.add(group);
@@ -916,6 +908,22 @@ export function init_cad(flag: number) {
       }
    }
 
+   console.log("STADYN",stadyn)
+   if (stadyn === 1) {
+      for (let i = 0; i < list.size; i++) {
+
+         let obj: TCAD_Element = list.getAt(i);
+
+         if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
+            // let masse = new TMass();
+            // masse = (obj as TCAD_Knotenmasse).masse
+            let index1 = obj.index1
+            let group = draw_knotenmasse(tr, obj as TCAD_Knotenmasse, get_cad_node_X(index1), get_cad_node_Z(index1))
+            two.add(group);
+            obj.setTwoObj(group);
+         }
+      }
+   }
    two.update();
 
    // dx_offset_touch = -tr.Pix0(raster_dx) * devicePixelRatio;
@@ -1361,15 +1369,18 @@ function penDown(ev: PointerEvent) {
                      alertdialog('ok', 'Knoten hat schon eine Knotenmasse');
                   }
                   else {
+                     let group: any;
                      let masse = new TMass();
                      read_knotenmasse_dialog(masse);
-                     let group = draw_knotenmasse(tr, masse, get_cad_node_X(index1), get_cad_node_Z(index1));
-                     two.add(group);
-                     two.update();
-                     console.log('getBoundingClientRect', group.getBoundingClientRect());
                      const el = new TCAD_Knotenmasse(group, index1, masse, buttons_control.typ_cad_element);
                      list.append(el);
                      add_element_nodes(index1);
+
+                     group = draw_knotenmasse(tr, el, get_cad_node_X(index1), get_cad_node_Z(index1));
+                     two.add(group);
+                     el.setTwoObj(group);
+                     two.update();
+                     //console.log('getBoundingClientRect', group.getBoundingClientRect());
                   }
                } else {
                   console.log('Keinen Knoten gefunden');
@@ -1821,15 +1832,18 @@ function mouseup(ev: any) {
                         alertdialog('ok', 'Knoten hat schon eine Knotenmasse');
                      }
                      else {
+                        let group: any;
                         let masse = new TMass();
                         read_knotenmasse_dialog(masse);
-                        let group = draw_knotenmasse(tr, masse, get_cad_node_X(index1), get_cad_node_Z(index1));
-                        two.add(group);
-                        two.update();
-                        //console.log('getBoundingClientRect', group.getBoundingClientRect());
                         const el = new TCAD_Knotenmasse(group, index1, masse, buttons_control.typ_cad_element);
                         list.append(el);
                         add_element_nodes(index1);
+
+                        group = draw_knotenmasse(tr, el, get_cad_node_X(index1), get_cad_node_Z(index1));
+                        two.add(group);
+                        el.setTwoObj(group);
+                        two.update();
+                        //console.log('getBoundingClientRect', group.getBoundingClientRect());
                      }
                   } else {
                      alertdialog('ok', 'keinen Knoten gefunden');

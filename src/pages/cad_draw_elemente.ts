@@ -4,7 +4,7 @@ import { System, STABWERK, TMass, maxBettung, set_maxBettung } from './rechnen'
 
 import { CTrans } from './trans';
 import { myFormat, write } from './utility';
-import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab } from './CCAD_element';
+import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager, TCAD_Stab } from './CCAD_element';
 import { draw_elementlasten, max_Lastfall } from './cad_draw_elementlasten';
 //import { two } from './cad';
 import { CADNodes, get_cad_node_X, get_cad_node_Z } from './cad_node';
@@ -70,7 +70,7 @@ export function drawStab(obj: TCAD_Stab, tr: CTrans, select = false) {
     let line1 = new Two.Line(tr.xPix(x1), tr.zPix(z1), tr.xPix(x2), tr.zPix(z2));
     line1.linewidth = 7 / devicePixelRatio;
     if (select) line1.stroke = select_color;
-    else if ( obj.multiSelected) line1.stroke = multiselect_color;
+    else if (obj.multiSelected) line1.stroke = multiselect_color;
     group.add(line1);
 
     // gestrichelte Faser
@@ -249,14 +249,18 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
                 rect.stroke = select_color;
                 rect.linewidth = 2;
             }
-            rect.fill = '#dddddd';
+
+            if (obj.multiSelected) rect.fill = multiselect_color;
+            else rect.fill = '#dddddd';
 
             group.add(rect);
         }
         else if ((node.L[0] >= 0 || node.L_org[0] === -1) && (node.L_org[1] === 1) && (node.L_org[2] === 1)) {  // Einspannung, verschieblich in x-Richtung
 
             let rechteck = new Two.Rectangle(0, 0, 20, 20)
-            rechteck.fill = '#dddddd';
+            if (obj.multiSelected) rechteck.fill = multiselect_color;
+            else rechteck.fill = '#dddddd';
+
             if (timer.element_selected) {
                 rechteck.stroke = select_color;
                 rechteck.linewidth = 2;
@@ -276,7 +280,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
         else if ((node.L_org[0] === 1) && (node.L[1] >= 0 || node.L_org[1] === -1) && (node.L_org[2] === 1)) {  // Einspannung, verschieblich in z-Richtung
 
             let rechteck = new Two.Rectangle(0, 0, 20, 20)
-            rechteck.fill = '#dddddd';
+            if (obj.multiSelected) rechteck.fill = multiselect_color;
+            else rechteck.fill = '#dddddd';
+
             if (timer.element_selected) {
                 rechteck.stroke = select_color;
                 rechteck.linewidth = 2;
@@ -296,7 +302,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
         else if ((node.L[0] >= 0 || node.L_org[0] === -1) && (node.L[1] >= 0 || node.L_org[1] === -1) && (node.L_org[2] === 1)) {  // Einspannung, verschieblich in x-, z-Richtung
 
             let rechteck = new Two.Rectangle(0, 0, 20, 20)
-            rechteck.fill = '#dddddd';
+            if (obj.multiSelected) rechteck.fill = multiselect_color;
+            else rechteck.fill = '#dddddd';
+
             if (timer.element_selected) {
                 rechteck.stroke = select_color;
                 rechteck.linewidth = 2;
@@ -331,7 +339,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             vertices.push(new Two.Anchor(12, 20));
 
             let flaeche = new Two.Path(vertices);
-            flaeche.fill = '#dddddd';
+            if (obj.multiSelected) flaeche.fill = multiselect_color;
+            else flaeche.fill = '#dddddd';
+
             flaeche.closed = true;
             if (timer.element_selected) {
                 flaeche.stroke = select_color;
@@ -357,7 +367,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             vertices.push(new Two.Anchor(12, 20));
 
             let flaeche = new Two.Path(vertices);
-            flaeche.fill = '#dddddd';
+            if (obj.multiSelected) flaeche.fill = multiselect_color;
+            else flaeche.fill = '#dddddd';
+
             flaeche.closed = true;
             if (timer.element_selected) {
                 flaeche.stroke = select_color;
@@ -383,7 +395,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             vertices.push(new Two.Anchor(20, 12));
 
             let flaeche = new Two.Path(vertices);
-            flaeche.fill = '#dddddd';
+            if (obj.multiSelected) flaeche.fill = multiselect_color;
+            else flaeche.fill = '#dddddd';
+
             flaeche.closed = true;
             if (timer.element_selected) {
                 flaeche.stroke = select_color;
@@ -411,7 +425,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             vertices.push(new Two.Anchor(12, 20));
 
             let flaeche = new Two.Path(vertices);
-            flaeche.fill = '#dddddd';
+            if (obj.multiSelected) flaeche.fill = multiselect_color;
+            else flaeche.fill = '#dddddd';
+
             flaeche.closed = true;
             if (timer.element_selected) {
                 flaeche.stroke = select_color;
@@ -437,7 +453,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             vertices.push(new Two.Anchor(12, 20));
 
             let flaeche = new Two.Path(vertices);
-            flaeche.fill = '#dddddd';
+            if (obj.multiSelected) flaeche.fill = multiselect_color;
+            else flaeche.fill = '#dddddd';
+
             flaeche.closed = true;
             if (timer.element_selected) {
                 flaeche.stroke = select_color;
@@ -463,7 +481,9 @@ export function draw_lager(tr: CTrans, obj: TCAD_Lager) {
             vertices.push(new Two.Anchor(20, 12));
 
             let flaeche = new Two.Path(vertices);
-            flaeche.fill = '#dddddd';
+            if (obj.multiSelected) flaeche.fill = multiselect_color;
+            else flaeche.fill = '#dddddd';
+
             flaeche.closed = true;
             if (timer.element_selected) {
                 flaeche.stroke = select_color;
@@ -552,6 +572,14 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
 
 
     lf_show = load.lf - 1    // noch überarbeiten
+
+    if (obj.multiSelected) {
+        style_pfeil.color = multiselect_color;
+        style_pfeil_moment.color = multiselect_color;
+    } else {
+        style_pfeil.color = '#ba0000';
+        style_pfeil_moment.color = '#ba0000';
+    }
 
 
     if (load.Px_org != 0.0 && load.lf - 1 === lf_show) {
@@ -1323,7 +1351,7 @@ export function draw_knoten(obj: TCAD_Knoten, tr: CTrans) {
 
 
 //--------------------------------------------------------------------------------------------------------
-export function draw_knotenmasse(tr: CTrans, _mass: TMass, xm: number, zm: number) {
+export function draw_knotenmasse(tr: CTrans, obj: TCAD_Knotenmasse, xm: number, zm: number) {
     //----------------------------------------------------------------------------------------------------
 
     let group = new Two.Group();
@@ -1336,7 +1364,8 @@ export function draw_knotenmasse(tr: CTrans, _mass: TMass, xm: number, zm: numbe
         circle.linewidth = 3;
         circle.fill = '#dddddd'
     } else {
-        circle.fill = '#ff3333'
+        if (obj.multiSelected) circle.fill = multiselect_color;
+        else circle.fill = '#ff3333'
     }
     group.add(circle);
 

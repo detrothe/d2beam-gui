@@ -13,7 +13,7 @@ import { reset_controlpanel_grafik } from "./grafik";
 
 import { get_querschnittRechteck, get_querschnitt_classname, get_querschnitt_length } from "./querschnitte";
 import { nQuerschnittSets, set_querschnittszaehler, add_rechteck_querschnitt } from "./querschnitte";
-import { alertdialog, maxBettung, set_maxBettung, setSystem, System, TLoads } from "./rechnen";
+import { alertdialog, maxBettung, set_maxBettung, set_stadyn, setSystem, stadyn, System, TLoads } from "./rechnen";
 import SlSelect from "@shoelace-style/shoelace/dist/components/select/select.js";
 import { CADNodes, reset_ID_counter, TCADNode } from "./cad_node";
 import { TCAD_Element, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Knotenverformung, TCAD_Lager, TCAD_Stab } from "./CCAD_element";
@@ -154,8 +154,13 @@ export function read_daten(eingabedaten: string) {
         // else el.setValue(jobj.nNodeDisps);
 
         let els = document.getElementById("id_stadyn") as HTMLSelectElement;
-        if (jobj.stadyn == undefined) els.value = "0";
-        else els.value = jobj.stadyn;
+        if (jobj.stadyn == undefined) {
+            els.value = "0";
+            set_stadyn(0);
+        } else {
+            els.value = jobj.stadyn;
+            set_stadyn(Number(jobj.stadyn));
+        }
         if (jobj.stadyn === "1") {
             // Dynamik : tab clickbar machen
             (document.getElementById("id_tab_mass") as SlSelect).disabled = false;
