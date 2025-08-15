@@ -77,26 +77,26 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.5.0,a, 14-August-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.5.0,a, 15-August-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
 
-export const nnodes_init = '0';
-export const nelem_init = '0';
-export const nnodalloads_init = '0';
-export const nstreckenlasten_init = '0';
-export const neinzellasten_init = '0';
-export const ntemperaturlasten_init = '0';
-export const nlastfaelle_init = '1';
-export const nkombinationen_init = '0';
-export const nstabvorverfomungen_init = '0';
-export const nvorspannungen_init = '0';
-export const nspannschloesser_init = '0';
-export const nnodalmass_init = '0';
-export let column_string_kombitabelle: string;
-export let typs_string_kombitabelle: string;
-//export let column_width_elementtabelle: string;
+const nnodes_init = '0';
+const nelem_init = '0';
+const nnodalloads_init = '0';
+const nstreckenlasten_init = '0';
+const neinzellasten_init = '0';
+const ntemperaturlasten_init = '0';
+const nlastfaelle_init = '1';
+const nkombinationen_init = '0';
+const nstabvorverfomungen_init = '0';
+const nvorspannungen_init = '0';
+const nspannschloesser_init = '0';
+const nnodalmass_init = '0';
+let column_string_kombitabelle: string;
+let typs_string_kombitabelle: string;
+
 const nkombiSpalten_init = '2'; // immer 1 mehr als nlastfaelle_init
 const nnodedisps_init = '0';
 const dyn_neigv_init = '1';

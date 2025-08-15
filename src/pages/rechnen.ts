@@ -1,5 +1,5 @@
 declare let Module: any;
-//import { app, nlastfaelle_init,  nstabvorverfomungen_init } from "./haupt"
+//import { app, nlastfaelle_init} from "./haupt"
 import { TFVector, TFArray2D, TFArray3D, TFArray3D_0 } from "./TFArray"
 
 import { berechnungErfolgreich, berechnungErforderlich } from './globals'

@@ -1903,9 +1903,7 @@ function dialog_bemassung_closed(this: any, _e: any) {
     console.log("sieht gut aus, bemassung closed");
 
     const el = document.getElementById("id_dialog_bemassung") as drDialogBemassung;
-    console.log("el id_dialog_bemassung", el)
     let hl = el.get_art_hilfslinie();
-    console.log("hl", hl)
     obj_bemassung.set_hilfsline(hl);
     init_cad(2);
 
