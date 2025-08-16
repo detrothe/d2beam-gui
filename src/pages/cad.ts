@@ -458,35 +458,6 @@ export function Stab_button(_ev: Event) {
 }
 
 //--------------------------------------------------------------------------------------------------------
-export function Lager_button(ev: Event) {
-   //----------------------------------------------------------------------------------------------------
-
-   console.log('in Lager_button', ev);
-
-   let el = document.getElementById('id_cad_lager_button') as HTMLButtonElement;
-
-   if (buttons_control.lager_eingabe_aktiv) {
-      lager_eingabe_beenden();
-   } else {
-      buttons_control.reset();
-      drawer_1_control.reset();
-      el.style.backgroundColor = 'darkRed';
-      buttons_control.lager_eingabe_aktiv = true;
-      buttons_control.cad_eingabe_aktiv = true;
-      buttons_control.typ_cad_element = CAD_LAGER;
-      el.addEventListener('keydown', keydown);
-      buttons_control.n_input_points = 1;
-      buttons_control.button_pressed = true;
-      set_zoomIsActive(false);
-      pointer.length = 0
-
-      showDialog_lager();
-
-      // jetzt auf Pointer eingabe warten
-   }
-}
-
-//--------------------------------------------------------------------------------------------------------
 export function lager_eingabe_beenden() {
    //----------------------------------------------------------------------------------------------------
 

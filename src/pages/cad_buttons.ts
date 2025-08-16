@@ -2,7 +2,7 @@
 
 
 import {
-  list, undoList, Stab_button, Lager_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST,
+  list, undoList, Stab_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST,
   keydown, CAD_STAB, CAD_LAGER, selected_element, CAD_ELLAST,
   click_zurueck_cad,
   redraw_stab,
@@ -246,6 +246,17 @@ class CDelElLast {
 export const buttons_control = new Cbuttons_control();
 export const drawer_1_control = new CDrawer_1_control();
 
+let button_knoten_timer_id = -1;
+let button_knoten_help_timer = false;
+
+let button_editknoten_timer_id = -1;
+let button_editknoten_help_timer = false;
+
+let button_lager_timer_id = -1;
+let button_lager_help_timer = false;
+
+let button_selectElement_timer_id = -1;
+let button_selectElement_help_timer = false;
 
 //--------------------------------------------------------------------------------------------------------
 function init_obj_mode() {
@@ -342,6 +353,17 @@ export function cad_buttons() {
   select_button.className = "btn";
   select_button.innerHTML = '<i class = "fa fa-hand-pointer-o"></i>';
   select_button.addEventListener("click", Select_button);
+  select_button.addEventListener("pointerdown", () => {
+    button_selectElement_timer_id = window.setTimeout(
+      () => {
+        set_help_text('Element auswählen durch Klick und danach editieren');
+        button_selectElement_help_timer = true;
+      }, 300);
+  });
+  select_button.addEventListener("pointerup", () => {
+    window.clearTimeout(button_selectElement_timer_id);
+  });
+
   select_button.title = "Element auswählen und danach editieren";
   select_button.id = "id_cad_select_button";
 
@@ -351,6 +373,15 @@ export function cad_buttons() {
   knoten_button.className = "btn";
   knoten_button.innerHTML = '<i class = "fa fa-square"></i>';
   knoten_button.addEventListener("click", Knoten_button);
+  knoten_button.addEventListener("pointerdown", () => {
+    button_knoten_timer_id = window.setTimeout(
+      () => {
+        set_help_text('Eingabe von Knotenkoordinaten'); button_knoten_help_timer = true;
+      }, 300);
+  });
+  knoten_button.addEventListener("pointerup", () => {
+    window.clearTimeout(button_knoten_timer_id);
+  });
   // stab_button.addEventListener('keydown', keydown);
   knoten_button.title = "Eingabe Knoten";
   knoten_button.id = "id_cad_knoten_button";
@@ -361,7 +392,16 @@ export function cad_buttons() {
   edit_knoten_button.className = "btn";
   edit_knoten_button.innerHTML = '<i class = "fa fa-file-text-o"></i>';
   edit_knoten_button.addEventListener("click", Edit_Knoten_button);
-  // stab_button.addEventListener('keydown', keydown);
+  edit_knoten_button.addEventListener("pointerdown", () => {
+    button_editknoten_timer_id = window.setTimeout(
+      () => {
+        set_help_text('Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken');
+        button_editknoten_help_timer = true;
+      }, 300);
+  });
+  edit_knoten_button.addEventListener("pointerup", () => {
+    window.clearTimeout(button_editknoten_timer_id);
+  });
   edit_knoten_button.title = "Knoten bearbeiten";
   edit_knoten_button.id = "id_cad_edit_knoten_button";
 
@@ -382,7 +422,17 @@ export function cad_buttons() {
   lager_button.className = "btn";
   lager_button.innerHTML = "Δ";
   lager_button.addEventListener("click", Lager_button);
-  // stab_button.addEventListener('keydown', keydown);
+  lager_button.addEventListener("pointerdown", () => {
+    button_lager_timer_id = window.setTimeout(
+      () => {
+        set_help_text('Knotenlager eingeben');
+        button_lager_help_timer = true;
+      }, 300);
+  });
+  lager_button.addEventListener("pointerup", () => {
+    window.clearTimeout(button_lager_timer_id);
+  });
+
   lager_button.title = "Eingabe Lager";
   lager_button.id = "id_cad_lager_button";
 
@@ -701,6 +751,7 @@ export function delete_button() {
 export function Select_button() {
   //----------------------------------------------------------------------------------------------------
 
+  if (button_selectElement_help_timer) { button_selectElement_help_timer = false; return; }
 
   if (buttons_control.select_element) {
     buttons_control.reset();
@@ -1954,10 +2005,12 @@ function dialog_knoten_closed(this: any, _e: any) {
 
 
 //--------------------------------------------------------------------------------------------------------
-export function Knoten_button(ev: Event) {
+export function Knoten_button(_ev: Event) {
   //----------------------------------------------------------------------------------------------------
 
-  console.log("in Knoten_button", ev)
+  //console.log("in Knoten_button", _ev)
+
+  if (button_knoten_help_timer) { button_knoten_help_timer = false; return; }
 
   let el = document.getElementById("id_cad_knoten_button") as HTMLButtonElement
 
@@ -1990,6 +2043,7 @@ export function Knoten_button(ev: Event) {
 export function Edit_Knoten_button() {
   //----------------------------------------------------------------------------------------------------
 
+  if (button_editknoten_help_timer) { button_editknoten_help_timer = false; return; }
 
   if (buttons_control.select_node) {
     buttons_control.reset();
@@ -3223,3 +3277,35 @@ export function show_selected_element(xc: number, zc: number) {
 }
 
 
+
+//--------------------------------------------------------------------------------------------------------
+export function Lager_button(ev: Event) {
+  //----------------------------------------------------------------------------------------------------
+
+  if (button_lager_help_timer) { button_lager_help_timer = false; return; }
+
+  console.log('in Lager_button', ev);
+
+  let el = document.getElementById('id_cad_lager_button') as HTMLButtonElement;
+
+  if (buttons_control.lager_eingabe_aktiv) {
+    lager_eingabe_beenden();
+  } else {
+    buttons_control.reset();
+    drawer_1_control.reset();
+    el.style.backgroundColor = 'darkRed';
+    buttons_control.lager_eingabe_aktiv = true;
+    buttons_control.cad_eingabe_aktiv = true;
+    buttons_control.typ_cad_element = CAD_LAGER;
+    el.addEventListener('keydown', keydown);
+    buttons_control.n_input_points = 1;
+    buttons_control.button_pressed = true;
+    set_zoomIsActive(false);
+    reset_pointer_length();
+
+
+    showDialog_lager();
+
+    // jetzt auf Pointer eingabe warten
+  }
+}
