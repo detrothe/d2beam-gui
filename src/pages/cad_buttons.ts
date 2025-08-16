@@ -246,6 +246,8 @@ class CDelElLast {
 export const buttons_control = new Cbuttons_control();
 export const drawer_1_control = new CDrawer_1_control();
 
+const button_color_help_text = '#ffd400';
+
 let button_knoten_timer_id = -1;
 let button_knoten_help_timer = false;
 
@@ -356,7 +358,7 @@ export function cad_buttons() {
   select_button.addEventListener("pointerdown", () => {
     button_selectElement_timer_id = window.setTimeout(
       () => {
-        set_help_text('Element auswählen durch Klick und danach editieren');
+        set_help_text('Element auswählen durch Klick und danach editieren', button_color_help_text);
         button_selectElement_help_timer = true;
       }, 300);
   });
@@ -376,7 +378,8 @@ export function cad_buttons() {
   knoten_button.addEventListener("pointerdown", () => {
     button_knoten_timer_id = window.setTimeout(
       () => {
-        set_help_text('Eingabe von Knotenkoordinaten'); button_knoten_help_timer = true;
+        set_help_text('Eingabe von Knotenkoordinaten', button_color_help_text);
+        button_knoten_help_timer = true;
       }, 300);
   });
   knoten_button.addEventListener("pointerup", () => {
@@ -395,7 +398,7 @@ export function cad_buttons() {
   edit_knoten_button.addEventListener("pointerdown", () => {
     button_editknoten_timer_id = window.setTimeout(
       () => {
-        set_help_text('Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken');
+        set_help_text('Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken', button_color_help_text);
         button_editknoten_help_timer = true;
       }, 300);
   });
@@ -425,7 +428,7 @@ export function cad_buttons() {
   lager_button.addEventListener("pointerdown", () => {
     button_lager_timer_id = window.setTimeout(
       () => {
-        set_help_text('Knotenlager eingeben');
+        set_help_text('Knotenlager eingeben', button_color_help_text);
         button_lager_help_timer = true;
       }, 300);
   });
@@ -561,10 +564,11 @@ export function cad_buttons() {
 
 
 //--------------------------------------------------------------------------------------------------------
-export function set_help_text(txt: string) {
+export function set_help_text(txt: string, color = "#ffffff") {
   //------------------------------------------------------------------------------------------------------
   let el = document.getElementById("id_cad_helptext") as HTMLSpanElement
   el.innerHTML = txt;
+  el.style.color = color;
 }
 
 //--------------------------------------------------------------------------------------------------------
