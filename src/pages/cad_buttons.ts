@@ -546,19 +546,9 @@ export function cad_buttons() {
   let h = div!.getBoundingClientRect()
   // console.log("Höhe des div", h)
 
-  //  br = document.createElement("br");
-  //div2.appendChild(br);
   div2.appendChild(querschnitt_default_select);
 
   div2.style.top = String(h)
-
-  //let div_cad_group = document.getElementById("id_cad_group") as HTMLDivElement
-  // undo_button!.addEventListener("focus", (_event) => {
-  //   // @ts-ignore
-  //   //console.log("focus", event)
-  //   let hoehe = undo_button!.getBoundingClientRect()
-  //   //console.log("hoehe div undo_button", hoehe)
-  // });
 
 }
 

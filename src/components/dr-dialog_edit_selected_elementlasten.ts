@@ -5,14 +5,15 @@ import '../styles/dr-dialog.css';
 import { SlCheckbox, SlRadioGroup, SlSelect } from '@shoelace-style/shoelace';
 
 
-@customElement('dr-dialog_selekt_typ')
-export class drDialogSelektTyp extends LitElement {
-  @property({ type: String }) title = 'select_typ';
 
-  /* @property({ type: Number }) xValue = 0; */
+@customElement('dr-dialog_edit_selected_elementlasten')
+export class drDialogEdit_selected_elementlasten extends LitElement {
+   @property({ type: String }) title = 'Kopieren';
 
-  static get styles() {
-    return css`
+   /* @property({ type: Number }) xValue = 0; */
+
+   static get styles() {
+      return css`
          input,
          label {
             font-size: 1rem;
@@ -120,62 +121,91 @@ export class drDialogSelektTyp extends LitElement {
             background: hsl(201 50% 40% /0.5);
          }
       `;
-  }
+   }
 
-  constructor() {
-    super();
-  }
+   constructor() {
+      super();
+   }
 
-  //----------------------------------------------------------------------------------------------
+   //----------------------------------------------------------------------------------------------
 
-  render() {
-    return html` <dialog id="dialog_selekt_typ">
-         <h2>selektieren nach CAD-Elementtyp</h2>
+   render() {
+      return html` <dialog id="dialog_edit_selected_elementloads">
+         <h2>editiere selektierte Elementlasten</h2>
 
 
-
-         <sl-radio-group id="id_typ" label="Wähle einen Element-Typ" name="a" value="0" >
-            <sl-radio value="0">Stab</sl-radio>
-            <sl-radio value="1">Stablast</sl-radio>
-            <sl-radio value="2">Knotenlast</sl-radio>
-            <sl-radio value="3">Lager</sl-radio>
-            <sl-radio value="4">Knotenmasse</sl-radio>
-            <sl-radio value="5">Bemassung</sl-radio>
+         <sl-radio-group id="id_option" label="Wähle eine Option" name="a" value="1" @sl-change="${this._handleChange}">
+            <sl-radio value="0">Lastfall ändern</sl-radio>
+            <sl-radio  value="1">Streckenlasten ändern</sl-radio>
+            <sl-radio  value="2">alles ändern</sl-radio>
+            <sl-radio  value="3">Lasten löschen</sl-radio>
          </sl-radio-group>
+
+         <div id="id_div" style="display: none;">
+            <p>
+               Lastfall :
+               <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="1" /> &nbsp;
+            </p>
+         </div>
 
          <br />
 
          <form method="dialog">
-            <sl-button id="OK" value="ok" @click="${this._dialog_ok}">ok</sl-button>
+            <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
             <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
          </form>
       </dialog>`;
-  }
+   }
 
-  _dialog_ok() {
-    console.log('dialog_ok');
-    const shadow = this.shadowRoot;
-    if (shadow) {
-      (shadow.getElementById('dialog_selekt_typ') as HTMLDialogElement).close('ok');
-    }
-  }
+   _dialog_ok() {
+      console.log('dialog_ok');
+      const shadow = this.shadowRoot;
+      if (shadow) {
+         (shadow.getElementById('dialog_edit_selected_elementloads') as HTMLDialogElement).close('ok');
+      }
+   }
 
-  _dialog_abbruch() {
-    console.log('dialog_abbruch');
-    const shadow = this.shadowRoot;
-    if (shadow) (shadow.getElementById('dialog_selekt_typ') as HTMLDialogElement).close('cancel');
-  }
+   _dialog_abbruch() {
+      console.log('dialog_abbruch');
+      const shadow = this.shadowRoot;
+      if (shadow) (shadow.getElementById('dialog_edit_selected_elementloads') as HTMLDialogElement).close('cancel');
+   }
+
+   get_lastfall(): boolean {
+      let el = this.shadowRoot?.getElementById('id_lf') as SlCheckbox;
+      return el.checked;
+   }
+
+   set_lastfall(wert: boolean) {
+      let el = this.shadowRoot?.getElementById('id_lf') as SlCheckbox;
+      el.checked = wert;
+   }
 
 
-  get_option() {
-    let el = this.shadowRoot?.getElementById('id_typ') as SlRadioGroup;
-    return Number(el.value);
-  }
+   get_option() {
+      let el = this.shadowRoot?.getElementById('id_option') as SlRadioGroup;
+      return Number(el.value);
+   }
 
-  set_option(wert: number) {
-    let el = this.shadowRoot?.getElementById('id_typ') as SlRadioGroup;
-    el.value = String(wert);
-  }
+   set_option(wert: number) {
+      let el = this.shadowRoot?.getElementById('id_option') as SlRadioGroup;
+      el.value = String(wert);
+   }
 
+   _handleChange() {
+      console.log('_handleChange');
 
+      let wert = (this.shadowRoot?.getElementById('id_option') as SlRadioGroup).value;
+      console.log('id_radio_group ', wert);
+
+      if (wert === '0') {
+         let el = this.shadowRoot?.getElementById('id_div') as HTMLDivElement;
+         el.style.display = 'block';
+      } else {
+         let el = this.shadowRoot?.getElementById('id_div') as HTMLDivElement;
+         el.style.display = 'none';
+      }
+
+      this.shadowRoot?.getElementById('OK')?.focus();
+   }
 }

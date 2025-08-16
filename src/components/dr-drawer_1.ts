@@ -6,7 +6,7 @@ import { Bemassung_button } from '../pages/cad_bemassung';
 import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_lager, set_show_lastfall, set_show_raster, set_show_stab_qname } from '../pages/cad';
 import { copy_svg_cad } from '../pages/grafik';
 import { Knotenverformung_button } from '../pages/cad_knotenverformung';
-import { copy_selected_button, select_multi_button, select_typ_button, unselect_all_button } from '../pages/cad_select';
+import { copy_selected_button, edit_selected_button, select_multi_button, select_typ_button, unselect_all_button } from '../pages/cad_select';
 
 @customElement('dr-drawer_1')
 export class drDrawer_1 extends LitElement {
@@ -229,7 +229,7 @@ export class drDrawer_1 extends LitElement {
       const drawer = document.querySelector('.drawer-overview');
       //@ts-ignore
       if (drawer !== null) drawer.hide();
-      Bemassung_button(1);
+      edit_selected_button();
    }
 
    _bemassung_parallel() {

@@ -48,6 +48,12 @@ export function unselect_all_button() {
     for (let i = 0; i < list.size; i++) {
         let obj = list.getAt(i) as TCAD_Element;
         obj.multiSelected = false;
+        if (obj.elTyp === CAD_STAB) {
+            for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
+                (obj as TCAD_Stab).elast[j].multiSelected = false;
+            }
+        }
+
     }
 
     buttons_control.reset();
@@ -279,10 +285,64 @@ function dialog_selekt_typ_closed(this: any, e: any) {
             else if (obj.elTyp === CAD_LAGER && eltyp === 3) obj.multiSelected = true;
             else if (obj.elTyp === CAD_KNMASSE && eltyp === 4) obj.multiSelected = true;
 
+            else if (obj.elTyp === CAD_STAB && eltyp === 1) {
+                for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
+                    (obj as TCAD_Stab).elast[j].multiSelected = true;
+                }
+            }
         }
     }
 
     buttons_control.reset();
     drawer_1_control.reset();
 
+}
+
+
+//------------------------------------------------------------------------------------------------------
+export function edit_selected_button() {
+    //----------------------------------------------------------------------------------------------------
+
+    buttons_control.reset()
+
+    let nStaebe_edit_selected = 0;
+    let nStablasten_edit_selected = 0;
+    let nKnLast_edit_selected = 0;
+    let nLager_edit_selected = 0;
+    let nMassen_edit_selected = 0;
+
+    for (let i = 0; i < list.size; i++) {
+        let obj = list.getAt(i) as TCAD_Element;
+        if (obj.elTyp === CAD_STAB && obj.multiSelected) nStaebe_edit_selected++;
+        else if (obj.elTyp === CAD_KNLAST && obj.multiSelected) nKnLast_edit_selected++;
+        else if (obj.elTyp === CAD_LAGER && obj.multiSelected) nLager_edit_selected++;
+        else if (obj.elTyp === CAD_KNMASSE && obj.multiSelected) nMassen_edit_selected;
+
+        else if (obj.elTyp === CAD_STAB) {
+            for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
+                if ((obj as TCAD_Stab).elast[j].multiSelected) nStablasten_edit_selected++;
+            }
+        }
+    }
+
+    console.log("NSTAEBE...", nStaebe_edit_selected, nStablasten_edit_selected, nKnLast_edit_selected, nLager_edit_selected, nMassen_edit_selected)
+
+    showDialog_edit_selected();
+
+}
+
+
+
+//---------------------------------------------------------------------------------------------------------------
+
+export function showDialog_edit_selected() {
+    //------------------------------------------------------------------------------------------------------------
+
+    console.log("showDialog_edit_selected()");
+
+    // const el = document.getElementById("id_dialog_selekt_typ");
+
+    // (el?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).addEventListener("close", dialog_selekt_typ_closed);
+
+    // (el?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).showModal();
 }
