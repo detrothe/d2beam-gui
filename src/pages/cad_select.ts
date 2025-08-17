@@ -1,10 +1,14 @@
+import { drDialogEdit_selected_elementlasten } from "../components/dr-dialog_edit_selected_elementlasten"
+import { drDialogElementlasten } from "../components/dr-dialog_elementlasten"
 import { drDialogKopieren } from "../components/dr-dialog_kopieren"
 import { drDialogSelektTyp } from "../components/dr-dialog_selekt_typ"
-import { CAD_COPY_SELECTED, CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_SELECT_MULTI, CAD_STAB, list, tr, two } from "./cad"
-import { buttons_control, drawer_1_control, set_help_text } from "./cad_buttons"
+import { CAD_COPY_SELECTED, CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_SELECT_MULTI, CAD_STAB, init_cad, list, tr, two } from "./cad"
+import { buttons_control, drawer_1_control, set_help_text, showDialog_elementlast } from "./cad_buttons"
 import { drawStab } from "./cad_draw_elemente"
+import { find_max_Lastfall, find_maxValues_eloads } from "./cad_draw_elementlasten"
 import { add_cad_node, add_element_nodes, get_cad_node_X, get_cad_node_Z } from "./cad_node"
 import { TCAD_Element, TCAD_Stab, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung } from "./CCAD_element"
+import { berechnungErforderlich } from "./globals"
 
 
 
@@ -14,7 +18,7 @@ let dz_copy = 0;
 let copy_option = 1;
 let copy_eload = false;
 
-
+export let mode_multi_selected_elementlast_aendern = false;
 
 //------------------------------------------------------------------------------------------------------
 export function select_multi_button(art: number) {
@@ -327,22 +331,149 @@ export function edit_selected_button() {
 
     console.log("NSTAEBE...", nStaebe_edit_selected, nStablasten_edit_selected, nKnLast_edit_selected, nLager_edit_selected, nMassen_edit_selected)
 
-    showDialog_edit_selected();
+    if (nStablasten_edit_selected > 0) showDialog_edit_selected_stablasten();
+
+    berechnungErforderlich(true);
 
 }
 
 
 
 //---------------------------------------------------------------------------------------------------------------
-
-export function showDialog_edit_selected() {
+export function showDialog_edit_selected_stablasten() {
     //------------------------------------------------------------------------------------------------------------
 
     console.log("showDialog_edit_selected()");
 
-    // const el = document.getElementById("id_dialog_selekt_typ");
+    const el = document.getElementById("id_dialog_edit_selected_elementlasten_typ");
 
-    // (el?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).addEventListener("close", dialog_selekt_typ_closed);
+    (el?.shadowRoot?.getElementById("dialog_edit_selected_elementloads") as HTMLDialogElement).addEventListener("close", dialog_edit_selected_stablasten_closed);
 
-    // (el?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).showModal();
+    (el?.shadowRoot?.getElementById("dialog_edit_selected_elementloads") as HTMLDialogElement).showModal();
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_edit_selected_stablasten_closed(this: any, e: any) {
+    //------------------------------------------------------------------------------------------------------------
+    console.log("Event dialog_edit_selected_closed", e);
+    console.log("this", this);
+    const ele = document.getElementById("id_dialog_edit_selected_elementlasten_typ") as HTMLDialogElement;
+
+    // ts-ignore
+    const returnValue = this.returnValue;
+
+    (ele?.shadowRoot?.getElementById("dialog_edit_selected_elementloads") as HTMLDialogElement).removeEventListener("close", dialog_edit_selected_stablasten_closed);
+
+    if (returnValue === "ok") {
+        console.log("sieht gut aus");
+
+        const el = document.getElementById("id_dialog_edit_selected_elementlasten_typ") as drDialogEdit_selected_elementlasten;
+
+        let option = el.get_option();
+        console.log("dialog_edit_selected_closed, option", option)
+
+        if (option === 0) {
+            let lastfall = el.get_lastfall();
+            if (lastfall > 0) {
+                for (let i = 0; i < list.size; i++) {
+                    let obj = list.getAt(i) as TCAD_Element;
+
+                    if (obj.elTyp === CAD_STAB) {
+                        for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
+                            if ((obj as TCAD_Stab).elast[j].multiSelected) {
+                                (obj as TCAD_Stab).elast[j].lastfall = lastfall;
+                            };
+                        }
+                    }
+                }
+                find_max_Lastfall();
+                find_maxValues_eloads();
+            }
+        }
+        else if (option === 1) {
+            let pa = el.get_pa();
+            let pe = el.get_pe();
+
+            for (let i = 0; i < list.size; i++) {
+                let obj = list.getAt(i) as TCAD_Element;
+
+                if (obj.elTyp === CAD_STAB) {
+                    for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
+                        if ((obj as TCAD_Stab).elast[j].multiSelected) {
+                            if ((obj as TCAD_Stab).elast[j].typ === 0) {
+                                ((obj as TCAD_Stab).elast[j] as TCAD_Streckenlast).pL = pa;
+                                ((obj as TCAD_Stab).elast[j] as TCAD_Streckenlast).pR = pe;
+                            }
+                        }
+                    }
+                }
+            }
+            find_max_Lastfall();
+            find_maxValues_eloads();
+
+        }
+        else if (option === 2) {
+            mode_multi_selected_elementlast_aendern = true;
+            showDialog_elementlast();
+        }
+
+    }
+
+    buttons_control.reset();
+    drawer_1_control.reset();
+
+}
+
+
+//------------------------------------------------------------------------------------------------------
+export function update_multi_selected_elementlast() {
+    //--------------------------------------------------------------------------------------------------
+    mode_multi_selected_elementlast_aendern = false;
+
+    const el = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
+    el.set_display_group_typ(true);
+
+    let typ = el.get_typ();
+    let art = el.get_art();
+    let lf = el.get_lastfall()
+
+    let pa = el.get_pa();
+    let pe = el.get_pe();
+
+    let x = el.get_x();
+    let P = el.get_P();
+    let M = el.get_M();
+
+    console.log("update_multi_selected_elementlast", typ, art, lf, x, P, M)
+
+    for (let i = 0; i < list.size; i++) {
+        let obj = list.getAt(i) as TCAD_Stab;
+
+        if (obj.elTyp === CAD_STAB) {
+            for (let j = 0; j < obj.elast.length; j++) {
+
+                if (obj.elast[j].multiSelected) {
+                    obj.elast[j].lastfall = lf;
+                    obj.elast[j].typ = typ;
+
+                    if (typ === 0) {       // Streckenlast
+                        (obj.elast[j] as TCAD_Streckenlast).art = art;
+                        (obj.elast[j] as TCAD_Streckenlast).pL = pa;
+                        (obj.elast[j] as TCAD_Streckenlast).pR = pe;
+                    }
+                    else if (typ === 1) {  // Einzelllast
+                        (obj.elast[j] as TCAD_Einzellast).xe = x;
+                        (obj.elast[j] as TCAD_Einzellast).P = P;
+                        (obj.elast[j] as TCAD_Einzellast).M = M;
+                    }
+                }
+
+            }
+        }
+    }
+    find_max_Lastfall();
+    find_maxValues_eloads();
+
+    init_cad(2);
 }

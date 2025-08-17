@@ -879,7 +879,6 @@ export function init_cad(flag: number) {
       }
    }
 
-   console.log("STADYN",stadyn)
    if (stadyn === 1) {
       for (let i = 0; i < list.size; i++) {
 
