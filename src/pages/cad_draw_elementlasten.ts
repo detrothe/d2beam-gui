@@ -323,7 +323,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         }
 
                         let flaeche = new Two.Path(vertices);
-                         if ( obj.elast[j].multiSelected) flaeche.fill = multiselect_color;
+                        if (obj.elast[j].multiSelected) flaeche.fill = multiselect_color;
                         else flaeche.fill = color_load;
                         flaeche.opacity = opacity
                         if (element_selected) {
@@ -403,7 +403,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         }
 
                         let flaeche = new Two.Path(vertices);
-                        flaeche.fill = color_load;
+                        if (obj.elast[j].multiSelected) flaeche.fill = multiselect_color;
+                        else flaeche.fill = color_load;
                         flaeche.opacity = opacity
                         if (element_selected) {
                             flaeche.stroke = select_color;
@@ -484,7 +485,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         }
 
                         let flaeche = new Two.Path(vertices);
-                        flaeche.fill = color_load;
+                        if (obj.elast[j].multiSelected) flaeche.fill = multiselect_color;
+                        else flaeche.fill = color_load;
                         flaeche.opacity = opacity
                         if (element_selected) {
                             flaeche.stroke = select_color;
@@ -563,7 +565,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         }
 
                         let flaeche = new Two.Path(vertices);
-                        flaeche.fill = color_load;
+                        if (obj.elast[j].multiSelected) flaeche.fill = multiselect_color;
+                        else flaeche.fill = color_load;
                         flaeche.opacity = opacity
                         if (element_selected) {
                             flaeche.stroke = select_color;
@@ -647,7 +650,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         }
 
                         let flaeche = new Two.Path(vertices);
-                        flaeche.fill = color_load;
+                        if (obj.elast[j].multiSelected) flaeche.fill = multiselect_color;
+                        else flaeche.fill = color_load;
                         flaeche.opacity = opacity
                         if (element_selected) {
                             flaeche.stroke = select_color;
@@ -735,7 +739,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     }
 
                     let flaeche = new Two.Path(vertices);
-                    flaeche.fill = color_load;
+                    if (obj.elast[j].multiSelected) flaeche.fill = multiselect_color;
+                    else flaeche.fill = color_load;
                     flaeche.opacity = opacity;
                     if (element_selected) {
                         flaeche.stroke = select_color;
@@ -760,7 +765,16 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     dp = pMax // - pMin
                     a = a + dp + a_spalt
                 }
-                else if (typ === 1) {   //eload[ieload].art === 6) {      // Einzellast oder/und Moment
+                else if (typ === 1) {         // Einzellast oder/und Moment
+
+
+                    if (obj.elast[j].multiSelected) {
+                        style_pfeil_knotenlast_element.color = multiselect_color;
+                        style_pfeil_moment_element.color = multiselect_color;
+                    } else {
+                        style_pfeil_knotenlast_element.color = '#ba0000';
+                        style_pfeil_moment_element.color = '#ba0000';
+                    }
 
                     let plength = tr.Pix0(slmax_cad / 70) /*35*/, delta = 12
                     let marker = tr.World0(10 / devicePixelRatio)
@@ -914,7 +928,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     }
 
                     let flaeche = new Two.Path(vertices);
-                    flaeche.fill = color_load;
+                    if (obj.elast[j].multiSelected) flaeche.fill = multiselect_color;
+                    else flaeche.fill = color_load;
                     flaeche.opacity = opacity;
                     if (element_selected) {
                         flaeche.stroke = select_color;

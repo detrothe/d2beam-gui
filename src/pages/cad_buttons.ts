@@ -82,7 +82,7 @@ import { drDialogBemassung } from "../components/dr-dialog_bemassung";
 import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
 import { draw_knotenverformung, showDialog_knotenverformung, write_knotenverformung_dialog } from "./cad_knotenverformung";
 import { drDrawer_1 } from "../components/dr-drawer_1";
-import { mode_multi_selected_elementlast_aendern, update_multi_selected_elementlast } from "./cad_select";
+import { mode_multi_selected_elementlast_aendern, mode_multi_selected_knotenlast_aendern, update_multi_selected_elementlast, update_multi_selected_knotenlast } from "./cad_select";
 
 let backgroundColor_button = 'rgb(64, 64, 64)';
 let backgroundColor_button_light = 'rgb(64, 64, 64)';
@@ -2478,6 +2478,7 @@ function dialog_knotenlast_closed(this: any, e: any) {
     //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
     console.log("sieht gut aus");
     if (mode_knotenlast_aendern) update_knotenlast();
+    else if ( mode_multi_selected_knotenlast_aendern) update_multi_selected_knotenlast();
   } else {
     // Abbruch
     (ele?.shadowRoot?.getElementById("dialog_knotenlast") as HTMLDialogElement).removeEventListener("close", dialog_knotenlast_closed);
