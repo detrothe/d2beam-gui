@@ -200,6 +200,7 @@ let c_simvektoriteration: any
 let c_gsl_eigenwert: any
 let c_cholesky_decomp: any
 let c_cholesky_2: any
+let c_speed:any
 
 
 
@@ -211,6 +212,8 @@ c_cholesky_decomp = Module.cwrap("c_cholesky_decomp", "number", ["number", "numb
 c_cholesky_2 = Module.cwrap("c_cholesky_2", "number", ["number", "number", "number"]);
 //}
 //write("c_cholesky_decomp= " + c_cholesky_decomp)
+
+c_speed = Module.cwrap("c_speed");
 
 const bytes_8 = 8;
 const bytes_4 = 4;
@@ -1822,6 +1825,10 @@ async function calculate() {
 
     //-----------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------
+
+    console.log("vor speed")
+    c_speed();
+    console.log("nach speed")
 
     let i: number, j: number
 

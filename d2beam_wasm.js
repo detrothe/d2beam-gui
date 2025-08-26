@@ -796,7 +796,41 @@ async function createWasm() {
   var __abort_js = () =>
       abort('native code called abort()');
 
+  var _emscripten_get_now = () => performance.now();
+  
   var _emscripten_date_now = () => Date.now();
+  
+  var nowIsMonotonic = 1;
+  
+  var checkWasiClock = (clock_id) => clock_id >= 0 && clock_id <= 3;
+  
+  var INT53_MAX = 9007199254740992;
+  
+  var INT53_MIN = -9007199254740992;
+  var bigintToI53Checked = (num) => (num < INT53_MIN || num > INT53_MAX) ? NaN : Number(num);
+  function _clock_time_get(clk_id, ignored_precision, ptime) {
+    ignored_precision = bigintToI53Checked(ignored_precision);
+  
+  
+      if (!checkWasiClock(clk_id)) {
+        return 28;
+      }
+      var now;
+      // all wasi clocks but realtime are monotonic
+      if (clk_id === 0) {
+        now = _emscripten_date_now();
+      } else if (nowIsMonotonic) {
+        now = _emscripten_get_now();
+      } else {
+        return 52;
+      }
+      // "now" is in ms, and wasi times are in ns.
+      var nsec = Math.round(now * 1000 * 1000);
+      HEAP64[((ptime)>>3)] = BigInt(nsec);
+      return 0;
+    ;
+  }
+
 
   var getHeapMax = () =>
       // Stay one Wasm page short of 4GB: while e.g. Chrome is able to allocate
@@ -965,10 +999,6 @@ async function createWasm() {
       abort('fd_close called without SYSCALLS_REQUIRE_FILESYSTEM');
     };
 
-  var INT53_MAX = 9007199254740992;
-  
-  var INT53_MIN = -9007199254740992;
-  var bigintToI53Checked = (num) => (num < INT53_MIN || num > INT53_MAX) ? NaN : Number(num);
   function _fd_seek(fd, offset, whence, newOffset) {
     offset = bigintToI53Checked(offset);
   
@@ -1329,7 +1359,6 @@ Module['FS_createPreloadedFile'] = FS.createPreloadedFile;
   'getCallstack',
   'convertPCtoSourceLocation',
   'getEnvStrings',
-  'checkWasiClock',
   'wasiRightsToMuslOFlags',
   'wasiOFlagsToMuslOFlags',
   'initRandomFill',
@@ -1454,6 +1483,7 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'restoreOldWindowedStyle',
   'UNWIND_CACHE',
   'ExitStatus',
+  'checkWasiClock',
   'flush_NO_FILESYSTEM',
   'emSetImmediate',
   'emClearImmediate_deps',
@@ -1633,6 +1663,7 @@ var _gsl_eigenwert = Module['_gsl_eigenwert'] = makeInvalidEarlyAccess('_gsl_eig
 var _cmult = Module['_cmult'] = makeInvalidEarlyAccess('_cmult');
 var _malloc = Module['_malloc'] = makeInvalidEarlyAccess('_malloc');
 var _free = Module['_free'] = makeInvalidEarlyAccess('_free');
+var _c_speed = Module['_c_speed'] = makeInvalidEarlyAccess('_c_speed');
 var _c_simvektoriteration = Module['_c_simvektoriteration'] = makeInvalidEarlyAccess('_c_simvektoriteration');
 var _c_cholesky_decomp = Module['_c_cholesky_decomp'] = makeInvalidEarlyAccess('_c_cholesky_decomp');
 var _c_cholesky_2 = Module['_c_cholesky_2'] = makeInvalidEarlyAccess('_c_cholesky_2');
@@ -1652,6 +1683,7 @@ function assignWasmExports(wasmExports) {
   Module['_cmult'] = _cmult = createExportWrapper('cmult', 0);
   Module['_malloc'] = _malloc = createExportWrapper('malloc', 1);
   Module['_free'] = _free = createExportWrapper('free', 1);
+  Module['_c_speed'] = _c_speed = createExportWrapper('c_speed', 0);
   Module['_c_simvektoriteration'] = _c_simvektoriteration = createExportWrapper('c_simvektoriteration', 7);
   Module['_c_cholesky_decomp'] = _c_cholesky_decomp = createExportWrapper('c_cholesky_decomp', 3);
   Module['_c_cholesky_2'] = _c_cholesky_2 = createExportWrapper('c_cholesky_2', 3);
@@ -1668,6 +1700,8 @@ function assignWasmExports(wasmExports) {
 var wasmImports = {
   /** @export */
   _abort_js: __abort_js,
+  /** @export */
+  clock_time_get: _clock_time_get,
   /** @export */
   emscripten_date_now: _emscripten_date_now,
   /** @export */
