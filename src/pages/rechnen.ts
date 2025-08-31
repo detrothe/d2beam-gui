@@ -201,6 +201,7 @@ let c_gsl_eigenwert: any
 let c_cholesky_decomp: any
 let c_cholesky_2: any
 let c_speed:any
+let arpack_iteration:any
 
 
 
@@ -210,6 +211,8 @@ c_simvektoriteration = Module.cwrap("c_simvektoriteration", "number", ["number",
 c_gsl_eigenwert = Module.cwrap("gsl_eigenwert", "number", ["number", "number", "number"]);
 c_cholesky_decomp = Module.cwrap("c_cholesky_decomp", "number", ["number", "number", "number"]);
 c_cholesky_2 = Module.cwrap("c_cholesky_2", "number", ["number", "number", "number"]);
+
+arpack_iteration = Module.cwrap("c_arpack_iteration", "number", ["number", "number", "number", "number", "number", "number", "number"]);
 //}
 //write("c_cholesky_decomp= " + c_cholesky_decomp)
 
@@ -1826,9 +1829,9 @@ async function calculate() {
     //-----------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------
 
-    console.log("vor speed")
-    c_speed();
-    console.log("nach speed")
+    // console.log("vor speed")
+    // c_speed();
+    // console.log("nach speed")
 
     let i: number, j: number
 
@@ -3107,7 +3110,10 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
         status = c_gsl_eigenwert(mass_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv)
     } else if (eig_solver === 1) {
         status = c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv, niter_neigv);
+    } else if (eig_solver === 2) {
+        status = arpack_iteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv, niter_neigv);
     }
+
     write("Status der Eigenwertberechnung = " + status)
     if (status !== 0) keineKonvergenzErreicht_eigv = true
     //c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv);
@@ -3221,7 +3227,11 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
         } else if (eig_solver === 1) {
             console.log("c_simvektoriteration", neq, neigv, niter_neigv)
             status = c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv, niter_neigv);
+        } else if (eig_solver === 2) {
+            console.log("c_simvektoriteration", neq, neigv, niter_neigv)
+            status = arpack_iteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv, niter_neigv);
         }
+
         write("Status der Eigenwertberechnung = " + status)
         if (status !== 0) keineKonvergenzErreicht_eigv = true
 

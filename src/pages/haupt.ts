@@ -78,7 +78,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.5.0,a, 26-August-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.5.0,a, 31-August-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -1039,9 +1039,10 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td id="id_eig_solver" title="Auswahl des Eigenwert solvers, Neuberechnung erforderlich">&nbsp;Eigenwertberechnung:</td>
               <td>
-              <sl-select  value="1" id="id_eig_solver_option" >
+              <sl-select  value="2" id="id_eig_solver_option" >
                  <sl-option value='0' @click=${berechnungErforderlich} >GNU GSL QR Methode</sl-option>
                  <sl-option value='1' @click=${berechnungErforderlich} >simultane Vektoriteration</sl-option>
+                 <sl-option value='2' @click=${berechnungErforderlich} >ARPACK Lanczos Iteration</sl-option>
               </sl-select>
               </td>
               <td>
