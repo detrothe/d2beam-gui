@@ -4,7 +4,7 @@ import Two from 'two.js'
 import { CTrans } from './trans';
 import { myFormat, write } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
-import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen, matprop_flag, nelem_koppelfedern, nelem_Balken, maxBettung, maxpress_all, max_press_kombi } from "./rechnen";
+import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen, matprop_flag, nelem_koppelfedern, nelem_Balken, maxBettung, maxpress_all, max_press_kombi, dyn_omega } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
@@ -2503,9 +2503,22 @@ export function drawsystem(svg_id = 'artboard') {
                 txt.baseline = 'middle'
                 txt.alignment = 'left'
             }
+
         }
     }
 
+
+    if (show_dyn_eigenformen && (maxValue_dyn_eigenform[draw_dyn_eigenform - 1] > 0.0)) {
+        const [x_min, x_max, z_min, z_max] = tr.getMinMax();
+        let rand = tr.World0(30 / devicePixelRatio)
+        let xl = x_min + 2 * rand
+        let zl = z_max - rand
+        let text = 'Frequenz f = ' + myFormat(dyn_omega[draw_dyn_eigenform - 1] / 2 / Math.PI, 2, 2) + ' Hz'
+        let txt = two.makeText(text, tr.xPix(xl), tr.zPix(zl), style_txt);
+        txt.fill = '#000000'
+        txt.baseline = 'bottom'
+        txt.alignment = 'left'
+    }
 
     if (show_knotenmassen && show_selection) draw_knotenmassen(two);
 
@@ -2609,6 +2622,7 @@ export function drawsystem(svg_id = 'artboard') {
 
         if (start_animation) {
             start_animation = false;
+            two.unbind('update')
             two.bind('update', draw_dyn_eigenformen);
 
             two.play();
@@ -5283,6 +5297,7 @@ function draw_dyn_eigenformen_grafik() {
 
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
+    if (two) two.unbind('update')
     drawsystem();
 }
 
@@ -5295,6 +5310,7 @@ function draw_dyn_animate_eigenformen_grafik() {
     animate_scale = 0.0
     if (show_dyn_animate_eigenformen) start_animation = true;
 
+    if (two) two.unbind('update')
     drawsystem();
 }
 
