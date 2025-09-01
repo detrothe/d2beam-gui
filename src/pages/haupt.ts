@@ -78,7 +78,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.5.0,a, 1-September-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.5.0,b, 1-September-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -1098,6 +1098,12 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <dr-button-pm id="id_button_dyn_neigv" nel="${dyn_neigv_init}" inputid="dyn_neigv"></dr-button-pm>
           <br /><br />
         </p>
+        <p>Zur Verbesserung der Konvergenz bei der Iteration der Eigenwerte:<br>
+           Mindestwert auf der Diagonalen der Massenmatrix :
+           <input type="number" id="id_minMass" name="minmass" class="input_tab" pattern="[0-9.,eE+-]*" value="0.0" /> kg
+        </p>
+
+
 
 
     </sl-tab-panel>

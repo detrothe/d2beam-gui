@@ -88,6 +88,7 @@ export function set_nnodalMass(wert: number) { nnodalMass = wert; }
 export let eigenform_dyn = [] as number[][]
 export let maxValue_dyn_eigenform = [] as number[]
 export let dyn_neigv = 1;
+export let min_mass = 0.0;
 
 export let neigv: number = 2;
 export let nNodeDisps = 0;
@@ -200,8 +201,8 @@ let c_simvektoriteration: any
 let c_gsl_eigenwert: any
 let c_cholesky_decomp: any
 let c_cholesky_2: any
-let c_speed:any
-let arpack_iteration:any
+let c_speed: any
+let arpack_iteration: any
 
 
 
@@ -614,6 +615,11 @@ export function rechnen(flag = 1) {
 
     el = document.getElementById('id_iter_neigv') as any;
     niter_neigv = Number(el.value);
+
+
+    el = document.getElementById('id_minMass') as HTMLInputElement;
+    min_mass = Number(el.value) / 1000.;  // von kg zu Tonnen
+
     console.log("niter_neigv = ", niter_neigv)
 
     console.log("== THIIO_flag", THIIO_flag, nelTeilungen, n_iterationen)
@@ -3072,6 +3078,11 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
         if (lmj >= 0) mass_matrix[lmj][lmj] += nodalmass[i].theta;
     }
 
+    if (min_mass > 0.0) {
+        for (i = 0; i < neq; i++) {  // Diagonalelemente ohne Masse mit min_mass belegen
+            if (mass_matrix[i][i] === 0.0) mass_matrix[i][i] = min_mass;
+        }
+    }
 
     for (i = 0; i < neq; i++) {  // merken für Ausdruck in Tab Pro
         for (j = 0; j < neq; j++) {

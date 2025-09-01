@@ -83,6 +83,10 @@ export function read_daten(eingabedaten: string) {
             setSystem(Number(jobj.system));
         }
 
+        if ( jobj.dateiname !== undefined) {
+            set_current_filename(jobj.dateiname);
+        }
+
         let el = document.getElementById("id_button_nkombinationen") as drButtonPM;
         el.setValue(jobj.ncombinations);
 
@@ -212,6 +216,10 @@ export function read_daten(eingabedaten: string) {
         eli = document.getElementById("id_iter_neigv") as HTMLInputElement;
         if (jobj.niter_neigv === undefined) eli.value = "500";
         else eli.value = jobj.niter_neigv;
+
+        eli = document.getElementById("id_minMass") as HTMLInputElement;
+        if (jobj.minMass === undefined) eli.value = "0.0";
+        else eli.value = jobj.minMass;
 
         const txtarea = document.getElementById("freetext") as HTMLTextAreaElement;
         console.log("textarea", txtarea.value);
@@ -595,8 +603,9 @@ async function handleFileSelect_save() {
 }
 
 export function str_inputToJSON() {
+
     let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node_ID, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, epsForce_tol, stadyn, dyn_neigv;
-    let eig_solver, niter_neigv, nelem_koppelfedern, matprop_flag;
+    let eig_solver, niter_neigv, nelem_koppelfedern, matprop_flag, min_mass;
 
     let el = document.getElementById("id_button_nteilungen") as any;
     nelTeilungen = el.nel;
@@ -645,6 +654,9 @@ export function str_inputToJSON() {
 
     el = document.getElementById("id_iter_neigv") as HTMLInputElement;
     niter_neigv = el.value;
+
+    el = document.getElementById("id_minMass") as HTMLInputElement;
+    min_mass = el.value;
 
     //el = document.getElementById('id_dialog_neue_eingabe') as HTMLElement;
     let system = System; //Number((el.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
@@ -888,6 +900,7 @@ export function str_inputToJSON() {
 
         // 'unit_length': current_unit_length,
         system: system,
+        dateiname: currentFilename,
         // 'nnodes': n_nodes,
         // 'nelem': n_elem,
         // 'nloads': nloads,
@@ -933,6 +946,7 @@ export function str_inputToJSON() {
         fangweite_cursor: get_fangweite_cursor(),
 
         maxBettung: maxBettung,
+        minMass: min_mass,
 
         // 'elem': elem,
         // 'koppelfedern': koppelfedern,
