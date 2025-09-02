@@ -59,7 +59,7 @@ export class TCAD_Stab extends TCAD_Element {
     index2 = -1;
     name_querschnitt = ''
     nGelenke = 0
-    gelenk = Array(6).fill(0)
+    gelenk = [0, 0, 0, 0, 0, 0]
     sinus = 0.0
     cosinus = 1.0
     alpha = 0.0

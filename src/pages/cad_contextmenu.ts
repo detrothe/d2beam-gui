@@ -76,14 +76,14 @@ export function show_property_dialog() {
 
 }
 //---------------------------------------------------------------------------------------------------------------
-function dialog_stab_eigenschaften_closed(this: any, e: any) {
+function dialog_stab_eigenschaften_closed(this: any, _e: any) {
     //------------------------------------------------------------------------------------------------------------
-    console.log("Event dialog_stab_eigenschaften_closed", e);
-    console.log("this", this);
+    //console.log("Event dialog_stab_eigenschaften_closed", e);
+    //console.log("this", this);
     //const ele = document.getElementById("id_dialog_stab_eigenschaften") as HTMLDialogElement;
 
     const el = document.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
-    console.log("id_dialog_stab_eigenschaften", el);
+    //console.log("id_dialog_stab_eigenschaften", el);
 
     // ts-ignore
     const returnValue = this.returnValue;

@@ -5,11 +5,12 @@ import { drDialogKopieren } from "../components/dr-dialog_kopieren"
 import { drDialogSelektTyp } from "../components/dr-dialog_selekt_typ"
 import { CAD_COPY_SELECTED, CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_SELECT_MULTI, CAD_STAB, init_cad, list, tr, two } from "./cad"
 import { buttons_control, drawer_1_control, set_help_text, showDialog_elementlast, showDialog_knotenlast } from "./cad_buttons"
-import { drawStab } from "./cad_draw_elemente"
+import { draw_knotenmasse, drawStab } from "./cad_draw_elemente"
 import { find_max_Lastfall, find_maxValues_eloads, set_max_lastfall } from "./cad_draw_elementlasten"
-import { add_cad_node, add_element_nodes, get_cad_node_X, get_cad_node_Z } from "./cad_node"
-import { TCAD_Element, TCAD_Stab, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenlast } from "./CCAD_element"
+import { add_cad_node, add_element_nodes, find_nearest_cad_node, get_cad_node_X, get_cad_node_Z } from "./cad_node"
+import { TCAD_Element, TCAD_Stab, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenlast, TCAD_Knotenmasse } from "./CCAD_element"
 import { berechnungErforderlich } from "./globals"
+import { TMass } from "./rechnen"
 
 
 
@@ -113,7 +114,9 @@ export function copy_selected(dx0: number, dz0: number) {
     console.log("in copy_selected", dx0, dz0)
     if (ncopies < 1) return;
 
-    for (let i = 0; i < list.size; i++) {
+    let lsize = list.size
+
+    for (let i = 0; i < lsize; i++) {
         let obj = list.getAt(i) as TCAD_Element;
         if (obj.multiSelected) {
             if (obj.elTyp === CAD_STAB) {
@@ -144,7 +147,7 @@ export function copy_selected(dx0: number, dz0: number) {
                     stab_obj.aL = (obj as TCAD_Stab).aL;
                     stab_obj.aR = (obj as TCAD_Stab).aR;
                     stab_obj.nGelenke = (obj as TCAD_Stab).nGelenke;
-                    stab_obj.gelenk = (obj as TCAD_Stab).gelenk;
+                    for (let j = 0; j < 6; j++)  stab_obj.gelenk[j] = (obj as TCAD_Stab).gelenk[j];
                     stab_obj.sinus = (obj as TCAD_Stab).sinus;
                     stab_obj.cosinus = (obj as TCAD_Stab).cosinus;
                     stab_obj.alpha = (obj as TCAD_Stab).alpha;
@@ -180,12 +183,40 @@ export function copy_selected(dx0: number, dz0: number) {
                     dz += dz0;
                 }
             }
+        }
+    }
 
+    lsize = list.size
+    for (let i = 0; i < lsize; i++) {
+        let obj = list.getAt(i) as TCAD_Element;
+        if (obj.multiSelected) {
+            if (obj.elTyp === CAD_KNMASSE) {
+                let x1 = get_cad_node_X((obj as TCAD_Knotenmasse).index1)
+                let z1 = get_cad_node_Z((obj as TCAD_Knotenmasse).index1)
+                let masse = new TMass();
+                masse.mass = (obj as TCAD_Knotenmasse).masse.mass;
+                masse.theta = (obj as TCAD_Knotenmasse).masse.theta;
+
+                let dx = dx0, dz = dz0;
+                for (let i = 0; i < ncopies; i++) {
+                    let index = find_nearest_cad_node(x1 + dx, z1 + dz);
+                    if (index > -1) {
+                        let group = null;
+                        const el = new TCAD_Knotenmasse(group, index, masse, CAD_KNMASSE);
+                        list.append(el);
+                        add_element_nodes(index);
+
+                        group = draw_knotenmasse(tr, el, get_cad_node_X(index), get_cad_node_Z(index));
+                        two.add(group);
+                        el.setTwoObj(group);
+                    }
+                    dx += dx0;
+                    dz += dz0;
+                }
+            }
         }
     }
     two.update();
-
-
 
 }
 
