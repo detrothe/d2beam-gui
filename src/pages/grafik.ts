@@ -2685,7 +2685,7 @@ function draw_dyn_eigenformen(_frameCount: any, _timeDelta: any) {
         let dx: number, x: number, eta: number, sl: number, nenner: number
         let Nu: number[] = new Array(2), Nw: number[] = new Array(4)
 
-        let u: number, w: number, uG: number, wG: number
+        let u = 0.0, w = 0.0, uG: number, wG: number
         let edispL: number[] = new Array(6)
         let ikomb = draw_lastfall
         let maxU = 0.0, x_max = 0.0, z_max = 0.0, dispG: number
@@ -2756,14 +2756,21 @@ function draw_dyn_eigenformen(_frameCount: any, _timeDelta: any) {
             x = 0.0; xx2 = 0.0; zz2 = 0.0
             for (let i = 0; i <= nelTeilungen; i++) {
                 if (System === 0) {
-                    Nu[0] = (1.0 - x / sl);
-                    Nu[1] = x / sl
-                    Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
-                    Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
-                    Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
-                    Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
-                    u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
-                    w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                    if (stab[ielem].elTyp === 0) {
+                        Nu[0] = (1.0 - x / sl);
+                        Nu[1] = x / sl
+                        Nw[0] = (2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x + sl ** 3 + 12 * eta * sl) / nenner;
+                        Nw[1] = -((sl * x ** 3 + (-2 * sl ** 2 - 6 * eta) * x ** 2 + (sl ** 3 + 6 * eta * sl) * x) / nenner);
+                        Nw[2] = -((2 * x ** 3 - 3 * sl * x ** 2 - 12 * eta * x) / nenner);
+                        Nw[3] = -((sl * x ** 3 + (6 * eta - sl ** 2) * x ** 2 - 6 * eta * sl * x) / nenner);
+                        u = Nu[0] * edispL[0] + Nu[1] * edispL[3]
+                        w = Nw[0] * edispL[1] + Nw[1] * edispL[2] + Nw[2] * edispL[4] + Nw[3] * edispL[5];
+                    } else if (stab[ielem].elTyp > 0 && stab[ielem].elTyp < 4) {
+                        Nu[0] = (1.0 - x / sl);
+                        Nu[1] = x / sl
+                        u = Nu[0] * edispL[0] + Nu[1] * edispL[2]
+                        w = Nu[0] * edispL[1] + Nu[1] * edispL[3]
+                    }
                 } else {
                     Nu[0] = (1.0 - x / sl);
                     Nu[1] = x / sl

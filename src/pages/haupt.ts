@@ -68,7 +68,7 @@ import { rechnen, init_tabellen, show_gleichungssystem, setSystem, System, hideC
 
 import { nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, set_dialog_querschnitt_new, removeAll_def_querschnitt } from './querschnitte';
 
-import { click_pan_button_cad, init_cad, init_two_cad, two_cad_clear } from './cad';
+import { click_pan_button_cad, init_cad, init_two_cad, set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_knotenverformung, set_show_lager, set_show_stab_qname, two_cad_clear } from './cad';
 import { cad_buttons, close_drawer_1 } from './cad_buttons';
 import { abbruch_property_dialog, delete_element_dialog, show_add_elload_dialog, show_property_dialog } from './cad_contextmenu';
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
@@ -78,7 +78,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.5.0,a, 3-September-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.5.0,b, 3-September-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -1846,6 +1846,14 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
       el = document.getElementById('id_button_nteilungen') as drButtonPM;
       el.setValue(10);
     }
+
+    set_show_stab_qname(true);
+    set_show_knotenlasten(true);
+    set_show_elementlasten(true);
+    set_show_bemassung(true);
+    set_show_lager(true);
+    set_show_knotenverformung(true);
+    set_show_knotenmassen(true);
 
     berechnungErforderlich(true);
 

@@ -880,14 +880,13 @@ export function init_cad(flag: number) {
       }
    }
 
+   console.log("show_knotenmassen", show_knotenmassen, stadyn)
    if (stadyn === 1) {
       for (let i = 0; i < list.size; i++) {
 
          let obj: TCAD_Element = list.getAt(i);
 
          if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
-            // let masse = new TMass();
-            // masse = (obj as TCAD_Knotenmasse).masse
             let index1 = obj.index1
             let group = draw_knotenmasse(tr, obj as TCAD_Knotenmasse, get_cad_node_X(index1), get_cad_node_Z(index1))
             two.add(group);
@@ -1678,7 +1677,7 @@ function mouseup(ev: any) {
 
       select_element(xc, zc);
 
-   }   else if (buttons_control.unselect_multi_aktiv) {
+   } else if (buttons_control.unselect_multi_aktiv) {
       let xc = tr.xWorld(xo);
       let zc = tr.zWorld(yo);
 
