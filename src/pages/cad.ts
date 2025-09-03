@@ -61,6 +61,7 @@ export const CAD_KNOTVERFORMUNG = 12;
 
 export const CAD_SELECT_MULTI = 13;
 export const CAD_COPY_SELECTED = 14;
+export const CAD_UNSELECT_MULTI = 15;
 
 export let two: any = null;
 let domElement: any = null;
@@ -1211,6 +1212,12 @@ function penDown(ev: PointerEvent) {
 
       select_element(xc, zc);
    }
+   else if (buttons_control.unselect_multi_aktiv) {
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
+
+      select_element(xc, zc);
+   }
 
    else if (buttons_control.cad_eingabe_aktiv) {
       if (buttons_control.input_started === 0) {
@@ -1666,6 +1673,12 @@ function mouseup(ev: any) {
       add_elementlast(xc, zc);
 
    } else if (buttons_control.select_multi_aktiv) {
+      let xc = tr.xWorld(xo);
+      let zc = tr.zWorld(yo);
+
+      select_element(xc, zc);
+
+   }   else if (buttons_control.unselect_multi_aktiv) {
       let xc = tr.xWorld(xo);
       let zc = tr.zWorld(yo);
 

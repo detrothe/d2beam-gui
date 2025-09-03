@@ -3,14 +3,16 @@ import { drDialogElementlasten } from "../components/dr-dialog_elementlasten"
 import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast"
 import { drDialogKopieren } from "../components/dr-dialog_kopieren"
 import { drDialogSelektTyp } from "../components/dr-dialog_selekt_typ"
-import { CAD_COPY_SELECTED, CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_SELECT_MULTI, CAD_STAB, init_cad, list, tr, two } from "./cad"
+import { drDialogStabEigenschaften } from "../components/dr-dialog_stab_eigenschaften"
+import { CAD_COPY_SELECTED, CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_SELECT_MULTI, CAD_STAB, CAD_UNSELECT_MULTI, init_cad, list, tr, two } from "./cad"
 import { buttons_control, drawer_1_control, set_help_text, showDialog_elementlast, showDialog_knotenlast } from "./cad_buttons"
-import { draw_knotenmasse, drawStab } from "./cad_draw_elemente"
+import { draw_knotenlast, draw_knotenmasse, draw_lager, drawStab } from "./cad_draw_elemente"
 import { find_max_Lastfall, find_maxValues_eloads, set_max_lastfall } from "./cad_draw_elementlasten"
 import { add_cad_node, add_element_nodes, find_nearest_cad_node, get_cad_node_X, get_cad_node_Z } from "./cad_node"
-import { TCAD_Element, TCAD_Stab, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenlast, TCAD_Knotenmasse } from "./CCAD_element"
+import { TCAD_Element, TCAD_Stab, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager } from "./CCAD_element"
 import { berechnungErforderlich } from "./globals"
-import { TMass } from "./rechnen"
+import { querschnittset } from "./querschnitte"
+import { TLoads, TMass, TNode } from "./rechnen"
 
 
 
@@ -26,8 +28,6 @@ export let mode_multi_selected_knotenlast_aendern = false;
 //------------------------------------------------------------------------------------------------------
 export function select_multi_button(art: number) {
     //----------------------------------------------------------------------------------------------------
-
-    //console.log("in select_multi_button")
 
     if (buttons_control.select_multi_aktiv) {
         buttons_control.reset()
@@ -45,6 +45,28 @@ export function select_multi_button(art: number) {
     }
 }
 
+
+//------------------------------------------------------------------------------------------------------
+export function unselect_multi_button(art: number) {
+    //----------------------------------------------------------------------------------------------------
+
+    //console.log("in select_multi_button")
+
+    if (buttons_control.unselect_multi_aktiv) {
+        buttons_control.reset()
+    } else {
+        buttons_control.reset()
+        buttons_control.unselect_multi_aktiv = true
+        buttons_control.art = art
+        buttons_control.cad_eingabe_aktiv = true
+        buttons_control.typ_cad_element = CAD_UNSELECT_MULTI
+        set_help_text('CAD Element picken');
+        //el.addEventListener('keydown', keydown);
+        buttons_control.n_input_points = 1
+        buttons_control.button_pressed = true;
+
+    }
+}
 
 //------------------------------------------------------------------------------------------------------
 export function unselect_all_button() {
@@ -214,6 +236,62 @@ export function copy_selected(dx0: number, dz0: number) {
                     dz += dz0;
                 }
             }
+            else if (obj.elTyp === CAD_LAGER) {
+                let x1 = get_cad_node_X((obj as TCAD_Lager).index1)
+                let z1 = get_cad_node_Z((obj as TCAD_Lager).index1)
+                let node = new TNode();
+                for (let j = 0; j < 3; j++) node.L_org[j] = (obj as TCAD_Lager).node.L_org[j];
+                node.kx = (obj as TCAD_Lager).node.kx;
+                node.kz = (obj as TCAD_Lager).node.kz;
+                node.kphi = (obj as TCAD_Lager).node.kphi;
+                node.phi = (obj as TCAD_Lager).node.phi;
+
+                let dx = dx0, dz = dz0;
+                for (let i = 0; i < ncopies; i++) {
+                    let index = find_nearest_cad_node(x1 + dx, z1 + dz);
+                    if (index > -1) {
+                        let group = null;
+                        const el = new TCAD_Lager(group, index, node, CAD_LAGER);
+                        list.append(el);
+                        add_element_nodes(index);
+
+                        group = draw_lager(tr, el);
+                        two.add(group);
+                        el.setTwoObj(group);
+                    }
+                    dx += dx0;
+                    dz += dz0;
+                }
+            }
+            else if (obj.elTyp === CAD_KNLAST) {
+                let x1 = get_cad_node_X((obj as TCAD_Knotenlast).index1)
+                let z1 = get_cad_node_Z((obj as TCAD_Knotenlast).index1)
+                let knlast = new TLoads();
+                for (let j = 0; j < 3; j++) knlast.p[j] = (obj as TCAD_Knotenlast).knlast.p[j];
+                knlast.lf = (obj as TCAD_Knotenlast).knlast.lf;
+                knlast.Px_org = (obj as TCAD_Knotenlast).knlast.Px_org;
+                knlast.Pz_org = (obj as TCAD_Knotenlast).knlast.Pz_org;
+                knlast.alpha = (obj as TCAD_Knotenlast).knlast.alpha;
+                knlast.Px = (obj as TCAD_Knotenlast).knlast.Px;
+                knlast.Pz = (obj as TCAD_Knotenlast).knlast.Pz;
+
+                let dx = dx0, dz = dz0;
+                for (let i = 0; i < ncopies; i++) {
+                    let index = find_nearest_cad_node(x1 + dx, z1 + dz);
+                    if (index > -1) {
+                        let group = null;
+                        const el = new TCAD_Knotenlast(group, index, knlast, CAD_KNLAST);
+                        list.append(el);
+                        add_element_nodes(index);
+
+                        group = draw_knotenlast(tr, el, index, 1, 0, true);
+                        two.add(group);
+                        el.setTwoObj(group);
+                    }
+                    dx += dx0;
+                    dz += dz0;
+                }
+            }
         }
     }
     two.update();
@@ -364,11 +442,13 @@ export function edit_selected_button() {
 
     console.log("NSTAEBE...", nStaebe_edit_selected, nStablasten_edit_selected, nKnLast_edit_selected, nLager_edit_selected, nMassen_edit_selected)
 
+    if (nStaebe_edit_selected > 0) showDialog_edit_selected_staebe();
+
     if (nStablasten_edit_selected > 0) showDialog_edit_selected_stablasten();
 
     if (nKnLast_edit_selected > 0) {
         mode_multi_selected_knotenlast_aendern = true;
-        showDialog_knotenlast();
+        showDialog_knotenlast(true);
     }
 
     berechnungErforderlich(true);
@@ -546,6 +626,8 @@ export function update_multi_selected_knotenlast() {
 
     let lf = el.get_lastfall()
 
+    let nur_lastfall = el.get_nur_lastfall();
+
     for (let i = 0; i < list.size; i++) {
         let obj = list.getAt(i) as TCAD_Knotenlast;
 
@@ -553,23 +635,113 @@ export function update_multi_selected_knotenlast() {
 
             obj.knlast.lf = el.get_lastfall();
             set_max_lastfall(obj.knlast.lf);
-            obj.knlast.Px_org = el.get_Px();
-            obj.knlast.Pz_org = el.get_Pz();
-            obj.knlast.p[2] = el.get_My();
-            obj.knlast.alpha = el.get_alpha();
+            if (!nur_lastfall) {
+                obj.knlast.Px_org = el.get_Px();
+                obj.knlast.Pz_org = el.get_Pz();
+                obj.knlast.p[2] = el.get_My();
+                obj.knlast.alpha = el.get_alpha();
 
-            // Transformation in x-z Koordinatensystem
+                // Transformation in x-z Koordinatensystem
 
-            let phi = obj.knlast.alpha * Math.PI / 180
+                let phi = obj.knlast.alpha * Math.PI / 180
 
-            let si = Math.sin(phi)
-            let co = Math.cos(phi)
+                let si = Math.sin(phi)
+                let co = Math.cos(phi)
 
-            obj.knlast.Px = co * obj.knlast.Px_org + si * obj.knlast.Pz_org
-            obj.knlast.Pz = -si * obj.knlast.Px_org + co * obj.knlast.Pz_org
-
+                obj.knlast.Px = co * obj.knlast.Px_org + si * obj.knlast.Pz_org
+                obj.knlast.Pz = -si * obj.knlast.Px_org + co * obj.knlast.Pz_org
+            }
         }
     }
 
     init_cad(2);
+}
+
+function showDialog_edit_selected_staebe() {
+    //----------------------------------------------------------------------------------------------------
+
+
+    const el = document.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
+
+    let names = [] as string[]
+    for (let i = 0; i < querschnittset.length; i++) {
+        names.push(querschnittset[i].name)
+    }
+
+    el.setQuerschnittNames(names);
+    let gelenke: boolean[] = Array(6).fill(false)
+    el.setGelenke(gelenke);
+
+    el.setStarrA(0.0)
+    el.setStarrE(0.0)
+    el.setBettung(0.0)
+
+    //el.set_stabtyp((picked_obj as TCAD_Stab).get_stabtyp())
+
+    console.log("shadow", el?.shadowRoot?.getElementById("dialog_stabeigenschaften")),
+        (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).addEventListener("close", dialog_stab_eigenschaften_closed);
+
+    (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).showModal();
+
+}
+
+//---------------------------------------------------------------------------------------------------------------
+function dialog_stab_eigenschaften_closed(this: any, _e: any) {
+    //------------------------------------------------------------------------------------------------------------
+    //console.log("Event dialog_stab_eigenschaften_closed", e);
+    //console.log("this", this);
+    //const ele = document.getElementById("id_dialog_stab_eigenschaften") as HTMLDialogElement;
+
+    const el = document.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
+    //console.log("id_dialog_stab_eigenschaften", el);
+
+    // ts-ignore
+    const returnValue = this.returnValue;
+
+    (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).removeEventListener("close", dialog_stab_eigenschaften_closed);
+
+    if (returnValue === "ok") {
+        //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+        console.log("dialog_stab_eigenschaften_closed sieht gut aus");
+
+        const el = document.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
+        //console.log("Querschnitt : ", el.getSelectedOptionByName());
+
+        // Daten eintragen in Objekt
+        const name_querschnitt = el.getSelectedOptionByName();
+        //let gelenke = Array(6)
+        const gelenke = el.getGelenke();
+
+        // (picked_obj as TCAD_Stab).set_gelenke(gelenke);
+
+        const starr_a = el.getStarrA();
+        const starr_e = el.getStarrE();
+        const bettung = el.getBettung();
+
+        const stab_typ = el.get_stabtyp();
+
+
+        for (let i = 0; i < list.size; i++) {
+            let obj = list.getAt(i) as TCAD_Stab;
+
+            if (obj.multiSelected) {
+
+                obj.set_bettung(bettung);
+                obj.set_name_querschnitt(name_querschnitt);
+                obj.set_starrA(starr_a);
+                obj.set_starrE(starr_e);
+                obj.set_stabtyp(stab_typ);
+                obj.set_gelenke(gelenke);
+            }
+        }
+
+        berechnungErforderlich(true);
+        init_cad(2);
+
+    } else {
+        // Abbruch
+
+        buttons_control.reset();
+        //el.removeEventListener('keydown', keydown);
+    }
 }

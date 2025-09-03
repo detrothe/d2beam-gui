@@ -6,7 +6,7 @@ import { Bemassung_button } from '../pages/cad_bemassung';
 import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_lager, set_show_lastfall, set_show_raster, set_show_stab_qname } from '../pages/cad';
 import { copy_svg_cad } from '../pages/grafik';
 import { Knotenverformung_button } from '../pages/cad_knotenverformung';
-import { copy_selected_button, edit_selected_button, select_multi_button, select_typ_button, unselect_all_button } from '../pages/cad_select';
+import { copy_selected_button, edit_selected_button, select_multi_button, select_typ_button, unselect_all_button, unselect_multi_button } from '../pages/cad_select';
 
 @customElement('dr-drawer_1')
 export class drDrawer_1 extends LitElement {
@@ -131,7 +131,11 @@ export class drDrawer_1 extends LitElement {
          </p>
 
          <p>
-            <sl-button id="id_unselect_all" value="0" @click="${this._unselect_all}">unselektiere alle Elemente</sl-button>
+            <sl-button id="id_unselect_all" value="0" @click="${this._unselect_all}">deselektiere alle Elemente</sl-button>
+         </p>
+
+         <p>
+            <sl-button id="id_unselect_multi" value="0" @click="${this._unselect_multi}">deselektiere mehrere Elemente</sl-button>
          </p>
 
          <p>
@@ -202,6 +206,13 @@ export class drDrawer_1 extends LitElement {
       //@ts-ignore
       if (drawer !== null) drawer.hide();
       select_multi_button(1);
+   }
+
+   _unselect_multi() {
+      const drawer = document.querySelector('.drawer-overview');
+      //@ts-ignore
+      if (drawer !== null) drawer.hide();
+      unselect_multi_button(1);
    }
 
    _select_typ() {

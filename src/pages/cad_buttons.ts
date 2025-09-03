@@ -161,6 +161,7 @@ class Cbuttons_control {
   show_boundingRect = false;
 
   select_multi_aktiv = false;
+  unselect_multi_aktiv = false;
   unselect_all_aktiv = false;
   copy_selected_aktiv = false;
   edit_selected_aktiv = false;
@@ -189,6 +190,7 @@ class Cbuttons_control {
     this.show_boundingRect = false;
 
     this.select_multi_aktiv = false;
+    this.unselect_multi_aktiv = false;
     this.unselect_all_aktiv = false;
     this.copy_selected_aktiv = false;
     this.edit_selected_aktiv = false;
@@ -1633,12 +1635,13 @@ export function select_element(xc: number, zc: number) {
   // -----------------------  M U L T I S E L E C T  ------------------------------------
 
 
-  else if (buttons_control.select_multi_aktiv) {
+  else if (buttons_control.select_multi_aktiv || buttons_control.unselect_multi_aktiv) {
 
     if (knotenmasse_gefunden) {
 
       two.remove(obj_knmasse.two_obj);
-      obj_knmasse.multiSelected = true
+      if (buttons_control.select_multi_aktiv) obj_knmasse.multiSelected = true;
+      else obj_knmasse.multiSelected = false;
       let index1 = obj_knmasse.index1
       let group = draw_knotenmasse(tr, obj_knmasse, get_cad_node_X(index1), get_cad_node_Z(index1))
       two.add(group);
@@ -1648,7 +1651,8 @@ export function select_element(xc: number, zc: number) {
     else if (knotenlast_gefunden) {
 
       two.remove(obj_knlast.two_obj);
-      obj_knlast.multiSelected = true
+      if (buttons_control.select_multi_aktiv) obj_knlast.multiSelected = true;
+      else obj_knlast.multiSelected = false;
       let index1 = obj_knlast.index1
       let group = draw_knotenlast(tr, obj_knlast, index1, 1.0, 0, true)
       two.add(group);
@@ -1661,7 +1665,8 @@ export function select_element(xc: number, zc: number) {
 
         let obj = list.getAt(index_stab);
         two.remove(obj.two_obj);
-        obj.multiSelected = true
+        if (buttons_control.select_multi_aktiv) obj.multiSelected = true;
+        else obj.multiSelected = false;
         let group = drawStab(obj, tr, false);
         two.add(group);
 
@@ -1672,7 +1677,9 @@ export function select_element(xc: number, zc: number) {
 
       let group = obj_ellast.getTwoObj();
       two.remove(group)
-      obj_ellast.elast[index_ellast].multiSelected = true
+      if (buttons_control.select_multi_aktiv) obj_ellast.elast[index_ellast].multiSelected = true;
+      else obj_ellast.elast[index_ellast].multiSelected = false;
+
       group = drawStab(obj_ellast as TCAD_Stab, tr);
       two.add(group)
       obj_ellast.setTwoObj(group);
@@ -1684,6 +1691,7 @@ export function select_element(xc: number, zc: number) {
 
 
   }
+
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -2448,15 +2456,17 @@ export function Knotenlast_button(_ev: Event) {
 
 //---------------------------------------------------------------------------------------------------------------
 
-export function showDialog_knotenlast() {
+export function showDialog_knotenlast(show_nur_lastfall = false) {
   //------------------------------------------------------------------------------------------------------------
-  console.log("showDialog_knotenlast()");
+  //console.log("showDialog_knotenlast()");
 
   const el = document.getElementById("id_dialog_knotenlast");
-  console.log("id_dialog_knotenlast", el);
+  //console.log("id_dialog_knotenlast", el);
 
-  console.log("shadow", el?.shadowRoot?.getElementById("dialog_knotenlast")),
-    (el?.shadowRoot?.getElementById("dialog_knotenlast") as HTMLDialogElement).addEventListener("close", dialog_knotenlast_closed);
+  //console.log("shadow", el?.shadowRoot?.getElementById("dialog_knotenlast")),
+  (document.getElementById("id_dialog_knotenlast") as drDialogKnotenlast).set_nur_lastfall(show_nur_lastfall);
+
+  (el?.shadowRoot?.getElementById("dialog_knotenlast") as HTMLDialogElement).addEventListener("close", dialog_knotenlast_closed);
 
   set_help_text('Knoten picken');
 
@@ -2478,7 +2488,7 @@ function dialog_knotenlast_closed(this: any, e: any) {
     //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
     console.log("sieht gut aus");
     if (mode_knotenlast_aendern) update_knotenlast();
-    else if ( mode_multi_selected_knotenlast_aendern) update_multi_selected_knotenlast();
+    else if (mode_multi_selected_knotenlast_aendern) update_multi_selected_knotenlast();
   } else {
     // Abbruch
     (ele?.shadowRoot?.getElementById("dialog_knotenlast") as HTMLDialogElement).removeEventListener("close", dialog_knotenlast_closed);
@@ -2655,7 +2665,7 @@ function dialog_elementlast_closed(this: any, e: any) {
     console.log("sieht gut aus");
 
     if (mode_elementlast_aendern) update_elementlast();
-    else if ( mode_multi_selected_elementlast_aendern) update_multi_selected_elementlast();
+    else if (mode_multi_selected_elementlast_aendern) update_multi_selected_elementlast();
   } else {
     // Abbruch
     (ele?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).removeEventListener("close", dialog_elementlast_closed);

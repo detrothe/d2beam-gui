@@ -4,9 +4,9 @@ import { property, customElement } from 'lit/decorators.js';
 import '../styles/dr-dialog.css';
 import { SlCheckbox, SlRadioGroup, SlSelect } from '@shoelace-style/shoelace';
 
-@customElement('dr-dialog_edit_selected_elementlasten')
-export class drDialogEdit_selected_elementlasten extends LitElement {
-   @property({ type: String }) title = 'Kopieren';
+@customElement('dr-dialog_edit_selected_lastfall')
+export class drDialogEdit_selected_lastfall extends LitElement {
+   @property({ type: String }) title = 'lastfall ändern';
 
    /* @property({ type: Number }) xValue = 0; */
 
@@ -128,14 +128,8 @@ export class drDialogEdit_selected_elementlasten extends LitElement {
    //----------------------------------------------------------------------------------------------
 
    render() {
-      return html` <dialog id="dialog_edit_selected_elementloads">
-         <h2>editiere selektierte Elementlasten</h2>
-
-         <sl-radio-group id="id_option" label="Wähle eine Option" name="a" value="0" @sl-change="${this._handleChange}">
-            <sl-radio value="0">nur Lastfall ändern</sl-radio>
-            <sl-radio value="1">Streckenlasten ändern</sl-radio>
-            <sl-radio value="2">alles ändern</sl-radio>
-         </sl-radio-group>
+      return html` <dialog id="dialog_edit_selected_loadcase">
+         <h2>Ändere selektierte Lasten</h2>
 
          <div id="id_div" style="display: none;">
             <p>
@@ -144,16 +138,6 @@ export class drDialogEdit_selected_elementlasten extends LitElement {
             </p>
          </div>
 
-         <div id="id_div_p" style="display: none;">
-            <p>
-               p<sub>a</sub>
-               <input type="number" id="id_pa" name="pa" pattern="[0-9.,eE+-]*" value="" />
-               [kN/m]<br />
-               p<sub>e</sub>
-               <input type="number" id="id_pe" name="pa" pattern="[0-9.,eE+-]*" value="" />
-               [kN/m]
-            </p>
-         </div>
          <br />
 
          <form method="dialog">
@@ -187,57 +171,4 @@ export class drDialogEdit_selected_elementlasten extends LitElement {
       el.value = String(wert);
    }
 
-   get_option() {
-      let el = this.shadowRoot?.getElementById('id_option') as SlRadioGroup;
-      return Number(el.value);
-   }
-
-   set_option(wert: number) {
-      let el = this.shadowRoot?.getElementById('id_option') as SlRadioGroup;
-      el.value = String(wert);
-   }
-
-
-   get_pa() {
-      const shadow = this.shadowRoot;
-      //console.log("id_x", (shadow?.getElementById("id_x") as HTMLInputElement).value);
-      let wert = Number((shadow?.getElementById("id_pa") as HTMLInputElement).value.replace(/,/g, "."));
-      return wert;
-   }
-   get_pe() {
-      const shadow = this.shadowRoot;
-      let wert = Number((shadow?.getElementById("id_pe") as HTMLInputElement).value.replace(/,/g, "."));
-      return wert;
-   }
-
-   set_pa(wert: number) {
-      let el = this.shadowRoot?.getElementById("id_pa") as HTMLInputElement;
-      el.value = String(wert);
-   }
-   set_pe(wert: number) {
-      let el = this.shadowRoot?.getElementById("id_pe") as HTMLInputElement;
-      el.value = String(wert);
-   }
-
-   _handleChange() {
-      //console.log('_handleChange');
-
-      let wert = (this.shadowRoot?.getElementById('id_option') as SlRadioGroup).value;
-      //console.log('id_radio_group ', wert);
-
-      let el = this.shadowRoot?.getElementById('id_div') as HTMLDivElement;
-      el.style.display = 'none';
-      el = this.shadowRoot?.getElementById('id_div_p') as HTMLDivElement;
-      el.style.display = 'none';
-
-      if (wert === '0') {
-         let el = this.shadowRoot?.getElementById('id_div') as HTMLDivElement;
-         el.style.display = 'block';
-      } else if (wert === '1') {
-         let el = this.shadowRoot?.getElementById('id_div_p') as HTMLDivElement;
-         el.style.display = 'block';
-      }
-
-      this.shadowRoot?.getElementById('OK')?.focus();
-   }
 }
