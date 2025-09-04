@@ -2510,9 +2510,9 @@ export function drawsystem(svg_id = 'artboard') {
 
     if (show_dyn_eigenformen && (maxValue_dyn_eigenform[draw_dyn_eigenform - 1] > 0.0)) {
         const [x_min, x_max, z_min, z_max] = tr.getMinMax();
-        let rand = tr.World0(30 / devicePixelRatio)
+        let rand = tr.World0(30)
         let xl = x_min + 2 * rand
-        let zl = z_max - rand
+        let zl = z_max - rand / devicePixelRatio
         let text = 'Frequenz f = ' + myFormat(dyn_omega[draw_dyn_eigenform - 1] / 2 / Math.PI, 2, 2) + ' Hz'
         let txt = two.makeText(text, tr.xPix(xl), tr.zPix(zl), style_txt);
         txt.fill = '#000000'
