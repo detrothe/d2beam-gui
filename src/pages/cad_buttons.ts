@@ -83,6 +83,7 @@ import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformu
 import { draw_knotenverformung, showDialog_knotenverformung, write_knotenverformung_dialog } from "./cad_knotenverformung";
 import { drDrawer_1 } from "../components/dr-drawer_1";
 import { mode_multi_selected_elementlast_aendern, mode_multi_selected_knotenlast_aendern, update_multi_selected_elementlast, update_multi_selected_knotenlast } from "./cad_select";
+import { LitElement } from "lit";
 
 let backgroundColor_button = 'rgb(64, 64, 64)';
 let backgroundColor_button_light = 'rgb(64, 64, 64)';
@@ -90,6 +91,9 @@ let backgroundColor_button_light = 'rgb(64, 64, 64)';
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
   backgroundColor_button = backgroundColor_button_light;
 }
+
+export let hide_drawer = true;
+export function set_hide_drawer(wert: boolean) { hide_drawer = wert; }
 
 export let picked_obj: TCAD_Element;
 export let index_stab = -1
@@ -2205,7 +2209,9 @@ export function Drawer_button(_ev: Event) {
   const drawer = document.querySelector('.drawer-overview');
   const closeButton = drawer?.querySelector('sl-button[variant="primary"]');
 
-  //console.log("in drawer_button", drawer);
+  const myDrawer = document.querySelector('.class-my-drawer') as LitElement;
+
+  console.log("in drawer_button", myDrawer);
 
   (document.getElementById("id_drawer_1") as drDrawer_1).init_loadcases(max_Lastfall);
 
@@ -2214,7 +2220,9 @@ export function Drawer_button(_ev: Event) {
 
   if (drawer_1_control.drawer_eingabe_aktiv) {
     //@ts-ignore
-    if (drawer !== null) drawer.hide()
+    //if (drawer !== null) drawer.hide()
+
+    if (myDrawer && hide_drawer) myDrawer.style.display = 'none';
 
     drawer_1_control.reset()
   } else {
@@ -2232,7 +2240,8 @@ export function Drawer_button(_ev: Event) {
     //@ts-ignore
     closeButton?.addEventListener('click', () => drawer.hide());
     //@ts-ignore
-    if (drawer !== null) drawer.show()
+    //if (drawer !== null) drawer.show()
+    if (myDrawer) myDrawer.style.display = 'block';
 
   }
 

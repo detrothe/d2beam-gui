@@ -1,6 +1,7 @@
 
 import './styles/global.css';
 import './styles/contextMenu.css';
+import './styles/dr-drawer.css';
 
 console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 if (process.env.NODE_ENV !== "development") {

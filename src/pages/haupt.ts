@@ -23,6 +23,7 @@ import SlSelect from '@shoelace-style/shoelace/dist/components/select/select.js'
 
 //import { styles } from '../styles/shared-styles';
 import './globals';
+
 import { berechnungErforderlich, set_touch_support_table } from './globals';
 
 import { add_listeners_einstellungen, readLocalStorage, readLocalStorage_cad } from './einstellungen';
@@ -48,9 +49,11 @@ import '../components/dr-dialog_knotenverformung';
 import '../components/dr-dialog_kopieren';
 import '../components/dr-dialog_selekt_typ';
 import '../components/dr-dialog_edit_selected_elementlasten';
+import '../components/dr-my_drawer';
 
 import { drButtonPM } from '../components/dr-button-pm';
 import { drRechteckQuerSchnitt } from '../components/dr-dialog-rechteckquerschnitt';
+import { drMyDrawer } from '../components/dr-my_drawer';
 
 import { reset_gui } from './mypanelgui';
 
@@ -78,7 +81,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.5.1, 4-September-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.5.1, 12-September-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -352,6 +355,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <sl-button slot="footer" variant="primary" @click="${close_drawer_1}">Close</sl-button>
           </sl-drawer>
 
+          <dr-my_drawer class="class-my-drawer" >
+          </dr-my_drawer>
 
           <div id="artboard_cad" style="margin:0;padding:0;z-index:100"></div>
           <div id="svg_artboard_cad" style="margin:0;padding:0;display:none"></div>
@@ -408,6 +413,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           >neuer allgemeiner Querschnitt</sl-button
         >
         -->
+
         <p>
           <br />&nbsp;&nbsp;
           <sl-button id="open-dialog_rechteck" @click="${click_neuer_querschnitt_rechteck}">neuer Querschnitt</sl-button>
@@ -796,6 +802,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-kombinationen">
+
         <p>
           <b> Eingabe der Lastfälle</b>
         </p>
