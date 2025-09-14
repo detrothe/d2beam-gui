@@ -322,6 +322,17 @@ export function cad_buttons() {
   zurueck_button.title = "zurück";
   zurueck_button.id = "id_button_zurueck_cad"
 
+
+  const esc_button = document.createElement("button");
+
+  esc_button.value = "ESC";
+  esc_button.className = "btn";
+  esc_button.innerHTML = 'ESC';
+  esc_button.addEventListener("click", click_ESC_cad);
+  esc_button.title = "aktuelle Aktion beenden";
+  esc_button.id = "id_button_ESC_cad"
+
+
   const querschnitt_default_select = document.createElement("select");
 
   //querschnitt_default_select.value = "";
@@ -530,6 +541,7 @@ export function cad_buttons() {
   help_text.id = "id_cad_helptext";
 
   div.appendChild(zurueck_button);
+  div.appendChild(esc_button);
   div.appendChild(help_text);
   let br = document.createElement("br");
   div.appendChild(br);
@@ -3324,4 +3336,12 @@ export function Lager_button(ev: Event) {
 
     // jetzt auf Pointer eingabe warten
   }
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+function click_ESC_cad() {
+   //----------------------------------------------------------------------------------------------------
+
+   buttons_control.reset();
 }
