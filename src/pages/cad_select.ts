@@ -1,11 +1,12 @@
 import { drDialogEdit_selected_elementlasten } from "../components/dr-dialog_edit_selected_elementlasten"
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten"
 import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast"
+import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse"
 import { drDialogKopieren } from "../components/dr-dialog_kopieren"
 import { drDialogSelektTyp } from "../components/dr-dialog_selekt_typ"
 import { drDialogStabEigenschaften } from "../components/dr-dialog_stab_eigenschaften"
 import { CAD_COPY_SELECTED, CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_SELECT_MULTI, CAD_STAB, CAD_UNSELECT_MULTI, init_cad, list, tr, two } from "./cad"
-import { buttons_control, drawer_1_control, set_help_text, showDialog_elementlast, showDialog_knotenlast } from "./cad_buttons"
+import { buttons_control, drawer_1_control, set_help_text, showDialog_elementlast, showDialog_knotenlast, showDialog_knotenmasse } from "./cad_buttons"
 import { draw_knotenlast, draw_knotenmasse, draw_lager, drawStab } from "./cad_draw_elemente"
 import { find_max_Lastfall, find_maxValues_eloads, set_max_lastfall } from "./cad_draw_elementlasten"
 import { add_cad_node, add_element_nodes, find_nearest_cad_node, get_cad_node_X, get_cad_node_Z } from "./cad_node"
@@ -24,6 +25,7 @@ let copy_eload = false;
 
 export let mode_multi_selected_elementlast_aendern = false;
 export let mode_multi_selected_knotenlast_aendern = false;
+export let mode_multi_selected_knotenmasse_aendern = false;
 
 //------------------------------------------------------------------------------------------------------
 export function select_multi_button(art: number) {
@@ -428,10 +430,11 @@ export function edit_selected_button() {
 
     for (let i = 0; i < list.size; i++) {
         let obj = list.getAt(i) as TCAD_Element;
+        console.log("obj.elTyp, obj.multiSelected",obj.elTyp, obj.multiSelected)
         if (obj.elTyp === CAD_STAB && obj.multiSelected) nStaebe_edit_selected++;
         else if (obj.elTyp === CAD_KNLAST && obj.multiSelected) nKnLast_edit_selected++;
         else if (obj.elTyp === CAD_LAGER && obj.multiSelected) nLager_edit_selected++;
-        else if (obj.elTyp === CAD_KNMASSE && obj.multiSelected) nMassen_edit_selected;
+        else if (obj.elTyp === CAD_KNMASSE && obj.multiSelected) nMassen_edit_selected++;
 
         else if (obj.elTyp === CAD_STAB) {
             for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
@@ -440,7 +443,7 @@ export function edit_selected_button() {
         }
     }
 
-    console.log("NSTAEBE...", nStaebe_edit_selected, nStablasten_edit_selected, nKnLast_edit_selected, nLager_edit_selected, nMassen_edit_selected)
+    console.log("NSTAEBE...", nMassen_edit_selected)
 
     if (nStaebe_edit_selected > 0) showDialog_edit_selected_staebe();
 
@@ -450,7 +453,10 @@ export function edit_selected_button() {
         mode_multi_selected_knotenlast_aendern = true;
         showDialog_knotenlast(true);
     }
-
+    if (nMassen_edit_selected > 0) {
+        mode_multi_selected_knotenmasse_aendern = true;
+        showDialog_knotenmasse();
+    }
     berechnungErforderlich(true);
 
 }
@@ -744,4 +750,29 @@ function dialog_stab_eigenschaften_closed(this: any, _e: any) {
         buttons_control.reset();
         //el.removeEventListener('keydown', keydown);
     }
+}
+
+
+//------------------------------------------------------------------------------------------------------
+export function update_multi_selected_knotenmasse() {
+    //--------------------------------------------------------------------------------------------------
+
+    mode_multi_selected_knotenmasse_aendern = false;
+
+    const el = document.getElementById("id_dialog_knotenmasse") as drDialogKnotenmasse;
+
+
+
+    for (let i = 0; i < list.size; i++) {
+        let obj = list.getAt(i) as TCAD_Knotenmasse;
+
+        if (obj.multiSelected) {
+
+                obj.masse.mass = el.get_mass()
+                obj.masse.theta = el.get_theta_y();
+
+        }
+    }
+
+    init_cad(2);
 }

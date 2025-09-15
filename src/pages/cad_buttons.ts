@@ -82,7 +82,7 @@ import { drDialogBemassung } from "../components/dr-dialog_bemassung";
 import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
 import { draw_knotenverformung, showDialog_knotenverformung, write_knotenverformung_dialog } from "./cad_knotenverformung";
 import { drDrawer_1 } from "../components/dr-drawer_1";
-import { mode_multi_selected_elementlast_aendern, mode_multi_selected_knotenlast_aendern, update_multi_selected_elementlast, update_multi_selected_knotenlast } from "./cad_select";
+import { mode_multi_selected_elementlast_aendern, mode_multi_selected_knotenlast_aendern, mode_multi_selected_knotenmasse_aendern, update_multi_selected_elementlast, update_multi_selected_knotenlast, update_multi_selected_knotenmasse } from "./cad_select";
 import { LitElement } from "lit";
 
 let backgroundColor_button = 'rgb(64, 64, 64)';
@@ -2430,6 +2430,8 @@ function dialog_knotenmasse_closed(this: any, e: any) {
     //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
     console.log("sieht gut aus");
     if (mode_knotenmasse_aendern) update_knotenmasse();
+    else if (mode_multi_selected_knotenmasse_aendern) update_multi_selected_knotenmasse();
+
   } else {
     // Abbruch
     (ele?.shadowRoot?.getElementById("dialog_knotenmasse") as HTMLDialogElement).removeEventListener("close", dialog_knotenmasse_closed);
@@ -3341,7 +3343,7 @@ export function Lager_button(ev: Event) {
 
 //--------------------------------------------------------------------------------------------------------
 function click_ESC_cad() {
-   //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
 
-   buttons_control.reset();
+  buttons_control.reset();
 }

@@ -67,7 +67,7 @@ import { my_jspdf } from './mypdf';
 
 //import { init_contextmenu } from '../components/dr-tabelle';
 
-import { rechnen, init_tabellen, show_gleichungssystem, setSystem, System, hideColumnsForFachwerk } from './rechnen';
+import { rechnen, init_tabellen, show_gleichungssystem, setSystem, System, hideColumnsForFachwerk, stadyn, set_stadyn } from './rechnen';
 
 import { nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, set_dialog_querschnitt_new, removeAll_def_querschnitt } from './querschnitte';
 
@@ -81,7 +81,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.5.1, 14-September-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.5.1, 15-September-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -1923,12 +1923,15 @@ function berechnungsart_changed() {
   if (sel.value === '0') {
     id_mass.disabled = true;
     id_btn_mass.style.display = 'none';
+    set_stadyn(0);
     //ele.set_system(0);
   } else {
     id_mass.disabled = false;
     id_btn_mass.style.display = 'inline-block';
+    set_stadyn(1)
     //ele.set_system(1);
   }
+  init_cad(2);
   berechnungErforderlich();
 }
 
