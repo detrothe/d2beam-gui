@@ -4,6 +4,7 @@ class Node {
     data: any;
     next: Node | null;
     prev: Node | null;
+
     constructor(data: any) {
         this.data = data;
         this.next = null;
@@ -16,11 +17,16 @@ export class LinkedList {
     tail: Node | null;
     size: number;
     current_pos: number;
+
+    index_mem = 0;
+    current_next: Node | null;
+
     constructor() {
         this.head = null;
         this.tail = null;
         this.size = 0;
         this.current_pos = -1
+        this.current_next = null;
     }
 
     // add a data to the end of the list (TAIL)
@@ -119,12 +125,36 @@ export class LinkedList {
         return (current as Node).data;
     }
 
+    getNext(ind: number): any {
+
+        if (ind === 0) {
+            this.current_pos = 0
+
+            let current = this.head;
+            this.current_next = (current as Node).next;
+            //this.index_mem = 0;
+
+            return (this.head as Node).data;
+        } else {
+            let data = (this.current_next as Node).data
+            this.current_next = (this.current_next as Node).next;
+            //this.index_mem++;
+
+            return data;
+        }
+    }
+
     // return head data
     getHead(): any {
         if (this.size == 0) {
             throw Error('No head in an empty list');
         }
         this.current_pos = 0
+
+        let current = this.head;
+        this.current_next = (current as Node).next;
+        this.index_mem = 0;
+
         return (this.head as Node).data;
     }
 

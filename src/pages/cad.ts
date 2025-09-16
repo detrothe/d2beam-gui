@@ -845,7 +845,14 @@ export function init_cad(flag: number) {
    //console.log('init cad list.size', list.size);
    for (let i = 0; i < list.size; i++) {
 
-      let obj: TCAD_Element = list.getAt(i);
+      // let obj: TCAD_Element = list.getAt(i);
+
+      // let obj: TCAD_Element;
+      // if (i === 0) {
+      //    obj = list.getHead();
+      // } else {
+      let obj: TCAD_Element = list.getNext(i);
+      // }
 
       if (obj.elTyp === CAD_KNOTEN) {
          let group = draw_knoten(obj, tr)
