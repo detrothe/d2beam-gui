@@ -435,7 +435,7 @@ export function read_daten(eingabedaten: string) {
     }
 
     // for (let i = 0; i < list.size; i++) {
-    //     let obj = list.getAt(i);
+    //     let obj = list.getNext(i);
     //     console.log("eingelesen", obj);
     // }
 
@@ -885,7 +885,7 @@ export function str_inputToJSON() {
     let elements = [] as TCAD_Element[];
     let zuruec: TCAD_Element;
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Element;
+        let obj = list.getNext(i) as TCAD_Element;
         obj.two_obj = null;
         elements.push(obj);
         zuruec = elements[i];

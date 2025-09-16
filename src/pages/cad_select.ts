@@ -77,7 +77,7 @@ export function unselect_all_button() {
     //console.log("in unselect_all_button")
 
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Element;
+        let obj = list.getNext(i) as TCAD_Element;
         obj.multiSelected = false;
         if (obj.elTyp === CAD_STAB) {
             for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
@@ -141,7 +141,7 @@ export function copy_selected(dx0: number, dz0: number) {
     let lsize = list.size
 
     for (let i = 0; i < lsize; i++) {
-        let obj = list.getAt(i) as TCAD_Element;
+        let obj = list.getNext(i) as TCAD_Element;
         if (obj.multiSelected) {
             if (obj.elTyp === CAD_STAB) {
 
@@ -212,7 +212,7 @@ export function copy_selected(dx0: number, dz0: number) {
 
     lsize = list.size
     for (let i = 0; i < lsize; i++) {
-        let obj = list.getAt(i) as TCAD_Element;
+        let obj = list.getNext(i) as TCAD_Element;
         if (obj.multiSelected) {
             if (obj.elTyp === CAD_KNMASSE) {
                 let x1 = get_cad_node_X((obj as TCAD_Knotenmasse).index1)
@@ -396,7 +396,7 @@ function dialog_selekt_typ_closed(this: any, e: any) {
         let eltyp = el.get_option();
 
         for (let i = 0; i < list.size; i++) {
-            let obj = list.getAt(i) as TCAD_Element;
+            let obj = list.getNext(i) as TCAD_Element;
             if (obj.elTyp === CAD_STAB && eltyp == 0) obj.multiSelected = true;
             else if (obj.elTyp === CAD_KNLAST && eltyp === 2) obj.multiSelected = true;
             else if (obj.elTyp === CAD_LAGER && eltyp === 3) obj.multiSelected = true;
@@ -429,7 +429,7 @@ export function edit_selected_button() {
     let nMassen_edit_selected = 0;
 
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Element;
+        let obj = list.getNext(i) as TCAD_Element;
         console.log("obj.elTyp, obj.multiSelected",obj.elTyp, obj.multiSelected)
         if (obj.elTyp === CAD_STAB && obj.multiSelected) nStaebe_edit_selected++;
         else if (obj.elTyp === CAD_KNLAST && obj.multiSelected) nKnLast_edit_selected++;
@@ -501,7 +501,7 @@ function dialog_edit_selected_stablasten_closed(this: any, _e: any) {
             let lastfall = el.get_lastfall();
             if (lastfall > 0) {
                 for (let i = 0; i < list.size; i++) {
-                    let obj = list.getAt(i) as TCAD_Element;
+                    let obj = list.getNext(i) as TCAD_Element;
 
                     if (obj.elTyp === CAD_STAB) {
                         for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
@@ -520,7 +520,7 @@ function dialog_edit_selected_stablasten_closed(this: any, _e: any) {
             let pe = el.get_pe();
 
             for (let i = 0; i < list.size; i++) {
-                let obj = list.getAt(i) as TCAD_Element;
+                let obj = list.getNext(i) as TCAD_Element;
 
                 if (obj.elTyp === CAD_STAB) {
                     for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
@@ -565,7 +565,7 @@ export function update_multi_selected_elementlast() {
     //console.log("update_multi_selected_elementlast", typ, art, lf, x, P, M)
 
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Stab;
+        let obj = list.getNext(i) as TCAD_Stab;
 
         if (obj.elTyp === CAD_STAB) {
             for (let j = 0; j < obj.elast.length; j++) {
@@ -635,7 +635,7 @@ export function update_multi_selected_knotenlast() {
     let nur_lastfall = el.get_nur_lastfall();
 
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Knotenlast;
+        let obj = list.getNext(i) as TCAD_Knotenlast;
 
         if (obj.multiSelected) {
 
@@ -728,7 +728,7 @@ function dialog_stab_eigenschaften_closed(this: any, _e: any) {
 
 
         for (let i = 0; i < list.size; i++) {
-            let obj = list.getAt(i) as TCAD_Stab;
+            let obj = list.getNext(i) as TCAD_Stab;
 
             if (obj.multiSelected) {
 
@@ -764,7 +764,7 @@ export function update_multi_selected_knotenmasse() {
 
 
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Knotenmasse;
+        let obj = list.getNext(i) as TCAD_Knotenmasse;
 
         if (obj.multiSelected) {
 

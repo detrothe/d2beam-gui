@@ -39,7 +39,7 @@ export function cad_rechnen() {
     let nknlast = 0
     let elNo = 0
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Stab;
+        let obj = list.getNext(i) as TCAD_Stab;
         if (obj.elTyp === CAD_KNLAST) nknlast++;
         else if (obj.elTyp === CAD_KNMASSE) nnodalMass++;
         else if (obj.elTyp === CAD_KNOTVERFORMUNG) nNodeDisps++;
@@ -113,7 +113,7 @@ export function cad_rechnen() {
         if (System === FACHWERK) ndof = 2
 
         for (let i = 0; i < list.size; i++) {
-            let obj = list.getAt(i) as TCAD_Lager;
+            let obj = list.getNext(i) as TCAD_Lager;
             if (obj.elTyp === CAD_LAGER) {
                 let index = obj.index1;
                 //console.log("CAD-Lager ", index)
@@ -179,7 +179,7 @@ export function cad_rechnen() {
         element.length = 0
         let ielem = 0
         for (let i = 0; i < list.size; i++) {
-            let obj = list.getAt(i) as TCAD_Stab;
+            let obj = list.getNext(i) as TCAD_Stab;
             if (obj.elTyp === CAD_STAB) {
                 element.push(new TElement())
 
@@ -278,7 +278,7 @@ export function cad_rechnen() {
 
             let nel = 0
             for (let i = 0; i < list.size; i++) {
-                let obj = list.getAt(i) as TCAD_Knotenlast;
+                let obj = list.getNext(i) as TCAD_Knotenlast;
                 if (obj.elTyp === CAD_KNLAST) {
                     load.push(new TLoads())
                     let index = obj.index1;
@@ -336,7 +336,7 @@ export function cad_rechnen() {
         let nStabvorverfomungen = 0
 
         for (let i = 0; i < list.size; i++) {
-            let obj = list.getAt(i) as TCAD_Stab;
+            let obj = list.getNext(i) as TCAD_Stab;
             if (obj.elTyp === CAD_STAB) {
                 for (let j = 0; j < obj.elast.length; j++) {
                     let typ = obj.elast[j].typ
@@ -438,7 +438,7 @@ export function cad_rechnen() {
         let irowSpannschloss = 1
         let irowStabvorverformung = 1
         for (let i = 0; i < list.size; i++) {
-            let obj = list.getAt(i) as TCAD_Stab;
+            let obj = list.getNext(i) as TCAD_Stab;
             if (obj.elTyp === CAD_STAB) {
 
                 if (obj.elast.length > 0) {
@@ -653,7 +653,7 @@ export function cad_rechnen() {
 
         let nel = 0;
         for (let i = 0; i < list.size; i++) {
-            let obj = list.getAt(i) as TCAD_Knotenverformung;
+            let obj = list.getNext(i) as TCAD_Knotenverformung;
             if (obj.elTyp === CAD_KNOTVERFORMUNG) {
                 nodeDisp0.push(new TNodeDisp)
                 let index = obj.index1;
@@ -806,7 +806,7 @@ export function cad_rechnen() {
 
             let nel = 0
             for (let i = 0; i < list.size; i++) {
-                let obj = list.getAt(i) as TCAD_Knotenmasse;
+                let obj = list.getNext(i) as TCAD_Knotenmasse;
                 if (obj.elTyp === CAD_KNMASSE) {
                     nodalmass.push(new TMass())
                     let index = obj.index1;
@@ -836,7 +836,7 @@ export function cad_rechnen() {
     // User-Knoten korrigieren
 
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Element;
+        let obj = list.getNext(i) as TCAD_Element;
         if (obj.elTyp === CAD_KNOTEN || obj.elTyp === CAD_KNLAST || obj.elTyp === CAD_KNOTVERFORMUNG
             || obj.elTyp === CAD_LAGER || obj.elTyp === CAD_KNMASSE) {
             let index = obj.index1;

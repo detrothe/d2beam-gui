@@ -139,7 +139,7 @@ export function find_querschnittSet(qname: string) {
     let anzahl = 0;
 
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Stab;
+        let obj = list.getNext(i) as TCAD_Stab;
         if (obj.elTyp === CAD_STAB) {
             if (obj.name_querschnitt === qname) return 1;
         }
@@ -495,7 +495,7 @@ export function dialog_querschnitt_closed(_e: any) {
                     // jetzt alle Stäbe korrigieren
 
                     for (let i = 0; i < list.size; i++) {
-                        let obj = list.getAt(i) as TCAD_Stab;
+                        let obj = list.getNext(i) as TCAD_Stab;
                         if (obj.elTyp === CAD_STAB) {
                             if (obj.name_querschnitt === old_name) obj.name_querschnitt = qname;
                             redraw_stab(obj);

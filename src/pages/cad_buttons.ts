@@ -821,7 +821,7 @@ export function delete_element(xc: number, zc: number) {
   let zpix = tr.zPix(zc)
 
   for (let i = 0; i < list.size; i++) {
-    let obj = list.getAt(i) as any;
+    let obj = list.getNext(i) as any;
     if (obj.elTyp === CAD_STAB) {
 
       let abstand = abstandPunktGerade_2D(get_cad_node_X(obj.index1), get_cad_node_Z(obj.index1), get_cad_node_X(obj.index2), get_cad_node_Z(obj.index2), xc, zc);
@@ -1180,7 +1180,7 @@ export function select_node(xc: number, zc: number) {
   let zpix = tr.zPix(zc)
 
   for (let i = 0; i < list.size; i++) {
-    let obj = list.getAt(i) as any;
+    let obj = list.getNext(i) as any;
     console.log("eltyp", obj.elTyp)
     if (obj.elTyp === CAD_KNOTEN) {
       let two_obj = obj.two_obj
@@ -1260,7 +1260,7 @@ export function select_element(xc: number, zc: number) {
   // element_einzellast_gefunden = false
 
   for (let i = 0; i < list.size; i++) {
-    let obj = list.getAt(i) as any;
+    let obj = list.getNext(i) as any;
     //console.log("eltyp", obj.elTyp)
 
     if (obj.elTyp === CAD_KNLAST && show_knotenlasten) {
@@ -1730,7 +1730,7 @@ export function add_elementlast(xc: number, zc: number) {
 
   let gefunden = false
   for (let i = 0; i < list.size; i++) {
-    let obj = list.getAt(i) as any;
+    let obj = list.getNext(i) as any;
     if (obj.elTyp === CAD_STAB) {
 
       let abstand = abstandPunktGerade_2D(get_cad_node_X(obj.index1), get_cad_node_Z(obj.index1), get_cad_node_X(obj.index2), get_cad_node_Z(obj.index2), xc, zc);
@@ -2882,7 +2882,7 @@ export function update_knoten(flag = 0) {
   // Verschiebe alle Elemente an dem Knoten
 
   for (let i = 0; i < list.size; i++) {
-    let obj = list.getAt(i) as TCAD_Element;
+    let obj = list.getNext(i) as TCAD_Element;
     if (obj.elTyp === CAD_STAB) {
       console.log("update_knoten", index, (obj as TCAD_Stab).index1, (obj as TCAD_Stab).index2)
       if (index === (obj as TCAD_Stab).index1) redraw_stab(obj as TCAD_Stab);
@@ -2976,7 +2976,7 @@ export function show_selected_element(xc: number, zc: number) {
   element_einzellast_gefunden = false
 
   for (let i = 0; i < list.size; i++) {
-    let obj = list.getAt(i) as any;
+    let obj = list.getNext(i) as any;
     console.log("eltyp", obj.elTyp)
 
     if (obj.elTyp === CAD_KNLAST && show_knotenlasten) {

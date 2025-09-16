@@ -18,7 +18,7 @@ export class LinkedList {
     size: number;
     current_pos: number;
 
-    index_mem = 0;
+    // index_mem = 0;
     current_next: Node | null;
 
     constructor() {
@@ -125,6 +125,7 @@ export class LinkedList {
         return (current as Node).data;
     }
 
+    // get next data, only to be used in for loop (i=0 ... list.size)
     getNext(ind: number): any {
 
         if (ind === 0) {
@@ -151,9 +152,9 @@ export class LinkedList {
         }
         this.current_pos = 0
 
-        let current = this.head;
-        this.current_next = (current as Node).next;
-        this.index_mem = 0;
+        // let current = this.head;
+        // this.current_next = (current as Node).next;
+        // this.index_mem = 0;
 
         return (this.head as Node).data;
     }

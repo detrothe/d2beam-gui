@@ -59,7 +59,7 @@ export function find_max_Lastfall(): boolean {
 
 
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Element;
+        let obj = list.getNext(i) as TCAD_Element;
         if (obj.elTyp === CAD_STAB) {
             let neloads = (obj as TCAD_Stab).elast.length
             if (neloads > 0) {
@@ -97,7 +97,7 @@ export function find_maxValues_eloads() {
     }
 
     for (let i = 0; i < list.size; i++) {
-        let obj = list.getAt(i) as TCAD_Stab;
+        let obj = list.getNext(i) as TCAD_Stab;
         if (obj.elTyp === CAD_STAB) {
             let neloads = obj.elast.length
             if (neloads > 0) {

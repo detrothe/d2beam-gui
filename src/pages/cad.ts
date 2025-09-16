@@ -845,7 +845,7 @@ export function init_cad(flag: number) {
    //console.log('init cad list.size', list.size);
    for (let i = 0; i < list.size; i++) {
 
-      // let obj: TCAD_Element = list.getAt(i);
+      // let obj: TCAD_Element = list.getNext(i);
 
       // let obj: TCAD_Element;
       // if (i === 0) {
@@ -891,7 +891,7 @@ export function init_cad(flag: number) {
    if (stadyn === 1) {
       for (let i = 0; i < list.size; i++) {
 
-         let obj: TCAD_Element = list.getAt(i);
+         let obj: TCAD_Element = list.getNext(i);
 
          if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
             let index1 = obj.index1
@@ -1403,7 +1403,7 @@ function check_doppeltes_Lager(index1: number): boolean {
    //-----------------------------------------------------------------------------------------------------
 
    for (let i = 0; i < list.size; i++) {
-      let obj = list.getAt(i) as TCAD_Lager;
+      let obj = list.getNext(i) as TCAD_Lager;
       if (obj.elTyp === CAD_LAGER) {
          if (obj.index1 === index1) {
             return true
@@ -1419,7 +1419,7 @@ function check_doppelte_Masse(index1: number): boolean {
    //-----------------------------------------------------------------------------------------------------
 
    for (let i = 0; i < list.size; i++) {
-      let obj = list.getAt(i) as TCAD_Knotenmasse;
+      let obj = list.getNext(i) as TCAD_Knotenmasse;
       if (obj.elTyp === CAD_KNMASSE) {
          if (obj.index1 === index1) {
             return true
