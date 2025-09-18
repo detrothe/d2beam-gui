@@ -5,7 +5,7 @@ import { drDialogKnotenmasse } from "../components/dr-dialog_knotenmasse"
 import { drDialogKopieren } from "../components/dr-dialog_kopieren"
 import { drDialogSelektTyp } from "../components/dr-dialog_selekt_typ"
 import { drDialogStabEigenschaften } from "../components/dr-dialog_stab_eigenschaften"
-import { CAD_COPY_SELECTED, CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_SELECT_MULTI, CAD_STAB, CAD_UNSELECT_MULTI, init_cad, list, tr, two } from "./cad"
+import { CAD_COPY_SELECTED, CAD_KNLAST, CAD_KNMASSE, CAD_LAGER, CAD_SELECT_MULTI, CAD_STAB, CAD_UNSELECT_MULTI, check_doppelte_Masse, check_doppeltes_Lager, init_cad, list, tr, two } from "./cad"
 import { buttons_control, drawer_1_control, set_help_text, showDialog_elementlast, showDialog_knotenlast, showDialog_knotenmasse } from "./cad_buttons"
 import { draw_knotenlast, draw_knotenmasse, draw_lager, drawStab } from "./cad_draw_elemente"
 import { find_max_Lastfall, find_maxValues_eloads, set_max_lastfall } from "./cad_draw_elementlasten"
@@ -13,7 +13,7 @@ import { add_cad_node, add_element_nodes, find_nearest_cad_node, get_cad_node_X,
 import { TCAD_Element, TCAD_Stab, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager } from "./CCAD_element"
 import { berechnungErforderlich } from "./globals"
 import { querschnittset } from "./querschnitte"
-import { TLoads, TMass, TNode } from "./rechnen"
+import { alertdialog, TLoads, TMass, TNode } from "./rechnen"
 
 
 
@@ -210,9 +210,11 @@ export function copy_selected(dx0: number, dz0: number) {
         }
     }
 
+    let fehler_masse = false;
+    let fehler_lager= false;
     lsize = list.size
     for (let i = 0; i < lsize; i++) {
-        let obj = list.getNext(i) as TCAD_Element;
+        let obj = list.getAt(i) as TCAD_Element;  // wegen innerer Schleife kein getNext möglich
         if (obj.multiSelected) {
             if (obj.elTyp === CAD_KNMASSE) {
                 let x1 = get_cad_node_X((obj as TCAD_Knotenmasse).index1)
@@ -224,15 +226,21 @@ export function copy_selected(dx0: number, dz0: number) {
                 let dx = dx0, dz = dz0;
                 for (let i = 0; i < ncopies; i++) {
                     let index = find_nearest_cad_node(x1 + dx, z1 + dz);
-                    if (index > -1) {
-                        let group = null;
-                        const el = new TCAD_Knotenmasse(group, index, masse, CAD_KNMASSE);
-                        list.append(el);
-                        add_element_nodes(index);
+                    let vorhanden = check_doppelte_Masse(index);
 
-                        group = draw_knotenmasse(tr, el, get_cad_node_X(index), get_cad_node_Z(index));
-                        two.add(group);
-                        el.setTwoObj(group);
+                    if (index > -1) {
+                        if (vorhanden) {
+                            fehler_masse = true;
+                        } else {
+                            let group = null;
+                            const el = new TCAD_Knotenmasse(group, index, masse, CAD_KNMASSE);
+                            list.append(el);
+                            add_element_nodes(index);
+
+                            group = draw_knotenmasse(tr, el, get_cad_node_X(index), get_cad_node_Z(index));
+                            two.add(group);
+                            el.setTwoObj(group);
+                        }
                     }
                     dx += dx0;
                     dz += dz0;
@@ -252,14 +260,19 @@ export function copy_selected(dx0: number, dz0: number) {
                 for (let i = 0; i < ncopies; i++) {
                     let index = find_nearest_cad_node(x1 + dx, z1 + dz);
                     if (index > -1) {
-                        let group = null;
-                        const el = new TCAD_Lager(group, index, node, CAD_LAGER);
-                        list.append(el);
-                        add_element_nodes(index);
+                        let vorhanden = check_doppeltes_Lager(index)
+                        if (vorhanden) {
+                            fehler_lager = true;
+                        } else {
+                            let group = null;
+                            const el = new TCAD_Lager(group, index, node, CAD_LAGER);
+                            list.append(el);
+                            add_element_nodes(index);
 
-                        group = draw_lager(tr, el);
-                        two.add(group);
-                        el.setTwoObj(group);
+                            group = draw_lager(tr, el);
+                            two.add(group);
+                            el.setTwoObj(group);
+                        }
                     }
                     dx += dx0;
                     dz += dz0;
@@ -295,6 +308,12 @@ export function copy_selected(dx0: number, dz0: number) {
                 }
             }
         }
+    }
+    if (fehler_masse) {
+        alertdialog('ok', 'einer oder mehrere Knoten hat(haben) schon eine Knotenmasse, nur eine Masse pro Knoten ist zulässig, es erfolgte keine Änderung bei den betroffenen Knoten.');
+    }
+     if (fehler_lager) {
+        alertdialog('ok', 'einer oder mehrere Knoten hat(haben) schon eine Lagerung, nur eine Lager pro Knoten ist zulässig, es erfolgte keine Änderung bei den betroffenen Knoten.');
     }
     two.update();
 
@@ -430,7 +449,7 @@ export function edit_selected_button() {
 
     for (let i = 0; i < list.size; i++) {
         let obj = list.getNext(i) as TCAD_Element;
-        console.log("obj.elTyp, obj.multiSelected",obj.elTyp, obj.multiSelected)
+        console.log("obj.elTyp, obj.multiSelected", obj.elTyp, obj.multiSelected)
         if (obj.elTyp === CAD_STAB && obj.multiSelected) nStaebe_edit_selected++;
         else if (obj.elTyp === CAD_KNLAST && obj.multiSelected) nKnLast_edit_selected++;
         else if (obj.elTyp === CAD_LAGER && obj.multiSelected) nLager_edit_selected++;
@@ -768,8 +787,8 @@ export function update_multi_selected_knotenmasse() {
 
         if (obj.multiSelected) {
 
-                obj.masse.mass = el.get_mass()
-                obj.masse.theta = el.get_theta_y();
+            obj.masse.mass = el.get_mass()
+            obj.masse.theta = el.get_theta_y();
 
         }
     }

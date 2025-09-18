@@ -1675,7 +1675,17 @@ export function select_element(xc: number, zc: number) {
 
       two.update();
     }
+  else if (lager_gefunden) {
 
+      two.remove(obj_knlager.two_obj);
+      if (buttons_control.select_multi_aktiv) obj_knlager.multiSelected = true;
+      else obj_knlager.multiSelected = false;
+
+      let group = draw_lager(tr, obj_knlager)
+      two.add(group);
+
+      two.update();
+    }
     else if (index_stab >= 0 && min_abstand < get_fangweite_cursor()) {
       if (list.size > 0) {
 

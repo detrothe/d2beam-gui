@@ -1399,7 +1399,7 @@ function penDown(ev: PointerEvent) {
 }
 
 //--------------------------------------------------------------------------------------------------------
-function check_doppeltes_Lager(index1: number): boolean {
+export function check_doppeltes_Lager(index1: number): boolean {
    //-----------------------------------------------------------------------------------------------------
 
    for (let i = 0; i < list.size; i++) {
@@ -1415,7 +1415,7 @@ function check_doppeltes_Lager(index1: number): boolean {
 }
 
 //--------------------------------------------------------------------------------------------------------
-function check_doppelte_Masse(index1: number): boolean {
+export function check_doppelte_Masse(index1: number): boolean {
    //-----------------------------------------------------------------------------------------------------
 
    for (let i = 0; i < list.size; i++) {
