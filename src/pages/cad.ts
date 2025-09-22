@@ -42,7 +42,7 @@ import { Group } from 'two.js/src/group';
 import { default_querschnitt, set_default_querschnitt } from './querschnitte';
 import { drDialogKnoten } from '../components/dr-dialog_knoten';
 import { drDialogMessen } from '../components/dr-dialog_messen';
-import { add_bemassung, drawBemassung, recalc_abstand, TCAD_Bemassung } from './cad_bemassung';
+import { add_bemassung, drawBemassung, drawBemassung_band, recalc_abstand, TCAD_Bemassung } from './cad_bemassung';
 import { CNodeDisp, draw_knotenverformung, read_knotenverformung_dialog } from './cad_knotenverformung';
 import { copy_selected } from './cad_select';
 
@@ -155,6 +155,8 @@ export function set_rubberband_drawn(wert: boolean) { rubberband_drawn = wert; }
 
 let start_x = 0
 let start_y = 0
+let end_x = 0
+let end_y = 0
 
 
 let start_x_wc = 0
@@ -607,6 +609,8 @@ export function init_two_cad(svg_id = 'artboard_cad') {
 export function init_cad(flag: number) {
 
 
+   let startTime = performance.now();
+
    let show_selection = true;
    let height = 0;
 
@@ -913,6 +917,8 @@ export function init_cad(flag: number) {
    //   dz_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
    //write("dxz_offset_touch " + dx_offset_touch + '  ' + dz_offset_touch + '  ' + devicePixelRatio)
 
+   let endTime = performance.now();
+   write("time init_cad: " + (endTime - startTime) + " msec");
 
 
 }
@@ -1568,14 +1574,18 @@ function mousemove(ev: MouseEvent) {
             rubberband_drawn = true;
          }
          else if (buttons_control.input_started === 2) {
-            rubberband = new Two.Group();
-            let band = new Two.Line(start_x, start_y, xo, yo);
-            band.linewidth = 1; /// devicePixelRatio;
-            band.dashes = [2, 2];
-            rubberband.add(band);
-            two.add(rubberband);
+            if (buttons_control.bemassung_aktiv) {
+               rubberband = new Two.Group();
+               let band = new Two.Line((start_x + end_x) / 2, (start_y + end_y) / 2, xo, yo);
+               band.linewidth = 1; /// devicePixelRatio;
+               band.dashes = [2, 2];
+               rubberband.add(band);
+               two.add(rubberband);
 
-            rubberband_drawn = true;
+               rubberband_drawn = true;
+
+               two.add(drawBemassung_band(start_x_wc, start_z_wc, end_x_wc, end_z_wc, tr.xWorld(xo), tr.zWorld(yo), tr));
+            }
          }
 
          if (txt_mouseCoord) {
@@ -1654,39 +1664,42 @@ function mouseup(ev: any) {
    let xo = ev.offsetX + dx_offset
    let yo = ev.offsetY + dy_offset
 
+   let xc = tr.xWorld(xo);
+   let zc = tr.zWorld(yo);
+
    if (buttons_control.delete_element) {
-      let xc = tr.xWorld(xo);
-      let zc = tr.zWorld(yo);
+      // let xc = tr.xWorld(xo);
+      // let zc = tr.zWorld(yo);
 
       delete_element(xc, zc);
 
    } else if (buttons_control.select_element) {
-      let xc = tr.xWorld(xo);
-      let zc = tr.zWorld(yo);
+      // let xc = tr.xWorld(xo);
+      // let zc = tr.zWorld(yo);
 
       select_element(xc, zc);
 
    } else if (buttons_control.select_node) {
-      let xc = tr.xWorld(xo);
-      let zc = tr.zWorld(yo);
+      // let xc = tr.xWorld(xo);
+      // let zc = tr.zWorld(yo);
 
       select_node(xc, zc);
 
    } else if (buttons_control.elementlast_eingabe_aktiv) {
-      let xc = tr.xWorld(xo);
-      let zc = tr.zWorld(yo);
+      // let xc = tr.xWorld(xo);
+      // let zc = tr.zWorld(yo);
 
       add_elementlast(xc, zc);
 
    } else if (buttons_control.select_multi_aktiv) {
-      let xc = tr.xWorld(xo);
-      let zc = tr.zWorld(yo);
+      // let xc = tr.xWorld(xo);
+      // let zc = tr.zWorld(yo);
 
       select_element(xc, zc);
 
    } else if (buttons_control.unselect_multi_aktiv) {
-      let xc = tr.xWorld(xo);
-      let zc = tr.zWorld(yo);
+      // let xc = tr.xWorld(xo);
+      // let zc = tr.zWorld(yo);
 
       select_element(xc, zc);
 
@@ -1705,8 +1718,8 @@ function mouseup(ev: any) {
                two.remove(nodePoint);
                foundNodePoint = false;
             }
-            let xc = tr.xWorld(xo);
-            let zc = tr.zWorld(yo);
+            // let xc = tr.xWorld(xo);
+            // let zc = tr.zWorld(yo);
             // find next CAD node
 
             let index = find_nearest_cad_node(xc, zc);
@@ -1870,6 +1883,8 @@ function mouseup(ev: any) {
             if (foundNodePoint) {
                end_x_wc = xNodePoint;
                end_z_wc = zNodePoint;
+               end_x = tr.xPix(xNodePoint)
+               end_y = tr.zPix(zNodePoint)
 
                two.remove(nodePoint);
                foundNodePoint = false;
@@ -1881,12 +1896,16 @@ function mouseup(ev: any) {
                if (foundRasterPoint) {
                   end_x_wc = xRasterPoint;
                   end_z_wc = zRasterPoint;
+                  end_x = tr.xPix(xRasterPoint)
+                  end_y = tr.zPix(zRasterPoint)
 
                   two.remove(rasterPoint);
                   foundRasterPoint = false;
                } else {
                   end_x_wc = tr.xWorld(xo);
                   end_z_wc = tr.zWorld(yo);
+                  end_x = xo;
+                  end_y = yo;
                }
             }
 
@@ -1991,7 +2010,7 @@ function mouseup(ev: any) {
             }
 
          }
-         else if (buttons_control.input_started === 2) {
+         else if (buttons_control.input_started === 2) {   // dritten Punkt eingeben
 
             if (foundNodePoint) {
                pkt3_x_wc = xNodePoint;
@@ -2018,7 +2037,10 @@ function mouseup(ev: any) {
                //console.log("Bemassung index1-2", index1, index2)
                let group = add_bemassung(tr, index1, index2, pkt3_x_wc, pkt3_z_wc, buttons_control.art);
                two.add(group);
+               let startTime = performance.now();
                two.update();
+               let endTime = performance.now();
+               write("time update: " + (endTime - startTime) + " msec");
             }
 
             if (buttons_control.n_input_points === 3) {

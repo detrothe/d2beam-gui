@@ -140,7 +140,7 @@ export class drDialogSelektTyp extends LitElement {
             <sl-radio value="2">Knotenlast</sl-radio>
             <sl-radio value="3">Lager</sl-radio>
             <sl-radio value="4">Knotenmasse</sl-radio>
-            <sl-radio value="5">Bemassung</sl-radio>
+            <!-- <sl-radio value="5">Bemassung</sl-radio> -->
          </sl-radio-group>
 
          <br />

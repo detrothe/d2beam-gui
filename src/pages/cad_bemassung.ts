@@ -421,3 +421,96 @@ export function Bemassung_button(art: number) {
 }
 
 
+//--------------------------------------------------------------------------------------------------------
+export function drawBemassung_band(x1: number, z1: number, x2: number, z2: number, x3: number, z3: number, tr: CTrans) {
+  //------------------------------------------------------------------------------------------------------
+
+  const X = 0, Y = 1, Z = 2
+  let p1xNew = 0, p1yNew = 0, p1zNew = 0, p2xNew = 0, p2yNew = 0, p2zNew = 0
+  let pe1x = 0, pe1y = 0, pe2x = 0, pe2y = 0
+  let pa1x = 0, pa1y = 0, pa1z = 0, pa2x = 0, pa2y = 0, pa2z = 0
+  let dx = 0, dz = 0
+  let dsl = 0, sinus = 0, cosinus = 0, alpha = 0
+
+  let art = PARALLEL;
+
+  let ueberstand = slmax_cad / 120;
+  let m_strich = 0;
+
+
+  dx = x2 - x1;
+  dz = z2 - z1;
+
+  if (art === PARALLEL) {
+
+    let b = [0, 0, 0];
+    // b[X] = x
+    // b[Y] = z
+
+    let a = Array(3), c = Array(3), d = Array(3);
+
+    a[X] = dx = x2 - x1;
+    a[Y] = dz = z2 - z1;
+    a[Z] = 0.0;
+
+    c[X] = x3 - x1;
+    c[Y] = z3 - z1;
+    c[Z] = 0.0;
+
+    crossProd(a, c, d);     // d = a x c
+    crossProd(d, a, b);     // b = d x a
+
+    let aBetrag = Math.sqrt(a[X] * a[X] + a[Y] * a[Y] + a[Z] * a[Z]);
+    let abstand = Math.sqrt(d[X] * d[X] + d[Y] * d[Y] + d[Z] * d[Z]) / aBetrag;
+    let bBetrag = Math.sqrt(b[X] * b[X] + b[Y] * b[Y] + b[Z] * b[Z]);
+    let fac = abstand / bBetrag;
+    b[X] *= fac; b[Y] *= fac; b[Z] *= fac;
+
+    p1xNew = x1 + b[X];
+    p1yNew = z1 + b[Y];
+    p1zNew = 0 + b[Z];
+    p2xNew = x2 + b[X];
+    p2yNew = z2 + b[Y];
+    p2zNew = 0 + b[Z];
+    //console.log("p12", p1xNew, p1yNew, p1zNew, p2xNew, p2yNew, p2zNew)
+
+    bBetrag = Math.sqrt(b[X] * b[X] + b[Y] * b[Y] + b[Z] * b[Z]);
+    fac = ueberstand / bBetrag;
+    b[X] *= fac; b[Y] *= fac; b[Z] *= fac;
+
+    pe1x = p1xNew + b[X];
+    pe1y = p1yNew + b[Y];
+    pe2x = p2xNew + b[X];
+    pe2y = p2yNew + b[Y];
+
+    if (m_strich == 0) {
+      pa1x = x1 + b[X], pa1y = z1 + b[Y], pa1z = 0 + b[Z];
+      pa2x = x2 + b[X], pa2y = z2 + b[Y], pa2z = 0 + b[Z];
+    } else {
+      pa1x = p1xNew - b[X], pa1y = p1yNew - b[Y], pa1z = p1zNew - b[Z];
+      pa2x = p2xNew - b[X], pa2y = p2yNew - b[Y], pa2z = p2zNew - b[Z];
+    }
+
+    dsl = Math.sqrt(dx * dx + dz * dz);
+    sinus = dz / dsl;
+    cosinus = dx / dsl;
+    alpha = Math.atan2(dz, dx)
+
+  }
+
+  let group = new Two.Group();
+
+
+  let line = new Two.Line(tr.xPix(p1xNew), tr.zPix(p1yNew), tr.xPix(p2xNew), tr.zPix(p2yNew));
+  line.linewidth = 2 / devicePixelRatio;
+  if (timer.element_selected) {
+    line.stroke = select_color;
+    line.linewidth = 3;
+  }
+  group.add(line);
+
+  return group;
+
+}
+
+
