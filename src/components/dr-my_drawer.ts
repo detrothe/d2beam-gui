@@ -123,17 +123,17 @@ export class drMyDrawer extends LitElement {
          }
 
          .svgbutton {
-            fill: white
+            fill: white;
          }
          .svgbutton_sticky {
-            fill:red;
+            fill: red;
          }
 
          button {
-               border-color: #43434a;
-               color: #b6b6be;
-               background-color:rgb(90, 90, 90);
-            }
+            border-color: #43434a;
+            color: #b6b6be;
+            background-color: rgb(90, 90, 90);
+         }
       `;
    }
 
@@ -145,22 +145,29 @@ export class drMyDrawer extends LitElement {
 
    render() {
       return html`
-
-      <button title='Pin'  @click="${this._sticky}">
+         <button title="Pin" @click="${this._sticky}">
             <!-- <svg id="id_svg_sticky" class ="svgbutton" width="1rem" height="1rem" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M0 3c0-1.1.9-2 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm2 2v12h16V5H2zm8 3l4 5H6l4-5z"/></svg> -->
-            <svg id="id_svg_sticky" class ="svgbutton" width="1.5rem" height="1.5rem" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M665.5 256l-76.8 76.8v122.9a153.6 153.6 0 0 1 76.8 133h-128v153.6l-25.6 25.6-25.6-25.6V588.7h-128a153.47 153.47 0 0 1 76.8-133V332.8L358.3 256"/></svg>
-      </button>
-      <button style="float: right;" @click="${this._div_ok}">
-         <svg  width="1rem" height="1rem" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm1.41-1.41A8 8 0 1 0 15.66 4.34 8 8 0 0 0 4.34 15.66zm9.9-8.49L11.41 10l2.83 2.83-1.41 1.41L10 11.41l-2.83 2.83-1.41-1.41L8.59 10 5.76 7.17l1.41-1.41L10 8.59l2.83-2.83 1.41 1.41z"/></svg>
-      </button>
+            <svg id="id_svg_sticky" class="svgbutton" width="1.5rem" height="1.5rem" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+               <path d="M665.5 256l-76.8 76.8v122.9a153.6 153.6 0 0 1 76.8 133h-128v153.6l-25.6 25.6-25.6-25.6V588.7h-128a153.47 153.47 0 0 1 76.8-133V332.8L358.3 256" />
+            </svg>
+         </button>
+         <button style="float: right;" @click="${this._div_ok}">
+            <svg width="1rem" height="1rem" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+               <path
+                  d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm1.41-1.41A8 8 0 1 0 15.66 4.34 8 8 0 0 0 4.34 15.66zm9.9-8.49L11.41 10l2.83 2.83-1.41 1.41L10 11.41l-2.83 2.83-1.41-1.41L8.59 10 5.76 7.17l1.41-1.41L10 8.59l2.83-2.83 1.41 1.41z"
+               />
+            </svg>
+         </button>
 
-      <p><b>Mehr Aktivitäten</b></p>
-      <div class='class_div_drawer' id="div_drawer">
-          <dr-drawer_1 id="id_drawer_1"></dr-drawer_1>
-      </div>
-      <footer>
-         <sl-button id="OK" value="ok" @click="${this._div_ok}">close</sl-button>
-      </footer>
+         <p><b>Mehr Aktivitäten</b></p>
+         <div class="class_div_drawer" id="div_drawer">
+            <dr-drawer_1 id="id_drawer_1"></dr-drawer_1>
+         </div>
+
+         <p>
+            <br />
+            <sl-button id="OK" value="ok" @click="${this._div_ok}">close</sl-button>
+         </p>
       `;
    }
 
@@ -178,16 +185,16 @@ export class drMyDrawer extends LitElement {
    }
 
    _sticky() {
-      this.sticky = !this.sticky;    // true
-      set_hide_drawer(!this.sticky);  // false
+      this.sticky = !this.sticky; // true
+      set_hide_drawer(!this.sticky); // false
 
       let el = this.shadowRoot?.getElementById('id_svg_sticky') as HTMLElement;
-      console.log("id_svg_sticky", el.classList)
+      console.log('id_svg_sticky', el.classList);
       if (this.sticky) {
          el.classList.replace('svgbutton', 'svgbutton_sticky');
          //el.classList.add('svgbutton_sticky')
       } else {
-         el.classList.replace('svgbutton_sticky', 'svgbutton')
+         el.classList.replace('svgbutton_sticky', 'svgbutton');
          //el.classList.add('svgbutton');
       }
    }

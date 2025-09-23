@@ -988,6 +988,8 @@ function draw_werte(x0: number, z0: number) {
 
 export function drawsystem(svg_id = 'artboard') {
 
+    if ( two === null) return;
+
     let show_selection = true;
     if (svg_id != 'artboard') show_selection = false;  // nur System für pdf-Ausgabe erzeugen
 
@@ -1108,18 +1110,22 @@ export function drawsystem(svg_id = 'artboard') {
         height = document.documentElement.clientHeight - grafik_top - 4 - 17//- el?.getBoundingClientRect()?.height;
     }
 
-    let breite: number
-    let hoehe: number
-    if (show_selection) {
-        //console.log("document.documentElement", document.documentElement.clientWidth, window.innerWidth)
-        //console.log("two=", two)
-        two.width = document.documentElement.clientWidth;
-        two.height = height
-        breite = two.width;
-        hoehe = two.height;
-    } else {
-        two.width = breite = 1500;
-        two.height = hoehe = 1500;
+    let breite = 1500
+    let hoehe = 1500
+    if (two) {
+        if (show_selection) {
+            //console.log("document.documentElement", document.documentElement.clientWidth, window.innerWidth)
+            console.log("two=", two)
+
+            two.width = document.documentElement.clientWidth;
+            two.height = height
+            breite = two.width;
+            hoehe = two.height;
+
+        } else {
+            two.width = breite = 1500;
+            two.height = hoehe = 1500;
+        }
     }
 
     view_diagonale = Math.sqrt(breite * breite + hoehe * hoehe)

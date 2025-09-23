@@ -46,7 +46,10 @@ import {
   show_lager,
   timer,
   set_raster_offset_x,
-  set_raster_offset_z
+  set_raster_offset_z,
+  set_masslinien_drawn,
+  masslinien_band,
+  masslinien_drawn
 } from "./cad";
 
 import { two, tr } from "./cad";
@@ -156,6 +159,9 @@ class Cbuttons_control {
   knotenverformung_eingabe_aktiv = false;
   messen_aktiv = false;
   bemassung_aktiv = false;
+  bemassung_parallel_aktiv = false;
+  bemassung_horizontal_aktiv = false;
+  bemassung_vertikal_aktiv = false;
   info_eingabe_aktiv = false;
   typ_cad_element = 0;
   n_input_points = 0;
@@ -190,6 +196,10 @@ class Cbuttons_control {
     this.info_eingabe_aktiv = false;
     this.messen_aktiv = false;
     this.bemassung_aktiv = false;
+    this.bemassung_parallel_aktiv = false;
+    this.bemassung_horizontal_aktiv = false;
+    this.bemassung_vertikal_aktiv = false;
+
     this.art = -1;
     this.show_boundingRect = false;
 
@@ -227,6 +237,10 @@ class Cbuttons_control {
     if (rubberband_drawn) {
       two.remove(rubberband);
       set_rubberband_drawn(false);
+    }
+    if (masslinien_drawn) {
+      two.remove(masslinien_band);
+      set_masslinien_drawn(false);
     }
 
     timer.element_selected = false;
@@ -1675,7 +1689,7 @@ export function select_element(xc: number, zc: number) {
 
       two.update();
     }
-  else if (lager_gefunden) {
+    else if (lager_gefunden) {
 
       two.remove(obj_knlager.two_obj);
       if (buttons_control.select_multi_aktiv) obj_knlager.multiSelected = true;

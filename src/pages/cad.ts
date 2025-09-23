@@ -68,6 +68,7 @@ let domElement: any = null;
 export let tr: CTrans;
 
 let devicePixelRatio = 1;
+let time_call = 0;
 
 let fangweite_cursor = 0.25;
 export function set_fangweite_cursor(wert: number) { fangweite_cursor = wert; }
@@ -152,6 +153,9 @@ let input_active = false;
 export let rubberband_drawn = false;
 export function set_rubberband_drawn(wert: boolean) { rubberband_drawn = wert; }
 
+export let masslinien_band: any = null;
+export let masslinien_drawn = false;
+export function set_masslinien_drawn(wert: boolean) { masslinien_drawn = wert; }
 
 let start_x = 0
 let start_y = 0
@@ -609,7 +613,7 @@ export function init_two_cad(svg_id = 'artboard_cad') {
 export function init_cad(flag: number) {
 
 
-   let startTime = performance.now();
+   //let startTime = performance.now();
 
    let show_selection = true;
    let height = 0;
@@ -891,7 +895,6 @@ export function init_cad(flag: number) {
       }
    }
 
-   console.log("show_knotenmassen", show_knotenmassen, stadyn)
    if (stadyn === 1) {
       for (let i = 0; i < list.size; i++) {
 
@@ -917,8 +920,8 @@ export function init_cad(flag: number) {
    //   dz_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
    //write("dxz_offset_touch " + dx_offset_touch + '  ' + dz_offset_touch + '  ' + devicePixelRatio)
 
-   let endTime = performance.now();
-   write("time init_cad: " + (endTime - startTime) + " msec");
+   // let endTime = performance.now();
+   // write("time init_cad: " + (endTime - startTime) + " msec");
 
 
 }
@@ -1478,6 +1481,10 @@ function mousemove(ev: MouseEvent) {
    // console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY, rubberband_drawn, buttons_control.input_started)
    // console.log('**********************************')
 
+   let t = performance.now();
+   write("dt:" + (t - time_call));
+   time_call = t;
+
    ev.preventDefault();
 
    // console.log("ev.offset", ev.offsetX, ev.offsetY);
@@ -1542,6 +1549,10 @@ function mousemove(ev: MouseEvent) {
             two.remove(nodePoint);
             foundNodePoint = false;
          }
+         if (masslinien_drawn) {
+            two.remove(masslinien_band);
+            masslinien_drawn = false;
+         }
 
          if (buttons_control.input_started === 1) {
             rubberband = new Two.Group();
@@ -1583,8 +1594,10 @@ function mousemove(ev: MouseEvent) {
                two.add(rubberband);
 
                rubberband_drawn = true;
+               masslinien_drawn = true;
 
-               two.add(drawBemassung_band(start_x_wc, start_z_wc, end_x_wc, end_z_wc, tr.xWorld(xo), tr.zWorld(yo), tr));
+               masslinien_band = drawBemassung_band(tr, start_x_wc, start_z_wc, end_x_wc, end_z_wc, tr.xWorld(xo), tr.zWorld(yo), buttons_control.art);
+               two.add(masslinien_band);
             }
          }
 
@@ -2063,12 +2076,13 @@ export function keydown(ev: any) {
    //console.log('KEYDOWN, keycode, key, code: ', ev.keyCode, ev.key, ev.code);
 
    if (ev.key === 'Escape') {
-      if (rubberband_drawn) {
-         two.remove(rubberband);
-         two.update();
-      }
+      if (rubberband_drawn) two.remove(rubberband);
+      if (masslinien_drawn) two.remove(masslinien_band);
+      if (rubberband_drawn || masslinien_drawn) two.update();
+
       input_active = false;
       rubberband_drawn = false;
+      masslinien_drawn = false;
       buttons_control.input_started = 0;
       delete_help_text();
    }

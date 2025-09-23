@@ -403,13 +403,20 @@ export function Bemassung_button(art: number) {
 
   console.log("in Bemassung_button")
 
-  if (buttons_control.bemassung_aktiv) {
+  if (buttons_control.bemassung_parallel_aktiv && art === 1) {
+    buttons_control.reset()
+  } else if (buttons_control.bemassung_horizontal_aktiv && art === 2) {
+    buttons_control.reset()
+  } else if (buttons_control.bemassung_vertikal_aktiv && art === 3) {
     buttons_control.reset()
   } else {
     buttons_control.reset()
     //  el.style.backgroundColor = 'darkRed'
     buttons_control.bemassung_aktiv = true
     buttons_control.art = art
+    if (art === 1) buttons_control.bemassung_parallel_aktiv = true;
+    else if (art === 2) buttons_control.bemassung_horizontal_aktiv = true;
+    else if (art === 3) buttons_control.bemassung_vertikal_aktiv = true;
     buttons_control.cad_eingabe_aktiv = true
     buttons_control.typ_cad_element = CAD_BEMASSUNG
     set_help_text('ersten Knoten picken');
@@ -422,7 +429,7 @@ export function Bemassung_button(art: number) {
 
 
 //--------------------------------------------------------------------------------------------------------
-export function drawBemassung_band(x1: number, z1: number, x2: number, z2: number, x3: number, z3: number, tr: CTrans) {
+export function drawBemassung_band(tr: CTrans, x1: number, z1: number, x2: number, z2: number, x3: number, z3: number, art: number) {
   //------------------------------------------------------------------------------------------------------
 
   const X = 0, Y = 1, Z = 2
@@ -432,20 +439,15 @@ export function drawBemassung_band(x1: number, z1: number, x2: number, z2: numbe
   let dx = 0, dz = 0
   let dsl = 0, sinus = 0, cosinus = 0, alpha = 0
 
-  let art = PARALLEL;
-
   let ueberstand = slmax_cad / 120;
   let m_strich = 0;
 
+  let b = [0, 0, 0];
 
   dx = x2 - x1;
   dz = z2 - z1;
 
   if (art === PARALLEL) {
-
-    let b = [0, 0, 0];
-    // b[X] = x
-    // b[Y] = z
 
     let a = Array(3), c = Array(3), d = Array(3);
 
@@ -497,17 +499,73 @@ export function drawBemassung_band(x1: number, z1: number, x2: number, z2: numbe
     alpha = Math.atan2(dz, dx)
 
   }
+  else if (art === HORIZONTAL) {
+
+    b[0] = 0
+    b[1] = z3 - z1
+    b[2] = 0
+
+    p1xNew = x1; p1yNew = b[Y] + z1; p1zNew = 0;
+    p2xNew = x2; p2yNew = b[Y] + z1; p2zNew = 0;
+
+    let vorzeichen = Math.abs(b[Y] + z1 - z1) / (b[Y] + z1 - z1);
+
+    pe1x = p1xNew; pe1y = p1yNew + vorzeichen * ueberstand;
+    pe2x = p2xNew; pe2y = p2yNew + vorzeichen * ueberstand;
+
+
+    if (m_strich == 0) {
+      pa1x = x1; pa1y = z1 + 2.0 * vorzeichen * ueberstand;
+      pa2x = x2; pa2y = z2 + 2.0 * vorzeichen * ueberstand;
+    } else {
+      pa1x = x1; pa1y = p1yNew - vorzeichen * ueberstand;
+      pa2x = x2; pa2y = p1yNew - vorzeichen * ueberstand;
+    }
+    dsl = Math.abs(dx);
+    cosinus = 1
+
+  }
+  else if (art === VERTIKAL) {
+
+    b[0] = x3 - x1
+    b[1] = 0
+    b[2] = 0
+
+    p1xNew = b[X] + x1; p1yNew = z1; p1zNew = 0;
+    p2xNew = b[X] + x1; p2yNew = z2; p2zNew = 0;
+
+    let vorzeichen = Math.abs(b[X] + x1 - x1) / (b[X] + x1 - x1);
+
+    pe1x = p1xNew + vorzeichen * ueberstand; pe1y = p1yNew;
+    pe2x = p2xNew + vorzeichen * ueberstand; pe2y = p2yNew;
+
+    if (m_strich == 0) {
+      pa1x = x1 + 2.0 * vorzeichen * ueberstand; pa1y = z1;
+      pa2x = x2 + 2.0 * vorzeichen * ueberstand; pa2y = z2;
+    } else {
+      pa1x = p1xNew - vorzeichen * ueberstand; pa1y = z1;
+      pa2x = p2xNew - vorzeichen * ueberstand; pa2y = z2;
+    }
+    dsl = Math.abs(dz);
+    sinus = 1;
+    alpha = -Math.PI / 2.0
+  }
 
   let group = new Two.Group();
 
 
   let line = new Two.Line(tr.xPix(p1xNew), tr.zPix(p1yNew), tr.xPix(p2xNew), tr.zPix(p2yNew));
   line.linewidth = 2 / devicePixelRatio;
-  if (timer.element_selected) {
-    line.stroke = select_color;
-    line.linewidth = 3;
-  }
   group.add(line);
+
+  let circle = new Two.Circle(tr.xPix(p1xNew), tr.zPix(p1yNew), 4 / devicePixelRatio, 6)
+  circle.fill = 'black'
+  group.add(circle);
+
+  circle = new Two.Circle(tr.xPix(p2xNew), tr.zPix(p2yNew), 4 / devicePixelRatio, 6)
+  circle.fill = 'black'
+  group.add(circle);
+
 
   return group;
 
