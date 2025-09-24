@@ -293,12 +293,12 @@ export class drRechteckQuerSchnitt extends LitElement {
                      <td title="die Querschnittshöhe ist für die Grafik immer einzugeben">
                         Querschnittshöhe:
                      </td>
-                     <td><input id="height" type="number" value="40" /></td>
+                     <td><input id="height" type="number" value="40" @change="${this._recalc_Rechteck}" /></td>
                      <td>&nbsp;[cm]</td>
                   </tr>
                   <tr>
                      <td><span id="id_row_width">Querschnittbreite:</span></td>
-                     <td><input id="width" type="number" value="30" /></td>
+                     <td><input id="width" type="number" value="30" @change="${this._recalc_Rechteck}" /></td>
                      <td>&nbsp;[cm]</td>
                   </tr>
 
@@ -435,7 +435,6 @@ export class drRechteckQuerSchnitt extends LitElement {
             </table>
             <br /><br />
 
-
             <form method="dialog">
                <sl-button id="id_btn_TQ_ok" value="ok" @click="${this._dialog_TQ_ok}">ok</sl-button>
                <sl-button id="id_btn_TQ_abbruch" value="cancel" @click="${this._dialog_TQ_abbruch}">Abbrechen</sl-button>
@@ -448,17 +447,12 @@ export class drRechteckQuerSchnitt extends LitElement {
     console.log('dialog_ok');
     const shadow = this.shadowRoot;
     if (shadow) {
-      //console.log(
-      //   'email: ',
-      //   (shadow.getElementById('email') as HTMLInputElement).value
-      //);
-
       let defined_querschnitt = Number((shadow?.getElementById('id_defquerschnitt') as HTMLInputElement).value);
       if (defined_querschnitt === 1) {
         // Rechteck
-        let h = Number((shadow?.getElementById('height') as HTMLInputElement).value);
-        let b = Number((shadow?.getElementById('width') as HTMLInputElement).value);
-        console.log('Es handelt sich um einen Rechteckquerschnitt', h, b);
+        let h = Number((shadow?.getElementById('height') as HTMLInputElement).value.replace(/,/g, '.'));
+        let b = Number((shadow?.getElementById('width') as HTMLInputElement).value.replace(/,/g, '.'));
+        //console.log('Es handelt sich um einen Rechteckquerschnitt', h, b);
         (shadow?.getElementById('area') as HTMLInputElement).value = myFormat_en(b * h, 1, 4);
         (shadow?.getElementById('traeg_y') as HTMLInputElement).value = myFormat_en((b * h * h * h) / 12, 1, 2);
         (shadow?.getElementById('zso') as HTMLInputElement).value = myFormat_en(h / 2, 1, 2);
@@ -628,12 +622,11 @@ export class drRechteckQuerSchnitt extends LitElement {
     console.log('_dialog_TQ_ok');
     const shadow = this.shadowRoot;
     if (shadow) {
-
-      let flanschbreite = Number((shadow.getElementById('id_TQ_flanschbreite') as HTMLInputElement).value.replace(/,/g, "."));
-      let flanschhoehe = Number((shadow.getElementById('id_TQ_flanschhoehe') as HTMLInputElement).value.replace(/,/g, "."));
-      let stegbreite_oben = Number((shadow.getElementById('id_TQ_stegbreite_oben') as HTMLInputElement).value.replace(/,/g, "."));
-      let stegbreite_unten = Number((shadow.getElementById('id_TQ_stegbreite_unten') as HTMLInputElement).value.replace(/,/g, "."));
-      let steghoehe = Number((shadow.getElementById('id_TQ_steghoehe') as HTMLInputElement).value.replace(/,/g, "."));
+      let flanschbreite = Number((shadow.getElementById('id_TQ_flanschbreite') as HTMLInputElement).value.replace(/,/g, '.'));
+      let flanschhoehe = Number((shadow.getElementById('id_TQ_flanschhoehe') as HTMLInputElement).value.replace(/,/g, '.'));
+      let stegbreite_oben = Number((shadow.getElementById('id_TQ_stegbreite_oben') as HTMLInputElement).value.replace(/,/g, '.'));
+      let stegbreite_unten = Number((shadow.getElementById('id_TQ_stegbreite_unten') as HTMLInputElement).value.replace(/,/g, '.'));
+      let steghoehe = Number((shadow.getElementById('id_TQ_steghoehe') as HTMLInputElement).value.replace(/,/g, '.'));
 
       let hoehe = flanschhoehe + steghoehe;
       (shadow?.getElementById('height') as HTMLInputElement).value = myFormat_en(hoehe, 1, 3);
@@ -641,22 +634,22 @@ export class drRechteckQuerSchnitt extends LitElement {
       const y: number[] = Array(8);
       const z: number[] = Array(8);
 
-      y[0] = -flanschbreite / 2
-      y[1] = flanschbreite / 2
-      y[2] = flanschbreite / 2
-      y[3] = stegbreite_oben / 2
-      y[4] = stegbreite_unten / 2
-      y[5] = -stegbreite_unten / 2
-      y[6] = -stegbreite_oben / 2
+      y[0] = -flanschbreite / 2;
+      y[1] = flanschbreite / 2;
+      y[2] = flanschbreite / 2;
+      y[3] = stegbreite_oben / 2;
+      y[4] = stegbreite_unten / 2;
+      y[5] = -stegbreite_unten / 2;
+      y[6] = -stegbreite_oben / 2;
       y[7] = -flanschbreite / 2;
 
-      z[0] = 0
-      z[1] = 0
-      z[2] = flanschhoehe
-      z[3] = flanschhoehe
-      z[4] = hoehe
-      z[5] = hoehe
-      z[6] = flanschhoehe
+      z[0] = 0;
+      z[1] = 0;
+      z[2] = flanschhoehe;
+      z[3] = flanschhoehe;
+      z[4] = hoehe;
+      z[5] = hoehe;
+      z[6] = flanschhoehe;
       z[7] = flanschhoehe;
 
       const quer = new CQuer_polygon(0);
@@ -676,5 +669,21 @@ export class drRechteckQuerSchnitt extends LitElement {
     console.log('_dialog_TQ_abbruch');
     const shadow = this.shadowRoot;
     if (shadow) (shadow.getElementById('dialog_TQ') as HTMLDialogElement).close('cancel');
+  }
+
+  _recalc_Rechteck() {
+    const shadow = this.shadowRoot;
+    if (shadow) {
+      let defined_querschnitt = Number((shadow?.getElementById('id_defquerschnitt') as HTMLInputElement).value);
+      if (defined_querschnitt === 1) {
+        // Rechteck
+        let h = Number((shadow?.getElementById('height') as HTMLInputElement).value.replace(/,/g, '.'));
+        let b = Number((shadow?.getElementById('width') as HTMLInputElement).value.replace(/,/g, '.'));
+        //console.log('Es handelt sich um einen Rechteckquerschnitt', h, b);
+        (shadow?.getElementById('area') as HTMLInputElement).value = myFormat_en(b * h, 1, 4);
+        (shadow?.getElementById('traeg_y') as HTMLInputElement).value = myFormat_en((b * h * h * h) / 12, 1, 2);
+        (shadow?.getElementById('zso') as HTMLInputElement).value = myFormat_en(h / 2, 1, 2);
+      }
+    }
   }
 }
