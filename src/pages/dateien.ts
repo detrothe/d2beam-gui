@@ -58,7 +58,7 @@ export function read_daten(eingabedaten: string) {
     let i, j;
     let startTime: any;
     let endTime: any;
-    write("start read_daten");
+    //write("start read_daten");
     startTime = performance.now();
 
     //console.log("in result", eingabedaten);
@@ -874,7 +874,7 @@ export function str_inputToJSON() {
               }
           */
     let qsClassName = new Array(nQuerschnittSets);
-    let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(12));
+    let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(18));
 
     for (i = 0; i < nQuerschnittSets; i++) {
         console.log("get_querschnitt_length", get_querschnitt_length(i));

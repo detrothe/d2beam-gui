@@ -84,7 +84,6 @@ export function unselect_all_button() {
                 (obj as TCAD_Stab).elast[j].multiSelected = false;
             }
         }
-
     }
 
     buttons_control.reset();
@@ -122,20 +121,16 @@ export function copy_selected_button() {
 export function select_typ_button() {
     //----------------------------------------------------------------------------------------------------
 
-
     buttons_control.reset()
 
-
     showDialog_selekt_typ();
-
-
 }
 
 //------------------------------------------------------------------------------------------------------
 export function copy_selected(dx0: number, dz0: number) {
     //----------------------------------------------------------------------------------------------------
 
-    console.log("in copy_selected", dx0, dz0)
+    //console.log("in copy_selected", dx0, dz0)
     if (ncopies < 1) return;
 
     let lsize = list.size
@@ -383,7 +378,7 @@ function dialog_kopieren_closed(this: any, e: any) {
 export function showDialog_selekt_typ() {
     //------------------------------------------------------------------------------------------------------------
 
-    console.log("showDialog_selekt_typ()");
+    //console.log("showDialog_selekt_typ()");
 
     const el = document.getElementById("id_dialog_selekt_typ");
 
@@ -449,7 +444,7 @@ export function edit_selected_button() {
 
     for (let i = 0; i < list.size; i++) {
         let obj = list.getNext(i) as TCAD_Element;
-        console.log("obj.elTyp, obj.multiSelected", obj.elTyp, obj.multiSelected)
+        //console.log("obj.elTyp, obj.multiSelected", obj.elTyp, obj.multiSelected)
         if (obj.elTyp === CAD_STAB && obj.multiSelected) nStaebe_edit_selected++;
         else if (obj.elTyp === CAD_KNLAST && obj.multiSelected) nKnLast_edit_selected++;
         else if (obj.elTyp === CAD_LAGER && obj.multiSelected) nLager_edit_selected++;

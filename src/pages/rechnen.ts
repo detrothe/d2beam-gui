@@ -1638,7 +1638,8 @@ export function init_tabellen() {
             schubfaktor,
             querdehnzahl,
             zso,
-            alphaT
+            alphaT,
+            0, 0, 0, 0, 0
         );
 
         add_new_cross_section(qname, id);

@@ -1481,9 +1481,9 @@ function mousemove(ev: MouseEvent) {
    // console.log('in mousemove', ev.movementX, ev.movementY, ev.offsetX, ev.offsetY, rubberband_drawn, buttons_control.input_started)
    // console.log('**********************************')
 
-   let t = performance.now();
-   write("dt:" + (t - time_call));
-   time_call = t;
+   // let t = performance.now();
+   // write("dt:" + (t - time_call));
+   // time_call = t;
 
    ev.preventDefault();
 
