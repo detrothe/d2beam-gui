@@ -87,6 +87,7 @@ import { draw_knotenverformung, showDialog_knotenverformung, write_knotenverform
 import { drDrawer_1 } from "../components/dr-drawer_1";
 import { mode_multi_selected_elementlast_aendern, mode_multi_selected_knotenlast_aendern, mode_multi_selected_knotenmasse_aendern, update_multi_selected_elementlast, update_multi_selected_knotenlast, update_multi_selected_knotenmasse } from "./cad_select";
 import { LitElement } from "lit";
+import { drMyDrawer } from "../components/dr-my_drawer";
 
 let backgroundColor_button = 'rgb(64, 64, 64)';
 let backgroundColor_button_light = 'rgb(64, 64, 64)';
@@ -194,6 +195,7 @@ class Cbuttons_control {
     this.button_pressed = false;
     this.input_started = 0;
     this.info_eingabe_aktiv = false;
+
     this.messen_aktiv = false;
     this.bemassung_aktiv = false;
     this.bemassung_parallel_aktiv = false;
@@ -209,6 +211,13 @@ class Cbuttons_control {
     this.copy_selected_aktiv = false;
     this.edit_selected_aktiv = false;
 
+    //const myDrawer = (document.getElementById("id_drawer_1") as drDrawer_1);
+    const myDrawer = document.querySelector('.class-my-drawer') as HTMLElement;
+    console.log("reset", myDrawer);
+    let elm = (myDrawer?.shadowRoot?.getElementById("id_drawer_1") as drDrawer_1);
+    elm.reset_buttons();
+    console.log("hier id_drawer_1", elm);
+    // myDrawer.reset_buttons();
 
     let backgroundColor = backgroundColor_button
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
@@ -2170,9 +2179,9 @@ export function Messen_button() {
   //  let el = document.getElementById("id_cad_info_button") as HTMLButtonElement
 
   if (buttons_control.messen_aktiv) {
-    buttons_control.reset()
+    // buttons_control.reset()
   } else {
-    buttons_control.reset()
+    // buttons_control.reset()
     //  el.style.backgroundColor = 'darkRed'
     buttons_control.messen_aktiv = true
     buttons_control.cad_eingabe_aktiv = true
@@ -2242,30 +2251,29 @@ export function Drawer_button(_ev: Event) {
 
   buttons_control.reset();
 
-  const drawer = document.querySelector('.drawer-overview');
-  const closeButton = drawer?.querySelector('sl-button[variant="primary"]');
+  // const drawer = document.querySelector('.drawer-overview');
+  // const closeButton = drawer?.querySelector('sl-button[variant="primary"]');
 
   const myDrawer = document.querySelector('.class-my-drawer') as LitElement;
 
-  console.log("in drawer_button", myDrawer);
+  console.log("in drawer_button", myDrawer.shadowRoot);
 
-  (document.getElementById("id_drawer_1") as drDrawer_1).init_loadcases(max_Lastfall);
+  // (document.getElementById("id_drawer_1") as drDrawer_1).init_loadcases(max_Lastfall);
 
   let el = document.getElementById("id_cad_drawer_button") as HTMLButtonElement
 
 
-  if (drawer_1_control.drawer_eingabe_aktiv) {
-    //@ts-ignore
-    //if (drawer !== null) drawer.hide()
+  // if (drawer_1_control.drawer_eingabe_aktiv) {
 
-    if (myDrawer && hide_drawer) myDrawer.style.display = 'none';
+  //   if (myDrawer && hide_drawer) myDrawer.style.display = 'none';
+
+  //   drawer_1_control.reset()
+  // } else
+  {
 
     drawer_1_control.reset()
-  } else {
 
-    drawer_1_control.reset()
-
-    el.style.backgroundColor = 'darkRed'
+    //el.style.backgroundColor = 'darkRed'
     drawer_1_control.drawer_eingabe_aktiv = true
     buttons_control.cad_eingabe_aktiv = false
     buttons_control.typ_cad_element = CAD_DRAWER
@@ -2274,7 +2282,7 @@ export function Drawer_button(_ev: Event) {
     buttons_control.button_pressed = true;
 
     //@ts-ignore
-    closeButton?.addEventListener('click', () => drawer.hide());
+    //closeButton?.addEventListener('click', () => drawer.hide());
     //@ts-ignore
     //if (drawer !== null) drawer.show()
     if (myDrawer) myDrawer.style.display = 'block';

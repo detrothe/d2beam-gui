@@ -1,6 +1,6 @@
 import { SlCheckbox } from '@shoelace-style/shoelace';
 import { LitElement, css, html } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
+import { property, customElement, state } from 'lit/decorators.js';
 import { hide_drawer, Messen_button } from '../pages/cad_buttons';
 import { Bemassung_button } from '../pages/cad_bemassung';
 import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_lager, set_show_lastfall, set_show_raster, set_show_stab_qname } from '../pages/cad';
@@ -15,6 +15,22 @@ export class drDrawer_1 extends LitElement {
 
    @property({ type: Number }) xValue = 0;
    @property({ type: Number }) nLastfaelle = 0;
+
+   backgroundColor = "rgb(90, 90, 90)";
+   backgroundColor_red = "darkRed";
+
+   knotenverformung_aktiv = false;
+   selektiere_mehrere_elemente_aktiv = false;
+   selektiere_nach_Element_typ_aktiv = false;
+   deselektiere_alle_elemente_aktiv = false;
+   deselektiere_mehrere_elemente_aktiv = false;
+   kopiere_selektierte_elemente_aktiv = false;
+   editiere_selektierte_elemente_aktiv = false;
+   messen_aktiv = false;
+   bemassung_parallel = false;
+   bemassung_horizontal = false;
+   bemassung_vertikal = false;
+
 
    static get styles() {
       return css`
@@ -207,29 +223,50 @@ export class drDrawer_1 extends LitElement {
    _messen() {
       const drawer = document.querySelector('.drawer-overview');
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
-      console.log('drawer', myDrawer);
+      if (this.messen_aktiv) {
+         this.reset_buttons();
+      } else {
+         this.reset_buttons();
+         (this.shadowRoot?.getElementById('id_messen') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
+         this.messen_aktiv = true;
+      }
       //console.log("Button messen geklickt", drawer)
       //@ts-ignore
       if (drawer) drawer.hide();
-      if ( myDrawer && hide_drawer) myDrawer.hide();
+      if (myDrawer && hide_drawer) myDrawer.hide();
       Messen_button();
    }
 
    _select_multi() {
       const drawer = document.querySelector('.drawer-overview');
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
+
+      if (this.selektiere_mehrere_elemente_aktiv) {
+         // this.reset_buttons();
+      } else {
+         // this.reset_buttons();
+         (this.shadowRoot?.getElementById('id_select_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
+         this.selektiere_mehrere_elemente_aktiv = true;
+      }
       //@ts-ignore
       if (drawer !== null) drawer.hide();
-      if ( myDrawer && hide_drawer) myDrawer.hide();
+      if (myDrawer && hide_drawer) myDrawer.hide();
       select_multi_button(1);
    }
 
    _unselect_multi() {
       const drawer = document.querySelector('.drawer-overview');
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
+      if (this.deselektiere_mehrere_elemente_aktiv) {
+         this.reset_buttons();
+      } else {
+         this.reset_buttons();
+         (this.shadowRoot?.getElementById('id_unselect_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
+         this.deselektiere_mehrere_elemente_aktiv = true;
+      }
       //@ts-ignore
       if (drawer !== null) drawer.hide();
-      if ( myDrawer && hide_drawer) myDrawer.hide();
+      if (myDrawer && hide_drawer) myDrawer.hide();
       unselect_multi_button(1);
    }
 
@@ -238,7 +275,7 @@ export class drDrawer_1 extends LitElement {
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
       //@ts-ignore
       if (drawer !== null) drawer.hide();
-      if ( myDrawer && hide_drawer) myDrawer.hide();
+      if (myDrawer && hide_drawer) myDrawer.hide();
       select_typ_button();
    }
 
@@ -247,7 +284,7 @@ export class drDrawer_1 extends LitElement {
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
       //@ts-ignore
       if (drawer !== null) drawer.hide();
-      if ( myDrawer && hide_drawer) myDrawer.hide();
+      if (myDrawer && hide_drawer) myDrawer.hide();
       unselect_all_button();
    }
 
@@ -256,7 +293,7 @@ export class drDrawer_1 extends LitElement {
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
       //@ts-ignore
       if (drawer !== null) drawer.hide();
-      if ( myDrawer && hide_drawer) myDrawer.hide();
+      if (myDrawer && hide_drawer) myDrawer.hide();
       copy_selected_button();
    }
 
@@ -265,7 +302,7 @@ export class drDrawer_1 extends LitElement {
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
       //@ts-ignore
       if (drawer !== null) drawer.hide();
-      if ( myDrawer && hide_drawer) myDrawer.hide();
+      if (myDrawer && hide_drawer) myDrawer.hide();
       edit_selected_button();
    }
 
@@ -274,7 +311,7 @@ export class drDrawer_1 extends LitElement {
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
       //@ts-ignore
       if (drawer !== null) drawer.hide();
-      if ( myDrawer && hide_drawer) myDrawer.hide();
+      if (myDrawer && hide_drawer) myDrawer.hide();
       Bemassung_button(1);
    }
 
@@ -283,7 +320,7 @@ export class drDrawer_1 extends LitElement {
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
       //@ts-ignore
       if (drawer !== null) drawer.hide();
-      if ( myDrawer && hide_drawer) myDrawer.hide();
+      if (myDrawer && hide_drawer) myDrawer.hide();
       Bemassung_button(2);
    }
 
@@ -292,7 +329,7 @@ export class drDrawer_1 extends LitElement {
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
       //@ts-ignore
       if (drawer !== null) drawer.hide();
-      if ( myDrawer && hide_drawer) myDrawer.hide();
+      if (myDrawer && hide_drawer) myDrawer.hide();
       Bemassung_button(3);
    }
 
@@ -367,7 +404,7 @@ export class drDrawer_1 extends LitElement {
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
       //@ts-ignore
       if (drawer !== null) drawer.hide();
-      if ( myDrawer && hide_drawer) myDrawer.hide();
+      if (myDrawer && hide_drawer) myDrawer.hide();
       Knotenverformung_button();
    }
 
@@ -406,5 +443,38 @@ export class drDrawer_1 extends LitElement {
       let el = this.shadowRoot?.getElementById('id_select_loadcase') as HTMLSelectElement;
       //console.log("loadcase changed", el.value)
       set_show_lastfall(Number(el.value));
+   }
+
+   reset_buttons() {
+
+      console.log("in reset_buttons()")
+
+      this.knotenverformung_aktiv = false;
+      this.selektiere_mehrere_elemente_aktiv = false;
+      this.selektiere_nach_Element_typ_aktiv = false;
+      this.deselektiere_alle_elemente_aktiv = false;
+      this.deselektiere_mehrere_elemente_aktiv = false;
+      this.kopiere_selektierte_elemente_aktiv = false;
+      this.editiere_selektierte_elemente_aktiv = false;
+      this.messen_aktiv = false;
+      this.bemassung_parallel = false;
+      this.bemassung_horizontal = false;
+      this.bemassung_vertikal = false;
+
+      (this.shadowRoot?.getElementById('id_messen') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
+      let el = (this.shadowRoot?.getElementById('id_select_multi') as HTMLButtonElement);
+      el.style.backgroundColor = this.backgroundColor;
+
+      (this.shadowRoot?.getElementById('id_unselect_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
+
+      (this.shadowRoot?.getElementById('id_copy_selected') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
+      (this.shadowRoot?.getElementById('id_edit_selected') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
+
+      (this.shadowRoot?.getElementById('id_bemassung_parallel') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
+      (this.shadowRoot?.getElementById('id_bemassung_x') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
+      (this.shadowRoot?.getElementById('id_bemassung_z') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
+
+
+       //this.requestUpdate();
    }
 }

@@ -81,7 +81,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.5.1.a, 24-September-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.5.1.a, 25-September-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -350,10 +350,10 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           </div>
 
 
-          <sl-drawer label="Mehr Aktivitäten" class="drawer-overview" style="cursor:pointer;--size:20rem">
-            <dr-drawer_1 id="id_drawer_1"></dr-drawer_1>
+          <!-- <sl-drawer label="Mehr Aktivitäten" class="drawer-overview" style="cursor:pointer;--size:20rem">
+            <dr-drawer_1 id="id_drawer_2"></dr-drawer_1>
             <sl-button slot="footer" variant="primary" @click="${close_drawer_1}">Close</sl-button>
-          </sl-drawer>
+          </sl-drawer> -->
 
           <dr-my_drawer class="class-my-drawer" >
           </dr-my_drawer>

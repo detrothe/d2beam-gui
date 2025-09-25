@@ -32,9 +32,9 @@ export function select_multi_button(art: number) {
     //----------------------------------------------------------------------------------------------------
 
     if (buttons_control.select_multi_aktiv) {
-        buttons_control.reset()
+        // buttons_control.reset()
     } else {
-        buttons_control.reset()
+        // buttons_control.reset()
         buttons_control.select_multi_aktiv = true
         buttons_control.art = art
         buttons_control.cad_eingabe_aktiv = true

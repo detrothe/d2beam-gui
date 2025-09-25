@@ -175,7 +175,7 @@ export class drMyDrawer extends LitElement {
       console.log('div_drawer_ok');
       const shadow = this.shadowRoot;
       const el = document.querySelector('.class-my-drawer') as HTMLElement;
-      console.log('class-my-drawer', el);
+      //console.log('class-my-drawer', el);
       el.style.display = 'none';
       this.sticky = false;
       set_hide_drawer(true);
