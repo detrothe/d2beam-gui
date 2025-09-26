@@ -177,7 +177,7 @@ class Cbuttons_control {
   copy_selected_aktiv = false;
   edit_selected_aktiv = false;
 
-  reset() {
+  reset(flag = 1) {
     this.delete_element = false;
     this.select_element = false;
     this.select_node = false;
@@ -212,12 +212,13 @@ class Cbuttons_control {
     this.edit_selected_aktiv = false;
 
     //const myDrawer = (document.getElementById("id_drawer_1") as drDrawer_1);
-    const myDrawer = document.querySelector('.class-my-drawer') as HTMLElement;
-    console.log("reset", myDrawer);
-    let elm = (myDrawer?.shadowRoot?.getElementById("id_drawer_1") as drDrawer_1);
-    elm.reset_buttons();
-    console.log("hier id_drawer_1", elm);
-    // myDrawer.reset_buttons();
+    if (flag === 1) {
+      const myDrawer = document.querySelector('.class-my-drawer') as HTMLElement;
+      console.log("reset", myDrawer);
+      let elm = (myDrawer?.shadowRoot?.getElementById("id_drawer_1") as drDrawer_1);
+      elm.reset_buttons();
+      console.log("hier id_drawer_1", elm);
+    }
 
     let backgroundColor = backgroundColor_button
     let el = document.getElementById("id_cad_stab_button") as HTMLButtonElement;
@@ -2179,9 +2180,9 @@ export function Messen_button() {
   //  let el = document.getElementById("id_cad_info_button") as HTMLButtonElement
 
   if (buttons_control.messen_aktiv) {
-    // buttons_control.reset()
+    buttons_control.reset(0)
   } else {
-    // buttons_control.reset()
+    buttons_control.reset(0)
     //  el.style.backgroundColor = 'darkRed'
     buttons_control.messen_aktiv = true
     buttons_control.cad_eingabe_aktiv = true

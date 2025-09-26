@@ -32,9 +32,9 @@ export function select_multi_button(art: number) {
     //----------------------------------------------------------------------------------------------------
 
     if (buttons_control.select_multi_aktiv) {
-        // buttons_control.reset()
+        buttons_control.reset(0)
     } else {
-        // buttons_control.reset()
+        buttons_control.reset(0)
         buttons_control.select_multi_aktiv = true
         buttons_control.art = art
         buttons_control.cad_eingabe_aktiv = true
@@ -55,9 +55,9 @@ export function unselect_multi_button(art: number) {
     //console.log("in select_multi_button")
 
     if (buttons_control.unselect_multi_aktiv) {
-        buttons_control.reset()
+        buttons_control.reset(0)
     } else {
-        buttons_control.reset()
+        buttons_control.reset(0)
         buttons_control.unselect_multi_aktiv = true
         buttons_control.art = art
         buttons_control.cad_eingabe_aktiv = true
@@ -100,9 +100,9 @@ export function copy_selected_button() {
     //console.log("in unselect_all_button")
 
     if (buttons_control.select_multi_aktiv) {
-        buttons_control.reset()
+        buttons_control.reset(0)
     } else {
-        buttons_control.reset()
+        buttons_control.reset(0)
         buttons_control.copy_selected_aktiv = true
         buttons_control.cad_eingabe_aktiv = true
         buttons_control.typ_cad_element = CAD_COPY_SELECTED
@@ -206,7 +206,7 @@ export function copy_selected(dx0: number, dz0: number) {
     }
 
     let fehler_masse = false;
-    let fehler_lager= false;
+    let fehler_lager = false;
     lsize = list.size
     for (let i = 0; i < lsize; i++) {
         let obj = list.getAt(i) as TCAD_Element;  // wegen innerer Schleife kein getNext möglich
@@ -307,7 +307,7 @@ export function copy_selected(dx0: number, dz0: number) {
     if (fehler_masse) {
         alertdialog('ok', 'einer oder mehrere Knoten hat(haben) schon eine Knotenmasse, nur eine Masse pro Knoten ist zulässig, es erfolgte keine Änderung bei den betroffenen Knoten.');
     }
-     if (fehler_lager) {
+    if (fehler_lager) {
         alertdialog('ok', 'einer oder mehrere Knoten hat(haben) schon eine Lagerung, nur eine Lager pro Knoten ist zulässig, es erfolgte keine Änderung bei den betroffenen Knoten.');
     }
     two.update();
