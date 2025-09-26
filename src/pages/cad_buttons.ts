@@ -2252,16 +2252,11 @@ export function Drawer_button(_ev: Event) {
 
   buttons_control.reset();
 
-  // const drawer = document.querySelector('.drawer-overview');
-  // const closeButton = drawer?.querySelector('sl-button[variant="primary"]');
+  const myDrawer = document.querySelector('.class-my-drawer') as HTMLElement;
+  let elm = (myDrawer?.shadowRoot?.getElementById("id_drawer_1") as drDrawer_1);
+  elm.init_loadcases(max_Lastfall);
 
-  const myDrawer = document.querySelector('.class-my-drawer') as LitElement;
-
-  console.log("in drawer_button", myDrawer.shadowRoot);
-
-  // (document.getElementById("id_drawer_1") as drDrawer_1).init_loadcases(max_Lastfall);
-
-  let el = document.getElementById("id_cad_drawer_button") as HTMLButtonElement
+  // let el = document.getElementById("id_cad_drawer_button") as HTMLButtonElement
 
 
   // if (drawer_1_control.drawer_eingabe_aktiv) {

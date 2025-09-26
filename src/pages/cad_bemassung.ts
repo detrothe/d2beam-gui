@@ -404,13 +404,13 @@ export function Bemassung_button(art: number) {
   console.log("in Bemassung_button")
 
   if (buttons_control.bemassung_parallel_aktiv && art === 1) {
-    buttons_control.reset()
+    buttons_control.reset(0)
   } else if (buttons_control.bemassung_horizontal_aktiv && art === 2) {
-    buttons_control.reset()
+    buttons_control.reset(0)
   } else if (buttons_control.bemassung_vertikal_aktiv && art === 3) {
-    buttons_control.reset()
+    buttons_control.reset(0)
   } else {
-    buttons_control.reset()
+    buttons_control.reset(0)
     //  el.style.backgroundColor = 'darkRed'
     buttons_control.bemassung_aktiv = true
     buttons_control.art = art
