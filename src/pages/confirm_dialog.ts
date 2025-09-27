@@ -52,7 +52,7 @@ export class ConfirmDialog {
         this.dialog.classList.add("confirm-dialog");
 
         const question = document.createElement("div");
-        question.textContent = this.questionText;
+        question.innerHTML = this.questionText;
         question.classList.add("confirm-dialog-question");
         this.dialog.appendChild(question);
 
@@ -144,7 +144,8 @@ export class AlertDialog {
         this.dialog.classList.add("confirm-dialog");
 
         const question = document.createElement("div");
-        question.textContent = this.questionText;
+        // question.textContent = this.questionText;
+        question.innerHTML = this.questionText;
         question.classList.add("confirm-dialog-question");
         this.dialog.appendChild(question);
 

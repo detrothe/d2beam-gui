@@ -15,8 +15,10 @@ export function info_Materialeigenschaften() {
 export function info_Eigenwertberechnung() {
 
     const question_Text = "Die simultane Vektoriteration konvergiert sehr langsam, aber meist erfolgreich. Der Startvektor wird durch Zufallszahlen zu Beginn " +
-    "jeder neuen Berechnung bestimmt. Deshalb kann eine erneute Berechnung nach einer erfolglosen Berechnung zum Erfolg führen." +
-    "Die QR Methode aus der GNU Bibliothek konvergiert sehr schnell, wenn sie konvergiert."
+    "jeder neuen Berechnung bestimmt. Deshalb kann eine erneute Berechnung nach einer erfolglosen Berechnung zum Erfolg führen. " +
+    "<br>Die QR Methode aus der GNU Bibliothek konvergiert sehr schnell, wenn sie konvergiert.<br>" +
+    "Der ARPACK (ARnoldi PACKage) Eigenwertlöser ist für die Berechnung einiger Eigenwerte und -vektoren großer Systeme entwickelt worden. " +
+    "Er konvergiert schnell, auch bei mehreren gesuchten Eigenwerten."
 
     alertdialog('ok', question_Text);
 

@@ -2058,10 +2058,10 @@ function mouseup(ev: any) {
                //console.log("Bemassung index1-2", index1, index2)
                let group = add_bemassung(tr, index1, index2, pkt3_x_wc, pkt3_z_wc, buttons_control.art);
                two.add(group);
-               let startTime = performance.now();
+               // let startTime = performance.now();
                two.update();
-               let endTime = performance.now();
-               write("time update: " + (endTime - startTime) + " msec");
+               // let endTime = performance.now();
+               // write("time update: " + (endTime - startTime) + " msec");
             }
 
             if (buttons_control.n_input_points === 3) {
