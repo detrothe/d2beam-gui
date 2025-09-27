@@ -3,7 +3,7 @@ import { LitElement, css, html } from 'lit';
 import { property, customElement, state } from 'lit/decorators.js';
 import { hide_drawer, Messen_button } from '../pages/cad_buttons';
 import { Bemassung_button } from '../pages/cad_bemassung';
-import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_lager, set_show_lastfall, set_show_raster, set_show_stab_qname } from '../pages/cad';
+import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_knotenverformung, set_show_lager, set_show_lastfall, set_show_raster, set_show_stab_qname } from '../pages/cad';
 import { copy_svg_cad } from '../pages/grafik';
 import { Knotenverformung_button } from '../pages/cad_knotenverformung';
 import { copy_selected_button, edit_selected_button, select_multi_button, select_typ_button, unselect_all_button, unselect_multi_button } from '../pages/cad_select';
@@ -16,8 +16,8 @@ export class drDrawer_1 extends LitElement {
    @property({ type: Number }) xValue = 0;
    @property({ type: Number }) nLastfaelle = 0;
 
-   backgroundColor = "rgb(90, 90, 90)";
-   backgroundColor_red = "darkRed";
+   backgroundColor = 'rgb(90, 90, 90)';
+   backgroundColor_red = 'darkRed';
 
    knotenverformung_aktiv = false;
    selektiere_mehrere_elemente_aktiv = false;
@@ -30,7 +30,6 @@ export class drDrawer_1 extends LitElement {
    bemassung_parallel_aktiv = false;
    bemassung_horizontal_aktiv = false;
    bemassung_vertikal_aktiv = false;
-
 
    static get styles() {
       return css`
@@ -146,51 +145,41 @@ export class drDrawer_1 extends LitElement {
 
    render() {
       return html`
-         <p>
+         <p style="line-height: 2rem;">
             <button id="id_knotverform" value="0" @click="${this._knotverform}">Knotenverformung</button>
-         </p>
+            <br />
 
-         <p>
             <button id="id_select_multi" value="0" @click="${this._select_multi}">selektiere mehrere Elemente</button>
-         </p>
+            <br />
 
-         <p>
             <button id="id_select_typ" value="0" @click="${this._select_typ}">selektiere nach Element-Typ</button>
-         </p>
+            <br />
 
-         <p>
             <button id="id_unselect_all" value="0" @click="${this._unselect_all}">deselektiere alle Elemente</button>
-         </p>
+            <br />
 
-         <p>
             <button id="id_unselect_multi" value="0" @click="${this._unselect_multi}">deselektiere mehrere Elemente</button>
-         </p>
+            <br />
 
-         <p>
             <button id="id_copy_selected" value="0" @click="${this._copy_selected}">Kopiere selektierte Elemente</button>
-         </p>
+            <br />
 
-         <p>
             <button id="id_edit_selected" value="0" @click="${this._edit_selected}">Editiere selektierte Elemente</button>
-         </p>
+            <br />
 
-         <p>
             <button id="id_messen" value="0" @click="${this._messen}">Messen</button>
-         </p>
+            <br />
 
-         <p>
             <button id="id_bemassung_parallel" value="0" @click="${this._bemassung_parallel}">Bemassung parallel</button>
-         </p>
+            <br />
 
-         <p>
             <button id="id_bemassung_x" value="0" @click="${this._bemassung_x}">Bemassung horizontal</button>
-         </p>
+            <br />
 
-         <p>
             <button id="id_bemassung_z" value="0" @click="${this._bemassung_z}">Bemassung vertikal</button>
          </p>
 
-         <p>
+         <p style="line-height: 1.5rem;">
             <b>Ausblenden</b><br />
             <sl-checkbox id="id_show_raster" @click="${this._checkbox_raster}">Rasterlinien </sl-checkbox>
             <br />
@@ -203,6 +192,8 @@ export class drDrawer_1 extends LitElement {
             <sl-checkbox id="id_show_elementlasten" @click="${this._checkbox_elementlasten}">Elementlasten </sl-checkbox>
             <br />
             <sl-checkbox id="id_show_knotenmassen" @click="${this._checkbox_knotenmassen}">Knotenmassen </sl-checkbox>
+            <br />
+            <sl-checkbox id="id_show_knotenverformungen" @click="${this._checkbox_knotenverformungen}">Knotenverformungen </sl-checkbox>
             <br />
             <sl-checkbox id="id_show_bemassung" @click="${this._checkbox_bemassung}">Bemaßung </sl-checkbox>
          </p>
@@ -381,6 +372,15 @@ export class drDrawer_1 extends LitElement {
       }
    }
 
+   _checkbox_knotenverformungen() {
+      let el = this.shadowRoot?.getElementById('id_show_knotenverformungen') as SlCheckbox;
+      if (el.checked) {
+         set_show_knotenverformung(false);
+      } else {
+         set_show_knotenverformung(true);
+      }
+   }
+
    _checkbox_elementlasten() {
       let el = this.shadowRoot?.getElementById('id_show_elementlasten') as SlCheckbox;
       if (el.checked) {
@@ -421,10 +421,17 @@ export class drDrawer_1 extends LitElement {
    }
 
    _knotverform() {
-      const drawer = document.querySelector('.drawer-overview');
+      // const drawer = document.querySelector('.drawer-overview');
       const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
       //@ts-ignore
-      if (drawer !== null) drawer.hide();
+      // if (drawer !== null) drawer.hide();
+      if (this.knotenverformung_aktiv) {
+         this.reset_buttons();
+      } else {
+         this.reset_buttons();
+         (this.shadowRoot?.getElementById('id_knotverform') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
+         this.knotenverformung_aktiv = true;
+      }
       if (myDrawer && hide_drawer) myDrawer.hide();
       Knotenverformung_button();
    }
@@ -467,8 +474,7 @@ export class drDrawer_1 extends LitElement {
    }
 
    reset_buttons() {
-
-      console.log("in reset_buttons()")
+      console.log('in reset_buttons()');
 
       this.knotenverformung_aktiv = false;
       this.selektiere_mehrere_elemente_aktiv = false;
@@ -482,6 +488,7 @@ export class drDrawer_1 extends LitElement {
       this.bemassung_horizontal_aktiv = false;
       this.bemassung_vertikal_aktiv = false;
 
+      (this.shadowRoot?.getElementById('id_knotverform') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
       (this.shadowRoot?.getElementById('id_messen') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
       (this.shadowRoot?.getElementById('id_select_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
 
@@ -493,7 +500,6 @@ export class drDrawer_1 extends LitElement {
       (this.shadowRoot?.getElementById('id_bemassung_parallel') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
       (this.shadowRoot?.getElementById('id_bemassung_x') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
       (this.shadowRoot?.getElementById('id_bemassung_z') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
-
 
       //this.requestUpdate();
    }

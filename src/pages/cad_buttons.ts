@@ -65,7 +65,7 @@ import "../components/dr-dialog_messen";
 import "../components/dr-dialog_bemassung";
 import "../components/dr-dialog_knotenverformung";
 
-import { alertdialog, TLoads, TMass, TNode, TNodeDisp } from "./rechnen";
+import { alertdialog, stadyn, TLoads, TMass, TNode, TNodeDisp } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knoten, draw_knotenlast, draw_knotenmasse, draw_lager } from "./cad_draw_elemente";
 import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Einzellast, TCAD_Knotenmasse, TCAD_Knotenverformung } from "./CCAD_element";
@@ -88,6 +88,7 @@ import { drDrawer_1 } from "../components/dr-drawer_1";
 import { mode_multi_selected_elementlast_aendern, mode_multi_selected_knotenlast_aendern, mode_multi_selected_knotenmasse_aendern, update_multi_selected_elementlast, update_multi_selected_knotenlast, update_multi_selected_knotenmasse } from "./cad_select";
 import { LitElement } from "lit";
 import { drMyDrawer } from "../components/dr-my_drawer";
+import { AlertDialog } from "./confirm_dialog";
 
 let backgroundColor_button = 'rgb(64, 64, 64)';
 let backgroundColor_button_light = 'rgb(64, 64, 64)';
@@ -997,7 +998,7 @@ export function delete_element(xc: number, zc: number) {
       }
     }
 
-    else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
+    else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen && stadyn > 0) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
       //console.log("rect Knotenmasse", rect, xc, zc)
@@ -1443,7 +1444,7 @@ export function select_element(xc: number, zc: number) {
         }
       }
     }
-    else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
+    else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen && stadyn > 0) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
       //console.log("rect Knotenmasse", rect, xc, zc)
@@ -1694,7 +1695,17 @@ export function select_element(xc: number, zc: number) {
       if (buttons_control.select_multi_aktiv) obj_knlast.multiSelected = true;
       else obj_knlast.multiSelected = false;
       let index1 = obj_knlast.index1
-      let group = draw_knotenlast(tr, obj_knlast, index1, 1.0, 0, true)
+      let group = draw_knotenlast(tr, obj_knlast, index1, 1.0, 0)
+      two.add(group);
+
+      two.update();
+    }
+    else if (knotenverformung_gefunden) {
+
+      two.remove(obj_knotverform.two_obj);
+      if (buttons_control.select_multi_aktiv) obj_knotverform.multiSelected = true;
+      else obj_knotverform.multiSelected = false;
+      let group = draw_knotenverformung(tr, obj_knotverform, 1.0, 0)
       two.add(group);
 
       two.update();
@@ -2551,12 +2562,20 @@ function dialog_knotenlast_closed(this: any, e: any) {
 
 
 //---------------------------------------------------------------------------------------------------------------
-export function read_knotenlast_dialog(knlast: TLoads) {
+export function read_knotenlast_dialog(knlast: TLoads): boolean {
   //-----------------------------------------------------------------------------------------------------------
+
+  let ok = true;
 
   const el = document.getElementById("id_dialog_knotenlast") as drDialogKnotenlast;
 
   knlast.lf = el.get_lastfall();
+
+  if (knlast.lf <= 0) {
+    ok = false;
+    alertdialog('ok', 'Lastfall muss größer 0 sein');
+    return ok;
+  }
 
   set_max_lastfall(knlast.lf)
 
@@ -2564,6 +2583,12 @@ export function read_knotenlast_dialog(knlast: TLoads) {
   knlast.Pz_org = el.get_Pz();
 
   knlast.p[2] = el.get_My()
+
+  if (knlast.Px_org === 0 && knlast.Pz_org === 0 && knlast.p[2] === 0) {
+    ok = false;
+    alertdialog('ok', 'mindestens ein Lastkomponente muss ungleich null sein');
+    return ok;
+  }
 
   knlast.alpha = el.get_alpha();
 
@@ -2576,6 +2601,8 @@ export function read_knotenlast_dialog(knlast: TLoads) {
 
   knlast.Px = co * knlast.Px_org + si * knlast.Pz_org
   knlast.Pz = -si * knlast.Px_org + co * knlast.Pz_org
+
+  return ok;
 
 }
 
@@ -2732,78 +2759,130 @@ function update_elementlast() {
 
   mode_elementlast_aendern = false
 
+  let ok = true
+
   const ele = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
   ele.set_display_group_typ(true);
 
   let lf = ele.get_lastfall()
 
-
-
-  if (element_einzellast_gefunden) {    // Einzellast und Einzelmoment
-    let x = ele.get_x();
-    let P = ele.get_P();
-    let M = ele.get_M();
-
-    (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).xe = x;
-    (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).P = P;
-    (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).M = M;
-    (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).lastfall = lf;
+  if (lf <= 0) {
+    ok = false;
+    alertdialog('ok', 'Lastfall muss größer 0 sein');
   }
   else {
-    let typ = (obj_ellast.elast[index_ellast] as TCAD_ElLast).typ
+    if (element_einzellast_gefunden) {    // Einzellast und Einzelmoment
+      let x = ele.get_x();
+      let P = ele.get_P();
+      let M = ele.get_M();
 
-    if (typ === 0) {   // Streckenlasten
-      let pa = ele.get_pa()
-      let pe = ele.get_pe()
-      let art = ele.get_art();
+      if (x < 0) {
+        ok = false;
+        alertdialog('ok', 'Angriffspunkt x muss größer gleich null sein');
 
-      (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL = pa;
-      (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pR = pe;
-      (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall = lf;
-      (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art = art;
+      } else if (P === 0 && M === 0) {
+        ok = false;
+        alertdialog('ok', 'mind. eine Last muss ungleich null sein');
+
+      } else {
+
+        (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).xe = x;
+        (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).P = P;
+        (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).M = M;
+        (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).lastfall = lf;
+      }
     }
-    else if (typ === 2) {    // Temperatur
-      let To = ele.get_To();
-      let Tu = ele.get_Tu();
+    else {
+      let typ = (obj_ellast.elast[index_ellast] as TCAD_ElLast).typ
 
-      (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).To = To;
-      (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).Tu = Tu;
-      (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).lastfall = lf;
-    }
-    else if (typ === 3) {    // Vorspannung
-      let sigmaV = ele.get_sigmaV();
+      if (typ === 0) {   // Streckenlasten
+        let pa = ele.get_pa()
+        let pe = ele.get_pe()
+        let art = ele.get_art();
 
-      (obj_ellast.elast[index_ellast] as TCAD_Vorspannung).sigmaV = sigmaV;
-      (obj_ellast.elast[index_ellast] as TCAD_Vorspannung).lastfall = lf;
-    }
-    else if (typ === 4) {    // Spannschloss
-      let ds = ele.get_ds();
+        if (pa === 0 && pe === 0) {
+          ok = false;
+          alertdialog('ok', 'mind. eine Last muss ungleich null sein');
+        } else {
 
-      (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).ds = ds;
-      (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).lastfall = lf;
-    }
-    else if (typ === 5) {    // Stabvorverformung
+          (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL = pa;
+          (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pR = pe;
+          (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall = lf;
+          (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art = art;
+        }
+      }
+      else if (typ === 2) {    // Temperatur
+        let To = ele.get_To();
+        let Tu = ele.get_Tu();
 
-      (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0a = ele.get_w0a();
-      (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0m = ele.get_w0m();
-      (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0e = ele.get_w0e();
-      (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).lastfall = lf;
+        if (To === 0 && Tu === 0) {
+          ok = false;
+          alertdialog('ok', 'mind. eine Temperatur muss ungleich null sein');
+        } else {
+
+
+          (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).To = To;
+          (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).Tu = Tu;
+          (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).lastfall = lf;
+        }
+      }
+      else if (typ === 3) {    // Vorspannung
+        let sigmaV = ele.get_sigmaV();
+
+        if (sigmaV === 0) {
+          ok = false;
+          alertdialog('ok', 'Vorspannung muss ungleich null sein');
+        } else {
+
+          (obj_ellast.elast[index_ellast] as TCAD_Vorspannung).sigmaV = sigmaV;
+          (obj_ellast.elast[index_ellast] as TCAD_Vorspannung).lastfall = lf;
+        }
+      }
+      else if (typ === 4) {    // Spannschloss
+        let ds = ele.get_ds();
+
+        if (ds === 0) {
+          ok = false;
+          alertdialog('ok', 'Spannweg ds muss ungleich null sein');
+        } else {
+
+          (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).ds = ds;
+          (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).lastfall = lf;
+        }
+      }
+      else if (typ === 5) {    // Stabvorverformung
+
+        let w0a = ele.get_w0a();
+        let w0m = ele.get_w0m();
+        let w0e = ele.get_w0e();
+
+        if (w0a === 0 && w0m === 0 && w0e === 0) {
+          ok = false;
+          alertdialog('ok', 'mind. eine Stabverformung muss ungleich null sein');
+        } else {
+          (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0a = w0a;
+          (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0m = w0m;
+          (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0e = w0e;
+          (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).lastfall = lf;
+        }
+      }
     }
   }
 
-  find_max_Lastfall();
-  find_maxValues_eloads();
+  if (ok) {
+    find_max_Lastfall();
+    find_maxValues_eloads();
 
-  let group = obj_ellast.getTwoObj();
-  two.remove(group)
-  group = drawStab(obj_ellast as TCAD_Stab, tr);
-  two.add(group)
-  obj_ellast.setTwoObj(group);
+    let group = obj_ellast.getTwoObj();
+    two.remove(group)
+    group = drawStab(obj_ellast as TCAD_Stab, tr);
+    two.add(group)
+    obj_ellast.setTwoObj(group);
 
-  two.update();
+    two.update();
 
-  berechnungErforderlich(true);
-
+    berechnungErforderlich(true);
+  }
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -2817,23 +2896,26 @@ function update_knotenlast() {
   obj_knlast.zero_drawLasten();
 
   let knlast = new TLoads();
-  read_knotenlast_dialog(knlast)
-  obj_knlast.knlast = knlast
+  let ok = read_knotenlast_dialog(knlast)
 
-  find_max_Lastfall();
+  if (ok) {
+    obj_knlast.knlast = knlast
 
-  let group = obj_knlast.getTwoObj();
-  two.remove(group)
-  let index1 = obj_knlast.index1
-  group = draw_knotenlast(tr, obj_knlast, index1, 1, 0);
-  two.add(group);
+    find_max_Lastfall();
 
-  obj_knlast.setTwoObj(group);
-  two.update();
+    let group = obj_knlast.getTwoObj();
+    two.remove(group)
+    let index1 = obj_knlast.index1
+    group = draw_knotenlast(tr, obj_knlast, index1, 1, 0);
+    two.add(group);
 
-  init_cad(2);
+    obj_knlast.setTwoObj(group);
+    two.update();
 
-  berechnungErforderlich(true);
+    init_cad(2);
+
+    berechnungErforderlich(true);
+  }
 
 }
 
@@ -3163,7 +3245,7 @@ export function show_selected_element(xc: number, zc: number) {
         }
       }
     }
-    else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
+    else if (obj.elTyp === CAD_KNMASSE && show_knotenmassen && stadyn > 0) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
       console.log("rect Knotenmasse", rect, xc, zc)

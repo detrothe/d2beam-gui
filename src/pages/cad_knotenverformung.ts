@@ -1,6 +1,6 @@
 import Two from "two.js";
 import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
-import { CAD_KNOTVERFORMUNG, init_cad, reset_pointer_length, select_color, set_zoomIsActive, show_lastfall, slmax_cad, timer, tr, two } from "./cad";
+import { CAD_KNOTVERFORMUNG, init_cad, multiselect_color, reset_pointer_length, select_color, set_zoomIsActive, show_lastfall, slmax_cad, timer, tr, two } from "./cad";
 import { buttons_control, mode_knotenverformung_aendern, obj_knotverform, set_help_text, set_mode_knotenverformung_aendern } from "./cad_buttons";
 import { find_max_Lastfall, max_Lastfall, set_max_lastfall } from "./cad_draw_elementlasten";
 import { TCAD_Knotenverformung } from "./CCAD_element";
@@ -9,6 +9,8 @@ import { CADNodes, get_cad_node_X, get_cad_node_Z } from "./cad_node";
 import { draw_arrow, draw_BoundingClientRect_xz, draw_moment_arrow, style_pfeil_moment } from "./cad_draw_elemente";
 import { myFormat } from "./utility";
 import { berechnungErforderlich } from "./globals";
+import { alertdialog } from "./rechnen";
+import { mode_multi_selected_knotenverformung_aendern, update_multi_selected_knotenverformung } from "./cad_select";
 
 
 const style_pfeil = {
@@ -42,12 +44,12 @@ export function Knotenverformung_button() {
     //let el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement
 
     if (buttons_control.knotenverformung_eingabe_aktiv) {
-        buttons_control.reset()
+        buttons_control.reset(0)
 
         // let el = document.getElementById("id_cad_knotenlast_button") as HTMLButtonElement
         // el.removeEventListener('keydown', keydown);
     } else {
-        buttons_control.reset();
+        buttons_control.reset(0);
         //drawer_1_control.reset();
         //el.style.backgroundColor = 'darkRed'
         buttons_control.knotenverformung_eingabe_aktiv = true
@@ -69,7 +71,7 @@ export function Knotenverformung_button() {
 
 //--------------------------------------------------------------------------------------------------------------
 
-export function showDialog_knotenverformung() {
+export function showDialog_knotenverformung(/* show_nur_lastfall = false */) {
     //------------------------------------------------------------------------------------------------------------
     console.log("dialog_knotenverformung_closed()");
 
@@ -99,6 +101,7 @@ function dialog_knotenverformung_closed(this: any, e: any) {
         //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
         console.log("sieht gut aus");
         if (mode_knotenverformung_aendern) update_knotenverformung();
+        else if (mode_multi_selected_knotenverformung_aendern) update_multi_selected_knotenverformung();
     } else {
         // Abbruch
         (ele?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).removeEventListener("close", dialog_knotenverformung_closed);
@@ -111,19 +114,33 @@ function dialog_knotenverformung_closed(this: any, e: any) {
 
 
 //---------------------------------------------------------------------------------------------------------------
-export function read_knotenverformung_dialog(nodeDisp: CNodeDisp) {
+export function read_knotenverformung_dialog(nodeDisp: CNodeDisp): boolean {
     //-----------------------------------------------------------------------------------------------------------
+
+    let ok = true;
 
     const el = document.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
 
     nodeDisp.lf = el.get_lastfall();
-    console.log("LASTFALL", nodeDisp.lf)
+    if (nodeDisp.lf <= 0) {
+        ok = false;
+        alertdialog('ok', 'Lastfall muss größer 0 sein');
+        return ok;
+    }
 
     set_max_lastfall(nodeDisp.lf)
 
     nodeDisp.dispx0 = el.get_ux0();
     nodeDisp.dispz0 = el.get_uz0();
     nodeDisp.phi0 = el.get_phi0();
+
+    if (Number(nodeDisp.dispx0) === 0 && Number(nodeDisp.dispz0) === 0 && Number(nodeDisp.phi0) === 0) {
+        ok = false;
+        alertdialog('ok', 'mindestens ein Verformungskomponente muss ungleich null sein');
+        return ok;
+    }
+
+    return ok;
 
 }
 
@@ -176,6 +193,14 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
 
     lf_show = nodeDisp.lf - 1    // noch überarbeiten
 
+
+    if (obj.multiSelected) {
+        style_pfeil.color = multiselect_color;
+        style_pfeil_moment.color = multiselect_color;
+    } else {
+        style_pfeil.color = '#0000ba';
+        style_pfeil_moment.color = '#0000ba';
+    }
 
     if (nodeDisp.dispx0.length > 0 && nodeDisp.lf - 1 === lf_show) {
         //console.log("Knotenlast zu zeichnen am Knoten ", +inode + 1)
@@ -366,27 +391,28 @@ function update_knotenverformung() {
 
     set_mode_knotenverformung_aendern(false);
 
-
     obj_knotverform.zero_drawLasten();
 
     let nodeDisp = new CNodeDisp();
-    read_knotenverformung_dialog(nodeDisp)
-    obj_knotverform.nodeDisp = nodeDisp
+    let ok = read_knotenverformung_dialog(nodeDisp)
+    if (ok) {
+        obj_knotverform.nodeDisp = nodeDisp
 
-    find_max_Lastfall();
+        find_max_Lastfall();
 
-    let group = obj_knotverform.getTwoObj();
-    two.remove(group)
-    let index1 = obj_knotverform.index1
-    group = draw_knotenverformung(tr, obj_knotverform, 1, 0);
-    two.add(group);
+        let group = obj_knotverform.getTwoObj();
+        two.remove(group)
+        let index1 = obj_knotverform.index1
+        group = draw_knotenverformung(tr, obj_knotverform, 1, 0);
+        two.add(group);
 
-    obj_knotverform.setTwoObj(group);
-    two.update();
+        obj_knotverform.setTwoObj(group);
+        two.update();
 
-    init_cad(2);
+        init_cad(2);
 
-    berechnungErforderlich(true);
+        berechnungErforderlich(true);
+    }
 
 }
 

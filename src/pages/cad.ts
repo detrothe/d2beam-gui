@@ -888,7 +888,7 @@ export function init_cad(flag: number) {
          two.add(group);
          obj.setTwoObj(group);
       }
-      else if (obj.elTyp === CAD_KNOTVERFORMUNG && show_bemassung) {
+      else if (obj.elTyp === CAD_KNOTVERFORMUNG && show_knotenverformung) {
          let group = draw_knotenverformung(tr, obj as TCAD_Knotenverformung, 1.0, 0, true)
          two.add(group);
          obj.setTwoObj(group);
@@ -1337,16 +1337,18 @@ function penDown(ev: PointerEvent) {
                let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
                if (index1 > -1) {
                   let knlast = new TLoads();
-                  read_knotenlast_dialog(knlast);
-                  const el = new TCAD_Knotenlast(null, index1, knlast, buttons_control.typ_cad_element);
+                  let ok = read_knotenlast_dialog(knlast);
+                  if (ok) {
+                     const el = new TCAD_Knotenlast(null, index1, knlast, buttons_control.typ_cad_element);
 
-                  let group = draw_knotenlast(tr, el, index1, 1, 0, true);
-                  el.setTwoObj(group)
-                  two.add(group);
-                  //console.log('getBoundingClientRect', group.getBoundingClientRect());
-                  list.append(el);
-                  add_element_nodes(index1);
-                  two.update();
+                     let group = draw_knotenlast(tr, el, index1, 1, 0, true);
+                     el.setTwoObj(group)
+                     two.add(group);
+                     //console.log('getBoundingClientRect', group.getBoundingClientRect());
+                     list.append(el);
+                     add_element_nodes(index1);
+                     two.update();
+                  }
                } else {
                   console.log('Keinen Knoten gefunden');
                   alertdialog('ok', 'keinen Knoten gefunden');
@@ -1384,16 +1386,18 @@ function penDown(ev: PointerEvent) {
                let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
                if (index1 > -1) {
                   let nodeDisp = new CNodeDisp();
-                  read_knotenverformung_dialog(nodeDisp);
-                  const el = new TCAD_Knotenverformung(null, index1, nodeDisp, buttons_control.typ_cad_element);
+                  let ok = read_knotenverformung_dialog(nodeDisp);
+                  if (ok) {
+                     const el = new TCAD_Knotenverformung(null, index1, nodeDisp, buttons_control.typ_cad_element);
 
-                  let group = draw_knotenverformung(tr, el, 1, 0, true);
-                  two.add(group);
-                  //console.log('getBoundingClientRect', group.getBoundingClientRect());
-                  el.setTwoObj(group)
-                  list.append(el);
-                  add_element_nodes(index1);
-                  two.update();
+                     let group = draw_knotenverformung(tr, el, 1, 0, true);
+                     two.add(group);
+                     //console.log('getBoundingClientRect', group.getBoundingClientRect());
+                     el.setTwoObj(group)
+                     list.append(el);
+                     add_element_nodes(index1);
+                     two.update();
+                  }
                } else {
                   alertdialog('ok', 'keinen Knoten gefunden');
                }
@@ -1787,7 +1791,7 @@ function mouseup(ev: any) {
             buttons_control.input_started = 1;
 
             if (buttons_control.n_input_points === 1) {
-               if (buttons_control.lager_eingabe_aktiv) {
+               if (buttons_control.lager_eingabe_aktiv) {                  // Lager
                   //let group=two.makeRectangle(start_x,start_y,20,20);
                   let node = new TNode();
                   // node.L_org[0] = 1
@@ -1818,26 +1822,28 @@ function mouseup(ev: any) {
                      alertdialog('ok', 'keinen Knoten gefunden');
                   }
                }
-               else if (buttons_control.knotenlast_eingabe_aktiv) {
+               else if (buttons_control.knotenlast_eingabe_aktiv) {               // Knotenlast
 
                   let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
                   if (index1 > -1) {
                      let knlast = new TLoads();
-                     read_knotenlast_dialog(knlast);
-                     const el = new TCAD_Knotenlast(null, index1, knlast, buttons_control.typ_cad_element);
+                     let ok = read_knotenlast_dialog(knlast);
+                     if (ok) {
+                        const el = new TCAD_Knotenlast(null, index1, knlast, buttons_control.typ_cad_element);
 
-                     let group = draw_knotenlast(tr, el, index1, 1, 0, true);
-                     two.add(group);
-                     //console.log('getBoundingClientRect', group.getBoundingClientRect());
-                     el.setTwoObj(group)
-                     list.append(el);
-                     add_element_nodes(index1);
-                     two.update();
+                        let group = draw_knotenlast(tr, el, index1, 1, 0, true);
+                        two.add(group);
+                        //console.log('getBoundingClientRect', group.getBoundingClientRect());
+                        el.setTwoObj(group)
+                        list.append(el);
+                        add_element_nodes(index1);
+                        two.update();
+                     }
                   } else {
                      alertdialog('ok', 'keinen Knoten gefunden');
                   }
                }
-               else if (buttons_control.knotenmasse_eingabe_aktiv) {
+               else if (buttons_control.knotenmasse_eingabe_aktiv) {              // Knotenmasse
                   //console.log("Knotenmasse eingabe aktiv")
 
                   let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
@@ -1864,21 +1870,23 @@ function mouseup(ev: any) {
                      alertdialog('ok', 'keinen Knoten gefunden');
                   }
                }
-               else if (buttons_control.knotenverformung_eingabe_aktiv) {
+               else if (buttons_control.knotenverformung_eingabe_aktiv) {           // Knotenverformung
 
                   let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
                   if (index1 > -1) {
                      let nodeDisp = new CNodeDisp();
-                     read_knotenverformung_dialog(nodeDisp);
-                     const el = new TCAD_Knotenverformung(null, index1, nodeDisp, buttons_control.typ_cad_element);
+                     let ok = read_knotenverformung_dialog(nodeDisp);
+                     if (ok) {
+                        const el = new TCAD_Knotenverformung(null, index1, nodeDisp, buttons_control.typ_cad_element);
 
-                     let group = draw_knotenverformung(tr, el, 1, 0, true);
-                     two.add(group);
-                     //console.log('getBoundingClientRect', group.getBoundingClientRect());
-                     el.setTwoObj(group)
-                     list.append(el);
-                     add_element_nodes(index1);
-                     two.update();
+                        let group = draw_knotenverformung(tr, el, 1, 0, true);
+                        two.add(group);
+                        //console.log('getBoundingClientRect', group.getBoundingClientRect());
+                        el.setTwoObj(group)
+                        list.append(el);
+                        add_element_nodes(index1);
+                        two.update();
+                     }
                   } else {
                      alertdialog('ok', 'keinen Knoten gefunden');
                   }
