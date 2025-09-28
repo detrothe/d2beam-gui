@@ -3006,6 +3006,15 @@ async function calculate() {
             });
             await dialogAlert.confirm();
         }
+        // if (keineKonvergenzErreicht_eigv) {
+        //     write('Ꚛ FEHLER - Es gab keine Konvergenz der Eigenwerte')
+
+        //     const question_Text = "Keine Konvergenz der Eigenwerte erreicht. " +
+        //         "<br>Mögliche Lösungen: Anderen Eigenwertlöser probieren, und/oder Anzahl der Eigenwerte reduzieren, siehe Tab Pro. " +
+        //         "<br>Die Ergebnisse sind wahrscheinlich nicht brauchbar!"
+
+        //     alertdialog('ok', question_Text);
+        // }
         if (keineKonvergenzErreicht_eigv) {
             write('Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Eigenwerte')
 
@@ -3132,13 +3141,13 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
     //c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv);
 
     let omega_array = new Float64Array(Module.HEAPF64.buffer, omega_ptr, dyn_neigv);
-    console.log("omega_array", omega_array);
+    // console.log("omega_array", omega_array);
 
     for (i = 0; i < dyn_neigv; i++) dyn_omega[i] = omega_array[i]
 
-    for (i = 0; i < dyn_neigv; i++) {
-        console.log("omega", +i + 1, dyn_omega[i], dyn_omega[i] / 2 / Math.PI)
-    }
+    // for (i = 0; i < dyn_neigv; i++) {
+    //     console.log("omega", +i + 1, dyn_omega[i], dyn_omega[i] / 2 / Math.PI)
+    // }
 
     let eigenform_array = new Float64Array(Module.HEAPF64.buffer, eigenform_ptr, neq * dyn_neigv);
 
@@ -3155,7 +3164,7 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
             if (Math.abs(eigenform_array[i + offset]) > maxValue_dyn_eigenform[ieigv]) maxValue_dyn_eigenform[ieigv] = Math.abs(eigenform_array[i + offset]);
         }
         offset = offset + neq
-        console.log(" maxValue_dyn_eigenform[ieigv+1] = ", +ieigv + 1, maxValue_dyn_eigenform[ieigv])
+        // console.log(" maxValue_dyn_eigenform[ieigv+1] = ", +ieigv + 1, maxValue_dyn_eigenform[ieigv])
 
 
         let disp = Array(3)
@@ -3173,9 +3182,8 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
 
         }
 
-
-
     }
+
 
 }
 
