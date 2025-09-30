@@ -126,7 +126,7 @@ export class drMyDrawer extends LitElement {
             fill: white;
          }
          .svgbutton_sticky {
-            fill: red;
+            fill: #ffc000;
          }
 
          button {
@@ -148,8 +148,13 @@ export class drMyDrawer extends LitElement {
          <button title="Pin" @click="${this._sticky}">
             <!-- <svg id="id_svg_sticky" class ="svgbutton" width="1rem" height="1rem" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M0 3c0-1.1.9-2 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm2 2v12h16V5H2zm8 3l4 5H6l4-5z"/></svg> -->
             <svg id="id_svg_sticky" class="svgbutton" width="1.5rem" height="1.5rem" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-               <path d="M665.5 256l-76.8 76.8v122.9a153.6 153.6 0 0 1 76.8 133h-128v153.6l-25.6 25.6-25.6-25.6V588.7h-128a153.47 153.47 0 0 1 76.8-133V332.8L358.3 256" />
+               <path
+                  d="M 706.38024,191.18987 600.16641,280.8547 V 424.34178 A 212.42765,179.32966 0 0 1 706.38024,579.62072 H 529.35719 v 179.32966 l -35.4046,29.88827 -35.40461,-29.88827 V 579.62072 H 281.52493 A 212.24786,179.17788 0 0 1 387.73876,424.34178 V 280.8547 L 281.52493,191.18987"
+               />
             </svg>
+            <!-- <svg id="id_svg_sticky" class="svgbutton" width="1.5rem" height="1.5rem" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+               <path d="M665.5 256l-76.8 76.8v122.9a153.6 153.6 0 0 1 76.8 133h-128v153.6l-25.6 25.6-25.6-25.6V588.7h-128a153.47 153.47 0 0 1 76.8-133V332.8L358.3 256" />
+            </svg> -->
          </button>
          <button style="float: right;" @click="${this._div_ok}">
             <svg width="1rem" height="1rem" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
