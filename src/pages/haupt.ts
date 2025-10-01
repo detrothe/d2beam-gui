@@ -53,7 +53,7 @@ import '../components/dr-my_drawer';
 
 import { drButtonPM } from '../components/dr-button-pm';
 import { drRechteckQuerSchnitt } from '../components/dr-dialog-rechteckquerschnitt';
-import { drMyDrawer } from '../components/dr-my_drawer';
+//import { drMyDrawer } from '../components/dr-my_drawer';
 
 import { reset_gui } from './mypanelgui';
 
@@ -81,7 +81,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.6.1, 30-September-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.6.2, 1-Oktober-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;

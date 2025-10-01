@@ -374,6 +374,8 @@ export class TElLoads {
 
     re: number[] = Array(6)             // Elementlastvektor lokal
     el_r: number[] = Array(10)          // Elementlastvektor im globalen Koordinatensystem, enthält Gelenke
+
+    u0 = 0.0                            // Längsverschiebung aus Vorspannung oder Spannscloss
 }
 
 
@@ -4187,7 +4189,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
 
             for (ielem = 0; ielem < nelemTotal; ielem++) {
 
-                if (el[ielem].isActive) {
+                if (el[ielem].isActive && !el[ielem].is_plastic) {
 
                     //console.log("ELEMENTLASTEN,ielem", ielem)
                     for (let ieload = 0; ieload < neloads; ieload++) {

@@ -55,6 +55,8 @@ let lastFileHandle = "documents";
 export function read_daten(eingabedaten: string) {
     //------------------------------------------------------------------------------------------------
 
+    console.log("in read_daten()")
+
     let i, j;
     let startTime: any;
     let endTime: any;
@@ -466,7 +468,7 @@ export function read_daten(eingabedaten: string) {
 }
 
 //------------------------------------------------------------------------------------------------
-function handleFileSelect_read() {
+function filedialog_read() {
     //--------------------------------------------------------------------------------------------
 
     let i, j;
@@ -479,7 +481,7 @@ function handleFileSelect_read() {
         //let files =   Array.from(input.files);
         //console.log(files);
 
-        //function handleFileSelect_read() {     // evt
+        //function filedialog_read() {     // evt
 
         two_cad_clear();
 
@@ -487,7 +489,7 @@ function handleFileSelect_read() {
         files = Array.from(input.files);
         //    const files = evt.target.files; // FileList object
         console.log("in select read", files);
-        let filename;
+        let filename: string;
 
         // Loop through the FileList and render image files as thumbnails.
         for (let ii = 0, f; (f = files[ii]); ii++) {
@@ -509,14 +511,16 @@ function handleFileSelect_read() {
                     init_cad(0);
                     reset_gui();
                     reset_controlpanel_grafik();
+                    //console.log("++++++ filename",filename)
+                    set_current_filename(filename);
                 };
             })(f);
 
             // Read in the image file as a data URL.
             reader.readAsText(f);
-            //console.log("f", reader);
+            //console.log("after reader.readAsText", reader);
 
-            set_current_filename(files[0].name);
+            //set_current_filename(files[0].name);
 
             // reset_gui();
             // reset_controlpanel_grafik();
@@ -524,7 +528,7 @@ function handleFileSelect_read() {
     };
 
     input.click();
-    console.log("nach click in handleFileSelect_read");
+    console.log("nach click in filedialog_read");
 }
 
 //------------------------------------------------------------------------------------------------
@@ -975,7 +979,7 @@ export function str_inputToJSON() {
 //document.getElementById('readFile').addEventListener('click', initFileSelect_read, false);
 
 export function addListener_filesave() {
-    document.getElementById("readFile")?.addEventListener("click", handleFileSelect_read, false);
+    document.getElementById("readFile")?.addEventListener("click", filedialog_read, false);
     document.getElementById("saveFile")?.addEventListener("click", handleFileSelect_save, false);
 }
 console.log("ende dateien.ts");

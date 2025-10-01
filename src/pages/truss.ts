@@ -852,6 +852,8 @@ export class CTruss extends CElement {
 
         // normale Elementlasten hinzufügen
 
+        let u_0 = 0.0  // Vorspannung oder Spannschloss
+
         if (THIIO_flag === 0 && matprop_flag === 0) {
 
             for (let ieload = 0; ieload < neloads; ieload++) {
@@ -868,12 +870,16 @@ export class CTruss extends CElement {
 
             for (let ieload = 0; ieload < neloads; ieload++) {
                 if (eload[ieload].element === ielem) {
-                    const index = eload[ieload].lf - 1
-                    //console.log("elem kombi index", index, kombiTabelle[iLastf - 1][index])
-                    if (kombiTabelle[iLastf - 1][index] !== 0.0) {
+                    if (!this.is_plastic) {
+                        const index = eload[ieload].lf - 1
 
-                        for (i = 0; i < this.neqeG; i++) {
-                            this.F[i] = this.F[i] + eload[ieload].el_r[i] * kombiTabelle[iLastf - 1][index]
+                        if (kombiTabelle[iLastf - 1][index] !== 0.0) {
+
+                            u_0 += eload[ieload].u0 * kombiTabelle[iLastf - 1][index]
+
+                            for (i = 0; i < this.neqeG; i++) {
+                                this.F[i] = this.F[i] + eload[ieload].el_r[i] * kombiTabelle[iLastf - 1][index]
+                            }
                         }
                     }
                 }
@@ -937,8 +943,8 @@ export class CTruss extends CElement {
                 u0[i] = sum
             }
 
-            let du = u0[2] - u0[0];
-            //console.log("in nur", ielem, iter, ' du= ', du * 1000)
+            let du = u0[2] - u0[0] + u_0;
+            console.log("in nur", ielem, iter, ' du= ', (u0[2] - u0[0]) * 1000, -u_0 * 1000)
 
             if (this.stabtyp === 2) {   // nur Zug
                 //console.log("in nur Zugstab", ielem, iter, du*1000, this.FL[0], this.FL[2], this.edispL)
@@ -1181,6 +1187,7 @@ export class CTruss extends CElement {
 
             eload[ieload].re[1] = 0.0
             eload[ieload].re[3] = 0.0
+            eload[ieload].u0 = eload[ieload].sigmaV / this.emodul * sl
         }
         else if (eload[ieload].art === 10) {              // Spannschloss
 
@@ -1189,6 +1196,7 @@ export class CTruss extends CElement {
 
             eload[ieload].re[1] = 0.0
             eload[ieload].re[3] = 0.0
+            eload[ieload].u0 = eload[ieload].delta_s
         }
 
 
