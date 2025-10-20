@@ -953,9 +953,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td id="id_einheit_kraft" title="Einheit für Kraft in Ausgabe">&nbsp;Einheit für Kraft in Ausgabe:</td>
               <td>
-              <select  value="kN" id="id_einheit_kraft_option" >
-                 <option value='kN' @change=${berechnungErforderlich} >kN</option>
-                 <option value='N' @change=${berechnungErforderlich} >N</option>
+              <select  value="kN" id="id_einheit_kraft_option" onchange="berechnungErforderlich()">
+                 <option value='kN' >kN</option>
+                 <option value='N'  >N</option>
               </select>
               </td>
             </tr>
