@@ -81,7 +81,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.6.2, 1-Oktober-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.6.3, 20-Oktober-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -946,6 +946,17 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               <td id="id_nteilungen" title="Stabteilungen für Ausgabe der Schnittgrößen">&nbsp;Stabteilungen Ausgabe:</td>
               <td>
                 <dr-button-pm id="id_button_nteilungen" nel="10" inputid="nteilungen"  @change=${berechnungErforderlich}></dr-button-pm>
+              </td>
+            </tr>
+
+
+            <tr>
+              <td id="id_einheit_kraft" title="Einheit für Kraft in Ausgabe">&nbsp;Einheit für Kraft in Ausgabe:</td>
+              <td>
+              <select  value="kN" id="id_einheit_kraft_option" >
+                 <option value='kN' @change=${berechnungErforderlich} >kN</option>
+                 <option value='N' @change=${berechnungErforderlich} >N</option>
+              </select>
               </td>
             </tr>
 
@@ -1835,6 +1846,9 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     elSel.options[0].selected = true;
 
     elSel = document.getElementById("id_matprop") as HTMLSelectElement;
+    elSel.options[0].selected = true;
+
+    elSel = document.getElementById("id_einheit_kraft_option") as HTMLSelectElement;
     elSel.options[0].selected = true;
 
     readLocalStorage_cad();

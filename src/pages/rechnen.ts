@@ -191,6 +191,10 @@ export let eig_solver = 1;
 export let equation_solver = 3;  // 0 = cholesky Fortran, 1 = gauss, 3 = cholesky javascript
 export let niter_neigv = 500;
 
+export let einheit_kraft = 'kN';
+export let faktor_einheit_kraft = 1.0;
+export function set_faktor_einheit_kraft(wert: number) { faktor_einheit_kraft = wert; };
+
 // @ts-ignore
 //var cmult = Module.cwrap("cmult", null, null);
 //console.log("CMULT-------------", cmult)
@@ -576,6 +580,11 @@ export function rechnen(flag = 1) {
 
     el = document.getElementById('id_button_nteilungen') as any;
     nelTeilungen = Number(el.nel);
+
+    el = document.getElementById('id_einheit_kraft_option') as HTMLOptionElement;
+    einheit_kraft = el.value;
+    if (einheit_kraft === 'kN') faktor_einheit_kraft = 1.0;
+    else faktor_einheit_kraft = 1000.0;
 
     el = document.getElementById('id_button_niter') as any;
     n_iterationen = Number(el.nel);

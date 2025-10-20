@@ -28,6 +28,8 @@ import {
     lagerkraefte_kombi,
     nelem_Balken_Bettung,
     matprop_flag,
+    einheit_kraft,
+    faktor_einheit_kraft,
 } from "./rechnen";
 
 import { prot_eingabe } from "./prot_eingabe"
@@ -166,20 +168,20 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         row.appendChild(th0);
         // @ts-ignore
         const th1 = table.tHead.appendChild(document.createElement("th"));
-        th1.innerHTML = "A<sub>x'</sub>&nbsp;[kN]";
+        th1.innerHTML = "A<sub>x'</sub>&nbsp;[" + einheit_kraft + "]";
         th1.title = "Auflagerkraft Ax, positiv in negativer x-Richtung"
         th1.setAttribute("class", "table_cell_center");
         row.appendChild(th1);
         // @ts-ignore
         const th2 = table.tHead.appendChild(document.createElement("th"));
-        th2.innerHTML = "A<sub>z'</sub>&nbsp;[kN]";
+        th2.innerHTML = "A<sub>z'</sub>&nbsp;[" + einheit_kraft + "]";
         th2.title = "Auflagerkraft Az, positiv in negativer z-Richtung"
         th2.setAttribute("class", "table_cell_center");
         row.appendChild(th2);
         if (System === 0) {
             // @ts-ignore
             const th3 = table.tHead.appendChild(document.createElement("th"));
-            th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+            th3.innerHTML = "M<sub>y</sub>&nbsp;[" + einheit_kraft + "m]";
             th3.title = "Einspannmoment, positiv im Uhrzeigersinn"
             th3.setAttribute("class", "table_cell_center");
             row.appendChild(th3);
@@ -196,18 +198,18 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
             newCell.setAttribute("class", "table_cell_center");
 
             newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
-            newText = document.createTextNode(myFormat(lagerkraft[i][0], 2, 2));  // Append a text node to the cell
+            newText = document.createTextNode(myFormat(lagerkraft[i][0] * faktor_einheit_kraft, 2, 2));  // Append a text node to the cell
             newCell.appendChild(newText);
             newCell.setAttribute("class", "table_cell_right");
 
             newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
-            newText = document.createTextNode(myFormat(lagerkraft[i][1], 2, 2));  // Append a text node to the cell
+            newText = document.createTextNode(myFormat(lagerkraft[i][1] * faktor_einheit_kraft, 2, 2));  // Append a text node to the cell
             newCell.appendChild(newText);
             newCell.setAttribute("class", "table_cell_right");
 
             if (System === 0) {
                 newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(myFormat(lagerkraft[i][2], 2, 2));  // Append a text node to the cell
+                newText = document.createTextNode(myFormat(lagerkraft[i][2] * faktor_einheit_kraft, 2, 2));  // Append a text node to the cell
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_right");
             }
@@ -216,13 +218,13 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
     // Stabendkräfte/-momente
     {
-        let str_Vz_a = "V<sub>az</sub>&nbsp;[kN]"
-        let str_Vz_e = "V<sub>ez</sub>&nbsp;[kN]"
+        let str_Vz_a = "V<sub>az</sub>&nbsp;[" + einheit_kraft + "]"
+        let str_Vz_e = "V<sub>ez</sub>&nbsp;[" + einheit_kraft + "]"
         let str_Vz_title_a = "Querkraft am Stabanfang, positiv in negativer z-Richtung am negativen Schnittufer"
         let str_Vz_title_e = "Querkraft am Stabende, positiv in z-Richtung am positiven Schnittufer"
         if (THIIO_flag === 1) {
-            str_Vz_a = "T<sub>az</sub>&nbsp;[kN]"
-            str_Vz_e = "T<sub>ez</sub>&nbsp;[kN]"
+            str_Vz_a = "T<sub>az</sub>&nbsp;[" + einheit_kraft + "]"
+            str_Vz_e = "T<sub>ez</sub>&nbsp;[" + einheit_kraft + "]"
             str_Vz_title_a = "Transversalkraft am Stabanfang, positiv in negativer z-Richtung am negativen Schnittufer"
             str_Vz_title_e = "Transversalkraft am Stabende, positiv in z-Richtung am positiven Schnittufer"
         }
@@ -252,7 +254,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         row.appendChild(th0);
         // @ts-ignore
         const th1 = table.tHead.appendChild(document.createElement("th"));
-        th1.innerHTML = "N<sub>a</sub> &nbsp;[kN]";
+        th1.innerHTML = "N<sub>a</sub> &nbsp;[" + einheit_kraft + "]";
         th1.title = "Normalkraft N am Stabanfang, positiv als Zugkraft"
         th1.setAttribute("class", "table_cell_center");
         row.appendChild(th1);
@@ -265,14 +267,14 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         if (System === 0) {
             // @ts-ignore
             const th3 = table.tHead.appendChild(document.createElement("th"));
-            th3.innerHTML = "M<sub>ay</sub>&nbsp;[kNm]";
+            th3.innerHTML = "M<sub>ay</sub>&nbsp;[" + einheit_kraft + "m]";
             th3.title = "Biegemoment am Stabanfang, positiv im Uhrzeigersinn am negativen Schnittufer"
             th3.setAttribute("class", "table_cell_center");
             row.appendChild(th3);
         }
         // @ts-ignore
         const th4 = table.tHead.appendChild(document.createElement("th"));
-        th4.innerHTML = "N<sub>e</sub> &nbsp;[kN]";
+        th4.innerHTML = "N<sub>e</sub> &nbsp;[" + einheit_kraft + "]";
         th4.title = "Normalkraft N am Stabende, positiv als Zugkraft"
         th4.setAttribute("class", "table_cell_center");
         row.appendChild(th4);
@@ -285,7 +287,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         if (System === 0) {
             // @ts-ignore
             const th6 = table.tHead.appendChild(document.createElement("th"));
-            th6.innerHTML = "M<sub>ey</sub>&nbsp;[kNm]";
+            th6.innerHTML = "M<sub>ey</sub>&nbsp;[" + einheit_kraft + "m]";
             th6.title = "Biegemoment am Stabende, positiv im Gegenuhrzeigersinn am positiven Schnittufer"
             th6.setAttribute("class", "table_cell_center");
             row.appendChild(th6);
@@ -305,7 +307,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
                 for (j = 1; j <= el[i].neqe; j++) {
                     newCell = newRow.insertCell(j);  // Insert a cell in the row at index 1
-                    newText = document.createTextNode(myFormat(stabendkraefte._(j, i + 1, iLastfall), 2, 2));  // Append a text node to the cell
+                    newText = document.createTextNode(myFormat(stabendkraefte._(j, i + 1, iLastfall) * faktor_einheit_kraft, 2, 2));  // Append a text node to the cell
                     newCell.appendChild(newText);
                     newCell.setAttribute("class", "table_cell_right");
                 }
@@ -343,19 +345,19 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         row.appendChild(th0);
         // @ts-ignore
         const th1 = table.tHead.appendChild(document.createElement("th"));
-        th1.innerHTML = "F<sub>x</sub> &nbsp;[kN]";
+        th1.innerHTML = "F<sub>x</sub> &nbsp;[" + einheit_kraft + "]";
         th1.title = "Federktaft Fx, positiv als Zugkraft"
         th1.setAttribute("class", "table_cell_center");
         row.appendChild(th1);
         // @ts-ignore
         const th2 = table.tHead.appendChild(document.createElement("th"));
-        th2.innerHTML = "F<sub>z</sub>&nbsp;[kN]";
+        th2.innerHTML = "F<sub>z</sub>&nbsp;[" + einheit_kraft + "]";
         th2.title = "Federkraft Fz, positiv als Zugkraft "
         th2.setAttribute("class", "table_cell_center");
         row.appendChild(th2);
         // @ts-ignore
         const th3 = table.tHead.appendChild(document.createElement("th"));
-        th3.innerHTML = "M<sub>φ</sub>&nbsp;[kNm]";
+        th3.innerHTML = "M<sub>φ</sub>&nbsp;[" + einheit_kraft + "m]";
         th3.title = "Federmoment, positiv im Uhrzeigersinn"
         th3.setAttribute("class", "table_cell_center");
         row.appendChild(th3);
@@ -363,7 +365,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
         for (i = 0; i < nelem_Federn; i++) {
 
-            let iFeder = i + nelem_Balken+nelem_koppelfedern
+            let iFeder = i + nelem_Balken + nelem_koppelfedern
             let newRow = table.insertRow(-1);
             let newCell, newText
             newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
@@ -374,7 +376,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
             for (j = 1; j <= el[iFeder].neqe; j++) {
                 newCell = newRow.insertCell(j);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(myFormat(stabendkraefte._(j, iFeder + 1, iLastfall), 2, 2));  // Append a text node to the cell
+                newText = document.createTextNode(myFormat(stabendkraefte._(j, iFeder + 1, iLastfall) * faktor_einheit_kraft, 2, 2));  // Append a text node to the cell
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_right");
             }
@@ -422,19 +424,19 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
         // @ts-ignore
         const th1 = table.tHead.appendChild(document.createElement("th"));
-        th1.innerHTML = "F<sub>x</sub> &nbsp;[kN]";
+        th1.innerHTML = "F<sub>x</sub> &nbsp;[" + einheit_kraft + "]";
         th1.title = "erforderliche Kraft, positiv in positiver x-Richtung"
         th1.setAttribute("class", "table_cell_center");
         row.appendChild(th1);
         // @ts-ignore
         const th2 = table.tHead.appendChild(document.createElement("th"));
-        th2.innerHTML = "F<sub>z</sub>&nbsp;[kN]";
+        th2.innerHTML = "F<sub>z</sub>&nbsp;[" + einheit_kraft + "]";
         th2.title = "erforderliche Kraft, positiv in positiver z-Richtung "
         th2.setAttribute("class", "table_cell_center");
         row.appendChild(th2);
         // @ts-ignore
         const th3 = table.tHead.appendChild(document.createElement("th"));
-        th3.innerHTML = "M<sub>φ</sub>&nbsp;[kNm]";
+        th3.innerHTML = "M<sub>φ</sub>&nbsp;[" + einheit_kraft + "m]";
         th3.title = "erforderliches Moment, positiv im Gegenuhrzeigersinn"
         th3.setAttribute("class", "table_cell_center");
         row.appendChild(th3);
@@ -458,7 +460,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
             for (j = 0; j < 3; j++) {
                 newCell = newRow.insertCell(j + 2);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(myFormat(nodeDisp0Force._(i, j, iLastfall - 1), 2, 2));  // Append a text node to the cell
+                newText = document.createTextNode(myFormat(nodeDisp0Force._(i, j, iLastfall - 1) * faktor_einheit_kraft, 2, 2));  // Append a text node to the cell
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_right");
             }
@@ -481,7 +483,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
     // Schnittgrößen und Verformungen entlang Stabachse
     {
-        let str_Vz = "V<sub>z</sub>&nbsp;[kN]"
+        let str_Vz = "V<sub>z</sub>&nbsp;[" + einheit_kraft + "]"
         let str_Vz_title = "Querkraft Vz, positiv in positiver z-Richtung am positiven Schnittufer"
 
         tag = document.createElement("p"); // <p></p>
@@ -492,7 +494,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         } else {
             if (ausgabe_gleichgewichtSG) {
                 tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
-                str_Vz = "T<sub>z</sub>&nbsp;[kN]"
+                str_Vz = "T<sub>z</sub>&nbsp;[" + einheit_kraft + "]"
                 str_Vz_title = "Transversalkraft Tz, positiv in positiver z-Richtung am positiven Schnittufer"
             } else {
                 tag.innerHTML = "<b>Nachweisschnittgrößen und lokale Verformungen</b>"
@@ -533,7 +535,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
                 // @ts-ignore
                 const th1 = table.tHead.appendChild(document.createElement("th"));
-                th1.innerHTML = "N &nbsp;[kN]";
+                th1.innerHTML = "N &nbsp;[" + einheit_kraft + "]";
                 th1.title = "Normalkraft N, positiv als Zugkraft"
                 th1.setAttribute("class", "table_cell_center");
                 row.appendChild(th1);
@@ -547,7 +549,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                     row.appendChild(th2);
                     // @ts-ignore
                     const th3 = table.tHead.appendChild(document.createElement("th"));
-                    th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+                    th3.innerHTML = "M<sub>y</sub>&nbsp;[" + einheit_kraft + "m]";
                     th3.title = "Biegemoment, positiv im Uhrzeigersinn am negativen Schnittufer"
                     th3.setAttribute("class", "table_cell_center");
                     row.appendChild(th3);
@@ -576,7 +578,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                     if (nelem_Balken_Bettung > 0) {
                         // @ts-ignore
                         const th7 = table.tHead.appendChild(document.createElement("th"));
-                        th7.innerHTML = "press [kN/m]";
+                        th7.innerHTML = "press [" + einheit_kraft + "/m]";
                         th7.title = "Bodenpressung"
                         th7.setAttribute("class", "table_cell_center");
                         row.appendChild(th7);
@@ -626,15 +628,15 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
                         for (j = 1; j <= n; j++) {
                             newCell = newRow.insertCell(j);
-                            if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
-                            else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i], 2, 2));
-                            else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i], 2, 2));
+                            if (j === 1) newText = document.createTextNode(myFormat(sg_N[i] * faktor_einheit_kraft, 2, 2));
+                            else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i] * faktor_einheit_kraft, 2, 2));
+                            else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i] * faktor_einheit_kraft, 2, 2));
                             else if (j === 4) newText = document.createTextNode(myFormat(uL[i] * 1000., 3, 3));
                             else if (j === 5) newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
                             else if (j === 6) newText = document.createTextNode(myFormat(phiL[i] * 1000., 3, 3));
                             else if (j === 7) {
                                 if (nelem_Balken_Bettung > 0) {
-                                    newText = document.createTextNode(myFormat(press[i], 3, 3));
+                                    newText = document.createTextNode(myFormat(press[i] * faktor_einheit_kraft, 3, 3));
                                 } else if ((THIIO_flag === 1)) {
                                     if (sg_N[i] < 0.0) {
                                         const eps = el[ielem].sl * Math.sqrt(Math.abs(sg_N[i]) / el[ielem].emodul / el[ielem].Iy)
@@ -661,7 +663,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                     }
                     else {
                         newCell = newRow.insertCell(1);
-                        newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
+                        newText = document.createTextNode(myFormat(sg_N[i] * faktor_einheit_kraft, 2, 2));
                         newCell.appendChild(newText);
                         newCell.setAttribute("class", "table_cell_right");
 
@@ -691,7 +693,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
     // Koppelfedern
 
     if (nelem_koppelfedern > 0) {
-        let str_Vz = "F<sub>z</sub>&nbsp;[kN]"
+        let str_Vz = "F<sub>z</sub>&nbsp;[" + einheit_kraft + "]"
         let str_Vz_title = "Kraft Fz, Zug positiv"
 
         tag = document.createElement("p"); // <p></p>
@@ -702,7 +704,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         } else {
             if (ausgabe_gleichgewichtSG) {
                 tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
-                str_Vz = "T<sub>z</sub>&nbsp;[kN]"
+                str_Vz = "T<sub>z</sub>&nbsp;[" + einheit_kraft + "]"
                 str_Vz_title = "Transversalkraft Tz, positiv in positiver z-Richtung am positiven Schnittufer"
             } else {
                 tag.innerHTML = "<b>Nachweisschnittgrößen und lokale Verformungen</b>"
@@ -746,7 +748,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
 
                 // @ts-ignore
                 const th1 = table.tHead.appendChild(document.createElement("th"));
-                th1.innerHTML = "F<sub>x</sub>&nbsp;[kN]";
+                th1.innerHTML = "F<sub>x</sub>&nbsp;[" + einheit_kraft + "]";
                 th1.title = "Kraft Fx, Zug positiv"
                 th1.setAttribute("class", "table_cell_center");
                 row.appendChild(th1);
@@ -760,7 +762,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                     row.appendChild(th2);
                     // @ts-ignore
                     const th3 = table.tHead.appendChild(document.createElement("th"));
-                    th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+                    th3.innerHTML = "M<sub>y</sub>&nbsp;[" + einheit_kraft + "m]";
                     th3.title = "Biegemoment, positiv im Uhrzeigersinn am negativen Schnittufer"
                     th3.setAttribute("class", "table_cell_center");
                     row.appendChild(th3);
@@ -825,9 +827,9 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
                     let n = 6;
                     for (j = 1; j <= n; j++) {
                         newCell = newRow.insertCell(j);
-                        if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
-                        else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i], 2, 2));
-                        else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i], 2, 2));
+                        if (j === 1) newText = document.createTextNode(myFormat(sg_N[i] * faktor_einheit_kraft, 2, 2));
+                        else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i] * faktor_einheit_kraft, 2, 2));
+                        else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i] * faktor_einheit_kraft, 2, 2));
                         else if (j === 4) newText = document.createTextNode(myFormat((uL[i + 1] - uL[i]) * 1000., 3, 3));
                         else if (j === 5) newText = document.createTextNode(myFormat((wL[i + 1] - wL[i]) * 1000., 3, 3));
                         else if (j === 6) newText = document.createTextNode(myFormat((phiL[i + 1] - phiL[i]) * 1000., 3, 3));
@@ -972,20 +974,20 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
             row.appendChild(th0);
             // @ts-ignore
             const th1 = table.tHead.appendChild(document.createElement("th"));
-            th1.innerHTML = "A<sub>x'</sub>&nbsp;[kN]";
+            th1.innerHTML = "A<sub>x'</sub>&nbsp;[" + einheit_kraft + "]";
             th1.title = "Auflagerkraft Ax, positiv in negativer x-Richtung"
             th1.setAttribute("class", "table_cell_center_kombi");
             row.appendChild(th1);
             // @ts-ignore
             const th2 = table.tHead.appendChild(document.createElement("th"));
-            th2.innerHTML = "A<sub>z'</sub>&nbsp;[kN]";
+            th2.innerHTML = "A<sub>z'</sub>&nbsp;[" + einheit_kraft + "]";
             th2.title = "Auflagerkraft Az, positiv in negativer z-Richtung"
             th2.setAttribute("class", "table_cell_center_kombi");
             row.appendChild(th2);
             if (System === 0) {
                 // @ts-ignore
                 const th3 = table.tHead.appendChild(document.createElement("th"));
-                th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+                th3.innerHTML = "M<sub>y</sub>&nbsp;[" + einheit_kraft + "m]";
                 th3.title = "Einspannmoment, positiv im Uhrzeigersinn"
                 th3.setAttribute("class", "table_cell_center_kombi");
                 row.appendChild(th3);
@@ -1002,18 +1004,18 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
                 newCell.setAttribute("class", "table_cell_center_kombi");
 
                 newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(myFormat(lagerkraefte_kombi._(i, 0, iKomb - 1), 2, 2));  // Append a text node to the cell
+                newText = document.createTextNode(myFormat(lagerkraefte_kombi._(i, 0, iKomb - 1) * faktor_einheit_kraft, 2, 2));  // Append a text node to the cell
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_right");
 
                 newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
-                newText = document.createTextNode(myFormat(lagerkraefte_kombi._(i, 1, iKomb - 1), 2, 2));  // Append a text node to the cell
+                newText = document.createTextNode(myFormat(lagerkraefte_kombi._(i, 1, iKomb - 1) * faktor_einheit_kraft, 2, 2));  // Append a text node to the cell
                 newCell.appendChild(newText);
                 newCell.setAttribute("class", "table_cell_right");
 
                 if (System === 0) {
                     newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
-                    newText = document.createTextNode(myFormat(lagerkraefte_kombi._(i, 2, iKomb - 1), 2, 2));  // Append a text node to the cell
+                    newText = document.createTextNode(myFormat(lagerkraefte_kombi._(i, 2, iKomb - 1) * faktor_einheit_kraft, 2, 2));  // Append a text node to the cell
                     newCell.appendChild(newText);
                     newCell.setAttribute("class", "table_cell_right");
                 }
@@ -1022,7 +1024,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
 
 
 
-        let str_Vz = "V<sub>z</sub>&nbsp;[kN]"
+        let str_Vz = "V<sub>z</sub>&nbsp;[" + einheit_kraft + "]"
         let str_Vz_title = "Querkraft Vz, positiv in positiver z-Richtung am positiven Schnittufer"
 
         tag = document.createElement("p"); // <p></p>
@@ -1063,7 +1065,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
 
                 // @ts-ignore
                 const th1 = table.tHead.appendChild(document.createElement("th"));
-                th1.innerHTML = "N &nbsp;[kN]";
+                th1.innerHTML = "N &nbsp;[" + einheit_kraft + "]";
                 th1.title = "Normalkraft N, positiv als Zugkraft"
                 th1.setAttribute("class", "table_cell_center_kombi");
                 row.appendChild(th1);
@@ -1077,7 +1079,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
                     row.appendChild(th2);
                     // @ts-ignore
                     const th3 = table.tHead.appendChild(document.createElement("th"));
-                    th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+                    th3.innerHTML = "M<sub>y</sub>&nbsp;[" + einheit_kraft + "m]";
                     th3.title = "Biegemoment, positiv im Uhrzeigersinn am negativen Schnittufer"
                     th3.setAttribute("class", "table_cell_center_kombi");
                     row.appendChild(th3);
@@ -1106,7 +1108,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
                     if (nelem_Balken_Bettung > 0) {
                         // @ts-ignore
                         const th7 = table.tHead.appendChild(document.createElement("th"));
-                        th7.innerHTML = "press [kN/m]";
+                        th7.innerHTML = "press [" + einheit_kraft + "/m]";
                         th7.title = "Bodenpressung"
                         th7.setAttribute("class", "table_cell_center_kombi");
                         row.appendChild(th7);
@@ -1155,13 +1157,13 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
 
                         for (j = 1; j <= n; j++) {
                             newCell = newRow.insertCell(j);
-                            if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
-                            else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i], 2, 2));
-                            else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i], 2, 2));
+                            if (j === 1) newText = document.createTextNode(myFormat(sg_N[i] * faktor_einheit_kraft, 2, 2));
+                            else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i] * faktor_einheit_kraft, 2, 2));
+                            else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i] * faktor_einheit_kraft, 2, 2));
                             else if (j === 4) newText = document.createTextNode(myFormat(uL[i] * 1000., 3, 3));
                             else if (j === 5) newText = document.createTextNode(myFormat(wL[i] * 1000., 3, 3));
                             else if (j === 6) newText = document.createTextNode(myFormat(phiL[i] * 1000., 3, 3));
-                            else if (j === 7) newText = document.createTextNode(myFormat(press[i], 3, 3));
+                            else if (j === 7) newText = document.createTextNode(myFormat(press[i] * faktor_einheit_kraft, 3, 3));
 
                             newCell.appendChild(newText);
                             newCell.setAttribute("class", "table_cell_right");
@@ -1169,7 +1171,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
                     }
                     else {
                         newCell = newRow.insertCell(1);
-                        newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
+                        newText = document.createTextNode(myFormat(sg_N[i] * faktor_einheit_kraft, 2, 2));
                         newCell.appendChild(newText);
                         newCell.setAttribute("class", "table_cell_right");
 
@@ -1193,7 +1195,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
         // Koppelfedern
 
         if (nelem_koppelfedern > 0) {
-            let str_Vz = "F<sub>z</sub>&nbsp;[kN]"
+            let str_Vz = "F<sub>z</sub>&nbsp;[" + einheit_kraft + "]"
             let str_Vz_title = "Kraft Fz, Zug positiv"
 
             tag = document.createElement("p"); // <p></p>
@@ -1204,7 +1206,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
             } else {
                 if (ausgabe_gleichgewichtSG) {
                     tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
-                    str_Vz = "T<sub>z</sub>&nbsp;[kN]"
+                    str_Vz = "T<sub>z</sub>&nbsp;[" + einheit_kraft + "]"
                     str_Vz_title = "Transversalkraft Tz, positiv in positiver z-Richtung am positiven Schnittufer"
                 } else {
                     tag.innerHTML = "<b>Nachweisschnittgrößen und lokale Verformungen</b>"
@@ -1248,7 +1250,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
 
                     // @ts-ignore
                     const th1 = table.tHead.appendChild(document.createElement("th"));
-                    th1.innerHTML = "F<sub>x</sub>&nbsp;[kN]";
+                    th1.innerHTML = "F<sub>x</sub>&nbsp;[" + einheit_kraft + "]";
                     th1.title = "Kraft Fx, Zug positiv"
                     th1.setAttribute("class", "table_cell_center_kombi");
                     row.appendChild(th1);
@@ -1262,7 +1264,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
                         row.appendChild(th2);
                         // @ts-ignore
                         const th3 = table.tHead.appendChild(document.createElement("th"));
-                        th3.innerHTML = "M<sub>y</sub>&nbsp;[kNm]";
+                        th3.innerHTML = "M<sub>y</sub>&nbsp;[" + einheit_kraft + "m]";
                         th3.title = "Biegemoment, positiv im Uhrzeigersinn am negativen Schnittufer"
                         th3.setAttribute("class", "table_cell_center_kombi");
                         row.appendChild(th3);
@@ -1318,9 +1320,9 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
                         let n = 6;
                         for (j = 1; j <= n; j++) {
                             newCell = newRow.insertCell(j);
-                            if (j === 1) newText = document.createTextNode(myFormat(sg_N[i], 2, 2));
-                            else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i], 2, 2));
-                            else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i], 2, 2));
+                            if (j === 1) newText = document.createTextNode(myFormat(sg_N[i] * faktor_einheit_kraft, 2, 2));
+                            else if (j === 2) newText = document.createTextNode(myFormat(sg_V[i] * faktor_einheit_kraft, 2, 2));
+                            else if (j === 3) newText = document.createTextNode(myFormat(sg_M[i] * faktor_einheit_kraft, 2, 2));
                             else if (j === 4) newText = document.createTextNode(myFormat((uL[i + 1] - uL[i]) * 1000., 3, 3));
                             else if (j === 5) newText = document.createTextNode(myFormat((wL[i + 1] - wL[i]) * 1000., 3, 3));
                             else if (j === 6) newText = document.createTextNode(myFormat((phiL[i + 1] - phiL[i]) * 1000., 3, 3));

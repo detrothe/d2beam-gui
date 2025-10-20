@@ -85,7 +85,7 @@ export function read_daten(eingabedaten: string) {
             setSystem(Number(jobj.system));
         }
 
-        if ( jobj.dateiname !== undefined) {
+        if (jobj.dateiname !== undefined) {
             set_current_filename(jobj.dateiname);
         }
 
@@ -137,6 +137,10 @@ export function read_daten(eingabedaten: string) {
         console.log("jobj.nelteilungen", jobj.nelteilungen);
         if (jobj.nelteilungen === undefined) el.setValue(10);
         else el.setValue(Math.max(jobj.nelteilungen, 1));
+
+        let sel = document.getElementById("id_einheit_kraft_option") as HTMLSelectElement;
+        if (jobj.einheit_kraft === undefined) sel.value = 'kN';
+        else sel.value = jobj.einheit_kraft;
 
         el = document.getElementById("id_button_niter") as drButtonPM;
         if (jobj.n_iter === undefined) el.setValue(10);
@@ -609,10 +613,13 @@ async function handleFileSelect_save() {
 export function str_inputToJSON() {
 
     let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node_ID, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, epsForce_tol, stadyn, dyn_neigv;
-    let eig_solver, niter_neigv, nelem_koppelfedern, matprop_flag, min_mass;
+    let eig_solver, niter_neigv, nelem_koppelfedern, matprop_flag, min_mass, einheit_kraft;
 
     let el = document.getElementById("id_button_nteilungen") as any;
     nelTeilungen = el.nel;
+
+    el = document.getElementById('id_einheit_kraft_option') as HTMLSelectElement;
+    einheit_kraft = el.value;
 
     el = document.getElementById("id_button_niter") as any;
     n_iterationen = el.nel;
@@ -918,6 +925,7 @@ export function str_inputToJSON() {
         nquerschnittsets: nQuerschnittSets,
         // 'nstabvorverfomungen': nStabvorverfomungen,
         nelteilungen: nelTeilungen,
+        einheit_kraft: einheit_kraft,
         n_iter: n_iterationen,
         THIIO_flag: THIIO_flag,
         matprop_flag: matprop_flag,
