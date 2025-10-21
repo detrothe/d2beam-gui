@@ -20,12 +20,12 @@ export default defineConfig({
         swDest: 'dist/sw.js',
         globDirectory: 'dist',
         globPatterns: [
-          '**/*.{html,js,css,json,png,svg,ttf,otf,woff,woff2,eot}',
+          '**/*.{html,js,css,json,png,svg}',
         ],
       },
       workbox: {
         globPatterns: [
-          '**/*.{html,js,css,json,png,ttf,otf,woff,woff2,eot}',
+          '**/*.{html,js,css,json,png}',
         ]
       },
       injectRegister: false,
