@@ -4,7 +4,7 @@ import { CTrans } from './trans';
 import { draw_arrow_alpha } from './grafik';
 import { myFormat, write } from './utility';
 import { LinkedList } from '../components/linkedlist';
-import { alertdialog, stadyn, TLoads, TMass, TNode, TNodeDisp } from './rechnen';
+import { alertdialog, einheit_kraft, stadyn, TLoads, TMass, TNode, TNodeDisp } from './rechnen';
 import { abstandPunktGerade_2D } from './lib';
 import {
    delete_element,

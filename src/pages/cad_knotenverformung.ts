@@ -231,7 +231,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         // zpix = tr.zPix(z) + 9
         xpix = tr.xPix((x0 + x1) / 2) + txt_abstand * si
         zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * co
-        let str = myFormat(Math.abs(wert), 1, 2) + 'mm'   //unit_force
+        let str = myFormat(Math.abs(wert), 1, 2) + 'mm'
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'center'
@@ -292,7 +292,7 @@ export function draw_knotenverformung(tr: CTrans, obj: TCAD_Knotenverformung, fa
         // zpix = tr.zPix(z - delta - plength) + 5
         xpix = tr.xPix((x0 + x1) / 2) - txt_abstand * co
         zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * si
-        let str = myFormat(Math.abs(wert), 1, 2) + 'mm'  //unit_force
+        let str = myFormat(Math.abs(wert), 1, 2) + 'mm'
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'center'

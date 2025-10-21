@@ -344,7 +344,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         if (p_L === p_R) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'center'
@@ -354,7 +354,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
-                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
@@ -363,7 +363,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                             xpix = xtr[2] + 5
                             zpix = ztr[2] - 5
-                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
+                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
@@ -424,7 +424,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         if (p_L === p_R) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'center'
@@ -435,7 +435,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
-                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
@@ -444,7 +444,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                             xpix = xtr[2] + 5
                             zpix = ztr[2] - 5
-                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
+                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
@@ -506,7 +506,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         if (p_L === p_R) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'center'
@@ -516,7 +516,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
-                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
@@ -525,7 +525,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                             xpix = xtr[2] + 5
                             zpix = ztr[2] - 5
-                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
+                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
@@ -590,7 +590,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         if (p_L === p_R) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'center'
@@ -600,7 +600,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
-                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
@@ -609,7 +609,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                             xpix = xtr[2] + 5
                             zpix = ztr[2] - 5
-                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
+                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
@@ -671,7 +671,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         if (p_L === p_R) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'center'
@@ -681,7 +681,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
-                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
@@ -690,7 +690,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                             xpix = xtr[2] + 5
                             zpix = ztr[2] - 5
-                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 2)
+                            str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
@@ -822,7 +822,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         xpix = tr.xPix(xl + ddx + dpx) + 5
                         zpix = tr.zPix(zl - ddz - dpz) + 9 / devicePixelRatio;
-                        let str = myFormat(Math.abs(wert), 1, 2) + unit_force
+                        let str = myFormat(Math.abs(wert), 1, 3) + unit_force
                         if (max_Lastfall > 1) str = iLastfall + '|' + str
                         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
                         txt.alignment = 'left'
@@ -872,7 +872,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                             zpix = tr.zPix(zl - Math.cos(Math.PI / 5) * slmax_cad / 50) + 20 * vorzeichen / devicePixelRatio //+ (vorzeichen * radius + 15 * vorzeichen) / devicePixelRatio
                         }
 
-                        let str = myFormat(Math.abs(wert), 1, 2) + unit_moment
+                        let str = myFormat(Math.abs(wert), 1, 3) + unit_moment
                         if (max_Lastfall > 1) str = iLastfall + '|' + str
                         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
                         txt.alignment = 'right'

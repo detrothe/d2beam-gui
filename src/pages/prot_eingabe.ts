@@ -11,7 +11,7 @@ import {
     nodalmass,
 } from "./rechnen";
 
-import { nQuerschnittSets,    querschnittset} from "./querschnitte"
+import { nQuerschnittSets, querschnittset } from "./querschnitte"
 
 import { testNumber, myFormat, write } from "./utility";
 
@@ -215,7 +215,8 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
                     newText = document.createTextNode(myFormat(querschnittset[i].area, 1, 2));
                     newCell.style.minWidth = "4rem";
                 } else if (ispalte === 3) {
-                    newText = document.createTextNode(myFormat(querschnittset[i].Iy, 1, 1));
+                    if (querschnittset[i].Iy < 1) newText = document.createTextNode(myFormat(querschnittset[i].Iy, 1, 4, 1));
+                    else newText = document.createTextNode(myFormat(querschnittset[i].Iy, 1, 1));
                     newCell.style.minWidth = "4rem";
                 } else if (ispalte === 4) {
                     newText = document.createTextNode(myFormat(querschnittset[i].emodul, 1, 1));

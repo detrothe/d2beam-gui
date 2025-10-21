@@ -612,7 +612,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         // zpix = tr.zPix(z) + 9
         xpix = tr.xPix((x0 + x1) / 2) + txt_abstand * si
         zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * co
-        let str = myFormat(Math.abs(wert), 1, 2) + unit_force
+        let str = myFormat(Math.abs(wert), 1, 3) + unit_force
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'center'
@@ -677,7 +677,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         // zpix = tr.zPix(z - delta - plength) + 5
         xpix = tr.xPix((x0 + x1) / 2) - txt_abstand * co
         zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * si
-        let str = myFormat(Math.abs(wert), 1, 2) + unit_force
+        let str = myFormat(Math.abs(wert), 1, 3) + unit_force
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'center'
@@ -735,7 +735,7 @@ export function draw_knotenlast(tr: CTrans, obj: TCAD_Knotenlast, index1: number
         }
 
         //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
-        let str = myFormat(Math.abs(wert), 1, 2) + unit_moment
+        let str = myFormat(Math.abs(wert), 1, 3) + unit_moment
         if (max_Lastfall > 1) str = iLastfall + '|' + str
         const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
         txt.alignment = 'right'

@@ -4,7 +4,7 @@ import Two from 'two.js'
 import { CTrans } from './trans';
 import { myFormat, write } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
-import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen, matprop_flag, nelem_koppelfedern, nelem_Balken, maxBettung, maxpress_all, max_press_kombi, dyn_omega } from "./rechnen";
+import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen, matprop_flag, nelem_koppelfedern, nelem_Balken, maxBettung, maxpress_all, max_press_kombi, dyn_omega, faktor_einheit_kraft, einheit_kraft } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
 import { element as stab } from "./rechnen"
 import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload, lagerkraefte, lagerkraefte_kombi, THIIO_flag, maxValue_w0 } from "./rechnen";
@@ -231,6 +231,28 @@ const style_pfeil_koord = {
     h: 16,
     linewidth: 4,
     color: '#006666'
+}
+
+let unit_force_grafik = 'kN'
+let unit_moment_grafik = 'kNm'
+
+//--------------------------------------------------------------------------------------------------------
+export function set_unit_grafik(faktor: number) {
+    //--------------------------------------------------------------------------------------------------------
+
+    if (unit_force === '') {
+        unit_force_grafik = ''
+        unit_moment_grafik = ''
+    }
+    else {
+        if (faktor === 1.0) {
+            unit_force_grafik = 'kN'
+            unit_moment_grafik = 'kNm'
+        } else {
+            unit_force_grafik = 'N'
+            unit_moment_grafik = 'Nm'
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -988,7 +1010,7 @@ function draw_werte(x0: number, z0: number) {
 
 export function drawsystem(svg_id = 'artboard') {
 
-    if ( two === null) return;
+    if (two === null) return;
 
     let show_selection = true;
     if (svg_id != 'artboard') show_selection = false;  // nur System für pdf-Ausgabe erzeugen
@@ -1911,8 +1933,17 @@ export function drawsystem(svg_id = 'artboard') {
                 let nLoop = 1, lf_index = 0
 
                 let unit: string
-                if (show_momentenlinien) unit = 'kNm';
-                else unit = 'kN';
+                if (unit_force === '') {
+                    unit = ''
+                } else {
+                    if (einheit_kraft === 'kN') {
+                        if (show_momentenlinien) unit = 'kNm';
+                        else unit = 'kN';
+                    } else {
+                        if (show_momentenlinien) unit = 'Nm';
+                        else unit = 'N';
+                    }
+                }
 
                 if (show_momentenlinien) { index_sg = 0; max_all = maxM_all; }
                 else if (show_querkraftlinien) { index_sg = 1; max_all = maxV_all; }
@@ -2027,7 +2058,7 @@ export function drawsystem(svg_id = 'artboard') {
                             werte.push(new TWerte())
                             werte[index_werte].x = xx1
                             werte[index_werte].z = zz1
-                            werte[index_werte].wert = myFormat(wert, 1, 2) + ' ' + unit
+                            werte[index_werte].wert = myFormat(wert * faktor_einheit_kraft, 1, 2) + ' ' + unit
                             index_werte++
                         }
 
@@ -2057,7 +2088,7 @@ export function drawsystem(svg_id = 'artboard') {
                             werte.push(new TWerte())
                             werte[index_werte].x = xx1
                             werte[index_werte].z = zz1
-                            werte[index_werte].wert = myFormat(wert, 1, 2) + ' ' + unit
+                            werte[index_werte].wert = myFormat(wert * faktor_einheit_kraft, 1, 2) + ' ' + unit
                             index_werte++
                         }
 
@@ -2075,7 +2106,7 @@ export function drawsystem(svg_id = 'artboard') {
                         werte.push(new TWerte())
                         werte[index_werte].x = xx1
                         werte[index_werte].z = zz1
-                        werte[index_werte].wert = myFormat(sgL, 1, 2) + ' ' + unit
+                        werte[index_werte].wert = myFormat(sgL * faktor_einheit_kraft, 1, 2) + ' ' + unit
                         index_werte++
 
                         if (sgL > valueLeftPos) {
@@ -2177,7 +2208,7 @@ export function drawsystem(svg_id = 'artboard') {
                             werte.push(new TWerte())
                             werte[index_werte].x = xx2
                             werte[index_werte].z = zz2
-                            werte[index_werte].wert = myFormat(sgR, 1, 2) + ' ' + unit
+                            werte[index_werte].wert = myFormat(sgR * faktor_einheit_kraft, 1, 2) + ' ' + unit
                             index_werte++
 
                             xx1 = xx2
@@ -2203,21 +2234,21 @@ export function drawsystem(svg_id = 'artboard') {
                         if (!foundNeg && !foundPos && Math.abs(valueLeftPos - valueRightPos) < 0.0001) {
                             let xpix = (x1 + x2 + x3 + x4) / 4
                             let zpix = (z1 + z2 + z3 + z4) / 4
-                            const str = myFormat(Math.abs(valueLeftPos), 1, 2) + unit
+                            const str = myFormat(Math.abs(valueLeftPos * faktor_einheit_kraft), 1, 2) + unit
                             let txt = two.makeText(str, xpix, zpix, style_txt)
                             txt.alignment = 'center'
                             txt.baseline = 'middle'
                             txt.rotation = element[ielem].alpha
                         } else {
                             if (foundPos && (Math.abs(maxValuePos) > 0.00001) && (maxValuePos > valueRightPos)) {
-                                const str = myFormat(Math.abs(maxValuePos), 1, 2) + unit
+                                const str = myFormat(Math.abs(maxValuePos * faktor_einheit_kraft), 1, 2) + unit
                                 //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, x_max, z_max + zp, style_txt)
                                 txt.alignment = 'left'
                                 txt.baseline = 'top'
                             }
                             if (foundNeg && (Math.abs(maxValueNeg) > 0.00001) && (maxValueNeg < valueRightNeg)) {
-                                const str = myFormat(Math.abs(maxValueNeg), 1, 2) + unit
+                                const str = myFormat(Math.abs(maxValueNeg * faktor_einheit_kraft), 1, 2) + unit
                                 //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, x_min, z_min + zp, style_txt)
                                 txt.alignment = 'left'
@@ -2225,14 +2256,14 @@ export function drawsystem(svg_id = 'artboard') {
                             }
 
                             if (Math.abs(valueLeftPos) > 0.00001) {
-                                const str = myFormat(Math.abs(valueLeftPos), 1, 2) + unit
+                                const str = myFormat(Math.abs(valueLeftPos * faktor_einheit_kraft), 1, 2) + unit
                                 //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, x0_max, z0_max + zp, style_txt)
                                 txt.alignment = 'left'
                                 txt.baseline = 'top'
                             }
                             if (Math.abs(valueRightPos) > 0.00001) {
-                                const str = myFormat(Math.abs(valueRightPos), 1, 2) + unit
+                                const str = myFormat(Math.abs(valueRightPos * faktor_einheit_kraft), 1, 2) + unit
                                 //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, xn_max, zn_max + zp, style_txt)
                                 txt.alignment = 'left'
@@ -2240,14 +2271,14 @@ export function drawsystem(svg_id = 'artboard') {
                             }
 
                             if (Math.abs(valueLeftNeg) > 0.00001) {
-                                const str = myFormat(Math.abs(valueLeftNeg), 1, 2) + unit
+                                const str = myFormat(Math.abs(valueLeftNeg * faktor_einheit_kraft), 1, 2) + unit
                                 //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, x0_min, z0_min + zp, style_txt)
                                 txt.alignment = 'left'
                                 txt.baseline = 'top'
                             }
                             if (Math.abs(valueRightNeg) > 0.00001) {
-                                const str = myFormat(Math.abs(valueRightNeg), 1, 2) + unit
+                                const str = myFormat(Math.abs(valueRightNeg * faktor_einheit_kraft), 1, 2) + unit
                                 //if (maxValuePos > 0.0) zp = 14; else zp = 0.0;
                                 const txt = two.makeText(str, xn_min, zn_min + zp, style_txt)
                                 txt.alignment = 'left'
@@ -2984,7 +3015,7 @@ function draw_elementlasten(two: Two) {
                         if (eload[ieload].pL === eload[ieload].pR) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'center'
                             txt.baseline = 'middle'
@@ -2992,14 +3023,14 @@ function draw_elementlasten(two: Two) {
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
-                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
 
                             xpix = xtr[2] + 5
                             zpix = ztr[2] - 5
-                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
@@ -3047,7 +3078,7 @@ function draw_elementlasten(two: Two) {
                             if (eload[ieload].pL === eload[ieload].pR) {
                                 xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
                                 zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                                let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                                let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                                 let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                                 txt.alignment = 'center'
                                 txt.baseline = 'middle'
@@ -3056,14 +3087,14 @@ function draw_elementlasten(two: Two) {
                             } else {
                                 xpix = xtr[3] + 5
                                 zpix = ztr[3] - 5
-                                let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                                let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                                 let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                                 txt.alignment = 'left'
                                 txt.baseline = 'top'
 
                                 xpix = xtr[2] + 5
                                 zpix = ztr[2] - 5
-                                str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                                str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                                 txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                                 txt.alignment = 'left'
                                 txt.baseline = 'top'
@@ -3111,7 +3142,7 @@ function draw_elementlasten(two: Two) {
                         if (eload[ieload].pL === eload[ieload].pR) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'center'
                             txt.baseline = 'middle'
@@ -3119,14 +3150,14 @@ function draw_elementlasten(two: Two) {
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
-                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
 
                             xpix = xtr[2] + 5
                             zpix = ztr[2] - 5
-                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
@@ -3176,7 +3207,7 @@ function draw_elementlasten(two: Two) {
                         if (eload[ieload].pL === eload[ieload].pR) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'center'
                             txt.baseline = 'middle'
@@ -3184,14 +3215,14 @@ function draw_elementlasten(two: Two) {
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
-                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
 
                             xpix = xtr[2] + 5
                             zpix = ztr[2] - 5
-                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
@@ -3239,7 +3270,7 @@ function draw_elementlasten(two: Two) {
                         if (eload[ieload].pL === eload[ieload].pR) {
                             xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4
                             zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4
-                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'center'
                             txt.baseline = 'middle'
@@ -3247,14 +3278,14 @@ function draw_elementlasten(two: Two) {
                         } else {
                             xpix = xtr[3] + 5
                             zpix = ztr[3] - 5
-                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop]), 1, 2)
+                            let str = myFormat(Math.abs(eload[ieload].pL * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             let txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
 
                             xpix = xtr[2] + 5
                             zpix = ztr[2] - 5
-                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop]), 1, 2)
+                            str = myFormat(Math.abs(eload[ieload].pR * fact[iLoop] * faktor_einheit_kraft), 1, 2)
                             txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
@@ -3328,7 +3359,7 @@ function draw_elementlasten(two: Two) {
                             }
                             xpix = tr.xPix(xl + ddx + dpx) + 4
                             zpix = tr.zPix(zl - ddz - dpz) - 4
-                            const str = myFormat(Math.abs(wert), 1, 2) + unit_force
+                            const str = myFormat(Math.abs(wert * faktor_einheit_kraft), 1, 2) + unit_force_grafik
                             const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast_element)
                             txt.alignment = 'left'
                             txt.baseline = 'top'
@@ -3347,7 +3378,7 @@ function draw_elementlasten(two: Two) {
 
                             xpix = tr.xPix(xl) - 10 / devicePixelRatio
                             zpix = tr.zPix(zl) + vorzeichen * (radius + 12) / devicePixelRatio
-                            const str = myFormat(Math.abs(wert), 1, 2) + unit_moment
+                            const str = myFormat(Math.abs(wert * faktor_einheit_kraft), 1, 2) + unit_moment_grafik
                             const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast_element)
                             txt.alignment = 'right'
                         }
@@ -3474,7 +3505,7 @@ function draw_knotenkraefte(two: Two) {
                 zpix = tr.zPix(z) - 5
                 xpix = tr.xPix((x0 + x1) / 2) + txt_abstand * si
                 zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * co
-                const str = myFormat(Math.abs(wert), 1, 2) + unit_force
+                const str = myFormat(Math.abs(wert * faktor_einheit_kraft), 1, 2) + unit_force_grafik
                 const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                 txt.alignment = 'center'
                 txt.baseline = 'top'
@@ -3503,7 +3534,7 @@ function draw_knotenkraefte(two: Two) {
                 xpix = tr.xPix((x0 + x1) / 2) - txt_abstand * co
                 zpix = tr.zPix((z0 + z1) / 2) + txt_abstand * si
 
-                const str = myFormat(Math.abs(wert), 1, 2) + unit_force
+                const str = myFormat(Math.abs(wert * faktor_einheit_kraft), 1, 2) + unit_force_grafik
                 const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                 txt.alignment = 'center'
                 txt.baseline = 'top'
@@ -3524,7 +3555,7 @@ function draw_knotenkraefte(two: Two) {
                 xpix = tr.xPix(x) - 10 / devicePixelRatio
                 zpix = tr.zPix(z) + vorzeichen * (radius + 15) / devicePixelRatio
                 //zpix = tr.zPix(z + vorzeichen * slmax / 50) + 15 * vorzeichen / devicePixelRatio
-                const str = myFormat(Math.abs(wert), 1, 2) + unit_moment
+                const str = myFormat(Math.abs(wert * faktor_einheit_kraft), 1, 2) + unit_moment_grafik
                 const txt = two.makeText(str, xpix, zpix, style_txt_knotenlast)
                 txt.alignment = 'right'
                 //txt.baseline = 'bottom'
@@ -3713,7 +3744,7 @@ function draw_lagerkraefte(two: Two) {
 
             xpix = tr.xPix(x + (delta + plength) * Math.cos(-alpha)) + 5
             zpix = tr.zPix(z + (delta + plength) * Math.sin(-alpha)) - 5
-            const str = myFormat(Math.abs(wert), 1, 2) + unit_force
+            const str = myFormat(Math.abs(wert * faktor_einheit_kraft), 1, 2) + unit_force_grafik
             const txt = two.makeText(str, xpix, zpix, style_txt_lager)
             txt.alignment = 'left'
             txt.baseline = 'top'
@@ -3741,7 +3772,7 @@ function draw_lagerkraefte(two: Two) {
 
             xpix = tr.xPix(x + (delta + plength) * Math.cos(-alpha + 1.5707963)) + 5
             zpix = tr.zPix(z + (delta + plength) * Math.sin(-alpha + 1.5707963)) + 5
-            const str = myFormat(Math.abs(wert), 1, 2) + unit_force
+            const str = myFormat(Math.abs(wert * faktor_einheit_kraft), 1, 2) + unit_force_grafik
             const txt = two.makeText(str, xpix, zpix, style_txt_lager)
             txt.alignment = 'left'
             txt.baseline = 'top'
@@ -3771,7 +3802,7 @@ function draw_lagerkraefte(two: Two) {
 
                 xpix = tr.xPix(x) - 10 / devicePixelRatio
                 zpix = tr.zPix(z) + vorzeichen * (radius + 15) / devicePixelRatio
-                const str = myFormat(Math.abs(wert), 1, 2) + unit_moment
+                const str = myFormat(Math.abs(wert * faktor_einheit_kraft), 1, 2) + unit_moment_grafik
                 const txt = two.makeText(str, xpix, zpix, style_txt_lager)
                 txt.alignment = 'right'
                 //txt.baseline = 'top'
