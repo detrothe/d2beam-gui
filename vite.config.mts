@@ -1,17 +1,21 @@
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+import htmlMinifier from 'vite-plugin-html-minifier'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/",
   build: {
     sourcemap: false,
-    chunkSizeWarningLimit:4000,
+    chunkSizeWarningLimit: 4000,
     assetsDir: "code",
     target: ["esnext", "edge100", "firefox100", "chrome100", "safari18"],
   },
-    plugins: [
+  plugins: [
+    htmlMinifier({
+      minify: true,
+    }),
     VitePWA({
       strategies: "injectManifest",
       injectManifest: {
