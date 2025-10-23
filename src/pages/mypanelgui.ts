@@ -151,7 +151,7 @@ export function myPanel() {
         window.dispatchEvent(new Event("draw_stabvorverformung_grafik"));
     });
 
-    gui.add(obj, 'scale', 0, 2, 0.1).name(skalierung).onFinishChange((v: any) => {
+    gui.add(obj, 'scale', 0, 3, 0.1).name(skalierung).onFinishChange((v: any) => {
         console.log("skalierung", v)
         scale_factor = v;
         window.dispatchEvent(new Event("scale_factor"));
