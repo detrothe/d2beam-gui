@@ -1,5 +1,5 @@
 import Two from "two.js";
-import { CAD_BEMASSUNG, list, select_color, slmax_cad, style_txt, timer } from "./cad"
+import { CAD_BEMASSUNG, einheit_bemassung, list, select_color, slmax_cad, style_txt, timer } from "./cad"
 import { buttons_control, set_help_text } from "./cad_buttons"
 import { add_cad_node, add_element_nodes, get_cad_node_X, get_cad_node_Z } from "./cad_node";
 import { TCAD_Element } from "./CCAD_element";
@@ -360,7 +360,11 @@ export function drawBemassung(obj: TCAD_Bemassung, tr: CTrans, save = false) {
   let xm = tr.xPix((p1xNew + p2xNew) / 2) + (sinus * 11 + cosinus * 1) // devicePixelRatio  war 17
   let zm = tr.zPix((p1yNew + p2yNew) / 2) - (cosinus * 11 - sinus * 1)
 
-  let str = myFormat(dsl, 1, 3) + 'm'
+  let str = '';
+  if (einheit_bemassung === 'm') str = myFormat(dsl, 1, 3) + 'm';
+  else if (einheit_bemassung === 'cm') str = myFormat(dsl * 100, 0, 3) + 'cm';
+  else if (einheit_bemassung === 'mm') str = myFormat(dsl * 1000, 0, 3) + 'mm';
+
   const txt1 = new Two.Text(str, xm, zm, style_txt)
   txt1.fill = '#000000'
   txt1.alignment = 'center'

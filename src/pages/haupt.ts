@@ -71,7 +71,7 @@ import { rechnen, init_tabellen, show_gleichungssystem, setSystem, System, hideC
 
 import { nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, set_dialog_querschnitt_new, removeAll_def_querschnitt } from './querschnitte';
 
-import { click_pan_button_cad, init_cad, init_two_cad, set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_knotenverformung, set_show_lager, set_show_stab_qname, two_cad_clear } from './cad';
+import { click_pan_button_cad, init_cad, init_two_cad, set_einheit_bemassung, set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_knotenverformung, set_show_lager, set_show_stab_qname, two_cad_clear } from './cad';
 import { cad_buttons, close_drawer_1 } from './cad_buttons';
 import { abbruch_property_dialog, delete_element_dialog, show_add_elload_dialog, show_property_dialog } from './cad_contextmenu';
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
@@ -81,7 +81,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.6.4, 22-Oktober-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.6.5, 23-Oktober-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -936,7 +936,10 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <div id="id_results"></div>
       </sl-tab-panel>
 
-      <!--------------------------------------------------------------------------------------->
+      <!--------------------------------------------  P R O  ------------------------------------------->
+      <!--------------------------------------------  P R O  ------------------------------------------->
+      <!--------------------------------------------  P R O  ------------------------------------------->
+
       <sl-tab-panel name="tab-pro">
         <p><b>Einstellungen </b><br /><br /></p>
 
@@ -953,9 +956,20 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td id="id_einheit_kraft" title="Einheit für Kraft in Ausgabe">&nbsp;Einheit für Kraft in Ausgabe:</td>
               <td>
-              <select  value="kN" id="id_einheit_kraft_option" onchange="berechnungErforderlich()">
+              <select  value="kN" id="id_einheit_kraft_option" onchange="berechnungErforderlich()" style="width:6rem;">
                  <option value='kN' >kN</option>
                  <option value='N'  >N</option>
+              </select>
+              </td>
+            </tr>
+
+            <tr>
+              <td title="Einheit für Bemaßung">&nbsp;Einheit für Bemaßung:</td>
+              <td>
+              <select  value="m" id="id_einheit_bemassung" style="width:6rem;" onchange="einheit_bemassung_changed()">
+                 <option value='m'  >m</option>
+                 <option value='cm' >cm</option>
+                 <option value='mm' >mm</option>
               </select>
               </td>
             </tr>
@@ -1845,10 +1859,10 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
     elSel = document.getElementById('id_THIIO') as HTMLSelectElement;
     elSel.options[0].selected = true;
 
-    elSel = document.getElementById("id_matprop") as HTMLSelectElement;
+    elSel = document.getElementById('id_matprop') as HTMLSelectElement;
     elSel.options[0].selected = true;
 
-    elSel = document.getElementById("id_einheit_kraft_option") as HTMLSelectElement;
+    elSel = document.getElementById('id_einheit_kraft_option') as HTMLSelectElement;
     elSel.options[0].selected = true;
 
     readLocalStorage_cad();
@@ -1942,7 +1956,7 @@ function berechnungsart_changed() {
   } else {
     id_mass.disabled = false;
     id_btn_mass.style.display = 'inline-block';
-    set_stadyn(1)
+    set_stadyn(1);
     //ele.set_system(1);
   }
   init_cad(2);
@@ -1993,7 +2007,17 @@ function elementTabelle_bettung_anzeigen(check: boolean) {
 
 //---------------------------------------------------------------------------------------------------------------
 function show_video() {
-  //---------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------
 
   window.open('https://d2beam-gui.statikverstehen.de/videos/videos.html', '_blank');
 }
+
+//---------------------------------------------------------------------------------------------------------------
+function einheit_bemassung_changed() {
+  //-------------------------------------------------------------------------------------------------------------
+  let el = document.getElementById('id_einheit_bemassung') as HTMLSelectElement;
+  set_einheit_bemassung(el.value);
+  init_cad(2);
+}
+// @ts-ignore
+window.einheit_bemassung_changed = einheit_bemassung_changed;

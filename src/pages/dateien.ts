@@ -41,6 +41,7 @@ import {
     set_raster_offset_z,
     raster_offset_x,
     raster_offset_z,
+    set_einheit_bemassung,
 } from "./cad";
 import { CMAXVALUESLOAD, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen";
@@ -141,6 +142,15 @@ export function read_daten(eingabedaten: string) {
         let sel = document.getElementById("id_einheit_kraft_option") as HTMLSelectElement;
         if (jobj.einheit_kraft === undefined) sel.value = 'kN';
         else sel.value = jobj.einheit_kraft;
+
+        sel = document.getElementById("id_einheit_bemassung") as HTMLSelectElement;
+        if (jobj.einheit_bemassung === undefined) {
+            sel.value = 'm';
+            set_einheit_bemassung('m');
+        } else {
+            sel.value = jobj.einheit_bemassung;
+            set_einheit_bemassung(jobj.einheit_bemassung);
+        }
 
         el = document.getElementById("id_button_niter") as drButtonPM;
         if (jobj.n_iter === undefined) el.setValue(10);
@@ -613,13 +623,16 @@ async function handleFileSelect_save() {
 export function str_inputToJSON() {
 
     let i, j, nelTeilungen, n_iterationen, THIIO_flag, maxU_node_ID, maxU_dir, maxU_schief, neigv, P_delta, ausgabe_SG, epsDisp_tol, epsForce_tol, stadyn, dyn_neigv;
-    let eig_solver, niter_neigv, nelem_koppelfedern, matprop_flag, min_mass, einheit_kraft;
+    let eig_solver, niter_neigv, nelem_koppelfedern, matprop_flag, min_mass, einheit_kraft,einheit_bemassung;
 
     let el = document.getElementById("id_button_nteilungen") as any;
     nelTeilungen = el.nel;
 
     el = document.getElementById('id_einheit_kraft_option') as HTMLSelectElement;
     einheit_kraft = el.value;
+
+    el = document.getElementById('id_einheit_bemassung') as HTMLSelectElement;
+    einheit_bemassung = el.value;
 
     el = document.getElementById("id_button_niter") as any;
     n_iterationen = el.nel;
@@ -676,151 +689,6 @@ export function str_inputToJSON() {
     console.log("textarea", txtarea.value);
     const freetxt = txtarea.value;
 
-    /*
-      el = document.getElementById('id_knoten_tabelle') as HTMLElement;
-      let tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-      console.log("knotentabelle", tabelle)
-      let n_nodes = tabelle.rows.length - 1;
-      let nSpalten = tabelle.rows[0].cells.length - 1;
-
-      const node = Array.from(Array(n_nodes), () => new Array(nSpalten));
-
-      for (i = 0; i < n_nodes; i++) {
-          for (j = 0; j < nSpalten; j++) {
-              let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-              node[i][j] = child.value;
-              //console.log(i,j,c[i][j]);
-          }
-      }
-
-      el = document.getElementById('id_koppelfedern_tabelle') as HTMLElement;
-      tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-      nelem_koppelfedern = tabelle.rows.length - 1;
-      nSpalten = tabelle.rows[0].cells.length - 1;
-
-      const koppelfedern = Array.from(Array(nelem_koppelfedern), () => new Array(nSpalten));
-
-      for (i = 0; i < nelem_koppelfedern; i++) {
-          for (j = 0; j < nSpalten; j++) {
-              let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-              koppelfedern[i][j] = child.value
-              //console.log(i,j,a[i][j]);
-          }
-      }
-
-      el = document.getElementById('id_element_tabelle') as HTMLElement;
-      tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-      let n_elem = tabelle.rows.length - 1;
-      nSpalten = tabelle.rows[0].cells.length - 1;
-
-      const elem = Array.from(Array(n_elem), () => new Array(nSpalten));
-
-      for (i = 0; i < n_elem; i++) {
-          for (j = 0; j < nSpalten; j++) {
-              let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-              elem[i][j] = child.value
-              //console.log(i,j,a[i][j]);
-          }
-      }
-
-      el = document.getElementById('id_knotenlasten_tabelle') as HTMLElement;
-      tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-      let nZeilen = tabelle.rows.length - 1;
-      nSpalten = tabelle.rows[0].cells.length - 1;
-      const nloads = nZeilen
-      const nodalload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-      for (i = 0; i < nZeilen; i++) {
-          for (j = 0; j < nSpalten; j++) {
-              let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-              nodalload[i][j] = child.value
-          }
-      }
-
-      el = document.getElementById('id_streckenlasten_tabelle') as HTMLElement;
-      tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-      nZeilen = tabelle.rows.length - 1;
-      nSpalten = tabelle.rows[0].cells.length - 1;
-      const nstreckenlasten = nZeilen
-      const linload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-      for (i = 0; i < nZeilen; i++) {
-          for (j = 0; j < nSpalten; j++) {
-              let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-              linload[i][j] = child.value
-          }
-      }
-
-      el = document.getElementById('id_einzellasten_tabelle') as HTMLElement;
-      tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-      nZeilen = tabelle.rows.length - 1;
-      nSpalten = tabelle.rows[0].cells.length - 1;
-      const neinzellasten = nZeilen
-      const pointload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-      for (i = 0; i < nZeilen; i++) {
-          for (j = 0; j < nSpalten; j++) {
-              let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-              pointload[i][j] = child.value
-          }
-      }
-
-      el = document.getElementById('id_temperaturlasten_tabelle') as HTMLElement;
-      tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-      nZeilen = tabelle.rows.length - 1;
-      nSpalten = tabelle.rows[0].cells.length - 1;
-      const ntemperaturlasten = nZeilen
-      const tempload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-      for (i = 0; i < nZeilen; i++) {
-          for (j = 0; j < nSpalten; j++) {
-              let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-              tempload[i][j] = child.value
-          }
-      }
-
-      el = document.getElementById('id_vorspannungen_tabelle') as HTMLElement;
-      tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-      nZeilen = tabelle.rows.length - 1;
-      nSpalten = tabelle.rows[0].cells.length - 1;
-      const nvorspannungen = nZeilen
-      const sigvload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-      for (i = 0; i < nZeilen; i++) {
-          for (j = 0; j < nSpalten; j++) {
-              let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-              sigvload[i][j] = child.value
-          }
-      }
-
-      el = document.getElementById('id_spannschloesser_tabelle') as HTMLElement;
-      tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-      nZeilen = tabelle.rows.length - 1;
-      nSpalten = tabelle.rows[0].cells.length - 1;
-      const nspannschloesser = nZeilen
-      const spannload = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-      for (i = 0; i < nZeilen; i++) {
-          for (j = 0; j < nSpalten; j++) {
-              let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-              spannload[i][j] = child.value
-          }
-      }
-
-      el = document.getElementById('id_stabvorverfomungen_tabelle') as HTMLElement;
-      tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-      nZeilen = tabelle.rows.length - 1;
-      nSpalten = tabelle.rows[0].cells.length - 1;
-      const nStabvorverfomungen = nZeilen
-      const stabvorverformung = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-      for (i = 0; i < nZeilen; i++) {
-          for (j = 0; j < nSpalten; j++) {
-              let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-              stabvorverformung[i][j] = child.value
-          }
-      }
-  */
     el = document.getElementById("id_lastfaelle_tabelle") as HTMLElement;
     let tabelle = el?.shadowRoot?.getElementById("mytable") as HTMLTableElement;
     let nZeilen = tabelle.rows.length - 1;
@@ -849,41 +717,6 @@ export function str_inputToJSON() {
         }
     }
 
-    /*
-      el = document.getElementById('id_nnodedisps_tabelle_gui') as HTMLElement;
-      tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-      nZeilen = tabelle.rows.length - 1;
-      nSpalten = tabelle.rows[0].cells.length - 1;
-      const nNodeDisps = nZeilen
-      const nodeDisp0 = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-      for (i = 0; i < nZeilen; i++) {
-          for (j = 0; j < nSpalten; j++) {
-              let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-              nodeDisp0[i][j] = child.value
-              console.log("i,j", i, j, child.value)
-              if (j === 1) {
-                  let lf = +child.value
-                  set_max_lastfall(lf);  // Fall tritt ein, wenn noch nicht gerechnet wurde
-              }
-          }
-      }
-
-
-              el = document.getElementById('id_knotenmassen_tabelle') as HTMLElement;
-              tabelle = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-              nZeilen = tabelle.rows.length - 1;
-              nSpalten = tabelle.rows[0].cells.length - 1;
-              const nnodalmass = nZeilen
-              const nodalmass = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-              for (i = 0; i < nZeilen; i++) {
-                  for (j = 0; j < nSpalten; j++) {
-                      let child = tabelle.rows[i + 1].cells[j + 1].firstElementChild as HTMLInputElement;
-                      nodalmass[i][j] = child.value
-                  }
-              }
-          */
     let qsClassName = new Array(nQuerschnittSets);
     let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(18));
 
@@ -909,23 +742,15 @@ export function str_inputToJSON() {
         created_by: "d2beam-gui",
         version: 1,
 
-        // 'unit_length': current_unit_length,
         system: system,
         dateiname: currentFilename,
-        // 'nnodes': n_nodes,
-        // 'nelem': n_elem,
-        // 'nloads': nloads,
-        // 'nstreckenlasten': nstreckenlasten,
-        // 'neinzellasten': neinzellasten,
-        // 'ntempload': ntemperaturlasten,
-        // 'nvorspannungen': nvorspannungen,
-        // 'nspannschloesser': nspannschloesser,
+
         nloadcases: nlastfaelle,
         ncombinations: nkombinationen,
         nquerschnittsets: nQuerschnittSets,
-        // 'nstabvorverfomungen': nStabvorverfomungen,
         nelteilungen: nelTeilungen,
         einheit_kraft: einheit_kraft,
+        einheit_bemassung: einheit_bemassung,
         n_iter: n_iterationen,
         THIIO_flag: THIIO_flag,
         matprop_flag: matprop_flag,
@@ -933,13 +758,11 @@ export function str_inputToJSON() {
         maxU_dir: maxU_dir,
         maxU_schief: maxU_schief,
         neigv: neigv,
-        //nNodeDisps: nNodeDisps,
         P_delta: P_delta,
         ausgabe_SG: ausgabe_SG,
         epsDisp_tol: epsDisp_tol,
         epsForce_tol: epsForce_tol,
         stadyn: stadyn,
-        // 'nnodalmass': nnodalmass,
         dyn_neigv: dyn_neigv,
         eig_solver: eig_solver,
         niter_neigv: niter_neigv,
@@ -960,16 +783,6 @@ export function str_inputToJSON() {
         maxBettung: maxBettung,
         minMass: min_mass,
 
-        // 'elem': elem,
-        // 'koppelfedern': koppelfedern,
-        // 'node': node,
-        // 'nodalLoad': nodalload,
-        // 'streckenlasten': linload,
-        // 'einzellasten': pointload,
-        // 'tempLoad': tempload,
-        // 'sigvload': sigvload,
-        // 'spannload': spannload,
-        // 'stabvorverformung': stabvorverformung,
         loadcases: lastfaelle,
         combination: kombination,
         qsclassname: qsClassName,
@@ -977,14 +790,11 @@ export function str_inputToJSON() {
         cadNodes: CADNodes,
         elements: elements,
         max_value_lasten: max_value_lasten,
-        // nodeDisp0: nodeDisp0,
-        // 'nodalmass': nodalmass
+
     };
 
     return JSON.stringify(polyData);
 }
-
-//document.getElementById('readFile').addEventListener('click', initFileSelect_read, false);
 
 export function addListener_filesave() {
     document.getElementById("readFile")?.addEventListener("click", filedialog_read, false);

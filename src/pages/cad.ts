@@ -132,6 +132,9 @@ export function set_show_units(wert: boolean) {
    }
 }
 
+export let einheit_bemassung = 'm'
+export function set_einheit_bemassung(wert: string) { einheit_bemassung = wert; }
+
 class CPointer {
    id = -1
    isPrimary = false;
