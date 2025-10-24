@@ -352,7 +352,7 @@ export function cad_buttons() {
 
   esc_button.value = "ESC";
   esc_button.className = "btn";
-  esc_button.innerHTML = 'ESC';
+  esc_button.innerHTML = 'esc';
   esc_button.addEventListener("click", click_ESC_cad);
   esc_button.title = "aktuelle Aktion beenden";
   esc_button.id = "id_button_ESC_cad"
