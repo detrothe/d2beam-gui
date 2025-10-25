@@ -81,7 +81,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.6.5, 24-Oktober-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.6.5, 25-Oktober-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -2009,7 +2009,7 @@ function elementTabelle_bettung_anzeigen(check: boolean) {
 function show_video() {
   //-------------------------------------------------------------------------------------------------------------
 
-  window.open('https://d2beam-gui.statikverstehen.de/videos/videos.html', '_blank');
+  window.open('https://d2beam-gui.statikverstehen.de/videos/videos.html', '_blank','noopener');
 }
 
 //---------------------------------------------------------------------------------------------------------------
