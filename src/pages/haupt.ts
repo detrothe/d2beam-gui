@@ -81,7 +81,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.6.5, 27-Oktober-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.6.6, 29-Oktober-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -112,7 +112,7 @@ let width_def_d2beam = 400;
 export let currentFilename = 'empty';
 
 export const app = {
-  appName: 'd2beam',
+  appName: 'd2beam-gui',
   browserLanguage: 'de',
   file: {
     handle: null,

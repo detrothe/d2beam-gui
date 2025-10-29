@@ -2242,13 +2242,13 @@ async function calculate() {
                 for (let ieload = 0; ieload < neloads; ieload++) {
 
                     if ((eload[ieload].art === 8) && (eload[ieload].lf === iLastfall)) {
-                        console.log("VORDEFINIERTE VERFORMUNGEN", eload[ieload].ieq0)
+                        // console.log("VORDEFINIERTE VERFORMUNGEN", eload[ieload].ieq0)
 
                         for (let k = 0; k < 3; k++) {
 
                             if (eload[ieload].ieq0[k] >= 0) {
                                 let ieq = eload[ieload].ieq0[k]
-                                console.log("I E Q ", ieq)
+                                // console.log("I E Q ", ieq)
                                 for (i = 0; i < neq; i++) {
                                     stiff[i][ieq] = 0.0   // Spalte streichen
                                     stiff[ieq][i] = 0.0   // Zeile streichen
@@ -3553,7 +3553,7 @@ export function show_gleichungssystem(checked: boolean) {
 
     const elem_darstellen = document.getElementById('id_element_darstellen') as HTMLSelectElement;
     let draw_element = Number(elem_darstellen.value)
-    console.log("§§§§§§§§§§§§§§§ draw_element", draw_element)
+    // console.log("§§§§§§§§§§§§§§§ draw_element", draw_element)
 
     const eq_div = document.getElementById('id_gleichungssystem') as HTMLDivElement
 

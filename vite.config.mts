@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-import htmlMinifier from 'vite-plugin-html-minifier'
+import htmlMinifier from 'vite-plugin-html-minifier';
 
 // https://vitejs.dev/config/
 export default defineConfig({
