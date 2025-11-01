@@ -718,7 +718,7 @@ export function str_inputToJSON() {
     }
 
     let qsClassName = new Array(nQuerschnittSets);
-    let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(18));
+    let qsWerte = Array.from(Array(nQuerschnittSets), () => new Array(19));
 
     for (i = 0; i < nQuerschnittSets; i++) {
         console.log("get_querschnitt_length", get_querschnitt_length(i));
@@ -733,14 +733,14 @@ export function str_inputToJSON() {
         obj.two_obj = null;
         elements.push(obj);
         zuruec = elements[i];
-        console.log("zuruec", zuruec);
+        console.log("zurueck", zuruec);
     }
 
     if (max_Lastfall === 0) set_max_lastfall(1);
 
     let polyData = {
         created_by: "d2beam-gui",
-        version: 1,
+        version: 2,
 
         system: system,
         dateiname: currentFilename,

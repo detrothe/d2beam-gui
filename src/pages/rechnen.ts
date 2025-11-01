@@ -276,6 +276,7 @@ export class TElement {
     schubfaktor: number = 0.833
     gmodul: number = 0.0
     dicke: number = 0.0
+    faktor_dehn = 1.0
     k_0 = 0.0                          // Bettungsmodul nach Winkler
     x1: number = 0.0
     x2: number = 0.0
@@ -1651,7 +1652,8 @@ export function init_tabellen() {
             querdehnzahl,
             zso,
             alphaT,
-            0, 0, 0, 0, 0
+            0, 0, 0, 0, 0,
+            1.0
         );
 
         add_new_cross_section(qname, id);
@@ -2019,7 +2021,7 @@ async function calculate() {
     console.log("Anzahl Gleichungen: ", neq)
 
     let emodul: number = 0.0, ks: number = 0.0, wichte: number = 0.0, definedQuerschnitt = 1
-    let querdehnzahl: number = 0.3, schubfaktor: number = 0.833, zso: number = 0.0, alphaT = 0.0
+    let querdehnzahl: number = 0.3, schubfaktor: number = 0.833, zso: number = 0.0, alphaT = 0.0, faktor_dehn = 1.0
     let nfiber: number = 2, maxfiber: number = 5, offset_abstand: number = 0.0, height: number = 0.0, width = 0.0
     let Iy: number = 0.0, area: number = 0.0, b: number;
     let lmj: number = 0, nod1: number, nodi: number
@@ -2061,6 +2063,7 @@ async function calculate() {
             schubfaktor = querschnittset[index].schubfaktor
             zso = querschnittset[index].zso / 100.0   // von cm in m
             alphaT = querschnittset[index].alphaT
+            faktor_dehn = querschnittset[index].faktor_dehn;
 
             nfiber = 2
             maxfiber = 3 * (nfiber - 1)
@@ -2091,8 +2094,10 @@ async function calculate() {
                 el.push(new CTruss());
                 el[ielem].stabtyp = element[ielem].elTyp;
             }
-            else el.push(new CTimoshenko_beam());
-
+            else {
+                el.push(new CTimoshenko_beam());
+                el[ielem].faktor_dehn = faktor_dehn;
+            }
         } else {
             el.push(new CTruss());
             el[ielem].stabtyp = element[ielem].elTyp;

@@ -359,6 +359,11 @@ export class drRechteckQuerSchnitt extends LitElement {
                      <td><input id="alpha_t" type="text" value="1.e-5" /></td>
                      <td>&nbsp;[1/K]</td>
                   </tr>
+                  <tr>
+                     <td>Faktor Dehnsteifigkeit:</td>
+                     <td><input id="id_fakt_dehn" type="number" value="1.0" /></td>
+                     <td>&nbsp;[-]</td>
+                  </tr>
                </tbody>
             </table>
 

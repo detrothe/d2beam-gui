@@ -35,6 +35,7 @@ class TQuerschnitt {
     alphaT: number = 0.0
     querdehnzahl: number = 0.0
     schubfaktor: number = 0.0
+    faktor_dehn = 1.0
 
     model: number = 1
     definedQuerschnitt: number = 1
@@ -321,7 +322,7 @@ export function opendialog(ev: any) {
         //let emodul: number = 0, Iy: number = 0, area: number = 0, height: number = 0, bettung: number = 0, wichte: number = 0;
 
         const [qname, id0, emodul, Iy, area, height, width, definedQuerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT,
-            flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe] = get_querschnittRechteck(index);
+            flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn] = get_querschnittRechteck(index);
 
         //if (id0 !== id) console.log("BIG Problem in opendialog");
 
@@ -356,6 +357,9 @@ export function opendialog(ev: any) {
         console.log("myformat", alphaT, "|", myFormat(Number(alphaT), 1, 6, 1), "|", String(myFormat(Number(alphaT), 1, 6, 1)));
         //    elem.value = String(alphaT);
         elem.value = wert;
+
+        elem = el?.shadowRoot?.getElementById("id_fakt_dehn") as HTMLInputElement;
+        elem.value = String(faktor_dehn);
 
         elem = (el?.shadowRoot?.getElementById("id_TQ_flanschbreite") as HTMLInputElement);
         elem.value = String(flanschbreite);
@@ -483,6 +487,8 @@ export function dialog_querschnitt_closed(_e: any) {
             const zso = +elem.value.replace(/,/g, ".");
             elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
             const alphaT = +elem.value.replace(/,/g, ".");
+            elem = el?.shadowRoot?.getElementById("id_fakt_dehn") as HTMLInputElement;
+            const faktor_dehn = +elem.value.replace(/,/g, ".");
             //console.log("dialog_querschnitt_closed",elem.value,alphaT)
 
             let flanschbreite = Number((el?.shadowRoot?.getElementById('id_TQ_flanschbreite') as HTMLInputElement).value.replace(/,/g, "."));
@@ -495,10 +501,10 @@ export function dialog_querschnitt_closed(_e: any) {
                 incr_querschnittSets();
 
                 set_querschnittRechteck(qname, id, emodul, Iy, area, height, width, defquerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT,
-                    flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe);
+                    flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn);
             } else {
                 update_querschnittRechteck(dialog_querschnitt_index, qname, id, emodul, Iy, area, height, width, defquerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT,
-                    flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe);
+                    flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn);
 
                 // Name des Querschnitts in Querschnitts-tree (tab Querschnitte) ändern
                 const el = document.getElementById(dialog_querschnitt_item_id) as HTMLElement;
@@ -554,7 +560,7 @@ export function dialog_querschnitt_closed(_e: any) {
 //---------------------------------------------------------------------------------------------------------------
 export function set_querschnittRechteck(name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number,
     definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number,
-    flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number) {
+    flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number, faktor_dehn: number) {
     //-----------------------------------------------------------------------------------------------------------
 
     const index = nQuerschnittSets - 1;
@@ -579,6 +585,8 @@ export function set_querschnittRechteck(name: string, id: string, emodul: number
     (querschnittset[index] as TQuerschnittRechteck).stegbreite_unten = stegbreite_unten;
     (querschnittset[index] as TQuerschnittRechteck).steghoehe = steghoehe;
 
+    (querschnittset[index] as TQuerschnittRechteck).faktor_dehn = faktor_dehn;
+
     console.log("set_querschnittRechteck", index, emodul)
 }
 
@@ -586,7 +594,7 @@ export function set_querschnittRechteck(name: string, id: string, emodul: number
 //---------------------------------------------------------------------------------------------------------------
 export function update_querschnittRechteck(index: number, name: string, id: string, emodul: number, Iy: number, area: number,
     height: number, width: number, definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number,
-    flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number) {
+    flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number, faktor_dehn: number) {
     //-----------------------------------------------------------------------------------------------------------
 
     querschnittset[index].name = name;
@@ -602,6 +610,7 @@ export function update_querschnittRechteck(index: number, name: string, id: stri
     (querschnittset[index] as TQuerschnittRechteck).querdehnzahl = querdehnzahl;
     (querschnittset[index] as TQuerschnittRechteck).zso = zso;
     (querschnittset[index] as TQuerschnittRechteck).alphaT = alphaT;
+    (querschnittset[index] as TQuerschnittRechteck).faktor_dehn = faktor_dehn;
 
     (querschnittset[index] as TQuerschnittRechteck).flanschbreite = flanschbreite;
     (querschnittset[index] as TQuerschnittRechteck).flanschhoehe = flanschhoehe;
@@ -618,7 +627,7 @@ export function get_querschnittRechteck(index: number) {
 
     let name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number, definedQuerschnitt: number, wichte: number
     let schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number
-    let flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number
+    let flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number, faktor_dehn: number
 
     console.log("index", index)
     name = querschnittset[index].name;
@@ -634,6 +643,7 @@ export function get_querschnittRechteck(index: number) {
     querdehnzahl = querschnittset[index].querdehnzahl;
     zso = querschnittset[index].zso;
     alphaT = querschnittset[index].alphaT;
+    faktor_dehn = querschnittset[index].faktor_dehn;
     flanschbreite = (querschnittset[index] as TQuerschnittRechteck).flanschbreite
     flanschhoehe = (querschnittset[index] as TQuerschnittRechteck).flanschhoehe
     stegbreite_oben = (querschnittset[index] as TQuerschnittRechteck).stegbreite_oben
@@ -643,7 +653,7 @@ export function get_querschnittRechteck(index: number) {
     console.log("get_querschnittRechteck", index, emodul)
 
     return [name, id, emodul, Iy, area, height, width, definedQuerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT,
-        flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe]
+        flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn]
 }
 
 
@@ -654,7 +664,7 @@ export function add_rechteck_querschnitt(werte: any[]) {
 
     console.log('add_rechteck_querschnitt wert', werte)
 
-    let flanschbreite = 0, flanschhoehe = 0, stegbreite_oben = 0, stegbreite_unten = 0, steghoehe = 0;
+    let flanschbreite = 0, flanschhoehe = 0, stegbreite_oben = 0, stegbreite_unten = 0, steghoehe = 0, faktor_dehn = 1.0;
 
     incr_querschnittSets();
 
@@ -679,6 +689,9 @@ export function add_rechteck_querschnitt(werte: any[]) {
         stegbreite_unten = werte[16]
         steghoehe = werte[17]
     }
+    if (werte.length >= 19) {
+        faktor_dehn = werte[18]
+    }
 
     set_querschnittRechteck(
         qname,
@@ -694,7 +707,8 @@ export function add_rechteck_querschnitt(werte: any[]) {
         querdehnzahl,
         zso,
         alphaT,
-        flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe
+        flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe,
+        faktor_dehn
     );
 
     add_new_cross_section(qname, id);

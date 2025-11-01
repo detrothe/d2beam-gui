@@ -26,6 +26,7 @@ export class CTimoshenko_beam extends CElement {
     k_0 = 0.0           // Bettungsmodul nach Winkler in kN/m²
     wichte = 0.0
     stabgewicht = 0.0   // Area * Wichte
+    faktor_dehn = 1.0;
     ks = 0.0
     Iy = 0.0
     area = 0.0
@@ -546,7 +547,7 @@ export class CTimoshenko_beam extends CElement {
         const L3 = L2 * sl
 
         let area_s: number
-        let EAL = this.emodul * this.area / sl
+        let EAL = this.emodul * this.area / sl * this.faktor_dehn
         const EI = this.emodul * this.Iy
         this.gmodul = this.emodul / 2.0 / (1.0 + this.querdehnzahl)
 
@@ -1244,8 +1245,8 @@ export class CTimoshenko_beam extends CElement {
             eload[ieload].eps_Ts = this.alphaT * ((eload[ieload].Tu - eload[ieload].To) * this.zso / this.h + eload[ieload].To)
             //console.log("Temperatur", this.alphaT, eload[ieload].Tu, eload[ieload].To, this.h, this.emodul * this.area)
 
-            eload[ieload].re[0] = this.emodul * this.area * eload[ieload].eps_Ts
-            eload[ieload].re[3] = -this.emodul * this.area * eload[ieload].eps_Ts
+            eload[ieload].re[0] = this.emodul * this.area * eload[ieload].eps_Ts * this.faktor_dehn
+            eload[ieload].re[3] = -this.emodul * this.area * eload[ieload].eps_Ts * this.faktor_dehn
 
             eload[ieload].re[1] = 0.0
             eload[ieload].re[4] = 0.0
@@ -1335,8 +1336,8 @@ export class CTimoshenko_beam extends CElement {
 
         else if (eload[ieload].art === 9) {              // zentrische Vorspannung
 
-            eload[ieload].re[0] = -this.area * eload[ieload].sigmaV
-            eload[ieload].re[3] = this.area * eload[ieload].sigmaV
+            eload[ieload].re[0] = -this.area * eload[ieload].sigmaV * this.faktor_dehn
+            eload[ieload].re[3] = this.area * eload[ieload].sigmaV * this.faktor_dehn
 
             eload[ieload].re[1] = 0.0
             eload[ieload].re[4] = 0.0
@@ -1345,8 +1346,8 @@ export class CTimoshenko_beam extends CElement {
         }
         else if (eload[ieload].art === 10) {              // Spannschloss
 
-            eload[ieload].re[0] = -this.emodul * this.area * eload[ieload].delta_s / sl
-            eload[ieload].re[3] = this.emodul * this.area * eload[ieload].delta_s / sl
+            eload[ieload].re[0] = -this.emodul * this.area * eload[ieload].delta_s / sl * this.faktor_dehn
+            eload[ieload].re[3] = this.emodul * this.area * eload[ieload].delta_s / sl * this.faktor_dehn
 
             eload[ieload].re[1] = 0.0
             eload[ieload].re[4] = 0.0
@@ -1651,7 +1652,7 @@ export class CTimoshenko_beam extends CElement {
         let edispG: number[] = Array(6).fill(0.0)
 
         let EI = this.emodul * this.Iy
-        let EA = this.emodul * this.area
+        let EA = this.emodul * this.area * this.faktor_dehn
 
         //console.log("________________________________________________________________")
         //console.log("class element: berechneElementSchnittgroessen von ", ielem, iLastf)
@@ -2108,7 +2109,7 @@ export class CTimoshenko_beam extends CElement {
                                 if (this.aR > 0.0) {
                                     this.u_starr[iLastf][1] += this.cosinus * edisp0[3] - this.sinus * edisp0[4]
                                     this.w_starr[iLastf][1] += this.sinus * edisp0[3] + this.cosinus * edisp0[4]
-                                    this.phi_starr[iLastf][1] +=  edisp0[5]
+                                    this.phi_starr[iLastf][1] += edisp0[5]
                                 }
                             }
                         }
