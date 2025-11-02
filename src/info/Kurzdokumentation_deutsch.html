@@ -112,18 +112,22 @@
 	<p>
 		Mit dieser Webanwendung können ebene Stab- und Fachwerke mit der Methode der finiten Elemente analysiert werden.
 		Es bestehen Berechnungsoptionen für statische und dynamische Analysen zur Verfügung, [1], [2], [3].
-		Statische Berechnungen können nach Theorie I. und II. Ordnung berechnet werden. Bei dynamischen Berechnungen können zur Zeit Eigenwerte und Eigenformen bestimmt werden.
-		Das Stabelement mit Namen d2beam (Typ 0) kann Schubverformungen nach der Theorie von Timoshenko berücksichtigen. Der Fachwerkstab ist ein klassisches 2-knotiges Element.
-		 Ausgangspunkt für das Element d2beam ist ein 4-knotiges gerades schubweiches
+		Statische Berechnungen können nach Theorie I. und II. Ordnung berechnet werden. Bei dynamischen Berechnungen
+		können zur Zeit Eigenwerte und Eigenformen bestimmt werden.
+		Das Stabelement mit Namen d2beam (Typ 0) kann Schubverformungen nach der Theorie von Timoshenko berücksichtigen.
+		Der Fachwerkstab ist ein klassisches 2-knotiges Element.
+		Ausgangspunkt für das Element d2beam ist ein 4-knotiges gerades schubweiches
 		Balkenelement [1], dessen innere Knoten kondensiert werden, so dass der Anwender mit einem 2-knotigem Element
 		arbeitet. Für Berechnungen nach Theorie I.Ordnung entsprechen die Elementmatrizen der Lösung, die man auch mit
 		der Differentialgleichung für den Timoshenkobalken erhält. Die Ergebnisse sind in diesem Fall also exakt.
 	</p>
 
-	<p>Nach Klicken des Buttons 'neue Eingabe beginnen' besteht die Auswahl zwischen der Berechnung eines Stabwerks oder eines reinen Fachwerks.
-		 Die Wahl 'Fachwerk' vereinfacht die Eingabe
-		 bei Fachwerken. Natürlich können mit den Stabwerkselementen auch Fachwerke berechnet werden, wenn man Momentengelenke für die
-		 Stäbe eingibt.
+	<p>Nach Klicken des Buttons 'neue Eingabe beginnen' besteht die Auswahl zwischen der Berechnung eines Stabwerks oder
+		eines reinen Fachwerks.
+		Die Wahl 'Fachwerk' vereinfacht die Eingabe
+		bei Fachwerken. Natürlich können mit den Stabwerkselementen auch Fachwerke berechnet werden, wenn man
+		Momentengelenke für die
+		Stäbe eingibt.
 
 		<br> Die Elemente haben einen Anfangs- und Endknoten, die mit a und e, bzw. 1 und 2 bezeichnet werden.
 	</p>
@@ -181,134 +185,143 @@
 		<a href="#">Grafische Eingabe</a>
 	</h2>
 
-<p>Die Eingabe des statischen Systems erfolgt im Tab System. Je nach vorhandener Hardware kann mit der Maus, dem Stift
-	oder dem Finger eingegeben werden.
-</p>
-<p>
+	<p>Die Eingabe des statischen Systems erfolgt im Tab System. Je nach vorhandener Hardware kann mit der Maus, dem
+		Stift
+		oder dem Finger eingegeben werden.
+	</p>
+	<p>
 
-	Folgenden Punkte sind bei der Eingabe zu beachten:
-<ul>
-	<li>Die Querschnitte werden im Tab Querschnitte definiert. Mindestens ein Querschnitt muss vor der Eingabe der
-		Stäbe erstellt werden.
-		Änderungen sind nachträglich in diesem Tab möglich.
-	</li>
-	<li>
-		Bei Berechnungen nach Theorie II. Ordung werden nur Kombinationen der Lastfälle berechnet, die vor der
-		Berechnung im Tab Kombinationen
-		definiert werden müssen.
-	</li>
-	<li>Die grafische Eingabe des Systems findet im Tab System statt.</li>
-	<li>
-		Die eigentliche Berechnung wird im Tab Haupt gestartet. Nach erfolgreicher Berechnung können im Tab Ergebnisse
-		die Verformungen,
-		Schnittgrößen etc. dargestellt werden.
-	</li>
-</ul>
-</p>
-<p> <b>Erläuterungen zu den Icons im Tab System</b></p>
-<p>
-	<img src="/assets/gui-icons/undo.png" name="undo" title="undo button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Undo Button: Löscht das zuletzt erstellte Element (Knoten, Stab, Lager, Knotenlast oder Elementlast)
-	und speichert es im internen Papierkorb.
-</p>
-<p>
-	<img src="/assets/gui-icons/redo.png" name="redo" title="redo button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Redo Button: Holt das zuletzt in den Papierkorb gestellte Element zurück.
-</p>
-<p>
-	<img src="/assets/gui-icons/loeschen.png" name="loeschen" title="löschen button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Löschen Button: Löscht ein anzuklickendes Element und speichert es im internen Papierkorb.
-</p>
-<p>
-	<img src="/assets/gui-icons/select.png" name="select" title="select button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Select Button: Es ist ein vorhandenes Element anzuklicken. Danach erscheint ein Dialog, in dem Änderungen
-	vorgenommen werdn können.
-</p>
-<p>
-	<img src="/assets/gui-icons/knoten.png" name="knoten" title="knoten button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Knoten Button: Eingabe von Knotenkoordinaten (x,z) mithilfe eines Dialogs. Hinweis: Die Eingabe von Knoten ist nur
-	erforderlich, wenn ein Stabknoten nicht in die Schnittpunkte der Rasterlinien fällt.
-</p>
-<p>
-	<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Edit Knoten Button: Die Koordinaten (x,z) von vorhandenen Knoten können hier geändert werden.
-</p>
-<p>
-	<img src="/assets/gui-icons/lager.png" name="lager" title="lager button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Lager Button: Eingabe von Lagern. Hinweis: Lager können nur an vorhandene Knoten gesetzt werden.
-</p>
-<p>
-	<img src="/assets/gui-icons/einstellungen.png" name="einstellungen" title="einstellungen button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Einstellungen Button: Hier können Einstellungen vorgenommen werden, die für die grafische Eingabe nützlich sind.
-</p>
-<p>
-	<img src="/assets/gui-icons/reset.png" name="reset" title="reset button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Reset Button: Das System wird neu gezeichnet. Zoom und Drag werden zurückgesetzt.
-</p>
-<p>
-	<img src="/assets/gui-icons/default_querschnitt.png" name="default_querschnitt" title="default_querschnitt combobox"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Default_Querschnitt Combobox: Der angezeigte Querschnittsname wird bei der nächsten Stabeingabe verwendet. Es können im Tab
-	Querschnitte beliebig viele Querschnitte definiert werden.
-</p>
-<p>
-	<img src="/assets/gui-icons/stab.png" name="stab" title="stab button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Stab Button: Ein Stab wird durch Anfangs- und Endknoten definiert. Es gelten folgende Fangregeln: Zuerst wird innerhalb der
-	Fangweite (Die Längen der Cursorlinien zeigen die Fangweite an) ein mit dem Knoten Button eingegebener Knoten gesucht. Wird nichts
-	gefunden, dann werden die blauen Rasterpunkte verwendet. Wird auch hier nichts innerhalb der Fangweite gefunden, dann gilt die
-	aktuelle Stelle des Cursors.
-</p>
-<p>
-	<img src="/assets/gui-icons/knotenlast.png" name="knotenlast" title="knotenlast button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Knotenlast Button: Eingabe von Knotenlasten. Hinweis: Knotenlasten können nur an vorhandene Knoten gesetzt werden.
-</p>
-<p>
-	<img src="/assets/gui-icons/elementlast.png" name="elementlast" title="element button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Elementlast Button: Eingabe von Stablasten. Hinweis: Stablasten können nur auf vorhandene Stäbe wirken.
-</p>
-<p>
-	<img src="/assets/gui-icons/knotenmasse.png" name="knotenmasse" title="knotenmasse button"
-		style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-	Knotenmasse Button: Eingabe von Knotenmassen und Massenträgheitsmomenten. Hinweis: Knotenmassen können nur an vorhandene Knoten gesetzt werden.
-	Sie werden nur berücksichtigt, wenn die Berechnungsart <i>dynamisch</i> im Tab Haupt gewählt wurde.
-</p>
+		Folgenden Punkte sind bei der Eingabe zu beachten:
+	<ul>
+		<li>Die Querschnitte werden im Tab Querschnitte definiert. Mindestens ein Querschnitt muss vor der Eingabe der
+			Stäbe erstellt werden.
+			Änderungen sind nachträglich in diesem Tab möglich.
+		</li>
+		<li>
+			Bei Berechnungen nach Theorie II. Ordung werden nur Kombinationen der Lastfälle berechnet, die vor der
+			Berechnung im Tab Kombinationen
+			definiert werden müssen.
+		</li>
+		<li>Die grafische Eingabe des Systems findet im Tab System statt.</li>
+		<li>
+			Die eigentliche Berechnung wird im Tab Haupt gestartet. Nach erfolgreicher Berechnung können im Tab
+			Ergebnisse
+			die Verformungen,
+			Schnittgrößen etc. dargestellt werden.
+		</li>
+	</ul>
+	</p>
+	<p> <b>Erläuterungen zu den Icons im Tab System</b></p>
+	<p>
+		<img src="/assets/gui-icons/undo.png" name="undo" title="undo button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Undo Button: Löscht das zuletzt erstellte Element (Knoten, Stab, Lager, Knotenlast oder Elementlast)
+		und speichert es im internen Papierkorb.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/redo.png" name="redo" title="redo button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Redo Button: Holt das zuletzt in den Papierkorb gestellte Element zurück.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/loeschen.png" name="loeschen" title="löschen button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Löschen Button: Löscht ein anzuklickendes Element und speichert es im internen Papierkorb.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/select.png" name="select" title="select button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Select Button: Es ist ein vorhandenes Element anzuklicken. Danach erscheint ein Dialog, in dem Änderungen
+		vorgenommen werdn können.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/knoten.png" name="knoten" title="knoten button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Knoten Button: Eingabe von Knotenkoordinaten (x,z) mithilfe eines Dialogs. Hinweis: Die Eingabe von Knoten ist
+		nur
+		erforderlich, wenn ein Stabknoten nicht in die Schnittpunkte der Rasterlinien fällt.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Edit Knoten Button: Die Koordinaten (x,z) von vorhandenen Knoten können hier geändert werden.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/lager.png" name="lager" title="lager button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Lager Button: Eingabe von Lagern. Hinweis: Lager können nur an vorhandene Knoten gesetzt werden.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/einstellungen.png" name="einstellungen" title="einstellungen button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Einstellungen Button: Hier können Einstellungen vorgenommen werden, die für die grafische Eingabe nützlich sind.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/reset.png" name="reset" title="reset button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Reset Button: Das System wird neu gezeichnet. Zoom und Drag werden zurückgesetzt.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/default_querschnitt.png" name="default_querschnitt"
+			title="default_querschnitt combobox"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Default_Querschnitt Combobox: Der angezeigte Querschnittsname wird bei der nächsten Stabeingabe verwendet. Es
+		können im Tab
+		Querschnitte beliebig viele Querschnitte definiert werden.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/stab.png" name="stab" title="stab button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Stab Button: Ein Stab wird durch Anfangs- und Endknoten definiert. Es gelten folgende Fangregeln: Zuerst wird
+		innerhalb der
+		Fangweite (Die Längen der Cursorlinien zeigen die Fangweite an) nach bereits vorhandenen Knoten
+		gesucht und der am nächsten zum Cursorkreuz liegende Knoten verwendet. Wird nichts
+		gefunden, dann werden die blauen Rasterpunkte verwendet. Wird auch hier nichts innerhalb der Fangweite gefunden,
+		dann gilt die aktuelle Stelle des Cursors, gerundet auf 1 mm.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/knotenlast.png" name="knotenlast" title="knotenlast button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Knotenlast Button: Eingabe von Knotenlasten. Hinweis: Knotenlasten können nur an vorhandene Knoten gesetzt
+		werden.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/elementlast.png" name="elementlast" title="element button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Elementlast Button: Eingabe von Stablasten. Hinweis: Stablasten können nur auf vorhandene Stäbe wirken.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/knotenmasse.png" name="knotenmasse" title="knotenmasse button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+		Knotenmasse Button: Eingabe von Knotenmassen und Massenträgheitsmomenten. Hinweis: Knotenmassen können nur an
+		vorhandene Knoten gesetzt werden.
+		Sie werden nur berücksichtigt, wenn die Berechnungsart <i>dynamisch</i> im Tab Haupt gewählt wurde.
+	</p>
 
 
-<p>
-	<br /><br />
-</p>
+	<p>
+		<br /><br />
+	</p>
 
 	<h2 class="western" id="vorzeichen">
 		<a href="#">Koordinatensystem und Vorzeichen</a>
 	</h2>
 
 	<img src="/assets/def_d2beam.png" name="definition_d2beam" title="Definition Stabelement d2beam"
-			style="max-width:100%; width:400px; height:auto; border:0px; margin: auto; display: block;" />
-			<p style="text-align: center;">Stabelement d2beam mit starren Enden und Gelenken</p>
+		style="max-width:100%; width:400px; height:auto; border:0px; margin: auto; display: block;" />
+	<p style="text-align: center;">Stabelement d2beam mit starren Enden und Gelenken</p>
 
 	<img src="/assets/vorzeichen_lager_notxt.png" name="vorzeichen_lager" title="Vorzeichen Lager"
-			style="max-width:100%; width:209px; height:auto; border:0px; margin: auto; display: block;" />
-			<p style="text-align: center;">Lagerkräfte am gedrehten Lager</p>
+		style="max-width:100%; width:209px; height:auto; border:0px; margin: auto; display: block;" />
+	<p style="text-align: center;">Lagerkräfte am gedrehten Lager</p>
 
 	<img src="/assets/gedrehtes_lager_notxt.png" name="gedrehtes_lager" title="gedrehtes Lager"
-			style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;" />
-			<p style="text-align: center;">starres Lager gedreht</p>
+		style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;" />
+	<p style="text-align: center;">starres Lager gedreht</p>
 
 	<img src="/assets/definition_federn.png" name="definition_federn" title="Definition Federn"
-			style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;" />
-			<p style="text-align: center;">Lagerfedern gedreht</p>
+		style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;" />
+	<p style="text-align: center;">Lagerfedern gedreht</p>
 
 
 
@@ -393,12 +406,16 @@
 		<li><b>Lagerkräfte anzeigen:</b> Darstellung der berechneten Lagerkräfte und Symbole.</li>
 		<li><b>Umriss anzeigen:</b> Die eingegebenen Querschnittshöhen der Stäbe werden bei der Darstellung
 			verwendet.</li>
-		<li><b>Gesamtverformung:</b> Nur bei Th. II. Ordnung. Normalerweise werden die relativen Verformungen angezeigt. Wenn die Option gewählt wird, dann werden die Vorverformungen
+		<li><b>Gesamtverformung:</b> Nur bei Th. II. Ordnung. Normalerweise werden die relativen Verformungen angezeigt.
+			Wenn die Option gewählt wird, dann werden die Vorverformungen
 			zu den relativen Verformungen addiert.</li>
-		<li><b>Gleichgewicht SG:</b> Nur bei Th. II. Ordnung. Wenn diese Option gewählt wird, dann werden die Schnittgrößen entlang des Stabes in den Richtungen
-			 des lokalen Koordinatensystens des unverformten Systems angezeigt (Gleichgewichtsschnittgrößen).
-				Wenn die Option nicht ausgewählt ist, dann werden die Gleichgewichtsschnittgrößen N und V<sub>z</sub> in die Richtung des gedrehten Querschnitts transformiert. Diese werden auch als
-			Nachweisschnittgrößen bezeichnet und sind für die Bemessung zu verwenden.<br> Diese Option hat keine Auswirkung auf das Biegemoment M<sub>y</sub>!  </li>
+		<li><b>Gleichgewicht SG:</b> Nur bei Th. II. Ordnung. Wenn diese Option gewählt wird, dann werden die
+			Schnittgrößen entlang des Stabes in den Richtungen
+			des lokalen Koordinatensystens des unverformten Systems angezeigt (Gleichgewichtsschnittgrößen).
+			Wenn die Option nicht ausgewählt ist, dann werden die Gleichgewichtsschnittgrößen N und V<sub>z</sub> in die
+			Richtung des gedrehten Querschnitts transformiert. Diese werden auch als
+			Nachweisschnittgrößen bezeichnet und sind für die Bemessung zu verwenden.<br> Diese Option hat keine
+			Auswirkung auf das Biegemoment M<sub>y</sub>! </li>
 		<li><b>Reset:</b> Einstellungen werden zurückgesetzt.</li>
 	</ul>
 	</p>
@@ -410,7 +427,8 @@
 		Mit dem Button <i>save svg</i> kann man die aktuelle grafische Darstellung in einer Datei im svg-Format
 		(Vektorformat) speichern.
 		Die Zeichnung kann mit jedem Programm, das das Vektorformat svg unterstützt,
-		zum Beispiel Inkscape, Libre Office und Microsoft Office (ab Version 2016) als Bild eingelesen werden. Da es sich um ein Vektorformat handelt,
+		zum Beispiel Inkscape, Libre Office und Microsoft Office (ab Version 2016) als Bild eingelesen werden. Da es
+		sich um ein Vektorformat handelt,
 		kann die Grafik bearbeitet werden.
 	</p>
 	<p>
@@ -498,20 +516,21 @@
 	<h2 class="western" id="faq"><a href="#">Fragen und Antworten</a></h2>
 
 	<p>
-		<ul>
-			<li>Frage: Ich habe einige Knoten zu viel eingegeben, die ich jetzt nicht mehr brauche.<br>
-				Antwort: Das macht nichts. Knoten, an denen keine Elemente 'hängen', werden ignoriert.
-			</li>
-			<li>Frage: Was ist die Knoten-ID?<br>
-				Antwort: Jeder Knoten hat eine interne eigene Nummer (Knoten-ID), die beim Erstellen des Knotens automatisch erzeugt wird.
-				Sie ist unabhängig von der späteren Vergabe der FE-Knotennummerierung.
-				Die Knoten-ID wird im Knotendialog im Tab System angezeigt, wenn du den <i>Knoten bearbeiten</i> Button
-				<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
+	<ul>
+		<li>Frage: Ich habe einige Knoten zu viel eingegeben, die ich jetzt nicht mehr brauche.<br>
+			Antwort: Das macht nichts. Knoten, an denen keine Elemente 'hängen', werden ignoriert.
+		</li>
+		<li>Frage: Was ist die Knoten-ID?<br>
+			Antwort: Jeder Knoten hat eine interne eigene Nummer (Knoten-ID), die beim Erstellen des Knotens automatisch
+			erzeugt wird.
+			Sie ist unabhängig von der späteren Vergabe der FE-Knotennummerierung.
+			Die Knoten-ID wird im Knotendialog im Tab System angezeigt, wenn du den <i>Knoten bearbeiten</i> Button
+			<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
 				style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-				 wählst und einen vorhandenen Knoten anklickst.
-			</li>
+			wählst und einen vorhandenen Knoten anklickst.
+		</li>
 
-		</ul>
+	</ul>
 	</p>
 
 	<p>
@@ -522,7 +541,8 @@
 	<h2 class="western" id="kontakt"><a href="#">Kontakt und Fehlermeldungen</a></h2>
 
 	<p>
-		Für Hinweise, Wünsche und Fehlermeldungen verwende die folgende E-Mail-Adresse: statikverstehen&#x40;web.de. <br>
+		Für Hinweise, Wünsche und Fehlermeldungen verwende die folgende E-Mail-Adresse: statikverstehen&#x40;web.de.
+		<br>
 		Bei Fehlermeldungen ist eine Kopie der Eingabedatei als Anhang meist hilfreich.
 
 	<p>
