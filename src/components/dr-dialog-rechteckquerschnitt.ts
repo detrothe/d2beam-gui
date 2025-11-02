@@ -11,6 +11,7 @@ import { check_if_name_exists } from '../pages/querschnitte';
 import { myFormat_en } from '../pages/utility';
 import { AlertDialog } from '../pages/confirm_dialog';
 import { CQuer_polygon } from '../pages/quer1';
+import { alertdialog } from '../pages/rechnen';
 
 // Profilename, E-Modul, A, Iy, Iz, Wichte, h, b, kappa_Vz, kappa_Vy
 
@@ -213,7 +214,7 @@ export class drRechteckQuerSchnitt extends LitElement {
 
          /*Styling der geöffneten Popup-Box*/
          dialog[open] {
-            width: 30rem;
+            max-width: 30rem;
             background: #fffbf0;
             border: thin solid #e7c157;
             border-radius: 6px;
@@ -224,6 +225,27 @@ export class drRechteckQuerSchnitt extends LitElement {
 
          dialog::backdrop {
             background: hsl(201 50% 40% /0.5);
+         }
+
+         #btn_small {
+            background-color: rgb(64, 64, 64);
+            /* background-color:transparent; */
+            border: none;
+            color: white;
+            padding: 0.3rem 0.6rem; /* 0.4375 0.75rem;*/
+            font-size: 1rem;
+            font-weight: 900;
+            cursor: pointer;
+            margin-left: 0.25rem;
+            margin-right: 0rem;
+            margin-bottom: 0rem;
+            margin-top: 0rem;
+            border-radius: 3px;
+            font-family: 'Times New Roman', Times, serif;
+         }
+         /* Darker background on mouse-over */
+         #btn_small:hover {
+            background-color: RoyalBlue;
          }
       `;
    }
@@ -279,7 +301,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                      </td>
                   </tr>
                   <tr>
-                     <td colspan="3">
+                     <td colspan="4">
                         <sl-radio-group label="Defintion des Querschnitts" name="defquerschnitt" id="id_defquerschnitt" value="1" class="radio-group-querschnitt">
                            <sl-radio-button value="1" id="id_rechteck" @click="${this._rechteck}">Rechteck</sl-radio-button>
                            <sl-radio-button value="2" id="id_werte" @click="${this._werte}">Querschnittswerte</sl-radio-button>
@@ -338,14 +360,24 @@ export class drRechteckQuerSchnitt extends LitElement {
                   <tr>
                      <td>Wichte:</td>
                      <td><input id="wichte" type="number" value="0" /></td>
-                     <td>&nbsp;[kN/m³]</td>
+                     <td>
+                        &nbsp;[kN/m³]
+                     </td>
+                     <td>
+                        <button id="btn_small" @click="${this.info_wichte}">i</button>
+                     </td>
                   </tr>
                   <tr>
                      <td>Schubfaktor:</td>
                      <td>
                         <input id="schubfaktor" type="number" value="0.0" />
                      </td>
-                     <td>&nbsp;[-]</td>
+                     <td>
+                        &nbsp;[-]
+                     </td>
+                     <td>
+                        <button id="btn_small" @click="${this.info_schubfaktor}">i</button>
+                     </td>
                   </tr>
                   <tr>
                      <td>Querdehnzahl:</td>
@@ -362,7 +394,12 @@ export class drRechteckQuerSchnitt extends LitElement {
                   <tr>
                      <td>Faktor Dehnsteifigkeit:</td>
                      <td><input id="id_fakt_dehn" type="number" value="1.0" /></td>
-                     <td>&nbsp;[-]</td>
+                     <td>
+                        &nbsp;[-]
+                     </td>
+                     <td>
+                        <button id="btn_small" @click="${this.info_dehnsteifigkeit}">i</button>
+                     </td>
                   </tr>
                </tbody>
             </table>
@@ -694,5 +731,24 @@ export class drRechteckQuerSchnitt extends LitElement {
             (shadow?.getElementById('zso') as HTMLInputElement).value = myFormat_en(h / 2, 1, 2);
          }
       }
+   }
+
+   info_dehnsteifigkeit() {
+      const question_Text =
+         'Die Dehnsteifigkeit EA wird mit diesem Faktor multipliziert, um z.B. dehnstarre Stäbe zu berücksichtigen.' + 'Der Faktor sollte nicht zu groß gewählt werden, um numerische Probleme zu vermeiden. Ein Wert von 1000 reicht meist aus.';
+
+      alertdialog('ok', question_Text);
+   }
+
+   info_schubfaktor() {
+      const question_Text = 'Bei einem Schubfaktor von 0 wird mit schubstarren Stabelementen gerechnet.';
+
+      alertdialog('ok', question_Text);
+   }
+
+   info_wichte() {
+      const question_Text = 'Wenn der Wert für die Wichte größer 0 ist, dann wird daraus das Gewicht des Stabes ermittelt und dem Lastfall 1 zugeordnet.<br>' + 'Bei Dynamik wird daraus die über die Stablänge verteilte Masse ermittelt.';
+
+      alertdialog('ok', question_Text);
    }
 }

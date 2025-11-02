@@ -81,7 +81,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.7.0, 9-November-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.7.0, 2-November-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -1546,20 +1546,12 @@ function calculate() {
 //---------------------------------------------------------------------------------------------------------------
 export function resizeTables() {
   //---------------------------------------------------------------------------------------------------------------
-  // {
-  //   const el_knoten = document.getElementById("id_button_nnodedisps_gui");
-  //   const nnodes = (el_knoten?.shadowRoot?.getElementById("nnodedisps_gui") as HTMLInputElement).value;
 
-  //   const el = document.getElementById("id_nnodedisps_tabelle_gui");
-  //   //console.log("EL: >>", el);
-  //   el?.setAttribute("nzeilen", nnodes);
-  // }
   {
     const el_knoten = document.getElementById('id_button_nnodes');
     const nnodes = (el_knoten?.shadowRoot?.getElementById('nnodes') as HTMLInputElement).value;
 
     const el = document.getElementById('id_knoten_tabelle');
-    //console.log("EL: >>", el);
     el?.setAttribute('nzeilen', nnodes);
   }
   {
@@ -1567,7 +1559,6 @@ export function resizeTables() {
     const nnodes = (el_knoten?.shadowRoot?.getElementById('nnodedisps') as HTMLInputElement).value;
 
     const el = document.getElementById('id_nnodedisps_tabelle');
-    //console.log("EL: >>", el);
     el?.setAttribute('nzeilen', nnodes);
   }
   {
@@ -1575,13 +1566,7 @@ export function resizeTables() {
     const nelem = (el_elemente?.shadowRoot?.getElementById('nelem') as HTMLInputElement).value;
 
     const el = document.getElementById('id_element_tabelle');
-    //console.log("EL: >>", el);
     el?.setAttribute('nzeilen', nelem);
-
-    // el?.setAttribute("hide_column", String(9));
-    // el?.setAttribute("hide_column", String(8));
-    // el?.setAttribute("hide_column", String(6));
-    // el?.setAttribute("hide_column", String(5));
   }
 
   {
@@ -1589,7 +1574,6 @@ export function resizeTables() {
     const nelem = (el_elemente?.shadowRoot?.getElementById('nnodalloads') as HTMLInputElement).value;
 
     const el = document.getElementById('id_knotenlasten_tabelle');
-    //console.log("EL: >>", el);
     el?.setAttribute('nzeilen', nelem);
   }
 
@@ -1598,7 +1582,6 @@ export function resizeTables() {
     const nelem = (el_elemente?.shadowRoot?.getElementById('nelemloads') as HTMLInputElement).value;
 
     const el = document.getElementById('id_streckenlasten_tabelle');
-    //console.log("EL: >>", el);
     el?.setAttribute('nzeilen', nelem);
   }
 
@@ -1607,7 +1590,6 @@ export function resizeTables() {
     const nelem = (el_elemente?.shadowRoot?.getElementById('nelemloads') as HTMLInputElement).value;
 
     const el = document.getElementById('id_einzellasten_tabelle');
-    //console.log("EL: >>", el);
     el?.setAttribute('nzeilen', nelem);
   }
 
@@ -1616,7 +1598,6 @@ export function resizeTables() {
     const nelem = (el_elemente?.shadowRoot?.getElementById('nelemloads') as HTMLInputElement).value;
 
     const el = document.getElementById('id_temperaturlasten_tabelle');
-    //console.log("EL: >>", el);
     el?.setAttribute('nzeilen', nelem);
   }
 
@@ -1625,7 +1606,6 @@ export function resizeTables() {
     const nelem = (el_elemente?.shadowRoot?.getElementById('nstabvorverformungen') as HTMLInputElement).value;
 
     const el = document.getElementById('id_stabvorverfomungen_tabelle');
-    //console.log("EL: >>", el);
     el?.setAttribute('nzeilen', nelem);
   }
 
@@ -1634,7 +1614,6 @@ export function resizeTables() {
     const nelem = (el_elemente?.shadowRoot?.getElementById('nvorspannungen') as HTMLInputElement).value;
 
     const el = document.getElementById('id_vorspannungen_tabelle');
-    //console.log("EL: >>", el);
     el?.setAttribute('nzeilen', nelem);
   }
 
@@ -1643,7 +1622,6 @@ export function resizeTables() {
     const nelem = (el_elemente?.shadowRoot?.getElementById('nspannschloesser') as HTMLInputElement).value;
 
     const el = document.getElementById('id_spannschloesser_tabelle');
-    //console.log("EL: >>", el);
     el?.setAttribute('nzeilen', nelem);
   }
 
@@ -1652,7 +1630,6 @@ export function resizeTables() {
     const nelem = (el_elemente?.shadowRoot?.getElementById('nlastfaelle') as HTMLInputElement).value;
 
     const el = document.getElementById('id_lastfaelle_tabelle');
-    //console.log("EL: >>", el);
     el?.setAttribute('nzeilen', nelem);
   }
 
@@ -1661,14 +1638,12 @@ export function resizeTables() {
     let nelem = (el_elemente?.shadowRoot?.getElementById('nkombinationen') as HTMLInputElement).value;
 
     let el = document.getElementById('id_kombinationen_tabelle');
-    //console.log("EL nzeilen: >>", nelem);
     el?.setAttribute('nzeilen', nelem);
     //---------------------------------------
     el_elemente = document.getElementById('id_button_nlastfaelle');
     nelem = (el_elemente?.shadowRoot?.getElementById('nlastfaelle') as HTMLInputElement).value;
 
     el = document.getElementById('id_kombinationen_tabelle');
-    //console.log("EL nspalten: >>", nelem);
     el?.setAttribute('nspalten', String(Number(nelem) + 1)); // +1 wegen Kommentarspalte
   }
 
