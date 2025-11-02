@@ -8,7 +8,7 @@ import '@shoelace-style/shoelace/dist/components/radio/radio.js';
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
 
 import { check_if_name_exists } from '../pages/querschnitte';
-import { myFormat_en } from '../pages/utility';
+import { myFormat, myFormat_en } from '../pages/utility';
 import { AlertDialog } from '../pages/confirm_dialog';
 import { CQuer_polygon } from '../pages/quer1';
 import { alertdialog } from '../pages/rechnen';
@@ -130,6 +130,8 @@ const PROFIL = Array(
 export class drRechteckQuerSchnitt extends LitElement {
    name_changed = false;
    @property({ type: String }) title = 'D2Beam RechteckQuerschnitt';
+   @property({ type: String }) EA = 'EA =';
+   @property({ type: String }) EI = 'EI =';
 
    static get styles() {
       return css`
@@ -232,11 +234,11 @@ export class drRechteckQuerSchnitt extends LitElement {
             /* background-color:transparent; */
             border: none;
             color: white;
-            padding: 0.3rem 0.6rem; /* 0.4375 0.75rem;*/
+            padding: 0.2rem 0.5rem; /* 0.4375 0.75rem;*/
             font-size: 1rem;
             font-weight: 900;
             cursor: pointer;
-            margin-left: 0.25rem;
+            margin-left: 0rem;
             margin-right: 0rem;
             margin-bottom: 0rem;
             margin-top: 0rem;
@@ -275,6 +277,8 @@ export class drRechteckQuerSchnitt extends LitElement {
    init_name_changed(wert: boolean) {
       console.log('in init_name_changed');
       this.name_changed = wert;
+
+      this._update_EA_EI();
    }
 
    //----------------------------------------------------------------------------------------------
@@ -326,35 +330,38 @@ export class drRechteckQuerSchnitt extends LitElement {
 
                   <tr>
                      <td>
-                        <span id="id_row_traeg_y" style="visibility:hidden">I<sub>y</sub>:</span>
+                        <span id="id_row_traeg_y" style="visibility:visible">I<sub>y</sub>:</span>
                      </td>
                      <td>
-                        <input id="traeg_y" type="number" value="160000" disabled />
+                        <input id="traeg_y" type="number" value="160000" disabled  @change="${this._update_EA_EI}"/>
                      </td>
                      <td>&nbsp;[cm<sup>4</sup>]</td>
                   </tr>
                   <tr>
                      <td>
-                        <span id="id_row_area" disabled style="visibility:hidden">A:</span>
+                        <span id="id_row_area" disabled style="visibility:visible">A:</span>
                      </td>
                      <td>
-                        <input id="area" type="number" value="1200" disabled />
+                        <input id="area" type="number" value="1200" disabled  @change="${this._update_EA_EI}"/>
                      </td>
                      <td>&nbsp;[cm²]</td>
                   </tr>
                   <tr>
                      <td title="Abstand Oberkante Querschnitt zum Schwerpunkt (positiver Wert), wird nur für Temperaturberechnung benötigt">
-                        <span id="id_row_zso" disabled style="visibility:hidden">z<sub>so</sub>:</span>
+                        <span id="id_row_zso" disabled style="visibility:visible">z<sub>so</sub>:</span>
                      </td>
                      <td>
                         <input id="zso" type="number" value="0" disabled />
                      </td>
                      <td>&nbsp;[cm]</td>
+                     <td>
+                        <button id="btn_small" @click="${this.info_zso}">i</button>
+                     </td>
                   </tr>
 
                   <tr>
                      <td>E-Modul:</td>
-                     <td><input id="emodul" type="number" value="30000" /></td>
+                     <td><input id="emodul" type="number" value="30000" @change="${this._update_EA_EI}"/></td>
                      <td>&nbsp;[MN/m²]</td>
                   </tr>
                   <tr>
@@ -407,6 +414,7 @@ export class drRechteckQuerSchnitt extends LitElement {
             <form method="dialog">
                <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
                <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+               <div style="float: right;font-size:0.875rem;">${this.EA}<br>${this.EI}</div>
             </form>
          </dialog>
 
@@ -530,12 +538,12 @@ export class drRechteckQuerSchnitt extends LitElement {
       const shadow = this.shadowRoot;
       if (shadow) {
          (shadow?.getElementById('traeg_y') as HTMLInputElement).disabled = true;
-         (shadow?.getElementById('id_row_traeg_y') as HTMLSpanElement).style.visibility = 'hidden';
-         (shadow?.getElementById('id_row_area') as HTMLSpanElement).style.visibility = 'hidden';
+         (shadow?.getElementById('id_row_traeg_y') as HTMLSpanElement).style.visibility = 'visible';
+         (shadow?.getElementById('id_row_area') as HTMLSpanElement).style.visibility = 'visible';
          (shadow?.getElementById('area') as HTMLInputElement).disabled = true;
          (shadow?.getElementById('width') as HTMLInputElement).disabled = false;
          (shadow?.getElementById('id_row_width') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('id_row_zso') as HTMLSpanElement).style.visibility = 'hidden';
+         (shadow?.getElementById('id_row_zso') as HTMLSpanElement).style.visibility = 'visible';
          (shadow?.getElementById('zso') as HTMLInputElement).disabled = true;
       }
    }
@@ -629,6 +637,8 @@ export class drRechteckQuerSchnitt extends LitElement {
             }
          }
 
+         this._update_EA_EI();
+
          (shadow.getElementById('dialog_profil') as HTMLDialogElement).close('ok');
       }
    }
@@ -705,7 +715,10 @@ export class drRechteckQuerSchnitt extends LitElement {
          (shadow?.getElementById('zso') as HTMLInputElement).value = myFormat_en(quer.zs, 1, 3);
          (shadow?.getElementById('width') as HTMLInputElement).value = '';
 
+         this._update_EA_EI();
+
          (shadow.getElementById('dialog_TQ') as HTMLDialogElement).close('ok');
+
       }
    }
 
@@ -729,13 +742,17 @@ export class drRechteckQuerSchnitt extends LitElement {
             if (Iy < 1) (shadow?.getElementById('traeg_y') as HTMLInputElement).value = String(Iy);
             else (shadow?.getElementById('traeg_y') as HTMLInputElement).value = myFormat_en(Iy, 1, 2);
             (shadow?.getElementById('zso') as HTMLInputElement).value = myFormat_en(h / 2, 1, 2);
+
+            this._update_EA_EI();
          }
       }
    }
 
    info_dehnsteifigkeit() {
       const question_Text =
-         'Die Dehnsteifigkeit EA wird mit diesem Faktor multipliziert, um z.B. dehnstarre Stäbe zu berücksichtigen.' + 'Der Faktor sollte nicht zu groß gewählt werden, um numerische Probleme zu vermeiden. Ein Wert von 1000 reicht meist aus.';
+         'Die Dehnsteifigkeit EA wird mit diesem Faktor multipliziert, um z.B. dehnstarre Stäbe zu berücksichtigen.' +
+         'Der Faktor sollte nicht zu groß gewählt werden, um numerische Probleme zu vermeiden. Ein Wert von 1000 reicht meist aus.<br>' +
+         'Der Faktor wird NICHT bei Fachwerkstäben berücksichtigt.';
 
       alertdialog('ok', question_Text);
    }
@@ -750,5 +767,23 @@ export class drRechteckQuerSchnitt extends LitElement {
       const question_Text = 'Wenn der Wert für die Wichte größer 0 ist, dann wird daraus das Gewicht des Stabes ermittelt und dem Lastfall 1 zugeordnet.<br>' + 'Bei Dynamik wird daraus die über die Stablänge verteilte Masse ermittelt.';
 
       alertdialog('ok', question_Text);
+   }
+
+   info_zso() {
+      const question_Text = 'Abstand von Oberkante Querschnitt zum Schwerpunkt (positiver Wert). Er wird nur für Temperaturberechnungen benötigt.';
+
+      alertdialog('ok', question_Text);
+   }
+
+
+   _update_EA_EI() {
+      const shadow = this.shadowRoot;
+      if (shadow) {
+         let E = Number((shadow?.getElementById('emodul') as HTMLInputElement).value.replace(/,/g, '.')) * 1000.0;
+         let A = Number((shadow?.getElementById('area') as HTMLInputElement).value.replace(/,/g, '.')) / 10000.0;
+         let Iy = Number((shadow?.getElementById('traeg_y') as HTMLInputElement).value.replace(/,/g, '.')) / 100000000.0;
+         this.EA = 'EA = ' + myFormat(E * A, 0, 1) + ' kN'
+         this.EI = 'EI = ' + myFormat(E * Iy, 0, 1) + ' kNm²'
+      }
    }
 }
