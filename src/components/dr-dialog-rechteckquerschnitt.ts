@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
+import { property, customElement, state } from 'lit/decorators.js';
 
 import '@shoelace-style/shoelace/dist/components/radio-button/radio-button.js';
 import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
@@ -131,7 +131,8 @@ export class drRechteckQuerSchnitt extends LitElement {
    name_changed = false;
    @property({ type: String }) title = 'D2Beam RechteckQuerschnitt';
    @property({ type: String }) EA = 'EA =';
-   @property({ type: String }) EI = 'EI =';
+   @state() EI = 'EI =';
+   // @state({ type: String }) EI = 'EI =';
 
    static get styles() {
       return css`
@@ -257,6 +258,7 @@ export class drRechteckQuerSchnitt extends LitElement {
    }
 
    async firstUpdated() {
+      console.log("firstUpdated")
       const shadow = this.shadowRoot;
       if (shadow) {
          let sel = shadow?.getElementById('id_profil_select') as HTMLSelectElement;
@@ -270,6 +272,9 @@ export class drRechteckQuerSchnitt extends LitElement {
 
             this.name_changed = false;
          }
+
+         //  let el = shadow?.getElementById('traeg_y') as HTMLInputElement;
+         //  el.addEventListener("input",this._update_Iy);
       }
    }
 
@@ -333,7 +338,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                         <span id="id_row_traeg_y" style="visibility:visible">I<sub>y</sub>:</span>
                      </td>
                      <td>
-                        <input id="traeg_y" type="number" value="160000" disabled  @change="${this._update_EA_EI}"/>
+                        <input id="traeg_y" type="number" value="160000" disabled @change="${this._update_EA_EI}" @input="${this._update_EA_EI}" />
                      </td>
                      <td>&nbsp;[cm<sup>4</sup>]</td>
                   </tr>
@@ -342,7 +347,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                         <span id="id_row_area" disabled style="visibility:visible">A:</span>
                      </td>
                      <td>
-                        <input id="area" type="number" value="1200" disabled  @change="${this._update_EA_EI}"/>
+                        <input id="area" type="number" value="1200" disabled  @change="${this._update_EA_EI}" @input="${this._update_EA_EI}"/>
                      </td>
                      <td>&nbsp;[cm²]</td>
                   </tr>
@@ -361,7 +366,7 @@ export class drRechteckQuerSchnitt extends LitElement {
 
                   <tr>
                      <td>E-Modul:</td>
-                     <td><input id="emodul" type="number" value="30000" @change="${this._update_EA_EI}"/></td>
+                     <td><input id="emodul" type="number" value="30000" @change="${this._update_EA_EI}" @input="${this._update_EA_EI}"/></td>
                      <td>&nbsp;[MN/m²]</td>
                   </tr>
                   <tr>
@@ -777,6 +782,7 @@ export class drRechteckQuerSchnitt extends LitElement {
 
 
    _update_EA_EI() {
+      //console.log("_update_EA_EI")
       const shadow = this.shadowRoot;
       if (shadow) {
          let E = Number((shadow?.getElementById('emodul') as HTMLInputElement).value.replace(/,/g, '.')) * 1000.0;
@@ -786,4 +792,19 @@ export class drRechteckQuerSchnitt extends LitElement {
          this.EI = 'EI = ' + myFormat(E * Iy, 0, 1) + ' kNm²'
       }
    }
+
+   // _update_Iy(e: any) {
+   //    console.log("e.target.value", e.target!.value)
+   //    let Iy = Number(e.target!.value.replace(/,/g, '.')) / 100000000.0;
+   //    const shadow = this.shadowRoot;
+   //    if (shadow) {
+   //       let E = Number((shadow?.getElementById('emodul') as HTMLInputElement).value.replace(/,/g, '.')) * 1000.0;
+   //       let A = Number((shadow?.getElementById('area') as HTMLInputElement).value.replace(/,/g, '.')) / 10000.0;
+   //       // let Iy = Number((shadow?.getElementById('traeg_y') as HTMLInputElement).value.replace(/,/g, '.')) / 100000000.0;
+   //       this.EA = 'EA = ' + myFormat(E * A, 0, 1) + ' kN'
+   //       this.EI = 'EI = ' + myFormat(E * Iy, 0, 1) + ' kNm²'
+   //    }
+
+   // }
+
 }
