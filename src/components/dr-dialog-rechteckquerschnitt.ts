@@ -789,7 +789,8 @@ export class drRechteckQuerSchnitt extends LitElement {
          let A = Number((shadow?.getElementById('area') as HTMLInputElement).value.replace(/,/g, '.')) / 10000.0;
          let Iy = Number((shadow?.getElementById('traeg_y') as HTMLInputElement).value.replace(/,/g, '.')) / 100000000.0;
          this.EA = 'EA = ' + myFormat(E * A, 0, 1) + ' kN'
-         this.EI = 'EI = ' + myFormat(E * Iy, 0, 1) + ' kNm²'
+         if (E * Iy < 1) this.EI = 'EI = ' + myFormat(E * Iy, 0, 3, 1) + ' kNm²';
+         else this.EI = 'EI = ' + myFormat(E * Iy, 0, 1) + ' kNm²';
       }
    }
 
