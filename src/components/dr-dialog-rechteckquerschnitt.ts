@@ -306,7 +306,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                         Name (eindeutig):
                      </td>
                      <td colspan="2">
-                        <input id="qname" type="text" style="width:95%;" value="Rechteck" @change="${this._valueChanged}" />
+                        <input id="qname" type="text" style="width:95%;" value="Rechteck" @change="${this._valueChanged}"  maxlength="50" />
                      </td>
                   </tr>
                   <tr>
@@ -400,7 +400,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                   </tr>
                   <tr>
                      <td>Temp-Koeffizient &alpha;<sub>T</sub>:</td>
-                     <td><input id="alpha_t" type="text" value="1.e-5" /></td>
+                     <td><input id="alpha_t" type="text" value="1.e-5" maxlength="10" /></td>
                      <td>&nbsp;[1/K]</td>
                   </tr>
                   <tr>
