@@ -81,7 +81,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.7.0, 4-November-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.7.0, 13.November-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
