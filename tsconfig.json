@@ -20,11 +20,12 @@
       "isolatedModules": true,
       "removeComments": true,
       "sourceMap": false,
+      "rootDir": "src/",
       "types": [
           "vite-plugin-pwa/client",
           "vite/client"
       ]
   },
-  "include": ["src/**/*.ts", "router.d.ts"],
+  "include": ["./src/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="en-GB" source-language="de" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="s684d7269ec02e919">
+  <source>Kurzinformationen GUI</source>
+  <target>short information for GUI</target>
+</trans-unit>
+<trans-unit id="s4a73475a66d0ff67">
+  <source>Objektdaten einlesen</source>
+  <target>read object data</target>
+</trans-unit>
+<trans-unit id="s6750e087f400b3eb">
+  <source>isAndroid =</source>
+  <target>ist Android</target>
+</trans-unit>
+</body>
+</file>
+</xliff>

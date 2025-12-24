@@ -1,4 +1,7 @@
 
+import {msg} from '@lit/localize';
+import {allLocales} from './generated/locale-codes.js';
+
 import './styles/global.css';
 import './styles/contextMenu.css';
 import './styles/dr-drawer.css';
@@ -7,6 +10,13 @@ console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 if (process.env.NODE_ENV !== "development") {
     console.log = () => { };
 }
+
+
+// import {configureTransformLocalization} from '@lit/localize';
+
+// export const {getLocale} = configureTransformLocalization({
+//   sourceLocale: 'de',
+// });
 
 import './pages/haupt';
 import { write } from './pages/utility'
@@ -18,11 +28,14 @@ import { reset_controlpanel_grafik } from './pages/grafik';
 import { reset_gui } from './pages/mypanelgui';
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
-console.log("isAndroid =", isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
+console.log(msg("isAndroid ="), isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
 
 console.log("userAgent", navigator.userAgent);
 console.log('navigator ', navigator)
 //write('navigator: ' + navigator.maxTouchPoints + ' | ' + navigator.platform + ' | ' + navigator.userAgent)
+
+console.log("allLocales",allLocales);
+//console.log("getLocale",getLocale());
 
 function getBrowserName(userAgent: string) {
     // The order matters here, and this may report false positives for unlisted browsers.

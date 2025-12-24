@@ -1,6 +1,7 @@
 {
   "author": "",
   "dependencies": {
+    "@lit/localize": "^0.12.2",
     "@shoelace-style/shoelace": "^2.20.1",
     "@thepassle/app-tools": "^0.10.0",
     "@types/emscripten": "^1.40.1",
@@ -19,6 +20,7 @@
   },
   "description": "A 2D beam analysis PWA",
   "devDependencies": {
+    "@lit/localize-tools": "^0.8.0",
     "@tweakpane/core": "^2.0.5",
     "@types/file-saver": "^2.0.7",
     "lil-gui": "^0.20.0",

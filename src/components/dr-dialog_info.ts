@@ -1,9 +1,11 @@
 import { SlCheckbox } from '@shoelace-style/shoelace';
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import {msg, localized} from '@lit/localize';
 
 import '../styles/dr-dialog.css';
 
+@localized()
 @customElement('dr-dialog_info')
 export class drDialogInfo extends LitElement {
    @property({ type: String }) title = 'Informationen';
@@ -127,13 +129,45 @@ export class drDialogInfo extends LitElement {
 
    constructor() {
       super();
+
+      // let items = [1,2,3]
+      // let foo = 2
+
+      // let newArray = items.map(item => item + 1) // [2,3,4]
+
+      // let newArray2 = items.map((item) => {
+      //    return item + foo
+      // }) // [3,4,5]
+
+      // let newArrayForEach = []
+      // items.forEach( item => newArrayForEach.push(item++))
+      // // [2,3,4]
+
+      // let newArrayForIn = []
+      // for (let item of items){ // item ist wert von i
+      //    newArrayForIn.push(item++)
+      // }
+      // // [2,3,4]
+
+      // for (let i in [1,2,3]){
+      //    console.log(i)
+      // }
+      // // 0,1,2
+
+      // let newArrayForIndex = []
+      // for (let i=0; i++; items.length) {
+      //    newArrayForIn.push(items[i]++)
+      // }
+      // // [2,3,4]
+
+
    }
 
    //----------------------------------------------------------------------------------------------
 
    render() {
       return html` <dialog id="dialog_info">
-         <h2>Kurzinformationen GUI</h2>
+         <h2>${msg('Kurzinformationen GUI')}</h2>
 
          <p>
             <b>Eingabe mit dem Finger bei einem Touchscreen</b><br />
@@ -148,6 +182,7 @@ export class drDialogInfo extends LitElement {
             Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
             Finger kannst du unter <i>Einstellungen GUI</i> ändern.
          </p>
+
          <p>
             <b>Knoteneingabe und Rasterlinien</b><br />
             Die Eingabe von Knoten über den Dialog ist nicht zwingend

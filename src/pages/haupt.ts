@@ -1,5 +1,6 @@
 import { html, render } from 'lit';
 //import { property, customElement } from 'lit/decorators.js';
+import {msg} from '@lit/localize';
 
 import '@shoelace-style/shoelace/dist/components/card/card.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
@@ -51,6 +52,8 @@ import '../components/dr-dialog_selekt_typ';
 import '../components/dr-dialog_edit_selected_elementlasten';
 import '../components/dr-my_drawer';
 
+import './locale-picker';
+
 import { drButtonPM } from '../components/dr-button-pm';
 import { drRechteckQuerSchnitt } from '../components/dr-dialog-rechteckquerschnitt';
 //import { drMyDrawer } from '../components/dr-my_drawer';
@@ -81,7 +84,7 @@ import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.7.0, 13.November-2025, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.8.0, 24.Dezember-2025, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -232,7 +235,7 @@ portrait.addEventListener('change', function (e) {
             Objektdaten speichern
           </button>
           <button type="button" id="readFile" style="min-width:8em;">
-            Objektdaten einlesen
+            ${msg('Objektdaten einlesen')}
           </button>
         </p>
 
@@ -1159,6 +1162,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-einstellungen"
         ><p><b>Einstellungen</b><br /><br /></p>
+        <locale-picker></locale-picker>
         <div id="id_einstellungen">
           <br />
           <table>
