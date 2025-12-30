@@ -1,4 +1,6 @@
 
+console.log("in grafik 0")
+
 import Two from 'two.js'
 
 import { CTrans } from './trans';
@@ -291,10 +293,14 @@ export function select_loadcase_changed() {
     //----------------------------------------------------------------------------------------------------
 
     //console.log("################################################ select_loadcase_changed")
-    const el_select_loadcase = document.getElementById("id_select_loadcase") as HTMLSelectElement
-    //console.log("select_loadcase_changed option", el_select_loadcase.value)
-    draw_lastfall = Number(el_select_loadcase.value)
-    if (!show_dyn_animate_eigenformen) drawsystem();
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        const el_select_loadcase = shadow.getElementById("id_select_loadcase") as HTMLSelectElement
+        //console.log("select_loadcase_changed option", el_select_loadcase.value)
+        draw_lastfall = Number(el_select_loadcase.value)
+        if (!show_dyn_animate_eigenformen) drawsystem();
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -302,10 +308,14 @@ export function select_eigenvalue_changed() {
     //----------------------------------------------------------------------------------------------------
 
     //console.log("################################################ select_eigenvalue_changed")
-    const el_select_eigenvalue = document.getElementById("id_select_eigenvalue") as HTMLSelectElement
-    //console.log("option", el_select_eigenvalue.value)
-    draw_eigenform = Number(el_select_eigenvalue.value)
-    if (!show_dyn_animate_eigenformen) drawsystem();
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        const el_select_eigenvalue = shadow.getElementById("id_select_eigenvalue") as HTMLSelectElement
+        //console.log("option", el_select_eigenvalue.value)
+        draw_eigenform = Number(el_select_eigenvalue.value)
+        if (!show_dyn_animate_eigenformen) drawsystem();
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -313,41 +323,48 @@ export function select_dyn_eigenvalue_changed() {
     //----------------------------------------------------------------------------------------------------
 
     //console.log("################################################ select_eigenvalue_changed")
-    const el_select_dyn_eigenvalue = document.getElementById("id_select_dyn_eigenvalue") as HTMLSelectElement
-    //console.log("option", el_select_eigenvalue.value)
-    draw_dyn_eigenform = Number(el_select_dyn_eigenvalue.value)
-    if (!show_dyn_animate_eigenformen) drawsystem();
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        const el_select_dyn_eigenvalue = shadow.getElementById("id_select_dyn_eigenvalue") as HTMLSelectElement
+        //console.log("option", el_select_eigenvalue.value)
+        draw_dyn_eigenform = Number(el_select_dyn_eigenvalue.value)
+        if (!show_dyn_animate_eigenformen) drawsystem();
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
 export function click_zurueck_grafik() {
     //----------------------------------------------------------------------------------------------------
 
-    let elb = document.getElementById("id_button_zurueck_grafik") as HTMLButtonElement
-    let ele = document.getElementById("id_grafik") as HTMLDivElement
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        let elb = shadow.getElementById("id_button_zurueck_grafik") as HTMLButtonElement
+        let ele = shadow.getElementById("id_grafik") as HTMLDivElement
 
-    if (fullscreen) {
-        console.log("click_zurueck_grafik")
-        let ele1 = document.getElementById("id_tab_group") as any
-        console.log("HEIGHT id_tab_group boundingRect", ele1.getBoundingClientRect(), '|', ele1);
+        if (fullscreen) {
+            console.log("click_zurueck_grafik")
+            let ele1 = shadow.getElementById("id_tab_group") as any
+            console.log("HEIGHT id_tab_group boundingRect", ele1.getBoundingClientRect(), '|', ele1);
 
-        ele.style.position = 'relative'
-        fullscreen = false
+            ele.style.position = 'relative'
+            fullscreen = false
 
-        elb.innerHTML = "Fullscreen"
+            elb.innerHTML = "Fullscreen"
+        }
+        else {
+            console.log("fullscreen")
+            ele.style.position = 'absolute'
+            fullscreen = true
+
+            elb.innerHTML = "zurück"
+        }
+
+        elb.style.width = 'fit-content'
+
+        drawsystem();
     }
-    else {
-        console.log("fullscreen")
-        ele.style.position = 'absolute'
-        fullscreen = true
-
-        elb.innerHTML = "zurück"
-    }
-
-    elb.style.width = 'fit-content'
-
-    drawsystem();
-
 
 }
 
@@ -356,15 +373,17 @@ export function click_pan_button_grafik() {
     //----------------------------------------------------------------------------------------------------
 
     allow_pan_grafik = !allow_pan_grafik;
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        const el_pan_button = shadow.getElementById('id_button_pan_grafik') as HTMLButtonElement;
 
-    const el_pan_button = document.getElementById('id_button_pan_grafik') as HTMLButtonElement;
-
-    if (allow_pan_grafik) {
-        el_pan_button.style.color = 'white'
-    } else {
-        el_pan_button.style.color = 'grey'
+        if (allow_pan_grafik) {
+            el_pan_button.style.color = 'white'
+        } else {
+            el_pan_button.style.color = 'grey'
+        }
     }
-
 }
 
 //--------------------------------------------------------------------------------------------------- i n i t _ t w o
@@ -374,87 +393,93 @@ export function init_two(svg_id = 'artboard', setEvents = true) {
     console.log(":::::::::::::::::::::::::::::::::::::::::::::::::::::::")
     console.log("init_two two", svg_id, two)
 
-    if (two !== null) {
-        // let parent = two.renderer.domElement.parentElement
-        // console.log("Parent ", parent)
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
 
-        two.unbind('update')
-        two.pause()
-        two.removeEventListener()
-        console.log("two.clear", two.clear());
+        if (two !== null) {
+            // let parent = two.renderer.domElement.parentElement
+            // console.log("Parent ", parent)
 
-        //two.bind('update')
-        //        let parent = two.renderer.domElement.parentelement;
-        //console.log("Parent ", parent)
-        //if (parent) parent.removeChild(two.renderer.domElement);
+            two.unbind('update')
+            two.pause()
+            two.removeEventListener()
+            console.log("two.clear", two.clear());
+
+            //two.bind('update')
+            //        let parent = two.renderer.domElement.parentelement;
+            //console.log("Parent ", parent)
+            //if (parent) parent.removeChild(two.renderer.domElement);
+        }
+
+
+        if (domElement != null) {
+            // domElement.removeEventListener('wheel', wheel, { passive: false });
+            // domElement.removeEventListener('mousedown', mousedown, false);
+            // domElement.removeEventListener('mouseup', mousemove, false);
+
+            //console.log('domElement',domElement)
+            let parent = domElement.parentElement
+            //console.log("Parent ", parent)
+            if (parent) parent.removeChild(domElement);
+
+        }
+
+        // const tab_group = document.getElementById('container') as any;
+        // tab_group.hidden=true
+
+        // for (let i = 0; i < two.scene.children.length; i++) {
+        //     let child = two.scene.children[i];
+        //     two.scene.remove(child);
+        //     Two.Utils.dispose(child);
+        // }
+
+        console.log("__________________________________  G R A F I K  ___________")
+        if (svg_id === 'svg_artboard') {
+            const elem = shadow.getElementById(svg_id) as any; //HTMLDivElement;
+            //console.log("childElementCount", elem.childElementCount)
+
+            if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
+        }
+
+        var params = {
+            fullscreen: false,
+            type: Two.Types.canvas
+        };
+
+        if (svg_id === 'svg_artboard') params.type = Two.Types.svg
+
+        if (two) two.clear();
+        two = null;
+        const artboard = shadow.getElementById(svg_id) as any;
+
+        two = new Two(params).appendTo(artboard);
+
+        if (svg_id === 'artboard' && setEvents) {
+            domElement = two.renderer.domElement;
+            //svgElement = two.render
+            //console.log("domElement", domElement)
+            //domElement.addEventListener('mousedown', mousedown, false);
+
+            domElement.addEventListener('wheel', wheel, { passive: false });
+            domElement.addEventListener('mousedown', mousedown, false);
+            domElement.addEventListener('mouseup', mouseup, false);
+            domElement.addEventListener('pointermove', pointermove, false);
+            // domElement.addEventListener('mousemove', mousemove, false);
+
+            domElement.addEventListener('touchstart', touchstart, { passive: false });
+            domElement.addEventListener('touchmove', touchmove, { passive: false });
+            //window.addEventListener('touchmove', touchmove, { passive: false });
+            domElement.addEventListener('touchend', touchend, { passive: false });
+        }
     }
-
-
-    if (domElement != null) {
-        // domElement.removeEventListener('wheel', wheel, { passive: false });
-        // domElement.removeEventListener('mousedown', mousedown, false);
-        // domElement.removeEventListener('mouseup', mousemove, false);
-
-        //console.log('domElement',domElement)
-        let parent = domElement.parentElement
-        //console.log("Parent ", parent)
-        if (parent) parent.removeChild(domElement);
-
-    }
-
-    // const tab_group = document.getElementById('container') as any;
-    // tab_group.hidden=true
-
-    // for (let i = 0; i < two.scene.children.length; i++) {
-    //     let child = two.scene.children[i];
-    //     two.scene.remove(child);
-    //     Two.Utils.dispose(child);
-    // }
-
-    console.log("__________________________________  G R A F I K  ___________")
-    if (svg_id === 'svg_artboard') {
-        const elem = document.getElementById(svg_id) as any; //HTMLDivElement;
-        //console.log("childElementCount", elem.childElementCount)
-
-        if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild);   // war > 2
-    }
-
-    var params = {
-        fullscreen: false,
-        type: Two.Types.canvas
-    };
-
-    if (svg_id === 'svg_artboard') params.type = Two.Types.svg
-
-    if (two) two.clear();
-    two = null;
-    const artboard = document.getElementById(svg_id) as any;
-
-    two = new Two(params).appendTo(artboard);
-
-    if (svg_id === 'artboard' && setEvents) {
-        domElement = two.renderer.domElement;
-        //svgElement = two.render
-        //console.log("domElement", domElement)
-        //domElement.addEventListener('mousedown', mousedown, false);
-
-        domElement.addEventListener('wheel', wheel, { passive: false });
-        domElement.addEventListener('mousedown', mousedown, false);
-        domElement.addEventListener('mouseup', mouseup, false);
-        domElement.addEventListener('pointermove', pointermove, false);
-        // domElement.addEventListener('mousemove', mousemove, false);
-
-        domElement.addEventListener('touchstart', touchstart, { passive: false });
-        domElement.addEventListener('touchmove', touchmove, { passive: false });
-        //window.addEventListener('touchmove', touchmove, { passive: false });
-        domElement.addEventListener('touchend', touchend, { passive: false });
-    }
-
 }
 
 //--------------------------------------------------------------------------------------------------------
 export function init_panel() {
     //----------------------------------------------------------------------------------------------------
+
+    console.log("init_panel")
 
     if (drawPanel === 0) {
         myPanel();
@@ -506,58 +531,103 @@ export function init_grafik(flag: number) {
     devicePixelRatio = window.devicePixelRatio
     console.log('devicePixelRatio =  ', devicePixelRatio)
 
-    const el_select = document.getElementById('id_select_loadcase') as HTMLSelectElement;
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
 
-    while (el_select.hasChildNodes()) {  // alte Optionen entfernen
-        // @ts-ignore
-        el_select.removeChild(el_select?.lastChild);
-    }
-    //el.style.width = '100%';   // 100px
-    //console.log('CREATE SELECT', nlastfaelle, el_select);
-    draw_lastfall = 1
+        const el_select = shadow.getElementById('id_select_loadcase') as HTMLSelectElement;
 
-    const el_select_eigv = document.getElementById('id_select_eigenvalue') as HTMLSelectElement;
-    const el_select_dyn_eigv = document.getElementById('id_select_dyn_eigenvalue') as HTMLSelectElement;
-
-    while (el_select_eigv.hasChildNodes()) {  // alte Optionen entfernen
-        // @ts-ignore
-        el_select_eigv.removeChild(el_select_eigv?.lastChild);
-    }
-    draw_eigenform = 1
-
-    while (el_select_dyn_eigv.hasChildNodes()) {  // alte Optionen entfernen
-        // @ts-ignore
-        el_select_dyn_eigv.removeChild(el_select_dyn_eigv?.lastChild);
-    }
-    draw_dyn_eigenform = 1
-
-    if (THIIO_flag === 0 && matprop_flag === 0) {
-
-        let option: any
-        for (let i = 0; i < nlastfaelle; i++) {
-            option = document.createElement('option');
-            option.value = String(+i + 1)
-            option.textContent = 'Lastfall ' + (+i + 1);
-            el_select.appendChild(option);
+        while (el_select.hasChildNodes()) {  // alte Optionen entfernen
+            // @ts-ignore
+            el_select.removeChild(el_select?.lastChild);
         }
+        //el.style.width = '100%';   // 100px
+        //console.log('CREATE SELECT', nlastfaelle, el_select);
+        draw_lastfall = 1
 
-        for (let i = 0; i < nkombinationen; i++) {
-            option = document.createElement('option');
-            option.value = String(+i + 1 + nlastfaelle)
-            option.textContent = 'Kombination ' + (+i + 1);
-            el_select.appendChild(option);
+        const el_select_eigv = shadow.getElementById('id_select_eigenvalue') as HTMLSelectElement;
+        const el_select_dyn_eigv = shadow.getElementById('id_select_dyn_eigenvalue') as HTMLSelectElement;
+
+        while (el_select_eigv.hasChildNodes()) {  // alte Optionen entfernen
+            // @ts-ignore
+            el_select_eigv.removeChild(el_select_eigv?.lastChild);
         }
+        draw_eigenform = 1
 
-        if (nkombinationen > 0) {
-
-            option = document.createElement('option');
-            option.value = String(+nkombinationen + 1 + nlastfaelle)
-            option.textContent = 'alle Kombinationen';
-            el_select.appendChild(option);
+        while (el_select_dyn_eigv.hasChildNodes()) {  // alte Optionen entfernen
+            // @ts-ignore
+            el_select_dyn_eigv.removeChild(el_select_dyn_eigv?.lastChild);
         }
+        draw_dyn_eigenform = 1
 
-        if (stadyn === 0) { // Statik
+        if (THIIO_flag === 0 && matprop_flag === 0) {
+
+            let option: any
+            for (let i = 0; i < nlastfaelle; i++) {
+                option = document.createElement('option');
+                option.value = String(+i + 1)
+                option.textContent = 'Lastfall ' + (+i + 1);
+                el_select.appendChild(option);
+            }
+
+            for (let i = 0; i < nkombinationen; i++) {
+                option = document.createElement('option');
+                option.value = String(+i + 1 + nlastfaelle)
+                option.textContent = 'Kombination ' + (+i + 1);
+                el_select.appendChild(option);
+            }
+
+            if (nkombinationen > 0) {
+
+                option = document.createElement('option');
+                option.value = String(+nkombinationen + 1 + nlastfaelle)
+                option.textContent = 'alle Kombinationen';
+                el_select.appendChild(option);
+            }
+
+            if (stadyn === 0) { // Statik
+                el_select_dyn_eigv.style.display = "none"
+
+                el_select_eigv.style.display = "block"
+
+                for (let i = 0; i < neigv; i++) {
+                    let option = document.createElement('option');
+                    option.value = String(+i + 1)
+                    option.textContent = 'Knickfigur ' + (+i + 1);
+                    el_select_eigv.appendChild(option);
+                }
+            } else {    // Dynamik
+                el_select_eigv.style.display = "none"
+
+                el_select_dyn_eigv.style.display = "block"
+
+                for (let i = 0; i < dyn_neigv; i++) {
+                    let option = document.createElement('option');
+                    option.value = String(+i + 1)
+                    option.textContent = 'Eigenform ' + (+i + 1);
+                    el_select_dyn_eigv.appendChild(option);
+                }
+            }
+
+        } else if (THIIO_flag === 1 || matprop_flag > 0) {
+
             el_select_dyn_eigv.style.display = "none"
+
+            let option: any
+            for (let i = 0; i < nkombinationen; i++) {
+                option = document.createElement('option');
+                option.value = String(+i + 1)
+                option.textContent = 'Kombination ' + (+i + 1);
+                el_select.appendChild(option);
+            }
+
+            if (nkombinationen > 0) {
+
+                option = document.createElement('option');
+                option.value = String(+nkombinationen + 1)
+                option.textContent = 'alle Kombinationen';
+                el_select.appendChild(option);
+            }
 
             el_select_eigv.style.display = "block"
 
@@ -567,49 +637,8 @@ export function init_grafik(flag: number) {
                 option.textContent = 'Knickfigur ' + (+i + 1);
                 el_select_eigv.appendChild(option);
             }
-        } else {    // Dynamik
-            el_select_eigv.style.display = "none"
-
-            el_select_dyn_eigv.style.display = "block"
-
-            for (let i = 0; i < dyn_neigv; i++) {
-                let option = document.createElement('option');
-                option.value = String(+i + 1)
-                option.textContent = 'Eigenform ' + (+i + 1);
-                el_select_dyn_eigv.appendChild(option);
-            }
-        }
-
-    } else if (THIIO_flag === 1 || matprop_flag > 0) {
-
-        el_select_dyn_eigv.style.display = "none"
-
-        let option: any
-        for (let i = 0; i < nkombinationen; i++) {
-            option = document.createElement('option');
-            option.value = String(+i + 1)
-            option.textContent = 'Kombination ' + (+i + 1);
-            el_select.appendChild(option);
-        }
-
-        if (nkombinationen > 0) {
-
-            option = document.createElement('option');
-            option.value = String(+nkombinationen + 1)
-            option.textContent = 'alle Kombinationen';
-            el_select.appendChild(option);
-        }
-
-        el_select_eigv.style.display = "block"
-
-        for (let i = 0; i < neigv; i++) {
-            let option = document.createElement('option');
-            option.value = String(+i + 1)
-            option.textContent = 'Knickfigur ' + (+i + 1);
-            el_select_eigv.appendChild(option);
         }
     }
-
     //const el_pan_button = document.getElementById('id_button_pan_grafik') as HTMLButtonElement;
 
 }
@@ -1119,17 +1148,21 @@ export function drawsystem(svg_id = 'artboard') {
     //console.log("HEIGHT id_tab_group boundingRect", el1, el1.getBoundingClientRect());
     //write("height id_tab_group: ", el1.getBoundingClientRect().height)
 
-    let ele = document.getElementById("id_grafik") as any
-    if (fullscreen) {
-        grafik_top = 0
-        ele.style.position = 'absolute'
-        height = document.documentElement.clientHeight - 4;
-    } else {
-        grafik_top = ele.getBoundingClientRect().top
-        //console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
-        //write("grafik top: " + grafik_top)
-        if (grafik_top === 0) grafik_top = 69
-        height = document.documentElement.clientHeight - grafik_top - 4 - 17//- el?.getBoundingClientRect()?.height;
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        let ele = shadow.getElementById("id_grafik") as any
+        if (fullscreen) {
+            grafik_top = 0
+            ele.style.position = 'absolute'
+            height = document.documentElement.clientHeight - 4;
+        } else {
+            grafik_top = ele.getBoundingClientRect().top
+            //console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
+            //write("grafik top: " + grafik_top)
+            if (grafik_top === 0) grafik_top = 69
+            height = document.documentElement.clientHeight - grafik_top - 4 - 17//- el?.getBoundingClientRect()?.height;
+        }
     }
 
     let breite = 1500
@@ -5409,63 +5442,83 @@ export async function copy_svg() {
 
     //let svg = svgElement;
     //console.log("svg", svg)
-    const elem1 = document.getElementById('artboard') as any;
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        const elem1 = shadow.getElementById('artboard') as any;
 
-    if (elem1) {
-
-
-        init_two('svg_artboard');
-        drawsystem()
-        const elem = document.getElementById('svg_artboard') as any;
+        if (elem1) {
 
 
-        // svg = svg.replace(/\r?\n|\r/g, "").trim();
-        // svg = svg.substring(0, svg.indexOf("</svg>")) + "</svg>";
-        // // @ts-ignore
-        // svg = svg.replaceAll("  ", "");
+            init_two('svg_artboard');
+            drawsystem()
+            const elem = shadow.getElementById('svg_artboard') as any;
 
-        // const preface = '<?xml version="1.0" standalone="no"?>\r\n';
-        // const svgBlob = new Blob([preface, svg], { type: "image/svg+xml;charset=utf-8" });
 
-        const svgBlob = new Blob([elem.innerHTML], { type: "image/svg+xml;charset=utf-8" });  //
+            // svg = svg.replace(/\r?\n|\r/g, "").trim();
+            // svg = svg.substring(0, svg.indexOf("</svg>")) + "</svg>";
+            // // @ts-ignore
+            // svg = svg.replaceAll("  ", "");
 
-        console.log("svgBlob.type", svgBlob.type)
+            // const preface = '<?xml version="1.0" standalone="no"?>\r\n';
+            // const svgBlob = new Blob([preface, svg], { type: "image/svg+xml;charset=utf-8" });
 
-        navigator.clipboard.writeText(elem.innerHTML)   // für inkscape
+            const svgBlob = new Blob([elem.innerHTML], { type: "image/svg+xml;charset=utf-8" });  //
 
-        let filename: any = 'd2beam.svg'
+            console.log("svgBlob.type", svgBlob.type)
 
-        if (app.hasFSAccess && app.isMac) {
+            navigator.clipboard.writeText(elem.innerHTML)   // für inkscape
 
-            filename = window.prompt(
-                "Name der Datei mit Extension, z.B. d2beam.svg\nDie Datei wird im Default Download Ordner gespeichert", 'd2beam.svg'
-            );
-        }
-        else if (app.hasFSAccess) {
+            let filename: any = 'd2beam.svg'
+
+            if (app.hasFSAccess && app.isMac) {
+
+                filename = window.prompt(
+                    "Name der Datei mit Extension, z.B. d2beam.svg\nDie Datei wird im Default Download Ordner gespeichert", 'd2beam.svg'
+                );
+            }
+            else if (app.hasFSAccess) {
+
+                try {
+                    // @ts-ignore
+                    const fileHandle = await window.showSaveFilePicker({
+                        suggestedName: currentFilenameSVG,
+                        startIn: lastFileHandleSVG,
+                        types: [{
+                            description: "svg file",
+                            accept: { "text/plain": [".svg"] }   //   image/svg+xml (.svg)
+                        }]
+                    });
+                    console.log("fileHandle SVG", fileHandle)
+                    lastFileHandleSVG = fileHandle
+                    currentFilenameSVG = fileHandle.name
+
+                    const fileStream = await fileHandle.createWritable();
+                    //console.log("fileStream=",fileStream);
+
+                    // (C) WRITE FILE
+                    await fileStream.write(svgBlob);
+                    await fileStream.close();
+
+                } catch (error: any) {
+                    //alert(error.name);
+                    alert(error.message);
+                }
+
+                // Zeichnung auf Bildschirm wieder herstellen
+
+                //console.log("redraw screen artboard")
+                init_two('artboard');
+                drawsystem();
+
+                return
+            }
+
+            // für den Rest des Feldes
 
             try {
-                // @ts-ignore
-                const fileHandle = await window.showSaveFilePicker({
-                    suggestedName: currentFilenameSVG,
-                    startIn: lastFileHandleSVG,
-                    types: [{
-                        description: "svg file",
-                        accept: { "text/plain": [".svg"] }   //   image/svg+xml (.svg)
-                    }]
-                });
-                console.log("fileHandle SVG", fileHandle)
-                lastFileHandleSVG = fileHandle
-                currentFilenameSVG = fileHandle.name
-
-                const fileStream = await fileHandle.createWritable();
-                //console.log("fileStream=",fileStream);
-
-                // (C) WRITE FILE
-                await fileStream.write(svgBlob);
-                await fileStream.close();
-
+                saveAs(svgBlob, filename);
             } catch (error: any) {
-                //alert(error.name);
                 alert(error.message);
             }
 
@@ -5474,25 +5527,8 @@ export async function copy_svg() {
             //console.log("redraw screen artboard")
             init_two('artboard');
             drawsystem();
-
-            return
         }
-
-        // für den Rest des Feldes
-
-        try {
-            saveAs(svgBlob, filename);
-        } catch (error: any) {
-            alert(error.message);
-        }
-
-        // Zeichnung auf Bildschirm wieder herstellen
-
-        //console.log("redraw screen artboard")
-        init_two('artboard');
-        drawsystem();
     }
-
 }
 
 
@@ -5503,63 +5539,83 @@ export async function copy_svg_cad() {
 
     //let svg = svgElement;
     console.log("copy_svg_cad")
-    const elem1 = document.getElementById('artboard_cad') as any;
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        const elem1 = shadow.getElementById('artboard_cad') as any;
 
-    if (elem1) {
-
-
-        init_two_cad('svg_artboard_cad');
-        init_cad(3);
-        const elem = document.getElementById('svg_artboard_cad') as any;
+        if (elem1) {
 
 
-        // svg = svg.replace(/\r?\n|\r/g, "").trim();
-        // svg = svg.substring(0, svg.indexOf("</svg>")) + "</svg>";
-        // // @ts-ignore
-        // svg = svg.replaceAll("  ", "");
+            init_two_cad('svg_artboard_cad');
+            init_cad(3);
+            const elem = shadow.getElementById('svg_artboard_cad') as any;
 
-        // const preface = '<?xml version="1.0" standalone="no"?>\r\n';
-        // const svgBlob = new Blob([preface, svg], { type: "image/svg+xml;charset=utf-8" });
 
-        const svgBlob = new Blob([elem.innerHTML], { type: "image/svg+xml;charset=utf-8" });  //
+            // svg = svg.replace(/\r?\n|\r/g, "").trim();
+            // svg = svg.substring(0, svg.indexOf("</svg>")) + "</svg>";
+            // // @ts-ignore
+            // svg = svg.replaceAll("  ", "");
 
-        console.log("svgBlob.type", svgBlob.type)
+            // const preface = '<?xml version="1.0" standalone="no"?>\r\n';
+            // const svgBlob = new Blob([preface, svg], { type: "image/svg+xml;charset=utf-8" });
 
-        navigator.clipboard.writeText(elem.innerHTML)   // für inkscape
+            const svgBlob = new Blob([elem.innerHTML], { type: "image/svg+xml;charset=utf-8" });  //
 
-        let filename: any = 'd2beam_cad.svg'
+            console.log("svgBlob.type", svgBlob.type)
 
-        if (app.hasFSAccess && app.isMac) {
+            navigator.clipboard.writeText(elem.innerHTML)   // für inkscape
 
-            filename = window.prompt(
-                "Name der Datei mit Extension, z.B. d2beam_cad.svg\nDie Datei wird im Default Download Ordner gespeichert", 'd2beam_cad.svg'
-            );
-        }
-        else if (app.hasFSAccess) {
+            let filename: any = 'd2beam_cad.svg'
+
+            if (app.hasFSAccess && app.isMac) {
+
+                filename = window.prompt(
+                    "Name der Datei mit Extension, z.B. d2beam_cad.svg\nDie Datei wird im Default Download Ordner gespeichert", 'd2beam_cad.svg'
+                );
+            }
+            else if (app.hasFSAccess) {
+
+                try {
+                    // @ts-ignore
+                    const fileHandle = await window.showSaveFilePicker({
+                        suggestedName: currentFilenameSVG,
+                        startIn: lastFileHandleSVG,
+                        types: [{
+                            description: "svg file",
+                            accept: { "text/plain": [".svg"] }   //   image/svg+xml (.svg)
+                        }]
+                    });
+                    console.log("fileHandle SVG", fileHandle)
+                    lastFileHandleSVG = fileHandle
+                    currentFilenameSVG = fileHandle.name
+
+                    const fileStream = await fileHandle.createWritable();
+                    //console.log("fileStream=",fileStream);
+
+                    // (C) WRITE FILE
+                    await fileStream.write(svgBlob);
+                    await fileStream.close();
+
+                } catch (error: any) {
+                    //alert(error.name);
+                    alert(error.message);
+                }
+
+                // Zeichnung auf Bildschirm wieder herstellen
+
+                //console.log("redraw screen artboard")
+                init_two_cad('artboard_cad');
+                init_cad(2);
+
+                return
+            }
+
+            // für den Rest des Feldes
 
             try {
-                // @ts-ignore
-                const fileHandle = await window.showSaveFilePicker({
-                    suggestedName: currentFilenameSVG,
-                    startIn: lastFileHandleSVG,
-                    types: [{
-                        description: "svg file",
-                        accept: { "text/plain": [".svg"] }   //   image/svg+xml (.svg)
-                    }]
-                });
-                console.log("fileHandle SVG", fileHandle)
-                lastFileHandleSVG = fileHandle
-                currentFilenameSVG = fileHandle.name
-
-                const fileStream = await fileHandle.createWritable();
-                //console.log("fileStream=",fileStream);
-
-                // (C) WRITE FILE
-                await fileStream.write(svgBlob);
-                await fileStream.close();
-
+                saveAs(svgBlob, filename);
             } catch (error: any) {
-                //alert(error.name);
                 alert(error.message);
             }
 
@@ -5568,23 +5624,6 @@ export async function copy_svg_cad() {
             //console.log("redraw screen artboard")
             init_two_cad('artboard_cad');
             init_cad(2);
-
-            return
         }
-
-        // für den Rest des Feldes
-
-        try {
-            saveAs(svgBlob, filename);
-        } catch (error: any) {
-            alert(error.message);
-        }
-
-        // Zeichnung auf Bildschirm wieder herstellen
-
-        //console.log("redraw screen artboard")
-        init_two_cad('artboard_cad');
-        init_cad(2);
     }
-
 }

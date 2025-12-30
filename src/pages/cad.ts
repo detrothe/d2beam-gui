@@ -45,6 +45,7 @@ import { drDialogMessen } from '../components/dr-dialog_messen';
 import { add_bemassung, drawBemassung, drawBemassung_band, recalc_abstand, TCAD_Bemassung } from './cad_bemassung';
 import { CNodeDisp, draw_knotenverformung, read_knotenverformung_dialog } from './cad_knotenverformung';
 import { copy_selected } from './cad_select';
+import { drHaupt } from '../components/dr-haupt';
 
 export const CAD_KNOTEN = 1;
 export const CAD_STAB = 2;
@@ -442,28 +443,31 @@ export function Stab_button(_ev: Event) {
       alertdialog('ok', 'Es ist noch kein Querschnitt definiert');
       return;
    }
-   let el = document.getElementById('id_cad_stab_button') as HTMLButtonElement;
+   const elHaupt = document.getElementById('id_haupt');
+   let shadow = elHaupt?.shadowRoot;
+   if (shadow) {
+      let el = shadow.getElementById('id_cad_stab_button') as HTMLButtonElement;
 
-   if (buttons_control.stab_eingabe_aktiv) {
-      // el.style.backgroundColor = 'DodgerBlue'
-      buttons_control.reset();
-      el.removeEventListener('keydown', keydown);
-      delete_help_text();
-   } else {
-      buttons_control.reset();
-      drawer_1_control.reset();
+      if (buttons_control.stab_eingabe_aktiv) {
+         // el.style.backgroundColor = 'DodgerBlue'
+         buttons_control.reset();
+         el.removeEventListener('keydown', keydown);
+         delete_help_text();
+      } else {
+         buttons_control.reset();
+         drawer_1_control.reset();
 
-      el.style.backgroundColor = 'darkRed';
-      buttons_control.stab_eingabe_aktiv = true;
-      buttons_control.cad_eingabe_aktiv = true;
-      buttons_control.typ_cad_element = CAD_STAB;
-      el.addEventListener('keydown', keydown);
-      buttons_control.n_input_points = 2;
-      set_help_text('Anfangsknoten eingeben');
-      buttons_control.button_pressed = true;
-      set_zoomIsActive(false);
-      pointer.length = 0
-
+         el.style.backgroundColor = 'darkRed';
+         buttons_control.stab_eingabe_aktiv = true;
+         buttons_control.cad_eingabe_aktiv = true;
+         buttons_control.typ_cad_element = CAD_STAB;
+         el.addEventListener('keydown', keydown);
+         buttons_control.n_input_points = 2;
+         set_help_text('Anfangsknoten eingeben');
+         buttons_control.button_pressed = true;
+         set_zoomIsActive(false);
+         pointer.length = 0
+      }
    }
 }
 
@@ -471,11 +475,15 @@ export function Stab_button(_ev: Event) {
 export function lager_eingabe_beenden() {
    //----------------------------------------------------------------------------------------------------
 
-   let el = document.getElementById('id_cad_lager_button') as HTMLButtonElement;
+   const elHaupt = document.getElementById('id_haupt');
+   let shadow = elHaupt?.shadowRoot;
+   if (shadow) {
+      let el = shadow.getElementById('id_cad_lager_button') as HTMLButtonElement;
 
-   //el.style.backgroundColor = 'DodgerBlue'
-   buttons_control.reset();
-   el.removeEventListener('keydown', keydown);
+      //el.style.backgroundColor = 'DodgerBlue'
+      buttons_control.reset();
+      el.removeEventListener('keydown', keydown);
+   }
    // lager_eingabe_aktiv = false
    // cad_eingabe_aktiv = false
    // typ_cad_element = 0
@@ -486,30 +494,34 @@ export function lager_eingabe_beenden() {
 export function click_zurueck_cad() {
    //----------------------------------------------------------------------------------------------------
 
-   let elb = document.getElementById('id_button_zurueck_cad') as HTMLButtonElement;
-   let ele = document.getElementById('id_cad') as HTMLDivElement;
+   const elHaupt = document.getElementById('id_haupt');
+   let shadow = elHaupt?.shadowRoot;
+   if (shadow) {
+      let elb = shadow.getElementById('id_button_zurueck_cad') as HTMLButtonElement;
+      let ele = shadow.getElementById('id_cad') as HTMLDivElement;
 
-   if (fullscreen) {
-      console.log('click_zurueck_grafik_cad');
-      //let ele1 = document.getElementById("id_tab_group") as any
-      //console.log("HEIGHT id_tab_group boundingRect", ele1.getBoundingClientRect(), '|', ele1);
+      if (fullscreen) {
+         console.log('click_zurueck_grafik_cad');
+         //let ele1 = document.getElementById("id_tab_group") as any
+         //console.log("HEIGHT id_tab_group boundingRect", ele1.getBoundingClientRect(), '|', ele1);
 
-      ele.style.position = 'relative';
-      fullscreen = false;
+         ele.style.position = 'relative';
+         fullscreen = false;
 
-      elb.innerHTML = 'Fullscreen';
-   } else {
-      console.log('fullscreen');
-      ele.style.position = 'absolute';
-      fullscreen = true;
+         elb.innerHTML = 'Fullscreen';
+      } else {
+         console.log('fullscreen');
+         ele.style.position = 'absolute';
+         fullscreen = true;
 
-      elb.innerHTML = 'zurück';
+         elb.innerHTML = 'zurück';
+      }
+
+      elb.style.width = 'fit-content';
+
+      //drawsystem();
+      init_cad(0);
    }
-
-   elb.style.width = 'fit-content';
-
-   //drawsystem();
-   init_cad(0);
 }
 
 
@@ -519,95 +531,103 @@ export function click_pan_button_cad() {
 
    allow_pan_cad = !allow_pan_cad;
 
-   const el_pan_button = document.getElementById('id_button_pan_cad') as HTMLButtonElement;
+   const elHaupt = document.getElementById('id_haupt');
+   let shadow = elHaupt?.shadowRoot;
+   if (shadow) {
+      const el_pan_button = shadow.getElementById('id_button_pan_cad') as HTMLButtonElement;
 
-   if (allow_pan_cad) {
-      el_pan_button.style.color = 'white'
-   } else {
-      el_pan_button.style.color = 'grey'
+      if (allow_pan_cad) {
+         el_pan_button.style.color = 'white'
+      } else {
+         el_pan_button.style.color = 'grey'
+      }
    }
-
 }
 //--------------------------------------------------------------------------------------------------- i n i t _ t w o _ c a d
 
 export function init_two_cad(svg_id = 'artboard_cad') {
    devicePixelRatio = window.devicePixelRatio;
 
-   if (two !== null) {
-      // let parent = two.renderer.domElement.parentElement
-      // console.log("Parent ", parent)
+   const elHaupt = document.getElementById('id_haupt') as drHaupt;
+   let shadow = elHaupt.shadowRoot;
+   if (shadow) {
 
-      two.unbind('update');
-      two.pause();
-      two.removeEventListener();
-      two.clear();
+      if (two !== null) {
+         // let parent = two.renderer.domElement.parentElement
+         // console.log("Parent ", parent)
 
-      //two.bind('update')
-      //        let parent = two.renderer.domElement.parentelement;
-      //console.log("Parent ", parent)
-      //if (parent) parent.removeChild(two.renderer.domElement);
-   }
+         two.unbind('update');
+         two.pause();
+         two.removeEventListener();
+         two.clear();
 
-   if (domElement != null) {
-      // domElement.removeEventListener('wheel', wheel, { passive: false });
-      // domElement.removeEventListener('mousedown', mousedown, false);
-      // domElement.removeEventListener('mouseup', mousemove, false);
+         //two.bind('update')
+         //        let parent = two.renderer.domElement.parentelement;
+         //console.log("Parent ", parent)
+         //if (parent) parent.removeChild(two.renderer.domElement);
+      }
 
-      //console.log('domElement',domElement)
-      let parent = domElement.parentElement;
-      //console.log("Parent ", parent)
-      if (parent) parent.removeChild(domElement);
-      const id_cad = document.getElementById('id_CAD') as any;
-      id_cad.removeEventListener('keydown', keydown);
-   }
+      if (domElement != null) {
+         // domElement.removeEventListener('wheel', wheel, { passive: false });
+         // domElement.removeEventListener('mousedown', mousedown, false);
+         // domElement.removeEventListener('mouseup', mousemove, false);
 
-   // const tab_group = document.getElementById('container') as any;
-   // tab_group.hidden=true
+         //console.log('domElement',domElement)
+         let parent = domElement.parentElement;
+         //console.log("Parent ", parent)
+         if (parent) parent.removeChild(domElement);
+         const id_cad = shadow.getElementById('id_CAD') as any;
+         id_cad.removeEventListener('keydown', keydown);
+      }
 
-   // for (let i = 0; i < two.scene.children.length; i++) {
-   //     let child = two.scene.children[i];
-   //     two.scene.remove(child);
-   //     Two.Utils.dispose(child);
-   // }
+      // const tab_group = shadow.getElementById('container') as any;
+      // tab_group.hidden=true
 
-   console.log('__________________________________  C  A  D  ___________');
-   if (svg_id === 'svg_artboard_cad') {
-      const elem = document.getElementById(svg_id) as any; //HTMLDivElement;
-      //console.log("childElementCount", elem.childElementCount)
+      // for (let i = 0; i < two.scene.children.length; i++) {
+      //     let child = two.scene.children[i];
+      //     two.scene.remove(child);
+      //     Two.Utils.dispose(child);
+      // }
 
-      if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild); // war > 2
-   }
+      console.log('__________________________________  C  A  D  ___________');
+      if (svg_id === 'svg_artboard_cad') {
+         const elem = shadow.getElementById(svg_id) as any; //HTMLDivElement;
+         //console.log("childElementCount", elem.childElementCount)
 
-   var params = {
-      fullscreen: false,
-      type: Two.Types.canvas,
-   };
+         if (elem.childElementCount > 0) elem.removeChild(elem?.lastChild); // war > 2
+      }
 
-   if (svg_id === 'svg_artboard_cad') params.type = Two.Types.svg;
+      var params = {
+         fullscreen: false,
+         type: Two.Types.canvas,
+      };
 
-   two = null;
-   const artboard = document.getElementById(svg_id) as any;
+      if (svg_id === 'svg_artboard_cad') params.type = Two.Types.svg;
 
-   two = new Two(params).appendTo(artboard);
+      two = null;
+      const artboard = shadow.getElementById(svg_id) as any;
 
-   if (svg_id === 'artboard_cad') {
-      domElement = two.renderer.domElement;
+      two = new Two(params).appendTo(artboard);
 
-      domElement.addEventListener('wheel', wheel, { passive: false });
-      domElement.addEventListener('pointerdown', pointerdown, false);
-      domElement.addEventListener('pointerup', pointerup, false);
-      domElement.addEventListener('pointermove', pointermove, false);
+      if (svg_id === 'artboard_cad') {
+         domElement = two.renderer.domElement;
 
-      // const id_cad = document.getElementById('id_CAD') as any;
-      // id_cad.addEventListener('keyup', keydown);
-      domElement.addEventListener(
-         'contextmenu',
-         (e: { preventDefault: () => any }) => e.preventDefault()
-      );
+         domElement.addEventListener('wheel', wheel, { passive: false });
+         domElement.addEventListener('pointerdown', pointerdown, false);
+         domElement.addEventListener('pointerup', pointerup, false);
+         domElement.addEventListener('pointermove', pointermove, false);
 
-      domElement.addEventListener('touchstart', touchstart, { passive: false });
-      domElement.addEventListener('touchmove', touchmove, { passive: false });
-      domElement.addEventListener('touchend', touchend, { passive: false });
+         // const id_cad = shadow.getElementById('id_CAD') as any;
+         // id_cad.addEventListener('keyup', keydown);
+         domElement.addEventListener(
+            'contextmenu',
+            (e: { preventDefault: () => any }) => e.preventDefault()
+         );
+
+         domElement.addEventListener('touchstart', touchstart, { passive: false });
+         domElement.addEventListener('touchmove', touchmove, { passive: false });
+         domElement.addEventListener('touchend', touchend, { passive: false });
+      }
    }
 }
 
@@ -645,287 +665,291 @@ export function init_cad(flag: number) {
 
    if (two) two.clear();
 
-   let ele = document.getElementById('id_cad') as any;
-   if (fullscreen) {
-      grafik_top = 0;
-      ele.style.position = 'absolute';
-      height = document.documentElement.clientHeight - 4;
-   } else {
-      grafik_top = ele.getBoundingClientRect().top;
-      //console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
-      //write("grafik top: " + grafik_top)
-      if (grafik_top === 0) grafik_top = 69;
-      height = document.documentElement.clientHeight - grafik_top - 4 - 17; //- el?.getBoundingClientRect()?.height;
-   }
+   const elHaupt = document.getElementById('id_haupt') as drHaupt;
+   let shadow = elHaupt.shadowRoot;
+   if (shadow) {
 
-   let breite: number;
-   let hoehe: number;
-   if (show_selection) {
-      two.width = document.documentElement.clientWidth;
-      two.height = height;
-      breite = two.width;
-      hoehe = two.height;
-   } else {
-      two.width = breite = 1500;
-      two.height = hoehe = 1500;
-   }
-   //write("width,height " + breite + ' | ' + hoehe);
-
-   // (xminv = -1.0), (xmaxv = 10.0), (zminv = -1.0), (zmaxv = 10.0);
-   xminv = raster_xmin
-   xmaxv = raster_xmax
-   zminv = raster_zmin
-   zmaxv = raster_zmax;
-
-   let dx = xmaxv - xminv
-   let dz = zmaxv - zminv
-
-   xminv -= centerX;
-   xmaxv -= centerX;
-   zminv -= centerY;
-   zmaxv -= centerY;
-
-   // xminv = xminv - dx * wheel_factor / 2.
-   // xmaxv = xmaxv + dx * wheel_factor / 2.
-   // zminv = zminv - dz * wheel_factor / 2.
-   // zmaxv = zmaxv + dz * wheel_factor / 2.
-
-   xminv = xminv - deltaXY / 2.
-   xmaxv = xmaxv + deltaXY / 2.
-   zminv = zminv - deltaXY / 2.
-   zmaxv = zmaxv + deltaXY / 2.
-
-   //console.log("wheel_factor", wheel_factor, deltaXY, xminv, xmaxv, zminv, zmaxv)
-
-   if (tr === undefined) {
-      //console.log('in undefined');
-      tr = new CTrans(xminv, zminv, xmaxv, zmaxv, breite, hoehe);
-   } else {
-      //if (init) {
-      tr.init(xminv, zminv, xmaxv, zmaxv, breite, hoehe);
-
-      //}
-   }
-
-   {
-
-      if (show_raster) {
-         let knSize = 8 / devicePixelRatio;
-         let circle = two.makeCircle(tr.xPix(raster_offset_x), tr.zPix(raster_offset_z), knSize, 8)
-         circle.fill = 'none'
-         circle.stroke = '#40e800';
-         circle.linewidth = 2 / devicePixelRatio;
-
-      }
-      // Koordinatenursprung darstellen
-
-      draw_arrow_alpha(two, tr, 0.0, 0.0, 0.0, -1.0, {
-         a: 55,
-         b: 25,
-         h: 12,
-         linewidth: 4,
-         color: '#bb0000',
-      });
-      let txt = two.makeText(
-         'x',
-         tr.xPix(0.0) + 80 / devicePixelRatio,
-         tr.zPix(0.0) - 10 / devicePixelRatio,
-         style_txt
-      );
-      txt.fill = '#bb0000';
-      draw_arrow_alpha(two, tr, 0.0, 0.0, Math.PI / 2.0, -1.0, {
-         a: 55,
-         b: 25,
-         h: 12,
-         linewidth: 4,
-         color: '#0000bb',
-      });
-      txt = two.makeText(
-         'z',
-         tr.xPix(0.0) + 10 / devicePixelRatio,
-         tr.zPix(0.0) + 80 / devicePixelRatio,
-         style_txt
-      );
-      txt.fill = '#0000bb';
-   }
-   if (flag !== 3) {
-
-      const [x_min, x_max, z_min, z_max] = tr.getMinMax();
-
-      let dx = x_max - x_min;
-      let dz = z_max - z_min;
-      //console.log("min max", x_min, x_max, z_min, z_max, dx, dz)
-      //console.log("LINKS", tr.xPix(x_min + dx * 0.1), tr.zPix(z_min + dz * 0.1), tr.xPix(x_min + dx * 0.1), tr.zPix(z_max - dz * 0.1))
-
-      // linke Linie
-      let rand = tr.World0(20 / devicePixelRatio);
-      let xl = x_min + rand; //dx * 0.05
-      let zl = z_max - rand;
-      let line1 = two.makeLine(tr.xPix(xl), tr.zPix(z_min + dz * 0.05), tr.xPix(xl), tr.zPix(z_max - dz * 0.05));
-      line1.linewidth = 1;
-
-      let line2 = two.makeLine(tr.xPix(x_min), tr.zPix(0.0), tr.xPix(x_min + rand), tr.zPix(0.0));
-      line2.linewidth = 1;
-      let txt = two.makeText('0', tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(0.0), style_txt);
-      txt.fill = '#000000';
-      txt.baseline = 'middle';
-      txt.alignment = 'left';
-
-      if (myFormat(raster_zmin, 1, 2) !== myFormat(0.0, 1, 2)) {
-         line2 = two.makeLine(tr.xPix(x_min), tr.zPix(raster_zmin), tr.xPix(x_min + rand), tr.zPix(raster_zmin));
-         line2.linewidth = 1;
-         txt = two.makeText(myFormat(raster_zmin, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(raster_zmin), style_txt)
-         txt.fill = '#000000'
-         txt.baseline = 'middle'
-         txt.alignment = 'left'
+      let ele = shadow.getElementById('id_cad') as any;
+      if (fullscreen) {
+         grafik_top = 0;
+         ele.style.position = 'absolute';
+         height = document.documentElement.clientHeight - 4;
+      } else {
+         grafik_top = ele.getBoundingClientRect().top;
+         //console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
+         //write("grafik top: " + grafik_top)
+         if (grafik_top === 0) grafik_top = 69;
+         height = document.documentElement.clientHeight - grafik_top - 4 - 17; //- el?.getBoundingClientRect()?.height;
       }
 
-      if (myFormat(raster_zmax, 1, 2) != myFormat(0.0, 1, 2)) {
-         line2 = two.makeLine(tr.xPix(x_min), tr.zPix(raster_zmax), tr.xPix(x_min + rand), tr.zPix(raster_zmax));
-         line2.linewidth = 1;
-         txt = two.makeText(myFormat(raster_zmax, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(raster_zmax), style_txt)
-         txt.fill = '#000000'
-         txt.baseline = 'middle'
-         txt.alignment = 'left'
+      let breite: number;
+      let hoehe: number;
+      if (show_selection) {
+         two.width = document.documentElement.clientWidth;
+         two.height = height;
+         breite = two.width;
+         hoehe = two.height;
+      } else {
+         two.width = breite = 1500;
+         two.height = hoehe = 1500;
       }
+      //write("width,height " + breite + ' | ' + hoehe);
 
-      //unten
+      // (xminv = -1.0), (xmaxv = 10.0), (zminv = -1.0), (zmaxv = 10.0);
+      xminv = raster_xmin
+      xmaxv = raster_xmax
+      zminv = raster_zmin
+      zmaxv = raster_zmax;
 
-      let line3 = two.makeLine(tr.xPix(x_min + dx * 0.05), tr.zPix(zl), tr.xPix(x_max - dx * 0.05), tr.zPix(zl));
-      line3.linewidth = 1;
-      let line4 = two.makeLine(tr.xPix(0.0), tr.zPix(z_max), tr.xPix(0.0), tr.zPix(z_max - rand));
-      line4.linewidth = 1;
-      let txt1 = two.makeText('0', tr.xPix(0.0), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt);
-      txt1.fill = '#000000';
-      txt1.baseline = 'baseline';
-      txt1.alignment = 'center';
+      let dx = xmaxv - xminv
+      let dz = zmaxv - zminv
 
-      if (myFormat(raster_xmax, 1, 2) != myFormat(0.0, 1, 2)) {
-         let line5 = two.makeLine(tr.xPix(raster_xmax), tr.zPix(z_max), tr.xPix(raster_xmax), tr.zPix(z_max - rand));
-         line5.linewidth = 1;
-         txt1 = two.makeText(myFormat(raster_xmax, 1, 2), tr.xPix(raster_xmax), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
-         txt1.fill = '#000000'
-         txt1.baseline = 'baseline'
-         txt1.alignment = 'center'
-      }
+      xminv -= centerX;
+      xmaxv -= centerX;
+      zminv -= centerY;
+      zmaxv -= centerY;
 
-      if (myFormat(raster_xmin, 1, 2) != myFormat(0.0, 1, 2)) {
-         let line5 = two.makeLine(tr.xPix(raster_xmin), tr.zPix(z_max), tr.xPix(raster_xmin), tr.zPix(z_max - rand));
-         line5.linewidth = 1;
-         txt1 = two.makeText(myFormat(raster_xmin, 1, 2), tr.xPix(raster_xmin), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
-         txt1.fill = '#000000'
-         txt1.baseline = 'baseline'
-         txt1.alignment = 'center'
-      }
+      // xminv = xminv - dx * wheel_factor / 2.
+      // xmaxv = xmaxv + dx * wheel_factor / 2.
+      // zminv = zminv - dz * wheel_factor / 2.
+      // zmaxv = zmaxv + dz * wheel_factor / 2.
 
-      // Mitte
+      xminv = xminv - deltaXY / 2.
+      xmaxv = xmaxv + deltaXY / 2.
+      zminv = zminv - deltaXY / 2.
+      zmaxv = zmaxv + deltaXY / 2.
 
-      {
-         let xmean = (xminv + xmaxv) / 2
-         //xmean = Number(xmean.toFixed(1))
-         let line5 = two.makeLine(tr.xPix(xmean), tr.zPix(z_max), tr.xPix(xmean), tr.zPix(z_max - rand));
-         line5.linewidth = 2;
-         line5.stroke = 'dodgerblue'
-         txt1 = two.makeText(myFormat(xmean, 1, 2), tr.xPix(xmean), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
-         txt1.fill = '#000000'
-         txt1.baseline = 'baseline'
-         txt1.alignment = 'center'
+      //console.log("wheel_factor", wheel_factor, deltaXY, xminv, xmaxv, zminv, zmaxv)
+
+      if (tr === undefined) {
+         //console.log('in undefined');
+         tr = new CTrans(xminv, zminv, xmaxv, zmaxv, breite, hoehe);
+      } else {
+         //if (init) {
+         tr.init(xminv, zminv, xmaxv, zmaxv, breite, hoehe);
+
+         //}
       }
 
       {
-         let zmean = (zminv + zmaxv) / 2
-         //zmean = Number(zmean.toFixed(1))
-         let line2 = two.makeLine(tr.xPix(x_min), tr.zPix(zmean), tr.xPix(x_min + rand), tr.zPix(zmean));
-         line2.linewidth = 2;
-         line2.stroke = 'dodgerblue'
-         txt = two.makeText(myFormat(zmean, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(zmean), style_txt)
-         txt.fill = '#000000'
-         txt.baseline = 'middle'
-         txt.alignment = 'left'
+
+         if (show_raster) {
+            let knSize = 8 / devicePixelRatio;
+            let circle = two.makeCircle(tr.xPix(raster_offset_x), tr.zPix(raster_offset_z), knSize, 8)
+            circle.fill = 'none'
+            circle.stroke = '#40e800';
+            circle.linewidth = 2 / devicePixelRatio;
+
+         }
+         // Koordinatenursprung darstellen
+
+         draw_arrow_alpha(two, tr, 0.0, 0.0, 0.0, -1.0, {
+            a: 55,
+            b: 25,
+            h: 12,
+            linewidth: 4,
+            color: '#bb0000',
+         });
+         let txt = two.makeText(
+            'x',
+            tr.xPix(0.0) + 80 / devicePixelRatio,
+            tr.zPix(0.0) - 10 / devicePixelRatio,
+            style_txt
+         );
+         txt.fill = '#bb0000';
+         draw_arrow_alpha(two, tr, 0.0, 0.0, Math.PI / 2.0, -1.0, {
+            a: 55,
+            b: 25,
+            h: 12,
+            linewidth: 4,
+            color: '#0000bb',
+         });
+         txt = two.makeText(
+            'z',
+            tr.xPix(0.0) + 10 / devicePixelRatio,
+            tr.zPix(0.0) + 80 / devicePixelRatio,
+            style_txt
+         );
+         txt.fill = '#0000bb';
       }
+      if (flag !== 3) {
 
-   }
-   if (show_raster) drawRaster();
+         const [x_min, x_max, z_min, z_max] = tr.getMinMax();
 
-   slmax_cad = Math.sqrt((raster_xmax - raster_xmin) ** 2 + (raster_zmax - raster_zmin) ** 2)
+         let dx = x_max - x_min;
+         let dz = z_max - z_min;
+         //console.log("min max", x_min, x_max, z_min, z_max, dx, dz)
+         //console.log("LINKS", tr.xPix(x_min + dx * 0.1), tr.zPix(z_min + dz * 0.1), tr.xPix(x_min + dx * 0.1), tr.zPix(z_max - dz * 0.1))
 
-   // Zeichne vorhandenes System
+         // linke Linie
+         let rand = tr.World0(20 / devicePixelRatio);
+         let xl = x_min + rand; //dx * 0.05
+         let zl = z_max - rand;
+         let line1 = two.makeLine(tr.xPix(xl), tr.zPix(z_min + dz * 0.05), tr.xPix(xl), tr.zPix(z_max - dz * 0.05));
+         line1.linewidth = 1;
 
-   zero_offset_nodes();
+         let line2 = two.makeLine(tr.xPix(x_min), tr.zPix(0.0), tr.xPix(x_min + rand), tr.zPix(0.0));
+         line2.linewidth = 1;
+         let txt = two.makeText('0', tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(0.0), style_txt);
+         txt.fill = '#000000';
+         txt.baseline = 'middle';
+         txt.alignment = 'left';
 
-   //console.log('init cad list.size', list.size);
-   for (let i = 0; i < list.size; i++) {
+         if (myFormat(raster_zmin, 1, 2) !== myFormat(0.0, 1, 2)) {
+            line2 = two.makeLine(tr.xPix(x_min), tr.zPix(raster_zmin), tr.xPix(x_min + rand), tr.zPix(raster_zmin));
+            line2.linewidth = 1;
+            txt = two.makeText(myFormat(raster_zmin, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(raster_zmin), style_txt)
+            txt.fill = '#000000'
+            txt.baseline = 'middle'
+            txt.alignment = 'left'
+         }
 
-      // let obj: TCAD_Element = list.getNext(i);
+         if (myFormat(raster_zmax, 1, 2) != myFormat(0.0, 1, 2)) {
+            line2 = two.makeLine(tr.xPix(x_min), tr.zPix(raster_zmax), tr.xPix(x_min + rand), tr.zPix(raster_zmax));
+            line2.linewidth = 1;
+            txt = two.makeText(myFormat(raster_zmax, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(raster_zmax), style_txt)
+            txt.fill = '#000000'
+            txt.baseline = 'middle'
+            txt.alignment = 'left'
+         }
 
-      // let obj: TCAD_Element;
-      // if (i === 0) {
-      //    obj = list.getHead();
-      // } else {
-      let obj: TCAD_Element = list.getNext(i);
-      // }
+         //unten
 
-      if (obj.elTyp === CAD_KNOTEN) {
-         let group = draw_knoten(obj, tr)
-         two.add(group);
-         obj.setTwoObj(group);
+         let line3 = two.makeLine(tr.xPix(x_min + dx * 0.05), tr.zPix(zl), tr.xPix(x_max - dx * 0.05), tr.zPix(zl));
+         line3.linewidth = 1;
+         let line4 = two.makeLine(tr.xPix(0.0), tr.zPix(z_max), tr.xPix(0.0), tr.zPix(z_max - rand));
+         line4.linewidth = 1;
+         let txt1 = two.makeText('0', tr.xPix(0.0), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt);
+         txt1.fill = '#000000';
+         txt1.baseline = 'baseline';
+         txt1.alignment = 'center';
+
+         if (myFormat(raster_xmax, 1, 2) != myFormat(0.0, 1, 2)) {
+            let line5 = two.makeLine(tr.xPix(raster_xmax), tr.zPix(z_max), tr.xPix(raster_xmax), tr.zPix(z_max - rand));
+            line5.linewidth = 1;
+            txt1 = two.makeText(myFormat(raster_xmax, 1, 2), tr.xPix(raster_xmax), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
+            txt1.fill = '#000000'
+            txt1.baseline = 'baseline'
+            txt1.alignment = 'center'
+         }
+
+         if (myFormat(raster_xmin, 1, 2) != myFormat(0.0, 1, 2)) {
+            let line5 = two.makeLine(tr.xPix(raster_xmin), tr.zPix(z_max), tr.xPix(raster_xmin), tr.zPix(z_max - rand));
+            line5.linewidth = 1;
+            txt1 = two.makeText(myFormat(raster_xmin, 1, 2), tr.xPix(raster_xmin), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
+            txt1.fill = '#000000'
+            txt1.baseline = 'baseline'
+            txt1.alignment = 'center'
+         }
+
+         // Mitte
+
+         {
+            let xmean = (xminv + xmaxv) / 2
+            //xmean = Number(xmean.toFixed(1))
+            let line5 = two.makeLine(tr.xPix(xmean), tr.zPix(z_max), tr.xPix(xmean), tr.zPix(z_max - rand));
+            line5.linewidth = 2;
+            line5.stroke = 'dodgerblue'
+            txt1 = two.makeText(myFormat(xmean, 1, 2), tr.xPix(xmean), tr.zPix(z_max - rand) - 4 / devicePixelRatio, style_txt)
+            txt1.fill = '#000000'
+            txt1.baseline = 'baseline'
+            txt1.alignment = 'center'
+         }
+
+         {
+            let zmean = (zminv + zmaxv) / 2
+            //zmean = Number(zmean.toFixed(1))
+            let line2 = two.makeLine(tr.xPix(x_min), tr.zPix(zmean), tr.xPix(x_min + rand), tr.zPix(zmean));
+            line2.linewidth = 2;
+            line2.stroke = 'dodgerblue'
+            txt = two.makeText(myFormat(zmean, 1, 2), tr.xPix(x_min + rand) + 4 / devicePixelRatio, tr.zPix(zmean), style_txt)
+            txt.fill = '#000000'
+            txt.baseline = 'middle'
+            txt.alignment = 'left'
+         }
+
       }
-      else if (obj.elTyp === CAD_STAB) {
-         let group = drawStab(obj as TCAD_Stab, tr);
-         two.add(group);
-         obj.setTwoObj(group);
-      }
-      else if (obj.elTyp === CAD_LAGER && show_lager) {
-         let group = draw_lager(tr, obj as TCAD_Lager)
-         two.add(group);
-         obj.setTwoObj(group);
-      }
-      else if (obj.elTyp === CAD_KNLAST && show_knotenlasten) {
-         let index1 = obj.index1
-         let group = draw_knotenlast(tr, (obj as TCAD_Knotenlast), index1, 1.0, 0, true)
-         two.add(group);
-         obj.setTwoObj(group);
-      }
-      else if (obj.elTyp === CAD_BEMASSUNG && show_bemassung) {
-         let group = drawBemassung(obj as TCAD_Bemassung, tr)
-         two.add(group);
-         obj.setTwoObj(group);
-      }
-      else if (obj.elTyp === CAD_KNOTVERFORMUNG && show_knotenverformung) {
-         let group = draw_knotenverformung(tr, obj as TCAD_Knotenverformung, 1.0, 0, true)
-         two.add(group);
-         obj.setTwoObj(group);
-      }
-   }
+      if (show_raster) drawRaster();
 
-   if (stadyn === 1) {
+      slmax_cad = Math.sqrt((raster_xmax - raster_xmin) ** 2 + (raster_zmax - raster_zmin) ** 2)
+
+      // Zeichne vorhandenes System
+
+      zero_offset_nodes();
+
+      //console.log('init cad list.size', list.size);
       for (let i = 0; i < list.size; i++) {
 
-         let obj: TCAD_Element = list.getNext(i);
+         // let obj: TCAD_Element = list.getNext(i);
 
-         if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
+         // let obj: TCAD_Element;
+         // if (i === 0) {
+         //    obj = list.getHead();
+         // } else {
+         let obj: TCAD_Element = list.getNext(i);
+         // }
+
+         if (obj.elTyp === CAD_KNOTEN) {
+            let group = draw_knoten(obj, tr)
+            two.add(group);
+            obj.setTwoObj(group);
+         }
+         else if (obj.elTyp === CAD_STAB) {
+            let group = drawStab(obj as TCAD_Stab, tr);
+            two.add(group);
+            obj.setTwoObj(group);
+         }
+         else if (obj.elTyp === CAD_LAGER && show_lager) {
+            let group = draw_lager(tr, obj as TCAD_Lager)
+            two.add(group);
+            obj.setTwoObj(group);
+         }
+         else if (obj.elTyp === CAD_KNLAST && show_knotenlasten) {
             let index1 = obj.index1
-            let group = draw_knotenmasse(tr, obj as TCAD_Knotenmasse, get_cad_node_X(index1), get_cad_node_Z(index1))
+            let group = draw_knotenlast(tr, (obj as TCAD_Knotenlast), index1, 1.0, 0, true)
+            two.add(group);
+            obj.setTwoObj(group);
+         }
+         else if (obj.elTyp === CAD_BEMASSUNG && show_bemassung) {
+            let group = drawBemassung(obj as TCAD_Bemassung, tr)
+            two.add(group);
+            obj.setTwoObj(group);
+         }
+         else if (obj.elTyp === CAD_KNOTVERFORMUNG && show_knotenverformung) {
+            let group = draw_knotenverformung(tr, obj as TCAD_Knotenverformung, 1.0, 0, true)
             two.add(group);
             obj.setTwoObj(group);
          }
       }
+
+      if (stadyn === 1) {
+         for (let i = 0; i < list.size; i++) {
+
+            let obj: TCAD_Element = list.getNext(i);
+
+            if (obj.elTyp === CAD_KNMASSE && show_knotenmassen) {
+               let index1 = obj.index1
+               let group = draw_knotenmasse(tr, obj as TCAD_Knotenmasse, get_cad_node_X(index1), get_cad_node_Z(index1))
+               two.add(group);
+               obj.setTwoObj(group);
+            }
+         }
+      }
+      two.update();
+
+      // dx_offset_touch = -tr.Pix0(raster_dx) * devicePixelRatio;
+      // dz_offset_touch = -tr.Pix0(raster_dz) * devicePixelRatio;
+      // let sl = Math.sqrt((xmaxv - xminv) ** 2 + (zmaxv - zminv) ** 2)
+      let sl = Math.sqrt(breite * breite + hoehe * hoehe)
+      dx_offset_touch = sl / 10 * devicePixelRatio * dx_offset_touch_fact //* devicePixelRatio;
+      dz_offset_touch = sl / 10 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
+      //   dx_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dx_offset_touch_fact //* devicePixelRatio;
+      //   dz_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
+      //write("dxz_offset_touch " + dx_offset_touch + '  ' + dz_offset_touch + '  ' + devicePixelRatio)
+
+      // let endTime = performance.now();
+      // write("time init_cad: " + (endTime - startTime) + " msec");
    }
-   two.update();
-
-   // dx_offset_touch = -tr.Pix0(raster_dx) * devicePixelRatio;
-   // dz_offset_touch = -tr.Pix0(raster_dz) * devicePixelRatio;
-   // let sl = Math.sqrt((xmaxv - xminv) ** 2 + (zmaxv - zminv) ** 2)
-   let sl = Math.sqrt(breite * breite + hoehe * hoehe)
-   dx_offset_touch = sl / 10 * devicePixelRatio * dx_offset_touch_fact //* devicePixelRatio;
-   dz_offset_touch = sl / 10 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
-   //   dx_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dx_offset_touch_fact //* devicePixelRatio;
-   //   dz_offset_touch = tr.Pix0(sl) / 7 * devicePixelRatio * dz_offset_touch_fact //* devicePixelRatio;
-   //write("dxz_offset_touch " + dx_offset_touch + '  ' + dz_offset_touch + '  ' + devicePixelRatio)
-
-   // let endTime = performance.now();
-   // write("time init_cad: " + (endTime - startTime) + " msec");
-
 
 }
 
@@ -1970,8 +1994,12 @@ function mouseup(ev: any) {
                let dz = end_z_wc - start_z_wc
                //let sl = Math.sqrt(dx * dx + dz * dz)
 
-               const el = document.getElementById("id_dialog_messen") as drDialogMessen;
-               el.set_dxdz(dx, dz);
+               const elHaupt = document.getElementById('id_haupt');
+               let shadow = elHaupt?.shadowRoot;
+               if (shadow) {
+                  const el = shadow.getElementById("id_dialog_messen") as drDialogMessen;
+                  el.set_dxdz(dx, dz);
+               }
                showDialog_messen();
 
                set_help_text('ersten Punkt picken');
@@ -2412,40 +2440,44 @@ export function draw_cad_knoten() {
 
    console.log('draw_cad_knoten');
 
-   const el = document.getElementById('id_dialog_knoten');
-   //console.log('id_dialog_knoten', el);
+   const elHaupt = document.getElementById('id_haupt') as drHaupt;
+   let shadow = elHaupt.shadowRoot;
+   if (shadow) {
+      //const el = shadow.getElementById('id_dialog_knoten');
+      //console.log('id_dialog_knoten', el);
 
-   //console.log("shadow showDialog_knoten", el?.shadowRoot?.getElementById("dialog_knoten").getValue())
+      //console.log("shadow showDialog_knoten", el?.shadowRoot?.getElementById("dialog_knoten").getValue())
 
-   let ele = document.getElementById('id_dialog_knoten') as drDialogKnoten;
-   // console.log('drDialogKnoten', ele.getValueX());
-   // console.log('drDialogKnoten', ele.getValueZ());
+      let ele = shadow.getElementById('id_dialog_knoten') as drDialogKnoten;
+      // console.log('drDialogKnoten', ele.getValueX());
+      // console.log('drDialogKnoten', ele.getValueZ());
 
-   let x = ele.getValueX();
-   let z = ele.getValueZ();
+      let x = ele.getValueX();
+      let z = ele.getValueZ();
 
-   let index = add_cad_node(x, z);
+      let index = add_cad_node(x, z);
 
-   console.log('index draw_cad_knoten ', index);
-   if (index === -1) {
+      console.log('index draw_cad_knoten ', index);
+      if (index === -1) {
 
-      let index1 = CADNodes.length - 1;
-      add_element_nodes(index1)
+         let index1 = CADNodes.length - 1;
+         add_element_nodes(index1)
 
-      let group = new Two.Group();
+         let group = new Two.Group();
 
-      const obj = new TCAD_Knoten(group, index1, CAD_KNOTEN);
-      list.append(obj);
+         const obj = new TCAD_Knoten(group, index1, CAD_KNOTEN);
+         list.append(obj);
 
-      group = draw_knoten(obj, tr)
-      two.add(group)
+         group = draw_knoten(obj, tr)
+         two.add(group)
 
-      two.update();
+         two.update();
 
-      obj.setTwoObj(group);
+         obj.setTwoObj(group);
 
-   } else {
-      alertdialog('ok', 'Knoten existiert bereits');
+      } else {
+         alertdialog('ok', 'Knoten existiert bereits');
+      }
    }
 
 }

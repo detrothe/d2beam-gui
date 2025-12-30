@@ -1,3 +1,4 @@
+console.log("Anfang 0 index.ts")
 
 import {msg} from '@lit/localize';
 import {allLocales} from './generated/locale-codes.js';
@@ -17,8 +18,11 @@ if (process.env.NODE_ENV !== "development") {
 // export const {getLocale} = configureTransformLocalization({
 //   sourceLocale: 'de',
 // });
+console.log("Anfang index.ts")
+//import './pages/haupt';
+import './components/dr-haupt'
+//import './pages/haupt3'
 
-import './pages/haupt';
 import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
 // import { rechnen } from './pages/rechnen'
@@ -344,8 +348,10 @@ else {
     // const letzteEinlesen = await dialog.confirm();
 
     //write("letzteEinlesen= " + letzteEinlesen)
+
     const letzteEinlesen = true
 
+    console.log("autoEingabeLesen, letzteEinlesen",letzteEinlesen)
     if (letzteEinlesen) {
         if (input !== null) read_daten(input);
         init_two_cad();

@@ -1,12 +1,13 @@
-//import { set_myScreen, app } from "./index.js";
-//console.log("enter einstellungen")
-// import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
+
+console.log("enter einstellungen")
+
 
 import { testeZahl } from "./utility.js";
 import { touch_support_table, set_touch_support_table } from './globals';
 import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 import { drDialogEinstellungen } from "../components/dr-dialog_einstellungen.js";
 import { set_dx_offset_touch_factor, set_dz_offset_touch_factor, set_fangweite_cursor, set_penLikeTouch, set_raster_dx, set_raster_dz, set_raster_xmax, set_raster_xmin, set_raster_zmax, set_raster_zmin, set_show_units, set_touch_support } from "./cad.js";
+import { drHaupt } from "../components/dr-haupt.js";
 //console.log("vor getElementId")
 //document.getElementById("unitLength")?.addEventListener('change', einstellungen);
 //document.getElementById("id_body_width")?.addEventListener('change', set_body_width);
@@ -31,13 +32,16 @@ let old_unit_length = 'cm'
 export function add_listeners_einstellungen() {
     //----------------------------------------------------------------------------------------------
 
-    document.getElementById("id_cb_saveLocalStorage")?.addEventListener('click', saveLocalStorage);
-    document.getElementById("id_cb_deleteLocalStorage")?.addEventListener('click', deleteLocalStorage);
+    const elHaupt = document.getElementById('id_haupt') as drHaupt;
+    let shadow = elHaupt.shadowRoot;
+    if (shadow) {
+        shadow.getElementById("id_cb_saveLocalStorage")?.addEventListener('click', saveLocalStorage);
+        shadow.getElementById("id_cb_deleteLocalStorage")?.addEventListener('click', deleteLocalStorage);
 
-    document.getElementById("id_fontsize")?.addEventListener('change', set_font_size);
-    document.getElementById("id_color_table_out")?.addEventListener('change', set_color_table_out);
-    document.getElementById("id_color_table_in")?.addEventListener('change', set_color_table_in);
-
+        shadow.getElementById("id_fontsize")?.addEventListener('change', set_font_size);
+        shadow.getElementById("id_color_table_out")?.addEventListener('change', set_color_table_out);
+        shadow.getElementById("id_color_table_in")?.addEventListener('change', set_color_table_in);
+    }
 }
 
 /*
@@ -83,16 +87,19 @@ function set_font_size() {
 function set_color_table_out() {
     //------------------------------------------------------------------------------------------
 
-    const el = document.getElementById("id_color_table_out") as HTMLInputElement;
-    color_table_out = el.value
-    //console.log("color_table_out", color_table_out)
+    const elHaupt = document.getElementById('id_haupt') as drHaupt;
+    let shadow = elHaupt.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_color_table_out") as HTMLInputElement;
+        color_table_out = el.value
+        //console.log("color_table_out", color_table_out)
 
-    const ntabelle = document.getElementById("nodeTable") as HTMLTableElement;
-    ntabelle.style.backgroundColor = color_table_out
+        const ntabelle = shadow.getElementById("nodeTable") as HTMLTableElement;
+        ntabelle.style.backgroundColor = color_table_out
 
-    const etabelle = document.getElementById("elemTable") as HTMLTableElement;
-    etabelle.style.backgroundColor = color_table_out
-
+        const etabelle = shadow.getElementById("elemTable") as HTMLTableElement;
+        etabelle.style.backgroundColor = color_table_out
+    }
 
 }
 
@@ -100,18 +107,22 @@ function set_color_table_out() {
 function set_color_table_in() {
     //------------------------------------------------------------------------------------------
 
-    const el = document.getElementById("id_color_table_in") as HTMLInputElement;
-    color_table_in = el.value
-    //console.log("color_table_in", color_table_in)
+    const elHaupt = document.getElementById('id_haupt') as drHaupt;
+    let shadow = elHaupt.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_color_table_in") as HTMLInputElement;
+        color_table_in = el.value
+        //console.log("color_table_in", color_table_in)
 
 
-    const ntabelle = document.getElementById("nodeTable") as HTMLTableElement;
-    for (let i = 1; i < ntabelle.rows.length; i++) {
-        ntabelle.rows[i].cells[0].style.backgroundColor = color_table_in
-    }
-    const etabelle = document.getElementById("elemTable") as HTMLTableElement;
-    for (let i = 1; i < etabelle.rows.length; i++) {
-        etabelle.rows[i].cells[0].style.backgroundColor = color_table_in
+        const ntabelle = shadow.getElementById("nodeTable") as HTMLTableElement;
+        for (let i = 1; i < ntabelle.rows.length; i++) {
+            ntabelle.rows[i].cells[0].style.backgroundColor = color_table_in
+        }
+        const etabelle = shadow.getElementById("elemTable") as HTMLTableElement;
+        for (let i = 1; i < etabelle.rows.length; i++) {
+            etabelle.rows[i].cells[0].style.backgroundColor = color_table_in
+        }
     }
 }
 
@@ -123,13 +134,15 @@ export function set_current_unit_length(unitLength: string) {
     current_unit_length = unitLength;
     old_unit_length = unitLength;
 
+    const elHaupt = document.getElementById('id_haupt') as drHaupt;
+    let shadow = elHaupt.shadowRoot;
+    if (shadow) {
+        const auswahl = shadow.getElementById("unitLength") as HTMLInputElement
+        auswahl.value = unitLength
 
-    const auswahl = document.getElementById("unitLength") as HTMLInputElement
-    auswahl.value = unitLength
-
-    set_unit_factors(unitLength)
-    //setNewUnits()
-
+        set_unit_factors(unitLength)
+        //setNewUnits()
+    }
 
 }
 /*
@@ -283,23 +296,27 @@ function saveLocalStorage() {
     //    const input = document.getElementById('id_cb_saveLocalStorage') as HTMLInputElement | null;
     console.log("in saveLocalStorage : ")
 
-    let el = document.getElementById("id_fontsize") as HTMLInputElement;
-    my_fontsize = el.value
+    const elHaupt = document.getElementById('id_haupt') as drHaupt;
+    let shadow = elHaupt.shadowRoot;
+    if (shadow) {
+        let el = shadow.getElementById("id_fontsize") as HTMLInputElement;
+        my_fontsize = el.value
 
-    el = document.getElementById("id_color_table_out") as HTMLInputElement;
-    color_table_out = el.value
+        el = shadow.getElementById("id_color_table_out") as HTMLInputElement;
+        color_table_out = el.value
 
-    el = document.getElementById("id_color_table_in") as HTMLInputElement;
-    color_table_in = el.value
+        el = shadow.getElementById("id_color_table_in") as HTMLInputElement;
+        color_table_in = el.value
 
-    //window.localStorage.setItem('current_unit_length', current_unit_length);
-    window.localStorage.setItem('my_fontsize', my_fontsize);
-    window.localStorage.setItem('color_table_out', color_table_out);
-    window.localStorage.setItem('color_table_in', color_table_in);
+        //window.localStorage.setItem('current_unit_length', current_unit_length);
+        window.localStorage.setItem('my_fontsize', my_fontsize);
+        window.localStorage.setItem('color_table_out', color_table_out);
+        window.localStorage.setItem('color_table_in', color_table_in);
 
-    window.localStorage.setItem('touch_support_tables', String(touch_support_table));
+        window.localStorage.setItem('touch_support_tables', String(touch_support_table));
 
-    console.log("saveLocalStorage, my_fontsize", my_fontsize)
+        console.log("saveLocalStorage, my_fontsize", my_fontsize)
+    }
 }
 
 
@@ -324,81 +341,86 @@ export function readLocalStorage() {
         console.log("nix gemacht")
     }
 */
-    const default_fontsize = window.localStorage.getItem('my_fontsize');
-    console.log("fontsize", default_fontsize)
-    if (default_fontsize) {
-        const el = document.getElementById("id_fontsize") as HTMLInputElement
-        console.log("fontsize", el.value, default_fontsize)
-        if (el.value !== default_fontsize) {
-            el.value = default_fontsize
-            my_fontsize = default_fontsize
-            document.body.style.fontSize = my_fontsize
-            // set css variable
-            const root = document.querySelector(':root') as HTMLElement;
-            root?.style.setProperty('size-size', my_fontsize);
-            set_font_size_root(my_fontsize);
+
+    const elHaupt = document.getElementById('id_haupt') as drHaupt;
+    let shadow = elHaupt.shadowRoot;
+    if (shadow) {
+
+        const default_fontsize = window.localStorage.getItem('my_fontsize');
+        console.log("fontsize", default_fontsize)
+        if (default_fontsize) {
+            const el = shadow.getElementById("id_fontsize") as HTMLInputElement
+            console.log("fontsize", el.value, default_fontsize)
+            if (el.value !== default_fontsize) {
+                el.value = default_fontsize
+                my_fontsize = default_fontsize
+                document.body.style.fontSize = my_fontsize
+                // set css variable
+                const root = shadow.querySelector(':root') as HTMLElement;
+                root?.style.setProperty('size-size', my_fontsize);
+                set_font_size_root(my_fontsize);
+            }
+        } else {
+            const width = Math.min(document.documentElement.clientWidth, document.documentElement.clientHeight)
+            const el = shadow.getElementById("id_fontsize") as HTMLInputElement
+            console.log("$$$$", width, el)
+            if (width < 380) {
+                let size = '0.625em'    // 10
+                el.value = size
+                my_fontsize = size
+                document.body.style.fontSize = size
+            }
+            else if (width < 420) {
+                let size = '0.7em'    // 11
+                el.value = size
+                my_fontsize = size
+                document.body.style.fontSize = size
+            } else if (width < 450) {
+                let size = '0.75em'    // 12
+                el.value = size
+                my_fontsize = size
+                document.body.style.fontSize = size
+            }
+            else if (width < 535) {
+                let size = '0.875em'  // 14
+                el.value = size
+                my_fontsize = size
+                document.body.style.fontSize = size
+            }
         }
-    } else {
-        const width = Math.min(document.documentElement.clientWidth, document.documentElement.clientHeight)
-        const el = document.getElementById("id_fontsize") as HTMLInputElement
-        console.log("$$$$", width, el)
-        if (width < 380) {
-            let size = '0.625em'    // 10
-            el.value = size
-            my_fontsize = size
-            document.body.style.fontSize = size
+
+        let color = window.localStorage.getItem('color_table_out');
+        if (color) {
+            const el = shadow.getElementById("id_color_table_out") as HTMLInputElement
+            el.value = color
+            color_table_out = color
         }
-        else if (width < 420) {
-            let size = '0.7em'    // 11
-            el.value = size
-            my_fontsize = size
-            document.body.style.fontSize = size
-        } else if (width < 450) {
-            let size = '0.75em'    // 12
-            el.value = size
-            my_fontsize = size
-            document.body.style.fontSize = size
+
+        color = window.localStorage.getItem('color_table_in');
+        if (color) {
+            const el = shadow.getElementById("id_color_table_in") as HTMLInputElement
+            el.value = color
+            color_table_in = color
         }
-        else if (width < 535) {
-            let size = '0.875em'  // 14
-            el.value = size
-            my_fontsize = size
-            document.body.style.fontSize = size
+
+
+        let touch_support = window.localStorage.getItem('touch_support_tables');
+        //console.log('touch_support',touch_support)
+        if (touch_support) {
+            const el = shadow.getElementById("id_touch_support_tables") as SlCheckbox
+            const isTrueSet = (touch_support?.toLowerCase?.() === 'true');
+            el.checked = isTrueSet
+            set_touch_support_table(isTrueSet)
+        } else {
+            const el = shadow.getElementById("id_touch_support_tables") as SlCheckbox
+            el.checked = false
+            set_touch_support_table(false)
         }
+
+
+        console.log("exit readLocalStorage")
+        console.log("readLocalStorage", my_fontsize, color_table_out, color_table_in)
     }
-
-    let color = window.localStorage.getItem('color_table_out');
-    if (color) {
-        const el = document.getElementById("id_color_table_out") as HTMLInputElement
-        el.value = color
-        color_table_out = color
-    }
-
-    color = window.localStorage.getItem('color_table_in');
-    if (color) {
-        const el = document.getElementById("id_color_table_in") as HTMLInputElement
-        el.value = color
-        color_table_in = color
-    }
-
-
-    let touch_support = window.localStorage.getItem('touch_support_tables');
-    //console.log('touch_support',touch_support)
-    if (touch_support) {
-        const el = document.getElementById("id_touch_support_tables") as SlCheckbox
-        const isTrueSet = (touch_support?.toLowerCase?.() === 'true');
-        el.checked = isTrueSet
-        set_touch_support_table(isTrueSet)
-    } else {
-        const el = document.getElementById("id_touch_support_tables") as SlCheckbox
-        el.checked = false
-        set_touch_support_table(false)
-    }
-
-
-    console.log("exit readLocalStorage")
-    console.log("readLocalStorage", my_fontsize, color_table_out, color_table_in)
-
 }
 
 //----------------------------------------------------------------------------------------------
@@ -475,96 +497,99 @@ function set_font_size_root(em: string) {
 export function readLocalStorage_cad() {
     //------------------------------------------------------------------------------------------
 
+    const elHaupt = document.getElementById('id_haupt') as drHaupt;
+    let shadow = elHaupt.shadowRoot;
+    if (shadow) {
 
-    let ele = document.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
+        let ele = shadow.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
 
-    let valueb = window.localStorage.getItem('cad_NO_touch_support')
-    console.log("cad_NO_touch_support", valueb)
-    if (valueb !== null) {
-        if (valueb === 'true') {
-            ele.set_NO_touch_support(true)
-            set_touch_support(false)
-        } else {
-            ele.set_NO_touch_support(false)
-            set_touch_support(true)
+        let valueb = window.localStorage.getItem('cad_NO_touch_support')
+        console.log("cad_NO_touch_support", valueb)
+        if (valueb !== null) {
+            if (valueb === 'true') {
+                ele.set_NO_touch_support(true)
+                set_touch_support(false)
+            } else {
+                ele.set_NO_touch_support(false)
+                set_touch_support(true)
+            }
         }
-    }
 
-    valueb = window.localStorage.getItem('cad_NO_units')
-    console.log("cad_NO_units", valueb, !!valueb)
-    if (valueb !== null) {
-        if (valueb === 'true') {
-            ele.set_show_units(true)
-            set_show_units(false)
-        } else {
-            ele.set_show_units(false)
-            set_show_units(true)
+        valueb = window.localStorage.getItem('cad_NO_units')
+        console.log("cad_NO_units", valueb, !!valueb)
+        if (valueb !== null) {
+            if (valueb === 'true') {
+                ele.set_show_units(true)
+                set_show_units(false)
+            } else {
+                ele.set_show_units(false)
+                set_show_units(true)
+            }
         }
-    }
 
-    valueb = window.localStorage.getItem('cad_penLikeTouch')
-    console.log("cad_penLikeTouch", valueb, !!valueb)
-    if (valueb !== null) {
-        if (valueb === 'true') {
-            ele.set_penLikeTouch(true)
-            set_penLikeTouch(true)
-        } else {
-            ele.set_penLikeTouch(false)
-            set_penLikeTouch(false)
+        valueb = window.localStorage.getItem('cad_penLikeTouch')
+        console.log("cad_penLikeTouch", valueb, !!valueb)
+        if (valueb !== null) {
+            if (valueb === 'true') {
+                ele.set_penLikeTouch(true)
+                set_penLikeTouch(true)
+            } else {
+                ele.set_penLikeTouch(false)
+                set_penLikeTouch(false)
+            }
         }
-    }
 
-    let value = window.localStorage.getItem('cad_id_fangweite_cursor')
-    if (value !== null) {
-        ele.set_fangweite_cursor(Number(value))
-        set_fangweite_cursor(Number(value));
-    }
-    value = window.localStorage.getItem('cad_id_fact_lager')
-    if (value !== null) ele.set_faktor_lagersymbol(Number(value))
+        let value = window.localStorage.getItem('cad_id_fangweite_cursor')
+        if (value !== null) {
+            ele.set_fangweite_cursor(Number(value))
+            set_fangweite_cursor(Number(value));
+        }
+        value = window.localStorage.getItem('cad_id_fact_lager')
+        if (value !== null) ele.set_faktor_lagersymbol(Number(value))
 
-    value = window.localStorage.getItem('cad_id_dx_offset_factor')
-    if (value !== null) {
-        ele.set_dx_offset(Number(value))
-        set_dx_offset_touch_factor(Number(value))
-    }
-    value = window.localStorage.getItem('cad_id_dz_offset_factor')
-    if (value !== null) {
-        ele.set_dz_offset(Number(value))
-        set_dz_offset_touch_factor(Number(value))
-    }
+        value = window.localStorage.getItem('cad_id_dx_offset_factor')
+        if (value !== null) {
+            ele.set_dx_offset(Number(value))
+            set_dx_offset_touch_factor(Number(value))
+        }
+        value = window.localStorage.getItem('cad_id_dz_offset_factor')
+        if (value !== null) {
+            ele.set_dz_offset(Number(value))
+            set_dz_offset_touch_factor(Number(value))
+        }
 
-    value = window.localStorage.getItem('cad_id_dx')
-    if (value !== null) {
-        ele.set_raster_dx(Number(value))
-        set_raster_dx(Number(value));
-    }
-    value = window.localStorage.getItem('cad_id_dz')
-    if (value !== null) {
-        ele.set_raster_dz(Number(value))
-        set_raster_dz(Number(value));
-    }
-    value = window.localStorage.getItem('cad_id_xmin')
-    if (value !== null) {
-        ele.set_raster_xmin(Number(value))
-        set_raster_xmin(Number(value));
-    }
-    value = window.localStorage.getItem('cad_id_xmax')
-    if (value !== null) {
-        ele.set_raster_xmax(Number(value))
-        set_raster_xmax(Number(value));
-    }
-    value = window.localStorage.getItem('cad_id_zmin')
-    if (value !== null) {
-        ele.set_raster_zmin(Number(value))
-        set_raster_zmin(Number(value));
-    }
-    value = window.localStorage.getItem('cad_id_zmax')
-    if (value !== null) {
-        ele.set_raster_zmax(Number(value))
-        set_raster_zmax(Number(value));
-    }
+        value = window.localStorage.getItem('cad_id_dx')
+        if (value !== null) {
+            ele.set_raster_dx(Number(value))
+            set_raster_dx(Number(value));
+        }
+        value = window.localStorage.getItem('cad_id_dz')
+        if (value !== null) {
+            ele.set_raster_dz(Number(value))
+            set_raster_dz(Number(value));
+        }
+        value = window.localStorage.getItem('cad_id_xmin')
+        if (value !== null) {
+            ele.set_raster_xmin(Number(value))
+            set_raster_xmin(Number(value));
+        }
+        value = window.localStorage.getItem('cad_id_xmax')
+        if (value !== null) {
+            ele.set_raster_xmax(Number(value))
+            set_raster_xmax(Number(value));
+        }
+        value = window.localStorage.getItem('cad_id_zmin')
+        if (value !== null) {
+            ele.set_raster_zmin(Number(value))
+            set_raster_zmin(Number(value));
+        }
+        value = window.localStorage.getItem('cad_id_zmax')
+        if (value !== null) {
+            ele.set_raster_zmax(Number(value))
+            set_raster_zmax(Number(value));
+        }
 
-
+    }
 
 }
 

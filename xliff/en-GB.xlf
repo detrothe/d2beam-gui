@@ -6,13 +6,13 @@
   <source>Kurzinformationen GUI</source>
   <target>short information for GUI</target>
 </trans-unit>
-<trans-unit id="s4a73475a66d0ff67">
-  <source>Objektdaten einlesen</source>
-  <target>read object data</target>
-</trans-unit>
 <trans-unit id="s6750e087f400b3eb">
   <source>isAndroid =</source>
   <target>ist Android</target>
+</trans-unit>
+<trans-unit id="s9fba2bcfd7807411">
+  <source>Haupt</source>
+   <target>Main</target>
 </trans-unit>
 </body>
 </file>

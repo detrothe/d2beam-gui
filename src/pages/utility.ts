@@ -1,3 +1,4 @@
+//import { drHaupt } from "../components/dr-haupt";
 
 //------------------------------------------------------------------------------------------------
 export function testeZahl(wert: any) {
@@ -36,7 +37,7 @@ export function testNumber(wert: string, zeile: number, spalte: number, id: any)
 
     let nwert = Number(wert)
     if (isNaN(nwert)) {
-        write("Das ist keine zulässige Zahl in Zeile " + zeile + ", spalte " + spalte );
+        write("Das ist keine zulässige Zahl in Zeile " + zeile + ", spalte " + spalte);
 
         console.log("FEHLER TABELLE", id);
 
@@ -77,12 +78,17 @@ export function set_info() {
     let clientWidth = document.documentElement.clientWidth;
     let clientHeight = document.documentElement.clientHeight;
     let breite = Math.min(clientWidth, 760);
-    document.getElementById("id_doc")?.setAttribute("width", breite + "px");
-    document.getElementById("id_doc")?.setAttribute("height", clientHeight + "px");
-    let left = (clientWidth - breite) / 2
-    if (left < 0) left = 0;
-    (document.getElementById("id_doc_frame") as HTMLDivElement).style.left = left + 'px';
-    //console.log("id_doc_frame", (clientWidth - breite) / 2)
+
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        shadow.getElementById("id_doc")?.setAttribute("width", breite + "px");
+        shadow.getElementById("id_doc")?.setAttribute("height", clientHeight + "px");
+        let left = (clientWidth - breite) / 2
+        if (left < 0) left = 0;
+        (shadow.getElementById("id_doc_frame") as HTMLDivElement).style.left = left + 'px';
+        //console.log("id_doc_frame", (clientWidth - breite) / 2)
+    }
 }
 
 
@@ -90,11 +96,15 @@ export function set_info() {
 export function write(str: string, wert?: number) {
     //----------------------------------------------------------------------------------------------------
 
-    const out = document.getElementById('output') as HTMLTextAreaElement;
-    if (out) {
-        if (wert) out.value += str + wert + "\n";
-        else out.value += str + "\n";
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        const out = shadow.getElementById('output') as HTMLTextAreaElement;
+        if (out) {
+            if (wert) out.value += str + wert + "\n";
+            else out.value += str + "\n";
 
-        out.scrollTop = out.scrollHeight; // focus on bottom
+            out.scrollTop = out.scrollHeight; // focus on bottom
+        }
     }
 }
