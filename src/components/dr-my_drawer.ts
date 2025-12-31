@@ -178,15 +178,20 @@ export class drMyDrawer extends LitElement {
 
    _div_ok() {
       console.log('div_drawer_ok');
-      const shadow = this.shadowRoot;
-      const el = document.querySelector('.class-my-drawer') as HTMLElement;
-      //console.log('class-my-drawer', el);
-      el.style.display = 'none';
-      this.sticky = false;
-      set_hide_drawer(true);
-      // if (shadow) {
-      //    (shadow.getElementById('div_drawer') as HTMLDialogElement).close('ok');
-      // }
+      //const shadow = this.shadowRoot;
+
+      const elHaupt = document.getElementById('id_haupt');
+      let shadow = elHaupt?.shadowRoot;
+      if (shadow) {
+         const el = shadow.querySelector('.class-my-drawer') as HTMLElement;
+         //console.log('class-my-drawer', el);
+         el.style.display = 'none';
+         this.sticky = false;
+         set_hide_drawer(true);
+         // if (shadow) {
+         //    (shadow.getElementById('div_drawer') as HTMLDialogElement).close('ok');
+         // }
+      }
    }
 
    _sticky() {

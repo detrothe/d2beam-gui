@@ -1,11 +1,15 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 //import { property, customElement } from 'lit/decorators.js';
 import { msg, localized, updateWhenLocaleChanges } from '@lit/localize';
 
-import '../styles/global.css';
-import '../styles/contextMenu.css';
-import '../styles/dr-drawer.css';
+import '../styles/global-css'
+import '../styles/contextMenu-css'
+//import '../styles/dr-drawer-css.js'
+
+// import '../styles/global.css';
+// import '../styles/contextMenu.css';
+// import '../styles/dr-drawer.css';
 
 import '@shoelace-style/shoelace/dist/components/card/card.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
@@ -53,6 +57,8 @@ import { berechnungErforderlich } from '../pages/globals';
 
 import '../pages/locale-picker'
 import { init_haupt3 } from '../pages/haupt3';
+import { global_css } from '../styles/global-css';
+//import { contextMenu_css } from '../styles/contextMenu-css';
 
 console.log('in dr-haupt');
 
@@ -103,6 +109,10 @@ let hostname = window.location.hostname;
 @localized()
 @customElement('dr-haupt')
 export class drHaupt extends LitElement {
+
+
+  static styles = [global_css];
+
   constructor() {
     super();
     updateWhenLocaleChanges(this);

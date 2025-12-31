@@ -75,15 +75,19 @@ export function showDialog_knotenverformung(/* show_nur_lastfall = false */) {
     //------------------------------------------------------------------------------------------------------------
     console.log("dialog_knotenverformung_closed()");
 
-    const el = document.getElementById("id_dialog_knotenverformung");
-    console.log("id_dialog_knotenverformung", el);
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_knotenverformung");
+        console.log("id_dialog_knotenverformung", el);
 
-    console.log("shadow", el?.shadowRoot?.getElementById("dialog_knotenverformung")),
-        (el?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).addEventListener("close", dialog_knotenverformung_closed);
+        console.log("shadow", el?.shadowRoot?.getElementById("dialog_knotenverformung")),
+            (el?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).addEventListener("close", dialog_knotenverformung_closed);
 
-    set_help_text('Knoten picken');
+        set_help_text('Knoten picken');
 
-    (el?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).showModal();
+        (el?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).showModal();
+    }
 }
 
 
@@ -92,22 +96,27 @@ function dialog_knotenverformung_closed(this: any, e: any) {
     //------------------------------------------------------------------------------------------------------------
     console.log("Event dialog_knotenverformung_closed", e);
     console.log("this", this);
-    const ele = document.getElementById("id_dialog_knotenverformung") as HTMLDialogElement;
 
-    // ts-ignore
-    const returnValue = this.returnValue;
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        const ele = shadow.getElementById("id_dialog_knotenverformung") as HTMLDialogElement;
 
-    if (returnValue === "ok") {
-        //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
-        console.log("sieht gut aus");
-        if (mode_knotenverformung_aendern) update_knotenverformung();
-        else if (mode_multi_selected_knotenverformung_aendern) update_multi_selected_knotenverformung();
-    } else {
-        // Abbruch
-        (ele?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).removeEventListener("close", dialog_knotenverformung_closed);
+        // ts-ignore
+        const returnValue = this.returnValue;
 
-        // knoten_eingabe_beenden();
-        buttons_control.reset()
+        if (returnValue === "ok") {
+            //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+            console.log("sieht gut aus");
+            if (mode_knotenverformung_aendern) update_knotenverformung();
+            else if (mode_multi_selected_knotenverformung_aendern) update_multi_selected_knotenverformung();
+        } else {
+            // Abbruch
+            (ele?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).removeEventListener("close", dialog_knotenverformung_closed);
+
+            // knoten_eingabe_beenden();
+            buttons_control.reset()
+        }
     }
 }
 
@@ -119,27 +128,30 @@ export function read_knotenverformung_dialog(nodeDisp: CNodeDisp): boolean {
 
     let ok = true;
 
-    const el = document.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
 
-    nodeDisp.lf = el.get_lastfall();
-    if (nodeDisp.lf <= 0) {
-        ok = false;
-        alertdialog('ok', 'Lastfall muss größer 0 sein');
-        return ok;
+        nodeDisp.lf = el.get_lastfall();
+        if (nodeDisp.lf <= 0) {
+            ok = false;
+            alertdialog('ok', 'Lastfall muss größer 0 sein');
+            return ok;
+        }
+
+        set_max_lastfall(nodeDisp.lf)
+
+        nodeDisp.dispx0 = el.get_ux0();
+        nodeDisp.dispz0 = el.get_uz0();
+        nodeDisp.phi0 = el.get_phi0();
+
+        if (Number(nodeDisp.dispx0) === 0 && Number(nodeDisp.dispz0) === 0 && Number(nodeDisp.phi0) === 0) {
+            ok = false;
+            alertdialog('ok', 'mindestens ein Verformungskomponente muss ungleich null sein');
+            return ok;
+        }
     }
-
-    set_max_lastfall(nodeDisp.lf)
-
-    nodeDisp.dispx0 = el.get_ux0();
-    nodeDisp.dispz0 = el.get_uz0();
-    nodeDisp.phi0 = el.get_phi0();
-
-    if (Number(nodeDisp.dispx0) === 0 && Number(nodeDisp.dispz0) === 0 && Number(nodeDisp.phi0) === 0) {
-        ok = false;
-        alertdialog('ok', 'mindestens ein Verformungskomponente muss ungleich null sein');
-        return ok;
-    }
-
     return ok;
 
 }
@@ -149,12 +161,16 @@ export function read_knotenverformung_dialog(nodeDisp: CNodeDisp): boolean {
 export function write_knotenverformung_dialog(nodeDisp: CNodeDisp) {
     //-----------------------------------------------------------------------------------------------------------
 
-    const el = document.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
+    const elHaupt = document.getElementById('id_haupt');
+    let shadow = elHaupt?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
 
-    el.set_lastfall(nodeDisp.lf)
-    el.set_ux0(nodeDisp.dispx0)
-    el.set_uz0(nodeDisp.dispz0)
-    el.set_phi0(nodeDisp.phi0)
+        el.set_lastfall(nodeDisp.lf)
+        el.set_ux0(nodeDisp.dispx0)
+        el.set_uz0(nodeDisp.dispz0)
+        el.set_phi0(nodeDisp.phi0)
+    }
 
 }
 
