@@ -38,8 +38,8 @@ import '../components/dr-my_drawer';
 
 import './locale-picker';
 
-import { drButtonPM } from '../components/dr-button-pm';
-import { drRechteckQuerSchnitt } from '../components/dr-dialog-rechteckquerschnitt';
+// import { drButtonPM } from '../components/dr-button-pm';
+// import { drRechteckQuerSchnitt } from '../components/dr-dialog-rechteckquerschnitt';
 //import { drMyDrawer } from '../components/dr-my_drawer';
 
 // import { reset_gui } from './mypanelgui';

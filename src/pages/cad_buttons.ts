@@ -72,7 +72,7 @@ import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast,
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 import { change_def_querschnitt } from "./querschnitte";
 import { drDialogKnoten } from "../components/dr-dialog_knoten";
-import { CTrans } from "./trans";
+// import { CTrans } from "./trans";
 import Two from "two.js";
 import { add_element_nodes, CADNodes, get_cad_node_X, get_cad_node_Z, get_ID, remove_element_nodes } from "./cad_node";
 import { draw_elementlasten, find_max_Lastfall, find_maxValues_eloads, max_Lastfall, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
@@ -82,13 +82,13 @@ import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast";
 import { berechnungErforderlich } from "./globals";
 import { drawBemassung, TCAD_Bemassung } from "./cad_bemassung";
 import { drDialogBemassung } from "../components/dr-dialog_bemassung";
-import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
+// import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
 import { draw_knotenverformung, showDialog_knotenverformung, write_knotenverformung_dialog } from "./cad_knotenverformung";
 import { drDrawer_1 } from "../components/dr-drawer_1";
 import { mode_multi_selected_elementlast_aendern, mode_multi_selected_knotenlast_aendern, mode_multi_selected_knotenmasse_aendern, update_multi_selected_elementlast, update_multi_selected_knotenlast, update_multi_selected_knotenmasse } from "./cad_select";
-import { LitElement } from "lit";
-import { drMyDrawer } from "../components/dr-my_drawer";
-import { AlertDialog } from "./confirm_dialog";
+// import { LitElement } from "lit";
+// import { drMyDrawer } from "../components/dr-my_drawer";
+// import { AlertDialog } from "./confirm_dialog";
 import { drHaupt } from "../components/dr-haupt";
 
 let backgroundColor_button = 'rgb(64, 64, 64)';

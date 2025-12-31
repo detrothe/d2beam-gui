@@ -5,11 +5,8 @@ import { msg, localized, updateWhenLocaleChanges } from '@lit/localize';
 
 import '../styles/global-css'
 import '../styles/contextMenu-css'
-//import '../styles/dr-drawer-css.js'
+// import '../styles/global.css'
 
-// import '../styles/global.css';
-// import '../styles/contextMenu.css';
-// import '../styles/dr-drawer.css';
 
 import '@shoelace-style/shoelace/dist/components/card/card.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
@@ -29,7 +26,7 @@ import '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
 import '@shoelace-style/shoelace/dist/components/divider/divider';
 import '@shoelace-style/shoelace/dist/components/drawer/drawer';
 
-import { cad_buttons, close_drawer_1 } from '../pages/cad_buttons';
+import { close_drawer_1 } from '../pages/cad_buttons';
 import {
   abbruch_property_dialog,
   delete_element_dialog,
@@ -170,7 +167,7 @@ export class drHaupt extends LitElement {
         <hr />
 
         <p><span id="lab_freier_text" title="Der eingegebene Text wird auch für die pdf-Ergebnissdatei verwendet">Projekt (freier Text mit HTML Formatierung für fett):</span><br>
-          <textarea id="freetext" name="freetext" rows="3" cols="50" placeholder="<b>Hausübung A1, SS 2023</b>
+          <textarea id="freetext" name="freetext" rows="3" cols="50" placeholder="<b>Hausübung A1, SS 2025</b>
 Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einrahmen, Zeilenumbruch mit Return-Taste"></textarea>
         </p>
 
