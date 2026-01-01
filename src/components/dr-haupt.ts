@@ -98,7 +98,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.0, 30.Dezember-2025, ';
+  '2D structural analysis of frames and trusses, v1.8.0, 1.Januar-2026, ';
 //########################################################################################################################
 
 let hostname = window.location.hostname;
@@ -153,7 +153,8 @@ export class drHaupt extends LitElement {
          <sl-button id="intro_video" value="video" variant="primary"  outline @click="${show_video}" style='width:20rem;color:"DodgerBlue";'><b>zeige Einführungsvideos</b></sl-button>
         </p>
 
-        <p><div id="id_current_filename">&nbsp;&nbsp;aktueller Dateiname: ${currentFilename}<br /></div>
+        <p><span id="id_current_filename">&nbsp;&nbsp;aktueller Dateiname: </span><br />
+        <!-- ${currentFilename} -->
         </p>
         <p>
           <button type="button" id="saveFile" style="min-width:8em;">
@@ -313,6 +314,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0">
           <!-- width:100vw; ;width:300px;height:300px; -->
           <div id="panel_gui"></div>
+          <dr-control-panel id="id_control_panel"></dr-control-panel>
           <div id="id_grafik_group">
             <div id="id_div_select_lc">
               <select id="id_select_loadcase" on></select>

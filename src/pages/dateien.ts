@@ -98,7 +98,7 @@ export function read_daten(eingabedaten: string) {
     //write("start read_daten");
     startTime = performance.now();
 
-    console.log("eingabedaten", eingabedaten);
+    // console.log("eingabedaten", eingabedaten);
     let jobj = JSON.parse(eingabedaten);
     //console.log("und zurück", jobj);
 
@@ -116,7 +116,7 @@ export function read_daten(eingabedaten: string) {
 
     const elHaupt = document.getElementById('id_haupt');
     let shadow = elHaupt?.shadowRoot;
-    console.log("shadow",shadow)
+    //console.log("shadow",shadow)
     if (shadow) {
         {
             let ele = shadow?.getElementById(

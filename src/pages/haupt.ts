@@ -35,6 +35,7 @@ import '../components/dr-dialog_kopieren';
 import '../components/dr-dialog_selekt_typ';
 import '../components/dr-dialog_edit_selected_elementlasten';
 import '../components/dr-my_drawer';
+import '../components/dr-control-panel'
 
 import './locale-picker';
 
@@ -402,7 +403,7 @@ export function set_current_filename(name: string) {
   const elHaupt = document.getElementById('id_haupt');
   let shadow = elHaupt?.shadowRoot;
   if (shadow) {
-    const el = shadow.getElementById('id_current_filename') as HTMLElement;
+    const el = shadow.getElementById('id_current_filename') as HTMLSpanElement;
     el.innerHTML = '&nbsp;&nbsp;aktueller Dateiname: ' + currentFilename;
   }
 }
