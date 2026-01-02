@@ -492,7 +492,7 @@ class DrTabelle extends HTMLElement {
    show_column(iSpalte: number) {
       //------------------------------------------------------------------------------------------------------------
 
-      console.info('in show_column');
+      //console.info('in show_column');
 
       const tabelle = this.shadow.getElementById('mytable') as any;
       const nZeilen = this.nZeilen;

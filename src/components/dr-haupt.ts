@@ -100,10 +100,10 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.0, 2.Januar-2026, ';
+  '2D structural analysis of frames and trusses, v1.8.1, 2.Januar-2026, ';
 //########################################################################################################################
 
-setBasePath('../src/shoelace/dist');
+setBasePath('./src/shoelace/dist/assets/icons');
 
 let hostname = window.location.hostname;
 
