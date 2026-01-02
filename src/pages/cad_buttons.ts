@@ -384,24 +384,52 @@ export function cad_buttons() {
     const undo_button = document.createElement("button");
 
     undo_button.value = "undo";
-    undo_button.className = "btn";
-    undo_button.innerHTML = '<i class = "fa fa-undo"></i>';
+    undo_button.className = "btn_svg";
+    undo_button.innerHTML = `<svg fill="#ffffff" height="1rem" width="1rem" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+<path d="M256,1C179.8,1,111.7,34.4,64.9,87.2L0,22.3V193h170.7l-60.2-60.2C145.6,91.5,197.5,65,256,65c106.1,0,192,85.9,192,192
+	c0,106.1-85.9,192-192,192c-53,0-101-21.5-135.8-56.2L75,438c46.4,46.3,110.4,75,181,75c141.4,0,256-114.6,256-256S397.4,1,256,1z"
+	/>
+</svg>`;
+    // undo_button.innerHTML = '<i class = "fa fa-undo"></i>';
     undo_button.addEventListener("click", unDo_button);
     undo_button.title = "undo";
 
     const redo_button = document.createElement("button");
 
     redo_button.value = "redo";
-    redo_button.className = "btn";
-    redo_button.innerHTML = '<i class = "fa fa-repeat"></i>';
+    redo_button.className = "btn_svg";
+    redo_button.innerHTML = `<svg fill="#ffffff" height="1rem" width="1rem" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+<path d="M512,192V21.3l-64.9,64.9C400.3,33.4,332.2,0,256,0C114.6,0,0,114.6,0,256s114.6,256,256,256c70.7,0,134.7-28.6,181-75
+	l-45.3-45.2C357,426.5,309,448,256,448c-106,0-192-85.9-192-192c0-106.1,86-192,192-192c58.5,0,110.4,26.5,145.5,67.8L341.3,192H512
+	z"/>
+</svg>`;
+    // redo_button.innerHTML = '<i class = "fa fa-repeat"></i>';
     redo_button.addEventListener("click", reDo_button);
     redo_button.title = "redo";
 
     const trash_button = document.createElement("button");
 
     trash_button.value = "delete";
-    trash_button.className = "btn";
-    trash_button.innerHTML = '<i class = "fa fa-trash"></i>';
+    trash_button.className = "btn_svg";
+    // trash_button.innerHTML = '<i class = "fa fa-trash"></i>';
+    trash_button.innerHTML = `<svg fill="#ffffff" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"	 width="1rem" height="1rem" viewBox="0 0 48.639 48.639"	 xml:space="preserve">
+	<g>
+		<path d="M42.055,6.696h-8.783v-2.36C33.271,1.944,31.327,0,28.936,0h-9.232c-2.392,0-4.337,1.944-4.337,4.336v2.36H6.584
+			c-2.391,0-4.336,1.945-4.336,4.336v4.617c0,1.243,1.012,2.256,2.256,2.256h3.064v26.396c0,2.392,1.945,4.338,4.336,4.338h25.38
+			c2.391,0,4.336-1.946,4.336-4.338V17.905h2.515c1.244,0,2.256-1.013,2.256-2.256v-4.617C46.391,8.641,44.445,6.696,42.055,6.696z
+			 M41.879,11.209v2.184H6.758v-2.184H41.879z M19.877,6.696V4.511h8.882v2.185H19.877z M37.107,17.905v26.221H12.08V17.905H37.107z
+			"/>
+		<path d="M24.319,42.149c1.201,0,2.177-0.976,2.177-2.177V21.758c0-1.2-0.977-2.178-2.177-2.178c-1.2,0-2.177,0.978-2.177,2.178
+			v18.216C22.142,41.174,23.119,42.149,24.319,42.149z"/>
+		<path d="M17.835,42.149c1.201,0,2.178-0.976,2.178-2.177V21.758c0-1.2-0.977-2.178-2.178-2.178s-2.177,0.978-2.177,2.178v18.216
+			C15.658,41.174,16.634,42.149,17.835,42.149z"/>
+		<path d="M30.803,42.149c1.201,0,2.178-0.976,2.178-2.177V21.758c0-1.2-0.977-2.178-2.178-2.178s-2.177,0.978-2.177,2.178v18.216
+			C28.625,41.174,29.602,42.149,30.803,42.149z"/>
+	</g>
+</svg>
+    `;
     trash_button.addEventListener("click", delete_button);
     trash_button.title = "Element löschen";
     trash_button.id = "id_cad_delete_button";
@@ -409,8 +437,19 @@ export function cad_buttons() {
     const select_button = document.createElement("button");
 
     select_button.value = "select";
-    select_button.className = "btn";
-    select_button.innerHTML = '<i class = "fa fa-hand-pointer-o"></i>';
+    select_button.className = "btn_svg";
+    select_button.innerHTML = `<svg version="1.1" id="Uploaded to svgrepo.com" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 width="1rem" height="1rem" viewBox="0 0 32 32" xml:space="preserve">
+<style type="text/css">
+	.linesandangles_een{fill:#ffffff;}
+</style>
+<path class="linesandangles_een" d="M22,16h-5v-5c0-1.206-0.799-3-3-3s-3,1.794-3,3v5.167C9.994,16.5,9,17.361,9,19v5
+	c0,1.639,0.994,2.5,2,2.833V30h12v-3.167c1.006-0.333,2-1.195,2-2.833v-5C25,17.794,24.201,16,22,16z M23,24c0,0.805-0.55,0.988-1,1
+	h-1v3h-8l-0.014-2.975L12.012,25C11.55,24.988,11,24.805,11,24v-5c0-0.805,0.55-0.988,1-1h1v-6.988C13.012,10.55,13.194,10,14,10
+	s0.988,0.55,1,1v9h2v-2h5c0.806,0,0.988,0.55,1,1V24z M9,11H5V9h4V11z M19,9h4v2h-4V9z M15,6h-2V2h2V6z M9.759,8.171l-2.83-2.828
+	l1.413-1.415l2.83,2.828L9.759,8.171z M18.241,8.171l-1.413-1.415l2.83-2.828l1.413,1.415L18.241,8.171z"/>
+</svg>`;
+    // select_button.innerHTML = '<i class = "fa fa-hand-pointer-o"></i>';
     select_button.addEventListener("click", Select_button);
     select_button.addEventListener("pointerdown", () => {
       button_selectElement_timer_id = window.setTimeout(
@@ -429,8 +468,11 @@ export function cad_buttons() {
     const knoten_button = document.createElement("button");
 
     knoten_button.value = "Knoten";
-    knoten_button.className = "btn";
-    knoten_button.innerHTML = '<i class = "fa fa-square"></i>';
+    knoten_button.className = "btn_svg";
+     knoten_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="7" y="7" width="10" height="10" rx="2" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    //knoten_button.innerHTML = '<i class = "fa fa-square"></i>';
     knoten_button.addEventListener("click", Knoten_button);
     knoten_button.addEventListener("pointerdown", () => {
       button_knoten_timer_id = window.setTimeout(
@@ -449,8 +491,11 @@ export function cad_buttons() {
     const edit_knoten_button = document.createElement("button");
 
     edit_knoten_button.value = "Knoten bearbeiten";
-    edit_knoten_button.className = "btn";
-    edit_knoten_button.innerHTML = '<i class = "fa fa-file-text-o"></i>';
+    edit_knoten_button.className = "btn_svg";
+    edit_knoten_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8 8H13M8 12H16M8 16H11M7.2 4H16.8C17.9201 4 18.4802 4 18.908 4.21799C19.2843 4.40973 19.5903 4.71569 19.782 5.09202C20 5.51984 20 6.0799 20 7.2V16.8C20 17.9201 20 18.4802 19.782 18.908C19.5903 19.2843 19.2843 19.5903 18.908 19.782C18.4802 20 17.9201 20 16.8 20H7.2C6.0799 20 5.51984 20 5.09202 19.782C4.71569 19.5903 4.40973 19.2843 4.21799 18.908C4 18.4802 4 17.9201 4 16.8V7.2C4 6.0799 4 5.51984 4.21799 5.09202C4.40973 4.71569 4.71569 4.40973 5.09202 4.21799C5.51984 4 6.0799 4 7.2 4Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    // edit_knoten_button.innerHTML = '<i class = "fa fa-file-text-o"></i>';
     edit_knoten_button.addEventListener("click", Edit_Knoten_button);
     edit_knoten_button.addEventListener("pointerdown", () => {
       button_editknoten_timer_id = window.setTimeout(
@@ -533,8 +578,24 @@ export function cad_buttons() {
     const cog_button = document.createElement("button");
 
     cog_button.value = "Einstellungen";
-    cog_button.className = "btn";
-    cog_button.innerHTML = '<i class = "fa fa-cog"></i>';
+    cog_button.className = "btn_svg";
+    cog_button.innerHTML = `<svg fill="#ffffff" height="1rem" width="1rem" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 viewBox="0 0 294 294" xml:space="preserve">
+<path d="M279.333,117h-18.178C258.423,107,254.3,96.814,249,87.747l13.383-13.361c5.857-5.857,5.858-15.344,0-21.202l-20.737-20.733
+	c-2.813-2.813-6.628-4.391-10.606-4.391c-3.978,0-7.794,1.581-10.606,4.395l-13.516,13.254c-9.308-5.519-19.417-9.796-30.417-12.591
+	V15c0-8.284-6.191-15-14.476-15h-29.327C124.413,0,117.5,6.716,117.5,15v18.118c-10,2.684-19.944,6.729-28.944,11.933L76.168,32.613
+	c-5.857-5.857-15.331-5.857-21.188,0L34.254,53.351c-5.858,5.857-5.852,15.355,0.006,21.213l12.117,12.071
+	C40.759,96.008,36.411,106,33.567,117H15.833C7.549,117,0.5,123.802,0.5,132.086v29.328C0.5,169.698,7.549,176,15.833,176h17.613
+	c2.794,11,7.094,21.211,12.652,30.584l-11.989,12.092c-5.858,5.857-5.858,15.407,0,21.265l20.737,20.763
+	c2.929,2.929,6.768,4.406,10.606,4.406s7.678-1.458,10.606-4.387l12.02-12.115c9.133,5.338,18.421,9.487,29.421,12.218V278.5
+	c0,8.284,6.913,15.5,15.197,15.5h29.327c8.284,0,14.476-7.216,14.476-15.5v-17.673c11-2.843,21.456-7.217,30.894-12.874
+	l13.065,12.934c2.929,2.929,6.833,4.394,10.672,4.394s7.711-1.465,10.639-4.394l20.754-20.737
+	c5.858-5.857,5.867-15.355,0.008-21.213l-13.254-13.465c5.242-9.065,9.314-18.471,11.997-29.471h18.058
+	c8.284,0,14.167-6.302,14.167-14.586v-29.328C293.5,123.802,287.617,117,279.333,117z M191.016,146.973
+	c0,24.071-19.583,43.654-43.654,43.654s-43.654-19.583-43.654-43.654s19.583-43.654,43.654-43.654S191.016,122.901,191.016,146.973z
+	"/>
+</svg>`;
+    // cog_button.innerHTML = '<i class = "fa fa-cog"></i>';
     cog_button.addEventListener("click", Einstellungen_button);
     // stab_button.addEventListener('keydown', keydown);
     cog_button.title = "Einstellungen";
@@ -544,8 +605,9 @@ export function cad_buttons() {
     const refresh_button = document.createElement("button");
 
     refresh_button.value = "refresh";
-    refresh_button.className = "btn";
-    refresh_button.innerHTML = '<i class = "fa fa-refresh"></i>';
+    refresh_button.className = "btn_svg";
+    refresh_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17 9a1 1 0 01-1-1c0-.551-.448-1-1-1H5.414l1.293 1.293a.999.999 0 11-1.414 1.414l-3-3a.999.999 0 010-1.414l3-3a.997.997 0 011.414 0 .999.999 0 010 1.414L5.414 5H15c1.654 0 3 1.346 3 3a1 1 0 01-1 1zM3 11a1 1 0 011 1c0 .551.448 1 1 1h9.586l-1.293-1.293a.999.999 0 111.414-1.414l3 3a.999.999 0 010 1.414l-3 3a.999.999 0 11-1.414-1.414L14.586 15H5c-1.654 0-3-1.346-3-3a1 1 0 011-1z" fill="#ffffff"/></svg>`;
+    // refresh_button.innerHTML = '<i class = "fa fa-refresh"></i>';
     refresh_button.addEventListener("click", reset_cad);
     // stab_button.addEventListener('keydown', keydown);
     refresh_button.title = "Reset Screen";
@@ -555,7 +617,7 @@ export function cad_buttons() {
 
     info_button.value = "info";
     info_button.className = "btn";
-    info_button.innerHTML = '<i class = "fa fa-info"></i>';
+    info_button.innerHTML = '<b>i</b>';
     info_button.addEventListener("click", Info_button);
     // stab_button.addEventListener('keydown', keydown);
     info_button.title = "Kurzanleitung & Information";

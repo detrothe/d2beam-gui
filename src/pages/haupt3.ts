@@ -43,10 +43,16 @@ export function init_haupt3() {
         el_zurueck_grafik?.addEventListener('click', click_zurueck_grafik);
         const el_pan_button_grafik = shadow.getElementById('id_button_pan_grafik') as HTMLButtonElement;
         el_pan_button_grafik?.addEventListener('click', click_pan_button_grafik);
-        el_pan_button_grafik.innerHTML = '<i class = "fa fa-arrows"></i>';
+        el_pan_button_grafik.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<path fill="#ffffff" d="M16 8l-3-3v2h-4v-4h2l-3-3-3 3h2v4h-4v-2l-3 3 3 3v-2h4v4h-2l3 3 3-3h-2v-4h4v2z"></path>
+</svg>`;
+        // el_pan_button_grafik.innerHTML = '<i class = "fa fa-arrows"></i>';
         const el_pan_button_cad = shadow.getElementById('id_button_pan_cad') as HTMLButtonElement;
         el_pan_button_cad?.addEventListener('click', click_pan_button_cad);
-        el_pan_button_cad.innerHTML = '<i class = "fa fa-arrows"></i>';
+        el_pan_button_cad.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<path fill="#ffffff" d="M16 8l-3-3v2h-4v-4h2l-3-3-3 3h2v4h-4v-2l-3 3 3 3v-2h4v4h-2l3 3 3-3h-2v-4h4v2z"></path>
+</svg>`;
+        // el_pan_button_cad.innerHTML = '<i class = "fa fa-arrows"></i>';
 
         // const el_zurueck_cad = shadow.getElementById("id_button_zurueck_cad");
         // el_zurueck_cad?.addEventListener("click", click_zurueck_cad);

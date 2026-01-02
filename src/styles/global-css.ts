@@ -508,6 +508,7 @@ export const global_css = css`
    }
 
    .btn {
+      height: 2rem;
       background-color: light-dark(var(--button_cad), rgb(64, 64, 64));
       border: none;
       color: white;
@@ -540,6 +541,24 @@ export const global_css = css`
    .btn_small:hover {
       background-color: RoyalBlue;
       color: white;
+   }
+
+
+   .btn_svg {
+      height:2rem;
+      background-color: light-dark(var(--button_cad), rgb(64, 64, 64));
+      border: none;
+      color: white;
+      padding: 0.3rem 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-left: 0.25rem;
+      margin-bottom: 0rem;
+      margin-top: 0rem;
+      border-radius: 3px;
+      -webkit-user-select: none;
+      user-select: none;
+
    }
 
    .helptext {

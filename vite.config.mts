@@ -49,10 +49,6 @@ export default defineConfig({
           src: 'src/info/Kurzdokumentation_deutsch.html',
           dest: './src/info/'
         },
-        {
-          src: 'node_modules/@shoelace-style/shoelace/dist/assets/icons/*.svg',
-          dest: './src/shoelace/assets/icons'
-        }
       ]
     })
   ]
