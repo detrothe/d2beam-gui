@@ -539,6 +539,7 @@ export const global_css = css`
    /* Darker background on mouse-over */
    .btn_small:hover {
       background-color: RoyalBlue;
+      color: white;
    }
 
    .helptext {

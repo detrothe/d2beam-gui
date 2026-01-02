@@ -8,12 +8,14 @@ export class drControlPanel extends LitElement {
 
     static get styles() {
         return css`
-            div {
+            #control_panel {
             margin: 1;
             padding: 1;
             font-size: 1rem;
-            background-color:'#ff0000';
+            background-color: #FBD603;
             border:2px;
+            color:red;
+            z-index: 90;
             }
    `;
     }

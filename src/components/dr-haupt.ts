@@ -25,6 +25,8 @@ import '@shoelace-style/shoelace/dist/components/menu/menu';
 import '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
 import '@shoelace-style/shoelace/dist/components/divider/divider';
 import '@shoelace-style/shoelace/dist/components/drawer/drawer';
+import '@shoelace-style/shoelace/dist/components/icon/icon';
+import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 
 import { close_drawer_1 } from '../pages/cad_buttons';
 import {
@@ -98,8 +100,10 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.0, 1.Januar-2026, ';
+  '2D structural analysis of frames and trusses, v1.8.0, 2.Januar-2026, ';
 //########################################################################################################################
+
+setBasePath('../src/shoelace/dist');
 
 let hostname = window.location.hostname;
 
@@ -224,7 +228,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                 </select>
               </td>
               <td>
-                  <button class="btn_small" @click="${info_Materialeigenschaften}"><i class="fa fa-info"></i></button>
+                  <button class="btn_small" @click="${info_Materialeigenschaften}"><sl-icon name="info-lg"></sl-icon></button>
+
+                  <!-- <button class="btn_small" @click="${info_Materialeigenschaften}"><i class="fa fa-info"></i></button> -->
               </td>
             </tr>
 
@@ -1008,7 +1014,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               </sl-select>
               </td>
               <td>
-                <button class="btn_small" @click="${info_Eigenwertberechnung}"><i class="fa fa-info"></i></button>
+                <button class="btn_small" @click="${info_Eigenwertberechnung}"><sl-icon name="info-lg"></sl-icon></button>
               </td>
             </tr>
 
