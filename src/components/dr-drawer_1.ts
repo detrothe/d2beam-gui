@@ -212,137 +212,159 @@ export class drDrawer_1 extends LitElement {
    }
 
    _messen() {
-      //const drawer = document.querySelector('.drawer-overview');
-      const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
-      if (this.messen_aktiv) {
-         this.reset_buttons();
-      } else {
-         this.reset_buttons();
-         (this.shadowRoot?.getElementById('id_messen') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-         this.messen_aktiv = true;
+      let shadow = document.getElementById('id_haupt')?.shadowRoot;
+      if (shadow) {
+         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
+         if (this.messen_aktiv) {
+            this.reset_buttons();
+         } else {
+            this.reset_buttons();
+            (this.shadowRoot?.getElementById('id_messen') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
+            this.messen_aktiv = true;
+         }
+         //console.log("Button messen geklickt", drawer)
+         //@ts-ignore
+         //if (drawer) drawer.hide();
+         console.log("_messen", myDrawer, hide_drawer)
+         if (myDrawer && hide_drawer) myDrawer.hide();
+         Messen_button();
       }
-      //console.log("Button messen geklickt", drawer)
-      //@ts-ignore
-      //if (drawer) drawer.hide();
-      if (myDrawer && hide_drawer) myDrawer.hide();
-      Messen_button();
    }
 
    _select_multi() {
-      //const drawer = document.querySelector('.drawer-overview');
-      const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
+      let shadow = document.getElementById('id_haupt')?.shadowRoot;
+      if (shadow) {
+         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
 
-      if (this.selektiere_mehrere_elemente_aktiv) {
-         this.reset_buttons();
-      } else {
-         this.reset_buttons();
-         (this.shadowRoot?.getElementById('id_select_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-         this.selektiere_mehrere_elemente_aktiv = true;
+         if (this.selektiere_mehrere_elemente_aktiv) {
+            this.reset_buttons();
+         } else {
+            this.reset_buttons();
+            (this.shadowRoot?.getElementById('id_select_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
+            this.selektiere_mehrere_elemente_aktiv = true;
+         }
+         //@ts-ignore
+         //if (drawer !== null) drawer.hide();
+         if (myDrawer && hide_drawer) myDrawer.hide();
+         select_multi_button(1);
       }
-      //@ts-ignore
-      //if (drawer !== null) drawer.hide();
-      if (myDrawer && hide_drawer) myDrawer.hide();
-      select_multi_button(1);
    }
 
    _unselect_multi() {
-      //const drawer = document.querySelector('.drawer-overview');
-      const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
-      if (this.deselektiere_mehrere_elemente_aktiv) {
-         this.reset_buttons();
-      } else {
-         this.reset_buttons();
-         (this.shadowRoot?.getElementById('id_unselect_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-         this.deselektiere_mehrere_elemente_aktiv = true;
+      let shadow = document.getElementById('id_haupt')?.shadowRoot;
+      if (shadow) {
+         const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
+         if (this.deselektiere_mehrere_elemente_aktiv) {
+            this.reset_buttons();
+         } else {
+            this.reset_buttons();
+            (this.shadowRoot?.getElementById('id_unselect_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
+            this.deselektiere_mehrere_elemente_aktiv = true;
+         }
+         //@ts-ignore
+         //if (drawer !== null) drawer.hide();
+         if (myDrawer && hide_drawer) myDrawer.hide();
+         unselect_multi_button(1);
       }
-      //@ts-ignore
-      //if (drawer !== null) drawer.hide();
-      if (myDrawer && hide_drawer) myDrawer.hide();
-      unselect_multi_button(1);
    }
 
    _select_typ() {
-      //const drawer = document.querySelector('.drawer-overview');
-      const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
-      //@ts-ignore
-      //if (drawer !== null) drawer.hide();
-      if (myDrawer && hide_drawer) myDrawer.hide();
-      select_typ_button();
+      let shadow = document.getElementById('id_haupt')?.shadowRoot;
+      if (shadow) {
+         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
+         //@ts-ignore
+         //if (drawer !== null) drawer.hide();
+         if (myDrawer && hide_drawer) myDrawer.hide();
+         select_typ_button();
+      }
    }
 
    _unselect_all() {
-      //const drawer = document.querySelector('.drawer-overview');
-      const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
-      //@ts-ignore
-      //if (drawer !== null) drawer.hide();
-      if (myDrawer && hide_drawer) myDrawer.hide();
-      unselect_all_button();
+      let shadow = document.getElementById('id_haupt')?.shadowRoot;
+      if (shadow) {
+         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
+         //@ts-ignore
+         //if (drawer !== null) drawer.hide();
+         if (myDrawer && hide_drawer) myDrawer.hide();
+         unselect_all_button();
+      }
+
    }
 
    _copy_selected() {
-      //const drawer = document.querySelector('.drawer-overview');
-      const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
-      //@ts-ignore
-      //if (drawer !== null) drawer.hide();
-      if (myDrawer && hide_drawer) myDrawer.hide();
-      copy_selected_button();
+      let shadow = document.getElementById('id_haupt')?.shadowRoot;
+      if (shadow) {
+         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
+         //@ts-ignore
+         //if (drawer !== null) drawer.hide();
+         if (myDrawer && hide_drawer) myDrawer.hide();
+         copy_selected_button();
+      }
    }
 
    _edit_selected() {
-      //const drawer = document.querySelector('.drawer-overview');
-      const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
-      //@ts-ignore
-      //if (drawer !== null) drawer.hide();
-      if (myDrawer && hide_drawer) myDrawer.hide();
-      edit_selected_button();
+      let shadow = document.getElementById('id_haupt')?.shadowRoot;
+      if (shadow) {
+         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
+         //@ts-ignore
+         //if (drawer !== null) drawer.hide();
+         if (myDrawer && hide_drawer) myDrawer.hide();
+         edit_selected_button();
+      }
    }
 
    _bemassung_parallel() {
-      //const drawer = document.querySelector('.drawer-overview');
-      const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
-      //@ts-ignore
-      //if (drawer !== null) drawer.hide();
-      if (this.bemassung_parallel_aktiv) {
-         this.reset_buttons();
-      } else {
-         this.reset_buttons();
-         (this.shadowRoot?.getElementById('id_bemassung_parallel') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-         this.bemassung_parallel_aktiv = true;
+      let shadow = document.getElementById('id_haupt')?.shadowRoot;
+      if (shadow) {
+         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
+         //@ts-ignore
+         //if (drawer !== null) drawer.hide();
+         if (this.bemassung_parallel_aktiv) {
+            this.reset_buttons();
+         } else {
+            this.reset_buttons();
+            (this.shadowRoot?.getElementById('id_bemassung_parallel') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
+            this.bemassung_parallel_aktiv = true;
+         }
+         if (myDrawer && hide_drawer) myDrawer.hide();
+         Bemassung_button(1);
       }
-      if (myDrawer && hide_drawer) myDrawer.hide();
-      Bemassung_button(1);
    }
 
    _bemassung_x() {
-      //const drawer = document.querySelector('.drawer-overview');
-      const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
-      //@ts-ignore
-      //if (drawer !== null) drawer.hide();
-      if (this.bemassung_horizontal_aktiv) {
-         this.reset_buttons();
-      } else {
-         this.reset_buttons();
-         (this.shadowRoot?.getElementById('id_bemassung_x') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-         this.bemassung_horizontal_aktiv = true;
+      let shadow = document.getElementById('id_haupt')?.shadowRoot;
+      if (shadow) {
+         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
+         //@ts-ignore
+         //if (drawer !== null) drawer.hide();
+         if (this.bemassung_horizontal_aktiv) {
+            this.reset_buttons();
+         } else {
+            this.reset_buttons();
+            (this.shadowRoot?.getElementById('id_bemassung_x') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
+            this.bemassung_horizontal_aktiv = true;
+         }
+         if (myDrawer && hide_drawer) myDrawer.hide();
+         Bemassung_button(2);
       }
-      if (myDrawer && hide_drawer) myDrawer.hide();
-      Bemassung_button(2);
    }
 
    _bemassung_z() {
-      //const drawer = document.querySelector('.drawer-overview');
-      const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
-      //@ts-ignore
-      //if (drawer !== null) drawer.hide();
-      if (this.bemassung_vertikal_aktiv) {
-         this.reset_buttons();
-      } else {
-         this.reset_buttons();
-         (this.shadowRoot?.getElementById('id_bemassung_z') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-         this.bemassung_vertikal_aktiv = true;
+      let shadow = document.getElementById('id_haupt')?.shadowRoot;
+      if (shadow) {
+         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
+         //@ts-ignore
+         //if (drawer !== null) drawer.hide();
+         if (this.bemassung_vertikal_aktiv) {
+            this.reset_buttons();
+         } else {
+            this.reset_buttons();
+            (this.shadowRoot?.getElementById('id_bemassung_z') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
+            this.bemassung_vertikal_aktiv = true;
+         }
+         if (myDrawer && hide_drawer) myDrawer.hide();
+         Bemassung_button(3);
       }
-      if (myDrawer && hide_drawer) myDrawer.hide();
-      Bemassung_button(3);
    }
 
    _checkbox_raster() {
@@ -421,8 +443,9 @@ export class drDrawer_1 extends LitElement {
    }
 
    _knotverform() {
-      // const drawer = document.querySelector('.drawer-overview');
-      const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
+            let shadow = document.getElementById('id_haupt')?.shadowRoot;
+      if (shadow) {
+      const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
       //@ts-ignore
       // if (drawer !== null) drawer.hide();
       if (this.knotenverformung_aktiv) {
@@ -434,6 +457,7 @@ export class drDrawer_1 extends LitElement {
       }
       if (myDrawer && hide_drawer) myDrawer.hide();
       Knotenverformung_button();
+   }
    }
 
    init_loadcases(nlastfaelle: number) {

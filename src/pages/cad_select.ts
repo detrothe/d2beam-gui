@@ -325,15 +325,18 @@ export function showDialog_kopieren() {
 
     console.log("showDialog_kopieren()");
 
-    const el = document.getElementById("id_dialog_kopieren");
-    console.log("id_dialog_kopieren", el);
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_kopieren");
+        console.log("id_dialog_kopieren", el);
 
-    console.log("shadow", el?.shadowRoot?.getElementById("dialog_kopieren")),
-        (el?.shadowRoot?.getElementById("dialog_kopieren") as HTMLDialogElement).addEventListener("close", dialog_kopieren_closed);
+        console.log("shadow", el?.shadowRoot?.getElementById("dialog_kopieren")),
+            (el?.shadowRoot?.getElementById("dialog_kopieren") as HTMLDialogElement).addEventListener("close", dialog_kopieren_closed);
 
-    //set_help_text('Knoten picken');
+        //set_help_text('Knoten picken');
 
-    (el?.shadowRoot?.getElementById("dialog_kopieren") as HTMLDialogElement).showModal();
+        (el?.shadowRoot?.getElementById("dialog_kopieren") as HTMLDialogElement).showModal();
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -341,36 +344,38 @@ function dialog_kopieren_closed(this: any, e: any) {
     //------------------------------------------------------------------------------------------------------------
     console.log("Event dialog_kopieren_closed", e);
     console.log("this", this);
-    const ele = document.getElementById("id_dialog_kopieren") as HTMLDialogElement;
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const ele = shadow.getElementById("id_dialog_kopieren") as HTMLDialogElement;
 
-    // ts-ignore
-    const returnValue = this.returnValue;
+        // ts-ignore
+        const returnValue = this.returnValue;
 
-    (ele?.shadowRoot?.getElementById("dialog_kopieren") as HTMLDialogElement).removeEventListener("close", dialog_kopieren_closed);
+        (ele?.shadowRoot?.getElementById("dialog_kopieren") as HTMLDialogElement).removeEventListener("close", dialog_kopieren_closed);
 
-    if (returnValue === "ok") {
-        console.log("sieht gut aus");
+        if (returnValue === "ok") {
+            console.log("sieht gut aus");
 
-        const el = document.getElementById("id_dialog_kopieren") as drDialogKopieren;
+            const el = shadow.getElementById("id_dialog_kopieren") as drDialogKopieren;
 
-        ncopies = el.get_ncopies();
-        copy_eload = el.get_copy_eload();
+            ncopies = el.get_ncopies();
+            copy_eload = el.get_copy_eload();
 
-        copy_option = el.get_option();
+            copy_option = el.get_option();
 
-        if (copy_option === 0) {
-            dx_copy = el.get_dx();
-            dz_copy = el.get_dz();
-            copy_selected(dx_copy, dz_copy);
+            if (copy_option === 0) {
+                dx_copy = el.get_dx();
+                dz_copy = el.get_dz();
+                copy_selected(dx_copy, dz_copy);
+                buttons_control.reset();
+                drawer_1_control.reset();
+            }
+        }
+        else {
             buttons_control.reset();
             drawer_1_control.reset();
         }
     }
-    else {
-        buttons_control.reset();
-        drawer_1_control.reset();
-    }
-
 
 }
 
@@ -382,15 +387,17 @@ export function showDialog_selekt_typ() {
     //------------------------------------------------------------------------------------------------------------
 
     //console.log("showDialog_selekt_typ()");
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_selekt_typ");
 
-    const el = document.getElementById("id_dialog_selekt_typ");
+        //console.log("shadow", el?.shadowRoot?.getElementById("dialog_selekt_typ")),
+        (el?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).addEventListener("close", dialog_selekt_typ_closed);
 
-    //console.log("shadow", el?.shadowRoot?.getElementById("dialog_selekt_typ")),
-    (el?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).addEventListener("close", dialog_selekt_typ_closed);
+        //set_help_text('Knoten picken');
 
-    //set_help_text('Knoten picken');
-
-    (el?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).showModal();
+        (el?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).showModal();
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -398,39 +405,41 @@ function dialog_selekt_typ_closed(this: any, e: any) {
     //------------------------------------------------------------------------------------------------------------
     console.log("Event dialog_selekt_typ_closed", e);
     console.log("this", this);
-    const ele = document.getElementById("id_dialog_selekt_typ") as HTMLDialogElement;
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const ele = shadow.getElementById("id_dialog_selekt_typ") as HTMLDialogElement;
 
-    // ts-ignore
-    const returnValue = this.returnValue;
+        // ts-ignore
+        const returnValue = this.returnValue;
 
-    (ele?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).removeEventListener("close", dialog_selekt_typ_closed);
+        (ele?.shadowRoot?.getElementById("dialog_selekt_typ") as HTMLDialogElement).removeEventListener("close", dialog_selekt_typ_closed);
 
-    if (returnValue === "ok") {
-        console.log("sieht gut aus");
+        if (returnValue === "ok") {
+            console.log("sieht gut aus");
 
-        const el = document.getElementById("id_dialog_selekt_typ") as drDialogSelektTyp;
+            const el = shadow.getElementById("id_dialog_selekt_typ") as drDialogSelektTyp;
 
-        let eltyp = el.get_option();
+            let eltyp = el.get_option();
 
-        for (let i = 0; i < list.size; i++) {
-            let obj = list.getNext(i) as TCAD_Element;
-            if (obj.elTyp === CAD_STAB && eltyp == 0) obj.multiSelected = true;
-            else if (obj.elTyp === CAD_KNLAST && eltyp === 2) obj.multiSelected = true;
-            else if (obj.elTyp === CAD_LAGER && eltyp === 3) obj.multiSelected = true;
-            else if (obj.elTyp === CAD_KNMASSE && eltyp === 4) obj.multiSelected = true;
-            else if (obj.elTyp === CAD_KNOTVERFORMUNG && eltyp === 5) obj.multiSelected = true;
+            for (let i = 0; i < list.size; i++) {
+                let obj = list.getNext(i) as TCAD_Element;
+                if (obj.elTyp === CAD_STAB && eltyp == 0) obj.multiSelected = true;
+                else if (obj.elTyp === CAD_KNLAST && eltyp === 2) obj.multiSelected = true;
+                else if (obj.elTyp === CAD_LAGER && eltyp === 3) obj.multiSelected = true;
+                else if (obj.elTyp === CAD_KNMASSE && eltyp === 4) obj.multiSelected = true;
+                else if (obj.elTyp === CAD_KNOTVERFORMUNG && eltyp === 5) obj.multiSelected = true;
 
-            else if (obj.elTyp === CAD_STAB && eltyp === 1) {
-                for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
-                    (obj as TCAD_Stab).elast[j].multiSelected = true;
+                else if (obj.elTyp === CAD_STAB && eltyp === 1) {
+                    for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
+                        (obj as TCAD_Stab).elast[j].multiSelected = true;
+                    }
                 }
             }
         }
+
+        buttons_control.reset();
+        drawer_1_control.reset();
     }
-
-    buttons_control.reset();
-    drawer_1_control.reset();
-
 }
 
 
@@ -492,12 +501,14 @@ export function showDialog_edit_selected_stablasten() {
     //------------------------------------------------------------------------------------------------------------
 
     console.log("showDialog_edit_selected()");
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_edit_selected_elementlasten_typ");
 
-    const el = document.getElementById("id_dialog_edit_selected_elementlasten_typ");
+        (el?.shadowRoot?.getElementById("dialog_edit_selected_elementloads") as HTMLDialogElement).addEventListener("close", dialog_edit_selected_stablasten_closed);
 
-    (el?.shadowRoot?.getElementById("dialog_edit_selected_elementloads") as HTMLDialogElement).addEventListener("close", dialog_edit_selected_stablasten_closed);
-
-    (el?.shadowRoot?.getElementById("dialog_edit_selected_elementloads") as HTMLDialogElement).showModal();
+        (el?.shadowRoot?.getElementById("dialog_edit_selected_elementloads") as HTMLDialogElement).showModal();
+    }
 }
 
 
@@ -506,71 +517,73 @@ function dialog_edit_selected_stablasten_closed(this: any, _e: any) {
     //------------------------------------------------------------------------------------------------------------
     //console.log("Event dialog_edit_selected_closed", e);
     //console.log("this", this);
-    const ele = document.getElementById("id_dialog_edit_selected_elementlasten_typ") as HTMLDialogElement;
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const ele = shadow.getElementById("id_dialog_edit_selected_elementlasten_typ") as HTMLDialogElement;
 
-    // ts-ignore
-    const returnValue = this.returnValue;
+        // ts-ignore
+        const returnValue = this.returnValue;
 
-    (ele?.shadowRoot?.getElementById("dialog_edit_selected_elementloads") as HTMLDialogElement).removeEventListener("close", dialog_edit_selected_stablasten_closed);
+        (ele?.shadowRoot?.getElementById("dialog_edit_selected_elementloads") as HTMLDialogElement).removeEventListener("close", dialog_edit_selected_stablasten_closed);
 
-    if (returnValue === "ok") {
-        console.log("sieht gut aus");
+        if (returnValue === "ok") {
+            console.log("sieht gut aus");
 
-        const el = document.getElementById("id_dialog_edit_selected_elementlasten_typ") as drDialogEdit_selected_elementlasten;
+            const el = shadow.getElementById("id_dialog_edit_selected_elementlasten_typ") as drDialogEdit_selected_elementlasten;
 
-        let option = el.get_option();
-        //console.log("dialog_edit_selected_closed, option", option)
+            let option = el.get_option();
+            //console.log("dialog_edit_selected_closed, option", option)
 
-        if (option === 0) {
-            let lastfall = el.get_lastfall();
-            if (lastfall > 0) {
+            if (option === 0) {
+                let lastfall = el.get_lastfall();
+                if (lastfall > 0) {
+                    for (let i = 0; i < list.size; i++) {
+                        let obj = list.getNext(i) as TCAD_Element;
+
+                        if (obj.elTyp === CAD_STAB) {
+                            for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
+                                if ((obj as TCAD_Stab).elast[j].multiSelected) {
+                                    (obj as TCAD_Stab).elast[j].lastfall = lastfall;
+                                };
+                            }
+                        }
+                    }
+                    find_max_Lastfall();
+                    find_maxValues_eloads();
+                }
+            }
+            else if (option === 1) {
+                let pa = el.get_pa();
+                let pe = el.get_pe();
+
                 for (let i = 0; i < list.size; i++) {
                     let obj = list.getNext(i) as TCAD_Element;
 
                     if (obj.elTyp === CAD_STAB) {
                         for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
                             if ((obj as TCAD_Stab).elast[j].multiSelected) {
-                                (obj as TCAD_Stab).elast[j].lastfall = lastfall;
-                            };
+                                if ((obj as TCAD_Stab).elast[j].typ === 0) {
+                                    ((obj as TCAD_Stab).elast[j] as TCAD_Streckenlast).pL = pa;
+                                    ((obj as TCAD_Stab).elast[j] as TCAD_Streckenlast).pR = pe;
+                                }
+                            }
                         }
                     }
                 }
                 find_max_Lastfall();
                 find_maxValues_eloads();
+
             }
-        }
-        else if (option === 1) {
-            let pa = el.get_pa();
-            let pe = el.get_pe();
-
-            for (let i = 0; i < list.size; i++) {
-                let obj = list.getNext(i) as TCAD_Element;
-
-                if (obj.elTyp === CAD_STAB) {
-                    for (let j = 0; j < (obj as TCAD_Stab).elast.length; j++) {
-                        if ((obj as TCAD_Stab).elast[j].multiSelected) {
-                            if ((obj as TCAD_Stab).elast[j].typ === 0) {
-                                ((obj as TCAD_Stab).elast[j] as TCAD_Streckenlast).pL = pa;
-                                ((obj as TCAD_Stab).elast[j] as TCAD_Streckenlast).pR = pe;
-                            }
-                        }
-                    }
-                }
+            else if (option === 2) {
+                mode_multi_selected_elementlast_aendern = true;
+                showDialog_elementlast();
             }
-            find_max_Lastfall();
-            find_maxValues_eloads();
 
         }
-        else if (option === 2) {
-            mode_multi_selected_elementlast_aendern = true;
-            showDialog_elementlast();
-        }
 
+        buttons_control.reset();
+        drawer_1_control.reset();
     }
-
-    buttons_control.reset();
-    drawer_1_control.reset();
-
 }
 
 
@@ -582,136 +595,139 @@ export function update_multi_selected_elementlast() {
 
     mode_multi_selected_elementlast_aendern = false;
 
-    const el = document.getElementById("id_dialog_elementlast") as drDialogElementlasten;
-    el.set_display_group_typ(true);
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_elementlast") as drDialogElementlasten;
+        el.set_display_group_typ(true);
 
-    let typ = el.get_typ();
-    let lf = el.get_lastfall()
+        let typ = el.get_typ();
+        let lf = el.get_lastfall()
 
-    if (lf <= 0) {
-        ok = false;
-        alertdialog('ok', 'Lastfall muss größer 0 sein');
-    }
-    else {
-
-        if (typ === 0) {
-            let pa = el.get_pa()
-            let pe = el.get_pe()
-
-            if (pa === 0 && pe === 0) {
-                ok = false;
-                alertdialog('ok', 'mind. eine Last muss ungleich null sein');
-            }
+        if (lf <= 0) {
+            ok = false;
+            alertdialog('ok', 'Lastfall muss größer 0 sein');
         }
-        else if (typ === 1) {
-            let x = el.get_x();
-            let P = el.get_P();
-            let M = el.get_M();
+        else {
 
-            if (x < 0) {
-                ok = false;
-                alertdialog('ok', 'Angriffspunkt x muss größer gleich null sein');
+            if (typ === 0) {
+                let pa = el.get_pa()
+                let pe = el.get_pe()
 
-            } else if (P === 0 && M === 0) {
-                ok = false;
-                alertdialog('ok', 'mind. eine Last muss ungleich null sein');
-            }
-        }
-        else if (typ === 2) {
-            let To = el.get_To();
-            let Tu = el.get_Tu();
-
-            if (To === 0 && Tu === 0) {
-                ok = false;
-                alertdialog('ok', 'mind. eine Temperatur muss ungleich null sein');
-            }
-        }
-        else if (typ === 3) {
-            let sigmaV = el.get_sigmaV();
-
-            if (sigmaV === 0) {
-                ok = false;
-                alertdialog('ok', 'Vorspannung muss ungleich null sein');
-            }
-        }
-        else if (typ === 4) {
-            let ds = el.get_ds();
-
-            if (ds === 0) {
-                ok = false;
-                alertdialog('ok', 'Spannweg ds muss ungleich null sein');
-            }
-        }
-        else if (typ === 5) {
-            let w0a = el.get_w0a();
-            let w0m = el.get_w0m();
-            let w0e = el.get_w0e();
-
-            if (w0a === 0 && w0m === 0 && w0e === 0) {
-                ok = false;
-                alertdialog('ok', 'mind. eine Stabverformung muss ungleich null sein');
-            }
-        }
-
-    }
-
-    if (ok) {
-        //console.log("update_multi_selected_elementlast", typ, art, lf, x, P, M)
-
-        for (let i = 0; i < list.size; i++) {
-            let obj = list.getNext(i) as TCAD_Stab;
-
-            if (obj.elTyp === CAD_STAB) {
-                for (let j = 0; j < obj.elast.length; j++) {
-
-                    if (obj.elast[j].multiSelected) {
-
-                        if (typ === 0 && obj.elast[j].typ === typ) {       // Streckenlast
-                            obj.elast[j].lastfall = lf;
-                            set_max_lastfall(lf);
-                            (obj.elast[j] as TCAD_Streckenlast).art = el.get_art();
-                            (obj.elast[j] as TCAD_Streckenlast).pL = el.get_pa();
-                            (obj.elast[j] as TCAD_Streckenlast).pR = el.get_pe();
-                        }
-                        else if (typ === 1 && obj.elast[j].typ === typ) {  // Einzelllast
-                            obj.elast[j].lastfall = lf;
-                            set_max_lastfall(lf);
-                            (obj.elast[j] as TCAD_Einzellast).xe = el.get_x();
-                            (obj.elast[j] as TCAD_Einzellast).P = el.get_P();
-                            (obj.elast[j] as TCAD_Einzellast).M = el.get_M();
-                        }
-                        else if (typ === 2 && obj.elast[j].typ === typ) {  // Temperatur
-                            obj.elast[j].lastfall = lf;
-                            set_max_lastfall(lf);
-                            (obj.elast[j] as TCAD_Temperaturlast).To = el.get_To();
-                            (obj.elast[j] as TCAD_Temperaturlast).Tu = el.get_Tu();
-                        }
-                        else if (typ === 3 && obj.elast[j].typ === typ) {  // Vorspannung
-                            obj.elast[j].lastfall = lf;
-                            set_max_lastfall(lf);
-                            (obj.elast[j] as TCAD_Vorspannung).sigmaV = el.get_sigmaV();
-                        }
-                        else if (typ === 4 && obj.elast[j].typ === typ) {  // Spannschloss
-                            obj.elast[j].lastfall = lf;
-                            set_max_lastfall(lf);
-                            (obj.elast[j] as TCAD_Spannschloss).ds = el.get_ds();
-                        }
-                        else if (typ === 5 && obj.elast[j].typ === typ) {  // Stabvorverformung
-                            obj.elast[j].lastfall = lf;
-                            set_max_lastfall(lf);
-                            (obj.elast[j] as TCAD_Stabvorverformung).w0a = el.get_w0a();
-                            (obj.elast[j] as TCAD_Stabvorverformung).w0m = el.get_w0m();
-                            (obj.elast[j] as TCAD_Stabvorverformung).w0e = el.get_w0e();
-                        }
-                    }
-
+                if (pa === 0 && pe === 0) {
+                    ok = false;
+                    alertdialog('ok', 'mind. eine Last muss ungleich null sein');
                 }
             }
+            else if (typ === 1) {
+                let x = el.get_x();
+                let P = el.get_P();
+                let M = el.get_M();
+
+                if (x < 0) {
+                    ok = false;
+                    alertdialog('ok', 'Angriffspunkt x muss größer gleich null sein');
+
+                } else if (P === 0 && M === 0) {
+                    ok = false;
+                    alertdialog('ok', 'mind. eine Last muss ungleich null sein');
+                }
+            }
+            else if (typ === 2) {
+                let To = el.get_To();
+                let Tu = el.get_Tu();
+
+                if (To === 0 && Tu === 0) {
+                    ok = false;
+                    alertdialog('ok', 'mind. eine Temperatur muss ungleich null sein');
+                }
+            }
+            else if (typ === 3) {
+                let sigmaV = el.get_sigmaV();
+
+                if (sigmaV === 0) {
+                    ok = false;
+                    alertdialog('ok', 'Vorspannung muss ungleich null sein');
+                }
+            }
+            else if (typ === 4) {
+                let ds = el.get_ds();
+
+                if (ds === 0) {
+                    ok = false;
+                    alertdialog('ok', 'Spannweg ds muss ungleich null sein');
+                }
+            }
+            else if (typ === 5) {
+                let w0a = el.get_w0a();
+                let w0m = el.get_w0m();
+                let w0e = el.get_w0e();
+
+                if (w0a === 0 && w0m === 0 && w0e === 0) {
+                    ok = false;
+                    alertdialog('ok', 'mind. eine Stabverformung muss ungleich null sein');
+                }
+            }
+
         }
 
-        find_maxValues_eloads();
+        if (ok) {
+            //console.log("update_multi_selected_elementlast", typ, art, lf, x, P, M)
 
-        init_cad(2);
+            for (let i = 0; i < list.size; i++) {
+                let obj = list.getNext(i) as TCAD_Stab;
+
+                if (obj.elTyp === CAD_STAB) {
+                    for (let j = 0; j < obj.elast.length; j++) {
+
+                        if (obj.elast[j].multiSelected) {
+
+                            if (typ === 0 && obj.elast[j].typ === typ) {       // Streckenlast
+                                obj.elast[j].lastfall = lf;
+                                set_max_lastfall(lf);
+                                (obj.elast[j] as TCAD_Streckenlast).art = el.get_art();
+                                (obj.elast[j] as TCAD_Streckenlast).pL = el.get_pa();
+                                (obj.elast[j] as TCAD_Streckenlast).pR = el.get_pe();
+                            }
+                            else if (typ === 1 && obj.elast[j].typ === typ) {  // Einzelllast
+                                obj.elast[j].lastfall = lf;
+                                set_max_lastfall(lf);
+                                (obj.elast[j] as TCAD_Einzellast).xe = el.get_x();
+                                (obj.elast[j] as TCAD_Einzellast).P = el.get_P();
+                                (obj.elast[j] as TCAD_Einzellast).M = el.get_M();
+                            }
+                            else if (typ === 2 && obj.elast[j].typ === typ) {  // Temperatur
+                                obj.elast[j].lastfall = lf;
+                                set_max_lastfall(lf);
+                                (obj.elast[j] as TCAD_Temperaturlast).To = el.get_To();
+                                (obj.elast[j] as TCAD_Temperaturlast).Tu = el.get_Tu();
+                            }
+                            else if (typ === 3 && obj.elast[j].typ === typ) {  // Vorspannung
+                                obj.elast[j].lastfall = lf;
+                                set_max_lastfall(lf);
+                                (obj.elast[j] as TCAD_Vorspannung).sigmaV = el.get_sigmaV();
+                            }
+                            else if (typ === 4 && obj.elast[j].typ === typ) {  // Spannschloss
+                                obj.elast[j].lastfall = lf;
+                                set_max_lastfall(lf);
+                                (obj.elast[j] as TCAD_Spannschloss).ds = el.get_ds();
+                            }
+                            else if (typ === 5 && obj.elast[j].typ === typ) {  // Stabvorverformung
+                                obj.elast[j].lastfall = lf;
+                                set_max_lastfall(lf);
+                                (obj.elast[j] as TCAD_Stabvorverformung).w0a = el.get_w0a();
+                                (obj.elast[j] as TCAD_Stabvorverformung).w0m = el.get_w0m();
+                                (obj.elast[j] as TCAD_Stabvorverformung).w0e = el.get_w0e();
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            find_maxValues_eloads();
+
+            init_cad(2);
+        }
     }
 }
 
@@ -722,68 +738,72 @@ export function update_multi_selected_knotenlast() {
 
     mode_multi_selected_knotenlast_aendern = false;
 
-    const el = document.getElementById("id_dialog_knotenlast") as drDialogKnotenlast;
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_knotenlast") as drDialogKnotenlast;
 
 
-    let lf = el.get_lastfall()
+        let lf = el.get_lastfall()
 
-    let nur_lastfall = el.get_nur_lastfall();
+        let nur_lastfall = el.get_nur_lastfall();
 
-    for (let i = 0; i < list.size; i++) {
-        let obj = list.getNext(i) as TCAD_Knotenlast;
+        for (let i = 0; i < list.size; i++) {
+            let obj = list.getNext(i) as TCAD_Knotenlast;
 
-        if (obj.multiSelected && obj.className === 'TCAD_Knotenlast') {
+            if (obj.multiSelected && obj.className === 'TCAD_Knotenlast') {
 
-            obj.knlast.lf = el.get_lastfall();
-            set_max_lastfall(obj.knlast.lf);
-            if (!nur_lastfall) {
-                obj.knlast.Px_org = el.get_Px();
-                obj.knlast.Pz_org = el.get_Pz();
-                obj.knlast.p[2] = el.get_My();
-                obj.knlast.alpha = el.get_alpha();
+                obj.knlast.lf = el.get_lastfall();
+                set_max_lastfall(obj.knlast.lf);
+                if (!nur_lastfall) {
+                    obj.knlast.Px_org = el.get_Px();
+                    obj.knlast.Pz_org = el.get_Pz();
+                    obj.knlast.p[2] = el.get_My();
+                    obj.knlast.alpha = el.get_alpha();
 
-                // Transformation in x-z Koordinatensystem
+                    // Transformation in x-z Koordinatensystem
 
-                let phi = obj.knlast.alpha * Math.PI / 180
+                    let phi = obj.knlast.alpha * Math.PI / 180
 
-                let si = Math.sin(phi)
-                let co = Math.cos(phi)
+                    let si = Math.sin(phi)
+                    let co = Math.cos(phi)
 
-                obj.knlast.Px = co * obj.knlast.Px_org + si * obj.knlast.Pz_org
-                obj.knlast.Pz = -si * obj.knlast.Px_org + co * obj.knlast.Pz_org
+                    obj.knlast.Px = co * obj.knlast.Px_org + si * obj.knlast.Pz_org
+                    obj.knlast.Pz = -si * obj.knlast.Px_org + co * obj.knlast.Pz_org
+                }
             }
         }
-    }
 
-    init_cad(2);
+        init_cad(2);
+    }
 }
 
 function showDialog_edit_selected_staebe() {
     //----------------------------------------------------------------------------------------------------
 
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
 
-    const el = document.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
+        let names = [] as string[]
+        for (let i = 0; i < querschnittset.length; i++) {
+            names.push(querschnittset[i].name)
+        }
 
-    let names = [] as string[]
-    for (let i = 0; i < querschnittset.length; i++) {
-        names.push(querschnittset[i].name)
+        el.setQuerschnittNames(names);
+        let gelenke: boolean[] = Array(6).fill(false)
+        el.setGelenke(gelenke);
+
+        el.setStarrA(0.0)
+        el.setStarrE(0.0)
+        el.setBettung(0.0)
+
+        //el.set_stabtyp((picked_obj as TCAD_Stab).get_stabtyp())
+
+        console.log("shadow", el?.shadowRoot?.getElementById("dialog_stabeigenschaften")),
+            (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).addEventListener("close", dialog_stab_eigenschaften_closed);
+
+        (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).showModal();
     }
-
-    el.setQuerschnittNames(names);
-    let gelenke: boolean[] = Array(6).fill(false)
-    el.setGelenke(gelenke);
-
-    el.setStarrA(0.0)
-    el.setStarrE(0.0)
-    el.setBettung(0.0)
-
-    //el.set_stabtyp((picked_obj as TCAD_Stab).get_stabtyp())
-
-    console.log("shadow", el?.shadowRoot?.getElementById("dialog_stabeigenschaften")),
-        (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).addEventListener("close", dialog_stab_eigenschaften_closed);
-
-    (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).showModal();
-
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -793,57 +813,60 @@ function dialog_stab_eigenschaften_closed(this: any, _e: any) {
     //console.log("this", this);
     //const ele = document.getElementById("id_dialog_stab_eigenschaften") as HTMLDialogElement;
 
-    const el = document.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
-    //console.log("id_dialog_stab_eigenschaften", el);
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
+        //console.log("id_dialog_stab_eigenschaften", el);
 
-    // ts-ignore
-    const returnValue = this.returnValue;
+        // ts-ignore
+        const returnValue = this.returnValue;
 
-    (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).removeEventListener("close", dialog_stab_eigenschaften_closed);
+        (el?.shadowRoot?.getElementById("dialog_stabeigenschaften") as HTMLDialogElement).removeEventListener("close", dialog_stab_eigenschaften_closed);
 
-    if (returnValue === "ok") {
-        //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
-        console.log("dialog_stab_eigenschaften_closed sieht gut aus");
+        if (returnValue === "ok") {
+            //let system = Number((ele.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
+            console.log("dialog_stab_eigenschaften_closed sieht gut aus");
 
-        const el = document.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
-        //console.log("Querschnitt : ", el.getSelectedOptionByName());
+            const el = shadow.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
+            //console.log("Querschnitt : ", el.getSelectedOptionByName());
 
-        // Daten eintragen in Objekt
-        const name_querschnitt = el.getSelectedOptionByName();
-        //let gelenke = Array(6)
-        const gelenke = el.getGelenke();
+            // Daten eintragen in Objekt
+            const name_querschnitt = el.getSelectedOptionByName();
+            //let gelenke = Array(6)
+            const gelenke = el.getGelenke();
 
-        // (picked_obj as TCAD_Stab).set_gelenke(gelenke);
+            // (picked_obj as TCAD_Stab).set_gelenke(gelenke);
 
-        const starr_a = el.getStarrA();
-        const starr_e = el.getStarrE();
-        const bettung = el.getBettung();
+            const starr_a = el.getStarrA();
+            const starr_e = el.getStarrE();
+            const bettung = el.getBettung();
 
-        const stab_typ = el.get_stabtyp();
+            const stab_typ = el.get_stabtyp();
 
 
-        for (let i = 0; i < list.size; i++) {
-            let obj = list.getNext(i) as TCAD_Stab;
+            for (let i = 0; i < list.size; i++) {
+                let obj = list.getNext(i) as TCAD_Stab;
 
-            if (obj.multiSelected) {
+                if (obj.multiSelected) {
 
-                obj.set_bettung(bettung);
-                obj.set_name_querschnitt(name_querschnitt);
-                obj.set_starrA(starr_a);
-                obj.set_starrE(starr_e);
-                obj.set_stabtyp(stab_typ);
-                obj.set_gelenke(gelenke);
+                    obj.set_bettung(bettung);
+                    obj.set_name_querschnitt(name_querschnitt);
+                    obj.set_starrA(starr_a);
+                    obj.set_starrE(starr_e);
+                    obj.set_stabtyp(stab_typ);
+                    obj.set_gelenke(gelenke);
+                }
             }
+
+            berechnungErforderlich(true);
+            init_cad(2);
+
+        } else {
+            // Abbruch
+
+            buttons_control.reset();
+            //el.removeEventListener('keydown', keydown);
         }
-
-        berechnungErforderlich(true);
-        init_cad(2);
-
-    } else {
-        // Abbruch
-
-        buttons_control.reset();
-        //el.removeEventListener('keydown', keydown);
     }
 }
 
@@ -854,22 +877,25 @@ export function update_multi_selected_knotenmasse() {
 
     mode_multi_selected_knotenmasse_aendern = false;
 
-    const el = document.getElementById("id_dialog_knotenmasse") as drDialogKnotenmasse;
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_knotenmasse") as drDialogKnotenmasse;
 
 
 
-    for (let i = 0; i < list.size; i++) {
-        let obj = list.getNext(i) as TCAD_Knotenmasse;
+        for (let i = 0; i < list.size; i++) {
+            let obj = list.getNext(i) as TCAD_Knotenmasse;
 
-        if (obj.multiSelected && obj.elTyp === CAD_KNMASSE) {
+            if (obj.multiSelected && obj.elTyp === CAD_KNMASSE) {
 
-            obj.masse.mass = el.get_mass()
-            obj.masse.theta = el.get_theta_y();
+                obj.masse.mass = el.get_mass()
+                obj.masse.theta = el.get_theta_y();
 
+            }
         }
-    }
 
-    init_cad(2);
+        init_cad(2);
+    }
 }
 
 
@@ -879,28 +905,30 @@ export function update_multi_selected_knotenverformung() {
 
     mode_multi_selected_knotenverformung_aendern = false;
 
-    const el = document.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById("id_dialog_knotenverformung") as drDialogKnotenverformung;
 
-    let lf = el.get_lastfall()
-    console.log("LAstfall", lf)
+        let lf = el.get_lastfall()
+        console.log("LAstfall", lf)
 
-    // let nur_lastfall = el.get_nur_lastfall();
+        // let nur_lastfall = el.get_nur_lastfall();
 
-    for (let i = 0; i < list.size; i++) {
-        let obj = list.getNext(i) as TCAD_Knotenverformung;
+        for (let i = 0; i < list.size; i++) {
+            let obj = list.getNext(i) as TCAD_Knotenverformung;
 
-        if (obj.multiSelected && obj.className === 'TCAD_Knotenverformung') {
+            if (obj.multiSelected && obj.className === 'TCAD_Knotenverformung') {
 
-            obj.nodeDisp.lf = el.get_lastfall();
-            set_max_lastfall(obj.nodeDisp.lf);
-            // if (!nur_lastfall) {
-            obj.nodeDisp.dispx0 = el.get_ux0();
-            obj.nodeDisp.dispz0 = el.get_uz0();
-            obj.nodeDisp.phi0 = el.get_phi0();
-            // }
+                obj.nodeDisp.lf = el.get_lastfall();
+                set_max_lastfall(obj.nodeDisp.lf);
+                // if (!nur_lastfall) {
+                obj.nodeDisp.dispx0 = el.get_ux0();
+                obj.nodeDisp.dispz0 = el.get_uz0();
+                obj.nodeDisp.phi0 = el.get_phi0();
+                // }
+            }
         }
+
+        init_cad(2);
     }
-
-    init_cad(2);
 }
-

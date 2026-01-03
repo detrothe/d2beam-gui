@@ -207,6 +207,7 @@ export class drMyDrawer extends LitElement {
          el.classList.replace('svgbutton_sticky', 'svgbutton');
          //el.classList.add('svgbutton');
       }
+
    }
 
    hide() {

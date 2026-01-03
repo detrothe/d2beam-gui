@@ -3,10 +3,10 @@ import { property, customElement } from 'lit/decorators.js';
 //import { property, customElement } from 'lit/decorators.js';
 import { msg, localized, updateWhenLocaleChanges } from '@lit/localize';
 
-import '../styles/global-css'
+//import '../styles/global-css'
 import '../styles/contextMenu-css'
 // import '../styles/global.css'
-
+//import styles from '../styles/lil-gui.css?raw'
 
 import '@shoelace-style/shoelace/dist/components/card/card.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
@@ -98,9 +98,12 @@ for (let i = 1; i <= Number(nlastfaelle_init); i++) {
 typs_string_kombitabelle = typs_string_kombitabelle + ']';
 console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
+// const stylesheet = new CSSStyleSheet();
+// stylesheet.replace(styles);
+
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.2, 2.Januar-2026, ';
+  '2D structural analysis of frames and trusses, v1.8.0, 3.Januar-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
