@@ -14,7 +14,8 @@ import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all,
 import { maxValue_dyn_eigenform, eigenform_dyn, dyn_neigv, nnodalMass, nodalmass, stabvorverformung_komb } from "./rechnen";
 
 //import { Pane } from 'tweakpane';
-import { myPanel, get_scale_factor, draw_sg, draw_group } from './mypanelgui'
+import { myPanel } from './mypanelgui'
+import {draw_sg, draw_group, get_scale_factor} from '../components/dr-control-panel'
 //import { colorToRgbNumber } from '@tweakpane/core';
 import { app } from "./haupt";
 import { saveAs } from 'file-saver';

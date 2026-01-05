@@ -25,6 +25,7 @@ import '@shoelace-style/shoelace/dist/components/menu/menu';
 import '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
 import '@shoelace-style/shoelace/dist/components/divider/divider';
 import '@shoelace-style/shoelace/dist/components/drawer/drawer';
+import '@shoelace-style/shoelace/dist/components/range/range';
 // import '@shoelace-style/shoelace/dist/components/icon/icon';
 // import { setBasePath,getBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 
@@ -103,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.0, 3.Januar-2026, ';
+  '2D structural analysis of frames and trusses, v1.8.0, 5.Januar-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
