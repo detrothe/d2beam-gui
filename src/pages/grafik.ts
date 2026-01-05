@@ -15,7 +15,7 @@ import { maxValue_dyn_eigenform, eigenform_dyn, dyn_neigv, nnodalMass, nodalmass
 
 //import { Pane } from 'tweakpane';
 import { myPanel } from './mypanelgui'
-import {draw_sg, draw_group, get_scale_factor} from '../components/dr-control-panel'
+import { draw_sg, draw_group, get_scale_factor } from '../components/dr-control-panel'
 //import { colorToRgbNumber } from '@tweakpane/core';
 import { app } from "./haupt";
 import { saveAs } from 'file-saver';
@@ -4997,6 +4997,8 @@ function draw_momentenlinien_grafik() {
     //console.log("in draw_momentenlinien_grafik", draw_sg.My, show_momentenlinien);
     show_momentenlinien = draw_sg.My  //!show_momentenlinien;
 
+    show_normalkraftlinien = false;
+    show_querkraftlinien = false;
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
     if (show_dyn_animate_eigenformen) return;
@@ -5010,6 +5012,8 @@ function draw_querkraftlinien_grafik() {
     //console.log("in draw_querkraftlinien_grafik", draw_sg.Vz, show_querkraftlinien);
     show_querkraftlinien = draw_sg.Vz //!show_querkraftlinien;
 
+    show_normalkraftlinien = false;
+    show_momentenlinien = false;
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
     if (show_dyn_animate_eigenformen) return;
@@ -5023,6 +5027,8 @@ function draw_normalkraftlinien_grafik() {
     //console.log("in draw_normalkraftlinien_grafik", draw_sg.N, show_normalkraftlinien);
     show_normalkraftlinien = draw_sg.N   //!show_normalkraftlinien;
 
+    show_querkraftlinien = false;
+    show_momentenlinien = false;
     //if (Gesamt_ys === undefined || isNaN(yM)) return;
 
     if (show_dyn_animate_eigenformen) return;

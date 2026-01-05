@@ -3,6 +3,7 @@ import { property, customElement } from 'lit/decorators.js';
 import { msg, localized, updateWhenLocaleChanges } from '@lit/localize';
 
 import { SlCheckbox, SlRange } from '@shoelace-style/shoelace';
+import { boolFromUnknown } from '@tweakpane/core';
 
 
 let scale_factor = 1.0;
@@ -16,6 +17,9 @@ export const draw_sg = {
 
 export let draw_group = false;
 
+let controller_N: any
+let controller_V: any
+let controller_M: any
 @localized()
 @customElement('dr-control-panel')
 export class drControlPanel extends LitElement {
@@ -265,13 +269,15 @@ export class drControlPanel extends LitElement {
 
     _checkbox_normalkraft() {
         let el = this.shadowRoot?.getElementById('id_normalkraft') as SlCheckbox;
-        console.log("el.checked", el.checked)
+        console.log("Normalkraft el.checked", el.checked)
         //if (el.checked) {
         if (draw_group) {
             draw_sg.N = false;
             window.dispatchEvent(new Event("draw_normalkraftlinien_grafik"));
         } else {
             draw_group = true;
+            this._setController_V(false);
+            this._setController_M(false);
             // controller_V.setValue(false);   // gui.controllers[4]
             // controller_M.setValue(false);   //gui.controllers[5]
             draw_group = false;
@@ -289,6 +295,8 @@ export class drControlPanel extends LitElement {
             window.dispatchEvent(new Event("draw_querkraftlinien_grafik"));
         } else {
             draw_group = true;
+            this._setController_N(false);
+            this._setController_M(false);
             // controller_N.setValue(false);  // gui.controllers[3]
             // controller_M.setValue(false);  // gui.controllers[5]
             draw_group = false;
@@ -304,6 +312,8 @@ export class drControlPanel extends LitElement {
             window.dispatchEvent(new Event("draw_momentenlinien_grafik"));
         } else {
             draw_group = true;
+            this._setController_N(false);
+            this._setController_V(false);
             // controller_N.setValue(false);  //gui.controllers[3]
             // controller_V.setValue(false);  //gui.controllers[4]
             draw_group = false;
@@ -358,6 +368,22 @@ export class drControlPanel extends LitElement {
         // }
     }
 
+    _setController_N(_wert: Boolean) {
+        let el = this.shadowRoot?.getElementById('id_normalkraft') as SlCheckbox;
+        el.removeAttribute('checked')
+        draw_sg.N = false;
+    }
+
+    _setController_V(_wert: Boolean) {
+        let el = this.shadowRoot?.getElementById('id_querkraft') as SlCheckbox;
+        el.removeAttribute('checked')
+        draw_sg.Vz = false;
+    }
+    _setController_M(_wert: Boolean) {
+        let el = this.shadowRoot?.getElementById('id_moment') as SlCheckbox;
+        el.removeAttribute('checked')
+        draw_sg.My = false;
+    }
 
 }
 
