@@ -104,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.0, 5.Januar-2026, ';
+  '2D structural analysis of frames and trusses, v1.8.0, 6.Januar-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -330,7 +330,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <sl-tab-panel name="tab-grafik"  id="id_tab-grafik">
         <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0">
           <!-- width:100vw; ;width:300px;height:300px; -->
-          <div id="panel_gui"></div>
+          <!-- <div id="panel_gui"></div> -->
           <dr-control-panel id="id_control_panel"></dr-control-panel>
           <div id="id_grafik_group">
             <div id="id_div_select_lc">

@@ -635,9 +635,9 @@ export const global_css = css`
    }
    #id_control_panel {
       position: absolute;
-      top: 2px;
+      top: 0.125rem;
       /* var(--abst_gl_v);*/
-      left: 50rem;
+      left: 0.125rem;
       z-index: 90;
       margin: 1;
       padding: 1;

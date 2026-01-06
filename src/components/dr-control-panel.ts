@@ -24,6 +24,8 @@ let controller_M: any
 @customElement('dr-control-panel')
 export class drControlPanel extends LitElement {
     show_main = true;
+    show_dynamik = true;
+    show_optionen = true;
 
     static get styles() {
         return css`
@@ -64,6 +66,10 @@ export class drControlPanel extends LitElement {
          }
 
          .zeile_optionen {
+            margin: 0px;
+         }
+
+         .zeile_dynamik {
             margin: 0px;
          }
 
@@ -156,9 +162,24 @@ export class drControlPanel extends LitElement {
                <sl-checkbox id="id_moment" @sl-change="${this._checkbox_moment}"></sl-checkbox>
             </div>
 
+            <div class="item1 zeile">Knickfigur</div>
+            <div class="zeile">
+               <sl-checkbox id="id_knickfigur" @sl-change="${this._checkbox_knickfigur}"></sl-checkbox>
+            </div>
+
+            <div class="item1 zeile">Schiefstellung</div>
+            <div class="zeile">
+               <sl-checkbox id="id_schiefstellung" @sl-change="${this._checkbox_schiefstellung}"></sl-checkbox>
+            </div>
+
+            <div class="item1 zeile">Stabvorverformung</div>
+            <div class="zeile">
+               <sl-checkbox id="id_stabvorverformung" @sl-change="${this._checkbox_stabvorverformung}"></sl-checkbox>
+            </div>
+
             <div class="item1 zeile">Skalierung</div>
             <div class="zeile">
-               <sl-range min="0" max="2.5" step="0.1" value="1.0" id="id_skalierung" @sl-change="${this._range_skalierung}"></sl-range>
+               <sl-range min="0.1" max="2.5" step="0.1" value="1.0" id="id_skalierung" @sl-change="${this._range_skalierung}"></sl-range>
             </div>
 
             <div class="item1 zeile">Lasten anzeigen</div>
@@ -171,6 +192,40 @@ export class drControlPanel extends LitElement {
                <sl-checkbox id="id_lager" checked @sl-change="${this._checkbox_lager}"></sl-checkbox>
             </div>
 
+
+            <header>
+             <button @click="${this._click_dynamik}" id="id_dynamik_button">
+                  <svg
+                     version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                     x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 100 100"
+                     style="enable-background:new 0 0 100 100;"
+                     xml:space="preserve"
+                  >
+                     <g>
+                        <polygon
+                           points="38,83 5,50 11.9,43 38,69.1 64.1,43 71,50 	"
+                        />
+                     </g>
+                  </svg>
+                  Dynamik
+               </button>
+            </header>
+
+
+            <div class="item1 zeile_dynamik">Eigenformen</div>
+            <div class="zeile_dynamik">
+               <sl-checkbox id="id_eigenformen" @sl-change="${this._checkbox_eigenformen}"></sl-checkbox>
+            </div>
+
+            <div class="item1 zeile_dynamik">animate Eigenformen</div>
+            <div class="zeile_dynamik">
+               <sl-checkbox id="id_animate_eigenformen" @sl-change="${this._checkbox_animate_eigenformen}"></sl-checkbox>
+            </div>
+
+            <div class="item1 zeile_dynamik">Massen anzeigen</div>
+            <div class="zeile_dynamik">
+               <sl-checkbox id="id_knotenmassen" @sl-change="${this._checkbox_knotenmassen}"></sl-checkbox>
+            </div>
 
             <header>
              <button @click="${this._click_optionen}" id="id_optionen_button">
@@ -237,15 +292,35 @@ export class drControlPanel extends LitElement {
         if (elall) {
             for (let el of elall) {
                 //console.log(el);
-                if (this.show_main) {
+                if (this.show_optionen) {
                     (el as HTMLElement).style.display = 'none';
                 } else {
                     (el as HTMLElement).style.display = 'block';
                 }
             }
-            this.show_main = !this.show_main;
+            this.show_optionen = !this.show_optionen;
         }
     }
+
+
+    _click_dynamik() {
+        console.log('_click_header()');
+        let elall = this.shadowRoot?.querySelectorAll('.zeile_dynamik');
+        //let el = document.getElementsByClassName('.item1')
+        //console.log("selector", elall)
+        if (elall) {
+            for (let el of elall) {
+                //console.log(el);
+                if (this.show_dynamik) {
+                    (el as HTMLElement).style.display = 'none';
+                } else {
+                    (el as HTMLElement).style.display = 'block';
+                }
+            }
+            this.show_dynamik = !this.show_dynamik;
+        }
+    }
+
     _checkbox_beschriftung() {
         let el = this.shadowRoot?.getElementById('id_beschriftung') as SlCheckbox;
         if (el) {
@@ -355,6 +430,48 @@ export class drControlPanel extends LitElement {
         let el = this.shadowRoot?.getElementById('id_gleichgewicht_SG') as SlCheckbox;
         if (el) {
             window.dispatchEvent(new Event("draw_gleichgewicht_SG_grafik"));
+        }
+    }
+
+    _checkbox_knickfigur() {
+        let el = this.shadowRoot?.getElementById('id_knickfigur') as SlCheckbox;
+        if (el) {
+            window.dispatchEvent(new Event("draw_eigenformen_grafik"));
+        }
+    }
+
+    _checkbox_schiefstellung() {
+        let el = this.shadowRoot?.getElementById('id_schiefstellung') as SlCheckbox;
+        if (el) {
+            window.dispatchEvent(new Event("draw_schiefstellung_grafik"));
+        }
+    }
+
+    _checkbox_stabvorverformung() {
+        let el = this.shadowRoot?.getElementById('id_stabvorverformung') as SlCheckbox;
+        if (el) {
+            window.dispatchEvent(new Event("draw_stabvorverformung_grafik"));
+        }
+    }
+
+    _checkbox_eigenformen() {
+        let el = this.shadowRoot?.getElementById('id_eigenformen') as SlCheckbox;
+        if (el) {
+            window.dispatchEvent(new Event("draw_dyn_eigenformen_grafik"));
+        }
+    }
+
+    _checkbox_animate_eigenformen() {
+        let el = this.shadowRoot?.getElementById('id_animate_eigenformen') as SlCheckbox;
+        if (el) {
+            window.dispatchEvent(new Event("draw_dyn_animate_eigenformen_grafik"));
+        }
+    }
+
+    _checkbox_knotenmassen() {
+        let el = this.shadowRoot?.getElementById('id_knotenmassen') as SlCheckbox;
+        if (el) {
+            window.dispatchEvent(new Event("draw_knotenmassen_grafik"));
         }
     }
 
