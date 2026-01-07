@@ -16,7 +16,7 @@ import { CTruss } from "./truss"
 import { CSpring } from "./feder"
 import { CKoppelfeder } from "./koppelfeder"
 import { init_grafik, drawsystem, init_two, init_panel, set_unit_grafik } from "./grafik";
-import { show_controller_THIIO, show_controller_bettung, show_controller_results, show_controller_truss } from "./mypanelgui"
+import { show_controller_THIIO, show_controller_bettung, show_controller_results, show_controller_truss } from "../components/dr-control-panel"
 import { ausgabe, ausgabe_kombinationen_Th_I_O, dyn_ausgabe } from "./ausgabe"
 import { AlertDialog } from "../pages/confirm_dialog";
 import { SlCheckbox } from "@shoelace-style/shoelace";

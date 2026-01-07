@@ -29,7 +29,7 @@ import { str_inputToJSON, read_daten } from './pages/dateien'
 // import { ConfirmDialog } from './pages/confirm_dialog';
 import { init_cad, init_two_cad } from './pages/cad';
 import { reset_controlpanel_grafik } from './pages/grafik';
-import { reset_gui } from './pages/mypanelgui';
+import { reset_gui } from './components/dr-control-panel.js';
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log(msg("isAndroid ="), isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))

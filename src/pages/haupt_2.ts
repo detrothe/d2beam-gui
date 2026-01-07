@@ -42,7 +42,7 @@ import { drButtonPM } from '../components/dr-button-pm';
 import { drRechteckQuerSchnitt } from '../components/dr-dialog-rechteckquerschnitt';
 //import { drMyDrawer } from '../components/dr-my_drawer';
 
-import { reset_gui } from './mypanelgui';
+import { reset_gui } from '../components/dr-control-panel';
 
 import DetectOS from './detectos';
 

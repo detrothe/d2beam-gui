@@ -642,8 +642,10 @@ export const global_css = css`
       margin: 1;
       padding: 1;
       font-size: 1rem;
-      background-color:'#ff0000';
+      /* background-color:'#ff0000'; */
       border:2px;
+      border-radius: 5px;
+      overflow: hidden;
    }
 `;
 

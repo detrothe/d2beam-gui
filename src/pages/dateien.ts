@@ -12,7 +12,7 @@ import {
 } from './haupt_2';
 import { saveAs } from 'file-saver';
 import { myFormat, write } from './utility';
-import { reset_gui } from './mypanelgui';
+import { reset_gui } from '../components/dr-control-panel';
 import { reset_controlpanel_grafik } from './grafik';
 
 import {

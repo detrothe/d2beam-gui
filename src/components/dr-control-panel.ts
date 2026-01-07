@@ -4,6 +4,7 @@ import { msg, localized, updateWhenLocaleChanges } from '@lit/localize';
 
 import { SlCheckbox, SlRange } from '@shoelace-style/shoelace';
 import { boolFromUnknown } from '@tweakpane/core';
+import { System } from '../pages/rechnen';
 
 
 let scale_factor = 1.0;
@@ -24,68 +25,109 @@ let controller_M: any
 @customElement('dr-control-panel')
 export class drControlPanel extends LitElement {
     show_main = true;
-    show_dynamik = true;
-    show_optionen = true;
+    show_dynamik = false;
+    show_optionen = false;
 
     static get styles() {
         return css`
-         #control_panel {
-            margin: 1;
-            padding: 1;
-            font-size: 1rem;
-            background-color: #fbd603;
-            border: 2px;
-            color: red;
-            z-index: 90;
-         }
+           #control_panel {
+              margin: 1;
+              padding: 1;
+              font-size: 1rem;
+              background-color: #fbd603;
+              border: 2px;
+              color: red;
+              z-index: 90;
+              /* border-radius: 3px; */
+           }
 
-         .container {
-            /* height:100vh; */
+           .container {
+              /* height:100vh; */
 
-            display: grid;
-            grid-template-columns: auto auto 5rem;
-         }
-         header {
-            background: tomato;
-            grid-column-start: 1;
-            grid-column-end: 4;
-            padding: 5px;
-            text-align:left;
-         }
-         .container div {
-            background: gold;
-            padding: 5px;
-         }
-         .item1 {
-            grid-column-start: 1;
-            grid-column-end: 3;
-         }
+              display: grid;
+              grid-template-columns: auto auto 5rem;
+              /* border-radius: 3px; */
+           }
+           header {
+              background: tomato;
+              grid-column-start: 1;
+              grid-column-end: 4;
+              padding: 5px;
+              text-align: left;
+           }
+           .basis {
+              display: block;
+           }
+           .dynamik {
+              display: none;
+           }
 
-         .zeile {
-            margin: 0px;
-         }
+           .optionen {
+              display: none;
+           }
 
-         .zeile_optionen {
-            margin: 0px;
-         }
+           .container div {
+              display: none;
+              background: black;
+              color: white;
+              padding: 5px;
+           }
+           .item1 {
+              grid-column-start: 1;
+              grid-column-end: 3;
+           }
 
-         .zeile_dynamik {
-            margin: 0px;
-         }
+           .zeile {
+              margin: 0px;
+           }
 
-         button {
-            width: 100%;
-            color: black;
-            background-color: transparent;
-            border: 0px;
-            font-size: 1rem;
-            text-align:left;
-         }
+           .zeile_optionen {
+              margin: 0px;
+           }
 
-         button:hover {
-            color: yellow;
-         }
-      `;
+           .zeile_dynamik {
+              margin: 0px;
+           }
+
+           .zeile_thiio {
+              margin: 0px;
+           }
+
+           .zeile_N {
+              margin: 0px;
+           }
+
+           .zeile_V {
+              margin: 0px;
+           }
+           .zeile_M {
+              margin: 0px;
+           }
+           .zeile_disp {
+              margin: 0px;
+           }
+
+           .zeile_bettung {
+              margin: 0px;
+           }
+
+           .zeile_basics {
+              margin: 0px;
+           }
+
+           button {
+              width: 100%;
+              color: black;
+              background-color: transparent;
+              border: 0px;
+              font-size: 1rem;
+              text-align: left;
+           }
+
+           button:hover {
+              color: yellow;
+           }
+        `;
     }
 
     constructor() {
@@ -98,7 +140,7 @@ export class drControlPanel extends LitElement {
     render() {
         return html`
          <div class="container">
-            <header>
+            <header class='basis'>
                <button @click="${this._click_header}" id="id_header_button">
                   <svg
                      version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -112,20 +154,20 @@ export class drControlPanel extends LitElement {
                         />
                      </g>
                   </svg>
-                  Control
+                  Bedienfeld anzeigen
                </button>
             </header>
 
-            <div class="item1 zeile">Beschriftung</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_basics">Beschriftung</div>
+            <div class="zeile zeile_basics">
                <sl-checkbox
                   id="id_beschriftung"
                   @sl-change="${this._checkbox_beschriftung}"
                ></sl-checkbox>
             </div>
 
-            <div class="item1 zeile">Systemlinien</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_basics">Systemlinien</div>
+            <div class="zeile zeile_basics">
                <sl-checkbox
                   checked
                   id="id_systemlinien"
@@ -133,67 +175,67 @@ export class drControlPanel extends LitElement {
                ></sl-checkbox>
             </div>
 
-            <div class="item1 zeile">Verformungen</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_disp">Verformungen</div>
+            <div class="zeile zeile_disp">
                <sl-checkbox
                   id="id_verformungen"
                   @sl-change="${this._checkbox_verformungen}"
                ></sl-checkbox>
             </div>
 
-            <div class="item1 zeile">Normalkraft</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_N">Normalkraft</div>
+            <div class="zeile zeile_N">
                <sl-checkbox
                   id="id_normalkraft"
                   @sl-change="${this._checkbox_normalkraft}"
                ></sl-checkbox>
             </div>
 
-            <div class="item1 zeile">Querkraft</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_V">Querkraft</div>
+            <div class="zeile zeile_V">
                <sl-checkbox
                   id="id_querkraft"
                   @sl-change="${this._checkbox_querkraft}"
                ></sl-checkbox>
             </div>
 
-            <div class="item1 zeile">Moment</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_M">Moment</div>
+            <div class="zeile zeile_M">
                <sl-checkbox id="id_moment" @sl-change="${this._checkbox_moment}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile">Knickfigur</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_thiio">Knickfigur</div>
+            <div class="zeile  zeile_thiio">
                <sl-checkbox id="id_knickfigur" @sl-change="${this._checkbox_knickfigur}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile">Schiefstellung</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_thiio">Schiefstellung</div>
+            <div class="zeile zeile_thiio">
                <sl-checkbox id="id_schiefstellung" @sl-change="${this._checkbox_schiefstellung}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile">Stabvorverformung</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_thiio">Stabvorverformung</div>
+            <div class="zeile zeile_thiio">
                <sl-checkbox id="id_stabvorverformung" @sl-change="${this._checkbox_stabvorverformung}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile">Skalierung</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_basics">Skalierung</div>
+            <div class="zeile zeile_basics">
                <sl-range min="0.1" max="2.5" step="0.1" value="1.0" id="id_skalierung" @sl-change="${this._range_skalierung}"></sl-range>
             </div>
 
-            <div class="item1 zeile">Lasten anzeigen</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_basics">Lasten anzeigen</div>
+            <div class="zeile zeile_basics">
                <sl-checkbox id="id_lasten" checked @sl-change="${this._checkbox_lasten}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile">Lagerkräfte anzeigen</div>
-            <div class="zeile">
+            <div class="item1 zeile zeile_basics">Lagerkräfte anzeigen</div>
+            <div class="zeile zeile_basics">
                <sl-checkbox id="id_lager" checked @sl-change="${this._checkbox_lager}"></sl-checkbox>
             </div>
 
 
-            <header>
+            <header class='dynamik'>
              <button @click="${this._click_dynamik}" id="id_dynamik_button">
                   <svg
                      version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -227,7 +269,7 @@ export class drControlPanel extends LitElement {
                <sl-checkbox id="id_knotenmassen" @sl-change="${this._checkbox_knotenmassen}"></sl-checkbox>
             </div>
 
-            <header>
+            <header class='optionen'>
              <button @click="${this._click_optionen}" id="id_optionen_button">
                   <svg
                      version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -261,7 +303,7 @@ export class drControlPanel extends LitElement {
             <div class="zeile_optionen">
                 <sl-checkbox id="id_gleichgewicht_SG" checked @sl-change="${this._checkbox_gleichgewicht_SG}"></sl-checkbox>
             </div>
-
+        </div>
       `;
     }
 
@@ -278,6 +320,15 @@ export class drControlPanel extends LitElement {
                 } else {
                     (el as HTMLElement).style.display = 'block';
                 }
+            }
+            if (this.show_main) {
+                this.show_optionen = true;
+                this.show_dynamik = true;
+                this._click_dynamik();
+                this._click_optionen();
+                this._showHeaders(false);
+            } else {
+                 this._showHeaders(true);
             }
             this.show_main = !this.show_main;
         }
@@ -502,8 +553,57 @@ export class drControlPanel extends LitElement {
         draw_sg.My = false;
     }
 
-}
+    showController_thiio(wert: Boolean) {
+        let elall = this.shadowRoot?.querySelectorAll('.zeile_thiio');
+        if (elall) {
+            for (let el of elall) {
+                if (wert) {
+                    (el as HTMLElement).style.display = 'block';
+                } else {
+                    (el as HTMLElement).style.display = 'none';
+                }
+            }
+        }
+    }
 
+    showController(wert: Boolean, art: string) {
+        let elall = this.shadowRoot?.querySelectorAll('.zeile_' + art);
+        if (elall) {
+            for (let el of elall) {
+                if (wert) {
+                    (el as HTMLElement).style.display = 'block';
+                } else {
+                    (el as HTMLElement).style.display = 'none';
+                }
+            }
+        }
+    }
+
+    showBasics(wert: Boolean) {
+        let elall = this.shadowRoot?.querySelectorAll('.zeile_basics');
+        if (elall) {
+            for (let el of elall) {
+                if (wert) {
+                    (el as HTMLElement).style.display = 'block';
+                } else {
+                    (el as HTMLElement).style.display = 'none';
+                }
+            }
+        }
+    }
+    _showHeaders(wert: Boolean) {
+        let elall = this.shadowRoot?.querySelectorAll('.optionen, .dynamik');
+        if (elall) {
+            for (let el of elall) {
+                if (wert) {
+                    (el as HTMLElement).style.display = 'block';
+                } else {
+                    (el as HTMLElement).style.display = 'none';
+                }
+            }
+        }
+    }
+}
 
 //--------------------------------------------------------------------------------------------------------
 export function get_scale_factor() {
@@ -520,4 +620,85 @@ export function get_scale_factor_arrows() {
 }
 
 
+
+//--------------------------------------------------------------------------------------------------------
+export function show_controller_THIIO(wert: boolean) {
+    //----------------------------------------------------------------------------------------------------
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        let shad = shadow.getElementById('id_control_panel') as drControlPanel;
+        if (shad) {
+            (shad).showController_thiio(wert);
+        }
+    }
+    // controller_schief.show(wert);
+    // controller_stabvorverformung.show(wert);
+
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function show_controller_results(wert: boolean) {
+    //----------------------------------------------------------------------------------------------------
+
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        let shad = shadow.getElementById('id_control_panel') as drControlPanel;
+        if (shad) {
+            (shad).showController(wert, 'N');
+            if (System === 0) {
+                (shad).showController(wert, 'V');
+                (shad).showController(wert, 'M');
+            }
+            (shad).showController(wert, 'disp');
+            (shad).showBasics(wert);
+        }
+    }
+
+    // controller_N.show(wert);
+    // if (System === 0) {
+    //     controller_V.show(wert);
+    //     controller_M.show(wert);
+    // }
+    // controller_disp.show(wert);
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function show_controller_truss(wert: boolean) {
+    //----------------------------------------------------------------------------------------------------
+
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        let shad = shadow.getElementById('id_control_panel') as drControlPanel;
+        if (shad) {
+            (shad).showController(wert, 'V');
+            (shad).showController(wert, 'M');
+        }
+    }
+
+    // controller_V.show(wert);
+    // controller_M.show(wert);
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+export function show_controller_bettung(wert: boolean) {
+    //----------------------------------------------------------------------------------------------------
+
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        let shad = shadow.getElementById('id_control_panel') as drControlPanel;
+        if (shad) {
+            (shad).showController(wert, 'bettung');
+        }
+    }
+
+    // controller_bettung.show(wert);
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function reset_gui() {
+    //----------------------------------------------------------------------------------------------------
+    // gui.reset();
+}
 

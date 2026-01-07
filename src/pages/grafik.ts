@@ -14,7 +14,7 @@ import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all,
 import { maxValue_dyn_eigenform, eigenform_dyn, dyn_neigv, nnodalMass, nodalmass, stabvorverformung_komb } from "./rechnen";
 
 //import { Pane } from 'tweakpane';
-import { myPanel } from './mypanelgui'
+//import { myPanel } from './mypanelgui'
 import { draw_sg, draw_group, get_scale_factor } from '../components/dr-control-panel'
 //import { colorToRgbNumber } from '@tweakpane/core';
 import { app } from "./haupt";
@@ -483,7 +483,7 @@ export function init_panel() {
     console.log("init_panel")
 
     if (drawPanel === 0) {
-        myPanel();
+        //myPanel();
         drawPanel = 1;
     }
 }
