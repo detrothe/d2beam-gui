@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-import { LitElement, html } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { getLocale, setLocaleFromUrl } from './localization';
 import { allLocales } from './../generated/locale-codes.js';
@@ -24,6 +24,22 @@ const localeNames: {
 @localized()
 @customElement('locale-picker')
 export class LocalePicker extends LitElement {
+
+    static get styles() {
+        return css`
+     select {
+         font-size: 0.875rem;
+         /*1rem;*/
+         border-radius: 4px;
+         border-width: 1px;
+         background-color: #ffffff;
+         border-color: #d4d4d8;
+         color: #444444;
+         padding: 0.4rem;
+      }
+           `;
+    }
+
     render() {
         return html`
       <select @change=${this.localeChanged}>

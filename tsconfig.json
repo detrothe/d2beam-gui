@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-      "skipLibCheck": false,
+      "skipLibCheck": true,
       "module": "esnext",
       "target": "esnext",
       "lib": ["es2017", "esnext", "dom", "dom.iterable"],

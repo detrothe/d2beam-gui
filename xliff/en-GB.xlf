@@ -12,7 +12,111 @@
 </trans-unit>
 <trans-unit id="s9fba2bcfd7807411">
   <source>Haupt</source>
-   <target>Main</target>
+  <target>Main</target>
+</trans-unit>
+<trans-unit id="s0bff33921e8709f6">
+  <source>Bedienfeld anzeigen</source>
+  <target>Display control panel</target>
+</trans-unit>
+<trans-unit id="s2b41d1fba90e38cb">
+  <source>Beschriftung</source>
+  <target>labeling</target>
+</trans-unit>
+<trans-unit id="se3f50870e34f1521">
+  <source>Systemlinien</source>
+  <target>system lines</target>
+</trans-unit>
+<trans-unit id="s4208b8c9f9ba4783">
+  <source>Verformungen</source>
+  <target>deformations</target>
+</trans-unit>
+<trans-unit id="s3d1362f3061410b4">
+  <source>Normalkraft</source>
+  <target>normal force</target>
+</trans-unit>
+<trans-unit id="s51ac13fc60ec8d42">
+  <source>Querkraft</source>
+  <target>shear force</target>
+</trans-unit>
+<trans-unit id="s3d21e2828d9cbcdd">
+  <source>Moment</source>
+  <target>moment</target>
+</trans-unit>
+<trans-unit id="sc9383464bcc002fe">
+  <source>Knickfigur</source>
+  <target>buckled shape</target>
+</trans-unit>
+<trans-unit id="sc9ffcae4af440f51">
+  <source>Schiefstellung</source>
+  <target>inclination</target>
+</trans-unit>
+<trans-unit id="s59afc2d10f246311">
+  <source>Stabvorverformung</source>
+  <target>beam pre-deformation</target>
+</trans-unit>
+<trans-unit id="s8d3551f00a88687e">
+  <source>Skalierung</source>
+  <target>scaling</target>
+</trans-unit>
+<trans-unit id="s8baaaf87af7af7d7">
+  <source>Lasten anzeigen</source>
+  <target>show loads</target>
+</trans-unit>
+<trans-unit id="sd0d2dfe921d156c5">
+  <source>Lagerkräfte anzeigen</source>
+  <target>show supports</target>
+</trans-unit>
+<trans-unit id="s56d117dffa5a0f36">
+  <source>Dynamik</source>
+  <target>Dynamics</target>
+</trans-unit>
+<trans-unit id="scfc306ddc5333ba2">
+  <source>Eigenformen</source>
+  <target>eigenform</target>
+</trans-unit>
+<trans-unit id="s0641fdf7c4cc8625">
+  <source>animate Eigenformen</source>
+  <target>animate eigenform</target>
+</trans-unit>
+<trans-unit id="s65ada9f53688cb8f">
+  <source>Massen anzeigen</source>
+  <target>show masses</target>
+</trans-unit>
+<trans-unit id="scc6d3482dd1b2057">
+  <source>Optionen</source>
+  <target>Options</target>
+</trans-unit>
+<trans-unit id="s51851ec717862dad">
+  <source>Umriss anzeigen</source>
+  <target>show outline</target>
+</trans-unit>
+<trans-unit id="se48ef32e03a831e9">
+  <source>Gesamtverformung</source>
+  <target>total deformation</target>
+</trans-unit>
+<trans-unit id="s0a9a66a4199b4e6a">
+  <source>Gleichgewicht SG</source>
+  <target>equilibrium of forces</target>
+</trans-unit>
+<trans-unit id="s0c6f4bc0ae2a0d3b">
+  <source>Schriftgröße:</source>
+  <target>font size</target>
+</trans-unit>
+<trans-unit id="s2153b0c36b61fda8">
+  <source>nur für Touchscreens:</source>
+  <target>only for touch screens</target>
+</trans-unit>
+<trans-unit id="s2ad271c4bf69a58d">
+  <source>Selektion von Zellen mit Finger erlauben</source>
+  <target>Allow selection of cells with finger</target>
+</trans-unit>
+<trans-unit id="s062463b6cb2ba47f">
+  <source>Auswahl als Standardwerte im Browser speichern</source>
+  <target>Save selection as default values in browser</target>
+</trans-unit>
+<trans-unit id="sdb44853a9a24fec0">
+  <source>Standardwerte im Speicher des Browsers löschen</source>
+  <target>Delete default values in the browser's memory</target>
 </trans-unit>
 </body>
 </file>

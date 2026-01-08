@@ -3,7 +3,6 @@ import { property, customElement } from 'lit/decorators.js';
 import { msg, localized, updateWhenLocaleChanges } from '@lit/localize';
 
 import { SlCheckbox, SlRange } from '@shoelace-style/shoelace';
-import { boolFromUnknown } from '@tweakpane/core';
 import { System } from '../pages/rechnen';
 
 
@@ -49,7 +48,7 @@ export class drControlPanel extends LitElement {
               /* border-radius: 3px; */
            }
            header {
-              background: tomato;
+              background: #b3ae00;
               grid-column-start: 1;
               grid-column-end: 4;
               padding: 5px;
@@ -154,11 +153,11 @@ export class drControlPanel extends LitElement {
                         />
                      </g>
                   </svg>
-                  Bedienfeld anzeigen
+                  ${msg('Bedienfeld anzeigen')}
                </button>
             </header>
 
-            <div class="item1 zeile zeile_basics">Beschriftung</div>
+            <div class="item1 zeile zeile_basics">${msg('Beschriftung')}</div>
             <div class="zeile zeile_basics">
                <sl-checkbox
                   id="id_beschriftung"
@@ -166,7 +165,7 @@ export class drControlPanel extends LitElement {
                ></sl-checkbox>
             </div>
 
-            <div class="item1 zeile zeile_basics">Systemlinien</div>
+            <div class="item1 zeile zeile_basics">${msg('Systemlinien')}</div>
             <div class="zeile zeile_basics">
                <sl-checkbox
                   checked
@@ -175,7 +174,7 @@ export class drControlPanel extends LitElement {
                ></sl-checkbox>
             </div>
 
-            <div class="item1 zeile zeile_disp">Verformungen</div>
+            <div class="item1 zeile zeile_disp">${msg('Verformungen')}</div>
             <div class="zeile zeile_disp">
                <sl-checkbox
                   id="id_verformungen"
@@ -183,7 +182,7 @@ export class drControlPanel extends LitElement {
                ></sl-checkbox>
             </div>
 
-            <div class="item1 zeile zeile_N">Normalkraft</div>
+            <div class="item1 zeile zeile_N">${msg('Normalkraft')}</div>
             <div class="zeile zeile_N">
                <sl-checkbox
                   id="id_normalkraft"
@@ -191,7 +190,7 @@ export class drControlPanel extends LitElement {
                ></sl-checkbox>
             </div>
 
-            <div class="item1 zeile zeile_V">Querkraft</div>
+            <div class="item1 zeile zeile_V">${msg('Querkraft')}</div>
             <div class="zeile zeile_V">
                <sl-checkbox
                   id="id_querkraft"
@@ -199,37 +198,37 @@ export class drControlPanel extends LitElement {
                ></sl-checkbox>
             </div>
 
-            <div class="item1 zeile zeile_M">Moment</div>
+            <div class="item1 zeile zeile_M">${msg('Moment')}</div>
             <div class="zeile zeile_M">
                <sl-checkbox id="id_moment" @sl-change="${this._checkbox_moment}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile zeile_thiio">Knickfigur</div>
+            <div class="item1 zeile zeile_thiio">${msg('Knickfigur')}</div>
             <div class="zeile  zeile_thiio">
                <sl-checkbox id="id_knickfigur" @sl-change="${this._checkbox_knickfigur}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile zeile_thiio">Schiefstellung</div>
+            <div class="item1 zeile zeile_thiio">${msg('Schiefstellung')}</div>
             <div class="zeile zeile_thiio">
                <sl-checkbox id="id_schiefstellung" @sl-change="${this._checkbox_schiefstellung}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile zeile_thiio">Stabvorverformung</div>
+            <div class="item1 zeile zeile_thiio">${msg('Stabvorverformung')}</div>
             <div class="zeile zeile_thiio">
                <sl-checkbox id="id_stabvorverformung" @sl-change="${this._checkbox_stabvorverformung}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile zeile_basics">Skalierung</div>
+            <div class="item1 zeile zeile_basics">${msg('Skalierung')}</div>
             <div class="zeile zeile_basics">
                <sl-range min="0.1" max="2.5" step="0.1" value="1.0" id="id_skalierung" @sl-change="${this._range_skalierung}"></sl-range>
             </div>
 
-            <div class="item1 zeile zeile_basics">Lasten anzeigen</div>
+            <div class="item1 zeile zeile_basics">${msg('Lasten anzeigen')}</div>
             <div class="zeile zeile_basics">
                <sl-checkbox id="id_lasten" checked @sl-change="${this._checkbox_lasten}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile zeile_basics">Lagerkräfte anzeigen</div>
+            <div class="item1 zeile zeile_basics">${msg('Lagerkräfte anzeigen')}</div>
             <div class="zeile zeile_basics">
                <sl-checkbox id="id_lager" checked @sl-change="${this._checkbox_lager}"></sl-checkbox>
             </div>
@@ -249,22 +248,22 @@ export class drControlPanel extends LitElement {
                         />
                      </g>
                   </svg>
-                  Dynamik
+                  ${msg('Dynamik')}
                </button>
             </header>
 
 
-            <div class="item1 zeile_dynamik">Eigenformen</div>
+            <div class="item1 zeile_dynamik">${msg('Eigenformen')}</div>
             <div class="zeile_dynamik">
                <sl-checkbox id="id_eigenformen" @sl-change="${this._checkbox_eigenformen}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile_dynamik">animate Eigenformen</div>
+            <div class="item1 zeile_dynamik">${msg('animate Eigenformen')}</div>
             <div class="zeile_dynamik">
                <sl-checkbox id="id_animate_eigenformen" @sl-change="${this._checkbox_animate_eigenformen}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile_dynamik">Massen anzeigen</div>
+            <div class="item1 zeile_dynamik">${msg('Massen anzeigen')}</div>
             <div class="zeile_dynamik">
                <sl-checkbox id="id_knotenmassen" @sl-change="${this._checkbox_knotenmassen}"></sl-checkbox>
             </div>
@@ -283,23 +282,23 @@ export class drControlPanel extends LitElement {
                         />
                      </g>
                   </svg>
-                  Optionen
+                  ${msg('Optionen')}
                </button>
             </header>
 
 
-            <div class="item1 zeile_optionen">Umriss anzeigen</div>
+            <div class="item1 zeile_optionen">${msg('Umriss anzeigen')}</div>
             <div class="zeile_optionen">
                <sl-checkbox id="id_umriss" @sl-change="${this._checkbox_umriss}"></sl-checkbox>
             </div>
 
 
-            <div class="item1 zeile_optionen">Gesamtverformung</div>
+            <div class="item1 zeile_optionen">${msg('Gesamtverformung')}</div>
             <div class="zeile_optionen">
                 <sl-checkbox id="id_gesamtverformung" @sl-change="${this._checkbox_gesamtverformung}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile_optionen">Gleichgewicht SG</div>
+            <div class="item1 zeile_optionen">${msg('Gleichgewicht SG')}</div>
             <div class="zeile_optionen">
                 <sl-checkbox id="id_gleichgewicht_SG" checked @sl-change="${this._checkbox_gleichgewicht_SG}"></sl-checkbox>
             </div>

@@ -13,10 +13,8 @@ import { maxValue_lf, maxValue_komb, maxValue_eigv, maxValue_u0, maxValue_eload,
 import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all, kombiTabelle, nNodeDisps, nodeDisp0, System, STABWERK, FACHWERK } from "./rechnen";
 import { maxValue_dyn_eigenform, eigenform_dyn, dyn_neigv, nnodalMass, nodalmass, stabvorverformung_komb } from "./rechnen";
 
-//import { Pane } from 'tweakpane';
 //import { myPanel } from './mypanelgui'
 import { draw_sg, draw_group, get_scale_factor } from '../components/dr-control-panel'
-//import { colorToRgbNumber } from '@tweakpane/core';
 import { app } from "./haupt";
 import { saveAs } from 'file-saver';
 import { dx_offset_touch, dz_offset_touch, faktor_lagersymbol, init_cad, init_two_cad, unit_force, unit_moment } from './cad';

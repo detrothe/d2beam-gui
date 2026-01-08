@@ -28,7 +28,7 @@ let controller_bettung: any
 
 let controller_SG: any
 
-console.log("in mypanelgui");
+//console.log("in mypanelgui");
 
 //--------------------------------------------------------------------------------------------------------
 export function myPanel() {

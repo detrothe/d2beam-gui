@@ -104,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.0, 7.Januar-2026, ';
+  '2D structural analysis of frames and trusses, v1.8.0, 8.Januar-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -1113,13 +1113,20 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-einstellungen"
         ><p><b>Einstellungen</b><br /><br /></p>
-        <locale-picker></locale-picker>
+
         <div id="id_einstellungen">
           <br />
           <table>
             <tbody>
               <tr>
-                <td id="lab_font_size">Schriftgröße:</td>
+                <td>Language:</td>
+                <td><locale-picker></locale-picker></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td id="lab_font_size">${msg('Schriftgröße:')}</td>
                 <td>
                   <select name="fontSize" id="id_fontsize">
                     <option value="0.5em">8</option>
@@ -1142,8 +1149,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td title='Selektion von Zellen mit Finger'>nur für Touchscreens: </td>
-                <td><sl-checkbox id="id_touch_support_tables">Selektion von Zellen mit Finger erlauben</sl-checkbox></td>
+                <td title='Selektion von Zellen mit Finger'>${msg('nur für Touchscreens:')}</td>
+                <td><sl-checkbox id="id_touch_support_tables">${msg('Selektion von Zellen mit Finger erlauben')}</sl-checkbox></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
@@ -1176,12 +1183,12 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <br /><br />
           <p>
             <button type="button" id="id_cb_saveLocalStorage">
-              Auswahl als Standardwerte im Browser speichern
+              ${msg('Auswahl als Standardwerte im Browser speichern')}
             </button>
           </p>
           <p>
             <button type="button" id="id_cb_deleteLocalStorage">
-              Standardwerte im Speicher des Browsers löschen
+              ${msg('Standardwerte im Speicher des Browsers löschen')}
             </button>
           </p>
         </div>
