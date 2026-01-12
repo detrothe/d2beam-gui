@@ -216,6 +216,8 @@ export function init_haupt3() {
 
     init_tabellen();
 
+    //update_button_language();
+
     console.log("FERTIG  init_haupt3")
 
 }

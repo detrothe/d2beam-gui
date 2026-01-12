@@ -32,7 +32,7 @@
 </trans-unit>
 <trans-unit id="s3d1362f3061410b4">
   <source>Normalkraft</source>
-  <target>fuerza normal</target>
+  <target>fuerza axial</target>
 </trans-unit>
 <trans-unit id="s51ac13fc60ec8d42">
   <source>Querkraft</source>
@@ -60,11 +60,11 @@
 </trans-unit>
 <trans-unit id="s8baaaf87af7af7d7">
   <source>Lasten anzeigen</source>
-  <target>show loads</target>
+  <target>Cargas</target>
 </trans-unit>
 <trans-unit id="sd0d2dfe921d156c5">
   <source>Lagerkräfte anzeigen</source>
-  <target>show supports</target>
+  <target>Reacciones</target>
 </trans-unit>
 <trans-unit id="s56d117dffa5a0f36">
   <source>Dynamik</source>
@@ -100,11 +100,11 @@
 </trans-unit>
 <trans-unit id="s0c6f4bc0ae2a0d3b">
   <source>Schriftgröße:</source>
-  <target></target>
+  <target/>
 </trans-unit>
 <trans-unit id="s2153b0c36b61fda8">
   <source>nur für Touchscreens:</source>
-  <target></target>
+  <target/>
 </trans-unit>
 <trans-unit id="s2ad271c4bf69a58d">
   <source>Selektion von Zellen mit Finger erlauben</source>
@@ -117,6 +117,30 @@
 <trans-unit id="sdb44853a9a24fec0">
   <source>Standardwerte im Speicher des Browsers löschen</source>
   <target>Borrar los valores predeterminados de la memoria del navegador</target>
+</trans-unit>
+<trans-unit id="sd98b69251f066fa1">
+  <source>Stab</source>
+  <target>Viga</target>
+</trans-unit>
+<trans-unit id="s2c9170533952c430">
+  <source>Knotenlager eingeben</source>
+  <target>Reacciones</target>
+</trans-unit>
+<trans-unit id="s7a37f71a594a557c">
+  <source>KnLast</source>
+  <target>nodCargas</target>
+</trans-unit>
+<trans-unit id="s97cb3fe71c6686b4">
+  <source>Eingabe Knotenlasten</source>
+  <target>Entrada de cargas de nodos</target>
+</trans-unit>
+<trans-unit id="s7937af3c124f9244">
+  <source>ElLast</source>
+  <target>Cargas</target>
+</trans-unit>
+<trans-unit id="s0bf516a8f909ff39">
+  <source>Eingabe Elementlasten</source>
+  <target>Entrada de cargas para los elementos</target>
 </trans-unit>
 </body>
 </file>

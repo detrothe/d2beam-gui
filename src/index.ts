@@ -1,7 +1,7 @@
 console.log("Anfang 0 index.ts")
 
-import {msg} from '@lit/localize';
-import {allLocales} from './generated/locale-codes.js';
+import { msg } from '@lit/localize';
+import { allLocales } from './generated/locale-codes.js';
 
 // import './styles/global.css';
 import './styles/contextMenu.css';
@@ -13,15 +13,25 @@ if (process.env.NODE_ENV !== "development") {
 }
 
 
-// import {configureTransformLocalization} from '@lit/localize';
-
-// export const {getLocale} = configureTransformLocalization({
-//   sourceLocale: 'de',
-// });
 console.log("Anfang index.ts")
-//import './pages/haupt';
+
+window.addEventListener('lit-localize-status', (event) => {
+
+
+    if (event.detail.status === 'loading') {
+        console.log(`******************** Loading new locale: ${event.detail.loadingLocale}`);
+    } else if (event.detail.status === 'ready') {
+        console.log(`Loaded new locale: ${event.detail.readyLocale}`);
+        update_button_language();
+    } else if (event.detail.status === 'error') {
+        console.error(
+            `******************* Error loading locale ${event.detail.errorLocale}: ` +
+            event.detail.errorMessage
+        );
+    }
+});
+
 import './components/dr-haupt'
-//import './pages/haupt3'
 
 import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
@@ -30,6 +40,7 @@ import { str_inputToJSON, read_daten } from './pages/dateien'
 import { init_cad, init_two_cad } from './pages/cad';
 import { reset_controlpanel_grafik } from './pages/grafik';
 import { reset_gui } from './components/dr-control-panel.js';
+import { update_button_language } from './pages/cad_buttons.js';
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log(msg("isAndroid ="), isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
@@ -38,7 +49,7 @@ console.log("userAgent", navigator.userAgent);
 console.log('navigator ', navigator)
 //write('navigator: ' + navigator.maxTouchPoints + ' | ' + navigator.platform + ' | ' + navigator.userAgent)
 
-console.log("allLocales",allLocales);
+console.log("allLocales", allLocales);
 //console.log("getLocale",getLocale());
 
 function getBrowserName(userAgent: string) {
@@ -351,7 +362,7 @@ else {
 
     const letzteEinlesen = true
 
-    console.log("autoEingabeLesen, letzteEinlesen",letzteEinlesen)
+    console.log("autoEingabeLesen, letzteEinlesen", letzteEinlesen)
     if (letzteEinlesen) {
         if (input !== null) read_daten(input);
         init_two_cad();

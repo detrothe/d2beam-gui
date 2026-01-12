@@ -118,6 +118,30 @@
   <source>Standardwerte im Speicher des Browsers löschen</source>
   <target>Delete default values in the browser's memory</target>
 </trans-unit>
+<trans-unit id="sd98b69251f066fa1">
+  <source>Stab</source>
+  <target>Rod</target>
+</trans-unit>
+<trans-unit id="s2c9170533952c430">
+  <source>Knotenlager eingeben</source>
+  <target>input nodal support</target>
+</trans-unit>
+<trans-unit id="s7a37f71a594a557c">
+  <source>KnLast</source>
+  <target>nodLoad</target>
+</trans-unit>
+<trans-unit id="s97cb3fe71c6686b4">
+  <source>Eingabe Knotenlasten</source>
+  <target>input nodal loads</target>
+</trans-unit>
+<trans-unit id="s7937af3c124f9244">
+  <source>ElLast</source>
+  <target>elLoad</target>
+</trans-unit>
+<trans-unit id="s0bf516a8f909ff39">
+  <source>Eingabe Elementlasten</source>
+  <target>input of element loads</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

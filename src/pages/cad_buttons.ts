@@ -1,4 +1,5 @@
-
+import { msg } from '@lit/localize';
+import { getLocale, setLocaleFromUrl } from './localization';
 
 
 import {
@@ -98,11 +99,18 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matc
   backgroundColor_button = backgroundColor_button_light;
 }
 
+let lastLocale = 'de'
+
 export let hide_drawer = true;
 export function set_hide_drawer(wert: boolean) { hide_drawer = wert; }
 
 export let picked_obj: TCAD_Element;
 export let index_stab = -1
+
+let stab_button: HTMLButtonElement;
+let knotlast_button: HTMLButtonElement;
+let ellast_button: HTMLButtonElement;
+let lager_button: HTMLButtonElement;
 
 let mode_elementlast_aendern = false;
 let element_einzellast_gefunden = false
@@ -469,7 +477,7 @@ export function cad_buttons() {
 
     knoten_button.value = "Knoten";
     knoten_button.className = "btn_svg";
-     knoten_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    knoten_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="7" y="7" width="10" height="10" rx="2" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     //knoten_button.innerHTML = '<i class = "fa fa-square"></i>';
@@ -510,18 +518,18 @@ export function cad_buttons() {
     edit_knoten_button.title = "Knoten bearbeiten";
     edit_knoten_button.id = "id_cad_edit_knoten_button";
 
-    const stab_button = document.createElement("button");
+    stab_button = document.createElement("button");
 
     stab_button.value = "Stab";
     stab_button.className = "btn";
-    stab_button.innerHTML = "Stab";
+    stab_button.innerHTML = msg('Stab');
     stab_button.addEventListener("click", Stab_button);
     // stab_button.addEventListener('keydown', keydown);
     stab_button.title = "Eingabe Stab";
     stab_button.id = "id_cad_stab_button";
     //stab_button.onmouseover = function () { this.style.backgroundColor = "RoyalBlue"; }
 
-    const lager_button = document.createElement("button");
+    lager_button = document.createElement("button");
 
     lager_button.value = "Lager";
     lager_button.className = "btn";
@@ -530,7 +538,7 @@ export function cad_buttons() {
     lager_button.addEventListener("pointerdown", () => {
       button_lager_timer_id = window.setTimeout(
         () => {
-          set_help_text('Knotenlager eingeben', button_color_help_text);
+          set_help_text(msg('Knotenlager eingeben'), button_color_help_text);
           button_lager_help_timer = true;
         }, 300);
     });
@@ -538,28 +546,28 @@ export function cad_buttons() {
       window.clearTimeout(button_lager_timer_id);
     });
 
-    lager_button.title = "Eingabe Lager";
+    lager_button.title = msg('Knotenlager eingeben');
     lager_button.id = "id_cad_lager_button";
 
 
-    const knotlast_button = document.createElement("button");
+    knotlast_button = document.createElement("button");
 
     knotlast_button.value = "Knotenlast";
     knotlast_button.className = "btn";
-    knotlast_button.innerHTML = "KnLast";
+    knotlast_button.innerHTML = msg('KnLast');
     knotlast_button.addEventListener("click", Knotenlast_button);
     // stab_button.addEventListener('keydown', keydown);
-    knotlast_button.title = "Eingabe Knotenlasten";
+    knotlast_button.title = msg('Eingabe Knotenlasten');
     knotlast_button.id = "id_cad_knotenlast_button";
 
-    const ellast_button = document.createElement("button");
+    ellast_button = document.createElement("button");
 
     ellast_button.value = "Elementlast";
     ellast_button.className = "btn";
-    ellast_button.innerHTML = "ElLast";
+    ellast_button.innerHTML = msg('ElLast');
     ellast_button.addEventListener("click", Elementlast_button);
     // stab_button.addEventListener('keydown', keydown);
-    ellast_button.title = "Eingabe Elementlasten";
+    ellast_button.title = msg('Eingabe Elementlasten');
     ellast_button.id = "id_cad_elementlast_button";
 
 
@@ -672,6 +680,38 @@ export function cad_buttons() {
   }
 }
 
+//--------------------------------------------------------------------------------------------------------
+export function update_button_language() {
+  //------------------------------------------------------------------------------------------------------
+  console.log("§§§§§§§§§§§§ in update_button_language", msg('Stab'), getLocale())
+  // if (lastLocale !== getLocale()) {
+  // lastLocale = getLocale();
+  // (async () => {
+  //   try {
+  //     // Defer first render until our initial locale is ready, to avoid a flash of
+  //     // the wrong locale.
+  //     await setLocaleFromUrl();
+  //   } catch (e) {
+  //     // Either the URL locale code was invalid, or there was a problem loading
+  //     // the locale module.
+  //     console.error(`Error loading locale: ${(e as Error).message}`);
+  //   }
+  //   console.log("§§§§§§§§§§§§ nach in update_button_language", msg('Stab'), getLocale())
+  //   stab_button.innerHTML = msg('Stab');
+
+  // })();
+  // //setLocaleFromUrl();
+  // }
+
+  stab_button.innerHTML = msg('Stab');
+  knotlast_button.innerHTML = msg('KnLast');
+  knotlast_button.title = msg('Eingabe Knotenlasten');
+  ellast_button.innerHTML = msg('ElLast');
+  ellast_button.title = msg('Eingabe Elementlasten');
+
+  //set_help_text(msg('Knotenlager eingeben'), button_color_help_text);
+lager_button.title = msg('Knotenlager eingeben');
+}
 
 //--------------------------------------------------------------------------------------------------------
 export function set_help_text(txt: string, color = "#ffffff") {

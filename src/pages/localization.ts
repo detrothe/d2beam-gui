@@ -4,14 +4,16 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-import {configureLocalization} from '@lit/localize';
-import {sourceLocale, targetLocales} from './../generated/locale-codes.js';
+import { msg, configureLocalization } from '@lit/localize';
+import { sourceLocale, targetLocales } from './../generated/locale-codes.js';
+//import { update_button_language } from './cad_buttons.js';
 
 document.addEventListener("DOMContentLoaded", (_event) => {
-  console.log("DOM fully loaded and parsed");
+  console.log("DOM fully loaded and parsed",getLocale());
+  //update_button_language();
 });
 
-export const {getLocale, setLocale} = configureLocalization({
+export const { getLocale, setLocale } = configureLocalization({
   sourceLocale,
   targetLocales,
   loadLocale: (locale: string) => import(`./../generated/locales/${locale}.ts`),
@@ -20,7 +22,10 @@ export const {getLocale, setLocale} = configureLocalization({
 export const setLocaleFromUrl = async () => {
   const url = new URL(window.location.href);
   const locale = url.searchParams.get('locale') || sourceLocale;
+  console.log("vor setLocale", msg('Stab'))
   await setLocale(locale);
+  console.log("nach setLocale", msg('Stab'))
+  //update_button_language();
 };
 
 console.log("vor browser language")
