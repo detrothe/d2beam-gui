@@ -142,6 +142,50 @@
   <source>Eingabe Elementlasten</source>
   <target>input of element loads</target>
 </trans-unit>
+<trans-unit id="sa81e2cdaf6921adc">
+  <source>System</source>
+  <target>System</target>
+</trans-unit>
+<trans-unit id="s7129495aed9d8046">
+  <source>Ergebnisse</source>
+  <target>Results</target>
+</trans-unit>
+<trans-unit id="s98b90047028ffa6e">
+  <source>Querschnitte</source>
+  <target>Cross-sections</target>
+</trans-unit>
+<trans-unit id="s9a0c3a9a16547042">
+  <source>Vorverformungen</source>
+  <target>Pre-deformations</target>
+</trans-unit>
+<trans-unit id="s763d87fc3b6b3f5b">
+  <source>Kombinationen</source>
+  <target>Combinations</target>
+</trans-unit>
+<trans-unit id="scb099bdf627764bb">
+  <source>Ausdruck</source>
+  <target>Output</target>
+</trans-unit>
+<trans-unit id="sbb1b7f4e054767ec">
+  <source>Tabellen</source>
+  <target>Tables</target>
+</trans-unit>
+<trans-unit id="s8adcdb8a4fce3119">
+  <source>Objektdaten speichern</source>
+  <target>Save object data</target>
+</trans-unit>
+<trans-unit id="s4a73475a66d0ff67">
+  <source>Objektdaten einlesen</source>
+  <target>Import object data</target>
+</trans-unit>
+<trans-unit id="s9234cde5c4c75943">
+  <source>neue Eingabe beginnen</source>
+  <target>Start new project</target>
+</trans-unit>
+<trans-unit id="se18e2431d4b6e0cd">
+  <source>Eingabe prüfen</source>
+  <target>Check input</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

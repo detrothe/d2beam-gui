@@ -318,6 +318,12 @@ function saveLocalStorage() {
 
         window.localStorage.setItem('touch_support_tables', String(touch_support_table));
 
+        let els = shadow.getElementById("id_locale-picker") as HTMLSelectElement;
+        let shad = els.shadowRoot?.getElementById("id_locale") as HTMLSelectElement;
+        let locale = shad?.value;
+        console.log("saveLocalStorage, locale", locale);
+        window.localStorage.setItem('locale', locale);
+
         console.log("saveLocalStorage, my_fontsize", my_fontsize)
     }
 }
@@ -420,6 +426,13 @@ export function readLocalStorage() {
             set_touch_support_table(false)
         }
 
+        let locale = window.localStorage.getItem('locale');
+        if (locale) {
+            const els = shadow.getElementById("id_locale-picker") as HTMLElement
+            console.log("einlesen, els",els)
+            let shad = els.shadowRoot?.getElementById("id_locale") as HTMLSelectElement;
+            //shad.value = locale
+        }
 
         console.log("exit readLocalStorage")
         console.log("readLocalStorage", my_fontsize, color_table_out, color_table_in)

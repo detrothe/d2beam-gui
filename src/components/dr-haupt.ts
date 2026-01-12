@@ -136,16 +136,16 @@ export class drHaupt extends LitElement {
 
       <sl-tab-group id="id_sl_tab_group">
       <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">${msg('Haupt')}</sl-tab>
-      <sl-tab id="id_CAD" slot="nav" panel="tab-cad">System</sl-tab>
-      <sl-tab slot="nav" panel="tab-grafik">Ergebnisse</sl-tab>
-      <sl-tab id="id_tab_quer" slot="nav" panel="tab-querschnitte">Querschnitte</sl-tab>
-      <sl-tab slot="nav" panel="tab-schiefstellung">Vorverformungen</sl-tab>
-      <sl-tab id="id_tab_kombi" slot="nav" panel="tab-kombinationen">Kombinationen</sl-tab>
-      <sl-tab slot="nav" panel="tab-ergebnisse">Ausdruck</sl-tab>
-      <sl-tab id="id_tab_mass" slot="nav" panel="tab-mass" disabled>Dynamik</sl-tab>
+      <sl-tab id="id_CAD" slot="nav" panel="tab-cad">${msg('System')}</sl-tab>
+      <sl-tab slot="nav" panel="tab-grafik">${msg('Ergebnisse')}</sl-tab>
+      <sl-tab id="id_tab_quer" slot="nav" panel="tab-querschnitte">${msg('Querschnitte')}</sl-tab>
+      <sl-tab slot="nav" panel="tab-schiefstellung">${msg('Vorverformungen')}</sl-tab>
+      <sl-tab id="id_tab_kombi" slot="nav" panel="tab-kombinationen">${msg('Kombinationen')}</sl-tab>
+      <sl-tab slot="nav" panel="tab-ergebnisse">${msg('Ausdruck')}</sl-tab>
+      <sl-tab id="id_tab_mass" slot="nav" panel="tab-mass" disabled>${msg('Dynamik')}</sl-tab>
       <sl-tab slot="nav" panel="tab-pro">Pro</sl-tab>
       <sl-tab slot="nav" panel="tab-info">Info</sl-tab>
-      <sl-tab slot="nav" panel="tab-tabellen">Tabellen</sl-tab>
+      <sl-tab slot="nav" panel="tab-tabellen">${msg('Tabellen')}</sl-tab>
       <sl-tab slot="nav" panel="tab-einstellungen">ꔷꔷꔷ</sl-tab>
 
       <!--------------------------------------------------------------------------------------->
@@ -167,10 +167,10 @@ export class drHaupt extends LitElement {
         </p>
         <p>
           <button type="button" id="saveFile" style="min-width:8em;">
-            Objektdaten speichern
+            ${msg('Objektdaten speichern')}
           </button>
           <button type="button" id="readFile" style="min-width:8em;">
-            'Objektdaten einlesen'
+            ${msg('Objektdaten einlesen')}
           </button>
         </p>
 
@@ -188,13 +188,13 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <tr>
               <td></td>
               <td>
-                <sl-button id="clear" value="clear" @click="${button_neue_eingabe}">neue Eingabe beginnen</sl-button>
+                <sl-button id="clear" value="clear" @click="${button_neue_eingabe}">${msg('neue Eingabe beginnen')}</sl-button>
               </td>
             </tr>
             <tr>
               <td></td>
               <td>
-                <sl-button id="id_check" value="check" @click="${button_eingabe_ueberpruefen}" style="min-width:100%;">Eingabe prüfen</sl-button>
+                <sl-button id="id_check" value="check" @click="${button_eingabe_ueberpruefen}" style="min-width:100%;">${msg('Eingabe prüfen')}</sl-button>
               </td>
             </tr>
             <tr>
@@ -1120,7 +1120,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tbody>
               <tr>
                 <td>Language:</td>
-                <td><locale-picker></locale-picker></td>
+                <td><locale-picker id="id_locale-picker"></locale-picker></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>

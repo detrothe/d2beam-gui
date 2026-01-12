@@ -9,7 +9,7 @@ import { sourceLocale, targetLocales } from './../generated/locale-codes.js';
 //import { update_button_language } from './cad_buttons.js';
 
 document.addEventListener("DOMContentLoaded", (_event) => {
-  console.log("DOM fully loaded and parsed",getLocale());
+  console.log("DOM fully loaded and parsed", getLocale());
   //update_button_language();
 });
 
@@ -34,4 +34,13 @@ let txtArray = txt.split("-");
 
 let browserLanguage = txtArray[0];
 console.log("your browserLanguage", browserLanguage, txt);
-if (browserLanguage !== "de") setLocale("en-GB");
+
+
+let locale = window.localStorage.getItem('locale');
+if (locale) {
+  setLocale(locale);
+  console.log("Locale from localStorage=", locale)
+}
+else {
+  if (browserLanguage !== "de") setLocale("en-GB");
+}

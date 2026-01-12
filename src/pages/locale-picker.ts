@@ -42,7 +42,7 @@ export class LocalePicker extends LitElement {
 
     render() {
         return html`
-      <select @change=${this.localeChanged}>
+      <select id="id_locale" @change=${this.localeChanged}>
         ${allLocales.map(
             (locale) =>
                 html`<option value=${locale} ?selected=${locale === getLocale()}>

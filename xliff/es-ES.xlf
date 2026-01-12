@@ -124,7 +124,7 @@
 </trans-unit>
 <trans-unit id="s2c9170533952c430">
   <source>Knotenlager eingeben</source>
-  <target>Reacciones</target>
+  <target>Introducir de reacciones</target>
 </trans-unit>
 <trans-unit id="s7a37f71a594a557c">
   <source>KnLast</source>
@@ -132,7 +132,7 @@
 </trans-unit>
 <trans-unit id="s97cb3fe71c6686b4">
   <source>Eingabe Knotenlasten</source>
-  <target>Entrada de cargas de nodos</target>
+  <target>Introducir de cargas de nodos</target>
 </trans-unit>
 <trans-unit id="s7937af3c124f9244">
   <source>ElLast</source>
@@ -140,7 +140,51 @@
 </trans-unit>
 <trans-unit id="s0bf516a8f909ff39">
   <source>Eingabe Elementlasten</source>
-  <target>Entrada de cargas para los elementos</target>
+  <target>Introducir de cargas para los elementos</target>
+</trans-unit>
+<trans-unit id="sa81e2cdaf6921adc">
+  <source>System</source>
+  <target>Sistema</target>
+</trans-unit>
+<trans-unit id="s7129495aed9d8046">
+  <source>Ergebnisse</source>
+  <target>Resultados</target>
+</trans-unit>
+<trans-unit id="s98b90047028ffa6e">
+  <source>Querschnitte</source>
+  <target>Secciones</target>
+</trans-unit>
+<trans-unit id="s9a0c3a9a16547042">
+  <source>Vorverformungen</source>
+  <target>Deformaciones previas</target>
+</trans-unit>
+<trans-unit id="s763d87fc3b6b3f5b">
+  <source>Kombinationen</source>
+  <target>Combinaciones</target>
+</trans-unit>
+<trans-unit id="scb099bdf627764bb">
+  <source>Ausdruck</source>
+  <target>Salida</target>
+</trans-unit>
+<trans-unit id="sbb1b7f4e054767ec">
+  <source>Tabellen</source>
+  <target>Tablas</target>
+</trans-unit>
+<trans-unit id="s8adcdb8a4fce3119">
+  <source>Objektdaten speichern</source>
+  <target>Guardar datos del objeto</target>
+</trans-unit>
+<trans-unit id="s4a73475a66d0ff67">
+  <source>Objektdaten einlesen</source>
+  <target>Importar datos del objeto</target>
+</trans-unit>
+<trans-unit id="s9234cde5c4c75943">
+  <source>neue Eingabe beginnen</source>
+  <target>Iniciar nuevo proyecto</target>
+</trans-unit>
+<trans-unit id="se18e2431d4b6e0cd">
+  <source>Eingabe prüfen</source>
+  <target>Comprobar entrada</target>
 </trans-unit>
 </body>
 </file>
