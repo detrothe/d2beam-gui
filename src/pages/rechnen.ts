@@ -3586,108 +3586,39 @@ function berechne_kombinationen() {
 export function show_gleichungssystem(checked: boolean) {
     //-----------------------------------------------------------------------------------------------------------
 
-    const elem_darstellen = document.getElementById('id_element_darstellen') as HTMLSelectElement;
-    let draw_element = Number(elem_darstellen.value)
-    // console.log("§§§§§§§§§§§§§§§ draw_element", draw_element)
+    const shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        const elem_darstellen = shadow.getElementById('id_element_darstellen') as HTMLSelectElement;
+        let draw_element = Number(elem_darstellen.value)
+        // console.log("§§§§§§§§§§§§§§§ draw_element", draw_element)
 
-    const eq_div = document.getElementById('id_gleichungssystem') as HTMLDivElement
+        const eq_div = shadow.getElementById('id_gleichungssystem') as HTMLDivElement
 
-    while (eq_div.hasChildNodes()) {  // alte Tabellen entfernen
-        // @ts-ignore
-        eq_div.removeChild(eq_div?.lastChild);
-    }
-
-    const elem_stiff_darstellen = document.getElementById('id_elementsteifigkeit') as HTMLSelectElement;
-
-    while (elem_stiff_darstellen.hasChildNodes()) {  // alte Optionen entfernen
-        // @ts-ignore
-        elem_stiff_darstellen.removeChild(elem_stiff_darstellen?.lastChild);
-    }
-
-    if (checked) {
-        console.log("show_gleichungssystem")
-
-        let tag = document.createElement("p");
-        let text = document.createTextNode("Elementsteifigkeitsmatrix");
-        tag.appendChild(text);
-        tag.innerHTML = "<b>Elementsteifigkeitsmatrix [k] im lokalen Koordinatensystem, nur Anteil Th. I. Ordnung, Einheit: kN und kNm, für Element " + (+draw_element + 1) + "</b>"
-        eq_div?.appendChild(tag);
-
-        {
-            const table = document.createElement('table');
-            eq_div.appendChild(table);
-            table.id = 'element_table';
-
-            let thead = table.createTHead();
-            //console.log('thead', thead);
-            let row = thead.insertRow();
-            for (let i = 0; i <= el[draw_element].neqe; i++) {
-                if (System === 0) {
-                    if (table.tHead) {
-                        const th0 = table.tHead.appendChild(document.createElement('th'));
-                        if (i === 0) th0.innerHTML = '';
-                        else if (i === 1) th0.innerHTML = 'u<sub>a</sub>';
-                        else if (i === 2) th0.innerHTML = 'w<sub>a</sub>';
-                        else if (i === 3) th0.innerHTML = 'φ<sub>a</sub>';
-                        else if (i === 4) th0.innerHTML = 'u<sub>e</sub>';
-                        else if (i === 5) th0.innerHTML = 'w<sub>e</sub>';
-                        else if (i === 6) th0.innerHTML = 'φ<sub>e</sub>';
-                        th0.style.padding = '5px';
-                        th0.style.margin = '0px';
-                        th0.style.textAlign = 'center';
-                        //th0.setAttribute('title', 'Hilfe')
-                        row.appendChild(th0);
-                    }
-                } else {
-                    if (table.tHead) {
-                        const th0 = table.tHead.appendChild(document.createElement('th'));
-                        if (i === 0) th0.innerHTML = '';
-                        else if (i === 1) th0.innerHTML = 'u<sub>a</sub>';
-                        else if (i === 2) th0.innerHTML = 'w<sub>a</sub>';
-                        else if (i === 3) th0.innerHTML = 'u<sub>e</sub>';
-                        else if (i === 4) th0.innerHTML = 'w<sub>e</sub>';
-                        th0.style.padding = '5px';
-                        th0.style.margin = '0px';
-                        th0.style.textAlign = 'center';
-                        //th0.setAttribute('title', 'Hilfe')
-                        row.appendChild(th0);
-                    }
-                }
-            }
-
-            let tbody = table.createTBody();
-
-            for (let iZeile = 1; iZeile <= el[draw_element].neqe; iZeile++) {
-                let newRow = tbody.insertRow(-1);
-
-                for (let iSpalte = 0; iSpalte <= el[draw_element].neqe; iSpalte++) {
-                    let newCell, newText;
-
-                    newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
-                    if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
-                    else newText = document.createTextNode(myFormat(el[draw_element].estm[iZeile - 1][iSpalte - 1], 0, 2));
-                    newCell.style.textAlign = 'center';
-                    //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
-                    newCell.style.padding = '5px';
-                    newCell.style.margin = '0px';
-                    if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
-                    newCell.appendChild(newText);
-                }
-            }
+        while (eq_div.hasChildNodes()) {  // alte Tabellen entfernen
+            // @ts-ignore
+            eq_div.removeChild(eq_div?.lastChild);
         }
 
-        if (stadyn === 1) {
+        const elem_stiff_darstellen = shadow.getElementById('id_elementsteifigkeit') as HTMLSelectElement;
+
+        while (elem_stiff_darstellen.hasChildNodes()) {  // alte Optionen entfernen
+            // @ts-ignore
+            elem_stiff_darstellen.removeChild(elem_stiff_darstellen?.lastChild);
+        }
+
+        if (checked) {
+            console.log("show_gleichungssystem")
 
             let tag = document.createElement("p");
-            let text = document.createTextNode("Elementmassenmatrix");
+            let text = document.createTextNode("Elementsteifigkeitsmatrix");
             tag.appendChild(text);
-            tag.innerHTML = "<b>Elementmassenmatrix [m] im lokalen Koordinatensystem, Einheit: t und tm², für Element " + (+draw_element + 1) + "</b>"
+            tag.innerHTML = "<b>Elementsteifigkeitsmatrix [k] im lokalen Koordinatensystem, nur Anteil Th. I. Ordnung, Einheit: kN und kNm, für Element " + (+draw_element + 1) + "</b>"
             eq_div?.appendChild(tag);
 
             {
                 const table = document.createElement('table');
                 eq_div.appendChild(table);
-                table.id = 'element_mass_table';
+                table.id = 'element_table';
 
                 let thead = table.createTHead();
                 //console.log('thead', thead);
@@ -3697,11 +3628,11 @@ export function show_gleichungssystem(checked: boolean) {
                         if (table.tHead) {
                             const th0 = table.tHead.appendChild(document.createElement('th'));
                             if (i === 0) th0.innerHTML = '';
-                            else if (i === 1) th0.innerHTML = 'ü<sub>a</sub>';
-                            else if (i === 2) th0.innerHTML = 'ẅ<sub>a</sub>';
+                            else if (i === 1) th0.innerHTML = 'u<sub>a</sub>';
+                            else if (i === 2) th0.innerHTML = 'w<sub>a</sub>';
                             else if (i === 3) th0.innerHTML = 'φ<sub>a</sub>';
-                            else if (i === 4) th0.innerHTML = 'ü<sub>e</sub>';
-                            else if (i === 5) th0.innerHTML = 'ẅ<sub>e</sub>';
+                            else if (i === 4) th0.innerHTML = 'u<sub>e</sub>';
+                            else if (i === 5) th0.innerHTML = 'w<sub>e</sub>';
                             else if (i === 6) th0.innerHTML = 'φ<sub>e</sub>';
                             th0.style.padding = '5px';
                             th0.style.margin = '0px';
@@ -3713,10 +3644,10 @@ export function show_gleichungssystem(checked: boolean) {
                         if (table.tHead) {
                             const th0 = table.tHead.appendChild(document.createElement('th'));
                             if (i === 0) th0.innerHTML = '';
-                            else if (i === 1) th0.innerHTML = 'ü<sub>a</sub>';
-                            else if (i === 2) th0.innerHTML = 'ẅ<sub>a</sub>';
-                            else if (i === 3) th0.innerHTML = 'ü<sub>e</sub>';
-                            else if (i === 4) th0.innerHTML = 'ẅ<sub>e</sub>';
+                            else if (i === 1) th0.innerHTML = 'u<sub>a</sub>';
+                            else if (i === 2) th0.innerHTML = 'w<sub>a</sub>';
+                            else if (i === 3) th0.innerHTML = 'u<sub>e</sub>';
+                            else if (i === 4) th0.innerHTML = 'w<sub>e</sub>';
                             th0.style.padding = '5px';
                             th0.style.margin = '0px';
                             th0.style.textAlign = 'center';
@@ -3736,7 +3667,7 @@ export function show_gleichungssystem(checked: boolean) {
 
                         newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
                         if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
-                        else newText = document.createTextNode(myFormat(el[draw_element].emass[iZeile - 1][iSpalte - 1], 0, 4));
+                        else newText = document.createTextNode(myFormat(el[draw_element].estm[iZeile - 1][iSpalte - 1], 0, 2));
                         newCell.style.textAlign = 'center';
                         //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
                         newCell.style.padding = '5px';
@@ -3746,158 +3677,100 @@ export function show_gleichungssystem(checked: boolean) {
                     }
                 }
             }
-        }
 
+            if (stadyn === 1) {
 
-        tag = document.createElement("p");
-        text = document.createTextNode("Transformationsmatrix");
-        tag.appendChild(text);
-        tag.innerHTML = "<b>Transformationsmatrix T, von global nach lokal ( {u}=[T]∙{U} ) für Element " + (+draw_element + 1) + "</b>"
-        eq_div?.appendChild(tag);
+                let tag = document.createElement("p");
+                let text = document.createTextNode("Elementmassenmatrix");
+                tag.appendChild(text);
+                tag.innerHTML = "<b>Elementmassenmatrix [m] im lokalen Koordinatensystem, Einheit: t und tm², für Element " + (+draw_element + 1) + "</b>"
+                eq_div?.appendChild(tag);
 
+                {
+                    const table = document.createElement('table');
+                    eq_div.appendChild(table);
+                    table.id = 'element_mass_table';
 
-        {
-            const table = document.createElement('table');
-            eq_div.appendChild(table);
-            table.id = 'element_table';
+                    let thead = table.createTHead();
+                    //console.log('thead', thead);
+                    let row = thead.insertRow();
+                    for (let i = 0; i <= el[draw_element].neqe; i++) {
+                        if (System === 0) {
+                            if (table.tHead) {
+                                const th0 = table.tHead.appendChild(document.createElement('th'));
+                                if (i === 0) th0.innerHTML = '';
+                                else if (i === 1) th0.innerHTML = 'ü<sub>a</sub>';
+                                else if (i === 2) th0.innerHTML = 'ẅ<sub>a</sub>';
+                                else if (i === 3) th0.innerHTML = 'φ<sub>a</sub>';
+                                else if (i === 4) th0.innerHTML = 'ü<sub>e</sub>';
+                                else if (i === 5) th0.innerHTML = 'ẅ<sub>e</sub>';
+                                else if (i === 6) th0.innerHTML = 'φ<sub>e</sub>';
+                                th0.style.padding = '5px';
+                                th0.style.margin = '0px';
+                                th0.style.textAlign = 'center';
+                                //th0.setAttribute('title', 'Hilfe')
+                                row.appendChild(th0);
+                            }
+                        } else {
+                            if (table.tHead) {
+                                const th0 = table.tHead.appendChild(document.createElement('th'));
+                                if (i === 0) th0.innerHTML = '';
+                                else if (i === 1) th0.innerHTML = 'ü<sub>a</sub>';
+                                else if (i === 2) th0.innerHTML = 'ẅ<sub>a</sub>';
+                                else if (i === 3) th0.innerHTML = 'ü<sub>e</sub>';
+                                else if (i === 4) th0.innerHTML = 'ẅ<sub>e</sub>';
+                                th0.style.padding = '5px';
+                                th0.style.margin = '0px';
+                                th0.style.textAlign = 'center';
+                                //th0.setAttribute('title', 'Hilfe')
+                                row.appendChild(th0);
+                            }
+                        }
+                    }
 
-            let thead = table.createTHead();
-            //console.log('thead', thead);
-            let row = thead.insertRow();
-            for (let i = 0; i <= el[draw_element].neqeG; i++) {
-                if (table.tHead) {
-                    const th0 = table.tHead.appendChild(document.createElement('th'));
-                    if (i === 0) th0.innerHTML = 'lm';
-                    else th0.innerHTML = String(+el[draw_element].lm[i - 1] + 1);
-                    //th0.title = "Elementnummer"
-                    th0.style.padding = '5px';
-                    th0.style.margin = '0px';
-                    th0.style.textAlign = 'center';
-                    //th0.setAttribute('title', 'Hilfe')
-                    row.appendChild(th0);
-                }
-            }
+                    let tbody = table.createTBody();
 
-            let tbody = table.createTBody();
+                    for (let iZeile = 1; iZeile <= el[draw_element].neqe; iZeile++) {
+                        let newRow = tbody.insertRow(-1);
 
-            for (let iZeile = 1; iZeile <= el[draw_element].neqe; iZeile++) {
-                let newRow = tbody.insertRow(-1);
+                        for (let iSpalte = 0; iSpalte <= el[draw_element].neqe; iSpalte++) {
+                            let newCell, newText;
 
-                for (let iSpalte = 0; iSpalte <= el[draw_element].neqeG; iSpalte++) {
-                    let newCell, newText;
-
-                    newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
-                    if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
-                    else newText = document.createTextNode(myFormat(el[draw_element].transU[iZeile - 1][iSpalte - 1], 0, 2));
-                    newCell.style.textAlign = 'center';
-                    //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
-                    newCell.style.padding = '5px';
-                    newCell.style.margin = '0px';
-                    if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
-                    newCell.appendChild(newText);
-                }
-            }
-
-        }
-
-
-
-
-        tag = document.createElement("p");
-        text = document.createTextNode("Elementsteifigkeitsmatrix");
-        tag.appendChild(text);
-        tag.innerHTML = "<b>Elementsteifigkeitsmatrix [k]<sub>G</sub>=[T]<sup>T</sup>∙[k]∙[T] im globalen Koordinatensystem für Element " + (+draw_element + 1) + "</b>"
-        eq_div?.appendChild(tag);
-
-        {
-            const table = document.createElement('table');
-            eq_div.appendChild(table);
-            table.id = 'element_table';
-
-            let thead = table.createTHead();
-            //console.log('thead', thead);
-            let row = thead.insertRow();
-            for (let i = 0; i <= el[draw_element].neqeG; i++) {
-                if (table.tHead) {
-                    const th0 = table.tHead.appendChild(document.createElement('th'));
-                    if (i === 0) th0.innerHTML = 'lm';
-                    else th0.innerHTML = String(+el[draw_element].lm[i - 1] + 1);
-                    //th0.title = "Elementnummer"
-                    th0.style.padding = '5px';
-                    th0.style.margin = '0px';
-                    th0.style.textAlign = 'center';
-                    //th0.setAttribute('title', 'Hilfe')
-                    row.appendChild(th0);
-                }
-            }
-
-            let tbody = table.createTBody();
-            //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
-
-            for (let iZeile = 1; iZeile <= el[draw_element].neqeG; iZeile++) {
-                let newRow = tbody.insertRow(-1);
-
-                for (let iSpalte = 0; iSpalte <= el[draw_element].neqeG; iSpalte++) {
-                    let newCell, newText;
-
-                    newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
-                    if (iSpalte === 0) newText = document.createTextNode(String(+el[draw_element].lm[iZeile - 1] + 1));
-                    else newText = document.createTextNode(myFormat(el[draw_element].estiffG[iZeile - 1][iSpalte - 1], 0, 2));
-                    newCell.style.textAlign = 'center';
-                    //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
-                    newCell.style.padding = '5px';
-                    newCell.style.margin = '0px';
-                    if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
-                    newCell.appendChild(newText);
-                }
-            }
-
-            for (let iZeile = 0; iZeile < el[draw_element].neqeG; iZeile++) {
-
-                let lmi = el[draw_element].lm[iZeile]
-                if (lmi >= 0) {
-                    for (let iSpalte = 0; iSpalte < el[draw_element].neqeG; iSpalte++) {
-                        let lmj = el[draw_element].lm[iSpalte]
-                        if (lmj >= 0) {
-                            let cell = table.rows[+iZeile + 1].cells[+iSpalte + 1]
-                            //console.log("child", cell.innerText)
-                            //cell.style.fontWeight = 'bold'
-                            cell.style.color = 'blue'
+                            newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
+                            if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
+                            else newText = document.createTextNode(myFormat(el[draw_element].emass[iZeile - 1][iSpalte - 1], 0, 4));
+                            newCell.style.textAlign = 'center';
+                            //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
+                            newCell.style.padding = '5px';
+                            newCell.style.margin = '0px';
+                            if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
+                            newCell.appendChild(newText);
                         }
                     }
                 }
             }
 
-        }
-
-        //                                                              Gesamtsteifigkeit
-
-        //console.log("U_",U_)
-        //console.log("R_",R_)
-
-        if (stadyn === 0) {
 
             tag = document.createElement("p");
-            text = document.createTextNode("Gesamtsteifigkeitsmatrix");
+            text = document.createTextNode("Transformationsmatrix");
             tag.appendChild(text);
-            tag.innerHTML = "<b>Gesamtsteifigkeitsbeziehung [K]*{U}={R}</b>"
+            tag.innerHTML = "<b>Transformationsmatrix T, von global nach lokal ( {u}=[T]∙{U} ) für Element " + (+draw_element + 1) + "</b>"
             eq_div?.appendChild(tag);
+
 
             {
                 const table = document.createElement('table');
                 eq_div.appendChild(table);
-                table.id = 'equation_table';
+                table.id = 'element_table';
 
                 let thead = table.createTHead();
                 //console.log('thead', thead);
                 let row = thead.insertRow();
-                for (let i = 0; i <= neq + 2; i++) {
+                for (let i = 0; i <= el[draw_element].neqeG; i++) {
                     if (table.tHead) {
                         const th0 = table.tHead.appendChild(document.createElement('th'));
-                        if (i === 0) th0.innerHTML = '[K]';
-                        else if (i <= neq) th0.innerHTML = String(i);
-                        else if (i === neq + 1) th0.innerHTML = '{U}';
-                        else th0.innerHTML = '{R}';
+                        if (i === 0) th0.innerHTML = 'lm';
+                        else th0.innerHTML = String(+el[draw_element].lm[i - 1] + 1);
                         //th0.title = "Elementnummer"
                         th0.style.padding = '5px';
                         th0.style.margin = '0px';
@@ -3909,17 +3782,69 @@ export function show_gleichungssystem(checked: boolean) {
 
                 let tbody = table.createTBody();
 
-                for (let iZeile = 1; iZeile <= neq; iZeile++) {
+                for (let iZeile = 1; iZeile <= el[draw_element].neqe; iZeile++) {
                     let newRow = tbody.insertRow(-1);
 
-                    for (let iSpalte = 0; iSpalte <= +neq + 2; iSpalte++) {
+                    for (let iSpalte = 0; iSpalte <= el[draw_element].neqeG; iSpalte++) {
                         let newCell, newText;
 
                         newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
                         if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
-                        else if (iSpalte <= neq) newText = document.createTextNode(myFormat(stm[iZeile - 1][iSpalte - 1], 0, 2));
-                        else if (iSpalte === +neq + 1) newText = document.createTextNode(myFormat(U_[iZeile - 1], 0, 5));
-                        else newText = document.createTextNode(myFormat(R_[iZeile - 1], 0, 3));
+                        else newText = document.createTextNode(myFormat(el[draw_element].transU[iZeile - 1][iSpalte - 1], 0, 2));
+                        newCell.style.textAlign = 'center';
+                        //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
+                        newCell.style.padding = '5px';
+                        newCell.style.margin = '0px';
+                        if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
+                        newCell.appendChild(newText);
+                    }
+                }
+
+            }
+
+
+
+
+            tag = document.createElement("p");
+            text = document.createTextNode("Elementsteifigkeitsmatrix");
+            tag.appendChild(text);
+            tag.innerHTML = "<b>Elementsteifigkeitsmatrix [k]<sub>G</sub>=[T]<sup>T</sup>∙[k]∙[T] im globalen Koordinatensystem für Element " + (+draw_element + 1) + "</b>"
+            eq_div?.appendChild(tag);
+
+            {
+                const table = document.createElement('table');
+                eq_div.appendChild(table);
+                table.id = 'element_table';
+
+                let thead = table.createTHead();
+                //console.log('thead', thead);
+                let row = thead.insertRow();
+                for (let i = 0; i <= el[draw_element].neqeG; i++) {
+                    if (table.tHead) {
+                        const th0 = table.tHead.appendChild(document.createElement('th'));
+                        if (i === 0) th0.innerHTML = 'lm';
+                        else th0.innerHTML = String(+el[draw_element].lm[i - 1] + 1);
+                        //th0.title = "Elementnummer"
+                        th0.style.padding = '5px';
+                        th0.style.margin = '0px';
+                        th0.style.textAlign = 'center';
+                        //th0.setAttribute('title', 'Hilfe')
+                        row.appendChild(th0);
+                    }
+                }
+
+                let tbody = table.createTBody();
+                //      tbody.addEventListener('mousemove', this.POINTER_MOVE);
+
+                for (let iZeile = 1; iZeile <= el[draw_element].neqeG; iZeile++) {
+                    let newRow = tbody.insertRow(-1);
+
+                    for (let iSpalte = 0; iSpalte <= el[draw_element].neqeG; iSpalte++) {
+                        let newCell, newText;
+
+                        newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
+                        if (iSpalte === 0) newText = document.createTextNode(String(+el[draw_element].lm[iZeile - 1] + 1));
+                        else newText = document.createTextNode(myFormat(el[draw_element].estiffG[iZeile - 1][iSpalte - 1], 0, 2));
                         newCell.style.textAlign = 'center';
                         //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
                         newCell.style.padding = '5px';
@@ -3936,7 +3861,7 @@ export function show_gleichungssystem(checked: boolean) {
                         for (let iSpalte = 0; iSpalte < el[draw_element].neqeG; iSpalte++) {
                             let lmj = el[draw_element].lm[iSpalte]
                             if (lmj >= 0) {
-                                let cell = table.rows[+lmi + 1].cells[+lmj + 1]
+                                let cell = table.rows[+iZeile + 1].cells[+iSpalte + 1]
                                 //console.log("child", cell.innerText)
                                 //cell.style.fontWeight = 'bold'
                                 cell.style.color = 'blue'
@@ -3944,153 +3869,230 @@ export function show_gleichungssystem(checked: boolean) {
                         }
                     }
                 }
+
             }
-        }
-        else if (stadyn === 1) {   // Dynamik
 
+            //                                                              Gesamtsteifigkeit
 
-            tag = document.createElement("p");
-            text = document.createTextNode("Gesamtsteifigkeitsmatrix");
-            tag.appendChild(text);
-            tag.innerHTML = "<b>Gesamtsteifigkeitsmatrix [K]</b>"
-            eq_div?.appendChild(tag);
+            //console.log("U_",U_)
+            //console.log("R_",R_)
 
-            {
-                const table = document.createElement('table');
-                eq_div.appendChild(table);
-                table.id = 'equation_table';
+            if (stadyn === 0) {
 
-                let thead = table.createTHead();
-                //console.log('thead', thead);
-                let row = thead.insertRow();
-                for (let i = 0; i <= neq; i++) {
-                    if (table.tHead) {
-                        const th0 = table.tHead.appendChild(document.createElement('th'));
-                        if (i === 0) th0.innerHTML = '[K]';
-                        else /*if (i <= neq)*/ th0.innerHTML = String(i);
-                        // else if (i === neq + 1) th0.innerHTML = '{U}';
-                        // else th0.innerHTML = '{R}';
-                        //th0.title = "Elementnummer"
-                        th0.style.padding = '5px';
-                        th0.style.margin = '0px';
-                        th0.style.textAlign = 'center';
-                        //th0.setAttribute('title', 'Hilfe')
-                        row.appendChild(th0);
+                tag = document.createElement("p");
+                text = document.createTextNode("Gesamtsteifigkeitsmatrix");
+                tag.appendChild(text);
+                tag.innerHTML = "<b>Gesamtsteifigkeitsbeziehung [K]*{U}={R}</b>"
+                eq_div?.appendChild(tag);
+
+                {
+                    const table = document.createElement('table');
+                    eq_div.appendChild(table);
+                    table.id = 'equation_table';
+
+                    let thead = table.createTHead();
+                    //console.log('thead', thead);
+                    let row = thead.insertRow();
+                    for (let i = 0; i <= neq + 2; i++) {
+                        if (table.tHead) {
+                            const th0 = table.tHead.appendChild(document.createElement('th'));
+                            if (i === 0) th0.innerHTML = '[K]';
+                            else if (i <= neq) th0.innerHTML = String(i);
+                            else if (i === neq + 1) th0.innerHTML = '{U}';
+                            else th0.innerHTML = '{R}';
+                            //th0.title = "Elementnummer"
+                            th0.style.padding = '5px';
+                            th0.style.margin = '0px';
+                            th0.style.textAlign = 'center';
+                            //th0.setAttribute('title', 'Hilfe')
+                            row.appendChild(th0);
+                        }
                     }
-                }
 
-                let tbody = table.createTBody();
+                    let tbody = table.createTBody();
 
-                for (let iZeile = 1; iZeile <= neq; iZeile++) {
-                    let newRow = tbody.insertRow(-1);
+                    for (let iZeile = 1; iZeile <= neq; iZeile++) {
+                        let newRow = tbody.insertRow(-1);
 
-                    for (let iSpalte = 0; iSpalte <= neq; iSpalte++) {
-                        let newCell, newText;
+                        for (let iSpalte = 0; iSpalte <= +neq + 2; iSpalte++) {
+                            let newCell, newText;
 
-                        newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
-                        if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
-                        else /*if (iSpalte <= neq)*/ newText = document.createTextNode(myFormat(stm[iZeile - 1][iSpalte - 1], 0, 2));
-                        // else if (iSpalte === +neq + 1) newText = document.createTextNode(myFormat(U_[iZeile - 1], 0, 5));
-                        // else newText = document.createTextNode(myFormat(R_[iZeile - 1], 0, 3));
-                        newCell.style.textAlign = 'center';
-                        //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
-                        newCell.style.padding = '5px';
-                        newCell.style.margin = '0px';
-                        if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
-                        newCell.appendChild(newText);
+                            newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
+                            if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
+                            else if (iSpalte <= neq) newText = document.createTextNode(myFormat(stm[iZeile - 1][iSpalte - 1], 0, 2));
+                            else if (iSpalte === +neq + 1) newText = document.createTextNode(myFormat(U_[iZeile - 1], 0, 5));
+                            else newText = document.createTextNode(myFormat(R_[iZeile - 1], 0, 3));
+                            newCell.style.textAlign = 'center';
+                            //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
+                            newCell.style.padding = '5px';
+                            newCell.style.margin = '0px';
+                            if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
+                            newCell.appendChild(newText);
+                        }
                     }
-                }
 
-                for (let iZeile = 0; iZeile < el[draw_element].neqeG; iZeile++) {
+                    for (let iZeile = 0; iZeile < el[draw_element].neqeG; iZeile++) {
 
-                    let lmi = el[draw_element].lm[iZeile]
-                    if (lmi >= 0) {
-                        for (let iSpalte = 0; iSpalte < el[draw_element].neqeG; iSpalte++) {
-                            let lmj = el[draw_element].lm[iSpalte]
-                            if (lmj >= 0) {
-                                let cell = table.rows[+lmi + 1].cells[+lmj + 1]
-                                //console.log("child", cell.innerText)
-                                //cell.style.fontWeight = 'bold'
-                                cell.style.color = 'blue'
+                        let lmi = el[draw_element].lm[iZeile]
+                        if (lmi >= 0) {
+                            for (let iSpalte = 0; iSpalte < el[draw_element].neqeG; iSpalte++) {
+                                let lmj = el[draw_element].lm[iSpalte]
+                                if (lmj >= 0) {
+                                    let cell = table.rows[+lmi + 1].cells[+lmj + 1]
+                                    //console.log("child", cell.innerText)
+                                    //cell.style.fontWeight = 'bold'
+                                    cell.style.color = 'blue'
+                                }
                             }
                         }
                     }
                 }
             }
+            else if (stadyn === 1) {   // Dynamik
 
 
-            tag = document.createElement("p");
-            text = document.createTextNode("Gesamtmassenmatrix");
-            tag.appendChild(text);
-            tag.innerHTML = "<b>Gesamtmassenmatrix [M]</b>"
-            eq_div?.appendChild(tag);
+                tag = document.createElement("p");
+                text = document.createTextNode("Gesamtsteifigkeitsmatrix");
+                tag.appendChild(text);
+                tag.innerHTML = "<b>Gesamtsteifigkeitsmatrix [K]</b>"
+                eq_div?.appendChild(tag);
 
-            {
-                const table = document.createElement('table');
-                eq_div.appendChild(table);
-                table.id = 'mass_equation_table';
+                {
+                    const table = document.createElement('table');
+                    eq_div.appendChild(table);
+                    table.id = 'equation_table';
 
-                let thead = table.createTHead();
-                //console.log('thead', thead);
-                let row = thead.insertRow();
-                for (let i = 0; i <= neq; i++) {
-                    if (table.tHead) {
-                        const th0 = table.tHead.appendChild(document.createElement('th'));
-                        if (i === 0) th0.innerHTML = '[M]';
-                        else /*if (i <= neq)*/ th0.innerHTML = String(i);
-                        // else if (i === neq + 1) th0.innerHTML = '{U}';
-                        // else th0.innerHTML = '{R}';
-                        //th0.title = "Elementnummer"
-                        th0.style.padding = '5px';
-                        th0.style.margin = '0px';
-                        th0.style.textAlign = 'center';
-                        //th0.setAttribute('title', 'Hilfe')
-                        row.appendChild(th0);
+                    let thead = table.createTHead();
+                    //console.log('thead', thead);
+                    let row = thead.insertRow();
+                    for (let i = 0; i <= neq; i++) {
+                        if (table.tHead) {
+                            const th0 = table.tHead.appendChild(document.createElement('th'));
+                            if (i === 0) th0.innerHTML = '[K]';
+                            else /*if (i <= neq)*/ th0.innerHTML = String(i);
+                            // else if (i === neq + 1) th0.innerHTML = '{U}';
+                            // else th0.innerHTML = '{R}';
+                            //th0.title = "Elementnummer"
+                            th0.style.padding = '5px';
+                            th0.style.margin = '0px';
+                            th0.style.textAlign = 'center';
+                            //th0.setAttribute('title', 'Hilfe')
+                            row.appendChild(th0);
+                        }
                     }
-                }
 
-                let tbody = table.createTBody();
+                    let tbody = table.createTBody();
 
-                for (let iZeile = 1; iZeile <= neq; iZeile++) {
-                    let newRow = tbody.insertRow(-1);
+                    for (let iZeile = 1; iZeile <= neq; iZeile++) {
+                        let newRow = tbody.insertRow(-1);
 
-                    for (let iSpalte = 0; iSpalte <= neq; iSpalte++) {
-                        let newCell, newText;
+                        for (let iSpalte = 0; iSpalte <= neq; iSpalte++) {
+                            let newCell, newText;
 
-                        newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
-                        if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
-                        else /*if (iSpalte <= neq)*/ newText = document.createTextNode(myFormat(print_mass[iZeile - 1][iSpalte - 1], 0, 4));
-                        // else if (iSpalte === +neq + 1) newText = document.createTextNode(myFormat(U_[iZeile - 1], 0, 5));
-                        // else newText = document.createTextNode(myFormat(R_[iZeile - 1], 0, 3));
-                        newCell.style.textAlign = 'center';
-                        //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
-                        newCell.style.padding = '5px';
-                        newCell.style.margin = '0px';
-                        if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
-                        newCell.appendChild(newText);
+                            newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
+                            if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
+                            else /*if (iSpalte <= neq)*/ newText = document.createTextNode(myFormat(stm[iZeile - 1][iSpalte - 1], 0, 2));
+                            // else if (iSpalte === +neq + 1) newText = document.createTextNode(myFormat(U_[iZeile - 1], 0, 5));
+                            // else newText = document.createTextNode(myFormat(R_[iZeile - 1], 0, 3));
+                            newCell.style.textAlign = 'center';
+                            //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
+                            newCell.style.padding = '5px';
+                            newCell.style.margin = '0px';
+                            if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
+                            newCell.appendChild(newText);
+                        }
                     }
-                }
 
-                for (let iZeile = 0; iZeile < el[draw_element].neqeG; iZeile++) {
+                    for (let iZeile = 0; iZeile < el[draw_element].neqeG; iZeile++) {
 
-                    let lmi = el[draw_element].lm[iZeile]
-                    if (lmi >= 0) {
-                        for (let iSpalte = 0; iSpalte < el[draw_element].neqeG; iSpalte++) {
-                            let lmj = el[draw_element].lm[iSpalte]
-                            if (lmj >= 0) {
-                                let cell = table.rows[+lmi + 1].cells[+lmj + 1]
-                                //console.log("child", cell.innerText)
-                                //cell.style.fontWeight = 'bold'
-                                cell.style.color = 'blue'
+                        let lmi = el[draw_element].lm[iZeile]
+                        if (lmi >= 0) {
+                            for (let iSpalte = 0; iSpalte < el[draw_element].neqeG; iSpalte++) {
+                                let lmj = el[draw_element].lm[iSpalte]
+                                if (lmj >= 0) {
+                                    let cell = table.rows[+lmi + 1].cells[+lmj + 1]
+                                    //console.log("child", cell.innerText)
+                                    //cell.style.fontWeight = 'bold'
+                                    cell.style.color = 'blue'
+                                }
                             }
                         }
                     }
                 }
-            }
 
+
+                tag = document.createElement("p");
+                text = document.createTextNode("Gesamtmassenmatrix");
+                tag.appendChild(text);
+                tag.innerHTML = "<b>Gesamtmassenmatrix [M]</b>"
+                eq_div?.appendChild(tag);
+
+                {
+                    const table = document.createElement('table');
+                    eq_div.appendChild(table);
+                    table.id = 'mass_equation_table';
+
+                    let thead = table.createTHead();
+                    //console.log('thead', thead);
+                    let row = thead.insertRow();
+                    for (let i = 0; i <= neq; i++) {
+                        if (table.tHead) {
+                            const th0 = table.tHead.appendChild(document.createElement('th'));
+                            if (i === 0) th0.innerHTML = '[M]';
+                            else /*if (i <= neq)*/ th0.innerHTML = String(i);
+                            // else if (i === neq + 1) th0.innerHTML = '{U}';
+                            // else th0.innerHTML = '{R}';
+                            //th0.title = "Elementnummer"
+                            th0.style.padding = '5px';
+                            th0.style.margin = '0px';
+                            th0.style.textAlign = 'center';
+                            //th0.setAttribute('title', 'Hilfe')
+                            row.appendChild(th0);
+                        }
+                    }
+
+                    let tbody = table.createTBody();
+
+                    for (let iZeile = 1; iZeile <= neq; iZeile++) {
+                        let newRow = tbody.insertRow(-1);
+
+                        for (let iSpalte = 0; iSpalte <= neq; iSpalte++) {
+                            let newCell, newText;
+
+                            newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
+                            if (iSpalte === 0) newText = document.createTextNode(String(iZeile));
+                            else /*if (iSpalte <= neq)*/ newText = document.createTextNode(myFormat(print_mass[iZeile - 1][iSpalte - 1], 0, 4));
+                            // else if (iSpalte === +neq + 1) newText = document.createTextNode(myFormat(U_[iZeile - 1], 0, 5));
+                            // else newText = document.createTextNode(myFormat(R_[iZeile - 1], 0, 3));
+                            newCell.style.textAlign = 'center';
+                            //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
+                            newCell.style.padding = '5px';
+                            newCell.style.margin = '0px';
+                            if (iZeile === iSpalte) newCell.style.fontWeight = 'bold'
+                            newCell.appendChild(newText);
+                        }
+                    }
+
+                    for (let iZeile = 0; iZeile < el[draw_element].neqeG; iZeile++) {
+
+                        let lmi = el[draw_element].lm[iZeile]
+                        if (lmi >= 0) {
+                            for (let iSpalte = 0; iSpalte < el[draw_element].neqeG; iSpalte++) {
+                                let lmj = el[draw_element].lm[iSpalte]
+                                if (lmj >= 0) {
+                                    let cell = table.rows[+lmi + 1].cells[+lmj + 1]
+                                    //console.log("child", cell.innerText)
+                                    //cell.style.fontWeight = 'bold'
+                                    cell.style.color = 'blue'
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
         }
     }
-
 }
 
 //---------------------------------------------------------------------------------------------------------------
