@@ -823,36 +823,43 @@ export function gleichungssystem_darstellen(check: boolean) {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-function elem_select_changed() {
+export function elem_select_changed() {
   //-------------------------------------------------------------------------------------------------------------
   console.log('elem_select_changed');
-  const checkbox = document.getElementById('id_glsystem_darstellen') as HTMLInputElement;
-  console.log('checkbox', checkbox.checked);
-  if (checkbox.checked) show_gleichungssystem(true);
+
+  const shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (shadow) {
+    const checkbox = shadow.getElementById('id_glsystem_darstellen') as HTMLInputElement;
+    console.log('checkbox', checkbox.checked);
+    if (checkbox.checked) show_gleichungssystem(true);
+  }
 }
 
 //---------------------------------------------------------------------------------------------------------------
 export function berechnungsart_changed() {
   //---------------------------------------------------------------------------------------------------------------
   // console.log("berechnungsart_changed");
-  const sel = document.getElementById('id_stadyn') as HTMLSelectElement;
-  const id_mass = document.getElementById('id_tab_mass') as SlSelect;
-  const id_btn_mass = document.getElementById('id_cad_knotenmasse_button') as HTMLButtonElement;
-  //let ele = document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse;
+  const shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (shadow) {
+    const sel = shadow.getElementById('id_stadyn') as HTMLSelectElement;
+    const id_mass = shadow.getElementById('id_tab_mass') as SlSelect;
+    const id_btn_mass = shadow.getElementById('id_cad_knotenmasse_button') as HTMLButtonElement;
+    //let ele = document.getElementById('id_dialog_knotenmasse') as drDialogKnotenmasse;
 
-  if (sel.value === '0') {
-    id_mass.disabled = true;
-    id_btn_mass.style.display = 'none';
-    set_stadyn(0);
-    //ele.set_system(0);
-  } else {
-    id_mass.disabled = false;
-    id_btn_mass.style.display = 'inline-block';
-    set_stadyn(1);
-    //ele.set_system(1);
+    if (sel.value === '0') {
+      id_mass.disabled = true;
+      id_btn_mass.style.display = 'none';
+      set_stadyn(0);
+      //ele.set_system(0);
+    } else {
+      id_mass.disabled = false;
+      id_btn_mass.style.display = 'inline-block';
+      set_stadyn(1);
+      //ele.set_system(1);
+    }
+    init_cad(2);
+    berechnungErforderlich();
   }
-  init_cad(2);
-  berechnungErforderlich();
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -860,12 +867,15 @@ export function elementTabelle_gelenke_anzeigen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
   // console.log("in elementTabelle_gelenke_anzeigen", check);
 
-  if (check) {
-    let el = document.getElementById('id_element_tabelle');
-    for (let i = 10; i > 4; i--) el?.setAttribute('show_column', String(i));
-  } else {
-    let el = document.getElementById('id_element_tabelle');
-    for (let i = 10; i > 4; i--) el?.setAttribute('hide_column', String(i));
+  const shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (shadow) {
+    if (check) {
+      let el = shadow.getElementById('id_element_tabelle');
+      for (let i = 10; i > 4; i--) el?.setAttribute('show_column', String(i));
+    } else {
+      let el = shadow.getElementById('id_element_tabelle');
+      for (let i = 10; i > 4; i--) el?.setAttribute('hide_column', String(i));
+    }
   }
 }
 
@@ -874,12 +884,15 @@ export function elementTabelle_starre_enden_anzeigen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
   // console.log("in elementTabelle_starre_enden_anzeigen", check);
 
-  if (check) {
-    let el = document.getElementById('id_element_tabelle');
-    for (let i = 12; i > 10; i--) el?.setAttribute('show_column', String(i));
-  } else {
-    let el = document.getElementById('id_element_tabelle');
-    for (let i = 12; i > 10; i--) el?.setAttribute('hide_column', String(i));
+  const shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (shadow) {
+    if (check) {
+      let el = shadow.getElementById('id_element_tabelle');
+      for (let i = 12; i > 10; i--) el?.setAttribute('show_column', String(i));
+    } else {
+      let el = shadow.getElementById('id_element_tabelle');
+      for (let i = 12; i > 10; i--) el?.setAttribute('hide_column', String(i));
+    }
   }
 }
 
@@ -888,12 +901,15 @@ export function elementTabelle_bettung_anzeigen(check: boolean) {
   //-------------------------------------------------------------------------------------------------------------
   // console.log("in elementTabelle_bettung_anzeigen", check);
 
-  if (check) {
-    let el = document.getElementById('id_element_tabelle');
-    for (let i = 13; i > 12; i--) el?.setAttribute('show_column', String(i));
-  } else {
-    let el = document.getElementById('id_element_tabelle');
-    for (let i = 13; i > 12; i--) el?.setAttribute('hide_column', String(i));
+  const shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (shadow) {
+    if (check) {
+      let el = shadow.getElementById('id_element_tabelle');
+      for (let i = 13; i > 12; i--) el?.setAttribute('show_column', String(i));
+    } else {
+      let el = shadow.getElementById('id_element_tabelle');
+      for (let i = 13; i > 12; i--) el?.setAttribute('hide_column', String(i));
+    }
   }
 }
 
@@ -907,9 +923,13 @@ export function show_video() {
 //---------------------------------------------------------------------------------------------------------------
 function einheit_bemassung_changed() {
   //-------------------------------------------------------------------------------------------------------------
-  let el = document.getElementById('id_einheit_bemassung') as HTMLSelectElement;
-  set_einheit_bemassung(el.value);
-  init_cad(2);
+
+  const shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (shadow) {
+    let el = shadow.getElementById('id_einheit_bemassung') as HTMLSelectElement;
+    set_einheit_bemassung(el.value);
+    init_cad(2);
+  }
 }
 // @ts-ignore
 window.einheit_bemassung_changed = einheit_bemassung_changed;

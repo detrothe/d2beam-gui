@@ -1,7 +1,7 @@
 import { cad_buttons } from './cad_buttons';
 import { addListener_filesave } from './dateien';
 import { add_listeners_einstellungen, readLocalStorage, readLocalStorage_cad } from './einstellungen';
-import { elementTabelle_bettung_anzeigen, elementTabelle_gelenke_anzeigen, elementTabelle_starre_enden_anzeigen, gleichungssystem_darstellen } from './haupt_2';
+import { elem_select_changed, elementTabelle_bettung_anzeigen, elementTabelle_gelenke_anzeigen, elementTabelle_starre_enden_anzeigen, gleichungssystem_darstellen } from './haupt_2';
 import { init_tabellen } from './rechnen';
 import { set_info } from './utility';
 
@@ -74,7 +74,7 @@ export function init_haupt3() {
 
         const elem_select = shadow.getElementById('id_element_darstellen');
         elem_select!.addEventListener('change', () => {
-            // @ts-ignore
+            //// @ts-ignore
             elem_select_changed();
         });
 
