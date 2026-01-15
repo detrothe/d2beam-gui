@@ -186,6 +186,165 @@
   <source>Eingabe prüfen</source>
   <target>Check input</target>
 </trans-unit>
+<trans-unit id="s4740b165d808bdda">
+  <source>zeige Einführungsvideos</source>
+<target>show introductory videos</target>
+</trans-unit>
+<trans-unit id="s7899fc50b891ee9e">
+  <source>Projekt (freier Text mit HTML Formatierung für fett):</source>
+  <target>Project (free text with HTML formatting for bold):</target>
+</trans-unit>
+<trans-unit id="s58d53b5fea623adc">
+  <source>Berechnungsart:</source>
+  <target>Calculation method:</target>
+</trans-unit>
+<trans-unit id="s7b709460ddf6cbb0">
+  <source>statisch</source>
+  <target>static</target>
+</trans-unit>
+<trans-unit id="s49eceeebc54b289d">
+  <source>dynamisch</source>
+  <target>dynamic</target>
+</trans-unit>
+  <trans-unit id="sa340e0670e759df0">
+  <source>Berechnung nach:</source>
+  <target>Calculation based on:</target>
+</trans-unit>
+<trans-unit id="sbe7f22a0e58f9911">
+  <source>Th. I. Ordnung</source>
+  <target>Theory first-order</target>
+</trans-unit>
+<trans-unit id="sab2e8866b3e797d4">
+  <source>Th. II. Ordnung</source>
+  <target>Theory second-order (P-Δ)</target>
+</trans-unit>
+<trans-unit id="sf06dab1ce58009f2">
+  <source>Materialeigenschaften:</source>
+  <target>Material properties:</target>
+</trans-unit>
+<trans-unit id="sac3191c5ecc66e60">
+  <source>linear</source>
+  <target>linear</target>
+</trans-unit>
+<trans-unit id="se5eb876756457fc8">
+  <source>nichtlinear</source>
+  <target>nonlinear</target>
+</trans-unit>
+<trans-unit id="se9f528070d8cf418">
+  <source>Rechnen</source>
+  <target>Calculation</target>
+</trans-unit>
+<trans-unit id="s3b2332f82896832c">
+  <source>aktueller Dateiname:</source>
+  <target>current file name:</target>
+</trans-unit>
+<trans-unit id="sf2b3ecba8ce0ddf7">
+  <source>neue Eingabe</source>
+  <target>Start a new entry</target>
+</trans-unit>
+<trans-unit id="s8d5fcddffb49d365">
+  <source>Hinweis: Alle Eingaben werden gelöscht !</source>
+  <target>Note: All entries will be deleted!</target>
+</trans-unit>
+<trans-unit id="s5b4332874f0c4bf5">
+  <source>Die Tabellengrößen können später jederzeit mit den Buttons, die sich
+            oberhalb der Tabellen befinden, geändert werden.&lt;br /&gt;
+            Nach den Änderungen ist eine Neuberechnung erforderlich</source>
+  <target>The table sizes can be changed at any time later using the buttons located above the tables.
+           A recalculation is necessary after the changes.</target>
+</trans-unit>
+<trans-unit id="s1802ab88151d5b76">
+  <source>Art des Systems :</source>
+  <target>Type of system</target>
+</trans-unit>
+<trans-unit id="s83c549670e2c85da">
+  <source>Stabwerk</source>
+  <target>Frame</target>
+</trans-unit>
+<trans-unit id="s9f1c28507d0dfda8">
+  <source>Fachwerk</source>
+  <target>Truss</target>
+</trans-unit>
+<trans-unit id="s9af710578a457088">
+  <source>Die Art des Systems kann nachträglich nicht mehr geändert werden !</source>
+  <target>The type of system cannot be changed later!</target>
+</trans-unit>
+<trans-unit id="s08b05d07b5566bef">
+  <source>ok</source>
+  <target>ok</target>
+</trans-unit>
+<trans-unit id="s8f411426731b6d29">
+  <source>Abbrechen</source>
+  <target>cancel</target>
+</trans-unit>
+<trans-unit id="s6e0487907409b2ab">
+  <source>Eingabe des Querschnitts</source>
+  <target>Enter the cross section</target>
+</trans-unit>
+<trans-unit id="s9d1fbad1be94c6eb">
+  <source>Name (eindeutig):</source>
+  <target>Name (unique):</target>
+</trans-unit>
+<trans-unit id="sd9ced2484d57c5f6">
+  <source>Rechteck</source>
+  <target>rectangle</target>
+</trans-unit>
+<trans-unit id="se01b5e871f140405">
+  <source>Querschnittswerte</source>
+  <target>cross-sectional values</target>
+</trans-unit>
+<trans-unit id="sa02d94fa5282edbf">
+  <source>Profil</source>
+  <target>profile</target>
+</trans-unit>
+<trans-unit id="s09351f07b5c76656">
+  <source>TQ</source>
+  <target>TQ</target>
+</trans-unit>
+<trans-unit id="sbdd50376173d3875">
+  <source>Querschnittshöhe:</source>
+  <target>Cross-section height:</target>
+</trans-unit>
+<trans-unit id="s11d133bf4147f948">
+  <source>Querschnittbreite:</source>
+  <target>Cross-section width:</target>
+</trans-unit>
+<trans-unit id="s2f66686ba092753a">
+  <source>E-Modul:</source>
+  <target>E-module</target>
+</trans-unit>
+<trans-unit id="sc2d13cc512db2d69">
+  <source>Wichte:</source>
+  <target>specific weight</target>
+</trans-unit>
+<trans-unit id="sd9a9e869e96dea5d">
+  <source>Schubfaktor:</source>
+  <target>Shear coefficient</target>
+</trans-unit>
+<trans-unit id="s2e71c3c8995c98ce">
+  <source>Querdehnzahl:</source>
+  <target>Poisson's ratio</target>
+</trans-unit>
+<trans-unit id="sbd63df02a0b7c518">
+  <source>Temp-Koeffizient</source>
+  <target>Thermal-coefficient</target>
+</trans-unit>
+<trans-unit id="s5c2cea4a0d9a497d">
+  <source>Faktor Dehnsteifigkeit:</source>
+  <target>Factor tensile stiffness:</target>
+</trans-unit>
+<trans-unit id="s165017f6138f8d2c">
+  <source>neuer Querschnitt</source>
+  <target>new cross-section</target>
+</trans-unit>
+<trans-unit id="s1ad39a021f0b54c6">
+  <source>Linear elastisch Querschnittswerte</source>
+  <target>Linear elastic cross-sectional values</target>
+</trans-unit>
+<trans-unit id="s660fdf5d11e3304d">
+  <source>Definition des Querschnitts</source>
+  <target>Definition of cross-section</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

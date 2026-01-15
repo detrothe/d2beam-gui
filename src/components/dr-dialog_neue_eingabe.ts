@@ -1,6 +1,7 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-
+import {msg, localized} from '@lit/localize';
+@localized()
 @customElement('dr-dialog_neue_eingabe')
 export class drDialogNeueEingabe extends LitElement {
    @property({ type: String }) title = 'neue Eingabe';
@@ -124,35 +125,35 @@ export class drDialogNeueEingabe extends LitElement {
 
    render() {
       return html` <dialog id="dialog_neue_eingabe">
-         <h2>neue Eingabe</h2>
+         <h2>${msg('neue Eingabe')}</h2>
 
-         <p>Hinweis: Alle Eingaben werden gelöscht !</p>
+         <p>${msg('Hinweis: Alle Eingaben werden gelöscht !')}</p>
          <p>
-            Die Tabellengrößen können später jederzeit mit den Buttons, die sich
+            ${msg(`Die Tabellengrößen können später jederzeit mit den Buttons, die sich
             oberhalb der Tabellen befinden, geändert werden.<br />
-            Nach den Änderungen ist eine Neuberechnung erforderlich
+            Nach den Änderungen ist eine Neuberechnung erforderlich`)}
          </p>
 
          <p>
-            Art des Systems :
+            ${msg('Art des Systems :')}
             <select name="werk" id="id_system">
-               <option value="0" selected>Stabwerk</option>
-               <option value="1">Fachwerk</option>
+               <option value="0" selected>${msg('Stabwerk')}</option>
+               <option value="1">${msg('Fachwerk')}</option>
             </select>
          </p>
          <p>
-            Die Art des Systems kann nachträglich nicht mehr geändert werden !
+            ${msg('Die Art des Systems kann nachträglich nicht mehr geändert werden !')}
          </p>
 
          <form method="dialog">
             <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}"
-               >ok</sl-button
+               >${msg('ok')}</sl-button
             >
             <sl-button
                id="Abbruch"
                value="cancel"
                @click="${this._dialog_abbruch}"
-               >Abbrechen</sl-button
+               >${msg('Abbrechen')}</sl-button
             >
          </form>
       </dialog>`;

@@ -1,5 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement, state } from 'lit/decorators.js';
+import {msg, localized} from '@lit/localize';
 
 import '@shoelace-style/shoelace/dist/components/radio-button/radio-button.js';
 import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
@@ -181,6 +182,7 @@ const PROFIL = Array(
    ['Rohr 323,9x25', 210000, 235, 26400, 26400, 78.5, 323.9, 323.9, 0, 0],
 );
 
+@localized()
 @customElement('dr-rechteckquerschnitt')
 export class drRechteckQuerSchnitt extends LitElement {
    name_changed = false;
@@ -352,13 +354,13 @@ export class drRechteckQuerSchnitt extends LitElement {
    render() {
       return html`
          <dialog id="dialog_rechteck">
-            <h2>Eingabe des Querschnitts</h2>
+            <h2>${msg('Eingabe des Querschnitts')}</h2>
 
             <table id="querschnittwerte_table">
                <tbody>
                   <tr>
                      <td title="der Name des Querschnitts wird bei der Elementeingabe benötigt, für jeden Querschnitt ist ein eigener Name zu vergeben">
-                        Name (eindeutig):
+                        ${msg('Name (eindeutig):')}
                      </td>
                      <td colspan="2">
                         <input id="qname" type="text" style="width:95%;" value="Rechteck" @change="${this._valueChanged}"  maxlength="50" />
@@ -366,24 +368,24 @@ export class drRechteckQuerSchnitt extends LitElement {
                   </tr>
                   <tr>
                      <td colspan="4">
-                        <sl-radio-group label="Defintion des Querschnitts" name="defquerschnitt" id="id_defquerschnitt" value="1" class="radio-group-querschnitt">
-                           <sl-radio-button value="1" id="id_rechteck" @click="${this._rechteck}">Rechteck</sl-radio-button>
-                           <sl-radio-button value="2" id="id_werte" @click="${this._werte}">Querschnittswerte</sl-radio-button>
-                           <sl-radio-button value="3" id="id_profile" @click="${this._profil}">Profil</sl-radio-button>
-                           <sl-radio-button value="4" id="id_profile" @click="${this._TQ}">TQ</sl-radio-button>
+                        <sl-radio-group label=${msg('Definition des Querschnitts')} name="defquerschnitt" id="id_defquerschnitt" value="1" class="radio-group-querschnitt">
+                           <sl-radio-button value="1" id="id_rechteck" @click="${this._rechteck}">${msg('Rechteck')}</sl-radio-button>
+                           <sl-radio-button value="2" id="id_werte" @click="${this._werte}">${msg('Querschnittswerte')}</sl-radio-button>
+                           <sl-radio-button value="3" id="id_profile" @click="${this._profil}">${msg('Profil')}</sl-radio-button>
+                           <sl-radio-button value="4" id="id_profile" @click="${this._TQ}">${msg('TQ')}</sl-radio-button>
                         </sl-radio-group>
                      </td>
                   </tr>
 
                   <tr>
                      <td title="die Querschnittshöhe ist für die Grafik immer einzugeben">
-                        Querschnittshöhe:
+                        ${msg('Querschnittshöhe:')}
                      </td>
                      <td><input id="height" type="number" value="40" @change="${this._recalc_Rechteck}" /></td>
                      <td>&nbsp;[cm]</td>
                   </tr>
                   <tr>
-                     <td><span id="id_row_width">Querschnittbreite:</span></td>
+                     <td><span id="id_row_width">${msg('Querschnittbreite:')}</span></td>
                      <td><input id="width" type="number" value="30" @change="${this._recalc_Rechteck}" /></td>
                      <td>&nbsp;[cm]</td>
                   </tr>
@@ -420,12 +422,12 @@ export class drRechteckQuerSchnitt extends LitElement {
                   </tr>
 
                   <tr>
-                     <td>E-Modul:</td>
+                     <td>${msg('E-Modul:')}</td>
                      <td><input id="emodul" type="number" value="30000" @change="${this._update_EA_EI}" @input="${this._update_EA_EI}"/></td>
                      <td>&nbsp;[MN/m²]</td>
                   </tr>
                   <tr>
-                     <td>Wichte:</td>
+                     <td>${msg('Wichte:')}</td>
                      <td><input id="wichte" type="number" value="0" /></td>
                      <td>
                         &nbsp;[kN/m³]
@@ -435,7 +437,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                      </td>
                   </tr>
                   <tr>
-                     <td>Schubfaktor:</td>
+                     <td>${msg('Schubfaktor:')}</td>
                      <td>
                         <input id="schubfaktor" type="number" value="0.0" />
                      </td>
@@ -447,19 +449,19 @@ export class drRechteckQuerSchnitt extends LitElement {
                      </td>
                   </tr>
                   <tr>
-                     <td>Querdehnzahl:</td>
+                     <td>${msg('Querdehnzahl:')}</td>
                      <td>
                         <input id="querdehnzahl" type="number" value="0.3" />
                      </td>
                      <td>&nbsp;[-]</td>
                   </tr>
                   <tr>
-                     <td>Temp-Koeffizient &alpha;<sub>T</sub>:</td>
+                     <td>${msg('Temp-Koeffizient')} &alpha;<sub>T</sub>:</td>
                      <td><input id="alpha_t" type="text" value="1.e-5" maxlength="10" /></td>
                      <td>&nbsp;[1/K]</td>
                   </tr>
                   <tr>
-                     <td>Faktor Dehnsteifigkeit:</td>
+                     <td>${msg('Faktor Dehnsteifigkeit:')}</td>
                      <td><input id="id_fakt_dehn" type="number" value="1.0" /></td>
                      <td>
                         &nbsp;[-]
@@ -472,8 +474,8 @@ export class drRechteckQuerSchnitt extends LitElement {
             </table>
 
             <form method="dialog">
-               <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
-               <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+               <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">${msg('ok')}</sl-button>
+               <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">${msg('Abbrechen')}</sl-button>
                <div style="float: right;font-size:0.875rem;">${this.EA}<br>${this.EI}</div>
             </form>
          </dialog>
@@ -546,8 +548,8 @@ export class drRechteckQuerSchnitt extends LitElement {
             <br /><br />
 
             <form method="dialog">
-               <sl-button id="id_btn_TQ_ok" value="ok" @click="${this._dialog_TQ_ok}">ok</sl-button>
-               <sl-button id="id_btn_TQ_abbruch" value="cancel" @click="${this._dialog_TQ_abbruch}">Abbrechen</sl-button>
+               <sl-button id="id_btn_TQ_ok" value="ok" @click="${this._dialog_TQ_ok}">${msg('ok')}</sl-button>
+               <sl-button id="id_btn_TQ_abbruch" value="cancel" @click="${this._dialog_TQ_abbruch}">${msg('Abbrechen')}</sl-button>
             </form>
          </dialog>
       `;

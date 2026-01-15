@@ -404,6 +404,6 @@ export function set_current_filename(name: string) {
   let shadow = elHaupt?.shadowRoot;
   if (shadow) {
     const el = shadow.getElementById('id_current_filename') as HTMLSpanElement;
-    el.innerHTML = '&nbsp;&nbsp;aktueller Dateiname: ' + currentFilename;
+    el.innerHTML = currentFilename;   //'&nbsp;&nbsp;aktueller Dateiname: ' +
   }
 }

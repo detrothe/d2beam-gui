@@ -104,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.0, 14.Januar-2026, ';
+  '2D structural analysis of frames and trusses, v1.8.1, 15.Januar-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -159,11 +159,10 @@ export class drHaupt extends LitElement {
           </video>  Einfuehrungsvideo
        -->
         <p>
-         <sl-button id="intro_video" value="video" variant="primary"  outline @click="${show_video}" style='width:20rem;color:"DodgerBlue";'><b>zeige Einführungsvideos</b></sl-button>
+         <sl-button id="intro_video" value="video" variant="primary"  outline @click="${show_video}" style='width:20rem;color:"DodgerBlue";'><b>${msg('zeige Einführungsvideos')}</b></sl-button>
         </p>
 
-        <p><span id="id_current_filename">&nbsp;&nbsp;aktueller Dateiname: </span><br />
-        <!-- ${currentFilename} -->
+        <p>&nbsp;&nbsp;${msg('aktueller Dateiname:')}&nbsp;<span id="id_current_filename"> </span><br />
         </p>
         <p>
           <button type="button" id="saveFile" style="min-width:8em;">
@@ -176,7 +175,7 @@ export class drHaupt extends LitElement {
 
         <hr />
 
-        <p><span id="lab_freier_text" title="Der eingegebene Text wird auch für die pdf-Ergebnissdatei verwendet">Projekt (freier Text mit HTML Formatierung für fett):</span><br>
+        <p><span id="lab_freier_text" title="Der eingegebene Text wird auch für die pdf-Ergebnissdatei verwendet">${msg('Projekt (freier Text mit HTML Formatierung für fett):')}</span><br>
           <textarea id="freetext" name="freetext" rows="3" cols="50" placeholder="<b>Hausübung A1, SS 2025</b>
 Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einrahmen, Zeilenumbruch mit Return-Taste"></textarea>
         </p>
@@ -188,7 +187,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <tr>
               <td></td>
               <td>
-                <sl-button id="clear" value="clear" @click="${button_neue_eingabe}">${msg('neue Eingabe beginnen')}</sl-button>
+                <sl-button id="clear" value="clear" @click="${button_neue_eingabe}" style="min-width:100%;">${msg('neue Eingabe beginnen')}</sl-button>
               </td>
             </tr>
             <tr>
@@ -203,21 +202,21 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               </td>
             </tr>
             <tr>
-              <td>&nbsp;&nbsp; Berechnungsart:</td>
+              <td>&nbsp;&nbsp; ${msg('Berechnungsart:')}</td>
               <td>
                 <select @change="${berechnungsart_changed}" name="stadyn" id="id_stadyn" style="min-width:100%;">
-                  <option value="0" selected>statisch</option>
-                  <option value="1">dynamisch</option>
+                  <option value="0" selected>${msg('statisch')}</option>
+                  <option value="1">${msg('dynamisch')}</option>
                 </select>
               </td>
               <td></td>
             </tr>
             <tr>
-              <td>&nbsp;&nbsp; Berechnung nach:</td>
+              <td>&nbsp;&nbsp; ${msg('Berechnung nach:')}</td>
               <td>
                 <select name="THIIO" id="id_THIIO" style="min-width:100%;" onchange="berechnungErforderlich()">
-                  <option value="0" selected>Th. I. Ordnung</option>
-                  <option value="1">Th. II. Ordnung</option>
+                  <option value="0" selected>${msg('Th. I. Ordnung')}</option>
+                  <option value="1">${msg('Th. II. Ordnung')}</option>
                 </select>
               </td>
               <td></td>
@@ -225,11 +224,11 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
 
             <tr>
-              <td title="Option 'nichtlinear' nur bei FW-Stäben, die nur Zug- oder Druckkräfte übertragen können, anwenden">&nbsp;&nbsp; Materialeigenschaften:</td>
+              <td title="Option 'nichtlinear' nur bei FW-Stäben, die nur Zug- oder Druckkräfte übertragen können, anwenden">&nbsp;&nbsp; ${msg('Materialeigenschaften:')}</td>
               <td>
                 <select name="matprop" id="id_matprop" style="min-width:100%;" onchange="berechnungErforderlich()">
-                  <option value="0" selected>linear</option>
-                  <option value="1">nichtlinear</option>
+                  <option value="0" selected>${msg('linear')}</option>
+                  <option value="1">${msg('nichtlinear')}</option>
                 </select>
               </td>
               <td>
@@ -254,7 +253,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td></td>
               <td>
-                <sl-button id="rechnen" value="Rechnen" @click="${calculate}" style="min-width:100%;">Rechnen</sl-button>
+                <sl-button id="rechnen" value="Rechnen" @click="${calculate}" style="min-width:100%;">${msg('Rechnen')}</sl-button>
               </td>
             </tr>
           </tbody>
@@ -363,7 +362,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
         <p>
           <br />&nbsp;&nbsp;
-          <sl-button id="open-dialog_rechteck" @click="${click_neuer_querschnitt_rechteck}">neuer Querschnitt</sl-button>
+          <sl-button id="open-dialog_rechteck" @click="${click_neuer_querschnitt_rechteck}">${msg('neuer Querschnitt')}</sl-button>
           <br /><br />
         </p>
         <sl-tree class="custom-icons">
@@ -372,7 +371,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                <sl-icon name="dash-square" slot="collapse-icon"></sl-icon>
            -->
           <sl-tree-item id="id_tree_LQ" expanded>
-            Linear elastisch Querschnittswerte
+            ${msg('Linear elastisch Querschnittswerte')}
           </sl-tree-item>
 
           <!--
