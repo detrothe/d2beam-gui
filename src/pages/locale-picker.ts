@@ -27,17 +27,31 @@ export class LocalePicker extends LitElement {
 
     static get styles() {
         return css`
-     select {
-         font-size: 0.875rem;
-         /*1rem;*/
-         border-radius: 4px;
-         border-width: 1px;
-         background-color: #ffffff;
-         border-color: #d4d4d8;
-         color: #444444;
-         padding: 0.4rem;
-      }
-           `;
+         @media (prefers-color-scheme: dark) {
+            select {
+                /* height: 2rem; */
+                font-size: 0.875rem;
+                border-radius: 4px;
+                border-width: 1px;
+                padding: 0.4rem;
+                border-color: #43434a;
+                color: #b6b6be;
+                background-color: #1a1a1e;
+            }
+         }
+         @media (prefers-color-scheme: light) {
+            select {
+                /* height: 2rem; */
+                font-size: 0.875rem;
+                border-radius: 4px;
+                border-width: 1px;
+                background-color: #ffffff;
+                border-color: #d4d4d8;
+                color: #444444;
+                padding: 0.4rem;
+            }
+         }
+        `;
     }
 
     render() {

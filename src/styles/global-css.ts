@@ -35,10 +35,7 @@ export const global_css = css`
    @media (prefers-color-scheme: dark) {
       html,
       body {
-         /*
-    background-color: #181818;
-    color: white;
-*/
+
          background-color: rgb(64, 64, 64);
          color: white;
 
