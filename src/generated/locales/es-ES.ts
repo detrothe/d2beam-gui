@@ -18,7 +18,6 @@
 's0bff33921e8709f6': `Mostrar panel de control`,
 's0c6f4bc0ae2a0d3b': `Tamaño de letra:`,
 's11d133bf4147f948': `Ancho transversal:`,
-'s1367411136526fcd': `Para permitir entradas precisas, el cursor de entrada se encuentra  junto al dedo. Coloca el dedo de entrada en la pantalla y     mueve el cursor al lugar deseado, y luego levanta            el dedo de la pantalla. Levantar el dedo tiene aquí la            misma función que pulsar el botón izquierdo del ratón. Si, al igual que al introducir el extremo de la barra, se requiere otra entrada, vuelve a colocar el dedo en la pantalla y mueve el cursor al lugar deseado. Al levantar el dedo de nuevo, se finaliza la entrada. Puedes cambiar la distancia y la posición (signo) del cursor con respecto al dedo en Ajustes GUI.`,
 's165017f6138f8d2c': `nueva sección`,
 's1802ab88151d5b76': `Tipo de sistema:`,
 's1ad39a021f0b54c6': `Valores de sección transversal elásticos lineales`,
@@ -35,6 +34,7 @@
 's4208b8c9f9ba4783': `deformación`,
 's46e0e618bf2299ec': `Introducción de nudos y líneas de cuadrícula`,
 's4740b165d808bdda': `Mostrar vídeos introductorios`,
+'s4777a861e6d0676b': `El área de cuadrícula configurable en la interfaz gráfica de usuario solo sirve como orientación para la introducción de datos. Normalmente se configura de manera que se pueda representar todo el sistema en ella.`,
 's49eceeebc54b289d': `dinámico`,
 's4a73475a66d0ff67': `Importar datos del objeto`,
 's51851ec717862dad': `shoe outline`,
@@ -77,16 +77,9 @@
 'sa81e2cdaf6921adc': `Sistema`,
 'sab2e8866b3e797d4': `Teoría de segundo orden (P-Δ)`,
 'sac3191c5ecc66e60': `lineal`,
-'saf7d1029bdf9f351': `No es obligatorio introducir nodos a través del cuadro de diálogo.
-            Al introducir el inicio y el final de la barra, primero se busca
-            un nodo existente dentro del alcance de captura (las
-            longitudes de línea del cursor indican la ventana de captura). Si
-            no se encuentra ningún nodo, se selecciona el siguiente punto de cuadrícula (intersección de las
-            líneas de cuadrícula), siempre que se encuentre dentro de la ventana de captura del
-            cursor. Un punto de cuadrícula encontrado se muestra como un rectángulo azul
-            . De lo contrario, se toman las coordenadas del cursor.
-            La distancia entre las líneas de cuadrícula se puede cambiar en
-            Configuración GUI.`,
+'sb09c495962730e6a': `No es obligatorio introducir nodos a través del cuadro de diálogo. Al introducir el inicio y el final de la barra, primero se busca  un nodo existente dentro del alcance de captura (las longitudes de las líneas del cursor indican la ventana de captura). Si no se encuentra ningún nodo, se selecciona el siguiente punto de cuadrícula (intersección de las líneas de cuadrícula), siempre que se encuentre dentro de la ventana de captura del cursor. Un punto de cuadrícula encontrado se muestra como un rectángulo azul. De lo contrario, se toman las coordenadas del cursor.  La distancia entre las líneas de cuadrícula se puede cambiar en Configuración GUI.
+`,
+'sb9d2ebb8b6b2ade4': `Para permitir entradas precisas, el cursor de entrada se encuentra  junto al dedo. Coloca el dedo de entrada en la pantalla y     mueve el cursor al lugar deseado, y luego levanta            el dedo de la pantalla. Levantar el dedo tiene aquí la            misma función que pulsar el botón izquierdo del ratón. Si, al igual que al introducir el extremo de la barra, se requiere otra entrada, vuelve a colocar el dedo en la pantalla y mueve el cursor al lugar deseado. Al levantar el dedo de nuevo, se finaliza la entrada. Puedes cambiar la distancia y la posición (signo) del cursor con respecto al dedo en Ajustes GUI.`,
 'sbb1b7f4e054767ec': `Tablas`,
 'sbd63df02a0b7c518': `coeficiente de temperatura`,
 'sbdd50376173d3875': `Altura transversal:`,
@@ -101,7 +94,6 @@
 'sd98b69251f066fa1': `Barra`,
 'sd9a9e869e96dea5d': `coeficiente de forma:`,
 'sd9ced2484d57c5f6': `Rectángulo`,
-'sda079338c32f80c4': `El área de cuadrícula configurable en la interfaz gráfica de usuario solo sirve como orientación para la introducción de datos. Normalmente se configura de manera que se pueda representar todo el sistema en ella.`,
 'sdb44853a9a24fec0': `Borrar los valores predeterminados de la memoria del navegador`,
 'se01b5e871f140405': `Valores transversales`,
 'se18e2431d4b6e0cd': `Comprobar entrada`,

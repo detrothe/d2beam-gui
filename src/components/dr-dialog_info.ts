@@ -180,7 +180,7 @@ export class drDialogInfo extends LitElement {
             ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
             die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
             Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
-            Finger kannst du unter <i>Einstellungen GUI</i> ändern.`)}
+            Finger kannst du unter Einstellungen GUI ändern.`)}
          </p>
 
          <p>
@@ -188,17 +188,17 @@ export class drDialogInfo extends LitElement {
             ${msg(`Die Eingabe von Knoten über den Dialog ist nicht zwingend
             erforderlich. Bei der Eingabe von Stabanfang und -ende wird zuerst
             nach einem vorhandenen Knoten innerhalb der Fangweite (Die
-            Linienlängen des Cursors geben das Fangfenster an.) gesucht. Wird
+            Linienlängen des Cursors geben das Fangfenster an) gesucht. Wird
             kein Knoten gefunden, wird der nächste Rasterpunkt (Schnittpunkt der
             Rasterlinien) gewählt, sofern er innerhalb des Fangfensters des
             Cursors liegt. Ein gefundener Rasterpunkt wird als blaues Rechteck
             angezeigt. Andernfalls werden die Koordinaten des Cursors genommen.
             Der Abstand der Rasterlinien kann unter
-            <i>Einstellungen GUI</i> geändert werden.`)}
+            Einstellungen GUI geändert werden.`)}
          </p>
          <p>
             <b>${msg('Rasterbereich')}</b><br />
-            ${msg(`Der unter <i>Einstellungen GUI</i> einstellbare Rasterbereich dient
+            ${msg(`Der unter Einstellungen GUI einstellbare Rasterbereich dient
             nur zur Orientierung bei der Eingabe. Im Normalfall wird er so
             eingestellt, dass das gesamte System darin dargestellt werden kann.`)}
          </p>
