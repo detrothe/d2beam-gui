@@ -18,9 +18,11 @@
 's0bff33921e8709f6': `Display control panel`,
 's0c6f4bc0ae2a0d3b': `font size`,
 's11d133bf4147f948': `Cross-section width:`,
+'s1367411136526fcd': `To enable precise input, the input cursor is located next to your finger. Place your input finger on the screen and move the cursor to the desired location, then lift your finger from the screen. Lifting your finger has the same function as pressing the left mouse button. If, as when entering the end of the bar, further input is required, place your finger back on the screen and move the cursor to the desired location. Lifting your finger again ends the input. You can change the distance and position (sign) of the cursor from your finger under Settings GUI.`,
 's165017f6138f8d2c': `new cross-section`,
 's1802ab88151d5b76': `Type of system`,
 's1ad39a021f0b54c6': `Linear elastic cross-sectional values`,
+'s1af650f3abc723be': `You can find more information about graphical input in the Info tab.`,
 's2153b0c36b61fda8': `only for touch screens`,
 's2ad271c4bf69a58d': `Allow selection of cells with finger`,
 's2b41d1fba90e38cb': `labeling`,
@@ -31,6 +33,7 @@
 's3d1362f3061410b4': `normal force`,
 's3d21e2828d9cbcdd': `moment`,
 's4208b8c9f9ba4783': `deformations`,
+'s46e0e618bf2299ec': `Node input and grid lines`,
 's4740b165d808bdda': `show introductory videos`,
 's49eceeebc54b289d': `dynamic`,
 's4a73475a66d0ff67': `Import object data`,
@@ -44,9 +47,11 @@
 's5c2cea4a0d9a497d': `Factor tensile stiffness:`,
 's65ada9f53688cb8f': `show masses`,
 's660fdf5d11e3304d': `Definition of cross-section`,
+'s6672f37e4875d9be': `Inputting with your finger on a touchscreen`,
 's6750e087f400b3eb': `ist Android`,
-'s684d7269ec02e919': `short information for GUI`,
+'s684d7269ec02e919': `Brief information GUI`,
 's6e0487907409b2ab': `Enter the cross section`,
+'s6e859bbc09f177dc': `Grid area`,
 's7129495aed9d8046': `Results`,
 's763d87fc3b6b3f5b': `Combinations`,
 's7899fc50b891ee9e': `Project (free text with HTML formatting for bold):`,
@@ -72,6 +77,15 @@
 'sa81e2cdaf6921adc': `System`,
 'sab2e8866b3e797d4': `Theory second-order (P-Δ)`,
 'sac3191c5ecc66e60': `linear`,
+'saf7d1029bdf9f351': `It is not necessary to enter nodes via the dialog box.
+           When entering the start and end points of a bar, the program first searches for an existing node within the snap range (the line lengths of the cursor indicate the snap window).
+           If no node is found, the next grid point (intersection of the grid lines) is selected, provided it is within the snap window of the cursor. If
+            no node is found, the nearest grid point (intersection of the
+            grid lines) is selected, provided it is within the snap window of the
+            cursor. A grid point that is found is displayed as a blue rectangle
+            . Otherwise, the coordinates of the cursor are used.
+            The distance between the grid lines can be changed under
+            Settings GUI.`,
 'sbb1b7f4e054767ec': `Tables`,
 'sbd63df02a0b7c518': `Thermal-coefficient`,
 'sbdd50376173d3875': `Cross-section height:`,
@@ -86,6 +100,7 @@
 'sd98b69251f066fa1': `Rod`,
 'sd9a9e869e96dea5d': `Shear coefficient`,
 'sd9ced2484d57c5f6': `rectangle`,
+'sda079338c32f80c4': `The grid area, which can be set under Settings GUI, is only used for orientation during input. Normally, it is set so that the entire system can be displayed within it.`,
 'sdb44853a9a24fec0': `Delete default values in the browser's memory`,
 'se01b5e871f140405': `cross-sectional values`,
 'se18e2431d4b6e0cd': `Check input`,

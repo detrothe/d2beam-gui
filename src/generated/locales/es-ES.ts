@@ -16,12 +16,14 @@
 's0a9a66a4199b4e6a': `equilibrium of forces`,
 's0bf516a8f909ff39': `Introducir de cargas para los elementos`,
 's0bff33921e8709f6': `Mostrar panel de control`,
-'s0c6f4bc0ae2a0d3b': ``,
+'s0c6f4bc0ae2a0d3b': `Tamaño de letra:`,
 's11d133bf4147f948': `Ancho transversal:`,
+'s1367411136526fcd': `Para permitir entradas precisas, el cursor de entrada se encuentra  junto al dedo. Coloca el dedo de entrada en la pantalla y     mueve el cursor al lugar deseado, y luego levanta            el dedo de la pantalla. Levantar el dedo tiene aquí la            misma función que pulsar el botón izquierdo del ratón. Si, al igual que al introducir el extremo de la barra, se requiere otra entrada, vuelve a colocar el dedo en la pantalla y mueve el cursor al lugar deseado. Al levantar el dedo de nuevo, se finaliza la entrada. Puedes cambiar la distancia y la posición (signo) del cursor con respecto al dedo en Ajustes GUI.`,
 's165017f6138f8d2c': `nueva sección`,
 's1802ab88151d5b76': `Tipo de sistema:`,
 's1ad39a021f0b54c6': `Valores de sección transversal elásticos lineales`,
-'s2153b0c36b61fda8': ``,
+'s1af650f3abc723be': `Encontrarás más información sobre la entrada gráfica en la pestaña Información.`,
+'s2153b0c36b61fda8': `Solo para pantallas táctiles:`,
 's2ad271c4bf69a58d': `Permitir la selección de celdas con el dedo`,
 's2b41d1fba90e38cb': `labeling`,
 's2c9170533952c430': `Introducir de reacciones`,
@@ -31,6 +33,7 @@
 's3d1362f3061410b4': `fuerza axial`,
 's3d21e2828d9cbcdd': `momento`,
 's4208b8c9f9ba4783': `deformación`,
+'s46e0e618bf2299ec': `Introducción de nudos y líneas de cuadrícula`,
 's4740b165d808bdda': `Mostrar vídeos introductorios`,
 's49eceeebc54b289d': `dinámico`,
 's4a73475a66d0ff67': `Importar datos del objeto`,
@@ -44,9 +47,11 @@
 's5c2cea4a0d9a497d': `Factor rigidez a la tracción:`,
 's65ada9f53688cb8f': `show masses`,
 's660fdf5d11e3304d': `Definición de sección transversal`,
+'s6672f37e4875d9be': `Introducción con el dedo en una pantalla táctil`,
 's6750e087f400b3eb': `ist Android`,
-'s684d7269ec02e919': `short information for GUI`,
+'s684d7269ec02e919': `Información breve sobre la interfaz gráfica de usuario (GUI)`,
 's6e0487907409b2ab': `Introducción de la sección transversal`,
+'s6e859bbc09f177dc': `Líneas de cuadrícula`,
 's7129495aed9d8046': `Resultados`,
 's763d87fc3b6b3f5b': `Combinaciones`,
 's7899fc50b891ee9e': `Proyecto (texto libre con formato HTML para negrita):`,
@@ -72,6 +77,16 @@
 'sa81e2cdaf6921adc': `Sistema`,
 'sab2e8866b3e797d4': `Teoría de segundo orden (P-Δ)`,
 'sac3191c5ecc66e60': `lineal`,
+'saf7d1029bdf9f351': `No es obligatorio introducir nodos a través del cuadro de diálogo.
+            Al introducir el inicio y el final de la barra, primero se busca
+            un nodo existente dentro del alcance de captura (las
+            longitudes de línea del cursor indican la ventana de captura). Si
+            no se encuentra ningún nodo, se selecciona el siguiente punto de cuadrícula (intersección de las
+            líneas de cuadrícula), siempre que se encuentre dentro de la ventana de captura del
+            cursor. Un punto de cuadrícula encontrado se muestra como un rectángulo azul
+            . De lo contrario, se toman las coordenadas del cursor.
+            La distancia entre las líneas de cuadrícula se puede cambiar en
+            Configuración GUI.`,
 'sbb1b7f4e054767ec': `Tablas`,
 'sbd63df02a0b7c518': `coeficiente de temperatura`,
 'sbdd50376173d3875': `Altura transversal:`,
@@ -86,6 +101,7 @@
 'sd98b69251f066fa1': `Barra`,
 'sd9a9e869e96dea5d': `coeficiente de forma:`,
 'sd9ced2484d57c5f6': `Rectángulo`,
+'sda079338c32f80c4': `El área de cuadrícula configurable en la interfaz gráfica de usuario solo sirve como orientación para la introducción de datos. Normalmente se configura de manera que se pueda representar todo el sistema en ella.`,
 'sdb44853a9a24fec0': `Borrar los valores predeterminados de la memoria del navegador`,
 'se01b5e871f140405': `Valores transversales`,
 'se18e2431d4b6e0cd': `Comprobar entrada`,

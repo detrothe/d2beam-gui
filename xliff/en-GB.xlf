@@ -2,10 +2,6 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 <file target-language="en-GB" source-language="de" original="lit-localize-inputs" datatype="plaintext">
 <body>
-<trans-unit id="s684d7269ec02e919">
-  <source>Kurzinformationen GUI</source>
-  <target>short information for GUI</target>
-</trans-unit>
 <trans-unit id="s6750e087f400b3eb">
   <source>isAndroid =</source>
   <target>ist Android</target>
@@ -344,6 +340,66 @@
 <trans-unit id="s660fdf5d11e3304d">
   <source>Definition des Querschnitts</source>
   <target>Definition of cross-section</target>
+</trans-unit>
+<trans-unit id="s684d7269ec02e919">
+  <source>Kurzinformationen GUI</source>
+  <target>Brief information GUI</target>
+</trans-unit>
+<trans-unit id="s6672f37e4875d9be">
+  <source>Eingabe mit dem Finger bei einem Touchscreen</source>
+  <target>Inputting with your finger on a touchscreen</target>
+</trans-unit>
+<trans-unit id="s1367411136526fcd">
+  <source>Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
+            neben dem Finger. Platziere den Eingabefinger auf dem Screen und
+            bewege den &lt;b&gt;Cursor&lt;/b&gt; zu der gewünschten Stelle, und hebe dann
+            den Finger vom Screen ab. Das Anheben des Fingers hat hier die
+            gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei
+            der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann
+            ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
+            die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
+            Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
+            Finger kannst du unter &lt;i&gt;Einstellungen GUI&lt;/i&gt; ändern.</source>
+  <target>To enable precise input, the input cursor is located next to your finger. Place your input finger on the screen and move the cursor to the desired location, then lift your finger from the screen. Lifting your finger has the same function as pressing the left mouse button. If, as when entering the end of the bar, further input is required, place your finger back on the screen and move the cursor to the desired location. Lifting your finger again ends the input. You can change the distance and position (sign) of the cursor from your finger under Settings GUI.</target>
+</trans-unit>
+<trans-unit id="s46e0e618bf2299ec">
+  <source>Knoteneingabe und Rasterlinien</source>
+  <target>Node input and grid lines</target>
+</trans-unit>
+<trans-unit id="s6e859bbc09f177dc">
+  <source>Rasterbereich</source>
+  <target>Grid area</target>
+</trans-unit>
+<trans-unit id="sda079338c32f80c4">
+  <source>Der unter &lt;i&gt;Einstellungen GUI&lt;/i&gt; einstellbare Rasterbereich dient
+            nur zur Orientierung bei der Eingabe. Im Normalfall wird er so
+            eingestellt, dass das gesamte System darin dargestellt werden kann.</source>
+   <target>The grid area, which can be set under Settings GUI, is only used for orientation during input. Normally, it is set so that the entire system can be displayed within it.</target>
+</trans-unit>
+<trans-unit id="s1af650f3abc723be">
+  <source>Weitere Informationen zur grafischen Eingabe findest du im Tab Info.</source>
+  <target>You can find more information about graphical input in the Info tab.</target>
+</trans-unit>
+<trans-unit id="saf7d1029bdf9f351">
+  <source>Die Eingabe von Knoten über den Dialog ist nicht zwingend
+            erforderlich. Bei der Eingabe von Stabanfang und -ende wird zuerst
+            nach einem vorhandenen Knoten innerhalb der Fangweite (Die
+            Linienlängen des Cursors geben das Fangfenster an.) gesucht. Wird
+            kein Knoten gefunden, wird der nächste Rasterpunkt (Schnittpunkt der
+            Rasterlinien) gewählt, sofern er innerhalb des Fangfensters des
+            Cursors liegt. Ein gefundener Rasterpunkt wird als blaues Rechteck
+            angezeigt. Andernfalls werden die Koordinaten des Cursors genommen.
+            Der Abstand der Rasterlinien kann unter
+            &lt;i&gt;Einstellungen GUI&lt;/i&gt; geändert werden.</source>
+  <target>It is not necessary to enter nodes via the dialog box.
+           When entering the start and end points of a bar, the program first searches for an existing node within the snap range (the line lengths of the cursor indicate the snap window).
+           If no node is found, the next grid point (intersection of the grid lines) is selected, provided it is within the snap window of the cursor. If
+            no node is found, the nearest grid point (intersection of the
+            grid lines) is selected, provided it is within the snap window of the
+            cursor. A grid point that is found is displayed as a blue rectangle
+            . Otherwise, the coordinates of the cursor are used.
+            The distance between the grid lines can be changed under
+            Settings GUI.</target>
 </trans-unit>
 </body>
 </file>

@@ -170,8 +170,8 @@ export class drDialogInfo extends LitElement {
          <h2>${msg('Kurzinformationen GUI')}</h2>
 
          <p>
-            <b>Eingabe mit dem Finger bei einem Touchscreen</b><br />
-            Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
+            <b>${msg('Eingabe mit dem Finger bei einem Touchscreen')}</b><br />
+            ${msg(`Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
             neben dem Finger. Platziere den Eingabefinger auf dem Screen und
             bewege den <b>Cursor</b> zu der gewünschten Stelle, und hebe dann
             den Finger vom Screen ab. Das Anheben des Fingers hat hier die
@@ -180,12 +180,12 @@ export class drDialogInfo extends LitElement {
             ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
             die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
             Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
-            Finger kannst du unter <i>Einstellungen GUI</i> ändern.
+            Finger kannst du unter <i>Einstellungen GUI</i> ändern.`)}
          </p>
 
          <p>
-            <b>Knoteneingabe und Rasterlinien</b><br />
-            Die Eingabe von Knoten über den Dialog ist nicht zwingend
+            <b>${msg('Knoteneingabe und Rasterlinien')}</b><br />
+            ${msg(`Die Eingabe von Knoten über den Dialog ist nicht zwingend
             erforderlich. Bei der Eingabe von Stabanfang und -ende wird zuerst
             nach einem vorhandenen Knoten innerhalb der Fangweite (Die
             Linienlängen des Cursors geben das Fangfenster an.) gesucht. Wird
@@ -194,21 +194,21 @@ export class drDialogInfo extends LitElement {
             Cursors liegt. Ein gefundener Rasterpunkt wird als blaues Rechteck
             angezeigt. Andernfalls werden die Koordinaten des Cursors genommen.
             Der Abstand der Rasterlinien kann unter
-            <i>Einstellungen GUI</i> ändert werden.
+            <i>Einstellungen GUI</i> geändert werden.`)}
          </p>
          <p>
-            <b>Rasterbereich</b><br />
-            Der unter <i>Einstellungen GUI</i> einstellbare Rasterbereich dient
+            <b>${msg('Rasterbereich')}</b><br />
+            ${msg(`Der unter <i>Einstellungen GUI</i> einstellbare Rasterbereich dient
             nur zur Orientierung bei der Eingabe. Im Normalfall wird er so
-            eingestellt, dass das gesamte System darin dargestellt werden kann.
+            eingestellt, dass das gesamte System darin dargestellt werden kann.`)}
          </p>
          <p>
-            Weitere Informationen zur grafischen Eingabe findest du im Tab Info.
+            ${msg('Weitere Informationen zur grafischen Eingabe findest du im Tab Info.')}
          </p>
 
          <form method="dialog">
             <sl-button id="OK" value="ok" @click="${this._dialog_ok}"
-               >ok</sl-button
+               >${msg('ok')}</sl-button
             >
          </form>
       </dialog>`;
