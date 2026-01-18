@@ -393,6 +393,62 @@
             Einstellungen GUI geändert werden.</source>
   <target>It is not necessary to enter nodes via the dialog box. When entering the start and end points of a bar, the program first searches for an existing node within the snap range (the line lengths of the cursor indicate the snap window). If no node is found, the nearest grid point (intersection of the grid lines) is selected, provided it is within the snap window of the cursor. A grid point that is found is displayed as a blue rectangle. Otherwise, the coordinates of the cursor are used. The distance between the grid lines can be changed under Settings GUI.</target>
 </trans-unit>
+<trans-unit id="s2b7c0ebed1d5f1a8">
+  <source>Knotenkoordinaten</source>
+  <target>Node coordinates</target>
+</trans-unit>
+<trans-unit id="sd82c3dbc52e9abee">
+  <source>Die ID wird bei TH.II.O. im Tab Vorverformungen benötigt</source>
+  <target>The ID is required in TH.II.O. in the Pre-deformations tab.</target>
+</trans-unit>
+<trans-unit id="sc376f0e2470cb265">
+  <source>Knoten ID</source>
+  <target>Node ID</target>
+</trans-unit>
+<trans-unit id="sc381fe2ae57c2313">
+  <source>Anwenden</source>
+  <target>Apply</target>
+</trans-unit>
+<trans-unit id="se07bc1727af675c8">
+  <source>Knotenlast</source>
+  <target>Nodal load</target>
+</trans-unit>
+<trans-unit id="sc508c6ac4435de64">
+  <source>nur Lastfall ändern</source>
+  <target>Change load case only</target>
+</trans-unit>
+<trans-unit id="s917e0dd0ca03b10a">
+  <source>Lastfall :</source>
+  <target>Load case:</target>
+</trans-unit>
+<trans-unit id="s35e97643d1f8de40">
+  <source>Winkel im Gegenuhrzeigersinn positiv</source>
+  <target>Angle counterclockwise positive</target>
+</trans-unit>
+<trans-unit id="sd17365872c4f61e7">
+  <source>Knotenlager</source>
+  <target>Nodal support</target>
+</trans-unit>
+<trans-unit id="s7d0cc518c494a80e">
+  <source>Drehung des Knotens (Lagers), im Gegenuhrzeigersinn positiv</source>
+  <target>Rotation of the node (support), counterclockwise positive</target>
+</trans-unit>
+<trans-unit id="sefe2e947928bba8c">
+  <source>Lagerbedingungen</source>
+  <target>support conditions</target>
+</trans-unit>
+<trans-unit id="s6a83752762ead46e">
+  <source>Lager starr</source>
+  <target>support rigid</target>
+</trans-unit>
+<trans-unit id="s5d9967b49bd47559">
+  <source>oder</source>
+  <target>or</target>
+</trans-unit>
+<trans-unit id="sa192adcf9373e01a">
+  <source>Federkonstante</source>
+  <target>spring constant</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

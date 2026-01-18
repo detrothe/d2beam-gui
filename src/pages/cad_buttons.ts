@@ -710,7 +710,7 @@ export function update_button_language() {
   ellast_button.title = msg('Eingabe Elementlasten');
 
   //set_help_text(msg('Knotenlager eingeben'), button_color_help_text);
-lager_button.title = msg('Knotenlager eingeben');
+  lager_button.title = msg('Knotenlager eingeben');
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -2922,14 +2922,16 @@ export function write_knoten_dialog(obj: TCAD_Knoten) {
 export function write_knoten_dialog_xz(x: number, z: number) {
   //-----------------------------------------------------------------------------------------------------------
 
-  const el = document.getElementById("id_dialog_knoten") as HTMLDialogElement;
+  let shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (shadow) {
+    const el = shadow.getElementById("id_dialog_knoten") as HTMLDialogElement;
 
-  let elem = el?.shadowRoot?.getElementById("id_x") as HTMLInputElement;
-  elem.value = String(x)
+    let elem = el?.shadowRoot?.getElementById("id_x") as HTMLInputElement;
+    elem.value = String(x)
 
-  elem = el?.shadowRoot?.getElementById("id_z") as HTMLInputElement;
-  elem.value = String(z)
-
+    elem = el?.shadowRoot?.getElementById("id_z") as HTMLInputElement;
+    elem.value = String(z)
+  }
 }
 
 //--------------------------------------------------------------------------------------------------------

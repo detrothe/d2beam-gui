@@ -1,9 +1,10 @@
 import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
+import {msg, localized} from '@lit/localize';
 
 import "../styles/dr-dialog.css";
-
+@localized()
 @customElement("dr-dialog_lager")
 export class drDialogLager extends LitElement {
   @property({ type: String }) title = "neues Lager";
@@ -129,23 +130,23 @@ export class drDialogLager extends LitElement {
 
   render() {
     return html` <dialog id="dialog_lager">
-      <h2>Knotenlager</h2>
+      <h2>${msg('Knotenlager')}</h2>
 
       <p>
-        Drehung des Knotens (Lagers), im Gegenuhrzeigersinn positiv
+        ${msg('Drehung des Knotens (Lagers), im Gegenuhrzeigersinn positiv')}
       </p>
       <p><input type="number" id="id_alpha" name="alpha" pattern="[0-9.,eE+-]*" value="0.0" />°</p>
       <br />
       <p>
-        <b>Lagerbedingungen</b>
+        <b>${msg('Lagerbedingungen')}</b>
       </p>
 
       <table id="lager_table">
         <thead>
           <tr>
-            <td style="text-align: center;">Lager starr</td>
-            <td style="text-align: center;">&nbsp;&nbsp;oder&nbsp;&nbsp;</td>
-            <td colspan="3" style="text-align: center;">Federkonstante</td>
+            <td style="text-align: center;">${msg('Lager starr')}</td>
+            <td style="text-align: center;">&nbsp;&nbsp;${msg('oder')}&nbsp;&nbsp;</td>
+            <td colspan="3" style="text-align: center;">${msg('Federkonstante')}</td>
           </tr>
         </thead>
         <tbody>
@@ -187,8 +188,8 @@ export class drDialogLager extends LitElement {
       </table>
 
       <form method="dialog">
-        <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
-        <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+        <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">${msg('ok')}</sl-button>
+        <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">${msg('Abbrechen')}</sl-button>
       </form>
     </dialog>`;
   }

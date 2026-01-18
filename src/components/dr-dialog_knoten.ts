@@ -1,9 +1,11 @@
 import { SlButton } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
+import {msg, localized} from '@lit/localize';
 
 import '../styles/dr-dialog.css';
 
+@localized()
 @customElement("dr-dialog_knoten")
 export class drDialogKnoten extends LitElement {
   @property({ type: String }) title = "neuer Knoten";
@@ -132,7 +134,7 @@ export class drDialogKnoten extends LitElement {
     return html` <dialog id="dialog_knoten">
 
       <p>
-        <b>Knotenkoordinaten</b>
+        <b>${msg('Knotenkoordinaten')}</b>
       </p>
 
       <p>
@@ -146,20 +148,20 @@ export class drDialogKnoten extends LitElement {
         [m]
       </p>
 
-      <p id="id_ID" title='ID wird bei TH.II.O. im Tab Vorverformungen benötigt'>Knoten ID : ${this.ID}</p>
+      <p id="id_ID" title=${msg('Die ID wird bei TH.II.O. im Tab Vorverformungen benötigt')}>${msg('Knoten ID')} : ${this.ID}</p>
 
       <form method="dialog">
         <table>
           <tbody>
             <tr>
               <td>
-                <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button>
+                <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">${msg('Anwenden')}</sl-button>
               </td>
               <td>
-                <sl-button id="ok" value="ok" @click="${this._dialog_ok}">ok</sl-button>
+                <sl-button id="ok" value="ok" @click="${this._dialog_ok}">${msg('ok')}</sl-button>
               </td>
               <td>
-                <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+                <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">${msg('Abbrechen')}</sl-button>
               </td>
             </tr>
           </tbody>

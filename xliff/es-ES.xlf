@@ -394,6 +394,62 @@
   <target>No es obligatorio introducir nodos a través del cuadro de diálogo. Al introducir el inicio y el final de la barra, primero se busca  un nodo existente dentro del alcance de captura (las longitudes de las líneas del cursor indican la ventana de captura). Si no se encuentra ningún nodo, se selecciona el siguiente punto de cuadrícula (intersección de las líneas de cuadrícula), siempre que se encuentre dentro de la ventana de captura del cursor. Un punto de cuadrícula encontrado se muestra como un rectángulo azul. De lo contrario, se toman las coordenadas del cursor.  La distancia entre las líneas de cuadrícula se puede cambiar en Configuración GUI.
 </target>
 </trans-unit>
+<trans-unit id="s2b7c0ebed1d5f1a8">
+  <source>Knotenkoordinaten</source>
+  <target>Coordenadas del nodo</target>
+</trans-unit>
+<trans-unit id="sd82c3dbc52e9abee">
+  <source>Die ID wird bei TH.II.O. im Tab Vorverformungen benötigt</source>
+  <target>El ID se necesita en TH.II.O. en la pestaña Preformaciones.</target>
+</trans-unit>
+<trans-unit id="sc376f0e2470cb265">
+  <source>Knoten ID</source>
+  <target>ID del nodo</target>
+</trans-unit>
+<trans-unit id="sc381fe2ae57c2313">
+  <source>Anwenden</source>
+  <target>Aplicar</target>
+</trans-unit>
+<trans-unit id="se07bc1727af675c8">
+  <source>Knotenlast</source>
+  <target>Carga nodal</target>
+</trans-unit>
+<trans-unit id="sc508c6ac4435de64">
+  <source>nur Lastfall ändern</source>
+  <target>Solo cambiar caso de carga</target>
+</trans-unit>
+<trans-unit id="s917e0dd0ca03b10a">
+  <source>Lastfall :</source>
+  <target>Caso de carga:</target>
+</trans-unit>
+<trans-unit id="s35e97643d1f8de40">
+  <source>Winkel im Gegenuhrzeigersinn positiv</source>
+  <target>Ángulo positivo en sentido antihorario</target>
+</trans-unit>
+<trans-unit id="sd17365872c4f61e7">
+  <source>Knotenlager</source>
+  <target>Soporte nodal</target>
+</trans-unit>
+<trans-unit id="s7d0cc518c494a80e">
+  <source>Drehung des Knotens (Lagers), im Gegenuhrzeigersinn positiv</source>
+  <target>Rotación del nudo (soporte), en sentido antihorario positivo</target>
+</trans-unit>
+<trans-unit id="sefe2e947928bba8c">
+  <source>Lagerbedingungen</source>
+  <target>Condiciones de soporte</target>
+</trans-unit>
+<trans-unit id="s6a83752762ead46e">
+  <source>Lager starr</source>
+  <target>soporte rígido</target>
+</trans-unit>
+<trans-unit id="s5d9967b49bd47559">
+  <source>oder</source>
+  <target>o</target>
+</trans-unit>
+<trans-unit id="sa192adcf9373e01a">
+  <source>Federkonstante</source>
+  <target>constante elástica</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

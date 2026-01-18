@@ -1,9 +1,11 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import {msg, localized} from '@lit/localize';
 
 import '../styles/dr-dialog.css';
 import { SlCheckbox } from '@shoelace-style/shoelace';
 
+@localized()
 @customElement('dr-dialog_knotenlast')
 export class drDialogKnotenlast extends LitElement {
    @property({ type: String }) title = 'neue Knotenlast';
@@ -129,18 +131,18 @@ export class drDialogKnotenlast extends LitElement {
 
    render() {
       return html` <dialog id="dialog_knotenlast">
-         <h2>Knotenlast</h2>
+         <h2>${msg('Knotenlast')}</h2>
 
          <div id="id_div_nur_lastfall">
             <p>
-               <sl-checkbox id="id_nur_lastfall" @sl-change="${this._handleChange}">nur Lastfall ändern</sl-checkbox>
+               <sl-checkbox id="id_nur_lastfall" @sl-change="${this._handleChange}">${msg('nur Lastfall ändern')}</sl-checkbox>
             </p>
          </div>
 
          <table>
             <tbody>
                <tr>
-                  <td>Lastfall :</td>
+                  <td>${msg('Lastfall :')}</td>
                   <td><input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="1" /></td>
                </tr>
             </tbody>
@@ -149,7 +151,7 @@ export class drDialogKnotenlast extends LitElement {
          <table id="id_einstellungen_table">
             <tbody>
                <tr>
-                  <td title="Winkel im Gegenuhrzeigersinn positiv">alpha :</td>
+                  <td title=${msg('Winkel im Gegenuhrzeigersinn positiv')}>alpha :</td>
                   <td><input type="number" id="id_alpha" name="alpha" pattern="[0-9.,eE+-]*" value="0.0" />[°]</td>
                </tr>
                <tr>
@@ -169,8 +171,8 @@ export class drDialogKnotenlast extends LitElement {
          </table>
          <form method="dialog">
             <!--<sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
-            <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
-            <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+            <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">${msg('ok')}</sl-button>
+            <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">${msg('Abbrechen')}</sl-button>
          </form>
       </dialog>`;
    }
