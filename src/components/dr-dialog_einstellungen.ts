@@ -1,9 +1,10 @@
 import { SlCheckbox } from '@shoelace-style/shoelace';
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import {msg, localized} from '@lit/localize';
 
 import '../styles/dr-dialog.css';
-
+@localized()
 @customElement('dr-dialog_einstellungen')
 export class drDialogEinstellungen extends LitElement {
    @property({ type: String }) title = 'Einstellungen';
@@ -109,7 +110,7 @@ export class drDialogEinstellungen extends LitElement {
 
          /* Styling der geöffneten Popup-Box */
          dialog[open] {
-            width: 25rem;
+            width: 30rem;
             background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
             border: thin solid #e7c157;
             /*margin: 5rem auto;*/
@@ -132,23 +133,23 @@ export class drDialogEinstellungen extends LitElement {
 
    render() {
       return html` <dialog id="dialog_einstellungen">
-         <h2>Einstellungen GUI</h2>
+         <h2>${msg('Einstellungen GUI')}</h2>
 
          <table id="einstellungen_table">
             <tbody>
                <tr>
                   <td>
-                     <sl-checkbox id="id_NO_touch_support">Keine Fingererkennung bei Stiftbenutzung für Systemeingabe </sl-checkbox>
+                     <sl-checkbox id="id_NO_touch_support">${msg('Keine Fingererkennung bei Stiftbenutzung für Systemeingabe')}</sl-checkbox>
                   </td>
                </tr>
                <tr>
                   <td>
-                     <sl-checkbox id="id_NO_units">keine Einheiten anzeigen in Grafik </sl-checkbox>
+                     <sl-checkbox id="id_NO_units">${msg('keine Einheiten anzeigen in Grafik')}</sl-checkbox>
                   </td>
                </tr>
                <tr>
                   <td>
-                     <sl-checkbox id="id_penLikeTouch">Stifteingabe wie Fingereingabe </sl-checkbox>
+                     <sl-checkbox id="id_penLikeTouch">${msg('Stifteingabe wie Fingereingabe')}</sl-checkbox>
                   </td>
                </tr>
             </tbody>
@@ -160,13 +161,13 @@ export class drDialogEinstellungen extends LitElement {
             <tbody>
                <tr>
                   <td>
-                     Fangweite Cursor:
+                     ${msg('Fangweite Cursor:')}
                   </td>
                   <td><input type="number" id="id_fangweite_cursor" name="fang_cursor" pattern="[0-9.,eE+-]*" value="0.25" /> [m]</td>
                </tr>
                <tr>
                   <td>
-                     Faktor für Lagersymbole:
+                     ${msg('Faktor für Lagersymbole:')}
                   </td>
                   <td>
                      <input type="number" id="id_fact_lager" name="fact_lager" pattern="[0-9.,eE+-]*" value="1" />
@@ -179,15 +180,15 @@ export class drDialogEinstellungen extends LitElement {
          <hr />
 
          <p>
-            Cursor Offset Faktor bei Touch (Finger) Eingabe (bei 0 befindet sich der Cursor direkt unter dem Finger):
+            ${msg('Cursor Offset Faktor bei Touch (Finger) Eingabe (bei 0 befindet sich der Cursor direkt unter dem Finger):')}
          </p>
          <p>
-            Faktor für dx:
+            ${msg('Faktor für dx:')}
             <input type="number" id="id_dx_offset_factor" name="dx_offset" pattern="[0-9.,eE+-]*" value="0" />
             [-]
          </p>
          <p>
-            Faktor für dz:
+            ${msg('Faktor für dz:')}
             <input type="number" id="id_dz_offset_factor" name="dz_offset" pattern="[0-9.,eE+-]*" value="-1" />
             [-]
          </p>
@@ -198,9 +199,9 @@ export class drDialogEinstellungen extends LitElement {
             <thead>
                <tr>
                   <td></td>
-                  <td style="text-align: center;">Raster</td>
+                  <td style="text-align: center;">${msg('Raster')}</td>
                   <td colspan="2"></td>
-                  <td style="text-align: center;">Offset Raster</td>
+                  <td style="text-align: center;">${msg('Offset Raster')}</td>
                </tr>
             </thead>
             <tbody>
@@ -223,7 +224,7 @@ export class drDialogEinstellungen extends LitElement {
             </tbody>
          </table>
 
-         <p>Initial darzustellender Rasterbereich</p>
+         <p>${msg('Initial darzustellender Rasterbereich')}</p>
 
          <table>
             <tbody>
@@ -248,14 +249,14 @@ export class drDialogEinstellungen extends LitElement {
 
          <p>
             <sl-button id="id_cad_saveLocalStorage" @click="${this._saveLocalStorage}">
-               Auswahl als Standardwerte im Browser speichern
+               ${msg('Auswahl als Standardwerte im Browser speichern')}
             </sl-button>
          </p>
 
          <form method="dialog">
             <!--<sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
-            <sl-button id="OK" value="ok" @click="${this._dialog_ok}">ok</sl-button>
-            <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+            <sl-button id="OK" value="ok" @click="${this._dialog_ok}">${msg('ok')}</sl-button>
+            <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">${msg('Abbrechen')}</sl-button>
          </form>
       </dialog>`;
    }

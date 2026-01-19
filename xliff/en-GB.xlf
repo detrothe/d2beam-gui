@@ -449,6 +449,54 @@
   <source>Federkonstante</source>
   <target>spring constant</target>
 </trans-unit>
+<trans-unit id="s082fee50a17a58f9">
+  <source>Einstellungen GUI</source>
+  <target>Settings GUI</target>
+</trans-unit>
+<trans-unit id="s1121453a4f564119">
+  <source>Keine Fingererkennung bei Stiftbenutzung für Systemeingabe</source>
+  <target>No finger recognition when using a stylus for system input</target>
+</trans-unit>
+<trans-unit id="s02a67a5e0d12eb12">
+  <source>keine Einheiten anzeigen in Grafik</source>
+  <target>Do not display units in graph</target>
+</trans-unit>
+<trans-unit id="s2c8573c23edad989">
+  <source>Stifteingabe wie Fingereingabe</source>
+  <target>Pen input like finger input</target>
+</trans-unit>
+<trans-unit id="s567a79132ce99d3d">
+  <source>Fangweite Cursor:</source>
+  <target>Cursor capture width:</target>
+</trans-unit>
+<trans-unit id="s5c4d149a121ec91a">
+  <source>Faktor für Lagersymbole:</source>
+  <target>Factor for support symbols:</target>
+</trans-unit>
+<trans-unit id="s0278681b3145d48b">
+  <source>Cursor Offset Faktor bei Touch (Finger) Eingabe (bei 0 befindet sich der Cursor direkt unter dem Finger):</source>
+  <target>Cursor offset factor for touch (finger) input (at 0, the cursor is directly under the finger):</target>
+</trans-unit>
+<trans-unit id="sa67929a9032d7484">
+  <source>Faktor für dx:</source>
+  <target>Factor for dx:</target>
+</trans-unit>
+<trans-unit id="sa67221a90327483e">
+  <source>Faktor für dz:</source>
+  <target>Factor for dz:</target>
+</trans-unit>
+<trans-unit id="sc88524dc7bec3ba6">
+  <source>Initial darzustellender Rasterbereich</source>
+  <target>Initial grid area to be displayed</target>
+</trans-unit>
+<trans-unit id="s521b400e2fa70dc8">
+  <source>Raster</source>
+  <target>grid</target>
+</trans-unit>
+<trans-unit id="s51967beda3ece227">
+  <source>Offset Raster</source>
+  <target>offset grid</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

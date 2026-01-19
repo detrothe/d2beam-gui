@@ -450,6 +450,54 @@
   <source>Federkonstante</source>
   <target>constante elástica</target>
 </trans-unit>
+<trans-unit id="s082fee50a17a58f9">
+  <source>Einstellungen GUI</source>
+  <target>Configuración GUI</target>
+</trans-unit>
+<trans-unit id="s1121453a4f564119">
+  <source>Keine Fingererkennung bei Stiftbenutzung für Systemeingabe</source>
+  <target>No se reconoce el dedo cuando se utiliza un lápiz para introducir datos en el sistema</target>
+</trans-unit>
+<trans-unit id="s02a67a5e0d12eb12">
+  <source>keine Einheiten anzeigen in Grafik</source>
+  <target>No mostrar unidades en el gráfico</target>
+</trans-unit>
+<trans-unit id="s2c8573c23edad989">
+  <source>Stifteingabe wie Fingereingabe</source>
+  <target>Entrada con lápiz igual que con el dedo</target>
+</trans-unit>
+<trans-unit id="s567a79132ce99d3d">
+  <source>Fangweite Cursor:</source>
+  <target>Alcance del cursor:</target>
+</trans-unit>
+<trans-unit id="s5c4d149a121ec91a">
+  <source>Faktor für Lagersymbole:</source>
+  <target>Factor para los símbolos de soporte:</target>
+</trans-unit>
+<trans-unit id="s0278681b3145d48b">
+  <source>Cursor Offset Faktor bei Touch (Finger) Eingabe (bei 0 befindet sich der Cursor direkt unter dem Finger):</source>
+  <target>Factor de desplazamiento del cursor en la entrada táctil (dedo) (en 0, el cursor se encuentra directamente debajo del dedo):</target>
+</trans-unit>
+<trans-unit id="sa67929a9032d7484">
+  <source>Faktor für dx:</source>
+  <target>Factor para dx:</target>
+</trans-unit>
+<trans-unit id="sa67221a90327483e">
+  <source>Faktor für dz:</source>
+  <target>Factor para dz:</target>
+</trans-unit>
+<trans-unit id="sc88524dc7bec3ba6">
+  <source>Initial darzustellender Rasterbereich</source>
+  <target>Área de trama inicial a representar</target>
+</trans-unit>
+<trans-unit id="s521b400e2fa70dc8">
+  <source>Raster</source>
+  <target>cuadrícula</target>
+</trans-unit>
+<trans-unit id="s51967beda3ece227">
+  <source>Offset Raster</source>
+  <target>cuadrícula offset</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
