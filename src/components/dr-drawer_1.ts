@@ -1,6 +1,8 @@
 import { SlCheckbox } from '@shoelace-style/shoelace';
 import { LitElement, css, html } from 'lit';
 import { property, customElement, state } from 'lit/decorators.js';
+import {msg, localized} from '@lit/localize';
+
 import { hide_drawer, Messen_button } from '../pages/cad_buttons';
 import { Bemassung_button } from '../pages/cad_bemassung';
 import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_knotenverformung, set_show_lager, set_show_lastfall, set_show_raster, set_show_stab_qname } from '../pages/cad';
@@ -9,6 +11,7 @@ import { Knotenverformung_button } from '../pages/cad_knotenverformung';
 import { copy_selected_button, edit_selected_button, select_multi_button, select_typ_button, unselect_all_button, unselect_multi_button } from '../pages/cad_select';
 import { drMyDrawer } from './dr-my_drawer';
 
+@localized()
 @customElement('dr-drawer_1')
 export class drDrawer_1 extends LitElement {
    @property({ type: String }) title = 'Drawer_1';

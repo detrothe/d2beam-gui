@@ -1,10 +1,11 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import {msg, localized} from '@lit/localize';
 
 import '../styles/dr-dialog.css';
 import { SlCheckbox, SlRadioGroup, SlSelect } from '@shoelace-style/shoelace';
 
-
+@localized()
 @customElement('dr-dialog_selekt_typ')
 export class drDialogSelektTyp extends LitElement {
   @property({ type: String }) title = 'select_typ';

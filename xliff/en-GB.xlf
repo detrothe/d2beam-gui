@@ -497,6 +497,70 @@
   <source>Offset Raster</source>
   <target>offset grid</target>
 </trans-unit>
+<trans-unit id="sef2a8e389cc8bc15">
+  <source>Streckenlasten</source>
+  <target>distributed load</target>
+</trans-unit>
+<trans-unit id="s852c56c86f4f4449">
+  <source>Einzellasten</source>
+  <target>point loads</target>
+</trans-unit>
+<trans-unit id="sa28084132e46d192">
+  <source>Temperatur</source>
+  <target>temperature</target>
+</trans-unit>
+<trans-unit id="s0d1bad2ed40c305a">
+  <source>Vorspannung</source>
+  <target>prestress</target>
+</trans-unit>
+<trans-unit id="sde5e53bd97d6062e">
+  <source>Spannschloss</source>
+  <target>turnbuckle</target>
+</trans-unit>
+<trans-unit id="s2b34a0f5704c95c2">
+  <source>Art der Trapezstreckenlast :</source>
+  <target>Type of trapezoidal line load:</target>
+</trans-unit>
+<trans-unit id="sfb0478b32732aa30">
+  <source>senkrecht auf Stab</source>
+  <target>perpendicular to element</target>
+</trans-unit>
+<trans-unit id="sdfe48192defca7bd">
+  <source>in globaler z-Richtung</source>
+  <target>in the global z-direction</target>
+</trans-unit>
+<trans-unit id="sbdf2a01274e3cbf4">
+  <source>in globaler z-Richtung, Projektion</source>
+  <target>in global z-direction, projection</target>
+</trans-unit>
+<trans-unit id="s490ad1b0503cba5f">
+  <source>in globaler x-Richtung</source>
+  <target>in the global x-direction</target>
+</trans-unit>
+<trans-unit id="se2ac2973eaf6ddc6">
+  <source>in globaler x-Richtung, Projektion</source>
+  <target>in global x-direction, projection</target>
+</trans-unit>
+<trans-unit id="s07276530e6884c15">
+  <source>Temperatur an Unter- und Oberseite</source>
+  <target>temperature at bottom and top</target>
+</trans-unit>
+<trans-unit id="sd3ac07153a11e41f">
+  <source>Zentrische Vorspannung</source>
+  <target>Centric pretension</target>
+</trans-unit>
+<trans-unit id="sc00669f0970fdc31">
+  <source>Stabvorverformungen (nur bei Th.II.O.)</source>
+  <target>Beam pre-deformations (only for th.II.o.)</target>
+</trans-unit>
+<trans-unit id="sb60d0d6316ed7878">
+  <source>Elementlasten</source>
+  <target>Element loads</target>
+</trans-unit>
+<trans-unit id="s158540ce0c07369d">
+  <source>Wähle eine Option</source>
+  <target>Select an option</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

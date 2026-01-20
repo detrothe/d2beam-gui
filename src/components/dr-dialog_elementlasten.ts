@@ -1,9 +1,11 @@
 import { SlRadioButton, SlRadioGroup, SlSelect } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
+import {msg, localized} from '@lit/localize';
 
 import "../styles/dr-dialog.css";
 
+@localized()
 @customElement("dr-dialog_elementlasten")
 export class drDialogElementlasten extends LitElement {
   @property({ type: String }) title = "neuer Knoten";
@@ -136,21 +138,21 @@ export class drDialogElementlasten extends LitElement {
 
   render() {
     return html` <dialog id="dialog_elementlast">
-      <h2>Elementlasten</h2>
+      <h2>${msg('Elementlasten')}</h2>
 
-      <sl-radio-group id="id_typ" label="Wähle eine Option" name="a" value="0" @sl-change="${this._handleChange}">
-        <sl-radio value="0">Streckenlasten</sl-radio>
-        <sl-radio id="id_typ_einzellasten" value="1">Einzellasten</sl-radio>
-        <sl-radio value="2">Temperatur</sl-radio>
-        <sl-radio value="3">Vorspannung</sl-radio>
-        <sl-radio value="4">Spannschloss</sl-radio>
-        <sl-radio value="5">Vorverformungen</sl-radio>
+      <sl-radio-group id="id_typ" label=${msg('Wähle eine Option')} name="a" value="0" @sl-change="${this._handleChange}">
+        <sl-radio value="0">${msg('Streckenlasten')}</sl-radio>
+        <sl-radio id="id_typ_einzellasten" value="1">${msg('Einzellasten')}</sl-radio>
+        <sl-radio value="2">${msg('Temperatur')}</sl-radio>
+        <sl-radio value="3">${msg('Vorspannung')}</sl-radio>
+        <sl-radio value="4">${msg('Spannschloss')}</sl-radio>
+        <sl-radio value="5">${msg('Vorverformungen')}</sl-radio>
       </sl-radio-group>
 
       <hr />
 
       <p>
-        Lastfall:
+        ${msg('Lastfall :')}
         <input type="number" id="id_lf" name="lf" pattern="[0-9.,eE+-]*" value="1" />
       </p>
 
@@ -158,12 +160,12 @@ export class drDialogElementlasten extends LitElement {
         <p>
           <!-- Art: -->
           <!-- <input type="number" id="id_art" name="art" pattern="[0-9.,eE+-]*" value="" /> -->
-          <sl-select id="id_art" label="Art der Trapezstreckenlast :" value="0">
-            <sl-option value="0">senkrecht auf Stab</sl-option>
-            <sl-option value="1">in globaler z-Richtung</sl-option>
-            <sl-option value="2">in globaler z-Richtung, Projektion</sl-option>
-            <sl-option value="3">in globaler x-Richtung</sl-option>
-            <sl-option value="4">in globaler x-Richtung, Projektion</sl-option>
+          <sl-select id="id_art" label=${msg('Art der Trapezstreckenlast :')} value="0">
+            <sl-option value="0">${msg('senkrecht auf Stab')}</sl-option>
+            <sl-option value="1">${msg('in globaler z-Richtung')}</sl-option>
+            <sl-option value="2">${msg('in globaler z-Richtung, Projektion')}</sl-option>
+            <sl-option value="3">${msg('in globaler x-Richtung')}</sl-option>
+            <sl-option value="4">${msg('in globaler x-Richtung, Projektion')}</sl-option>
           </sl-select>
         </p>
         <p>
@@ -177,7 +179,7 @@ export class drDialogElementlasten extends LitElement {
       </div>
 
       <div id="id_einzellast" style="display:none;">
-        <p>Einzellasten</p>
+        <p>${msg('Einzellasten')}</p>
         <table id="einstellungen_table">
           <tbody>
             <tr>
@@ -200,7 +202,7 @@ export class drDialogElementlasten extends LitElement {
       </div>
 
       <div id="id_temperatur" style="display:none;">
-        <p>Temperatur an Unter- und Oberseite</p>
+        <p>${msg('Temperatur an Unter- und Oberseite')}</p>
         <p>
           T<sub>u</sub>
           <input type="number" id="id_Tu" name="Tu" pattern="[0-9.,eE+-]*" value="" />
@@ -212,7 +214,7 @@ export class drDialogElementlasten extends LitElement {
       </div>
 
       <div id="id_vorspannung" style="display:none;">
-        <p>Zentrische Vorspannung</p>
+        <p>${msg('Zentrische Vorspannung')}</p>
         <p>
           σ<sub>v</sub>
           <input type="number" id="id_sigmaV" name="sigmaV" pattern="[0-9.,eE+-]*" value="" />
@@ -221,7 +223,7 @@ export class drDialogElementlasten extends LitElement {
       </div>
 
       <div id="id_spannschloss" style="display:none;">
-        <p>Spannschloss</p>
+        <p>${msg('Spannschloss')}</p>
         <p>
           &Delta;s
           <input type="number" id="id_ds" name="ds" pattern="[0-9.,eE+-]*" value="" />
@@ -230,7 +232,7 @@ export class drDialogElementlasten extends LitElement {
       </div>
 
       <div id="id_vorverformungen" style="display:none;">
-        <p>Stabvorverformungen (nur bei Th.II.O.)</p>
+        <p>${msg('Stabvorverformungen (nur bei Th.II.O.)')}</p>
         <table id="einstellungen_table">
           <tbody>
             <tr>
@@ -254,8 +256,8 @@ export class drDialogElementlasten extends LitElement {
 
       <form method="dialog">
         <!-- <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
-        <sl-button id="OK" value="ok" @click="${this._dialog_ok}">ok</sl-button>
-        <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+        <sl-button id="OK" value="ok" @click="${this._dialog_ok}">${msg('ok')}</sl-button>
+        <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">${msg('Abbrechen')}</sl-button>
       </form>
     </dialog>`;
   }

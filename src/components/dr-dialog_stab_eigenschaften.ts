@@ -1,9 +1,11 @@
 import { SlCheckbox, SlSelect } from '@shoelace-style/shoelace';
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import {msg, localized} from '@lit/localize';
 
 import '../styles/dr-dialog.css';
 
+@localized()
 @customElement('dr-dialog_stab_eigenschaften')
 export class drDialogStabEigenschaften extends LitElement {
   @property({ type: String }) title = 'Stab Eigenschaften';

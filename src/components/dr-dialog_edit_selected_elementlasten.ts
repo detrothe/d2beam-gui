@@ -1,9 +1,11 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import {msg, localized} from '@lit/localize';
 
 import '../styles/dr-dialog.css';
 import { SlCheckbox, SlRadioGroup, SlSelect } from '@shoelace-style/shoelace';
 
+@localized()
 @customElement('dr-dialog_edit_selected_elementlasten')
 export class drDialogEdit_selected_elementlasten extends LitElement {
    @property({ type: String }) title = 'Kopieren';

@@ -1,6 +1,8 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import {msg, localized} from '@lit/localize';
 
+@localized()
 @customElement('dr-layerquerschnitt')
 export class drLayerQuerSchnitt extends LitElement {
    @property({ type: String }) title = 'layered D2Beam Querschnitt';

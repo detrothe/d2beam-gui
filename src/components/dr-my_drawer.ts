@@ -1,11 +1,13 @@
 import { SlCheckbox } from '@shoelace-style/shoelace';
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import {msg, localized} from '@lit/localize';
 
 import '../styles/dr-dialog.css';
 import '../components/dr-drawer_1';
 import { set_hide_drawer } from '../pages/cad_buttons';
 
+@localized()
 @customElement('dr-my_drawer')
 export class drMyDrawer extends LitElement {
    @property({ type: String }) title = 'Drawer';

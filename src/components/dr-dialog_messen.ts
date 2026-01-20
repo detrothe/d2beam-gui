@@ -1,10 +1,12 @@
 import { SlButton } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
+import {msg, localized} from '@lit/localize';
 
 import "../styles/dr-dialog.css";
 import { myFormat } from "../pages/utility";
 
+@localized()
 @customElement("dr-dialog_messen")
 export class drDialogMessen extends LitElement {
   @property({ type: String }) title = "neue Messung";

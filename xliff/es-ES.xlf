@@ -498,6 +498,70 @@
   <source>Offset Raster</source>
   <target>cuadrícula offset</target>
 </trans-unit>
+<trans-unit id="sef2a8e389cc8bc15">
+  <source>Streckenlasten</source>
+  <target>carga distribuida</target>
+</trans-unit>
+<trans-unit id="s852c56c86f4f4449">
+  <source>Einzellasten</source>
+  <target>cargas puntuales</target>
+</trans-unit>
+<trans-unit id="sa28084132e46d192">
+  <source>Temperatur</source>
+  <target>temperatura</target>
+</trans-unit>
+<trans-unit id="s0d1bad2ed40c305a">
+  <source>Vorspannung</source>
+  <target>pretensado</target>
+</trans-unit>
+<trans-unit id="sde5e53bd97d6062e">
+  <source>Spannschloss</source>
+  <target>tensor</target>
+</trans-unit>
+<trans-unit id="s2b34a0f5704c95c2">
+  <source>Art der Trapezstreckenlast :</source>
+  <target>Tipo de carga lineal trapezoidal:</target>
+</trans-unit>
+<trans-unit id="sfb0478b32732aa30">
+  <source>senkrecht auf Stab</source>
+  <target>perpendicular a la barra</target>
+</trans-unit>
+<trans-unit id="sdfe48192defca7bd">
+  <source>in globaler z-Richtung</source>
+  <target>en dirección z global</target>
+</trans-unit>
+<trans-unit id="sbdf2a01274e3cbf4">
+  <source>in globaler z-Richtung, Projektion</source>
+  <target>en dirección z global, proyección</target>
+</trans-unit>
+<trans-unit id="s490ad1b0503cba5f">
+  <source>in globaler x-Richtung</source>
+  <target>en dirección x global</target>
+</trans-unit>
+<trans-unit id="se2ac2973eaf6ddc6">
+  <source>in globaler x-Richtung, Projektion</source>
+  <target>en dirección x global, proyección</target>
+</trans-unit>
+<trans-unit id="s07276530e6884c15">
+  <source>Temperatur an Unter- und Oberseite</source>
+  <target>Temperatura en la parte inferior y superior</target>
+</trans-unit>
+<trans-unit id="sd3ac07153a11e41f">
+  <source>Zentrische Vorspannung</source>
+  <target>Precarga centrada</target>
+</trans-unit>
+<trans-unit id="sc00669f0970fdc31">
+  <source>Stabvorverformungen (nur bei Th.II.O.)</source>
+  <target>Deformaciones previas de vigas (solo en teoría II.O.)</target>
+</trans-unit>
+<trans-unit id="sb60d0d6316ed7878">
+  <source>Elementlasten</source>
+  <target>Cargas de elementos</target>
+</trans-unit>
+<trans-unit id="s158540ce0c07369d">
+  <source>Wähle eine Option</source>
+  <target>Selecciona una opción</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
