@@ -561,6 +561,122 @@
   <source>Wähle eine Option</source>
   <target>Select an option</target>
 </trans-unit>
+<trans-unit id="s43416e6180c07e85">
+  <source>Knotenverformung</source>
+  <target>node deformation</target>
+</trans-unit>
+<trans-unit id="sbb33101f6d46481f">
+  <source>selektiere mehrere Elemente</source>
+  <target>select multiple elements</target>
+</trans-unit>
+<trans-unit id="sbb57c970d148a7d8">
+  <source>selektiere nach Element-Typ</source>
+  <target>select by element type</target>
+</trans-unit>
+<trans-unit id="sf3dec101a866cd9c">
+  <source>deselektiere alle Elemente</source>
+  <target>deselect all elements</target>
+</trans-unit>
+<trans-unit id="s2547cec150cd5726">
+  <source>deselektiere mehrere Elemente</source>
+  <target>deselect multiple elements</target>
+</trans-unit>
+<trans-unit id="s11a8f7c1aed9eeb8">
+  <source>Kopiere selektierte Elemente</source>
+  <target>copy selected elements</target>
+</trans-unit>
+<trans-unit id="s76692b76c761818c">
+  <source>Editiere selektierte Elemente</source>
+  <target>edit selected elements</target>
+</trans-unit>
+<trans-unit id="s566b0c00d97da6b2">
+  <source>Messen</source>
+  <target>measuring lengths</target>
+</trans-unit>
+<trans-unit id="s8868c976698b6e74">
+  <source>Ausblenden</source>
+  <target>Hide</target>
+</trans-unit>
+<trans-unit id="s180a3aad88575d3d">
+  <source>Rasterlinien</source>
+  <target>grid lines</target>
+</trans-unit>
+<trans-unit id="s650d928168a2cc45">
+  <source>Stab Querschnittsname</source>
+  <target>rod cross-sectional name</target>
+</trans-unit>
+<trans-unit id="s391b70f7d352f798">
+  <source>Lager</source>
+  <target>support</target>
+</trans-unit>
+<trans-unit id="sc729044b272a9ffb">
+  <source>Knotenlasten</source>
+  <target>nodal loads</target>
+</trans-unit>
+<trans-unit id="s562ad517c760d37b">
+  <source>Knotenmassen</source>
+  <target>nodal masses</target>
+</trans-unit>
+<trans-unit id="sd64b92494d15400a">
+  <source>Knotenverformungen</source>
+  <target>node deformations</target>
+</trans-unit>
+<trans-unit id="s149a0a21f95cfb5d">
+  <source>Bemaßung</source>
+  <target>dimensioning</target>
+</trans-unit>
+<trans-unit id="s4cd219280214a6b1">
+  <source>Zeige :</source>
+  <target>Show :</target>
+</trans-unit>
+<trans-unit id="s84b24c83aaeeb5f3">
+  <source>alle</source>
+  <target>all</target>
+</trans-unit>
+<trans-unit id="s917e04d0ca03a1bf">
+  <source>Lastfall 1</source>
+  <target>load case 1</target>
+</trans-unit>
+<trans-unit id="s42a8fafacf7d0fa7">
+  <source>System als svg-Datei speichern</source>
+  <target>Save system as svg file</target>
+</trans-unit>
+<trans-unit id="sb205170315fd9dbe">
+  <source>alle Lastfälle</source>
+  <target>all load cases</target>
+</trans-unit>
+<trans-unit id="sdcc618dd2b6ce1f4">
+  <source>Lastfall </source>
+  <target>load case </target>
+</trans-unit>
+<trans-unit id="s8db89619f41917b4">
+  <source>Pin</source>
+  <target>pin</target>
+</trans-unit>
+<trans-unit id="se772e5c544d8fb9b">
+  <source>Weitere Aktivitäten</source>
+  <target>Additional activities</target>
+</trans-unit>
+<trans-unit id="sb2246a8686ca9805">
+  <source>Schließen</source>
+  <target>close</target>
+</trans-unit>
+<trans-unit id="s45a6175ff5837d88">
+  <source>Elementlasten </source>
+  <target>element loads</target>
+</trans-unit>
+<trans-unit id="s08395b5ece17be10">
+  <source>Bemaßung parallel</source>
+  <target>parallel dimensioning</target>
+</trans-unit>
+<trans-unit id="s62bbd61a5ded4527">
+  <source>Bemaßung horizontal</source>
+  <target>horizontal dimensioning</target>
+</trans-unit>
+<trans-unit id="s8973491fa3b25481">
+  <source>Bemaßung vertikal</source>
+  <target>vertical dimensioning</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

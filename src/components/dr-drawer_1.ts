@@ -149,67 +149,67 @@ export class drDrawer_1 extends LitElement {
    render() {
       return html`
          <p style="line-height: 2rem;">
-            <button id="id_knotverform" value="0" @click="${this._knotverform}">Knotenverformung</button>
+            <button id="id_knotverform" value="0" @click="${this._knotverform}">${msg('Knotenverformung')}</button>
             <br />
 
-            <button id="id_select_multi" value="0" @click="${this._select_multi}">selektiere mehrere Elemente</button>
+            <button id="id_select_multi" value="0" @click="${this._select_multi}">${msg('selektiere mehrere Elemente')}</button>
             <br />
 
-            <button id="id_select_typ" value="0" @click="${this._select_typ}">selektiere nach Element-Typ</button>
+            <button id="id_select_typ" value="0" @click="${this._select_typ}">${msg('selektiere nach Element-Typ')}</button>
             <br />
 
-            <button id="id_unselect_all" value="0" @click="${this._unselect_all}">deselektiere alle Elemente</button>
+            <button id="id_unselect_all" value="0" @click="${this._unselect_all}">${msg('deselektiere alle Elemente')}</button>
             <br />
 
-            <button id="id_unselect_multi" value="0" @click="${this._unselect_multi}">deselektiere mehrere Elemente</button>
+            <button id="id_unselect_multi" value="0" @click="${this._unselect_multi}">${msg('deselektiere mehrere Elemente')}</button>
             <br />
 
-            <button id="id_copy_selected" value="0" @click="${this._copy_selected}">Kopiere selektierte Elemente</button>
+            <button id="id_copy_selected" value="0" @click="${this._copy_selected}">${msg('Kopiere selektierte Elemente')}</button>
             <br />
 
-            <button id="id_edit_selected" value="0" @click="${this._edit_selected}">Editiere selektierte Elemente</button>
+            <button id="id_edit_selected" value="0" @click="${this._edit_selected}">${msg('Editiere selektierte Elemente')}</button>
             <br />
 
-            <button id="id_messen" value="0" @click="${this._messen}">Messen</button>
+            <button id="id_messen" value="0" @click="${this._messen}">${msg('Messen')}</button>
             <br />
 
-            <button id="id_bemassung_parallel" value="0" @click="${this._bemassung_parallel}">Bemassung parallel</button>
+            <button id="id_bemassung_parallel" value="0" @click="${this._bemassung_parallel}">${msg('Bemaßung parallel')}</button>
             <br />
 
-            <button id="id_bemassung_x" value="0" @click="${this._bemassung_x}">Bemassung horizontal</button>
+            <button id="id_bemassung_x" value="0" @click="${this._bemassung_x}">${msg('Bemaßung horizontal')}</button>
             <br />
 
-            <button id="id_bemassung_z" value="0" @click="${this._bemassung_z}">Bemassung vertikal</button>
+            <button id="id_bemassung_z" value="0" @click="${this._bemassung_z}">${msg('Bemaßung vertikal')}</button>
          </p>
 
          <p style="line-height: 1.5rem;">
-            <b>Ausblenden</b><br />
-            <sl-checkbox id="id_show_raster" @click="${this._checkbox_raster}">Rasterlinien </sl-checkbox>
+            <b>${msg('Ausblenden')}</b><br />
+            <sl-checkbox id="id_show_raster" @click="${this._checkbox_raster}">${msg('Rasterlinien')} </sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_stab_name" @click="${this._checkbox_stab_name}">Stab Querschnittsname </sl-checkbox>
+            <sl-checkbox id="id_show_stab_name" @click="${this._checkbox_stab_name}">${msg('Stab Querschnittsname')} </sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_lager" @click="${this._checkbox_lager}">Lager</sl-checkbox>
+            <sl-checkbox id="id_show_lager" @click="${this._checkbox_lager}">${msg('Lager')}</sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_knotenlasten" @click="${this._checkbox_knotenlasten}">Knotenlasten </sl-checkbox>
+            <sl-checkbox id="id_show_knotenlasten" @click="${this._checkbox_knotenlasten}">${msg('Knotenlasten')} </sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_elementlasten" @click="${this._checkbox_elementlasten}">Elementlasten </sl-checkbox>
+            <sl-checkbox id="id_show_elementlasten" @click="${this._checkbox_elementlasten}">${msg('Elementlasten ')} </sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_knotenmassen" @click="${this._checkbox_knotenmassen}">Knotenmassen </sl-checkbox>
+            <sl-checkbox id="id_show_knotenmassen" @click="${this._checkbox_knotenmassen}">${msg('Knotenmassen')} </sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_knotenverformungen" @click="${this._checkbox_knotenverformungen}">Knotenverformungen </sl-checkbox>
+            <sl-checkbox id="id_show_knotenverformungen" @click="${this._checkbox_knotenverformungen}">${msg('Knotenverformungen')} </sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_bemassung" @click="${this._checkbox_bemassung}">Bemaßung </sl-checkbox>
+            <sl-checkbox id="id_show_bemassung" @click="${this._checkbox_bemassung}">${msg('Bemaßung')} </sl-checkbox>
          </p>
          <p>
-            <label for="id_select_loadcase">Zeige :</label>
+            <label for="id_select_loadcase">${msg('Zeige :')}</label>
             <select id="id_select_loadcase" @change="${this._select_loadcase_changed}">
-               <option value="alle">alle</option>
-               <option value="1">Lastfall 1</option>
+               <option value="alle">${msg('alle')}</option>
+               <option value="1">${msg('Lastfall 1')}</option>
             </select>
          </p>
 
          <p>
-            <button id="id_svg" value="0" @click="${this._svg}">System als svg-Datei speichern</button>
+            <button id="id_svg" value="0" @click="${this._svg}">${msg('System als svg-Datei speichern')}</button>
          </p>
       `;
    }
@@ -478,15 +478,15 @@ export class drDrawer_1 extends LitElement {
          console.log('el_select', el_select);
 
          let option = document.createElement('option');
-         option.value = String('alle');
-         option.textContent = 'alle Lastfälle';
+         option.value = msg('alle');
+         option.textContent = msg('alle Lastfälle');
          option.selected = true;
          el_select.appendChild(option);
 
          for (let i = 1; i <= nlastfaelle; i++) {
             option = document.createElement('option');
             option.value = String(i);
-            option.textContent = 'Lastfall ' + i;
+            option.textContent = msg('Lastfall ') + i;
             el_select.appendChild(option);
          }
          console.log('neu el_select', el_select);

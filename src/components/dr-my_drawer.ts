@@ -147,7 +147,7 @@ export class drMyDrawer extends LitElement {
 
    render() {
       return html`
-         <button title="Pin" @click="${this._sticky}">
+         <button title=${msg('Pin')} @click="${this._sticky}">
             <!-- <svg id="id_svg_sticky" class ="svgbutton" width="1rem" height="1rem" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M0 3c0-1.1.9-2 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm2 2v12h16V5H2zm8 3l4 5H6l4-5z"/></svg> -->
             <svg id="id_svg_sticky" class="svgbutton" width="1.5rem" height="1.5rem" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
                <path
@@ -166,14 +166,14 @@ export class drMyDrawer extends LitElement {
             </svg>
          </button>
 
-         <p><b>Mehr Aktivitäten</b></p>
+         <p><b>${msg('Weitere Aktivitäten')}</b></p>
          <div class="class_div_drawer" id="div_drawer">
             <dr-drawer_1 id="id_drawer_1"></dr-drawer_1>
          </div>
 
          <p>
             <br />
-            <sl-button id="OK" value="ok" @click="${this._div_ok}">close</sl-button>
+            <sl-button id="OK" value="ok" @click="${this._div_ok}">${msg('Schließen')}</sl-button>
          </p>
       `;
    }
