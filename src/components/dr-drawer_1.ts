@@ -186,19 +186,19 @@ export class drDrawer_1 extends LitElement {
             <b>${msg('Ausblenden')}</b><br />
             <sl-checkbox id="id_show_raster" @click="${this._checkbox_raster}">${msg('Rasterlinien')} </sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_stab_name" @click="${this._checkbox_stab_name}">${msg('Stab Querschnittsname')} </sl-checkbox>
+            <sl-checkbox id="id_show_stab_name" @click="${this._checkbox_stab_name}">${msg('Stab Querschnittsname')}</sl-checkbox>
             <br />
             <sl-checkbox id="id_show_lager" @click="${this._checkbox_lager}">${msg('Lager')}</sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_knotenlasten" @click="${this._checkbox_knotenlasten}">${msg('Knotenlasten')} </sl-checkbox>
+            <sl-checkbox id="id_show_knotenlasten" @click="${this._checkbox_knotenlasten}">${msg('Knotenlasten')}</sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_elementlasten" @click="${this._checkbox_elementlasten}">${msg('Elementlasten ')} </sl-checkbox>
+            <sl-checkbox id="id_show_elementlasten" @click="${this._checkbox_elementlasten}">${msg('Elementlasten ')}</sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_knotenmassen" @click="${this._checkbox_knotenmassen}">${msg('Knotenmassen')} </sl-checkbox>
+            <sl-checkbox id="id_show_knotenmassen" @click="${this._checkbox_knotenmassen}">${msg('Knotenmassen')}</sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_knotenverformungen" @click="${this._checkbox_knotenverformungen}">${msg('Knotenverformungen')} </sl-checkbox>
+            <sl-checkbox id="id_show_knotenverformungen" @click="${this._checkbox_knotenverformungen}">${msg('Knotenverformungen')}</sl-checkbox>
             <br />
-            <sl-checkbox id="id_show_bemassung" @click="${this._checkbox_bemassung}">${msg('Bemaßung')} </sl-checkbox>
+            <sl-checkbox id="id_show_bemassung" @click="${this._checkbox_bemassung}">${msg('Bemaßung')}</sl-checkbox>
          </p>
          <p>
             <label for="id_select_loadcase">${msg('Zeige :')}</label>

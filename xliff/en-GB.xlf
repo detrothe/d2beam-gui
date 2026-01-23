@@ -603,7 +603,7 @@
 </trans-unit>
 <trans-unit id="s650d928168a2cc45">
   <source>Stab Querschnittsname</source>
-  <target>rod cross-sectional name</target>
+  <target>cross-sectional name</target>
 </trans-unit>
 <trans-unit id="s391b70f7d352f798">
   <source>Lager</source>
@@ -676,6 +676,90 @@
 <trans-unit id="s8973491fa3b25481">
   <source>Bemaßung vertikal</source>
   <target>vertical dimensioning</target>
+</trans-unit>
+<trans-unit id="sa5a52c4169e1e648">
+  <source>Stab-Eigenschaften</source>
+  <target>Element properties</target>
+</trans-unit>
+<trans-unit id="sfaadd489dfa358bf">
+  <source>Querschnitt</source>
+  <target>Cross-section</target>
+</trans-unit>
+<trans-unit id="s5bfa8df7ff3f340a">
+  <source>Art des Stabes</source>
+  <target>Type of element</target>
+</trans-unit>
+<trans-unit id="sd64c04f6cc0ee34c">
+  <source>Biegestab d2beam</source>
+  <target>Bending bar d2beam</target>
+</trans-unit>
+<trans-unit id="s293d1a977716f4a1">
+  <source>FW-Stab Zug + Druck</source>
+  <target>truss tension + compression</target>
+</trans-unit>
+<trans-unit id="sb51fce4a6488bd2e">
+  <source>FW-Stab nur Zug</source>
+  <target>truss only tensile</target>
+</trans-unit>
+<trans-unit id="see27cf5ab63de49f">
+  <source>FW-Stab nur Druck</source>
+  <target>truss only pressure</target>
+</trans-unit>
+<trans-unit id="s2bcf54e43d1edf0c">
+  <source>Gelenke</source>
+  <target>joints</target>
+</trans-unit>
+<trans-unit id="s2c0dccac51d58d5e">
+  <source>Starre Stabenden</source>
+  <target>Rigid element ends</target>
+</trans-unit>
+<trans-unit id="sfb513c9f05f2007c">
+  <source>starr a:</source>
+  <target>rigid a:</target>
+</trans-unit>
+<trans-unit id="sfb5eb49f05fd56c0">
+  <source>starr e:</source>
+  <target>rigid e:</target>
+</trans-unit>
+<trans-unit id="se67a90c06f82c248">
+  <source>Stabbettung</source>
+  <target>Element bedding</target>
+</trans-unit>
+<trans-unit id="sc1d21b56736029e4">
+  <source>Eingabe der Lastfälle</source>
+  <target>Input of load cases</target>
+</trans-unit>
+<trans-unit id="s078637e8ea734ef8">
+  <source>Anzahl Lastfälle :</source>
+  <target>Number of load cases :</target>
+</trans-unit>
+<trans-unit id="s3ee5664c49a38eff">
+  <source>Tabelle anpassen</source>
+  <target>Adjust table size</target>
+</trans-unit>
+<trans-unit id="s45deb552041bc081">
+  <source>Eingabe der Kombinationen</source>
+  <target>Input of combinations</target>
+</trans-unit>
+<trans-unit id="sf1761da387d5b4f7">
+  <source>und der Multiplikatoren (Lastfaktoren), mit denen die einzelnen Lastfälle multipliziert werden sollen.</source>
+  <target>and the multipliers (load factors) by which the individual load cases are to be multiplied.</target>
+</trans-unit>
+<trans-unit id="sf3f260df2cc0cf33">
+  <source>Eine leere Zelle oder null bedeutet, dass der Lastfall nicht an der Kombination beteiligt ist.</source>
+  <target>An empty cell or zero means that the load case is not involved in the combination.</target>
+</trans-unit>
+<trans-unit id="s6431d4f0541960d3">
+  <source>Ein Kommentar ist optional.</source>
+  <target>A comment is optional.</target>
+</trans-unit>
+<trans-unit id="s5c1fb6f38c79e9c4">
+  <source>Bei Theorie I.Ordnung und linearen Materialeigenschaften sind Kombinationen optional. Bei Theorie II. Ordnung und/oder nichtlinearen Materialeigenschaften muss mindestens eine Kombination definiert sein.</source>
+  <target>For first-order theory and linear material properties, combinations are optional. For second-order theory and/or nonlinear material properties, at least one combination must be defined.</target>
+</trans-unit>
+<trans-unit id="scbc97ad387a601ff">
+  <source>Anzahl Kombinationen:</source>
+  <target>Number of combinations:</target>
 </trans-unit>
 </body>
 </file>

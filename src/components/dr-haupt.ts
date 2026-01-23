@@ -104,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.0, 22.Januar-2026, ';
+  '2D structural analysis of frames and trusses, v1.8.0, 23.Januar-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -750,18 +750,18 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <sl-tab-panel name="tab-kombinationen">
 
         <p>
-          <b> Eingabe der Lastfälle</b>
+          <b>${msg('Eingabe der Lastfälle')}</b>
         </p>
         <p>
-          Anzahl Lastfälle:
+          ${msg('Anzahl Lastfälle :')}
           <dr-button-pm id="id_button_nlastfaelle" nel="${nlastfaelle_init}" inputid="nlastfaelle"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">${msg('Tabelle anpassen')}</sl-button>
         </p>
         <dr-tabelle
           id="id_lastfaelle_tabelle"
           nzeilen="${nlastfaelle_init}"
           nspalten="1"
-          columns='["Lastfall", "Bezeichnung (optional)"'
+          columns='["Lastfall", "Bezeichnung (optional)"]'
           colwidth='["10","20"]'
           typs='["-", "text"]'
         ></dr-tabelle>
@@ -769,24 +769,23 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <br>
 
         <p>
-          <b> Eingabe der Kombinationen</b>
+          <b>${msg('Eingabe der Kombinationen')}</b>
         </p>
         <p>
-          <b> und der Multiplikatoren (Lastfaktoren), mit denen die einzelnen Lastfälle multipliziert werden sollen.</b>
+          <b>${msg('und der Multiplikatoren (Lastfaktoren), mit denen die einzelnen Lastfälle multipliziert werden sollen.')}</b>
         </p>
         <p>
-          Eine leere Zelle oder null bedeutet, dass der Lastfall nicht an der Kombination beteiligt ist.<br>
-          Ein Kommentar ist optional.
+          ${msg('Eine leere Zelle oder null bedeutet, dass der Lastfall nicht an der Kombination beteiligt ist.')}<br>
+          ${msg('Ein Kommentar ist optional.')}
         </p>
         <p>
-          Bei Theorie I.Ordnung und linearen Materialeigenschaften sind Kombinationen optional. Bei Theorie II. Ordnung und/oder nichtlinearen
-          Materialeigenschaften muss mindestens eine Kombination definiert sein.
+          ${msg('Bei Theorie I.Ordnung und linearen Materialeigenschaften sind Kombinationen optional. Bei Theorie II. Ordnung und/oder nichtlinearen Materialeigenschaften muss mindestens eine Kombination definiert sein.')}
         </p>
 
         <p>
-          Anzahl Kombinationen:
+          ${msg('Anzahl Kombinationen:')}
           <dr-button-pm id="id_button_nkombinationen" nel="${nkombinationen_init}" inputid="nkombinationen"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
+          <sl-button id="resize" value="resize" @click="${resizeTables}">${msg('Tabelle anpassen')}</sl-button>
         </p>
 
         <dr-tabelle

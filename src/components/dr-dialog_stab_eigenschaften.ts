@@ -139,10 +139,10 @@ export class drDialogStabEigenschaften extends LitElement {
 
   render() {
     return html` <dialog id="dialog_stabeigenschaften">
-         <h2>Stab-Eigenschaften</h2>
+         <h2>${msg('Stab-Eigenschaften')}</h2>
 
          <p>
-            <b>Querschnitt</b>
+            <b>${msg('Querschnitt')}</b>
          </p>
 
          <p>
@@ -150,20 +150,20 @@ export class drDialogStabEigenschaften extends LitElement {
          </p>
 
           <p>
-            <b>Art des Stabes</b>
+            <b>${msg('Art des Stabes')}</b>
          </p>
          <p>
             <select value="0" id="id_stabtyp">
-               <option value="0" selected @click=${this.show_div}> Biegestab d2beam </option>
-               <option value="1" @click=${this.show_div}>FW-Stab Zug + Druck</option>
-               <option value="2" @click=${this.show_div}>FW-Stab nur Zug</option>
-               <option value="3" @click=${this.show_div}>FW-Stab nur Druck</option>
+               <option value="0" selected @click=${this.show_div}> ${msg('Biegestab d2beam')} </option>
+               <option value="1" @click=${this.show_div}>${msg('FW-Stab Zug + Druck')}</option>
+               <option value="2" @click=${this.show_div}>${msg('FW-Stab nur Zug')}</option>
+               <option value="3" @click=${this.show_div}>${msg('FW-Stab nur Druck')}</option>
             </select>
 
             <select value="1" id="id_stabtyp_FW">
-               <option value="1" selected @click=${this.show_div}>FW-Stab Zug + Druck</option>
-               <option value="2" @click=${this.show_div}>FW-Stab nur Zug</option>
-               <option value="3" @click=${this.show_div}>FW-Stab nur Druck</option>
+               <option value="1" selected @click=${this.show_div}>${msg('FW-Stab Zug + Druck')}</option>
+               <option value="2" @click=${this.show_div}>${msg('FW-Stab nur Zug')}</option>
+               <option value="3" @click=${this.show_div}>${msg('FW-Stab nur Druck')}</option>
             </select>
          </p>
 
@@ -171,9 +171,9 @@ export class drDialogStabEigenschaften extends LitElement {
             <table id="stab_table">
                <thead>
                   <tr>
-                     <td>Gelenke</td>
+                     <td>${msg('Gelenke')}</td>
                      <td colspan="2" style="text-align: center;">
-                        Federkonstante
+                        ${msg('Federkonstante')}
                      </td>
                   </tr>
                </thead>
@@ -248,19 +248,19 @@ export class drDialogStabEigenschaften extends LitElement {
                </tbody>
             </table>
 
-            <p><b>Starre Stabenden</b></p>
+            <p><b>${msg('Starre Stabenden')}</b></p>
             <p>
-               starr a:
+               ${msg('starr a:')}
                <input type="number" id="id_a" name="a" pattern="[0-9.,eE+-]*" value="" />
                [m]
             </p>
             <p>
-               starr e:
+               ${msg('starr e:')}
                <input type="number" id="id_e" name="e" pattern="[0-9.,eE+-]*" value="" />
                [m]
             </p>
 
-            <p><b>Stabbettung</b></p>
+            <p><b>${msg('Stabbettung')}</b></p>
             <p>
                k<sub>b</sub>:
                <input type="number" id="id_kb" name="kb" pattern="[0-9.,eE+-]*" value="" />
@@ -270,8 +270,8 @@ export class drDialogStabEigenschaften extends LitElement {
 
          <form method="dialog">
             <!-- <sl-button id="Anwenden" value="anwenden" @click="${this._dialog_anwenden}">Anwenden</sl-button> -->
-            <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
-            <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+            <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">${msg('ok')}</sl-button>
+            <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">${msg('Abbrechen')}</sl-button>
          </form>
       </dialog>`;
   }
