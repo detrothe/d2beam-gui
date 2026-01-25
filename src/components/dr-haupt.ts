@@ -104,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.0, 23.Januar-2026, ';
+  '2D structural analysis of frames and trusses, v1.8.0, 25.Januar-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -802,31 +802,30 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-schiefstellung">
         <p>
-          <b> Die Schiefstellung des Systems wird nur bei Berechnungen nach Theorie II. Ordnung berücksichtigt</b>
+          <b>${msg('Die Schiefstellung des Systems wird nur bei Berechnungen nach Theorie II. Ordnung berücksichtigt')}</b>
         </p>
 
-        <p> <b>Hinweise:</b> Die Knoten-ID wird im Knotendialog im Tab System angezeigt, wenn du den <i>Knoten bearbeiten</i> Button
+        <p> <b>${msg('Hinweise:')}</b> Die Knoten-ID wird im Knotendialog im Tab System angezeigt, wenn du den <i>Knoten bearbeiten</i> Button
             <img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
             style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" >
              wählst und einen Knoten anklickst.
           </p>
           <p>
-            Wenn das Eingabefeld für &Delta; leer ist, wird keine Schiefstellung berücksichtigt.
+            ${msg('Wenn das Eingabefeld für Δ leer ist, wird keine Schiefstellung berücksichtigt.')}
           </p>
           <p>
-            Wenn das Eingabefeld für Knoten-ID leer ist, wird der Freiheitsgrad mit dem größten Wert aus der Knickfigur-Berechnung
-             mit dem Wert von &Delta; skaliert.
+            ${msg('Wenn das Eingabefeld für Knoten-ID leer ist, wird der Freiheitsgrad mit dem größten Wert aus der Knickfigur-Berechnung mit dem Wert von Δ skaliert.')}
           </p>
           <br />
           <p>
-          <b>- Schiefstellung des gesamten Systems mithilfe der ersten Eigenform</b>
+          <b>${msg('Schiefstellung des gesamten Systems mithilfe der ersten Eigenform')}</b>
         </p>
 
         <table id="schiefstellung_table">
           <tbody>
             <tr>
               <td title="0 oder leer = automatische Skalierung auf den Größtwert aus der Eigenwertberechnung">
-                Knoten-ID:
+                ${msg('Knoten-ID:')}
               </td>
               <td>
                 <input
@@ -842,7 +841,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               </td>
             </tr>
             <tr>
-              <td>Richtung :</td>
+              <td>${msg('Richtung :')}</td>
               <td>
                 <select name="maxu_dir" id="id_maxu_dir" style="min-width: 100%;"  onchange="berechnungErforderlich()">
                   <option value="0">x (u)</option>
@@ -852,8 +851,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               </td>
             </tr>
             <tr>
-              <td title="Vorverformung am Knoten in gewählter Richtung">
-                &Delta; [mm, mrad] :
+              <td title=${msg('Vorverformung am Knoten in gewählter Richtung')}>
+                Δ [mm, mrad] :
               </td>
               <td>
                 <input
@@ -876,8 +875,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-ergebnisse"
-        ><p><sl-button id="id_create_pdf" @click="${create_pdf}">erstelle pdf-Datei</sl-button></p>
-        <p><b>Eingabeprotokoll</b></p>
+        ><p><sl-button id="id_create_pdf" @click="${create_pdf}">${msg('erstelle pdf-Datei')}</sl-button></p>
+        <p><b>${msg('Eingabeprotokoll')}</b></p>
         <div id="id_results"></div>
       </sl-tab-panel>
 
@@ -886,7 +885,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <!--------------------------------------------  P R O  ------------------------------------------->
 
       <sl-tab-panel name="tab-pro">
-        <p><b>Einstellungen </b><br /><br /></p>
+        <p><b>${msg('Einstellungen')}</b><br /><br /></p>
 
         <table>
           <tbody>
@@ -1110,7 +1109,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-einstellungen"
-        ><p><b>Einstellungen</b><br /><br /></p>
+        ><p><b>${msg('Einstellungen')}</b><br /><br /></p>
 
         <div id="id_einstellungen">
           <br />

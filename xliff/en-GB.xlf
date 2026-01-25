@@ -44,11 +44,11 @@
 </trans-unit>
 <trans-unit id="sc9ffcae4af440f51">
   <source>Schiefstellung</source>
-  <target>inclination</target>
+  <target>imperfection</target>
 </trans-unit>
 <trans-unit id="s59afc2d10f246311">
   <source>Stabvorverformung</source>
-  <target>beam pre-deformation</target>
+  <target>local imperfection</target>
 </trans-unit>
 <trans-unit id="s8d3551f00a88687e">
   <source>Skalierung</source>
@@ -152,7 +152,7 @@
 </trans-unit>
 <trans-unit id="s9a0c3a9a16547042">
   <source>Vorverformungen</source>
-  <target>Pre-deformations</target>
+  <target>Imperfection</target>
 </trans-unit>
 <trans-unit id="s763d87fc3b6b3f5b">
   <source>Kombinationen</source>
@@ -760,6 +760,39 @@
 <trans-unit id="scbc97ad387a601ff">
   <source>Anzahl Kombinationen:</source>
   <target>Number of combinations:</target>
+</trans-unit>
+<trans-unit id="sf5dc25851d9359f5">
+  <source>Die Schiefstellung des Systems wird nur bei Berechnungen nach Theorie II. Ordnung berücksichtigt</source>
+</trans-unit>
+<trans-unit id="s9741672b82323e9b">
+  <source>Hinweise:</source>
+</trans-unit>
+<trans-unit id="s5d0eefefce8727dc">
+  <source>Wenn das Eingabefeld für &amp;Delta; leer ist, wird keine Schiefstellung berücksichtigt.</source>
+</trans-unit>
+<trans-unit id="s3361b40085e63911">
+  <source>Wenn das Eingabefeld für Knoten-ID leer ist, wird der Freiheitsgrad mit dem größten Wert aus der Knickfigur-Berechnung mit dem Wert von &amp;Delta; skaliert.</source>
+</trans-unit>
+<trans-unit id="s3e3859541a69f2da">
+  <source>- Schiefstellung des gesamten Systems mithilfe der ersten Eigenform</source>
+</trans-unit>
+<trans-unit id="s3e8ad165ae2213f8">
+  <source>Knoten-ID:</source>
+</trans-unit>
+<trans-unit id="s8c9b6040d2e5f671">
+  <source>Richtung :</source>
+</trans-unit>
+<trans-unit id="s8c55f55aab69a063">
+  <source>Vorverformung am Knoten in gewählter Richtung</source>
+</trans-unit>
+<trans-unit id="s060500f0260f3e8b">
+  <source>erstelle pdf-Datei</source>
+</trans-unit>
+<trans-unit id="s3d1befec83497b6a">
+  <source>Eingabeprotokoll</source>
+</trans-unit>
+<trans-unit id="s784d82bd15c49b4a">
+  <source>Einstellungen</source>
 </trans-unit>
 </body>
 </file>
