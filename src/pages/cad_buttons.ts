@@ -521,8 +521,75 @@ export function cad_buttons() {
     stab_button = document.createElement("button");
 
     stab_button.value = "Stab";
-    stab_button.className = "btn";
-    stab_button.innerHTML = msg('Stab');
+    stab_button.className = "btn_svg";
+    // stab_button.innerHTML = msg('Stab');
+    stab_button.innerHTML = `
+    <svg
+   version="1.1"
+   width="1rem"
+   height="1rem"
+   viewBox="0 0 189.4178 189.4178"
+
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="two-16005"
+     transform="translate(-240.4314,-43.415058)">
+    <g
+       id="two-16010"
+       transform="rotate(90,242,254)"
+       />
+    <g
+       id="two-16014"
+       transform="translate(-312.35576,-206.1899)"
+       >
+      <path
+         d="M 556.88713,434.92277 738.10495,253.70495"
+         stroke="#ffffff"
+         stroke-width="15.6"
+         stroke-linecap="butt"
+         stroke-linejoin="miter"
+         stroke-miterlimit="4"
+         id="two-16015" />
+      <path
+         d="m 622.94992,380.17368 60.40594,-60.40594"
+         stroke="#ffff00"
+         stroke-width="10"
+         stroke-linecap="butt"
+         stroke-linejoin="miter"
+         stroke-miterlimit="4"
+         stroke-dasharray="10, 4"
+         stroke-dashoffset="0"
+         id="two-16016" />
+      <path
+         transform="translate(556.88715,434.92276)"
+         d="M -3.6,-3.6 H 3.6 V 3.6 H -3.6 Z"
+         stroke="#ffffff"
+         stroke-width="50"
+         visibility="visible"
+         stroke-linecap="butt"
+         stroke-linejoin="miter"
+         stroke-miterlimit="4"
+         id="two-16017" />
+      <path
+         transform="translate(738.10498,253.70496)"
+         d="M -3.6,-3.6 H 3.6 V 3.6 H -3.6 Z"
+         stroke="#ffffff"
+         stroke-width="50"
+         visibility="visible"
+         stroke-linecap="butt"
+         stroke-linejoin="miter"
+         stroke-miterlimit="4"
+         id="two-16018" />
+    </g>
+  </g>
+</svg>
+`
+
+
     stab_button.addEventListener("click", Stab_button);
     // stab_button.addEventListener('keydown', keydown);
     stab_button.title = "Eingabe Stab";
@@ -703,7 +770,7 @@ export function update_button_language() {
   // //setLocaleFromUrl();
   // }
 
-  stab_button.innerHTML = msg('Stab');
+  //stab_button.innerHTML = msg('Stab');
   knotlast_button.innerHTML = msg('KnLast');
   knotlast_button.title = msg('Eingabe Knotenlasten');
   ellast_button.innerHTML = msg('ElLast');

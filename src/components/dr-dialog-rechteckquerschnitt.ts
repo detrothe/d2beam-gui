@@ -481,63 +481,63 @@ export class drRechteckQuerSchnitt extends LitElement {
          </dialog>
 
          <dialog id="dialog_profil">
-            <h2>Wähle ein Profil</h2>
+            <h2>${msg('Wähle ein Profil')}</h2>
 
             <select name="profile" id="id_profil_select"></select>
             <br /><br />
 
-            <sl-radio-group label="Beanspruchung um Querschnittsachse" name="achse" value="y" id="id_querschnittsachse">
+            <sl-radio-group label=${msg('Beanspruchung um Querschnittsachse')} name="achse" value="y" id="id_querschnittsachse">
                <sl-radio value="y">y</sl-radio>
                <sl-radio value="z">z</sl-radio>
             </sl-radio-group>
             <br /><br />
 
-            <sl-checkbox id="id_profilname_uebernehmen" checked>Profilname für Name des Querschnitts übernehmen</sl-checkbox>
+            <sl-checkbox id="id_profilname_uebernehmen" checked>${msg('Profilname für Name des Querschnitts übernehmen')}</sl-checkbox>
             <br /><br />
 
             <form method="dialog">
-               <sl-button id="id_btn_profil_ok" value="ok" @click="${this._dialog_profil_ok}">ok</sl-button>
-               <sl-button id="id_btn_profil_abbruch" value="cancel" @click="${this._dialog_profil_abbruch}">Abbrechen</sl-button>
+               <sl-button id="id_btn_profil_ok" value="ok" @click="${this._dialog_profil_ok}">${msg('ok')}</sl-button>
+               <sl-button id="id_btn_profil_abbruch" value="cancel" @click="${this._dialog_profil_abbruch}">${msg('Abbrechen')}</sl-button>
             </form>
          </dialog>
 
          <!--               T - Querschnitt -->
 
          <dialog id="dialog_TQ">
-            <h2>T-Querschnitt</h2>
+            <h2>${msg('T-Querschnitt')}</h2>
 
             <table id="querschnittwerte_table_TQ">
                <tbody>
                   <tr>
-                     <td>Flanschbreite</td>
+                     <td>${msg('Flanschbreite')}</td>
                      <td>
                         <input id="id_TQ_flanschbreite" type="number" value="" />
                      </td>
                      <td>cm</td>
                   </tr>
                   <tr>
-                     <td>Flanschhöhe</td>
+                     <td>${msg('Flanschhöhe')}</td>
                      <td>
                         <input id="id_TQ_flanschhoehe" type="number" value="" />
                      </td>
                      <td>cm</td>
                   </tr>
                   <tr>
-                     <td>Stegbreite oben</td>
+                     <td>${msg('Stegbreite oben')}</td>
                      <td>
                         <input id="id_TQ_stegbreite_oben" type="number" value="" />
                      </td>
                      <td>cm</td>
                   </tr>
                   <tr>
-                     <td>Stegbreite unten</td>
+                     <td>${msg('Stegbreite unten')}</td>
                      <td>
                         <input id="id_TQ_stegbreite_unten" type="number" value="" />
                      </td>
                      <td>cm</td>
                   </tr>
                   <tr>
-                     <td>Steghöhe</td>
+                     <td>${msg('Steghöhe')}</td>
                      <td>
                         <input id="id_TQ_steghoehe" type="number" value="" />
                      </td>

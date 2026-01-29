@@ -104,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.0, 25.Januar-2026, ';
+  '2D structural analysis of frames and trusses, v1.8.0, 29.Januar-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -396,7 +396,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
       <sl-tab-panel name="tab-tabellen">
 
-      <h2>&nbsp;&nbsp;&nbsp;Hier nichts eintragen, Änderungen werden nicht berücksichtigt</h2>
+      <h2>&nbsp;&nbsp;&nbsp;${msg('Hier nichts eintragen, Änderungen werden nicht berücksichtigt, nur zur Info')}</h2>
 
         <table>
           <tbody>
@@ -805,10 +805,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <b>${msg('Die Schiefstellung des Systems wird nur bei Berechnungen nach Theorie II. Ordnung berücksichtigt')}</b>
         </p>
 
-        <p> <b>${msg('Hinweise:')}</b> Die Knoten-ID wird im Knotendialog im Tab System angezeigt, wenn du den <i>Knoten bearbeiten</i> Button
-            <img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
+        <p> <b>${msg('Hinweise:')}</b>${msg('Die Knoten-ID wird im Knotendialog im Tab System angezeigt, wenn du den Button <Knoten bearbeiten> wählst und danach einen Knoten anklickst.')}
+            <img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title=${msg('edit-knoten button')}
             style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" >
-             wählst und einen Knoten anklickst.
           </p>
           <p>
             ${msg('Wenn das Eingabefeld für Δ leer ist, wird keine Schiefstellung berücksichtigt.')}
@@ -824,7 +823,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <table id="schiefstellung_table">
           <tbody>
             <tr>
-              <td title="0 oder leer = automatische Skalierung auf den Größtwert aus der Eigenwertberechnung">
+              <td title=${msg('0 oder leer = automatische Skalierung auf den Größtwert aus der Eigenwertberechnung')}>
                 ${msg('Knoten-ID:')}
               </td>
               <td>
@@ -890,7 +889,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <table>
           <tbody>
             <tr>
-              <td id="id_nteilungen" title="Stabteilungen für Ausgabe der Schnittgrößen">&nbsp;Stabteilungen Ausgabe:</td>
+              <td id="id_nteilungen" title=${msg('Stabteilungen für Ausgabe der Schnittgrößen')}>&nbsp;${msg('Stabteilungen Ausgabe:')}</td>
               <td>
                 <dr-button-pm id="id_button_nteilungen" nel="10" inputid="nteilungen"  @change=${berechnungErforderlich}></dr-button-pm>
               </td>
@@ -898,7 +897,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
 
             <tr>
-              <td id="id_einheit_kraft" title="Einheit für Kraft in Ausgabe">&nbsp;Einheit für Kraft in Ausgabe:</td>
+              <td id="id_einheit_kraft" title=${msg('Einheit für Kraft in Ausgabe')}>&nbsp;${msg('Einheit für Kraft in Ausgabe:')}</td>
               <td>
               <select  value="kN" id="id_einheit_kraft_option" onchange="berechnungErforderlich()" style="width:6rem;">
                  <option value='kN' >kN</option>
@@ -908,7 +907,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             </tr>
 
             <tr>
-              <td title="Einheit für Bemaßung">&nbsp;Einheit für Bemaßung:</td>
+              <td title=${msg('Einheit für Bemaßung')}>&nbsp;${msg('Einheit für Bemaßung:')}</td>
               <td>
               <select  value="m" id="id_einheit_bemassung" style="width:6rem;" onchange="einheit_bemassung_changed()">
                  <option value='m'  >m</option>
@@ -921,10 +920,10 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td>&nbsp; </td>
             </tr>
-            <tr><td>&nbsp;<b>Allgemein:</b></td></tr>
+            <tr><td>&nbsp;<b>${msg('Allgemein:')}</b></td></tr>
 
             <tr>
-              <td id="id_eps_disp" title="max. Euklidische Fehlertoleranz eps für Verformungen">&nbsp;eps tol Verformung:</td>
+              <td id="id_eps_disp" title=${msg('max. Euklidische Fehlertoleranz eps für Verformungen')}>&nbsp;${msg('eps tol Verformung:')}</td>
               <td>
               <input
                   type="number"
@@ -940,7 +939,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             </tr>
 
             <tr>
-              <td id="id_eps_force" title="max. Euklidische Fehlertoleranz eps für Kräfte">&nbsp;eps tol Kraft:</td>
+              <td id="id_eps_force" title=${msg('max. Euklidische Fehlertoleranz eps für Kräfte')}>&nbsp;${msg('eps tol Kraft:')}</td>
               <td>
               <input
                   type="number"
@@ -959,9 +958,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               <td>&nbsp; </td>
             </tr>
 
-            <tr><td>&nbsp;<b>für Theorie II. Ordnung:</b></td></tr>
+            <tr><td>&nbsp;<b>${msg('für Theorie II. Ordnung:')}</b></td></tr>
             <tr>
-              <td id="id_niter" title="max. Anzahl Iterationen bei Th. II. Ordnung">&nbsp;max. Anzahl Gleichgewichts-Iterationen:</td>
+              <td id="id_niter" title=${msg('max. Anzahl Iterationen bei Th. II. Ordnung')}>&nbsp;${msg('max. Anzahl Gleichgewichts-Iterationen:')}</td>
               <td>
                 <dr-button-pm id="id_button_niter" nel="10" inputid="niter"  @change=${berechnungErforderlich}></dr-button-pm>
               </td>
@@ -969,8 +968,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
 
             <tr>
-              <td title="Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet">
-              &nbsp;Anzahl Knickfiguren :
+              <td title=${msg('Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet')}>
+              &nbsp;${msg('Anzahl Knickfiguren :')}
               </td>
               <td>
               <dr-button-pm id="id_neigv" nel="1" minValue="0" inputid="neigv"  @change=${berechnungErforderlich}></dr-button-pm>
@@ -989,21 +988,21 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             </tr>
 
             <tr>
-              <td id="id_P_delta" title="Art der geometrischen Steifigkeitsmatrix">&nbsp;Geom. Steifigkeitsmatrix:</td>
+              <td id="id_P_delta" title=${msg('Art der geometrischen Steifigkeitsmatrix')}>&nbsp;${msg('Geom. Steifigkeitsmatrix:')}</td>
               <td>
-              <sl-select  value="false" id="id_P_delta_option" >
-                 <sl-option value='false' @click=${berechnungErforderlich} > vollständiger Ansatz </sl-option>
-                 <sl-option value='true' @click=${berechnungErforderlich} >nur P-Δ Effekt</sl-option>
-              </sl-select>
+              <select  id="id_P_delta_option" style="min-width:100%;">
+                 <option value='false' @click=${berechnungErforderlich} selected >${msg('vollständiger Ansatz')}</option>
+                 <option value='true' @click=${berechnungErforderlich} >${msg('nur P-Δ Effekt')}</option>
+              </select>
               </td>
             </tr>
             <tr>
-              <td id="id_ausgabe_SG" title="Ausgabe Schnittgrößen in Tab Ergebnisse und pdf-Datei, Neuberechnung erforderlich">&nbsp;Ausgabe Schnittgrößen:</td>
+              <td id="id_ausgabe_SG" title=${msg('Ausgabe Schnittgrößen in Tab Ergebnisse und pdf-Datei, Neuberechnung erforderlich')}>&nbsp;${msg('Ausgabe Schnittgrößen:')}</td>
               <td>
-              <sl-select  value="true" id="id_ausgabe_SG_option" >
-                 <sl-option value='true' @click=${berechnungErforderlich} > Gleichgewichtsschnittgrößen </sl-option>
-                 <sl-option value='false' @click=${berechnungErforderlich} >Nachweisschnittgrößen</sl-option>
-              </sl-select>
+              <select  id="id_ausgabe_SG_option" style="min-width:100%;">
+                 <option value='true' @click=${berechnungErforderlich} selected >${msg('Gleichgewichtsschnittgrößen')}</option>
+                 <option value='false' @click=${berechnungErforderlich} >${msg('Nachweisschnittgrößen')}</option>
+              </select>
               </td>
             </tr>
 
@@ -1011,15 +1010,15 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               <td>&nbsp; </td>
             </tr>
 
-            <tr><td>&nbsp;<b>für Theorie II. Ordnung und Dynamik:</b></td></tr>
+            <tr><td>&nbsp;<b>${msg('für Theorie II. Ordnung und Dynamik:')}</b></td></tr>
             <tr>
-              <td id="id_eig_solver" title="Auswahl des Eigenwert solvers, Neuberechnung erforderlich">&nbsp;Eigenwertberechnung:</td>
+              <td id="id_eig_solver" title=${msg('Auswahl des Eigenwert solvers, Neuberechnung erforderlich')}>&nbsp;${msg('Eigenwertberechnung:')}</td>
               <td>
-              <sl-select  value="2" id="id_eig_solver_option" >
-                 <sl-option value='0' @click=${berechnungErforderlich} >GNU GSL QR Methode</sl-option>
-                 <sl-option value='1' @click=${berechnungErforderlich} >simultane Vektoriteration</sl-option>
-                 <sl-option value='2' @click=${berechnungErforderlich} >ARPACK Lanczos Iteration</sl-option>
-              </sl-select>
+              <select  id="id_eig_solver_option" style="min-width:100%;">
+                 <option value='0' @click=${berechnungErforderlich} >${msg('GNU GSL QR Methode')}</option>
+                 <option value='1' @click=${berechnungErforderlich} >${msg('simultane Vektoriteration')}</option>
+                 <option value='2' @click=${berechnungErforderlich} selected >${msg('ARPACK Lanczos Iteration')}</option>
+              </select>
               </td>
               <td>
                 <button class="btn_small" @click="${info_Eigenwertberechnung}">
@@ -1035,8 +1034,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
 
             <tr>
-              <td title="max. Anzahl der Iterationen für simultane Vektoriteration">
-              &nbsp;max. Anzahl Iterationen für Vektoriteration :
+              <td title=${msg('max. Anzahl der Iterationen für die Vektoriterationen')}>
+              &nbsp;${msg('max. Anzahl Iterationen für Vektoriteration :')}
               </td>
               <td>
                 <input
@@ -1059,9 +1058,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <hr />
         <p>
 
-          <sl-checkbox id="id_glsystem_darstellen"><b>Gleichungssystem darstellen</b></sl-checkbox>
+          <sl-checkbox id="id_glsystem_darstellen"><b>${msg('Gleichungssystem darstellen')}</b></sl-checkbox>
           <br /><br />
-          &nbsp;&nbsp;Zeige :
+          &nbsp;&nbsp;${msg('Zeige :')}
           <select id="id_element_darstellen" on></select>
         </p>
 
@@ -1076,13 +1075,13 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
 
         <p>
-          Anzahl Eigenwerte:
+          ${msg('Anzahl Eigenwerte:')}
 
           <dr-button-pm id="id_button_dyn_neigv" nel="${dyn_neigv_init}" inputid="dyn_neigv"></dr-button-pm>
           <br /><br />
         </p>
-        <p>Zur Verbesserung der Konvergenz bei der Iteration der Eigenwerte:<br>
-           Mindestwert auf der Diagonalen der Massenmatrix :
+        <p>${msg('Zur Verbesserung der Konvergenz bei der Iteration der Eigenwerte:')}<br>
+           ${msg('Mindestwert auf der Diagonalen der Massenmatrix :')}
            <input type="number" id="id_minMass" name="minmass" class="input_tab" pattern="[0-9.,eE+-]*" value="0.0" /> kg
         </p>
 

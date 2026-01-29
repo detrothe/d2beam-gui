@@ -763,36 +763,259 @@
 </trans-unit>
 <trans-unit id="sf5dc25851d9359f5">
   <source>Die Schiefstellung des Systems wird nur bei Berechnungen nach Theorie II. Ordnung berücksichtigt</source>
+  <target>The imperfection of the system is only taken into account in calculations according to second-order theory.</target>
 </trans-unit>
 <trans-unit id="s9741672b82323e9b">
   <source>Hinweise:</source>
-</trans-unit>
-<trans-unit id="s5d0eefefce8727dc">
-  <source>Wenn das Eingabefeld für &amp;Delta; leer ist, wird keine Schiefstellung berücksichtigt.</source>
-</trans-unit>
-<trans-unit id="s3361b40085e63911">
-  <source>Wenn das Eingabefeld für Knoten-ID leer ist, wird der Freiheitsgrad mit dem größten Wert aus der Knickfigur-Berechnung mit dem Wert von &amp;Delta; skaliert.</source>
-</trans-unit>
-<trans-unit id="s3e3859541a69f2da">
-  <source>- Schiefstellung des gesamten Systems mithilfe der ersten Eigenform</source>
+  <target>Notes:</target>
 </trans-unit>
 <trans-unit id="s3e8ad165ae2213f8">
   <source>Knoten-ID:</source>
+  <target>node ID:</target>
 </trans-unit>
 <trans-unit id="s8c9b6040d2e5f671">
   <source>Richtung :</source>
+  <target>direction:</target>
 </trans-unit>
 <trans-unit id="s8c55f55aab69a063">
   <source>Vorverformung am Knoten in gewählter Richtung</source>
+  <target>pre-deformation at the node in the selected direction</target>
 </trans-unit>
 <trans-unit id="s060500f0260f3e8b">
   <source>erstelle pdf-Datei</source>
+  <target>create PDF file</target>
 </trans-unit>
 <trans-unit id="s3d1befec83497b6a">
   <source>Eingabeprotokoll</source>
+  <target>input log</target>
 </trans-unit>
 <trans-unit id="s784d82bd15c49b4a">
   <source>Einstellungen</source>
+  <target>Settings</target>
+</trans-unit>
+<trans-unit id="sdb4cee89615a9395">
+  <source>Wenn das Eingabefeld für Δ leer ist, wird keine Schiefstellung berücksichtigt.</source>
+  <target>If the input field for Δ is empty, no imperfection is taken into account.</target>
+</trans-unit>
+<trans-unit id="s9e749bbf5b0e64b0">
+  <source>Wenn das Eingabefeld für Knoten-ID leer ist, wird der Freiheitsgrad mit dem größten Wert aus der Knickfigur-Berechnung mit dem Wert von Δ skaliert.</source>
+  <target>If the input field for node ID is empty, the degree of freedom with the largest value from the buckling figure calculation is scaled by the value of Δ.</target>
+</trans-unit>
+<trans-unit id="s66f1b01569c36879">
+  <source>Schiefstellung des gesamten Systems mithilfe der ersten Eigenform</source>
+  <target>Imperfection of the entire system using the first eigenform</target>
+</trans-unit>
+<trans-unit id="s8c35b76b6f2c60c2">
+  <source>Hier nichts eintragen, Änderungen werden nicht berücksichtigt, nur zur Info</source>
+  <target>Do not enter anything here, changes will not be taken into account, for information purposes only.</target>
+</trans-unit>
+<trans-unit id="s02c3c22410854873">
+  <source>Die Knoten-ID wird im Knotendialog im Tab System angezeigt, wenn du den Button &lt;Knoten bearbeiten&gt; wählst und danach einen Knoten anklickst.</source>
+  <target>The node ID is displayed in the node dialog in the System tab when you select the 'Edit Node' button and then click on a node.</target>
+</trans-unit>
+<trans-unit id="s9d05f95c9b651f6b">
+  <source>edit-knoten button</source>
+  <target>edit node button</target>
+</trans-unit>
+<trans-unit id="s873e4ab6fd271d36">
+  <source>0 oder leer = automatische Skalierung auf den Größtwert aus der Eigenwertberechnung</source>
+  <target>0 or empty = automatic scaling to the maximum value from the eigenvalue calculation</target>
+</trans-unit>
+<trans-unit id="sf1810e8beefc64c1">
+  <source>Wähle ein Profil</source>
+  <target>Select a profile</target>
+</trans-unit>
+<trans-unit id="s405ad46ccb89bcf3">
+  <source>Beanspruchung um Querschnittsachse</source>
+  <target>stress around cross-sectional axis</target>
+</trans-unit>
+<trans-unit id="s261612b31bf5a144">
+  <source>Profilname für Name des Querschnitts übernehmen</source>
+  <target>use profile name for cross-section name</target>
+</trans-unit>
+<trans-unit id="sf1d1814712830712">
+  <source>T-Querschnitt</source>
+  <target>T-cross section</target>
+</trans-unit>
+<trans-unit id="sd789dfa5d904d857">
+  <source>Flanschbreite</source>
+  <target>flange width</target>
+</trans-unit>
+<trans-unit id="sa7cda0c4526f2663">
+  <source>Flanschhöhe</source>
+  <target>flange height</target>
+</trans-unit>
+<trans-unit id="sc839bb100aee7447">
+  <source>Stegbreite oben</source>
+  <target>top web width</target>
+</trans-unit>
+<trans-unit id="s4f8b788ac6b3f559">
+  <source>Stegbreite unten</source>
+  <target>bottom web width</target>
+</trans-unit>
+<trans-unit id="s32b071a71459e623">
+  <source>Steghöhe</source>
+  <target>web height</target>
+</trans-unit>
+<trans-unit id="s511b90c4aedcd781">
+  <source>Stabteilungen für Ausgabe der Schnittgrößen</source>
+  <target>bar divisions for output of internal forces</target>
+</trans-unit>
+<trans-unit id="se26058465f7402fe">
+  <source>Stabteilungen Ausgabe:</source>
+  <target>bar divisions for output:</target>
+</trans-unit>
+<trans-unit id="s12f5eaaf5e8e8e14">
+  <source>Einheit für Kraft in Ausgabe</source>
+  <target>unit for force in output</target>
+</trans-unit>
+<trans-unit id="sc66bf5fdac3b982a">
+  <source>Einheit für Kraft in Ausgabe:</source>
+  <target>unit for force in output:</target>
+</trans-unit>
+<trans-unit id="s1b33c217a3161e77">
+  <source>Einheit für Bemaßung</source>
+  <target>unit for dimensioning</target>
+</trans-unit>
+<trans-unit id="s4f111b2a1e957cd7">
+  <source>Einheit für Bemaßung:</source>
+  <target>unit for dimensioning</target>
+</trans-unit>
+<trans-unit id="sf64e65dc8874622d">
+  <source>Allgemein:</source>
+  <target>General:</target>
+</trans-unit>
+<trans-unit id="sd80b8cadd831dc08">
+  <source>max. Euklidische Fehlertoleranz eps für Verformungen</source>
+  <target>max. Euclidean error tolerance eps for deformations</target>
+</trans-unit>
+<trans-unit id="sb9c2dd24a319f32b">
+  <source>eps tol Verformung:</source>
+  <target>eps tol deformation:</target>
+</trans-unit>
+<trans-unit id="safd4b9bcb2691c5a">
+  <source>max. Euklidische Fehlertoleranz eps für Kräfte</source>
+  <target>max. Euclidean error tolerance eps for forces</target>
+</trans-unit>
+<trans-unit id="sc88adba699c1f842">
+  <source>eps tol Kraft:</source>
+  <target>eps tol force:</target>
+</trans-unit>
+<trans-unit id="sb3b01c6fc152389c">
+  <source>für Theorie II. Ordnung:</source>
+  <target>for second-order theory:</target>
+</trans-unit>
+<trans-unit id="scf4f2b1466aee8de">
+  <source>max. Anzahl Iterationen bei Th. II. Ordnung</source>
+  <target>Max. number of iterations for second-order theory</target>
+</trans-unit>
+<trans-unit id="sa886a246793b8bd4">
+  <source>max. Anzahl Gleichgewichts-Iterationen:</source>
+  <target>max. number of equilibrium iterations:</target>
+</trans-unit>
+<trans-unit id="s978e7cb7f7e53f40">
+  <source>Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet</source>
+  <target>Number of eigenvalues to be calculated; the first eigenmode is always used for imperfection</target>
+</trans-unit>
+<trans-unit id="s4f57bf6f517adce3">
+  <source>Anzahl Knickfiguren :</source>
+  <target>number of buckling modes:</target>
+</trans-unit>
+<trans-unit id="sbc19aa5c50f0b65c">
+  <source>Art der geometrischen Steifigkeitsmatrix</source>
+  <target>type of geometric stiffness matrix</target>
+</trans-unit>
+<trans-unit id="se8d84cd92bdac9a7">
+  <source>Geom. Steifigkeitsmatrix:</source>
+  <target>geometric stiffness matrix:</target>
+</trans-unit>
+<trans-unit id="s95de9ae6bc7dc2c7">
+  <source>vollständiger Ansatz</source>
+  <target>complete approach</target>
+</trans-unit>
+<trans-unit id="s6b427fe9afbad9f8">
+  <source>nur P-Δ Effekt</source>
+  <target>P-Δ effect only</target>
+</trans-unit>
+<trans-unit id="sc812a78cf4984cef">
+  <source>Ausgabe Schnittgrößen in Tab Ergebnisse und pdf-Datei, Neuberechnung erforderlich</source>
+  <target>output of internal forces in tab results and PDF file, recalculation required</target>
+</trans-unit>
+<trans-unit id="seb6990c94d13b2fb">
+  <source>Ausgabe Schnittgrößen:</source>
+  <target>Output of internal forces:</target>
+</trans-unit>
+<trans-unit id="s2fabff037b897689">
+  <source>Gleichgewichtsschnittgrößen</source>
+  <target>equilibrium internal forces</target>
+</trans-unit>
+<trans-unit id="s51d78bbd47a21d03">
+  <source>Nachweisschnittgrößen</source>
+  <target>design internal forces</target>
+</trans-unit>
+<trans-unit id="s7416239bea68ee24">
+  <source>für Theorie II. Ordnung und Dynamik:</source>
+  <target>for second-order theory and dynamics:</target>
+</trans-unit>
+<trans-unit id="s87e3a94c399ad324">
+  <source>Auswahl des Eigenwert solvers, Neuberechnung erforderlich</source>
+  <target>selection of eigenvalue solver, recalculation required</target>
+</trans-unit>
+<trans-unit id="sfff66c1f8228ab1a">
+  <source>Eigenwertberechnung:</source>
+  <target>eigenvalue calculation:</target>
+</trans-unit>
+<trans-unit id="sd86f00c775d79ea5">
+  <source>max. Anzahl der Iterationen für die Vektoriterationen</source>
+  <target>max. number of iterations for vector iteration</target>
+</trans-unit>
+<trans-unit id="s2016e03373773b29">
+  <source>max. Anzahl Iterationen für Vektoriteration :</source>
+  <target>max. number of iterations for vector iterations :</target>
+</trans-unit>
+<trans-unit id="see364b206e44f2b9">
+  <source>Gleichungssystem darstellen</source>
+  <target>Show the system of equations</target>
+</trans-unit>
+<trans-unit id="s0f686499875d27cb">
+  <source>Die Option `nichtlinear` ist zu wählen, wenn das System Fachwerkstäbe enthält, die nur Zug- oder Druckkräfte übertragen können. Die Berechnung erfolgt dann iterativ.</source>
+  <target>The `nonlinear` option should be selected if the system contains truss members that can only transmit tensile or compressive forces. The calculation is then performed iteratively.</target>
+</trans-unit>
+<trans-unit id="sd8e81de2031fda10">
+  <source>GNU GSL QR Methode</source>
+  <target>GNU GSL QR method</target>
+</trans-unit>
+<trans-unit id="s8a2654ded66a56c1">
+  <source>simultane Vektoriteration</source>
+  <target>simultaneous vector iteration</target>
+</trans-unit>
+<trans-unit id="s696d69c098c43cec">
+  <source>ARPACK Lanczos Iteration</source>
+  <target>ARPACK Lanczos iteration</target>
+</trans-unit>
+<trans-unit id="s945b20402df2f6d3">
+  <source>Die simultane Vektoriteration konvergiert sehr langsam, aber meist erfolgreich. Der Startvektor wird durch Zufallszahlen zu Beginn jeder neuen Berechnung bestimmt. Deshalb kann eine erneute Berechnung nach einer erfolglosen Berechnung zum Erfolg führen.</source>
+  <target>Simultaneous vector iteration converges very slowly, but usually successfully. The starting vector is determined by random numbers at the beginning of each new calculation. Therefore, recalculating after an unsuccessful calculation can lead to success.</target>
+</trans-unit>
+<trans-unit id="s99a3b734f631f963">
+  <source>Die QR Methode aus der GNU Bibliothek konvergiert sehr schnell, wenn sie konvergiert.</source>
+  <target>The QR method from the GNU library converges very quickly when it converges.</target>
+</trans-unit>
+<trans-unit id="sc607f3ce142369a0">
+  <source>Der ARPACK (ARnoldi PACKage) Eigenwertlöser ist für die Berechnung einiger Eigenwerte und -vektoren großer Systeme entwickelt worden. Er konvergiert schnell, auch bei mehreren gesuchten Eigenwerten.</source>
+  <target>The ARPACK (ARnoldi PACKage) eigenvalue solver was developed for calculating a few eigenvalues and eigenvectors of large systems. It converges quickly, even when multiple eigenvalues are sought.</target>
+</trans-unit>
+<trans-unit id="sf23bed29f06d75fe">
+  <source>Anzahl Eigenwerte:</source>
+  <target>Number of eigenvalues:</target>
+</trans-unit>
+<trans-unit id="s846311b9c04c189d">
+  <source>Zur Verbesserung der Konvergenz bei der Iteration der Eigenwerte:</source>
+  <target>To improve convergence during eigenvalue iteration:</target>
+</trans-unit>
+<trans-unit id="s0f3b73d4323545ab">
+  <source>Mindestwert auf der Diagonalen der Massenmatrix :</source>
+  <target>Minimum value on the diagonal of the mass matrix:</target>
 </trans-unit>
 </body>
 </file>
