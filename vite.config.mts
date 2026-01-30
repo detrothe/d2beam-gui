@@ -49,6 +49,14 @@ export default defineConfig({
           src: 'src/info/Kurzdokumentation_deutsch.html',
           dest: './src/info/'
         },
+         {
+          src: 'src/info/Kurzdokumentation_english.html',
+          dest: './src/info/'
+        },
+         {
+          src: 'src/info/Kurzdokumentation_spanish.html',
+          dest: './src/info/'
+        },
       ]
     })
   ]
