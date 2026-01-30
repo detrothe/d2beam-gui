@@ -82,8 +82,12 @@ export function set_info() {
     const elHaupt = document.getElementById('id_haupt');
     let shadow = elHaupt?.shadowRoot;
     if (shadow) {
-        shadow.getElementById("id_doc")?.setAttribute("width", breite + "px");
-        shadow.getElementById("id_doc")?.setAttribute("height", clientHeight + "px");
+        shadow.getElementById("id_doc_de")?.setAttribute("width", breite + "px");
+        shadow.getElementById("id_doc_de")?.setAttribute("height", clientHeight + "px");
+        shadow.getElementById("id_doc_en")?.setAttribute("width", breite + "px");
+        shadow.getElementById("id_doc_en")?.setAttribute("height", clientHeight + "px");
+        shadow.getElementById("id_doc_es")?.setAttribute("width", breite + "px");
+        shadow.getElementById("id_doc_es")?.setAttribute("height", clientHeight + "px");
         let left = (clientWidth - breite) / 2
         if (left < 0) left = 0;
         (shadow.getElementById("id_doc_frame") as HTMLDivElement).style.left = left + 'px';

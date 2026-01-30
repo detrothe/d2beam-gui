@@ -12,6 +12,8 @@ if (process.env.NODE_ENV !== "development") {
     console.log = () => { };
 }
 
+export let user_language = 'en_GB';
+export function set_user_language(wert: string) { user_language = wert; };
 
 console.log("Anfang index.ts")
 
@@ -22,6 +24,7 @@ window.addEventListener('lit-localize-status', (event) => {
         console.log(`******************** Loading new locale: ${event.detail.loadingLocale}`);
     } else if (event.detail.status === 'ready') {
         console.log(`Loaded new locale: ${event.detail.readyLocale}`);
+        user_language = event.detail.readyLocale;
         update_button_language();
     } else if (event.detail.status === 'error') {
         console.error(

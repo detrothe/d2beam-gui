@@ -25,7 +25,8 @@ export const setLocaleFromUrl = async () => {
   console.log("vor setLocale", msg('Stab'))
   await setLocale(locale);
   console.log("nach setLocale", msg('Stab'))
-  //update_button_language();
+  console.log('LOCALE',locale)
+
 };
 
 console.log("vor browser language")

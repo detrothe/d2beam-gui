@@ -91,6 +91,7 @@ import { mode_multi_selected_elementlast_aendern, mode_multi_selected_knotenlast
 // import { drMyDrawer } from "../components/dr-my_drawer";
 // import { AlertDialog } from "./confirm_dialog";
 import { drHaupt } from "../components/dr-haupt";
+import { user_language } from '..';
 
 let backgroundColor_button = 'rgb(64, 64, 64)';
 let backgroundColor_button_light = 'rgb(64, 64, 64)';
@@ -778,6 +779,21 @@ export function update_button_language() {
 
   //set_help_text(msg('Knotenlager eingeben'), button_color_help_text);
   lager_button.title = msg('Knotenlager eingeben');
+
+
+  const elHaupt = document.getElementById('id_haupt');
+  let shadow = elHaupt?.shadowRoot;
+  if (shadow) {
+    shadow.getElementById("id_doc_de")!.style.display = 'none';
+    shadow.getElementById("id_doc_en")!.style.display = 'none';
+    shadow.getElementById("id_doc_es")!.style.display = 'none';
+
+    console.log("in update_button_language", user_language)
+
+    if (user_language == 'de') shadow.getElementById("id_doc_de")!.style.display = 'block';
+    else if (user_language == 'en-GB') shadow.getElementById("id_doc_en")!.style.display = 'block';
+    else if (user_language == 'es-ES') shadow.getElementById("id_doc_es")!.style.display = 'block';
+  }
 }
 
 //--------------------------------------------------------------------------------------------------------

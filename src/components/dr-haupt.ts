@@ -104,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 //########################################################################################################################
 let theFooter =
-  '2D structural analysis of frames and trusses, v1.8.0, 29.Januar-2026, ';
+  '2D structural analysis of frames and trusses, v1.8.0, 30.Januar-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -1095,11 +1095,27 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <div id="id_hilfe" class="c_hilfe">
           <div id="id_doc_frame" style="position: relative; width: 760px; left:50%;">
             <iframe
-              id="id_doc"
+              id="id_doc_de"
               src="src/info/Kurzdokumentation_deutsch.html"
               width="100%"
               height="1500px"
               style="border: none; overflow: scroll; background-color: white;"
+            >
+            </iframe>
+            <iframe
+              id="id_doc_en"
+              src="src/info/Kurzdokumentation_english.html"
+              width="100%"
+              height="1500px"
+              style="border: none; overflow: scroll; background-color: white; display: none;"
+            >
+            </iframe>
+            <iframe
+              id="id_doc_es"
+              src="src/info/Kurzdokumentation_spanish.html"
+              width="100%"
+              height="1500px"
+              style="border: none; overflow: scroll; background-color: white; display: none;"
             >
             </iframe>
           </div>
