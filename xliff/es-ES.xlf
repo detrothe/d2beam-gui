@@ -16,7 +16,7 @@
 </trans-unit>
 <trans-unit id="s2b41d1fba90e38cb">
   <source>Beschriftung</source>
-  <target>labeling</target>
+  <target>rotulación</target>
 </trans-unit>
 <trans-unit id="se3f50870e34f1521">
   <source>Systemlinien</source>
@@ -40,7 +40,7 @@
 </trans-unit>
 <trans-unit id="sc9383464bcc002fe">
   <source>Knickfigur</source>
-  <target>buckled shape</target>
+  <target>forma propia</target>
 </trans-unit>
 <trans-unit id="sc9ffcae4af440f51">
   <source>Schiefstellung</source>
@@ -52,15 +52,15 @@
 </trans-unit>
 <trans-unit id="s8d3551f00a88687e">
   <source>Skalierung</source>
-  <target>scaling</target>
+  <target>escalado</target>
 </trans-unit>
 <trans-unit id="s8baaaf87af7af7d7">
   <source>Lasten anzeigen</source>
-  <target>Cargas</target>
+  <target>cargas</target>
 </trans-unit>
 <trans-unit id="sd0d2dfe921d156c5">
   <source>Lagerkräfte anzeigen</source>
-  <target>Reacciones</target>
+  <target>reacciones</target>
 </trans-unit>
 <trans-unit id="s56d117dffa5a0f36">
   <source>Dynamik</source>
@@ -68,31 +68,31 @@
 </trans-unit>
 <trans-unit id="scfc306ddc5333ba2">
   <source>Eigenformen</source>
-  <target>eigenform</target>
+  <target>forma propia</target>
 </trans-unit>
 <trans-unit id="s0641fdf7c4cc8625">
   <source>animate Eigenformen</source>
-  <target>animate eigenform</target>
+  <target>animar forma propia</target>
 </trans-unit>
 <trans-unit id="s65ada9f53688cb8f">
   <source>Massen anzeigen</source>
-  <target>show masses</target>
+  <target>Mostrar masas</target>
 </trans-unit>
 <trans-unit id="scc6d3482dd1b2057">
   <source>Optionen</source>
-  <target>Options</target>
+  <target>Opciones</target>
 </trans-unit>
 <trans-unit id="s51851ec717862dad">
   <source>Umriss anzeigen</source>
-  <target>shoe outline</target>
+  <target>Mostrar contorno</target>
 </trans-unit>
 <trans-unit id="se48ef32e03a831e9">
   <source>Gesamtverformung</source>
-  <target>total deformation</target>
+  <target>deformación total</target>
 </trans-unit>
 <trans-unit id="s0a9a66a4199b4e6a">
   <source>Gleichgewicht SG</source>
-  <target>equilibrium of forces</target>
+  <target>equilibrio de fuerzas internas</target>
 </trans-unit>
 <trans-unit id="s0c6f4bc0ae2a0d3b">
   <source>Schriftgröße:</source>
