@@ -99,10 +99,10 @@
 			<a href="#vorzeichen">Koordinatensystem und Vorzeichen</a><br>
 			<a href="#hinweiseApp">Hinweise zur Bedienung der App</a><br>
 			<a href="#darstellung_2D">Darstellungen 2D</a><br>
-			<a href="#svg">Grafik speichern </a><br>
-			<a href="#bezeichnungen">Bezeichnungen</a><br>
-			<a href="#voreinstellungen">Voreinstellungen</a><br>
-			<a href="#installation">Installation als App auf dem Desktop</a><br>
+			<a href="#svg">Guardar gráfico</a><br>
+			<a href="#bezeichnungen">Denominaciones</a><br>
+			<a href="#voreinstellungen">Ajustes preestablecidos</a><br>
+			<a href="#installation">Instalación como aplicación en el escritorio</a><br>
 			<a href="#kompatibilitaet">Kompatibilität</a><br>
 			<a href="#tastatur">Hilfe: Meine Tastatur hat keine Minus-Taste, virtuelle
 				Tastatur</a><br>
@@ -160,549 +160,555 @@
 					<p>
 						Material linealmente elástico para barras.
 					</p>
+				</li>
+				<p>
+					Las deformaciones por empuje se tienen en cuenta mediante un factor de
+					corrección de empuje.
+					Si se introduce un valor de 0,
+					se calcula con elementos rígidos al empuje.
+				</p>
+				<li>
+					<p>
+						En la teoría de segundo orden, la imperfección se puede tener en cuenta
+						fácilmente a través de la primera forma propia.
+						En los sistemas de bastidores típicos (fijados en la parte inferior y
+						móviles en la parte superior), basta con indicar el mayor
+						desplazamiento sin especificar el nodo (entrada 0). La dirección de la
+						imperfección se establece igual
+						que el desplazamiento existente del grado de libertad correspondiente
+						del cálculo anterior según la teoría de primer orden, que también se
+						necesita para determinar las fuerzas normales.
+						<br>
+						En sistemas simples no desplazables, la primera forma propia corresponde
+						a una deformación previa de la barra y puede utilizarse en consecuencia.
+						<br>
+						La deformación previa calculada por el programa se puede verificar en la
+						representación gráfica . Si el resultado no es correcto, se debe
+						especificar el nodo deseado con la dirección en la entrada.
+					</p>
 					<li>
 						<p>
-							Las deformaciones por empuje se tienen en cuenta mediante un factor de
-							corrección de empuje.
-							Si se introduce un valor de 0,
-							se calcula con elementos rígidos al empuje.
+							Apoyo opcional de las barras de flexión según Winkler.
 						</p>
 						<li>
 							<p>
-								En la teoría de segundo orden, la imperfección se puede tener en cuenta
-								fácilmente a través de la primera forma propia.
-								En los sistemas de bastidores típicos (fijados en la parte inferior y
-								móviles en la parte superior), basta con indicar el mayor
-								desplazamiento sin especificar el nodo (entrada 0). La dirección de la
-								imperfección se establece igual
-								que el desplazamiento existente del grado de libertad correspondiente
-								del cálculo anterior según la teoría de primer orden, que también se
-								necesita para determinar las fuerzas normales.
-								<br>
-								En sistemas simples no desplazables, la primera forma propia corresponde
-								a una deformación previa de la barra y puede utilizarse en consecuencia.
-								<br>
-								La deformación previa calculada por el programa se puede verificar en la
-								representación gráfica . Si el resultado no es correcto, se debe
-								especificar el nodo deseado con la dirección en la entrada.
+								Se pueden definir combinaciones de carga con los factores de seguridad
+								correspondientes.
+								En el caso de la teoría de segundo orden, solo se calculan las
+								combinaciones de carga.
 							</p>
-							<li>
-								<p>
-									Apoyo opcional de las barras de flexión según Winkler.
-								</p>
+
+						</ul>
+						<p>
+							<br /><br />
+						</p>
+
+						<h2 class="western" id="gui">
+							<a href="#">Entrada gráfica</a>
+						</h2>
+
+						<p>La introducción del sistema estático se realiza en la pestaña
+							Sistema. Dependiendo del
+							hardware disponible, se puede introducir con el ratón, el lápiz o el
+							dedo.
+						</p>
+						<p>
+
+							Al introducir los datos, hay que tener en cuenta los siguientes puntos:
+							<ul>
+								<li>Las secciones transversales se definen en la pestaña Secciones
+									transversales. Se debe crear al menos
+									una sección transversal antes de introducir las barras.
+									Los cambios se pueden realizar posteriormente en esta pestaña.
+								</li>
 								<li>
-									<p>
-										Se pueden definir combinaciones de carga con los factores de seguridad
-										correspondientes.
-										En el caso de la teoría de segundo orden, solo se calculan las
-										combinaciones de carga.
-									</p>
+									En los cálculos según la teoría de segundo orden, solo se calculan
+									las combinaciones de casos de carga que deben definirse en la pestaña
+									Combinaciones antes del cálculo.
+								</li>
+								<li>La introducción gráfica del sistema se realiza en la pestaña
+									Sistema.</li>
+								<li>
+									El cálculo propiamente dicho se inicia en la pestaña Principal. Una
+									vez realizado correctamente el cálculo, en la pestaña
+									Resultados se pueden visualizar las deformaciones,
+									los esfuerzos internos, etc.
+								</li>
+							</ul>
+						</p>
+						<p> <b>Explicaciones sobre los iconos de la pestaña Sistema</b></p>
+						<p>
+							<img src="/assets/gui-icons/undo.png" name="undo" title="undo button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Undo Button: Löscht das zuletzt erstellte Element (Knoten, Stab, Lager,
+							Knotenlast oder Elementlast)
+							und speichert es im internen Papierkorb.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/redo.png" name="redo" title="redo button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Redo Button: Holt das zuletzt in den Papierkorb gestellte Element
+							zurück.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/loeschen.png" name="loeschen"
+								title="löschen button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Löschen Button: Löscht ein anzuklickendes Element und speichert es im
+							internen Papierkorb.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/select.png" name="select"
+								title="select button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Select Button: Es ist ein vorhandenes Element anzuklicken. Danach
+							erscheint ein Dialog, in dem Änderungen
+							vorgenommen werdn können.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/knoten.png" name="knoten"
+								title="knoten button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Knoten Button: Eingabe von Knotenkoordinaten (x,z) mithilfe eines
+							Dialogs. Hinweis: Die Eingabe von Knoten ist
+							nur
+							erforderlich, wenn ein Stabknoten nicht in die Schnittpunkte der
+							Rasterlinien fällt.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten"
+								title="edit-knoten button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Edit Knoten Button: Die Koordinaten (x,z) von vorhandenen Knoten können
+							hier geändert werden.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/lager.png" name="lager"
+								title="lager button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Lager Button: Eingabe von Lagern. Hinweis: Lager können nur an
+							vorhandene Knoten gesetzt werden.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/einstellungen.png" name="einstellungen"
+								title="einstellungen button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Einstellungen Button: Hier können Einstellungen vorgenommen werden, die
+							für die grafische Eingabe nützlich sind.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/reset.png" name="reset"
+								title="reset button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Reset Button: Das System wird neu gezeichnet. Zoom und Drag werden
+							zurückgesetzt.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/default_querschnitt.png"
+								name="default_querschnitt"
+								title="default_querschnitt combobox"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Default_Querschnitt Combobox: Der angezeigte Querschnittsname wird bei
+							der nächsten Stabeingabe verwendet. Es
+							können im Tab
+							Querschnitte beliebig viele Querschnitte definiert werden.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/stab.png" name="stab" title="stab button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Stab Button: Ein Stab wird durch Anfangs- und Endknoten definiert. Es
+							gelten folgende Fangregeln: Zuerst wird
+							innerhalb der
+							Fangweite (Die Längen der Cursorlinien zeigen die Fangweite an) nach
+							bereits vorhandenen Knoten
+							gesucht und der am nächsten zum Cursorkreuz liegende Knoten verwendet.
+							Wird nichts
+							gefunden, dann werden die blauen Rasterpunkte verwendet. Wird auch hier
+							nichts innerhalb der Fangweite gefunden,
+							dann gilt die aktuelle Stelle des Cursors, gerundet auf 1 mm.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/knotenlast.png" name="knotenlast"
+								title="knotenlast button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Knotenlast Button: Eingabe von Knotenlasten. Hinweis: Knotenlasten
+							können nur an vorhandene Knoten gesetzt
+							werden.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/elementlast.png" name="elementlast"
+								title="element button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Elementlast Button: Eingabe von Stablasten. Hinweis: Stablasten können
+							nur auf vorhandene Stäbe wirken.
+						</p>
+						<p>
+							<img src="/assets/gui-icons/knotenmasse.png" name="knotenmasse"
+								title="knotenmasse button"
+								style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
+							Knotenmasse Button: Eingabe von Knotenmassen und
+							Massenträgheitsmomenten. Hinweis: Knotenmassen können nur an
+							vorhandene Knoten gesetzt werden.
+							Sie werden nur berücksichtigt, wenn die Berechnungsart <i>dynamisch</i>
+							im Tab Haupt gewählt wurde.
+						</p>
 
-								</ul>
-								<p>
-									<br /><br />
-								</p>
+						<p>
+							<br /><br />
+						</p>
 
-								<h2 class="western" id="gui">
-									<a href="#">Entrada gráfica</a>
-								</h2>
+						<h2 class="western" id="vorzeichen">
+							<a href="#">Koordinatensystem und Vorzeichen</a>
+						</h2>
 
-								<p>La introducción del sistema estático se realiza en la pestaña
-									Sistema. Dependiendo del
-									hardware disponible, se puede introducir con el ratón, el lápiz o el
-									dedo.
-								</p>
-								<p>
+						<img src="/assets/def_d2beam.png" name="definition_d2beam"
+							title="Definition Stabelement d2beam"
+							style="max-width:100%; width:400px; height:auto; border:0px; margin: auto; display: block;" />
+						<p style="text-align: center;">Stabelement d2beam mit starren Enden und
+							Gelenken</p>
 
-									Folgenden Punkte sind bei der Eingabe zu beachten:
-									<ul>
-										<li>Die Querschnitte werden im Tab Querschnitte definiert. Mindestens
-											ein Querschnitt muss vor der Eingabe der
-											Stäbe erstellt werden.
-											Änderungen sind nachträglich in diesem Tab möglich.
-										</li>
-										<li>
-											Bei Berechnungen nach Theorie II. Ordung werden nur Kombinationen der
-											Lastfälle berechnet, die vor der
-											Berechnung im Tab Kombinationen
-											definiert werden müssen.
-										</li>
-										<li>Die grafische Eingabe des Systems findet im Tab System statt.</li>
-										<li>
-											Die eigentliche Berechnung wird im Tab Haupt gestartet. Nach
-											erfolgreicher Berechnung können im Tab
-											Ergebnisse
-											die Verformungen,
-											Schnittgrößen etc. dargestellt werden.
-										</li>
-									</ul>
-								</p>
-								<p> <b>Erläuterungen zu den Icons im Tab System</b></p>
-								<p>
-									<img src="/assets/gui-icons/undo.png" name="undo" title="undo button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Undo Button: Löscht das zuletzt erstellte Element (Knoten, Stab, Lager,
-									Knotenlast oder Elementlast)
-									und speichert es im internen Papierkorb.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/redo.png" name="redo" title="redo button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Redo Button: Holt das zuletzt in den Papierkorb gestellte Element
-									zurück.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/loeschen.png" name="loeschen"
-										title="löschen button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Löschen Button: Löscht ein anzuklickendes Element und speichert es im
-									internen Papierkorb.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/select.png" name="select"
-										title="select button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Select Button: Es ist ein vorhandenes Element anzuklicken. Danach
-									erscheint ein Dialog, in dem Änderungen
-									vorgenommen werdn können.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/knoten.png" name="knoten"
-										title="knoten button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Knoten Button: Eingabe von Knotenkoordinaten (x,z) mithilfe eines
-									Dialogs. Hinweis: Die Eingabe von Knoten ist
-									nur
-									erforderlich, wenn ein Stabknoten nicht in die Schnittpunkte der
-									Rasterlinien fällt.
-								</p>
-								<p>
+						<img src="/assets/vorzeichen_lager_notxt.png" name="vorzeichen_lager"
+							title="Vorzeichen Lager"
+							style="max-width:100%; width:209px; height:auto; border:0px; margin: auto; display: block;" />
+						<p style="text-align: center;">Lagerkräfte am gedrehten Lager</p>
+
+						<img src="/assets/gedrehtes_lager_notxt.png" name="gedrehtes_lager"
+							title="gedrehtes Lager"
+							style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;" />
+						<p style="text-align: center;">starres Lager gedreht</p>
+
+						<img src="/assets/definition_federn.png" name="definition_federn"
+							title="Definition Federn"
+							style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;" />
+						<p style="text-align: center;">Lagerfedern gedreht</p>
+
+						<p>
+							<h1 class="western" id="hinweiseApp"><a href="#">Weitere Hinweise zur
+									Bedienung der App</a></h1>
+						</p>
+						<p>
+							<h2 class="western">Entrada</h2>
+						</p>
+						<p>Como separador decimal se permite la coma o el punto.
+							No se permite el separador de miles.
+						</p>
+						<p>Para acelerar la introducción de datos, se pueden copiar
+							o generar valores de celdas individuales o filas
+							de las tablas. Se puede seleccionar un bloque pulsando el botón DERECHO
+							del ratón .
+							Al soltar el botón del ratón, aparecerá un menú contextual.
+							<br>
+							En <b>pantallas táctiles:</b> al pasar el dedo
+							o el lápiz, las celdas seleccionadas se resaltan en color, al igual que
+							con el ratón. Al levantar el
+							dedo o el lápiz, aparece el menú contextual.
+							Durante el modo de selección no se pueden introducir valores. La
+							selección <i>close</i> cancela el diálogo
+							y elimina la selección.
+						</p>
+
+						<p>
+							<ul>
+								<li><b>copy first cell value:</b> Es wird der Wert der zuerst
+									selektierten Zelle in die anderen selektierten
+									Zellen
+									kopiert.</li>
+								<li><b>copy first row values:</b> Es sind mindestens zwei Zeilen zu
+									selektieren. Es werden die Werte der
+									obersten Zeile
+									spaltenweise nach unten kopiert.</li>
+								<li><b>increment by 1:</b> Es sind mindestens zwei Zeilen zu
+									selektieren. Es werden die Werte der obersten Zeile
+									spaltenweise um 1 erhöht.</li>
+								<li><b>increment by delta:</b> Es sind mindestens drei Zeilen zu
+									selektieren. Es werden spaltenweise die
+									Differenzen
+									zwischen der obersten und der darunterliegenden Zeile
+									bestimmt. Die darunterliegenden Zeilen werden spaltenweise mit den
+									berechneten Deltawerten verändert. </li>
+								<li><b>copy to clipboard:</b> Der Inhalt der selektierten Zellen wird
+									in die Zwischenablage kopiert und kann zum
+									Beispiel an anderen Stellen der Tabelle eingesetzt werden. Auch
+									können die Werte an andere Programme
+									übergeben werden (Tabellenkalkulation)</li>
+								<li><b>insert from clipboard:</b> Der Inhalt der Zwischenablage wird
+									beginnend an der linken oberen Zelle des
+									markierten Bereichs eingefügt. </li>
+								<li><b>close:</b> Der Dialog wird ohne weitere Ausführungen
+									beendet.</li>
+							</ul>
+						</p>
+						<p>Bei iOS erfolgt die Auswahl im Kontextmenü mit einem Doppelklick.
+						</p>
+
+						<p>Hinweis: An jedes Tablett und Smartphone läßt sich eine Bluetooth
+							Maus und/oder Tastatur anschließen.</p>
+
+						<p>Um den begrenzten Bildschirmplatz auf Smartphones und Tabletts besser
+							zu nutzen, werden die Anzahl der Zeilen in
+							den Tabellen für die Knotenkoordinaten und Elemente
+							durch die Eingabe der Anzahl Knoten und Elemente bestimmt. Deshalb sind
+							erst die neue Anzahl Elemente und Knoten
+							einzugeben und dann die Größe der Tabellen mit Hilfe des Buttons
+							'Tabelle anpassen' zu änden. Der Vorgang kann beliebig oft wiederholt
+							werden.
+						</p>
+						<p>
+							<h2 class="western" id="darstellung_2D"><a href="#">Darstellungen
+									2D</a></h2>
+						</p>
+						<p>Die Darstellungsoptionen können beliebig kombiniert werden.</p>
+
+						<p>
+							<ul>
+								<li><b>Beschriftung:</b> Beschriftung der Elemente. Schnittgrößen und
+									Verformungen. Die Art der Beschriftung ist
+									abhängig von der
+									Wahl weiterer Optionen. </li>
+								<li><b>Systemlinien:</b> Darstellung des Systems.</li>
+								<li><b>Verformungen:</b> Darstellung des verformten Systems.</li>
+								<li><b>Normalkraft:</b> Zustandskinien für die Normalkräfte </li>
+								<li><b>Querkraft:</b> Zustandslinien für die Querkräfte</li>
+								<li><b>Moment:</b> Zustandslinien für die Momente </li>
+								<li><b>Eigenformen:</b> Darstellung der Eigenformen. In der Auswahlbox
+									rechts oben können Sie aus den
+									berechneten Eigenform auswählen.</li>
+								<li><b>Schiefstellung:</b> Darstellung der verwendeten Schiefstellung,
+									basierend auf der ersten Eigenform.
+									Achtung, die verwendete
+									Schiefstellung ist abhängig von der eingestellten Kombination. Nur
+									bei Theorie II. Ordnung.
+								</li>
+								<li><b>Stabvorverformung:</b> Darstellung der eingegebenen
+									Stabvorverformungen, nur bei Theorie II. Ordnung.
+								</li>
+								<li><b>Skalierung:</b> Skalierung der Größe der Schnittgrößen und
+									Verformungen.</li>
+								<li><b>Lasten anzeigen:</b> Darstellung der Lasten in Abhängigkeit von
+									dem gewählten Lastfall.
+								</li>
+								<li><b>Lagerkräfte anzeigen:</b> Darstellung der berechneten
+									Lagerkräfte und Symbole.</li>
+								<li><b>Umriss anzeigen:</b> Die eingegebenen Querschnittshöhen der
+									Stäbe werden bei der Darstellung
+									verwendet.</li>
+								<li><b>Gesamtverformung:</b> Nur bei Th. II. Ordnung. Normalerweise
+									werden die relativen Verformungen angezeigt.
+									Wenn die Option gewählt wird, dann werden die Vorverformungen
+									zu den relativen Verformungen addiert.</li>
+								<li><b>Gleichgewicht SG:</b> Nur bei Th. II. Ordnung. Wenn diese
+									Option gewählt wird, dann werden die
+									Schnittgrößen entlang des Stabes in den Richtungen
+									des lokalen Koordinatensystens des unverformten Systems angezeigt
+									(Gleichgewichtsschnittgrößen).
+									Wenn die Option nicht ausgewählt ist, dann werden die
+									Gleichgewichtsschnittgrößen N und V<sub>z</sub> in die
+									Richtung des gedrehten Querschnitts transformiert. Diese werden auch
+									als
+									Nachweisschnittgrößen bezeichnet und sind für die Bemessung zu
+									verwenden.<br> Diese Option hat keine
+									Auswirkung auf das Biegemoment M<sub>y</sub>! </li>
+								<li><b>Reset:</b> Einstellungen werden zurückgesetzt.</li>
+							</ul>
+						</p>
+
+						<p>
+							<h2 class="western" id="svg"><a href="#">Guardar gráfico</a></h2>
+						</p>
+						<p>
+							Con el botón <i>guardar svg</i> se puede guardar la representación
+							gráfica actual en un archivo en formato svg (formato vectorial). El
+							dibujo se puede abrir con cualquier programa que admita el formato
+							vectorial svg, por ejemplo, Inkscape, Libre Office y Microsoft Office
+							(a partir de la versión 2016). Al tratarse de un formato vectorial, el
+							gráfico se puede editar.
+						</p>
+						<p>
+							<h2 class="western" id="bezeichnungen"><a
+									href="#">Denominaciones</a></h2>
+						</p>
+						<p>Incidencias de nudos de los elementos<br>
+							nod a = incidencia del nodo al inicio del elemento<br>
+							nod e = incidencia del nodo en el extremo del elemento</p>
+
+						<p> Los signos y las denominaciones corresponden a los habituales en
+							estática, véase [2].
+						</p>
+						<p>
+							<h2 class="western" id="voreinstellungen"><a
+									href="#">Ajustes preestablecidos</a></h2>
+						</p>
+						<p>En el menú ꔷꔷꔷ puntos se puede ajustar el tamaño de la fuente y el
+							color de la tabla .
+							<br>
+							Los ajustes de la página se pueden guardar como ajustes predeterminados
+							en la memoria local memoria local del navegador utilizado
+							y estarán disponibles de nuevo tras reiniciar el programa. Los ajustes
+							preestablecidos se pueden borrar con el botón situado debajo.
+							<br>
+							La memoria local (local storage) no son
+							cookies. Esta aplicación web realiza todos los
+							El almacenamiento local (local storage) no son
+							cookies. Esta aplicación web realiza todos los
+							cálculos en el ordenador local en el navegador en JavaScript. No se
+							intercambian
+							datos con un servidor web. Por lo tanto, una vez iniciado el programa,
+							ya no es necesaria ninguna conexión de red
+							.
+						</p>
+
+						<p>
+							<h2 class="western" id="installation"><a href="#">Instalación como
+									aplicación en el escritorio</a></h2>
+						</p>
+						<p>Esta aplicación está programada como una aplicación web (web app),
+							por lo que se puede instalar en todos los sistemas operativos del
+							escritorio. Para ello, se crea un icono en el escritorio. De este modo,
+							la aplicación se comporta como una aplicación instalada desde una
+							tienda.
+							Por supuesto, D2beam-gui seguirá ejecutándose en el motor del navegador
+							instalado, pero sin elementos de control como, por ejemplo,
+							la barra de direcciones. La instalación
+							varía en función del sistema operativo, la versión y el navegador.
+							<br>
+							Después de iniciar d2beam por primera vez en el navegador, en
+							Android, en el navegador Chrome, en la esquina superior derecha
+							del menú de aplicaciones <i>(menú de tres puntos)</i>
+							la opción «Instalar aplicación». Aparecerá un cuadro de diálogo que
+							deberá confirmar. A continuación,
+							podrá cerrar el navegador . En el escritorio aparecerá
+							un nuevo icono con el nombre D2beam-gui.
+						</p>
+						<p>Para la instalación en iOS, es necesario utilizar el navegador
+							Safari. Aquí, el comando se llama «Añadir a la pantalla de inicio» y
+							tiene un icono con el signo más.
+						</p>
+
+						<p>La instalación en Microsoft Windows es similar a la instalación
+							en Android. En el navegador Edge, en el menú de aplicaciones
+							<i> (menú de tres puntos)</i>
+							<img src="/assets/app-install-windows.png" name="Bild4"
+								title="install windows"
+								style="max-width:100%; width:423px; height:auto; border:0px; margin: auto; display: block;" />
+							<!--width:423px; height:111px-->
+							<br>En las versiones más recientes de Chrome, es posible que se le
+							pregunte directamente
+							si desea realizar la instalación,
+							véase el símbolo a la derecha de la barra de direcciones :
+							<img src="/assets/chrome_install.png" name="chrome_install"
+								title="chrome install"
+								style="max-width:100%; width:436px; height:auto; border:0px; margin: auto; display: block;" />
+							<!--width:436px; height:155px-->
+						</p>
+						<p>En macOS, se debe utilizar el navegador Microsoft Edge o Google
+							Chrome para la instalación.
+						</p>
+						<p>El navegador Firefox aún no admite la instalación.
+							<br>
+							En los sistemas operativos Microsoft Windows y Linux,
+							también se puede cambiar al modo de pantalla completa
+							con la tecla F11.
+						</p>
+						<p>La desinstalación se realiza en Android, iOS y Linux simplemente
+							eliminando el icono del
+							escritorio. En Windows, la aplicación se desinstala como un programa
+							normal .
+						</p>
+
+						<h2 class="western" id="kompatibilitaet"><a href="#">Kompatibilität und
+								Probleme</a></h2>
+
+						<p>Es wurden folgenden Betriebssysteme getestet: Windows 10↑, macOS
+							Catalina 10.15.7↑, Ubuntu 22.04↑, Android 9-16,
+							iOS 15.7.3↑. </p>
+						<p>Es wurden folgende Browser in der aktuellsten Version getestet:
+							Chrome, Chromium, Edge, Safari, Firefox.
+							Nur die aktuellen Versionen werden getestet und unterstützt.
+						</p>
+						<!--  <p>Probleme: Unter Android Firefox funktioniert die Selektion der Zellen in den Tabellen nicht.</p>  -->
+
+						<h2 class="western" id="tastatur"><a href="#">Teclado virtual</a></h2>
+						<p>En algunos dispositivos Android, especialmente los de Samsung, el
+							teclado numérico no incluye una tecla para el signo negativo
+							. Desafortunadamente, la especificación HTML deja a criterio del
+							fabricante del dispositivo si el teclado numérico
+							contiene una tecla para el signo negativo. A juzgar por las numerosas
+							entradas en Internet
+							, es probable que solo unas pocas personas conozcan el significado más
+							profundo que se esconde detrás de esto.
+							En estos casos, se recomienda instalar un teclado virtual adicional
+							. Por ejemplo, el teclado original de Google Android, Gboard, de
+							Play Store es una alternativa. El
+							teclado aún debe activarse después de la instalación. Es mejor
+							hacerlo de inmediato en Play Store.
+							Más adelante, siempre puede cambiar entre los teclados instalados
+							(icono en la parte inferior derecha del teclado).
+						</p>
+
+						<h2 class="western" id="faq"><a href="#">Preguntas y respuestas</a></h2>
+
+						<p>
+							<ul>
+								<li>Pregunta: He introducido algunos nodos de más que ahoraya no
+									necesito.<br>
+									Respuesta: No pasa nada. Los nodos que no tienen elementos «colgados»
+									se ignoran.
+								</li>
+								<li>Pregunta: ¿Qué es el ID de nodo?<br>
+									Respuesta: Cada nodo tiene un número interno propio (ID de nodo) que
+									se genera automáticamente al crear el nodo.
+									Es independiente de la posterior asignación de la
+									numeración de nodos FE.
+									El ID de nodo se muestra en la pestaña Sistema del cuadro de diálogo
+									Nodo cuando
+									seleccionas el botón <i>Editar nodo</i>
 									<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten"
 										title="edit-knoten button"
 										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Edit Knoten Button: Die Koordinaten (x,z) von vorhandenen Knoten können
-									hier geändert werden.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/lager.png" name="lager"
-										title="lager button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Lager Button: Eingabe von Lagern. Hinweis: Lager können nur an
-									vorhandene Knoten gesetzt werden.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/einstellungen.png" name="einstellungen"
-										title="einstellungen button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Einstellungen Button: Hier können Einstellungen vorgenommen werden, die
-									für die grafische Eingabe nützlich sind.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/reset.png" name="reset"
-										title="reset button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Reset Button: Das System wird neu gezeichnet. Zoom und Drag werden
-									zurückgesetzt.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/default_querschnitt.png"
-										name="default_querschnitt"
-										title="default_querschnitt combobox"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Default_Querschnitt Combobox: Der angezeigte Querschnittsname wird bei
-									der nächsten Stabeingabe verwendet. Es
-									können im Tab
-									Querschnitte beliebig viele Querschnitte definiert werden.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/stab.png" name="stab" title="stab button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Stab Button: Ein Stab wird durch Anfangs- und Endknoten definiert. Es
-									gelten folgende Fangregeln: Zuerst wird
-									innerhalb der
-									Fangweite (Die Längen der Cursorlinien zeigen die Fangweite an) nach
-									bereits vorhandenen Knoten
-									gesucht und der am nächsten zum Cursorkreuz liegende Knoten verwendet.
-									Wird nichts
-									gefunden, dann werden die blauen Rasterpunkte verwendet. Wird auch hier
-									nichts innerhalb der Fangweite gefunden,
-									dann gilt die aktuelle Stelle des Cursors, gerundet auf 1 mm.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/knotenlast.png" name="knotenlast"
-										title="knotenlast button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Knotenlast Button: Eingabe von Knotenlasten. Hinweis: Knotenlasten
-									können nur an vorhandene Knoten gesetzt
-									werden.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/elementlast.png" name="elementlast"
-										title="element button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Elementlast Button: Eingabe von Stablasten. Hinweis: Stablasten können
-									nur auf vorhandene Stäbe wirken.
-								</p>
-								<p>
-									<img src="/assets/gui-icons/knotenmasse.png" name="knotenmasse"
-										title="knotenmasse button"
-										style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-									Knotenmasse Button: Eingabe von Knotenmassen und
-									Massenträgheitsmomenten. Hinweis: Knotenmassen können nur an
-									vorhandene Knoten gesetzt werden.
-									Sie werden nur berücksichtigt, wenn die Berechnungsart <i>dynamisch</i>
-									im Tab Haupt gewählt wurde.
-								</p>
+									y haces clic en un nodo existente.
+								</li>
 
-								<p>
-									<br /><br />
-								</p>
+							</ul>
+						</p>
 
-								<h2 class="western" id="vorzeichen">
-									<a href="#">Koordinatensystem und Vorzeichen</a>
-								</h2>
+						<p>
+							<br />
+						</p>
 
-								<img src="/assets/def_d2beam.png" name="definition_d2beam"
-									title="Definition Stabelement d2beam"
-									style="max-width:100%; width:400px; height:auto; border:0px; margin: auto; display: block;" />
-								<p style="text-align: center;">Stabelement d2beam mit starren Enden und
-									Gelenken</p>
+						<h2 class="western" id="kontakt"><a href="#">Contacto y mensajes de
+								error</a></h2>
 
-								<img src="/assets/vorzeichen_lager_notxt.png" name="vorzeichen_lager"
-									title="Vorzeichen Lager"
-									style="max-width:100%; width:209px; height:auto; border:0px; margin: auto; display: block;" />
-								<p style="text-align: center;">Lagerkräfte am gedrehten Lager</p>
+						<p>
+							Para comentarios, solicitudes y notificaciones de errores, utiliza la
+							siguiente dirección de correo electrónico: statikverstehen&#x40;web.de.
+							<br>
+							En caso de mensajes de error, suele ser útil adjuntar una copia del
+							archivo de entrada.
 
-								<img src="/assets/gedrehtes_lager_notxt.png" name="gedrehtes_lager"
-									title="gedrehtes Lager"
-									style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;" />
-								<p style="text-align: center;">starres Lager gedreht</p>
+							<p>
+								<br />
+								<br />
+							</p>
 
-								<img src="/assets/definition_federn.png" name="definition_federn"
-									title="Definition Federn"
-									style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;" />
-								<p style="text-align: center;">Lagerfedern gedreht</p>
+							<h1 class="western">
+								<a href="#">Bibliografía</a>
+							</h1>
 
-								<p>
-									<h1 class="western" id="hinweiseApp"><a href="#">Weitere Hinweise zur
-											Bedienung der App</a></h1>
-								</p>
-								<p>
-									<h2 class="western">Eingabe</h2>
-								</p>
-								<p>Als Dezimal-Trennzeichen ist das Komma oder der Punkt zulässig.
-									Ein Tausender-Trennzeichen ist nicht zulässig.
-								</p>
-								<p>Um die Eingabe zu beschleunigen, können einzelne Zellwerte oder
-									Zeilen der Tabellen kopiert
-									bzw. generiert werden.
-									Es kann durch Drücken der RECHTEN Maustaste ein Block selektiert
-									werden.
-									Nach dem Loslassen der Maustaste erscheint ein Kontextmenü. <br>
-									Bei <b>Touch screens:</b> Beim Übersteichen mit dem Finger
-									oder dem Stift werden dann wie bei der Maus
-									die selektierten Zellen farblich markiert. Nach Heben des
-									Fingers/Stifts erscheint das Kontextmenu.
-									Während des Selektiermodus können keine Werte eingegeben werden. Die
-									Auswahl <i>close</i> bricht den Dialog ab
-									und entfernt die Selektion.
-								</p>
+							<p>
+								[1] Klaus Knothe, Heribert Wessels:
+								Finite Elemente, Eine Einführung für Ingenieure, 5.Auflage, Ernst W.
+								&amp; Sohn Verlag, 2017
+							</p>
+							<p>
+								[2] Rolf Kindmann; Matthias Kraus :
+								Steel Structures: Design using FEM, Ernst W. &amp; Sohn Verlag, 2011
+							</p>
+							<p>
+								[3] Horst Werkle:
+								Finite Elemente in der Baustatik, 4.Auflage, Ernst W. &amp; Sohn
+								Verlag, 2021
+							</p>
+						</p>
+					</body>
 
-								<p>
-									<ul>
-										<li><b>copy first cell value:</b> Es wird der Wert der zuerst
-											selektierten Zelle in die anderen selektierten
-											Zellen
-											kopiert.</li>
-										<li><b>copy first row values:</b> Es sind mindestens zwei Zeilen zu
-											selektieren. Es werden die Werte der
-											obersten Zeile
-											spaltenweise nach unten kopiert.</li>
-										<li><b>increment by 1:</b> Es sind mindestens zwei Zeilen zu
-											selektieren. Es werden die Werte der obersten Zeile
-											spaltenweise um 1 erhöht.</li>
-										<li><b>increment by delta:</b> Es sind mindestens drei Zeilen zu
-											selektieren. Es werden spaltenweise die
-											Differenzen
-											zwischen der obersten und der darunterliegenden Zeile
-											bestimmt. Die darunterliegenden Zeilen werden spaltenweise mit den
-											berechneten Deltawerten verändert. </li>
-										<li><b>copy to clipboard:</b> Der Inhalt der selektierten Zellen wird
-											in die Zwischenablage kopiert und kann zum
-											Beispiel an anderen Stellen der Tabelle eingesetzt werden. Auch
-											können die Werte an andere Programme
-											übergeben werden (Tabellenkalkulation)</li>
-										<li><b>insert from clipboard:</b> Der Inhalt der Zwischenablage wird
-											beginnend an der linken oberen Zelle des
-											markierten Bereichs eingefügt. </li>
-										<li><b>close:</b> Der Dialog wird ohne weitere Ausführungen
-											beendet.</li>
-									</ul>
-								</p>
-								<p>Bei iOS erfolgt die Auswahl im Kontextmenü mit einem Doppelklick.
-								</p>
-
-								<p>Hinweis: An jedes Tablett und Smartphone läßt sich eine Bluetooth
-									Maus und/oder Tastatur anschließen.</p>
-
-								<p>Um den begrenzten Bildschirmplatz auf Smartphones und Tabletts besser
-									zu nutzen, werden die Anzahl der Zeilen in
-									den Tabellen für die Knotenkoordinaten und Elemente
-									durch die Eingabe der Anzahl Knoten und Elemente bestimmt. Deshalb sind
-									erst die neue Anzahl Elemente und Knoten
-									einzugeben und dann die Größe der Tabellen mit Hilfe des Buttons
-									'Tabelle anpassen' zu änden. Der Vorgang kann beliebig oft wiederholt
-									werden.
-								</p>
-								<p>
-									<h2 class="western" id="darstellung_2D"><a href="#">Darstellungen
-											2D</a></h2>
-								</p>
-								<p>Die Darstellungsoptionen können beliebig kombiniert werden.</p>
-
-								<p>
-									<ul>
-										<li><b>Beschriftung:</b> Beschriftung der Elemente. Schnittgrößen und
-											Verformungen. Die Art der Beschriftung ist
-											abhängig von der
-											Wahl weiterer Optionen. </li>
-										<li><b>Systemlinien:</b> Darstellung des Systems.</li>
-										<li><b>Verformungen:</b> Darstellung des verformten Systems.</li>
-										<li><b>Normalkraft:</b> Zustandskinien für die Normalkräfte </li>
-										<li><b>Querkraft:</b> Zustandslinien für die Querkräfte</li>
-										<li><b>Moment:</b> Zustandslinien für die Momente </li>
-										<li><b>Eigenformen:</b> Darstellung der Eigenformen. In der Auswahlbox
-											rechts oben können Sie aus den
-											berechneten Eigenform auswählen.</li>
-										<li><b>Schiefstellung:</b> Darstellung der verwendeten Schiefstellung,
-											basierend auf der ersten Eigenform.
-											Achtung, die verwendete
-											Schiefstellung ist abhängig von der eingestellten Kombination. Nur
-											bei Theorie II. Ordnung.
-										</li>
-										<li><b>Stabvorverformung:</b> Darstellung der eingegebenen
-											Stabvorverformungen, nur bei Theorie II. Ordnung.
-										</li>
-										<li><b>Skalierung:</b> Skalierung der Größe der Schnittgrößen und
-											Verformungen.</li>
-										<li><b>Lasten anzeigen:</b> Darstellung der Lasten in Abhängigkeit von
-											dem gewählten Lastfall.
-										</li>
-										<li><b>Lagerkräfte anzeigen:</b> Darstellung der berechneten
-											Lagerkräfte und Symbole.</li>
-										<li><b>Umriss anzeigen:</b> Die eingegebenen Querschnittshöhen der
-											Stäbe werden bei der Darstellung
-											verwendet.</li>
-										<li><b>Gesamtverformung:</b> Nur bei Th. II. Ordnung. Normalerweise
-											werden die relativen Verformungen angezeigt.
-											Wenn die Option gewählt wird, dann werden die Vorverformungen
-											zu den relativen Verformungen addiert.</li>
-										<li><b>Gleichgewicht SG:</b> Nur bei Th. II. Ordnung. Wenn diese
-											Option gewählt wird, dann werden die
-											Schnittgrößen entlang des Stabes in den Richtungen
-											des lokalen Koordinatensystens des unverformten Systems angezeigt
-											(Gleichgewichtsschnittgrößen).
-											Wenn die Option nicht ausgewählt ist, dann werden die
-											Gleichgewichtsschnittgrößen N und V<sub>z</sub> in die
-											Richtung des gedrehten Querschnitts transformiert. Diese werden auch
-											als
-											Nachweisschnittgrößen bezeichnet und sind für die Bemessung zu
-											verwenden.<br> Diese Option hat keine
-											Auswirkung auf das Biegemoment M<sub>y</sub>! </li>
-										<li><b>Reset:</b> Einstellungen werden zurückgesetzt.</li>
-									</ul>
-								</p>
-
-								<p>
-									<h2 class="western" id="svg"><a href="#">Grafik speichern</a></h2>
-								</p>
-								<p>
-									Mit dem Button <i>save svg</i> kann man die aktuelle grafische
-									Darstellung in einer Datei im svg-Format
-									(Vektorformat) speichern.
-									Die Zeichnung kann mit jedem Programm, das das Vektorformat svg
-									unterstützt,
-									zum Beispiel Inkscape, Libre Office und Microsoft Office (ab Version
-									2016) als Bild eingelesen werden. Da es
-									sich um ein Vektorformat handelt,
-									kann die Grafik bearbeitet werden.
-								</p>
-								<p>
-									<h2 class="western" id="bezeichnungen"><a
-											href="#">Bezeichnungen</a></h2>
-								</p>
-								<p>Knoten-Inzidenzen der Elemente<br>
-									nod a = Knoten-Inzidenz am Elementanfang<br>
-									nod e = Knoten-Inzidenz am Elementende</p>
-
-								<p> Die Vorzeichen und Bezeichungen entsprechen den Üblichen in der
-									Statik, siehe [2].</p>
-								<p>
-									<h2 class="western" id="voreinstellungen"><a
-											href="#">Voreinstellungen</a></h2>
-								</p>
-								<p>In dem ꔷꔷꔷ Punkte Menü kann die Schriftgröße und die Tabellenfarbe
-									eingestellt werden.<br>
-									Die Einstellungen der Seite können als Voreinstellung im lokalen
-									Speicher des verwendeten Browsers gespeichert
-									werden und stehen nach einem
-									Programmneustart wieder zur Verfügung. Die Voreinstellungen können mit
-									dem darunterliegenden Button wieder
-									gelöscht werden.<br>
-									Bei dem lokalen Speicher (local storage) handelt es sich nicht um
-									Cookies. Diese Webanwendung führt alle
-									Berechnungen
-									auf dem lokalen Rechner im Browser in JavaScript durch. Es werden keine
-									Daten mit einem Webserver ausgetauscht.
-									Nach dem Programmstart ist deshalb keine Netzwerkverbindung mehr
-									erforderlich.
-								</p>
-
-								<p>
-									<h2 class="western" id="installation"><a href="#">Installation als App
-											auf dem Desktop</a></h2>
-								</p>
-								<p>Diese Anwendung ist als Webanwendung (Web App) programmiert, so dass
-									sie unter allen Betriebssystemen auf dem
-									Desktop installiert werden kann.
-									Dafür wird auf dem Desktop ein Icon erstellt. Damit verhält sich die
-									App wie eine aus einem Store installierte
-									App.
-									D2beam wird natürlich weiterhin im installierten Browser ausgeführt,
-									allerdings ohne Bedienelemente wie zum
-									Beispiel die Adressleiste. Die Installation
-									unterscheidet sich je nach Betriebssystem, -version und Browser.<br>
-									Nachdem d2beam erstmalig im Browser gestartet wurde, wählt man unter
-									Android im Chrome Browser rechts oben aus
-									dem Anwendungsmenü <i>(Drei-Punkte-Menü)</i> die Option
-									'App installieren'.
-									Ein Dialog erscheint, der zu bestätigen ist. Danach kann der Browser
-									geschlossen werden. Auf dem Desktop gibt es
-									jetzt ein neues Icon mit Namen d2beam.
-								</p>
-								<p>Für die Installation unter iOS ist der Safari Browser zu verwenden.
-									Hier heißt der Befehl 'Zum Home-Bildschirm'
-									mit einem Addieren-Symbol</p>
-
-								<p>Die Installation unter Microsoft Windows ist ähnlich der Installation
-									unter Android. Im Edge Browser steht
-									folgender Abschnitt im Anwendungsmenü <i> (Drei-Punkte-Menü)</i>
-									<img src="/assets/app-install-windows.png" name="Bild4"
-										title="install windows"
-										style="max-width:100%; width:423px; height:auto; border:0px; margin: auto; display: block;" />
-									<!--width:423px; height:111px-->
-									<br>Bei neueren Chrome Versionen werden Sie unter Umständen direkt
-									gefragt, ob eine Installation gewünscht wird,
-									siehe Symbol rechts in der Adressleiste :
-									<img src="/assets/chrome_install.png" name="chrome_install"
-										title="chrome install"
-										style="max-width:100%; width:436px; height:auto; border:0px; margin: auto; display: block;" />
-									<!--width:436px; height:155px-->
-								</p>
-								<p>Unter macOS ist der Microsoft Edge or Google Chrome Browser zur
-									Installation zu verwenden.</p>
-								<p>Der Firefox Browser unterstützt die Installation zur Zeit noch nicht.
-									<br>
-									Unter den PC-Betriebsystemen Microsoft Windows und Linux kann
-									alternativ mit der F11-Taste in den Vollbildmodus
-									umgeschaltet werden.
-								</p>
-								<p>Eine Deinstallation erfolgt durch einfaches Löschen des Icons auf dem
-									Desktop.</p>
-
-								<h2 class="western" id="kompatibilitaet"><a href="#">Kompatibilität und
-										Probleme</a></h2>
-
-								<p>Es wurden folgenden Betriebssysteme getestet: Windows 10↑, macOS
-									Catalina 10.15.7↑, Ubuntu 22.04↑, Android 9-16,
-									iOS 15.7.3↑. </p>
-								<p>Es wurden folgende Browser in der aktuellsten Version getestet:
-									Chrome, Chromium, Edge, Safari, Firefox.
-									Nur die aktuellen Versionen werden getestet und unterstützt.
-								</p>
-								<!--  <p>Probleme: Unter Android Firefox funktioniert die Selektion der Zellen in den Tabellen nicht.</p>  -->
-
-								<h2 class="western" id="tastatur"><a href="#">Teclado virtual</a></h2>
-								<p>En algunos dispositivos Android, especialmente los de Samsung, el
-									teclado numérico no incluye una tecla para el signo negativo
-									. Desafortunadamente, la especificación HTML deja a criterio del
-									fabricante del dispositivo si el teclado numérico
-									contiene una tecla para el signo negativo. A juzgar por las numerosas
-									entradas en Internet
-									, es probable que solo unas pocas personas conozcan el significado más
-									profundo que se esconde detrás de esto.
-									En estos casos, se recomienda instalar un teclado virtual adicional
-									. Por ejemplo, el teclado original de Google Android, Gboard, de
-									Play Store es una alternativa. El
-									teclado aún debe activarse después de la instalación. Es mejor
-									hacerlo de inmediato en Play Store.
-									Más adelante, siempre puede cambiar entre los teclados instalados
-									(icono en la parte inferior derecha del teclado).
-								</p>
-
-								<h2 class="western" id="faq"><a href="#">Preguntas y respuestas</a></h2>
-
-								<p>
-									<ul>
-										<li>Pregunta: He introducido algunos nodos de más que ahoraya no
-											necesito.<br>
-											Respuesta: No pasa nada. Los nodos que no tienen elementos «colgados»
-											se ignoran.
-										</li>
-										<li>Pregunta: ¿Qué es el ID de nodo?<br>
-											Respuesta: Cada nodo tiene un número interno propio (ID de nodo) que
-											se genera automáticamente al crear el nodo.
-											Es independiente de la posterior asignación de la
-											numeración de nodos FE.
-											El ID de nodo se muestra en la pestaña Sistema del cuadro de diálogo
-											Nodo cuando
-											seleccionas el botón <i>Editar nodo</i>
-											<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten"
-												title="edit-knoten button"
-												style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;" />
-											y haces clic en un nodo existente.
-										</li>
-
-									</ul>
-								</p>
-
-								<p>
-									<br />
-								</p>
-
-								<h2 class="western" id="kontakt"><a href="#">Contacto y mensajes de
-										error</a></h2>
-
-								<p>
-									Para comentarios, solicitudes y notificaciones de errores, utiliza la
-									siguiente dirección de correo electrónico: statikverstehen&#x40;web.de.
-									<br>
-									En caso de mensajes de error, suele ser útil adjuntar una copia del
-									archivo de entrada.
-
-									<p>
-										<br />
-										<br />
-									</p>
-
-									<h1 class="western">
-										<a href="#">Bibliografía</a>
-									</h1>
-
-									<p>
-										[1] Klaus Knothe, Heribert Wessels:
-										Finite Elemente, Eine Einführung für Ingenieure, 5.Auflage, Ernst W.
-										&amp; Sohn Verlag, 2017
-									</p>
-									<p>
-										[2] Rolf Kindmann; Matthias Kraus :
-										Steel Structures: Design using FEM, Ernst W. &amp; Sohn Verlag, 2011
-									</p>
-									<p>
-										[3] Horst Werkle:
-										Finite Elemente in der Baustatik, 4.Auflage, Ernst W. &amp; Sohn
-										Verlag, 2021
-									</p>
-								</body>
-
-							</html>
+				</html>
