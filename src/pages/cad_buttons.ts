@@ -108,10 +108,25 @@ export function set_hide_drawer(wert: boolean) { hide_drawer = wert; }
 export let picked_obj: TCAD_Element;
 export let index_stab = -1
 
+let esc_button: HTMLButtonElement;
+let zurueck_button: HTMLButtonElement;
+let undo_button: HTMLButtonElement;
+let redo_button: HTMLButtonElement;
+let trash_button: HTMLButtonElement;
+let select_button: HTMLButtonElement;
+let knoten_button: HTMLButtonElement;
+let edit_knoten_button: HTMLButtonElement;
+
 let stab_button: HTMLButtonElement;
 let knotlast_button: HTMLButtonElement;
 let ellast_button: HTMLButtonElement;
 let lager_button: HTMLButtonElement;
+let knotmass_button: HTMLButtonElement;
+
+let cog_button: HTMLButtonElement;
+let refresh_button: HTMLButtonElement;
+let info_button: HTMLButtonElement;
+let drawer_button: HTMLButtonElement;
 
 let mode_elementlast_aendern = false;
 let element_einzellast_gefunden = false
@@ -361,23 +376,23 @@ export function cad_buttons() {
     let div2 = shadow.getElementById("id_cad_group2") as HTMLDivElement;
 
 
-    const zurueck_button = document.createElement("button");
+    zurueck_button = document.createElement("button");
 
     zurueck_button.value = "zurueck";
     zurueck_button.className = "btn";
     zurueck_button.innerHTML = 'Fullscreen';
     zurueck_button.addEventListener("click", click_zurueck_cad);
-    zurueck_button.title = "zurück";
+    zurueck_button.title = msg('zurück');
     zurueck_button.id = "id_button_zurueck_cad"
 
 
-    const esc_button = document.createElement("button");
+    esc_button = document.createElement("button");
 
     esc_button.value = "ESC";
     esc_button.className = "btn";
     esc_button.innerHTML = 'esc';
     esc_button.addEventListener("click", click_ESC_cad);
-    esc_button.title = "aktuelle Aktion beenden";
+    esc_button.title = msg('aktuelle Aktion beenden');
     esc_button.id = "id_button_ESC_cad"
 
 
@@ -390,7 +405,7 @@ export function cad_buttons() {
     querschnitt_default_select.title = "aktiver Querschnitt";
     querschnitt_default_select.id = "id_querschnitt_default"
 
-    const undo_button = document.createElement("button");
+    undo_button = document.createElement("button");
 
     undo_button.value = "undo";
     undo_button.className = "btn_svg";
@@ -402,9 +417,9 @@ export function cad_buttons() {
 </svg>`;
     // undo_button.innerHTML = '<i class = "fa fa-undo"></i>';
     undo_button.addEventListener("click", unDo_button);
-    undo_button.title = "undo";
+    undo_button.title = msg('undo');
 
-    const redo_button = document.createElement("button");
+    redo_button = document.createElement("button");
 
     redo_button.value = "redo";
     redo_button.className = "btn_svg";
@@ -416,9 +431,9 @@ export function cad_buttons() {
 </svg>`;
     // redo_button.innerHTML = '<i class = "fa fa-repeat"></i>';
     redo_button.addEventListener("click", reDo_button);
-    redo_button.title = "redo";
+    redo_button.title = msg('redo');
 
-    const trash_button = document.createElement("button");
+    trash_button = document.createElement("button");
 
     trash_button.value = "delete";
     trash_button.className = "btn_svg";
@@ -440,10 +455,10 @@ export function cad_buttons() {
 </svg>
     `;
     trash_button.addEventListener("click", delete_button);
-    trash_button.title = "Element löschen";
+    trash_button.title = msg('Element löschen');
     trash_button.id = "id_cad_delete_button";
 
-    const select_button = document.createElement("button");
+    select_button = document.createElement("button");
 
     select_button.value = "select";
     select_button.className = "btn_svg";
@@ -471,10 +486,10 @@ export function cad_buttons() {
       window.clearTimeout(button_selectElement_timer_id);
     });
 
-    select_button.title = "Element auswählen und danach editieren";
+    select_button.title = msg('Element auswählen und danach editieren');
     select_button.id = "id_cad_select_button";
 
-    const knoten_button = document.createElement("button");
+    knoten_button = document.createElement("button");
 
     knoten_button.value = "Knoten";
     knoten_button.className = "btn_svg";
@@ -494,10 +509,10 @@ export function cad_buttons() {
       window.clearTimeout(button_knoten_timer_id);
     });
     // stab_button.addEventListener('keydown', keydown);
-    knoten_button.title = "Eingabe Knoten";
+    knoten_button.title = msg('Eingabe Knoten');
     knoten_button.id = "id_cad_knoten_button";
 
-    const edit_knoten_button = document.createElement("button");
+    edit_knoten_button = document.createElement("button");
 
     edit_knoten_button.value = "Knoten bearbeiten";
     edit_knoten_button.className = "btn_svg";
@@ -516,7 +531,7 @@ export function cad_buttons() {
     edit_knoten_button.addEventListener("pointerup", () => {
       window.clearTimeout(button_editknoten_timer_id);
     });
-    edit_knoten_button.title = "Knoten bearbeiten";
+    edit_knoten_button.title = msg('Knoten bearbeiten');
     edit_knoten_button.id = "id_cad_edit_knoten_button";
 
     stab_button = document.createElement("button");
@@ -593,7 +608,7 @@ export function cad_buttons() {
 
     stab_button.addEventListener("click", Stab_button);
     // stab_button.addEventListener('keydown', keydown);
-    stab_button.title = "Eingabe Stab";
+    stab_button.title = msg('Eingabe Stab');
     stab_button.id = "id_cad_stab_button";
     //stab_button.onmouseover = function () { this.style.backgroundColor = "RoyalBlue"; }
 
@@ -639,19 +654,21 @@ export function cad_buttons() {
     ellast_button.id = "id_cad_elementlast_button";
 
 
-    const knotmass_button = document.createElement("button");
+    knotmass_button = document.createElement("button");
 
     knotmass_button.value = "Knotenmasse";
-    knotmass_button.className = "btn";
-    knotmass_button.innerHTML = '<i class = "fa fa-circle"></i>';;
-    knotmass_button.addEventListener("click", Knotenmasse_button);
+    knotmass_button.className = "btn_svg";
+    knotmass_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="8" cy="8" r="7" fill="#ffffff"/>
+    </svg>`;
+    knotmass_button.addEventListener('click', Knotenmasse_button);
     // stab_button.addEventListener('keydown', keydown);
-    knotmass_button.title = "Eingabe Knotenmassen";
+    knotmass_button.title = msg('Eingabe Knotenmassen');
     knotmass_button.id = "id_cad_knotenmasse_button";
     knotmass_button.style.display = 'none'
 
 
-    const cog_button = document.createElement("button");
+    cog_button = document.createElement("button");
 
     cog_button.value = "Einstellungen";
     cog_button.className = "btn_svg";
@@ -674,11 +691,11 @@ export function cad_buttons() {
     // cog_button.innerHTML = '<i class = "fa fa-cog"></i>';
     cog_button.addEventListener("click", Einstellungen_button);
     // stab_button.addEventListener('keydown', keydown);
-    cog_button.title = "Einstellungen";
+    cog_button.title = msg('Einstellungen');
     cog_button.id = "id_cad_einstellungen_button";
 
 
-    const refresh_button = document.createElement("button");
+    refresh_button = document.createElement("button");
 
     refresh_button.value = "refresh";
     refresh_button.className = "btn_svg";
@@ -686,29 +703,29 @@ export function cad_buttons() {
     // refresh_button.innerHTML = '<i class = "fa fa-refresh"></i>';
     refresh_button.addEventListener("click", reset_cad);
     // stab_button.addEventListener('keydown', keydown);
-    refresh_button.title = "Reset Screen";
+    refresh_button.title = msg('Reset Screen');
     refresh_button.id = "id_cad_refresh_button";
 
-    const info_button = document.createElement("button");
+    info_button = document.createElement("button");
 
     info_button.value = "info";
     info_button.className = "btn";
     info_button.innerHTML = '<b>i</b>';
     info_button.addEventListener("click", Info_button);
     // stab_button.addEventListener('keydown', keydown);
-    info_button.title = "Kurzanleitung & Information";
+    info_button.title = msg('Kurzanleitung & Information');
     info_button.id = "id_cad_info_button";
 
 
 
-    const drawer_button = document.createElement("button");
+    drawer_button = document.createElement("button");
 
     drawer_button.value = "drawer";
     drawer_button.className = "btn";
     drawer_button.innerHTML = 'A';
     drawer_button.addEventListener("click", Drawer_button);
     // stab_button.addEventListener('keydown', keydown);
-    drawer_button.title = "Mehr Aktivitäten";
+    drawer_button.title = msg('Mehr Aktivitäten');
     drawer_button.id = "id_cad_drawer_button";
 
 
@@ -772,6 +789,18 @@ export function update_button_language() {
   // }
 
   //stab_button.innerHTML = msg('Stab');
+  esc_button.title = msg('aktuelle Aktion beenden');
+  zurueck_button.title = msg('zurück');
+
+
+  undo_button.title = msg('undo');
+  redo_button.title = msg('redo');
+  trash_button.title = msg('Element löschen');
+  select_button.title = msg('Element auswählen und danach editieren');
+  knoten_button.title = msg('Eingabe Knoten');
+  edit_knoten_button.title = msg('Knoten bearbeiten');
+
+  stab_button.title = msg('Eingabe Stab');
   knotlast_button.innerHTML = msg('KnLast');
   knotlast_button.title = msg('Eingabe Knotenlasten');
   ellast_button.innerHTML = msg('ElLast');
@@ -779,6 +808,12 @@ export function update_button_language() {
 
   //set_help_text(msg('Knotenlager eingeben'), button_color_help_text);
   lager_button.title = msg('Knotenlager eingeben');
+  knotmass_button.title = msg('Eingabe Knotenmassen');
+
+  cog_button.title = msg('Einstellungen');
+  refresh_button.title = msg('Reset Screen');
+  info_button.title = msg('Kurzanleitung & Information');
+  drawer_button.title = msg('Mehr Aktivitäten');
 
 
   const elHaupt = document.getElementById('id_haupt');
@@ -3821,3 +3856,4 @@ function click_ESC_cad() {
 
   buttons_control.reset();
 }
+

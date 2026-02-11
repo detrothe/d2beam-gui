@@ -1,3 +1,4 @@
+import { msg } from '@lit/localize';
 import Two from 'two.js';
 
 import { CTrans } from './trans';
@@ -514,7 +515,7 @@ export function click_zurueck_cad() {
          ele.style.position = 'absolute';
          fullscreen = true;
 
-         elb.innerHTML = 'zurück';
+         elb.innerHTML = msg('zurück');
       }
 
       elb.style.width = 'fit-content';

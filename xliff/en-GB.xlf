@@ -168,11 +168,11 @@
 </trans-unit>
 <trans-unit id="s8adcdb8a4fce3119">
   <source>Objektdaten speichern</source>
-  <target>Save object data</target>
+  <target>Save project data</target>
 </trans-unit>
 <trans-unit id="s4a73475a66d0ff67">
   <source>Objektdaten einlesen</source>
-  <target>Import object data</target>
+  <target>Import project data</target>
 </trans-unit>
 <trans-unit id="s9234cde5c4c75943">
   <source>neue Eingabe beginnen</source>
@@ -1016,6 +1016,62 @@
 <trans-unit id="s0f3b73d4323545ab">
   <source>Mindestwert auf der Diagonalen der Massenmatrix :</source>
   <target>Minimum value on the diagonal of the mass matrix:</target>
+</trans-unit>
+<trans-unit id="s40c7f83f01e8702b">
+  <source>aktuelle Aktion beenden</source>
+  <target>end current activity</target>
+</trans-unit>
+<trans-unit id="s64bde8e4857adf2f">
+  <source>undo</source>
+  <target>undo</target>
+</trans-unit>
+<trans-unit id="s4cf0781fbfe66969">
+  <source>redo</source>
+  <target>redo</target>
+</trans-unit>
+<trans-unit id="s05265fbf99932950">
+  <source>Element löschen</source>
+  <target>delete element</target>
+</trans-unit>
+<trans-unit id="s7982ab7959568ab9">
+  <source>Element auswählen und danach editieren</source>
+  <target>select an element and then edit it</target>
+</trans-unit>
+<trans-unit id="s7a2c2a63fbd9e7a3">
+  <source>Eingabe Knoten</source>
+  <target>input node</target>
+</trans-unit>
+<trans-unit id="se59e12933d763e65">
+  <source>Knoten bearbeiten</source>
+  <target>edit node</target>
+</trans-unit>
+<trans-unit id="s917ea53ba1ad9f9e">
+  <source>Eingabe Stab</source>
+  <target>input bar element</target>
+</trans-unit>
+<trans-unit id="sdbea3d97e0950350">
+  <source>Eingabe Knotenmassen</source>
+  <target>input nodal masses</target>
+</trans-unit>
+<trans-unit id="se29e08d15abe94a4">
+  <source>Reset Screen</source>
+  <target>reset screen</target>
+</trans-unit>
+<trans-unit id="s19991f9668db8bb8">
+  <source>Kurzanleitung &amp; Information</source>
+  <target>quick guide; information</target>
+</trans-unit>
+<trans-unit id="s9a350e6f2e8a1f84">
+  <source>Mehr Aktivitäten</source>
+  <target>more activities</target>
+</trans-unit>
+<trans-unit id="s938b55f81f0d53cc">
+  <source>zurück</source>
+  <target>back</target>
+</trans-unit>
+<trans-unit id="s42d04fe173ce3377">
+  <source>Knotenmasse</source>
+  <target>Nodal mass</target>
 </trans-unit>
 </body>
 </file>

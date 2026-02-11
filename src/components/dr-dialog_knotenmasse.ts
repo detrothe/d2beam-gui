@@ -131,7 +131,7 @@ export class drDialogKnotenmasse extends LitElement {
 
   render() {
     return html` <dialog id="dialog_knotenmasse">
-      <h2>Knotenmasse</h2>
+      <h2>${msg('Knotenmasse')}</h2>
 
       <p>
         M:
@@ -145,8 +145,8 @@ export class drDialogKnotenmasse extends LitElement {
       </p>
 
       <form method="dialog">
-        <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">ok</sl-button>
-        <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">Abbrechen</sl-button>
+        <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">${msg('ok')}</sl-button>
+        <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">${msg('Abbrechen')}</sl-button>
       </form>
     </dialog>`;
   }

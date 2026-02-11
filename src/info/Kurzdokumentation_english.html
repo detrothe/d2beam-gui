@@ -104,7 +104,7 @@
 			<br>
 			<a href="#darstellung_2D">2D representations</a>
 			<br>
-			<a href="#svg">Save graphic</a>
+			<a href="#svg">Save screenshot</a>
 			<br>
 			<a href="#bezeichnungen">Designations</a>
 			<br>
@@ -254,9 +254,8 @@
 					name="undo"
 					title="undo button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Undo Button: Löscht das zuletzt erstellte Element (Knoten, Stab, Lager,
-				Knotenlast oder Elementlast)
-				und speichert es im internen Papierkorb.
+				Undo Button: Deletes the last created element (node, member, support, node
+				load, or element load) and saves it in the internal recycle bin.
 			</p>
 			<p>
 				<img
@@ -264,8 +263,7 @@
 					name="redo"
 					title="redo button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Redo Button: Holt das zuletzt in den Papierkorb gestellte Element
-				zurück.
+				Redo Button: Recovers the last item placed in the recycle bin.
 			</p>
 			<p>
 				<img
@@ -273,8 +271,8 @@
 					name="loeschen"
 					title="löschen button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Löschen Button: Löscht ein anzuklickendes Element und speichert es im
-				internen Papierkorb.
+				Delete button: Deletes a clickable element and saves it in the internal
+				trash can.
 			</p>
 			<p>
 				<img
@@ -282,9 +280,8 @@
 					name="select"
 					title="select button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Select Button: Es ist ein vorhandenes Element anzuklicken. Danach
-				erscheint ein Dialog, in dem Änderungen
-				vorgenommen werdn können.
+				Select button: Click on an existing element. A dialog box will then appear
+				in which changes can be made.
 			</p>
 			<p>
 				<img
@@ -292,11 +289,9 @@
 					name="knoten"
 					title="knoten button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Knoten Button: Eingabe von Knotenkoordinaten (x,z) mithilfe eines
-				Dialogs. Hinweis: Die Eingabe von Knoten ist
-				nur
-				erforderlich, wenn ein Stabknoten nicht in die Schnittpunkte der
-				Rasterlinien fällt.
+				Node button: Enter node coordinates (x, z) using a dialog box. Note:
+				Entering nodes is only necessary if a member node does not fall at the
+				intersection of grid lines.
 			</p>
 			<p>
 				<img
@@ -304,8 +299,8 @@
 					name="edit_knoten"
 					title="edit-knoten button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Edit Knoten Button: Die Koordinaten (x,z) von vorhandenen Knoten können
-				hier geändert werden.
+				Edit Node Button: The coordinates (x,z) of existing nodes can be changed
+				here.
 			</p>
 			<p>
 				<img
@@ -313,8 +308,8 @@
 					name="lager"
 					title="lager button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Lager Button: Eingabe von Lagern. Hinweis: Lager können nur an
-				vorhandene Knoten gesetzt werden.
+				Support button: Entering supports. Note: Supports can only be set at
+				existing nodes.
 			</p>
 			<p>
 				<img
@@ -322,8 +317,8 @@
 					name="einstellungen"
 					title="einstellungen button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Einstellungen Button: Hier können Einstellungen vorgenommen werden, die
-				für die grafische Eingabe nützlich sind.
+				Settings button: Here you can configure settings that are useful for
+				graphical input.
 			</p>
 			<p>
 				<img
@@ -331,8 +326,7 @@
 					name="reset"
 					title="reset button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Reset Button: Das System wird neu gezeichnet. Zoom und Drag werden
-				zurückgesetzt.
+				Reset button: The system is redrawn. Zoom and drag are reset.
 			</p>
 			<p>
 				<img
@@ -340,10 +334,9 @@
 					name="default_querschnitt"
 					title="default_querschnitt combobox"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Default_Querschnitt Combobox: Der angezeigte Querschnittsname wird bei
-				der nächsten Stabeingabe verwendet. Es
-				können im Tab
-				Querschnitte beliebig viele Querschnitte definiert werden.
+				Default cross-section combo box: The cross-section name displayed is used
+				for the next bar entry. Any number of cross-sections can be defined in the
+				Cross-sections tab.
 			</p>
 			<p>
 				<img
@@ -351,16 +344,12 @@
 					name="stab"
 					title="stab button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Stab Button: Ein Stab wird durch Anfangs- und Endknoten definiert. Es
-				gelten folgende Fangregeln: Zuerst wird
-				innerhalb der
-				Fangweite (Die Längen der Cursorlinien zeigen die Fangweite an) nach
-				bereits vorhandenen Knoten
-				gesucht und der am nächsten zum Cursorkreuz liegende Knoten verwendet.
-				Wird nichts
-				gefunden, dann werden die blauen Rasterpunkte verwendet. Wird auch hier
-				nichts innerhalb der Fangweite gefunden,
-				dann gilt die aktuelle Stelle des Cursors, gerundet auf 1 mm.
+				Bar button: A bar is defined by start and end nodes. The following snapping
+				rules apply: First, existing nodes are searched for within the snap range
+				(the lengths of the cursor lines indicate the snap range) and the node
+				closest to the cursor cross is used. If nothing is found, the blue grid
+				points are used. If nothing is found within the snap range here either, the
+				current position of the cursor, rounded to 1 mm, is used.
 			</p>
 			<p>
 				<img
@@ -368,9 +357,8 @@
 					name="knotenlast"
 					title="knotenlast button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Knotenlast Button: Eingabe von Knotenlasten. Hinweis: Knotenlasten
-				können nur an vorhandene Knoten gesetzt
-				werden.
+				Nodal load button: Enter nodal loads. Note: Nodal loads can only be set at
+				existing nodes.
 			</p>
 			<p>
 				<img
@@ -378,8 +366,8 @@
 					name="elementlast"
 					title="element button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Elementlast Button: Eingabe von Stablasten. Hinweis: Stablasten können
-				nur auf vorhandene Stäbe wirken.
+				Element load button: Entering member loads. Note: Member loads can only act
+				on existing members.
 			</p>
 			<p>
 				<img
@@ -387,12 +375,10 @@
 					name="knotenmasse"
 					title="knotenmasse button"
 					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Knotenmasse Button: Eingabe von Knotenmassen und
-				Massenträgheitsmomenten. Hinweis: Knotenmassen können nur an
-				vorhandene Knoten gesetzt werden.
-				Sie werden nur berücksichtigt, wenn die Berechnungsart
-				<i>dynamisch</i>
-				im Tab Haupt gewählt wurde.
+				Nodal mass button: Enter nodal masses and
+				mass moments of inertia. Note: Nodal masses can only be set at existing
+				nodes. They are only taken into account if the calculation type
+				<i>dynamic</i> has been selected in the Main tab.
 			</p>
 			<p>
 				<br>
@@ -429,7 +415,7 @@
 			<p style="text-align: center;">support spring rotated</p>
 			<p>
 				<h1 class="western" id="hinweiseApp">
-					<a href="#">Weitere Hinweise zur Bedienung der App</a>
+					<a href="#">Further information on using the app</a>
 				</h1>
 			</p>
 			<p>
@@ -582,7 +568,7 @@
 					</li>
 					<li>
 						<b>total deformation:</b>
-						Only for Th. II. Order. Normally, the relative deformations are displayed.
+						Only for Th. 2nd Order. Normally, the relative deformations are displayed.
 						If the option is selected, the pre-deformations are added to the relative
 						deformations.
 					</li>
@@ -606,7 +592,7 @@
 			</p>
 			<p>
 				<h2 class="western" id="svg">
-					<a href="#">Save graphic</a>
+					<a href="#">Save screenshot</a>
 				</h2>
 			</p>
 			<p>

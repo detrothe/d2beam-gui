@@ -120,7 +120,7 @@
 </trans-unit>
 <trans-unit id="s2c9170533952c430">
   <source>Knotenlager eingeben</source>
-  <target>Introducir de reacciones</target>
+  <target>introducir de reacciones</target>
 </trans-unit>
 <trans-unit id="s7a37f71a594a557c">
   <source>KnLast</source>
@@ -128,7 +128,7 @@
 </trans-unit>
 <trans-unit id="s97cb3fe71c6686b4">
   <source>Eingabe Knotenlasten</source>
-  <target>Introducir de cargas de nodos</target>
+  <target>introducir de cargas de nodos</target>
 </trans-unit>
 <trans-unit id="s7937af3c124f9244">
   <source>ElLast</source>
@@ -136,7 +136,7 @@
 </trans-unit>
 <trans-unit id="s0bf516a8f909ff39">
   <source>Eingabe Elementlasten</source>
-  <target>Introducir de cargas para los elementos</target>
+  <target>introducir de cargas para los elementos</target>
 </trans-unit>
 <trans-unit id="sa81e2cdaf6921adc">
   <source>System</source>
@@ -168,11 +168,11 @@
 </trans-unit>
 <trans-unit id="s8adcdb8a4fce3119">
   <source>Objektdaten speichern</source>
-  <target>Guardar datos del objeto</target>
+  <target>Guardar datos del proyecto</target>
 </trans-unit>
 <trans-unit id="s4a73475a66d0ff67">
   <source>Objektdaten einlesen</source>
-  <target>Importar datos del objeto</target>
+  <target>Importar datos del proyecto</target>
 </trans-unit>
 <trans-unit id="s9234cde5c4c75943">
   <source>neue Eingabe beginnen</source>
@@ -1017,6 +1017,62 @@
 <trans-unit id="s0f3b73d4323545ab">
   <source>Mindestwert auf der Diagonalen der Massenmatrix :</source>
   <target>Valor mínimo en la diagonal de la matriz de masas:</target>
+</trans-unit>
+<trans-unit id="s40c7f83f01e8702b">
+  <source>aktuelle Aktion beenden</source>
+  <target>finalizar actividad actual</target>
+</trans-unit>
+<trans-unit id="s64bde8e4857adf2f">
+  <source>undo</source>
+  <target>deshacer</target>
+</trans-unit>
+<trans-unit id="s4cf0781fbfe66969">
+  <source>redo</source>
+  <target>repetir</target>
+</trans-unit>
+<trans-unit id="s05265fbf99932950">
+  <source>Element löschen</source>
+  <target>eliminar elemento</target>
+</trans-unit>
+<trans-unit id="s7982ab7959568ab9">
+  <source>Element auswählen und danach editieren</source>
+  <target>seleccionar elemento y editarlo a continuación</target>
+</trans-unit>
+<trans-unit id="s7a2c2a63fbd9e7a3">
+  <source>Eingabe Knoten</source>
+  <target>entrada nodo</target>
+</trans-unit>
+<trans-unit id="se59e12933d763e65">
+  <source>Knoten bearbeiten</source>
+  <target>editar nodo</target>
+</trans-unit>
+<trans-unit id="s917ea53ba1ad9f9e">
+  <source>Eingabe Stab</source>
+  <target>introducción del elemento de barra</target>
+</trans-unit>
+<trans-unit id="sdbea3d97e0950350">
+  <source>Eingabe Knotenmassen</source>
+  <target>introducción de masas de nudos</target>
+</trans-unit>
+<trans-unit id="se29e08d15abe94a4">
+  <source>Reset Screen</source>
+  <target>restablecer pantalla</target>
+</trans-unit>
+<trans-unit id="s19991f9668db8bb8">
+  <source>Kurzanleitung &amp; Information</source>
+  <target>guía rápida e información</target>
+</trans-unit>
+<trans-unit id="s9a350e6f2e8a1f84">
+  <source>Mehr Aktivitäten</source>
+  <target>más actividades</target>
+</trans-unit>
+<trans-unit id="s938b55f81f0d53cc">
+  <source>zurück</source>
+  <target>atrás</target>
+</trans-unit>
+<trans-unit id="s42d04fe173ce3377">
+  <source>Knotenmasse</source>
+  <target>Masa nodular</target>
 </trans-unit>
 </body>
 </file>
