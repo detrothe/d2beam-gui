@@ -113,7 +113,7 @@ export function abstandPunktGerade_2D(p1x: number, p1y: number, p2x: number, p2y
     if (eta < 0.0 || eta > 1.0) return abstand;
 
     let lambda = (-ay * bx + ax * by) / det
-    console.log("lambda", lambda)
+    //console.log("abstandPunktGerade_2D lambda", lambda)
 
     // cross product
 
@@ -180,5 +180,21 @@ export function test_point_inside_area_2D(x: number[], y: number[], pQx: number,
 
     }
     return !outside;
+
+}
+
+/*
+    Inside Area. 2D Version
+*/
+//-------------------------------------------------------------------------------------------------------
+export function tausche_0_1_und_2_3(x: number[], z: number[]): void
+//-------------------------------------------------------------------------------------------------------
+{
+    let mem = 0
+    mem = x[0]; x[0] = x[1]; x[1] = mem;
+    mem = z[0]; z[0] = z[1]; z[1] = mem;
+
+    mem = x[2]; x[2] = x[3]; x[3] = mem;
+    mem = z[2]; z[2] = z[3]; z[3] = mem;
 
 }

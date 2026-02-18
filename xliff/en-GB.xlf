@@ -1073,6 +1073,42 @@
   <source>Knotenmasse</source>
   <target>Nodal mass</target>
 </trans-unit>
+<trans-unit id="s397719ef0d7a6ec8">
+  <source>Toleranz eps_force in Lastfall</source>
+  <target>Tolerance eps_force in load case</target>
+</trans-unit>
+<trans-unit id="s9405bcae771cf187">
+  <source>Toleranz bei den Kräften eingehalten</source>
+  <target>Convergence of forces achieved</target>
+</trans-unit>
+<trans-unit id="s678b94e997eed396">
+  <source>++++ geforderte Genauigkeit bei den Kräften nicht erreicht, das System auf mögliche Kinematiken überprüfen</source>
+  <target>++++ Required force accuracy not achieved; check the system for possible kinematics.</target>
+</trans-unit>
+<trans-unit id="s3458010cbd46deee">
+  <source>Es muss mindestens eine Kombination definiert sein</source>
+  <target>At least one combination must be defined.</target>
+</trans-unit>
+<trans-unit id="saa847ba46ef6ea16">
+  <source>Toleranz in Iterationsschritt</source>
+  <target>Tolerance in iteration step</target>
+</trans-unit>
+<trans-unit id="s73acc8dac42c1ccb">
+  <source>Konvergenz bei den Verformungen erreicht</source>
+  <target>Convergence of deformations achieved</target>
+</trans-unit>
+<trans-unit id="sf5406b5dcdef3a26">
+  <source>++++ keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen ++++</source>
+  <target>++++ No convergence achieved for deformations, increase number of iterations ++++</target>
+</trans-unit>
+<trans-unit id="sf610db2715075c15">
+  <source>Konvergenz bei den Kräften erreicht</source>
+  <target>Convergence of forces achieved</target>
+</trans-unit>
+<trans-unit id="s3d65885cdcd6c17c">
+  <source>++++ keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen ++++</source>
+  <target>++++ No convergence of forces achieved, increase number of iterations ++++</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

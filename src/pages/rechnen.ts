@@ -1,4 +1,6 @@
 declare let Module: any;
+import { msg } from '@lit/localize';
+
 //import { app, nlastfaelle_init} from "./haupt"
 import { TFVector, TFArray2D, TFArray3D, TFArray3D_0 } from "./TFArray"
 
@@ -2387,12 +2389,12 @@ async function calculate() {
                         nenner = Math.sqrt(nenner)
                         let eps_force = 0.0
                         if (nenner !== 0.0) eps_force = zaehler / nenner;
-                        write('Toleranz eps_force in Lastfall ' + iLastfall + ' = ' + myFormat(eps_force, 5, 5, 1))
+                        write(msg('Toleranz eps_force in Lastfall') + ' ' + iLastfall + ' = ' + myFormat(eps_force, 5, 5, 1))
 
-                        if (eps_force < epsForce_tol) {
-                            write('Toleranz bei den Kräften eingehalten')
+                        if (eps_force < Math.max(1.0e-5, epsForce_tol)) {
+                            write(msg('Toleranz bei den Kräften eingehalten'))
                         } else {
-                            write('++++ geforderte Genauigkeit bei den Kräften nicht erreicht, das System auf mögliche Kinematiken überprüfen')
+                            write(msg('++++ geforderte Genauigkeit bei den Kräften nicht erreicht, das System auf mögliche Kinematiken überprüfen'))
                             keineKonvergenzErreicht = true
                         }
                     }
@@ -2512,7 +2514,7 @@ async function calculate() {
                 let eps_disp = 1.0, eps_force = 0.0, iter = 0
 
                 if (nkombinationen < 1) {
-                    const question_Text = "Es muss mindestens eine Kombination definiert sein"
+                    const question_Text = msg("Es muss mindestens eine Kombination definiert sein")
                     alertdialog('ok', question_Text);
 
                     // let element = document.getElementById("id_tab_kombi"); // id_eingabe
@@ -2804,7 +2806,7 @@ async function calculate() {
                             eps_force = 0.0
                             if (nenner !== 0.0) eps_force = zaehler / nenner;
                             //write('Toleranz eps_force in Iterationsschritt ' + iter + ' = ' + eps_force)
-                            write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + myFormat(eps_disp, 5, 5, 1) + ', eps_force = ' + myFormat(eps_force, 5, 5, 51))
+                            write(msg('Toleranz in Iterationsschritt') + ' ' + iter + ', eps_disp = ' + myFormat(eps_disp, 5, 5, 1) + ', eps_force = ' + myFormat(eps_force, 5, 5, 51))
 
 
                         }
@@ -2986,16 +2988,16 @@ async function calculate() {
                     ausgabe(iKomb, newDiv)
 
                     if (eps_disp < epsDisp_tol) {
-                        write('Konvergenz bei den Verformungen erreicht, iter = ' + iter)
+                        write(msg('Konvergenz bei den Verformungen erreicht') + ', iter = ' + iter)
                     } else {
-                        write('++++ keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen ++++')
+                        write(msg('++++ keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen ++++'))
                         keineKonvergenzErreicht = true
                     }
 
                     if (eps_force < epsForce_tol) {
-                        write('Konvergenz bei den Kräften erreicht, iter = ' + iter)
+                        write(msg('Konvergenz bei den Kräften erreicht') + ', iter = ' + iter)
                     } else {
-                        write('++++ keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen ++++')
+                        write(msg('++++ keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen ++++'))
                         keineKonvergenzErreicht = true
                     }
 

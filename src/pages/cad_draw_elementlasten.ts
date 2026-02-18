@@ -7,6 +7,7 @@ import { CAD_KNLAST, CAD_KNOTVERFORMUNG, CAD_STAB, list, multiselect_color, sele
 import { draw_arrow, draw_BoundingClientRect_xz, draw_moment_arrow } from "./cad_draw_elemente"
 import { get_cad_node_X, get_cad_node_Z } from "./cad_node"
 import { buttons_control } from "./cad_buttons"
+import { tausche_0_1_und_2_3 } from "./lib"
 
 
 const style_pfeil_knotenlast_element = {
@@ -311,6 +312,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
                         x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
 
+                        if (pL < 0 && pR < 0) tausche_0_1_und_2_3(x, z);
+
                         (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
                         //console.log("pL...", pL, pR, x, z)
@@ -392,6 +395,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         x[1] = x2 + si * a; z[1] = z2 - a * co;
                         x[2] = x[1]; z[2] = z[1] - pR;
                         x[3] = x[0]; z[3] = z[0] - pL;
+
+                        if (pL < 0 && pR < 0) tausche_0_1_und_2_3(x, z);
 
                         (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
@@ -475,6 +480,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         x[2] = x[1]; z[2] = z[1] - pR;
                         x[3] = x[0]; z[3] = z[0] - pL;
 
+                        if (pL < 0 && pR < 0) tausche_0_1_und_2_3(x, z);
+
                         (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
                         var vertices = [];
@@ -554,6 +561,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         x[1] = x2 + a * si; z[1] = z2 - co * a;
                         x[2] = x[1] + pR; z[2] = z[1];
                         x[3] = x[0] + pL; z[3] = z[0];
+
+                        if (pL < 0 && pR < 0) tausche_0_1_und_2_3(x, z);
 
                         (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
@@ -639,6 +648,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         x[1] = xm + ax_projektion; z[1] = z2;
                         x[2] = x[1] + pR; z[2] = z[1];
                         x[3] = x[0] + pL; z[3] = z[0];
+
+                        if (pL < 0 && pR < 0) tausche_0_1_und_2_3(x, z);
 
                         (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
