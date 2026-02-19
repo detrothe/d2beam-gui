@@ -748,12 +748,12 @@ function check_input() {
 
     let fehler = 0;
 
-    if (nQuerschnittSets === 0) { write('Es muss mindestens 1 Querschnitt definiert sein\n'); fehler++; }
-    if (nelem < 1) { write('Es muss mindestens 1 Element definiert sein'); fehler++; }
-    if (nnodes < 2) { write('Es müssen mindestens 2 Knoten definiert sein'); fehler++; }
+    if (nQuerschnittSets === 0) { write(msg('Es muss mindestens 1 Querschnitt definiert sein')+'\n'); fehler++; }
+    if (nelem < 1) { write(msg('Es muss mindestens 1 Element definiert sein')); fehler++; }
+    if (nnodes < 2) { write(msg('Es müssen mindestens 2 Knoten definiert sein')); fehler++; }
 
     if (THIIO_flag === 1) {
-        if (nkombinationen < 1) { write('Es muss mindestens 1 Kombination definiert sein'); fehler++; }
+        if (nkombinationen < 1) { write(msg('Es muss mindestens 1 Kombination definiert sein')); fehler++; }
     }
 
     if (fehler > 0) write(' ')
@@ -822,7 +822,7 @@ function check_input() {
     }
 
     write('_________________________________________________________')
-    write('Es sind ' + fehler + ' Eingabefehler gefunden worden');
+    write(msg('Anzahl Fehler in Eingabe:') + ' ' + fehler);
 
     return fehler;
 
@@ -2325,8 +2325,8 @@ async function calculate() {
 
                         const dialogAlert = new AlertDialog({
                             trueButton_Text: "ok",
-                            question_Text: "Steifigkeitsmatrix nicht positiv definit. " +
-                                "Mögliche Ursache: das System ist vermutlich kinematisch.",
+                            question_Text: msg('Steifigkeitsmatrix nicht positiv definit.') + " " +
+                                msg('Mögliche Ursache: das System ist vermutlich kinematisch.'),
                         });
                         await dialogAlert.confirm();
 
@@ -2727,9 +2727,8 @@ async function calculate() {
 
                             const dialogAlert = new AlertDialog({
                                 trueButton_Text: "ok",
-                                question_Text: "Steifigkeitsmatrix nicht positiv definit in Kombination " + iKomb + ". " +
-                                    "<br>Mögliche Ursachen: Lasten zu hoch in dieser Kombination. Tritt die Meldung auch bei einer Berechnung " +
-                                    "nach Th. I. Ordnung auf, dann ist das System kinematisch.",
+                                question_Text: msg('Steifigkeitsmatrix nicht positiv definit in Kombination') + " " + iKomb + ". " +
+                                    "<br>" + msg('Mögliche Ursachen: Lasten zu hoch in dieser Kombination. Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.'),
                             });
                             await dialogAlert.confirm();
 
@@ -3033,7 +3032,7 @@ async function calculate() {
 
         write('______________________________')
         if (keineKonvergenzErreicht && (THIIO_flag === 0) && (matprop_flag === 0)) {    // TH I. Ordnung linear
-            write('Ꚛ FEHLER - In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten')
+            write(msg('Ꚛ FEHLER - In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten'))
 
             const dialogAlert = new AlertDialog({
                 trueButton_Text: "ok",
@@ -3065,7 +3064,7 @@ async function calculate() {
             //     alertdialog('ok', question_Text);
             // }
             if (keineKonvergenzErreicht_eigv) {
-                write('Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Eigenwerte')
+                write(msg('Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Eigenwerte'))
 
                 const dialogAlert = new AlertDialog({
                     trueButton_Text: "ok",
@@ -3076,7 +3075,7 @@ async function calculate() {
                 await dialogAlert.confirm();
             }
             if (alpha_cr_2_low) {
-                write('Ꚛ FEHLER - In mindestens einer Kombination war alpha_cr < 1')
+                write(msg('Ꚛ FEHLER - In mindestens einer Kombination war alpha_cr') + ' < 1')
 
                 const dialogAlert = new AlertDialog({
                     trueButton_Text: "ok",
@@ -3090,7 +3089,7 @@ async function calculate() {
             berechnungErforderlich(true);
 
         } else {
-            write('Berechnung erfolgreich beendet ✔')
+            write(msg('Berechnung erfolgreich beendet') + ' ✔')
             berechnungErfolgreich(true);
         }
     }

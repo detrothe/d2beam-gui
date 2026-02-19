@@ -1110,6 +1110,58 @@
   <source>++++ keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen ++++</source>
   <target>++++ No se ha alcanzado la convergencia de fuerzas, aumentar el número de iteraciones ++++</target>
 </trans-unit>
+<trans-unit id="sf75ff0ddff5d24b4">
+  <source>Steifigkeitsmatrix nicht positiv definit.</source>
+  <target>Matriz de rigidez no positiva definida.</target>
+</trans-unit>
+<trans-unit id="sf53ac660804801a1">
+  <source>Mögliche Ursache: das System ist vermutlich kinematisch.</source>
+  <target>Posible causa: el sistema probablemente sea cinemático.</target>
+</trans-unit>
+<trans-unit id="s3229ddf751598ad2">
+  <source>Steifigkeitsmatrix nicht positiv definit in Kombination</source>
+  <target>Matriz de rigidez no definida positiva en combinación</target>
+</trans-unit>
+<trans-unit id="s8dd82a7653b2754b">
+  <source>Mögliche Ursachen: Lasten zu hoch in dieser Kombination. Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.</source>
+  <target>Posibles causas: Cargas demasiado elevadas en esta combinación. Si el mensaje también aparece en un cálculo elástico lineal, entonces el sistema es cinemático.</target>
+</trans-unit>
+<trans-unit id="sbad21220dd5ef4aa">
+  <source>Ꚛ FEHLER - In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten</source>
+  <target>Ꚛ ERROR: en al menos un caso de carga no se ha alcanzado la tolerancia de fuerza.</target>
+</trans-unit>
+<trans-unit id="sa9b1f339d01156e0">
+  <source>Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Eigenwerte</source>
+  <target>Ꚛ ERROR: no hubo convergencia de los valores propios en al menos una combinación.</target>
+</trans-unit>
+<trans-unit id="se3f55a8eba7c3707">
+  <source>Berechnung erfolgreich beendet</source>
+  <target>Cálculo completado con éxito</target>
+</trans-unit>
+<trans-unit id="s475dc3809bbcad73">
+  <source>Ꚛ FEHLER - In mindestens einer Kombination war alpha_cr</source>
+  <target>Ꚛ ERROR: En al menos una combinación, alpha_cr</target>
+</trans-unit>
+<trans-unit id="s07ae3396a71a6b0f">
+  <source>Anzahl Fehler in Eingabe:</source>
+  <target>Número de errores en la entrada:</target>
+</trans-unit>
+<trans-unit id="se62b642f5b1a32fd">
+  <source>Es muss mindestens 1 Querschnitt definiert sein</source>
+  <target>Se debe definir al menos 1 sección transversal.</target>
+</trans-unit>
+<trans-unit id="s32164771e94afcad">
+  <source>Es muss mindestens 1 Element definiert sein</source>
+  <target>Se debe definir al menos 1 elemento</target>
+</trans-unit>
+<trans-unit id="s1654f3b8ada9e06f">
+  <source>Es müssen mindestens 2 Knoten definiert sein</source>
+  <target>Se deben definir al menos 2 nodos</target>
+</trans-unit>
+<trans-unit id="s5828b3ac62d964ec">
+  <source>Es muss mindestens 1 Kombination definiert sein</source>
+  <target>Se debe definir al menos una combinación</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

@@ -1109,6 +1109,58 @@
   <source>++++ keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen ++++</source>
   <target>++++ No convergence of forces achieved, increase number of iterations ++++</target>
 </trans-unit>
+<trans-unit id="sf75ff0ddff5d24b4">
+  <source>Steifigkeitsmatrix nicht positiv definit.</source>
+  <target>Stiffness matrix not positive definite.</target>
+</trans-unit>
+<trans-unit id="sf53ac660804801a1">
+  <source>Mögliche Ursache: das System ist vermutlich kinematisch.</source>
+  <target>Possible cause: the system is probably kinematic.</target>
+</trans-unit>
+<trans-unit id="s3229ddf751598ad2">
+  <source>Steifigkeitsmatrix nicht positiv definit in Kombination</source>
+  <target>Stiffness matrix not positive definite in combination</target>
+</trans-unit>
+<trans-unit id="s8dd82a7653b2754b">
+  <source>Mögliche Ursachen: Lasten zu hoch in dieser Kombination. Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.</source>
+  <target>Possible causes: Loads too high in this combination. If the message also appears in a linear elastic calculation, then the system is kinematic.</target>
+</trans-unit>
+<trans-unit id="sbad21220dd5ef4aa">
+  <source>Ꚛ FEHLER - In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten</source>
+  <target>Ꚛ ERROR - The force tolerance was not achieved in at least one load case.</target>
+</trans-unit>
+<trans-unit id="sa9b1f339d01156e0">
+  <source>Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Eigenwerte</source>
+  <target>Ꚛ ERROR - There was no convergence of eigenvalues in at least one combination.</target>
+</trans-unit>
+<trans-unit id="se3f55a8eba7c3707">
+  <source>Berechnung erfolgreich beendet</source>
+  <target>Calculation successfully completed</target>
+</trans-unit>
+<trans-unit id="s475dc3809bbcad73">
+  <source>Ꚛ FEHLER - In mindestens einer Kombination war alpha_cr</source>
+  <target>Ꚛ ERROR - In at least one combination, alpha_cr was</target>
+</trans-unit>
+<trans-unit id="s07ae3396a71a6b0f">
+  <source>Anzahl Fehler in Eingabe:</source>
+  <target>Number of errors in input:</target>
+</trans-unit>
+<trans-unit id="se62b642f5b1a32fd">
+  <source>Es muss mindestens 1 Querschnitt definiert sein</source>
+  <target>At least 1 cross-section must be defined</target>
+</trans-unit>
+<trans-unit id="s32164771e94afcad">
+  <source>Es muss mindestens 1 Element definiert sein</source>
+  <target>At least 1 element must be defined</target>
+</trans-unit>
+<trans-unit id="s1654f3b8ada9e06f">
+  <source>Es müssen mindestens 2 Knoten definiert sein</source>
+  <target>At least 2 nodes must be defined</target>
+</trans-unit>
+<trans-unit id="s5828b3ac62d964ec">
+  <source>Es muss mindestens 1 Kombination definiert sein</source>
+  <target>At least 1 combination must be defined</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

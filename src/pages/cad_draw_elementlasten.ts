@@ -307,14 +307,28 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         a += Math.abs(pMin)
 
+                        if (pL * pR < 0) {
+                            if (pL > 0) {
+                                x[0] = x1 + si * a; z[0] = z1 - co * a;
+                                x[2] = x2 + si * a; z[2] = z2 - co * a;
+                                x[1] = x[2] + si * pR; z[1] = z[2] - co * pR;
+                                x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
+                            } else {
+                                x[0] = x1 + si * a; z[0] = z1 - co * a;
+                                x[2] = x2 + si * a; z[2] = z2 - co * a;
+                                x[1] = x[0] + si * pL; z[1] = z[0] - co * pL;
+                                x[3] = x[2] + si * pR; z[3] = z[2] - co * pR;
+                            }
+                            (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+                        }
                         x[0] = x1 + si * a; z[0] = z1 - co * a;
                         x[1] = x2 + si * a; z[1] = z2 - co * a;
                         x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
                         x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
 
-                        if (pL < 0 && pR < 0) tausche_0_1_und_2_3(x, z);
+                        if (pL <= 0 && pR <= 0) tausche_0_1_und_2_3(x, z);
 
-                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+                        if (pL * pR >= 0) (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
                         //console.log("pL...", pL, pR, x, z)
 
