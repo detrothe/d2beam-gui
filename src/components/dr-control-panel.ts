@@ -3,7 +3,7 @@ import { property, customElement } from 'lit/decorators.js';
 import { msg, localized, updateWhenLocaleChanges } from '@lit/localize';
 
 import { SlCheckbox, SlRange } from '@shoelace-style/shoelace';
-import { System } from '../pages/rechnen';
+import { stadyn, System, THIIO_flag } from '../pages/rechnen';
 
 
 let scale_factor = 1.0;
@@ -92,6 +92,10 @@ export class drControlPanel extends LitElement {
               margin: 0px;
            }
 
+           .zeile_pruefen {
+              margin: 0px;
+           }
+
            .zeile_N {
               margin: 0px;
            }
@@ -157,16 +161,16 @@ export class drControlPanel extends LitElement {
                </button>
             </header>
 
-            <div class="item1 zeile zeile_basics">${msg('Beschriftung')}</div>
-            <div class="zeile zeile_basics">
+            <div class="item1 zeile zeile_basics zeile_pruefen">${msg('Beschriftung')}</div>
+            <div class="zeile zeile_basics zeile_pruefen">
                <sl-checkbox
                   id="id_beschriftung"
                   @sl-change="${this._checkbox_beschriftung}"
                ></sl-checkbox>
             </div>
 
-            <div class="item1 zeile zeile_basics">${msg('Systemlinien')}</div>
-            <div class="zeile zeile_basics">
+            <div class="item1 zeile zeile_basics zeile_pruefen">${msg('Systemlinien')}</div>
+            <div class="zeile zeile_basics zeile_pruefen">
                <sl-checkbox
                   checked
                   id="id_systemlinien"
@@ -223,8 +227,8 @@ export class drControlPanel extends LitElement {
                <sl-range min="0.1" max="2.5" step="0.1" value="1.0" id="id_skalierung" @sl-change="${this._range_skalierung}"></sl-range>
             </div>
 
-            <div class="item1 zeile zeile_basics">${msg('Lasten anzeigen')}</div>
-            <div class="zeile zeile_basics">
+            <div class="item1 zeile zeile_basics zeile_pruefen">${msg('Lasten anzeigen')}</div>
+            <div class="zeile zeile_basics zeile_pruefen">
                <sl-checkbox id="id_lasten" checked @sl-change="${this._checkbox_lasten}"></sl-checkbox>
             </div>
 
@@ -322,15 +326,19 @@ export class drControlPanel extends LitElement {
             }
             if (this.show_main) {
                 this.show_optionen = true;
-                this.show_dynamik = true;
-                this._click_dynamik();
+                if (stadyn > 0) {
+                    this.show_dynamik = true;
+                    this._click_dynamik();
+                }
                 this._click_optionen();
                 this._showHeaders(false);
             } else {
-                 this._showHeaders(true);
+                this._showHeaders(true);
             }
+
             this.show_main = !this.show_main;
         }
+        if (THIIO_flag === 0) this.showController_thiio(false);
     }
 
 
@@ -590,8 +598,63 @@ export class drControlPanel extends LitElement {
             }
         }
     }
+
+    showPruefen(wert: Boolean) {
+        let elall = this.shadowRoot?.querySelectorAll('.zeile');
+        if (elall) {
+            for (let el of elall) {
+                (el as HTMLElement).style.display = 'none';
+            }
+        }
+        elall = this.shadowRoot?.querySelectorAll('.zeile_pruefen');
+        if (elall) {
+            for (let el of elall) {
+                if (wert) {
+                    (el as HTMLElement).style.display = 'block';
+                } else {
+                    (el as HTMLElement).style.display = 'none';
+                }
+            }
+        }
+    }
+
     _showHeaders(wert: Boolean) {
-        let elall = this.shadowRoot?.querySelectorAll('.optionen, .dynamik');
+        let elall = this.shadowRoot?.querySelectorAll('.optionen');
+        if (elall) {
+            for (let el of elall) {
+                if (wert) {
+                    (el as HTMLElement).style.display = 'block';
+                } else {
+                    (el as HTMLElement).style.display = 'none';
+                }
+            }
+        }
+        if (stadyn === 0) wert = false;
+        elall = this.shadowRoot?.querySelectorAll('.dynamik');
+        if (elall) {
+            for (let el of elall) {
+                if (wert) {
+                    (el as HTMLElement).style.display = 'block';
+                } else {
+                    (el as HTMLElement).style.display = 'none';
+                }
+            }
+        }
+    }
+    showHeader_optionen(wert: Boolean) {
+        let elall = this.shadowRoot?.querySelectorAll('.optionen');
+        if (elall) {
+            for (let el of elall) {
+                if (wert) {
+                    (el as HTMLElement).style.display = 'block';
+                } else {
+                    (el as HTMLElement).style.display = 'none';
+                }
+            }
+        }
+    }
+    showHeader_dynamik(wert: Boolean) {
+        let elall = this.shadowRoot?.querySelectorAll('.dynamik');
         if (elall) {
             for (let el of elall) {
                 if (wert) {
@@ -650,6 +713,9 @@ export function show_controller_results(wert: boolean) {
             }
             (shad).showController(wert, 'disp');
             (shad).showBasics(wert);
+            (shad).showHeader_optionen(wert);
+            if (stadyn > 0) (shad).showHeader_dynamik(true);
+            else (shad).showHeader_dynamik(false);
         }
     }
 
@@ -693,6 +759,20 @@ export function show_controller_bettung(wert: boolean) {
     }
 
     // controller_bettung.show(wert);
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function show_controller_pruefen(wert: boolean) {
+    //----------------------------------------------------------------------------------------------------
+
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        let shad = shadow.getElementById('id_control_panel') as drControlPanel;
+        if (shad) {
+            (shad).showPruefen(wert);
+        }
+    }
+
 }
 
 //--------------------------------------------------------------------------------------------------------
