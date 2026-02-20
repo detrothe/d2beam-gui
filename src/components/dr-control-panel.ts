@@ -267,7 +267,7 @@ export class drControlPanel extends LitElement {
                <sl-checkbox id="id_animate_eigenformen" @sl-change="${this._checkbox_animate_eigenformen}"></sl-checkbox>
             </div>
 
-            <div class="item1 zeile_dynamik">${msg('Massen anzeigen')}</div>
+            <div class="item1zeile_dynamik">${msg('Massen anzeigen')}</div>
             <div class="zeile_dynamik">
                <sl-checkbox id="id_knotenmassen" @sl-change="${this._checkbox_knotenmassen}"></sl-checkbox>
             </div>
@@ -313,6 +313,12 @@ export class drControlPanel extends LitElement {
     _click_header() {
         console.log('_click_header()');
         let elall = this.shadowRoot?.querySelectorAll('.zeile');
+        if (elall) {
+            for (let el of elall) {
+                (el as HTMLElement).style.display = 'none';
+            }
+        }
+        elall = this.shadowRoot?.querySelectorAll('.zeile');
         //let el = document.getElementsByClassName('.item1')
         //console.log("selector", elall)
         if (elall) {
@@ -339,6 +345,7 @@ export class drControlPanel extends LitElement {
             this.show_main = !this.show_main;
         }
         if (THIIO_flag === 0) this.showController_thiio(false);
+        else this.showController_thiio(true);
     }
 
 
@@ -587,7 +594,13 @@ export class drControlPanel extends LitElement {
     }
 
     showBasics(wert: Boolean) {
-        let elall = this.shadowRoot?.querySelectorAll('.zeile_basics');
+        let elall = this.shadowRoot?.querySelectorAll('.zeile');
+        if (elall) {
+            for (let el of elall) {
+                (el as HTMLElement).style.display = 'none';
+            }
+        }
+        elall = this.shadowRoot?.querySelectorAll('.zeile_basics');
         if (elall) {
             for (let el of elall) {
                 if (wert) {
@@ -706,16 +719,20 @@ export function show_controller_results(wert: boolean) {
     if (shadow) {
         let shad = shadow.getElementById('id_control_panel') as drControlPanel;
         if (shad) {
+            (shad).showBasics(wert);
             (shad).showController(wert, 'N');
             if (System === 0) {
                 (shad).showController(wert, 'V');
                 (shad).showController(wert, 'M');
             }
             (shad).showController(wert, 'disp');
-            (shad).showBasics(wert);
             (shad).showHeader_optionen(wert);
             if (stadyn > 0) (shad).showHeader_dynamik(true);
             else (shad).showHeader_dynamik(false);
+
+            if (THIIO_flag === 0) (shad).showController_thiio(false);
+            else (shad).showController_thiio(true);
+
         }
     }
 

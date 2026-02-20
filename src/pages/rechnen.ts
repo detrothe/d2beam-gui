@@ -693,9 +693,9 @@ export function rechnen(flag = 1) {
             } else {
                 init_panel();
                 calculate();
-                if (THIIO_flag === 0) show_controller_THIIO(false);
-                else show_controller_THIIO(true);
                 show_controller_results(true);
+                // if (THIIO_flag === 0) show_controller_THIIO(false);
+                // else show_controller_THIIO(true);
                 if (nelem_Balken_Bettung > 0) show_controller_bettung(true); else show_controller_bettung(false);
             }
         } else { // Eingabe überprüfen
