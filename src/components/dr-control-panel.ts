@@ -600,6 +600,12 @@ export class drControlPanel extends LitElement {
                 (el as HTMLElement).style.display = 'none';
             }
         }
+        elall = this.shadowRoot?.querySelectorAll('.zeile_dynamik');
+        if (elall) {
+            for (let el of elall) {
+                (el as HTMLElement).style.display = 'none';
+            }
+        }
         elall = this.shadowRoot?.querySelectorAll('.zeile_basics');
         if (elall) {
             for (let el of elall) {

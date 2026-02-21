@@ -1,4 +1,5 @@
-import { app } from "./haupt"
+import { msg } from '@lit/localize';
+//import { app } from "./haupt"
 import { myFormat } from './utility'
 
 import {
@@ -49,7 +50,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
     newDiv = prot_eingabe(iLastfall, newDiv)!;
 
     let tag = document.createElement("p");
-    let text = document.createTextNode("Ergebnisse");
+    let text = document.createTextNode(msg('Ergebnisse'));
     tag.appendChild(text);
     tag.innerHTML = "<b>Ergebnisse</b>"
     newDiv?.appendChild(tag);
@@ -58,19 +59,15 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
     tag.setAttribute("id", "id_ergebnisse");
     text = document.createTextNode("xxx");
     tag.appendChild(text);
-    if (app.browserLanguage == 'de') {
-        if (THIIO_flag === 0 && matprop_flag === 0) tag.innerHTML = "<b>Lastfall " + iLastfall + '</b>';
-        else tag.innerHTML = "<b>Kombination " + iLastfall + '</b>';
-    } else {
-        if (THIIO_flag === 0 && matprop_flag === 0) tag.innerHTML = "Load case " // + current_unit_stress
-        else tag.innerHTML = "<b>Load Combination " + iLastfall + '</b>';
-    }
+    if (THIIO_flag === 0 && matprop_flag === 0) tag.innerHTML = "<b>" + msg('Lastfall') + " " + iLastfall + '</b>';
+    else tag.innerHTML = "<b>" + msg('Kombination') + " " + iLastfall + '</b>';
+
     newDiv?.appendChild(tag);
 
     tag = document.createElement("p"); // <p></p>
     text = document.createTextNode("xxx");
     tag.appendChild(text);
-    tag.innerHTML = "<b>Knotenverformungen</b> im Knoten-Koordinatensystem"
+    tag.innerHTML = "<b>" + msg('Knotenverformungen') + "</b> " + msg('im Knoten-Koordinatensystem')
 
     newDiv?.appendChild(tag);
 
@@ -146,7 +143,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Lagerreaktionen</b> im Knoten-Koordinatensystem"
+        tag.innerHTML = "<b>" + msg('Lagerreaktionen') + "</b> " + msg('im Knoten-Koordinatensystem')
 
         newDiv?.appendChild(tag);
 
@@ -232,7 +229,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Stabendkräfte/-momente</b> (Gleichgewichtsschnittgrößen)"
+        tag.innerHTML = "<b>" + msg('Stabendkräfte/-momente') + "</b> " + msg('(Gleichgewichtsschnittgrößen)')
 
         newDiv?.appendChild(tag);
 
@@ -323,7 +320,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Federkräfte/-momente</b>"
+        tag.innerHTML = "<b>" + msg('Federkräfte/-momente') + "</b>"
 
         newDiv?.appendChild(tag);
 
@@ -394,7 +391,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>erforderliche Knotenkräfte/-momente für vorgegebene Knotenverformungen</b>"
+        tag.innerHTML = "<b>" + msg('erforderliche Knotenkräfte/-momente für vorgegebene Knotenverformungen') + "</b>"
 
         newDiv?.appendChild(tag);
 
@@ -475,7 +472,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         tag.appendChild(text);
         tag.innerHTML = ''
         for (i = 0; i < neigv; i++) {
-            tag.innerHTML += "<b>&alpha;<sub>cr</sub></b>[Eigenwert " + (+i + 1) + "] =&nbsp;" + myFormat(alpha_cr[iLastfall - 1][i], 2, 2) + "<br>"
+            tag.innerHTML += "<b>&alpha;<sub>cr</sub></b>[" + msg('Eigenwert') + " " + (+i + 1) + "] =&nbsp;" + myFormat(alpha_cr[iLastfall - 1][i], 2, 2) + "<br>"
         }
         newDiv?.appendChild(tag);
 
@@ -490,14 +487,14 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
         text = document.createTextNode("xxx");
         tag.appendChild(text);
         if (THIIO_flag === 0) {
-            tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
+            tag.innerHTML = "<b>" + msg('Stabschnittgrößen und lokale Verformungen') + "</b>"
         } else {
             if (ausgabe_gleichgewichtSG) {
-                tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
+                tag.innerHTML = "<b>" + msg('Stabschnittgrößen und lokale Verformungen') + "</b>"
                 str_Vz = "T<sub>z</sub>&nbsp;[" + einheit_kraft + "]"
                 str_Vz_title = "Transversalkraft Tz, positiv in positiver z-Richtung am positiven Schnittufer"
             } else {
-                tag.innerHTML = "<b>Nachweisschnittgrößen und lokale Verformungen</b>"
+                tag.innerHTML = "<b>" + msg('Nachweisschnittgrößen und lokale Verformungen') + "</b>"
                 tag.title = "Nachweisschnittgrößen berücksichtigen die Rotation des Querschnitts und sind für die Bemessung zu verwenden"
                 str_Vz_title = "Querkraft Vz, positiv in positiver z(φ)-Richtung am positiven Schnittufer"
             }
@@ -863,18 +860,14 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
         tag.setAttribute("id", "id_ergebnisse_komb");
         let text = document.createTextNode("xxx");
         tag.appendChild(text);
-        if (app.browserLanguage == 'de') {
-            tag.innerHTML = "<b>Kombination " + iKomb + '</b>';
-        } else {
-            tag.innerHTML = "<b>Load Combination " + iKomb + '</b>';
-        }
+        tag.innerHTML = "<b>" + msg('Kombination') + " " + iKomb + '</b>';
         newDiv?.appendChild(tag);
 
 
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Knotenverformungen</b> im Knoten-Koordinatensystem"
+        tag.innerHTML = "<b>" + msg('Knotenverformungen') + "</b> " + msg('im Knoten-Koordinatensystem')
 
         newDiv?.appendChild(tag);
 
@@ -952,7 +945,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
             tag = document.createElement("p"); // <p></p>
             text = document.createTextNode("xxx");
             tag.appendChild(text);
-            tag.innerHTML = "<b>Lagerreaktionen</b> im Knoten-Koordinatensystem"
+            tag.innerHTML = "<b>" + msg('Lagerreaktionen') + "</b> " + msg('im Knoten-Koordinatensystem')
 
             newDiv?.appendChild(tag);
 
@@ -1030,7 +1023,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Stabschnittgrößen und lokale Verformungen</b>"
+        tag.innerHTML = "<b>" + msg('Stabschnittgrößen und lokale Verformungen') + "</b>"
 
         newDiv?.appendChild(tag);
 
@@ -1042,7 +1035,7 @@ export function ausgabe_kombinationen_Th_I_O(newDiv: HTMLDivElement) {
                 tag = document.createElement("p"); // <p></p>
                 text = document.createTextNode("xxx");
                 tag.appendChild(text);
-                tag.innerHTML = "<b>Stab " + (+ielem + 1) + "</b>" + " ,  Kombination " + iKomb
+                tag.innerHTML = "<b>" + msg('Element') + " " + (+ielem + 1) + "</b>" + " ,  " + msg('Kombination') + " " + iKomb
 
                 newDiv?.appendChild(tag);
 
@@ -1357,14 +1350,14 @@ export function dyn_ausgabe(newDiv: HTMLDivElement) {
     let tag = document.createElement("p");
     let text = document.createTextNode("Ergebnisse");
     tag.appendChild(text);
-    tag.innerHTML = "<b>Ergebnisse</b>"
+    tag.innerHTML = "<b>" + msg('Ergebnisse') + "</b>"
     newDiv?.appendChild(tag);
 
 
     tag = document.createElement("p");
     text = document.createTextNode("Eigenwerte");
     tag.appendChild(text);
-    tag.innerHTML = "<b>Eigenwerte</b>"
+    tag.innerHTML = "<b>" + msg('Eigenwerte') + "</b>"
     newDiv?.appendChild(tag);
 
 
@@ -1387,14 +1380,14 @@ export function dyn_ausgabe(newDiv: HTMLDivElement) {
 
     // @ts-ignore
     const th0 = table.tHead.appendChild(document.createElement("th"));
-    th0.innerHTML = "Frequenz [Hz]";
+    th0.innerHTML = msg('Frequenz') + " [Hz]";
     th0.title = "Frequenz in Schwingungen pro Sekunde"
     th0.setAttribute("class", "table_cell_center");
     row.appendChild(th0);
 
     // @ts-ignore
     const th1 = table.tHead.appendChild(document.createElement("th"));
-    th1.innerHTML = "Periode [sec]";
+    th1.innerHTML = msg('Periode') + " [sec]";
     th1.title = "Periode T in Sekunden"
     th1.setAttribute("class", "table_cell_center");
     row.appendChild(th1);
@@ -1431,7 +1424,7 @@ export function dyn_ausgabe(newDiv: HTMLDivElement) {
             tag = document.createElement("p"); // <p></p>
             text = document.createTextNode("xxx");
             tag.appendChild(text);
-            tag.innerHTML = "<b>Eigenform " + (+ieigv + 1) + "</b>"
+            tag.innerHTML = "<b>" + msg('Eigenform') + " " + (+ieigv + 1) + "</b>"
 
             newDiv?.appendChild(tag);
 

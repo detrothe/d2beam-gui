@@ -122,17 +122,9 @@
   <source>Knotenlager eingeben</source>
   <target>introducir de reacciones</target>
 </trans-unit>
-<trans-unit id="s7a37f71a594a557c">
-  <source>KnLast</source>
-  <target>nodCargas</target>
-</trans-unit>
 <trans-unit id="s97cb3fe71c6686b4">
   <source>Eingabe Knotenlasten</source>
   <target>introducir de cargas de nodos</target>
-</trans-unit>
-<trans-unit id="s7937af3c124f9244">
-  <source>ElLast</source>
-  <target>Cargas</target>
 </trans-unit>
 <trans-unit id="s0bf516a8f909ff39">
   <source>Eingabe Elementlasten</source>
@@ -1161,6 +1153,106 @@
 <trans-unit id="s5828b3ac62d964ec">
   <source>Es muss mindestens 1 Kombination definiert sein</source>
   <target>Se debe definir al menos una combinación</target>
+</trans-unit>
+<trans-unit id="sfa72df8d294b941c">
+  <source>Lastfall</source>
+  <target>Caso de carga</target>
+</trans-unit>
+<trans-unit id="s1ec4b4cd6d7f0728">
+  <source>Kombination</source>
+  <target>Combinación</target>
+</trans-unit>
+<trans-unit id="s4b2db88798392408">
+  <source>im Knoten-Koordinatensystem</source>
+  <target>en el sistema de coordenadas del nodo</target>
+</trans-unit>
+<trans-unit id="s147ea22dc2e6281c">
+  <source>Lagerreaktionen</source>
+  <target>Reacciones de apoyo</target>
+</trans-unit>
+<trans-unit id="s5b181c0144d4e645">
+  <source>Stabendkräfte/-momente</source>
+  <target>Fuerzas/momentos de los elementos</target>
+</trans-unit>
+<trans-unit id="sef2b3c73b1c4629a">
+  <source>(Gleichgewichtsschnittgrößen)</source>
+  <target>(Fuerzas internas de equilibrio)</target>
+</trans-unit>
+<trans-unit id="sc56f7f1f284db55e">
+  <source>Federkräfte/-momente</source>
+  <target>Fuerzas/momentos elásticos</target>
+</trans-unit>
+<trans-unit id="sc73caa6ce42c140b">
+  <source>erforderliche Knotenkräfte/-momente für vorgegebene Knotenverformungen</source>
+  <target>Fuerzas/momentos nodales requeridos para deformaciones nodales especificadas</target>
+</trans-unit>
+<trans-unit id="s310f53d4e287b7e9">
+  <source>Eigenwert</source>
+  <target>Valor propio</target>
+</trans-unit>
+<trans-unit id="s248330e3462ea530">
+  <source>Stabschnittgrößen und lokale Verformungen</source>
+  <target>Fuerzas/momentos internos y deformaciones locales</target>
+</trans-unit>
+<trans-unit id="s79ca317bf315602e">
+  <source>Nachweisschnittgrößen und lokale Verformungen</source>
+  <target>Fuerzas/momentos internos de diseño y deformaciones locales</target>
+</trans-unit>
+<trans-unit id="se4c2febcec9ce2e4">
+  <source>Eigenwerte</source>
+  <target>Valores propios</target>
+</trans-unit>
+<trans-unit id="s6b41d9a2d30afe5d">
+  <source>Frequenz</source>
+  <target>Frecuencia</target>
+</trans-unit>
+<trans-unit id="s2ea376e3da085b13">
+  <source>Periode</source>
+  <target>período</target>
+</trans-unit>
+<trans-unit id="sf47f0457e968c00d">
+  <source>Eigenform</source>
+  <target>Forma modal</target>
+</trans-unit>
+<trans-unit id="s190747c04bd639f7">
+  <source>Element</source>
+  <target>Elemento</target>
+</trans-unit>
+<trans-unit id="s6ba8ff3a3676ea08">
+  <source>Knoten</source>
+  <target>Nudo</target>
+</trans-unit>
+<trans-unit id="s1af77ca35c56537f">
+  <source>Freihheitsgrade</source>
+  <target>grados de libertad</target>
+</trans-unit>
+<trans-unit id="se0b33ac830cd2272">
+  <source>Stabelemente</source>
+  <target>Elementos finitos</target>
+</trans-unit>
+<trans-unit id="safecc3c08471a71b">
+  <source>Inzidenzvektor</source>
+  <target>vector de incidencia</target>
+</trans-unit>
+<trans-unit id="s2be84d4c857586bd">
+  <source>Länge</source>
+  <target>longitud</target>
+</trans-unit>
+<trans-unit id="s45d4a50b4d28b89c">
+  <source>Masse</source>
+  <target>Masa</target>
+</trans-unit>
+<trans-unit id="seaa553e3cdf42989">
+  <source>Summe der Knotenmassen</source>
+  <target>Suma de las masas de los nodos</target>
+</trans-unit>
+<trans-unit id="s7ec9a790330ec265">
+  <source>Summe der Massenträgheitsmomente</source>
+  <target>Suma de los momentos de inercia</target>
+</trans-unit>
+<trans-unit id="sb8025bd7145eb802">
+  <source>Summe der Elementmassen</source>
+  <target>Suma de las masas de los elementos</target>
 </trans-unit>
 </body>
 </file>

@@ -1,3 +1,4 @@
+import { msg } from '@lit/localize';
 import {
     el,
     element as stab,
@@ -53,7 +54,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         let tag = document.createElement("p"); // <p></p>
         let text = document.createTextNode("Knoten");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Knoten</b>";
+        tag.innerHTML = "<b>" + msg('Knoten') + "</b>";
         newDiv?.appendChild(tag);
 
         const table = document.createElement("TABLE") as HTMLTableElement; //TABLE??
@@ -75,7 +76,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
 
         // @ts-ignore
         th0 = table.tHead.appendChild(document.createElement("th"));
-        th0.innerHTML = "Freihheitsgrade";
+        th0.innerHTML = msg('Freihheitsgrade');
         th0.title = "Nummern der Gleichungen";
         th0.setAttribute("class", "table_ein_cell_center");
         th0.colSpan = 3;
@@ -167,7 +168,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         let tag = document.createElement("p"); // <p></p>
         let text = document.createTextNode("Querschnitte");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Querschnitte</b>";
+        tag.innerHTML = "<b>" + msg('Querschnitte') + "</b>";
         newDiv?.appendChild(tag);
 
         const table = document.createElement("TABLE") as HTMLTableElement; //TABLE??
@@ -253,7 +254,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         let tag = document.createElement("p"); // <p></p>
         let text = document.createTextNode("xxx");
         tag.appendChild(text);
-        tag.innerHTML = "<b>Stabelemente</b>";
+        tag.innerHTML = "<b>" + msg('Stabelemente') + "</b>";
         newDiv?.appendChild(tag);
 
         const table = document.createElement("TABLE") as HTMLTableElement; //TABLE??
@@ -277,7 +278,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         if (System === 0) {
             // @ts-ignore
             th0 = table.tHead.appendChild(document.createElement("th"));
-            th0.innerHTML = "Gelenke";
+            th0.innerHTML = msg('Gelenke');
             th0.title = "Gelenke";
             th0.setAttribute("class", "table_ein_cell_center");
             th0.colSpan = 6;
@@ -291,7 +292,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
 
         // @ts-ignore
         th0 = table.tHead.appendChild(document.createElement("th"));
-        th0.innerHTML = "Inzidenzvektor";
+        th0.innerHTML = msg('Inzidenzvektor');
         th0.title = "zeigt an, an welchen globalen Freigeitsgraden die 6 Elementfreiheitsgrade liegen, 0=starre Lagerung";
         th0.setAttribute("class", "table_ein_cell_center");
         th0.colSpan = ne;
@@ -307,7 +308,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         row.appendChild(th0);
         // @ts-ignore
         const th1 = table.tHead.appendChild(document.createElement("th"));
-        th1.innerHTML = "Querschnitt";
+        th1.innerHTML = msg('Querschnitt');
         th1.title = "Querschnittsname";
         th1.setAttribute("class", "table_ein_cell_center");
         row.appendChild(th1);
@@ -366,7 +367,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
 
         // @ts-ignore
         let th6 = table.tHead.appendChild(document.createElement("th"));
-        th6.innerHTML = "Länge [m]";
+        th6.innerHTML = msg('Länge') + " [m]";
         th6.title = "Stablänge";
         th6.setAttribute("class", "table_ein_cell_center");
         row.appendChild(th6);
@@ -447,7 +448,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
             let tag = document.createElement("p"); // <p></p>
             let text = document.createTextNode("xxx");
             tag.appendChild(text);
-            tag.innerHTML = "<b>Knotenmassen</b>";
+            tag.innerHTML = "<b>" + msg('Knotenmassen') + "</b>";
             newDiv?.appendChild(tag);
 
             const table = document.createElement("TABLE") as HTMLTableElement;
@@ -462,14 +463,14 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
 
             // @ts-ignore
             let th0 = table.tHead.appendChild(document.createElement("th"));
-            th0.innerHTML = "Knoten";
+            th0.innerHTML = msg('Knoten');
             th0.title = "Knotennummer";
             th0.setAttribute("class", "table_ein_cell_center");
             row0.appendChild(th0);
 
             // @ts-ignore
             let th1 = table.tHead.appendChild(document.createElement("th"));
-            th1.innerHTML = "Masse [t]";
+            th1.innerHTML = msg('Masse') + " [t]";
             th1.title = "Translationsmasse in Tonnen";
             th1.setAttribute("class", "table_ein_cell_center");
             row0.appendChild(th1);
@@ -508,13 +509,13 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         let tag = document.createElement("p"); // <p></p>
         let text = document.createTextNode(" ");
         tag.appendChild(text);
-        tag.innerHTML = "&nbsp;&nbsp;  Summe der Knotenmassen = " + myFormat(sum_mass, 1, 1) + ' [t]';
+        tag.innerHTML = "&nbsp;&nbsp;  " + msg('Summe der Knotenmassen') + " = " + myFormat(sum_mass, 1, 1) + ' [t]';
         newDiv?.appendChild(tag);
 
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode(" ");
         tag.appendChild(text);
-        tag.innerHTML = "&nbsp;&nbsp;  Summe der Massenträgheitsmomente = " + myFormat(sum_theta, 1, 1) + ' [tm²]';
+        tag.innerHTML = "&nbsp;&nbsp;  " + msg('Summe der Massenträgheitsmomente') + " = " + myFormat(sum_theta, 1, 1) + ' [tm²]';
         newDiv?.appendChild(tag);
 
         sum_mass = 0.0
@@ -525,7 +526,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
         tag = document.createElement("p"); // <p></p>
         text = document.createTextNode(" ");
         tag.appendChild(text);
-        tag.innerHTML = "&nbsp;&nbsp;  Summe der Elementmassen = " + myFormat(sum_mass, 1, 2) + ' [t]';
+        tag.innerHTML = "&nbsp;&nbsp;  " + msg('Summe der Elementmassen') + " = " + myFormat(sum_mass, 1, 2) + ' [t]';
         newDiv?.appendChild(tag);
 
     }
