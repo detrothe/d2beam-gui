@@ -539,72 +539,80 @@ export function cad_buttons() {
     stab_button.value = "Stab";
     stab_button.className = "btn_svg";
     // stab_button.innerHTML = msg('Stab');
+    /*     stab_button.innerHTML = `
+        <svg
+       version="1.1"
+       width="1rem"
+       height="1rem"
+       viewBox="0 0 189.4178 189.4178"
+
+       id="svg1"
+       xmlns="http://www.w3.org/2000/svg"
+       xmlns:svg="http://www.w3.org/2000/svg">
+      <defs
+         id="defs1" />
+      <g
+         id="two-16005"
+         transform="translate(-240.4314,-43.415058)">
+        <g
+           id="two-16010"
+           transform="rotate(90,242,254)"
+           />
+        <g
+           id="two-16014"
+           transform="translate(-312.35576,-206.1899)"
+           >
+          <path
+             d="M 556.88713,434.92277 738.10495,253.70495"
+             stroke="#ffffff"
+             stroke-width="15.6"
+             stroke-linecap="butt"
+             stroke-linejoin="miter"
+             stroke-miterlimit="4"
+             id="two-16015" />
+          <path
+             d="m 622.94992,380.17368 60.40594,-60.40594"
+             stroke="#ffff00"
+             stroke-width="10"
+             stroke-linecap="butt"
+             stroke-linejoin="miter"
+             stroke-miterlimit="4"
+             stroke-dasharray="10, 4"
+             stroke-dashoffset="0"
+             id="two-16016" />
+          <path
+             transform="translate(556.88715,434.92276)"
+             d="M -3.6,-3.6 H 3.6 V 3.6 H -3.6 Z"
+             stroke="#ffffff"
+             stroke-width="50"
+             visibility="visible"
+             stroke-linecap="butt"
+             stroke-linejoin="miter"
+             stroke-miterlimit="4"
+             id="two-16017" />
+          <path
+             transform="translate(738.10498,253.70496)"
+             d="M -3.6,-3.6 H 3.6 V 3.6 H -3.6 Z"
+             stroke="#ffffff"
+             stroke-width="50"
+             visibility="visible"
+             stroke-linecap="butt"
+             stroke-linejoin="miter"
+             stroke-miterlimit="4"
+             id="two-16018" />
+        </g>
+      </g>
+    </svg>
+    `
+     */
     stab_button.innerHTML = `
-    <svg
-   version="1.1"
-   width="1rem"
-   height="1rem"
-   viewBox="0 0 189.4178 189.4178"
-
-   id="svg1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs1" />
-  <g
-     id="two-16005"
-     transform="translate(-240.4314,-43.415058)">
-    <g
-       id="two-16010"
-       transform="rotate(90,242,254)"
-       />
-    <g
-       id="two-16014"
-       transform="translate(-312.35576,-206.1899)"
-       >
-      <path
-         d="M 556.88713,434.92277 738.10495,253.70495"
-         stroke="#ffffff"
-         stroke-width="15.6"
-         stroke-linecap="butt"
-         stroke-linejoin="miter"
-         stroke-miterlimit="4"
-         id="two-16015" />
-      <path
-         d="m 622.94992,380.17368 60.40594,-60.40594"
-         stroke="#ffff00"
-         stroke-width="10"
-         stroke-linecap="butt"
-         stroke-linejoin="miter"
-         stroke-miterlimit="4"
-         stroke-dasharray="10, 4"
-         stroke-dashoffset="0"
-         id="two-16016" />
-      <path
-         transform="translate(556.88715,434.92276)"
-         d="M -3.6,-3.6 H 3.6 V 3.6 H -3.6 Z"
-         stroke="#ffffff"
-         stroke-width="50"
-         visibility="visible"
-         stroke-linecap="butt"
-         stroke-linejoin="miter"
-         stroke-miterlimit="4"
-         id="two-16017" />
-      <path
-         transform="translate(738.10498,253.70496)"
-         d="M -3.6,-3.6 H 3.6 V 3.6 H -3.6 Z"
-         stroke="#ffffff"
-         stroke-width="50"
-         visibility="visible"
-         stroke-linecap="butt"
-         stroke-linejoin="miter"
-         stroke-miterlimit="4"
-         id="two-16018" />
-    </g>
-  </g>
-</svg>
-`
-
+      <svg width="1rem" height="1rem" viewBox="0.5 0.5 188.418 188.418" xmlns="http://www.w3.org/2000/svg">
+        <g transform="rotate(90 143.492 112.077)"/>
+        <path d="M4.1 185.318 185.318 4.1" stroke="#fff" stroke-width="15.6"/>
+        <path d="m70.163 130.569 60.406-60.406" stroke="#ff0" stroke-width="10" stroke-dasharray="10, 4"/>
+        <path d="M.5 181.718h7.2v7.2H.5ZM181.718.5h7.2v7.2h-7.2Z" stroke="#fff" stroke-width="50"/>
+      </svg>
+    `;
 
     stab_button.addEventListener("click", Stab_button);
     // stab_button.addEventListener('keydown', keydown);
@@ -636,8 +644,32 @@ export function cad_buttons() {
     knotlast_button = document.createElement("button");
 
     knotlast_button.value = "Knotenlast";
-    knotlast_button.className = "btn";
-    knotlast_button.innerHTML = msg('KnLast');
+    knotlast_button.className = "btn_svg";
+    knotlast_button.innerHTML = `
+      <svg version="1.2" width="1.107rem" height="1rem" viewBox="0 0 1825.686 1649.212" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+        <defs class="ClipPathGroup">
+          <clipPath id="a" clipPathUnits="userSpaceOnUse">
+            <path d="M0 0h21000v29700H0z"/>
+          </clipPath>
+        </defs>
+        <g class="SlideGroup">
+          <g class="Slide" clip-path="url(#a)" transform="translate(-5136.96 -3303.323)">
+            <g class="Page">
+              <path class="BoundingBox" fill="#ffffff" d="M5499 4499h503v503h-503z" transform="translate(-348.929 -61.576)"/>
+              <path d="M5750 5000h-250v-500h500v500z" transform="translate(-348.929 -61.576)"/>
+              <path fill="#ffffff" stroke="#ffffff" d="M5750 5000h-250v-500h500v500z" transform="translate(-348.929 -61.576)"/>
+              <path class="BoundingBox" fill="none" d="M5520 3447h461v1054h-461z" transform="translate(-348.929 -143.676)"/>
+              <path fill="none" stroke="#ffffff" stroke-width="106" d="M5750 3500v572" transform="translate(-348.929 -143.676)"/>
+              <path fill="#ffffff" d="m5980 4041-230 459-229-459z" transform="translate(-348.929 -143.676)"/>
+              <path class="BoundingBox" fill="none" d="M5947 4520h1304v461H5947z" transform="translate(-348.929 -61.576)"/>
+              <path fill="none" stroke="#ffffff" stroke-width="106" d="M6123.151 4750h822" transform="translate(-348.929 -61.576)"/>
+              <path fill="#ffffff" d="m6852.576 4521 459 229-459 230z" transform="translate(-348.929 -61.576)"/>
+            </g>
+          </g>
+        </g>
+      </svg>
+    `;
+    //knotlast_button.innerHTML = msg('KnLast');
     knotlast_button.addEventListener("click", Knotenlast_button);
     // stab_button.addEventListener('keydown', keydown);
     knotlast_button.title = msg('Eingabe Knotenlasten');
@@ -646,8 +678,31 @@ export function cad_buttons() {
     ellast_button = document.createElement("button");
 
     ellast_button.value = "Elementlast";
-    ellast_button.className = "btn";
-    ellast_button.innerHTML = msg('ElLast');
+    ellast_button.className = "btn_svg";
+    // ellast_button.innerHTML = msg('ElLast');
+    ellast_button.innerHTML = `
+      <svg version="1.2" width="1rem" height="1rem" viewBox="947 673 2857 1531" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
+        <g class="Master_Slide">
+          <g class="Background"/>
+          <g class="BackgroundObjects"/>
+        </g>
+        <g class="SlideGroup">
+          <g class="Slide" clip-path="url(#a)">
+            <g class="Page">
+              <g fill="none">
+                <path class="BoundingBox" d="M947 2687h2857v117H947z"/>
+                <path stroke="#ffffff" stroke-width="306" d="m1000 2740 2750 10"/>
+              </g>
+              <g>
+                <path class="BoundingBox" fill="none" d="M973 973h2806v1306H973z"/>
+                <path fill="#b2b2b2" d="m1000 1249 2751-249v1251H1000z"/>
+                <path fill="none" stroke="#ffffff" stroke-width="53" d="m1000 1249 2751-249v1251H1000z"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>
+    `;
     ellast_button.addEventListener("click", Elementlast_button);
     // stab_button.addEventListener('keydown', keydown);
     ellast_button.title = msg('Eingabe Elementlasten');
@@ -673,21 +728,21 @@ export function cad_buttons() {
     cog_button.value = "Einstellungen";
     cog_button.className = "btn_svg";
     cog_button.innerHTML = `<svg fill="#ffffff" height="1rem" width="1rem" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-	 viewBox="0 0 294 294" xml:space="preserve">
-<path d="M279.333,117h-18.178C258.423,107,254.3,96.814,249,87.747l13.383-13.361c5.857-5.857,5.858-15.344,0-21.202l-20.737-20.733
-	c-2.813-2.813-6.628-4.391-10.606-4.391c-3.978,0-7.794,1.581-10.606,4.395l-13.516,13.254c-9.308-5.519-19.417-9.796-30.417-12.591
-	V15c0-8.284-6.191-15-14.476-15h-29.327C124.413,0,117.5,6.716,117.5,15v18.118c-10,2.684-19.944,6.729-28.944,11.933L76.168,32.613
-	c-5.857-5.857-15.331-5.857-21.188,0L34.254,53.351c-5.858,5.857-5.852,15.355,0.006,21.213l12.117,12.071
-	C40.759,96.008,36.411,106,33.567,117H15.833C7.549,117,0.5,123.802,0.5,132.086v29.328C0.5,169.698,7.549,176,15.833,176h17.613
-	c2.794,11,7.094,21.211,12.652,30.584l-11.989,12.092c-5.858,5.857-5.858,15.407,0,21.265l20.737,20.763
-	c2.929,2.929,6.768,4.406,10.606,4.406s7.678-1.458,10.606-4.387l12.02-12.115c9.133,5.338,18.421,9.487,29.421,12.218V278.5
-	c0,8.284,6.913,15.5,15.197,15.5h29.327c8.284,0,14.476-7.216,14.476-15.5v-17.673c11-2.843,21.456-7.217,30.894-12.874
-	l13.065,12.934c2.929,2.929,6.833,4.394,10.672,4.394s7.711-1.465,10.639-4.394l20.754-20.737
-	c5.858-5.857,5.867-15.355,0.008-21.213l-13.254-13.465c5.242-9.065,9.314-18.471,11.997-29.471h18.058
-	c8.284,0,14.167-6.302,14.167-14.586v-29.328C293.5,123.802,287.617,117,279.333,117z M191.016,146.973
-	c0,24.071-19.583,43.654-43.654,43.654s-43.654-19.583-43.654-43.654s19.583-43.654,43.654-43.654S191.016,122.901,191.016,146.973z
-	"/>
-</svg>`;
+        viewBox="0 0 294 294" xml:space="preserve">
+        <path d="M279.333,117h-18.178C258.423,107,254.3,96.814,249,87.747l13.383-13.361c5.857-5.857,5.858-15.344,0-21.202l-20.737-20.733
+        c-2.813-2.813-6.628-4.391-10.606-4.391c-3.978,0-7.794,1.581-10.606,4.395l-13.516,13.254c-9.308-5.519-19.417-9.796-30.417-12.591
+        V15c0-8.284-6.191-15-14.476-15h-29.327C124.413,0,117.5,6.716,117.5,15v18.118c-10,2.684-19.944,6.729-28.944,11.933L76.168,32.613
+        c-5.857-5.857-15.331-5.857-21.188,0L34.254,53.351c-5.858,5.857-5.852,15.355,0.006,21.213l12.117,12.071
+        C40.759,96.008,36.411,106,33.567,117H15.833C7.549,117,0.5,123.802,0.5,132.086v29.328C0.5,169.698,7.549,176,15.833,176h17.613
+        c2.794,11,7.094,21.211,12.652,30.584l-11.989,12.092c-5.858,5.857-5.858,15.407,0,21.265l20.737,20.763
+        c2.929,2.929,6.768,4.406,10.606,4.406s7.678-1.458,10.606-4.387l12.02-12.115c9.133,5.338,18.421,9.487,29.421,12.218V278.5
+        c0,8.284,6.913,15.5,15.197,15.5h29.327c8.284,0,14.476-7.216,14.476-15.5v-17.673c11-2.843,21.456-7.217,30.894-12.874
+        l13.065,12.934c2.929,2.929,6.833,4.394,10.672,4.394s7.711-1.465,10.639-4.394l20.754-20.737
+        c5.858-5.857,5.867-15.355,0.008-21.213l-13.254-13.465c5.242-9.065,9.314-18.471,11.997-29.471h18.058
+        c8.284,0,14.167-6.302,14.167-14.586v-29.328C293.5,123.802,287.617,117,279.333,117z M191.016,146.973
+        c0,24.071-19.583,43.654-43.654,43.654s-43.654-19.583-43.654-43.654s19.583-43.654,43.654-43.654S191.016,122.901,191.016,146.973z
+        "/>
+      </svg>`;
     // cog_button.innerHTML = '<i class = "fa fa-cog"></i>';
     cog_button.addEventListener("click", Einstellungen_button);
     // stab_button.addEventListener('keydown', keydown);
@@ -801,9 +856,9 @@ export function update_button_language() {
   edit_knoten_button.title = msg('Knoten bearbeiten');
 
   stab_button.title = msg('Eingabe Stab');
-  knotlast_button.innerHTML = msg('KnLast');
+  //knotlast_button.innerHTML = msg('KnLast');
   knotlast_button.title = msg('Eingabe Knotenlasten');
-  ellast_button.innerHTML = msg('ElLast');
+  //ellast_button.innerHTML = msg('ElLast');
   ellast_button.title = msg('Eingabe Elementlasten');
 
   //set_help_text(msg('Knotenlager eingeben'), button_color_help_text);
