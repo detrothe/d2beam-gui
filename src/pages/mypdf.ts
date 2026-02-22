@@ -1,3 +1,4 @@
+import { msg } from '@lit/localize';
 import { jsPDF, jsPDFAPI } from "jspdf";
 //import autoTable from "jspdf-autotable";
 import { Canvg } from "canvg";
@@ -1039,11 +1040,9 @@ export async function my_jspdf() {
 
     doc.setFontSize(fs1);
     doc.setFont("freesans_bold");
-    if (app.browserLanguage == "de") {
-      doc.text("Ergebnisse", links, yy);
-    } else {
-      doc.text("Results", links, yy);
-    }
+
+    doc.text(msg('Ergebnisse'), links, yy);
+
     doc.setFontSize(fs);
     doc.setFont("freesans_normal");
 
@@ -1057,9 +1056,9 @@ export async function my_jspdf() {
       let text: string;
       let nLoop = 0;
       if (THIIO_flag === 0) {      // Theorie I.Ordnung
-        doc.text("Berechnung nach Theorie I. Ordnung", links, yy);
+        doc.text(msg('Berechnung nach Theorie I. Ordnung'), links, yy);
       } else {
-        doc.text("Berechnung nach Theorie II. Ordnung", links, yy);
+        doc.text(msg('Berechnung nach Theorie II. Ordnung'), links, yy);
       }
       yy = neueZeile(yy, fs, 1);
 
@@ -1072,8 +1071,8 @@ export async function my_jspdf() {
       //console.log("Ausgabe pdf", nLoop, nlastfaelle, nkombinationen);
 
       for (let iLastfall = 1; iLastfall <= nLoop; iLastfall++) {
-        if (THIIO_flag === 0 && matprop_flag === 0) text = "Lastfall " + iLastfall;
-        else text = "Kombination " + iLastfall;
+        if (THIIO_flag === 0 && matprop_flag === 0) text = msg('Lastfall') + " " + iLastfall;
+        else text = msg('Kombination') + " " + iLastfall;
         console.log("text", links, yy, text);
         doc.setFont("freesans_bold");
         yy = neueZeile(yy, fs, 1);
@@ -1119,7 +1118,7 @@ export async function my_jspdf() {
           //yy = neueZeile(yy, fs, 1)
           yy = testSeite(yy, fs, 1, 5);
           doc.setFont("freesans_bold");
-          doc.text("Lagerreaktionen", links, yy);
+          doc.text(msg('Lagerreaktionen'), links, yy);
           //yy = neueZeile(yy, fs, 1)
 
           doc.setFontSize(fs);
@@ -1161,13 +1160,13 @@ export async function my_jspdf() {
           yy = testSeite(yy, fs, 1, 5);
           doc.setFont("freesans_bold");
           if (THIIO_flag === 0) {
-            doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
+            doc.text(msg('Stabschnittgrößen und lokale Verformungen'), links, yy);
           } else {
             if (ausgabe_gleichgewichtSG) {
-              doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
+              doc.text(msg('Stabschnittgrößen und lokale Verformungen'), links, yy);
               str_Vz = "T<sub>z</sub>"
             } else {
-              doc.text("Nachweisschnittgrößen und lokale Verformungen", links, yy);
+              doc.text(msg('Nachweisschnittgrößen und lokale Verformungen'), links, yy);
             }
           }
           yy = neueZeile(yy, fs, 1);
@@ -1335,8 +1334,8 @@ export async function my_jspdf() {
       if (THIIO_flag === 0 && matprop_flag === 0 && nkombinationen > 0) {
 
         for (let iKomb = 1; iKomb <= nkombinationen; iKomb++) {
-          text = "Kombination " + iKomb;
-          console.log("text", links, yy, text);
+          text = msg('Kombination') + " " + iKomb;
+          //console.log("text", links, yy, text);
           doc.setFont("freesans_bold");
           yy = neueZeile(yy, fs, 1);
 
@@ -1351,7 +1350,7 @@ export async function my_jspdf() {
           {
             yy = testSeite(yy, fs, 1, 5);
             doc.setFont("freesans_bold");
-            doc.text("Knotenverformungen", links, yy);
+            doc.text(msg('Knotenverformungen'), links, yy);
             //yy = neueZeile(yy, fs, 1)
 
             doc.setFontSize(fs);
@@ -1381,7 +1380,7 @@ export async function my_jspdf() {
             //yy = neueZeile(yy, fs, 1)
             yy = testSeite(yy, fs, 1, 5);
             doc.setFont("freesans_bold");
-            doc.text("Lagerreaktionen", links, yy);
+            doc.text(msg('Lagerreaktionen'), links, yy);
             //yy = neueZeile(yy, fs, 1)
 
             doc.setFontSize(fs);
@@ -1414,13 +1413,13 @@ export async function my_jspdf() {
             yy = testSeite(yy, fs, 1, 5);
             doc.setFont("freesans_bold");
             if (THIIO_flag === 0) {
-              doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
+              doc.text(msg('Stabschnittgrößen und lokale Verformungen'), links, yy);
             } else {
               if (ausgabe_gleichgewichtSG) {
-                doc.text("Stabschnittgrößen und lokale Verformungen", links, yy);
+                doc.text(msg('Stabschnittgrößen und lokale Verformungen'), links, yy);
                 str_Vz = "T<sub>z</sub>"
               } else {
-                doc.text("Nachweisschnittgrößen und lokale Verformungen", links, yy);
+                doc.text(msg('Nachweisschnittgrößen und lokale Verformungen'), links, yy);
               }
             }
             yy = neueZeile(yy, fs, 1);
@@ -1587,15 +1586,15 @@ export async function my_jspdf() {
 
       yy = testSeite(yy, fs, 1, 5);
       doc.setFont("freesans_bold");
-      doc.text("Eigenwerte", links, yy);
+      doc.text(msg('Eigenwerte'), links, yy);
 
       doc.setFontSize(fs);
       doc.setFont("freesans_bold");
       yy = neueZeile(yy, fs1, 1);
       let el_table = new pdf_table(doc, links, [20, 20, 40]);
       el_table.htmlText("Eig No", 0, "left", yy);
-      el_table.htmlText("Frequenz [Hz]", 1, "center", yy);
-      el_table.htmlText("Periode [sec]", 2, "center", yy);
+      el_table.htmlText(msg('Frequenz') + " [Hz]", 1, "center", yy);
+      el_table.htmlText(msg('Periode') + " [sec]", 2, "center", yy);
 
       doc.setFontSize(fs);
       doc.setFont("freesans_normal");
@@ -1613,7 +1612,7 @@ export async function my_jspdf() {
         {
           yy = testSeite(yy, fs, 1, 5);
           doc.setFont("freesans_bold");
-          doc.text("Eigenform " + (+ieigv + 1), links, yy);
+          doc.text(msg('Eigenform') + " " + (+ieigv + 1), links, yy);
           //yy = neueZeile(yy, fs, 1)
 
           doc.setFontSize(fs);
@@ -1656,7 +1655,7 @@ export async function my_jspdf() {
 
       var canvas = document.createElement("canvas");
       var context = canvas.getContext("2d");
-      console.log("canvas", canvas.width, canvas.height);
+      //console.log("canvas", canvas.width, canvas.height);
 
       if (context != null) {
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -1671,11 +1670,7 @@ export async function my_jspdf() {
         } else {
           yy = neueZeile(yy, fs)
         }
-        if (app.browserLanguage == 'de') {
-          doc.text('System', links, yy)
-        } else {
-          doc.text('System', links, yy)
-        }
+        doc.text(msg('System'), links, yy)
 
         // if (svg_pdf_ratio > 1.0) {
         //   doc.addImage(imgData, "PNG", 5, yy, 200, 200 / svg_pdf_ratio);

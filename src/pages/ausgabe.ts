@@ -52,7 +52,7 @@ export function ausgabe(iLastfall: number, newDiv: HTMLDivElement) {
     let tag = document.createElement("p");
     let text = document.createTextNode(msg('Ergebnisse'));
     tag.appendChild(text);
-    tag.innerHTML = "<b>Ergebnisse</b>"
+    tag.innerHTML = "<b>"+msg('Ergebnisse')+"</b>"
     newDiv?.appendChild(tag);
 
     tag = document.createElement("p");

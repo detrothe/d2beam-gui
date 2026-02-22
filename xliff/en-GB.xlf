@@ -1257,6 +1257,14 @@
   <source>alle Kombinationen</source>
   <target>All combinations</target>
 </trans-unit>
+<trans-unit id="s4d18bf5810bf162c">
+  <source>Berechnung nach Theorie I. Ordnung</source>
+  <target>Calculation according to first-order theory</target>
+</trans-unit>
+<trans-unit id="s48a5e2e7abae422b">
+  <source>Berechnung nach Theorie II. Ordnung</source>
+  <target>Calculation according to second-order theory</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
