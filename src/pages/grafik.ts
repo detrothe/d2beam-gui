@@ -1,6 +1,6 @@
 
-console.log("in grafik 0")
-
+//console.log("in grafik 0")
+import { msg } from '@lit/localize';
 import Two from 'two.js'
 
 import { CTrans } from './trans';
@@ -14,7 +14,7 @@ import { max_S_kombi, max_disp_kombi, maxM_all, maxV_all, maxN_all, maxdisp_all,
 import { maxValue_dyn_eigenform, eigenform_dyn, dyn_neigv, nnodalMass, nodalmass, stabvorverformung_komb } from "./rechnen";
 
 //import { myPanel } from './mypanelgui'
-import { draw_sg, draw_group, get_scale_factor } from '../components/dr-control-panel'
+import { draw_sg, draw_group, get_scale_factor, reset_panel_dyn_eigenformen } from '../components/dr-control-panel'
 import { app } from "./haupt";
 import { saveAs } from 'file-saver';
 import { dx_offset_touch, dz_offset_touch, faktor_lagersymbol, init_cad, init_two_cad, unit_force, unit_moment } from './cad';
@@ -343,21 +343,19 @@ export function click_zurueck_grafik() {
         let ele = shadow.getElementById("id_grafik") as HTMLDivElement
 
         if (fullscreen) {
-            console.log("click_zurueck_grafik")
+            //console.log("click_zurueck_grafik")
             let ele1 = shadow.getElementById("id_tab_group") as any
-            console.log("HEIGHT id_tab_group boundingRect", ele1.getBoundingClientRect(), '|', ele1);
-
             ele.style.position = 'relative'
             fullscreen = false
 
             elb.innerHTML = "Fullscreen"
         }
         else {
-            console.log("fullscreen")
+            //console.log("fullscreen")
             ele.style.position = 'absolute'
             fullscreen = true
 
-            elb.innerHTML = "zurück"
+            elb.innerHTML = msg('zurück');
         }
 
         elb.style.width = 'fit-content'
@@ -565,14 +563,14 @@ export function init_grafik(flag: number) {
             for (let i = 0; i < nlastfaelle; i++) {
                 option = document.createElement('option');
                 option.value = String(+i + 1)
-                option.textContent = 'Lastfall ' + (+i + 1);
+                option.textContent = msg('Lastfall') + ' ' + (+i + 1);
                 el_select.appendChild(option);
             }
 
             for (let i = 0; i < nkombinationen; i++) {
                 option = document.createElement('option');
                 option.value = String(+i + 1 + nlastfaelle)
-                option.textContent = 'Kombination ' + (+i + 1);
+                option.textContent = msg('Kombination') + ' ' + (+i + 1);
                 el_select.appendChild(option);
             }
 
@@ -580,7 +578,7 @@ export function init_grafik(flag: number) {
 
                 option = document.createElement('option');
                 option.value = String(+nkombinationen + 1 + nlastfaelle)
-                option.textContent = 'alle Kombinationen';
+                option.textContent = msg('alle Kombinationen');
                 el_select.appendChild(option);
             }
 
@@ -592,7 +590,7 @@ export function init_grafik(flag: number) {
                 for (let i = 0; i < neigv; i++) {
                     let option = document.createElement('option');
                     option.value = String(+i + 1)
-                    option.textContent = 'Knickfigur ' + (+i + 1);
+                    option.textContent = msg('Knickfigur') + ' ' + (+i + 1);
                     el_select_eigv.appendChild(option);
                 }
             } else {    // Dynamik
@@ -603,7 +601,7 @@ export function init_grafik(flag: number) {
                 for (let i = 0; i < dyn_neigv; i++) {
                     let option = document.createElement('option');
                     option.value = String(+i + 1)
-                    option.textContent = 'Eigenform ' + (+i + 1);
+                    option.textContent = msg('Eigenform') + ' ' + (+i + 1);
                     el_select_dyn_eigv.appendChild(option);
                 }
             }
@@ -616,7 +614,7 @@ export function init_grafik(flag: number) {
             for (let i = 0; i < nkombinationen; i++) {
                 option = document.createElement('option');
                 option.value = String(+i + 1)
-                option.textContent = 'Kombination ' + (+i + 1);
+                option.textContent = msg('Kombination') + ' ' + (+i + 1);
                 el_select.appendChild(option);
             }
 
@@ -624,7 +622,7 @@ export function init_grafik(flag: number) {
 
                 option = document.createElement('option');
                 option.value = String(+nkombinationen + 1)
-                option.textContent = 'alle Kombinationen';
+                option.textContent = msg('alle Kombinationen');
                 el_select.appendChild(option);
             }
 
@@ -633,7 +631,7 @@ export function init_grafik(flag: number) {
             for (let i = 0; i < neigv; i++) {
                 let option = document.createElement('option');
                 option.value = String(+i + 1)
-                option.textContent = 'Knickfigur ' + (+i + 1);
+                option.textContent = msg('Knickfigur') + ' ' + (+i + 1);
                 el_select_eigv.appendChild(option);
             }
         }
@@ -5415,6 +5413,15 @@ function draw_bodenpressung_grafik() {
 
     if (!show_dyn_animate_eigenformen) drawsystem();
 }
+
+//--------------------------------------------------------------------------------------------------------
+export function reset_dyn_eigenformen() {
+
+    show_dyn_eigenformen = false;
+    show_dyn_animate_eigenformen = false;
+    reset_panel_dyn_eigenformen();
+
+}
 //---------------------------------------------------------------------------------- a d d E v e n t L i s t e n e r
 
 window.addEventListener('draw_label_grafik', draw_label_grafik);
@@ -5446,7 +5453,8 @@ export async function copy_svg() {
     //-----------------------------------------------------------------------------------------------
 
     //let svg = svgElement;
-    //console.log("svg", svg)
+    console.log("svg")
+
     const elHaupt = document.getElementById('id_haupt');
     let shadow = elHaupt?.shadowRoot;
     if (shadow) {

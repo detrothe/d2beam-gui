@@ -1254,6 +1254,10 @@
   <source>Summe der Elementmassen</source>
   <target>Suma de las masas de los elementos</target>
 </trans-unit>
+<trans-unit id="sb8c1a3de0e553097">
+  <source>alle Kombinationen</source>
+  <target>Todas las combinaciones</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

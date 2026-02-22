@@ -220,6 +220,7 @@
 'sb51fce4a6488bd2e': `truss solo tracción`,
 'sb60d0d6316ed7878': `Cargas de elementos`,
 'sb8025bd7145eb802': `Suma de las masas de los elementos`,
+'sb8c1a3de0e553097': `Todas las combinaciones`,
 'sb9c2dd24a319f32b': `deformación eps tol:`,
 'sb9d2ebb8b6b2ade4': `Para permitir entradas precisas, el cursor de entrada se encuentra  junto al dedo. Coloca el dedo de entrada en la pantalla y     mueve el cursor al lugar deseado, y luego levanta            el dedo de la pantalla. Levantar el dedo tiene aquí la            misma función que pulsar el botón izquierdo del ratón. Si, al igual que al introducir el extremo de la barra, se requiere otra entrada, vuelve a colocar el dedo en la pantalla y mueve el cursor al lugar deseado. Al levantar el dedo de nuevo, se finaliza la entrada. Puedes cambiar la distancia y la posición (signo) del cursor con respecto al dedo en Ajustes GUI.`,
 'sbad21220dd5ef4aa': `Ꚛ ERROR: en al menos un caso de carga no se ha alcanzado la tolerancia de fuerza.`,

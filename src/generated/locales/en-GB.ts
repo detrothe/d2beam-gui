@@ -219,6 +219,7 @@
 'sb51fce4a6488bd2e': `truss only tensile`,
 'sb60d0d6316ed7878': `Element loads`,
 'sb8025bd7145eb802': `Sum of the element masses`,
+'sb8c1a3de0e553097': `All combinations`,
 'sb9c2dd24a319f32b': `eps tol deformation:`,
 'sb9d2ebb8b6b2ade4': `To enable precise input, the input cursor is located next to your finger. Place your input finger on the screen and move the cursor to the desired location, then lift your finger from the screen. Lifting your finger has the same function as pressing the left mouse button. If, as when entering the end of the bar, further input is required, place your finger back on the screen and move the cursor to the desired location. Lifting your finger again ends the input. You can change the distance and position (sign) of the cursor from your finger under Settings GUI.`,
 'sbad21220dd5ef4aa': `Ꚛ ERROR - The force tolerance was not achieved in at least one load case.`,

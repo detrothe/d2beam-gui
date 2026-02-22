@@ -17,7 +17,7 @@ import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CTruss } from "./truss"
 import { CSpring } from "./feder"
 import { CKoppelfeder } from "./koppelfeder"
-import { init_grafik, drawsystem, init_two, init_panel, set_unit_grafik } from "./grafik";
+import { init_grafik, drawsystem, init_two, init_panel, set_unit_grafik, reset_dyn_eigenformen } from "./grafik";
 import { show_controller_THIIO, show_controller_bettung, show_controller_pruefen, show_controller_results, show_controller_truss } from "../components/dr-control-panel"
 import { ausgabe, ausgabe_kombinationen_Th_I_O, dyn_ausgabe } from "./ausgabe"
 import { AlertDialog } from "../pages/confirm_dialog";
@@ -693,6 +693,7 @@ export function rechnen(flag = 1) {
             } else {
                 init_panel();
                 calculate();
+                if (stadyn === 0) reset_dyn_eigenformen();
                 show_controller_results(true);
                 // if (THIIO_flag === 0) show_controller_THIIO(false);
                 // else show_controller_THIIO(true);
@@ -749,7 +750,7 @@ function check_input() {
 
     let fehler = 0;
 
-    if (nQuerschnittSets === 0) { write(msg('Es muss mindestens 1 Querschnitt definiert sein')+'\n'); fehler++; }
+    if (nQuerschnittSets === 0) { write(msg('Es muss mindestens 1 Querschnitt definiert sein') + '\n'); fehler++; }
     if (nelem < 1) { write(msg('Es muss mindestens 1 Element definiert sein')); fehler++; }
     if (nnodes < 2) { write(msg('Es müssen mindestens 2 Knoten definiert sein')); fehler++; }
 

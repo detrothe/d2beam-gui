@@ -145,18 +145,9 @@ export class drControlPanel extends LitElement {
          <div class="container">
             <header class='basis'>
                <button @click="${this._click_header}" id="id_header_button">
-                  <svg
-                     version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                     x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 100 100"
-                     style="enable-background:new 0 0 100 100;"
-                     xml:space="preserve"
-                  >
-                     <g>
-                        <polygon
-                           points="38,83 5,50 11.9,43 38,69.1 64.1,43 71,50 	"
-                        />
-                     </g>
-                  </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 100 100" xml:space="preserve">
+                <path d="M38 83 5 50l6.9-7L38 69.1 64.1 43l6.9 7z"/>
+                </svg>
                   ${msg('Bedienfeld anzeigen')}
                </button>
             </header>
@@ -240,18 +231,9 @@ export class drControlPanel extends LitElement {
 
             <header class='dynamik'>
              <button @click="${this._click_dynamik}" id="id_dynamik_button">
-                  <svg
-                     version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                     x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 100 100"
-                     style="enable-background:new 0 0 100 100;"
-                     xml:space="preserve"
-                  >
-                     <g>
-                        <polygon
-                           points="38,83 5,50 11.9,43 38,69.1 64.1,43 71,50 	"
-                        />
-                     </g>
-                  </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 100 100" xml:space="preserve">
+                <path d="M38 83 5 50l6.9-7L38 69.1 64.1 43l6.9 7z"/>
+                </svg>
                   ${msg('Dynamik')}
                </button>
             </header>
@@ -267,25 +249,16 @@ export class drControlPanel extends LitElement {
                <sl-checkbox id="id_animate_eigenformen" @sl-change="${this._checkbox_animate_eigenformen}"></sl-checkbox>
             </div>
 
-            <div class="item1zeile_dynamik">${msg('Massen anzeigen')}</div>
+            <div class="item1 zeile_dynamik">${msg('Massen anzeigen')}</div>
             <div class="zeile_dynamik">
                <sl-checkbox id="id_knotenmassen" @sl-change="${this._checkbox_knotenmassen}"></sl-checkbox>
             </div>
 
             <header class='optionen'>
              <button @click="${this._click_optionen}" id="id_optionen_button">
-                  <svg
-                     version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                     x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 100 100"
-                     style="enable-background:new 0 0 100 100;"
-                     xml:space="preserve"
-                  >
-                     <g>
-                        <polygon
-                           points="38,83 5,50 11.9,43 38,69.1 64.1,43 71,50 	"
-                        />
-                     </g>
-                  </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 100 100" xml:space="preserve">
+                <path d="M38 83 5 50l6.9-7L38 69.1 64.1 43l6.9 7z"/>
+                </svg>
                   ${msg('Optionen')}
                </button>
             </header>
@@ -684,6 +657,12 @@ export class drControlPanel extends LitElement {
             }
         }
     }
+    resetController_dyn_eigenform() {
+        let el = this.shadowRoot?.getElementById('id_eigenformen') as SlCheckbox;
+        el.removeAttribute('checked')
+        el = this.shadowRoot?.getElementById('id_animate_eigenformen') as SlCheckbox;
+        el.removeAttribute('checked')
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -804,3 +783,15 @@ export function reset_gui() {
     // gui.reset();
 }
 
+
+//--------------------------------------------------------------------------------------------------------
+export function reset_panel_dyn_eigenformen() {
+    //----------------------------------------------------------------------------------------------------
+ let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (shadow) {
+        let shad = shadow.getElementById('id_control_panel') as drControlPanel;
+        if (shad) {
+            (shad).resetController_dyn_eigenform();
+        }
+    }
+}

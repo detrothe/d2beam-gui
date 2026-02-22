@@ -52,15 +52,14 @@ export function init_haupt3() {
         el_pan_button_cad.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <path fill="#ffffff" d="M16 8l-3-3v2h-4v-4h2l-3-3-3 3h2v4h-4v-2l-3 3 3 3v-2h4v4h-2l3 3 3-3h-2v-4h4v2z"></path>
 </svg>`;
-        // el_pan_button_cad.innerHTML = '<i class = "fa fa-arrows"></i>';
 
-        // const el_zurueck_cad = shadow.getElementById("id_button_zurueck_cad");
-        // el_zurueck_cad?.addEventListener("click", click_zurueck_cad);
+        // const el_fullscreen_button_grafik = shadow.getElementById('id_button_zurueck_grafik') as HTMLButtonElement;
+        // el_fullscreen_button_grafik.innerHTML = `
+        //     <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        //     <path d="M8 2H4a2 2 0 0 0-2 2v4m20 0V4a2 2 0 0 0-2-2h-4m0 20h4a2 2 0 0 0 2-2v-4M8 22H4a2 2 0 0 1-2-2v-4" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+        //     </svg>        `;
 
-        // const el_def_quer = shadow.getElementById("id_querschnitt_default");
-        // el_def_quer?.addEventListener("change", change_def_querschnitt);
-
-        document?.getElementById('id_button_copy_svg')?.addEventListener('click', copy_svg, false);
+        shadow.getElementById('id_button_copy_svg')?.addEventListener('click', copy_svg, false);
 
         const checkbox = shadow.getElementById('id_glsystem_darstellen');
         checkbox!.addEventListener('sl-change', (event) => {
