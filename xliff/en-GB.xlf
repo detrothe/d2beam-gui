@@ -779,7 +779,7 @@
 </trans-unit>
 <trans-unit id="s3d1befec83497b6a">
   <source>Eingabeprotokoll</source>
-  <target>input log</target>
+  <target>Input log</target>
 </trans-unit>
 <trans-unit id="s784d82bd15c49b4a">
   <source>Einstellungen</source>
@@ -1219,7 +1219,7 @@
 </trans-unit>
 <trans-unit id="s6ba8ff3a3676ea08">
   <source>Knoten</source>
-  <target>Node</target>
+  <target>Nodes</target>
 </trans-unit>
 <trans-unit id="s1af77ca35c56537f">
   <source>Freihheitsgrade</source>
@@ -1264,6 +1264,90 @@
 <trans-unit id="s48a5e2e7abae422b">
   <source>Berechnung nach Theorie II. Ordnung</source>
   <target>Calculation according to second-order theory</target>
+</trans-unit>
+<trans-unit id="s83977996c90f160f">
+  <source>Seite</source>
+  <target>Page</target>
+</trans-unit>
+<trans-unit id="s0c78d81f84bec0f1">
+  <source>Ebenes Stabwerk d2beam</source>
+  <target>Plane frame analysis d2beam</target>
+</trans-unit>
+<trans-unit id="sba7b1a93d2c78556">
+  <source>Knotenkoordinaten und Lager</source>
+  <target>Node coordinates and supports</target>
+</trans-unit>
+<trans-unit id="sdee1d2056321d187">
+  <source>Elementdaten</source>
+  <target>Element data</target>
+</trans-unit>
+<trans-unit id="s8798cd87ae5032f5">
+  <source>Temperaturlasten</source>
+  <target>Temperature loads</target>
+</trans-unit>
+<trans-unit id="se2fb2b9a1f52a30a">
+  <source>Lastfälle</source>
+  <target>load cases</target>
+</trans-unit>
+<trans-unit id="sa09badfa322f689e">
+  <source>Arten der Trapezstreckenlasten</source>
+  <target>Types of trapezoidal line loads</target>
+</trans-unit>
+<trans-unit id="sec4cbb6bd2ef1ef8">
+  <source>0 = Trapezstreckenlast senkrecht auf Stab</source>
+  <target>0 = Trapezoidal line load perpendicular to element</target>
+</trans-unit>
+<trans-unit id="sbdc80c210da4f43e">
+  <source>1 = Trapezstreckenlast in globaler z-Richtung</source>
+  <target>1 = Trapezoidal line load in global z-direction</target>
+</trans-unit>
+<trans-unit id="se4be79a595da5232">
+  <source>2 = Trapezstreckenlast in globaler z-Richtung, Projektion</source>
+  <target>2 = Trapezoidal line load in global z-direction, projection</target>
+</trans-unit>
+<trans-unit id="s664087ea02c8cea6">
+  <source>3 = Trapezstreckenlast in globaler x-Richtung</source>
+  <target>3 = Trapezoidal line load in global x-direction</target>
+</trans-unit>
+<trans-unit id="s8e7c0bda7fd27bb2">
+  <source>4 = Trapezstreckenlast in globaler x-Richtung, Projektion</source>
+  <target>4 = Trapezoidal line load in global x-direction, projection</target>
+</trans-unit>
+<trans-unit id="sf9f8d719a044edca">
+  <source>Art</source>
+  <target>typ</target>
+</trans-unit>
+<trans-unit id="s09194207b5af2717">
+  <source>Lf</source>
+  <target>lc</target>
+</trans-unit>
+<trans-unit id="s9278a256ab573265">
+  <source>Bezeichnung</source>
+  <target>designation</target>
+</trans-unit>
+<trans-unit id="s20765a8467f7fd60">
+  <source>Erläuterung</source>
+  <target>explanation</target>
+</trans-unit>
+<trans-unit id="sa889c8c779c7bee1">
+  <source>Kombinationen und Last-Multiplikatoren</source>
+  <target>Combinations and load multipliers</target>
+</trans-unit>
+<trans-unit id="see5d95ad45ad21b9">
+  <source>starr</source>
+  <target>rigid</target>
+</trans-unit>
+<trans-unit id="s805e18010aa2ee49">
+  <source>Wichte</source>
+  <target>sp.weight</target>
+</trans-unit>
+<trans-unit id="sfea6f3a7cfc9e79f">
+  <source>Winkel</source>
+  <target>angle</target>
+</trans-unit>
+<trans-unit id="s0f11179d35c7ca57">
+  <source>aktiver Querschnitt</source>
+  <target>active cross-section</target>
 </trans-unit>
 </body>
 </file>

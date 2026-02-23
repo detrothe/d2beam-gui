@@ -32,7 +32,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
             "L<sub>x</sub> <br> (kN/m)",
             "L<sub>z</sub> <br> (kN/m)",
             "L<sub>φ</sub> <br> (kNm/rad)",
-            "Winkel <br> [°]",
+            msg('Winkel')+" <br> [°]",
             "n<sub>x</sub>",
             "n<sub>z</sub>",
             "n<sub>φ</sub>",
@@ -150,7 +150,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
             "&nu; <br> -",
             "&kappa;<sub>&tau;</sub> <br> -",
             "&alpha;<sub>T</sub> <br> [1/K]",
-            "Wichte <br> [kN/m<sup>3</sup>]",
+            msg('Wichte')+" <br> [kN/m<sup>3</sup>]",
         ];
         //const kopf2 = ['', '', '[cm²]', '[cm<sup>4</sup>]', '[N/mm²]', '-', '-', '[1/K]', '[kN/m³]'];
         const kopf_text = [
@@ -279,7 +279,7 @@ export function prot_eingabe(iLastfall: number, newDiv: HTMLDivElement) {
             // @ts-ignore
             th0 = table.tHead.appendChild(document.createElement("th"));
             th0.innerHTML = msg('Gelenke');
-            th0.title = "Gelenke";
+            th0.title = msg('Gelenke');
             th0.setAttribute("class", "table_ein_cell_center");
             th0.colSpan = 6;
             row0.appendChild(th0);

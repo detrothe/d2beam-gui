@@ -1266,6 +1266,90 @@
   <source>Berechnung nach Theorie II. Ordnung</source>
   <target>Cálculo según la teoría de segundo orden</target>
 </trans-unit>
+<trans-unit id="s83977996c90f160f">
+  <source>Seite</source>
+  <target>Página</target>
+</trans-unit>
+<trans-unit id="s0c78d81f84bec0f1">
+  <source>Ebenes Stabwerk d2beam</source>
+  <target>Análisis de estructuras planas con d2beam</target>
+</trans-unit>
+<trans-unit id="sba7b1a93d2c78556">
+  <source>Knotenkoordinaten und Lager</source>
+  <target>Coordenadas y soportes de los nodos</target>
+</trans-unit>
+<trans-unit id="sdee1d2056321d187">
+  <source>Elementdaten</source>
+  <target>Datos de elementos</target>
+</trans-unit>
+<trans-unit id="s8798cd87ae5032f5">
+  <source>Temperaturlasten</source>
+  <target>cargas térmicas</target>
+</trans-unit>
+<trans-unit id="se2fb2b9a1f52a30a">
+  <source>Lastfälle</source>
+  <target>casos de carga</target>
+</trans-unit>
+<trans-unit id="sa09badfa322f689e">
+  <source>Arten der Trapezstreckenlasten</source>
+  <target>Tipos de cargas lineales trapezoidales</target>
+</trans-unit>
+<trans-unit id="sec4cbb6bd2ef1ef8">
+  <source>0 = Trapezstreckenlast senkrecht auf Stab</source>
+  <target>0 = Carga lineal trapezoidal perpendicular al elemento</target>
+</trans-unit>
+<trans-unit id="sbdc80c210da4f43e">
+  <source>1 = Trapezstreckenlast in globaler z-Richtung</source>
+  <target>1 = Carga lineal trapezoidal en dirección z global</target>
+</trans-unit>
+<trans-unit id="se4be79a595da5232">
+  <source>2 = Trapezstreckenlast in globaler z-Richtung, Projektion</source>
+  <target>2 = Carga lineal trapezoidal en dirección z global, proyección</target>
+</trans-unit>
+<trans-unit id="s664087ea02c8cea6">
+  <source>3 = Trapezstreckenlast in globaler x-Richtung</source>
+  <target>3 = Carga lineal trapezoidal en dirección x global</target>
+</trans-unit>
+<trans-unit id="s8e7c0bda7fd27bb2">
+  <source>4 = Trapezstreckenlast in globaler x-Richtung, Projektion</source>
+  <target>4 = Carga lineal trapezoidal en dirección x global, proyección</target>
+</trans-unit>
+<trans-unit id="sf9f8d719a044edca">
+  <source>Art</source>
+  <target>Tipo</target>
+</trans-unit>
+<trans-unit id="s09194207b5af2717">
+  <source>Lf</source>
+  <target>cc</target>
+</trans-unit>
+<trans-unit id="s9278a256ab573265">
+  <source>Bezeichnung</source>
+  <target>denominación</target>
+</trans-unit>
+<trans-unit id="s20765a8467f7fd60">
+  <source>Erläuterung</source>
+  <target>explicación</target>
+</trans-unit>
+<trans-unit id="sa889c8c779c7bee1">
+  <source>Kombinationen und Last-Multiplikatoren</source>
+  <target>Combinaciones y multiplicadores de carga</target>
+</trans-unit>
+<trans-unit id="see5d95ad45ad21b9">
+  <source>starr</source>
+  <target>rígido</target>
+</trans-unit>
+<trans-unit id="s805e18010aa2ee49">
+  <source>Wichte</source>
+  <target>peso esp.</target>
+</trans-unit>
+<trans-unit id="sfea6f3a7cfc9e79f">
+  <source>Winkel</source>
+  <target>ángulo</target>
+</trans-unit>
+<trans-unit id="s0f11179d35c7ca57">
+  <source>aktiver Querschnitt</source>
+  <target>sección transversal activa</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

@@ -128,6 +128,8 @@ let refresh_button: HTMLButtonElement;
 let info_button: HTMLButtonElement;
 let drawer_button: HTMLButtonElement;
 
+let querschnitt_default_select:HTMLSelectElement;
+
 let mode_elementlast_aendern = false;
 let element_einzellast_gefunden = false
 
@@ -396,13 +398,13 @@ export function cad_buttons() {
     esc_button.id = "id_button_ESC_cad"
 
 
-    const querschnitt_default_select = document.createElement("select");
+    querschnitt_default_select = document.createElement("select");
 
     //querschnitt_default_select.value = "";
     querschnitt_default_select.className = "btn";
     //querschnitt_default_select.innerHTML = 'Fullscreen';
     querschnitt_default_select.addEventListener("change", change_def_querschnitt);
-    querschnitt_default_select.title = "aktiver Querschnitt";
+    querschnitt_default_select.title = msg('aktiver Querschnitt');
     querschnitt_default_select.id = "id_querschnitt_default"
 
     undo_button = document.createElement("button");
@@ -870,6 +872,7 @@ export function update_button_language() {
   info_button.title = msg('Kurzanleitung & Information');
   drawer_button.title = msg('Mehr Aktivitäten');
 
+  querschnitt_default_select.title= msg('aktiver Querschnitt');
 
   const elHaupt = document.getElementById('id_haupt');
   let shadow = elHaupt?.shadowRoot;
