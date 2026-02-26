@@ -1350,6 +1350,62 @@
   <source>aktiver Querschnitt</source>
   <target>sección transversal activa</target>
 </trans-unit>
+<trans-unit id="s5439c2772db668d2">
+  <source>Lösche Querschnitt</source>
+  <target>Eliminar sección transversal</target>
+</trans-unit>
+<trans-unit id="saee0655be78ad4e8">
+  <source>Es gibt mindestens ein Element, das den Querschnitt verwendet</source>
+  <target>Hay al menos un elemento que utiliza la sección transversal.</target>
+</trans-unit>
+<trans-unit id="s81cf40be8b8b8d45">
+  <source>In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten.</source>
+  <target>La tolerancia de fuerza no se ha respetado en al menos un caso de carga.</target>
+</trans-unit>
+<trans-unit id="sdd624efda3f25db6">
+  <source>Mögliche Ursache: Das System ist kinematisch.</source>
+  <target>Posible causa: el sistema es cinemático.</target>
+</trans-unit>
+<trans-unit id="s892405389a3a5dbd">
+  <source>Die Ergebnisse sind wahrscheinlich nicht brauchbar!</source>
+  <target>¡Es probable que los resultados sean inútiles!</target>
+</trans-unit>
+<trans-unit id="s917adb24fdaed8f5">
+  <source>In mindestens einer Kombination keine Konvergenz der Verformungen/Kräfte erreicht.</source>
+  <target>No se ha logrado la convergencia de deformaciones/fuerzas en al menos una combinación.</target>
+</trans-unit>
+<trans-unit id="s8ac46269880e846d">
+  <source>Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. Kinematiken überprüfen.</source>
+  <target>Posibles soluciones: aumentar las iteraciones, reducir las cargas o aumentar las secciones transversales. Comprobar la cinemática.</target>
+</trans-unit>
+<trans-unit id="s5e5f2629828806eb">
+  <source>In mindestens einer Kombination keine Konvergenz der Eigenwerte erreicht.</source>
+  <target>No se ha alcanzado la convergencia de los valores propios en al menos una combinación.</target>
+</trans-unit>
+<trans-unit id="sb7482aa61c57cd96">
+  <source>Mögliche Lösungen: Anderen Eigenwertlöser probieren, und/oder Anzahl der Eigenwerte reduzieren, siehe Tab Pro.</source>
+  <target>Posibles soluciones: Pruebe con otro solucionador de valores propios y/o reduzca el número de valores propios, consulte la pestaña Pro.</target>
+</trans-unit>
+<trans-unit id="s838cc0f7aeda0734">
+  <source>In mindestens einer Kombination war alpha_cr</source>
+  <target>En al menos una combinación, alpha_cr</target>
+</trans-unit>
+<trans-unit id="s7ce8e2f713417b9b">
+  <source>Mögliche Lösungen: Lasten reduzieren oder Querschnitte vergrößern.</source>
+  <target>Posibles soluciones: reducir las cargas o aumentar las secciones transversales.</target>
+</trans-unit>
+<trans-unit id="s829b912bb4a4d5f9">
+  <source>Die Ergebnisse sind nicht brauchbar!</source>
+  <target>¡Los resultados no son válidos!</target>
+</trans-unit>
+<trans-unit id="s4d87dd473addb7af">
+  <source>Mögliche Ursachen: Lasten zu hoch in dieser Kombination.</source>
+  <target>Posibles causas: cargas demasiado elevadas en esta combinación.</target>
+</trans-unit>
+<trans-unit id="s4829aafde5473623">
+  <source>Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.</source>
+  <target>Si el mensaje también aparece en un cálculo elástico lineal, entonces el sistema es cinemático.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

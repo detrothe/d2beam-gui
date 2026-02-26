@@ -1349,6 +1349,62 @@
   <source>aktiver Querschnitt</source>
   <target>active cross-section</target>
 </trans-unit>
+<trans-unit id="s5439c2772db668d2">
+  <source>Lösche Querschnitt</source>
+  <target>Delete cross section</target>
+</trans-unit>
+<trans-unit id="saee0655be78ad4e8">
+  <source>Es gibt mindestens ein Element, das den Querschnitt verwendet</source>
+  <target>There is at least one element that uses the cross section.</target>
+</trans-unit>
+<trans-unit id="s81cf40be8b8b8d45">
+  <source>In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten.</source>
+  <target>The force tolerance was not maintained in at least one load case.</target>
+</trans-unit>
+<trans-unit id="sdd624efda3f25db6">
+  <source>Mögliche Ursache: Das System ist kinematisch.</source>
+  <target>Possible cause: The system is kinematic.</target>
+</trans-unit>
+<trans-unit id="s892405389a3a5dbd">
+  <source>Die Ergebnisse sind wahrscheinlich nicht brauchbar!</source>
+  <target>The results are probably unusable!</target>
+</trans-unit>
+<trans-unit id="s917adb24fdaed8f5">
+  <source>In mindestens einer Kombination keine Konvergenz der Verformungen/Kräfte erreicht.</source>
+  <target>No convergence of deformations/forces achieved in at least one combination.</target>
+</trans-unit>
+<trans-unit id="s8ac46269880e846d">
+  <source>Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. Kinematiken überprüfen.</source>
+  <target>Possible solutions: Increase iterations, reduce loads, or increase cross-sections. Check kinematics.</target>
+</trans-unit>
+<trans-unit id="s5e5f2629828806eb">
+  <source>In mindestens einer Kombination keine Konvergenz der Eigenwerte erreicht.</source>
+  <target>No convergence of eigenvalues achieved in at least one combination.</target>
+</trans-unit>
+<trans-unit id="sb7482aa61c57cd96">
+  <source>Mögliche Lösungen: Anderen Eigenwertlöser probieren, und/oder Anzahl der Eigenwerte reduzieren, siehe Tab Pro.</source>
+  <target>Possible solutions: Try a different eigenvalue solver and/or reduce the number of eigenvalues, see the Pro tab.</target>
+</trans-unit>
+<trans-unit id="s838cc0f7aeda0734">
+  <source>In mindestens einer Kombination war alpha_cr</source>
+  <target>In at least one combination, alpha_cr was</target>
+</trans-unit>
+<trans-unit id="s7ce8e2f713417b9b">
+  <source>Mögliche Lösungen: Lasten reduzieren oder Querschnitte vergrößern.</source>
+  <target>Possible solutions: Reduce loads or increase cross-sections.</target>
+</trans-unit>
+<trans-unit id="s829b912bb4a4d5f9">
+  <source>Die Ergebnisse sind nicht brauchbar!</source>
+  <target>The results are unusable!</target>
+</trans-unit>
+<trans-unit id="s4d87dd473addb7af">
+  <source>Mögliche Ursachen: Lasten zu hoch in dieser Kombination.</source>
+  <target>Possible causes: Loads too high in this combination.</target>
+</trans-unit>
+<trans-unit id="s4829aafde5473623">
+  <source>Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.</source>
+  <target>If the message also appears in a linearly elastic calculation, then the system is kinematic.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

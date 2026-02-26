@@ -1,3 +1,5 @@
+import { msg } from '@lit/localize';
+
 import { SlButton } from "@shoelace-style/shoelace"
 import { drRechteckQuerSchnitt } from "../components/dr-dialog-rechteckquerschnitt"
 import { CAD_STAB, list, redraw_stab, two_cad_update } from "./cad"
@@ -67,7 +69,7 @@ export function change_def_querschnitt() {
 
         let el = shadow.getElementById('id_querschnitt_default') as HTMLSelectElement;
         default_querschnitt = el.value;
-        write("default_querschnitt " + default_querschnitt)
+        //write("default_querschnitt " + default_querschnitt)
     }
 }
 //---------------------------------------------------------------------------------------------------------------
@@ -152,7 +154,7 @@ export function del_querschnittSet(qname: string) {
 
     for (let i = 0; i < nQuerschnittSets; i++) {
         if (qname === querschnittset[i].name) {
-            console.log("lösche jetzt", i, qname)
+            //console.log("lösche jetzt", i, qname)
             querschnittset.splice(i, 1);
             nQuerschnittSets--;
             break;
@@ -452,7 +454,7 @@ export async function contextmenu_querschnitt(ev: any) {
         const dialog = new ConfirmDialog({
             trueButton_Text: "ja",
             falseButton_Text: "nein",
-            question_Text: "Lösche Querschnitt: " + qname,
+            question_Text: msg('Lösche Querschnitt')+": " + qname,
         });
         const loesche = await dialog.confirm();
         //console.log("loesche", loesche);
@@ -474,7 +476,7 @@ export async function contextmenu_querschnitt(ev: any) {
             } else {
                 const dialogAlert = new AlertDialog({
                     trueButton_Text: "ok",
-                    question_Text: "Es gibt mindestens ein Element, das den Querschnitt verwendet",
+                    question_Text: msg('Es gibt mindestens ein Element, das den Querschnitt verwendet'),
                 });
                 await dialogAlert.confirm();
                 //window.alert("Lösche Querschnitt: ")
@@ -488,7 +490,7 @@ export async function contextmenu_querschnitt(ev: any) {
 export function dialog_querschnitt_closed(_e: any) {
     //------------------------------------------------------------------------------------------------------------
     //console.log("Event dialog closed", e);
-    console.log("dialog_querschnitt_closed")
+    //console.log("dialog_querschnitt_closed")
 
     const elHaupt = document.getElementById('id_haupt') as drHaupt;
     let shadow = elHaupt.shadowRoot;
@@ -714,7 +716,7 @@ export function add_rechteck_querschnitt(werte: any[]) {
     //-----------------------------------------------------------------------------------------------------------
     // Diese Methode darf nur von dateien.ts beim Einlesen aus Datei verwendet werden
 
-    console.log('add_rechteck_querschnitt wert', werte)
+    //console.log('add_rechteck_querschnitt wert', werte)
 
     let flanschbreite = 0, flanschhoehe = 0, stegbreite_oben = 0, stegbreite_unten = 0, steghoehe = 0, faktor_dehn = 1.0;
 
