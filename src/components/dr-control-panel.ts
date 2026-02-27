@@ -4,6 +4,7 @@ import { msg, localized, updateWhenLocaleChanges } from '@lit/localize';
 
 import { SlCheckbox, SlRange } from '@shoelace-style/shoelace';
 import { stadyn, System, THIIO_flag } from '../pages/rechnen';
+import { reset_dyn_eigenformen } from '../pages/grafik';
 
 
 let scale_factor = 1.0;
@@ -598,6 +599,15 @@ export class drControlPanel extends LitElement {
                 (el as HTMLElement).style.display = 'none';
             }
         }
+        elall = this.shadowRoot?.querySelectorAll('.zeile_dynamik');
+        if (elall) {
+            for (let el of elall) {
+                (el as HTMLElement).style.display = 'none';
+            }
+        }
+        this.showHeader_dynamik(false);
+        reset_dyn_eigenformen();
+
         elall = this.shadowRoot?.querySelectorAll('.zeile_pruefen');
         if (elall) {
             for (let el of elall) {
@@ -787,7 +797,7 @@ export function reset_gui() {
 //--------------------------------------------------------------------------------------------------------
 export function reset_panel_dyn_eigenformen() {
     //----------------------------------------------------------------------------------------------------
- let shadow = document.getElementById('id_haupt')?.shadowRoot;
+    let shadow = document.getElementById('id_haupt')?.shadowRoot;
     if (shadow) {
         let shad = shadow.getElementById('id_control_panel') as drControlPanel;
         if (shad) {
