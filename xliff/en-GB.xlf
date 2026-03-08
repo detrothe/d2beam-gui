@@ -1405,6 +1405,14 @@
   <source>Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.</source>
   <target>If the message also appears in a linearly elastic calculation, then the system is kinematic.</target>
 </trans-unit>
+<trans-unit id="s8ac4f010f5d4bb4f">
+  <source>Eingabefehler bitte erst beheben</source>
+  <target>Please correct input errors first</target>
+</trans-unit>
+<trans-unit id="sad58d4d06a8b1460">
+  <source>Im Tab Ergebnisse wurde das System soweit möglich gezeichnet</source>
+  <target>In the Results tab, the system was drawn as far as possible.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

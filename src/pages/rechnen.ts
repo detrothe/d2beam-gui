@@ -689,7 +689,7 @@ export function rechnen(flag = 1) {
 
             let fehler = check_input();
             if (fatal_error || fehler > 0) {
-                write('\nEingabefehler bitte erst beheben')
+                write('\n' + msg('Eingabefehler bitte erst beheben'))
             } else {
                 init_panel();
                 calculate();
@@ -735,7 +735,7 @@ export function rechnen(flag = 1) {
 
             drawsystem();
 
-            write('Im Tab Grafik wurde das System soweit möglich gezeichnet');
+            write(msg('Im Tab Ergebnisse wurde das System soweit möglich gezeichnet'));
         }
     }
 
@@ -3039,8 +3039,8 @@ async function calculate() {
             const dialogAlert = new AlertDialog({
                 trueButton_Text: "ok",
                 question_Text: msg('In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten.') +
-                    "<br>"+msg('Mögliche Ursache: Das System ist kinematisch.') +
-                    "<br>"+msg('Die Ergebnisse sind wahrscheinlich nicht brauchbar!'),
+                    "<br>" + msg('Mögliche Ursache: Das System ist kinematisch.') +
+                    "<br>" + msg('Die Ergebnisse sind wahrscheinlich nicht brauchbar!'),
             });
             await dialogAlert.confirm();
         }
@@ -3051,8 +3051,8 @@ async function calculate() {
                 const dialogAlert = new AlertDialog({
                     trueButton_Text: "ok",
                     question_Text: msg('In mindestens einer Kombination keine Konvergenz der Verformungen/Kräfte erreicht.') +
-                        "<br>"+msg('Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. Kinematiken überprüfen.') +
-                        "<br>"+msg('Die Ergebnisse sind wahrscheinlich nicht brauchbar!'),
+                        "<br>" + msg('Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. Kinematiken überprüfen.') +
+                        "<br>" + msg('Die Ergebnisse sind wahrscheinlich nicht brauchbar!'),
                 });
                 await dialogAlert.confirm();
             }
@@ -3071,8 +3071,8 @@ async function calculate() {
                 const dialogAlert = new AlertDialog({
                     trueButton_Text: "ok",
                     question_Text: msg('In mindestens einer Kombination keine Konvergenz der Eigenwerte erreicht.') +
-                        "<br>"+msg('Mögliche Lösungen: Anderen Eigenwertlöser probieren, und/oder Anzahl der Eigenwerte reduzieren, siehe Tab Pro.') +
-                        "<br>"+msg('Die Ergebnisse sind wahrscheinlich nicht brauchbar!'),
+                        "<br>" + msg('Mögliche Lösungen: Anderen Eigenwertlöser probieren, und/oder Anzahl der Eigenwerte reduzieren, siehe Tab Pro.') +
+                        "<br>" + msg('Die Ergebnisse sind wahrscheinlich nicht brauchbar!'),
                 });
                 await dialogAlert.confirm();
             }
@@ -3081,9 +3081,9 @@ async function calculate() {
 
                 const dialogAlert = new AlertDialog({
                     trueButton_Text: "ok",
-                    question_Text: msg('In mindestens einer Kombination war alpha_cr')+" < 1. " +
-                        "<br>"+msg('Mögliche Lösungen: Lasten reduzieren oder Querschnitte vergrößern.') +
-                        "<br>"+msg('Die Ergebnisse sind nicht brauchbar!'),
+                    question_Text: msg('In mindestens einer Kombination war alpha_cr') + " < 1. " +
+                        "<br>" + msg('Mögliche Lösungen: Lasten reduzieren oder Querschnitte vergrößern.') +
+                        "<br>" + msg('Die Ergebnisse sind nicht brauchbar!'),
                 });
                 await dialogAlert.confirm();
             }
@@ -4342,9 +4342,9 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
             if (error != 0) {
                 //window.alert("Gleichungssystem singulär");
 
-                const question_Text = msg('Steifigkeitsmatrix nicht positiv definit in Kombination') +" " + iKomb + ". " +
-                    "<br>"+msg('Mögliche Ursachen: Lasten zu hoch in dieser Kombination.') +
-                    "<br>"+msg('Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.')
+                const question_Text = msg('Steifigkeitsmatrix nicht positiv definit in Kombination') + " " + iKomb + ". " +
+                    "<br>" + msg('Mögliche Ursachen: Lasten zu hoch in dieser Kombination.') +
+                    "<br>" + msg('Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.')
 
                 alertdialog('ok', question_Text);
 

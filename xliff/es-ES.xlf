@@ -1406,6 +1406,14 @@
   <source>Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.</source>
   <target>Si el mensaje también aparece en un cálculo elástico lineal, entonces el sistema es cinemático.</target>
 </trans-unit>
+<trans-unit id="s8ac4f010f5d4bb4f">
+  <source>Eingabefehler bitte erst beheben</source>
+  <target>Por favor, corrija primero los errores de entrada.</target>
+</trans-unit>
+<trans-unit id="sad58d4d06a8b1460">
+  <source>Im Tab Ergebnisse wurde das System soweit möglich gezeichnet</source>
+  <target>En la pestaña Resultados, el sistema se dibujó en la medida de lo posible.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
