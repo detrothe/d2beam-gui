@@ -1413,6 +1413,178 @@
   <source>Im Tab Ergebnisse wurde das System soweit möglich gezeichnet</source>
   <target>In the Results tab, the system was drawn as far as possible.</target>
 </trans-unit>
+<trans-unit id="sb61bc52e9b4ecf92">
+  <source>Länge von Element</source>
+  <target>Length of element</target>
+</trans-unit>
+<trans-unit id="s5f914f515e785df8">
+  <source>Angriffspunkt Einzellast auf Stab</source>
+  <target>The point of application of the single load on bar</target>
+</trans-unit>
+<trans-unit id="s162733daa0aa2102">
+  <source>ist größer Stablänge, siehe Tab Tabellen</source>
+  <target>is greater than the bar length, see Tab tables</target>
+</trans-unit>
+<trans-unit id="sfecd3a744c81cdc9">
+  <source>Dem Element</source>
+  <target>No cross-section is assigned to element</target>
+</trans-unit>
+<trans-unit id="s0482241b31714309">
+  <source>ist kein Querschnitt zugeordnet</source>
+  <target> </target>
+</trans-unit>
+<trans-unit id="s90b0d535974c7970">
+  <source>Das ist keine zulässige Zahl in Zeile</source>
+  <target>This is not a valid number in line</target>
+</trans-unit>
+<trans-unit id="s0a1749fba7dd142d">
+  <source>An Kombination</source>
+  <target>No load case is involved in combination</target>
+</trans-unit>
+<trans-unit id="s3029e00f65e4fa86">
+  <source>ist kein Lastfall beteiligt</source>
+  <target> </target>
+</trans-unit>
+<trans-unit id="saa75b01360e48f68">
+  <source>ist null</source>
+  <target>is zero</target>
+</trans-unit>
+<trans-unit id="scaceacd849f5602a">
+  <source>Es ist noch kein Querschnitt definiert</source>
+  <target>No cross-section has been defined yet</target>
+</trans-unit>
+<trans-unit id="sb35dba047ce53a93">
+  <source>Stablänge zu klein</source>
+  <target>element length too small</target>
+</trans-unit>
+<trans-unit id="s7d0cb3c2effc8ec2">
+  <source>Angriffspunkt x muss größer gleich null sein</source>
+  <target>The point of load application x must be greater than or equal to zero</target>
+</trans-unit>
+<trans-unit id="s63440ec92d8737c3">
+  <source>ersten Knoten picken</source>
+  <target>pick first node</target>
+</trans-unit>
+<trans-unit id="s8de142262ddffdc9">
+  <source>Element auswählen durch Klick und danach editieren</source>
+  <target>Select an element by clicking on it and then edit it</target>
+</trans-unit>
+<trans-unit id="s1ab5ceb0caa4ac22">
+  <source>Eingabe von Knotenkoordinaten</source>
+  <target>Entering node coordinates</target>
+</trans-unit>
+<trans-unit id="s68dcdd432794b14d">
+  <source>Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken</source>
+  <target>To change node coordinates, first select an existing node</target>
+</trans-unit>
+<trans-unit id="sfe6eb2b8c21847bc">
+  <source>Pick ein Element</source>
+  <target>Pick an element</target>
+</trans-unit>
+<trans-unit id="s0dc0a5c66a137db7">
+  <source>Pick Element, Lager oder Last</source>
+  <target>Pick element, support, or load</target>
+</trans-unit>
+<trans-unit id="scec808ea4f5deb2d">
+  <source>Pick Knoten</source>
+  <target>Pick node</target>
+</trans-unit>
+<trans-unit id="s8ce209eb53d7f1f8">
+  <source>mindestens ein Lastkomponente muss ungleich null sein</source>
+  <target></target>
+</trans-unit>
+<trans-unit id="s8cda330f7171b61b">
+  <source>Element picken</source>
+  <target>Pick an element</target>
+</trans-unit>
+<trans-unit id="s057a38695e9b5f0d">
+  <source>mind. eine Last muss ungleich null sein</source>
+  <target>At least one load must be non-zero</target>
+</trans-unit>
+<trans-unit id="sb40103231670e3fe">
+  <source>mind. eine Temperatur muss ungleich null sein</source>
+  <target>At least one temperature must be non-zero</target>
+</trans-unit>
+<trans-unit id="s7d7b08def4b4d34b">
+  <source>Vorspannung muss ungleich null sein</source>
+  <target>Prestress must be non-zero</target>
+</trans-unit>
+<trans-unit id="s26d9b7fbfaa42c4e">
+  <source>Spannweg ds muss ungleich null sein</source>
+  <target>The distance ds must be non-zero</target>
+</trans-unit>
+<trans-unit id="s19afcf0b0dfe1028">
+  <source>mind. eine Stabverformung muss ungleich null sein</source>
+  <target>At least one element deformation must be non-zero</target>
+</trans-unit>
+<trans-unit id="s42dee0a9650c7116">
+  <source>Knoten picken</source>
+  <target>pick node</target>
+</trans-unit>
+<trans-unit id="s95fc09c1f1d89d30">
+  <source>Lastfall muss größer 0 sein</source>
+  <target>Load case must be greater than 0</target>
+</trans-unit>
+<trans-unit id="s64bf79d9b257f4ed">
+  <source>Anfangsknoten eingeben</source>
+  <target>Enter start node</target>
+</trans-unit>
+<trans-unit id="s743caaab8a3b30c6">
+  <source>Stabende eingeben</source>
+  <target>Enter element end</target>
+</trans-unit>
+<trans-unit id="scd88c6c749958373">
+  <source>zweiten Punkt picken</source>
+  <target>pick the second point</target>
+</trans-unit>
+<trans-unit id="s08ce83e7dca73406">
+  <source>zweiten Knoten picken</source>
+  <target>pick the second node</target>
+</trans-unit>
+<trans-unit id="s0edfd76b37e30722">
+  <source>Pfeilspitze picken</source>
+  <target>pick at an arrowhead</target>
+</trans-unit>
+<trans-unit id="s6c307b3a1a718b75">
+  <source>keinen Knoten gepickt</source>
+  <target>No node was picked</target>
+</trans-unit>
+<trans-unit id="s655dacda54bf73f1">
+  <source>Knoten hat schon ein Lager</source>
+  <target>The node already has support</target>
+</trans-unit>
+<trans-unit id="s5c7d90867a472c06">
+  <source>keinen Knoten gefunden</source>
+  <target>no node found</target>
+</trans-unit>
+<trans-unit id="s8a7299b02b0cdded">
+  <source>Knoten hat schon eine Knotenmasse</source>
+  <target>node already has a nodal mass</target>
+</trans-unit>
+<trans-unit id="sd5073c88655e8a55">
+  <source>Stabanfang eingeben</source>
+  <target>Enter element start</target>
+</trans-unit>
+<trans-unit id="s32b6b574fc24ee40">
+  <source>ersten Punkt picken</source>
+  <target>pick the first point</target>
+</trans-unit>
+<trans-unit id="sa855ac92fbe2586a">
+  <source>Masslinienpunkt picken</source>
+  <target>Pick dimension line point</target>
+</trans-unit>
+<trans-unit id="s6f05d8235e842502">
+  <source>Maßlänge zu klein</source>
+  <target>Dimension too small</target>
+</trans-unit>
+<trans-unit id="s45c6ed4f68df387a">
+  <source>Maßlänge dx zu klein</source>
+  <target>Dimension length dx too small</target>
+</trans-unit>
+<trans-unit id="sbc39d486419572b4">
+  <source>Maßlänge dz zu klein</source>
+  <target>Dimension length dz too small</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

@@ -1,3 +1,4 @@
+import { msg } from '@lit/localize';
 import { drDialogEdit_selected_elementlasten } from "../components/dr-dialog_edit_selected_elementlasten"
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten"
 import { drDialogKnotenlast } from "../components/dr-dialog_knotenlast"
@@ -625,7 +626,7 @@ export function update_multi_selected_elementlast() {
 
                 if (x < 0) {
                     ok = false;
-                    alertdialog('ok', 'Angriffspunkt x muss größer gleich null sein');
+                    alertdialog('ok', msg('Angriffspunkt x muss größer gleich null sein'));
 
                 } else if (P === 0 && M === 0) {
                     ok = false;

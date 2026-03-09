@@ -1,3 +1,4 @@
+import { msg } from '@lit/localize';
 import { CElement } from "./element"
 
 import {
@@ -192,7 +193,7 @@ export class CTimoshenko_beam extends CElement {
         this.sl = Math.sqrt(this.dx * this.dx + this.dz * this.dz) - this.aL - this.aR;      // elastische Stablänge
 
         if (this.sl < 1e-12) {
-            alert("Länge von Element " + String(ielem + 1) + " ist null")
+            alert(msg('Länge von Element') + " " + String(ielem + 1) + " " + msg('ist null'))
             return;
         }
 

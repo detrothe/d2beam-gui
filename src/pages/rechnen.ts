@@ -760,7 +760,7 @@ function check_input() {
 
     if (fehler > 0) write(' ')
     for (let ielem = 0; ielem < nelem_Balken; ielem++) {
-        if (element[ielem].qname === "") { write('Dem Element ' + (+ielem + 1) + ' ist kein Querschnitt zugeordnet'); fehler++; }
+        if (element[ielem].qname === "") { write(msg('Dem Element') + " " + (+ielem + 1) + ' ' + msg('ist kein Querschnitt zugeordnet')); fehler++; }
         // if (element[ielem].nod[0] < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
         // if (element[ielem].nod[1] < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
         // if (element[ielem].nod[0] > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
@@ -802,7 +802,7 @@ function check_input() {
         for (let j = 0; j < nlastfaelle; j++) {
             if (kombiTabelle[i][j] != 0.0) anzahl++;
         }
-        if (anzahl === 0) { write('An Kombination ' + (+i + 1) + ' ist kein Lastfall beteiligt'); fehler++; }
+        if (anzahl === 0) { write(msg('An Kombination') + ' ' + (+i + 1) + ' ' + msg('ist kein Lastfall beteiligt')); fehler++; }
     }
 
     if (maxU_node < 0) { write('Tab Vorverformungen, Schiefstellung: Knotennummer muss >= 0 sein') }
@@ -1450,7 +1450,7 @@ function read_elements() {
             element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Stablänge
 
             if (element[ielem].sl < 1e-12) {
-                write("Länge von Element " + String(ielem + 1) + " ist null")
+                write(msg('Länge von Element')+" " + String(ielem + 1) + " "+msg('ist null'))
                 element[ielem].cosinus = 1.0
                 element[ielem].sinus = 0.0
                 element[ielem].alpha = 0.0

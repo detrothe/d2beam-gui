@@ -441,7 +441,7 @@ export function Stab_button(_ev: Event) {
    // console.log("hoehe des div", h)
 
    if (default_querschnitt.length === 0) {
-      alertdialog('ok', 'Es ist noch kein Querschnitt definiert');
+      alertdialog('ok', msg('Es ist noch kein Querschnitt definiert'));
       return;
    }
    const elHaupt = document.getElementById('id_haupt');
@@ -464,7 +464,7 @@ export function Stab_button(_ev: Event) {
          buttons_control.typ_cad_element = CAD_STAB;
          el.addEventListener('keydown', keydown);
          buttons_control.n_input_points = 2;
-         set_help_text('Anfangsknoten eingeben');
+         set_help_text(msg('Anfangsknoten eingeben'));
          buttons_control.button_pressed = true;
          set_zoomIsActive(false);
          pointer.length = 0
@@ -1288,13 +1288,13 @@ function penDown(ev: PointerEvent) {
             start_y = tr.zPix(z);
             start_x_wc = x;
             start_z_wc = z;
-            if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
-            else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
-            else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
-            else if (buttons_control.copy_selected_aktiv) set_help_text('Pfeilspitze picken');
+            if (buttons_control.stab_eingabe_aktiv) set_help_text(msg('Stabende eingeben'));
+            else if (buttons_control.messen_aktiv) set_help_text(msg('zweiten Punkt picken'));
+            else if (buttons_control.bemassung_aktiv) set_help_text(msg('zweiten Knoten picken'));
+            else if (buttons_control.copy_selected_aktiv) set_help_text(msg('Pfeilspitze picken'));
          } else {
             if (buttons_control.bemassung_aktiv) {
-               alertdialog('ok', 'keinen Knoten gepickt');
+               alertdialog('ok', msg('keinen Knoten gepickt'));
                //buttons_control.input_started = 0;
                return;
             }
@@ -1320,10 +1320,10 @@ function penDown(ev: PointerEvent) {
                start_x_wc = xc;
                start_z_wc = zc;
             }
-            if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
-            else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
-            else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
-            else if (buttons_control.copy_selected_aktiv) set_help_text('Pfeilspitze picken');
+            if (buttons_control.stab_eingabe_aktiv) set_help_text(msg('Stabende eingeben'));
+            else if (buttons_control.messen_aktiv) set_help_text(msg('zweiten Punkt picken'));
+            else if (buttons_control.bemassung_aktiv) set_help_text(msg('zweiten Knoten picken'));
+            else if (buttons_control.copy_selected_aktiv) set_help_text(msg('Pfeilspitze picken'));
          }
          input_active = true;
          buttons_control.input_started = 1;
@@ -1335,14 +1335,14 @@ function penDown(ev: PointerEvent) {
                node.x = start_x_wc;
                node.z = start_z_wc;
                read_lager_dialog(node);
-               console.log('pendown, node', node);
+               //console.log('pendown, node', node);
 
                let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
                if (index1 > -1) {
                   // Überprüfe, ob Knoten schon Lager hat
                   let vorhanden = check_doppeltes_Lager(index1)
                   if (vorhanden) {
-                     alertdialog('ok', 'Knoten hat schon ein Lager');
+                     alertdialog('ok', msg('Knoten hat schon ein Lager'));
                   }
                   else {
                      let group: any;
@@ -1355,8 +1355,8 @@ function penDown(ev: PointerEvent) {
                      two.update();
                   }
                } else {
-                  console.log('Keinen Knoten gefunden');
-                  alertdialog('ok', 'keinen Knoten gefunden');
+                  //console.log('Keinen Knoten gefunden');
+                  alertdialog('ok', msg('keinen Knoten gefunden'));
                }
             }
 
@@ -1378,8 +1378,8 @@ function penDown(ev: PointerEvent) {
                      two.update();
                   }
                } else {
-                  console.log('Keinen Knoten gefunden');
-                  alertdialog('ok', 'keinen Knoten gefunden');
+                  //console.log('Keinen Knoten gefunden');
+                  alertdialog('ok', msg('keinen Knoten gefunden'));
                }
             }
             else if (buttons_control.knotenmasse_eingabe_aktiv) {
@@ -1388,7 +1388,7 @@ function penDown(ev: PointerEvent) {
                if (index1 > -1) {
                   let vorhanden = check_doppelte_Masse(index1)
                   if (vorhanden) {
-                     alertdialog('ok', 'Knoten hat schon eine Knotenmasse');
+                     alertdialog('ok', msg('Knoten hat schon eine Knotenmasse'));
                   }
                   else {
                      let group: any;
@@ -1405,8 +1405,8 @@ function penDown(ev: PointerEvent) {
                      //console.log('getBoundingClientRect', group.getBoundingClientRect());
                   }
                } else {
-                  console.log('Keinen Knoten gefunden');
-                  alertdialog('ok', 'keinen Knoten gefunden');
+                  //console.log('Keinen Knoten gefunden');
+                  alertdialog('ok', msg('keinen Knoten gefunden'));
                }
             }
             else if (buttons_control.knotenverformung_eingabe_aktiv) {
@@ -1427,7 +1427,7 @@ function penDown(ev: PointerEvent) {
                      two.update();
                   }
                } else {
-                  alertdialog('ok', 'keinen Knoten gefunden');
+                  alertdialog('ok', msg('keinen Knoten gefunden'));
                }
             }
 
@@ -1779,13 +1779,13 @@ function mouseup(ev: any) {
                start_y = tr.zPix(z);
                start_x_wc = x;
                start_z_wc = z;
-               if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
-               else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
-               else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
-               else if (buttons_control.copy_selected_aktiv) set_help_text('Pfeilspitze picken');
+               if (buttons_control.stab_eingabe_aktiv) set_help_text(msg('Stabende eingeben'));
+               else if (buttons_control.messen_aktiv) set_help_text(msg('zweiten Punkt picken'));
+               else if (buttons_control.bemassung_aktiv) set_help_text(msg('zweiten Knoten picken'));
+               else if (buttons_control.copy_selected_aktiv) set_help_text(msg('Pfeilspitze picken'));
             } else {
                if (buttons_control.bemassung_aktiv) {
-                  alertdialog('ok', 'keinen Knoten gepickt');
+                  alertdialog('ok', msg('keinen Knoten gepickt'));
                   //buttons_control.input_started = 0;
                   return;
                }
@@ -1810,10 +1810,10 @@ function mouseup(ev: any) {
                   start_x_wc = xc;
                   start_z_wc = zc;
                }
-               if (buttons_control.stab_eingabe_aktiv) set_help_text('Stabende eingeben');
-               else if (buttons_control.messen_aktiv) set_help_text('zweiten Punkt picken');
-               else if (buttons_control.bemassung_aktiv) set_help_text('zweiten Knoten picken');
-               else if (buttons_control.copy_selected_aktiv) set_help_text('Pfeilspitze picken');
+               if (buttons_control.stab_eingabe_aktiv) set_help_text(msg('Stabende eingeben'));
+               else if (buttons_control.messen_aktiv) set_help_text(msg('zweiten Punkt picken'));
+               else if (buttons_control.bemassung_aktiv) set_help_text(msg('zweiten Knoten picken'));
+               else if (buttons_control.copy_selected_aktiv) set_help_text(msg('Pfeilspitze picken'));
             }
             input_active = true;
             buttons_control.input_started = 1;
@@ -1833,7 +1833,7 @@ function mouseup(ev: any) {
                      // Überprüfe, ob Knoten schon Lager hat
                      let vorhanden = check_doppeltes_Lager(index1)
                      if (vorhanden) {
-                        alertdialog('ok', 'Knoten hat schon ein Lager');
+                        alertdialog('ok', msg('Knoten hat schon ein Lager'));
                      }
                      else {
 
@@ -1847,7 +1847,7 @@ function mouseup(ev: any) {
                         two.update();
                      }
                   } else {
-                     alertdialog('ok', 'keinen Knoten gefunden');
+                     alertdialog('ok', msg('keinen Knoten gefunden'));
                   }
                }
                else if (buttons_control.knotenlast_eingabe_aktiv) {               // Knotenlast
@@ -1878,7 +1878,7 @@ function mouseup(ev: any) {
                   if (index1 > -1) {
                      let vorhanden = check_doppelte_Masse(index1)
                      if (vorhanden) {
-                        alertdialog('ok', 'Knoten hat schon eine Knotenmasse');
+                        alertdialog('ok', msg('Knoten hat schon eine Knotenmasse'));
                      }
                      else {
                         let group: any;
@@ -1895,7 +1895,7 @@ function mouseup(ev: any) {
                         //console.log('getBoundingClientRect', group.getBoundingClientRect());
                      }
                   } else {
-                     alertdialog('ok', 'keinen Knoten gefunden');
+                     alertdialog('ok', msg('keinen Knoten gefunden'));
                   }
                }
                else if (buttons_control.knotenverformung_eingabe_aktiv) {           // Knotenverformung
@@ -1916,7 +1916,7 @@ function mouseup(ev: any) {
                         two.update();
                      }
                   } else {
-                     alertdialog('ok', 'keinen Knoten gefunden');
+                     alertdialog('ok', msg('keinen Knoten gefunden'));
                   }
                }
 
@@ -1939,7 +1939,7 @@ function mouseup(ev: any) {
                foundNodePoint = false;
             } else {
                if (buttons_control.bemassung_aktiv) {
-                  alertdialog('ok', 'keinen Knoten gepickt');
+                  alertdialog('ok', msg('keinen Knoten gepickt'));
                   return;
                }
                if (foundRasterPoint) {
@@ -1986,9 +1986,9 @@ function mouseup(ev: any) {
                   obj.setTwoObj(group)
                }
                else {
-                  alertdialog('ok', 'Stablänge zu klein = ' + sl + 'm');
+                  alertdialog('ok', msg('Stablänge zu klein')+' = ' + sl + 'm');
                }
-               set_help_text('Stabanfang eingeben');
+               set_help_text(msg('Stabanfang eingeben'));
             }
             else if (buttons_control.messen_aktiv) {
                let dx = end_x_wc - start_x_wc
@@ -2003,7 +2003,7 @@ function mouseup(ev: any) {
                }
                showDialog_messen();
 
-               set_help_text('ersten Punkt picken');
+               set_help_text(msg('ersten Punkt picken'));
 
             }
             else if (buttons_control.bemassung_aktiv) {
@@ -2013,43 +2013,43 @@ function mouseup(ev: any) {
                let fehler = false;
                if (buttons_control.art === 1) {
                   if (sl > 0.001) {
-                     set_help_text('Masslinienpunkt picken');
+                     set_help_text(msg('Masslinienpunkt picken'));
                      buttons_control.input_started = 2;
                   }
                   else {
-                     alertdialog('ok', 'Maßlänge zu klein = ' + sl + 'm');
+                     alertdialog('ok', msg('Maßlänge zu klein')+' = ' + sl + 'm');
                      fehler = true;
                      buttons_control.input_started = 1;
-                     set_help_text('zweiten Knoten picken');
+                     set_help_text(msg('zweiten Knoten picken'));
                   }
                }
                else if (buttons_control.art === 2) {
                   if (Math.abs(dx) > 0.001) {
-                     set_help_text('Masslinienpunkt picken');
+                     set_help_text(msg('Masslinienpunkt picken'));
                      buttons_control.input_started = 2;
                   }
                   else {
-                     alertdialog('ok', 'Maßlänge dx zu klein = ' + Math.abs(dx) + 'm');
+                     alertdialog('ok', msg('Maßlänge dx zu klein')+' = ' + Math.abs(dx) + 'm');
                      buttons_control.input_started = 1;
                      fehler = true;
-                     set_help_text('zweiten Knoten picken');
+                     set_help_text(msg('zweiten Knoten picken'));
                   }
                }
                else if (buttons_control.art === 3) {
                   if (Math.abs(dz) > 0.001) {
-                     set_help_text('Masslinienpunkt picken');
+                     set_help_text(msg('Masslinienpunkt picken'));
                      buttons_control.input_started = 2;
                   }
                   else {
-                     alertdialog('ok', 'Maßlänge dz zu klein = ' + Math.abs(dz) + 'm');
+                     alertdialog('ok', msg('Maßlänge dz zu klein')+' = ' + Math.abs(dz) + 'm');
                      buttons_control.input_started = 1;
                      fehler = true;
-                     set_help_text('zweiten Knoten picken');
+                     set_help_text(msg('zweiten Knoten picken'));
                   }
                }
                if (fehler && isPen) {
                   buttons_control.input_started = 0;
-                  set_help_text('ersten Knoten picken');
+                  set_help_text(msg('ersten Knoten picken'));
                }
             }
             else if (buttons_control.copy_selected_aktiv) {
@@ -2084,7 +2084,7 @@ function mouseup(ev: any) {
             }
 
             if (buttons_control.bemassung_aktiv) {
-               set_help_text('ersten Knoten picken');
+               set_help_text(msg('ersten Knoten picken'));
                let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
                let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
                //console.log("Bemassung index1-2", index1, index2)

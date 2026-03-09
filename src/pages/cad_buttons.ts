@@ -480,7 +480,7 @@ export function cad_buttons() {
     select_button.addEventListener("pointerdown", () => {
       button_selectElement_timer_id = window.setTimeout(
         () => {
-          set_help_text('Element auswählen durch Klick und danach editieren', button_color_help_text);
+          set_help_text(msg('Element auswählen durch Klick und danach editieren'), button_color_help_text);
           button_selectElement_help_timer = true;
         }, 300);
     });
@@ -503,7 +503,7 @@ export function cad_buttons() {
     knoten_button.addEventListener("pointerdown", () => {
       button_knoten_timer_id = window.setTimeout(
         () => {
-          set_help_text('Eingabe von Knotenkoordinaten', button_color_help_text);
+          set_help_text(msg('Eingabe von Knotenkoordinaten'), button_color_help_text);
           button_knoten_help_timer = true;
         }, 300);
     });
@@ -526,7 +526,7 @@ export function cad_buttons() {
     edit_knoten_button.addEventListener("pointerdown", () => {
       button_editknoten_timer_id = window.setTimeout(
         () => {
-          set_help_text('Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken', button_color_help_text);
+          set_help_text(msg('Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken'), button_color_help_text);
           button_editknoten_help_timer = true;
         }, 300);
     });
@@ -1080,7 +1080,7 @@ export function delete_button() {
       el.style.backgroundColor = "darkRed";
     }
     buttons_control.delete_element = true;
-    set_help_text('Pick ein Element');
+    set_help_text(msg('Pick ein Element'));
     buttons_control.button_pressed = true;
     buttons_control.show_boundingRect = true;
 
@@ -1110,7 +1110,7 @@ export function Select_button() {
       el.style.backgroundColor = "darkRed";
     }
     buttons_control.select_element = true;
-    set_help_text('Pick Element, Lager oder Last');
+    set_help_text(msg('Pick Element, Lager oder Last'));
     buttons_control.button_pressed = true;
     buttons_control.show_boundingRect = true;
 
@@ -2200,7 +2200,7 @@ export function showDialog_lager() {
     console.log("shadow", el?.shadowRoot?.getElementById("dialog_lager")),
       (el?.shadowRoot?.getElementById("dialog_lager") as HTMLDialogElement).addEventListener("close", dialog_lager_closed);
 
-    set_help_text('Knoten picken');
+    set_help_text(msg('Knoten picken'));
 
     (el?.shadowRoot?.getElementById("dialog_lager") as HTMLDialogElement).showModal();
   }
@@ -2482,7 +2482,7 @@ export function Edit_Knoten_button() {
       el.style.backgroundColor = "darkRed";
 
       buttons_control.select_node = true;
-      set_help_text('Pick Knoten');
+      set_help_text(msg('Pick Knoten'));
       buttons_control.button_pressed = true;
       set_zoomIsActive(false);
       reset_pointer_length();
@@ -2569,7 +2569,7 @@ export function Messen_button() {
     buttons_control.messen_aktiv = true
     buttons_control.cad_eingabe_aktiv = true
     buttons_control.typ_cad_element = CAD_MESSEN
-    set_help_text('ersten Punkt picken');
+    set_help_text(msg('ersten Punkt picken'));
     //el.addEventListener('keydown', keydown);
     buttons_control.n_input_points = 2
     buttons_control.button_pressed = true;
@@ -2853,7 +2853,7 @@ export function showDialog_knotenmasse() {
     console.log("shadow", el?.shadowRoot?.getElementById("dialog_knotenmasse")),
       (el?.shadowRoot?.getElementById("dialog_knotenmasse") as HTMLDialogElement).addEventListener("close", dialog_knotenmasse_closed);
 
-    set_help_text('Knoten picken');
+    set_help_text(msg('Knoten picken'));
 
     (el?.shadowRoot?.getElementById("dialog_knotenmasse") as HTMLDialogElement).showModal();
   }
@@ -2944,7 +2944,7 @@ export function showDialog_knotenlast(show_nur_lastfall = false) {
 
     (el?.shadowRoot?.getElementById("dialog_knotenlast") as HTMLDialogElement).addEventListener("close", dialog_knotenlast_closed);
 
-    set_help_text('Knoten picken');
+    set_help_text(msg('Knoten picken'));
 
     (el?.shadowRoot?.getElementById("dialog_knotenlast") as HTMLDialogElement).showModal();
   }
@@ -2995,7 +2995,7 @@ export function read_knotenlast_dialog(knlast: TLoads): boolean {
 
     if (knlast.lf <= 0) {
       ok = false;
-      alertdialog('ok', 'Lastfall muss größer 0 sein');
+      alertdialog('ok', msg('Lastfall muss größer 0 sein'));
       return ok;
     }
 
@@ -3008,7 +3008,7 @@ export function read_knotenlast_dialog(knlast: TLoads): boolean {
 
     if (knlast.Px_org === 0 && knlast.Pz_org === 0 && knlast.p[2] === 0) {
       ok = false;
-      alertdialog('ok', 'mindestens ein Lastkomponente muss ungleich null sein');
+      alertdialog('ok', msg('mindestens ein Lastkomponente muss ungleich null sein'));
       return ok;
     }
 
@@ -3162,7 +3162,7 @@ export function showDialog_elementlast() {
     // (el?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).addEventListener("close", dialog_elementlast_closed);
     el.addEventListener("close", dialog_elementlast_closed);
 
-    set_help_text('Element picken');
+    set_help_text(msg('Element picken'));
 
     //(el?.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).showModal();
     el.showModal();
@@ -3228,11 +3228,11 @@ function update_elementlast() {
 
         if (x < 0) {
           ok = false;
-          alertdialog('ok', 'Angriffspunkt x muss größer gleich null sein');
+          alertdialog('ok', msg('Angriffspunkt x muss größer gleich null sein'));
 
         } else if (P === 0 && M === 0) {
           ok = false;
-          alertdialog('ok', 'mind. eine Last muss ungleich null sein');
+          alertdialog('ok', msg('mind. eine Last muss ungleich null sein'));
 
         } else {
 
@@ -3252,7 +3252,7 @@ function update_elementlast() {
 
           if (pa === 0 && pe === 0) {
             ok = false;
-            alertdialog('ok', 'mind. eine Last muss ungleich null sein');
+            alertdialog('ok', msg('mind. eine Last muss ungleich null sein'));
           } else {
 
             (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pL = pa;
@@ -3267,7 +3267,7 @@ function update_elementlast() {
 
           if (To === 0 && Tu === 0) {
             ok = false;
-            alertdialog('ok', 'mind. eine Temperatur muss ungleich null sein');
+            alertdialog('ok', msg('mind. eine Temperatur muss ungleich null sein'));
           } else {
 
 
@@ -3281,7 +3281,7 @@ function update_elementlast() {
 
           if (sigmaV === 0) {
             ok = false;
-            alertdialog('ok', 'Vorspannung muss ungleich null sein');
+            alertdialog('ok', msg('Vorspannung muss ungleich null sein'));
           } else {
 
             (obj_ellast.elast[index_ellast] as TCAD_Vorspannung).sigmaV = sigmaV;
@@ -3293,7 +3293,7 @@ function update_elementlast() {
 
           if (ds === 0) {
             ok = false;
-            alertdialog('ok', 'Spannweg ds muss ungleich null sein');
+            alertdialog('ok', msg('Spannweg ds muss ungleich null sein'));
           } else {
 
             (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).ds = ds;
@@ -3308,7 +3308,7 @@ function update_elementlast() {
 
           if (w0a === 0 && w0m === 0 && w0e === 0) {
             ok = false;
-            alertdialog('ok', 'mind. eine Stabverformung muss ungleich null sein');
+            alertdialog('ok', msg('mind. eine Stabverformung muss ungleich null sein'));
           } else {
             (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0a = w0a;
             (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0m = w0m;
@@ -3381,7 +3381,7 @@ function update_knotenlager() {
 
   read_lager_dialog((obj_knlager as TCAD_Lager).node)
 
-  console.log("update_knotenlager", (obj_knlager as TCAD_Lager).node)
+  //console.log("update_knotenlager", (obj_knlager as TCAD_Lager).node)
   let group = obj_knlager.getTwoObj();
   two.remove(group)
   group = draw_lager(tr, obj_knlager as TCAD_Lager)
@@ -3645,7 +3645,7 @@ export function show_selected_element(xc: number, zc: number) {
             (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
             //console.log("xz", x, z)
             let inside = test_point_inside_area_2D(x, z, xc, zc)
-            console.log("select_element, inside ", i, inside)
+            //console.log("select_element, inside ", i, inside)
             if (inside) {
               elementlast_gefunden = true
               obj_ellast = obj
@@ -3660,7 +3660,7 @@ export function show_selected_element(xc: number, zc: number) {
               (obj.elast[j] as TCAD_ElLast).get_drawLast_xz(x, z);
               //console.log("xz", x, z)
               let inside = test_point_inside_area_2D(x, z, xc, zc)
-              console.log("select_element P typ 1, inside ", i, inside)
+              //console.log("select_element P typ 1, inside ", i, inside)
               if (inside) {
                 element_einzellast_gefunden = true
                 obj_eleinzellast = obj
@@ -3675,7 +3675,7 @@ export function show_selected_element(xc: number, zc: number) {
               (obj.elast[j] as TCAD_Einzellast).get_drawLast_M_xz(x, z);
               //console.log("xz", x, z)
               let inside = test_point_inside_area_2D(x, z, xc, zc)
-              console.log("select_element M typ 1, inside ", i, inside)
+              //console.log("select_element M typ 1, inside ", i, inside)
               if (inside) {
                 element_einzellast_gefunden = true
                 obj_eleinzellast = obj
@@ -3690,7 +3690,7 @@ export function show_selected_element(xc: number, zc: number) {
     else if (obj.elTyp === CAD_LAGER && show_lager) {
       let two_obj = obj.two_obj
       let rect = two_obj.getBoundingClientRect();
-      console.log("rect Lager", rect, xc, zc)
+      //console.log("rect Lager", rect, xc, zc)
       if (xpix > rect.left && xpix < rect.right) {
         if (zpix > rect.top && zpix < rect.bottom) {
           lager_gefunden = true
@@ -3731,7 +3731,7 @@ export function show_selected_element(xc: number, zc: number) {
       (obj as TCAD_Bemassung).get_txt_xz(x, z);
       //console.log("xz", x, z)
       let inside = test_point_inside_area_2D(x, z, xc, zc)
-      console.log("select_bemassung, inside ", i, inside)
+      //console.log("select_bemassung, inside ", i, inside)
       if (inside) {
         bemassung_gefunden = true
         obj_bemassung = obj;

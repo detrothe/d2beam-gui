@@ -1414,6 +1414,178 @@
   <source>Im Tab Ergebnisse wurde das System soweit möglich gezeichnet</source>
   <target>En la pestaña Resultados, el sistema se dibujó en la medida de lo posible.</target>
 </trans-unit>
+<trans-unit id="sb61bc52e9b4ecf92">
+  <source>Länge von Element</source>
+  <target>La longitud del elemento</target>
+</trans-unit>
+<trans-unit id="s5f914f515e785df8">
+  <source>Angriffspunkt Einzellast auf Stab</source>
+  <target>El punto de aplicación de la carga puntual sobre la barra</target>
+</trans-unit>
+<trans-unit id="s162733daa0aa2102">
+  <source>ist größer Stablänge, siehe Tab Tabellen</source>
+  <target>es mayor que la longitud de la barra, véase la tabla</target>
+</trans-unit>
+<trans-unit id="sfecd3a744c81cdc9">
+  <source>Dem Element</source>
+  <target>No hay ninguna sección transversal asignada al elemento</target>
+</trans-unit>
+<trans-unit id="s0482241b31714309">
+  <source>ist kein Querschnitt zugeordnet</source>
+  <target> </target>
+</trans-unit>
+<trans-unit id="s90b0d535974c7970">
+  <source>Das ist keine zulässige Zahl in Zeile</source>
+  <target>Este número no es válido en línea</target>
+</trans-unit>
+<trans-unit id="s0a1749fba7dd142d">
+  <source>An Kombination</source>
+  <target>La combinación</target>
+</trans-unit>
+<trans-unit id="s3029e00f65e4fa86">
+  <source>ist kein Lastfall beteiligt</source>
+  <target>no implica ningún caso de carga</target>
+</trans-unit>
+<trans-unit id="saa75b01360e48f68">
+  <source>ist null</source>
+  <target>es cero</target>
+</trans-unit>
+<trans-unit id="scaceacd849f5602a">
+  <source>Es ist noch kein Querschnitt definiert</source>
+  <target>Aún no se ha definido ninguna sección transversal</target>
+</trans-unit>
+<trans-unit id="sb35dba047ce53a93">
+  <source>Stablänge zu klein</source>
+  <target>Longitud del elemento demasiado pequeña</target>
+</trans-unit>
+<trans-unit id="s7d0cb3c2effc8ec2">
+  <source>Angriffspunkt x muss größer gleich null sein</source>
+  <target>El punto de aplicación de la carga x debe ser mayor o igual a cero</target>
+</trans-unit>
+<trans-unit id="s63440ec92d8737c3">
+  <source>ersten Knoten picken</source>
+  <target>Seleccionar primer nodo</target>
+</trans-unit>
+<trans-unit id="s8de142262ddffdc9">
+  <source>Element auswählen durch Klick und danach editieren</source>
+  <target>Seleccione un elemento haciendo clic sobre él y, a continuación, edítelo</target>
+</trans-unit>
+<trans-unit id="s1ab5ceb0caa4ac22">
+  <source>Eingabe von Knotenkoordinaten</source>
+  <target>Introducción de coordenadas de nodos</target>
+</trans-unit>
+<trans-unit id="s68dcdd432794b14d">
+  <source>Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken</source>
+  <target>Para cambiar las coordenadas de un nodo, primero seleccione un nodo existente</target>
+</trans-unit>
+<trans-unit id="sfe6eb2b8c21847bc">
+  <source>Pick ein Element</source>
+  <target>Selecciona un elemento</target>
+</trans-unit>
+<trans-unit id="s0dc0a5c66a137db7">
+  <source>Pick Element, Lager oder Last</source>
+  <target>Seleccionar elemento, soporte o carga</target>
+</trans-unit>
+<trans-unit id="scec808ea4f5deb2d">
+  <source>Pick Knoten</source>
+  <target>Seleccionar nodo</target>
+</trans-unit>
+<trans-unit id="s8ce209eb53d7f1f8">
+  <source>mindestens ein Lastkomponente muss ungleich null sein</source>
+  <target></target>
+</trans-unit>
+<trans-unit id="s8cda330f7171b61b">
+  <source>Element picken</source>
+  <target>Selección de elementos</target>
+</trans-unit>
+<trans-unit id="s057a38695e9b5f0d">
+  <source>mind. eine Last muss ungleich null sein</source>
+  <target>Al menos una carga debe ser distinta de cero</target>
+</trans-unit>
+<trans-unit id="sb40103231670e3fe">
+  <source>mind. eine Temperatur muss ungleich null sein</source>
+  <target>Al menos una temperatura debe ser distinta de cero</target>
+</trans-unit>
+<trans-unit id="s7d7b08def4b4d34b">
+  <source>Vorspannung muss ungleich null sein</source>
+  <target>El pretensado debe ser distinto de cero</target>
+</trans-unit>
+<trans-unit id="s26d9b7fbfaa42c4e">
+  <source>Spannweg ds muss ungleich null sein</source>
+  <target>La distancia ds debe ser distinta de cero</target>
+</trans-unit>
+<trans-unit id="s19afcf0b0dfe1028">
+  <source>mind. eine Stabverformung muss ungleich null sein</source>
+  <target>Al menos una deformación de elemento debe ser distinta de cero</target>
+</trans-unit>
+<trans-unit id="s42dee0a9650c7116">
+  <source>Knoten picken</source>
+  <target>seleccionar nodo</target>
+</trans-unit>
+<trans-unit id="s95fc09c1f1d89d30">
+  <source>Lastfall muss größer 0 sein</source>
+  <target>El caso de carga debe ser mayor que 0</target>
+</trans-unit>
+<trans-unit id="s64bf79d9b257f4ed">
+  <source>Anfangsknoten eingeben</source>
+  <target>Introducir el nodo de inicio</target>
+</trans-unit>
+<trans-unit id="s743caaab8a3b30c6">
+  <source>Stabende eingeben</source>
+  <target>Introducir fin de elemento</target>
+</trans-unit>
+<trans-unit id="scd88c6c749958373">
+  <source>zweiten Punkt picken</source>
+  <target>seleccionar el segundo punto</target>
+</trans-unit>
+<trans-unit id="s08ce83e7dca73406">
+  <source>zweiten Knoten picken</source>
+  <target>seleccionar el segundo nodo</target>
+</trans-unit>
+<trans-unit id="s0edfd76b37e30722">
+  <source>Pfeilspitze picken</source>
+  <target>picotear una punta de flecha</target>
+</trans-unit>
+<trans-unit id="s6c307b3a1a718b75">
+  <source>keinen Knoten gepickt</source>
+  <target>No se seleccionó ningún nodo</target>
+</trans-unit>
+<trans-unit id="s655dacda54bf73f1">
+  <source>Knoten hat schon ein Lager</source>
+  <target>El nodo ya tiene soporte</target>
+</trans-unit>
+<trans-unit id="s5c7d90867a472c06">
+  <source>keinen Knoten gefunden</source>
+  <target>No se ha encontrado ningún nodo</target>
+</trans-unit>
+<trans-unit id="s8a7299b02b0cdded">
+  <source>Knoten hat schon eine Knotenmasse</source>
+  <target>El nodo ya tiene una masa nodal</target>
+</trans-unit>
+<trans-unit id="sd5073c88655e8a55">
+  <source>Stabanfang eingeben</source>
+  <target>Introducir inicio de elemento</target>
+</trans-unit>
+<trans-unit id="s32b6b574fc24ee40">
+  <source>ersten Punkt picken</source>
+  <target>seleccionar el primer punto</target>
+</trans-unit>
+<trans-unit id="sa855ac92fbe2586a">
+  <source>Masslinienpunkt picken</source>
+  <target>Seleccionar punto para  línea de cota</target>
+</trans-unit>
+<trans-unit id="s6f05d8235e842502">
+  <source>Maßlänge zu klein</source>
+  <target>Longitud demasiado pequeña</target>
+</trans-unit>
+<trans-unit id="s45c6ed4f68df387a">
+  <source>Maßlänge dx zu klein</source>
+  <target>Longitud dx demasiado pequeña</target>
+</trans-unit>
+<trans-unit id="sbc39d486419572b4">
+  <source>Maßlänge dz zu klein</source>
+  <target>Longitud dz demasiado pequeña</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

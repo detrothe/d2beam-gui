@@ -1,3 +1,4 @@
+import { msg } from '@lit/localize';
 import Two from "two.js";
 import { drDialogKnotenverformung } from "../components/dr-dialog_knotenverformung";
 import { CAD_KNOTVERFORMUNG, init_cad, multiselect_color, reset_pointer_length, select_color, set_zoomIsActive, show_lastfall, slmax_cad, timer, tr, two } from "./cad";
@@ -84,7 +85,7 @@ export function showDialog_knotenverformung(/* show_nur_lastfall = false */) {
         console.log("shadow", el?.shadowRoot?.getElementById("dialog_knotenverformung")),
             (el?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).addEventListener("close", dialog_knotenverformung_closed);
 
-        set_help_text('Knoten picken');
+        set_help_text(msg('Knoten picken'));
 
         (el?.shadowRoot?.getElementById("dialog_knotenverformung") as HTMLDialogElement).showModal();
     }
@@ -136,7 +137,7 @@ export function read_knotenverformung_dialog(nodeDisp: CNodeDisp): boolean {
         nodeDisp.lf = el.get_lastfall();
         if (nodeDisp.lf <= 0) {
             ok = false;
-            alertdialog('ok', 'Lastfall muss größer 0 sein');
+            alertdialog('ok', msg('Lastfall muss größer 0 sein'));
             return ok;
         }
 

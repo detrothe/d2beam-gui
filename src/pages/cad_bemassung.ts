@@ -1,3 +1,4 @@
+import { msg } from '@lit/localize';
 import Two from "two.js";
 import { CAD_BEMASSUNG, einheit_bemassung, list, select_color, slmax_cad, style_txt, timer } from "./cad"
 import { buttons_control, set_help_text } from "./cad_buttons"
@@ -423,7 +424,7 @@ export function Bemassung_button(art: number) {
     else if (art === 3) buttons_control.bemassung_vertikal_aktiv = true;
     buttons_control.cad_eingabe_aktiv = true
     buttons_control.typ_cad_element = CAD_BEMASSUNG
-    set_help_text('ersten Knoten picken');
+    set_help_text(msg('ersten Knoten picken'));
     //el.addEventListener('keydown', keydown);
     buttons_control.n_input_points = 3
     buttons_control.button_pressed = true;

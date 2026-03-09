@@ -1,3 +1,4 @@
+import { msg } from '@lit/localize';
 import { drButtonPM } from "../components/dr-button-pm";
 
 import { CAD_BEMASSUNG, CAD_KNLAST, CAD_KNMASSE, CAD_KNOTEN, CAD_KNOTVERFORMUNG, CAD_LAGER, CAD_STAB, list } from "./cad";
@@ -208,7 +209,7 @@ export function cad_rechnen() {
                     element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Stablänge
 
                     if (element[ielem].sl < 1e-12) {
-                        write("Länge von Element " + String(ielem + 1) + " ist null")
+                        write(msg('Länge von Element')+" " + String(ielem + 1) + " "+msg('ist null'))
                         element[ielem].cosinus = 1.0
                         element[ielem].sinus = 0.0
                         element[ielem].alpha = 0.0
@@ -489,7 +490,7 @@ export function cad_rechnen() {
 
                                 let elemNo = obj.elNo - 1
                                 if (x - 0.0001 > element[elemNo].sl) {
-                                    write("Angriffspunkt Einzellast auf Stab " + String(elemNo + 1) + " ist größer Stablänge, siehe Tab Tabellen")
+                                    write(msg('Angriffspunkt Einzellast auf Stab')+" " + String(elemNo + 1) + " "+msg('ist größer Stablänge, siehe Tab Tabellen'))
                                     fatal_error = true;
                                 } else {
                                     if (x > element[elemNo].sl) x = element[elemNo].sl;
