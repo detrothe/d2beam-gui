@@ -1492,7 +1492,7 @@
 </trans-unit>
 <trans-unit id="s8ce209eb53d7f1f8">
   <source>mindestens ein Lastkomponente muss ungleich null sein</source>
-  <target></target>
+  <target>Al menos un componente de carga debe ser distinto de cero</target>
 </trans-unit>
 <trans-unit id="s8cda330f7171b61b">
   <source>Element picken</source>

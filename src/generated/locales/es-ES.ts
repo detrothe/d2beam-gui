@@ -218,7 +218,7 @@
 's8c55f55aab69a063': `Preformado en el nodo en la dirección seleccionada`,
 's8c9b6040d2e5f671': `Dirección:`,
 's8cda330f7171b61b': `Selección de elementos`,
-'s8ce209eb53d7f1f8': ``,
+'s8ce209eb53d7f1f8': `Al menos un componente de carga debe ser distinto de cero`,
 's8d3551f00a88687e': `escalado`,
 's8d5fcddffb49d365': `Aviso: ¡Se borrarán todos los datos introducidos!`,
 's8db89619f41917b4': `fijar`,

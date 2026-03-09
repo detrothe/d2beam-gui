@@ -218,7 +218,7 @@
 's8c55f55aab69a063': `pre-deformation at the node in the selected direction`,
 's8c9b6040d2e5f671': `direction:`,
 's8cda330f7171b61b': `Pick an element`,
-'s8ce209eb53d7f1f8': ``,
+'s8ce209eb53d7f1f8': `At least one load component must be non-zero`,
 's8d3551f00a88687e': `scaling`,
 's8d5fcddffb49d365': `Note: All entries will be deleted!`,
 's8db89619f41917b4': `pin`,
