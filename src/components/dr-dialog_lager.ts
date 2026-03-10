@@ -1,7 +1,7 @@
 import { SlCheckbox } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
-import {msg, localized} from '@lit/localize';
+import { msg, localized } from '@lit/localize';
 
 import "../styles/dr-dialog.css";
 @localized()
@@ -195,10 +195,30 @@ export class drDialogLager extends LitElement {
   }
 
   _dialog_ok() {
-    console.log("dialog_ok");
-    const shadow = this.shadowRoot;
-    if (shadow) {
-      (shadow.getElementById("dialog_lager") as HTMLDialogElement).close("ok");
+    // überprüfe, ob was sinnvolles eingegeben wurde
+    let Lx = false, Lz = false, Lphi = false;
+    let kx = 0, kz = 0, kphi = 0;
+
+    let el = this.shadowRoot?.getElementById("id_Lx") as SlCheckbox;
+    if (el.checked) Lx = true;
+    el = this.shadowRoot?.getElementById("id_Lz") as SlCheckbox;
+    if (el.checked) Lz = true;
+    el = this.shadowRoot?.getElementById("id_Lphi") as SlCheckbox;
+    if (el.checked) Lphi = true;
+
+    let eli = this.shadowRoot?.getElementById("id_kx") as HTMLInputElement;
+    if (eli.value !== '') kx = +eli.value.replace(/,/g, '.');
+    eli = this.shadowRoot?.getElementById("id_kz") as HTMLInputElement;
+    if (eli.value !== '') kz = +eli.value.replace(/,/g, '.');
+    eli = this.shadowRoot?.getElementById("id_kphi") as HTMLInputElement;
+    if (eli.value !== '') kphi = +eli.value.replace(/,/g, '.');
+
+    if (Lx || Lz || Lphi || kx !== 0 || kz !== 0 || kphi !== 0) {
+
+      const shadow = this.shadowRoot;
+      if (shadow) {
+        (shadow.getElementById("dialog_lager") as HTMLDialogElement).close("ok");
+      }
     }
   }
 

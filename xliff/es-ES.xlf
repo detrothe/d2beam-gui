@@ -1586,6 +1586,10 @@
   <source>Maßlänge dz zu klein</source>
   <target>Longitud dz demasiado pequeña</target>
 </trans-unit>
+<trans-unit id="s3729124a9f912673">
+  <source>keine Lagerbedingungen eingegeben</source>
+  <target>No se han introducido condiciones de soporte</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

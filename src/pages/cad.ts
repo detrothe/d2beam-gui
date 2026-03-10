@@ -1334,29 +1334,32 @@ function penDown(ev: PointerEvent) {
                let node = new TNode();
                node.x = start_x_wc;
                node.z = start_z_wc;
-               read_lager_dialog(node);
-               //console.log('pendown, node', node);
-
-               let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
-               if (index1 > -1) {
-                  // Überprüfe, ob Knoten schon Lager hat
-                  let vorhanden = check_doppeltes_Lager(index1)
-                  if (vorhanden) {
-                     alertdialog('ok', msg('Knoten hat schon ein Lager'));
+               let error = read_lager_dialog(node);
+               if (error === 1) {
+                  alertdialog(msg('ok'), msg('keine Lagerbedingungen eingegeben'));
+               }
+               else {
+                  let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+                  if (index1 > -1) {
+                     // Überprüfe, ob Knoten schon Lager hat
+                     let vorhanden = check_doppeltes_Lager(index1)
+                     if (vorhanden) {
+                        alertdialog('ok', msg('Knoten hat schon ein Lager'));
+                     }
+                     else {
+                        let group: any;
+                        const el = new TCAD_Lager(group, index1, node, buttons_control.typ_cad_element);
+                        list.append(el);
+                        add_element_nodes(index1);
+                        group = draw_lager(tr, el);
+                        two.add(group);
+                        el.setTwoObj(group)
+                        two.update();
+                     }
+                  } else {
+                     //console.log('Keinen Knoten gefunden');
+                     alertdialog('ok', msg('keinen Knoten gefunden'));
                   }
-                  else {
-                     let group: any;
-                     const el = new TCAD_Lager(group, index1, node, buttons_control.typ_cad_element);
-                     list.append(el);
-                     add_element_nodes(index1);
-                     group = draw_lager(tr, el);
-                     two.add(group);
-                     el.setTwoObj(group)
-                     two.update();
-                  }
-               } else {
-                  //console.log('Keinen Knoten gefunden');
-                  alertdialog('ok', msg('keinen Knoten gefunden'));
                }
             }
 
@@ -1826,28 +1829,32 @@ function mouseup(ev: any) {
                   // node.L_org[1] = 1
                   node.x = start_x_wc;
                   node.z = start_z_wc;
-                  read_lager_dialog(node);
+                  let error = read_lager_dialog(node);
+                  if (error === 1) {
+                     alertdialog(msg('ok'), msg('keine Lagerbedingungen eingegeben'));
+                  }
+                  else {
+                     let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+                     if (index1 > -1) {
+                        // Überprüfe, ob Knoten schon Lager hat
+                        let vorhanden = check_doppeltes_Lager(index1)
+                        if (vorhanden) {
+                           alertdialog('ok', msg('Knoten hat schon ein Lager'));
+                        }
+                        else {
 
-                  let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
-                  if (index1 > -1) {
-                     // Überprüfe, ob Knoten schon Lager hat
-                     let vorhanden = check_doppeltes_Lager(index1)
-                     if (vorhanden) {
-                        alertdialog('ok', msg('Knoten hat schon ein Lager'));
+                           let group: any;
+                           const el = new TCAD_Lager(group, index1, node, buttons_control.typ_cad_element);
+                           list.append(el);
+                           add_element_nodes(index1);
+                           group = draw_lager(tr, el);
+                           two.add(group);
+                           el.setTwoObj(group);
+                           two.update();
+                        }
+                     } else {
+                        alertdialog('ok', msg('keinen Knoten gefunden'));
                      }
-                     else {
-
-                        let group: any;
-                        const el = new TCAD_Lager(group, index1, node, buttons_control.typ_cad_element);
-                        list.append(el);
-                        add_element_nodes(index1);
-                        group = draw_lager(tr, el);
-                        two.add(group);
-                        el.setTwoObj(group);
-                        two.update();
-                     }
-                  } else {
-                     alertdialog('ok', msg('keinen Knoten gefunden'));
                   }
                }
                else if (buttons_control.knotenlast_eingabe_aktiv) {               // Knotenlast
@@ -1986,7 +1993,7 @@ function mouseup(ev: any) {
                   obj.setTwoObj(group)
                }
                else {
-                  alertdialog('ok', msg('Stablänge zu klein')+' = ' + sl + 'm');
+                  alertdialog('ok', msg('Stablänge zu klein') + ' = ' + sl + 'm');
                }
                set_help_text(msg('Stabanfang eingeben'));
             }
@@ -2017,7 +2024,7 @@ function mouseup(ev: any) {
                      buttons_control.input_started = 2;
                   }
                   else {
-                     alertdialog('ok', msg('Maßlänge zu klein')+' = ' + sl + 'm');
+                     alertdialog('ok', msg('Maßlänge zu klein') + ' = ' + sl + 'm');
                      fehler = true;
                      buttons_control.input_started = 1;
                      set_help_text(msg('zweiten Knoten picken'));
@@ -2029,7 +2036,7 @@ function mouseup(ev: any) {
                      buttons_control.input_started = 2;
                   }
                   else {
-                     alertdialog('ok', msg('Maßlänge dx zu klein')+' = ' + Math.abs(dx) + 'm');
+                     alertdialog('ok', msg('Maßlänge dx zu klein') + ' = ' + Math.abs(dx) + 'm');
                      buttons_control.input_started = 1;
                      fehler = true;
                      set_help_text(msg('zweiten Knoten picken'));
@@ -2041,7 +2048,7 @@ function mouseup(ev: any) {
                      buttons_control.input_started = 2;
                   }
                   else {
-                     alertdialog('ok', msg('Maßlänge dz zu klein')+' = ' + Math.abs(dz) + 'm');
+                     alertdialog('ok', msg('Maßlänge dz zu klein') + ' = ' + Math.abs(dz) + 'm');
                      buttons_control.input_started = 1;
                      fehler = true;
                      set_help_text(msg('zweiten Knoten picken'));

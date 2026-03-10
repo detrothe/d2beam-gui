@@ -89,6 +89,7 @@
 's32b6b574fc24ee40': `pick the first point`,
 's3458010cbd46deee': `At least one combination must be defined.`,
 's35e97643d1f8de40': `Angle counterclockwise positive`,
+'s3729124a9f912673': `No support conditions entered`,
 's391b70f7d352f798': `support`,
 's397719ef0d7a6ec8': `Tolerance eps_force in load case`,
 's3b2332f82896832c': `current file name:`,

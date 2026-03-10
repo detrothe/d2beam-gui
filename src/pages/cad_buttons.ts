@@ -128,7 +128,7 @@ let refresh_button: HTMLButtonElement;
 let info_button: HTMLButtonElement;
 let drawer_button: HTMLButtonElement;
 
-let querschnitt_default_select:HTMLSelectElement;
+let querschnitt_default_select: HTMLSelectElement;
 
 let mode_elementlast_aendern = false;
 let element_einzellast_gefunden = false
@@ -872,7 +872,7 @@ export function update_button_language() {
   info_button.title = msg('Kurzanleitung & Information');
   drawer_button.title = msg('Mehr Aktivitäten');
 
-  querschnitt_default_select.title= msg('aktiver Querschnitt');
+  querschnitt_default_select.title = msg('aktiver Querschnitt');
 
   const elHaupt = document.getElementById('id_haupt');
   let shadow = elHaupt?.shadowRoot;
@@ -2235,15 +2235,15 @@ function dialog_lager_closed(this: any, e: any) {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-export function read_lager_dialog(node: TNode) {
+export function read_lager_dialog(node: TNode): number {
   //-----------------------------------------------------------------------------------------------------------
 
+  let error = 1;
   const elHaupt = document.getElementById('id_haupt');
   let shadow = elHaupt?.shadowRoot;
   if (shadow) {
     const el = shadow.getElementById("id_dialog_lager") as HTMLDialogElement;
 
-    //console.log("read_lager_dialog, el=", el);
     let elem = el?.shadowRoot?.getElementById("id_Lx") as SlCheckbox;
     let elFeder = el?.shadowRoot?.getElementById("id_kx") as HTMLInputElement;
 
@@ -2272,7 +2272,10 @@ export function read_lager_dialog(node: TNode) {
 
     let elemi = el?.shadowRoot?.getElementById("id_alpha") as HTMLInputElement;
     node.phi = +elemi.value
+
+    if (node.L_org[0] !== 0 || node.L_org[1] !== 0 || node.L_org[2] !== 0 || node.kx !== 0 || node.kz !== 0 || node.kphi !== 0) error = 0;
   }
+  return error;
 }
 
 
@@ -3379,18 +3382,21 @@ function update_knotenlager() {
 
   //const ele = document.getElementById("id_dialog_lager") as drDialogElementlasten;
 
-  read_lager_dialog((obj_knlager as TCAD_Lager).node)
+  let error = read_lager_dialog((obj_knlager as TCAD_Lager).node)
+  if (error === 1) {
+    alertdialog(msg('ok'), msg('keine Lagerbedingungen eingegeben'));
+  }
+  else {
+    let group = obj_knlager.getTwoObj();
+    two.remove(group)
+    group = draw_lager(tr, obj_knlager as TCAD_Lager)
+    two.add(group);
 
-  //console.log("update_knotenlager", (obj_knlager as TCAD_Lager).node)
-  let group = obj_knlager.getTwoObj();
-  two.remove(group)
-  group = draw_lager(tr, obj_knlager as TCAD_Lager)
-  two.add(group);
+    obj_knlager.setTwoObj(group);
+    two.update();
 
-  obj_knlager.setTwoObj(group);
-  two.update();
-
-  berechnungErforderlich(true);
+    berechnungErforderlich(true);
+  }
 
 }
 

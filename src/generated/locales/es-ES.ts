@@ -89,6 +89,7 @@
 's32b6b574fc24ee40': `seleccionar el primer punto`,
 's3458010cbd46deee': `Se debe definir al menos una combinación.`,
 's35e97643d1f8de40': `Ángulo positivo en sentido antihorario`,
+'s3729124a9f912673': `No se han introducido condiciones de soporte`,
 's391b70f7d352f798': `soporte`,
 's397719ef0d7a6ec8': `Tolerancia eps_force en caso de carga`,
 's3b2332f82896832c': `nombre del archivo actual:`,
