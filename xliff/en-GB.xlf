@@ -1589,6 +1589,22 @@
   <source>keine Lagerbedingungen eingegeben</source>
   <target>No support conditions entered</target>
 </trans-unit>
+<trans-unit id="sb5cba5aac7e66bcf">
+  <source>Kombi</source>
+  <target>Combi</target>
+</trans-unit>
+<trans-unit id="s8d213b8465f934a5">
+  <source>Kommentar</source>
+  <target>Comment</target>
+</trans-unit>
+<trans-unit id="sd207de3949fd3751">
+  <source>Lf = Lastfall</source>
+  <target>lc = load case</target>
+</trans-unit>
+<trans-unit id="sf526b80172d34180">
+  <source>Bezeichnung (optional)</source>
+  <target>Description (optional)</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

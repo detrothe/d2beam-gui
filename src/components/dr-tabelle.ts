@@ -1,6 +1,6 @@
 import styles from './dr-tabelle.css?raw';
 
-import { nQuerschnittSets,get_querschnittRechteck_name } from '../pages/querschnitte';
+import { nQuerschnittSets, get_querschnittRechteck_name } from '../pages/querschnitte';
 import { Detect } from '../pages/haupt';
 
 import { berechnungErforderlich, touch_support_table } from "../pages/globals";
@@ -363,13 +363,23 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    attributeChangedCallback(name: string, oldValue: any, newValue: any) {
       //------------------------------------------------------------------------------------------------------------
-      //console.log('Custom square element attributes changed.', name, oldValue, newValue);
+      //console.log('attributeChangedCallback', name, oldValue, newValue);
 
       if (name === 'add_new_option') {
          this.add_new_select_option();
 
       } else if (name === 'namechanged') {
          this.update_select_options_name(Number(newValue));
+
+      } else if (name === 'lf_languagechanged') {
+         //this.update_select_options_name(Number(newValue));
+         console.log("in attributeChangedCallback, lf_languageChanged", newValue, oldValue);
+         this.lf_languageChanged(newValue);
+
+      } else if (name === 'columns_languagechanged') {
+         //this.update_select_options_name(Number(newValue));
+         console.log("in attributeChangedCallback, columns_languagechanged", newValue, oldValue);
+         this.columns_languageChanged(newValue);
 
       } else if (name === 'clear') {
          this.clear_Tabelle('mytable');
@@ -455,7 +465,8 @@ class DrTabelle extends HTMLElement {
    //---------------------------------------------------------------------------------------------------------------
    static get observedAttributes() {
       //------------------------------------------------------------------------------------------------------------
-      return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext', 'option_deleted', 'hide_column', 'show_column', 'id'];
+      return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext',
+         'option_deleted', 'hide_column', 'show_column', 'id', 'lf_languagechanged', 'columns_languagechanged'];
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -470,6 +481,41 @@ class DrTabelle extends HTMLElement {
       }
    */
 
+   //---------------------------------------------------------------------------------------------------------------
+   lf_languageChanged(lf: string) {
+      //------------------------------------------------------------------------------------------------------------
+      this.colText = lf;
+   }
+
+   //---------------------------------------------------------------------------------------------------------------
+   columns_languageChanged(newValue: string) {
+      //------------------------------------------------------------------------------------------------------------
+      console.log("columns_languageChanged", newValue)
+      let myValue = newValue.replace('[', '');
+      const lastIndex = myValue.lastIndexOf(']');
+      myValue = myValue.slice(0, lastIndex);
+      //console.log('myValue', myValue);
+      const myArray = myValue.split(',');
+      //console.log('myArray', myArray[0], myArray[1], myArray[2]);
+      for (let i = 0; i < myArray.length; i++) {
+         this.columns[i] = myArray[i].replace(/"/g, '').trim();
+      }
+
+      const table = this.shadow.getElementById('mytable') as HTMLTableElement;
+      console.log('table', table);
+      let nZeilen = table.rows.length - 1; // header abziehen
+      let nSpalten = table.rows[0].cells.length - 1;
+      let iZeile = 0
+      let row = table.rows.item(iZeile);
+      //console.log("row",row?.children)
+      if (row) {
+         for (let iSpalte = 0; iSpalte <= nSpalten; iSpalte++) {
+            let child = table.rows[iZeile].cells[iSpalte];
+            console.log("child", iZeile, iSpalte, nSpalten, table.rows[iZeile].cells[iSpalte].innerHTML)
+            child.innerHTML = this.columns[iSpalte];
+         }
+      }
+   }
 
    //---------------------------------------------------------------------------------------------------------------
    hide_column(iSpalte: number) {
@@ -725,12 +771,14 @@ class DrTabelle extends HTMLElement {
                                                 th0.style.textAlign = 'center';
                                                 row.appendChild(th0);
                                                 */
-                        newCell.innerHTML = '<b>' + this.colText + ' ' + (iSpalte - 1) + '</b>';
+                        // newCell.innerHTML = '<b>' + this.colText + ' ' + (iSpalte - 1) + '</b>';
+                        newCell.innerHTML = this.colText + ' ' + (iSpalte - 1);
                         //th0.title = "Elementnummer"
                         newCell.style.padding = '5px';
                         newCell.style.margin = '0px';
                         newCell.style.textAlign = 'center';
                         newCell.style.fontSize = '1rem';
+                        newCell.style.fontWeight = 'bold';
                         //th0.setAttribute('title', 'Hilfe')
                         //row.appendChild(newCell);
 
@@ -1017,7 +1065,7 @@ class DrTabelle extends HTMLElement {
          if (ev.key === '0' || ev.key === '1' || ev.key === '2' || ev.key === '3' || ev.key === '4' || ev.key === '5' || ev.key === '6' || ev.key === '7' || ev.key === '8' || ev.key === '9') { berechnungErforderlich(true); return; }                            // Ziffern 0-9
          //if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
          //if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad
-         if (ev.key === 'e'|| ev.key === 'E' || ev.key === '.' || ev.key === ',') { berechnungErforderlich(true); return; } // e .  ,
+         if (ev.key === 'e' || ev.key === 'E' || ev.key === '.' || ev.key === ',') { berechnungErforderlich(true); return; } // e .  ,
          //if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) { berechnungErforderlich(true); return; } // e .  ,
          //if (ev.keyCode === 8 || ev.keyCode === 46) { berechnungErforderlich(true); return; }                         //  del, entfernen
          if (ev.key === 'Backspace' || ev.key === 'Delete') { berechnungErforderlich(true); return; }                         //  del, entfernen

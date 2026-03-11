@@ -76,6 +76,7 @@ const nspannschloesser_init = '0';
 const nnodalmass_init = '0';
 let column_string_kombitabelle: string;
 let typs_string_kombitabelle: string;
+let coltext_lf = 'Lf';
 
 const nkombiSpalten_init = '2'; // immer 1 mehr als nlastfaelle_init
 const nnodedisps_init = '0';
@@ -85,7 +86,7 @@ const nkoppelfedern_init = '0';
 let width_lager = 175; // /window.devicePixelRatio;
 let width_def_d2beam = 400;
 
-column_string_kombitabelle = '["Kombi", "Kommentar"';
+column_string_kombitabelle = '["' + msg('Kombi') + '", "' + msg('Kommentar') + '"';
 for (let i = 1; i <= Number(nlastfaelle_init); i++) {
   column_string_kombitabelle = column_string_kombitabelle + ', "Lf ' + i + '"';
 }
@@ -103,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 // stylesheet.replace(styles);
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.8.1, 10.März-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.8.2, 11.März-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -780,7 +781,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
         <p>
           ${msg('Bei Theorie I.Ordnung und linearen Materialeigenschaften sind Kombinationen optional. Bei Theorie II. Ordnung und/oder nichtlinearen Materialeigenschaften muss mindestens eine Kombination definiert sein.')}
         </p>
-
+        <p>${msg('Lf = Lastfall')}</p>
         <p>
           ${msg('Anzahl Kombinationen:')}
           <dr-button-pm id="id_button_nkombinationen" nel="${nkombinationen_init}" inputid="nkombinationen"></dr-button-pm>
@@ -793,8 +794,9 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           nspalten="${nkombiSpalten_init}"
           columns="${column_string_kombitabelle}"
           typs="${typs_string_kombitabelle}"
-          coltext="Lf"
+          coltext=${coltext_lf}
           colwidth='["4","8","3"]'
+          lf_languagechanged='Lf'
         ></dr-tabelle>
       </sl-tab-panel>
 

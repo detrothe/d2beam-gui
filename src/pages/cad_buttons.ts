@@ -66,7 +66,7 @@ import "../components/dr-dialog_messen";
 import "../components/dr-dialog_bemassung";
 import "../components/dr-dialog_knotenverformung";
 
-import { alertdialog, stadyn, TLoads, TMass, TNode, TNodeDisp } from "./rechnen";
+import { alertdialog, nlastfaelle, stadyn, TLoads, TMass, TNode, TNodeDisp } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knoten, draw_knotenlast, draw_knotenmasse, draw_lager } from "./cad_draw_elemente";
 import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Einzellast, TCAD_Knotenmasse, TCAD_Knotenverformung } from "./CCAD_element";
@@ -886,6 +886,35 @@ export function update_button_language() {
     if (user_language == 'de') shadow.getElementById("id_doc_de")!.style.display = 'block';
     else if (user_language == 'en-GB') shadow.getElementById("id_doc_en")!.style.display = 'block';
     else if (user_language == 'es-ES') shadow.getElementById("id_doc_es")!.style.display = 'block';
+  }
+
+  // Tabellenüberschriften anpassen
+
+  let coltext_lf = msg('Lf');
+  // console.log("coltext_lf", coltext_lf)
+
+  if (shadow) {
+
+    const el = shadow.getElementById("id_lastfaelle_tabelle");
+    console.log("el", el)
+    let columns = '["' + msg('Lastfall') + '", "' + msg('Bezeichnung (optional)') + '"]'
+    el?.setAttribute("columns_languagechanged", columns);
+
+    const ele = shadow.getElementById("id_kombinationen_tabelle");
+    console.log("ele", ele)
+    ele?.setAttribute("lf_languagechanged", coltext_lf);
+    let column_string_kombitabelle: string;
+    column_string_kombitabelle = '["' + msg('Kombi') + '", "' + msg('Kommentar') + '"';
+    const el_elemente = shadow.getElementById('id_button_nlastfaelle');
+    const nelem = (el_elemente?.shadowRoot?.getElementById('nlastfaelle') as HTMLInputElement).value;
+    for (let i = 1; i <= Number(nelem); i++) {
+      column_string_kombitabelle = column_string_kombitabelle + ', "' + msg('Lf') + ' ' + i + '"';
+    }
+    column_string_kombitabelle = column_string_kombitabelle + ']';
+    console.log('column_string_kombitabelle', column_string_kombitabelle);
+
+    ele?.setAttribute("columns_languagechanged", column_string_kombitabelle);
+
   }
 }
 

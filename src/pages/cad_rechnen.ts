@@ -209,7 +209,7 @@ export function cad_rechnen() {
                     element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Stablänge
 
                     if (element[ielem].sl < 1e-12) {
-                        write(msg('Länge von Element')+" " + String(ielem + 1) + " "+msg('ist null'))
+                        write(msg('Länge von Element') + " " + String(ielem + 1) + " " + msg('ist null'))
                         element[ielem].cosinus = 1.0
                         element[ielem].sinus = 0.0
                         element[ielem].alpha = 0.0
@@ -490,7 +490,7 @@ export function cad_rechnen() {
 
                                 let elemNo = obj.elNo - 1
                                 if (x - 0.0001 > element[elemNo].sl) {
-                                    write(msg('Angriffspunkt Einzellast auf Stab')+" " + String(elemNo + 1) + " "+msg('ist größer Stablänge, siehe Tab Tabellen'))
+                                    write(msg('Angriffspunkt Einzellast auf Stab') + " " + String(elemNo + 1) + " " + msg('ist größer Stablänge, siehe Tab Tabellen'))
                                     fatal_error = true;
                                 } else {
                                     if (x > element[elemNo].sl) x = element[elemNo].sl;
@@ -879,6 +879,11 @@ export function cad_rechnen() {
                 }
             }
         }
+
+        // let coltext_lf = msg('Lf');
+        // const ele = shadow.getElementById("id_kombinationen_tabelle");
+        // console.log("ele", ele)
+        // ele?.setAttribute("lf_languagechanged", coltext_lf);
 
     }
     return fatal_error;

@@ -1590,6 +1590,22 @@
   <source>keine Lagerbedingungen eingegeben</source>
   <target>No se han introducido condiciones de soporte</target>
 </trans-unit>
+<trans-unit id="sb5cba5aac7e66bcf">
+  <source>Kombi</source>
+  <target>Combi</target>
+</trans-unit>
+<trans-unit id="s8d213b8465f934a5">
+  <source>Kommentar</source>
+  <target>Comentario</target>
+</trans-unit>
+<trans-unit id="sd207de3949fd3751">
+  <source>Lf = Lastfall</source>
+  <target>cc = caso de carga</target>
+</trans-unit>
+<trans-unit id="sf526b80172d34180">
+  <source>Bezeichnung (optional)</source>
+  <target>Descripción (opcional)</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
