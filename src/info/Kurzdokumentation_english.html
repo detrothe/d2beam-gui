@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport"
-			content="width=device-width, initial-scale=1, minimal-ui">
-		<title>d2beam-GUI frame program for plane systems</title>
-		<meta name="author" content="Prof. Dr.-Ing. Detlef Rothe">
-		<meta name="AppVersion" content="15.0000">
-		<script id="MathJax-script" async
-			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-		<style type="text/css">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+	<title>d2beam-GUI frame program for plane systems</title>
+	<meta name="author" content="Prof. Dr.-Ing. Detlef Rothe">
+	<meta name="AppVersion" content="15.0000">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<style type="text/css">
 		body {
 			font-size: 1em;
 			font-family: "FreeSans", sans-serif;
@@ -85,728 +84,663 @@
 		a[href^="#"]:before {
 			content: '➡ ';
 		}
-        </style>
-	</head>
-	<body
-		lang="de-DE"
-		link="#0000ff"
-		vlink="#800000"
-		dir="ltr">
-		<h1 class="western">Table of Contents</h1>
-		<p class="western">
-			<a href="#uebersicht">Overview</a>
+	</style>
+</head>
+
+<body lang="de-DE" link="#0000ff" vlink="#800000" dir="ltr">
+	<h1 class="western">Table of Contents</h1>
+	<p class="western">
+		<a href="#uebersicht">Overview</a>
+		<br>
+		<a href="#gui">Graphical input</a>
+		<br>
+		<a href="#vorzeichen">Coordinate system and sign definitions</a>
+		<br>
+		<a href="#hinweiseApp">Notes on using the app</a>
+		<br>
+		<a href="#darstellung_2D">2D representations</a>
+		<br>
+		<a href="#svg">Save screenshot</a>
+		<br>
+		<a href="#bezeichnungen">Designations</a>
+		<br>
+		<a href="#voreinstellungen">Default settings</a>
+		<br>
+		<a href="#installation">Installing the app on your desktop</a>
+		<br>
+		<a href="#kompatibilitaet">Compatibility</a>
+		<br>
+		<a href="#tastatur">Help: My keyboard has no minus key, virtual keyboard</a>
+		<br>
+		<a href="#faq">Questions and answers</a>
+		<br>
+		<a href="#kontakt">Contact and error messages</a>
+		<br>
+	<h1 lang="de-DE" class="western" id="uebersicht">
+		<a href="#">Overview</a>
+	</h1>
+	<p>
+		This web application can be used to analyze 2D frames and trusses using the
+		finite element method. Calculation options are available for static and
+		dynamic analyses [1], [2], [3]. Static calculations can be performed
+		according to first- and second-order theory. For dynamic calculations,
+		eigenvalues and eigenmodes can currently be determined.
+		<br>
+		The beam element named d2beam (type 0) can take shear deformations into
+		account according to Timoshenko's theory. The truss member is a classic
+		2-node element.
+		The starting point for the d2beam element is a 4-node straight
+		shear-flexible beam element [1], whose internal nodes are condensed so that
+		the user works with a 2-node element.
+	</p>
+	<p>
+		After clicking the ‘Start new project’ button, you can choose
+		between calculating a truss or a frame structure.
+		Selecting ‘truss’ simplifies the input
+		for truss structures. Of course, truss structures can also be calculated with frame elements if you enter moment
+		joints for the members.
+		<br>
+		The elements have a start and end node, which are designated a and e, or 1
+		and
+		2.
+	</p>
+	<p></p>
+	<p></p>
+	<p>
+		Features of the program:
+	</p>
+	<ul>
+		<li>
+			<p>The cross-section is constant element by element.</p>
+		</li>
+		<li>
+			<p>
+				Linearly elastic material for beams.
+			</p>
+		</li>
+		<li>
+			<p>
+				Shear deformations are taken into account using a shear correction
+				factor.
+				If a value of 0 is entered,
+				the calculation is performed using shear-rigid elements.
+			</p>
+		</li>
+		<li>
+			<p>
+				In second-order theory, the imperfection can be conveniently taken into
+				account via the first eigenform.
+				For typical frame systems (fixed at the bottom, freely movable at the
+				top) it is sufficient to specify the largest
+				displacement without specifying the node (input 0). The direction of the
+				displacement without specifying the node (input 0). The direction of the
+				imperfection is set the same
+				as the existing displacement of the corresponding degree of freedom from
+				the previous calculation according to
+				first-order theory, which is also required to determine the normal
+				forces.
+				<br>
+				For simple non-displaceable systems, the first eigenmode corresponds to
+				a member pre-deformation and can be used accordingly.
+				<br>
+				The pre-deformation calculated by the program can be checked in the
+				graphical representation. If
+				the result is not correct, the desired node with direction
+				must be specified in the input.
+			</p>
+		</li>
+		<li>
+			<p>
+				Optional bedding of bending bars according to Winkler.
+			</p>
+		</li>
+		<li>
+			<p>
+				Load combinations with associated safety factors can be defined.
+				In second-order theory, only the load combinations are calculated.
+			</p>
+		</li>
+	</ul>
+	<p>
+		<br>
+		<br>
+	</p>
+	<h2 class="western" id="gui">
+		<a href="#">Graphical input</a>
+	</h2>
+	<p>
+		The structure is entered in the System tab. Depending on the
+		available hardware, you can enter data using the mouse, the
+		pen or your finger.
+	</p>
+	<p>
+		Please note the following points when entering data:
+	<ul>
+		<li>
+			The cross-sections are defined in the Cross-sections tab. At least
+			one cross-section must be created before entering the
+			members.
+			Changes can be made later in this tab.
+		</li>
+		<li>
+			When performing second-order calculations, only combinations of
+			load cases that are defined in the Combinations tab prior to the
+			calculation are calculated.
+			The combinations must be defined in the Combinations tab prior to the
+			calculation.
+		</li>
+		<li>
+			The graphical input for the system is located in the System
+			tab.
+		</li>
+		<li>
+			The actual calculation is started in the Main tab. After successful
+			calculation, the deformations, internal forces, etc. can be displayed
+			in the Results tab.
+		</li>
+	</ul>
+	</p>
+	<p>
+		<b>Explanations of the icons in the System tab</b>
+	</p>
+	<p>
+		<img src="/assets/gui-icons/undo.png" name="undo" title="undo button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Undo Button: Deletes the last created element (node, member, support, node
+		load, or element load) and saves it in the internal recycle bin.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/redo.png" name="redo" title="redo button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Redo Button: Recovers the last item placed in the recycle bin.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/loeschen.png" name="loeschen" title="löschen button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Delete button: Deletes a clickable element and saves it in the internal
+		trash can.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/select.png" name="select" title="select button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Select button: Click on an existing element. A dialog box will then appear
+		in which changes can be made.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/knoten.png" name="knoten" title="knoten button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Node button: Enter node coordinates (x, z) using a dialog box. Note:
+		Entering nodes is only necessary if a member node does not fall at the
+		intersection of grid lines.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Edit Node Button: The coordinates (x,z) of existing nodes can be changed
+		here.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/lager.png" name="lager" title="lager button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Support button: Entering supports. Note: Supports can only be set at
+		existing nodes.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/einstellungen.png" name="einstellungen" title="einstellungen button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Settings button: Here you can configure settings that are useful for
+		graphical input.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/reset.png" name="reset" title="reset button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Reset button: The system is redrawn. Zoom and drag are reset.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/default_querschnitt.png" name="default_querschnitt"
+			title="default_querschnitt combobox"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Default cross-section combo box: The cross-section name displayed is used
+		for the next bar entry. Any number of cross-sections can be defined in the
+		Cross-sections tab.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/stab.png" name="stab" title="stab button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Bar button: A bar is defined by start and end nodes. The following snapping
+		rules apply: First, existing nodes are searched for within the snap range
+		(the lengths of the cursor lines indicate the snap range) and the node
+		closest to the cursor cross is used. If nothing is found, the blue grid
+		points are used. If nothing is found within the snap range here either, the
+		current position of the cursor, rounded to 1 mm, is used.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/knotenlast.png" name="knotenlast" title="knotenlast button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Nodal load button: Enter nodal loads. Note: Nodal loads can only be set at
+		existing nodes.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/elementlast.png" name="elementlast" title="element button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Element load button: Entering member loads. Note: Member loads can only act
+		on existing members.
+	</p>
+	<p>
+		<img src="/assets/gui-icons/knotenmasse.png" name="knotenmasse" title="knotenmasse button"
+			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+		Nodal mass button: Enter nodal masses and
+		mass moments of inertia. Note: Nodal masses can only be set at existing
+		nodes. They are only taken into account if the calculation type
+		<i>dynamic</i> has been selected in the Main tab.
+	</p>
+	<p>
+		<br>
+		<br>
+	</p>
+	<h2 class="western" id="vorzeichen">
+		<a href="#">Coordinate system and sign definitions</a>
+	</h2>
+	<img src="/assets/def_d2beam.png" name="definition_d2beam" title="Definition Stabelement d2beam"
+		style="max-width:100%; width:400px; height:auto; border:0px; margin: auto; display: block;">
+	<p style="text-align: center;">
+		Beam element d2beam with rigid ends and joints
+	</p>
+	<img src="/assets/vorzeichen_lager_notxt.png" name="vorzeichen_lager" title="Vorzeichen Lager"
+		style="max-width:100%; width:209px; height:auto; border:0px; margin: auto; display: block;">
+	<p style="text-align: center;">bearing forces at the rotated support</p>
+	<img src="/assets/gedrehtes_lager_notxt.png" name="gedrehtes_lager" title="gedrehtes Lager"
+		style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+	<p style="text-align: center;">rigid bearing rotated</p>
+	<img src="/assets/definition_federn.png" name="definition_federn" title="Definition Federn"
+		style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+	<p style="text-align: center;">support spring rotated</p>
+	<p>
+	<h1 class="western" id="hinweiseApp">
+		<a href="#">Further information on using the app</a>
+	</h1>
+	</p>
+	<p>
+	<h2 class="western">Input</h2>
+	</p>
+	<p>
+		The comma or period is permitted as the decimal separator.
+		A thousand separator is not permitted.
+	</p>
+	<p>
+		To speed up data entry, individual cell values or rows
+		in the tables can be copied or generated.
+		A block can be selected by pressing the RIGHT mouse button.
+		After releasing the mouse button, a context menu appears.
+		The context menu contains the following options:
+		<br>
+		For touch screens: When you swipe with your finger or stylus,
+		the selected cells are highlighted in color, just like with a mouse.
+		After lifting your finger/stylus, the context menu appears.
+		During selection mode, no values can be entered.
+		No values can be entered during selection mode. The
+		<i>close</i>
+		selection cancels the dialog
+		and removes the selection.
+	</p>
+	<p>
+	<ul>
+		<li>
+			<b>copy first cell value:</b>
+			The value of the first selected cell is copied to the other selected
+			cells.
+		</li>
+		<li>
+			<b>copy first row values:</b>
+			At least two rows are to be selected. The values of the uppermost row are
+			copied downwards column by column.
+		</li>
+		<li>
+			<b>increment by 1:</b>
+			At least two rows are to be selected. The values of the top row are
+			incremented by 1 column by column
+		</li>
+		<li>
+			<b>increment by delta:</b>
+			At least three rows are to be selected. The differences between the top
+			row and
+			the row below are determined column by column. The rows below are changed
+			column by column with the
+			calculated delta values.
+		</li>
+		<li>
+			<b>copy to clipboard:</b>
+			The content of the selected cells is copied to the clipboard and can be
+			used in
+			other places in the table, for example. The values can also be transferred
+			to other programs (spreadsheet).
+		</li>
+		<li>
+			<b>insert from clipboard:</b>
+			The clipboard content is pasted starting at the upper left cell of the
+			selected area.
+		</li>
+		<li>
+			<b>close:</b>
+			The dialog is ended without further explanations.
+		</li>
+	</ul>
+	</p>
+	<p>
+		For iOS, the selection in the context menu is made with a double
+		click.
+	</p>
+	<p>
+		Note: A Bluetooth mouse and/or keyboard can be connected to any tablet or
+		smartphone.
+	</p>
+	<p>
+		To make better use of the limited screen space on smartphones and tablets,
+		the number of rows in the tables for
+		node coordinates and elements are determined by entering the number of nodes
+		and elements. Therefore, the new
+		number of elements and nodes must be entered first and then the size of the
+		tables must be changed using the
+		'resize tables' button. The process can be repeated as often as necessary.
+	</p>
+	<p>
+	<h2 class="western" id="darstellung_2D">
+		<a href="#">2D representations</a>
+	</h2>
+	</p>
+	<p>The display options can be combined at will.</p>
+	<p>
+	<ul>
+		<li>
+			<b>labeling:</b>
+			Labeling of elements, internal forces and deformations. The type of
+			labeling depends on the selection of additional options.
+		</li>
+		<li>
+			<b>systemlines:</b>
+			Show structural system.
+		</li>
+		<li>
+			<b>deformations:</b>
+			Show deformed structure.
+		</li>
+		<li>
+			<b>normal force:</b>
+			axial force diagram
+		</li>
+		<li>
+			<b>shear force:</b>
+			shear force diagram
+		</li>
+		<li>
+			<b>moment:</b>
+			moment diagram
+		</li>
+		<li>
+			<b>Eigenform:</b>
+			Display of eigenforms. In the selection box at the top right, you can
+			select from the calculated eigenforms.
+		</li>
+		<li>
+			<b>imperfection:</b>
+			Representation of the imperfection used, based on the first eigenform.
+			Please note that the imperfection used depends on the combination
+			selected. Only for second-order theory.
+		</li>
+		<li>
+			<b>local imperfection:</b>
+			Display of the entered local imperfections, only for theory II. Order.
+		</li>
+		<li>
+			<b>scaling:</b>
+			Scaling of the size of internal force diagrams and
+			deformations.
+		</li>
+		<li>
+			<b>show loads:</b>
+			Display of loads depending on the selected load case.
+		</li>
+		<li>
+			<b>show supports:</b>
+			Display of calculated support forces and symbols.
+		</li>
+		<li>
+			<b>show outline:</b>
+			The cross-section heights of the bars entered are used in the display.
+		</li>
+		<li>
+			<b>total deformation:</b>
+			Only for Th. 2nd Order. Normally, the relative deformations are displayed.
+			If the option is selected, the pre-deformations are added to the relative
+			deformations.
+		</li>
+		<li>
+			<b>equilibrium of forces:</b>
+			Only for Th. 2nd Order. If this option is selected, the internal forces
+			along the member are displayed in the directions of the local coordinate
+			system of the undeformed system (equilibrium internal forces).
+			If the option is not selected, the equilibrium internal forces N and
+			V<sub>z</sub> are transformed in the direction of the rotated
+			cross-section. These are also referred to as design internal forces and
+			are to be used for the design.
 			<br>
-			<a href="#gui">Graphical input</a>
+			This option has no effect on the bending moment M<sub>y</sub> !
+		</li>
+		<li>
+			<b>Reset:</b>
+			Settings will be reset.
+		</li>
+	</ul>
+	</p>
+	<p>
+	<h2 class="western" id="svg">
+		<a href="#">Save screenshot</a>
+	</h2>
+	</p>
+	<p>
+		With the
+		<i>save svg</i>
+		button, you can save the current graphic
+		representation in a file in svg format
+		(vector format). The drawing can be opened with any program that
+		supports the svg vector format ,
+		such as Inkscape, Libre Office, and Microsoft Office (from version
+		2016 onwards). Since it is a vector format, the graphic can be edited.
+	</p>
+	<p>
+	<h2 class="western" id="bezeichnungen">
+		<a href="#">Designations</a>
+	</h2>
+	</p>
+	<p>
+		Node incidences of the elements
+		<br>
+		nod a = Node incidence at the beginning of the element
+		<br>
+		nod e = node incidence at the end of the element
+	</p>
+	<p>
+		The signs and designations correspond to those commonly used instatics,
+		see [2].
+	</p>
+	<p>
+	<h2 class="western" id="voreinstellungen">
+		<a href="#">Default settings</a>
+	</h2>
+	</p>
+	<p>
+		In the ꔷꔷꔷ Points menu, you can adjust the font size and table color.
+		<br>
+		The page settings can be saved as default settings in the local
+		storage of the browser used
+		and will be available again after
+		restarting the program. The default settings can be deleted again
+		using the button below.
+		<br>
+		Local storage is not the same as
+		cookies. This web application performs all
+		calculations
+		Local storage does not involve
+		cookies. This web application performs all
+		calculations
+		on the local computer in the browser using JavaScript. No
+		data is exchanged with a web server.
+		Therefore, once the program has started, no network connection is
+		required.
+		.
+	</p>
+	<p>
+	<h2 class="western" id="installation">
+		<a href="#">Installing the app on your desktop</a>
+	</h2>
+	</p>
+	<p>
+		This application is programmed as a web application (web app), so that
+		it can be installed on the desktop under all operating systems.
+		An icon is created on the desktop for this purpose. This allows the
+		An icon is created on the desktop for this purpose. This means that the
+		app behaves like an app installed from a store .
+		D2beam-gui will of course continue to run in the browser engine of the
+		installed browser, but without controls such as the address bar. The
+		installation differs depending on the operating system, version, and
+		browser.
+		<br>
+		After d2beam has been started in the browser for the first time, select
+		the ‘Install app’ option from the application menu (three-dot menu) in
+		the top right-hand corner of the Chrome browser on Android.
+		the option ‘Install app’. A dialog box will appear, which must be
+		confirmed. The browser can then be
+		closed. A new icon named D2beam-gui will now appear on the desktop.
+		The icon can be used to start the application.
+	</p>
+	<p>
+		For installation on iOS, you must use the Safari browser.
+		Here, the command is called “Add to Home Screen”
+		with a plus sign icon.
+	</p>
+	<p>
+		Installation on Microsoft Windows is similar to installation
+		on Android. In the Edge browser,
+		the following section is available in the application menu
+		<i> (three-dot menu)</i>
+		<img src="/assets/app-install-windows.png" name="Bild4" title="install windows"
+			style="max-width:100%; width:423px; height:auto; border:0px; margin: auto; display: block;">
+		<!--width:423px; height:111px-->
+		<br>
+		In newer versions of Chrome, you may be asked directly whether you want
+		to install it. See the icon on the right in the address bar:
+		<img src="/assets/chrome_install.png" name="chrome_install" title="chrome install"
+			style="max-width:100%; width:436px; height:auto; border:0px; margin: auto; display: block;">
+		<!--width:436px; height:155px-->
+	</p>
+	<p>
+		On macOS, the Microsoft Edge or Google Chrome browser should be used
+		for installation.
+	</p>
+	<p>
+		The Firefox browser does not currently support installation.
+		<br>
+		On Microsoft Windows and Linux PC operating systems,
+		you can alternatively switch to full-screen mode
+		by pressing the F11 key.
+	</p>
+	<p>
+		On Android, iOS, and Linux, uninstallation is done by simply deleting
+		the icon on the desktop.
+		On Windows, the app is uninstalled like a normal program.
+	</p>
+	<h2 class="western" id="kompatibilitaet">
+		<a href="#">Compatibility and issues</a>
+	</h2>
+	<p>
+		The following operating systems were tested: Windows 10↑, macOS Catalina
+		10.15.7↑, Ubuntu 22.04↑, Android 9-16, iOS 15.7.3↑.
+	</p>
+	<p>
+		The following browsers have been tested in their latest versions:
+		Chrome, Chromium, Edge, Safari, Firefox.
+		Only the latest versions are tested and supported.
+	</p>
+	<!--  <p>Probleme: Unter Android Firefox funktioniert die Selektion der Zellen in den Tabellen nicht.</p>  -->
+	<h2 class="western" id="tastatur">
+		<a href="#">Virtual keyboard</a>
+	</h2>
+	<p>
+		On some Android devices, especially from Samsung, the numeric keyboard
+		does not include a key for a negative
+		sign. Unfortunately, the HTML specification leaves it up to the device
+		manufacturer whether the numeric keyboard
+		contains a key for the negative sign. Judging from the many Internet
+		entries, the deeper meaning behind this is
+		probably only clear to a few people. In these cases, it is recommended
+		to install an additional virtual
+		keyboard. For example, the original Google Android keyboard Gboard from
+		the Play Store is an alternative. The
+		keyboard still has to be activated after the installation. It is best
+		to do this right away in the Play Store.
+		Later, you can always switch between the installed keyboards (icon at
+		the bottom right of the keyboard).
+	</p>
+	<h2 class="western" id="faq">
+		<a href="#">Questions and answers</a>
+	</h2>
+	<p>
+	<ul>
+		<li>
+			Question: I have entered a few too many nodes that I no longer need.
 			<br>
-			<a href="#vorzeichen">Coordinate system and sign definitions</a>
+			Answer: That doesn't matter. Nodes that don't have any elements
+			'attached' to them are ignored.
+		</li>
+		<li>
+			Question: What is the node ID?
 			<br>
-			<a href="#hinweiseApp">Notes on using the app</a>
-			<br>
-			<a href="#darstellung_2D">2D representations</a>
-			<br>
-			<a href="#svg">Save screenshot</a>
-			<br>
-			<a href="#bezeichnungen">Designations</a>
-			<br>
-			<a href="#voreinstellungen">Default settings</a>
-			<br>
-			<a href="#installation">Installing the app on your desktop</a>
-			<br>
-			<a href="#kompatibilitaet">Compatibility</a>
-			<br>
-			<a href="#tastatur">Help: My keyboard has no minus key, virtual keyboard</a>
-			<br>
-			<a href="#faq">Questions and answers</a>
-			<br>
-			<a href="#kontakt">Contact and error messages</a>
-			<br>
-			<h1 lang="de-DE" class="western" id="uebersicht">
-				<a href="#">Overview</a>
-			</h1>
-			<p>
-				This web application can be used to analyze 2D frames and trusses using the
-				finite element method. Calculation options are available for static and
-				dynamic analyses [1], [2], [3]. Static calculations can be performed
-				according to first- and second-order theory. For dynamic calculations,
-				eigenvalues and eigenmodes can currently be determined.
-				<br>
-				The beam element named d2beam (type 0) can take shear deformations into
-				account according to Timoshenko's theory. The truss member is a classic
-				2-node element.
-				The starting point for the d2beam element is a 4-node straight
-				shear-flexible beam element [1], whose internal nodes are condensed so that
-				the user works with a 2-node element.
-			</p>
-			<p>
-				After clicking the ‘Start new project’ button, you can choose
-				between calculating a truss or a pure lattice structure.
-				Selecting ‘Lattice structure’ simplifies the input
-				for lattice structures. Of course, lattice structures can also be calculated
-				with the truss elements
-				if you enter moment joints for the members.
-				<br>
-				The elements have a start and end node, which are designated a and e, or 1
-				and
-				2.
-			</p>
-			<p></p>
-			<p></p>
-			<p>
-				Features of the program:
-			</p>
-			<ul>
-				<li>
-					<p>The cross-section is constant element by element.</p>
-				</li>
-				<li>
-					<p>
-						Linearly elastic material for beams.
-					</p>
-				</li>
-				<li>
-					<p>
-						Shear deformations are taken into account using a shear correction
-						factor.
-						If a value of 0 is entered,
-						the calculation is performed using shear-rigid elements.
-					</p>
-				</li>
-				<li>
-					<p>
-						In second-order theory, the imperfection can be conveniently taken into
-						account via the first eigenform.
-						For typical frame systems (fixed at the bottom, freely movable at the
-						top) it is sufficient to specify the largest
-						displacement without specifying the node (input 0). The direction of the
-						displacement without specifying the node (input 0). The direction of the
-						imperfection is set the same
-						as the existing displacement of the corresponding degree of freedom from
-						the previous calculation according to
-						first-order theory, which is also required to determine the normal
-						forces.
-						<br>
-						For simple non-displaceable systems, the first eigenmode corresponds to
-						a member pre-deformation and can be used accordingly.
-						<br>
-						The pre-deformation calculated by the program can be checked in the
-						graphical representation. If
-						the result is not correct, the desired node with direction
-						must be specified in the input.
-					</p>
-				</li>
-				<li>
-					<p>
-						Optional bedding of bending bars according to Winkler.
-					</p>
-				</li>
-				<li>
-					<p>
-						Load combinations with associated safety factors can be defined.
-						In second-order theory, only the load combinations are calculated.
-					</p>
-				</li>
-			</ul>
-			<p>
-				<br>
-				<br>
-			</p>
-			<h2 class="western" id="gui">
-				<a href="#">Graphical input</a>
-			</h2>
-			<p>
-				The structure is entered in the System tab. Depending on the
-				available hardware, you can enter data using the mouse, the
-				pen or your finger.
-			</p>
-			<p>
-				Please note the following points when entering data:
-				<ul>
-					<li>
-						The cross-sections are defined in the Cross-sections tab. At least
-						one cross-section must be created before entering the
-						members.
-						Changes can be made later in this tab.
-					</li>
-					<li>
-						When performing second-order calculations, only combinations of
-						load cases that are defined in the Combinations tab prior to the
-						calculation are calculated.
-						The combinations must be defined in the Combinations tab prior to the
-						calculation.
-					</li>
-					<li>
-						The graphical input for the system is located in the System
-						tab.
-					</li>
-					<li>
-						The actual calculation is started in the Main tab. After successful
-						calculation, the deformations, internal forces, etc. can be displayed
-						in the Results tab.
-					</li>
-				</ul>
-			</p>
-			<p>
-				<b>Explanations of the icons in the System tab</b>
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/undo.png"
-					name="undo"
-					title="undo button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Undo Button: Deletes the last created element (node, member, support, node
-				load, or element load) and saves it in the internal recycle bin.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/redo.png"
-					name="redo"
-					title="redo button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Redo Button: Recovers the last item placed in the recycle bin.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/loeschen.png"
-					name="loeschen"
-					title="löschen button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Delete button: Deletes a clickable element and saves it in the internal
-				trash can.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/select.png"
-					name="select"
-					title="select button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Select button: Click on an existing element. A dialog box will then appear
-				in which changes can be made.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/knoten.png"
-					name="knoten"
-					title="knoten button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Node button: Enter node coordinates (x, z) using a dialog box. Note:
-				Entering nodes is only necessary if a member node does not fall at the
-				intersection of grid lines.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/edit_knoten.png"
-					name="edit_knoten"
-					title="edit-knoten button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Edit Node Button: The coordinates (x,z) of existing nodes can be changed
-				here.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/lager.png"
-					name="lager"
-					title="lager button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Support button: Entering supports. Note: Supports can only be set at
-				existing nodes.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/einstellungen.png"
-					name="einstellungen"
-					title="einstellungen button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Settings button: Here you can configure settings that are useful for
-				graphical input.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/reset.png"
-					name="reset"
-					title="reset button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Reset button: The system is redrawn. Zoom and drag are reset.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/default_querschnitt.png"
-					name="default_querschnitt"
-					title="default_querschnitt combobox"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Default cross-section combo box: The cross-section name displayed is used
-				for the next bar entry. Any number of cross-sections can be defined in the
-				Cross-sections tab.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/stab.png"
-					name="stab"
-					title="stab button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Bar button: A bar is defined by start and end nodes. The following snapping
-				rules apply: First, existing nodes are searched for within the snap range
-				(the lengths of the cursor lines indicate the snap range) and the node
-				closest to the cursor cross is used. If nothing is found, the blue grid
-				points are used. If nothing is found within the snap range here either, the
-				current position of the cursor, rounded to 1 mm, is used.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/knotenlast.png"
-					name="knotenlast"
-					title="knotenlast button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Nodal load button: Enter nodal loads. Note: Nodal loads can only be set at
-				existing nodes.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/elementlast.png"
-					name="elementlast"
-					title="element button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Element load button: Entering member loads. Note: Member loads can only act
-				on existing members.
-			</p>
-			<p>
-				<img
-					src="/assets/gui-icons/knotenmasse.png"
-					name="knotenmasse"
-					title="knotenmasse button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-				Nodal mass button: Enter nodal masses and
-				mass moments of inertia. Note: Nodal masses can only be set at existing
-				nodes. They are only taken into account if the calculation type
-				<i>dynamic</i> has been selected in the Main tab.
-			</p>
-			<p>
-				<br>
-				<br>
-			</p>
-			<h2 class="western" id="vorzeichen">
-				<a href="#">Coordinate system and sign definitions</a>
-			</h2>
-			<img
-				src="/assets/def_d2beam.png"
-				name="definition_d2beam"
-				title="Definition Stabelement d2beam"
-				style="max-width:100%; width:400px; height:auto; border:0px; margin: auto; display: block;">
-			<p style="text-align: center;">
-				Beam element d2beam with rigid ends and joints
-			</p>
-			<img
-				src="/assets/vorzeichen_lager_notxt.png"
-				name="vorzeichen_lager"
-				title="Vorzeichen Lager"
-				style="max-width:100%; width:209px; height:auto; border:0px; margin: auto; display: block;">
-			<p style="text-align: center;">bearing forces at the rotated support</p>
-			<img
-				src="/assets/gedrehtes_lager_notxt.png"
-				name="gedrehtes_lager"
-				title="gedrehtes Lager"
-				style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
-			<p style="text-align: center;">rigid bearing rotated</p>
-			<img
-				src="/assets/definition_federn.png"
-				name="definition_federn"
-				title="Definition Federn"
-				style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
-			<p style="text-align: center;">support spring rotated</p>
-			<p>
-				<h1 class="western" id="hinweiseApp">
-					<a href="#">Further information on using the app</a>
-				</h1>
-			</p>
-			<p>
-				<h2 class="western">Input</h2>
-			</p>
-			<p>
-				The comma or period is permitted as the decimal separator.
-				A thousand separator is not permitted.
-			</p>
-			<p>
-				To speed up data entry, individual cell values or rows
-				in the tables can be copied or generated.
-				A block can be selected by pressing the RIGHT mouse button.
-				After releasing the mouse button, a context menu appears.
-				The context menu contains the following options:
-				<br>
-				For touch screens: When you swipe with your finger or stylus,
-				the selected cells are highlighted in color, just like with a mouse.
-				After lifting your finger/stylus, the context menu appears.
-				During selection mode, no values can be entered.
-				No values can be entered during selection mode. The
-				<i>close</i>
-				selection cancels the dialog
-				and removes the selection.
-			</p>
-			<p>
-				<ul>
-					<li>
-						<b>copy first cell value:</b>
-						The value of the first selected cell is copied to the other selected
-						cells.
-					</li>
-					<li>
-						<b>copy first row values:</b>
-						At least two rows are to be selected. The values of the uppermost row are
-						copied downwards column by column.
-					</li>
-					<li>
-						<b>increment by 1:</b>
-						At least two rows are to be selected. The values of the top row are
-						incremented by 1 column by column
-					</li>
-					<li>
-						<b>increment by delta:</b>
-						At least three rows are to be selected. The differences between the top
-						row and
-						the row below are determined column by column. The rows below are changed
-						column by column with the
-						calculated delta values.
-					</li>
-					<li>
-						<b>copy to clipboard:</b>
-						The content of the selected cells is copied to the clipboard and can be
-						used in
-						other places in the table, for example. The values can also be transferred
-						to other programs (spreadsheet).
-					</li>
-					<li>
-						<b>insert from clipboard:</b>
-						The clipboard content is pasted starting at the upper left cell of the
-						selected area.
-					</li>
-					<li>
-						<b>close:</b>
-						The dialog is ended without further explanations.
-					</li>
-				</ul>
-			</p>
-			<p>
-				For iOS, the selection in the context menu is made with a double
-				click.
-			</p>
-			<p>
-				Note: A Bluetooth mouse and/or keyboard can be connected to any tablet or
-				smartphone.
-			</p>
-			<p>
-				To make better use of the limited screen space on smartphones and tablets,
-				the number of rows in the tables for
-				node coordinates and elements are determined by entering the number of nodes
-				and elements. Therefore, the new
-				number of elements and nodes must be entered first and then the size of the
-				tables must be changed using the
-				'resize tables' button. The process can be repeated as often as necessary.
-			</p>
-			<p>
-				<h2 class="western" id="darstellung_2D">
-					<a href="#">2D representations</a>
-				</h2>
-			</p>
-			<p>The display options can be combined at will.</p>
-			<p>
-				<ul>
-					<li>
-						<b>labeling:</b>
-						Labeling of elements, internal forces and deformations. The type of
-						labeling depends on the selection of additional options.
-					</li>
-					<li>
-						<b>systemlines:</b>
-						Show structural system.
-					</li>
-					<li>
-						<b>deformations:</b>
-						Show deformed structure.
-					</li>
-					<li>
-						<b>normal force:</b>
-						axial force diagram
-					</li>
-					<li>
-						<b>shear force:</b>
-						shear force diagram
-					</li>
-					<li>
-						<b>moment:</b>
-						moment diagram
-					</li>
-					<li>
-						<b>Eigenform:</b>
-						Display of eigenforms. In the selection box at the top right, you can
-						select from the calculated eigenforms.
-					</li>
-					<li>
-						<b>imperfection:</b>
-						Representation of the imperfection used, based on the first eigenform.
-						Please note that the imperfection used depends on the combination
-						selected. Only for second-order theory.
-					</li>
-					<li>
-						<b>local imperfection:</b>
-						Display of the entered local imperfections, only for theory II. Order.
-					</li>
-					<li>
-						<b>scaling:</b>
-						Scaling of the size of internal force diagrams and
-						deformations.
-					</li>
-					<li>
-						<b>show loads:</b>
-						Display of loads depending on the selected load case.
-					</li>
-					<li>
-						<b>show supports:</b>
-						Display of calculated support forces and symbols.
-					</li>
-					<li>
-						<b>show outline:</b>
-						The cross-section heights of the bars entered are used in the display.
-					</li>
-					<li>
-						<b>total deformation:</b>
-						Only for Th. 2nd Order. Normally, the relative deformations are displayed.
-						If the option is selected, the pre-deformations are added to the relative
-						deformations.
-					</li>
-					<li>
-						<b>equilibrium of forces:</b>
-						Only for Th. 2nd Order. If this option is selected, the internal forces
-						along the member are displayed in the directions of the local coordinate
-						system of the undeformed system (equilibrium internal forces).
-						If the option is not selected, the equilibrium internal forces N and
-						V<sub>z</sub> are transformed in the direction of the rotated
-						cross-section. These are also referred to as design internal forces and
-						are to be used for the design.
-						<br>
-						This option has no effect on the bending moment M<sub>y</sub> !
-					</li>
-					<li>
-						<b>Reset:</b>
-						Settings will be reset.
-					</li>
-				</ul>
-			</p>
-			<p>
-				<h2 class="western" id="svg">
-					<a href="#">Save screenshot</a>
-				</h2>
-			</p>
-			<p>
-				With the
-				<i>save svg</i>
-				button, you can save the current graphic
-				representation in a file in svg format
-				(vector format). The drawing can be opened with any program that
-				supports the svg vector format ,
-				such as Inkscape, Libre Office, and Microsoft Office (from version
-				2016 onwards). Since it is a vector format, the graphic can be edited.
-			</p>
-			<p>
-				<h2 class="western" id="bezeichnungen">
-					<a href="#">Designations</a>
-				</h2>
-			</p>
-			<p>
-				Node incidences of the elements
-				<br>
-				nod a = Node incidence at the beginning of the element
-				<br>
-				nod e = node incidence at the end of the element
-			</p>
-			<p>
-				The signs and designations correspond to those commonly used instatics,
-				see [2].
-			</p>
-			<p>
-				<h2 class="western" id="voreinstellungen">
-					<a href="#">Default settings</a>
-				</h2>
-			</p>
-			<p>
-				In the ꔷꔷꔷ Points menu, you can adjust the font size and table color.
-				<br>
-				The page settings can be saved as default settings in the local
-				storage of the browser used
-				and will be available again after
-				restarting the program. The default settings can be deleted again
-				using the button below.
-				<br>
-				Local storage is not the same as
-				cookies. This web application performs all
-				calculations
-				Local storage does not involve
-				cookies. This web application performs all
-				calculations
-				on the local computer in the browser using JavaScript. No
-				data is exchanged with a web server.
-				Therefore, once the program has started, no network connection is
-				required.
-				.
-			</p>
-			<p>
-				<h2 class="western" id="installation">
-					<a href="#">Installing the app on your desktop</a>
-				</h2>
-			</p>
-			<p>
-				This application is programmed as a web application (web app), so that
-				it can be installed on the desktop under all operating systems.
-				An icon is created on the desktop for this purpose. This allows the
-				An icon is created on the desktop for this purpose. This means that the
-				app behaves like an app installed from a store .
-				D2beam-gui will of course continue to run in the browser engine of the
-				installed browser, but without controls such as the address bar. The
-				installation differs depending on the operating system, version, and
-				browser.
-				<br>
-				After d2beam has been started in the browser for the first time, select
-				the ‘Install app’ option from the application menu (three-dot menu) in
-				the top right-hand corner of the Chrome browser on Android.
-				the option ‘Install app’. A dialog box will appear, which must be
-				confirmed. The browser can then be
-				closed. A new icon named D2beam-gui will now appear on the desktop.
-				The icon can be used to start the application.
-			</p>
-			<p>
-				For installation on iOS, you must use the Safari browser.
-				Here, the command is called “Add to Home Screen”
-				with a plus sign icon.
-			</p>
-			<p>
-				Installation on Microsoft Windows is similar to installation
-				on Android. In the Edge browser,
-				the following section is available in the application menu
-				<i> (three-dot menu)</i>
-				<img
-					src="/assets/app-install-windows.png"
-					name="Bild4"
-					title="install windows"
-					style="max-width:100%; width:423px; height:auto; border:0px; margin: auto; display: block;">
-				<!--width:423px; height:111px-->
-				<br>
-				In newer versions of Chrome, you may be asked directly whether you want
-				to install it. See the icon on the right in the address bar:
-				<img
-					src="/assets/chrome_install.png"
-					name="chrome_install"
-					title="chrome install"
-					style="max-width:100%; width:436px; height:auto; border:0px; margin: auto; display: block;">
-				<!--width:436px; height:155px-->
-			</p>
-			<p>
-				On macOS, the Microsoft Edge or Google Chrome browser should be used
-				for installation.
-			</p>
-			<p>
-				The Firefox browser does not currently support installation.
-				<br>
-				On Microsoft Windows and Linux PC operating systems,
-				you can alternatively switch to full-screen mode
-				by pressing the F11 key.
-			</p>
-			<p>
-				On Android, iOS, and Linux, uninstallation is done by simply deleting
-				the icon on the desktop.
-				On Windows, the app is uninstalled like a normal program.
-			</p>
-			<h2 class="western" id="kompatibilitaet">
-				<a href="#">Compatibility and issues</a>
-			</h2>
-			<p>
-				The following operating systems were tested: Windows 10↑, macOS Catalina
-				10.15.7↑, Ubuntu 22.04↑, Android 9-16, iOS 15.7.3↑.
-			</p>
-			<p>
-				The following browsers have been tested in their latest versions:
-				Chrome, Chromium, Edge, Safari, Firefox.
-				Only the latest versions are tested and supported.
-			</p>
-			<!--  <p>Probleme: Unter Android Firefox funktioniert die Selektion der Zellen in den Tabellen nicht.</p>  -->
-			<h2 class="western" id="tastatur">
-				<a href="#">Virtual keyboard</a>
-			</h2>
-			<p>
-				On some Android devices, especially from Samsung, the numeric keyboard
-				does not include a key for a negative
-				sign. Unfortunately, the HTML specification leaves it up to the device
-				manufacturer whether the numeric keyboard
-				contains a key for the negative sign. Judging from the many Internet
-				entries, the deeper meaning behind this is
-				probably only clear to a few people. In these cases, it is recommended
-				to install an additional virtual
-				keyboard. For example, the original Google Android keyboard Gboard from
-				the Play Store is an alternative. The
-				keyboard still has to be activated after the installation. It is best
-				to do this right away in the Play Store.
-				Later, you can always switch between the installed keyboards (icon at
-				the bottom right of the keyboard).
-			</p>
-			<h2 class="western" id="faq">
-				<a href="#">Questions and answers</a>
-			</h2>
-			<p>
-				<ul>
-					<li>
-						Question: I have entered a few too many nodes that I no longer need.
-						<br>
-						Answer: That doesn't matter. Nodes that don't have any elements
-						'attached' to them are ignored.
-					</li>
-					<li>
-						Question: What is the node ID?
-						<br>
-						Answer: Each node has its own internal number (node ID), which is
-						automatically generated when the node is created.
-						It is independent of the subsequent assignment of the
-						FE node numbering.
-						The node ID is displayed in the node dialog in the System tab when
-						you select the
-						<i>Edit Node</i>
-						button
-						<img
-							src="/assets/gui-icons/edit_knoten.png"
-							name="edit_knoten"
-							title="edit-knoten button"
-							style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-						and click on an existing node.
-					</li>
-				</ul>
-			</p>
-			<p>
-				<br>
-			</p>
-			<h2 class="western" id="kontakt">
-				<a href="#">Contact and error messages</a>
-			</h2>
-			<p>
-				For comments, requests, and error reports, please use the following
-				email address: statikverstehen&#x40;web.de.
-				<br>
-				When error messages occur, it is usually helpful to attach a copy of
-				the input file.
-				<br>
-				<br>
-			</p>
-			<h1 class="western">
-				<a href="#">Literature</a>
-			</h1>
-			<p>
-				[1] Klaus Knothe, Heribert Wessels:
-				Finite Elemente, Eine Einführung für Ingenieure, 5.Auflage, Ernst W.
-				&amp; Sohn Verlag, 2017
-			</p>
-			<p>
-				[2] Rolf Kindmann; Matthias Kraus :
-				Steel Structures: Design using FEM, Ernst W. &amp; Sohn Verlag, 2011
-			</p>
-			<p>
-				[3] Horst Werkle:
-				Finite Elements in Structural Analysis, Ernst W. &amp; Sohn Verlag, 2021
-			</p>
-		</p>
-	</body>
+			Answer: Each node has its own internal number (node ID), which is
+			automatically generated when the node is created.
+			It is independent of the subsequent assignment of the
+			FE node numbering.
+			The node ID is displayed in the node dialog in the System tab when
+			you select the
+			<i>Edit Node</i>
+			button
+			<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
+				style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			and click on an existing node.
+		</li>
+	</ul>
+	</p>
+	<p>
+		<br>
+	</p>
+	<h2 class="western" id="kontakt">
+		<a href="#">Contact and error messages</a>
+	</h2>
+	<p>
+		For comments, requests, and error reports, please use the following
+		email address: statikverstehen&#x40;web.de.
+		<br>
+		When error messages occur, it is usually helpful to attach a copy of
+		the input file.
+		<br>
+		<br>
+	</p>
+	<h1 class="western">
+		<a href="#">Literature</a>
+	</h1>
+	<p>
+		[1] Klaus Knothe, Heribert Wessels:
+		Finite Elemente, Eine Einführung für Ingenieure, 5.Auflage, Ernst W.
+		&amp; Sohn Verlag, 2017
+	</p>
+	<p>
+		[2] Rolf Kindmann; Matthias Kraus :
+		Steel Structures: Design using FEM, Ernst W. &amp; Sohn Verlag, 2011
+	</p>
+	<p>
+		[3] Horst Werkle:
+		Finite Elements in Structural Analysis, Ernst W. &amp; Sohn Verlag, 2021
+	</p>
+	</p>
+</body>
+
 </html>

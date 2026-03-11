@@ -247,11 +247,11 @@
 </trans-unit>
 <trans-unit id="s83c549670e2c85da">
   <source>Stabwerk</source>
-<target>Estructuras de barras</target>
+<target>Marco</target>
 </trans-unit>
 <trans-unit id="s9f1c28507d0dfda8">
   <source>Fachwerk</source>
-<target>Cercha</target>
+<target>Celosía</target>
 </trans-unit>
 <trans-unit id="s9af710578a457088">
   <source>Die Art des Systems kann nachträglich nicht mehr geändert werden !</source>
