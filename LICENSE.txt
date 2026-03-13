@@ -1,6 +1,6 @@
 
 
-Copyright (c) 2023-25 statikverstehen.de
+Copyright (c) 2023-26 statikverstehen.de
 
 All rights reserved.
 

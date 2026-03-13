@@ -101,7 +101,7 @@
 's3ee5664c49a38eff': `Adjust table size`,
 's405ad46ccb89bcf3': `stress around cross-sectional axis`,
 's40c7f83f01e8702b': `end current activity`,
-'s4208b8c9f9ba4783': `deformations`,
+'s4208b8c9f9ba4783': `deflection`,
 's42a8fafacf7d0fa7': `Save system as svg file`,
 's42d04fe173ce3377': `Nodal mass`,
 's42dee0a9650c7116': `pick node`,
