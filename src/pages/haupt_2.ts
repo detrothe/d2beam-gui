@@ -351,8 +351,8 @@ console.log("in haupt2>")
 
 //---------------------------------------------------------------------------------------------------------------
 
-export function handleClick_allgeiner_querschnitt() {
-  console.log('handleClick_allgeiner_querschnitt()');
+export function handleClick_allgemeiner_querschnitt() {
+  console.log('handleClick_allgemeiner_querschnitt()');
 
   const el = document.getElementById('id_dialog');
   console.log('id_dialog', el);

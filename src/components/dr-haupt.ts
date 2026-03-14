@@ -43,7 +43,7 @@ import {
   calculate,
   click_neuer_querschnitt_rechteck,
   create_pdf,
-  handleClick_allgeiner_querschnitt,
+  handleClick_allgemeiner_querschnitt,
   resizeTables,
   show_video,
 } from '../pages/haupt_2';
@@ -104,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 // stylesheet.replace(styles);
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.8.2, 13.März-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.8.3, 14.März-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -355,7 +355,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
       <sl-tab-panel id="id_tab_querschnitt" name="tab-querschnitte">
         <!--
-        <sl-button id="open-dialog" @click="${handleClick_allgeiner_querschnitt}"
+        <sl-button id="open-dialog" @click="${handleClick_allgemeiner_querschnitt}"
           >neuer allgemeiner Querschnitt</sl-button
         >
         -->
