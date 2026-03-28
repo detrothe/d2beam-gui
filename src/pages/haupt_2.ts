@@ -66,7 +66,7 @@ import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-g
 import { set_max_lastfall, zero_max_lastfall } from './cad_draw_elementlasten';
 import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
-import { currentFilename } from './haupt';
+import { app, currentFilename } from './haupt';
 import { drHaupt } from '../components/dr-haupt';
 
 console.log("in haupt2>")
@@ -916,8 +916,11 @@ export function elementTabelle_bettung_anzeigen(check: boolean) {
 //---------------------------------------------------------------------------------------------------------------
 export function show_video() {
   //-------------------------------------------------------------------------------------------------------------
-
-  window.open('https://d2beam-gui.statikverstehen.de/videos/videos.html', '_blank', 'noopener');
+  if (app.browserLanguage === "de") {
+    window.open('https://d2beam-gui.statikverstehen.de/videos/videos.html', '_blank', 'noopener');
+  } else {
+    window.open('https://fea-apps.de/videos/videos.html', '_blank', 'noopener');
+  }
 }
 
 //---------------------------------------------------------------------------------------------------------------
