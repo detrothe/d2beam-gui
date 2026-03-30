@@ -917,7 +917,7 @@ export function elementTabelle_bettung_anzeigen(check: boolean) {
 export function show_video() {
   //-------------------------------------------------------------------------------------------------------------
   if (app.browserLanguage === "de") {
-    window.open('https://d2beam-gui.statikverstehen.de/videos/videos.html', '_blank', 'noopener');
+    window.open('https://statikverstehen.de/videos/videos.html', '_blank', 'noopener');
   } else {
     window.open('https://fea-apps.de/videos/videos.html', '_blank', 'noopener');
   }

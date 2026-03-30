@@ -1856,7 +1856,7 @@ function getMaterialIndex(ielem: number) {
     console.log("qname", qname, nQuerschnittSets)
     let index = -1;
     for (j = 0; j < nQuerschnittSets; j++) {
-        console.log("qname", querschnittset[j].name)
+        console.log("qname", j, querschnittset[j].name)
         if (querschnittset[j].name === qname) {
             index = j;
             break;

@@ -520,7 +520,7 @@ export function dialog_querschnitt_closed(_e: any) {
                 elem = el?.shadowRoot?.getElementById("area") as HTMLInputElement;
                 const area = +elem.value.replace(/,/g, ".");
                 elem = el?.shadowRoot?.getElementById("qname") as HTMLInputElement;
-                const qname = elem.value.replace(/,/g, ".");
+                const qname = elem.value;
                 elem = el?.shadowRoot?.getElementById("height") as HTMLInputElement;
                 const height = +elem.value.replace(/,/g, ".");
                 elem = el?.shadowRoot?.getElementById("width") as HTMLInputElement;
