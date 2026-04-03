@@ -68,11 +68,11 @@
 </trans-unit>
 <trans-unit id="scfc306ddc5333ba2">
   <source>Eigenformen</source>
-  <target>eigen mode</target>
+  <target>eigenmode</target>
 </trans-unit>
 <trans-unit id="s0641fdf7c4cc8625">
   <source>animate Eigenformen</source>
-  <target>animate eigen mode</target>
+  <target>animate eigenmode</target>
 </trans-unit>
 <trans-unit id="s65ada9f53688cb8f">
   <source>Massen anzeigen</source>
@@ -795,7 +795,7 @@
 </trans-unit>
 <trans-unit id="s66f1b01569c36879">
   <source>Schiefstellung des gesamten Systems mithilfe der ersten Eigenform</source>
-  <target>Imperfection of the entire system using the first eigen mode</target>
+  <target>Imperfection of the entire system using the first eigenmode</target>
 </trans-unit>
 <trans-unit id="s8c35b76b6f2c60c2">
   <source>Hier nichts eintragen, Änderungen werden nicht berücksichtigt, nur zur Info</source>
@@ -907,7 +907,7 @@
 </trans-unit>
 <trans-unit id="s978e7cb7f7e53f40">
   <source>Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet</source>
-  <target>Number of eigenvalues to be calculated; the first eigen mode is always used for imperfection</target>
+  <target>Number of eigenvalues to be calculated; the first eigenmode is always used for imperfection</target>
 </trans-unit>
 <trans-unit id="s4f57bf6f517adce3">
   <source>Anzahl Knickfiguren :</source>
