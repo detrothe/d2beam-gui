@@ -146,7 +146,7 @@
           Tras los cambios, es necesario realizar un nuevo cálculo.`,
 's5bfa8df7ff3f340a': `Tipo de elemento`,
 's5c1fb6f38c79e9c4': `En el caso de la teoría de primer orden y las propiedades lineales de los materiales, las combinaciones son opcionales. En el caso de la teoría de segundo orden y/o las propiedades no lineales de los materiales, se debe definir al menos una combinación.`,
-'s5c2cea4a0d9a497d': `Factor rigidez a la tracción:`,
+'s5c2cea4a0d9a497d': `factor de rigidez axial:`,
 's5c4d149a121ec91a': `Factor para los símbolos de soporte:`,
 's5c7d90867a472c06': `No se ha encontrado ningún nodo`,
 's5d9967b49bd47559': `o`,

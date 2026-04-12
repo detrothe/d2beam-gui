@@ -146,7 +146,7 @@
            A recalculation is necessary after the changes.`,
 's5bfa8df7ff3f340a': `Type of element`,
 's5c1fb6f38c79e9c4': `For first-order theory and linear material properties, combinations are optional. For second-order theory and/or nonlinear material properties, at least one combination must be defined.`,
-'s5c2cea4a0d9a497d': `Factor tensile stiffness:`,
+'s5c2cea4a0d9a497d': `Axial stiffness factor:`,
 's5c4d149a121ec91a': `Factor for support symbols:`,
 's5c7d90867a472c06': `no node found`,
 's5d9967b49bd47559': `or`,

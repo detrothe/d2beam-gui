@@ -319,7 +319,7 @@
 </trans-unit>
 <trans-unit id="s5c2cea4a0d9a497d">
   <source>Faktor Dehnsteifigkeit:</source>
-  <target>Factor tensile stiffness:</target>
+  <target>Axial stiffness factor:</target>
 </trans-unit>
 <trans-unit id="s165017f6138f8d2c">
   <source>neuer Querschnitt</source>
