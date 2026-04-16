@@ -47,6 +47,7 @@ import { add_bemassung, drawBemassung, drawBemassung_band, recalc_abstand, TCAD_
 import { CNodeDisp, draw_knotenverformung, read_knotenverformung_dialog } from './cad_knotenverformung';
 import { copy_selected } from './cad_select';
 import { drHaupt } from '../components/dr-haupt';
+import { cad_min_max } from './cad_min_max';
 
 export const CAD_KNOTEN = 1;
 export const CAD_STAB = 2;
@@ -2511,6 +2512,8 @@ export function reset_cad() {
 
    pointer.length = 0
    zoomIsActive = false
+
+   cad_min_max();
 
    init_cad(2);
 

@@ -1,0 +1,151 @@
+Date : 2026-04-16 14:07:45
+Directory : /home/detlef/git-code/d2beam-gui-26-12-2025
+Total : 104 files,  60819 codes, 12010 comments, 8738 blanks, all 81567 lines
+
+Languages
++-------------------------+------------+------------+------------+------------+------------+
+| language                | files      | code       | comment    | blank      | total      |
++-------------------------+------------+------------+------------+------------+------------+
+| TypeScript              |         76 |     33,420 |     11,001 |      8,009 |     52,430 |
+| WebAssembly Text Format |          1 |      9,495 |          0 |        115 |      9,610 |
+| JSON                    |          7 |      7,069 |          0 |          2 |      7,071 |
+| JavaScript              |          5 |      3,735 |        669 |        325 |      4,729 |
+| XML                     |          2 |      3,221 |          0 |          2 |      3,223 |
+| HTML                    |          4 |      2,437 |         81 |         51 |      2,569 |
+| PostCSS                 |          7 |      1,398 |        259 |        226 |      1,883 |
+| JSON with Comments      |          1 |         31 |          0 |          1 |         32 |
+| Markdown                |          1 |         13 |          0 |          7 |         20 |
++-------------------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                   |        104 |     60,819 |     12,010 |      8,738 |     81,567 |
+| . (Files)                                                                                           |         11 |     20,353 |        686 |        450 |     21,489 |
+| public                                                                                              |          4 |        136 |         56 |          3 |        195 |
+| public (Files)                                                                                      |          2 |        109 |         56 |          3 |        168 |
+| public/widget                                                                                       |          2 |         27 |          0 |          0 |         27 |
+| src                                                                                                 |         87 |     37,109 |     11,268 |      8,283 |     56,660 |
+| src (Files)                                                                                         |          1 |        152 |        164 |         75 |        391 |
+| src/components                                                                                      |         26 |      9,094 |        863 |      1,052 |     11,009 |
+| src/fonts                                                                                           |          2 |          2 |          0 |          3 |          5 |
+| src/generated                                                                                       |          3 |        809 |         20 |         16 |        845 |
+| src/generated (Files)                                                                               |          1 |         10 |         12 |          4 |         26 |
+| src/generated/locales                                                                               |          2 |        799 |          8 |         12 |        819 |
+| src/info                                                                                            |          3 |      2,350 |          9 |         47 |      2,406 |
+| src/pages                                                                                           |         42 |     22,572 |      9,938 |      6,866 |     39,376 |
+| src/styles                                                                                          |         10 |      2,130 |        274 |        224 |      2,628 |
+| xliff                                                                                               |          2 |      3,221 |          0 |          2 |      3,223 |
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------+-------------------------+------------+------------+------------+------------+
+| filename                                                                                            | language                | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------+-------------------------+------------+------------+------------+------------+
+| /home/detlef/git-code/d2beam-gui-26-12-2025/.eslintrc.js                                            | JavaScript              |         33 |          0 |          1 |         34 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/README.md                                               | Markdown                |         13 |          0 |          7 |         20 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/d2beam_wasm.js                                          | JavaScript              |      3,694 |        613 |        318 |      4,625 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/d2beam_wasm.wasm                                        | WebAssembly Text Format |      9,495 |          0 |        115 |      9,610 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/index.html                                              | HTML                    |         87 |         72 |          4 |        163 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/lit-localize.json                                       | JSON                    |         18 |          0 |          0 |         18 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/package-lock.json                                       | JSON                    |      6,854 |          0 |          1 |      6,855 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/package.json                                            | JSON                    |         55 |          0 |          1 |         56 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/public/manifest.json                                    | JSON                    |        103 |          0 |          0 |        103 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/public/sw.js                                            | JavaScript              |          6 |         56 |          3 |         65 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/public/widget/ac.json                                   | JSON                    |         24 |          0 |          0 |         24 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/public/widget/data.json                                 | JSON                    |          3 |          0 |          0 |          3 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-button-pm.ts                          | TypeScript              |        201 |         18 |         16 |        235 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-control-panel.ts                      | TypeScript              |        685 |         51 |         72 |        808 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog-layerquerschnitt.ts            | TypeScript              |        186 |          1 |         14 |        201 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog-rechteckquerschnitt.ts         | TypeScript              |        773 |         32 |         64 |        869 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_bemassung.ts                   | TypeScript              |        160 |          2 |         13 |        175 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_edit_selected_elementlasten.ts | TypeScript              |        219 |          5 |         22 |        246 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_edit_selected_lastfall.ts      | TypeScript              |        162 |          2 |         13 |        177 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_einstellungen.ts               | TypeScript              |        445 |          8 |         56 |        509 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_elementlasten.ts               | TypeScript              |        465 |          4 |         29 |        498 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_info.ts                        | TypeScript              |        183 |         24 |         19 |        226 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_knoten.ts                      | TypeScript              |        211 |          7 |         15 |        233 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_knotenlast.ts                  | TypeScript              |        267 |          5 |         27 |        299 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_knotenmasse.ts                 | TypeScript              |        187 |          2 |         15 |        204 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_knotenverformung.ts            | TypeScript              |        220 |          4 |         20 |        244 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_kopieren.ts                    | TypeScript              |        225 |          2 |         25 |        252 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_lager.ts                       | TypeScript              |        250 |          2 |         17 |        269 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_messen.ts                      | TypeScript              |        212 |          4 |         13 |        229 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_neue_eingabe.ts                | TypeScript              |        173 |          1 |          8 |        182 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_selekt_typ.ts                  | TypeScript              |        167 |          2 |         15 |        184 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-dialog_stab_eigenschaften.ts          | TypeScript              |        442 |         36 |         58 |        536 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-drawer_1.ts                           | TypeScript              |        461 |         28 |         45 |        534 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-haupt.ts                              | TypeScript              |      1,185 |         22 |         27 |      1,234 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-my_drawer.ts                          | TypeScript              |        196 |          8 |         15 |        219 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-tabelle.css                           | PostCSS                 |         58 |          7 |         13 |         78 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/dr-tabelle.ts                            | TypeScript              |      1,180 |        569 |        398 |      2,147 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/components/linkedlist.ts                            | TypeScript              |        181 |         17 |         23 |        221 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/fonts/FreeSans-bold.js                              | JavaScript              |          1 |          0 |          1 |          2 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/fonts/FreeSans-normal.js                            | JavaScript              |          1 |          0 |          2 |          3 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/generated/locale-codes.ts                           | TypeScript              |         10 |         12 |          4 |         26 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/generated/locales/en-GB.ts                          | TypeScript              |        399 |          4 |          6 |        409 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/generated/locales/es-ES.ts                          | TypeScript              |        400 |          4 |          6 |        410 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/index.ts                                            | TypeScript              |        152 |        164 |         75 |        391 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/info/Kurzdokumentation_deutsch.html                 | HTML                    |        874 |          3 |         15 |        892 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/info/Kurzdokumentation_english.html                 | HTML                    |        727 |          3 |         16 |        746 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/info/Kurzdokumentation_spanish.html                 | HTML                    |        749 |          3 |         16 |        768 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/CCAD_element.ts                               | TypeScript              |        370 |         70 |        114 |        554 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/TFArray.ts                                    | TypeScript              |        187 |          8 |         50 |        245 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/ausgabe.ts                                    | TypeScript              |      1,112 |        110 |        276 |      1,498 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/cad.ts                                        | TypeScript              |        655 |      1,713 |        179 |      2,547 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/cad_bemassung.ts                              | TypeScript              |        390 |         40 |        150 |        580 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/cad_buttons.ts                                | TypeScript              |      2,732 |        452 |        771 |      3,955 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/cad_contextmenu.ts                            | TypeScript              |        170 |         54 |         66 |        290 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/cad_draw_elemente.ts                          | TypeScript              |      1,156 |        114 |        314 |      1,584 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/cad_draw_elementlasten.ts                     | TypeScript              |        452 |        401 |        131 |        984 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/cad_knotenverformung.ts                       | TypeScript              |        302 |         35 |         99 |        436 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/cad_node.ts                                   | TypeScript              |        107 |         24 |         39 |        170 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/cad_rechnen.ts                                | TypeScript              |        633 |         96 |        163 |        892 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/cad_select.ts                                 | TypeScript              |        662 |         73 |        201 |        936 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/cholesky.ts                                   | TypeScript              |         62 |         18 |         23 |        103 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/confirm_dialog.ts                             | TypeScript              |        131 |         19 |         33 |        183 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/dateien.ts                                    | TypeScript              |        772 |        100 |        156 |      1,028 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/detectos.ts                                   | TypeScript              |        164 |         35 |          7 |        206 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/einstellungen.ts                              | TypeScript              |        298 |        242 |         74 |        614 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/element.ts                                    | TypeScript              |         62 |          2 |         29 |         93 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/feder.ts                                      | TypeScript              |        145 |         20 |         54 |        219 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/gauss.ts                                      | TypeScript              |         48 |         58 |         18 |        124 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/globals.ts                                    | TypeScript              |         27 |          8 |          6 |         41 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/grafik.ts                                     | TypeScript              |      1,831 |      3,162 |        649 |      5,642 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/haupt.ts                                      | TypeScript              |         75 |        300 |         35 |        410 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/haupt3.ts                                     | TypeScript              |        123 |         62 |         39 |        224 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/haupt_2.ts                                    | TypeScript              |        379 |        413 |        146 |        938 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/infos.ts                                      | TypeScript              |         13 |          0 |         12 |         25 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/koppelfeder.ts                                | TypeScript              |        798 |        286 |        326 |      1,410 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/lib.ts                                        | TypeScript              |        102 |         45 |         54 |        201 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/locale-picker.ts                              | TypeScript              |         65 |          8 |          6 |         79 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/localization.ts                               | TypeScript              |         31 |          7 |         10 |         48 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/mypanelgui.ts                                 | TypeScript              |        162 |         67 |         49 |        278 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/mypdf.ts                                      | TypeScript              |      1,233 |        106 |        357 |      1,696 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/prot_eingabe.ts                               | TypeScript              |        421 |         40 |         75 |        536 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/quer1.ts                                      | TypeScript              |         83 |          5 |         25 |        113 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/querschnitte.ts                               | TypeScript              |        510 |        128 |        148 |        786 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/rechnen.ts                                    | TypeScript              |      3,120 |        584 |        981 |      4,685 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/timoshenko_beam.ts                            | TypeScript              |      1,786 |        306 |        510 |      2,602 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/trans.ts                                      | TypeScript              |         62 |         23 |         24 |        109 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/truss.ts                                      | TypeScript              |      1,077 |        518 |        447 |      2,042 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/utility.ts                                    | TypeScript              |         64 |         31 |         20 |        115 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/pages/zoomtest.ts                                   | TypeScript              |          0 |        155 |          0 |        155 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/styles/contextMenu-css.ts                           | TypeScript              |        112 |         16 |          3 |        131 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/styles/contextMenu.css                              | PostCSS                 |         79 |         25 |         22 |        126 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/styles/dark.css                                     | PostCSS                 |        395 |         72 |         64 |        531 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/styles/dr-dialog.css                                | PostCSS                 |          7 |          0 |          2 |          9 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/styles/dr-drawer-css.ts                             | TypeScript              |         20 |          0 |          3 |         23 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/styles/dr-drawer.css                                | PostCSS                 |         15 |          2 |          2 |         19 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/styles/global-css.ts                                | TypeScript              |        641 |          4 |          4 |        649 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/styles/global.css                                   | PostCSS                 |        448 |         81 |         60 |        589 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/styles/light.css                                    | PostCSS                 |        396 |         72 |         63 |        531 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/src/styles/shared-styles.ts                             | TypeScript              |         17 |          2 |          1 |         20 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/swa-cli.config.json                                     | JSON                    |         12 |          0 |          0 |         12 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/tsconfig.json                                           | JSON with Comments      |         31 |          0 |          1 |         32 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/vite.config.mts                                         | TypeScript              |         61 |          1 |          2 |         64 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/xliff/en-GB.xlf                                         | XML                     |      1,610 |          0 |          1 |      1,611 |
+| /home/detlef/git-code/d2beam-gui-26-12-2025/xliff/es-ES.xlf                                         | XML                     |      1,611 |          0 |          1 |      1,612 |
+| Total                                                                                               |                         |     60,819 |     12,010 |      8,738 |     81,567 |
++-----------------------------------------------------------------------------------------------------+-------------------------+------------+------------+------------+------------+

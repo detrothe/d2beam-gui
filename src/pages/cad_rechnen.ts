@@ -31,7 +31,6 @@ export function cad_rechnen() {
         fatal_error = false;
         let check_max_lastfall = 1   // für Eigengewichtslastfall
 
-
         // Markiere alle Knoten /Punkte, an denen Stäbe hängen
 
         for (let i = 0; i < CADNodes.length; i++) CADNodes[i].nel = 0  // init
