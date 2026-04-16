@@ -104,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 // stylesheet.replace(styles);
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.8.5, 12.April-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.8.5, 16-April-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -284,7 +284,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <button id="id_button_pan_cad">Pan</button>
 
 
-          <div id="id_context_menu" style="position:absolute;top:100;display:none;">
+          <!-- <div id="id_context_menu" style="position:absolute;top:100;display:none;">
             <sl-menu style="max-width: 200px;">
               <sl-menu-item value="properties" @click="${show_property_dialog}">Eigenschaften</sl-menu-item>
               <sl-menu-item value="add_eload" @click="${show_add_elload_dialog}">add E-Lasten</sl-menu-item>
@@ -292,7 +292,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               <sl-menu-item value="delete"  @click="${delete_element_dialog}">Löschen</sl-menu-item>
               <sl-menu-item value="abbruch"  @click="${abbruch_property_dialog}">Abbruch</sl-menu-item>
             </sl-menu>
-          </div>
+          </div> -->
 
 
           <!-- <sl-drawer label="Mehr Aktivitäten" class="drawer-overview" style="cursor:pointer;--size:20rem">

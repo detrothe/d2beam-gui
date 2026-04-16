@@ -118,6 +118,7 @@ export class drDialogStabEigenschaften extends LitElement {
             width: 19rem;
             background: light-dark(var(--dialog-open-light), var(--dialog-open-dark));
             border: thin solid #e7c157;
+            border-radius: 0.375rem;
             /*margin: 5rem auto;*/
             font-size: 1rem;
             max-height: 90vh;

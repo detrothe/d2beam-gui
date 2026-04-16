@@ -17,8 +17,8 @@ export function abbruch_property_dialog() {
     const elHaupt = document.getElementById('id_haupt');
     let shadow = elHaupt?.shadowRoot;
     if (shadow) {
-        let divi = shadow.getElementById("id_context_menu");
-        divi!.style.display = 'none';
+        // let divi = shadow.getElementById("id_context_menu");
+        // divi!.style.display = 'none';
 
         // stab unselektiert neu zeichnen
         if (selected_element.group) {
@@ -48,8 +48,8 @@ export function show_property_dialog() {
     const elHaupt = document.getElementById('id_haupt');
     let shadow = elHaupt?.shadowRoot;
     if (shadow) {
-        let divi = shadow.getElementById("id_context_menu");
-        divi!.style.display = 'none';
+        // let divi = shadow.getElementById("id_context_menu");
+        // divi!.style.display = 'none';
 
         const el = shadow.getElementById("id_dialog_stab_eigenschaften") as drDialogStabEigenschaften;
         // console.log("id_dialog_stab_eigenschaften", el);
@@ -158,8 +158,8 @@ export function show_add_elload_dialog() {
     const elHaupt = document.getElementById('id_haupt');
     let shadow = elHaupt?.shadowRoot;
     if (shadow) {
-        let divi = shadow.getElementById("id_context_menu");
-        divi!.style.display = 'none';
+        // let divi = shadow.getElementById("id_context_menu");
+        // divi!.style.display = 'none';
 
         buttons_control.reset()
 
@@ -267,8 +267,8 @@ export function delete_element_dialog() {
     const elHaupt = document.getElementById('id_haupt');
     let shadow = elHaupt?.shadowRoot;
     if (shadow) {
-        let divi = shadow.getElementById("id_context_menu");
-        divi!.style.display = 'none';
+        // let divi = shadow.getElementById("id_context_menu");
+        // divi!.style.display = 'none';
 
         buttons_control.reset()
 

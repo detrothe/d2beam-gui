@@ -92,6 +92,7 @@ import { mode_multi_selected_elementlast_aendern, mode_multi_selected_knotenlast
 // import { AlertDialog } from "./confirm_dialog";
 import { drHaupt } from "../components/dr-haupt";
 import { user_language } from '..';
+import { show_property_dialog } from './cad_contextmenu';
 
 let backgroundColor_button = 'rgb(64, 64, 64)';
 let backgroundColor_button_light = 'rgb(64, 64, 64)';
@@ -1982,12 +1983,13 @@ export function select_element(xc: number, zc: number) {
           picked_obj = obj;
           console.log("picked obj", picked_obj)
 
-          let divi = shadow.getElementById("id_context_menu");
+          // let divi = shadow.getElementById("id_context_menu");
 
-          divi!.style.left = xpix + 'px';
-          divi!.style.top = zpix + 'px';
-          divi!.style.display = 'block';
+          // divi!.style.left = xpix + 'px';
+          // divi!.style.top = zpix + 'px';
+          // divi!.style.display = 'block';
 
+          show_property_dialog();
         }
       }
 
