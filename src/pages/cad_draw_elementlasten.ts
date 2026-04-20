@@ -307,6 +307,9 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         a += Math.abs(pMin)
 
+                        let links = 3
+                        let rechts = 2
+
                         if (pL * pR < 0) {
                             if (pL > 0) {
                                 x[0] = x1 + si * a; z[0] = z1 - co * a;
@@ -326,8 +329,11 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         x[2] = x[1] + si * pR; z[2] = z[1] - co * pR;
                         x[3] = x[0] + si * pL; z[3] = z[0] - co * pL;
 
-                        if (pL <= 0 && pR <= 0) tausche_0_1_und_2_3(x, z);
-
+                        if (pL <= 0 && pR <= 0) {
+                            tausche_0_1_und_2_3(x, z);
+                            links = 2
+                            rechts = 3
+                        }
                         if (pL * pR >= 0) (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
                         //console.log("pL...", pL, pR, x, z)
@@ -350,12 +356,20 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         group.add(flaeche)
 
                         if (Math.abs(pL) > 0.0) {
-                            let gr = draw_arrow(tr, x[3], z[3], x[0], z[0], element_selected, style_pfeil)
-                            group.add(gr)
+                            if (pL <= 0 && pR <= 0) {
+                                group.add(draw_arrow(tr, x[2], z[2], x[1], z[1], element_selected, style_pfeil))
+                            } else {
+                                let gr = draw_arrow(tr, x[3], z[3], x[0], z[0], element_selected, style_pfeil)
+                                group.add(gr)
+                            }
                         }
                         if (Math.abs(pR) > 0.0) {
-                            let gr = draw_arrow(tr, x[2], z[2], x[1], z[1], element_selected, style_pfeil)
-                            group.add(gr)
+                            if (pL <= 0 && pR <= 0) {
+                                group.add(draw_arrow(tr, x[3], z[3], x[0], z[0], element_selected, style_pfeil))
+                            } else {
+                                let gr = draw_arrow(tr, x[2], z[2], x[1], z[1], element_selected, style_pfeil)
+                                group.add(gr)
+                            }
                         }
 
                         if (p_L === p_R) {
@@ -369,8 +383,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                             txt.rotation = obj.alpha
                             group.add(txt)
                         } else {
-                            xpix = xtr[3] + 5
-                            zpix = ztr[3] - 5
+                            xpix = xtr[links] + 5
+                            zpix = ztr[links] - 5
                             let str = myFormat(Math.abs(p_L * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
@@ -378,8 +392,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                             txt.baseline = 'top'
                             group.add(txt)
 
-                            xpix = xtr[2] + 5
-                            zpix = ztr[2] - 5
+                            xpix = xtr[rechts] + 5
+                            zpix = ztr[rechts] - 5
                             str = myFormat(Math.abs(p_R * fact[iLoop]), 1, 3)
                             if (max_Lastfall > 1) str = iLastfall + '|' + str
                             txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)
