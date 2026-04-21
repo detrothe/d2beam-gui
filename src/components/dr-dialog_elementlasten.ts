@@ -1,9 +1,10 @@
 import { SlRadioButton, SlRadioGroup, SlSelect } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
-import {msg, localized} from '@lit/localize';
+import { msg, localized } from '@lit/localize';
 
 import "../styles/dr-dialog.css";
+import { alertdialog } from "../pages/rechnen";
 
 @localized()
 @customElement("dr-dialog_elementlasten")
@@ -272,10 +273,19 @@ export class drDialogElementlasten extends LitElement {
 
   _dialog_ok() {
     console.log("dialog_ok");
-    const shadow = this.shadowRoot;
-    if (shadow) {
-      (shadow.getElementById("dialog_elementlast") as HTMLDialogElement).close("ok");
+    let el = this.shadowRoot?.getElementById("id_art") as SlSelect;
+    console.log("gewählte Belastungsart = ", el.value);
+    let art = Number(el.value);
+    if (art <= 5) {
+      let pa = this.get_pa();
+      let pe = this.get_pe();
+      if (pa === 0 && pe === 0) {
+        alertdialog("ok", msg('Streckenlast darf nicht null sein'));
+        return;
+      }
     }
+
+    (this.shadowRoot?.getElementById("dialog_elementlast") as HTMLDialogElement).close("ok");
   }
 
   _dialog_abbruch() {

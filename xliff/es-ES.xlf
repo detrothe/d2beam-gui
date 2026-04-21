@@ -1606,6 +1606,14 @@
   <source>Bezeichnung (optional)</source>
   <target>Descripción (opcional)</target>
 </trans-unit>
+<trans-unit id="sa3216da3cd96b94b">
+  <source>Streckenlast darf nicht null sein</source>
+    <target>La carga lineal no puede ser cero</target>
+</trans-unit>
+<trans-unit id="s5ceeb541246402e4">
+  <source>Der darzustellende Rasterbereich enthält unzulässige Werte</source>
+  <target>El área de la tabla que se va a mostrar contiene valores no válidos</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

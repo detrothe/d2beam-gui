@@ -1605,6 +1605,14 @@
   <source>Bezeichnung (optional)</source>
   <target>Description (optional)</target>
 </trans-unit>
+<trans-unit id="sa3216da3cd96b94b">
+  <source>Streckenlast darf nicht null sein</source>
+  <target>The line load must not be zero</target>
+</trans-unit>
+<trans-unit id="s5ceeb541246402e4">
+  <source>Der darzustellende Rasterbereich enthält unzulässige Werte</source>
+  <target>The grid area to be displayed contains invalid values</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

@@ -2810,7 +2810,7 @@ function dialog_einstellungen_closed(this: any, e: any) {
       set_faktor_lagersymbol(el.get_faktor_lagersymbol());
 
       if (el.get_raster_xmax() - el.get_raster_xmin() <= 0.0 || el.get_raster_zmax() - el.get_raster_zmin() <= 0.0) {
-        alertdialog("ok", "Der darzustellende Rasterbereich enthält unzulässige Werte");
+        alertdialog("ok", msg('Der darzustellende Rasterbereich enthält unzulässige Werte'));
       }
 
       init_cad(2);
