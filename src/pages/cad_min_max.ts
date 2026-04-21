@@ -102,7 +102,12 @@ export function cad_min_max() {
         }
     }
 
-    if (xmin < 1.30 && zmin < 1.e30) {
+    // console.log("xmin", xmin)
+    // console.log("xmax", xmax)
+    // console.log("zmin", zmin)
+    // console.log("zmax", zmax)
+
+    if (xmin < 1.e30 && zmin < 1.e30) {
         let dx = xmax - xmin;
         let dz = zmax - zmin;
 
@@ -110,6 +115,11 @@ export function cad_min_max() {
         set_raster_xmax(xmax + 0.15 * dx);
         set_raster_zmin(zmin - 0.15 * dz);
         set_raster_zmax(zmax + 0.15 * dz);
+
+        // console.log("xmin", xmin - 0.15 * dx)
+        // console.log("xmax", xmax + 0.15 * dx)
+        // console.log("zmin", zmin - 0.15 * dz)
+        // console.log("zmax", zmax + 0.15 * dz)
     }
 
 }
