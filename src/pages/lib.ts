@@ -1,3 +1,4 @@
+import { get_fangweite_cursor } from "./cad"
 
 const X = 0, Y = 1, Z = 2
 
@@ -148,7 +149,16 @@ export function test_point_inside_area_2D(x: number[], y: number[], pQx: number,
     //let inside = true
     let outside = false
     let len = x.length
-
+    if (len === 4) {
+        let area = testArea4(x, y);
+        if (area === 0) {
+            let abstand = abstandPunktGerade_2D(x[0], y[0], x[1], y[1], pQx, pQy);
+            console.log("abstand", abstand, get_fangweite_cursor())
+            if (abstand > -1.0) {
+                if (abstand < get_fangweite_cursor()) return true;
+            }
+        }
+    }
     for (let i = 0; i < len; i++) {
 
         if (i < len - 1) {
@@ -179,6 +189,7 @@ export function test_point_inside_area_2D(x: number[], y: number[], pQx: number,
         if (lambda > 0.0) outside = true
 
     }
+    console.log("not outside", !outside)
     return !outside;
 
 }
@@ -197,4 +208,17 @@ export function tausche_0_1_und_2_3(x: number[], z: number[]): void
     mem = x[2]; x[2] = x[3]; x[3] = mem;
     mem = z[2]; z[2] = z[3]; z[3] = mem;
 
+}
+/*
+    überprüfe, ob Fläche eines Vierecks positiv ist
+*/
+//-------------------------------------------------------------------------------------------
+export function testArea4(x: number[], y: number[])
+//-------------------------------------------------------------------------------------------
+{
+    let a;
+
+    a = (x[0] * y[1] - y[0] * x[1]) + (x[1] * y[2] - y[1] * x[2]) + (x[2] * y[3] - y[2] * x[3]) + (x[3] * y[0] - y[3] * x[0]);
+    console.log("area4", a)
+    return a;
 }
