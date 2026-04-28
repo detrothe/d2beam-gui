@@ -7,6 +7,8 @@ import { allLocales } from './generated/locale-codes.js';
 import './styles/contextMenu.css';
 import './styles/dr-drawer.css';
 
+import { Workbox } from 'workbox-window';
+
 console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 if (process.env.NODE_ENV !== "development") {
     console.log = () => { };
@@ -23,9 +25,10 @@ window.addEventListener('lit-localize-status', (event) => {
     if (event.detail.status === 'loading') {
         console.log(`******************** Loading new locale: ${event.detail.loadingLocale}`);
     } else if (event.detail.status === 'ready') {
-        console.log(`Loaded new locale: ${event.detail.readyLocale}`);
+        console.log(`******************** Loaded new locale: ${event.detail.readyLocale}`);
         user_language = event.detail.readyLocale;
         update_button_language();
+        check_for_new_version();
     } else if (event.detail.status === 'error') {
         console.error(
             `******************* Error loading locale ${event.detail.errorLocale}: ` +
@@ -388,3 +391,22 @@ else {
 //     }
 //     return dbPromise;
 // }
+
+function check_for_new_version() {
+    console.log("check_for_new_version")
+
+    if ('serviceWorker' in navigator) {
+        const wb = new Workbox('sw.js');
+
+        wb.addEventListener('installed', event => {
+            if (event.isUpdate) {
+                console.log("vor confirm")
+                if (confirm(`New content is available!. Click OK to refresh`)) {
+                    window.location.reload();
+                }
+            }
+        });
+
+        wb.register();
+    }
+}
