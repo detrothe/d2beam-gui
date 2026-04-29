@@ -41,8 +41,6 @@ import './components/dr-haupt'
 
 import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
-// import { rechnen } from './pages/rechnen'
-// import { ConfirmDialog } from './pages/confirm_dialog';
 import { init_cad, init_two_cad } from './pages/cad';
 import { reset_controlpanel_grafik } from './pages/grafik';
 import { reset_gui } from './components/dr-control-panel.js';
@@ -392,7 +390,7 @@ else {
 //     return dbPromise;
 // }
 
-function check_for_new_version() {
+async function check_for_new_version() {
     console.log("check_for_new_version")
 
     if ('serviceWorker' in navigator) {
@@ -401,6 +399,17 @@ function check_for_new_version() {
         wb.addEventListener('installed', event => {
             if (event.isUpdate) {
                 console.log("vor confirm")
+                // const dialog = new ConfirmDialog({
+                //     trueButton_Text: "ja",
+                //     falseButton_Text: "nein",
+                //     question_Text: msg('Es gibt eine neue Version, klicke OK zur Installation')
+                // });
+                // const loesche = await dialog.confirm();
+                // //console.log("loesche", loesche);
+
+                // if (loesche) {
+                // }
+                write ("vor confirm");
                 if (confirm(`New content is available!. Click OK to refresh`)) {
                     window.location.reload();
                 }
