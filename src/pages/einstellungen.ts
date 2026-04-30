@@ -429,7 +429,7 @@ export function readLocalStorage() {
         let locale = window.localStorage.getItem('locale');
         if (locale) {
             const els = shadow.getElementById("id_locale-picker") as HTMLElement
-            console.log("einlesen, els",els)
+            console.log("einlesen, els", els)
             let shad = els.shadowRoot?.getElementById("id_locale") as HTMLSelectElement;
             //shad.value = locale
         }
@@ -557,8 +557,13 @@ export function readLocalStorage_cad() {
 
         let value = window.localStorage.getItem('cad_id_fangweite_cursor')
         if (value !== null) {
-            ele.set_fangweite_cursor(Number(value))
-            set_fangweite_cursor(Number(value));
+            if (Number(value) > 2) {
+                ele.set_fangweite_cursor(Number(value))
+                set_fangweite_cursor(Number(value));
+            } else {
+                ele.set_fangweite_cursor(20)
+                set_fangweite_cursor(20);
+            }
         }
         value = window.localStorage.getItem('cad_id_fact_lager')
         if (value !== null) ele.set_faktor_lagersymbol(Number(value))
