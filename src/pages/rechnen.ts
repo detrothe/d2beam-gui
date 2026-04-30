@@ -540,7 +540,7 @@ export function rechnen(flag = 1) {
     let shadow = elHaupt?.shadowRoot;
     if (shadow) {
 
-        //(shadow.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
+        (shadow.getElementById('output') as HTMLTextAreaElement).value = ''; // Textarea output löschewn
 
         fatal_error = false;
 
