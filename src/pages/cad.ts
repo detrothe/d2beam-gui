@@ -75,7 +75,10 @@ let time_call = 0;
 
 let fangweite_cursor = 0.25;
 export function set_fangweite_cursor(wert: number) { fangweite_cursor = wert; }
-export function get_fangweite_cursor() { return fangweite_cursor; }
+export function get_fangweite_cursor() {
+   fangweite_cursor = tr.World0(20)
+   return fangweite_cursor;
+}
 
 let fullscreen = false;
 let grafik_top = 0;
@@ -1049,7 +1052,7 @@ function pointerdown(ev: PointerEvent) {
 
       if (cursorLineh) two.remove(cursorLineh);
       if (cursorLinev) two.remove(cursorLinev);
-      let len = tr.Pix0(fangweite_cursor);
+      let len = tr.Pix0(get_fangweite_cursor());
       cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
       cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
       two.update();
@@ -1567,7 +1570,7 @@ function mousemove(ev: MouseEvent) {
          foundSelectNode = false;
       }
 
-      let len = tr.Pix0(fangweite_cursor);
+      let len = tr.Pix0(get_fangweite_cursor());
       cursorLineh = two.makeLine(xo - len, yo, xo + len, yo);
       cursorLinev = two.makeLine(xo, yo - len, xo, yo + len);
       // }
@@ -2363,7 +2366,7 @@ function findNextRasterPoint(xl: number, yl: number) {
    let gefunden = false;
 
    slmin = 1e30;
-   rahm = fangweite_cursor;
+   rahm = get_fangweite_cursor();
    fangweite2 = rahm * rahm;
 
    if (xl - raster_offset_x >= 0.0) {
