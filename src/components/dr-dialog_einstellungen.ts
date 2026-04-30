@@ -164,7 +164,7 @@ export class drDialogEinstellungen extends LitElement {
                   <td>
                      ${msg('Fangweite Cursor:')}
                   </td>
-                  <td><input type="number" id="id_fangweite_cursor" name="fang_cursor" pattern="[0-9.,eE+-]*" value="0.25" /> [m]</td>
+                  <td><input type="number" id="id_fangweite_cursor" name="fang_cursor" pattern="[0-9.,eE+-]*" value="20" /> [px]</td>
                </tr>
                <tr>
                   <td>

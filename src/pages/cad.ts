@@ -73,12 +73,12 @@ export let tr: CTrans;
 let devicePixelRatio = 1;
 let time_call = 0;
 
-let fangweite_cursor = 0.25;
+let fangweite_cursor = 20;
 export function set_fangweite_cursor(wert: number) { fangweite_cursor = wert; }
 export function get_fangweite_cursor() {
-   fangweite_cursor = tr.World0(20)
-   return fangweite_cursor;
+   return tr.World0(fangweite_cursor);
 }
+export function get_fangweite_cursor_org() { return fangweite_cursor; }
 
 let fullscreen = false;
 let grafik_top = 0;

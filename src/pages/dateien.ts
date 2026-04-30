@@ -63,7 +63,7 @@ import {
     set_raster_zmin,
     set_raster_zmax,
     set_fangweite_cursor,
-    get_fangweite_cursor,
+    get_fangweite_cursor_org,
     set_faktor_lagersymbol,
     set_raster_offset_x,
     set_raster_offset_z,
@@ -102,7 +102,7 @@ export function read_daten(eingabedaten: string) {
     let jobj = JSON.parse(eingabedaten);
     //console.log("und zurück", jobj);
 
-    //let version = jobj.version;
+    let version = jobj.version;
     let creator = jobj.created_by;
     if (creator !== 'd2beam-gui') {
         alertdialog(
@@ -368,9 +368,9 @@ export function read_daten(eingabedaten: string) {
         ele.set_raster_zmin(jobj.raster_zmin);
         ele.set_raster_zmax(jobj.raster_zmax);
 
-        if (jobj.fangweite_cursor === undefined) {
-            set_fangweite_cursor(0.25);
-            ele.set_fangweite_cursor(0.25);
+        if (jobj.fangweite_cursor === undefined || version < 3) {
+            set_fangweite_cursor(20);
+            ele.set_fangweite_cursor(20);
         } else {
             set_fangweite_cursor(jobj.fangweite_cursor);
             ele.set_fangweite_cursor(jobj.fangweite_cursor);
@@ -928,7 +928,7 @@ export function str_inputToJSON() {
 
         let polyData = {
             created_by: 'd2beam-gui',
-            version: 2,
+            version: 3,
 
             system: system,
             dateiname: currentFilename,
@@ -966,7 +966,7 @@ export function str_inputToJSON() {
             raster_xmax: raster_xmax,
             raster_zmin: raster_zmin,
             raster_zmax: raster_zmax,
-            fangweite_cursor: get_fangweite_cursor(),
+            fangweite_cursor: get_fangweite_cursor_org(),
 
             maxBettung: maxBettung,
             minMass: min_mass,
