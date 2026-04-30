@@ -50,56 +50,9 @@
             href="./src/styles/dark.css"
             onload="document.documentElement.classList.add('sl-theme-dark');"
         >
-        <!-- <script type="module" src="./src/shoelace/dist/shoelace.js"></script> -->
-        <!--
-      <script>
-         console.log('in script');
-         // make the whole serviceworker process into a promise so later on we can
-         // listen to it and in case new content is available a toast will be shown
-         window.isUpdateAvailable = new Promise(function (resolve, reject) {
-            // lazy way of disabling service workers while developing
-            if (
-               'serviceWorker' in navigator /*&&
-               ['localhost', '127'].indexOf(location.hostname) === -1 */
-            ) {
-               console.log('service worker in navigator');
-               // register service worker file
-               navigator.serviceWorker
-                  .register('/sw.js')
-                  .then((reg) => {
-                     console.log('service worker installed');
-                     reg.onupdatefound = () => {
-                        const installingWorker = reg.installing;
-                        installingWorker.onstatechange = () => {
-                           switch (installingWorker.state) {
-                              case 'installed':
-                                 if (navigator.serviceWorker.controller) {
-                                    // new update available
-                                    resolve(true);
-                                 } else {
-                                    // no update available
-                                    resolve(false);
-                                 }
-                                 break;
-                           }
-                        };
-                     };
-                  })
-                  .catch((err) => console.error('[SW ERROR]', err));
-            }
-         });
 
-         // Update:
-         // this also can be incorporated right into e.g. your run() function in angular,
-         // to avoid using the global namespace for such a thing.
-         // because the registering of a service worker doesn't need to be executed on the first load of the page.
-      </script>
-   -->
         <script src="d2beam_wasm.js"></script>
-        <!--
-       <script>navigator.serviceWorker.register("dist/sw.js")</script>
-       <script>navigator.serviceWorker.register("public/sw.js")</script>
-      -->
+
         <script type="module" src="/src/index.ts"></script>
     </head>
     <body>

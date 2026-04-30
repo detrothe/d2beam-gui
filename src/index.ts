@@ -409,9 +409,9 @@ async function check_for_new_version() {
 
                 // if (loesche) {
                 // }
-                write ("vor confirm");
+                //write ("vor confirm");
                 if (confirm(`New content is available!. Click OK to refresh`)) {
-                    write ("reloading")
+                    //write ("reloading")
                     window.location.reload();
                 }
             }
