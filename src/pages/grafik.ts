@@ -376,9 +376,26 @@ export function click_pan_button_grafik() {
         const el_pan_button = shadow.getElementById('id_button_pan_grafik') as HTMLButtonElement;
 
         if (allow_pan_grafik) {
-            el_pan_button.style.color = 'white'
+            // el_pan_button.style.color = 'white'
+            el_pan_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <path fill="#ffffff" d="M16 8l-3-3v2h-4v-4h2l-3-3-3 3h2v4h-4v-2l-3 3 3 3v-2h4v4h-2l3 3 3-3h-2v-4h4v2z"></path>
+            </svg>`;
+
         } else {
-            el_pan_button.style.color = 'grey'
+            // el_pan_button.style.color = 'grey'
+            el_pan_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+  <defs id="defs1" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:0.6rem;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke-width:0.0"
+     x="0.0"
+     y="12.0"
+     transform="scale(1.0,1.0)"><tspan
+       id="tspan6"
+       style="stroke-width:0.0"
+       x="0.0"
+       y="12.0">123</tspan></text>
+</svg>`;
         }
     }
 }
@@ -636,7 +653,6 @@ export function init_grafik(flag: number) {
             }
         }
     }
-    //const el_pan_button = document.getElementById('id_button_pan_grafik') as HTMLButtonElement;
 
 }
 
@@ -1167,7 +1183,7 @@ export function drawsystem(svg_id = 'artboard') {
     if (two) {
         if (show_selection) {
             //console.log("document.documentElement", document.documentElement.clientWidth, window.innerWidth)
-            console.log("two=", two)
+            //console.log("two=", two)
 
             two.width = document.documentElement.clientWidth;
             two.height = height

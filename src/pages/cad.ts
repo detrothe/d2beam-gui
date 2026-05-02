@@ -534,6 +534,8 @@ export function click_zurueck_cad() {
 export function click_pan_button_cad() {
    //----------------------------------------------------------------------------------------------------
 
+   console.log("in click_pan_button_cad")
+
    allow_pan_cad = !allow_pan_cad;
 
    const elHaupt = document.getElementById('id_haupt');
@@ -542,9 +544,15 @@ export function click_pan_button_cad() {
       const el_pan_button = shadow.getElementById('id_button_pan_cad') as HTMLButtonElement;
 
       if (allow_pan_cad) {
-         el_pan_button.style.color = 'white'
+         // el_pan_button.style.fill = 'white'
+         el_pan_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+         <path fill="#ffffff" d="M16 8l-3-3v2h-4v-4h2l-3-3-3 3h2v4h-4v-2l-3 3 3 3v-2h4v4h-2l3 3 3-3h-2v-4h4v2z"></path>
+         </svg>`;
       } else {
-         el_pan_button.style.color = 'grey'
+         // el_pan_button.style.fill = 'grey'
+         el_pan_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+         <path fill="#666666" d="M16 8l-3-3v2h-4v-4h2l-3-3-3 3h2v4h-4v-2l-3 3 3 3v-2h4v4h-2l3 3 3-3h-2v-4h4v2z"></path>
+         </svg>`;
       }
    }
 }
