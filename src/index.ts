@@ -410,7 +410,7 @@ async function check_for_new_version() {
                 // if (loesche) {
                 // }
                 //write ("vor confirm");
-                if (confirm(`New content is available!. Click OK to refresh`)) {
+                if (confirm(`A new version is available!. Please close the app and restart`)) {
                     //write ("reloading")
                     //@ts-ignore
                     window.location.reload(true);
