@@ -19,6 +19,8 @@ export function set_user_language(wert: string) { user_language = wert; };
 
 console.log("Anfang index.ts")
 
+check_for_new_version();
+
 window.addEventListener('lit-localize-status', (event) => {
 
 
@@ -28,7 +30,7 @@ window.addEventListener('lit-localize-status', (event) => {
         console.log(`******************** Loaded new locale: ${event.detail.readyLocale}`);
         user_language = event.detail.readyLocale;
         update_button_language();
-        check_for_new_version();
+        // check_for_new_version();
     } else if (event.detail.status === 'error') {
         console.error(
             `******************* Error loading locale ${event.detail.errorLocale}: ` +
