@@ -412,7 +412,8 @@ async function check_for_new_version() {
                 //write ("vor confirm");
                 if (confirm(`New content is available!. Click OK to refresh`)) {
                     //write ("reloading")
-                    window.location.reload();
+                    //@ts-ignore
+                    window.location.reload(true);
                 }
             }
         });
