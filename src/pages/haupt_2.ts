@@ -66,7 +66,7 @@ import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-g
 import { set_max_lastfall, zero_max_lastfall } from './cad_draw_elementlasten';
 import { reset_cad_nodes } from './cad_node';
 import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
-import { app, currentFilename } from './haupt';
+import { app, currentFilename, set_current_filename } from './haupt';
 import { drHaupt } from '../components/dr-haupt';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 
@@ -803,6 +803,7 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
       set_show_knotenmassen(true);
 
       berechnungErforderlich(true);
+      set_current_filename('empty');
 
       let element = shadow.getElementById('id_tab_quer'); // id_eingabe
       element?.click();

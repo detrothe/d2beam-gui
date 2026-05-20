@@ -1,4 +1,5 @@
 import { CNodeDisp } from "./cad_knotenverformung";
+import { testArea4 } from "./lib";
 import { System, TLoads, TMass, TNode } from "./rechnen";
 
 //―――――――――――――――――――――――――――――――――――――――――――――
@@ -329,9 +330,19 @@ export class TCAD_ElLast {
     }
 
     set_drawLast_xz(x: number[], z: number[]) {
-        for (let i = 0; i < 4; i++) {
-            this.x[i] = x[i]
-            this.z[i] = z[i]
+        let area = testArea4(x, z);
+        //  console.log("alte area",testArea4(x, z))
+        if (area > 0) {
+            this.x[0] = x[1]; this.z[0] = z[1];
+            this.x[1] = x[0]; this.z[1] = z[0];
+            this.x[2] = x[3]; this.z[2] = z[3];
+            this.x[3] = x[2]; this.z[3] = z[2];
+            // console.log("neue area",testArea4(this.x, this.z))
+        } else {
+            for (let i = 0; i < 4; i++) {
+                this.x[i] = x[i]
+                this.z[i] = z[i]
+            }
         }
     }
 

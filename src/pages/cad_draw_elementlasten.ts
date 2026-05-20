@@ -417,6 +417,21 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         a += Math.abs(pMin)   //* co
 
+                        if (pL * pR < 0) {
+                            if (pL > 0) {
+                                x[0] = x1 + si * a; z[0] = z1 - co * a;
+                                x[2] = x2 + si * a; z[2] = z2 - co * a;
+                                x[1] = x[2]; z[1] = z[2] - pR;
+                                x[3] = x[0]; z[3] = z[0] - pL;
+                            } else {
+                                x[0] = x1 + si * a; z[0] = z1 - co * a;
+                                x[2] = x2 + si * a; z[2] = z2 - co * a;
+                                x[1] = x[0]; z[1] = z[0] - pL;
+                                x[3] = x[2]; z[3] = z[2] - pR;
+                            }
+                            (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+                        }
+
                         x[0] = x1 + si * a; z[0] = z1 - a * co;    // /
                         x[1] = x2 + si * a; z[1] = z2 - a * co;
                         x[2] = x[1]; z[2] = z[1] - pR;
@@ -429,7 +444,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                             rechts = 3
                         }
 
-                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+                        if (pL * pR >= 0) (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
                         var vertices = [];
                         for (let i = 0; i < 4; i++) {
@@ -520,6 +535,14 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         az_projektion += Math.abs(pMin)
 
+                        if (pL * pR < 0) {
+                            x[0] = x1; z[0] = zm - az_projektion;
+                            x[2] = x2; z[2] = zm - az_projektion;
+                            x[1] = x[0]; z[1] = z[0] - pL;
+                            x[3] = x[2]; z[3] = z[2] - pR;
+                            (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+                        }
+
                         x[0] = x1; z[0] = zm - az_projektion;
                         x[1] = x2; z[1] = zm - az_projektion;
                         x[2] = x[1]; z[2] = z[1] - pR;
@@ -532,7 +555,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                             rechts = 3
                         }
 
-                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+                        if (pL * pR >= 0) (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
                         var vertices = [];
                         for (let i = 0; i < 4; i++) {
@@ -621,6 +644,21 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         if (si < 0.0) a += Math.abs(pMax * si);
                         else a += Math.abs(pMin * si);   //  * si
 
+                        if (pL * pR < 0) {
+                            if (pL > 0) {
+                                x[0] = x1 + si * a; z[0] = z1 - co * a;
+                                x[2] = x2 + si * a; z[2] = z2 - co * a;
+                                x[1] = x[2] + pR; z[1] = z[2];
+                                x[3] = x[0] + pL; z[3] = z[0];
+                            } else {
+                                x[0] = x1 + si * a; z[0] = z1 - co * a;
+                                x[2] = x2 + si * a; z[2] = z2 - co * a;
+                                x[1] = x[0] + pL; z[1] = z[0];
+                                x[3] = x[2] + pR; z[3] = z[2];
+                            }
+                            (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+                        }
+
                         x[0] = x1 + a * si; z[0] = z1 - co * a;  // / si
                         x[1] = x2 + a * si; z[1] = z2 - co * a;
                         x[2] = x[1] + pR; z[2] = z[1];
@@ -633,7 +671,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                             rechts = 3
                         }
 
-                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+                        if (pL * pR >= 0) (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
                         const vertices = [];
                         for (let i = 0; i < 4; i++) {
@@ -666,16 +704,16 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         // }
                         if (Math.abs(pL) > 0.0) {
                             if (pL <= 0 && pR <= 0) {
-                                group.add(draw_arrow(tr, x[2], z[2], x[1], z[1], element_selected, style_pfeil))
+                                group.add(draw_arrow(tr, x[1], z[1], x[2], z[2], element_selected, style_pfeil))
                             } else {
-                                group.add(draw_arrow(tr, x[3], z[3], x[0], z[0], element_selected, style_pfeil))
+                                group.add(draw_arrow(tr, x[0], z[0], x[3], z[3], element_selected, style_pfeil))
                             }
                         }
                         if (Math.abs(pR) > 0.0) {
                             if (pL <= 0 && pR <= 0) {
-                                group.add(draw_arrow(tr, x[3], z[3], x[0], z[0], element_selected, style_pfeil))
+                                group.add(draw_arrow(tr, x[0], z[0], x[3], z[3], element_selected, style_pfeil))
                             } else {
-                                group.add(draw_arrow(tr, x[2], z[2], x[1], z[1], element_selected, style_pfeil))
+                                group.add(draw_arrow(tr, x[1], z[1], x[2], z[2], element_selected, style_pfeil))
                             }
                         }
 
@@ -727,6 +765,21 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         ax_projektion += Math.abs(pMin)
 
+                        if (pL * pR < 0) {
+                            // if (pL > 0) {
+                            x[0] = xm + ax_projektion; z[0] = z1;
+                            x[2] = xm + ax_projektion; z[2] = z2;
+                            x[1] = x[2] + pR; z[1] = z[2];
+                            x[3] = x[0] + pL; z[3] = z[0];
+                            // } else {
+                            //     x[0] = xm + ax_projektion; z[0] = z1;
+                            //     x[2] = xm + ax_projektion; z[2] = z2;
+                            //     x[1] = x[2] + pL; z[1] = z[2];
+                            //     x[3] = x[0] + pR; z[3] = z[0];
+                            // }
+                            (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+                        }
+
                         x[0] = xm + ax_projektion; z[0] = z1;
                         x[1] = xm + ax_projektion; z[1] = z2;
                         x[2] = x[1] + pR; z[2] = z[1];
@@ -739,7 +792,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                             rechts = 3
                         }
 
-                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
+                        if (pL * pR >= 0) (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
 
                         const vertices = [];
                         for (let i = 0; i < 4; i++) {
@@ -768,16 +821,16 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         // }
                         if (Math.abs(pL) > 0.0) {
                             if (pL <= 0 && pR <= 0) {
-                                group.add(draw_arrow(tr, x[2], z[2], x[1], z[1], element_selected, style_pfeil))
+                                group.add(draw_arrow(tr, x[1], z[1], x[2], z[2], element_selected, style_pfeil))
                             } else {
-                                group.add(draw_arrow(tr, x[3], z[3], x[0], z[0], element_selected, style_pfeil))
+                                group.add(draw_arrow(tr, x[0], z[0], x[3], z[3], element_selected, style_pfeil))
                             }
                         }
                         if (Math.abs(pR) > 0.0) {
                             if (pL <= 0 && pR <= 0) {
-                                group.add(draw_arrow(tr, x[3], z[3], x[0], z[0], element_selected, style_pfeil))
+                                group.add(draw_arrow(tr, x[0], z[0], x[3], z[3], element_selected, style_pfeil))
                             } else {
-                                group.add(draw_arrow(tr, x[2], z[2], x[1], z[1], element_selected, style_pfeil))
+                                group.add(draw_arrow(tr, x[1], z[1], x[2], z[2], element_selected, style_pfeil))
                             }
                         }
 
