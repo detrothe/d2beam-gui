@@ -661,6 +661,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         x[0] = x1 + a * si; z[0] = z1 - co * a;  // / si
                         x[1] = x2 + a * si; z[1] = z2 - co * a;
+                        // x[0] = x1 + a / si; z[0] = z1 ;
+                        // x[1] = x2 + a / si; z[1] = z2 ;
                         x[2] = x[1] + pR; z[2] = z[1];
                         x[3] = x[0] + pL; z[3] = z[0];
 
@@ -764,11 +766,13 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         pMin = Math.min(0.0, pL, pR)
 
                         ax_projektion += Math.abs(pMin)
+                        let mina = 0;
+                        if (Math.abs(z2 - z1) < 1.e-3) mina = slmax / 150.
 
                         if (pL * pR < 0) {
                             // if (pL > 0) {
-                            x[0] = xm + ax_projektion; z[0] = z1;
-                            x[2] = xm + ax_projektion; z[2] = z2;
+                            x[0] = xm + ax_projektion; z[0] = z1 + mina;
+                            x[2] = xm + ax_projektion; z[2] = z2 - mina;
                             x[1] = x[2] + pR; z[1] = z[2];
                             x[3] = x[0] + pL; z[3] = z[0];
                             // } else {
@@ -780,8 +784,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                             (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
                         }
 
-                        x[0] = xm + ax_projektion; z[0] = z1;
-                        x[1] = xm + ax_projektion; z[1] = z2;
+                        x[0] = xm + ax_projektion; z[0] = z1 + mina;
+                        x[1] = xm + ax_projektion; z[1] = z2 - mina;
                         x[2] = x[1] + pR; z[2] = z[1];
                         x[3] = x[0] + pL; z[3] = z[0];
 
