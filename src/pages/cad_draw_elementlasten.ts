@@ -142,6 +142,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
     let lf_show = Array(1)  // nlastfaelle)
 
     const color_load = '#9ba4d0';
+    const color_load_error = '#9b0000'
     nLoop = 1
     fact[0] = 1.0
     lf_show[0] = 0   //draw_lastfall - 1
@@ -534,17 +535,19 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         pMin = Math.min(0.0, pL, pR)
 
                         az_projektion += Math.abs(pMin)
+                        let mina = 0;
+                        if (Math.abs(x2 - x1) < 1.e-2) mina = slmax / 150.
 
                         if (pL * pR < 0) {
-                            x[0] = x1; z[0] = zm - az_projektion;
-                            x[2] = x2; z[2] = zm - az_projektion;
+                            x[0] = x1 - mina; z[0] = zm - az_projektion;
+                            x[2] = x2 + mina; z[2] = zm - az_projektion;
                             x[1] = x[0]; z[1] = z[0] - pL;
                             x[3] = x[2]; z[3] = z[2] - pR;
                             (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(x, z)   // Koordinaten merken für Picken
                         }
 
-                        x[0] = x1; z[0] = zm - az_projektion;
-                        x[1] = x2; z[1] = zm - az_projektion;
+                        x[0] = x1 - mina; z[0] = zm - az_projektion;
+                        x[1] = x2 + mina; z[1] = zm - az_projektion;
                         x[2] = x[1]; z[2] = z[1] - pR;
                         x[3] = x[0]; z[3] = z[0] - pL;
 
@@ -567,6 +570,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let flaeche = new Two.Path(vertices);
                         if (obj.elast[j].multiSelected) flaeche.fill = multiselect_color;
                         else flaeche.fill = color_load;
+                        if (mina !== 0) flaeche.fill = color_load_error;
                         flaeche.opacity = opacity
                         if (element_selected) {
                             flaeche.stroke = select_color;
@@ -767,7 +771,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
 
                         ax_projektion += Math.abs(pMin)
                         let mina = 0;
-                        if (Math.abs(z2 - z1) < 1.e-3) mina = slmax / 150.
+                        if (Math.abs(z2 - z1) < 1.e-2) mina = slmax / 150.
 
                         if (pL * pR < 0) {
                             // if (pL > 0) {
@@ -808,10 +812,12 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         let flaeche = new Two.Path(vertices);
                         if (obj.elast[j].multiSelected) flaeche.fill = multiselect_color;
                         else flaeche.fill = color_load;
+                        if (mina !== 0) flaeche.fill = color_load_error;
                         flaeche.opacity = opacity
                         if (element_selected) {
                             flaeche.stroke = select_color;
                             flaeche.linewidth = 3;
+                            // style_pfeil.color=select_color;
                         }
                         group.add(flaeche)
 
@@ -823,6 +829,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         //     let gr = draw_arrow(tr, x[1], z[1], x[2], z[2], element_selected, style_pfeil)
                         //     group.add(gr)
                         // }
+
                         if (Math.abs(pL) > 0.0) {
                             if (pL <= 0 && pR <= 0) {
                                 group.add(draw_arrow(tr, x[1], z[1], x[2], z[2], element_selected, style_pfeil))
