@@ -47,15 +47,15 @@ export default defineConfig({
         },
         {
           src: 'src/info/Kurzdokumentation_deutsch.html',
-          dest: './src/info/'
+          dest: '.'
         },
          {
           src: 'src/info/Kurzdokumentation_english.html',
-          dest: './src/info/'
+          dest: '.'
         },
          {
           src: 'src/info/Kurzdokumentation_spanish.html',
-          dest: './src/info/'
+          dest: '.'
         },
       ]
     })
