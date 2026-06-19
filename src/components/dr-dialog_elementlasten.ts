@@ -273,14 +273,17 @@ export class drDialogElementlasten extends LitElement {
 
   _dialog_ok() {
     console.log("dialog_ok");
-    let el = this.shadowRoot?.getElementById("id_art") as SlSelect;
+    let el = this.shadowRoot?.getElementById("id_typ") as SlSelect;
     console.log("gewählte Belastungsart = ", el.value);
-    let art = Number(el.value);
-    if (art <= 5) {
-      let pa = this.get_pa();
-      let pe = this.get_pe();
-      if (pa === 0 && pe === 0) {
+    let typ = Number(el.value);
+    if (typ === 0) {
+      if (this.get_pa() === 0 && this.get_pe() === 0) {
         alertdialog("ok", msg('Streckenlast darf nicht null sein'));
+        return;
+      }
+    } else if (typ === 1) {
+        if (this.get_P() === 0 && this.get_M() === 0) {
+        alertdialog("ok", msg('Einzellasten dürfen nicht null sein'));
         return;
       }
     }
