@@ -10,8 +10,6 @@
     "html-to-pdfmake": "^2.5.33",
     "jspdf": "^4.2.1",
     "lit": "^3.3.3",
-    "npm-check-updates": "^22.2.0",
-    "serialize-javascript": "^7.0.5",
     "two.js": "0.8.15",
     "urlpattern-polyfill": "^10.1.0",
     "vite-plugin-pwa": "^1.3.0",
@@ -28,7 +26,7 @@
     "typescript": "5.8.3",
     "vite": "^7.3.3",
     "vite-plugin-html-minifier": "^1.0.5",
-    "vite-plugin-static-copy": "^4.1.0"
+    "vite-plugin-static-copy": "^4.1.1"
   },
   "license": "ISC",
   "main": "index.js",
