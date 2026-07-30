@@ -14,8 +14,6 @@
     "urlpattern-polyfill": "^10.1.0",
     "vite-plugin-pwa": "^1.3.0",
     "workbox-build": "^7.4.1",
-    "//workbox-core": "^7.4.1",
-    "//workbox-precaching": "^7.4.1",
     "workbox-window": "^7.4.1"
   },
   "description": "A 2D beam analysis PWA",
