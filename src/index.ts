@@ -393,33 +393,18 @@ else {
 // }
 
 async function check_for_new_version() {
-    console.log("check_for_new_version")
+  if ('serviceWorker' in navigator) {
+    const wb = new Workbox('/sw.js');
 
-    if ('serviceWorker' in navigator) {
-        const wb = new Workbox('sw.js');
+    wb.addEventListener('installed', event => {
+      if (event.isUpdate) {
+        const ok = confirm('Es gibt eine neue Version. App neu starten?');
+        if (ok) {
+          window.location.reload();
+        }
+      }
+    });
 
-        wb.addEventListener('installed', event => {
-            if (event.isUpdate) {
-                console.log("vor confirm")
-                // const dialog = new ConfirmDialog({
-                //     trueButton_Text: "ja",
-                //     falseButton_Text: "nein",
-                //     question_Text: msg('Es gibt eine neue Version, klicke OK zur Installation')
-                // });
-                // const loesche = await dialog.confirm();
-                // //console.log("loesche", loesche);
-
-                // if (loesche) {
-                // }
-                //write ("vor confirm");
-                if (confirm(`A new version is available!. Please close the app and restart`)) {
-                    //write ("reloading")
-                    //@ts-ignore
-                    window.location.reload(true);
-                }
-            }
-        });
-
-        wb.register();
-    }
+    wb.register();
+  }
 }
