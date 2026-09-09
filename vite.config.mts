@@ -31,6 +31,12 @@ export default defineConfig({
             type: "image/png"
           },
           {
+            src: "/icons/maskable_512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable"
+          },
+          {
             src: "/icons/512x512.png",
             sizes: "512x512",
             type: "image/png"
@@ -39,7 +45,7 @@ export default defineConfig({
             src: "/icons/apple-512x512.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any maskable"
+            purpose: "any"
           }
         ]
       },
