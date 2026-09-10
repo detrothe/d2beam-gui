@@ -398,7 +398,7 @@ async function check_for_new_version() {
 
     wb.addEventListener('installed', event => {
       if (event.isUpdate) {
-        const ok = confirm('Es gibt eine neue Version. App neu starten?');
+        const ok = confirm('Es gibt eine neue Version.');
         if (ok) {
           window.location.reload();
         }
