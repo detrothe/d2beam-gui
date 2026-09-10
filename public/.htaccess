@@ -1,0 +1,15 @@
+RewriteEngine On
+
+# 1. Erzwinge HTTPS (leitet http:// auf https:// weiter)
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# 2. Verhindert das Caching des Service Workers und Manifests (Wichtig für iOS-Updates)
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|webmanifest)$">
+    <If "%{REQUEST_URI} =~ m#(sw\.js|manifest\.webmanifest)$#">
+      Header set Cache-Control "no-cache, no-store, must-revalidate"
+      Header set Expires "0"
+    </If>
+  </FilesMatch>
+</IfModule>
