@@ -406,9 +406,9 @@ async function check_for_new_version() {
                 // }
                 alertdialog('ok', 'Sie erhalten eine neue Version');
                 window.location.reload();
-
-            });
-
+            }
+        });
         wb.register();
     }
+
 }
