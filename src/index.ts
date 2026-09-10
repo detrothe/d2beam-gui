@@ -47,6 +47,8 @@ import { init_cad, init_two_cad } from './pages/cad';
 import { reset_controlpanel_grafik } from './pages/grafik';
 import { reset_gui } from './components/dr-control-panel.js';
 import { update_button_language } from './pages/cad_buttons.js';
+import { AlertDialog } from './pages/confirm_dialog.js';
+import { alertdialog } from './pages/rechnen.js';
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log(msg("isAndroid ="), isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
@@ -393,18 +395,20 @@ else {
 // }
 
 async function check_for_new_version() {
-  if ('serviceWorker' in navigator) {
-    const wb = new Workbox('/sw.js');
+    if ('serviceWorker' in navigator) {
+        const wb = new Workbox('/sw.js');
 
-    wb.addEventListener('installed', event => {
-      if (event.isUpdate) {
-        const ok = confirm('Es gibt eine neue Version.');
-        if (ok) {
-          window.location.reload();
-        }
-      }
-    });
+        wb.addEventListener('installed', event => {
+            if (event.isUpdate) {
+                // const ok = alertdialog('Es gibt eine neue Version.');
+                // if (ok) {
+                //   window.location.reload();
+                // }
+                alertdialog('ok', 'Sie erhalten eine neue Version');
+                window.location.reload();
 
-    wb.register();
-  }
+            });
+
+        wb.register();
+    }
 }
