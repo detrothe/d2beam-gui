@@ -398,15 +398,14 @@ async function check_for_new_version() {
     if ('serviceWorker' in navigator) {
         const wb = new Workbox('/sw.js');
 
-        wb.addEventListener('installed', event => {
+        wb.addEventListener('installed', async event => {
             if (event.isUpdate) {
                 // const ok = alertdialog('Es gibt eine neue Version.');
                 // if (ok) {
                 //   window.location.reload();
                 // }
-                alertdialog('ok', 'Sie erhalten eine neue Version');
-                // if (ok)
-                window.location.reload();
+                let ok = await alertdialog('ok', 'Sie erhalten eine neue Version');
+                if (ok) window.location.reload();
             }
         }
         );
