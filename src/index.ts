@@ -404,10 +404,12 @@ async function check_for_new_version() {
                 // if (ok) {
                 //   window.location.reload();
                 // }
-                alertdialog('ok', 'Sie erhalten eine neue Version');
+                // let ok = alertdialog('ok', 'Sie erhalten eine neue Version');
+                // if (ok)
                 window.location.reload();
             }
-        });
+        }
+        );
         wb.register();
     }
 
