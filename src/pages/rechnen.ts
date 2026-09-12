@@ -1450,7 +1450,7 @@ function read_elements() {
             element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Stablänge
 
             if (element[ielem].sl < 1e-12) {
-                write(msg('Länge von Element')+" " + String(ielem + 1) + " "+msg('ist null'))
+                write(msg('Länge von Element') + " " + String(ielem + 1) + " " + msg('ist null'))
                 element[ielem].cosinus = 1.0
                 element[ielem].sinus = 0.0
                 element[ielem].alpha = 0.0
@@ -4678,8 +4678,8 @@ export async function alertdialog(trueButton_text: string, question_text: string
         trueButton_Text: trueButton_text,
         question_Text: question_text,
     });
-    await dialogAlert.confirm();
+    return await dialogAlert.confirm();
 
-    return 1;
+    // return 1;
 
 }
