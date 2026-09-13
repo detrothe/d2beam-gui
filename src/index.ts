@@ -33,13 +33,14 @@ function navigate() {
     const main = document.querySelector('main');
     if (!main) return;
 
-    if (path === '/about') {
-        main.innerHTML = `<dr-about></dr-about>`;
+    // SPA-Routen
+    if (path === '/' || path === '/index.html') {
+        main.innerHTML = `<dr-haupt id="id_haupt"></dr-haupt>`;
         return;
     }
 
-    if (path === '/' || path === '/index.html') {
-        main.innerHTML = `<dr-haupt id="id_haupt"></dr-haupt>`;
+    if (path === '/about') {
+        main.innerHTML = `<dr-about></dr-about>`;
         return;
     }
 
