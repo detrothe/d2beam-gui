@@ -28,26 +28,49 @@ check_for_new_version();
 //                        eigener Router
 //########################################################################################
 
+// function navigate() {
+//     const path = window.location.pathname;
+//     const main = document.querySelector('main');
+//     if (!main) return;
+
+//     // SPA-Routen
+//     if (path === '/' || path === '/index.html') {
+//         main.innerHTML = `<dr-haupt id="id_haupt"></dr-haupt>`;
+//         return;
+//     }
+
+//     if (path === '/about') {
+//         main.innerHTML = `<dr-about></dr-about>`;
+//         return;
+//     }
+
+//     // Alles andere → 404
+//     main.innerHTML = `<dr-404></dr-404>`;
+// }
 function navigate() {
     const path = window.location.pathname;
     const main = document.querySelector('main');
     if (!main) return;
 
-    // SPA-Routen
+    // Startseite
     if (path === '/' || path === '/index.html') {
-        main.innerHTML = `<dr-haupt id="id_haupt"></dr-haupt>`;
+        const haupt = document.createElement('dr-haupt');
+        haupt.id = 'id_haupt';
+        main.replaceChildren(haupt);
         return;
     }
 
+    // About
     if (path === '/about') {
-        main.innerHTML = `<dr-about></dr-about>`;
+        const about = document.createElement('dr-about');
+        main.replaceChildren(about);
         return;
     }
 
-    // Alles andere → 404
-    main.innerHTML = `<dr-404></dr-404>`;
+    // 404
+    const notfound = document.createElement('dr-404');
+    main.replaceChildren(notfound);
 }
-
 // Navigation beim Laden ausführen
 navigate();
 
