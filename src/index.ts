@@ -3,6 +3,9 @@ console.log("Anfang 0 index.ts")
 import { msg } from '@lit/localize';
 import { allLocales } from './generated/locale-codes.js';
 
+import './components/dr-about';
+import './components/dr-404';
+
 // import './styles/global.css';
 import './styles/contextMenu.css';
 import './styles/dr-drawer.css';
@@ -20,6 +23,54 @@ export function set_user_language(wert: string) { user_language = wert; };
 console.log("Anfang index.ts")
 
 check_for_new_version();
+
+//########################################################################################
+//                        eigener Router
+//########################################################################################
+
+function navigate() {
+    const path = window.location.pathname;
+    const main = document.querySelector('main');
+    if (!main) return;
+
+    if (path === '/about') {
+        main.innerHTML = `<dr-about></dr-about>`;
+        return;
+    }
+
+    if (path === '/' || path === '/index.html') {
+        main.innerHTML = `<dr-haupt id="id_haupt"></dr-haupt>`;
+        return;
+    }
+
+    // Alles andere → 404
+    main.innerHTML = `<dr-404></dr-404>`;
+}
+
+// Navigation beim Laden ausführen
+navigate();
+
+// Navigation ausführen, wenn der Nutzer zurück/nach vorne klickt
+window.addEventListener('popstate', navigate);
+
+// Optional: interne Links abfangen
+document.addEventListener('click', (ev) => {
+    const target = ev.target as HTMLElement;
+
+    if (target.tagName === 'A') {
+        const href = target.getAttribute('href');
+        if (href && href.startsWith('/')) {
+            ev.preventDefault();
+            history.pushState({}, '', href);
+            navigate();
+        }
+    }
+});
+
+//########################################################################################
+//                        Ende Router
+//########################################################################################
+
 
 window.addEventListener('lit-localize-status', (event) => {
 

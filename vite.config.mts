@@ -19,7 +19,7 @@ export default defineConfig({
       strategies: "generateSW",
       manifest: {
         name: "D2Beam GUI",
-        short_name: "D2Beam",
+        short_name: "d2beam gui",
         start_url: "/",
         display: "standalone",
         background_color: "#f3f3f3",
@@ -46,6 +46,37 @@ export default defineConfig({
             sizes: "512x512",
             type: "image/png",
             purpose: "any"
+          }
+        ],
+        // optional
+        screenshots: [
+          {
+            src: "/assets/screenshots/screen.png",
+            sizes: "1570x790",
+            type: "image/png"
+          }
+        ],
+
+        // sinnvoll
+        shortcuts: [
+          {
+            name: "Open About",
+            short_name: "About",
+            description: "Open the about page",
+            url: "/about",
+            icons: [
+              { src: "/assets/icons/192x192.png", sizes: "192x192" }
+            ]
+          }
+        ],
+
+        // sehr sinnvoll, wenn deine App Dateien öffnet
+        file_handlers: [
+          {
+            action: "/openFile",
+            accept: {
+              "text/*": [".d2beam"]
+            }
           }
         ]
       },
