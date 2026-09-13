@@ -24,6 +24,28 @@ console.log("Anfang index.ts")
 
 check_for_new_version();
 
+
+window.addEventListener('lit-localize-status', (event) => {
+
+
+    if (event.detail.status === 'loading') {
+        console.log(`******************** Loading new locale: ${event.detail.loadingLocale}`);
+    } else if (event.detail.status === 'ready') {
+        console.log(`******************** Loaded new locale: ${event.detail.readyLocale}`);
+        user_language = event.detail.readyLocale;
+        update_button_language();
+        // check_for_new_version();
+    } else if (event.detail.status === 'error') {
+        console.error(
+            `******************* Error loading locale ${event.detail.errorLocale}: ` +
+            event.detail.errorMessage
+        );
+    }
+});
+
+import './components/dr-haupt'
+
+
 //########################################################################################
 //                        eigener Router
 //########################################################################################
@@ -102,27 +124,6 @@ document.addEventListener('click', (ev) => {
 //########################################################################################
 //                        Ende Router
 //########################################################################################
-
-
-window.addEventListener('lit-localize-status', (event) => {
-
-
-    if (event.detail.status === 'loading') {
-        console.log(`******************** Loading new locale: ${event.detail.loadingLocale}`);
-    } else if (event.detail.status === 'ready') {
-        console.log(`******************** Loaded new locale: ${event.detail.readyLocale}`);
-        user_language = event.detail.readyLocale;
-        update_button_language();
-        // check_for_new_version();
-    } else if (event.detail.status === 'error') {
-        console.error(
-            `******************* Error loading locale ${event.detail.errorLocale}: ` +
-            event.detail.errorMessage
-        );
-    }
-});
-
-import './components/dr-haupt'
 
 import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
