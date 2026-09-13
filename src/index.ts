@@ -53,19 +53,27 @@ navigate();
 // Navigation ausführen, wenn der Nutzer zurück/nach vorne klickt
 window.addEventListener('popstate', navigate);
 
-// Optional: interne Links abfangen
 document.addEventListener('click', (ev) => {
     const target = ev.target as HTMLElement;
 
     if (target.tagName === 'A') {
         const href = target.getAttribute('href');
-        if (href && href.startsWith('/')) {
+        if (!href) return;
+
+        // 1. Dokumentations-Dateien NICHT abfangen
+        if (href.endsWith('.html')) {
+            return; // Browser soll die Datei normal laden
+        }
+
+        // 2. SPA-Routen abfangen
+        if (href.startsWith('/')) {
             ev.preventDefault();
             history.pushState({}, '', href);
             navigate();
         }
     }
 });
+
 
 //########################################################################################
 //                        Ende Router
