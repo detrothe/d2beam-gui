@@ -95,10 +95,8 @@ export default defineConfig({
 
     viteStaticCopy({
       targets: [
-        { src: 'd2beam_wasm.*', dest: '.' },
-        { src: 'src/info/Kurzdokumentation_deutsch.html', dest: '.' },
-        { src: 'src/info/Kurzdokumentation_english.html', dest: '.' },
-        { src: 'src/info/Kurzdokumentation_spanish.html', dest: '.' }
+        { src: 'd2beam_wasm.*', dest: '.' }
+
       ]
     })
   ]

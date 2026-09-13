@@ -104,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 // stylesheet.replace(styles);
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.9.1, 13-Sep-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.9.2, 13-Sep-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -1096,7 +1096,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <div id="id_doc_frame" style="position: relative; width: 760px; left:50%;">
             <iframe
               id="id_doc_de"
-              src="src/info/Kurzdokumentation_deutsch.html"
+              src="Kurzdokumentation_deutsch.html"
               width="100%"
               height="1500px"
               style="border: none; overflow: scroll; background-color: white;"
@@ -1104,7 +1104,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             </iframe>
             <iframe
               id="id_doc_en"
-              src="src/info/Kurzdokumentation_english.html"
+              src="Kurzdokumentation_english.html"
               width="100%"
               height="1500px"
               style="border: none; overflow: scroll; background-color: white; display: none;"
@@ -1112,7 +1112,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             </iframe>
             <iframe
               id="id_doc_es"
-              src="src/info/Kurzdokumentation_spanish.html"
+              src="Kurzdokumentation_spanish.html"
               width="100%"
               height="1500px"
               style="border: none; overflow: scroll; background-color: white; display: none;"
