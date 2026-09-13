@@ -66,7 +66,7 @@ import "../components/dr-dialog_messen";
 import "../components/dr-dialog_bemassung";
 import "../components/dr-dialog_knotenverformung";
 
-import { alertdialog, nlastfaelle, stadyn, TLoads, TMass, TNode, TNodeDisp } from "./rechnen";
+import { stadyn, TLoads, TMass, TNode, TNodeDisp } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knoten, draw_knotenlast, draw_knotenmasse, draw_lager } from "./cad_draw_elemente";
 import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Einzellast, TCAD_Knotenmasse, TCAD_Knotenverformung } from "./CCAD_element";
@@ -93,6 +93,7 @@ import { mode_multi_selected_elementlast_aendern, mode_multi_selected_knotenlast
 import { drHaupt } from "../components/dr-haupt";
 import { user_language } from '..';
 import { show_property_dialog } from './cad_contextmenu';
+import { alertdialog } from "./confirm_dialog"
 
 let backgroundColor_button = 'rgb(64, 64, 64)';
 let backgroundColor_button_light = 'rgb(64, 64, 64)';

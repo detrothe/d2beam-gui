@@ -20,7 +20,7 @@ import { CKoppelfeder } from "./koppelfeder"
 import { init_grafik, drawsystem, init_two, init_panel, set_unit_grafik, reset_dyn_eigenformen } from "./grafik";
 import { show_controller_THIIO, show_controller_bettung, show_controller_pruefen, show_controller_results, show_controller_truss } from "../components/dr-control-panel"
 import { ausgabe, ausgabe_kombinationen_Th_I_O, dyn_ausgabe } from "./ausgabe"
-import { AlertDialog } from "../pages/confirm_dialog";
+import { alertdialog, AlertDialog } from "../pages/confirm_dialog";
 import { SlCheckbox } from "@shoelace-style/shoelace";
 import { cad_rechnen } from "./cad_rechnen";
 import {
@@ -4670,16 +4670,16 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
     return 0;
 }
 
-//---------------------------------------------------------------------------------------------------------------
-export async function alertdialog(trueButton_text: string, question_text: string) {
-    //-----------------------------------------------------------------------------------------------------------
+// //---------------------------------------------------------------------------------------------------------------
+// export async function alertdialog(trueButton_text: string, question_text: string) {
+//     //-----------------------------------------------------------------------------------------------------------
 
-    const dialogAlert = new AlertDialog({
-        trueButton_Text: trueButton_text,
-        question_Text: question_text,
-    });
-    return await dialogAlert.confirm();
+//     const dialogAlert = new AlertDialog({
+//         trueButton_Text: trueButton_text,
+//         question_Text: question_text,
+//     });
+//     return await dialogAlert.confirm();
 
-    // return 1;
+//     // return 1;
 
-}
+// }

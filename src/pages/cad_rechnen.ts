@@ -1,6 +1,8 @@
 import { msg } from '@lit/localize';
 import { drButtonPM } from "../components/dr-button-pm";
 
+import { alertdialog } from "./confirm_dialog"
+
 import { CAD_BEMASSUNG, CAD_KNLAST, CAD_KNMASSE, CAD_KNOTEN, CAD_KNOTVERFORMUNG, CAD_LAGER, CAD_STAB, list } from "./cad";
 import { TCAD_Bemassung } from "./cad_bemassung";
 import { cad_buttons } from "./cad_buttons";
@@ -8,7 +10,7 @@ import { max_Lastfall, new_max_lastfall, set_max_lastfall } from "./cad_draw_ele
 import { CADNodes } from "./cad_node";
 import { TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_ElLast, TCAD_Einzellast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenmasse, TCAD_Knoten, TCAD_Knotenverformung, TCAD_Element } from "./CCAD_element";
 import {
-    alertdialog, element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nnodes, nodalmass, node,
+    element, eload, FACHWERK, inc_nelem, inc_nnodes, load, maxValue_eload, nelem, nelem_Balken, nnodes, nodalmass, node,
     nodeDisp0,
     nstreckenlasten, ntemperaturlasten, set_maxBettung, set_maxU_node, set_neinzellasten, set_nelem, set_nelem_Balken, set_nelem_Balken_Bettung, set_nelemTotal, set_neloads, set_nkombinationen,
     set_nlastfaelle, set_nloads, set_nnodalMass, set_nNodeDisps, set_nnodes, set_nnodesTotal, set_nspannschloesser, set_nstabvorverfomungen, set_nstreckenlasten, set_ntemperaturlasten, set_ntotalEloads, set_nvorspannungen, stabvorverformung, System, TElement, TElLoads, TLoads, TMass, TNode,

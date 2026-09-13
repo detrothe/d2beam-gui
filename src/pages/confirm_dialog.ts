@@ -122,7 +122,7 @@ export class AlertDialog {
     confirm() {
         return new Promise((resolve, reject) => {
             const somethingWentWrongUponCreation =
-                !this.dialog || !this.trueButton ;
+                !this.dialog || !this.trueButton;
             if (somethingWentWrongUponCreation) {
                 reject('Someting went wrong when creating the modal');
                 return;
@@ -180,4 +180,34 @@ export class AlertDialog {
         //console.log("_destroy this", this)
         //delete this;
     }
+}
+
+//---------------------------------------------------------------------------------------------------------------
+export async function alertdialog(trueButton_text: string, question_text: string) {
+    //-----------------------------------------------------------------------------------------------------------
+
+    const dialogAlert = new AlertDialog({
+        trueButton_Text: trueButton_text,
+        question_Text: question_text,
+    });
+    return await dialogAlert.confirm();
+
+    // return 1;
+
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+export async function confirmdialog(trueButton_text: string, falseButton_text: string, question_text: string) {
+    //-----------------------------------------------------------------------------------------------------------
+
+    const dialogConfirm = new ConfirmDialog({
+        trueButton_Text: trueButton_text,
+        falseButton_Text: falseButton_text,
+        question_Text: question_text,
+    });
+    return await dialogConfirm.confirm();
+
+    // return 1;
+
 }

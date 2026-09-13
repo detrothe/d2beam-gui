@@ -10,7 +10,7 @@ import { CADNodes, get_cad_node_X, get_cad_node_Z } from "./cad_node";
 import { draw_arrow, draw_BoundingClientRect_xz, draw_moment_arrow, style_pfeil_moment } from "./cad_draw_elemente";
 import { myFormat } from "./utility";
 import { berechnungErforderlich } from "./globals";
-import { alertdialog } from "./rechnen";
+import { alertdialog } from "./confirm_dialog";
 import { mode_multi_selected_knotenverformung_aendern, update_multi_selected_knotenverformung } from "./cad_select";
 
 

@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement, state } from 'lit/decorators.js';
-import {msg, localized} from '@lit/localize';
+import { msg, localized } from '@lit/localize';
 
 import '@shoelace-style/shoelace/dist/components/radio-button/radio-button.js';
 import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
@@ -10,9 +10,9 @@ import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkb
 
 import { check_if_name_exists } from '../pages/querschnitte';
 import { myFormat, myFormat_en } from '../pages/utility';
-import { AlertDialog } from '../pages/confirm_dialog';
+import { alertdialog, AlertDialog } from '../pages/confirm_dialog';
 import { CQuer_polygon } from '../pages/quer1';
-import { alertdialog } from '../pages/rechnen';
+// import { alertdialog } from '../pages/rechnen';
 
 // Profilename, E-Modul, A, Iy, Iz, Wichte, h, b, kappa_Vz, kappa_Vy
 

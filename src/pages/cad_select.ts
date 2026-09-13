@@ -16,7 +16,8 @@ import { add_cad_node, add_element_nodes, find_nearest_cad_node, get_cad_node_X,
 import { TCAD_Element, TCAD_Stab, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager, TCAD_Knotenverformung } from "./CCAD_element"
 import { berechnungErforderlich } from "./globals"
 import { querschnittset } from "./querschnitte"
-import { alertdialog, TLoads, TMass, TNode } from "./rechnen"
+import { TLoads, TMass, TNode } from "./rechnen"
+import { alertdialog } from "./confirm_dialog"
 
 
 

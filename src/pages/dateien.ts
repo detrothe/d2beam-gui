@@ -2,6 +2,8 @@
 
 import '@shoelace-style/shoelace/dist/components/select/select.js';
 
+import { alertdialog } from "./confirm_dialog"
+
 import { drButtonPM } from '../components/dr-button-pm';
 import { app, currentFilename, set_current_filename } from './haupt';
 //import { testeZahl } from "./utility";
@@ -26,7 +28,6 @@ import {
     add_rechteck_querschnitt,
 } from './querschnitte';
 import {
-    alertdialog,
     maxBettung,
     set_maxBettung,
     set_stadyn,

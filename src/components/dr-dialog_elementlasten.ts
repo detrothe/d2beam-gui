@@ -4,7 +4,7 @@ import { property, customElement } from "lit/decorators.js";
 import { msg, localized } from '@lit/localize';
 
 import "../styles/dr-dialog.css";
-import { alertdialog } from "../pages/rechnen";
+import { alertdialog } from "../pages/confirm_dialog";
 
 @localized()
 @customElement("dr-dialog_elementlasten")
@@ -282,7 +282,7 @@ export class drDialogElementlasten extends LitElement {
         return;
       }
     } else if (typ === 1) {
-        if (this.get_P() === 0 && this.get_M() === 0) {
+      if (this.get_P() === 0 && this.get_M() === 0) {
         alertdialog("ok", msg('Einzellasten dürfen nicht null sein'));
         return;
       }

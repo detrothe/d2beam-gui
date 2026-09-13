@@ -46,7 +46,8 @@
     "dev-server": "vite --open --host",
     "dev-task": "vite",
     "start": "npm run dev",
-    "start-remote": "vite --host"
+    "start-remote": "vite --host",
+    "preview": "vite preview --open"
   },
   "allowScripts": {
     "core-js@3.50.0": true,

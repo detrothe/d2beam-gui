@@ -1,5 +1,5 @@
 import { msg } from '@lit/localize';
-import { alertdialog } from "./rechnen";
+import { alertdialog } from "./confirm_dialog";
 
 
 
@@ -18,7 +18,7 @@ export function info_Eigenwertberechnung() {
     let txt2 = msg('Die QR Methode aus der GNU Bibliothek konvergiert sehr schnell, wenn sie konvergiert.');
     let txt3 = msg('Der ARPACK (ARnoldi PACKage) Eigenwertlöser ist für die Berechnung einiger Eigenwerte und -vektoren großer Systeme entwickelt worden. Er konvergiert schnell, auch bei mehreren gesuchten Eigenwerten.');
 
-    let question_Text =  txt1 + "<br>" + txt2 + "<br>" + txt3;
+    let question_Text = txt1 + "<br>" + txt2 + "<br>" + txt3;
 
     alertdialog(msg('ok'), question_Text);
 

@@ -2,7 +2,7 @@ import { CAD_BEMASSUNG, CAD_KNLAST, CAD_KNMASSE, CAD_KNOTEN, CAD_KNOTVERFORMUNG,
 import { TCAD_Bemassung } from "./cad_bemassung";
 import { CADNodes } from "./cad_node";
 import { TCAD_Element, TCAD_Stab } from "./CCAD_element";
-import { alertdialog } from "./rechnen";
+import { alertdialog } from "./confirm_dialog";
 
 
 
