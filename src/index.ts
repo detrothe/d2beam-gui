@@ -236,7 +236,7 @@ if (isAndroid) {
     //     //     event.preventDefault();
     //     // })
 
-    window.addEventListener('beforeunload', function (event) {
+    window.addEventListener('beforeunload', function (_event) {
         //event.preventDefault();
         // Google Chrome < 119 requires returnValue to be set.
         //event.returnValue = true;
