@@ -237,7 +237,7 @@ if (isAndroid) {
     //     // })
 
     window.addEventListener('beforeunload', function (event) {
-        event.preventDefault();
+        //event.preventDefault();
         // Google Chrome < 119 requires returnValue to be set.
         //event.returnValue = true;
 
@@ -347,6 +347,12 @@ else if (yourOS === 'iOS') {
         }
     });
 
+    // Alternativer Fallback für das Schließen/Navigieren
+    window.addEventListener('pagehide', (_event) => {
+        // Daten speichern
+        window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
+
+    });
 }
 else {
 
