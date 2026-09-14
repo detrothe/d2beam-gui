@@ -10,7 +10,7 @@ class DrAbout extends HTMLElement {
 
       <h2>Dokumentation</h2>
       <ul>
-        <li><a href="/Kurzdokumentation_deutsch0.html">Deutsch</a></li>
+        <li><a href="/Kurzdokumentation_deutsch.html">Deutsch</a></li>
         <li><a href="/Kurzdokumentation_english.html">English</a></li>
         <li><a href="/Kurzdokumentation_spanish.html">Español</a></li>
       </ul>
