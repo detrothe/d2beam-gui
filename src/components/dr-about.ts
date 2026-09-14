@@ -4,7 +4,7 @@ class DrAbout extends HTMLElement {
         this.innerHTML =  /* html */ `
       <h1>Über d2beam</h1>
       <p>d2beam ist eine Web‑Anwendung zur Analyse von 2D‑Rahmenstrukturen.</p>
-      <p> Die Berechnung erfolgt vollständig im Browser und nutzt WebAssembly, ohne Server
+      <p>Sie ermöglicht das Berechnen von Schnittgrößen, Verformungen und Spannungen direkt im Browser und nutzt WebAssembly, ohne Server
           und ohne Installation. Die App ist als Progressive Web App (PWA) verfügbar
           und kann auf allen Geräten offline genutzt werden.</p>
 

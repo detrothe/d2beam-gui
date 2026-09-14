@@ -5,10 +5,6 @@ import { elem_select_changed, elementTabelle_bettung_anzeigen, elementTabelle_ge
 import { init_tabellen } from './rechnen';
 import { set_info } from './utility';
 
-// import '@shoelace-style/shoelace/dist/components/tab/tab.js';
-// import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
-// import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
-
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import { set_touch_support_table } from './globals';
@@ -134,13 +130,6 @@ export function init_haupt3() {
             //init_two('artboard', false);
         });
 
-        // let div_cad_group = shadow.getElementById("id_tab-cad") as HTMLDivElement
-        // div_cad_group!.addEventListener("load", (event) => {
-        //   // @ts-ignore
-        //   console.log("load", event)
-        //   let hoehe = div_cad_group!.getBoundingClientRect()
-        //   console.log("hoehe div id_cad_group", hoehe)
-        // });
 
         let ttt1 = shadow.getElementById('id_sl_tab_group') as SlTabGroup;
         ttt1!.addEventListener('sl-tab-show', (event) => {
@@ -152,17 +141,6 @@ export function init_haupt3() {
             let h = div!.getBoundingClientRect();
             console.log('Rect des div id_cad_group2', h);
         });
-
-        // let ttt1 = shadow.getElementById("id_cad_group") as SlTabGroup;
-        // ttt1!.addEventListener("resize", (event) => {
-        //   // @ts-ignore
-        //   console.log("sl-tab-show", event)
-        //   //  let hoehe = div_cad_group!.getBoundingClientRect()
-        //   //  console.log("hoehe div id_cad_group", hoehe)
-        //   let div = shadow.getElementById("id_cad_group") as HTMLDivElement
-        //   let h = div!.getBoundingClientRect()
-        //   console.log("Rect des div", h)
-        // });
 
         const resizeObserver = new ResizeObserver((entries) => {
             for (const entry of entries) {
@@ -180,32 +158,8 @@ export function init_haupt3() {
         let ob_t1 = shadow.getElementById('id_cad_group') as SlTabGroup;
         resizeObserver.observe(ob_t1);
 
-        // addEventListener("resize", function () {
-        //   ("RESIZE")
-        //   write ("resize " + this.window.innerHeight)
-        //   init_cad(0);
-        // });
-
-        // console.log("id_button_copy_svg", getComputedStyle(document?.getElementById("id_button_copy_svg")!).height);
-        // console.log("rechnen", getComputedStyle(document?.getElementById("rechnen")!).width);
-
-        // let ELEMENT = document?.querySelector(".output_container");
-        // console.log("ELEMENT", ELEMENT);
-        // console.log("ELEMENT", getComputedStyle(ELEMENT!).width);
-
         console.log('document.readyState', document.readyState);
 
-        // let time = 0
-        // //while (document.readyState != 'complete') {
-        // setTimeout(function () {
-        //   write("in setTimeout document.readyState " + document.readyState)
-        //   if (document.readyState === 'complete') init_tabellen();
-        //   console.log("Executed after 0.1 second");
-        // }, 500);
-        // time = time + 500
-        // console.log("time used ", time)
-        // write('document.readyState ' + document.readyState)
-        //}
     }
 
     // initTabellenLoop();

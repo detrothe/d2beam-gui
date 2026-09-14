@@ -352,16 +352,12 @@ else {
 
     // Damit man nicht versehentlich das Browserfenster löscht und Eingaben verliert
 
-    window.addEventListener('beforeunload', function (event) {
-        event.preventDefault();
+    window.addEventListener('beforeunload', function (_event) {
+        //event.preventDefault();
         // Google Chrome < 119 requires returnValue to be set.
-        event.returnValue = true;
+        //event.returnValue = true;
         console.log("else, beforeunload", navigator.userAgent)
 
-        // if (dbPromise) {
-        //     dbPromise.then(db => db.close());
-        //     dbPromise = null;
-        // }
 
         let output = str_inputToJSON();
         console.log("inputToJSON", output)
