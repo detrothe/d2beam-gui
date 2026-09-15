@@ -2,6 +2,49 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import htmlMinifier from 'vite-plugin-html-minifier';
+import fs from 'fs';
+import path from 'path';
+import { minify } from 'html-minifier-terser';
+
+const minifyOnlyPublicHtml = () => ({
+  name: 'minify-only-public-html',
+  // Fügen Sie hier die optionalen Parameter hinzu, die Rollup/Vite erwartet
+  async closeBundle(this: any) {
+    const publicDir = path.resolve(__dirname, 'public');
+    const distDir = path.resolve(__dirname, 'dist');
+
+    const processDirectory = async (currentDistDir: string): Promise<void> => {
+      if (!fs.existsSync(currentDistDir)) return;
+      const files = fs.readdirSync(currentDistDir);
+
+      for (const file of files) {
+        const distFilePath = path.join(currentDistDir, file);
+        const stat = fs.statSync(distFilePath);
+
+        if (stat.isDirectory()) {
+          await processDirectory(distFilePath);
+        } else if (file.endsWith('.html')) {
+          const relativePath = path.relative(distDir, distFilePath);
+          const originalPublicPath = path.join(publicDir, relativePath);
+
+          if (fs.existsSync(originalPublicPath)) {
+            const html = fs.readFileSync(distFilePath, 'utf-8');
+            const minifiedHtml = await minify(html, {
+              collapseWhitespace: true,
+              removeComments: true,
+              minifyJS: true,
+              minifyCSS: true
+            });
+            fs.writeFileSync(distFilePath, minifiedHtml, 'utf-8');
+            console.log(`✓ Minified public HTML: ${relativePath}`);
+          }
+        }
+      }
+    };
+
+    await processDirectory(distDir);
+  }
+});
 
 export default defineConfig({
   base: "/",
@@ -13,6 +56,7 @@ export default defineConfig({
   },
   plugins: [
     htmlMinifier({ minify: true }),
+    minifyOnlyPublicHtml(),
 
     VitePWA({
       registerType: "autoUpdate",
