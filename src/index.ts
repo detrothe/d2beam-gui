@@ -3,8 +3,8 @@ console.log("Anfang 0 index.ts")
 import { msg } from '@lit/localize';
 import { allLocales } from './generated/locale-codes.js';
 
-import './components/dr-about';
-import './components/dr-404';
+// import './components/dr-about';
+// import './components/dr-404';
 
 // import './styles/global.css';
 import './styles/contextMenu.css';
@@ -94,31 +94,31 @@ function navigate() {
     main.replaceChildren(notfound);
 }
 // Navigation beim Laden ausführen
-navigate();
+// navigate();
 
-// Navigation ausführen, wenn der Nutzer zurück/nach vorne klickt
-window.addEventListener('popstate', navigate);
+// // Navigation ausführen, wenn der Nutzer zurück/nach vorne klickt
+// window.addEventListener('popstate', navigate);
 
-document.addEventListener('click', (ev) => {
-    const target = ev.target as HTMLElement;
+// document.addEventListener('click', (ev) => {
+//     const target = ev.target as HTMLElement;
 
-    if (target.tagName === 'A') {
-        const href = target.getAttribute('href');
-        if (!href) return;
+//     if (target.tagName === 'A') {
+//         const href = target.getAttribute('href');
+//         if (!href) return;
 
-        // 1. Dokumentations-Dateien NICHT abfangen
-        if (href.endsWith('.html')) {
-            return; // Browser soll die Datei normal laden
-        }
+//         // 1. Dokumentations-Dateien NICHT abfangen
+//         if (href.endsWith('.html')) {
+//             return; // Browser soll die Datei normal laden
+//         }
 
-        // 2. SPA-Routen abfangen
-        if (href.startsWith('/')) {
-            ev.preventDefault();
-            history.pushState({}, '', href);
-            navigate();
-        }
-    }
-});
+//         // 2. SPA-Routen abfangen
+//         if (href.startsWith('/')) {
+//             ev.preventDefault();
+//             history.pushState({}, '', href);
+//             navigate();
+//         }
+//     }
+// });
 
 
 //########################################################################################

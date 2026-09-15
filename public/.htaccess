@@ -1,37 +1,15 @@
-RewriteEngine On
 
-# 1. Erzwinge HTTPS (leitet http:// auf https:// weiter)
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-# 2. Verhindert das Caching des Service Workers und Manifests (Wichtig für iOS-Updates)
-<IfModule mod_headers.c>
-  <FilesMatch "\.(js|webmanifest)$">
-    <If "%{REQUEST_URI} =~ m#(sw\.js|manifest\.webmanifest)$#">
-      Header set Cache-Control "no-cache, no-store, must-revalidate"
-      Header set Expires "0"
-    </If>
-  </FilesMatch>
-
-  # NEU: Erlaubt Cross-Origin Resource Sharing (CORS), falls der Service Worker
-  # die Icons über die Subdomain blockiert
-  Header set Access-Control-Allow-Origin "*"
-</IfModule>
-
-# 3. NEU: Richtige MIME-Types für das PWA-Manifest deklarieren
-<IfModule mod_mime.c>
-  AddType application/manifest+json .webmanifest
-  AddType application/json .json
-</IfModule>
-
-# 4. NEU: SPA-Routing für Vite aktivieren (Verhindert 404 bei Routen und Asset-Verwirrung)
 <IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Bei einer echten Subdomain zwingend auf "/" setzen,
+  # da die Subdomain die neue Root-Ebene ist!
   RewriteBase /
 
-  # Wenn die Datei oder der Ordner (wie /icons/icon.png) existiert, lade sie direkt
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
+  # Wenn die Datei existiert (z.B. /icons/512x512.png), lade sie direkt
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
 
-  # Ansonsten leite alle Anfragen an die index.html weiter
-  RewriteRule . /index.html [L]
+  # Alles andere an die index.html übergeben
+  RewriteRule ^ index.html [L]
 </IfModule>

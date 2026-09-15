@@ -102,17 +102,17 @@ export default defineConfig({
         ],
 
         // sinnvoll
-        shortcuts: [
-          {
-            name: "Open About",
-            short_name: "About",
-            description: "Open the about page",
-            url: "/about",
-            icons: [
-              { src: "/assets/icons/192x192.png", sizes: "192x192" }
-            ]
-          }
-        ],
+        // shortcuts: [
+        //   {
+        //     name: "Open About",
+        //     short_name: "About",
+        //     description: "Open the about page",
+        //     url: "/about",
+        //     icons: [
+        //       { src: "/icons/192x192.png", sizes: "192x192" }
+        //     ]
+        //   }
+        // ],
 
         // sehr sinnvoll, wenn deine App Dateien öffnet
         file_handlers: [
