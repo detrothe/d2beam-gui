@@ -1,10 +1,34 @@
+
 RewriteEngine On
 
-# 1. Erzwinge HTTPS (leitet http:// auf https:// weiter)
+# 1. HTTPS erzwingen (dein Block)
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# 2. Verhindert das Caching des Service Workers und Manifests (Wichtig für iOS-Updates)
+# 2. Richtige MIME-Typen für PWA
+AddType application/manifest+json .webmanifest
+AddType application/json .json
+AddType application/javascript .js
+AddType text/css .css
+AddType image/png .png
+AddType image/svg+xml .svg
+AddType application/wasm .wasm
+
+# 3. Service Worker und Manifest NICHT umleiten
+RewriteRule ^sw\.js$ - [L]
+RewriteRule ^service-worker\.js$ - [L]
+RewriteRule ^manifest\.webmanifest$ - [L]
+
+# 4. Icons und Assets NICHT umleiten
+RewriteRule ^icons/.*$ - [L]
+RewriteRule ^assets/.*$ - [L]
+
+# 5. SPA Routing (alles andere → index.html)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
+
+# 6. Dein iOS-Update-Block (bleibt unverändert)
 <IfModule mod_headers.c>
   <FilesMatch "\.(js|webmanifest)$">
     <If "%{REQUEST_URI} =~ m#(sw\.js|manifest\.webmanifest)$#">
