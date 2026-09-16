@@ -1,15 +1,35 @@
+RewriteEngine On
 
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  # Bei einer echten Subdomain zwingend auf "/" setzen,
-  # da die Subdomain die neue Root-Ebene ist!
-  RewriteBase /
+# 1. HTTPS erzwingen
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  # Wenn die Datei existiert (z.B. /icons/512x512.png), lade sie direkt
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
+# 2. CORS + No-Cache für SW & Manifest
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|webmanifest)$">
+    <If "%{REQUEST_URI} =~ m#(sw\.js|manifest\.webmanifest)$#">
+      Header set Cache-Control "no-cache, no-store, must-revalidate"
+      Header set Expires "0"
+    </If>
+  </FilesMatch>
 
-  # Alles andere an die index.html übergeben
-  RewriteRule ^ index.html [L]
+  Header set Access-Control-Allow-Origin "*"
 </IfModule>
+
+# 3. MIME-Types für Manifest
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+  AddType application/json .json
+  AddType image/png .png
+</IfModule>
+
+# 4. WICHTIG: Icons und Assets NIEMALS umleiten
+RewriteRule ^icons/.*$ - [L]
+RewriteRule ^assets/.*$ - [L]
+RewriteRule ^sw\.js$ - [L]
+RewriteRule ^manifest\.webmanifest$ - [L]
+
+# 5. SPA Routing (alles andere → index.html)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
