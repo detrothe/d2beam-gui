@@ -1,230 +1,203 @@
 import { LitElement, css, html } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
+import { property, customElement, query } from 'lit/decorators.js';
 
+/**
+ * Numeric input mit +/- Spinner-Buttons.
+ *
+ * Feuert ein `change`-Event (bubbles + composed), sobald sich der Wert
+ * über einen der Buttons oder direkte Eingabe ändert. `event.detail.value`
+ * enthält den neuen Wert.
+ */
 @customElement('dr-button-pm')
 export class drButtonPM extends LitElement {
-   @property({ type: String }) title = 'Button with counter';
-
-   @property({ type: Boolean }) enableBack: boolean = false;
-   @property({
-      // only update for odd values of newVal.
-      // @ts-ignore
-      hasChanged(newVal: number, oldVal: number) {
-         //console.log(`nel has changed ${newVal}, ${oldVal}`);
-         return true;
-      },
-   })
-   nel = 0;
-   @property({ type: String }) inputID = '';
+   /** Sichtbares Label vor dem Spinner. */
    @property({ type: String }) txt = '';
+
+   /** id des internen <input>, z.B. für ein externes <label for="..."> */
+   @property({ type: String }) inputID = '';
+
+   @property({ type: Number }) nel = 0;
    @property({ type: Number }) minValue = 0;
 
-   static get styles() {
-      return css`
+   /** Optionales Maximum. `undefined` = keine Obergrenze. */
+   @property({ type: Number }) maxValue?: number;
+
+   @query('input') private _input!: HTMLInputElement;
+
+   static override styles = css`
+      :host {
+         --dr-pad: 0;
+         --dr-border-color-light: #d4d4d8;
+         --dr-border-color-dark: #43434a;
+         --dr-text-color-light: #444;
+         --dr-text-color-dark: #b6b6be;
+         --dr-bg-color-dark: #1a1a1e;
+
+         --dr-border-color: var(--dr-border-color-light);
+         --dr-text-color: var(--dr-text-color-light);
+         --dr-bg-color: transparent;
+
+         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+            Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+            'Segoe UI Emoji', 'Segoe UI Symbol';
+      }
+
+      @media (prefers-color-scheme: dark) {
          :host {
-            --dr-pad: 0;
-            /* --color-border: #f6d818; */
-
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-               Helvetica, Arial, sans-serif, 'Apple Color Emoji',
-               'Segoe UI Emoji', 'Segoe UI Symbol';
+            --dr-border-color: var(--dr-border-color-dark);
+            --dr-text-color: var(--dr-text-color-dark);
+            --dr-bg-color: var(--dr-bg-color-dark);
          }
+      }
 
-         @media (prefers-color-scheme: dark) {
-            .spinner {
-               border: solid 1px  #43434a;
-            }
-            .input_int {
-               border-top: 1px solid  #43434a;
-               border-bottom: 1px solid  #43434a;
-               color: #b6b6be;
-            }
-            button {
-               font-size: 1em;
-               border-radius: 3px;
-               border-width: 1px;
-               border-color: #43434a;
-               color: #b6b6be;
-               background-color: #1a1a1e;
-               padding: 0em; /* 0.2em;*/
-            }
-         }
+      .spinner {
+         border: solid 1px var(--dr-border-color);
+         margin: 0;
+         padding: var(--dr-pad);
+         width: 1.25rem;
+         line-height: calc(var(--sl-input-height-medium) - 2px);
+         vertical-align: middle;
+      }
 
-         @media (prefers-color-scheme: light) {
-            .spinner {
-               border: solid 1px #d4d4d8;
-            }
-            .input_int {
-               border-top: 1px solid #d4d4d8;
-               border-bottom: 1px solid #d4d4d8;
-            }
-            button {
-               font-size: 1em;
-               border-radius: 3px;
-               border-width: 1px;
-               border-color: #303030;
-               color: #444;
-               padding: 0em; /* 0.2em;*/
-            }
-         }
+      .spinner:hover {
+         background: lightgrey;
+      }
 
-         input,
-         label {
-            font-size: 0.875rem;
-         }
+      .spinner:disabled {
+         opacity: 0.4;
+         cursor: not-allowed;
+         background: none;
+      }
 
-         button:active {
-            background-color: darkorange;
-         }
-         input[type='number']::-webkit-inner-spin-button,
-         input[type='number']::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-         }
+      .input_int {
+         width: 3.125em;
+         margin: 0;
+         padding: 0;
+         border-top: 1px solid var(--dr-border-color);
+         border-bottom: 1px solid var(--dr-border-color);
+         border-left: 0;
+         border-right: 0;
+         border-radius: 0;
+         text-align: center;
+         line-height: calc(var(--sl-input-height-medium) - 2px);
+         vertical-align: middle;
+         color: var(--dr-text-color);
+      }
 
-         /* Firefox */
-         input[type='number'] {
-            -moz-appearance: textfield;
-         }
+      input,
+      label {
+         font-size: 0.875rem;
+      }
 
-         .input_int {
-            width: 3.125em;
-            margin: 0;
-            padding: 0; /*1px;*/
-            /* border-top: 1px solid var(--color-border);
-            border-bottom: 1px solid var(--color-border); */
-            border-left: 0;
-            border-right: 0;
-            border-radius: 0;
-            text-align: center;
-            line-height: calc(var(--sl-input-height-medium) - 2px);
-            vertical-align: middle;
-         }
+      button {
+         font-size: 1em;
+         border-radius: 3px;
+         border-width: 1px;
+         border-color: var(--dr-border-color);
+         color: var(--dr-text-color);
+         background-color: var(--dr-bg-color);
+         padding: 0;
+      }
 
-         .spinner {
-            /* border: solid 1px var(--color-border); */
-            margin: 0;
-            padding: var(--dr-pad); /*1px;*/
-            width: 1.25rem; /* 1em;*/
-            line-height: calc(var(--sl-input-height-medium) - 2px);
-            vertical-align: middle;
-         }
+      button:active {
+         background-color: darkorange;
+      }
 
-         .spinner:hover {
-            background: lightgrey;
-         }
+      input[type='number']::-webkit-inner-spin-button,
+      input[type='number']::-webkit-outer-spin-button {
+         -webkit-appearance: none;
+         margin: 0;
+      }
 
-         .decrement {
-            /*.decrement*/
-            border-radius: 4px 0px 0px 4px;
-            /* color: #000000; */
-         }
+      input[type='number'] {
+         -moz-appearance: textfield;
+      }
 
-         .increment {
-            /*.increment*/
-            border-radius: 0px 4px 4px 0px;
-            /* color: #000000; */
-         }
-      `;
-   }
+      .decrement {
+         border-radius: 4px 0px 0px 4px;
+      }
 
-   constructor() {
-      super();
-   }
+      .increment {
+         border-radius: 0px 4px 4px 0px;
+      }
+   `;
 
+   /** Setzt den Wert programmatisch von außen (z.B. durch den Parent). */
    setValue(wert: number) {
-      //console.log("in setValue", wert,'|',this.inputID,'|')
-      if (typeof wert == 'number') this.nel = wert;
-      else this.nel = 0;
-
-      const shadow = this.shadowRoot;
-      if (shadow) {
-         (shadow.getElementById(this.inputID) as HTMLInputElement).value =
-            String(this.nel);
-      }
+      this.nel = typeof wert === 'number' && !Number.isNaN(wert) ? wert : 0;
    }
 
-   // async firstUpdated() {
-   //   console.log("firstUpdated inputID", this.inputID,this.nel);
-   //   //document.getElementById('id_input_node_incr').addEventListener('click', increment_nnodes, false);
-   //   //document.getElementById('id_input_node_dec').addEventListener('click', decrement_nnodes, false);
-   // }
-
-   //----------------------------------------------------------------------------------------------
-
-   _increment_nnodes() {
-      this.nel++;
-      console.log('_increment_nnodes', this.nel);
-      const shadow = this.shadowRoot;
-      if (shadow) {
-         (shadow.getElementById(this.inputID) as HTMLInputElement).value =
-            String(this.nel);
-         const event = new Event('change', { bubbles: true, composed: true });
-         this.dispatchEvent(event);
-      }
+   private _clamp(value: number): number {
+      let v = value;
+      if (v < this.minValue) v = this.minValue;
+      if (this.maxValue !== undefined && v > this.maxValue) v = this.maxValue;
+      return v;
    }
 
-   //----------------------------------------------------------------------------------------------
-   _decrement_nnodes() {
-      if (this.nel > this.minValue) {
-         this.nel--;
-         //console.log('_decrement_nnodes', this.nel);
-         const shadow = this.shadowRoot;
-         if (shadow) {
-            //console.log("id:",shadow.getElementById(this.inputID));
-            (shadow.getElementById(this.inputID) as HTMLInputElement).value =
-               String(this.nel);
-            const event = new Event('change', {
-               bubbles: true,
-               composed: true,
-            });
-            this.dispatchEvent(event);
-         }
-      }
-      //input_nodes.value = this.nel;
-      //set_InfosNeueBerechnungErforderlich()
+   private _notifyChange() {
+      this.dispatchEvent(
+         new CustomEvent('change', {
+            detail: { value: this.nel },
+            bubbles: true,
+            composed: true,
+         }),
+      );
    }
 
-   //----------------------------------------------------------------------------------------------
-   _valueChanged() {
-      console.log('value changed in dr-button');
-      const shadow = this.shadowRoot;
-      if (shadow) {
-         let value = (shadow.getElementById(this.inputID) as HTMLInputElement)
-            .value;
-         console.log('VALUE  CHANGED', value);
-         this.nel = Number(value);
-
-         const event = new Event('change', { bubbles: true, composed: true });
-         this.dispatchEvent(event);
-      }
-
-      //set_InfosNeueBerechnungErforderlich()
+   private _increment() {
+      const next = this._clamp(this.nel + 1);
+      if (next === this.nel) return;
+      this.nel = next;
+      this._notifyChange();
    }
-   //----------------------------------------------------------------------------------------------
 
-   render() {
+   private _decrement() {
+      const next = this._clamp(this.nel - 1);
+      if (next === this.nel) return;
+      this.nel = next;
+      this._notifyChange();
+   }
+
+   private _onInputChange() {
+      this.nel = this._clamp(Number(this._input.value));
+      // Falls geclampt wurde, muss das Feld synchron zum internen Wert bleiben.
+      this._input.value = String(this.nel);
+      this._notifyChange();
+   }
+
+   private get _atMin() {
+      return this.nel <= this.minValue;
+   }
+
+   private get _atMax() {
+      return this.maxValue !== undefined && this.nel >= this.maxValue;
+   }
+
+   override render() {
       return html`
-         <label id="lab_nnodes">${this.txt}</label>
+         <label id="lab_nnodes" for="${this.inputID}">${this.txt}</label>
 
          <button
-            id="id_input_node_dec"
             class="spinner decrement"
-            @click="${this._decrement_nnodes}"
+            aria-label="Wert verringern"
+            ?disabled="${this._atMin}"
+            @click="${this._decrement}"
          >
-            -</button
+            -
+         </button
          ><input
             type="number"
             step="1"
             id="${this.inputID}"
             name="nnodes"
             class="input_int"
-            value="${this.nel}"
-            @change="${this._valueChanged}"
+            .value="${String(this.nel)}"
+            @change="${this._onInputChange}"
          /><button
-            id="id_input_node_incr"
             class="spinner increment"
-            @click="${this._increment_nnodes}"
+            aria-label="Wert erhöhen"
+            ?disabled="${this._atMax}"
+            @click="${this._increment}"
          >
             +
          </button>
@@ -232,3 +205,8 @@ export class drButtonPM extends LitElement {
    }
 }
 
+declare global {
+   interface HTMLElementTagNameMap {
+      'dr-button-pm': drButtonPM;
+   }
+}
