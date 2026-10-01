@@ -89,133 +89,174 @@ export function calculate() {
   rechnen(1);
 }
 
+
+const TABELLEN: [string, string][] = [
+  ['id_button_nnodes', 'id_knoten_tabelle'],
+  ['id_button_nnodedisps', 'id_nnodedisps_tabelle'],
+  ['id_button_nelem', 'id_element_tabelle'],
+  ['id_button_nnodalloads', 'id_knotenlasten_tabelle'],
+  ['id_button_nstreckenlasten', 'id_streckenlasten_tabelle'],
+  ['id_button_neinzellasten', 'id_einzellasten_tabelle'],
+  ['id_button_ntemperaturlasten', 'id_temperaturlasten_tabelle'],
+  ['id_button_nstabvorverformungen', 'id_stabvorverfomungen_tabelle'],
+  ['id_button_nvorspannungen', 'id_vorspannungen_tabelle'],
+  ['id_button_nspannschloesser', 'id_spannschloesser_tabelle'],
+  ['id_button_nlastfaelle', 'id_lastfaelle_tabelle'],
+  ['id_button_nkombinationen', 'id_kombinationen_tabelle'],
+  ['id_button_nnodalmass', 'id_knotenmassen_tabelle'],
+  ['id_button_nkoppelfedern', 'id_koppelfedern_tabelle'],
+];
+
+//---------------------------------------------------------------------------------------------------------------
+function anzahl(shadow: ShadowRoot, id: string): number {
+  //-------------------------------------------------------------------------------------------------------------
+  return (shadow.getElementById(id) as drButtonPM | null)?.getValue() ?? 0;
+}
+
 //---------------------------------------------------------------------------------------------------------------
 export function resizeTables() {
-  //---------------------------------------------------------------------------------------------------------------
-  const elHaupt = document.getElementById('id_haupt') as drHaupt;
-  let shadow = elHaupt.shadowRoot;
-  if (shadow) {
-    {
-      const el_knoten = shadow.getElementById('id_button_nnodes');
-      const nnodes = (el_knoten?.shadowRoot?.getElementById('nnodes') as HTMLInputElement).value;
+  //-------------------------------------------------------------------------------------------------------------
 
-      const el = shadow.getElementById('id_knoten_tabelle');
-      el?.setAttribute('nzeilen', nnodes);
-    }
-    {
-      const el_knoten = shadow.getElementById('id_button_nnodedisps');
-      const nnodes = (el_knoten?.shadowRoot?.getElementById('nnodedisps') as HTMLInputElement).value;
+  const shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (!shadow) return;
 
-      const el = shadow.getElementById('id_nnodedisps_tabelle');
-      el?.setAttribute('nzeilen', nnodes);
-    }
-    {
-      const el_elemente = shadow.getElementById('id_button_nelem');
-      const nelem = (el_elemente?.shadowRoot?.getElementById('nelem') as HTMLInputElement).value;
-
-      const el = shadow.getElementById('id_element_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-    }
-
-    {
-      const el_elemente = shadow.getElementById('id_button_nnodalloads');
-      const nelem = (el_elemente?.shadowRoot?.getElementById('nnodalloads') as HTMLInputElement).value;
-
-      const el = shadow.getElementById('id_knotenlasten_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-    }
-
-    {
-      const el_elemente = shadow.getElementById('id_button_nstreckenlasten');
-      const nelem = (el_elemente?.shadowRoot?.getElementById('nelemloads') as HTMLInputElement).value;
-
-      const el = shadow.getElementById('id_streckenlasten_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-    }
-
-    {
-      const el_elemente = shadow.getElementById('id_button_neinzellasten');
-      const nelem = (el_elemente?.shadowRoot?.getElementById('nelemloads') as HTMLInputElement).value;
-
-      const el = shadow.getElementById('id_einzellasten_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-    }
-
-    {
-      const el_elemente = shadow.getElementById('id_button_ntemperaturlasten');
-      const nelem = (el_elemente?.shadowRoot?.getElementById('nelemloads') as HTMLInputElement).value;
-
-      const el = shadow.getElementById('id_temperaturlasten_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-    }
-
-    {
-      const el_elemente = shadow.getElementById('id_button_nstabvorverformungen');
-      const nelem = (el_elemente?.shadowRoot?.getElementById('nstabvorverformungen') as HTMLInputElement).value;
-
-      const el = shadow.getElementById('id_stabvorverfomungen_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-    }
-
-    {
-      const el_elemente = shadow.getElementById('id_button_nvorspannungen');
-      const nelem = (el_elemente?.shadowRoot?.getElementById('nvorspannungen') as HTMLInputElement).value;
-
-      const el = shadow.getElementById('id_vorspannungen_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-    }
-
-    {
-      const el_elemente = shadow.getElementById('id_button_nspannschloesser');
-      const nelem = (el_elemente?.shadowRoot?.getElementById('nspannschloesser') as HTMLInputElement).value;
-
-      const el = shadow.getElementById('id_spannschloesser_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-    }
-
-    {
-      const el_elemente = shadow.getElementById('id_button_nlastfaelle');
-      const nelem = (el_elemente?.shadowRoot?.getElementById('nlastfaelle') as HTMLInputElement).value;
-
-      const el = shadow.getElementById('id_lastfaelle_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-    }
-
-    {
-      let el_elemente = shadow.getElementById('id_button_nkombinationen');
-      let nelem = (el_elemente?.shadowRoot?.getElementById('nkombinationen') as HTMLInputElement).value;
-
-      let el = shadow.getElementById('id_kombinationen_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-      //---------------------------------------
-      el_elemente = shadow.getElementById('id_button_nlastfaelle');
-      nelem = (el_elemente?.shadowRoot?.getElementById('nlastfaelle') as HTMLInputElement).value;
-
-      el = shadow.getElementById('id_kombinationen_tabelle');
-      el?.setAttribute('nspalten', String(Number(nelem) + 1)); // +1 wegen Kommentarspalte
-    }
-
-    {
-      const el_elemente = shadow.getElementById('id_button_nnodalmass');
-      const nelem = (el_elemente?.shadowRoot?.getElementById('nnodalmass') as HTMLInputElement).value;
-
-      const el = shadow.getElementById('id_knotenmassen_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-    }
-
-    {
-      const el_elemente = shadow.getElementById('id_button_nkoppelfedern');
-      const nelem = (el_elemente?.shadowRoot?.getElementById('nkoppelfedern') as HTMLInputElement).value;
-
-      const el = shadow.getElementById('id_koppelfedern_tabelle');
-      el?.setAttribute('nzeilen', nelem);
-    }
-
-    // if (System === 0) showColumnsForStabwerk();
-    // else hideColumnsForFachwerk();
-    if (System === 1) hideColumnsForFachwerk();
+  for (const [button, tabelle] of TABELLEN) {
+    shadow.getElementById(tabelle)?.setAttribute('nzeilen', String(anzahl(shadow, button)));
   }
+  // Kombinationen: eine Spalte je Lastfall plus Kommentarspalte
+  shadow.getElementById('id_kombinationen_tabelle')
+    ?.setAttribute('nspalten', String(anzahl(shadow, 'id_button_nlastfaelle') + 1));
+
+  if (System === 1) hideColumnsForFachwerk();
+
 }
+
+//---------------------------------------------------------------------------------------------------------------
+// export function resizeTables() {
+//---------------------------------------------------------------------------------------------------------------
+
+// const elHaupt = document.getElementById('id_haupt') as drHaupt;
+// let shadow = elHaupt.shadowRoot;
+// if (shadow) {
+//   {
+//     const el_knoten = shadow.getElementById('id_button_nnodes');
+//     const nnodes = (el_knoten?.shadowRoot?.getElementById('nnodes') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_knoten_tabelle');
+//     el?.setAttribute('nzeilen', nnodes);
+//   }
+//   {
+//     const el_knoten = shadow.getElementById('id_button_nnodedisps');
+//     const nnodes = (el_knoten?.shadowRoot?.getElementById('nnodedisps') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_nnodedisps_tabelle');
+//     el?.setAttribute('nzeilen', nnodes);
+//   }
+//   {
+//     const el_elemente = shadow.getElementById('id_button_nelem');
+//     const nelem = (el_elemente?.shadowRoot?.getElementById('nelem') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_element_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//   }
+
+//   {
+//     const el_elemente = shadow.getElementById('id_button_nnodalloads');
+//     const nelem = (el_elemente?.shadowRoot?.getElementById('nnodalloads') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_knotenlasten_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//   }
+
+//   {
+//     const el_elemente = shadow.getElementById('id_button_nstreckenlasten');
+//     const nelem = (el_elemente?.shadowRoot?.getElementById('nelemloads') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_streckenlasten_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//   }
+
+//   {
+//     const el_elemente = shadow.getElementById('id_button_neinzellasten');
+//     const nelem = (el_elemente?.shadowRoot?.getElementById('nelemloads') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_einzellasten_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//   }
+
+//   {
+//     const el_elemente = shadow.getElementById('id_button_ntemperaturlasten');
+//     const nelem = (el_elemente?.shadowRoot?.getElementById('nelemloads') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_temperaturlasten_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//   }
+
+//   {
+//     const el_elemente = shadow.getElementById('id_button_nstabvorverformungen');
+//     const nelem = (el_elemente?.shadowRoot?.getElementById('nstabvorverformungen') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_stabvorverfomungen_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//   }
+
+//   {
+//     const el_elemente = shadow.getElementById('id_button_nvorspannungen');
+//     const nelem = (el_elemente?.shadowRoot?.getElementById('nvorspannungen') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_vorspannungen_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//   }
+
+//   {
+//     const el_elemente = shadow.getElementById('id_button_nspannschloesser');
+//     const nelem = (el_elemente?.shadowRoot?.getElementById('nspannschloesser') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_spannschloesser_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//   }
+
+//   {
+//     const el_elemente = shadow.getElementById('id_button_nlastfaelle');
+//     const nelem = (el_elemente?.shadowRoot?.getElementById('nlastfaelle') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_lastfaelle_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//   }
+
+//   {
+//     let el_elemente = shadow.getElementById('id_button_nkombinationen');
+//     let nelem = (el_elemente?.shadowRoot?.getElementById('nkombinationen') as HTMLInputElement).value;
+
+//     let el = shadow.getElementById('id_kombinationen_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//     //---------------------------------------
+//     el_elemente = shadow.getElementById('id_button_nlastfaelle');
+//     nelem = (el_elemente?.shadowRoot?.getElementById('nlastfaelle') as HTMLInputElement).value;
+
+//     el = shadow.getElementById('id_kombinationen_tabelle');
+//     el?.setAttribute('nspalten', String(Number(nelem) + 1)); // +1 wegen Kommentarspalte
+//   }
+
+//   {
+//     const el_elemente = shadow.getElementById('id_button_nnodalmass');
+//     const nelem = (el_elemente?.shadowRoot?.getElementById('nnodalmass') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_knotenmassen_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//   }
+
+//   {
+//     const el_elemente = shadow.getElementById('id_button_nkoppelfedern');
+//     const nelem = (el_elemente?.shadowRoot?.getElementById('nkoppelfedern') as HTMLInputElement).value;
+
+//     const el = shadow.getElementById('id_koppelfedern_tabelle');
+//     el?.setAttribute('nzeilen', nelem);
+//   }
+
+//   if (System === 1) hideColumnsForFachwerk();
+
+//}
 
 //---------------------------------------------------------------------------------------------------------------
 export function clearTables() {
@@ -363,14 +404,14 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
       let eli = shadow.getElementById('id_eps_disp_tol') as HTMLInputElement;
       eli.value = '1e-5';
 
-      let els = shadow.getElementById('id_P_delta_option') as SlSelect;
-      els.setAttribute('value', 'false');
+      let els = shadow.getElementById('id_P_delta_option') as HTMLSelectElement;
+      els.value = 'false';
 
-      els = shadow.getElementById('id_ausgabe_SG_option') as SlSelect;
-      els.setAttribute('value', 'true');
+      els = shadow.getElementById('id_ausgabe_SG_option') as HTMLSelectElement;
+      els.value = 'true';
 
-      els = shadow.getElementById('id_eig_solver_option') as SlSelect;
-      els.setAttribute('value', '1');
+      els = shadow.getElementById('id_eig_solver_option') as HTMLSelectElement;
+      els.value = '1';
 
       eli = shadow.getElementById('id_maxu_node_ID') as HTMLInputElement;
       eli.value = '';
