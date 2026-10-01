@@ -213,18 +213,20 @@ export function read_daten(eingabedaten: string) {
             if (jobj.n_iter === undefined) el.setValue(10);
             else el.setValue(Math.max(jobj.n_iter, 2));
 
-            let slel = shadow?.getElementById('id_P_delta_option') as SlSelect;
-            if (jobj.P_delta === undefined) slel.setAttribute('value', 'false');
-            //.setValue(false);
-            else slel.setAttribute('value', jobj.P_delta); //.setValue(jobj.P_delta);
+            // let slel = shadow?.getElementById('id_P_delta_option') as SlSelect;
+            // if (jobj.P_delta === undefined) slel.setAttribute('value', 'false');
+            // //.setValue(false);
+            // else slel.setAttribute('value', jobj.P_delta); //.setValue(jobj.P_delta);
 
-            slel = shadow?.getElementById('id_ausgabe_SG_option') as SlSelect;
-            if (jobj.ausgabe_SG === undefined) slel.setAttribute('value', 'true');
-            else slel.setAttribute('value', jobj.ausgabe_SG);
+            (shadow.getElementById('id_P_delta_option') as HTMLSelectElement).value = String(jobj.P_delta ?? 'false');
 
-            slel = shadow?.getElementById('id_eig_solver_option') as SlSelect;
-            if (jobj.eig_solver === undefined) slel.setAttribute('value', '1');
-            else slel.setAttribute('value', jobj.eig_solver);
+            let slel = shadow?.getElementById('id_ausgabe_SG_option') as HTMLSelectElement;
+            if (jobj.ausgabe_SG === undefined) slel.value = 'true';
+            else slel.value = jobj.ausgabe_SG;
+
+            slel = shadow?.getElementById('id_eig_solver_option') as HTMLSelectElement;
+            if (jobj.eig_solver === undefined) slel.value = '1';
+            else slel.value = jobj.eig_solver;
 
             // el = shadow?.getElementById('id_button_nnodedisps_gui') as drButtonPM;
             // if (jobj.nNodeDisps === undefined) el.setValue(0);
