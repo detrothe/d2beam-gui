@@ -7,6 +7,10 @@ import { property, customElement, query } from 'lit/decorators.js';
  * Feuert ein `change`-Event (bubbles + composed), sobald sich der Wert
  * über einen der Buttons oder direkte Eingabe ändert. `event.detail.value`
  * enthält den neuen Wert.
+ *
+ * Wichtig: Das interne <input> wird bei jeder Wertänderung SOFORT
+ * geschrieben (nicht erst beim nächsten Lit-Render), damit Code, der
+ * direkt danach das DOM-Feld liest (z.B. resizeTables), den neuen Wert sieht.
  */
 @customElement('dr-button-pm')
 export class drButtonPM extends LitElement {
@@ -122,13 +126,38 @@ export class drButtonPM extends LitElement {
       }
    `;
 
-   /** Setzt den Wert programmatisch von außen (z.B. durch den Parent). */
-   setValue(wert: number) {
-      this.nel = typeof wert === 'number' && !Number.isNaN(wert) ? wert : 0;
+   /**
+    * Setzt nel UND das Eingabefeld sofort.
+    * Ohne das Schreiben des Feldes würden Leser des DOM-Feldes bis zum
+    * nächsten Lit-Update den alten Wert sehen.
+    */
+   private _setNel(v: number) {
+      this.nel = v;
+      if (this._input) this._input.value = String(v);
+   }
+
+   /**
+    * Setzt den Wert programmatisch von außen (z.B. durch read_daten).
+    * Akzeptiert auch Zahlen-Strings, weil ältere Sicherungen z.B. "1" statt 1
+    * enthalten können.
+    */
+   setValue(wert: number | string) {
+      const n = Number(wert);
+      const ok = wert !== '' && wert !== null && wert !== undefined && Number.isFinite(n);
+      this._setNel(ok ? n : 0);
+   }
+
+   /** Liest den aktuellen Wert (z.B. durch den Parent).
+    Anwendung:
+    const el = this.shadowRoot?.querySelector('dr-button-pm') as drButtonPM;
+    const currentValue = el.getValue(); */
+   getValue(): number {
+      return this.nel;
    }
 
    private _clamp(value: number): number {
       let v = value;
+      if (Number.isNaN(v)) v = this.minValue;
       if (v < this.minValue) v = this.minValue;
       if (this.maxValue !== undefined && v > this.maxValue) v = this.maxValue;
       return v;
@@ -147,21 +176,20 @@ export class drButtonPM extends LitElement {
    private _increment() {
       const next = this._clamp(this.nel + 1);
       if (next === this.nel) return;
-      this.nel = next;
+      this._setNel(next);
       this._notifyChange();
    }
 
    private _decrement() {
       const next = this._clamp(this.nel - 1);
       if (next === this.nel) return;
-      this.nel = next;
+      this._setNel(next);
       this._notifyChange();
    }
 
    private _onInputChange() {
-      this.nel = this._clamp(Number(this._input.value));
-      // Falls geclampt wurde, muss das Feld synchron zum internen Wert bleiben.
-      this._input.value = String(this.nel);
+      // Falls geclampt wurde, bleibt das Feld synchron zum internen Wert.
+      this._setNel(this._clamp(Number(this._input.value)));
       this._notifyChange();
    }
 

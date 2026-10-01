@@ -230,12 +230,6 @@ if (isAndroid) {
     });
 
 
-    //     // window.addEventListener('popstate', function (event) {
-    //     //     write('Android popstate')
-    //     //     window.history.pushState({}, '')
-    //     //     event.preventDefault();
-    //     // })
-
     window.addEventListener('beforeunload', function (_event) {
         //event.preventDefault();
         // Google Chrome < 119 requires returnValue to be set.
@@ -367,7 +361,10 @@ else {
 
         let output = str_inputToJSON();
         console.log("inputToJSON", output)
+
+        downloadJsonString(output, 'debug.txt');
         window.localStorage.setItem('current_input_D2BEAM_GUI', output);
+
 
     });
 
@@ -417,7 +414,8 @@ else {
         //if (yourOS !== 'iOS') {
         input = window.localStorage.getItem('current_input_D2BEAM_GUI');
         //write('else, LOAD  current input = ' + input.length)
-        //console.log('LOAD  current input = ', input.length)
+        // console.log('LOAD  current input = ', input!.length)
+        // console.log('input string', input)
         if (input !== null && input.length > 0) {
             autoEingabeLesen();
         }
@@ -434,16 +432,6 @@ else {
 
 }
 
-// async function handleFiles(files: any) {
-//     for (const file of files) {
-//         const blob = await file.getFile();
-//         blob.handle = file;
-//         const text = await blob.text();
-
-//         console.log(`${file.name} handled, content: ${text}`);
-//     }
-// }
-
 /*async*/ function autoEingabeLesen() {
     // const dialog = new ConfirmDialog({
     //     trueButton_Text: 'ja',
@@ -458,7 +446,11 @@ else {
 
     console.log("autoEingabeLesen, letzteEinlesen", letzteEinlesen)
     if (letzteEinlesen) {
-        if (input !== null) read_daten(input);
+        if (input !== null) {
+            console.log('LOAD  current input = ', input!.length)
+            console.log('input string', input)
+            read_daten(input);
+        }
         init_two_cad();
         init_cad(0);
         reset_gui();
@@ -468,17 +460,17 @@ else {
 
 }
 
-// function openDB() {
-//     if (!dbPromise) {
-//         dbPromise = new Promise((resolve, reject) => {
-//             const req = indexedDB.open('my-db', 1);
-//             req.onupgradeneeded = () => req.result.createObjectStore('keyval');
-//             req.onerror = () => reject(req.error);
-//             req.onsuccess = () => resolve(req.result);
-//         });
-//     }
-//     return dbPromise;
-// }
+function downloadJsonString(jsonString: string, filename: string): void {
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename.endsWith(".json") ? filename : `${filename}.json`;
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
 
 async function check_for_new_version() {
     if ('serviceWorker' in navigator) {

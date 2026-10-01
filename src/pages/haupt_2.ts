@@ -15,11 +15,11 @@ import { drRechteckQuerSchnitt } from '../components/dr-dialog-rechteckquerschni
 
 import { reset_gui } from '../components/dr-control-panel';
 
-import DetectOS from './detectos';
+// import DetectOS from './detectos';
 
-import { addListener_filesave } from './dateien';
+// import { addListener_filesave } from './dateien';
 import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik, reset_controlpanel_grafik, click_pan_button_grafik } from './grafik';
-import { set_info, write } from './utility';
+// import { set_info, write } from './utility';
 
 import { my_jspdf } from './mypdf';
 
@@ -36,7 +36,7 @@ import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import { set_max_lastfall, zero_max_lastfall } from './cad_draw_elementlasten';
 import { reset_cad_nodes } from './cad_node';
-import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
+// import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 import { app, currentFilename, set_current_filename } from './haupt';
 import { drHaupt } from '../components/dr-haupt';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
