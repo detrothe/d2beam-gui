@@ -197,6 +197,9 @@ class DrTabelle extends HTMLElement {
    windowWidth: any;
    windowHeight: any;
 
+   private onMouseMove = (ev: any) => this.MOUSE_MOVE(ev);
+   private onTouchMove = (ev: any) => this.TOUCH_MOVE(ev);
+
 
    //---------------------------------------------------------------------------------------------------------------
    connectedCallback() {
@@ -213,18 +216,12 @@ class DrTabelle extends HTMLElement {
       const table = document.createElement('table');
       this.shadow.appendChild(table);
       table.id = 'mytable';
-      // alt      table.addEventListener('mousemove', this.POINTER_MOVE.bind(this));    // , {capture:true}
       const table1 = this.shadow.getElementById('mytable') as HTMLTableElement;
       table1.addEventListener('touchstart', this.TOUCH_START.bind(this));    // , {capture:true}
-      // table.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
-      //table1.addEventListener('mousemove', this.MOUSE_MOVE.bind(this),false);
       table1.addEventListener('pointerup', this.POINTER_UP.bind(this), true);
 
-      //table.addEventListener('mouseup', this.MOUSE_UP.bind(this));
-      // table.addEventListener('touchend', this.TOUCH_END.bind(this));
 
       table1.addEventListener("contextmenu", e => e.preventDefault());
-      //table.addEventListener("focusout", this.lostFocus.bind(this));
       table.onclick = function (e) {
          // Some code here...
          console.log("Table clicked!", e);
@@ -1120,11 +1117,13 @@ class DrTabelle extends HTMLElement {
       if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
          if (touch_support_table) {
             console.log("vor removeEventListener")
-            table.removeEventListener('touchmove', this.TOUCH_MOVE.bind(this), true);
+            //table.removeEventListener('touchmove', this.TOUCH_MOVE.bind(this), true);
+            table.removeEventListener('touchmove', this.onTouchMove, true);
          }
       } else {
          console.log("vor removeEventListener mouse_move")
-         table.removeEventListener('mousemove', this.MOUSE_MOVE.bind(this), false);
+         //table.removeEventListener('mousemove', this.MOUSE_MOVE.bind(this), false);
+         table.removeEventListener('mousemove', this.onMouseMove, false);
       }
 
       if (this.selectionMode) this.show_contextMenu(ev);
@@ -1369,27 +1368,12 @@ class DrTabelle extends HTMLElement {
 
          //console.log("Zell Info", input_id, cellLeft, cellWidth)
       }
-      //    if (ev.target.hasPointerCapture(ev.pointerId)) {
-      // ev.target.releasePointerCapture(ev.pointerId);
-      //   }
-      //console.log("POINTERDOWN", ev)
-      //console.log('POINTERDOWN', this.selectionMode, ev.button, tableId, inputId, ev.pageX, ev.pageY, ev.which, ev.pointerType);
 
-      //infoBox.innerHTML += "<br>POINTERDOWN" + ' | ' + selectMode + ' | ' + ev.button + ' | ' + tableId + ' | ' + inputId + ' | ' + ev.pageX + ' | ' + ev.pageY + ' | ' + ev.which + ' | ' + ev.pointerType
-      //const shadow = this.shadowRoot;
-      //console.log('pointerdown THIS:', this);
-      //if (shadow) {
-      // const myTable = ev.target.offsetParent.offsetParent as HTMLTableElement; //this.tableRoot.getElementById(tableId);
-      //console.log('myTable:', myTable);
-
-      //myTable.addEventListener('mousemove', this.POINTER_MOVE);
       if (this.selectionMode || ev.pointerType === 'mouse') {
          // bei Mouse immer select mode
          //      console.log('select Mode = true', this.id, this.shadow, this.shadowRoot);
          //const el=this.shadow.getElementById(this.id) as any
          //console.log("el",el)
-         //   this.addEventListener('touchmove', this.TOUCH_MOVE.bind(this)); // , { passive: false }  , { capture: true }
-         //TODO myTable.addEventListener("pointerup", POINTER_UP);
       }
 
       const myArray = inputId.split('-');
@@ -1415,10 +1399,8 @@ class DrTabelle extends HTMLElement {
          if (touch_support_table) {
             const table = this.shadow.getElementById('mytable') as HTMLTableElement;
             //console.log("s", table, this)
-            table.addEventListener('touchmove', this.TOUCH_MOVE.bind(this), true); // , { passive: false }  , { capture: true }
-            // //this.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
-            //  table.addEventListener('touchend', this.TOUCH_END.bind(this));
-            // table.addEventListener('pointerup', this.POINTER_UP.bind(this), true);
+            //table.addEventListener('touchmove', this.TOUCH_MOVE.bind(this), true); // , { passive: false }  , { capture: true }
+            table.addEventListener('touchmove', this.onTouchMove, true);
 
             this.selectionMode = true;
 
@@ -1434,9 +1416,8 @@ class DrTabelle extends HTMLElement {
          }
       } else {
          const table = this.shadow.getElementById('mytable') as HTMLTableElement;
-         table.addEventListener('mousemove', this.MOUSE_MOVE.bind(this), false); // , { passive: false }  , { capture: true }
-         //this.addEventListener('pointerleave', this.POINTER_LEAVE.bind(this));
-         // table.addEventListener('mouseup', this.MOUSE_UP.bind(this));
+         //table.addEventListener('mousemove', this.MOUSE_MOVE.bind(this), false); // , { passive: false }  , { capture: true }
+         table.addEventListener('mousemove', this.onMouseMove, false);
 
          const browser = Detect.browser
          if (browser === 'Firefox') {
