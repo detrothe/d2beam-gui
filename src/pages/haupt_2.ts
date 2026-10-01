@@ -411,7 +411,7 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
       els.value = 'true';
 
       els = shadow.getElementById('id_eig_solver_option') as HTMLSelectElement;
-      els.value = '1';
+      els.value = '2';
 
       eli = shadow.getElementById('id_maxu_node_ID') as HTMLInputElement;
       eli.value = '';
