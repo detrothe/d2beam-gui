@@ -199,7 +199,9 @@ class DrTabelle extends HTMLElement {
 
    private onMouseMove = (ev: any) => this.MOUSE_MOVE(ev);
    private onTouchMove = (ev: any) => this.TOUCH_MOVE(ev);
+   private onKeyDown = (ev: Event) => this.KEYDOWN(ev as KeyboardEvent);
 
+   private onValueChanged = () => berechnungErforderlich(true);
 
    //---------------------------------------------------------------------------------------------------------------
    connectedCallback() {
@@ -207,11 +209,8 @@ class DrTabelle extends HTMLElement {
 
       //console.log('connectedCallback  Custom square element added to page.');
 
-      //console.log('columns', this.columns);
-
-      //console.log("-----------nQuerschnittSets--------------", nQuerschnittSets);
-
-      //document.getElementById("context-menu")?.addEventListener('click', this.contextMenuClicked.bind(this));
+      // Bei erneutem Einhängen (Verschieben im DOM, Lit-Rerender) nichts neu aufbauen
+      if (this.shadow.getElementById('mytable')) return;
 
       const table = document.createElement('table');
       this.shadow.appendChild(table);
@@ -306,7 +305,9 @@ class DrTabelle extends HTMLElement {
                el.id = str;
                //el.value = str;
                //el.className = 'input_normal';
-               el.addEventListener('keydown', this.KEYDOWN.bind(this));
+               el.addEventListener('keydown', this.onKeyDown);
+               el.addEventListener('input', this.onValueChanged);
+               el.addEventListener('change', this.onValueChanged);   // für select / Browser-Autofill
                //el.addEventListener("change", function () { berechnungErforderlich(true); });
 
                newCell = newRow.insertCell();
@@ -796,7 +797,9 @@ class DrTabelle extends HTMLElement {
                         const str = id_table + '-' + iZeile + '-' + iSpalte;
                         el.id = str;
                         el.className = 'input_normal';
-                        el.addEventListener('keydown', this.KEYDOWN.bind(this));
+                        el.addEventListener('keydown', this.onKeyDown);
+                        el.addEventListener('input', this.onValueChanged);
+                        el.addEventListener('change', this.onValueChanged);   // für select / Browser-Autofill
 
                         //newCell.style.width = '6em';
                         //console.log("§§§§§§§§§ colwidth",this.colWidth.length,this.colWidth[this.colWidth.length-1])
@@ -888,7 +891,9 @@ class DrTabelle extends HTMLElement {
                   const str = id_table + '-' + iZeile + '-' + iSpalte;
                   el.id = str;
                   //el.className = 'input_normal';
-                  el.addEventListener('keydown', this.KEYDOWN.bind(this));
+                  el.addEventListener('keydown', this.onKeyDown);
+                  el.addEventListener('input', this.onValueChanged);
+                  el.addEventListener('change', this.onValueChanged);   // für select / Browser-Autofill
 
                   newCell = newRow.insertCell();
                   //newCell.style.width = '6em';
@@ -959,139 +964,161 @@ class DrTabelle extends HTMLElement {
       //console.log('FINAL shadowroot ', this.shadowRoot);
    }
 
-   //------------------------------------------------------------------------------------------------
-   KEYDOWN(ev: any) {
-      //--------------------------------------------------------------------------------------------
-
-      //write('KEYDOWN ' + ev.target.type + ' | ' + ev)
-
-      console.log(
-         'KEYDOWN, keycode, id_input, id_tabelle: ',
-         ev.keyCode,
-         ev.key,
-         ev.code,
-         //ev.target.id,
-         //ev.target.offsetParent.offsetParent.id,
-         //ev.target.type
-      );
-      //const tableCellId = ev.target.offsetParent.id;
-
-      //write("KEYDOWN " + ev.code + " | ", ev.key)
-      //console.log('KEYDOWN', ev.keyCode, ev.shiftKey, ev.key, ev);
-
-      //infoBox.innerHTML += "<br>key= " + ev.key + "  | keyCode= " + ev.keyCode
-
-      //ev.target.style.backgroundColor = 'rgb(210,00,00)';
-
-      // if (ev.shiftKey) {
-      //    ev.preventDefault();
-      //    return;
-      // }
-
-      if (ev.keyCode === 13) {  // return-Taste
-         ev.preventDefault();
-         const inputId = ev.target.id;
-         const myArray = inputId.split('-');
-         console.log('RETURN Taste in Zelle', myArray.length, myArray[0], myArray[1], myArray[2], this.nTabRow);
-         let zeile = +myArray[1] + 1;
-         console.log("zeile", zeile, this.nTabRow)
-         if (zeile < this.nTabRow) {
-            console.log("springe jetzt in Zeile ", zeile)
-            let spalte: number;
-            if (this.typs[1] === 'select') {
-               spalte = 2;                        // select option bisher nur in Spalte 1
-            } else spalte = 1;
-            let str = 'idtable-' + zeile + '-' + spalte;
-            const elemNeu = this.shadow.getElementById(str) as HTMLInputElement;
-            console.log("elemNeu", str, elemNeu)
-            //elemNeu.innerText = "";
-            elemNeu.focus();
-            const evt = new Event("mousedown", { "bubbles": true, "cancelable": false }) as any;
-            evt.button = 0;     // linke Maustaste
-            elemNeu.dispatchEvent(evt);
-         }
-
-      } else if (ev.key === 'ArrowDown' || ev.key === 'PageDown') {
-         console.log("ArrowDown")
-         ev.preventDefault();
-         const inputId = ev.target.id;
-         const myArray = inputId.split('-');
-         console.log('ArrowDown Taste in Zelle', myArray.length, myArray[0], myArray[1], myArray[2], ev.target.selectionStart); //Cursorposition: selectionStart nur bei Text
-         let zeile = +myArray[1] + 1;
-         //console.log("zeile", zeile, this.nTabRow)
-         if (zeile < this.nTabRow) {
-            console.log("springe jetzt in Zeile ", zeile)
-            let spalte = myArray[2];
-            let str = 'idtable-' + zeile + '-' + spalte;
-            const elemNeu = this.shadow.getElementById(str) as HTMLInputElement;
-            console.log("elemNeu", str, elemNeu)
-            elemNeu.focus();
-            const evt = new Event("mousedown", { "bubbles": true, "cancelable": false }) as any;
-            evt.button = 0;     // linke Maustaste
-            elemNeu.dispatchEvent(evt);
-         }
-
-      } else if (ev.key === 'ArrowUp' || ev.key === 'PageUp') {
-         console.log("ArrowUp")
-         ev.preventDefault();
-         const inputId = ev.target.id;
-         const myArray = inputId.split('-');
-         //console.log('RETURN Taste in Zelle', myArray.length, myArray[0], myArray[1], myArray[2], this.nTabRow);
-         let zeile = +myArray[1] - 1;
-         //console.log("zeile", zeile, this.nTabRow)
-         if (zeile > 0) {
-            console.log("springe jetzt in Zeile ", zeile)
-            let spalte = myArray[2];
-            let str = 'idtable-' + zeile + '-' + spalte;
-            const elemNeu = this.shadow.getElementById(str) as HTMLInputElement;
-            console.log("elemNeu", str, elemNeu)
-            elemNeu.focus();
-            const evt = new Event("mousedown", { "bubbles": true, "cancelable": false }) as any;
-            evt.button = 0;     // linke Maustaste
-            elemNeu.dispatchEvent(evt);
-         }
-
-      }
-      else if (ev.target.type === 'text') {
-         console.log("in text eingabe")
-         berechnungErforderlich(true);
-         return;
-      }
-      else if (ev.target.type === 'number') {
-         console.log("in number", ev.key, ev.keycode)
-         if (ev.key === '0' || ev.key === '1' || ev.key === '2' || ev.key === '3' || ev.key === '4' || ev.key === '5' || ev.key === '6' || ev.key === '7' || ev.key === '8' || ev.key === '9') { berechnungErforderlich(true); return; }                            // Ziffern 0-9
-         //if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
-         //if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad
-         if (ev.key === 'e' || ev.key === 'E' || ev.key === '.' || ev.key === ',') { berechnungErforderlich(true); return; } // e .  ,
-         //if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) { berechnungErforderlich(true); return; } // e .  ,
-         //if (ev.keyCode === 8 || ev.keyCode === 46) { berechnungErforderlich(true); return; }                         //  del, entfernen
-         if (ev.key === 'Backspace' || ev.key === 'Delete') { berechnungErforderlich(true); return; }                         //  del, entfernen
-
-         if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') { berechnungErforderlich(true); return; }  // rechts links -
-         if (ev.key === 'Tab' || ev.key === 'Escape') { berechnungErforderlich(true); return; }                         // Tab, ESC
-         //if (ev.keyCode === 9 || ev.keyCode === 27) { berechnungErforderlich(true); return; }                         // Tab, ESC
-
-         if (ev.key === '-' || ev.key === '+') { berechnungErforderlich(true); return; }                                            // + und - Zeichen
-         //if (ev.keyCode === 173) { berechnungErforderlich(true); return; }                                            // - Zeichen bei Firefox
-         //if (ev.keyCode === 0) { berechnungErforderlich(true); return; }                                              // - Zeichen bei Android Firefox
-
-         ev.preventDefault();
-      }
-      else {
-         console.log("in sonst", ev.keycode)
-
-         ev.preventDefault();
-         return;
-         // if (ev.keyCode > 47 && ev.keyCode < 58) { berechnungErforderlich(true); return; }                            // Ziffern 0-9
-         // if (ev.keyCode > 95 && ev.keyCode < 111) { berechnungErforderlich(true); return; }                           // Ziffern 0-9, +, - vom numpad
-         // if (ev.keyCode === 69 || ev.keyCode === 190 || ev.keyCode === 188) { berechnungErforderlich(true); return; } // e .  ,
-         // if (ev.keyCode === 8 || ev.keyCode === 46) { berechnungErforderlich(true); return; }                         //  del, entfernen
-         // if (ev.keyCode === 37 || ev.keyCode === 39 || ev.keyCode === 189) { berechnungErforderlich(true); return; }  // rechts links -
-         // if (ev.keyCode === 9 || ev.keyCode === 27) { berechnungErforderlich(true); return; }                         // Tab, ESC
-         // if (ev.keyCode === 173) { berechnungErforderlich(true); return; }                                            // - Zeichen bei Firefox
-         // if (ev.keyCode === 0) { berechnungErforderlich(true); return; }                                              // - Zeichen bei Android Firefox
-      }
+   private focusCell(zeile: number, spalte: number) {
+      const el = this.shadow.getElementById(`idtable-${zeile}-${spalte}`) as HTMLElement | null;
+      if (!el) return;
+      el.focus();
+      const evt = new Event('mousedown', { bubbles: true, cancelable: false }) as any;
+      evt.button = 0;   // linke Maustaste
+      el.dispatchEvent(evt);
    }
+
+   KEYDOWN(ev: KeyboardEvent) {
+      // Shortcuts (Strg+C/V/A/Z, Cmd auf Mac, Alt+...) nie blockieren
+      if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+
+      const target = ev.target as HTMLInputElement | HTMLSelectElement;
+      const parts = target.id.split('-');          // idtable-<zeile>-<spalte>
+      const zeile = Number(parts[1]);
+      const spalte = Number(parts[2]);
+      const isSelect = target instanceof HTMLSelectElement;
+
+      switch (ev.key) {
+         case 'Enter': {
+            ev.preventDefault();
+            if (zeile + 1 < this.nTabRow) {
+               // select-Option bisher nur in Spalte 1
+               this.focusCell(zeile + 1, this.typs[1] === 'select' ? 2 : 1);
+            }
+            return;
+         }
+         case 'ArrowDown':
+         case 'PageDown': {
+            // In einem Select ändern die Pfeiltasten nativ die Auswahl
+            if (isSelect && ev.key === 'ArrowDown') return;
+            ev.preventDefault();
+            if (zeile + 1 < this.nTabRow) this.focusCell(zeile + 1, spalte);
+            return;
+         }
+         case 'ArrowUp':
+         case 'PageUp': {
+            if (isSelect && ev.key === 'ArrowUp') return;
+            ev.preventDefault();
+            if (zeile - 1 > 0) this.focusCell(zeile - 1, spalte);
+            return;
+         }
+      }
+
+      // Zahlenfelder: nur druckbare Zeichen filtern. Tab, Home, End, F5, Backspace,
+      // Delete, Pfeile links/rechts usw. haben key.length > 1 und gehen durch.
+      if (target.type === 'number' && ev.key.length === 1 && !/[0-9eE.,+\-]/.test(ev.key)) {
+         ev.preventDefault();
+      }
+      // text und select: nichts blockieren
+   }
+
+   // //------------------------------------------------------------------------------------------------
+   // KEYDOWN(ev: any) {
+   //    //--------------------------------------------------------------------------------------------
+
+   //    //write('KEYDOWN ' + ev.target.type + ' | ' + ev)
+
+   //    console.log(
+   //       'KEYDOWN, keycode, id_input, id_tabelle: ',
+   //       ev.keyCode,
+   //       ev.key,
+   //       ev.code,
+   //    );
+
+   //    if (ev.keyCode === 13) {  // return-Taste
+   //       ev.preventDefault();
+   //       const inputId = ev.target.id;
+   //       const myArray = inputId.split('-');
+   //       console.log('RETURN Taste in Zelle', myArray.length, myArray[0], myArray[1], myArray[2], this.nTabRow);
+   //       let zeile = +myArray[1] + 1;
+   //       console.log("zeile", zeile, this.nTabRow)
+   //       if (zeile < this.nTabRow) {
+   //          console.log("springe jetzt in Zeile ", zeile)
+   //          let spalte: number;
+   //          if (this.typs[1] === 'select') {
+   //             spalte = 2;                        // select option bisher nur in Spalte 1
+   //          } else spalte = 1;
+   //          let str = 'idtable-' + zeile + '-' + spalte;
+   //          const elemNeu = this.shadow.getElementById(str) as HTMLInputElement;
+   //          console.log("elemNeu", str, elemNeu)
+   //          //elemNeu.innerText = "";
+   //          elemNeu.focus();
+   //          const evt = new Event("mousedown", { "bubbles": true, "cancelable": false }) as any;
+   //          evt.button = 0;     // linke Maustaste
+   //          elemNeu.dispatchEvent(evt);
+   //       }
+
+   //    } else if (ev.key === 'ArrowDown' || ev.key === 'PageDown') {
+   //       console.log("ArrowDown")
+   //       ev.preventDefault();
+   //       const inputId = ev.target.id;
+   //       const myArray = inputId.split('-');
+   //       console.log('ArrowDown Taste in Zelle', myArray.length, myArray[0], myArray[1], myArray[2], ev.target.selectionStart); //Cursorposition: selectionStart nur bei Text
+   //       let zeile = +myArray[1] + 1;
+   //       //console.log("zeile", zeile, this.nTabRow)
+   //       if (zeile < this.nTabRow) {
+   //          console.log("springe jetzt in Zeile ", zeile)
+   //          let spalte = myArray[2];
+   //          let str = 'idtable-' + zeile + '-' + spalte;
+   //          const elemNeu = this.shadow.getElementById(str) as HTMLInputElement;
+   //          console.log("elemNeu", str, elemNeu)
+   //          elemNeu.focus();
+   //          const evt = new Event("mousedown", { "bubbles": true, "cancelable": false }) as any;
+   //          evt.button = 0;     // linke Maustaste
+   //          elemNeu.dispatchEvent(evt);
+   //       }
+
+   //    } else if (ev.key === 'ArrowUp' || ev.key === 'PageUp') {
+   //       console.log("ArrowUp")
+   //       ev.preventDefault();
+   //       const inputId = ev.target.id;
+   //       const myArray = inputId.split('-');
+   //       //console.log('RETURN Taste in Zelle', myArray.length, myArray[0], myArray[1], myArray[2], this.nTabRow);
+   //       let zeile = +myArray[1] - 1;
+   //       //console.log("zeile", zeile, this.nTabRow)
+   //       if (zeile > 0) {
+   //          console.log("springe jetzt in Zeile ", zeile)
+   //          let spalte = myArray[2];
+   //          let str = 'idtable-' + zeile + '-' + spalte;
+   //          const elemNeu = this.shadow.getElementById(str) as HTMLInputElement;
+   //          console.log("elemNeu", str, elemNeu)
+   //          elemNeu.focus();
+   //          const evt = new Event("mousedown", { "bubbles": true, "cancelable": false }) as any;
+   //          evt.button = 0;     // linke Maustaste
+   //          elemNeu.dispatchEvent(evt);
+   //       }
+
+   //    }
+   //    else if (ev.target.type === 'text') {
+   //       console.log("in text eingabe")
+   //       berechnungErforderlich(true);
+   //       return;
+   //    }
+   //    else if (ev.target.type === 'number') {
+   //       console.log("in number", ev.key, ev.keycode)
+   //       if (ev.key === '0' || ev.key === '1' || ev.key === '2' || ev.key === '3' || ev.key === '4' || ev.key === '5' || ev.key === '6' || ev.key === '7' || ev.key === '8' || ev.key === '9') { berechnungErforderlich(true); return; }                            // Ziffern 0-9
+   //       if (ev.key === 'e' || ev.key === 'E' || ev.key === '.' || ev.key === ',') { berechnungErforderlich(true); return; } // e .  ,
+   //       if (ev.key === 'Backspace' || ev.key === 'Delete') { berechnungErforderlich(true); return; }                         //  del, entfernen
+
+   //       if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') { berechnungErforderlich(true); return; }  // rechts links -
+   //       if (ev.key === 'Tab' || ev.key === 'Escape') { berechnungErforderlich(true); return; }                         // Tab, ESC
+
+   //       if (ev.key === '-' || ev.key === '+') { berechnungErforderlich(true); return; }                                            // + und - Zeichen
+
+   //       ev.preventDefault();
+   //    }
+   //    else {
+   //       console.log("in sonst", ev.keycode)
+
+   //       ev.preventDefault();
+   //       return;
+   //    }
+   // }
 
 
    //------------------------------------------------------------------------------------------------
