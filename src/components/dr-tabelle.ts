@@ -649,33 +649,56 @@ class DrTabelle extends HTMLElement {
 
    //---------------------------------------------------------------------------------------------------------------
    clear_Tabelle(idTable: any) {
-      //------------------------------------------------------------------------------------------------------------
-      //console.info('in clear_Tabelle');
+      //---------------------------------------------------------------------------------------------------------------
 
       const table = this.shadow.getElementById(idTable) as HTMLTableElement;
-      //console.log('spalten', table);
-      let nZeilen = table.rows.length
-      let nSpalten = table.rows[0].cells.length
+      const nZeilen = table.rows.length;
+      const nSpalten = table.rows[0].cells.length;
 
       for (let iZeile = 1; iZeile < nZeilen; iZeile++) {
-
          for (let iSpalte = 1; iSpalte < nSpalten; iSpalte++) {
-            let child = table.rows[iZeile].cells[iSpalte].firstElementChild as HTMLInputElement;
-            child.value = "";
-            if (this.typs[iSpalte] === 'select') {
-               const idstr = 'idtable-' + iZeile + '-' + iSpalte;
-               const el = this.shadow.getElementById(idstr)
-               //console.log("idstr", el)
-               //const index = nQuerschnittSets - 1;
-               //let option = document.createElement('option');
+            const child = table.rows[iZeile].cells[iSpalte].firstElementChild as HTMLInputElement | HTMLSelectElement | null;
+            if (!child) continue;
 
-               //option.value = option.textContent = get_querschnittRechteck_name(index);
-               for (let i = 0; i < nQuerschnittSets; i++) el.removeChild(el.lastChild);
+            if (child instanceof HTMLSelectElement) {
+               child.replaceChildren();      // alle Options entfernen, unabhängig von nQuerschnittSets
+            } else {
+               child.value = '';
             }
          }
       }
-
    }
+
+   // alte eigene Version, oben steht version von claude
+   // //---------------------------------------------------------------------------------------------------------------
+   // clear_Tabelle(idTable: any) {
+   //    //------------------------------------------------------------------------------------------------------------
+   //    //console.info('in clear_Tabelle');
+
+   //    const table = this.shadow.getElementById(idTable) as HTMLTableElement;
+   //    //console.log('spalten', table);
+   //    let nZeilen = table.rows.length
+   //    let nSpalten = table.rows[0].cells.length
+
+   //    for (let iZeile = 1; iZeile < nZeilen; iZeile++) {
+
+   //       for (let iSpalte = 1; iSpalte < nSpalten; iSpalte++) {
+   //          let child = table.rows[iZeile].cells[iSpalte].firstElementChild as HTMLInputElement;
+   //          child.value = "";
+   //          if (this.typs[iSpalte] === 'select') {
+   //             const idstr = 'idtable-' + iZeile + '-' + iSpalte;
+   //             const el = this.shadow.getElementById(idstr)
+   //             //console.log("idstr", el)
+   //             //const index = nQuerschnittSets - 1;
+   //             //let option = document.createElement('option');
+
+   //             //option.value = option.textContent = get_querschnittRechteck_name(index);
+   //             for (let i = 0; i < nQuerschnittSets; i++) el.removeChild(el.lastChild);
+   //          }
+   //       }
+   //    }
+
+   // }
 
    //---------------------------------------------------------------------------------------------------------------
    unselect_Tabelle() {
@@ -1100,7 +1123,7 @@ class DrTabelle extends HTMLElement {
    //       return;
    //    }
    //    else if (ev.target.type === 'number') {
-   //       console.log("in number", ev.key, ev.keycode)
+   //       console.log("in number", ev.key, ev.keyCode)
    //       if (ev.key === '0' || ev.key === '1' || ev.key === '2' || ev.key === '3' || ev.key === '4' || ev.key === '5' || ev.key === '6' || ev.key === '7' || ev.key === '8' || ev.key === '9') { berechnungErforderlich(true); return; }                            // Ziffern 0-9
    //       if (ev.key === 'e' || ev.key === 'E' || ev.key === '.' || ev.key === ',') { berechnungErforderlich(true); return; } // e .  ,
    //       if (ev.key === 'Backspace' || ev.key === 'Delete') { berechnungErforderlich(true); return; }                         //  del, entfernen
@@ -1113,7 +1136,7 @@ class DrTabelle extends HTMLElement {
    //       ev.preventDefault();
    //    }
    //    else {
-   //       console.log("in sonst", ev.keycode)
+   //       console.log("in sonst", ev.keyCode)
 
    //       ev.preventDefault();
    //       return;
