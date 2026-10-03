@@ -18,9 +18,9 @@ export const draw_sg = {
 
 export let draw_group = false;
 
-let controller_N: any
-let controller_V: any
-let controller_M: any
+// let controller_N: any
+// let controller_V: any
+// let controller_M: any
 @localized()
 @customElement('dr-control-panel')
 export class drControlPanel extends LitElement {
