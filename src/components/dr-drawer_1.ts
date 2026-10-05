@@ -1,533 +1,212 @@
-import { SlCheckbox } from '@shoelace-style/shoelace';
+import type { SlCheckbox } from '@shoelace-style/shoelace';
+import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
 import { LitElement, css, html } from 'lit';
-import { property, customElement, state } from 'lit/decorators.js';
-import {msg, localized} from '@lit/localize';
+import { customElement, property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { msg, str, localized } from '@lit/localize';
 
-import { hide_drawer, Messen_button } from '../pages/cad_buttons';
+import { Messen_button } from '../pages/cad_buttons';
 import { Bemassung_button } from '../pages/cad_bemassung';
-import { set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_knotenverformung, set_show_lager, set_show_lastfall, set_show_raster, set_show_stab_qname } from '../pages/cad';
+import {
+   set_show_bemassung,
+   set_show_elementlasten,
+   set_show_knotenlasten,
+   set_show_knotenmassen,
+   set_show_knotenverformung,
+   set_show_lager,
+   set_show_lastfall,
+   set_show_raster,
+   set_show_stab_qname,
+} from '../pages/cad';
 import { copy_svg_cad } from '../pages/grafik';
 import { Knotenverformung_button } from '../pages/cad_knotenverformung';
-import { copy_selected_button, edit_selected_button, select_multi_button, select_typ_button, unselect_all_button, unselect_multi_button } from '../pages/cad_select';
-import { drMyDrawer } from './dr-my_drawer';
+import {
+   copy_selected_button,
+   edit_selected_button,
+   select_multi_button,
+   select_typ_button,
+   unselect_all_button,
+   unselect_multi_button,
+} from '../pages/cad_select';
+
+interface Tool {
+   id: string;
+   label: () => string;
+   run: () => void;
+   /** true: Werkzeug bleibt aktiv (rot), bis es erneut geklickt wird */
+   modal: boolean;
+}
+
+const TOOLS: Tool[] = [
+   { id: 'knotverform', label: () => msg('Knotenverformung'), run: () => Knotenverformung_button(), modal: true },
+   { id: 'select_multi', label: () => msg('selektiere mehrere Elemente'), run: () => select_multi_button(1), modal: true },
+   { id: 'select_typ', label: () => msg('selektiere nach Element-Typ'), run: () => select_typ_button(), modal: false },
+   { id: 'unselect_all', label: () => msg('deselektiere alle Elemente'), run: () => unselect_all_button(), modal: false },
+   { id: 'unselect_multi', label: () => msg('deselektiere mehrere Elemente'), run: () => unselect_multi_button(1), modal: true },
+   { id: 'copy_selected', label: () => msg('Kopiere selektierte Elemente'), run: () => copy_selected_button(), modal: false },
+   { id: 'edit_selected', label: () => msg('Editiere selektierte Elemente'), run: () => edit_selected_button(), modal: false },
+   { id: 'messen', label: () => msg('Messen'), run: () => Messen_button(), modal: true },
+   { id: 'bemassung_parallel', label: () => msg('Bemaßung parallel'), run: () => Bemassung_button(1), modal: true },
+   { id: 'bemassung_x', label: () => msg('Bemaßung horizontal'), run: () => Bemassung_button(2), modal: true },
+   { id: 'bemassung_z', label: () => msg('Bemaßung vertikal'), run: () => Bemassung_button(3), modal: true },
+];
+
+interface Toggle {
+   id: string;
+   label: () => string;
+   set: (show: boolean) => void;
+}
+
+const TOGGLES: Toggle[] = [
+   { id: 'raster', label: () => msg('Rasterlinien'), set: set_show_raster },
+   { id: 'stab_name', label: () => msg('Stab Querschnittsname'), set: set_show_stab_qname },
+   { id: 'lager', label: () => msg('Lager'), set: set_show_lager },
+   { id: 'knotenlasten', label: () => msg('Knotenlasten'), set: set_show_knotenlasten },
+   { id: 'elementlasten', label: () => msg('Elementlasten'), set: set_show_elementlasten },
+   { id: 'knotenmassen', label: () => msg('Knotenmassen'), set: set_show_knotenmassen },
+   { id: 'knotenverformungen', label: () => msg('Knotenverformungen'), set: set_show_knotenverformung },
+   { id: 'bemassung', label: () => msg('Bemaßung'), set: set_show_bemassung },
+];
 
 @localized()
 @customElement('dr-drawer_1')
 export class drDrawer_1 extends LitElement {
-   @property({ type: String }) title = 'Drawer_1';
-
-   @property({ type: Number }) xValue = 0;
    @property({ type: Number }) nLastfaelle = 0;
 
-   backgroundColor = 'rgb(90, 90, 90)';
-   backgroundColor_red = 'darkRed';
+   /** id des aktuell aktiven (roten) Werkzeugs */
+   @state() private activeTool: string | null = null;
 
-   knotenverformung_aktiv = false;
-   selektiere_mehrere_elemente_aktiv = false;
-   selektiere_nach_Element_typ_aktiv = false;
-   deselektiere_alle_elemente_aktiv = false;
-   deselektiere_mehrere_elemente_aktiv = false;
-   kopiere_selektierte_elemente_aktiv = false;
-   editiere_selektierte_elemente_aktiv = false;
-   messen_aktiv = false;
-   bemassung_parallel_aktiv = false;
-   bemassung_horizontal_aktiv = false;
-   bemassung_vertikal_aktiv = false;
+   static styles = css`
+      :host {
+         display: block;
+      }
 
-   static get styles() {
-      return css`
-         input,
-         label {
-            font-size: 1rem;
-            width: 6rem;
-         }
+      .tools,
+      .toggles {
+         display: flex;
+         flex-direction: column;
+         gap: 0.5rem;
+      }
 
-         button,
-         select {
-            font-size: 0.875rem;
-            border-radius: 4px;
-            border-width: 1px;
-            padding: 0.4rem;
-         }
+      .toggles {
+         gap: 0.25rem;
+         margin-top: 1rem;
+      }
 
-         @media (prefers-color-scheme: dark) {
-            button,
-            select {
-               border-color: #43434a;
-               color: #b6b6be;
-               background-color: #1a1a1e;
-            }
-         }
+      button {
+         font-size: 1rem;
+         padding: 0.4rem;
+         border: 0;
+         border-radius: 4px;
+         color: white;
+         background-color: var(--drawer-button-bg, rgb(90, 90, 90));
+         text-align: left;
+         cursor: pointer;
+      }
 
-         @media (prefers-color-scheme: light) {
-            button,
-            select {
-               border-color: #303030;
-               color: #444;
-            }
-         }
+      button.active {
+         background-color: var(--drawer-button-active-bg, darkred);
+      }
 
-         button:active {
-            background-color: darkorange;
-         }
+      button:active {
+         background-color: darkorange;
+      }
 
-         input[type='number']::-webkit-inner-spin-button,
-         input[type='number']::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-         }
-
-         /* Firefox */
-         input[type='number'] {
-            -moz-appearance: textfield;
-         }
-
-         .input_int {
-            width: 3.125rem;
-            margin: 0;
-            padding: 1px;
-            border-top: 1px solid #444;
-            border-bottom: 1px solid #444;
-            border-left: 0;
-            border-right: 0;
-            border-radius: 0;
-            text-align: center;
-         }
-
-         td,
-         th {
-            padding: 2px;
-            margin: 3px;
-            /*width: 10em;*/
-         }
-
-         table {
-            border: none;
-            border-spacing: 0px;
-            padding: 5px;
-            margin: 5px;
-            /*background-color: rgb(207, 217, 21);
-        border-radius: 5px;*/
-         }
-
-         td.selected {
-            /*background-color: rgb(206, 196, 46);*/
-            color: rgb(13, 13, 13);
-         }
-
-         td.highlight {
-            background-color: orange;
-            color: darkslateblue;
-         }
-
-         #id_select_loadcase {
-            /*margin: 0;
-            padding: 0.3125rem;*/
-            font-size: 1rem;
-            height: 2rem;
-         }
-
-         button {
-            color: white;
-            background-color: rgb(90, 90, 90);
-            border: 0px;
-            font-size: 1rem;
-         }
-
+      @media (hover: hover) {
          button:hover {
             color: yellow;
          }
-      `;
-   }
+      }
 
-   constructor() {
-      super();
-   }
+      label {
+         font-size: 1rem;
+      }
 
-   //----------------------------------------------------------------------------------------------
+      select {
+         font-size: 1rem;
+         height: 2rem;
+         border-radius: 4px;
+         padding: 0 0.4rem;
+      }
+
+      .section-title {
+         display: block;
+         margin: 1rem 0 0.25rem;
+         font-weight: bold;
+      }
+
+      .lastfall {
+         margin-top: 1rem;
+         display: flex;
+         align-items: center;
+         gap: 0.5rem;
+      }
+   `;
 
    render() {
       return html`
-         <p style="line-height: 2rem;">
-            <button id="id_knotverform" value="0" @click="${this._knotverform}">${msg('Knotenverformung')}</button>
-            <br />
+         <div class="tools">
+            ${TOOLS.map(
+         (t) => html`
+                  <button
+                     id="id_${t.id}"
+                     class=${classMap({ active: this.activeTool === t.id })}
+                     aria-pressed=${t.modal ? String(this.activeTool === t.id) : 'false'}
+                     @click=${() => this.onTool(t)}
+                  >
+                     ${t.label()}
+                  </button>
+               `,
+      )}
+         </div>
 
-            <button id="id_select_multi" value="0" @click="${this._select_multi}">${msg('selektiere mehrere Elemente')}</button>
-            <br />
+         <span class="section-title">${msg('Ausblenden')}</span>
+         <div class="toggles">
+            ${TOGGLES.map(
+         (t) => html`
+                  <sl-checkbox id="id_show_${t.id}" @sl-change=${(e: Event) => t.set(!(e.target as SlCheckbox).checked)}>
+                     ${t.label()}
+                  </sl-checkbox>
+               `,
+      )}
+         </div>
 
-            <button id="id_select_typ" value="0" @click="${this._select_typ}">${msg('selektiere nach Element-Typ')}</button>
-            <br />
-
-            <button id="id_unselect_all" value="0" @click="${this._unselect_all}">${msg('deselektiere alle Elemente')}</button>
-            <br />
-
-            <button id="id_unselect_multi" value="0" @click="${this._unselect_multi}">${msg('deselektiere mehrere Elemente')}</button>
-            <br />
-
-            <button id="id_copy_selected" value="0" @click="${this._copy_selected}">${msg('Kopiere selektierte Elemente')}</button>
-            <br />
-
-            <button id="id_edit_selected" value="0" @click="${this._edit_selected}">${msg('Editiere selektierte Elemente')}</button>
-            <br />
-
-            <button id="id_messen" value="0" @click="${this._messen}">${msg('Messen')}</button>
-            <br />
-
-            <button id="id_bemassung_parallel" value="0" @click="${this._bemassung_parallel}">${msg('Bemaßung parallel')}</button>
-            <br />
-
-            <button id="id_bemassung_x" value="0" @click="${this._bemassung_x}">${msg('Bemaßung horizontal')}</button>
-            <br />
-
-            <button id="id_bemassung_z" value="0" @click="${this._bemassung_z}">${msg('Bemaßung vertikal')}</button>
-         </p>
-
-         <p style="line-height: 1.5rem;">
-            <b>${msg('Ausblenden')}</b><br />
-            <sl-checkbox id="id_show_raster" @click="${this._checkbox_raster}">${msg('Rasterlinien')} </sl-checkbox>
-            <br />
-            <sl-checkbox id="id_show_stab_name" @click="${this._checkbox_stab_name}">${msg('Stab Querschnittsname')}</sl-checkbox>
-            <br />
-            <sl-checkbox id="id_show_lager" @click="${this._checkbox_lager}">${msg('Lager')}</sl-checkbox>
-            <br />
-            <sl-checkbox id="id_show_knotenlasten" @click="${this._checkbox_knotenlasten}">${msg('Knotenlasten')}</sl-checkbox>
-            <br />
-            <sl-checkbox id="id_show_elementlasten" @click="${this._checkbox_elementlasten}">${msg('Elementlasten ')}</sl-checkbox>
-            <br />
-            <sl-checkbox id="id_show_knotenmassen" @click="${this._checkbox_knotenmassen}">${msg('Knotenmassen')}</sl-checkbox>
-            <br />
-            <sl-checkbox id="id_show_knotenverformungen" @click="${this._checkbox_knotenverformungen}">${msg('Knotenverformungen')}</sl-checkbox>
-            <br />
-            <sl-checkbox id="id_show_bemassung" @click="${this._checkbox_bemassung}">${msg('Bemaßung')}</sl-checkbox>
-         </p>
-         <p>
+         <div class="lastfall">
             <label for="id_select_loadcase">${msg('Zeige :')}</label>
-            <select id="id_select_loadcase" @change="${this._select_loadcase_changed}">
-               <option value="alle">${msg('alle')}</option>
-               <option value="1">${msg('Lastfall 1')}</option>
+            <select id="id_select_loadcase" @change=${this.onLoadcaseChanged}>
+               <option value="alle" selected>${msg('alle Lastfälle')}</option>
+               ${Array.from({ length: this.nLastfaelle }, (_, i) => html`<option value=${i + 1}>${msg(str`Lastfall ${i + 1}`)}</option>`)}
             </select>
-         </p>
+         </div>
 
          <p>
-            <button id="id_svg" value="0" @click="${this._svg}">${msg('System als svg-Datei speichern')}</button>
+            <button @click=${() => copy_svg_cad()}>${msg('System als svg-Datei speichern')}</button>
          </p>
       `;
    }
 
-   _messen() {
-      let shadow = document.getElementById('id_haupt')?.shadowRoot;
-      if (shadow) {
-         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
-         if (this.messen_aktiv) {
-            this.reset_buttons();
-         } else {
-            this.reset_buttons();
-            (this.shadowRoot?.getElementById('id_messen') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-            this.messen_aktiv = true;
-         }
-         //console.log("Button messen geklickt", drawer)
-         //@ts-ignore
-         //if (drawer) drawer.hide();
-         console.log("_messen", myDrawer, hide_drawer)
-         if (myDrawer && hide_drawer) myDrawer.hide();
-         Messen_button();
-      }
-   }
-
-   _select_multi() {
-      let shadow = document.getElementById('id_haupt')?.shadowRoot;
-      if (shadow) {
-         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
-
-         if (this.selektiere_mehrere_elemente_aktiv) {
-            this.reset_buttons();
-         } else {
-            this.reset_buttons();
-            (this.shadowRoot?.getElementById('id_select_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-            this.selektiere_mehrere_elemente_aktiv = true;
-         }
-         //@ts-ignore
-         //if (drawer !== null) drawer.hide();
-         if (myDrawer && hide_drawer) myDrawer.hide();
-         select_multi_button(1);
-      }
-   }
-
-   _unselect_multi() {
-      let shadow = document.getElementById('id_haupt')?.shadowRoot;
-      if (shadow) {
-         const myDrawer = document.querySelector('.class-my-drawer') as drMyDrawer;
-         if (this.deselektiere_mehrere_elemente_aktiv) {
-            this.reset_buttons();
-         } else {
-            this.reset_buttons();
-            (this.shadowRoot?.getElementById('id_unselect_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-            this.deselektiere_mehrere_elemente_aktiv = true;
-         }
-         //@ts-ignore
-         //if (drawer !== null) drawer.hide();
-         if (myDrawer && hide_drawer) myDrawer.hide();
-         unselect_multi_button(1);
-      }
-   }
-
-   _select_typ() {
-      let shadow = document.getElementById('id_haupt')?.shadowRoot;
-      if (shadow) {
-         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
-         //@ts-ignore
-         //if (drawer !== null) drawer.hide();
-         if (myDrawer && hide_drawer) myDrawer.hide();
-         select_typ_button();
-      }
-   }
-
-   _unselect_all() {
-      let shadow = document.getElementById('id_haupt')?.shadowRoot;
-      if (shadow) {
-         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
-         //@ts-ignore
-         //if (drawer !== null) drawer.hide();
-         if (myDrawer && hide_drawer) myDrawer.hide();
-         unselect_all_button();
-      }
-
-   }
-
-   _copy_selected() {
-      let shadow = document.getElementById('id_haupt')?.shadowRoot;
-      if (shadow) {
-         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
-         //@ts-ignore
-         //if (drawer !== null) drawer.hide();
-         if (myDrawer && hide_drawer) myDrawer.hide();
-         copy_selected_button();
-      }
-   }
-
-   _edit_selected() {
-      let shadow = document.getElementById('id_haupt')?.shadowRoot;
-      if (shadow) {
-         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
-         //@ts-ignore
-         //if (drawer !== null) drawer.hide();
-         if (myDrawer && hide_drawer) myDrawer.hide();
-         edit_selected_button();
-      }
-   }
-
-   _bemassung_parallel() {
-      let shadow = document.getElementById('id_haupt')?.shadowRoot;
-      if (shadow) {
-         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
-         //@ts-ignore
-         //if (drawer !== null) drawer.hide();
-         if (this.bemassung_parallel_aktiv) {
-            this.reset_buttons();
-         } else {
-            this.reset_buttons();
-            (this.shadowRoot?.getElementById('id_bemassung_parallel') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-            this.bemassung_parallel_aktiv = true;
-         }
-         if (myDrawer && hide_drawer) myDrawer.hide();
-         Bemassung_button(1);
-      }
-   }
-
-   _bemassung_x() {
-      let shadow = document.getElementById('id_haupt')?.shadowRoot;
-      if (shadow) {
-         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
-         //@ts-ignore
-         //if (drawer !== null) drawer.hide();
-         if (this.bemassung_horizontal_aktiv) {
-            this.reset_buttons();
-         } else {
-            this.reset_buttons();
-            (this.shadowRoot?.getElementById('id_bemassung_x') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-            this.bemassung_horizontal_aktiv = true;
-         }
-         if (myDrawer && hide_drawer) myDrawer.hide();
-         Bemassung_button(2);
-      }
-   }
-
-   _bemassung_z() {
-      let shadow = document.getElementById('id_haupt')?.shadowRoot;
-      if (shadow) {
-         const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
-         //@ts-ignore
-         //if (drawer !== null) drawer.hide();
-         if (this.bemassung_vertikal_aktiv) {
-            this.reset_buttons();
-         } else {
-            this.reset_buttons();
-            (this.shadowRoot?.getElementById('id_bemassung_z') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-            this.bemassung_vertikal_aktiv = true;
-         }
-         if (myDrawer && hide_drawer) myDrawer.hide();
-         Bemassung_button(3);
-      }
-   }
-
-   _checkbox_raster() {
-      let el = this.shadowRoot?.getElementById('id_show_raster') as SlCheckbox;
-      if (el.checked) {
-         set_show_raster(false);
+   private onTool(tool: Tool) {
+      if (tool.modal) {
+         this.activeTool = this.activeTool === tool.id ? null : tool.id;
       } else {
-         set_show_raster(true);
+         // Einmal-Aktionen beenden ein evtl. aktives Werkzeug
+         this.activeTool = null;
       }
+      this.dispatchEvent(new CustomEvent('hide-drawer', { bubbles: true, composed: true }));
+      tool.run();
    }
 
-   _checkbox_stab_name() {
-      let el = this.shadowRoot?.getElementById('id_show_stab_name') as SlCheckbox;
-      if (el.checked) {
-         set_show_stab_qname(false);
-      } else {
-         set_show_stab_qname(true);
-      }
+   private onLoadcaseChanged(e: Event) {
+      set_show_lastfall(Number((e.target as HTMLSelectElement).value));
    }
 
-   _checkbox_knotenlasten() {
-      let el = this.shadowRoot?.getElementById('id_show_knotenlasten') as SlCheckbox;
-      if (el.checked) {
-         set_show_knotenlasten(false);
-      } else {
-         set_show_knotenlasten(true);
-      }
-   }
-
-   _checkbox_knotenverformungen() {
-      let el = this.shadowRoot?.getElementById('id_show_knotenverformungen') as SlCheckbox;
-      if (el.checked) {
-         set_show_knotenverformung(false);
-      } else {
-         set_show_knotenverformung(true);
-      }
-   }
-
-   _checkbox_elementlasten() {
-      let el = this.shadowRoot?.getElementById('id_show_elementlasten') as SlCheckbox;
-      if (el.checked) {
-         set_show_elementlasten(false);
-      } else {
-         set_show_elementlasten(true);
-      }
-   }
-
-   _checkbox_knotenmassen() {
-      let el = this.shadowRoot?.getElementById('id_show_knotenmassen') as SlCheckbox;
-      if (el.checked) {
-         set_show_knotenmassen(false);
-      } else {
-         set_show_knotenmassen(true);
-      }
-   }
-
-   _checkbox_bemassung() {
-      let el = this.shadowRoot?.getElementById('id_show_bemassung') as SlCheckbox;
-      if (el.checked) {
-         set_show_bemassung(false);
-      } else {
-         set_show_bemassung(true);
-      }
-   }
-
-   _checkbox_lager() {
-      let el = this.shadowRoot?.getElementById('id_show_lager') as SlCheckbox;
-      if (el.checked) {
-         set_show_lager(false);
-      } else {
-         set_show_lager(true);
-      }
-   }
-   _svg() {
-      copy_svg_cad();
-   }
-
-   _knotverform() {
-            let shadow = document.getElementById('id_haupt')?.shadowRoot;
-      if (shadow) {
-      const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer;
-      //@ts-ignore
-      // if (drawer !== null) drawer.hide();
-      if (this.knotenverformung_aktiv) {
-         this.reset_buttons();
-      } else {
-         this.reset_buttons();
-         (this.shadowRoot?.getElementById('id_knotverform') as HTMLButtonElement).style.backgroundColor = this.backgroundColor_red;
-         this.knotenverformung_aktiv = true;
-      }
-      if (myDrawer && hide_drawer) myDrawer.hide();
-      Knotenverformung_button();
-   }
-   }
+   // --- öffentliche API (wird von außen aufgerufen) ---
 
    init_loadcases(nlastfaelle: number) {
-      console.log('init_loadcases', nlastfaelle);
-
-      if (this.nLastfaelle !== nlastfaelle) {
-         const el_select = this.shadowRoot?.getElementById('id_select_loadcase') as HTMLSelectElement;
-
-         while (el_select.hasChildNodes()) {
-            // alte Optionen entfernen
-            // @ts-ignore
-            el_select.removeChild(el_select?.lastChild);
-         }
-
-         console.log('el_select', el_select);
-
-         let option = document.createElement('option');
-         option.value = msg('alle');
-         option.textContent = msg('alle Lastfälle');
-         option.selected = true;
-         el_select.appendChild(option);
-
-         for (let i = 1; i <= nlastfaelle; i++) {
-            option = document.createElement('option');
-            option.value = String(i);
-            option.textContent = msg('Lastfall ') + i;
-            el_select.appendChild(option);
-         }
-         console.log('neu el_select', el_select);
-         this.nLastfaelle = nlastfaelle;
-      }
-   }
-
-   _select_loadcase_changed() {
-      let el = this.shadowRoot?.getElementById('id_select_loadcase') as HTMLSelectElement;
-      //console.log("loadcase changed", el.value)
-      set_show_lastfall(Number(el.value));
+      this.nLastfaelle = nlastfaelle;
    }
 
    reset_buttons() {
-      console.log('in reset_buttons()');
-
-      this.knotenverformung_aktiv = false;
-      this.selektiere_mehrere_elemente_aktiv = false;
-      this.selektiere_nach_Element_typ_aktiv = false;
-      this.deselektiere_alle_elemente_aktiv = false;
-      this.deselektiere_mehrere_elemente_aktiv = false;
-      this.kopiere_selektierte_elemente_aktiv = false;
-      this.editiere_selektierte_elemente_aktiv = false;
-      this.messen_aktiv = false;
-      this.bemassung_parallel_aktiv = false;
-      this.bemassung_horizontal_aktiv = false;
-      this.bemassung_vertikal_aktiv = false;
-
-      (this.shadowRoot?.getElementById('id_knotverform') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
-      (this.shadowRoot?.getElementById('id_messen') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
-      (this.shadowRoot?.getElementById('id_select_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
-
-      (this.shadowRoot?.getElementById('id_unselect_multi') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
-
-      (this.shadowRoot?.getElementById('id_copy_selected') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
-      (this.shadowRoot?.getElementById('id_edit_selected') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
-
-      (this.shadowRoot?.getElementById('id_bemassung_parallel') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
-      (this.shadowRoot?.getElementById('id_bemassung_x') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
-      (this.shadowRoot?.getElementById('id_bemassung_z') as HTMLButtonElement).style.backgroundColor = this.backgroundColor;
-
-      //this.requestUpdate();
+      this.activeTool = null;
    }
 }

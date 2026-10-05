@@ -95,6 +95,8 @@ import { user_language } from '..';
 import { show_property_dialog } from './cad_contextmenu';
 import { alertdialog } from "./confirm_dialog"
 
+import type { drMyDrawer } from '../components/dr-my_drawer';
+
 let backgroundColor_button = 'rgb(64, 64, 64)';
 let backgroundColor_button_light = 'rgb(64, 64, 64)';
 
@@ -2670,49 +2672,69 @@ export function close_drawer_1() {
   drawer_1_control.reset()
 }
 
-//--------------------------------------------------------------------------------------------------------
-export function Drawer_button(_ev: Event) {
-  //----------------------------------------------------------------------------------------------------
+// //--------------------------------------------------------------------------------------------------------
+// export function Drawer_button(_ev: Event) {
+//   //----------------------------------------------------------------------------------------------------
 
+//   buttons_control.reset();
+
+//   const elHaupt = document.getElementById('id_haupt');
+//   let shadow = elHaupt?.shadowRoot;
+//   if (shadow) {
+
+//     const myDrawer = shadow.querySelector('.class-my-drawer') as HTMLElement;
+//     let elm = (myDrawer?.shadowRoot?.getElementById("id_drawer_1") as drDrawer_1);
+//     elm.init_loadcases(max_Lastfall);
+
+//     // let el = shadow.getElementById("id_cad_drawer_button") as HTMLButtonElement
+
+
+//     // if (drawer_1_control.drawer_eingabe_aktiv) {
+
+//     //   if (myDrawer && hide_drawer) myDrawer.style.display = 'none';
+
+//     //   drawer_1_control.reset()
+//     // } else
+//     {
+
+//       drawer_1_control.reset()
+
+//       //el.style.backgroundColor = 'darkRed'
+//       drawer_1_control.drawer_eingabe_aktiv = true
+//       buttons_control.cad_eingabe_aktiv = false
+//       buttons_control.typ_cad_element = CAD_DRAWER
+//       //el.addEventListener('keydown', keydown);
+//       buttons_control.n_input_points = 0
+//       buttons_control.button_pressed = true;
+
+//       //@ts-ignore
+//       //closeButton?.addEventListener('click', () => drawer.hide());
+//       //@ts-ignore
+//       //if (drawer !== null) drawer.show()
+//       if (myDrawer) myDrawer.style.display = 'block';
+
+//     }
+//   }
+// }
+
+export function Drawer_button(_ev: Event) {
   buttons_control.reset();
 
-  const elHaupt = document.getElementById('id_haupt');
-  let shadow = elHaupt?.shadowRoot;
-  if (shadow) {
+  const shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (!shadow) return;
 
-    const myDrawer = shadow.querySelector('.class-my-drawer') as HTMLElement;
-    let elm = (myDrawer?.shadowRoot?.getElementById("id_drawer_1") as drDrawer_1);
-    elm.init_loadcases(max_Lastfall);
+  const myDrawer = shadow.querySelector('.class-my-drawer') as drMyDrawer | null;
+  const elm = myDrawer?.shadowRoot?.getElementById('id_drawer_1') as drDrawer_1 | null | undefined;
+  elm?.init_loadcases(max_Lastfall);
 
-    // let el = shadow.getElementById("id_cad_drawer_button") as HTMLButtonElement
+  drawer_1_control.reset();
+  drawer_1_control.drawer_eingabe_aktiv = true;
+  buttons_control.cad_eingabe_aktiv = false;
+  buttons_control.typ_cad_element = CAD_DRAWER;
+  buttons_control.n_input_points = 0;
+  buttons_control.button_pressed = true;
 
-
-    // if (drawer_1_control.drawer_eingabe_aktiv) {
-
-    //   if (myDrawer && hide_drawer) myDrawer.style.display = 'none';
-
-    //   drawer_1_control.reset()
-    // } else
-    {
-
-      drawer_1_control.reset()
-
-      //el.style.backgroundColor = 'darkRed'
-      drawer_1_control.drawer_eingabe_aktiv = true
-      buttons_control.cad_eingabe_aktiv = false
-      buttons_control.typ_cad_element = CAD_DRAWER
-      //el.addEventListener('keydown', keydown);
-      buttons_control.n_input_points = 0
-      buttons_control.button_pressed = true;
-
-      //@ts-ignore
-      //closeButton?.addEventListener('click', () => drawer.hide());
-      //@ts-ignore
-      //if (drawer !== null) drawer.show()
-      if (myDrawer) myDrawer.style.display = 'block';
-
-    }
-  }
+  myDrawer?.show();   // statt style.display = 'block'
 }
 
 //---------------------------------------------------------------------------------------------------------------
