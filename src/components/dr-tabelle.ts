@@ -203,6 +203,9 @@ class DrTabelle extends HTMLElement {
 
    private onValueChanged = () => berechnungErforderlich(true);
 
+   lastClientX = 0;
+   lastClientY = 0;
+
    //---------------------------------------------------------------------------------------------------------------
    connectedCallback() {
       //------------------------------------------------------------------------------------------------------------
@@ -1255,6 +1258,9 @@ class DrTabelle extends HTMLElement {
          this.unselect_Tabelle();
          return
       }
+      this.lastClientX = ev.changedTouches[0].clientX;
+      this.lastClientY = ev.changedTouches[0].clientY;
+
       if (ev.cancelable) ev.preventDefault();
 
       //console.log('TOUCH MOVE', ev);   // ev.target
@@ -1386,6 +1392,9 @@ class DrTabelle extends HTMLElement {
       //write('pointertype ' + ev.pointerType + ' | ' + ev.button + ' | ' + ev.which + ' | ' + ev.target.type);
       console.log('pointertype ', ev.pointerType, ev.button, ev.which, ev.target.type);
 
+      this.lastClientX = ev.clientX;
+      this.lastClientY = ev.clientY;
+
       if (ev.pointerType === 'mouse' && ev.button === 0) return;
 
       //if ( ev.pointerType === 'mouse' && ev.which === 3) ev.preventDefault();
@@ -1504,8 +1513,10 @@ class DrTabelle extends HTMLElement {
    //------------------------------------------------------------------------------------------------
    MOUSE_MOVE(ev: any) {
       //--------------------------------------------------------------------------------------------
-      console.log('MOUSE MOVE', ev.target.id, this.selectionMode, ev.target.tagName);
+      //console.log('MOUSE MOVE', ev.target.id, this.selectionMode, ev.target.tagName);
       ev.preventDefault();
+      this.lastClientX = ev.clientX;
+      this.lastClientY = ev.clientY;
 
       if (!this.selectionMode) return;
 
@@ -2081,6 +2092,8 @@ class DrTabelle extends HTMLElement {
    //----------------------------------------------------------------------------------------------
    toggleMenuOn() {
       //------------------------------------------------------------------------------------------
+      this.menu = this.menu ?? document.querySelector('#context-menu');
+
       //console.log("toggleMenuOn", menuState);
       if (this.menuState !== 1) {
          this.menuState = 1;
@@ -2125,50 +2138,48 @@ class DrTabelle extends HTMLElement {
       }
    }
 
-   //----------------------------------------------------------------------------------------------
    positionMenu(e: any) {
-      //------------------------------------------------------------------------------------------
+      const margin = 8;     // Mindestabstand zum Rand
+      const gap = 12;       // Abstand zum Finger/Cursor
 
-      //console.log("positionMenu", e.pageX, e.pageY);
+      // Koordinaten: bei pointercancel oder touchend ggf. 0 -> letzte bekannte Position
+      let x = e.clientX;
+      let y = e.clientY;
+      if (!x && !y) { x = this.lastClientX; y = this.lastClientY; }
 
-      this.clickCoords = this.getPosition(e);
-      this.clickCoordsX = this.clickCoords.x;
-      this.clickCoordsY = this.clickCoords.y;
+      // sichtbarer Bereich (berücksichtigt Pinch-Zoom und Tastatur auf Mobilgeräten)
+      const vv = window.visualViewport;
+      const vLeft = vv ? vv.offsetLeft : 0;
+      const vTop = vv ? vv.offsetTop : 0;
+      const vW = vv ? vv.width : document.documentElement.clientWidth;
+      const vH = vv ? vv.height : document.documentElement.clientHeight;
 
-      this.menuWidth = this.menu.offsetWidth + 4;
-      this.menuHeight = this.menu.offsetHeight + 4;
+      this.menu = this.menu ?? document.querySelector('#context-menu')  // zur sicherheit
+      const m = this.menu as HTMLElement;
+      m.style.position = 'fixed';
+      m.style.right = 'auto';
+      m.style.bottom = 'auto';
 
-      this.windowWidth = document.documentElement.clientWidth;   //window.innerWidth;
-      this.windowHeight = document.documentElement.clientHeight; //window.innerHeight;
+      // Menü höher als Bildschirm -> Höhe begrenzen und scrollbar machen
+      m.style.maxHeight = (vH - 2 * margin) + 'px';
+      m.style.overflowY = 'auto';
 
-      if ((e.pageX + this.menuWidth) > this.windowWidth) {
-         this.menu.style.left = e.pageX - this.menuWidth + "px";
-      } else {
-         //menu.style.left = clickCoordsX + "px";
-         this.menu.style.left = e.pageX + "px";
-      }
+      const w = m.offsetWidth;
+      const h = m.offsetHeight;      // nach maxHeight messen
 
+      // horizontal: rechts vom Punkt, wenn Platz, sonst links davon
+      let left = (x + gap + w + margin <= vLeft + vW) ? x + gap : x - gap - w;
 
-      if ((e.pageY + this.menuHeight) > this.windowHeight) {
-         this.menu.style.top = e.pageY - this.menuHeight + "px";
-      } else {
-         //menu.style.top = clickCoordsY + "px";
-         this.menu.style.top = e.pageY + "px";
-      }
+      // vertikal: unterhalb, wenn Platz, sonst oberhalb (Finger verdeckt so nichts)
+      let top = (y + gap + h + margin <= vTop + vH) ? y + gap : y - gap - h;
+
+      // am Ende immer in den sichtbaren Bereich klemmen
+      left = Math.max(vLeft + margin, Math.min(left, vLeft + vW - w - margin));
+      top = Math.max(vTop + margin, Math.min(top, vTop + vH - h - margin));
+
+      m.style.left = left + 'px';
+      m.style.top = top + 'px';
    }
-
-   // //----------------------------------------------------------------------------------------------
-   // lostFocus(e: any) {
-   //    //------------------------------------------------------------------------------------------
-
-   //    console.log("q q q q q q   Lost Focus")
-
-   //    const tabelle = this.shadow.getElementById('mytable') as any;
-
-   //    console.log("mytable table.id", this.tableId)
-
-
-   // }
 
 }
 

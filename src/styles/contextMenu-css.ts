@@ -85,46 +85,108 @@ export const contextMenu_css = css`
 
    /* context menu */
 
-   .context-menu {
-      display: none;
-      position: absolute;
-      z-index: 10;
-      padding: 12px 0;
-      width: 240px;
-      background-color: #fff;
-      border: solid 1px #dfdfdf;
-      box-shadow: 1px 1px 2px #cfcfcf;
-      border-radius: 8px;
-   }
+   // .context-menu {
+   //    display: none;
+   //    position: absolute;
+   //    z-index: 10;
+   //    padding: 12px 0;
+   //    width: 240px;
+   //    background-color: #fff;
+   //    border: solid 1px #dfdfdf;
+   //    box-shadow: 1px 1px 2px #cfcfcf;
+   //    border-radius: 8px;
+   // }
 
-   .context-menu--active {
-      display: block;
-   }
+   // .context-menu--active {
+   //    display: block;
+   // }
 
-   .context-menu__items {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-   }
+   // .context-menu__items {
+   //    list-style: none;
+   //    margin: 0;
+   //    padding: 0;
+   // }
 
-   .context-menu__item {
-      display: block;
-      margin-bottom: 4px;
-   }
+   // .context-menu__item {
+   //    display: block;
+   //    margin-bottom: 4px;
+   // }
 
-   .context-menu__item:last-child {
-      margin-bottom: 0;
-   }
+   // .context-menu__item:last-child {
+   //    margin-bottom: 0;
+   // }
 
-   .context-menu__link {
-      display: block;
-      padding: 4px 12px;
-      color: #111111;
-      text-decoration: none;
-   }
+   // .context-menu__link {
+   //    display: block;
+   //    padding: 4px 12px;
+   //    color: #111111;
+   //    text-decoration: none;
+   // }
 
+   // .context-menu__link:hover {
+   //    color: #dfdfdf;
+   //    background-color: #333333;
+   // }
+
+/* context menu */
+
+.context-menu {
+   display: none;
+   position: fixed;                 /* statt absolute */
+   z-index: 100000;                 /* über allem */
+   padding: 12px 0;
+   width: 240px;
+   max-width: calc(100vw - 16px);   /* auf schmalen Smartphones nie breiter als der Bildschirm */
+   box-sizing: border-box;
+   background-color: #fff;
+   border: solid 1px #dfdfdf;
+   box-shadow: 1px 1px 2px #cfcfcf;
+   border-radius: 8px;
+   touch-action: manipulation;
+   -webkit-user-select: none;
+   user-select: none;
+   -webkit-overflow-scrolling: touch;
+   overscroll-behavior: contain;    /* Scrollen im Menü scrollt nicht die Seite */
+}
+
+.context-menu--active {
+   display: block;
+}
+
+.context-menu__items {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+}
+
+.context-menu__item {
+   display: block;
+   margin-bottom: 4px;
+}
+
+.context-menu__item:last-child {
+   margin-bottom: 0;
+}
+
+.context-menu__link {
+   display: block;
+   padding: 12px 16px;              /* ca. 44 px Höhe, fingerfreundlich */
+   color: #111111;
+   text-decoration: none;
+   -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover nur auf Geräten mit echter Maus, sonst bleibt der Eintrag nach dem Tippen dunkel */
+@media (hover: hover) {
    .context-menu__link:hover {
       color: #dfdfdf;
       background-color: #333333;
    }
+}
+
+.context-menu__link:active {
+   color: #dfdfdf;
+   background-color: #333333;
+}
+
 `;
