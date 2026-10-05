@@ -218,7 +218,10 @@ class DrTabelle extends HTMLElement {
       const table1 = this.shadow.getElementById('mytable') as HTMLTableElement;
       table1.addEventListener('touchstart', this.TOUCH_START.bind(this));    // , {capture:true}
       table1.addEventListener('pointerup', this.POINTER_UP.bind(this), true);
-
+      // dauerhaft registrieren, damit iOS preventDefault schon beim 1. touchstart berücksichtigt
+      table1.addEventListener('touchmove', this.onTouchMove, { capture: true, passive: false });
+      // iOS feuert pointercancel, wenn es doch zu scrollen beginnt
+      table1.addEventListener('pointercancel', this.POINTER_UP.bind(this), true);
 
       table1.addEventListener("contextmenu", e => e.preventDefault());
       table.onclick = function (e) {
@@ -1166,9 +1169,8 @@ class DrTabelle extends HTMLElement {
       const table = this.shadow.getElementById('mytable') as HTMLTableElement;
       if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
          if (touch_support_table) {
-            console.log("vor removeEventListener")
-            //table.removeEventListener('touchmove', this.TOUCH_MOVE.bind(this), true);
-            table.removeEventListener('touchmove', this.onTouchMove, true);
+            // console.log("vor removeEventListener")
+            //table.removeEventListener('touchmove', this.onTouchMove, true);
          }
       } else {
          console.log("vor removeEventListener mouse_move")
@@ -1243,6 +1245,7 @@ class DrTabelle extends HTMLElement {
       // if (ev.target.hasPointerCapture(ev.pointerId)) {
       //    ev.target.releasePointerCapture(ev.pointerId);
       // }
+      if (!this.selectionMode || this.selection_ended) return;
       if (this.selection_ended) return
 
       console.log('touches.length', ev.touches.length, ev.cancelable)
@@ -1447,10 +1450,8 @@ class DrTabelle extends HTMLElement {
       // console.log('MEMORY', this.cellRow, this.cellCol, this.cellLeft, this.cellTop, this.cellWidth, this.cellHeight, this.offsetX, this.offsetY);
       if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
          if (touch_support_table) {
-            const table = this.shadow.getElementById('mytable') as HTMLTableElement;
-            //console.log("s", table, this)
-            //table.addEventListener('touchmove', this.TOUCH_MOVE.bind(this), true); // , { passive: false }  , { capture: true }
-            table.addEventListener('touchmove', this.onTouchMove, true);
+            //const table = this.shadow.getElementById('mytable') as HTMLTableElement;
+            //table.addEventListener('touchmove', this.onTouchMove, true);
 
             this.selectionMode = true;
 
