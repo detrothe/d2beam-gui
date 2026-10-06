@@ -104,7 +104,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 // stylesheet.replace(styles);
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.9.2, 5-Okt-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.9.0, 6-Okt-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -327,8 +327,6 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-grafik"  id="id_tab-grafik">
         <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0">
-          <!-- width:100vw; ;width:300px;height:300px; -->
-          <!-- <div id="panel_gui"></div> -->
           <dr-control-panel id="id_control_panel"></dr-control-panel>
           <div id="id_grafik_group">
             <div id="id_div_select_lc">
@@ -345,7 +343,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <button id="id_button_zurueck_grafik">Fullscreen</button>
           <button id="id_button_pan_grafik">Pan</button>
 
-          <div id="artboard" style="margin:0;padding:0;background-color:#ffffff;"></div>
+          <div id="artboard" style="margin:0;padding:0;background-color:#ffffff;min-height:80vh;"></div>
           <div id="svg_artboard" style="margin:0;padding:0;display:none"></div>
         </div>
       </sl-tab-panel>

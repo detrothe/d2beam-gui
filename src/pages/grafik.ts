@@ -428,10 +428,6 @@ export function init_two(svg_id = 'artboard', setEvents = true) {
 
 
         if (domElement != null) {
-            // domElement.removeEventListener('wheel', wheel, { passive: false });
-            // domElement.removeEventListener('mousedown', mousedown, false);
-            // domElement.removeEventListener('mouseup', mousemove, false);
-
             //console.log('domElement',domElement)
             let parent = domElement.parentElement
             //console.log("Parent ", parent)
