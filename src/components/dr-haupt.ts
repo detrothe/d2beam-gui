@@ -100,8 +100,6 @@ for (let i = 1; i <= Number(nlastfaelle_init); i++) {
 typs_string_kombitabelle = typs_string_kombitabelle + ']';
 console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
-// const stylesheet = new CSSStyleSheet();
-// stylesheet.replace(styles);
 
 //########################################################################################################################
 let theFooter = '2D structural analysis of frames and trusses, v1.9.0, 6-Okt-2026, ';
@@ -129,7 +127,6 @@ export class drHaupt extends LitElement {
     init_haupt3();
   }
 
-  //  const template = () => html`
   render() {
     return html`
 
@@ -151,12 +148,6 @@ export class drHaupt extends LitElement {
 
       <sl-tab-panel name="tab-haupt">
 
-       <!--
-          <video  height="150" controls >
-          <source src="assets/video/einfuehrung.mp4" type="video/mp4" >
-          Einfuehrungsvideo
-          </video>  Einfuehrungsvideo
-       -->
         <p>
          <sl-button id="intro_video" value="video" variant="primary"  outline @click="${show_video}" style='width:20rem;color:"DodgerBlue";'><b>${msg('zeige Einführungsvideos')}</b></sl-button>
         </p>
