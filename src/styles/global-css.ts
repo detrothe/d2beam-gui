@@ -13,13 +13,7 @@ export const global_css = css`
       --button_cad: rgb(64, 64, 64);
       --group_cad: rgb(90, 90, 90);
    }
-   /*
-:root,
-:host,
-.sl-theme-light::part() {
-  --sl-line-height-normal: 1.0;
-}
-*/
+
    html,
    body {
       /*font-family: var(--font-family); */
@@ -234,7 +228,6 @@ export const global_css = css`
    #id_grafik_group {
       position: absolute;
       top: 2px;
-      /* var(--abst_gl_v);*/
       left: 15.625rem;
       z-index: 90;
       margin: 0;
@@ -346,13 +339,9 @@ export const global_css = css`
    }
 
    #id_grafik {
-      /*position: relative;*/
       margin: 0px;
       padding: 0px;
-      /*z-index: 1000;*/
-      /*background-color: #bbb*/
       background-color: #d8d8d8;
-      /*background-color: blueviolet;*/
    }
 
    .lil-gui {
@@ -644,5 +633,49 @@ export const global_css = css`
       border-radius: 5px;
       overflow: hidden;
    }
+
+
+// #id_sl_tab_group { height: 100%; }
+// #id_sl_tab_group::part(base) { height: 100%; display: flex; flex-direction: column; }
+// #id_sl_tab_group::part(body) { flex: 1; min-height: 0; }
+
+// sl-tab-panel[name='tab-grafik'] { --padding: 0; height: 100%; }
+
+// #id_grafik {
+//    position: relative;
+//    height: 100%;
+//    display: flex;
+//    flex-direction: column;
+//    overflow: hidden;
+//    margin: 0;
+//    padding: 0;
+//    background-color: #ffffff;
+// }
+
+// #artboard {
+//    flex: 1;
+//    min-height: 80vh;
+//    position: relative;
+//    margin: 0;
+//    padding: 0;
+//    background-color: #ffffff;
+// }
+
+// #artboard > svg,
+// #artboard > canvas {
+//    position: absolute;
+//    inset: 0;
+//    display: block;
+// }
+
+// #id_grafik.fullscreen {
+//    position: fixed;
+//    inset: 0;
+//    height: auto;
+//    z-index: 100;
+// }
+
+// #id_grafik_group, #id_div_select_lc { display: flex; align-items: center; gap: 0.25rem; }
+
 `;
 

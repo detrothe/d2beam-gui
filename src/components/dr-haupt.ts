@@ -58,6 +58,12 @@ import { berechnungErforderlich } from '../pages/globals';
 import '../pages/locale-picker'
 import { init_haupt3 } from '../pages/haupt3';
 import { global_css } from '../styles/global-css';
+
+document.adoptedStyleSheets = [
+  ...document.adoptedStyleSheets,
+  global_css.styleSheet!,
+];
+
 //import { contextMenu_css } from '../styles/contextMenu-css';
 
 console.log('in dr-haupt');
@@ -115,7 +121,13 @@ let hostname = window.location.hostname;
 export class drHaupt extends LitElement {
 
 
-  static styles = [global_css];
+  //static styles = [global_css];
+  static styles = [global_css, css`
+  :host {
+    display: block;
+    height: 100dvh;
+  }
+`];
 
   constructor() {
     super();
@@ -317,7 +329,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-grafik"  id="id_tab-grafik">
-        <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0">
+        <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0;overflow:hidden;">
+        <!-- <div id="id_grafik" > -->
           <dr-control-panel id="id_control_panel"></dr-control-panel>
           <div id="id_grafik_group">
             <div id="id_div_select_lc">
@@ -334,8 +347,12 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <button id="id_button_zurueck_grafik">Fullscreen</button>
           <button id="id_button_pan_grafik">Pan</button>
 
-          <div id="artboard" style="margin:0;padding:0;background-color:#ffffff;min-height:80vh;"></div>
+          <div id="artboard" style="margin:0;padding:0;background-color:#ffffff;min-height:80vh;overflow:hidden;"></div>
           <div id="svg_artboard" style="margin:0;padding:0;display:none"></div>
+<!--
+          <div id="artboard" style="background-color:#ffffff;"></div>
+          <div id="svg_artboard" style="display:none"></div>
+-->
         </div>
       </sl-tab-panel>
 
