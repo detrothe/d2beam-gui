@@ -108,7 +108,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.9.1, 7-Okt-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.9.2, 7-Okt-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -128,7 +128,7 @@ export class drHaupt extends LitElement {
     height: 100dvh;
   }
   @media (prefers-color-scheme: dark) {
-      sl-tab::part(base) { color: #fcfcfd; }
+      sl-tab::part(base) { color: #d8f4ab; }
       sl-tab[active]::part(base) { color: #4da3ff; }
     }
 
