@@ -127,6 +127,15 @@ export class drHaupt extends LitElement {
     display: block;
     height: 100dvh;
   }
+  @media (prefers-color-scheme: dark) {
+      sl-tab::part(base) { color: #fcfcfd; }
+      sl-tab[active]::part(base) { color: #4da3ff; }
+    }
+
+    @media (prefers-color-scheme: light) {
+      sl-tab::part(base) { color: var(--sl-color-neutral-600); }
+      sl-tab[active]::part(base) { color: var(--sl-color-primary-600); }
+    }
 `];
 
   constructor() {

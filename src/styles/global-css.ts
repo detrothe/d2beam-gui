@@ -17,8 +17,9 @@ export const global_css = css`
    html,
    body {
       /*font-family: var(--font-family); */
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-         Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+      font-family:
+         -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+         Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
          'Segoe UI Symbol';
       padding: 0;
       margin: 0;
@@ -29,12 +30,12 @@ export const global_css = css`
    @media (prefers-color-scheme: dark) {
       html,
       body {
-
          background-color: rgb(64, 64, 64);
          color: white;
 
          font-size: 1rem;
       }
+
 
       button {
          font-size: 0.875rem;
@@ -186,9 +187,21 @@ export const global_css = css`
       width: 100%;
       height: 100%;
       font-size: 0.875rem;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-         Roboto, Oxygen, Ubuntu, 'Open Sans', 'Helvetica Neue', sans-serif,
-         Verdana, Arial, Helvetica, sans-serif;
+      font-family:
+         system-ui,
+         -apple-system,
+         BlinkMacSystemFont,
+         'Segoe UI',
+         Roboto,
+         Oxygen,
+         Ubuntu,
+         'Open Sans',
+         'Helvetica Neue',
+         sans-serif,
+         Verdana,
+         Arial,
+         Helvetica,
+         sans-serif;
       margin: 0px;
       padding: 0px;
       padding-left: 0px;
@@ -355,9 +368,10 @@ export const global_css = css`
       --widget-height: 1.75rem;
       --font-size: 1rem;
       /*14px;*/
-      --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-         Roboto, Oxygen, Ubuntu, 'Open Sans', 'Helvetica Neue', sans-serif,
-         Verdana, Arial, Helvetica, sans-serif;
+      --font-family:
+         system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+         Oxygen, Ubuntu, 'Open Sans', 'Helvetica Neue', sans-serif, Verdana,
+         Arial, Helvetica, sans-serif;
       --margin: 0;
       --padding: 0.3125rem;
       --spacing: 0.125rem;
@@ -535,9 +549,8 @@ export const global_css = css`
       color: white;
    }
 
-
    .btn_svg {
-      height:2rem;
+      height: 2rem;
       background-color: light-dark(var(--button_cad), rgb(64, 64, 64));
       border: none;
       color: white;
@@ -550,7 +563,6 @@ export const global_css = css`
       border-radius: 3px;
       -webkit-user-select: none;
       user-select: none;
-
    }
 
    .helptext {
@@ -635,67 +647,65 @@ export const global_css = css`
       padding: 1;
       font-size: 1rem;
       /* background-color:'#ff0000'; */
-      border:2px;
+      border: 2px;
       border-radius: 5px;
       overflow: hidden;
    }
 
+   // #id_sl_tab_group { height: 100%; }
+   // #id_sl_tab_group::part(base) { height: 100%; display: flex; flex-direction: column; }
+   // #id_sl_tab_group::part(body) { flex: 1; min-height: 0; }
 
-// #id_sl_tab_group { height: 100%; }
-// #id_sl_tab_group::part(base) { height: 100%; display: flex; flex-direction: column; }
-// #id_sl_tab_group::part(body) { flex: 1; min-height: 0; }
+   // sl-tab-panel[name='tab-grafik'] { --padding: 0; overflow: hidden; }   // height: 100%;
+   // sl-tab-panel[name='tab-cad'] { --padding: 0; overflow: hidden; }   // height: 100%;
 
-// sl-tab-panel[name='tab-grafik'] { --padding: 0; overflow: hidden; }   // height: 100%;
-// sl-tab-panel[name='tab-cad'] { --padding: 0; overflow: hidden; }   // height: 100%;
+   //   sl-tab-panel[name='tab-grafik'],
+   //   sl-tab-panel[name='tab-cad'] {
+   //     --padding: 0;
+   //   }
 
-//   sl-tab-panel[name='tab-grafik'],
-//   sl-tab-panel[name='tab-cad'] {
-//     --padding: 0;
-//   }
+   sl-tab-panel#id_tab-cad::part(base) {
+      padding: 0;
+   }
 
-sl-tab-panel#id_tab-cad::part(base) {
-  padding: 0;
-}
+   sl-tab-panel#id_tab-grafik::part(base) {
+      padding: 0;
+   }
 
-sl-tab-panel#id_tab-grafik::part(base) {
-  padding: 0;
-}
+   // #id_grafik {
+   //    position: relative;
+   //    height: 100%;
+   //    display: flex;
+   //    flex-direction: column;
+   //    overflow: hidden;
+   //    margin: 0;
+   //    padding: 0;
+   //    background-color: #ffffff;
+   // }
 
-// #id_grafik {
-//    position: relative;
-//    height: 100%;
-//    display: flex;
-//    flex-direction: column;
-//    overflow: hidden;
-//    margin: 0;
-//    padding: 0;
-//    background-color: #ffffff;
-// }
+   // #artboard {
+   //    flex: 1;
+   //    min-height: 80vh;
+   //    position: relative;
+   //    margin: 0;
+   //    padding: 0;
+   //    background-color: #ffffff;
+   // }
 
-// #artboard {
-//    flex: 1;
-//    min-height: 80vh;
-//    position: relative;
-//    margin: 0;
-//    padding: 0;
-//    background-color: #ffffff;
-// }
+   // #artboard > svg,
+   // #artboard > canvas {
+   //    position: absolute;
+   //    inset: 0;
+   //    display: block;
+   // }
 
-// #artboard > svg,
-// #artboard > canvas {
-//    position: absolute;
-//    inset: 0;
-//    display: block;
-// }
+   // #id_grafik.fullscreen {
+   //    position: fixed;
+   //    inset: 0;
+   //    height: auto;
+   //    z-index: 100;
+   // }
 
-// #id_grafik.fullscreen {
-//    position: fixed;
-//    inset: 0;
-//    height: auto;
-//    z-index: 100;
-// }
-
-// #id_grafik_group, #id_div_select_lc { display: flex; align-items: center; gap: 0.25rem; }
-
+   // #id_grafik_group, #id_div_select_lc { display: flex; align-items: center; gap: 0.25rem; }
 `;
 
