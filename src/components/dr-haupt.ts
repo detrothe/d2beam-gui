@@ -108,7 +108,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.9.0, 7-Okt-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.9.1, 7-Okt-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -144,7 +144,7 @@ export class drHaupt extends LitElement {
 
       <sl-tab-group id="id_sl_tab_group">
       <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">${msg('Haupt')}</sl-tab>
-      <sl-tab id="id_CAD" slot="nav" panel="tab-cad">${msg('System')}</sl-tab>
+      <sl-tab id="id_panel_CAD" slot="nav" panel="tab-cad">${msg('System')}</sl-tab>
       <sl-tab id="id_panel_grafik" slot="nav" panel="tab-grafik">${msg('Ergebnisse')}</sl-tab>
       <sl-tab id="id_tab_quer" slot="nav" panel="tab-querschnitte">${msg('Querschnitte')}</sl-tab>
       <sl-tab slot="nav" panel="tab-schiefstellung">${msg('Vorverformungen')}</sl-tab>
@@ -276,31 +276,11 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-cad" id="id_tab-cad">
-        <div id="id_cad" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0;cursor:none">
-          <!-- width:100vw; ;width:300px;height:300px; -->
+        <div id="id_cad" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0;cursor:none;overflow:hidden;">
           <div id="id_cad_group" style="cursor: pointer">
               <div id="id_cad_group2" style="cursor: pointer"></div>
           </div>
-          <!-- <button id="id_button_zurueck_cad">Fullscreen</button> -->
-          <!-- <select name="querschnitt_default" id="id_querschnitt_default" title="default Querschnitt"></select> -->
           <button id="id_button_pan_cad">Pan</button>
-
-
-          <!-- <div id="id_context_menu" style="position:absolute;top:100;display:none;">
-            <sl-menu style="max-width: 200px;">
-              <sl-menu-item value="properties" @click="${show_property_dialog}">Eigenschaften</sl-menu-item>
-              <sl-menu-item value="add_eload" @click="${show_add_elload_dialog}">add E-Lasten</sl-menu-item>
-              <sl-divider></sl-divider>
-              <sl-menu-item value="delete"  @click="${delete_element_dialog}">Löschen</sl-menu-item>
-              <sl-menu-item value="abbruch"  @click="${abbruch_property_dialog}">Abbruch</sl-menu-item>
-            </sl-menu>
-          </div> -->
-
-
-          <!-- <sl-drawer label="Mehr Aktivitäten" class="drawer-overview" style="cursor:pointer;--size:20rem">
-            <dr-drawer_1 id="id_drawer_2"></dr-drawer_1>
-            <sl-button slot="footer" variant="primary" @click="${close_drawer_1}">Close</sl-button>
-          </sl-drawer> -->
 
           <dr-my_drawer class="class-my-drawer" >
           </dr-my_drawer>

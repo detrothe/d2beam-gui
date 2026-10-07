@@ -227,7 +227,7 @@ export const global_css = css`
 
    #id_grafik_group {
       position: absolute;
-      top: 0px;
+      top: 2px;
       left: 15.625rem;
       z-index: 90;
       margin: 0;
@@ -237,7 +237,7 @@ export const global_css = css`
 
    #id_cad_group {
       position: absolute;
-      top: -5px;
+      top: 0px;
       /* var(--abst_gl_v);*/
       left: 0px;
       /*z-index: 90;*/
@@ -342,6 +342,12 @@ export const global_css = css`
       margin: 0px;
       padding: 0px;
       background-color: #d8d8d8;
+   }
+
+   #id_cad {
+      margin: 0px;
+      padding: 0px;
+      background-color: #ba355f;
    }
 
    .lil-gui {
@@ -639,7 +645,21 @@ export const global_css = css`
 // #id_sl_tab_group::part(base) { height: 100%; display: flex; flex-direction: column; }
 // #id_sl_tab_group::part(body) { flex: 1; min-height: 0; }
 
-sl-tab-panel[name='tab-grafik'] { --padding: 0; overflow: hidden }   // height: 100%;
+// sl-tab-panel[name='tab-grafik'] { --padding: 0; overflow: hidden; }   // height: 100%;
+// sl-tab-panel[name='tab-cad'] { --padding: 0; overflow: hidden; }   // height: 100%;
+
+//   sl-tab-panel[name='tab-grafik'],
+//   sl-tab-panel[name='tab-cad'] {
+//     --padding: 0;
+//   }
+
+sl-tab-panel#id_tab-cad::part(base) {
+  padding: 0;
+}
+
+sl-tab-panel#id_tab-grafik::part(base) {
+  padding: 0;
+}
 
 // #id_grafik {
 //    position: relative;
