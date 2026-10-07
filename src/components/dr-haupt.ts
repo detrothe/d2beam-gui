@@ -128,7 +128,7 @@ export class drHaupt extends LitElement {
     height: 100dvh;
   }
   @media (prefers-color-scheme: dark) {
-      sl-tab::part(base) { color: #d8f4ab; }
+      sl-tab::part(base) { color: yellow; }
       sl-tab[active]::part(base) { color: #4da3ff; }
     }
 
