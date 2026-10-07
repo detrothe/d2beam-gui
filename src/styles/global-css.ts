@@ -227,7 +227,7 @@ export const global_css = css`
 
    #id_grafik_group {
       position: absolute;
-      top: 2px;
+      top: 0px;
       left: 15.625rem;
       z-index: 90;
       margin: 0;
@@ -639,7 +639,7 @@ export const global_css = css`
 // #id_sl_tab_group::part(base) { height: 100%; display: flex; flex-direction: column; }
 // #id_sl_tab_group::part(body) { flex: 1; min-height: 0; }
 
-// sl-tab-panel[name='tab-grafik'] { --padding: 0; height: 100%; }
+sl-tab-panel[name='tab-grafik'] { --padding: 0; overflow: hidden }   // height: 100%;
 
 // #id_grafik {
 //    position: relative;

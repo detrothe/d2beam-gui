@@ -108,7 +108,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.9.1, 6-Okt-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.9.0, 7-Okt-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -145,7 +145,7 @@ export class drHaupt extends LitElement {
       <sl-tab-group id="id_sl_tab_group">
       <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">${msg('Haupt')}</sl-tab>
       <sl-tab id="id_CAD" slot="nav" panel="tab-cad">${msg('System')}</sl-tab>
-      <sl-tab slot="nav" panel="tab-grafik">${msg('Ergebnisse')}</sl-tab>
+      <sl-tab id="id_panel_grafik" slot="nav" panel="tab-grafik">${msg('Ergebnisse')}</sl-tab>
       <sl-tab id="id_tab_quer" slot="nav" panel="tab-querschnitte">${msg('Querschnitte')}</sl-tab>
       <sl-tab slot="nav" panel="tab-schiefstellung">${msg('Vorverformungen')}</sl-tab>
       <sl-tab id="id_tab_kombi" slot="nav" panel="tab-kombinationen">${msg('Kombinationen')}</sl-tab>

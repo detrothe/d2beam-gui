@@ -1160,17 +1160,29 @@ export function drawsystem(svg_id = 'artboard') {
     const elHaupt = document.getElementById('id_haupt');
     let shadow = elHaupt?.shadowRoot;
     if (shadow) {
+
+        console.log("id_sl_tab_group", shadow.getElementById("id_sl_tab_group")!.getBoundingClientRect().top)
+        console.log("id_sl_tab_group", shadow.getElementById("id_sl_tab_group")!.getBoundingClientRect().height)
+        console.log("id_panel_grafik", shadow.getElementById("id_panel_grafik")!.getBoundingClientRect().top)
+        console.log("id_panel_grafik", shadow.getElementById("id_panel_grafik")!.getBoundingClientRect().height)
+        console.log("id_panel_grafik", shadow.getElementById("id_panel_grafik")!.getBoundingClientRect().bottom)
+        console.log("id_tab-grafik", shadow.getElementById("id_tab-grafik")!.getBoundingClientRect().top)
+        console.log("id_tab-grafik", shadow.getElementById("id_tab-grafik")!.getBoundingClientRect().height)
+        console.log("clientheight", document.documentElement.clientHeight)
+
         let ele = shadow.getElementById("id_grafik") as any
         if (fullscreen) {
             grafik_top = 0
             ele.style.position = 'absolute'
             height = document.documentElement.clientHeight - 4;
         } else {
-            grafik_top = ele.getBoundingClientRect().top
+            grafik_top = shadow.getElementById("id_panel_grafik")!.getBoundingClientRect().bottom;
+            console.log("grafik_top", grafik_top)
             //console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
             //write("grafik top: " + grafik_top)
-            if (grafik_top === 0) grafik_top = 69
-            height = document.documentElement.clientHeight - grafik_top - 4 - 17//- el?.getBoundingClientRect()?.height;
+            // if (grafik_top === 0) grafik_top = 69
+            height = document.documentElement.clientHeight - grafik_top - 8 //- 17 //- el?.getBoundingClientRect()?.height;
+            console.log("height", height)
         }
     }
 
