@@ -134,14 +134,14 @@ export const contextMenu_css = css`
    display: none;
    position: fixed;                 /* statt absolute */
    z-index: 100000;                 /* über allem */
-   padding: 12px 0;
-   width: 240px;
-   max-width: calc(100vw - 16px);   /* auf schmalen Smartphones nie breiter als der Bildschirm */
+   padding: 0.75rem 0;
+   width: 15rem;
+   max-width: calc(100vw - 1rem);   /* auf schmalen Smartphones nie breiter als der Bildschirm */
    box-sizing: border-box;
    background-color: #fff;
    border: solid 1px #dfdfdf;
    box-shadow: 1px 1px 2px #cfcfcf;
-   border-radius: 8px;
+   border-radius: 0.5rem;
    touch-action: manipulation;
    -webkit-user-select: none;
    user-select: none;
@@ -161,7 +161,7 @@ export const contextMenu_css = css`
 
 .context-menu__item {
    display: block;
-   margin-bottom: 4px;
+   margin-bottom: 0.25rem;
 }
 
 .context-menu__item:last-child {
@@ -170,7 +170,7 @@ export const contextMenu_css = css`
 
 .context-menu__link {
    display: block;
-   padding: 12px 16px;              /* ca. 44 px Höhe, fingerfreundlich */
+   padding: 0.75rem 1rem;              /* ca. 2.75rem Höhe bei 1rem Schrift, fingerfreundlich */
    color: #111111;
    text-decoration: none;
    -webkit-tap-highlight-color: transparent;
@@ -189,4 +189,16 @@ export const contextMenu_css = css`
    background-color: #333333;
 }
 
+// .context-menu__icon {
+//    width: 1.25em;
+//    height: 1.25em;
+//    margin-right: 0.5rem;
+//    vertical-align: -0.25em;
+//    fill: none;
+//    stroke: currentColor;
+//    stroke-width: 2;
+//    stroke-linecap: round;
+//    stroke-linejoin: round;
+//    pointer-events: none;
+// }
 `;

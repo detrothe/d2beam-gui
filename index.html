@@ -22,7 +22,7 @@
 
     <!-- <script src="bundle.js" data-shoelace="/path/to/shoelace/dist"></script> -->
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
     <link rel="stylesheet" href="./src/styles/global.css">
 
     <!-- <link rel="stylesheet" href="node_modules/lit-fontawesome/css/font.css"> -->
@@ -54,6 +54,21 @@
         }
     </style> -->
 
+    <style>
+        .context-menu__icon {
+            width: 1.25em;
+            height: 1.25em;
+            margin-right: 0.5rem;
+            vertical-align: -0.25em;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            pointer-events: none;
+        }
+    </style>
+
     <link rel="stylesheet" media="(prefers-color-scheme:light)" href="./src/styles/light.css">
     <link rel="stylesheet" media="(prefers-color-scheme:dark)" href="./src/styles/dark.css"
         onload="document.documentElement.classList.add('sl-theme-dark');">
@@ -73,7 +88,7 @@
     <main>
         <dr-haupt id="id_haupt"></dr-haupt>
     </main>
-    <nav id="context-menu" class="context-menu">
+    <!-- <nav id="context-menu" class="context-menu">
         <ul class="context-menu__items">
             <li class="context-menu__item">
                 <a href="#" class="context-menu__link" data-action="copyFirst">
@@ -114,6 +129,75 @@
             <li class="context-menu__item">
                 <a href="#" class="context-menu__link" data-action="close">
                     <i class="fa fa-window-close"></i>
+                    close
+                </a>
+            </li>
+        </ul>
+    </nav> -->
+
+    <nav id="context-menu" class="context-menu">
+        <ul class="context-menu__items">
+            <li class="context-menu__item">
+                <a href="#" class="context-menu__link" data-action="copyFirst">
+                    <svg class="context-menu__icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="9" y="9" width="11" height="11" rx="2" />
+                        <path d="M5 15V6a2 2 0 0 1 2-2h9" />
+                    </svg>
+                    copy first cell value
+                </a>
+            </li>
+            <li class="context-menu__item">
+                <a href="#" class="context-menu__link" data-action="copyFirstRow">
+                    <svg class="context-menu__icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="9" y="9" width="11" height="11" rx="2" />
+                        <path d="M5 15V6a2 2 0 0 1 2-2h9" />
+                    </svg>
+                    copy first row values
+                </a>
+            </li>
+            <li class="context-menu__item">
+                <a href="#" class="context-menu__link" data-action="increment_1">
+                    <svg class="context-menu__icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="4" y="4" width="16" height="16" rx="2" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                    increment by 1
+                </a>
+            </li>
+            <li class="context-menu__item">
+                <a href="#" class="context-menu__link" data-action="increment_delta">
+                    <svg class="context-menu__icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="4" y="4" width="16" height="16" rx="2" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                    increment by delta
+                </a>
+            </li>
+            <li class="context-menu__item">
+                <a href="#" class="context-menu__link" data-action="copy">
+                    <svg class="context-menu__icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="5" y="4" width="14" height="17" rx="2" />
+                        <rect x="9" y="2" width="6" height="4" rx="1" />
+                    </svg>
+                    copy to clipboard
+                </a>
+            </li>
+            <li class="context-menu__item">
+                <a href="#" class="context-menu__link" data-action="insert">
+                    <svg class="context-menu__icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="5" y="4" width="14" height="17" rx="2" />
+                        <rect x="9" y="2" width="6" height="4" rx="1" />
+                        <path d="M12 10v7M9 14l3 3 3-3" />
+                    </svg>
+                    insert from clipboard
+                </a>
+            </li>
+            <li class="context-menu__item">
+                <a href="#" class="context-menu__link" data-action="close">
+                    <svg class="context-menu__icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <path d="M9 9l6 6M15 9l-6 6" />
+                    </svg>
                     close
                 </a>
             </li>
