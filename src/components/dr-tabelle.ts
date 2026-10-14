@@ -2003,9 +2003,9 @@ class DrTabelle extends HTMLElement {
                      }
                   }
                }
+               berechnungErforderlich(true);
 
             });
-            berechnungErforderlich(true);
          }
          else if (link.getAttribute("data-action") === "close") {
          }
