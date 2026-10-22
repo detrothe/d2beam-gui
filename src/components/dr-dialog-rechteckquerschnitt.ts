@@ -12,6 +12,8 @@ import { check_if_name_exists } from '../pages/querschnitte';
 import { myFormat, myFormat_en } from '../pages/utility';
 import { alertdialog, AlertDialog } from '../pages/confirm_dialog';
 import { CQuer_polygon } from '../pages/quer1';
+
+import "../styles/dr-dialog.css";
 // import { alertdialog } from '../pages/rechnen';
 
 // Profilename, E-Modul, A, Iy, Iz, Wichte, h, b, kappa_Vz, kappa_Vy
@@ -200,6 +202,20 @@ export class drRechteckQuerSchnitt extends LitElement {
             border-radius: 4px;
          }
 
+         input:disabled {
+            color: #000;
+            -webkit-text-fill-color: #000;
+            opacity: 0.8;
+         }
+
+         @media (prefers-color-scheme: dark) {
+            input:disabled {
+            color: #fff;
+            -webkit-text-fill-color: #fff;
+            opacity: 0.8;
+            }
+         }
+
          button,
          select {
             font-size: 1rem;
@@ -221,6 +237,16 @@ export class drRechteckQuerSchnitt extends LitElement {
          /* Firefox */
          input[type='number'] {
             -moz-appearance: textfield;
+         }
+
+         @media (prefers-color-scheme: dark) {
+            sl-radio-button::part(button) { color: yellow; }
+            /* sl-radio-button::part(button--checked) { color: #4da3ff; } */
+         }
+
+         @media (prefers-color-scheme: light) {
+            sl-radio-button::part(button) { color: var(--sl-color-neutral-600); }
+            /*sl-radio-button::part(button--checked) { color: var(--sl-color-primary-600); } */
          }
 
          /* .input_int {
@@ -247,7 +273,7 @@ export class drRechteckQuerSchnitt extends LitElement {
             border-spacing: 0px;
             padding: 5px;
             margin: 5px;
-            background-color: rgb(207, 217, 21);
+            background-color: var(--table-bgcolor-light);   /* rgb(207, 217, 21); */
             border-radius: 5px;
             font-size: 1rem;
             color: black;
