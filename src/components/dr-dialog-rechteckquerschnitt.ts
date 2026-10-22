@@ -240,7 +240,7 @@ export class drRechteckQuerSchnitt extends LitElement {
          }
 
          @media (prefers-color-scheme: dark) {
-            sl-radio-button::part(button) { color: yellow; }
+            sl-radio-button::part(button) { color: white; }
             /* sl-radio-button::part(button--checked) { color: #4da3ff; } */
          }
 
