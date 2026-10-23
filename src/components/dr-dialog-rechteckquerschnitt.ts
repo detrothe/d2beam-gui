@@ -202,17 +202,11 @@ export class drRechteckQuerSchnitt extends LitElement {
             border-radius: 4px;
          }
 
-         input:disabled {
-            color: #000;
-            -webkit-text-fill-color: #000;
-            opacity: 0.8;
-         }
-
          @media (prefers-color-scheme: dark) {
             input:disabled {
             color: #fff;
             -webkit-text-fill-color: #fff;
-            opacity: 0.8;
+            opacity: 0.75;
             }
          }
 
