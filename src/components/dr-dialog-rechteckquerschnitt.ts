@@ -195,6 +195,8 @@ export class drRechteckQuerSchnitt extends LitElement {
 
    static get styles() {
       return css`
+         :host { color-scheme: light dark; }
+
          input,
          label {
             font-size: 1rem;
@@ -204,9 +206,10 @@ export class drRechteckQuerSchnitt extends LitElement {
 
          @media (prefers-color-scheme: dark) {
             input:disabled {
-            color: #fff;
-            -webkit-text-fill-color: #fff;
-            opacity: 0.75;
+            color: #000;
+            -webkit-text-fill-color: #000;
+            background-color: var(--table-bgcolor-light);
+            /*opacity: 0.75;*/
             }
          }
 
