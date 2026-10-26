@@ -395,7 +395,6 @@ export class drControlPanel extends LitElement {
             // controller_V.setValue(false);   // gui.controllers[4]
             // controller_M.setValue(false);   //gui.controllers[5]
             draw_group = false;
-
             draw_sg.N = el.checked;
             window.dispatchEvent(new Event("draw_normalkraftlinien_grafik"));
         }
@@ -592,6 +591,29 @@ export class drControlPanel extends LitElement {
         }
     }
 
+    onlyHeader() {
+        let elall = this.shadowRoot?.querySelectorAll('.zeile');
+        if (elall) {
+            for (let el of elall) {
+                (el as HTMLElement).style.display = 'none';
+            }
+        }
+        elall = this.shadowRoot?.querySelectorAll('.zeile_dynamik');
+        if (elall) {
+            for (let el of elall) {
+                (el as HTMLElement).style.display = 'none';
+            }
+        }
+
+        elall = this.shadowRoot?.querySelectorAll('.zeile_optionen');
+        if (elall) {
+            for (let el of elall) {
+                (el as HTMLElement).style.display = 'none';
+            }
+        }
+        this.show_optionen = false;
+    }
+
     showPruefen(wert: Boolean) {
         let elall = this.shadowRoot?.querySelectorAll('.zeile');
         if (elall) {
@@ -706,6 +728,10 @@ export class drControlPanel extends LitElement {
         el.checked = false;
         el = this.shadowRoot?.getElementById('id_systemlinien') as SlCheckbox;
         el.checked = true;
+
+        this.onlyHeader();
+        this.showHeader_optionen(false);
+        this.showHeader_dynamik(false);
     }
 }
 

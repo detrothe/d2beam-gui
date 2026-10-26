@@ -691,17 +691,17 @@ export function init_cad(flag: number) {
          height = document.documentElement.clientHeight - 4;
       } else {
 
-         console.log("id_cad.top", shadow.getElementById("id_cad_group")!.getBoundingClientRect().top)
+         //console.log("id_cad.top", shadow.getElementById("id_cad_group")!.getBoundingClientRect().top)
          grafik_top = shadow.getElementById("id_panel_CAD")!.getBoundingClientRect().bottom;  //ele.getBoundingClientRect().top;
          //console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
          //write("grafik top: " + grafik_top)
          //if (grafik_top === 0) grafik_top = 69;
 
-         console.log("grafik_top CAD", grafik_top)
+         //console.log("grafik_top CAD", grafik_top)
          const group = shadow.getElementById("id_sl_tab_group") as HTMLElement;
          const body = group.shadowRoot!.querySelector('[part="body"]') as HTMLElement;
          grafik_top = body.getBoundingClientRect().top;
-         console.log("grafik_top CAD neu", grafik_top)
+         //console.log("grafik_top CAD neu", grafik_top)
 
          height = document.documentElement.clientHeight - grafik_top - 8 // 4 - 17 - 18; //- el?.getBoundingClientRect()?.height;
       }

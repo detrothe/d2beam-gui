@@ -383,7 +383,7 @@ export function read_daten(eingabedaten: string) {
         else set_maxBettung(jobj.maxBettung);
 
         let nQuerschnittSets = jobj.nquerschnittsets;
-        console.log('nQuerschnittSets', nQuerschnittSets);
+        //console.log('nQuerschnittSets', nQuerschnittSets);
         for (i = 0; i < nQuerschnittSets; i++) {
             let className = jobj.qsclassname[i];
             if (className === 'QuerschnittRechteck') {
@@ -690,10 +690,7 @@ function filedialog_read() {
             reader.readAsText(f);
             //console.log("after reader.readAsText", reader);
 
-            //set_current_filename(files[0].name);
 
-            // reset_gui();
-            // reset_controlpanel_grafik();
         }
     };
 
