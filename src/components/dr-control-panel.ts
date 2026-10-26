@@ -701,23 +701,23 @@ export class drControlPanel extends LitElement {
         this._setController_V(false);
         this._setController_M(false);
         let el = this.shadowRoot?.getElementById('id_verformungen') as SlCheckbox;
-        el.removeAttribute('checked')
+        el.checked = false;
         el = this.shadowRoot?.getElementById('id_knickfigur') as SlCheckbox;
-        el.removeAttribute('checked')
+        el.checked = false;
         el = this.shadowRoot?.getElementById('id_schiefstellung') as SlCheckbox;
-        el.removeAttribute('checked')
+        el.checked = false;
         el = this.shadowRoot?.getElementById('id_stabvorverformung') as SlCheckbox;
-        el.removeAttribute('checked')
+        el.checked = false;
         el = this.shadowRoot?.getElementById('id_eigenformen') as SlCheckbox;
-        el.removeAttribute('checked')
+        el.checked = false;
         el = this.shadowRoot?.getElementById('id_animate_eigenformen') as SlCheckbox;
-        el.removeAttribute('checked')
+        el.checked = false;
         el = this.shadowRoot?.getElementById('id_knotenmassen') as SlCheckbox;
-        el.removeAttribute('checked')
+        el.checked = false;
         el = this.shadowRoot?.getElementById('id_gesamtverformung') as SlCheckbox;
-        el.removeAttribute('checked')
+        el.checked = false;
         el = this.shadowRoot?.getElementById('id_umriss') as SlCheckbox;
-        el.removeAttribute('checked')
+        el.checked = false;
         el = this.shadowRoot?.getElementById('id_gleichgewicht_SG') as SlCheckbox;
         el.checked = true;
         el = this.shadowRoot?.getElementById('id_lager') as SlCheckbox;
