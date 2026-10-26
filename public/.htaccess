@@ -23,6 +23,14 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
   AddType image/png .png
 </IfModule>
 
+# Kompression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain
+  AddOutputFilterByType DEFLATE application/javascript text/javascript
+  AddOutputFilterByType DEFLATE application/json application/manifest+json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
 # 4. WICHTIG: Icons und Assets NIEMALS umleiten
 RewriteRule ^icons/.*$ - [L]
 RewriteRule ^assets/.*$ - [L]

@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import htmlMinifier from 'vite-plugin-html-minifier';
+import { compression } from 'vite-plugin-compression2';
+
 // import fs from 'fs';
 // import path from 'path';
 // import { minify } from 'html-minifier-terser';
@@ -142,6 +144,13 @@ export default defineConfig({
         { src: 'd2beam_wasm.*', dest: '.' }
 
       ]
+    }),
+
+    compression({
+      algorithms: ['gzip'],          // optional zusätzlich 'brotliCompress'
+      include: /\.(js|css|html|svg|json)$/,
+      threshold: 1024,               // nur Dateien > 1 KB
+      deleteOriginalAssets: false    // Originale behalten (wichtig!)
     })
   ]
 });
