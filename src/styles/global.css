@@ -9,6 +9,7 @@
   --button_cad: rgb(64, 64, 64);
   --group_cad: rgb(90, 90, 90);
 }
+
 /*
 :root,
 :host,
@@ -23,10 +24,12 @@ body {
   padding: 0;
   margin: 0;
   font-size: var(--fsize);
-  overscroll-behavior: none; /* kein pull to refresh , kein reload bei Ziehen mit Finger von oben nach unten */
+  overscroll-behavior: none;
+  /* kein pull to refresh , kein reload bei Ziehen mit Finger von oben nach unten */
 }
 
 @media (prefers-color-scheme: dark) {
+
   html,
   body {
     /*
@@ -79,6 +82,7 @@ body {
 }
 
 @media (prefers-color-scheme: light) {
+
   html,
   body {
     background-color: #f5f5f5;
@@ -209,6 +213,7 @@ input[type="number"] {
   text-align: center;
   background-color: #ff7f50;
 }
+
 .table_cell_center_kombi {
   text-align: center;
   background-color: #ffa000;
@@ -327,6 +332,7 @@ input[type="number"] {
   padding: 4px;
   height: 2rem;
 }
+
 #panel_gui {
   position: absolute;
   top: 2px;
@@ -348,38 +354,6 @@ input[type="number"] {
   /*background-color: #bbb*/
   background-color: #d8d8d8;
   /*background-color: blueviolet;*/
-}
-
-.lil-gui {
-  --width: 15rem;
-  --widget-height: 1.75rem;
-  --font-size: 1rem;
-  /*14px;*/
-  --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Open Sans", "Helvetica Neue", sans-serif, Verdana, Arial, Helvetica, sans-serif;
-  --margin: 0;
-  --padding: 0.3125rem;
-  --spacing: 0.125rem;
-  --name-width: 70%;
-  --slider-input-width: 1.4rem;
-  /* Zahleneingabe */
-  --slider-input-min-width: 1.4rem; /*30px */
-  --title-background-color: #b3ae00;
-  --title-text-color: #fefffa;
-  --folder-indent: 0.625rem;
-  --input-font-size: 0.75rem;
-  --widget-padding: 0 0 0 0.1875rem;
-}
-
-.lil-gui.allow-touch-styles {
-  --widget-height: 1.75rem; /* 28px */
-  --padding: 0px;
-  --spacing: 0.125rem;
-  --margin: 0;
-  --font-size: 1rem; /*14px*/
-  --input-font-size: 0.75rem; /*12px;*/
-  --slider-input-width: 1.4rem;
-  --slider-input-min-width: 1.4rem;
-  --folder-indent: 0.625rem;
 }
 
 #id_einstellungen {
@@ -436,6 +410,7 @@ input[type="number"] {
   background-color: light-dark(var(--button_cad), rgb(64, 64, 64));
   color: #f1f1f1;
 }
+
 /* #id_querschnitt_default {
    position: absolute;
    top: 3.125rem;
@@ -487,7 +462,7 @@ input[type="number"] {
   justify-content: flex-end;
   margin: 1rem -1rem -1rem;
 
-  > * {
+  >* {
     margin: 1rem;
   }
 }
@@ -515,8 +490,9 @@ input[type="number"] {
 .btn_small {
   background-color: light-dark(#f8f8f8, rgb(64, 64, 64));
   border: none;
-  color:  light-dark( rgb(64, 64, 64), white);
-  padding: 0.3rem 0.6rem;  /* 0.4375 0.75rem;*/
+  color: light-dark(rgb(64, 64, 64), white);
+  padding: 0.3rem 0.6rem;
+  /* 0.4375 0.75rem;*/
   font-size: 1rem;
   cursor: pointer;
   margin-left: 0.25rem;
@@ -544,6 +520,7 @@ input[type="number"] {
   margin-top: 0.1875rem;
   /*border-radius: 3px;*/
 }
+
 /*
 .output_table_ein {
   border-spacing: 1px 0px;
@@ -583,6 +560,7 @@ input[type="number"] {
 #div_add_cross_section:focus {
   background-color: "#ff0000";
 }
+
 #div_add_cross_section:active {
   background-color: "#ff0000";
 }
