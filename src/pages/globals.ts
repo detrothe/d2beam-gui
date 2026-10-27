@@ -14,17 +14,12 @@ export function berechnungErfolgreich(wert: boolean) {
         shadow.getElementById("rechnen")!.setAttribute("variant", "default")
     }
 }
-export function berechnungErforderlich(ev = true) { // ev:any
-    //console.log("in berechnungErforderlich",ev)
+export function berechnungErforderlich(ev: boolean = true) { // ev:any
     berechnung_erforderlich = ev;
-    //document.getElementById("resize")?.setAttribute('disabled', 'true')
-    const elHaupt = document.getElementById('id_haupt');
-    let shadow = elHaupt?.shadowRoot;
+    const shadow = document.getElementById('id_haupt')?.shadowRoot;
     if (shadow) {
-        shadow.getElementById("rechnen")!.setAttribute("variant", "primary")   //style.color = "#dd0000"
+        shadow.getElementById("rechnen")?.setAttribute("variant", "primary")   //style.color = "#dd0000"
     }
-    //document.getElementById("rechnen")!.disabled = false
-    //document.getElementById("info_berechnung").innerText = txt_berechnung
 }
 
 export function set_text_berechnung_erforderlich(txt: string) {

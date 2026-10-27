@@ -108,7 +108,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.9.0, 27-Okt-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.9.1, 27-Okt-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -130,12 +130,13 @@ export class drHaupt extends LitElement {
   @media (prefers-color-scheme: dark) {
       sl-tab::part(base) { color: yellow; }
       sl-tab[active]::part(base) { color: #4da3ff; }
-    }
+  }
 
-    @media (prefers-color-scheme: light) {
+  @media (prefers-color-scheme: light) {
       sl-tab::part(base) { color: var(--sl-color-neutral-600); }
       sl-tab[active]::part(base) { color: var(--sl-color-primary-600); }
-    }
+  }
+
 `];
 
   constructor() {
@@ -225,7 +226,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td>&nbsp;&nbsp; ${msg('Berechnung nach:')}</td>
               <td>
-                <select name="THIIO" id="id_THIIO" style="min-width:100%;" onchange="berechnungErforderlich()">
+                <select name="THIIO" id="id_THIIO" style="min-width:100%;" @change=${() => berechnungErforderlich()}>
                   <option value="0" selected>${msg('Th. I. Ordnung')}</option>
                   <option value="1">${msg('Th. II. Ordnung')}</option>
                 </select>
@@ -237,7 +238,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td title="Option 'nichtlinear' nur bei FW-Stäben, die nur Zug- oder Druckkräfte übertragen können, anwenden">&nbsp;&nbsp; ${msg('Materialeigenschaften:')}</td>
               <td>
-                <select name="matprop" id="id_matprop" style="min-width:100%;" onchange="berechnungErforderlich()">
+                <select name="matprop" id="id_matprop" style="min-width:100%;" @change=${() => berechnungErforderlich()}>
                   <option value="0" selected>${msg('linear')}</option>
                   <option value="1">${msg('nichtlinear')}</option>
                 </select>
@@ -579,7 +580,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             id="id_button_nstreckenlasten"
             nel="${nstreckenlasten_init}"
             inputid="nelemloads"
-            @change=${berechnungErforderlich}
+            @change=${() => berechnungErforderlich()}
           ></dr-button-pm>
           <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
@@ -602,7 +603,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             id="id_button_neinzellasten"
             nel="${neinzellasten_init}"
             inputid="nelemloads"
-            @change=${berechnungErforderlich}
+            @change=${() => berechnungErforderlich()}
           ></dr-button-pm>
           <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
@@ -626,7 +627,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             id="id_button_ntemperaturlasten"
             nel="${ntemperaturlasten_init}"
             inputid="nelemloads"
-            @change=${berechnungErforderlich}
+            @change=${() => berechnungErforderlich()}
           ></dr-button-pm>
           <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
@@ -649,7 +650,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             id="id_button_nvorspannungen"
             nel="${nvorspannungen_init}"
             inputid="nvorspannungen"
-            @change=${berechnungErforderlich}
+            @change=${() => berechnungErforderlich()}
           ></dr-button-pm>
           <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
@@ -672,7 +673,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             id="id_button_nspannschloesser"
             nel="${nspannschloesser_init}"
             inputid="nspannschloesser"
-            @change=${berechnungErforderlich}
+            @change=${() => berechnungErforderlich()}
           ></dr-button-pm>
           <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
@@ -828,16 +829,15 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                   id="id_maxu_node_ID"
                   name="maxu_node_ID"
                   class="input_tab"
-                  pattern="[0-9.,eE+-]*"
                   value=""
-                  @change=${berechnungErforderlich}
+                  @change=${() => berechnungErforderlich()}
                 />
               </td>
             </tr>
             <tr>
               <td>${msg('Richtung :')}</td>
               <td>
-                <select name="maxu_dir" id="id_maxu_dir" style="min-width: 100%;"  onchange="berechnungErforderlich()">
+                <select name="maxu_dir" id="id_maxu_dir" style="min-width: 100%;" >
                   <option value="0">x (u)</option>
                   <option value="1" selected>z (w)</option>
                   <option value="2">φ</option>
@@ -855,9 +855,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                   id="id_maxu_schief"
                   name="maxu_schief"
                   class="input_tab"
-                  pattern="[0-9.,eE+-]*"
                   value=""
-                  onchange="berechnungErforderlich()"
+                  @change=${() => berechnungErforderlich()}
                 />
               </td>
             </tr>
@@ -886,7 +885,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td id="id_nteilungen" title=${msg('Stabteilungen für Ausgabe der Schnittgrößen')}>&nbsp;${msg('Stabteilungen Ausgabe:')}</td>
               <td>
-                <dr-button-pm id="id_button_nteilungen" nel="10" inputid="nteilungen"  @change=${berechnungErforderlich}></dr-button-pm>
+                <dr-button-pm id="id_button_nteilungen" nel="10" inputid="nteilungen"  @change=${() => berechnungErforderlich()}></dr-button-pm>
               </td>
             </tr>
 
@@ -894,7 +893,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td id="id_einheit_kraft" title=${msg('Einheit für Kraft in Ausgabe')}>&nbsp;${msg('Einheit für Kraft in Ausgabe:')}</td>
               <td>
-              <select  value="kN" id="id_einheit_kraft_option" onchange="berechnungErforderlich()" style="width:6rem;">
+              <select  value="kN" id="id_einheit_kraft_option" @change=${() => berechnungErforderlich()} style="width:6rem;">
                  <option value='kN' >kN</option>
                  <option value='N'  >N</option>
               </select>
@@ -904,7 +903,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td title=${msg('Einheit für Bemaßung')}>&nbsp;${msg('Einheit für Bemaßung:')}</td>
               <td>
-              <select  value="m" id="id_einheit_bemassung" style="width:6rem;" onchange="einheit_bemassung_changed()">
+              <select  value="m" id="id_einheit_bemassung" style="width:6rem;" @change=${() => berechnungErforderlich()}>
                  <option value='m'  >m</option>
                  <option value='cm' >cm</option>
                  <option value='mm' >mm</option>
@@ -926,9 +925,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                   id="id_eps_disp_tol"
                   name="eps_disp_tol"
                   class="input_tab"
-                  pattern="[0-9.,eE+-]*"
                   value="1e-5"
-                  onchange="berechnungErforderlich()"
+                  @change=${() => berechnungErforderlich()}
                 />
               </td>
             </tr>
@@ -942,9 +940,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                   id="id_eps_force_tol"
                   name="eps_force_tol"
                   class="input_tab"
-                  pattern="[0-9.,eE+-]*"
                   value="1e-8"
-                  onchange="berechnungErforderlich()"
+                  @change=${() => berechnungErforderlich()}
                 />
               </td>
             </tr>
@@ -957,7 +954,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
             <tr>
               <td id="id_niter" title=${msg('max. Anzahl Iterationen bei Th. II. Ordnung')}>&nbsp;${msg('max. Anzahl Gleichgewichts-Iterationen:')}</td>
               <td>
-                <dr-button-pm id="id_button_niter" nel="10" inputid="niter"  @change=${berechnungErforderlich}></dr-button-pm>
+                <dr-button-pm id="id_button_niter" nel="10" inputid="niter"  @change=${() => berechnungErforderlich()}></dr-button-pm>
               </td>
             </tr>
 
@@ -967,7 +964,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               &nbsp;${msg('Anzahl Knickfiguren :')}
               </td>
               <td>
-              <dr-button-pm id="id_neigv" nel="1" minValue="0" inputid="neigv"  @change=${berechnungErforderlich}></dr-button-pm>
+              <dr-button-pm id="id_neigv" nel="1" minValue="0" inputid="neigv"  @change=${() => berechnungErforderlich()}></dr-button-pm>
                 <!-- <input
                   type="number"
                   step="1"
@@ -975,9 +972,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                   id="id_neigv"
                   name="neigv"
                   class="input_tab"
-                  pattern="[0-9.,eE+-]*"
                   value="1"
-                  @change=${berechnungErforderlich}
+                  @change=${() => berechnungErforderlich()}
                 /> -->
               </td>
             </tr>
@@ -1040,9 +1036,8 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
                   id="id_iter_neigv"
                   name="iter_neigv"
                   class="input_tab"
-                  pattern="[0-9]*"
                   value="500"
-                  @change=${berechnungErforderlich}
+                  @change=${() => berechnungErforderlich()}
                 />
               </td>
             </tr>

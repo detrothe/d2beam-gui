@@ -236,6 +236,10 @@ export class drRechteckQuerSchnitt extends LitElement {
             -moz-appearance: textfield;
          }
 
+         input:invalid {
+            outline: 2px solid #dd0000;
+         }
+
          @media (prefers-color-scheme: dark) {
             sl-radio-button::part(button) { color: white; }
             /* sl-radio-button::part(button--checked) { color: #4da3ff; } */
@@ -335,6 +339,11 @@ export class drRechteckQuerSchnitt extends LitElement {
 
    constructor() {
       super();
+   }
+
+   private filterZahl(e: Event) {
+      const input = e.target as HTMLInputElement;
+      input.value = input.value.replace(/[^0-9.,eE+-]/g, '');
    }
 
    async firstUpdated() {
@@ -480,7 +489,8 @@ export class drRechteckQuerSchnitt extends LitElement {
                   </tr>
                   <tr>
                      <td>${msg('Temp-Koeffizient')} &alpha;<sub>T</sub>:</td>
-                     <td><input id="alpha_t" type="text" value="1.e-5" maxlength="10" /></td>
+                     <td><input id="alpha_t" type="text" value="1.e-5" maxlength="10" @input=${this.filterZahl}
+                     pattern="[+\\-]?([0-9]+([.,][0-9]*)?|[.,][0-9]+)([eE][+\\-]?[0-9]+)?" /></td>
                      <td>&nbsp;[1/K]</td>
                   </tr>
                   <tr>
