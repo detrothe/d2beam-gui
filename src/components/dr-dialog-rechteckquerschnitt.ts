@@ -413,12 +413,12 @@ export class drRechteckQuerSchnitt extends LitElement {
                      <td title="die Querschnittshöhe ist für die Grafik immer einzugeben">
                         ${msg('Querschnittshöhe:')}
                      </td>
-                     <td><input id="height" type="number" value="40" @change="${this._recalc_Rechteck}" /></td>
+                     <td><input id="height" type="number" step="any" value="40" @change="${this._recalc_Rechteck}" /></td>
                      <td>&nbsp;[cm]</td>
                   </tr>
                   <tr>
                      <td><span id="id_row_width">${msg('Querschnittbreite:')}</span></td>
-                     <td><input id="width" type="number" value="30" @change="${this._recalc_Rechteck}" /></td>
+                     <td><input id="width" type="number" step="any" value="30" @change="${this._recalc_Rechteck}" /></td>
                      <td>&nbsp;[cm]</td>
                   </tr>
 
@@ -427,7 +427,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                         <span id="id_row_traeg_y" style="visibility:visible">I<sub>y</sub>:</span>
                      </td>
                      <td>
-                        <input id="traeg_y" type="number" value="160000" disabled @change="${this._update_EA_EI}" @input="${this._update_EA_EI}" />
+                        <input id="traeg_y" type="number" step="any" value="160000" disabled @change="${this._update_EA_EI}" @input="${this._update_EA_EI}" />
                      </td>
                      <td>&nbsp;[cm<sup>4</sup>]</td>
                   </tr>
@@ -436,7 +436,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                         <span id="id_row_area" disabled style="visibility:visible">A:</span>
                      </td>
                      <td>
-                        <input id="area" type="number" value="1200" disabled  @change="${this._update_EA_EI}" @input="${this._update_EA_EI}"/>
+                        <input id="area" type="number" step="any" value="1200" disabled  @change="${this._update_EA_EI}" @input="${this._update_EA_EI}"/>
                      </td>
                      <td>&nbsp;[cm²]</td>
                   </tr>
@@ -455,12 +455,12 @@ export class drRechteckQuerSchnitt extends LitElement {
 
                   <tr>
                      <td>${msg('E-Modul:')}</td>
-                     <td><input id="emodul" type="number" value="30000" @change="${this._update_EA_EI}" @input="${this._update_EA_EI}"/></td>
+                     <td><input id="emodul" type="number" step="any" value="30000" @change="${this._update_EA_EI}" @input="${this._update_EA_EI}"/></td>
                      <td>&nbsp;[MN/m²]</td>
                   </tr>
                   <tr>
                      <td>${msg('Wichte:')}</td>
-                     <td><input id="wichte" type="number" value="0" /></td>
+                     <td><input id="wichte" type="number" step="any" value="0" /></td>
                      <td>
                         &nbsp;[kN/m³]
                      </td>
@@ -471,7 +471,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                   <tr>
                      <td>${msg('Schubfaktor:')}</td>
                      <td>
-                        <input id="schubfaktor" type="number" value="0.0" />
+                        <input id="schubfaktor" type="number" step="any" value="0.0" />
                      </td>
                      <td>
                         &nbsp;[-]
@@ -483,7 +483,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                   <tr>
                      <td>${msg('Querdehnzahl:')}</td>
                      <td>
-                        <input id="querdehnzahl" type="number" value="0.3" />
+                        <input id="querdehnzahl" type="number" step="any" value="0.3" />
                      </td>
                      <td>&nbsp;[-]</td>
                   </tr>
@@ -495,7 +495,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                   </tr>
                   <tr>
                      <td>${msg('Faktor Dehnsteifigkeit:')}</td>
-                     <td><input id="id_fakt_dehn" type="number" value="1.0" /></td>
+                     <td><input id="id_fakt_dehn" type="number" step="any" value="1.0" /></td>
                      <td>
                         &nbsp;[-]
                      </td>
