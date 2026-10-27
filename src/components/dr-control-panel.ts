@@ -316,10 +316,13 @@ export class drControlPanel extends LitElement {
                 this._showHeaders(true);
             }
 
+            this.showController_thiio(false);
+            if (THIIO_flag !== 0 && !this.show_main) {
+                this.showController_thiio(true);
+            }
+
             this.show_main = !this.show_main;
         }
-        if (THIIO_flag === 0) this.showController_thiio(false);
-        else this.showController_thiio(true);
     }
 
 
