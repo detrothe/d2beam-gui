@@ -55,8 +55,8 @@ class TastaturHinweis extends LitElement {
     render() {
         if (!this.sichtbar) return html``;
         const text = this.istIOS()
-            ? 'Minus und Exponent (e) fehlen auf der Zifferntastatur. Nutze dafür die Tasten ± und e unter den Eingabefeldern.'
-            : 'Manche Tastaturen (z. B. Samsung) bieten keine Tasten für Minus und Exponent (e). Es wird empfohlen die Gboard-Tastatur von Google zu installieren.';
+            ? 'Das „e“ für Exponenten (z. B. 1e-5) findest du auf der Buchstaben-Tastatur. Wechsle dafür mit der Taste „ABC“ um.'
+            : 'Manche virtuellen Tastaturen (z. B. Samsung) bieten keine Tasten für Minus und Exponent (e). Es wird empfohlen die Gboard-Tastatur von Google zu installieren.';
         return html`
       <div class="hinweis" role="note">
         <span>${text}</span>
