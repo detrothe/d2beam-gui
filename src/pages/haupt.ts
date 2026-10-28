@@ -26,13 +26,13 @@ import '../components/dr-dialog_selekt_typ';
 import '../components/dr-dialog_edit_selected_elementlasten';
 import '../components/dr-my_drawer';
 import '../components/dr-control-panel'
+import '../components/tastatur_hinweis'
 
 import './locale-picker';
 
 import DetectOS from './detectos';
 
-import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik, reset_controlpanel_grafik, click_pan_button_grafik } from './grafik';
-
+import { drawsystem } from './grafik';
 
 import { init_cad } from './cad';
 

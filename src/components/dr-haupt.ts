@@ -1,3 +1,5 @@
+console.log("in dr-haupt");
+
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 //import { property, customElement } from 'lit/decorators.js';
@@ -29,13 +31,14 @@ import '@shoelace-style/shoelace/dist/components/range/range';
 // import '@shoelace-style/shoelace/dist/components/icon/icon';
 // import { setBasePath,getBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 
-import { close_drawer_1 } from '../pages/cad_buttons';
-import {
-  abbruch_property_dialog,
-  delete_element_dialog,
-  show_add_elload_dialog,
-  show_property_dialog,
-} from '../pages/cad_contextmenu';
+// import { close_drawer_1 } from '../pages/cad_buttons';
+// import {
+//   abbruch_property_dialog,
+//   delete_element_dialog,
+//   show_add_elload_dialog,
+//   show_property_dialog,
+// } from '../pages/cad_contextmenu';
+
 import {
   berechnungsart_changed,
   button_eingabe_ueberpruefen,
@@ -47,7 +50,7 @@ import {
   resizeTables,
   show_video,
 } from '../pages/haupt_2';
-import { currentFilename } from '../pages/haupt';
+// import { currentFilename } from '../pages/haupt';
 import {
   info_Eigenwertberechnung,
   info_Materialeigenschaften,
@@ -108,7 +111,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.9.3, 27-Okt-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.10.0, 28-Okt-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -169,6 +172,8 @@ export class drHaupt extends LitElement {
       <!--------------------------------------------------------------------------------------->
 
       <sl-tab-panel name="tab-haupt">
+
+        <tastatur-hinweis></tastatur-hinweis>
 
         <p>
          <sl-button id="intro_video" value="video" variant="primary"  outline @click="${show_video}" style='width:20rem;color:"DodgerBlue";'><b>${msg('zeige Einführungsvideos')}</b></sl-button>

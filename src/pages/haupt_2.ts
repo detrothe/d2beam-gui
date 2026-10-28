@@ -5,9 +5,9 @@ import SlSelect from '@shoelace-style/shoelace/dist/components/select/select.js'
 
 import './globals';
 
-import { berechnungErforderlich, set_touch_support_table } from './globals';
+import { berechnungErforderlich } from './globals';
 
-import { add_listeners_einstellungen, readLocalStorage, readLocalStorage_cad } from './einstellungen';
+import { readLocalStorage_cad } from './einstellungen';
 
 
 import { drButtonPM } from '../components/dr-button-pm';
@@ -18,7 +18,7 @@ import { reset_gui } from '../components/dr-control-panel';
 // import DetectOS from './detectos';
 
 // import { addListener_filesave } from './dateien';
-import { select_loadcase_changed, select_eigenvalue_changed, select_dyn_eigenvalue_changed, copy_svg, drawsystem, click_zurueck_grafik, reset_controlpanel_grafik, click_pan_button_grafik } from './grafik';
+import { reset_controlpanel_grafik } from './grafik';
 // import { set_info, write } from './utility';
 
 import { my_jspdf } from './mypdf';
@@ -30,14 +30,14 @@ import { rechnen, init_tabellen, show_gleichungssystem, setSystem, System, hideC
 import { nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, set_dialog_querschnitt_new, removeAll_def_querschnitt } from './querschnitte';
 
 import { click_pan_button_cad, init_cad, init_two_cad, set_einheit_bemassung, set_raster_dx, set_raster_dz, set_raster_xmax, set_raster_xmin, set_raster_zmax, set_raster_zmin, set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_knotenverformung, set_show_lager, set_show_stab_qname, two_cad_clear } from './cad';
-import { cad_buttons, close_drawer_1 } from './cad_buttons';
-import { abbruch_property_dialog, delete_element_dialog, show_add_elload_dialog, show_property_dialog } from './cad_contextmenu';
-import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
-import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
+// import { cad_buttons, close_drawer_1 } from './cad_buttons';
+// import { abbruch_property_dialog, delete_element_dialog, show_add_elload_dialog, show_property_dialog } from './cad_contextmenu';
+// import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
+// import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import { set_max_lastfall, zero_max_lastfall } from './cad_draw_elementlasten';
 import { reset_cad_nodes } from './cad_node';
 // import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
-import { app, currentFilename, set_current_filename } from './haupt';
+import { app, set_current_filename } from './haupt';
 import { drHaupt } from '../components/dr-haupt';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 
