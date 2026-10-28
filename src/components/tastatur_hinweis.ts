@@ -16,6 +16,7 @@ class TastaturHinweis extends LitElement {
       display: flex;
       gap: 0.8rem;
       align-items: flex-start;
+      color: black;
     }
     button { flex: none; }
   `;
