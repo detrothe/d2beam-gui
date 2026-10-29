@@ -362,7 +362,7 @@ else {
         let output = str_inputToJSON();
         console.log("inputToJSON", output)
 
-        downloadJsonString(output, 'debug.txt');
+        //downloadJsonString(output, 'debug.txt');
         window.localStorage.setItem('current_input_D2BEAM_GUI', output);
 
 
@@ -460,17 +460,17 @@ else {
 
 }
 
-function downloadJsonString(jsonString: string, filename: string): void {
-    const blob = new Blob([jsonString], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
+// function downloadJsonString(jsonString: string, filename: string): void {
+//     const blob = new Blob([jsonString], { type: "application/json" });
+//     const url = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename.endsWith(".json") ? filename : `${filename}.json`;
-    link.click();
+//     const link = document.createElement("a");
+//     link.href = url;
+//     link.download = filename.endsWith(".json") ? filename : `${filename}.json`;
+//     link.click();
 
-    URL.revokeObjectURL(url);
-}
+//     URL.revokeObjectURL(url);
+// }
 
 async function check_for_new_version() {
     if ('serviceWorker' in navigator) {

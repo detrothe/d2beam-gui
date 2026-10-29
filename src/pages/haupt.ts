@@ -38,31 +38,7 @@ import { init_cad } from './cad';
 
 
 console.log("in haupt")
-//import '../components/dr-haupt'
-//console.log("nach dr-haupt")
-// const nnodes_init = '0';
-// const nelem_init = '0';
-// const nnodalloads_init = '0';
-// const nstreckenlasten_init = '0';
-// const neinzellasten_init = '0';
-// const ntemperaturlasten_init = '0';
 const nlastfaelle_init = '1';
-// const nkombinationen_init = '0';
-// const nstabvorverfomungen_init = '0';
-// const nvorspannungen_init = '0';
-// const nspannschloesser_init = '0';
-// const nnodalmass_init = '0';
-
-// let column_string_kombitabelle: string;
-// let typs_string_kombitabelle: string;
-
-// const nkombiSpalten_init = '2'; // immer 1 mehr als nlastfaelle_init
-// const nnodedisps_init = '0';
-// const dyn_neigv_init = '1';
-// const nkoppelfedern_init = '0';
-
-// let width_lager = 175; // /window.devicePixelRatio;
-// let width_def_d2beam = 400;
 
 export let currentFilename = 'empty';
 
