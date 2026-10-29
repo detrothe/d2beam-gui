@@ -759,6 +759,11 @@ async function handleFileSelect_save() {
         //     set_current_filename(filename);
     } else {
 
+        filename = window.prompt(
+            'Name der Ausgabedatei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert',
+            currentFilename
+        );
+
         const mimeType = 'application/json'; //opts.mimeType ?? 'application/octet-stream';
         const blob = new Blob([jsonse], { type: 'text/plain' });
         const file = new File([blob], currentFilename, { type: blob.type || mimeType });
@@ -776,10 +781,10 @@ async function handleFileSelect_save() {
 
 
             //window.alert("showSaveFilePicker UNBEKANNT");
-            filename = window.prompt(
-                'Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert',
-                currentFilename
-            );
+            // filename = window.prompt(
+            //     'Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert',
+            //     currentFilename
+            // );
             const myFile = new File([jsonse], filename, {
                 type: 'text/plain;charset=utf-8',
             });
