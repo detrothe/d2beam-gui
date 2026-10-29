@@ -246,6 +246,29 @@ export function get_querschnitt_index(qname: string) {
     return -1;
 }
 
+//---------------------------------------------------------------------------------------------------------------
+
+export function click_neuer_querschnitt_rechteck() {
+    //---------------------------------------------------------------------------------------------------------------
+    console.log('click_neuer_querschnitt_rechteck()');
+
+    const elHaupt = document.getElementById('id_haupt') as drHaupt;
+    let shadow = elHaupt.shadowRoot;
+    if (shadow) {
+        const el = shadow.getElementById('id_dialog_rechteck') as drRechteckQuerSchnitt;
+
+        el.init_name_changed(true, '');
+
+        // console.log("id_dialog_rechteck", el);
+        // console.log("QUERY Dialog", el?.shadowRoot?.getElementById("dialog_rechteck"));
+
+        (el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement).addEventListener('close', dialog_querschnitt_closed);
+
+        set_dialog_querschnitt_new(true);
+
+        (el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement).showModal();
+    }
+}
 
 //---------------------------------------------------------------------------------------------------------------
 export function add_new_cross_section(qName: string, id: string) {

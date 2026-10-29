@@ -44,13 +44,11 @@ import {
   button_eingabe_ueberpruefen,
   button_neue_eingabe,
   calculate,
-  click_neuer_querschnitt_rechteck,
   create_pdf,
-  handleClick_allgemeiner_querschnitt,
   resizeTables,
   show_video,
 } from '../pages/haupt_2';
-// import { currentFilename } from '../pages/haupt';
+
 import {
   info_Eigenwertberechnung,
   info_Materialeigenschaften,
@@ -58,6 +56,7 @@ import {
 
 import { berechnungErforderlich } from '../pages/globals';
 
+import { click_neuer_querschnitt_rechteck } from '../pages/querschnitte'
 import '../pages/locale-picker'
 import { init_haupt3 } from '../pages/haupt3';
 import { global_css } from '../styles/global-css';
@@ -111,7 +110,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.10.4, 29-Okt-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.10.5, 29-Okt-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -354,11 +353,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
       <!--------------------------------------------------------------------------------------->
 
       <sl-tab-panel id="id_tab_querschnitt" name="tab-querschnitte">
-        <!--
-        <sl-button id="open-dialog" @click="${handleClick_allgemeiner_querschnitt}"
-          >neuer allgemeiner Querschnitt</sl-button
-        >
-        -->
+
 
         <p>
           <br />&nbsp;&nbsp;

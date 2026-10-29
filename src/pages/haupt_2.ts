@@ -46,38 +46,16 @@ console.log("in haupt2>")
 
 //---------------------------------------------------------------------------------------------------------------
 
-export function handleClick_allgemeiner_querschnitt() {
-  console.log('handleClick_allgemeiner_querschnitt()');
+// export function handleClick_allgemeiner_querschnitt() {
+//   console.log('handleClick_allgemeiner_querschnitt()');
 
-  const el = document.getElementById('id_dialog');
-  console.log('id_dialog', el);
-  console.log('QUERY Dialog', el?.shadowRoot?.getElementById('dialog'));
-  (el?.shadowRoot?.getElementById('dialog') as HTMLDialogElement).showModal();
-}
+//   const el = document.getElementById('id_dialog');
+//   console.log('id_dialog', el);
+//   console.log('QUERY Dialog', el?.shadowRoot?.getElementById('dialog'));
+//   (el?.shadowRoot?.getElementById('dialog') as HTMLDialogElement).showModal();
+// }
 
-//---------------------------------------------------------------------------------------------------------------
 
-export function click_neuer_querschnitt_rechteck() {
-  //---------------------------------------------------------------------------------------------------------------
-  console.log('click_neuer_querschnitt_rechteck()');
-
-  const elHaupt = document.getElementById('id_haupt') as drHaupt;
-  let shadow = elHaupt.shadowRoot;
-  if (shadow) {
-    const el = shadow.getElementById('id_dialog_rechteck') as drRechteckQuerSchnitt;
-
-    el.init_name_changed(true, 'Rechteck');
-
-    // console.log("id_dialog_rechteck", el);
-    // console.log("QUERY Dialog", el?.shadowRoot?.getElementById("dialog_rechteck"));
-
-    (el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement).addEventListener('close', dialog_querschnitt_closed);
-
-    set_dialog_querschnitt_new(true);
-
-    (el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement).showModal();
-  }
-}
 
 
 //---------------------------------------------------------------------------------------------------------------

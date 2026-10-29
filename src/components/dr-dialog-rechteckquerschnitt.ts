@@ -189,6 +189,7 @@ const PROFIL = Array(
 export class drRechteckQuerSchnitt extends LitElement {
    name_changed = false;
    private _initialName = '';
+   private new_cross_section = true;
 
    @property({ type: String }) title = 'D2Beam RechteckQuerschnitt';
    @property({ type: String }) EA = 'EA =';
@@ -372,8 +373,11 @@ export class drRechteckQuerSchnitt extends LitElement {
    //----------------------------------------------------------------------------------------------
    init_name_changed(wert: boolean, name: string) {
       console.log('in init_name_changed');
-      this.name_changed = wert;
+      this.name_changed = false;
       this._initialName = name;
+      this.new_cross_section = wert;
+
+      if (wert === true) (this.shadowRoot?.getElementById('qname') as HTMLInputElement).value = '';  // neuer Queschnitt
 
       this._update_EA_EI();
    }
@@ -608,18 +612,25 @@ export class drRechteckQuerSchnitt extends LitElement {
             (shadow?.getElementById('zso') as HTMLInputElement).value = myFormat_en(h / 2, 1, 2);
          }
 
-         if (this.name_changed) {
-            let qname = (shadow.getElementById('qname') as HTMLInputElement).value.trim();
-            if (qname !== this._initialName) {
-               if (check_if_name_exists(qname)) {
-                  //window.alert("Name für Querschnitt schon vergeben");
-                  const dialogAlert = new AlertDialog({
-                     trueButton_Text: 'ok',
-                     question_Text: 'Name für Querschnitt schon vergeben',
-                  });
-                  await dialogAlert.confirm();
-                  return;
-               }
+         let qname = (shadow.getElementById('qname') as HTMLInputElement).value.trim();
+         if (qname === '') {
+            const dialogAlert = new AlertDialog({
+               trueButton_Text: 'ok',
+               question_Text: 'Wähle einen eindeutigen Namen für den Querschnitt',
+            });
+            await dialogAlert.confirm();
+            return;
+         }
+
+         let name_exists = check_if_name_exists(qname);
+         if (this.new_cross_section || qname !== this._initialName) {
+            if (name_exists) {
+               const dialogAlert = new AlertDialog({
+                  trueButton_Text: 'ok',
+                  question_Text: 'Name für Querschnitt schon vergeben',
+               });
+               await dialogAlert.confirm();
+               return;
             }
          }
 
