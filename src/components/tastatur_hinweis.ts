@@ -25,16 +25,16 @@ class TastaturHinweis extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        this.sichtbar = this.istTouch() && !this.schonGesehen();
+        this.sichtbar = (this.istApple() || this.istAndroid()) && !this.schonGesehen();
     }
 
-    private istTouch(): boolean {
-        return matchMedia('(pointer: coarse)').matches;
-    }
-
-    private istIOS(): boolean {
+    private istApple(): boolean {
         return /iPhone|iPad|iPod/.test(navigator.userAgent) ||
-            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS im Desktop-Modus
+    }
+
+    private istAndroid(): boolean {
+        return /Android/i.test(navigator.userAgent);
     }
 
     private schonGesehen(): boolean {
@@ -54,7 +54,7 @@ class TastaturHinweis extends LitElement {
 
     render() {
         if (!this.sichtbar) return html``;
-        const text = this.istIOS()
+        const text = this.istApple()
             ? 'Das „e“ für Exponenten (z. B. 1e-5) findest du auf der Buchstaben-Tastatur. Wechsle dafür mit der Taste „ABC“ um.'
             : 'Manche virtuellen Tastaturen (z. B. Samsung) bieten keine Tasten für Minus und Exponent (e). Es wird empfohlen die Gboard-Tastatur von Google zu installieren.';
         return html`
