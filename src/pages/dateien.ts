@@ -798,7 +798,7 @@ async function handleFileSelect_save() {
 
     }
 }
-}
+
 
 export function str_inputToJSON() {
     let i,
