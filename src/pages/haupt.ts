@@ -42,6 +42,8 @@ const nlastfaelle_init = '1';
 
 export let currentFilename = 'empty';
 
+const canUseSecureContext = typeof window !== 'undefined' && window.isSecureContext;
+
 export const app = {
   appName: 'd2beam-gui',
   browserLanguage: 'de',
@@ -56,7 +58,8 @@ export const app = {
     monoSpace: false,
     wordWrap: true,
   },
-  hasFSAccess: 'chooseFileSystemEntries' in window || 'showOpenFilePicker' in window || 'showSaveFilePicker' in window,
+  hasSaveFS_Access: canUseSecureContext && typeof (window as any).showSaveFilePicker === 'function',
+  hasOpenFS_Access: 'showOpenFilePicker' in window,
   isMac: navigator.userAgent.includes('Mac OS X'),
 };
 

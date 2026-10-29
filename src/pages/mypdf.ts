@@ -364,9 +364,9 @@ export async function my_jspdf() {
       el_table_nodes.htmlText("L<sub>z</sub> (kN/m)", 4, "center", yy);
       if (System === 0) {
         el_table_nodes.htmlText("L<sub>φ</sub> (kNm/m)", 5, "center", yy);
-        el_table_nodes.htmlText(msg('Winkel')+" [°]", 6, "center", yy);
+        el_table_nodes.htmlText(msg('Winkel') + " [°]", 6, "center", yy);
       } else {
-        el_table_nodes.htmlText(msg('Winkel')+" [°]", 5, "center", yy);
+        el_table_nodes.htmlText(msg('Winkel') + " [°]", 5, "center", yy);
       }
 
       doc.setFontSize(fs);
@@ -1640,12 +1640,12 @@ export async function my_jspdf() {
 
     let filename: any = "d2beam.pdf";
 
-    if (app.hasFSAccess && app.isMac) {
+    if (app.hasSaveFS_Access && app.isMac) {
       filename = window.prompt(
         "Name der Datei mit Extension, z.B. d2beam.pdf\nDie Datei wird im Default Download Ordner gespeichert",
         "d2beam.pdf"
       );
-    } else if (app.hasFSAccess) {
+    } else if (app.hasSaveFS_Access) {
       // filename = window.prompt(
       //   "Name der Datei mit Extension, z.B. d2beam.pdf\nDie Datei wird im Default Download Ordner gespeichert",
       //   "d2beam.pdf"

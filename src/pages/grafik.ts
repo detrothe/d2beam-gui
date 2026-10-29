@@ -5508,13 +5508,13 @@ export async function copy_svg() {
 
             let filename: any = 'd2beam.svg'
 
-            if (app.hasFSAccess && app.isMac) {
+            if (app.hasSaveFS_Access && app.isMac) {
 
                 filename = window.prompt(
                     "Name der Datei mit Extension, z.B. d2beam.svg\nDie Datei wird im Default Download Ordner gespeichert", 'd2beam.svg'
                 );
             }
-            else if (app.hasFSAccess) {
+            else if (app.hasSaveFS_Access) {
 
                 try {
                     // @ts-ignore
@@ -5605,13 +5605,13 @@ export async function copy_svg_cad() {
 
             let filename: any = 'd2beam_cad.svg'
 
-            if (app.hasFSAccess && app.isMac) {
+            if (app.hasSaveFS_Access && app.isMac) {
 
                 filename = window.prompt(
                     "Name der Datei mit Extension, z.B. d2beam_cad.svg\nDie Datei wird im Default Download Ordner gespeichert", 'd2beam_cad.svg'
                 );
             }
-            else if (app.hasFSAccess) {
+            else if (app.hasSaveFS_Access) {
 
                 try {
                     // @ts-ignore

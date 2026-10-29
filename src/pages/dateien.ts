@@ -716,7 +716,7 @@ async function handleFileSelect_save() {
 
     let filename: any;
 
-    if (app.hasFSAccess) {
+    if (app.hasSaveFS_Access) {
         //window.alert("showSaveFilePicker bekannt")
 
         try {
