@@ -66,7 +66,7 @@ export function click_neuer_querschnitt_rechteck() {
   if (shadow) {
     const el = shadow.getElementById('id_dialog_rechteck') as drRechteckQuerSchnitt;
 
-    el.init_name_changed(true);
+    el.init_name_changed(true, 'Rechteck');
 
     // console.log("id_dialog_rechteck", el);
     // console.log("QUERY Dialog", el?.shadowRoot?.getElementById("dialog_rechteck"));

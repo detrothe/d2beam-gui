@@ -188,6 +188,8 @@ const PROFIL = Array(
 @customElement('dr-rechteckquerschnitt')
 export class drRechteckQuerSchnitt extends LitElement {
    name_changed = false;
+   private _initialName = '';
+
    @property({ type: String }) title = 'D2Beam RechteckQuerschnitt';
    @property({ type: String }) EA = 'EA =';
    @state() EI = 'EI =';
@@ -368,9 +370,10 @@ export class drRechteckQuerSchnitt extends LitElement {
    }
 
    //----------------------------------------------------------------------------------------------
-   init_name_changed(wert: boolean) {
+   init_name_changed(wert: boolean, name: string) {
       console.log('in init_name_changed');
       this.name_changed = wert;
+      this._initialName = name;
 
       this._update_EA_EI();
    }
@@ -606,15 +609,17 @@ export class drRechteckQuerSchnitt extends LitElement {
          }
 
          if (this.name_changed) {
-            let qname = (shadow.getElementById('qname') as HTMLInputElement).value;
-            if (check_if_name_exists(qname)) {
-               //window.alert("Name für Querschnitt schon vergeben");
-               const dialogAlert = new AlertDialog({
-                  trueButton_Text: 'ok',
-                  question_Text: 'Name für Querschnitt schon vergeben',
-               });
-               await dialogAlert.confirm();
-               return;
+            let qname = (shadow.getElementById('qname') as HTMLInputElement).value.trim();
+            if (qname !== this._initialName) {
+               if (check_if_name_exists(qname)) {
+                  //window.alert("Name für Querschnitt schon vergeben");
+                  const dialogAlert = new AlertDialog({
+                     trueButton_Text: 'ok',
+                     question_Text: 'Name für Querschnitt schon vergeben',
+                  });
+                  await dialogAlert.confirm();
+                  return;
+               }
             }
          }
 
@@ -700,7 +705,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                return;
             }
 
-            (shadow?.getElementById('qname') as HTMLInputElement).value = wahl;
+            (shadow?.getElementById('qname') as HTMLInputElement).value = wahl.trim();
          }
 
          let index: number;

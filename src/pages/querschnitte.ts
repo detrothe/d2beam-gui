@@ -288,7 +288,7 @@ export function add_new_cross_section(qName: string, id: string) {
 	</g>
 </svg>
     `;
-//        delete_button.innerHTML = '<i class = "fa fa-trash"></i>';
+        //        delete_button.innerHTML = '<i class = "fa fa-trash"></i>';
         delete_button.addEventListener("click", contextmenu_querschnitt);
         delete_button.title = "delete Querschnitt";
         //delete_button.style.margin='0';
@@ -327,19 +327,16 @@ export function add_new_cross_section(qName: string, id: string) {
 
 
 //---------------------------------------------------------------------------------------------------------------
-export function opendialog(ev: any) {
+function opendialog(ev: any) {
     //-------------------------------------------------------------------------------------------------------------
 
     // @ts-ignore
     console.log("opendialog geht", this);
-    ev.preventDefault;
+    ev.preventDefault();
 
     const elHaupt = document.getElementById('id_haupt') as drHaupt;
     let shadow = elHaupt.shadowRoot;
     if (shadow) {
-
-        // @ts-ignore
-        const id = this.id;
 
         // console.log("id", document.getElementById(id));
 
@@ -349,9 +346,11 @@ export function opendialog(ev: any) {
         // const index = Number(myArray[1]);
 
         // @ts-ignore
-        const ele = this;
-        const qname = ele.textContent;
-        console.log("opendialog, qname", ele.innerText, "|", ele.textContent, ele.id);
+        //const ele = this;
+        const ele = ev.currentTarget as HTMLElement;
+        const id = ele.id;
+        const qname = ele.textContent ?? '';
+        console.log("opendialog, qname", JSON.stringify(ele.innerText), "|", JSON.stringify(ele.textContent), ele.id);
         const index = get_querschnitt_index(qname);
 
         if (index < 0) {
@@ -378,7 +377,7 @@ export function opendialog(ev: any) {
             elem = el?.shadowRoot?.getElementById("area") as HTMLInputElement;
             elem.value = String(area);
             elem = el?.shadowRoot?.getElementById("qname") as HTMLInputElement;
-            elem.value = String(qname);
+            elem.value = String(qname).trim();
             elem = el?.shadowRoot?.getElementById("height") as HTMLInputElement;
             elem.value = String(height);
             elem = el?.shadowRoot?.getElementById("width") as HTMLInputElement;
@@ -418,7 +417,7 @@ export function opendialog(ev: any) {
         //const el=shadow.getElementById(id);
         const el = shadow.getElementById("id_dialog_rechteck") as drRechteckQuerSchnitt;
 
-        el.init_name_changed(false);
+        el.init_name_changed(false, String(qname).trim());
 
         (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).addEventListener("close", dialog_querschnitt_closed);
 
@@ -454,7 +453,7 @@ export async function contextmenu_querschnitt(ev: any) {
         const dialog = new ConfirmDialog({
             trueButton_Text: "ja",
             falseButton_Text: "nein",
-            question_Text: msg('Lösche Querschnitt')+": " + qname,
+            question_Text: msg('Lösche Querschnitt') + ": " + qname,
         });
         const loesche = await dialog.confirm();
         //console.log("loesche", loesche);
@@ -684,7 +683,7 @@ export function get_querschnittRechteck(index: number) {
     let flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number, faktor_dehn: number
 
     console.log("index", index)
-    name = querschnittset[index].name;
+    name = querschnittset[index].name.trim();
     emodul = querschnittset[index].emodul;
     Iy = querschnittset[index].Iy;
     area = querschnittset[index].area;
@@ -722,7 +721,7 @@ export function add_rechteck_querschnitt(werte: any[]) {
 
     incr_querschnittSets();
 
-    const qname = werte[0]
+    const qname = werte[0].trim()
     const id = werte[1]
     const emodul = werte[2]
     const Iy = werte[3]

@@ -359,9 +359,7 @@ export function read_daten(eingabedaten: string) {
             set_raster_offset_z(jobj.raster_offset_z);
         }
 
-        let ele = shadow?.getElementById(
-            'id_dialog_einstellungen'
-        ) as drDialogEinstellungen;
+        let ele = shadow?.getElementById('id_dialog_einstellungen') as drDialogEinstellungen;
         ele.set_raster_dx(jobj.raster_dx);
         ele.set_raster_dz(jobj.raster_dz);
 

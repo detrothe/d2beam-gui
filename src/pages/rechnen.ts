@@ -830,179 +830,179 @@ function check_input() {
 
 }
 
-//---------------------------------------------------------------------------------------------------------------
-function read_nodes() {
-    //-----------------------------------------------------------------------------------------------------------
+// //---------------------------------------------------------------------------------------------------------------
+// function read_nodes() {
+//     //-----------------------------------------------------------------------------------------------------------
 
-    let i: number;
+//     let i: number;
 
-    let el = document.getElementById('id_knoten_tabelle');
-    //console.log('EL: >>', el);
-    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+//     let el = document.getElementById('id_knoten_tabelle');
+//     //console.log('EL: >>', el);
+//     //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
-    let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    //console.log('nZeilen', table.rows.length);
-    //console.log('nSpalten', table.rows[0].cells.length);
+//     let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+//     //console.log('nZeilen', table.rows.length);
+//     //console.log('nSpalten', table.rows[0].cells.length);
 
-    node.length = 0
-    for (i = 0; i < nnodes; i++) {
-        node.push(new TNode())
-    }
+//     node.length = 0
+//     for (i = 0; i < nnodes; i++) {
+//         node.push(new TNode())
+//     }
 
-    let nRowTab = table.rows.length;
-    let nColTab = table.rows[0].cells.length;
-    let wert: any;
-    let shad = el?.shadowRoot?.getElementById('mytable')
+//     let nRowTab = table.rows.length;
+//     let nColTab = table.rows[0].cells.length;
+//     let wert: any;
+//     let shad = el?.shadowRoot?.getElementById('mytable')
 
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        let iz = izeile - 1
-        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
-            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
-            wert = child.value;
-            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) node[iz].x = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 2) node[iz].z = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) node[iz].L[0] = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) node[iz].L[1] = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 5) node[iz].L[2] = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 6) node[iz].phi = Number(testNumber(wert, izeile, ispalte, shad));
+//     for (let izeile = 1; izeile < nRowTab; izeile++) {
+//         let iz = izeile - 1
+//         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+//             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+//             wert = child.value;
+//             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+//             if (ispalte === 1) node[iz].x = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 2) node[iz].z = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 3) node[iz].L[0] = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 4) node[iz].L[1] = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 5) node[iz].L[2] = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 6) node[iz].phi = Number(testNumber(wert, izeile, ispalte, shad));
 
-            if (System === FACHWERK) node[iz].L[2] = 1;   // Drehfreiheitsgrad festhalten
+//             if (System === FACHWERK) node[iz].L[2] = 1;   // Drehfreiheitsgrad festhalten
 
-            node[iz].L_org[0] = node[iz].L[0]
-            node[iz].L_org[1] = node[iz].L[1]
-            node[iz].L_org[2] = node[iz].L[2]
-        }
-    }
-
-
-
-    nnodesTotal = nnodes;
-
-    // definierte Knotenverformungen
-
-    for (i = 0; i < nNodeDisps; i++) {
-        nodeDisp0.push(new TNodeDisp)
-    }
-
-    el = document.getElementById('id_nnodedisps_tabelle_gui');
-    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-    nRowTab = table.rows.length;
-    nColTab = table.rows[0].cells.length;
-
-    shad = el?.shadowRoot?.getElementById('mytable')
-
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        let iz = izeile - 1
-        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
-            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
-            wert = child.value;
-            console.log('NODE Knotenverformungen i:1', nnodes, izeile, ispalte, wert, wert.length);
-            if (ispalte === 1) nodeDisp0[iz].node = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) nodeDisp0[iz].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) {
-                if (wert.length === 0) nodeDisp0[iz].dispL[0] = false; else nodeDisp0[iz].dispL[0] = true;     // true=definierte Knotenverformung
-                nodeDisp0[iz].dispx0 = Number(testNumber(wert, izeile, ispalte, shad));
-            }
-            else if (ispalte === 4) {
-                if (wert.length === 0) nodeDisp0[iz].dispL[1] = false; else nodeDisp0[iz].dispL[1] = true;
-                nodeDisp0[iz].dispz0 = Number(testNumber(wert, izeile, ispalte, shad));
-            }
-            else if (ispalte === 5) {
-                if (wert.length === 0) nodeDisp0[iz].dispL[2] = false; else nodeDisp0[iz].dispL[2] = true;
-                nodeDisp0[iz].phi0 = Number(testNumber(wert, izeile, ispalte, shad));
-            }
-
-        }
-    }
-
-}
+//             node[iz].L_org[0] = node[iz].L[0]
+//             node[iz].L_org[1] = node[iz].L[1]
+//             node[iz].L_org[2] = node[iz].L[2]
+//         }
+//     }
 
 
-//---------------------------------------------------------------------------------------------------------------
-function read_nodal_loads() {
-    //-----------------------------------------------------------------------------------------------------------
 
-    let i: number;
+//     nnodesTotal = nnodes;
 
-    const el = document.getElementById('id_knotenlasten_tabelle');
-    //console.log('EL: >>', el);
-    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+//     // definierte Knotenverformungen
 
-    const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    //console.log('nZeilen', table.rows.length);
-    //console.log('nSpalten', table.rows[0].cells.length);
+//     for (i = 0; i < nNodeDisps; i++) {
+//         nodeDisp0.push(new TNodeDisp)
+//     }
 
-    load.length = 0
-    for (i = 0; i < nloads; i++) {
-        load.push(new TLoads())
-    }
+//     el = document.getElementById('id_nnodedisps_tabelle_gui');
+//     table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    let nRowTab = table.rows.length;
-    let nColTab = table.rows[0].cells.length;
-    let wert: any;
-    const shad = el?.shadowRoot?.getElementById('mytable')
+//     nRowTab = table.rows.length;
+//     nColTab = table.rows[0].cells.length;
 
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
-            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
-            wert = child.value;
-            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) load[izeile - 1].node = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) load[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) load[izeile - 1].Px = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) load[izeile - 1].Pz = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 5) load[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad));
-        }
-        if (load[izeile - 1].lf > nlastfaelle) {
-            fatal_error = true;
-            write('Knotenlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
-            //nlastfaelle = load[izeile - 1].lf
-        }
+//     shad = el?.shadowRoot?.getElementById('mytable')
 
-        console.log("R", izeile, load[izeile - 1])
-    }
-}
+//     for (let izeile = 1; izeile < nRowTab; izeile++) {
+//         let iz = izeile - 1
+//         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+//             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+//             wert = child.value;
+//             console.log('NODE Knotenverformungen i:1', nnodes, izeile, ispalte, wert, wert.length);
+//             if (ispalte === 1) nodeDisp0[iz].node = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//             else if (ispalte === 2) nodeDisp0[iz].lf = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 3) {
+//                 if (wert.length === 0) nodeDisp0[iz].dispL[0] = false; else nodeDisp0[iz].dispL[0] = true;     // true=definierte Knotenverformung
+//                 nodeDisp0[iz].dispx0 = Number(testNumber(wert, izeile, ispalte, shad));
+//             }
+//             else if (ispalte === 4) {
+//                 if (wert.length === 0) nodeDisp0[iz].dispL[1] = false; else nodeDisp0[iz].dispL[1] = true;
+//                 nodeDisp0[iz].dispz0 = Number(testNumber(wert, izeile, ispalte, shad));
+//             }
+//             else if (ispalte === 5) {
+//                 if (wert.length === 0) nodeDisp0[iz].dispL[2] = false; else nodeDisp0[iz].dispL[2] = true;
+//                 nodeDisp0[iz].phi0 = Number(testNumber(wert, izeile, ispalte, shad));
+//             }
+
+//         }
+//     }
+
+// }
 
 
-//---------------------------------------------------------------------------------------------------------------
-function read_nodal_mass() {
-    //-----------------------------------------------------------------------------------------------------------
+// //---------------------------------------------------------------------------------------------------------------
+// function read_nodal_loads() {
+//     //-----------------------------------------------------------------------------------------------------------
 
-    let i: number;
+//     let i: number;
 
-    const el = document.getElementById('id_knotenmassen_tabelle');
-    //console.log('EL: >>', el);
-    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+//     const el = document.getElementById('id_knotenlasten_tabelle');
+//     //console.log('EL: >>', el);
+//     //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
-    const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    //console.log('nZeilen', table.rows.length);
-    //console.log('nSpalten', table.rows[0].cells.length);
+//     const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+//     //console.log('nZeilen', table.rows.length);
+//     //console.log('nSpalten', table.rows[0].cells.length);
 
-    nodalmass.length = 0
-    for (i = 0; i < nnodalMass; i++) {
-        nodalmass.push(new TMass())
-    }
+//     load.length = 0
+//     for (i = 0; i < nloads; i++) {
+//         load.push(new TLoads())
+//     }
 
-    let nRowTab = table.rows.length;
-    let nColTab = table.rows[0].cells.length;
-    let wert: any;
-    const shad = el?.shadowRoot?.getElementById('mytable')
+//     let nRowTab = table.rows.length;
+//     let nColTab = table.rows[0].cells.length;
+//     let wert: any;
+//     const shad = el?.shadowRoot?.getElementById('mytable')
 
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
-            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
-            wert = child.value;
-            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) nodalmass[izeile - 1].node = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) nodalmass[izeile - 1].mass = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) nodalmass[izeile - 1].theta = Number(testNumber(wert, izeile, ispalte, shad));
-        }
+//     for (let izeile = 1; izeile < nRowTab; izeile++) {
+//         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+//             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+//             wert = child.value;
+//             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+//             if (ispalte === 1) load[izeile - 1].node = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//             else if (ispalte === 2) load[izeile - 1].lf = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 3) load[izeile - 1].Px = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 4) load[izeile - 1].Pz = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 5) load[izeile - 1].p[2] = Number(testNumber(wert, izeile, ispalte, shad));
+//         }
+//         if (load[izeile - 1].lf > nlastfaelle) {
+//             fatal_error = true;
+//             write('Knotenlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+//             //nlastfaelle = load[izeile - 1].lf
+//         }
 
-        //console.log("nodalmass", izeile, nodalmass[izeile - 1])
-    }
-}
+//         console.log("R", izeile, load[izeile - 1])
+//     }
+// }
+
+
+// //---------------------------------------------------------------------------------------------------------------
+// function read_nodal_mass() {
+//     //-----------------------------------------------------------------------------------------------------------
+
+//     let i: number;
+
+//     const el = document.getElementById('id_knotenmassen_tabelle');
+//     //console.log('EL: >>', el);
+//     //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+
+//     const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+//     //console.log('nZeilen', table.rows.length);
+//     //console.log('nSpalten', table.rows[0].cells.length);
+
+//     nodalmass.length = 0
+//     for (i = 0; i < nnodalMass; i++) {
+//         nodalmass.push(new TMass())
+//     }
+
+//     let nRowTab = table.rows.length;
+//     let nColTab = table.rows[0].cells.length;
+//     let wert: any;
+//     const shad = el?.shadowRoot?.getElementById('mytable')
+
+//     for (let izeile = 1; izeile < nRowTab; izeile++) {
+//         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+//             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+//             wert = child.value;
+//             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+//             if (ispalte === 1) nodalmass[izeile - 1].node = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//             else if (ispalte === 2) nodalmass[izeile - 1].mass = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 3) nodalmass[izeile - 1].theta = Number(testNumber(wert, izeile, ispalte, shad));
+//         }
+
+//         //console.log("nodalmass", izeile, nodalmass[izeile - 1])
+//     }
+// }
 
 //---------------------------------------------------------------------------------------------------------------
 function find_maxValues_eloads(ieload: number) {
@@ -1060,250 +1060,250 @@ export function init_maxValues_eload() {
     find_maxValues_eloads(neloads);
 }
 
-//---------------------------------------------------------------------------------------------------------------
-function read_element_loads() {
-    //-----------------------------------------------------------------------------------------------------------
+// //---------------------------------------------------------------------------------------------------------------
+// function read_element_loads() {
+//     //-----------------------------------------------------------------------------------------------------------
 
-    let i: number;
+//     let i: number;
 
 
-    let el = document.getElementById('id_button_nstreckenlasten') as any;
-    nstreckenlasten = Number(el.nel);
+//     let el = document.getElementById('id_button_nstreckenlasten') as any;
+//     nstreckenlasten = Number(el.nel);
 
-    el = document.getElementById('id_button_neinzellasten') as any;
-    neinzellasten = Number(el.nel);
+//     el = document.getElementById('id_button_neinzellasten') as any;
+//     neinzellasten = Number(el.nel);
 
-    el = document.getElementById('id_button_ntemperaturlasten') as any;
-    ntemperaturlasten = Number(el.nel);
+//     el = document.getElementById('id_button_ntemperaturlasten') as any;
+//     ntemperaturlasten = Number(el.nel);
 
-    el = document.getElementById('id_button_nvorspannungen') as any;
-    nvorspannungen = Number(el.nel);
+//     el = document.getElementById('id_button_nvorspannungen') as any;
+//     nvorspannungen = Number(el.nel);
 
-    el = document.getElementById('id_button_nspannschloesser') as any;
-    nspannschloesser = Number(el.nel);
+//     el = document.getElementById('id_button_nspannschloesser') as any;
+//     nspannschloesser = Number(el.nel);
 
-    ntotalEloads = neloads = nstreckenlasten + neinzellasten + ntemperaturlasten + nvorspannungen + nspannschloesser + nelem_Balken
+//     ntotalEloads = neloads = nstreckenlasten + neinzellasten + ntemperaturlasten + nvorspannungen + nspannschloesser + nelem_Balken
 
-    console.log("NELOADS", neloads, nstreckenlasten, neinzellasten, ntemperaturlasten, nvorspannungen, nspannschloesser)
+//     console.log("NELOADS", neloads, nstreckenlasten, neinzellasten, ntemperaturlasten, nvorspannungen, nspannschloesser)
 
-    eload.length = 0
-    for (i = 0; i < neloads; i++) {
-        eload.push(new TElLoads())
-    }
-    let ieload = 0
+//     eload.length = 0
+//     for (i = 0; i < neloads; i++) {
+//         eload.push(new TElLoads())
+//     }
+//     let ieload = 0
 
-    // Eigengewicht
+//     // Eigengewicht
 
-    let wichte = 0.0, area = 0.0
-    for (let ielem = 0; ielem < nelem_Balken; ielem++) {
-        let index = getMaterialIndex(ielem);
-        if (index === -1) return index;
-        if (querschnittset[index].className === 'QuerschnittRechteck') {   //  linear elastisch
-            wichte = querschnittset[index].wichte
-            area = querschnittset[index].area
-        }
-        eload[ieload].element = ielem
-        eload[ieload].lf = 1
-        eload[ieload].art = 1
-        eload[ieload].pL = wichte * area / 10000.0   // richtige Werte werden in initialisiereElementdaten() gesetzt
-        eload[ieload].pR = wichte * area / 10000.0
-        ieload++;
-    }
+//     let wichte = 0.0, area = 0.0
+//     for (let ielem = 0; ielem < nelem_Balken; ielem++) {
+//         let index = getMaterialIndex(ielem);
+//         if (index === -1) return index;
+//         if (querschnittset[index].className === 'QuerschnittRechteck') {   //  linear elastisch
+//             wichte = querschnittset[index].wichte
+//             area = querschnittset[index].area
+//         }
+//         eload[ieload].element = ielem
+//         eload[ieload].lf = 1
+//         eload[ieload].art = 1
+//         eload[ieload].pL = wichte * area / 10000.0   // richtige Werte werden in initialisiereElementdaten() gesetzt
+//         eload[ieload].pR = wichte * area / 10000.0
+//         ieload++;
+//     }
 
-    // Streckenlasten
+//     // Streckenlasten
 
-    el = document.getElementById('id_streckenlasten_tabelle');
-    //console.log('EL: >>', el);
-    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+//     el = document.getElementById('id_streckenlasten_tabelle');
+//     //console.log('EL: >>', el);
+//     //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
-    let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    //console.log('nZeilen', table.rows.length);
-    //console.log('nSpalten', table.rows[0].cells.length);
+//     let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+//     //console.log('nZeilen', table.rows.length);
+//     //console.log('nSpalten', table.rows[0].cells.length);
 
-    let nRowTab = table.rows.length;
-    let nColTab = table.rows[0].cells.length;
-    let wert: any;
-    let shad = el?.shadowRoot?.getElementById('mytable')
+//     let nRowTab = table.rows.length;
+//     let nColTab = table.rows[0].cells.length;
+//     let wert: any;
+//     let shad = el?.shadowRoot?.getElementById('mytable')
 
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
-            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
-            wert = child.value;
-            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[ieload].art = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) eload[ieload].pL = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 5) eload[ieload].pR = Number(testNumber(wert, izeile, ispalte, shad));
-        }
-        if (eload[ieload].lf > nlastfaelle) {
-            fatal_error = true;
-            write('Elementstreckenlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
-        }
+//     for (let izeile = 1; izeile < nRowTab; izeile++) {
+//         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+//             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+//             wert = child.value;
+//             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+//             if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//             else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 3) eload[ieload].art = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 4) eload[ieload].pL = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 5) eload[ieload].pR = Number(testNumber(wert, izeile, ispalte, shad));
+//         }
+//         if (eload[ieload].lf > nlastfaelle) {
+//             fatal_error = true;
+//             write('Elementstreckenlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+//         }
 
-        console.log("eload", izeile, eload[ieload])
-        ieload++;
-    }
+//         console.log("eload", izeile, eload[ieload])
+//         ieload++;
+//     }
 
-    maxValue_eload = new Array(nlastfaelle).fill(0.0)
+//     maxValue_eload = new Array(nlastfaelle).fill(0.0)
 
-    // jetzt die max. Streckenlasten bei Kombinationen bestimmen
+//     // jetzt die max. Streckenlasten bei Kombinationen bestimmen
 
-    if (nkombinationen > 0) maxValue_eload_komb = new Array(nkombinationen).fill(0.0)
+//     if (nkombinationen > 0) maxValue_eload_komb = new Array(nkombinationen).fill(0.0)
 
-    find_maxValues_eloads(ieload);
+//     find_maxValues_eloads(ieload);
 
-    // Einzellasten
+//     // Einzellasten
 
-    el = document.getElementById('id_einzellasten_tabelle');
+//     el = document.getElementById('id_einzellasten_tabelle');
 
-    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+//     table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    nRowTab = table.rows.length;
-    nColTab = table.rows[0].cells.length;
-    shad = el?.shadowRoot?.getElementById('mytable')
+//     nRowTab = table.rows.length;
+//     nColTab = table.rows[0].cells.length;
+//     shad = el?.shadowRoot?.getElementById('mytable')
 
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
-            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
-            wert = child.value;
-            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) {
-                eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-                let ele = eload[ieload].element
-                if (ele < 0 || ele >= nelem_Balken) {
-                    fatal_error = true;
-                    write('Elementeinzellast in Zeile ' + izeile + ': unzulässsige Elementnummer');
-                }
-            }
-            else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) {
-                eload[ieload].x = Number(testNumber(wert, izeile, ispalte, shad));
-                if (!fatal_error) {
-                    let ele = eload[ieload].element
-                    if (eload[ieload].x - 0.0001 > element[ele].sl) {
-                        fatal_error = true;
-                        write('Elementeinzellast in Zeile ' + izeile + ': Lastangriff x größer Stablänge');
-                    } else {
-                        if (eload[ieload].x > element[ele].sl) eload[ieload].x = element[ele].sl  // Rundungsärger eliminieren
-                    }
-                }
-            }
-            else if (ispalte === 4) eload[ieload].P = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 5) eload[ieload].M = Number(testNumber(wert, izeile, ispalte, shad));
-            eload[ieload].art = 6;
-        }
-        // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
-        if (eload[ieload].lf > nlastfaelle) {
-            fatal_error = true;
-            write('Elementeinzellast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
-        }
+//     for (let izeile = 1; izeile < nRowTab; izeile++) {
+//         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+//             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+//             wert = child.value;
+//             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+//             if (ispalte === 1) {
+//                 eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//                 let ele = eload[ieload].element
+//                 if (ele < 0 || ele >= nelem_Balken) {
+//                     fatal_error = true;
+//                     write('Elementeinzellast in Zeile ' + izeile + ': unzulässsige Elementnummer');
+//                 }
+//             }
+//             else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 3) {
+//                 eload[ieload].x = Number(testNumber(wert, izeile, ispalte, shad));
+//                 if (!fatal_error) {
+//                     let ele = eload[ieload].element
+//                     if (eload[ieload].x - 0.0001 > element[ele].sl) {
+//                         fatal_error = true;
+//                         write('Elementeinzellast in Zeile ' + izeile + ': Lastangriff x größer Stablänge');
+//                     } else {
+//                         if (eload[ieload].x > element[ele].sl) eload[ieload].x = element[ele].sl  // Rundungsärger eliminieren
+//                     }
+//                 }
+//             }
+//             else if (ispalte === 4) eload[ieload].P = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 5) eload[ieload].M = Number(testNumber(wert, izeile, ispalte, shad));
+//             eload[ieload].art = 6;
+//         }
+//         // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+//         if (eload[ieload].lf > nlastfaelle) {
+//             fatal_error = true;
+//             write('Elementeinzellast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+//         }
 
-        console.log("eload", izeile, eload[ieload])
-        ieload++;
+//         console.log("eload", izeile, eload[ieload])
+//         ieload++;
 
-    }
+//     }
 
-    // Temperatur
+//     // Temperatur
 
-    el = document.getElementById('id_temperaturlasten_tabelle');
+//     el = document.getElementById('id_temperaturlasten_tabelle');
 
-    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+//     table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    nRowTab = table.rows.length;
-    nColTab = table.rows[0].cells.length;
-    shad = el?.shadowRoot?.getElementById('mytable')
+//     nRowTab = table.rows.length;
+//     nColTab = table.rows[0].cells.length;
+//     shad = el?.shadowRoot?.getElementById('mytable')
 
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
-            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
-            wert = child.value;
-            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[ieload].Tu = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 4) eload[ieload].To = Number(testNumber(wert, izeile, ispalte, shad));
-            eload[ieload].art = 5;
-        }
-        // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
-        if (eload[ieload].lf > nlastfaelle) {
-            fatal_error = true;
-            write('Elementtemperaturlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
-        }
+//     for (let izeile = 1; izeile < nRowTab; izeile++) {
+//         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+//             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+//             wert = child.value;
+//             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+//             if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//             else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 3) eload[ieload].Tu = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 4) eload[ieload].To = Number(testNumber(wert, izeile, ispalte, shad));
+//             eload[ieload].art = 5;
+//         }
+//         // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+//         if (eload[ieload].lf > nlastfaelle) {
+//             fatal_error = true;
+//             write('Elementtemperaturlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+//         }
 
-        console.log("eload", izeile, eload[ieload])
-        ieload++;
+//         console.log("eload", izeile, eload[ieload])
+//         ieload++;
 
-    }
+//     }
 
-    // Vorspannung
+//     // Vorspannung
 
-    el = document.getElementById('id_vorspannungen_tabelle');
+//     el = document.getElementById('id_vorspannungen_tabelle');
 
-    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+//     table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    nRowTab = table.rows.length;
-    nColTab = table.rows[0].cells.length;
-    shad = el?.shadowRoot?.getElementById('mytable')
+//     nRowTab = table.rows.length;
+//     nColTab = table.rows[0].cells.length;
+//     shad = el?.shadowRoot?.getElementById('mytable')
 
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
-            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
-            wert = child.value;
-            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[ieload].sigmaV = Number(testNumber(wert, izeile, ispalte, shad)) * 1000.0; //von MN/m² in kN/m²
-            eload[ieload].art = 9;
-        }
-        // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
-        if (eload[ieload].lf > nlastfaelle) {
-            fatal_error = true;
-            write('Elementtemperaturlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
-        }
+//     for (let izeile = 1; izeile < nRowTab; izeile++) {
+//         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+//             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+//             wert = child.value;
+//             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+//             if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//             else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 3) eload[ieload].sigmaV = Number(testNumber(wert, izeile, ispalte, shad)) * 1000.0; //von MN/m² in kN/m²
+//             eload[ieload].art = 9;
+//         }
+//         // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+//         if (eload[ieload].lf > nlastfaelle) {
+//             fatal_error = true;
+//             write('Elementtemperaturlast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+//         }
 
-        console.log("eload", izeile, eload[ieload])
-        ieload++;
+//         console.log("eload", izeile, eload[ieload])
+//         ieload++;
 
-    }
+//     }
 
-    // Spannschloss
+//     // Spannschloss
 
-    el = document.getElementById('id_spannschloesser_tabelle');
+//     el = document.getElementById('id_spannschloesser_tabelle');
 
-    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+//     table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-    nRowTab = table.rows.length;
-    nColTab = table.rows[0].cells.length;
-    shad = el?.shadowRoot?.getElementById('mytable')
+//     nRowTab = table.rows.length;
+//     nColTab = table.rows[0].cells.length;
+//     shad = el?.shadowRoot?.getElementById('mytable')
 
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
-            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
-            wert = child.value;
-            //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
-            if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) eload[ieload].delta_s = Number(testNumber(wert, izeile, ispalte, shad)) / 1000.;  // von mm in m
-            eload[ieload].art = 10;
-        }
-        // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
-        if (eload[ieload].lf > nlastfaelle) {
-            fatal_error = true;
-            write('Elementspannschlosslast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
-        }
+//     for (let izeile = 1; izeile < nRowTab; izeile++) {
+//         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+//             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+//             wert = child.value;
+//             //console.log('NODE i:1', nnodes, izeile, ispalte, wert);
+//             if (ispalte === 1) eload[ieload].element = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//             else if (ispalte === 2) eload[ieload].lf = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 3) eload[ieload].delta_s = Number(testNumber(wert, izeile, ispalte, shad)) / 1000.;  // von mm in m
+//             eload[ieload].art = 10;
+//         }
+//         // if (eload[ieload].lf > nlastfaelle) nlastfaelle = eload[ieload].lf
+//         if (eload[ieload].lf > nlastfaelle) {
+//             fatal_error = true;
+//             write('Elementspannschlosslast in Zeile ' + izeile + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
+//         }
 
-        console.log("eload", izeile, eload[ieload])
-        ieload++;
+//         console.log("eload", izeile, eload[ieload])
+//         ieload++;
 
-    }
+//     }
 
-    //for (i = 0; i < nlastfaelle; i++) console.log('maxValue_eload', i, maxValue_eload[i])
-    console.log('maxValue_eload', maxValue_eload)
+//     //for (i = 0; i < nlastfaelle; i++) console.log('maxValue_eload', i, maxValue_eload[i])
+//     console.log('maxValue_eload', maxValue_eload)
 
-    return 0;
+//     return 0;
 
-}
+// }
 
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1351,231 +1351,231 @@ function read_stabvorverformungen() {
     //console.log('nstabvorverfomungen, maxValue_w0', nstabvorverfomungen, maxValue_w0)
 }
 
-//---------------------------------------------------------------------------------------------------------------
-function read_elements() {
-    //-----------------------------------------------------------------------------------------------------------
+// //---------------------------------------------------------------------------------------------------------------
+// function read_elements() {
+//     //-----------------------------------------------------------------------------------------------------------
 
-    let i: number, ielem: number, nod1: number, nod2: number, dx: number, dz: number;
+//     let i: number, ielem: number, nod1: number, nod2: number, dx: number, dz: number;
 
-    let el = document.getElementById('id_element_tabelle');
-    //console.log('EL: >>', el);
-    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
+//     let el = document.getElementById('id_element_tabelle');
+//     //console.log('EL: >>', el);
+//     //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
-    let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-    //console.log('nZeilen', table.rows.length);
-    //console.log('nSpalten', table.rows[0].cells.length);
+//     let table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+//     //console.log('nZeilen', table.rows.length);
+//     //console.log('nSpalten', table.rows[0].cells.length);
 
-    nelem_Balken_Bettung = 0
+//     nelem_Balken_Bettung = 0
 
-    element.length = 0
-    for (i = 0; i < nelem; i++) {
-        element.push(new TElement())
-    }
-    nelemTotal = nelem
+//     element.length = 0
+//     for (i = 0; i < nelem; i++) {
+//         element.push(new TElement())
+//     }
+//     nelemTotal = nelem
 
-    let nRowTab = table.rows.length;
-    let nColTab = table.rows[0].cells.length;
-    let wert: any;
-    let shad = el?.shadowRoot?.getElementById('mytable')
+//     let nRowTab = table.rows.length;
+//     let nColTab = table.rows[0].cells.length;
+//     let wert: any;
+//     let shad = el?.shadowRoot?.getElementById('mytable')
 
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        element[izeile - 1].nGelenke = 0
-        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
-            if (ispalte === 1) {
-                //console.log('iSpalte === 1',izeile, ispalte, table.rows[izeile].cells[ispalte].firstElementChild.value);
-                wert = (table.rows[izeile].cells[ispalte].firstElementChild as HTMLSelectElement).value;
-            } else {
-                let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
-                wert = child.value;
-                //console.log('NODE i:1', nnodes, izeile, ispalte, wert, table.rows[izeile].cells[ispalte].textContent);
-            }
-            if (ispalte === 1) element[izeile - 1].qname = wert;
-            else if (ispalte === 2) element[izeile - 1].elTyp = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 3) element[izeile - 1].nod[0] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 4) element[izeile - 1].nod[1] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte > 4 && ispalte <= 10) {
-                element[izeile - 1].gelenk[ispalte - 5] = Number(testNumber(wert, izeile, ispalte, shad));
-                if (element[izeile - 1].gelenk[ispalte - 5] > 0) element[izeile - 1].nGelenke++;
-            }
-            else if (ispalte === 11) element[izeile - 1].aL = Number(testNumber(wert, izeile, ispalte, shad));
-            else if (ispalte === 12) element[izeile - 1].aR = Number(testNumber(wert, izeile, ispalte, shad));
+//     for (let izeile = 1; izeile < nRowTab; izeile++) {
+//         element[izeile - 1].nGelenke = 0
+//         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+//             if (ispalte === 1) {
+//                 //console.log('iSpalte === 1',izeile, ispalte, table.rows[izeile].cells[ispalte].firstElementChild.value);
+//                 wert = (table.rows[izeile].cells[ispalte].firstElementChild as HTMLSelectElement).value;
+//             } else {
+//                 let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+//                 wert = child.value;
+//                 //console.log('NODE i:1', nnodes, izeile, ispalte, wert, table.rows[izeile].cells[ispalte].textContent);
+//             }
+//             if (ispalte === 1) element[izeile - 1].qname = wert;
+//             else if (ispalte === 2) element[izeile - 1].elTyp = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 3) element[izeile - 1].nod[0] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//             else if (ispalte === 4) element[izeile - 1].nod[1] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//             else if (ispalte > 4 && ispalte <= 10) {
+//                 element[izeile - 1].gelenk[ispalte - 5] = Number(testNumber(wert, izeile, ispalte, shad));
+//                 if (element[izeile - 1].gelenk[ispalte - 5] > 0) element[izeile - 1].nGelenke++;
+//             }
+//             else if (ispalte === 11) element[izeile - 1].aL = Number(testNumber(wert, izeile, ispalte, shad));
+//             else if (ispalte === 12) element[izeile - 1].aR = Number(testNumber(wert, izeile, ispalte, shad));
 
-            else if (ispalte === 13) {
-                element[izeile - 1].k_0 = Number(testNumber(wert, izeile, ispalte, shad));   // in kN/m²
-                if (element[izeile - 1].k_0 !== 0.0) {
-                    nelem_Balken_Bettung++;
-                    if (Math.abs(element[izeile - 1].k_0) > maxBettung) maxBettung = Math.abs(element[izeile - 1].k_0)
-                }
-            }
-        }
-        console.log("element", izeile, element[izeile - 1].qname, element[izeile - 1].nod[0], element[izeile - 1].nod[1])
+//             else if (ispalte === 13) {
+//                 element[izeile - 1].k_0 = Number(testNumber(wert, izeile, ispalte, shad));   // in kN/m²
+//                 if (element[izeile - 1].k_0 !== 0.0) {
+//                     nelem_Balken_Bettung++;
+//                     if (Math.abs(element[izeile - 1].k_0) > maxBettung) maxBettung = Math.abs(element[izeile - 1].k_0)
+//                 }
+//             }
+//         }
+//         console.log("element", izeile, element[izeile - 1].qname, element[izeile - 1].nod[0], element[izeile - 1].nod[1])
 
-        ielem = izeile - 1
+//         ielem = izeile - 1
 
-        nod1 = element[ielem].nod[0];
-        nod2 = element[ielem].nod[1];
+//         nod1 = element[ielem].nod[0];
+//         nod2 = element[ielem].nod[1];
 
-        if (nod1 === -2 && nod2 === -2) element[ielem].isActive = false;
-        if (element[ielem].elTyp === -1) element[ielem].isActive = false;
+//         if (nod1 === -2 && nod2 === -2) element[ielem].isActive = false;
+//         if (element[ielem].elTyp === -1) element[ielem].isActive = false;
 
-        console.log("isActive", (+ielem + 1), element[ielem].isActive, nod1, nod2)
+//         console.log("isActive", (+ielem + 1), element[ielem].isActive, nod1, nod2)
 
-        if (element[ielem].isActive) {
+//         if (element[ielem].isActive) {
 
-            let fehler = 0;
-            if (nod1 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
-            if (nod2 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
-            if (nod1 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
-            if (nod2 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++; }
-            if (nod1 === nod2) { write('Element ' + (+ielem + 1) + ': Knoteninzidenzen für (nod a) und (nod e) muessen unterschiedlich sein'); fehler++; }
+//             let fehler = 0;
+//             if (nod1 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
+//             if (nod2 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
+//             if (nod1 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
+//             if (nod2 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++; }
+//             if (nod1 === nod2) { write('Element ' + (+ielem + 1) + ': Knoteninzidenzen für (nod a) und (nod e) muessen unterschiedlich sein'); fehler++; }
 
-            if (fehler > 0) {
-                fatal_error = true;
-                write('Fataler Eingabefehler für Element ' + (+ielem + 1) + ', bitte als Erstes beheben\n')
-                continue;
-            }
-
-
-            node[nod1].is_used = true
-            node[nod2].is_used = true
-
-            element[ielem].x1 = node[nod1].x;
-            element[ielem].x2 = node[nod2].x;
-            element[ielem].z1 = node[nod1].z;
-            element[ielem].z2 = node[nod2].z;
+//             if (fehler > 0) {
+//                 fatal_error = true;
+//                 write('Fataler Eingabefehler für Element ' + (+ielem + 1) + ', bitte als Erstes beheben\n')
+//                 continue;
+//             }
 
 
-            const dx = element[ielem].x2 - element[ielem].x1;
-            const dz = element[ielem].z2 - element[ielem].z1;
-            element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Stablänge
+//             node[nod1].is_used = true
+//             node[nod2].is_used = true
 
-            if (element[ielem].sl < 1e-12) {
-                write(msg('Länge von Element') + " " + String(ielem + 1) + " " + msg('ist null'))
-                element[ielem].cosinus = 1.0
-                element[ielem].sinus = 0.0
-                element[ielem].alpha = 0.0
-            } else {
-                element[ielem].cosinus = dx / element[ielem].sl
-                element[ielem].sinus = dz / element[ielem].sl
-                element[ielem].alpha = Math.atan2(dz, dx)
-            }
-
-            if (element[ielem].elTyp === 3) {
-
-                let x = (element[ielem].x2 + element[ielem].x1) / 2.0
-                let z = (element[ielem].z2 + element[ielem].z1) / 2.0
-                node.push(new TNode())
-                node[nnodesTotal].x = x
-                node[nnodesTotal].z = z
-                element[ielem].nod[2] = nnodesTotal
-                nnodesTotal++;
-            }
-            else if (element[ielem].elTyp === 4) {
-
-                let dx = (element[ielem].x2 - element[ielem].x1) / 3.0
-                let dz = (element[ielem].z2 - element[ielem].z1) / 3.0
-                let x = element[ielem].x1 + dx
-                let z = element[ielem].z1 + dz
-                node.push(new TNode())
-                node[nnodesTotal].x = x
-                node[nnodesTotal].z = z
-                element[ielem].nod[2] = nnodesTotal
-                nnodesTotal++;
-
-                x = x + dx
-                z = z + dz
-                node.push(new TNode())
-                node[nnodesTotal].x = x
-                node[nnodesTotal].z = z
-                element[ielem].nod[3] = nnodesTotal
-                nnodesTotal++;
-            }
-        }
-    }
-
-    // **********************************
-    // Koppelfedern
-    // **********************************
-
-    el = document.getElementById('id_koppelfedern_tabelle');
-    //console.log('EL: >>', el);
-    //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
-
-    table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-    for (i = 0; i < nelem_koppelfedern; i++) {
-        element.push(new TElement())
-    }
-    nelemTotal += nelem_koppelfedern
-
-    nRowTab = table.rows.length;
-    nColTab = table.rows[0].cells.length;
-    shad = el?.shadowRoot?.getElementById('mytable')
-
-    ielem = nelem_Balken
-
-    for (let izeile = 1; izeile < nRowTab; izeile++) {
-        element[ielem].qname = element[ielem].qname = 'koppelfeder';
-
-        for (let ispalte = 1; ispalte < nColTab; ispalte++) {
-
-            let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
-            wert = child.value;
-            //console.log('NODE i:1', nnodes, izeile, ispalte, wert, table.rows[izeile].cells[ispalte].textContent);
-
-            if (ispalte === 1) element[ielem].nod[0] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte === 2) element[ielem].nod[1] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
-            else if (ispalte > 2) {
-                element[ielem].mat_koppelfeder[ispalte - 3] = Number(testNumber(wert, izeile, ispalte, shad));
-                console.log("MAT KOPPELFEDER", wert, element[ielem].mat_koppelfeder[ispalte - 3])
-            }
-        }
-        console.log("element", izeile, element[ielem].qname, element[ielem].nod[0], element[ielem].nod[1])
+//             element[ielem].x1 = node[nod1].x;
+//             element[ielem].x2 = node[nod2].x;
+//             element[ielem].z1 = node[nod1].z;
+//             element[ielem].z2 = node[nod2].z;
 
 
-        nod1 = element[ielem].nod[0];
-        nod2 = element[ielem].nod[1];
+//             const dx = element[ielem].x2 - element[ielem].x1;
+//             const dz = element[ielem].z2 - element[ielem].z1;
+//             element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Stablänge
 
-        if (nod1 === -2 && nod2 === -2) element[ielem].isActive = false;
+//             if (element[ielem].sl < 1e-12) {
+//                 write(msg('Länge von Element') + " " + String(ielem + 1) + " " + msg('ist null'))
+//                 element[ielem].cosinus = 1.0
+//                 element[ielem].sinus = 0.0
+//                 element[ielem].alpha = 0.0
+//             } else {
+//                 element[ielem].cosinus = dx / element[ielem].sl
+//                 element[ielem].sinus = dz / element[ielem].sl
+//                 element[ielem].alpha = Math.atan2(dz, dx)
+//             }
 
-        console.log("isActive", (+ielem + 1), element[ielem].isActive, nod1, nod2)
+//             if (element[ielem].elTyp === 3) {
 
-        if (element[ielem].isActive) {
+//                 let x = (element[ielem].x2 + element[ielem].x1) / 2.0
+//                 let z = (element[ielem].z2 + element[ielem].z1) / 2.0
+//                 node.push(new TNode())
+//                 node[nnodesTotal].x = x
+//                 node[nnodesTotal].z = z
+//                 element[ielem].nod[2] = nnodesTotal
+//                 nnodesTotal++;
+//             }
+//             else if (element[ielem].elTyp === 4) {
 
-            let fehler = 0;
-            if (nod1 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
-            if (nod2 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
-            if (nod1 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
-            if (nod2 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++; }
-            if (nod1 === nod2) { write('Element ' + (+ielem + 1) + ': Knoteninzidenzen für (nod a) und (nod e) muessen unterschiedlich sein'); fehler++; }
+//                 let dx = (element[ielem].x2 - element[ielem].x1) / 3.0
+//                 let dz = (element[ielem].z2 - element[ielem].z1) / 3.0
+//                 let x = element[ielem].x1 + dx
+//                 let z = element[ielem].z1 + dz
+//                 node.push(new TNode())
+//                 node[nnodesTotal].x = x
+//                 node[nnodesTotal].z = z
+//                 element[ielem].nod[2] = nnodesTotal
+//                 nnodesTotal++;
 
-            if (fehler > 0) {
-                fatal_error = true;
-                write('Fataler Eingabefehler für Element ' + (+ielem + 1) + ', bitte als Erstes beheben\n')
-                continue;
-            }
+//                 x = x + dx
+//                 z = z + dz
+//                 node.push(new TNode())
+//                 node[nnodesTotal].x = x
+//                 node[nnodesTotal].z = z
+//                 element[ielem].nod[3] = nnodesTotal
+//                 nnodesTotal++;
+//             }
+//         }
+//     }
 
-            node[nod1].is_used = true
-            node[nod2].is_used = true
+//     // **********************************
+//     // Koppelfedern
+//     // **********************************
 
-            element[ielem].x1 = node[nod1].x;
-            element[ielem].x2 = node[nod2].x;
-            element[ielem].z1 = node[nod1].z;
-            element[ielem].z2 = node[nod2].z;
+//     el = document.getElementById('id_koppelfedern_tabelle');
+//     //console.log('EL: >>', el);
+//     //console.log('QUERY', el?.shadowRoot?.getElementById('mytable'));
 
-            element[ielem].sl = 1.0   // Stablänge
+//     table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
 
-            element[ielem].cosinus = 1.0
-            element[ielem].sinus = 0.0
-            element[ielem].alpha = 0.0
+//     for (i = 0; i < nelem_koppelfedern; i++) {
+//         element.push(new TElement())
+//     }
+//     nelemTotal += nelem_koppelfedern
 
-        }
+//     nRowTab = table.rows.length;
+//     nColTab = table.rows[0].cells.length;
+//     shad = el?.shadowRoot?.getElementById('mytable')
 
-        ielem++;
-    }
+//     ielem = nelem_Balken
+
+//     for (let izeile = 1; izeile < nRowTab; izeile++) {
+//         element[ielem].qname = element[ielem].qname = 'koppelfeder';
+
+//         for (let ispalte = 1; ispalte < nColTab; ispalte++) {
+
+//             let child = table.rows[izeile].cells[ispalte].firstElementChild as HTMLInputElement;
+//             wert = child.value;
+//             //console.log('NODE i:1', nnodes, izeile, ispalte, wert, table.rows[izeile].cells[ispalte].textContent);
+
+//             if (ispalte === 1) element[ielem].nod[0] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//             else if (ispalte === 2) element[ielem].nod[1] = Number(testNumber(wert, izeile, ispalte, shad)) - 1;
+//             else if (ispalte > 2) {
+//                 element[ielem].mat_koppelfeder[ispalte - 3] = Number(testNumber(wert, izeile, ispalte, shad));
+//                 console.log("MAT KOPPELFEDER", wert, element[ielem].mat_koppelfeder[ispalte - 3])
+//             }
+//         }
+//         console.log("element", izeile, element[ielem].qname, element[ielem].nod[0], element[ielem].nod[1])
 
 
-}
+//         nod1 = element[ielem].nod[0];
+//         nod2 = element[ielem].nod[1];
+
+//         if (nod1 === -2 && nod2 === -2) element[ielem].isActive = false;
+
+//         console.log("isActive", (+ielem + 1), element[ielem].isActive, nod1, nod2)
+
+//         if (element[ielem].isActive) {
+
+//             let fehler = 0;
+//             if (nod1 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss größer 0 sein'); fehler++; }
+//             if (nod2 < 0) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss größer 0 sein'); fehler++; }
+//             if (nod1 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod a) muss <= Anzahl Knoten sein'); fehler++; }
+//             if (nod2 > (nnodes - 1)) { write('Element ' + (+ielem + 1) + ': Knoteninzidenz (nod e) muss <= Anzahl Knoten sein'); fehler++; }
+//             if (nod1 === nod2) { write('Element ' + (+ielem + 1) + ': Knoteninzidenzen für (nod a) und (nod e) muessen unterschiedlich sein'); fehler++; }
+
+//             if (fehler > 0) {
+//                 fatal_error = true;
+//                 write('Fataler Eingabefehler für Element ' + (+ielem + 1) + ', bitte als Erstes beheben\n')
+//                 continue;
+//             }
+
+//             node[nod1].is_used = true
+//             node[nod2].is_used = true
+
+//             element[ielem].x1 = node[nod1].x;
+//             element[ielem].x2 = node[nod2].x;
+//             element[ielem].z1 = node[nod1].z;
+//             element[ielem].z2 = node[nod2].z;
+
+//             element[ielem].sl = 1.0   // Stablänge
+
+//             element[ielem].cosinus = 1.0
+//             element[ielem].sinus = 0.0
+//             element[ielem].alpha = 0.0
+
+//         }
+
+//         ielem++;
+//     }
+
+
+// }
 
 
 //---------------------------------------------------------------------------------------------------------------

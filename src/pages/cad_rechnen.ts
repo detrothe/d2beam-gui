@@ -195,7 +195,7 @@ export function cad_rechnen() {
                     index = obj.index2;
                     let nod2 = CADNodes[index].index_FE
 
-                    element[ielem].qname = obj.name_querschnitt
+                    element[ielem].qname = obj.name_querschnitt.trim();
                     element[ielem].nod[0] = nod1
                     element[ielem].nod[1] = nod2
 
