@@ -83,6 +83,8 @@ import { drDialogKnotenmasse } from '../components/dr-dialog_knotenmasse';
 import { TCAD_Bemassung } from './cad_bemassung';
 import { drHaupt } from '../components/dr-haupt';
 
+import { capabilities, isAbortError } from './saveFile'
+
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
 
 let lastFileHandle = 'documents';
@@ -756,26 +758,41 @@ async function handleFileSelect_save() {
         //     download(filename, jsonse);
         //     set_current_filename(filename);
     } else {
-        //window.alert("showSaveFilePicker UNBEKANNT");
-        filename = window.prompt(
-            'Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert',
-            currentFilename
-        );
-        const myFile = new File([jsonse], filename, {
-            type: 'text/plain;charset=utf-8',
-        });
-        try {
-            saveAs(myFile);
-            set_current_filename(filename);
-        } catch (error: any) {
-            //alert(error.name);
-            alert(error.message);
+
+        const mimeType = 'application/json'; //opts.mimeType ?? 'application/octet-stream';
+        const blob = new Blob([jsonse], { type: 'text/plain' });
+        const file = new File([blob], currentFilename, { type: blob.type || mimeType });
+        write("test can share " + capabilities.canShareFile(file))
+        if (capabilities.canShareFile(file)) {
+            write('in share')
+            try {
+                await navigator.share({ files: [file], title: currentFilename });
+                //return { ok: true, method: 'share' };
+            } catch (err) {
+                // if (isAbortError(err)) return { ok: false, reason: 'cancelled' };
+                write('navigator.share fehlgeschlagen, nutze Download: ' + err);
+            }
+        } else {
+
+
+            //window.alert("showSaveFilePicker UNBEKANNT");
+            filename = window.prompt(
+                'Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert',
+                currentFilename
+            );
+            const myFile = new File([jsonse], filename, {
+                type: 'text/plain;charset=utf-8',
+            });
+            try {
+                saveAs(myFile);
+                set_current_filename(filename);
+            } catch (error: any) {
+                //alert(error.name);
+                alert(error.message);
+            }
+
         }
     }
-
-    //}
-
-    //  }
 }
 
 export function str_inputToJSON() {
