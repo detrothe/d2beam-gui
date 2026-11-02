@@ -622,14 +622,6 @@
   <source>Zeige :</source>
   <target>Mostrar :</target>
 </trans-unit>
-<trans-unit id="s84b24c83aaeeb5f3">
-  <source>alle</source>
-  <target>todos</target>
-</trans-unit>
-<trans-unit id="s917e04d0ca03a1bf">
-  <source>Lastfall 1</source>
-  <target>caso de carga 1</target>
-</trans-unit>
 <trans-unit id="s42a8fafacf7d0fa7">
   <source>System als svg-Datei speichern</source>
   <target>Guardar el sistema como archivo svg</target>
@@ -637,10 +629,6 @@
 <trans-unit id="sb205170315fd9dbe">
   <source>alle Lastfälle</source>
   <target>todos los casos de carga</target>
-</trans-unit>
-<trans-unit id="sdcc618dd2b6ce1f4">
-  <source>Lastfall </source>
-  <target>caso de carga </target>
 </trans-unit>
 <trans-unit id="s8db89619f41917b4">
   <source>Pin</source>
@@ -653,10 +641,6 @@
 <trans-unit id="sb2246a8686ca9805">
   <source>Schließen</source>
   <target>Cerrar</target>
-</trans-unit>
-<trans-unit id="s45a6175ff5837d88">
-  <source>Elementlasten </source>
-  <target>cargas por elemento</target>
 </trans-unit>
 <trans-unit id="s08395b5ece17be10">
   <source>Bemaßung parallel</source>
@@ -1613,6 +1597,18 @@
 <trans-unit id="s5ceeb541246402e4">
   <source>Der darzustellende Rasterbereich enthält unzulässige Werte</source>
   <target>El área de la tabla que se va a mostrar contiene valores no válidos</target>
+</trans-unit>
+<trans-unit id="s18fcff9c5e03f48e">
+  <source>Einzellasten dürfen nicht null sein</source>
+  <target>Las cargas puntuales no pueden ser cero</target>
+</trans-unit>
+<trans-unit id="s7d268ed1a95e365d">
+  <source>Name für Querschnitt schon vergeben</source>
+  <target>El nombre de la sección transversal ya está en uso</target>
+</trans-unit>
+<trans-unit id="s917e29d0ca03e09e">
+  <source>Lastfall <x id="0" equiv-text="${i + 1}"/></source>
+  <target>Caso de carga <x id="0" equiv-text="${i + 1}"/></target>
 </trans-unit>
 </body>
 </file>

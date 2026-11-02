@@ -3,7 +3,7 @@
     // Re-generate this file by running lit-localize
 
     
-    
+    import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
     /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -51,6 +51,7 @@
 's1654f3b8ada9e06f': `Se deben definir al menos 2 nodos`,
 's1802ab88151d5b76': `Tipo de sistema:`,
 's180a3aad88575d3d': `líneas de trama`,
+'s18fcff9c5e03f48e': `Las cargas puntuales no pueden ser cero`,
 's190747c04bd639f7': `Elemento`,
 's19991f9668db8bb8': `guía rápida e información`,
 's19afcf0b0dfe1028': `Al menos una deformación de elemento debe ser distinta de cero`,
@@ -106,7 +107,6 @@
 's42d04fe173ce3377': `Masa nodular`,
 's42dee0a9650c7116': `seleccionar nodo`,
 's43416e6180c07e85': `Deformación de nudos`,
-'s45a6175ff5837d88': `cargas por elemento`,
 's45c6ed4f68df387a': `Longitud dx demasiado pequeña`,
 's45d4a50b4d28b89c': `Masa`,
 's45deb552041bc081': `Introducción de las combinaciones`,
@@ -193,6 +193,7 @@
 's7ce8e2f713417b9b': `Posibles soluciones: reducir las cargas o aumentar las secciones transversales.`,
 's7d0cb3c2effc8ec2': `El punto de aplicación de la carga x debe ser mayor o igual a cero`,
 's7d0cc518c494a80e': `Rotación del nudo (soporte), en sentido antihorario positivo`,
+'s7d268ed1a95e365d': `El nombre de la sección transversal ya está en uso`,
 's7d7b08def4b4d34b': `El pretensado debe ser distinto de cero`,
 's7ec9a790330ec265': `Suma de los momentos de inercia`,
 's805e18010aa2ee49': `peso esp.`,
@@ -202,7 +203,6 @@
 's83977996c90f160f': `Página`,
 's83c549670e2c85da': `Marco`,
 's846311b9c04c189d': `Para mejorar la convergencia en la iteración de los valores propios:`,
-'s84b24c83aaeeb5f3': `todos`,
 's852c56c86f4f4449': `cargas puntuales`,
 's873e4ab6fd271d36': `0 o vacío = escalado automático al valor máximo del cálculo del valor propio`,
 's8798cd87ae5032f5': `cargas térmicas`,
@@ -231,8 +231,8 @@
 's8f411426731b6d29': `Cancelar`,
 's90b0d535974c7970': `Este número no es válido en línea`,
 's917adb24fdaed8f5': `No se ha logrado la convergencia de deformaciones/fuerzas en al menos una combinación.`,
-'s917e04d0ca03a1bf': `caso de carga 1`,
 's917e0dd0ca03b10a': `Caso de carga:`,
+'s917e29d0ca03e09e': str`Caso de carga ${0}`,
 's917ea53ba1ad9f9e': `introducción del elemento de barra`,
 's9234cde5c4c75943': `Iniciar nuevo proyecto`,
 's9278a256ab573265': `denominación`,
@@ -348,7 +348,6 @@
 'sdb44853a9a24fec0': `Borrar los valores predeterminados de la memoria del navegador`,
 'sdb4cee89615a9395': `Si el campo de entrada para Δ está vacío, no se tiene en cuenta ninguna imperfección.`,
 'sdbea3d97e0950350': `introducción de masas de nudos`,
-'sdcc618dd2b6ce1f4': `caso de carga `,
 'sdd624efda3f25db6': `Posible causa: el sistema es cinemático.`,
 'sde5e53bd97d6062e': `tensor`,
 'sdee1d2056321d187': `Datos de elementos`,

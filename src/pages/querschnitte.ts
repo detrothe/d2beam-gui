@@ -15,7 +15,7 @@ export function set_querschnitts_zaehler(wert: number) { querschnitts_zaehler = 
 export let default_querschnitt = ''
 export function set_default_querschnitt(wert: string) { default_querschnitt = wert };
 
-export let querschnittset = [] as TQuerschnitt[]
+export let querschnittset = [] as TQuerschnittRechteck[]
 
 let dialog_querschnitt_new = true;
 export function set_dialog_querschnitt_new(wert: boolean) { dialog_querschnitt_new = wert };
@@ -167,18 +167,16 @@ export function del_querschnittSet(qname: string) {
 
 
 //---------------------------------------------------------------------------------------------------------------
-export function find_querschnittSet(qname: string) {
+function find_querschnittSet_in_CAD_STAB(qname: string): boolean {
     //-----------------------------------------------------------------------------------------------------------
-
-    let anzahl = 0;
 
     for (let i = 0; i < list.size; i++) {
         let obj = list.getNext(i) as TCAD_Stab;
         if (obj.elTyp === CAD_STAB) {
-            if (obj.name_querschnitt === qname) return 1;
+            if (obj.name_querschnitt === qname) return true;
         }
     }
-    return anzahl;
+    return false;
 
     // const el = document.getElementById('id_element_tabelle');
     // const table = el?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
@@ -240,7 +238,6 @@ export function get_querschnitt_index(qname: string) {
     for (let index = 0; index < querschnittset.length; index++) {
         if (qname === querschnittset[index].name) {
             return index;
-            break;
         }
     }
     return -1;
@@ -253,23 +250,26 @@ export function click_neuer_querschnitt_rechteck() {
     console.log('click_neuer_querschnitt_rechteck()');
 
     const elHaupt = document.getElementById('id_haupt') as drHaupt;
-    let shadow = elHaupt.shadowRoot;
-    if (shadow) {
-        const el = shadow.getElementById('id_dialog_rechteck') as drRechteckQuerSchnitt;
+    const shadow = elHaupt.shadowRoot;
+    if (!shadow) return;
 
-        el.init_name_changed(true, '');
+    const el = shadow.getElementById('id_dialog_rechteck') as drRechteckQuerSchnitt;
 
-        // console.log("id_dialog_rechteck", el);
-        // console.log("QUERY Dialog", el?.shadowRoot?.getElementById("dialog_rechteck"));
+    el.init_name_changed(true, '');
 
-        (el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement).addEventListener('close', dialog_querschnitt_closed);
+    const dlg = el.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement;
+    dlg.addEventListener('close', dialog_querschnitt_closed, { once: true });
 
-        set_dialog_querschnitt_new(true);
+    // (el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement).addEventListener('close', dialog_querschnitt_closed);
 
-        (el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement).showModal();
-    }
+    set_dialog_querschnitt_new(true);
+    dlg.showModal();
+
+    // (el?.shadowRoot?.getElementById('dialog_rechteck') as HTMLDialogElement).showModal();
+
 }
 
+// aufgerufen von: dialog_querschnitt_closed, add_rechteck_querschnitt, init_tabellen in rechnen.ts
 //---------------------------------------------------------------------------------------------------------------
 export function add_new_cross_section(qName: string, id: string) {
     //-------------------------------------------------------------------------------------------------------------
@@ -285,7 +285,7 @@ export function add_new_cross_section(qName: string, id: string) {
         const quer_button = document.createElement("sl-button");
         quer_button.textContent = qName;
         quer_button.style.minWidth = "8rem";
-        quer_button.addEventListener("click", opendialog);
+        quer_button.addEventListener("click", show_cross_section_dialog);
         quer_button.title = "click to modify";
         quer_button.id = id;
         //quer_button.style.margin='0';
@@ -312,7 +312,7 @@ export function add_new_cross_section(qName: string, id: string) {
 </svg>
     `;
         //        delete_button.innerHTML = '<i class = "fa fa-trash"></i>';
-        delete_button.addEventListener("click", contextmenu_querschnitt);
+        delete_button.addEventListener("click", button_delete_querschnitt);
         delete_button.title = "delete Querschnitt";
         //delete_button.style.margin='0';
         //delete_button.style.padding='auto'
@@ -348,289 +348,393 @@ export function add_new_cross_section(qName: string, id: string) {
     }
 }
 
-
 //---------------------------------------------------------------------------------------------------------------
-function opendialog(ev: any) {
-    //-------------------------------------------------------------------------------------------------------------
+function show_cross_section_dialog(ev: Event) {
+    //---------------------------------------------------------------------------------------------------------------
 
-    // @ts-ignore
-    console.log("opendialog geht", this);
     ev.preventDefault();
 
-    const elHaupt = document.getElementById('id_haupt') as drHaupt;
-    let shadow = elHaupt.shadowRoot;
-    if (shadow) {
+    const shadow = (document.getElementById('id_haupt') as drHaupt).shadowRoot;
+    if (!shadow) return;
 
-        // console.log("id", document.getElementById(id));
+    const ele = ev.currentTarget as HTMLElement;
+    const id = ele.id;
+    const qname = (ele.textContent ?? '').trim();
+    const index = get_querschnitt_index(qname);
 
-        // const myArray = id.split("-");
-        // console.log("Array", myArray.length, myArray[0], myArray[1]);
-
-        // const index = Number(myArray[1]);
-
-        // @ts-ignore
-        //const ele = this;
-        const ele = ev.currentTarget as HTMLElement;
-        const id = ele.id;
-        const qname = ele.textContent ?? '';
-        console.log("opendialog, qname", JSON.stringify(ele.innerText), "|", JSON.stringify(ele.textContent), ele.id);
-        const index = get_querschnitt_index(qname);
-
-        if (index < 0) {
-            alert("BIG Problem in opendialog, contact developer");
-            return;
-        }
-
-        {
-            //let qname: string = '', id0: string = ''
-            //let emodul: number = 0, Iy: number = 0, area: number = 0, height: number = 0, bettung: number = 0, wichte: number = 0;
-
-            const [qname, id0, emodul, Iy, area, height, width, definedQuerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT,
-                flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn] = get_querschnittRechteck(index);
-
-            //if (id0 !== id) console.log("BIG Problem in opendialog");
-
-            const el = shadow.getElementById("id_dialog_rechteck") as HTMLDialogElement;
-
-            let elem = el?.shadowRoot?.getElementById("emodul") as HTMLInputElement;
-            console.log("set emodul=", elem.value, emodul);
-            elem.value = String(emodul);
-            elem = el?.shadowRoot?.getElementById("traeg_y") as HTMLInputElement;
-            elem.value = String(Iy);
-            elem = el?.shadowRoot?.getElementById("area") as HTMLInputElement;
-            elem.value = String(area);
-            elem = el?.shadowRoot?.getElementById("qname") as HTMLInputElement;
-            elem.value = String(qname).trim();
-            elem = el?.shadowRoot?.getElementById("height") as HTMLInputElement;
-            elem.value = String(height);
-            elem = el?.shadowRoot?.getElementById("width") as HTMLInputElement;
-            elem.value = String(width);
-            elem = el?.shadowRoot?.getElementById("id_defquerschnitt") as HTMLInputElement;
-            elem.value = String(definedQuerschnitt);
-            elem = el?.shadowRoot?.getElementById("wichte") as HTMLInputElement;
-            elem.value = String(wichte);
-            elem = el?.shadowRoot?.getElementById("schubfaktor") as HTMLInputElement;
-            elem.value = String(schubfaktor);
-            elem = el?.shadowRoot?.getElementById("querdehnzahl") as HTMLInputElement;
-            elem.value = String(querdehnzahl);
-            elem = el?.shadowRoot?.getElementById("zso") as HTMLInputElement;
-            elem.value = String(zso);
-            let wert = String(myFormat(Number(alphaT), 1, 6, 1)).replace(/,/g, ".");
-            elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
-            // elem.setAttribute('value', String(myFormat(Number(alphaT), 1, 6, 1)));
-            console.log("myformat", alphaT, "|", myFormat(Number(alphaT), 1, 6, 1), "|", String(myFormat(Number(alphaT), 1, 6, 1)));
-            //    elem.value = String(alphaT);
-            elem.value = wert;
-
-            elem = el?.shadowRoot?.getElementById("id_fakt_dehn") as HTMLInputElement;
-            elem.value = String(faktor_dehn);
-
-            elem = (el?.shadowRoot?.getElementById("id_TQ_flanschbreite") as HTMLInputElement);
-            elem.value = String(flanschbreite);
-            elem = (el?.shadowRoot?.getElementById("id_TQ_flanschhoehe") as HTMLInputElement);
-            elem.value = String(flanschhoehe);
-            elem = (el?.shadowRoot?.getElementById("id_TQ_stegbreite_oben") as HTMLInputElement);
-            elem.value = String(stegbreite_oben);
-            elem = (el?.shadowRoot?.getElementById("id_TQ_stegbreite_unten") as HTMLInputElement);
-            elem.value = String(stegbreite_unten);
-            elem = (el?.shadowRoot?.getElementById("id_TQ_steghoehe") as HTMLInputElement);
-            elem.value = String(steghoehe);
-        }
-
-        //const el=shadow.getElementById(id);
-        const el = shadow.getElementById("id_dialog_rechteck") as drRechteckQuerSchnitt;
-
-        el.init_name_changed(false, String(qname).trim());
-
-        (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).addEventListener("close", dialog_querschnitt_closed);
-
-        dialog_querschnitt_new = false;
-        dialog_querschnitt_index = index;
-        dialog_querschnitt_item_id = id;
-
-        (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).showModal();
+    if (index < 0) {
+        alert("BIG Problem in show_cross_section_dialog, contact developer");
+        return;
     }
+
+    const el = shadow.getElementById("id_dialog_rechteck") as drRechteckQuerSchnitt;
+    const root = el.shadowRoot!;
+    const q = querschnittset[index];
+
+    const setVal = (elemId: string, v: string | number) => {
+        (root.getElementById(elemId) as HTMLInputElement).value = String(v);
+    };
+
+    setVal("emodul", q.emodul);
+    setVal("traeg_y", q.Iy);
+    setVal("area", q.area);
+    setVal("qname", q.name.trim());
+    setVal("height", q.height);
+    setVal("width", q.width);
+    setVal("id_defquerschnitt", q.definedQuerschnitt);
+    setVal("wichte", q.wichte);
+    setVal("schubfaktor", q.schubfaktor);
+    setVal("querdehnzahl", q.querdehnzahl);
+    setVal("zso", q.zso);
+    setVal("alpha_t", String(myFormat(Number(q.alphaT), 1, 6, 1)).replace(/,/g, "."));
+    setVal("id_fakt_dehn", q.faktor_dehn);
+    setVal("id_TQ_flanschbreite", q.flanschbreite);
+    setVal("id_TQ_flanschhoehe", q.flanschhoehe);
+    setVal("id_TQ_stegbreite_oben", q.stegbreite_oben);
+    setVal("id_TQ_stegbreite_unten", q.stegbreite_unten);
+    setVal("id_TQ_steghoehe", q.steghoehe);
+
+    el.init_name_changed(false, qname);
+
+    const dlg = root.getElementById("dialog_rechteck") as HTMLDialogElement;
+    dlg.addEventListener("close", dialog_querschnitt_closed, { once: true });
+
+    dialog_querschnitt_new = false;
+    dialog_querschnitt_index = index;
+    dialog_querschnitt_item_id = id;
+    console.log("show_cross_section_dialog, id", id)
+
+
+    dlg.showModal();
 }
 
 
+// //---------------------------------------------------------------------------------------------------------------
+// function show_new_cross_section_dialog(ev: any) {
+//     //-------------------------------------------------------------------------------------------------------------
+
+//     // @ts-ignore
+//     console.log("show_new_cross_section_dialog geht", this);
+//     ev.preventDefault();
+
+//     const elHaupt = document.getElementById('id_haupt') as drHaupt;
+//     let shadow = elHaupt.shadowRoot;
+//     if (shadow) {
+
+//         // console.log("id", document.getElementById(id));
+
+//         // const myArray = id.split("-");
+//         // console.log("Array", myArray.length, myArray[0], myArray[1]);
+
+//         // const index = Number(myArray[1]);
+
+//         // @ts-ignore
+//         //const ele = this;
+//         const ele = ev.currentTarget as HTMLElement;
+//         const id = ele.id;
+//         const qname = (ele.textContent ?? '').trim();
+//         console.log("show_new_cross_section_dialog, qname", JSON.stringify(ele.innerText), "|", JSON.stringify(ele.textContent), ele.id);
+//         const index = get_querschnitt_index(qname);
+
+//         if (index < 0) {
+//             alert("BIG Problem in show_new_cross_section_dialog, contact developer");
+//             return;
+//         }
+
+//         {
+//             //let qname: string = '', id0: string = ''
+//             //let emodul: number = 0, Iy: number = 0, area: number = 0, height: number = 0, bettung: number = 0, wichte: number = 0;
+
+//             const [qname, id0, emodul, Iy, area, height, width, definedQuerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT,
+//                 flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn] = get_querschnittRechteck(index);
+
+//             //if (id0 !== id) console.log("BIG Problem in add_new_cross_section_dialog");
+
+//             const el = shadow.getElementById("id_dialog_rechteck") as HTMLDialogElement;
+
+//             let elem = el?.shadowRoot?.getElementById("emodul") as HTMLInputElement;
+//             console.log("set emodul=", elem.value, emodul);
+//             elem.value = String(emodul);
+//             elem = el?.shadowRoot?.getElementById("traeg_y") as HTMLInputElement;
+//             elem.value = String(Iy);
+//             elem = el?.shadowRoot?.getElementById("area") as HTMLInputElement;
+//             elem.value = String(area);
+//             elem = el?.shadowRoot?.getElementById("qname") as HTMLInputElement;
+//             elem.value = String(qname).trim();
+//             elem = el?.shadowRoot?.getElementById("height") as HTMLInputElement;
+//             elem.value = String(height);
+//             elem = el?.shadowRoot?.getElementById("width") as HTMLInputElement;
+//             elem.value = String(width);
+//             elem = el?.shadowRoot?.getElementById("id_defquerschnitt") as HTMLInputElement;
+//             elem.value = String(definedQuerschnitt);
+//             elem = el?.shadowRoot?.getElementById("wichte") as HTMLInputElement;
+//             elem.value = String(wichte);
+//             elem = el?.shadowRoot?.getElementById("schubfaktor") as HTMLInputElement;
+//             elem.value = String(schubfaktor);
+//             elem = el?.shadowRoot?.getElementById("querdehnzahl") as HTMLInputElement;
+//             elem.value = String(querdehnzahl);
+//             elem = el?.shadowRoot?.getElementById("zso") as HTMLInputElement;
+//             elem.value = String(zso);
+//             let wert = String(myFormat(Number(alphaT), 1, 6, 1)).replace(/,/g, ".");
+//             elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
+//             // elem.setAttribute('value', String(myFormat(Number(alphaT), 1, 6, 1)));
+//             console.log("myformat", alphaT, "|", myFormat(Number(alphaT), 1, 6, 1), "|", String(myFormat(Number(alphaT), 1, 6, 1)));
+//             //    elem.value = String(alphaT);
+//             elem.value = wert;
+
+//             elem = el?.shadowRoot?.getElementById("id_fakt_dehn") as HTMLInputElement;
+//             elem.value = String(faktor_dehn);
+
+//             elem = (el?.shadowRoot?.getElementById("id_TQ_flanschbreite") as HTMLInputElement);
+//             elem.value = String(flanschbreite);
+//             elem = (el?.shadowRoot?.getElementById("id_TQ_flanschhoehe") as HTMLInputElement);
+//             elem.value = String(flanschhoehe);
+//             elem = (el?.shadowRoot?.getElementById("id_TQ_stegbreite_oben") as HTMLInputElement);
+//             elem.value = String(stegbreite_oben);
+//             elem = (el?.shadowRoot?.getElementById("id_TQ_stegbreite_unten") as HTMLInputElement);
+//             elem.value = String(stegbreite_unten);
+//             elem = (el?.shadowRoot?.getElementById("id_TQ_steghoehe") as HTMLInputElement);
+//             elem.value = String(steghoehe);
+//         }
+
+//         //const el=shadow.getElementById(id);
+//         const el = shadow.getElementById("id_dialog_rechteck") as drRechteckQuerSchnitt;
+
+//         el.init_name_changed(false, String(qname).trim());
+
+//         (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).addEventListener("close", dialog_querschnitt_closed);
+
+//         dialog_querschnitt_new = false;
+//         dialog_querschnitt_index = index;
+//         dialog_querschnitt_item_id = id;
+
+//         (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).showModal();
+//     }
+// }
+
+
 //---------------------------------------------------------------------------------------------------------------
-export async function contextmenu_querschnitt(ev: any) {
+export async function button_delete_querschnitt(ev: any) {
     //-------------------------------------------------------------------------------------------------------------
 
     let qname = "";
 
     ev.preventDefault();
 
-    // @ts-ignore
-    const el = this;
-    //console.log("el,this",ev.offsetParent)
-    const id_button = el.value; // button
+    // // @ts-ignore
+    // const el = this;
+    // //console.log("el,this",ev.offsetParent)
+    // const id_button = el.value; // button
 
-    const elHaupt = document.getElementById('id_haupt') as drHaupt;
-    let shadow = elHaupt.shadowRoot;
-    if (shadow) {
-        const ele = shadow.getElementById(id_button) as SlButton;
-        if (ele != null) qname = ele.textContent!;
-        //console.log("contextmenu_querschnitt, qname", el.innerText, el.textContent, '|', el.value);
 
-        const dialog = new ConfirmDialog({
-            trueButton_Text: "ja",
-            falseButton_Text: "nein",
-            question_Text: msg('Lösche Querschnitt') + ": " + qname,
-        });
-        const loesche = await dialog.confirm();
-        //console.log("loesche", loesche);
+    const btn = ev.currentTarget as HTMLButtonElement;
+    const id_button = btn.value;
 
-        if (loesche) {
-            // window.confirm("Lösche Querschnitt: " + qname)
+    const shadow = (document.getElementById('id_haupt') as drHaupt).shadowRoot;
+    if (!shadow) return;
 
-            const anzahl = find_querschnittSet(qname);
-            if (anzahl === 0) {
-                del_querschnittSet(qname);
+    const ele = shadow.getElementById(id_button) as SlButton;
+    if (ele != null) qname = ele.textContent!;
 
-                let element = shadow.getElementById("id_tree_LQ") as any;
-                //console.log("element.children", element.children);
-                //console.log("el.parentNode", el.parentNode.parentNode);
-                //console.log("el.parentElement", el.parentElement.parentElement);
-                element?.removeChild(el.parentElement.parentElement);
+    const dialog = new ConfirmDialog({
+        trueButton_Text: "ja",
+        falseButton_Text: "nein",
+        question_Text: msg('Lösche Querschnitt') + ": " + qname,
+    });
+    const loesche = await dialog.confirm();
+    //console.log("loesche", loesche);
 
-                remove_def_querschnitt(qname);
-            } else {
-                const dialogAlert = new AlertDialog({
-                    trueButton_Text: "ok",
-                    question_Text: msg('Es gibt mindestens ein Element, das den Querschnitt verwendet'),
-                });
-                await dialogAlert.confirm();
-                //window.alert("Lösche Querschnitt: ")
-            }
+    if (loesche) {
+        const gefunden = find_querschnittSet_in_CAD_STAB(qname);
+        if (gefunden) {
+            const dialogAlert = new AlertDialog({
+                trueButton_Text: "ok",
+                question_Text: msg('Es gibt mindestens ein Element, das den Querschnitt verwendet'),
+            });
+            await dialogAlert.confirm();
+
+        } else {
+            del_querschnittSet(qname);
+            btn.closest('sl-tree-item')?.remove();   // statt parentElement.parentElement
+
+            // let element = shadow.getElementById("id_tree_LQ") as any;
+            // element?.removeChild(el.parentElement.parentElement);
+
+            remove_def_querschnitt(qname);
         }
     }
+
 }
 
 
 //---------------------------------------------------------------------------------------------------------------
-export function dialog_querschnitt_closed(_e: any) {
+export function dialog_querschnitt_closed(e: any) {
     //------------------------------------------------------------------------------------------------------------
     //console.log("Event dialog closed", e);
     //console.log("dialog_querschnitt_closed")
 
-    const elHaupt = document.getElementById('id_haupt') as drHaupt;
-    let shadow = elHaupt.shadowRoot;
-    if (shadow) {
+    const dlg = e.currentTarget as HTMLDialogElement;
+    if (dlg.returnValue !== "ok") return;
 
-        const el = shadow.getElementById("id_dialog_rechteck") as HTMLDialogElement;
+    const shadow = (document.getElementById('id_haupt') as drHaupt).shadowRoot;
+    if (!shadow) return;
 
-        // @ts-ignore
-        const returnValue = this.returnValue;
 
-        (el?.shadowRoot?.getElementById("dialog_rechteck") as HTMLDialogElement).removeEventListener("close", dialog_querschnitt_closed);
+    const root = (shadow.getElementById("id_dialog_rechteck") as drRechteckQuerSchnitt).shadowRoot!;
+    const num = (elemId: string) =>
+        Number((root.getElementById(elemId) as HTMLInputElement).value.replace(/,/g, "."));
+    const txt = (elemId: string) =>
+        (root.getElementById(elemId) as HTMLInputElement).value.trim();
 
-        if (returnValue === "ok") {
-            let id: string;
-            if (dialog_querschnitt_new) {
-                incr_querschnitts_zaehler();
-                id = "mat-" + querschnitts_zaehler;
-            } else {
-                id = "mat-" + dialog_querschnitt_index;
+
+    let id: string;
+    if (dialog_querschnitt_new) {
+        incr_querschnitts_zaehler();
+        id = "mat-" + querschnitts_zaehler;
+    } else {
+        // id = "mat-" + dialog_querschnitt_index;
+        id = dialog_querschnitt_item_id;
+    }
+
+    console.log("dialog_querschnitt_closed, id", id)
+
+    const qname = txt("qname");
+    const emodul = num("emodul");
+    const Iy = num("traeg_y");
+    const area = num("area");
+    const height = num("height");
+    const width = num("width");
+    const defquerschnitt = num("id_defquerschnitt");
+    const schubfaktor = num("schubfaktor");
+    const querdehnzahl = num("querdehnzahl");
+    const wichte = num("wichte");
+    const zso = num("zso");
+    const alphaT = num("alpha_t");
+    const faktor_dehn = num("id_fakt_dehn");
+    const flanschbreite = num("id_TQ_flanschbreite");
+    const flanschhoehe = num("id_TQ_flanschhoehe");
+    const stegbreite_oben = num("id_TQ_stegbreite_oben");
+    const stegbreite_unten = num("id_TQ_stegbreite_unten");
+    const steghoehe = num("id_TQ_steghoehe");
+
+    // {
+    //     let elem = el?.shadowRoot?.getElementById("emodul") as HTMLInputElement;
+    //     //console.log("emodul=", elem.value);
+    //     const emodul = +elem.value.replace(/,/g, ".");
+    //     elem = el?.shadowRoot?.getElementById("traeg_y") as HTMLInputElement;
+    //     const Iy = +elem.value.replace(/,/g, ".");
+    //     elem = el?.shadowRoot?.getElementById("area") as HTMLInputElement;
+    //     const area = +elem.value.replace(/,/g, ".");
+    //     elem = el?.shadowRoot?.getElementById("qname") as HTMLInputElement;
+    //     const qname = elem.value.trim();
+    //     elem = el?.shadowRoot?.getElementById("height") as HTMLInputElement;
+    //     const height = +elem.value.replace(/,/g, ".");
+    //     elem = el?.shadowRoot?.getElementById("width") as HTMLInputElement;
+    //     const width = +elem.value.replace(/,/g, ".");
+    //     //         elem = el?.shadowRoot?.querySelector('.radio-group-querschnitt') as any;
+    //     elem = el?.shadowRoot?.getElementById("id_defquerschnitt") as any;
+    //     //console.log("defquerschnitt", elem)
+    //     const defquerschnitt = +elem.value.replace(/,/g, ".");
+    //     //console.log("defquerschnitt", defquerschnitt)
+    //     elem = el?.shadowRoot?.getElementById("schubfaktor") as HTMLInputElement;
+    //     const schubfaktor = +elem.value.replace(/,/g, ".");
+    //     elem = el?.shadowRoot?.getElementById("querdehnzahl") as HTMLInputElement;
+    //     const querdehnzahl = +elem.value.replace(/,/g, ".");
+    //     elem = el?.shadowRoot?.getElementById("wichte") as HTMLInputElement;
+    //     const wichte = +elem.value.replace(/,/g, ".");
+    //     elem = el?.shadowRoot?.getElementById("zso") as HTMLInputElement;
+    //     const zso = +elem.value.replace(/,/g, ".");
+    //     elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
+    //     const alphaT = +elem.value.replace(/,/g, ".");
+    //     elem = el?.shadowRoot?.getElementById("id_fakt_dehn") as HTMLInputElement;
+    //     const faktor_dehn = +elem.value.replace(/,/g, ".");
+    //     //console.log("dialog_querschnitt_closed",elem.value,alphaT)
+
+    //     let flanschbreite = Number((el?.shadowRoot?.getElementById('id_TQ_flanschbreite') as HTMLInputElement).value.replace(/,/g, "."));
+    //     let flanschhoehe = Number((el?.shadowRoot?.getElementById('id_TQ_flanschhoehe') as HTMLInputElement).value.replace(/,/g, "."));
+    //     let stegbreite_oben = Number((el?.shadowRoot?.getElementById('id_TQ_stegbreite_oben') as HTMLInputElement).value.replace(/,/g, "."));
+    //     let stegbreite_unten = Number((el?.shadowRoot?.getElementById('id_TQ_stegbreite_unten') as HTMLInputElement).value.replace(/,/g, "."));
+    //     let steghoehe = Number((el?.shadowRoot?.getElementById('id_TQ_steghoehe') as HTMLInputElement).value.replace(/,/g, "."));
+
+    if (dialog_querschnitt_new) {
+        incr_querschnittSets();
+
+        set_querschnittRechteck(qname, id, emodul, Iy, area, height, width, defquerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT,
+            flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn);
+        add_new_cross_section(qname, id);
+    } else {
+        update_querschnittRechteck(dialog_querschnitt_index, qname, id, emodul, Iy, area, height, width, defquerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT,
+            flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn);
+
+        const btn = shadow.getElementById(dialog_querschnitt_item_id) as HTMLElement;
+        const old_name = (btn.textContent ?? '').trim();
+
+        if (old_name !== qname) {
+            btn.textContent = qname;
+            shadow.getElementById("id_element_tabelle")?.setAttribute("namechanged", String(dialog_querschnitt_index));
+
+            const select = shadow.getElementById('id_querschnitt_default') as HTMLSelectElement;
+            for (const option of select.options) {
+                if (option.textContent === old_name) option.textContent = qname;
             }
-            {
-                let elem = el?.shadowRoot?.getElementById("emodul") as HTMLInputElement;
-                //console.log("emodul=", elem.value);
-                const emodul = +elem.value.replace(/,/g, ".");
-                elem = el?.shadowRoot?.getElementById("traeg_y") as HTMLInputElement;
-                const Iy = +elem.value.replace(/,/g, ".");
-                elem = el?.shadowRoot?.getElementById("area") as HTMLInputElement;
-                const area = +elem.value.replace(/,/g, ".");
-                elem = el?.shadowRoot?.getElementById("qname") as HTMLInputElement;
-                const qname = elem.value;
-                elem = el?.shadowRoot?.getElementById("height") as HTMLInputElement;
-                const height = +elem.value.replace(/,/g, ".");
-                elem = el?.shadowRoot?.getElementById("width") as HTMLInputElement;
-                const width = +elem.value.replace(/,/g, ".");
-                //         elem = el?.shadowRoot?.querySelector('.radio-group-querschnitt') as any;
-                elem = el?.shadowRoot?.getElementById("id_defquerschnitt") as any;
-                //console.log("defquerschnitt", elem)
-                const defquerschnitt = +elem.value.replace(/,/g, ".");
-                //console.log("defquerschnitt", defquerschnitt)
-                elem = el?.shadowRoot?.getElementById("schubfaktor") as HTMLInputElement;
-                const schubfaktor = +elem.value.replace(/,/g, ".");
-                elem = el?.shadowRoot?.getElementById("querdehnzahl") as HTMLInputElement;
-                const querdehnzahl = +elem.value.replace(/,/g, ".");
-                elem = el?.shadowRoot?.getElementById("wichte") as HTMLInputElement;
-                const wichte = +elem.value.replace(/,/g, ".");
-                elem = el?.shadowRoot?.getElementById("zso") as HTMLInputElement;
-                const zso = +elem.value.replace(/,/g, ".");
-                elem = el?.shadowRoot?.getElementById("alpha_t") as HTMLInputElement;
-                const alphaT = +elem.value.replace(/,/g, ".");
-                elem = el?.shadowRoot?.getElementById("id_fakt_dehn") as HTMLInputElement;
-                const faktor_dehn = +elem.value.replace(/,/g, ".");
-                //console.log("dialog_querschnitt_closed",elem.value,alphaT)
+            if (default_querschnitt === old_name) default_querschnitt = qname;
 
-                let flanschbreite = Number((el?.shadowRoot?.getElementById('id_TQ_flanschbreite') as HTMLInputElement).value.replace(/,/g, "."));
-                let flanschhoehe = Number((el?.shadowRoot?.getElementById('id_TQ_flanschhoehe') as HTMLInputElement).value.replace(/,/g, "."));
-                let stegbreite_oben = Number((el?.shadowRoot?.getElementById('id_TQ_stegbreite_oben') as HTMLInputElement).value.replace(/,/g, "."));
-                let stegbreite_unten = Number((el?.shadowRoot?.getElementById('id_TQ_stegbreite_unten') as HTMLInputElement).value.replace(/,/g, "."));
-                let steghoehe = Number((el?.shadowRoot?.getElementById('id_TQ_steghoehe') as HTMLInputElement).value.replace(/,/g, "."));
-
-                if (dialog_querschnitt_new) {
-                    incr_querschnittSets();
-
-                    set_querschnittRechteck(qname, id, emodul, Iy, area, height, width, defquerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT,
-                        flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn);
-                } else {
-                    update_querschnittRechteck(dialog_querschnitt_index, qname, id, emodul, Iy, area, height, width, defquerschnitt, wichte, schubfaktor, querdehnzahl, zso, alphaT,
-                        flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn);
-
-                    // Name des Querschnitts in Querschnitts-tree (tab Querschnitte) ändern
-                    const el = shadow.getElementById(dialog_querschnitt_item_id) as HTMLElement;
-                    //console.log("dialog_querschnitt_item_id", dialog_querschnitt_item_id);
-                    //console.log("dialog_querschnitt_index, qname", dialog_querschnitt_index, qname); // , el.textContent
-
-                    if (el.textContent !== qname) {
-                        let old_name = el.textContent
-                        // innerHTML
-
-                        el.textContent = qname;
-                        const ele = shadow.getElementById("id_element_tabelle");
-                        //console.log('ELE: >>', ele);
-                        ele?.setAttribute("namechanged", String(dialog_querschnitt_index));
-
-                        // update in Tab cad
-
-                        let eld = shadow.getElementById('id_querschnitt_default') as HTMLSelectElement;
-                        for (const option of eld.options) {
-                            //console.log("OPTIONS", option.value, option.textContent, option.text)
-                            if (option.textContent === old_name) {
-                                option.textContent = qname
-                                if (default_querschnitt === old_name) default_querschnitt = qname;
-                            }
-                        }
-
-                        // jetzt alle Stäbe korrigieren
-
-                        for (let i = 0; i < list.size; i++) {
-                            let obj = list.getNext(i) as TCAD_Stab;
-                            if (obj.elTyp === CAD_STAB) {
-                                if (obj.name_querschnitt === old_name) obj.name_querschnitt = qname;
-                                redraw_stab(obj);
-                            }
-                        }
-                        two_cad_update();
-                    }
+            for (let i = 0; i < list.size; i++) {
+                const obj = list.getNext(i) as TCAD_Stab;
+                if (obj.elTyp === CAD_STAB) {
+                    if (obj.name_querschnitt === old_name) obj.name_querschnitt = qname;
+                    redraw_stab(obj);
                 }
             }
-
-            if (dialog_querschnitt_new) {
-                const qName = (el?.shadowRoot?.getElementById("qname") as HTMLInputElement).value;
-                console.log("NAME", qName);
-
-                add_new_cross_section(qName, id);
-            }
-
-            berechnungErforderlich(true);
+            two_cad_update();
         }
+
+        // const el = shadow.getElementById(dialog_querschnitt_item_id) as HTMLElement;
+
+        // if (el.textContent !== qname) {
+        //     let old_name = el.textContent
+        //     // innerHTML
+
+        //     el.textContent = qname;
+        //     const ele = shadow.getElementById("id_element_tabelle");
+        //     //console.log('ELE: >>', ele);
+        //     ele?.setAttribute("namechanged", String(dialog_querschnitt_index));
+
+        //     // update in Tab cad
+
+        //     let eld = shadow.getElementById('id_querschnitt_default') as HTMLSelectElement;
+        //     for (const option of eld.options) {
+        //         //console.log("OPTIONS", option.value, option.textContent, option.text)
+        //         if (option.textContent === old_name) {
+        //             option.textContent = qname
+        //             if (default_querschnitt === old_name) default_querschnitt = qname;
+        //         }
+        //     }
+
+        //     // jetzt alle Stäbe korrigieren
+
+        //     for (let i = 0; i < list.size; i++) {
+        //         let obj = list.getNext(i) as TCAD_Stab;
+        //         if (obj.elTyp === CAD_STAB) {
+        //             if (obj.name_querschnitt === old_name) obj.name_querschnitt = qname;
+        //             redraw_stab(obj);
+        //         }
+        //     }
+        //     two_cad_update();
+        // }
+        // }
     }
+
+    // if (dialog_querschnitt_new) {
+    //     const qName = (el?.shadowRoot?.getElementById("qname") as HTMLInputElement).value;
+    //     console.log("NAME", qName);
+
+    //     add_new_cross_section(qName, id);
+    // }
+
+    berechnungErforderlich(true);
 }
+
 
 
 //---------------------------------------------------------------------------------------------------------------
@@ -668,33 +772,68 @@ export function set_querschnittRechteck(name: string, id: string, emodul: number
 
 
 //---------------------------------------------------------------------------------------------------------------
+// export function update_querschnittRechteck(index: number, name: string, id: string, emodul: number, Iy: number, area: number,
+//     height: number, width: number, definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number,
+//     flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number, faktor_dehn: number) {
+//     //-----------------------------------------------------------------------------------------------------------
+
+//     querschnittset[index].name = name;
+//     querschnittset[index].id = id;
+//     (querschnittset[index] as TQuerschnittRechteck).emodul = emodul;
+//     (querschnittset[index] as TQuerschnittRechteck).Iy = Iy;
+//     (querschnittset[index] as TQuerschnittRechteck).area = area;
+//     (querschnittset[index] as TQuerschnittRechteck).height = height;
+//     (querschnittset[index] as TQuerschnittRechteck).width = width;
+//     (querschnittset[index] as TQuerschnittRechteck).definedQuerschnitt = definedQuerschnitt;
+//     (querschnittset[index] as TQuerschnittRechteck).wichte = wichte;
+//     (querschnittset[index] as TQuerschnittRechteck).schubfaktor = schubfaktor;
+//     (querschnittset[index] as TQuerschnittRechteck).querdehnzahl = querdehnzahl;
+//     (querschnittset[index] as TQuerschnittRechteck).zso = zso;
+//     (querschnittset[index] as TQuerschnittRechteck).alphaT = alphaT;
+//     (querschnittset[index] as TQuerschnittRechteck).faktor_dehn = faktor_dehn;
+
+//     (querschnittset[index] as TQuerschnittRechteck).flanschbreite = flanschbreite;
+//     (querschnittset[index] as TQuerschnittRechteck).flanschhoehe = flanschhoehe;
+//     (querschnittset[index] as TQuerschnittRechteck).stegbreite_oben = stegbreite_oben;
+//     (querschnittset[index] as TQuerschnittRechteck).stegbreite_unten = stegbreite_unten;
+//     (querschnittset[index] as TQuerschnittRechteck).steghoehe = steghoehe;
+
+//     console.log("update_querschnittRechteck", index, emodul)
+// }
+
+//---------------------------------------------------------------------------------------------------------------
 export function update_querschnittRechteck(index: number, name: string, id: string, emodul: number, Iy: number, area: number,
     height: number, width: number, definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number,
     flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number, faktor_dehn: number) {
-    //-----------------------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------------
 
-    querschnittset[index].name = name;
-    querschnittset[index].id = id;
-    (querschnittset[index] as TQuerschnittRechteck).emodul = emodul;
-    (querschnittset[index] as TQuerschnittRechteck).Iy = Iy;
-    (querschnittset[index] as TQuerschnittRechteck).area = area;
-    (querschnittset[index] as TQuerschnittRechteck).height = height;
-    (querschnittset[index] as TQuerschnittRechteck).width = width;
-    (querschnittset[index] as TQuerschnittRechteck).definedQuerschnitt = definedQuerschnitt;
-    (querschnittset[index] as TQuerschnittRechteck).wichte = wichte;
-    (querschnittset[index] as TQuerschnittRechteck).schubfaktor = schubfaktor;
-    (querschnittset[index] as TQuerschnittRechteck).querdehnzahl = querdehnzahl;
-    (querschnittset[index] as TQuerschnittRechteck).zso = zso;
-    (querschnittset[index] as TQuerschnittRechteck).alphaT = alphaT;
-    (querschnittset[index] as TQuerschnittRechteck).faktor_dehn = faktor_dehn;
+    const querschnitt = querschnittset[index];
 
-    (querschnittset[index] as TQuerschnittRechteck).flanschbreite = flanschbreite;
-    (querschnittset[index] as TQuerschnittRechteck).flanschhoehe = flanschhoehe;
-    (querschnittset[index] as TQuerschnittRechteck).stegbreite_oben = stegbreite_oben;
-    (querschnittset[index] as TQuerschnittRechteck).stegbreite_unten = stegbreite_unten;
-    (querschnittset[index] as TQuerschnittRechteck).steghoehe = steghoehe;
+    if (querschnitt === undefined) {
+        console.log("update_querschnittRechteck: ungültiger Index", index);
+        return;
+    }
 
-    console.log("update_querschnittRechteck", index, emodul)
+    querschnitt.name = name;
+    querschnitt.id = id;
+    querschnitt.emodul = emodul;
+    querschnitt.Iy = Iy;
+    querschnitt.area = area;
+    querschnitt.height = height;
+    querschnitt.width = width;
+    querschnitt.definedQuerschnitt = definedQuerschnitt;
+    querschnitt.wichte = wichte;
+    querschnitt.schubfaktor = schubfaktor;
+    querschnitt.querdehnzahl = querdehnzahl;
+    querschnitt.zso = zso;
+    querschnitt.alphaT = alphaT;
+    querschnitt.faktor_dehn = faktor_dehn;
+
+    querschnitt.flanschbreite = flanschbreite;
+    querschnitt.flanschhoehe = flanschhoehe;
+    querschnitt.stegbreite_oben = stegbreite_oben;
+    querschnitt.stegbreite_unten = stegbreite_unten;
+    querschnitt.steghoehe = steghoehe;
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -732,9 +871,10 @@ export function get_querschnittRechteck(index: number) {
         flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn]
 }
 
-
 //---------------------------------------------------------------------------------------------------------------
 export function add_rechteck_querschnitt(werte: any[]) {
+
+    // aufgerufen von : read_daten in dateien.ts
     //-----------------------------------------------------------------------------------------------------------
     // Diese Methode darf nur von dateien.ts beim Einlesen aus Datei verwendet werden
 
@@ -788,20 +928,5 @@ export function add_rechteck_querschnitt(werte: any[]) {
     );
 
     add_new_cross_section(qname, id);
-
-    // var tag = document.createElement('sl-tree-item');
-    // var text = document.createTextNode(qname);
-    // tag.appendChild(text);
-    // tag.addEventListener('click', opendialog);
-    // tag.addEventListener("contextmenu", contextmenu_querschnitt);
-
-    // tag.id = id;
-    // var element = document.getElementById('id_tree_LQ');
-    // element?.appendChild(tag);
-    // //console.log('child appendchild', element);
-
-    // const ele = document.getElementById('id_element_tabelle');
-    // //console.log('ELE: >>', ele);
-    // ele?.setAttribute('add_new_option', '4');
 
 }

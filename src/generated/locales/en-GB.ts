@@ -3,7 +3,7 @@
     // Re-generate this file by running lit-localize
 
     
-    
+    import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
     /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -51,6 +51,7 @@
 's1654f3b8ada9e06f': `At least 2 nodes must be defined`,
 's1802ab88151d5b76': `Type of system`,
 's180a3aad88575d3d': `grid lines`,
+'s18fcff9c5e03f48e': `Point loads must not be zero`,
 's190747c04bd639f7': `Element`,
 's19991f9668db8bb8': `quick guide; information`,
 's19afcf0b0dfe1028': `At least one element deformation must be non-zero`,
@@ -106,7 +107,6 @@
 's42d04fe173ce3377': `Nodal mass`,
 's42dee0a9650c7116': `pick node`,
 's43416e6180c07e85': `node deformation`,
-'s45a6175ff5837d88': `element loads`,
 's45c6ed4f68df387a': `Dimension length dx too small`,
 's45d4a50b4d28b89c': `Mass`,
 's45deb552041bc081': `Input of combinations`,
@@ -193,6 +193,7 @@
 's7ce8e2f713417b9b': `Possible solutions: Reduce loads or increase cross-sections.`,
 's7d0cb3c2effc8ec2': `The point of load application x must be greater than or equal to zero`,
 's7d0cc518c494a80e': `Rotation of the node (support), counterclockwise positive`,
+'s7d268ed1a95e365d': `Cross-section name already in use`,
 's7d7b08def4b4d34b': `Prestress must be non-zero`,
 's7ec9a790330ec265': `Sum of the moments of inertia`,
 's805e18010aa2ee49': `sp.weight`,
@@ -202,7 +203,6 @@
 's83977996c90f160f': `Page`,
 's83c549670e2c85da': `Frame`,
 's846311b9c04c189d': `To improve convergence during eigenvalue iteration:`,
-'s84b24c83aaeeb5f3': `all`,
 's852c56c86f4f4449': `point loads`,
 's873e4ab6fd271d36': `0 or empty = automatic scaling to the maximum value from the eigenvalue calculation`,
 's8798cd87ae5032f5': `Temperature loads`,
@@ -231,8 +231,8 @@
 's8f411426731b6d29': `cancel`,
 's90b0d535974c7970': `This is not a valid number in line`,
 's917adb24fdaed8f5': `No convergence of deformations/forces achieved in at least one combination.`,
-'s917e04d0ca03a1bf': `load case 1`,
 's917e0dd0ca03b10a': `Load case:`,
+'s917e29d0ca03e09e': str`Load case ${0}`,
 's917ea53ba1ad9f9e': `input bar element`,
 's9234cde5c4c75943': `Start new project`,
 's9278a256ab573265': `designation`,
@@ -347,7 +347,6 @@
 'sdb44853a9a24fec0': `Delete default values in the browser's memory`,
 'sdb4cee89615a9395': `If the input field for Δ is empty, no imperfection is taken into account.`,
 'sdbea3d97e0950350': `input nodal masses`,
-'sdcc618dd2b6ce1f4': `load case `,
 'sdd624efda3f25db6': `Possible cause: The system is kinematic.`,
 'sde5e53bd97d6062e': `turnbuckle`,
 'sdee1d2056321d187': `Element data`,

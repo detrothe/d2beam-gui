@@ -52,7 +52,8 @@ const PROFIL = Array(
    ['I 320', 210000, 77.7, 12510, 555, 78.5, 320, 131, 0, 0],
    ['I 340', 210000, 86.7, 15700, 674, 78.5, 340, 137, 0, 0],
    ['I 360', 210000, 97, 19610, 818, 78.5, 360, 143, 0, 0],
-   ['I 380', 210000, 118, 29210, 1140, 78.5, 400, 155, 0, 0],
+   ['I 380', 210000, 107, 24010, 975, 78.5, 380, 149, 0, 0],
+   ['I 400', 210000, 118, 29210, 1160, 78.5, 400, 155, 0, 0],
    ['I 450', 210000, 147, 45850, 1730, 78.5, 450, 170, 0, 0],
    ['I 500', 210000, 179, 68740, 2480, 78.5, 500, 185, 0, 0],
    ['HEA 100', 210000, 21.2, 349, 134, 78.5, 96, 100, 0.225, 0],
@@ -75,7 +76,7 @@ const PROFIL = Array(
    ['HEA 550', 210000, 212, 111900, 10820, 78.5, 540, 300, 0.312, 0],
    ['HEA 600', 210000, 226, 141200, 11270, 78.5, 590, 300, 0.331, 0],
    ['HEA 650', 210000, 242, 175200, 11720, 78.5, 640, 300, 0.35, 0],
-   ['HEA 700', 210000, 560, 248300, 12180, 78.5, 690, 300, 0.375, 0],
+   ['HEA 700', 210000, 260.5, 248300, 12180, 78.5, 690, 300, 0.375, 0],
    ['HEA 800', 210000, 286, 303400, 12640, 78.5, 790, 300, 0.405, 0],
    ['HEA 900', 210000, 321, 422100, 13550, 78.5, 890, 300, 0.433, 0],
    ['HEA 1000', 210000, 347, 553800, 14000, 78.5, 990, 300, 0.459, 0],
@@ -96,7 +97,7 @@ const PROFIL = Array(
    ['HEB 400', 210000, 198, 57680, 10820, 78.5, 400, 300, 0.266, 0],
    ['HEB 450', 210000, 218, 79890, 11720, 78.5, 450, 300, 0.282, 0],
    ['HEB 500', 210000, 239, 107200, 12620, 78.5, 500, 300, 0.296, 0],
-   ['HEB 550', 210000, 254, 136700, 133080, 78.5, 550, 300, 0.316, 0],
+   ['HEB 550', 210000, 254, 136700, 13080, 78.5, 550, 300, 0.316, 0],
    ['HEB 600', 210000, 270, 171000, 13530, 78.5, 600, 300, 0.335, 0],
    ['HEB 650', 210000, 286, 210600, 13980, 78.5, 650, 300, 0.353, 0],
    ['HEB 700', 210000, 306, 256900, 14440, 78.5, 700, 300, 0.377, 0],
@@ -317,7 +318,7 @@ export class drRechteckQuerSchnitt extends LitElement {
             background: hsl(201 50% 40% /0.5);
          }
 
-         #btn_small {
+         .btn_small {
             background-color: rgb(64, 64, 64);
             /* background-color:transparent; */
             border: none;
@@ -334,7 +335,7 @@ export class drRechteckQuerSchnitt extends LitElement {
             font-family: 'Times New Roman', Times, serif;
          }
          /* Darker background on mouse-over */
-         #btn_small:hover {
+         .btn_small:hover {
             background-color: RoyalBlue;
          }
       `;
@@ -379,6 +380,7 @@ export class drRechteckQuerSchnitt extends LitElement {
 
       if (wert === true) (this.shadowRoot?.getElementById('qname') as HTMLInputElement).value = '';  // neuer Queschnitt
 
+      this.update_mode_ui();   // <-- neu
       this._update_EA_EI();
    }
 
@@ -411,7 +413,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                            <sl-radio-button value="1" id="id_rechteck" @click="${this._rechteck}">${msg('Rechteck')}</sl-radio-button>
                            <sl-radio-button value="2" id="id_werte" @click="${this._werte}">${msg('Querschnittswerte')}</sl-radio-button>
                            <sl-radio-button value="3" id="id_profile" @click="${this._profil}">${msg('Profil')}</sl-radio-button>
-                           <sl-radio-button value="4" id="id_profile" @click="${this._TQ}">${msg('TQ')}</sl-radio-button>
+                           <sl-radio-button value="4" id="id_TQ" @click="${this._TQ}">${msg('TQ')}</sl-radio-button>
                         </sl-radio-group>
                      </td>
                   </tr>
@@ -456,7 +458,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                      </td>
                      <td>&nbsp;[cm]</td>
                      <td>
-                        <button id="btn_small" @click="${this.info_zso}">i</button>
+                        <button class="btn_small" @click="${this.info_zso}">i</button>
                      </td>
                   </tr>
 
@@ -472,7 +474,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                         &nbsp;[kN/m³]
                      </td>
                      <td>
-                        <button id="btn_small" @click="${this.info_wichte}">i</button>
+                        <button class="btn_small" @click="${this.info_wichte}">i</button>
                      </td>
                   </tr>
                   <tr>
@@ -484,7 +486,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                         &nbsp;[-]
                      </td>
                      <td>
-                        <button id="btn_small" @click="${this.info_schubfaktor}">i</button>
+                        <button class="btn_small" @click="${this.info_schubfaktor}">i</button>
                      </td>
                   </tr>
                   <tr>
@@ -507,7 +509,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                         &nbsp;[-]
                      </td>
                      <td>
-                        <button id="btn_small" @click="${this.info_dehnsteifigkeit}">i</button>
+                        <button class="btn_small" @click="${this.info_dehnsteifigkeit}">i</button>
                      </td>
                   </tr>
                </tbody>
@@ -626,8 +628,8 @@ export class drRechteckQuerSchnitt extends LitElement {
          if (this.new_cross_section || qname !== this._initialName) {
             if (name_exists) {
                const dialogAlert = new AlertDialog({
-                  trueButton_Text: 'ok',
-                  question_Text: 'Name für Querschnitt schon vergeben',
+                  trueButton_Text: msg('ok'),
+                  question_Text: msg('Name für Querschnitt schon vergeben'),
                });
                await dialogAlert.confirm();
                return;
@@ -644,54 +646,54 @@ export class drRechteckQuerSchnitt extends LitElement {
       if (shadow) (shadow.getElementById('dialog_rechteck') as HTMLDialogElement).close('cancel');
    }
 
-   _rechteck() {
-      console.log('rechteck');
-      const shadow = this.shadowRoot;
-      if (shadow) {
-         (shadow?.getElementById('traeg_y') as HTMLInputElement).disabled = true;
-         (shadow?.getElementById('id_row_traeg_y') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('id_row_area') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('area') as HTMLInputElement).disabled = true;
-         (shadow?.getElementById('width') as HTMLInputElement).disabled = false;
-         (shadow?.getElementById('id_row_width') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('id_row_zso') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('zso') as HTMLInputElement).disabled = true;
-      }
-   }
+   // _rechteck() {
+   //    console.log('rechteck');
+   //    const shadow = this.shadowRoot;
+   //    if (shadow) {
+   //       (shadow?.getElementById('traeg_y') as HTMLInputElement).disabled = true;
+   //       (shadow?.getElementById('id_row_traeg_y') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('id_row_area') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('area') as HTMLInputElement).disabled = true;
+   //       (shadow?.getElementById('width') as HTMLInputElement).disabled = false;
+   //       (shadow?.getElementById('id_row_width') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('id_row_zso') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('zso') as HTMLInputElement).disabled = true;
+   //    }
+   // }
 
-   _werte() {
-      console.log('werte');
-      const shadow = this.shadowRoot;
-      if (shadow) {
-         (shadow?.getElementById('width') as HTMLInputElement).disabled = true;
-         (shadow?.getElementById('traeg_y') as HTMLInputElement).disabled = false;
-         (shadow?.getElementById('id_row_width') as HTMLSpanElement).style.visibility = 'hidden';
-         (shadow?.getElementById('id_row_traeg_y') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('id_row_area') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('area') as HTMLInputElement).disabled = false;
-         (shadow?.getElementById('id_row_zso') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('zso') as HTMLInputElement).disabled = false;
-      }
-   }
+   // _werte() {
+   //    console.log('werte');
+   //    const shadow = this.shadowRoot;
+   //    if (shadow) {
+   //       (shadow?.getElementById('width') as HTMLInputElement).disabled = true;
+   //       (shadow?.getElementById('traeg_y') as HTMLInputElement).disabled = false;
+   //       (shadow?.getElementById('id_row_width') as HTMLSpanElement).style.visibility = 'hidden';
+   //       (shadow?.getElementById('id_row_traeg_y') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('id_row_area') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('area') as HTMLInputElement).disabled = false;
+   //       (shadow?.getElementById('id_row_zso') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('zso') as HTMLInputElement).disabled = false;
+   //    }
+   // }
 
-   _profil() {
-      console.log('profil');
-      const shadow = this.shadowRoot;
-      if (shadow) {
-         let dialog = shadow?.getElementById('dialog_profil') as HTMLDialogElement;
-         dialog.showModal();
+   // _profil() {
+   //    console.log('profil');
+   //    const shadow = this.shadowRoot;
+   //    if (shadow) {
+   //       let dialog = shadow?.getElementById('dialog_profil') as HTMLDialogElement;
+   //       dialog.showModal();
 
-         //(shadow?.getElementById('dialog_profil') as HTMLDialogElement).hidden=false;
-         (shadow?.getElementById('width') as HTMLInputElement).disabled = true;
-         (shadow?.getElementById('traeg_y') as HTMLInputElement).disabled = false;
-         (shadow?.getElementById('id_row_width') as HTMLSpanElement).style.visibility = 'hidden';
-         (shadow?.getElementById('id_row_traeg_y') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('id_row_area') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('area') as HTMLInputElement).disabled = false;
-         (shadow?.getElementById('id_row_zso') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('zso') as HTMLInputElement).disabled = false;
-      }
-   }
+   //       //(shadow?.getElementById('dialog_profil') as HTMLDialogElement).hidden=false;
+   //       (shadow?.getElementById('width') as HTMLInputElement).disabled = true;
+   //       (shadow?.getElementById('traeg_y') as HTMLInputElement).disabled = false;
+   //       (shadow?.getElementById('id_row_width') as HTMLSpanElement).style.visibility = 'hidden';
+   //       (shadow?.getElementById('id_row_traeg_y') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('id_row_area') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('area') as HTMLInputElement).disabled = false;
+   //       (shadow?.getElementById('id_row_zso') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('zso') as HTMLInputElement).disabled = false;
+   //    }
+   // }
 
    async _dialog_profil_ok() {
       console.log('_dialog_profil_ok');
@@ -709,8 +711,8 @@ export class drRechteckQuerSchnitt extends LitElement {
             if (check_if_name_exists(wahl)) {
                //window.alert("Name für Querschnitt schon vergeben");
                const dialogAlert = new AlertDialog({
-                  trueButton_Text: 'ok',
-                  question_Text: 'Name für Querschnitt schon vergeben',
+                  trueButton_Text: msg('ok'),
+                  question_Text: msg('Name für Querschnitt schon vergeben'),
                });
                await dialogAlert.confirm();
                return;
@@ -764,24 +766,24 @@ export class drRechteckQuerSchnitt extends LitElement {
    //                       T-Querschnitt
    //                       T-Querschnitt
 
-   _TQ() {
-      //console.log('TQ');
-      const shadow = this.shadowRoot;
-      if (shadow) {
-         let dialog = shadow?.getElementById('dialog_TQ') as HTMLDialogElement;
-         dialog.showModal();
+   // _TQ() {
+   //    //console.log('TQ');
+   //    const shadow = this.shadowRoot;
+   //    if (shadow) {
+   //       let dialog = shadow?.getElementById('dialog_TQ') as HTMLDialogElement;
+   //       dialog.showModal();
 
-         //(shadow?.getElementById('dialog_TQ') as HTMLDialogElement).hidden=false;
-         (shadow?.getElementById('width') as HTMLInputElement).disabled = true;
-         (shadow?.getElementById('traeg_y') as HTMLInputElement).disabled = false;
-         (shadow?.getElementById('id_row_width') as HTMLSpanElement).style.visibility = 'hidden';
-         (shadow?.getElementById('id_row_traeg_y') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('id_row_area') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('area') as HTMLInputElement).disabled = false;
-         (shadow?.getElementById('id_row_zso') as HTMLSpanElement).style.visibility = 'visible';
-         (shadow?.getElementById('zso') as HTMLInputElement).disabled = false;
-      }
-   }
+   //       //(shadow?.getElementById('dialog_TQ') as HTMLDialogElement).hidden=false;
+   //       (shadow?.getElementById('width') as HTMLInputElement).disabled = true;
+   //       (shadow?.getElementById('traeg_y') as HTMLInputElement).disabled = false;
+   //       (shadow?.getElementById('id_row_width') as HTMLSpanElement).style.visibility = 'hidden';
+   //       (shadow?.getElementById('id_row_traeg_y') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('id_row_area') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('area') as HTMLInputElement).disabled = false;
+   //       (shadow?.getElementById('id_row_zso') as HTMLSpanElement).style.visibility = 'visible';
+   //       (shadow?.getElementById('zso') as HTMLInputElement).disabled = false;
+   //    }
+   // }
 
    async _dialog_TQ_ok() {
       console.log('_dialog_TQ_ok');
@@ -914,4 +916,45 @@ export class drRechteckQuerSchnitt extends LitElement {
 
    // }
 
+   private _applyMode(mode: number) {
+
+      const root = this.shadowRoot;
+      if (!root) return;
+      const inp = (id: string) => root.getElementById(id) as HTMLInputElement;
+
+      //const rechteck = mode === 1;
+      let rechteck: boolean;
+
+      if (mode === 1) {
+         rechteck = true;
+      } else {
+         rechteck = false;
+      }
+
+      inp('width').disabled = !rechteck;
+      (root.getElementById('id_row_width') as HTMLSpanElement).style.visibility = rechteck ? 'visible' : 'hidden';
+
+      inp('traeg_y').disabled = rechteck;
+      inp('area').disabled = rechteck;
+      inp('zso').disabled = rechteck;
+   }
+
+   /** Zustand der Eingabefelder passend zur gewählten Radio-Gruppe setzen (öffnet keinen Dialog) */
+   public update_mode_ui() {
+      const group = this.shadowRoot?.getElementById('id_defquerschnitt') as HTMLInputElement | null;
+      this._applyMode(Number(group?.value ?? 1));
+   }
+
+   _rechteck() { this._applyMode(1); }
+   _werte() { this._applyMode(2); }
+
+   _profil() {
+      this._applyMode(3);
+      (this.shadowRoot?.getElementById('dialog_profil') as HTMLDialogElement).showModal();
+   }
+
+   _TQ() {
+      this._applyMode(4);
+      (this.shadowRoot?.getElementById('dialog_TQ') as HTMLDialogElement).showModal();
+   }
 }

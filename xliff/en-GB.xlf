@@ -621,14 +621,6 @@
   <source>Zeige :</source>
   <target>Show :</target>
 </trans-unit>
-<trans-unit id="s84b24c83aaeeb5f3">
-  <source>alle</source>
-  <target>all</target>
-</trans-unit>
-<trans-unit id="s917e04d0ca03a1bf">
-  <source>Lastfall 1</source>
-  <target>load case 1</target>
-</trans-unit>
 <trans-unit id="s42a8fafacf7d0fa7">
   <source>System als svg-Datei speichern</source>
   <target>Save system as svg file</target>
@@ -636,10 +628,6 @@
 <trans-unit id="sb205170315fd9dbe">
   <source>alle Lastfälle</source>
   <target>all load cases</target>
-</trans-unit>
-<trans-unit id="sdcc618dd2b6ce1f4">
-  <source>Lastfall </source>
-  <target>load case </target>
 </trans-unit>
 <trans-unit id="s8db89619f41917b4">
   <source>Pin</source>
@@ -652,10 +640,6 @@
 <trans-unit id="sb2246a8686ca9805">
   <source>Schließen</source>
   <target>close</target>
-</trans-unit>
-<trans-unit id="s45a6175ff5837d88">
-  <source>Elementlasten </source>
-  <target>element loads</target>
 </trans-unit>
 <trans-unit id="s08395b5ece17be10">
   <source>Bemaßung parallel</source>
@@ -1612,6 +1596,18 @@
 <trans-unit id="s5ceeb541246402e4">
   <source>Der darzustellende Rasterbereich enthält unzulässige Werte</source>
   <target>The grid area to be displayed contains invalid values</target>
+</trans-unit>
+<trans-unit id="s18fcff9c5e03f48e">
+  <source>Einzellasten dürfen nicht null sein</source>
+  <target>Point loads must not be zero</target>
+</trans-unit>
+<trans-unit id="s7d268ed1a95e365d">
+  <source>Name für Querschnitt schon vergeben</source>
+  <target>Cross-section name already in use</target>
+</trans-unit>
+<trans-unit id="s917e29d0ca03e09e">
+  <source>Lastfall <x id="0" equiv-text="${i + 1}"/></source>
+  <target>Load case <x id="0" equiv-text="${i + 1}"/></target>
 </trans-unit>
 </body>
 </file>
