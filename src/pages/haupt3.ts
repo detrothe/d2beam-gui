@@ -131,16 +131,16 @@ export function init_haupt3() {
         });
 
 
-        let ttt1 = shadow.getElementById('id_sl_tab_group') as SlTabGroup;
-        ttt1!.addEventListener('sl-tab-show', (event) => {
-            // @ts-ignore
-            console.log('sl-tab-show', event);
-            //  let hoehe = div_cad_group!.getBoundingClientRect()
-            //  console.log("hoehe div id_cad_group", hoehe)
-            let div = shadow.getElementById('id_cad_group2') as HTMLDivElement;
-            let h = div!.getBoundingClientRect();
-            console.log('Rect des div id_cad_group2', h);
-        });
+        // let ttt1 = shadow.getElementById('id_sl_tab_group') as SlTabGroup;
+        // ttt1!.addEventListener('sl-tab-show', (event) => {
+        //     // @ts-ignore
+        //     //console.log('sl-tab-show', event);
+        //     //  let hoehe = div_cad_group!.getBoundingClientRect()
+        //     //  console.log("hoehe div id_cad_group", hoehe)
+        //     //let div = shadow.getElementById('id_cad_group2') as HTMLDivElement;
+        //     //let h = div!.getBoundingClientRect();
+        //     //console.log('Rect des div id_cad_group2', h);
+        // });
 
         const resizeObserver = new ResizeObserver((entries) => {
             for (const entry of entries) {

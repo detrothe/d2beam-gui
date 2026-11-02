@@ -24,7 +24,7 @@ import {
 } from './querschnitte';
 import {
     nQuerschnittSets,
-    set_querschnittszaehler,
+    get_max_querschnittszaehler,
     add_rechteck_querschnitt,
 } from './querschnitte';
 import {
@@ -396,7 +396,7 @@ export function read_daten(eingabedaten: string) {
                 add_rechteck_querschnitt(jobj.qswerte[i]);
             }
         }
-        set_querschnittszaehler();
+        get_max_querschnittszaehler();
 
         // {
         //     let el = document.getElementById('id_nnodedisps_tabelle_gui') as HTMLElement;

@@ -111,8 +111,10 @@ export function incr_querschnitts_zaehler() {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-export function set_querschnittszaehler() {
+export function get_max_querschnittszaehler() {
     //-----------------------------------------------------------------------------------------------------------
+
+    querschnitts_zaehler = -1;
 
     for (let i = 0; i < nQuerschnittSets; i++) {
         let id = querschnittset[i].id
@@ -333,7 +335,7 @@ export function add_new_cross_section(qName: string, id: string) {
 
         const element = shadow.getElementById("id_tree_LQ");
         element?.appendChild(tag);
-        console.log("child appendchild", element);
+        //console.log("child appendchild", element);
 
         const ele = shadow.getElementById("id_element_tabelle");
         //console.log("ELE: >>", ele);
@@ -669,6 +671,7 @@ export function dialog_querschnitt_closed(e: any) {
         const btn = shadow.getElementById(dialog_querschnitt_item_id) as HTMLElement;
         const old_name = (btn.textContent ?? '').trim();
 
+        console.log("old_name, qname", old_name, qname)
         if (old_name !== qname) {
             btn.textContent = qname;
             shadow.getElementById("id_element_tabelle")?.setAttribute("namechanged", String(dialog_querschnitt_index));
@@ -682,8 +685,10 @@ export function dialog_querschnitt_closed(e: any) {
             for (let i = 0; i < list.size; i++) {
                 const obj = list.getNext(i) as TCAD_Stab;
                 if (obj.elTyp === CAD_STAB) {
-                    if (obj.name_querschnitt === old_name) obj.name_querschnitt = qname;
-                    redraw_stab(obj);
+                    if (obj.name_querschnitt.trim() === old_name) {
+                        obj.name_querschnitt = qname;
+                        redraw_stab(obj);
+                    }
                 }
             }
             two_cad_update();

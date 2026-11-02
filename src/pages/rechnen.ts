@@ -454,7 +454,7 @@ export function setSystem(system: number) {
         els.set_system(system);
 
         let ele2 = shadow.getElementById('id_dialog_elementlast') as drDialogElementlasten;
-        console.log("drDialogElementlasten", ele2)
+        //console.log("drDialogElementlasten", ele2)
         ele2.set_system(system);
     }
 }
