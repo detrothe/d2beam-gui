@@ -736,39 +736,49 @@ export function dialog_querschnitt_closed(e: any) {
 }
 
 
-
 //---------------------------------------------------------------------------------------------------------------
 export function set_querschnittRechteck(name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number,
     definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number,
     flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number, faktor_dehn: number) {
-    //-----------------------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------------
 
-    const index = nQuerschnittSets - 1;
-
-    querschnittset[index].name = name;
-    querschnittset[index].id = id;
-    (querschnittset[index] as TQuerschnittRechteck).emodul = emodul;
-    (querschnittset[index] as TQuerschnittRechteck).Iy = Iy;
-    (querschnittset[index] as TQuerschnittRechteck).area = area;
-    (querschnittset[index] as TQuerschnittRechteck).height = height;
-    (querschnittset[index] as TQuerschnittRechteck).width = width;
-    (querschnittset[index] as TQuerschnittRechteck).definedQuerschnitt = definedQuerschnitt;
-    (querschnittset[index] as TQuerschnittRechteck).wichte = wichte;
-    (querschnittset[index] as TQuerschnittRechteck).schubfaktor = schubfaktor;
-    (querschnittset[index] as TQuerschnittRechteck).querdehnzahl = querdehnzahl;
-    (querschnittset[index] as TQuerschnittRechteck).zso = zso;
-    (querschnittset[index] as TQuerschnittRechteck).alphaT = alphaT;
-
-    (querschnittset[index] as TQuerschnittRechteck).flanschbreite = flanschbreite;
-    (querschnittset[index] as TQuerschnittRechteck).flanschhoehe = flanschhoehe;
-    (querschnittset[index] as TQuerschnittRechteck).stegbreite_oben = stegbreite_oben;
-    (querschnittset[index] as TQuerschnittRechteck).stegbreite_unten = stegbreite_unten;
-    (querschnittset[index] as TQuerschnittRechteck).steghoehe = steghoehe;
-
-    (querschnittset[index] as TQuerschnittRechteck).faktor_dehn = faktor_dehn;
-
-    console.log("set_querschnittRechteck", index, emodul)
+    update_querschnittRechteck(nQuerschnittSets - 1, name, id, emodul, Iy, area, height, width, definedQuerschnitt, wichte,
+        schubfaktor, querdehnzahl, zso, alphaT, flanschbreite, flanschhoehe, stegbreite_oben, stegbreite_unten, steghoehe, faktor_dehn);
 }
+
+
+// //---------------------------------------------------------------------------------------------------------------
+// export function set_querschnittRechteck(name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number,
+//     definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number,
+//     flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number, faktor_dehn: number) {
+//     //-----------------------------------------------------------------------------------------------------------
+
+//     const index = nQuerschnittSets - 1;
+
+//     querschnittset[index].name = name;
+//     querschnittset[index].id = id;
+//     (querschnittset[index] as TQuerschnittRechteck).emodul = emodul;
+//     (querschnittset[index] as TQuerschnittRechteck).Iy = Iy;
+//     (querschnittset[index] as TQuerschnittRechteck).area = area;
+//     (querschnittset[index] as TQuerschnittRechteck).height = height;
+//     (querschnittset[index] as TQuerschnittRechteck).width = width;
+//     (querschnittset[index] as TQuerschnittRechteck).definedQuerschnitt = definedQuerschnitt;
+//     (querschnittset[index] as TQuerschnittRechteck).wichte = wichte;
+//     (querschnittset[index] as TQuerschnittRechteck).schubfaktor = schubfaktor;
+//     (querschnittset[index] as TQuerschnittRechteck).querdehnzahl = querdehnzahl;
+//     (querschnittset[index] as TQuerschnittRechteck).zso = zso;
+//     (querschnittset[index] as TQuerschnittRechteck).alphaT = alphaT;
+
+//     (querschnittset[index] as TQuerschnittRechteck).flanschbreite = flanschbreite;
+//     (querschnittset[index] as TQuerschnittRechteck).flanschhoehe = flanschhoehe;
+//     (querschnittset[index] as TQuerschnittRechteck).stegbreite_oben = stegbreite_oben;
+//     (querschnittset[index] as TQuerschnittRechteck).stegbreite_unten = stegbreite_unten;
+//     (querschnittset[index] as TQuerschnittRechteck).steghoehe = steghoehe;
+
+//     (querschnittset[index] as TQuerschnittRechteck).faktor_dehn = faktor_dehn;
+
+//     console.log("set_querschnittRechteck", index, emodul)
+// }
 
 
 //---------------------------------------------------------------------------------------------------------------
@@ -802,7 +812,7 @@ export function set_querschnittRechteck(name: string, id: string, emodul: number
 // }
 
 //---------------------------------------------------------------------------------------------------------------
-export function update_querschnittRechteck(index: number, name: string, id: string, emodul: number, Iy: number, area: number,
+function update_querschnittRechteck(index: number, name: string, id: string, emodul: number, Iy: number, area: number,
     height: number, width: number, definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number,
     flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number, faktor_dehn: number) {
     //---------------------------------------------------------------------------------------------------------------
