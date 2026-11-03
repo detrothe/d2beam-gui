@@ -491,3 +491,26 @@ async function check_for_new_version() {
     }
 
 }
+
+function handleGlobalContextMenu(event: MouseEvent): void {
+    const pfad = event.composedPath();
+    let zielElement: any = null;
+    if (pfad.length > 0) {
+        zielElement = pfad[0];
+    }
+
+    // Eingabefelder behalten ihr normales Menü (Kopieren/Einfügen)
+    let istEingabefeld = false;
+    if (zielElement !== null) {
+        const tagName = String(zielElement.tagName).toLowerCase();
+        if (tagName === 'input' || tagName === 'textarea') {
+            istEingabefeld = true;
+        }
+    }
+
+    if (istEingabefeld === false) {
+        event.preventDefault();
+    }
+}
+
+document.addEventListener('contextmenu', handleGlobalContextMenu, { capture: true });
