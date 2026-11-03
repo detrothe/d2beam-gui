@@ -1175,10 +1175,14 @@ function pointerup(ev: PointerEvent) {
    switch (ev.pointerType) {
 
       case 'mouse':
-         if (ev.button === 2 && buttons_control.input_started === 0) {
-            // test Element unter Maus
-            set_right_mousebutton_pressed(true);
-            test_for_cad_element(ev);
+         console.log("pointerup, mouse, ", ev.button, buttons_control.input_started)
+         if (ev.button === 2) {   //rechte Maustaste
+            if (buttons_control.input_started === 0) {
+               set_right_mousebutton_pressed(true);
+               test_for_cad_element(ev);
+            } else {
+               buttons_control.reset();  //  wie ESC Abbbruch
+            }
          } else {
             mouseup(ev);
          }
@@ -1718,7 +1722,7 @@ function mousemove(ev: MouseEvent) {
 function mouseup(ev: any) {
    //----------------------------------------------------------------------------------------------------
 
-   //console.log('in mouseup', ev.button);
+   console.log('in mouseup', ev.button);
    ev.preventDefault();
 
    zoomIsActive = false;

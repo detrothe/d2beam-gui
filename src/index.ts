@@ -216,50 +216,33 @@ if (browserName === 'Apple Safari' && maxTouchPoints > 0) {
 write('dein OS: ' + yourOS);
 
 
-// let dbPromise: any;
 let input: string | null;
-
 input = ''
-
 
 if (isAndroid) {
 
     window.addEventListener('load', () => {
         input = window.localStorage.getItem('current_input_D2BEAM_GUI');
-        //write('Android, LOAD  current input = ' + input.length)
-        //console.log('LOAD  current input = ', input.length)
         if (input !== null && input.length > 0) {
             autoEingabeLesen();
-            // read_daten(input);
-            // rechnen(1)
         }
     });
 
 
     window.addEventListener('beforeunload', function (_event) {
-        //event.preventDefault();
-        // Google Chrome < 119 requires returnValue to be set.
-        //event.returnValue = true;
-
-        //write("Android, beforeunload")
 
         window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
 
     });
 
     document.addEventListener('visibilitychange', function () {
-        //write(navigator.userAgent);
-        //write('Android visibilitychange = ' + document.visibilityState)
         // fires when user switches tabs, apps, goes to homescreen, etc.
         if (document.visibilityState === 'hidden') {
-            //write('Android hidden')
             window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
         }
 
         // fires when app transitions from prerender, user returns to the app / tab.
         if (document.visibilityState === 'visible') {
-            //write('Android visible');
-            //two_cad_update();
             init_cad(2);
         }
     });
@@ -374,87 +357,23 @@ else {
 
     });
 
-    // document.addEventListener('visibilitychange', function () {
-    //     //write(navigator.userAgent);
-    //     //write('Android visibilitychange = ' + document.visibilityState)
-    //     // fires when user switches tabs, apps, goes to homescreen, etc.
-    //     if (document.visibilityState === 'hidden') {
-    //         write('visibility changed to hidden')
-    //         window.localStorage.setItem('current_input_D2BEAM_GUI', str_inputToJSON());
-    //     }
-
-    //     // fires when app transitions from prerender, user returns to the app / tab.
-    //     if (document.visibilityState === 'visible') {
-    //         write('visibility changed to visible');
-    //         //init_cad(2);
-    //     }
-    // });
-
-
-
-    // if ('launchQueue' in window) {
-    //     console.log('File Handling API is supported!');
-
-    //     //@ts-ignore
-    //     launchQueue.setConsumer(launchParams => {
-    //         handleFiles(launchParams.files);
-    //     });
-    // } else {
-    //     console.error('File Handling API is not supported!');
-    // }
-
-
-    // window.addEventListener('pageshow', (event) => {
-    //     if (event.persisted) {
-    //         //write('This page was restored from the bfcache.');
-    //     } else {
-    //         //write('This page was loaded normally.');
-    //         // openDB();
-    //         const input = window.localStorage.getItem('current_input');
-    //         //write('current input = ' + input)
-
-    //     }
-    // });
 
     window.addEventListener('load', () => {
-        //if (yourOS !== 'iOS') {
         input = window.localStorage.getItem('current_input_D2BEAM_GUI');
-        //write('else, LOAD  current input = ' + input.length)
-        // console.log('LOAD  current input = ', input!.length)
-        // console.log('input string', input)
         if (input !== null && input.length > 0) {
             autoEingabeLesen();
         }
-        //}
     });
-
-    // document.addEventListener("readystatechange", (event: any) => {
-    //     console.log("readystatechange", event.target.readyState, document.readyState)
-    //     console.log('LOADED  current input = ', input)
-    //     if (event.target.readyState === "complete") {
-    //         //if (input) read_daten(input);;
-    //     }
-    // });
 
 }
 
 /*async*/ function autoEingabeLesen() {
-    // const dialog = new ConfirmDialog({
-    //     trueButton_Text: 'ja',
-    //     falseButton_Text: 'nein',
-    //     question_Text: 'letzte (automatisch) gespeicherte Eingabe einlesen'
-    // });
-    // const letzteEinlesen = await dialog.confirm();
-
-    //write("letzteEinlesen= " + letzteEinlesen)
 
     const letzteEinlesen = true
 
     console.log("autoEingabeLesen, letzteEinlesen", letzteEinlesen)
     if (letzteEinlesen) {
         if (input !== null) {
-            console.log('LOAD  current input = ', input!.length)
-            console.log('input string', input)
             read_daten(input);
         }
         init_two_cad();
