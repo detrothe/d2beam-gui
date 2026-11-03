@@ -254,10 +254,10 @@ class Cbuttons_control {
       //const myDrawer = (shadow.getElementById("id_drawer_1") as drDrawer_1);
       if (flag === 1) {
         const myDrawer = shadow.querySelector('.class-my-drawer') as HTMLElement;
-        console.log("reset", myDrawer);
+        //console.log("reset", myDrawer);
         let elm = (myDrawer?.shadowRoot?.getElementById("id_drawer_1") as drDrawer_1);
         elm.reset_buttons();
-        console.log("hier id_drawer_1", elm);
+        //console.log("hier id_drawer_1", elm);
       }
 
       let backgroundColor = backgroundColor_button

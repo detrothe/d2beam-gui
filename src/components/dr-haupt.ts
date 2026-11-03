@@ -110,7 +110,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v1.10.0, 2-Nov-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v1.10.0, 3-Nov-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -361,22 +361,10 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
           <br /><br />
         </p>
         <sl-tree class="custom-icons">
-          <!--
-               <sl-icon name="plus-square" slot="expand-icon"></sl-icon>
-               <sl-icon name="dash-square" slot="collapse-icon"></sl-icon>
-           -->
+
           <sl-tree-item id="id_tree_LQ" expanded>
             ${msg('Linear elastisch Querschnittswerte')}
           </sl-tree-item>
-
-          <!--
-          <sl-tree-item>
-            Linear elastisch allgemein
-            <sl-tree-item><button>button 1</button><button>button 2</button></sl-tree-item>
-            <sl-tree-item>nix 2</sl-tree-item>
-            <sl-tree-item>nix 3</sl-tree-item>
-          </sl-tree-item>
-          -->
 
         </sl-tree>
 

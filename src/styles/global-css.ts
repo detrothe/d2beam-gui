@@ -27,6 +27,27 @@ export const global_css = css`
       overscroll-behavior: none; /* kein pull to refresh , kein reload bei Ziehen mit Finger von oben nach unten */
    }
 
+   sl-tree {
+      width: fit-content;
+      min-width: 1rem;
+      max-width: 100%;
+   }
+
+   sl-tree-item::part(item--selected) {
+      background-color: transparent;
+      border-inline-start-color: var(--sl-color-primary-600);
+   }
+
+   sl-tree-item::part(item):hover {
+      background-color: transparent;
+   }
+
+   sl-tree-item:focus-visible::part(item) {
+      background-color: transparent;
+      outline: 2px solid var(--sl-color-primary-600);
+      outline-offset: -2px;
+   }
+
    @media (prefers-color-scheme: dark) {
       html,
       body {

@@ -25,11 +25,11 @@ import { my_jspdf } from './mypdf';
 
 //import { init_contextmenu } from '../components/dr-tabelle';
 
-import { rechnen, init_tabellen, show_gleichungssystem, setSystem, System, hideColumnsForFachwerk, stadyn, set_stadyn } from './rechnen';
+import { rechnen, show_gleichungssystem, setSystem, System, hideColumnsForFachwerk, set_stadyn } from './rechnen';
 
-import { nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, set_dialog_querschnitt_new, removeAll_def_querschnitt } from './querschnitte';
+import { nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, removeAll_def_querschnitt, set_querschnitts_zaehler } from './querschnitte';
 
-import { click_pan_button_cad, init_cad, init_two_cad, set_einheit_bemassung, set_raster_dx, set_raster_dz, set_raster_xmax, set_raster_xmin, set_raster_zmax, set_raster_zmin, set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_knotenverformung, set_show_lager, set_show_stab_qname, two_cad_clear } from './cad';
+import { init_cad, set_einheit_bemassung, set_raster_dx, set_raster_dz, set_raster_xmax, set_raster_xmin, set_raster_zmax, set_raster_zmin, set_show_bemassung, set_show_elementlasten, set_show_knotenlasten, set_show_knotenmassen, set_show_knotenverformung, set_show_lager, set_show_stab_qname, two_cad_clear } from './cad';
 // import { cad_buttons, close_drawer_1 } from './cad_buttons';
 // import { abbruch_property_dialog, delete_element_dialog, show_add_elload_dialog, show_property_dialog } from './cad_contextmenu';
 // import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
@@ -292,6 +292,8 @@ export function clearTables() {
     }
 
     removeAll_def_querschnitt(); // lösche Querschnitte in Button in Tab System
+    set_querschnitts_zaehler(0);
+
     two_cad_clear();
   }
 }
