@@ -17,6 +17,12 @@ if (process.env.NODE_ENV !== "development") {
     console.log = () => { };
 }
 
+let unterdrueckeKontextmenue = false;
+
+export function set_unterdrueckeKontextmenue(wert: boolean) {
+    unterdrueckeKontextmenue = wert;
+}
+
 export let user_language = 'en_GB';
 export function set_user_language(wert: string) { user_language = wert; };
 
@@ -493,6 +499,10 @@ async function check_for_new_version() {
 }
 
 function handleGlobalContextMenu(event: MouseEvent): void {
+
+    if (unterdrueckeKontextmenue === false) {
+        return;
+    }
     const pfad = event.composedPath();
     let zielElement: any = null;
     if (pfad.length > 0) {

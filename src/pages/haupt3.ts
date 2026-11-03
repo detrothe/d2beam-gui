@@ -11,6 +11,7 @@ import { set_touch_support_table } from './globals';
 import { click_pan_button_cad, init_cad, init_two_cad } from './cad';
 import { click_pan_button_grafik, click_zurueck_grafik, copy_svg, init_panel, select_dyn_eigenvalue_changed, select_eigenvalue_changed, select_loadcase_changed } from './grafik';
 import { drHaupt } from '../components/dr-haupt';
+import { set_unterdrueckeKontextmenue } from '..';
 
 console.log('in haupt3');
 
@@ -159,6 +160,19 @@ export function init_haupt3() {
         resizeObserver.observe(ob_t1);
 
         console.log('document.readyState', document.readyState);
+
+        const tabGruppe = shadow.getElementById('id_sl_tab_group');
+        if (tabGruppe) {
+            tabGruppe.addEventListener('sl-tab-show', function (event: any) {
+                const aktiverTabName = event.detail.name;
+
+                if (aktiverTabName === 'id_panel_CAD') {
+                    set_unterdrueckeKontextmenue(true);
+                } else {
+                    set_unterdrueckeKontextmenue(false);
+                }
+            });
+        }
 
     }
 
