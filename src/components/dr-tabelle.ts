@@ -1494,14 +1494,14 @@ class DrTabelle extends HTMLElement {
       console.log('Maustaste', ev.button, ev.which, myArray);
 
       if (ev.which === 3) {                 // rechte Maustaste
-         console.log('rechte Maustaste');
+         //console.log('rechte Maustaste');
          // ev.preventDefault();
       }
       if (ev.button === 0 || ev.which === 3) {         // linke Maustaste
 
          this.selectionMode = true;
 
-         console.log('linke Maustaste', ev.button, ev.which, myArray);
+         //console.log('linke Maustaste', ev.button, ev.which, myArray);
 
          this.startRowIndex = Number(myArray[1]);
          this.startColIndex = Number(myArray[2]);
@@ -1531,7 +1531,7 @@ class DrTabelle extends HTMLElement {
       let rowIndex = -1, colIndex = -1;
 
       const tableId = ev.target.offsetParent.offsetParent.id;
-      console.log("tableId", tableId, ev.target.id)
+      //console.log("tableId", tableId, ev.target.id)
       if (tableId === '') return; // cursor steht auf irgendwas, aber nicht auf tag <input>
 
       const text = ev.target.id;
@@ -1550,7 +1550,7 @@ class DrTabelle extends HTMLElement {
             if (vorz < 0.0) ny = ny - 1
             //ny = Number(Math.trunc(dy / cellHeight))
             zeile = Number(this.startRowIndex) + 1 * ny
-            console.log("Zeile=", zeile, div, dy, vorz, ny, this.cellTop, this.cellHeight, this.startRowIndex)
+            //console.log("Zeile=", zeile, div, dy, vorz, ny, this.cellTop, this.cellHeight, this.startRowIndex)
             //console.log("::::", tableIndex, zeile, spalte)
             if (zeile > this.nZeilen) return;    //zeile = tableInfo[tableIndex].nZeilen
             if (zeile < 1) return;   // zeile = 1
@@ -1631,7 +1631,7 @@ class DrTabelle extends HTMLElement {
 
          for (let i = rowStart; i <= rowEnd; i++) {
             for (let j = colStart; j <= colEnd; j++) {
-               console.log('this.typs', j, this.typs[j])
+               //console.log('this.typs', j, this.typs[j])
                if (this.typs[j] === 'select') {
                   tabelle.rows[i].cells[j].firstElementChild.style.backgroundColor = 'rgb(255,165,0)';
                }
@@ -1757,8 +1757,8 @@ class DrTabelle extends HTMLElement {
    //----------------------------------------------------------------------------------------------
    _menuItemListener(link: any) {
       //-------------------------------------------------------------------------------------------
-      console.log("LINK", link.getAttribute("data-action"))
-      console.log(" in menuItemListener, , this.tableId =", this.tableId, current_table_id)
+      //console.log("LINK", link.getAttribute("data-action"))
+      //console.log(" in menuItemListener, , this.tableId =", this.tableId, current_table_id)
       //console.log("Task ID - " + taskItemInContext.getAttribute("data-id") + ", Task action - " + link.getAttribute("data-action"));
       this.toggleMenuOff();
 
@@ -2023,15 +2023,15 @@ class DrTabelle extends HTMLElement {
    //-------------------------------------------------------------------------
    show_contextMenu(ev: any) {
       //---------------------------------------------------------------------
-      console.log('this.ref_listener', this.ref_listener)
+      //console.log('this.ref_listener', this.ref_listener)
       if (this.ref_listener === null) {
          document.getElementById("context-menu")?.addEventListener('click', this.ref_listener = this.contextMenuClicked.bind(this));
       }
 
       this.taskItemInContext = this.clickInsideElement(ev, this.taskItemClassName);
 
-      console.log("//// show_contextMemu  taskItem In Context", this.taskItemInContext);
-      console.log("this.nSpalten", this.nSpalten)
+      //console.log("//// show_contextMemu  taskItem In Context", this.taskItemInContext);
+      //console.log("this.nSpalten", this.nSpalten)
 
       if (this.taskItemInContext) {
          if (ev.cancelable) ev.preventDefault();
@@ -2049,7 +2049,7 @@ class DrTabelle extends HTMLElement {
       //------------------------------------------------------------------------------------------
 
       let el = e.srcElement || e.target;
-      console.log("click Inside Element:", className, e.target, "-el-", el);
+      //console.log("click Inside Element:", className, e.target, "-el-", el);
 
       if (el.classList.contains(className)) {
          //console.log("el.classList.contains: ", className)
@@ -2074,7 +2074,7 @@ class DrTabelle extends HTMLElement {
    contextMenuClicked(ev: any) {
       //------------------------------------------------------------------------------------------
 
-      console.log("in contextMenuClicked", ev)
+      //console.log("in contextMenuClicked", ev)
       const clickeElIsLink = this.clickInsideElement(ev, this.contextMenuLinkClassName);
       //console.log("+++ clickListener  clickeElIsLink", clickeElIsLink, ev.button);
 
