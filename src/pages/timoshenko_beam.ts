@@ -611,14 +611,14 @@ export class CTimoshenko_beam extends CElement {
 
             console.log("ielem, k_0", this.ielem, this.k_0, nenner2)
 
-            this.estm[1][1] += this.k_0 * (13. * L4 + 295. * eta + 1680. * eta2) / (35. * nenner2 * L3)
+            this.estm[1][1] += this.k_0 * (13. * L4 + 294. * eta * L2 + 1680. * eta2) / (35. * nenner2 * L3)
             this.estm[1][2] += -this.k_0 * (11. * L4 + 231. * eta * L2 + 1260. * eta2) / (210. * nenner2 * L2)
             this.estm[1][4] += this.k_0 * (9. * L4 + 252. * eta * L2 + 1680. * eta2) / (70. * nenner2 * L3)
             this.estm[1][5] += this.k_0 * (13. * L4 + 378. * eta * L2 + 2520. * eta2) / (420. * nenner2 * L2)
             this.estm[2][2] += this.k_0 * (L4 + 21. * eta * L2 + 126 * eta2) / (105. * nenner2 * sl)
             this.estm[2][4] += -this.k_0 * (13. * L4 + 378. * eta * L2 + 2520. * eta2) / (420. * nenner2 * L2)
             this.estm[2][5] += -this.k_0 * (L4 + 28. * eta * L2 + 168. * eta2) / (140. * nenner2 * sl)
-            this.estm[4][4] += this.k_0 * (13. * L4 + 295. * eta + 1680. * eta2) / (35. * nenner2 * L3)
+            this.estm[4][4] += this.k_0 * (13. * L4 + 294. * eta * L2 + 1680. * eta2) / (35. * nenner2 * L3)
             this.estm[4][5] += this.k_0 * (11. * L4 + 231. * eta * L2 + 1260. * eta2) / (210. * nenner2 * L2)
             this.estm[5][5] += this.k_0 * (L4 + 21. * eta * L2 + 126. * eta2) / (105. * nenner2 * sl)
 
