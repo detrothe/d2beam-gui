@@ -166,7 +166,8 @@ export function init_haupt3() {
             tabGruppe.addEventListener('sl-tab-show', function (event: any) {
                 const aktiverTabName = event.detail.name;
 
-                if (aktiverTabName === 'id_panel_CAD') {
+                console.log("aktiverTabName", aktiverTabName)
+                if (aktiverTabName === 'tab-cad') {
                     set_unterdrueckeKontextmenue(true);
                 } else {
                     set_unterdrueckeKontextmenue(false);

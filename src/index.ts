@@ -500,6 +500,7 @@ async function check_for_new_version() {
 
 function handleGlobalContextMenu(event: MouseEvent): void {
 
+    console.log("unterdrueckeKontextmenue", unterdrueckeKontextmenue)
     if (unterdrueckeKontextmenue === false) {
         return;
     }
