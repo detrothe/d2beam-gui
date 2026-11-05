@@ -138,7 +138,8 @@ import { reset_controlpanel_grafik } from './pages/grafik';
 import { reset_gui } from './components/dr-control-panel.js';
 import { update_button_language } from './pages/cad_buttons.js';
 import { AlertDialog } from './pages/confirm_dialog.js';
-import { confirmdialog } from './pages/confirm_dialog';
+import { confirmdialog, alertdialog } from './pages/confirm_dialog';
+import { clearTables } from './pages/haupt_2';
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log(msg("isAndroid ="), isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
@@ -374,7 +375,21 @@ else {
     console.log("autoEingabeLesen, letzteEinlesen", letzteEinlesen)
     if (letzteEinlesen) {
         if (input !== null) {
-            read_daten(input);
+            try {
+                if (!read_daten(input)) throw new Error('gespeicherte Eingabe wurde abgelehnt');
+            } catch (error) {
+                // Gespeicherte Eingabe ist defekt/inkompatibel -> nicht bei jedem Start erneut abstürzen.
+                // Daten als Sicherung aufheben, Hauptschlüssel löschen und mit leerer Eingabe starten.
+                console.error('autoEingabeLesen: gespeicherte Eingabe konnte nicht gelesen werden', error);
+                try {
+                    window.localStorage.setItem('current_input_D2BEAM_GUI_defekt', input);
+                    window.localStorage.removeItem('current_input_D2BEAM_GUI');
+                } catch (e) {
+                    console.error('autoEingabeLesen: localStorage nicht verfügbar', e);
+                }
+                clearTables();
+                alertdialog('ok', msg('Die zuletzt gespeicherte Eingabe konnte nicht gelesen werden. Es wird mit einer leeren Eingabe gestartet.'));
+            }
         }
         init_two_cad();
         init_cad(0);

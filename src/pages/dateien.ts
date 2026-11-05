@@ -3,6 +3,7 @@
 import '@shoelace-style/shoelace/dist/components/select/select.js';
 
 import { alertdialog } from "./confirm_dialog"
+import { msg } from '@lit/localize';
 
 import { drButtonPM } from '../components/dr-button-pm';
 import { app, currentFilename, set_current_filename } from './haupt';
@@ -58,7 +59,6 @@ import {
     raster_zmin,
     set_raster_dx,
     set_raster_dz,
-    two_cad_clear,
     set_raster_xmin,
     set_raster_xmax,
     set_raster_zmin,
@@ -90,8 +90,12 @@ import { drHaupt } from '../components/dr-haupt';
 let lastFileHandle = 'documents';
 
 //------------------------------------------------------------------------------------------------
-export function read_daten(eingabedaten: string) {
+export function read_daten(eingabedaten: string): boolean {
     //------------------------------------------------------------------------------------------------
+    // Rückgabe: true  = Daten eingelesen
+    //           false = Datei abgelehnt, es wurde NICHTS verändert
+    // Wirft eine Exception, wenn die Datei formal gültig ist, das Einlesen aber mittendrin scheitert
+    // (dann ist der Zustand teilweise überschrieben und der Aufrufer muss zurücksetzen).
 
     console.log('in read_daten()');
 
@@ -102,17 +106,27 @@ export function read_daten(eingabedaten: string) {
     startTime = performance.now();
 
     // console.log("eingabedaten", eingabedaten);
-    let jobj = JSON.parse(eingabedaten);
+    let jobj: any;
+    try {
+        jobj = JSON.parse(eingabedaten);
+    } catch (error) {
+        console.error('read_daten: kein gültiges JSON', error);
+        alertdialog(
+            'ok',
+            msg('Die gewählte Datei hat kein gültiges Format und kann nicht gelesen werden.')
+        );
+        return false;
+    }
     //console.log("und zurück", jobj);
 
-    let version = jobj.version;
-    let creator = jobj.created_by;
+    let version = jobj?.version;
+    let creator = jobj?.created_by;
     if (creator !== 'd2beam-gui') {
         alertdialog(
             'ok',
             'Die gewählte Datei ist NICHT für dieses Programm erstellt worden'
         );
-        return;
+        return false;
     }
 
     // in Tabelle schreiben
@@ -633,8 +647,12 @@ export function read_daten(eingabedaten: string) {
             }
         }
     }
+    else {
+        return false;
+    }
     endTime = performance.now();
     write('done read_daten: ' + myFormat(endTime - startTime, 2, 3) + ' msec');
+    return true;
 }
 
 //------------------------------------------------------------------------------------------------
@@ -647,51 +665,57 @@ function filedialog_read() {
     input.type = 'file';
     // @ts-ignore
     input.onchange = (_) => {
-        // you can use this method to get file and perform respective operations
-        //let files =   Array.from(input.files);
-        //console.log(files);
+        // Das bestehende Modell wird erst gelöscht, wenn die Datei geprüft ist (das macht read_daten
+        // selbst über clearTables()). Scheitert das Einlesen mittendrin, wird die bisherige Eingabe
+        // wiederhergestellt.
 
-        //function filedialog_read() {     // evt
+        const f: File | undefined = input.files?.[0];
+        if (!f) return;
+        const filename = f.name;
+        console.log('filename: ', filename);
 
-        two_cad_clear();
+        const reader = new FileReader();
 
-        let files: any;
-        files = Array.from(input.files);
-        //    const files = evt.target.files; // FileList object
-        console.log('in select read', files);
-        let filename: string;
+        reader.onload = (e: any) => {
+            const sicherung = str_inputToJSON();   // aktuelles Modell merken
 
-        // Loop through the FileList and render image files as thumbnails.
-        for (let ii = 0, f; (f = files[ii]); ii++) {
-            filename = files[0].name;
-            console.log('filename: ', files[0].name);
+            let ok = false;
+            let geaendert = false;                 // wurde der Zustand schon (teilweise) überschrieben?
+            try {
+                ok = read_daten(e.target.result as string);
+            } catch (error) {
+                console.error('filedialog_read: Fehler beim Einlesen', error);
+                geaendert = true;
+            }
 
-            const reader = new FileReader();
+            if (!ok && !geaendert) return;         // Datei abgelehnt, Modell unverändert
 
-            // Closure to capture the file information.
-            reader.onload = (function (theFile) {
-                console.log('theFile', theFile);
-                return function (e: any) {
-                    // Render thumbnail.
+            if (!ok) {
+                try {
+                    read_daten(sicherung);
+                } catch (error) {
+                    console.error('filedialog_read: Wiederherstellen fehlgeschlagen', error);
+                    clearTables();
+                }
+                alertdialog(
+                    'ok',
+                    msg('Die Datei konnte nicht vollständig gelesen werden. Die bisherige Eingabe wurde wiederhergestellt.')
+                );
+            }
 
-                    //let jobj = JSON.parse(e.target.result);
-                    read_daten(e.target.result);
+            init_two_cad();
+            init_cad(0);
+            reset_gui();
+            reset_controlpanel_grafik();
+            if (ok) set_current_filename(filename);
+        };
 
-                    init_two_cad();
-                    init_cad(0);
-                    reset_gui();
-                    reset_controlpanel_grafik();
-                    //console.log("++++++ filename",filename)
-                    set_current_filename(filename);
-                };
-            })(f);
+        reader.onerror = () => {
+            console.error('filedialog_read: Datei konnte nicht gelesen werden', reader.error);
+            alertdialog('ok', msg('Die Datei konnte nicht gelesen werden.'));
+        };
 
-            // Read in the image file as a data URL.
-            reader.readAsText(f);
-            //console.log("after reader.readAsText", reader);
-
-
-        }
+        reader.readAsText(f);
     };
 
     input.click();

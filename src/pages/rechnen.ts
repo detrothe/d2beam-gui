@@ -3234,6 +3234,11 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
 
     }
 
+    // WASM-Speicher freigeben (omega_array/eigenform_array sind danach ungültig)
+    Module._free(kstiff_ptr);
+    Module._free(mass_ptr);
+    Module._free(eigenform_ptr);
+    Module._free(omega_ptr);
 
 }
 
