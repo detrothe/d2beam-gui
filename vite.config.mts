@@ -53,7 +53,9 @@ export default defineConfig({
     sourcemap: false,
     chunkSizeWarningLimit: 4000,
     assetsDir: "code",
-    target: ["esnext", "edge100", "firefox100", "chrome100", "safari18"],
+    // Mindestversionen: Popover-API (Hilfetexte bei langem Drücken, touch_hint.ts)
+    // gibt es ab Chrome/Edge 114, Firefox 125, Safari 17
+    target: ["chrome114", "edge114", "firefox125", "safari18"],
   },
   plugins: [
     htmlMinifier({ minify: true }),

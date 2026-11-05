@@ -1,5 +1,6 @@
 import { msg } from '@lit/localize';
 import { getLocale, setLocaleFromUrl } from './localization';
+import { enableTouchHints } from './touch_hint';
 
 
 import {
@@ -320,17 +321,6 @@ export const drawer_1_control = new CDrawer_1_control();
 
 const button_color_help_text = '#ffd400';
 
-let button_knoten_timer_id = -1;
-let button_knoten_help_timer = false;
-
-let button_editknoten_timer_id = -1;
-let button_editknoten_help_timer = false;
-
-let button_lager_timer_id = -1;
-let button_lager_help_timer = false;
-
-let button_selectElement_timer_id = -1;
-let button_selectElement_help_timer = false;
 
 //--------------------------------------------------------------------------------------------------------
 function init_obj_mode() {
@@ -481,18 +471,9 @@ export function cad_buttons() {
 </svg>`;
     // select_button.innerHTML = '<i class = "fa fa-hand-pointer-o"></i>';
     select_button.addEventListener("click", Select_button);
-    select_button.addEventListener("pointerdown", () => {
-      button_selectElement_timer_id = window.setTimeout(
-        () => {
-          set_help_text(msg('Element auswählen durch Klick und danach editieren'), button_color_help_text);
-          button_selectElement_help_timer = true;
-        }, 300);
-    });
-    select_button.addEventListener("pointerup", () => {
-      window.clearTimeout(button_selectElement_timer_id);
-    });
 
     select_button.title = msg('Element auswählen und danach editieren');
+    select_button.dataset.hint = msg('Element auswählen durch Klick und danach editieren');
     select_button.id = "id_cad_select_button";
 
     knoten_button = document.createElement("button");
@@ -504,18 +485,9 @@ export function cad_buttons() {
 </svg>`;
     //knoten_button.innerHTML = '<i class = "fa fa-square"></i>';
     knoten_button.addEventListener("click", Knoten_button);
-    knoten_button.addEventListener("pointerdown", () => {
-      button_knoten_timer_id = window.setTimeout(
-        () => {
-          set_help_text(msg('Eingabe von Knotenkoordinaten'), button_color_help_text);
-          button_knoten_help_timer = true;
-        }, 300);
-    });
-    knoten_button.addEventListener("pointerup", () => {
-      window.clearTimeout(button_knoten_timer_id);
-    });
     // stab_button.addEventListener('keydown', keydown);
     knoten_button.title = msg('Eingabe Knoten');
+    knoten_button.dataset.hint = msg('Eingabe von Knotenkoordinaten');
     knoten_button.id = "id_cad_knoten_button";
 
     edit_knoten_button = document.createElement("button");
@@ -527,17 +499,8 @@ export function cad_buttons() {
 </svg>`;
     // edit_knoten_button.innerHTML = '<i class = "fa fa-file-text-o"></i>';
     edit_knoten_button.addEventListener("click", Edit_Knoten_button);
-    edit_knoten_button.addEventListener("pointerdown", () => {
-      button_editknoten_timer_id = window.setTimeout(
-        () => {
-          set_help_text(msg('Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken'), button_color_help_text);
-          button_editknoten_help_timer = true;
-        }, 300);
-    });
-    edit_knoten_button.addEventListener("pointerup", () => {
-      window.clearTimeout(button_editknoten_timer_id);
-    });
     edit_knoten_button.title = msg('Knoten bearbeiten');
+    edit_knoten_button.dataset.hint = msg('Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken');
     edit_knoten_button.id = "id_cad_edit_knoten_button";
 
     stab_button = document.createElement("button");
@@ -567,16 +530,6 @@ export function cad_buttons() {
     lager_button.className = "btn";
     lager_button.innerHTML = "Δ";
     lager_button.addEventListener("click", Lager_button);
-    lager_button.addEventListener("pointerdown", () => {
-      button_lager_timer_id = window.setTimeout(
-        () => {
-          set_help_text(msg('Knotenlager eingeben'), button_color_help_text);
-          button_lager_help_timer = true;
-        }, 300);
-    });
-    lager_button.addEventListener("pointerup", () => {
-      window.clearTimeout(button_lager_timer_id);
-    });
 
     lager_button.title = msg('Knotenlager eingeben');
     lager_button.id = "id_cad_lager_button";
@@ -752,6 +705,8 @@ export function cad_buttons() {
     div.appendChild(info_button);
     div.appendChild(drawer_button);
 
+    enableTouchHints(div);   // Hilfetext bei langem Drücken (Touch/Stift) für alle Buttons mit title/data-hint
+
     let h = div!.getBoundingClientRect()
     // console.log("Höhe des div", h)
 
@@ -793,8 +748,11 @@ export function update_button_language() {
   redo_button.title = msg('redo');
   trash_button.title = msg('Element löschen');
   select_button.title = msg('Element auswählen und danach editieren');
+  select_button.dataset.hint = msg('Element auswählen durch Klick und danach editieren');
   knoten_button.title = msg('Eingabe Knoten');
+  knoten_button.dataset.hint = msg('Eingabe von Knotenkoordinaten');
   edit_knoten_button.title = msg('Knoten bearbeiten');
+  edit_knoten_button.dataset.hint = msg('Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken');
 
   stab_button.title = msg('Eingabe Stab');
   //knotlast_button.innerHTML = msg('KnLast');
@@ -1062,7 +1020,6 @@ export function delete_button() {
 export function Select_button() {
   //----------------------------------------------------------------------------------------------------
 
-  if (button_selectElement_help_timer) { button_selectElement_help_timer = false; return; }
 
   if (buttons_control.select_element) {
     buttons_control.reset();
@@ -2404,7 +2361,6 @@ export function Knoten_button(_ev: Event) {
 
   //console.log("in Knoten_button", _ev)
 
-  if (button_knoten_help_timer) { button_knoten_help_timer = false; return; }
 
   const elHaupt = document.getElementById('id_haupt');
   let shadow = elHaupt?.shadowRoot;
@@ -2440,7 +2396,6 @@ export function Knoten_button(_ev: Event) {
 export function Edit_Knoten_button() {
   //----------------------------------------------------------------------------------------------------
 
-  if (button_editknoten_help_timer) { button_editknoten_help_timer = false; return; }
 
   if (buttons_control.select_node) {
     buttons_control.reset();
@@ -3871,7 +3826,6 @@ export function show_selected_element(xc: number, zc: number) {
 export function Lager_button(ev: Event) {
   //----------------------------------------------------------------------------------------------------
 
-  if (button_lager_help_timer) { button_lager_help_timer = false; return; }
 
   console.log('in Lager_button', ev);
 
