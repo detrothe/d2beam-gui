@@ -771,6 +771,8 @@ export function update_button_language() {
 
   querschnitt_default_select.title = msg('aktiver Querschnitt');
 
+  set_pan_button_titles();
+
   const elHaupt = document.getElementById('id_haupt');
   let shadow = elHaupt?.shadowRoot;
   if (shadow) {
@@ -813,6 +815,19 @@ export function update_button_language() {
     ele?.setAttribute("columns_languagechanged", column_string_kombitabelle);
 
   }
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function set_pan_button_titles() {
+  //------------------------------------------------------------------------------------------------------
+  // Pan-Buttons links unten in den Tabs System und Ergebnisse
+  const shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (!shadow) return;
+
+  const el_cad = shadow.getElementById('id_button_pan_cad');
+  if (el_cad) el_cad.title = msg('Verschieben der Ansicht (Pan) ein-/ausschalten');
+  const el_grafik = shadow.getElementById('id_button_pan_grafik');
+  if (el_grafik) el_grafik.title = msg('Verschieben der Ansicht (Pan) ein-/ausschalten, Text 123 bedeutet, dass Werte der Schnittgrößen/Verformungen mit Cursor angezeigt werden können');
 }
 
 //--------------------------------------------------------------------------------------------------------

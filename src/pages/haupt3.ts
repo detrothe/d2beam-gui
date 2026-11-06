@@ -1,4 +1,5 @@
-import { cad_buttons } from './cad_buttons';
+import { cad_buttons, set_pan_button_titles } from './cad_buttons';
+import { enableTouchHints } from './touch_hint';
 import { addListener_filesave } from './dateien';
 import { add_listeners_einstellungen, readLocalStorage, readLocalStorage_cad } from './einstellungen';
 import { elem_select_changed, elementTabelle_bettung_anzeigen, elementTabelle_gelenke_anzeigen, elementTabelle_starre_enden_anzeigen, gleichungssystem_darstellen } from './haupt_2';
@@ -49,6 +50,11 @@ export function init_haupt3() {
         el_pan_button_cad.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <path fill="#ffffff" d="M16 8l-3-3v2h-4v-4h2l-3-3-3 3h2v4h-4v-2l-3 3 3 3v-2h4v4h-2l3 3 3-3h-2v-4h4v2z"></path>
 </svg>`;
+
+        // Hilfetexte (Hover/langes Drücken) für die Pan-Buttons
+        set_pan_button_titles();
+        enableTouchHints(el_pan_button_cad);
+        enableTouchHints(el_pan_button_grafik);
 
         // const el_fullscreen_button_grafik = shadow.getElementById('id_button_zurueck_grafik') as HTMLButtonElement;
         // el_fullscreen_button_grafik.innerHTML = `
