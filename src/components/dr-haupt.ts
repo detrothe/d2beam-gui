@@ -333,6 +333,7 @@ export class drHaupt extends LitElement {
       <sl-tab-panel name="tab-grafik"  id="id_tab-grafik">
         <div id="id_grafik" style=" background-color:#ffffff;margin:0;padding:0;position:relative;top:0;overflow:hidden;">
         <!-- <div id="id_grafik" > -->
+          <div id="id_grafik_oben">
           <dr-control-panel id="id_control_panel"></dr-control-panel>
           <div id="id_grafik_group">
             <div id="id_div_select_lc">
@@ -345,6 +346,7 @@ export class drHaupt extends LitElement {
             <div id="id_div_select_dyn_eigv">
               <select id="id_select_dyn_eigenvalue" on></select>
             </div>
+          </div>
           </div>
           <button id="id_button_zurueck_grafik">Fullscreen</button>
           <button id="id_button_pan_grafik">Pan</button>

@@ -259,11 +259,27 @@ export const global_css = css`
       background-color: #cbcbcf80;
    }
 
-   #id_grafik_group {
+   /* Bedienfeld und Lastfall-Auswahl nebeneinander: die Auswahl rückt mit, wenn das Bedienfeld
+      in einer Sprache mit längeren Texten breiter wird (vorher feste Position, Überlappung in fr/it) */
+   #id_grafik_oben {
       position: absolute;
-      top: 2px;
-      left: 15.625rem;
+      top: 0.125rem;
+      left: 0.125rem;
+      right: 0.125rem;
       z-index: 90;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      pointer-events: none;      /* freie Fläche gibt Maus/Touch an die Grafik weiter */
+   }
+   #id_grafik_oben > * {
+      pointer-events: auto;
+   }
+
+   #id_grafik_group {
+      position: relative;
+      flex: 0 1 auto;
+      min-width: 0;
       margin: 0;
       padding: 0;
       font-size: 1rem;
@@ -306,6 +322,7 @@ export const global_css = css`
    #id_select_loadcase {
       font-size: 1rem;
       width: 9.375rem;
+      max-width: 100%;
       background-color: #181818;
       color: #f1f1f1;
       margin: 0;
@@ -353,6 +370,7 @@ export const global_css = css`
    #id_select_dyn_eigenvalue {
       font-size: 1rem;
       width: 9.375rem;
+      max-width: 100%;
       background-color: #181818;
       color: #f1f1f1;
       margin: 0;
@@ -624,10 +642,8 @@ export const global_css = css`
       overflow-y: auto;
    }
    #id_control_panel {
-      position: absolute;
-      top: 0.125rem;
-      /* var(--abst_gl_v);*/
-      left: 0.125rem;
+      position: relative;
+      flex: none;
       z-index: 90;
       margin: 1;
       padding: 1;
