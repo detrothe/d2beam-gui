@@ -124,7 +124,7 @@ export function read_daten(eingabedaten: string): boolean {
     if (creator !== 'd2beam-gui') {
         alertdialog(
             'ok',
-            'Die gewählte Datei ist NICHT für dieses Programm erstellt worden'
+            msg('Die gewählte Datei ist NICHT für dieses Programm erstellt worden')
         );
         return false;
     }

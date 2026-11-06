@@ -1609,6 +1609,34 @@
   <source>Lastfall <x id="0" equiv-text="${i + 1}"/></source>
   <target>Load case <x id="0" equiv-text="${i + 1}"/></target>
 </trans-unit>
+<trans-unit id="s446b034c92eb3e59">
+  <source>Die zuletzt gespeicherte Eingabe konnte nicht gelesen werden. Es wird mit einer leeren Eingabe gestartet.</source>
+  <target>The last saved input could not be read. Starting with an empty input.</target>
+</trans-unit>
+<trans-unit id="sc53a7f3e79fdf193">
+  <source>Verschieben der Ansicht (Pan) ein-/ausschalten</source>
+  <target>Switch view panning (pan) on/off</target>
+</trans-unit>
+<trans-unit id="sdafd6ac4a928a349">
+  <source>Verschieben der Ansicht (Pan) ein-/ausschalten, Text 123 bedeutet, dass Werte der Schnittgrößen/Verformungen mit Cursor angezeigt werden können</source>
+  <target>Switch view panning (pan) on/off; the text 123 means that values of internal forces/deflections can be displayed with the cursor</target>
+</trans-unit>
+<trans-unit id="s062bb2601193f751">
+  <source>Die gewählte Datei hat kein gültiges Format und kann nicht gelesen werden.</source>
+  <target>The selected file has an invalid format and cannot be read.</target>
+</trans-unit>
+<trans-unit id="s1dbcc8895a8f9ef2">
+  <source>Die Datei konnte nicht vollständig gelesen werden. Die bisherige Eingabe wurde wiederhergestellt.</source>
+  <target>The file could not be read completely. The previous input has been restored.</target>
+</trans-unit>
+<trans-unit id="s63c590d099d72b1b">
+  <source>Die Datei konnte nicht gelesen werden.</source>
+  <target>The file could not be read.</target>
+</trans-unit>
+<trans-unit id="s5df5a7143fe08d90">
+  <source>Die gewählte Datei ist NICHT für dieses Programm erstellt worden</source>
+  <target>The selected file was NOT created for this program.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
