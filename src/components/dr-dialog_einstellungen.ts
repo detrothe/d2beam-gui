@@ -24,6 +24,21 @@ export class drDialogEinstellungen extends LitElement {
             color: black;
          }
 
+         /* langer Text (v. a. es/fr/it) darf umbrechen, sonst ragt der Button aus dem Dialog */
+         #id_cad_saveLocalStorage {
+            max-width: 100%;
+         }
+         #id_cad_saveLocalStorage::part(base) {
+            height: auto;
+            min-height: var(--sl-input-height-medium);
+         }
+         #id_cad_saveLocalStorage::part(label) {
+            white-space: normal;
+            line-height: 1.3;
+            padding-top: 0.4rem;
+            padding-bottom: 0.4rem;
+         }
+
          button,
          select {
             font-size: 0.875rem;

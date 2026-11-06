@@ -13,10 +13,28 @@ document.addEventListener("DOMContentLoaded", (_event) => {
   //update_button_language();
 });
 
+// lit-localize schreibt <, > und & in reinen Text-Übersetzungen als &lt; &gt; &amp; in die
+// generierten Dateien. Für msg('…') und msg(str`…`) wird das nirgends zurückgewandelt, in Tooltips,
+// Platzhaltern und im Ausgabefeld stand dann z. B. wörtlich "&amp;". html`…`-Übersetzungen bleiben
+// unverändert, dort löst der HTML-Parser die Entities auf.
+const decodeEntities = (s: string) =>
+  s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+
+async function loadLocaleDecoded(locale: string) {
+  const mod = await import(`./../generated/locales/${locale}.ts`);
+  const templates: { [id: string]: any } = {};
+  for (const [id, t] of Object.entries(mod.templates as { [id: string]: any })) {
+    if (typeof t === 'string') templates[id] = decodeEntities(t);
+    else if (t && t.strTag) templates[id] = { ...t, strings: t.strings.map(decodeEntities) };
+    else templates[id] = t;
+  }
+  return { templates };
+}
+
 export const { getLocale, setLocale } = configureLocalization({
   sourceLocale,
   targetLocales,
-  loadLocale: (locale: string) => import(`./../generated/locales/${locale}.ts`),
+  loadLocale: loadLocaleDecoded,
 });
 
 export const setLocaleFromUrl = async () => {

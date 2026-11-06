@@ -595,17 +595,9 @@ export function init_grafik(flag: number) {
                 el_select.appendChild(option);
             }
 
-            if (stadyn === 0) { // Statik
+            if (stadyn === 0) { // Statik, Th. I. Ordnung: keine Knickfiguren
                 el_select_dyn_eigv.style.display = "none"
-
-                el_select_eigv.style.display = "block"
-
-                for (let i = 0; i < neigv; i++) {
-                    let option = document.createElement('option');
-                    option.value = String(+i + 1)
-                    option.textContent = msg('Knickfigur') + ' ' + (+i + 1);
-                    el_select_eigv.appendChild(option);
-                }
+                el_select_eigv.style.display = "none"
             } else {    // Dynamik
                 el_select_eigv.style.display = "none"
 

@@ -1,5 +1,5 @@
 declare let Module: any;
-import { msg } from '@lit/localize';
+import { msg, str } from '@lit/localize';
 
 //import { app, nlastfaelle_init} from "./haupt"
 import { TFVector, TFArray2D, TFArray3D, TFArray3D_0 } from "./TFArray"
@@ -769,30 +769,30 @@ function check_input() {
 
         for (let i = 0; i < 6; i++) {
             if (!(element[ielem].gelenk[i] === 0 || element[ielem].gelenk[i] === 1)) {
-                write('Element ' + (+ielem + 1) + ': für Gelenke nur 1 zulässig, kein Gelenk: 0 oder leere Zelle'); fehler++;
+                write(msg(str`Element ${+ielem + 1}: für Gelenke nur 1 zulässig, kein Gelenk: 0 oder leere Zelle`)); fehler++;
             }
         }
     }
     if (fehler > 0) write(' ')
 
     for (let i = 0; i < nloads; i++) {
-        if (load[i].node < 0) { write('Knotenlast ' + (+i + 1) + ' Knotennummer muss größer 0 sein'); fehler++; }
-        if (load[i].node > (nnodes - 1)) { write('Knotenlast ' + (+i + 1) + ' Knotennummer muss <= Anzahl Knoten sein'); fehler++; }
-        if (load[i].lf < 1) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss größer 1 sein'); fehler++; }
-        if (load[i].lf > nlastfaelle) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
+        if (load[i].node < 0) { write(msg(str`Knotenlast ${+i + 1}: Knotennummer muss größer 0 sein`)); fehler++; }
+        if (load[i].node > (nnodes - 1)) { write(msg(str`Knotenlast ${+i + 1}: Knotennummer muss <= Anzahl Knoten sein`)); fehler++; }
+        if (load[i].lf < 1) { write(msg(str`Knotenlast ${+i + 1}: Nummer des Lastfalls muss größer 0 sein`)); fehler++; }
+        if (load[i].lf > nlastfaelle) { write(msg(str`Knotenlast ${+i + 1}: Nummer des Lastfalls muss <= Anzahl Lastfälle sein`)); fehler++; }
     }
     if (fehler > 0) write(' ')
 
     for (let i = 0; i < nstreckenlasten; i++) {
-        if (eload[i].art < 0 || eload[i].art > 4) { write('Streckenlast ' + (+i + 1) + ' Lastart muss zwischen 0 und 4 sein'); fehler++; }
+        if (eload[i].art < 0 || eload[i].art > 4) { write(msg(str`Streckenlast ${+i + 1}: Lastart muss zwischen 0 und 4 sein`)); fehler++; }
     }
     if (fehler > 0) write(' ')
 
     for (let i = 0; i < neloads; i++) {
-        if (eload[i].element < 0) { write('Elementlast ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++; }
-        if (eload[i].element > (nelem - 1)) { write('Elementlast ' + (+i + 1) + ': Knotennummer muss <= Anzahl Elemente sein'); fehler++; }
-        if (eload[i].lf < 1) { write('Elementlast ' + (+i + 1) + ': Nummer des Lastfalls muss größer 1 sein'); fehler++; }
-        if (eload[i].lf > nlastfaelle) { write('Elementlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
+        if (eload[i].element < 0) { write(msg(str`Elementlast ${+i + 1}: Elementnummer muss größer 0 sein`)); fehler++; }
+        if (eload[i].element > (nelem - 1)) { write(msg(str`Elementlast ${+i + 1}: Elementnummer muss <= Anzahl Elemente sein`)); fehler++; }
+        if (eload[i].lf < 1) { write(msg(str`Elementlast ${+i + 1}: Nummer des Lastfalls muss größer 0 sein`)); fehler++; }
+        if (eload[i].lf > nlastfaelle) { write(msg(str`Elementlast ${+i + 1}: Nummer des Lastfalls muss <= Anzahl Lastfälle sein`)); fehler++; }
     }
 
     if (fehler > 0) write(' ')
@@ -805,22 +805,22 @@ function check_input() {
         if (anzahl === 0) { write(msg('An Kombination') + ' ' + (+i + 1) + ' ' + msg('ist kein Lastfall beteiligt')); fehler++; }
     }
 
-    if (maxU_node < 0) { write('Tab Vorverformungen, Schiefstellung: Knotennummer muss >= 0 sein') }
-    if (maxU_node > nnodes) { write('Tab Vorverformungen, Schiefstellung: Knotennummer muss <= Anzahl Knoten sein') }
+    if (maxU_node < 0) { write(msg('Tab Vorverformungen, Schiefstellung: Knotennummer muss >= 0 sein')) }
+    if (maxU_node > nnodes) { write(msg('Tab Vorverformungen, Schiefstellung: Knotennummer muss <= Anzahl Knoten sein')) }
 
     for (let i = 0; i < nstabvorverfomungen; i++) {
-        if (stabvorverformung[i].lf < 1) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss größer 1 sein'); fehler++; }
-        if (stabvorverformung[i].lf > nlastfaelle) { write('Knotenlast ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
+        if (stabvorverformung[i].lf < 1) { write(msg(str`Stabvorverformung ${+i + 1}: Nummer des Lastfalls muss größer 0 sein`)); fehler++; }
+        if (stabvorverformung[i].lf > nlastfaelle) { write(msg(str`Stabvorverformung ${+i + 1}: Nummer des Lastfalls muss <= Anzahl Lastfälle sein`)); fehler++; }
 
-        if (stabvorverformung[i].element < 0) { write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss größer 0 sein'); fehler++; }
-        if (stabvorverformung[i].element > (nelem - 1)) { write('Stabvorverformung ' + (+i + 1) + ': Elementnummer muss  <= Anzahl Elemente sein'); fehler++; }
+        if (stabvorverformung[i].element < 0) { write(msg(str`Stabvorverformung ${+i + 1}: Elementnummer muss größer 0 sein`)); fehler++; }
+        if (stabvorverformung[i].element > (nelem - 1)) { write(msg(str`Stabvorverformung ${+i + 1}: Elementnummer muss <= Anzahl Elemente sein`)); fehler++; }
     }
 
     for (let i = 0; i < nNodeDisps; i++) {
-        if (nodeDisp0[i].node < 0) { write('(Tab Knoten) Knotenverformung ' + (+i + 1) + ': Knotennummer muss größer 0 sein'); fehler++; }
-        if (nodeDisp0[i].node > (nnodes - 1)) { write('(Tab Knoten) Knotenvorverformung ' + (+i + 1) + ': Knotennummer muss  <= Anzahl Elemente sein'); fehler++; }
-        if (nodeDisp0[i].lf < 1) { write('(Tab Knoten) Knotenverformung ' + (+i + 1) + ': Nummer des Lastfalls muss größer 1 sein'); fehler++; }
-        if (nodeDisp0[i].lf > nlastfaelle) { write('(Tab Knoten) Knotenverformung ' + (+i + 1) + ' Nummer des Lastfalls muss <= Anzahl Lastfälle sein'); fehler++; }
+        if (nodeDisp0[i].node < 0) { write(msg(str`(Tab Knoten) Knotenverformung ${+i + 1}: Knotennummer muss größer 0 sein`)); fehler++; }
+        if (nodeDisp0[i].node > (nnodes - 1)) { write(msg(str`(Tab Knoten) Knotenverformung ${+i + 1}: Knotennummer muss <= Anzahl Knoten sein`)); fehler++; }
+        if (nodeDisp0[i].lf < 1) { write(msg(str`(Tab Knoten) Knotenverformung ${+i + 1}: Nummer des Lastfalls muss größer 0 sein`)); fehler++; }
+        if (nodeDisp0[i].lf > nlastfaelle) { write(msg(str`(Tab Knoten) Knotenverformung ${+i + 1}: Nummer des Lastfalls muss <= Anzahl Lastfälle sein`)); fehler++; }
     }
 
     write('_________________________________________________________')
@@ -1831,7 +1831,7 @@ function calc_neq_and_springs() {
             }
         } else {
             for (j = 0; j < 3; j++) node[i].L[j] = -1;
-            write('\nWarnung: An Knoten ' + (+i + 1) + ' hängt kein Element')
+            write('\n' + msg(str`Warnung: An Knoten ${+i + 1} hängt kein Element`))
         }
     }
 
@@ -1864,7 +1864,7 @@ function getMaterialIndex(ielem: number) {
     }
 
     if (index === -1) {
-        alert('element ' + ielem + ' hat keinen Querschnitt');
+        alertdialog('ok', msg('Dem Element') + ' ' + (+ielem + 1) + ' ' + msg('ist kein Querschnitt zugeordnet'));
         return -1;
     }
     console.log("typeOf ", index, querschnittset[index].className)
@@ -1915,7 +1915,7 @@ async function calculate() {
         for (let i = 0; i < nelem; i++) {
             option = document.createElement('option');
             option.value = String(i)
-            option.textContent = 'Element ' + (+i + 1);
+            option.textContent = msg('Element') + ' ' + (+i + 1);
             elem_darstellen.appendChild(option);
         }
 
@@ -2080,7 +2080,7 @@ async function calculate() {
             // }
 
             // if (index === -1) {
-            //     alert('element ' + ielem + ' hat keinen Querschnitt');
+            //     alertdialog('ok', msg('Dem Element') + ' ' + (+ielem + 1) + ' ' + msg('ist kein Querschnitt zugeordnet'));
             //     return -1;
             // }
             // console.log("typeOf ", index, querschnittset[index].className)
@@ -2574,7 +2574,7 @@ async function calculate() {
                     }
 
                     console.log("\n***************  K O M B I N A T I O N ", iKomb, "\n\n")
-                    write("\n***************  K O M B I N A T I O N   " + iKomb + "\n")
+                    write("\n***************  " + msg("Kombination").toUpperCase().split("").join(" ") + "   " + iKomb + "\n")
 
                     for (iter = 0; iter < n_iterationen; iter++) {
 
@@ -3046,7 +3046,7 @@ async function calculate() {
         }
         else if (keineKonvergenzErreicht || alpha_cr_2_low || keineKonvergenzErreicht_eigv) {
             if (keineKonvergenzErreicht) {
-                write('Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Verformungen/Kräfte')
+                write('Ꚛ ' + msg('FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Verformungen/Kräfte'))
 
                 const dialogAlert = new AlertDialog({
                     trueButton_Text: "ok",
@@ -3186,7 +3186,7 @@ function dyn_eigenwert(stiff: number[][], mass_matrix: number[][]) {
         status = arpack_iteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv, niter_neigv);
     }
 
-    write("Status der Eigenwertberechnung = " + status)
+    write(msg("Status der Eigenwertberechnung =") + " " + status)
     if (status !== 0) keineKonvergenzErreicht_eigv = true
     //c_simvektoriteration(kstiff_ptr, mass_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv);
 
@@ -3310,7 +3310,7 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
             status = arpack_iteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv, niter_neigv);
         }
 
-        write("Status der Eigenwertberechnung = " + status)
+        write(msg("Status der Eigenwertberechnung =") + " " + status)
         if (status !== 0) keineKonvergenzErreicht_eigv = true
 
         //c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv);
@@ -3426,7 +3426,7 @@ function cholesky_solve_equation(stiff: number[][], R: number[]) {
             error = cholesky(stiff, R, neq, 1);
             if (error === 0) {
                 let det = det_cholesky(stiff, neq)
-                write('Determinante = ' + det)
+                write(msg('Determinante =') + ' ' + det)
                 error = cholesky(stiff, R, neq, 2);
             }
         }
@@ -3622,7 +3622,7 @@ export function show_gleichungssystem(checked: boolean) {
             let tag = document.createElement("p");
             let text = document.createTextNode("Elementsteifigkeitsmatrix");
             tag.appendChild(text);
-            tag.innerHTML = "<b>Elementsteifigkeitsmatrix [k] im lokalen Koordinatensystem, nur Anteil Th. I. Ordnung, Einheit: kN und kNm, für Element " + (+draw_element + 1) + "</b>"
+            tag.innerHTML = "<b>" + msg(str`Elementsteifigkeitsmatrix [k] im lokalen Koordinatensystem, nur Anteil Th. I. Ordnung, Einheit: kN und kNm, für Element ${+draw_element + 1}`) + "</b>"
             eq_div?.appendChild(tag);
 
             {
@@ -3693,7 +3693,7 @@ export function show_gleichungssystem(checked: boolean) {
                 let tag = document.createElement("p");
                 let text = document.createTextNode("Elementmassenmatrix");
                 tag.appendChild(text);
-                tag.innerHTML = "<b>Elementmassenmatrix [m] im lokalen Koordinatensystem, Einheit: t und tm², für Element " + (+draw_element + 1) + "</b>"
+                tag.innerHTML = "<b>" + msg(str`Elementmassenmatrix [m] im lokalen Koordinatensystem, Einheit: t und tm², für Element ${+draw_element + 1}`) + "</b>"
                 eq_div?.appendChild(tag);
 
                 {
@@ -3764,7 +3764,7 @@ export function show_gleichungssystem(checked: boolean) {
             tag = document.createElement("p");
             text = document.createTextNode("Transformationsmatrix");
             tag.appendChild(text);
-            tag.innerHTML = "<b>Transformationsmatrix T, von global nach lokal ( {u}=[T]∙{U} ) für Element " + (+draw_element + 1) + "</b>"
+            tag.innerHTML = "<b>" + msg(str`Transformationsmatrix T, von global nach lokal ( {u}=[T]∙{U} ) für Element ${+draw_element + 1}`) + "</b>"
             eq_div?.appendChild(tag);
 
 
@@ -3818,7 +3818,7 @@ export function show_gleichungssystem(checked: boolean) {
             tag = document.createElement("p");
             text = document.createTextNode("Elementsteifigkeitsmatrix");
             tag.appendChild(text);
-            tag.innerHTML = "<b>Elementsteifigkeitsmatrix [k]<sub>G</sub>=[T]<sup>T</sup>∙[k]∙[T] im globalen Koordinatensystem für Element " + (+draw_element + 1) + "</b>"
+            tag.innerHTML = "<b>" + msg("Elementsteifigkeitsmatrix") + " [k]<sub>G</sub>=[T]<sup>T</sup>∙[k]∙[T] " + msg(str`im globalen Koordinatensystem für Element ${+draw_element + 1}`) + "</b>"
             eq_div?.appendChild(tag);
 
             {
@@ -3892,7 +3892,7 @@ export function show_gleichungssystem(checked: boolean) {
                 tag = document.createElement("p");
                 text = document.createTextNode("Gesamtsteifigkeitsmatrix");
                 tag.appendChild(text);
-                tag.innerHTML = "<b>Gesamtsteifigkeitsbeziehung [K]*{U}={R}</b>"
+                tag.innerHTML = "<b>" + msg("Gesamtsteifigkeitsbeziehung") + " [K]*{U}={R}</b>"
                 eq_div?.appendChild(tag);
 
                 {
@@ -3964,7 +3964,7 @@ export function show_gleichungssystem(checked: boolean) {
                 tag = document.createElement("p");
                 text = document.createTextNode("Gesamtsteifigkeitsmatrix");
                 tag.appendChild(text);
-                tag.innerHTML = "<b>Gesamtsteifigkeitsmatrix [K]</b>"
+                tag.innerHTML = "<b>" + msg("Gesamtsteifigkeitsmatrix") + " [K]</b>"
                 eq_div?.appendChild(tag);
 
                 {
@@ -4034,7 +4034,7 @@ export function show_gleichungssystem(checked: boolean) {
                 tag = document.createElement("p");
                 text = document.createTextNode("Gesamtmassenmatrix");
                 tag.appendChild(text);
-                tag.innerHTML = "<b>Gesamtmassenmatrix [M]</b>"
+                tag.innerHTML = "<b>" + msg("Gesamtmassenmatrix") + " [M]</b>"
                 eq_div?.appendChild(tag);
 
                 {
@@ -4192,7 +4192,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
         }
 
         console.log("\n***************  K O M B I N A T I O N ", iKomb, "\n\n")
-        write("\n***************  K O M B I N A T I O N   " + iKomb + "\n")
+        write("\n***************  " + msg("Kombination").toUpperCase().split("").join(" ") + "   " + iKomb + "\n")
 
         for (iter = 0; iter < n_iterationen; iter++) {
 
@@ -4479,7 +4479,7 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
                 eps_force = 0.0
                 if (nenner !== 0.0) eps_force = zaehler / nenner;
 
-                write('Toleranz in Iterationsschritt ' + iter + ', eps_disp = ' + myFormat(eps_disp, 5, 5, 1) + ', eps_force = ' + myFormat(eps_force, 5, 5, 1))
+                write(msg(str`Toleranz in Iterationsschritt ${iter}`) + ', eps_disp = ' + myFormat(eps_disp, 5, 5, 1) + ', eps_force = ' + myFormat(eps_force, 5, 5, 1))
 
                 //for (let i = 0; i < neq; i++) R_internal[i] = R_[i];
 
@@ -4655,16 +4655,16 @@ function nonlinear(stiff: number[][], R: number[], u: number[], newDiv: HTMLDivE
         ausgabe(iKomb, newDiv)
 
         if (eps_disp < epsDisp_tol) {
-            write('Konvergenz bei den Verformungen erreicht, iter = ' + iter)
+            write(msg('Konvergenz bei den Verformungen erreicht, iter =') + ' ' + iter)
         } else {
-            write('++++ keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen ++++')
+            write('++++ ' + msg('keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen') + ' ++++')
             keineKonvergenzErreicht = true
         }
 
         if (eps_force < epsForce_tol) {
-            write('Konvergenz bei den Kräften erreicht, iter = ' + iter)
+            write(msg('Konvergenz bei den Kräften erreicht, iter =') + ' ' + iter)
         } else {
-            write('++++ keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen ++++')
+            write('++++ ' + msg('keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen') + ' ++++')
             keineKonvergenzErreicht = true
         }
 

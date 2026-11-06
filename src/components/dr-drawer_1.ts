@@ -141,6 +141,11 @@ export class drDrawer_1 extends LitElement {
          align-items: center;
          gap: 0.5rem;
       }
+      .lastfall select {
+         min-width: 0;          /* lange Texte (es/fr) dürfen die Auswahl nicht über den Rand schieben */
+         max-width: 100%;
+         flex: 1 1 auto;
+      }
    `;
 
    render() {

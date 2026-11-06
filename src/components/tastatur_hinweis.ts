@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { state } from 'lit/decorators.js';
+import { msg, updateWhenLocaleChanges } from '@lit/localize';
 
 console.log("TASTATUR HINWEIS")
 
@@ -22,6 +23,11 @@ class TastaturHinweis extends LitElement {
   `;
 
     @state() private sichtbar = false;
+
+    constructor() {
+        super();
+        updateWhenLocaleChanges(this);   // Sprache wird beim Start asynchron geladen
+    }
 
     connectedCallback() {
         super.connectedCallback();
@@ -55,12 +61,12 @@ class TastaturHinweis extends LitElement {
     render() {
         if (!this.sichtbar) return html``;
         const text = this.istApple()
-            ? 'Das „e“ für Exponenten (z. B. 1e-5) findest du auf der Buchstaben-Tastatur. Wechsle dafür mit der Taste „ABC“ um.'
-            : 'Manche virtuellen Tastaturen (z. B. Samsung) bieten keine Tasten für Minus und Exponent (e). Es wird empfohlen die Gboard-Tastatur von Google zu installieren.';
+            ? msg('Das „e“ für Exponenten (z. B. 1e-5) findest du auf der Buchstaben-Tastatur. Wechsle dafür mit der Taste „ABC“ um.')
+            : msg('Manche virtuellen Tastaturen (z. B. Samsung) bieten keine Tasten für Minus und Exponent (e). Es wird empfohlen, die Gboard-Tastatur von Google zu installieren.');
         return html`
       <div class="hinweis" role="note">
         <span>${text}</span>
-        <button type="button" @click=${this.schliessen}>Verstanden</button>
+        <button type="button" @click=${this.schliessen}>${msg('Verstanden')}</button>
       </div>
     `;
     }

@@ -1636,6 +1636,184 @@
   <source>Das ist keine zulässige Zahl in Zeile</source>
   <target>Questo non è un numero valido nella riga</target>
 </trans-unit>
+<trans-unit id="s27be039a09c986b9">
+  <source>Der eingegebene Text wird auch für die pdf-Ergebnisdatei verwendet</source>
+  <target>Il testo inserito viene utilizzato anche nel file PDF dei risultati</target>
+</trans-unit>
+<trans-unit id="s09c57b7d0f77b4c8">
+  <source>&lt;b&gt;Hausübung A1, SS 2025&lt;/b&gt;
+Bearbeitet von: Melis Muster</source>
+  <target>&lt;b&gt;Esercitazione A1, semestre estivo 2025&lt;/b&gt;
+Elaborato da: Alex Esempio</target>
+</trans-unit>
+<trans-unit id="s872b71f4f5fa2988">
+  <source>Buchstaben in Fett durch &lt;b&gt; und &lt;/b&gt; einrahmen, Zeilenumbruch mit Return-Taste</source>
+  <target>Racchiudere il testo in grassetto tra &lt;b&gt; e &lt;/b&gt;, a capo con il tasto Invio</target>
+</trans-unit>
+<trans-unit id="sa476974934cf9127">
+  <source>Option 'nichtlinear' nur bei FW-Stäben, die nur Zug- oder Druckkräfte übertragen können, anwenden</source>
+  <target>Usare l'opzione 'non lineare' solo per aste reticolari che possono trasmettere solo trazione o compressione</target>
+</trans-unit>
+<trans-unit id="s7006416cde272464">
+  <source>Das „e“ für Exponenten (z. B. 1e-5) findest du auf der Buchstaben-Tastatur. Wechsle dafür mit der Taste „ABC“ um.</source>
+  <target>La «e» per gli esponenti (ad es. 1e-5) si trova sulla tastiera delle lettere. Passa a essa con il tasto «ABC».</target>
+</trans-unit>
+<trans-unit id="s575bb799373a5c2c">
+  <source>Manche virtuellen Tastaturen (z. B. Samsung) bieten keine Tasten für Minus und Exponent (e). Es wird empfohlen, die Gboard-Tastatur von Google zu installieren.</source>
+  <target>Alcune tastiere virtuali (ad es. Samsung) non hanno tasti per il segno meno e l'esponente (e). Si consiglia di installare la tastiera Gboard di Google.</target>
+</trans-unit>
+<trans-unit id="s678950cd49e1a925">
+  <source>Verstanden</source>
+  <target>Ho capito</target>
+</trans-unit>
+<trans-unit id="s7e6e1c83e9fb5a8d">
+  <source>Element <x id="0" equiv-text="${+ielem + 1}"/>: für Gelenke nur 1 zulässig, kein Gelenk: 0 oder leere Zelle</source>
+  <target>Elemento <x id="0" equiv-text="${+ielem + 1}"/>: per le cerniere è ammesso solo 1, nessuna cerniera: 0 o cella vuota</target>
+</trans-unit>
+<trans-unit id="s94ad466efc22a16b">
+  <source>Knotenlast <x id="0" equiv-text="${+i + 1}"/>: Knotennummer muss größer 0 sein</source>
+  <target>Carico nodale <x id="0" equiv-text="${+i + 1}"/>: il numero del nodo deve essere maggiore di 0</target>
+</trans-unit>
+<trans-unit id="s316ff337da981744">
+  <source>Knotenlast <x id="0" equiv-text="${+i + 1}"/>: Knotennummer muss &lt;= Anzahl Knoten sein</source>
+  <target>Carico nodale <x id="0" equiv-text="${+i + 1}"/>: il numero del nodo deve essere &lt;= numero di nodi</target>
+</trans-unit>
+<trans-unit id="s8adacfb1d703909e">
+  <source>Knotenlast <x id="0" equiv-text="${+i + 1}"/>: Nummer des Lastfalls muss größer 0 sein</source>
+  <target>Carico nodale <x id="0" equiv-text="${+i + 1}"/>: il numero del caso di carico deve essere maggiore di 0</target>
+</trans-unit>
+<trans-unit id="s4015791a72b25e2f">
+  <source>Knotenlast <x id="0" equiv-text="${+i + 1}"/>: Nummer des Lastfalls muss &lt;= Anzahl Lastfälle sein</source>
+  <target>Carico nodale <x id="0" equiv-text="${+i + 1}"/>: il numero del caso di carico deve essere &lt;= numero di casi di carico</target>
+</trans-unit>
+<trans-unit id="s91a5dac1744b0720">
+  <source>Streckenlast <x id="0" equiv-text="${+i + 1}"/>: Lastart muss zwischen 0 und 4 sein</source>
+  <target>Carico distribuito <x id="0" equiv-text="${+i + 1}"/>: il tipo di carico deve essere compreso tra 0 e 4</target>
+</trans-unit>
+<trans-unit id="s3545d1a8d3e5e023">
+  <source>Elementlast <x id="0" equiv-text="${+i + 1}"/>: Elementnummer muss größer 0 sein</source>
+  <target>Carico sull'elemento <x id="0" equiv-text="${+i + 1}"/>: il numero dell'elemento deve essere maggiore di 0</target>
+</trans-unit>
+<trans-unit id="se77101eb4a77ff32">
+  <source>Elementlast <x id="0" equiv-text="${+i + 1}"/>: Elementnummer muss &lt;= Anzahl Elemente sein</source>
+  <target>Carico sull'elemento <x id="0" equiv-text="${+i + 1}"/>: il numero dell'elemento deve essere &lt;= numero di elementi</target>
+</trans-unit>
+<trans-unit id="s557f37385b5611cb">
+  <source>Elementlast <x id="0" equiv-text="${+i + 1}"/>: Nummer des Lastfalls muss größer 0 sein</source>
+  <target>Carico sull'elemento <x id="0" equiv-text="${+i + 1}"/>: il numero del caso di carico deve essere maggiore di 0</target>
+</trans-unit>
+<trans-unit id="sd6d84568dc39e83c">
+  <source>Elementlast <x id="0" equiv-text="${+i + 1}"/>: Nummer des Lastfalls muss &lt;= Anzahl Lastfälle sein</source>
+  <target>Carico sull'elemento <x id="0" equiv-text="${+i + 1}"/>: il numero del caso di carico deve essere &lt;= numero di casi di carico</target>
+</trans-unit>
+<trans-unit id="s23857ed4e4d77fe6">
+  <source>Tab Vorverformungen, Schiefstellung: Knotennummer muss &gt;= 0 sein</source>
+  <target>Scheda Imperfezioni, imperfezione globale: il numero del nodo deve essere &gt;= 0</target>
+</trans-unit>
+<trans-unit id="s98b4502ea20f2055">
+  <source>Tab Vorverformungen, Schiefstellung: Knotennummer muss &lt;= Anzahl Knoten sein</source>
+  <target>Scheda Imperfezioni, imperfezione globale: il numero del nodo deve essere &lt;= numero di nodi</target>
+</trans-unit>
+<trans-unit id="s85aff991348b9465">
+  <source>Stabvorverformung <x id="0" equiv-text="${+i + 1}"/>: Nummer des Lastfalls muss größer 0 sein</source>
+  <target>Imperfezione locale <x id="0" equiv-text="${+i + 1}"/>: il numero del caso di carico deve essere maggiore di 0</target>
+</trans-unit>
+<trans-unit id="sfffa83ef073db03e">
+  <source>Stabvorverformung <x id="0" equiv-text="${+i + 1}"/>: Nummer des Lastfalls muss &lt;= Anzahl Lastfälle sein</source>
+  <target>Imperfezione locale <x id="0" equiv-text="${+i + 1}"/>: il numero del caso di carico deve essere &lt;= numero di casi di carico</target>
+</trans-unit>
+<trans-unit id="s1a4761aa80a2befd">
+  <source>Stabvorverformung <x id="0" equiv-text="${+i + 1}"/>: Elementnummer muss größer 0 sein</source>
+  <target>Imperfezione locale <x id="0" equiv-text="${+i + 1}"/>: il numero dell'elemento deve essere maggiore di 0</target>
+</trans-unit>
+<trans-unit id="sc857bb51e1ad687c">
+  <source>Stabvorverformung <x id="0" equiv-text="${+i + 1}"/>: Elementnummer muss &lt;= Anzahl Elemente sein</source>
+  <target>Imperfezione locale <x id="0" equiv-text="${+i + 1}"/>: il numero dell'elemento deve essere &lt;= numero di elementi</target>
+</trans-unit>
+<trans-unit id="se41e336dbd813f25">
+  <source>(Tab Knoten) Knotenverformung <x id="0" equiv-text="${+i + 1}"/>: Knotennummer muss größer 0 sein</source>
+  <target>(Tabella Nodi) spostamento impresso <x id="0" equiv-text="${+i + 1}"/>: il numero del nodo deve essere maggiore di 0</target>
+</trans-unit>
+<trans-unit id="sb65e20cb0483bfda">
+  <source>(Tab Knoten) Knotenverformung <x id="0" equiv-text="${+i + 1}"/>: Knotennummer muss &lt;= Anzahl Knoten sein</source>
+  <target>(Tabella Nodi) spostamento impresso <x id="0" equiv-text="${+i + 1}"/>: il numero del nodo deve essere &lt;= numero di nodi</target>
+</trans-unit>
+<trans-unit id="s4eede8ccefe38a58">
+  <source>(Tab Knoten) Knotenverformung <x id="0" equiv-text="${+i + 1}"/>: Nummer des Lastfalls muss größer 0 sein</source>
+  <target>(Tabella Nodi) spostamento impresso <x id="0" equiv-text="${+i + 1}"/>: il numero del caso di carico deve essere maggiore di 0</target>
+</trans-unit>
+<trans-unit id="s07f25eb0b9f84359">
+  <source>(Tab Knoten) Knotenverformung <x id="0" equiv-text="${+i + 1}"/>: Nummer des Lastfalls muss &lt;= Anzahl Lastfälle sein</source>
+  <target>(Tabella Nodi) spostamento impresso <x id="0" equiv-text="${+i + 1}"/>: il numero del caso di carico deve essere &lt;= numero di casi di carico</target>
+</trans-unit>
+<trans-unit id="s439287ec9acf9687">
+  <source>Warnung: An Knoten <x id="0" equiv-text="${+i + 1}"/> hängt kein Element</source>
+  <target>Avviso: nessun elemento è collegato al nodo <x id="0" equiv-text="${+i + 1}"/></target>
+</trans-unit>
+<trans-unit id="s85f30ce027bda792">
+  <source>FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Verformungen/Kräfte</source>
+  <target>ERRORE - in almeno una combinazione non è stata raggiunta la convergenza di deformazioni/forze</target>
+</trans-unit>
+<trans-unit id="sf9727b758da5a910">
+  <source>Status der Eigenwertberechnung =</source>
+  <target>Stato del calcolo degli autovalori =</target>
+</trans-unit>
+<trans-unit id="sf4e78caf8ad966f0">
+  <source>Determinante =</source>
+  <target>Determinante =</target>
+</trans-unit>
+<trans-unit id="sb44bd65c83c594db">
+  <source>Elementsteifigkeitsmatrix [k] im lokalen Koordinatensystem, nur Anteil Th. I. Ordnung, Einheit: kN und kNm, für Element <x id="0" equiv-text="${+draw_element + 1}"/></source>
+  <target>Matrice di rigidezza dell'elemento [k] nel sistema di coordinate locale, solo parte del I ordine, unità: kN e kNm, per l'elemento <x id="0" equiv-text="${+draw_element + 1}"/></target>
+</trans-unit>
+<trans-unit id="s08359f14448fbce3">
+  <source>Elementmassenmatrix [m] im lokalen Koordinatensystem, Einheit: t und tm², für Element <x id="0" equiv-text="${+draw_element + 1}"/></source>
+  <target>Matrice di massa dell'elemento [m] nel sistema di coordinate locale, unità: t e tm², per l'elemento <x id="0" equiv-text="${+draw_element + 1}"/></target>
+</trans-unit>
+<trans-unit id="sc5093184ca5ed970">
+  <source>Transformationsmatrix T, von global nach lokal ( {u}=[T]∙{U} ) für Element <x id="0" equiv-text="${+draw_element + 1}"/></source>
+  <target>Matrice di trasformazione T, da globale a locale ( {u}=[T]∙{U} ) per l'elemento <x id="0" equiv-text="${+draw_element + 1}"/></target>
+</trans-unit>
+<trans-unit id="s444f56ee6af64d73">
+  <source>Elementsteifigkeitsmatrix</source>
+  <target>Matrice di rigidezza dell'elemento</target>
+</trans-unit>
+<trans-unit id="sa825d3e95a11f69a">
+  <source>im globalen Koordinatensystem für Element <x id="0" equiv-text="${+draw_element + 1}"/></source>
+  <target>nel sistema di coordinate globale per l'elemento <x id="0" equiv-text="${+draw_element + 1}"/></target>
+</trans-unit>
+<trans-unit id="sd0c9da646eb2f034">
+  <source>Gesamtsteifigkeitsbeziehung</source>
+  <target>Relazione di rigidezza globale</target>
+</trans-unit>
+<trans-unit id="sc4aa00eca066d34c">
+  <source>Gesamtsteifigkeitsmatrix</source>
+  <target>Matrice di rigidezza globale</target>
+</trans-unit>
+<trans-unit id="sb85dea9ef6d4eb2a">
+  <source>Gesamtmassenmatrix</source>
+  <target>Matrice di massa globale</target>
+</trans-unit>
+<trans-unit id="se01717a88ba590d4">
+  <source>Toleranz in Iterationsschritt <x id="0" equiv-text="${iter}"/></source>
+  <target>Tolleranza nel passo di iterazione <x id="0" equiv-text="${iter}"/></target>
+</trans-unit>
+<trans-unit id="scbbb9799ee04b856">
+  <source>Konvergenz bei den Verformungen erreicht, iter =</source>
+  <target>Convergenza delle deformazioni raggiunta, iter =</target>
+</trans-unit>
+<trans-unit id="s144a66565419c38c">
+  <source>keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen</source>
+  <target>convergenza delle deformazioni non raggiunta, aumentare il numero di iterazioni</target>
+</trans-unit>
+<trans-unit id="s976ca7a17f32a19c">
+  <source>Konvergenz bei den Kräften erreicht, iter =</source>
+  <target>Convergenza delle forze raggiunta, iter =</target>
+</trans-unit>
+<trans-unit id="s7472f4243bf18532">
+  <source>keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen</source>
+  <target>convergenza delle forze non raggiunta, aumentare il numero di iterazioni</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

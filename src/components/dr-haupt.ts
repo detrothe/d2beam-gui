@@ -129,6 +129,15 @@ export class drHaupt extends LitElement {
     display: block;
     height: 100dvh;
   }
+  #freetext {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  /* schmale Handys: Tabelle mit Buttons/Auswahlfeldern und Info-Button passt sonst nicht in die Breite */
+  @media (max-width: 440px) {
+    #querschnittwerte_table { border-spacing: 2px; }
+    #querschnittwerte_table td:first-child { font-size: 0.9rem; }
+  }
   @media (prefers-color-scheme: dark) {
       sl-tab::part(base) { color: yellow; font-size: 1rem;}
       sl-tab[active]::part(base) { color: #4da3ff; }
@@ -191,9 +200,8 @@ export class drHaupt extends LitElement {
 
         <hr />
 
-        <p><span id="lab_freier_text" title="Der eingegebene Text wird auch für die pdf-Ergebnissdatei verwendet">${msg('Projekt (freier Text mit HTML Formatierung für fett):')}</span><br>
-          <textarea id="freetext" name="freetext" rows="3" cols="50" placeholder="<b>Hausübung A1, SS 2025</b>
-Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einrahmen, Zeilenumbruch mit Return-Taste"></textarea>
+        <p><span id="lab_freier_text" title="${msg('Der eingegebene Text wird auch für die pdf-Ergebnisdatei verwendet')}">${msg('Projekt (freier Text mit HTML Formatierung für fett):')}</span><br>
+          <textarea id="freetext" name="freetext" rows="3" cols="50" placeholder="${msg('<b>Hausübung A1, SS 2025</b>\nBearbeitet von: Melis Muster')}" title="${msg('Buchstaben in Fett durch <b> und </b> einrahmen, Zeilenumbruch mit Return-Taste')}"></textarea>
         </p>
 
         <br />
@@ -240,7 +248,7 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
 
 
             <tr>
-              <td title="Option 'nichtlinear' nur bei FW-Stäben, die nur Zug- oder Druckkräfte übertragen können, anwenden">&nbsp;&nbsp; ${msg('Materialeigenschaften:')}</td>
+              <td title="${msg("Option 'nichtlinear' nur bei FW-Stäben, die nur Zug- oder Druckkräfte übertragen können, anwenden")}">&nbsp;&nbsp; ${msg('Materialeigenschaften:')}</td>
               <td>
                 <select name="matprop" id="id_matprop" style="min-width:100%;" @change=${() => berechnungErforderlich()}>
                   <option value="0" selected>${msg('linear')}</option>
