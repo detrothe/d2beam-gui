@@ -159,6 +159,7 @@ export function test_point_inside_area_2D(x: number[], y: number[], pQx: number,
             }
         }
     }
+    let nKanten = 0;   // Anzahl gültiger (nicht entarteter) Kanten
     for (let i = 0; i < len; i++) {
 
         if (i < len - 1) {
@@ -173,6 +174,7 @@ export function test_point_inside_area_2D(x: number[], y: number[], pQx: number,
         if (isNaN(det)) continue;
 
         if (Math.abs(det) < 1.e-12) continue;
+        nKanten++;
 
         bx = pQx - x[i];
         by = pQy - y[i];
@@ -189,6 +191,10 @@ export function test_point_inside_area_2D(x: number[], y: number[], pQx: number,
         if (lambda > 0.0) outside = true
 
     }
+    // Ohne mindestens 3 gültige Kanten gibt es keine Fläche (z.B. alle Punkte (0,0), weil die Last
+    // nie gezeichnet wurde) -> nicht "innen", sonst würde jeder Klick als Treffer zählen
+    if (nKanten < 3) return false;
+
     console.log("not outside", !outside)
     return !outside;
 

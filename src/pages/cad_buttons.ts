@@ -54,7 +54,7 @@ import {
   masslinien_drawn
 } from "./cad";
 
-import { two, tr } from "./cad";
+import { two, tr, show_lastfall } from "./cad";
 import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 import "@shoelace-style/shoelace/dist/components/drawer/drawer";
@@ -1097,6 +1097,7 @@ export function delete_element(xc: number, zc: number) {
       if (show_elementlasten) {
         for (let j = 0; j < obj.elast.length; j++) {
           let typ = obj.elast[j].typ
+          if (show_lastfall > 0 && obj.elast[j].lastfall !== show_lastfall) continue;   // nicht angezeigte Lastfälle nicht picken
           if (typ === 0 || typ === 2 || typ === 3 || typ === 4 || typ === 5) { // Streckenlast, Temperatur, Vorspannung, Spannschloss, Stabvorverformung
 
             let x = Array(4)
@@ -1626,6 +1627,7 @@ export function select_element(xc: number, zc: number) {
         if (show_elementlasten) {
           for (let j = 0; j < obj.elast.length; j++) {
             let typ = obj.elast[j].typ
+            if (show_lastfall > 0 && obj.elast[j].lastfall !== show_lastfall) continue;   // nicht angezeigte Lastfälle nicht picken
 
             if (typ === 0 || typ === 2 || typ === 3 || typ === 4 || typ === 5) { // Streckenlast, Temperatur, Vorspannung, Spannschloss, Stabvorverformung
 
@@ -3586,6 +3588,7 @@ export function show_selected_element(xc: number, zc: number) {
       if (show_elementlasten) {
         for (let j = 0; j < obj.elast.length; j++) {
           let typ = obj.elast[j].typ
+          if (show_lastfall > 0 && obj.elast[j].lastfall !== show_lastfall) continue;   // nicht angezeigte Lastfälle nicht picken
 
           if (typ === 0 || typ === 2 || typ === 3 || typ === 4 || typ === 5) { // Streckenlast, Temperatur, Vorspannung, Spannschloss, Stabvorverformung
 
