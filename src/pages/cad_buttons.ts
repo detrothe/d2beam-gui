@@ -70,7 +70,7 @@ import "../components/dr-dialog_knotenverformung";
 import { stadyn, TLoads, TMass, TNode, TNodeDisp } from "./rechnen";
 import { abstandPunktGerade_2D, test_point_inside_area_2D } from "./lib";
 import { drawStab, draw_knoten, draw_knotenlast, draw_knotenmasse, draw_lager } from "./cad_draw_elemente";
-import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Einzellast, TCAD_Knotenmasse, TCAD_Knotenverformung } from "./CCAD_element";
+import { TCAD_Knoten, TCAD_Knotenlast, TCAD_Lager, TCAD_Stab, TCAD_Streckenlast, TCAD_Temperaturlast, TCAD_Element, TCAD_ElLast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Einzellast, TCAD_Knotenmasse, TCAD_Knotenverformung, next_cad_seq } from "./CCAD_element";
 import { drDialogElementlasten } from "../components/dr-dialog_elementlasten";
 import { change_def_querschnitt } from "./querschnitte";
 import { drDialogKnoten } from "../components/dr-dialog_knoten";
@@ -310,10 +310,45 @@ class CDelElLast {
   ellast = true;
   obj_element: TCAD_Stab;
   obj_elast: TCAD_ElLast
-  constructor(obj_element: TCAD_Stab, obj_elast: TCAD_ElLast) {
+  index: number                  // ursprüngliche Position in obj_element.elast[]
+  constructor(obj_element: TCAD_Stab, obj_elast: TCAD_ElLast, index: number) {
     this.obj_element = obj_element
     this.obj_elast = obj_elast
+    this.index = index
   }
+}
+
+//--------------------------------------------------------------------------------------------------------
+function remove_elementlast(stab: TCAD_Stab, index: number) {
+  //----------------------------------------------------------------------------------------------------
+  // entfernt eine Elementlast vom Stab, zeichnet den Stab neu und merkt sie für Redo vor
+
+  const elast = stab.elast[index];
+  stab.elast.splice(index, 1);
+  undoList.append(new CDelElLast(stab, elast, index));
+
+  two.remove(stab.getTwoObj());
+  const group = drawStab(stab, tr);
+  two.add(group);
+  stab.setTwoObj(group);
+  two.update();
+
+  find_max_Lastfall();
+  find_maxValues_eloads();
+}
+
+//--------------------------------------------------------------------------------------------------------
+function find_newest_elementlast(): { stab: TCAD_Stab, index: number, seq: number } | null {
+  //----------------------------------------------------------------------------------------------------
+  let newest: { stab: TCAD_Stab, index: number, seq: number } | null = null;
+  for (const obj of list) {
+    if (obj.elTyp !== CAD_STAB) continue;
+    const stab = obj as TCAD_Stab;
+    for (let j = 0; j < stab.elast.length; j++) {
+      if (newest === null || stab.elast[j].seq > newest.seq) newest = { stab: stab, index: j, seq: stab.elast[j].seq };
+    }
+  }
+  return newest;
 }
 
 export const buttons_control = new Cbuttons_control();
@@ -868,22 +903,27 @@ export function unDo_button() {
     let obj = list.getTail();
     console.log("obj eltyp", obj.elTyp);
 
+    // Ist eine Elementlast jünger als das letzte Element, wird zuerst sie zurückgenommen.
+    // Eine Elementlast ist immer jünger als ihr Stab, daher bleibt die Chronologie erhalten.
+    const newest = find_newest_elementlast();
+    if (newest && newest.seq > (obj as TCAD_Element).seq) {
+      remove_elementlast(newest.stab, newest.index);
+      init_cad(2);
+      return;
+    }
+
     if ((obj as TCAD_Element).elTyp === CAD_STAB) {
       remove_element_nodes((obj as TCAD_Stab).index1)
       remove_element_nodes((obj as TCAD_Stab).index2)
-      find_max_Lastfall();
-      find_maxValues_eloads();
     }
     else if ((obj as TCAD_Element).elTyp === CAD_LAGER) {
       remove_element_nodes((obj as TCAD_Lager).index1)
     }
     else if ((obj as TCAD_Element).elTyp === CAD_KNLAST) {
       remove_element_nodes((obj as TCAD_Knotenlast).index1)
-      find_max_Lastfall();
     }
     else if ((obj as TCAD_Element).elTyp === CAD_KNOTVERFORMUNG) {
       remove_element_nodes((obj as TCAD_Knotenverformung).index1)
-      find_max_Lastfall();
     }
     else if ((obj as TCAD_Element).elTyp === CAD_KNMASSE) {
       remove_element_nodes((obj as TCAD_Knotenmasse).index1)
@@ -911,6 +951,10 @@ export function unDo_button() {
     obj = list.removeTail();
 
     undoList.append(obj);
+
+    // erst nach dem Entfernen neu bestimmen, ein Stab nimmt seine Elementlasten mit
+    find_max_Lastfall();
+    find_maxValues_eloads();
   }
 }
 
@@ -927,27 +971,32 @@ export function reDo_button() {
 
     if (obj.ellast) {
       console.log("Es handelt sich um eine Elementlast", obj.obj_elast)
-      obj.obj_element.elast.push(obj.obj_elast)
-      //obj.obj_element.nStreckenlasten++;
-      console.log("neuer Stab", obj.obj_element)
-      two.remove(obj.obj_element.two_obj);
-      console.log("max Lastfall", obj.obj_elast.lastfall)
-      let lf = obj.obj_elast.lastfall
-      set_max_lastfall(lf)
-      if (obj.obj_elast.className === 'TCAD_Streckenlast') {
-        let pa = obj.obj_elast.pL;
-        let pe = obj.obj_elast.pR;
-        if (Math.abs(pa) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pa);
-        if (Math.abs(pe) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pe);
+      if (list.indexOf(obj.obj_element) < 0) {
+        // darf wegen LIFO nicht vorkommen, Last würde sonst ohne Stab dastehen
+        console.warn("reDo: Stab der Elementlast ist nicht mehr vorhanden, Last wird verworfen");
+        return;
       }
+      obj.obj_elast.seq = next_cad_seq();
+      obj.obj_element.elast.splice(Math.min(obj.index, obj.obj_element.elast.length), 0, obj.obj_elast)
+      //obj.obj_element.nStreckenlasten++;
+
+      // vor dem Zeichnen neu bestimmen, drawStab braucht max_value_lasten für alle Lastfälle
+      find_max_Lastfall();
+      find_maxValues_eloads();
+
+      two.remove(obj.obj_element.two_obj);
       group = drawStab(obj.obj_element, tr);
       two.add(group);
       obj.obj_element.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
-
-      find_max_Lastfall();
-      find_maxValues_eloads();
     }
     else {
+      obj.seq = next_cad_seq();   // wieder eingefügt = jüngstes Element, nimmt seine Elementlasten mit
+      list.append(obj);
+
+      // vor dem Zeichnen neu bestimmen, ein Stab bringt seine Elementlasten wieder mit
+      find_max_Lastfall();
+      find_maxValues_eloads();
+
       if (obj.elTyp === CAD_STAB) {
         group = drawStab(obj, tr);
         two.add(group);
@@ -965,15 +1014,11 @@ export function reDo_button() {
         group = draw_knotenlast(tr, obj, index1, 1.0, 0)
         two.add(group);
         add_element_nodes(obj.index1);
-
-        find_max_Lastfall();
       }
       else if (obj.elTyp === CAD_KNOTVERFORMUNG) {
         group = draw_knotenverformung(tr, obj, 1.0, 0)
         two.add(group);
         add_element_nodes(obj.index1);
-
-        find_max_Lastfall();
       }
       else if (obj.elTyp === CAD_KNOTEN) {
         //console.log("KNOTEN reDo", obj.x1, obj.z1)
@@ -999,7 +1044,6 @@ export function reDo_button() {
       }
 
       obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
-      list.append(obj);
     }
 
     init_cad(2);
@@ -1316,23 +1360,7 @@ export function delete_element(xc: number, zc: number) {
       index_ellast = index_eleinzellast
     }
 
-    let obj_strLast = obj_ellast.elast[index_ellast]
-    console.log("obj_strLast", obj_strLast)
-    let undo_obj = new CDelElLast(obj_ellast, obj_strLast);
-
-    obj_ellast.elast.splice(index_ellast, 1);
-    //obj_ellast.nStreckenlasten--;
-    let group = obj_ellast.getTwoObj();
-    console.log("two.remove group", two.remove(group));
-
-    group = drawStab(obj_ellast as TCAD_Stab, tr);
-    two.add(group)
-    obj_ellast.setTwoObj(group);
-    two.update();
-    undoList.append(undo_obj);
-
-    find_max_Lastfall();
-    find_maxValues_eloads();
+    remove_elementlast(obj_ellast as TCAD_Stab, index_ellast);
     gefunden = true;
   }
   else if (lager_gefunden) {
@@ -1398,7 +1426,9 @@ export function delete_element(xc: number, zc: number) {
       remove_element_nodes((obj as TCAD_Stab).index1)
       remove_element_nodes((obj as TCAD_Stab).index2)
 
-      undoList.append(obj);
+      undoList.append(obj);          // Elementlasten bleiben am Stab hängen und kommen mit Redo zurück
+      find_max_Lastfall();
+      find_maxValues_eloads();
       //buttons_control.reset();
       gefunden = true;
     }

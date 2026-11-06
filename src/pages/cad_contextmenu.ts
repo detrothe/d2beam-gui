@@ -3,7 +3,7 @@ import { drDialogStabEigenschaften } from "../components/dr-dialog_stab_eigensch
 import { CAD_ELLAST, init_cad, keydown, list, reset_pointer_length, selected_element, set_zoomIsActive, tr, two, undoList } from "./cad";
 import { buttons_control, index_stab, picked_obj } from "./cad_buttons";
 import { draw_stab_gelenke, drawStab } from "./cad_draw_elemente";
-import { max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
+import { find_max_Lastfall, find_maxValues_eloads, max_value_lasten, set_max_lastfall } from "./cad_draw_elementlasten";
 import { remove_element_nodes } from "./cad_node";
 import { TCAD_Stab } from "./CCAD_element";
 import { berechnungErforderlich } from "./globals";
@@ -279,7 +279,9 @@ export function delete_element_dialog() {
         remove_element_nodes((obj as TCAD_Stab).index1)
         remove_element_nodes((obj as TCAD_Stab).index2)
 
-        undoList.append(obj);
+        undoList.append(obj);          // Elementlasten bleiben am Stab hängen und kommen mit Redo zurück
+        find_max_Lastfall();
+        find_maxValues_eloads();
 
         if (selected_element.group) {
             two.remove(selected_element.group);

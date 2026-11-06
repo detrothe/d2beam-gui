@@ -46,11 +46,13 @@ import {
     TCAD_Knotenverformung,
     TCAD_Lager,
     TCAD_Stab,
+    take_cad_seq,
 } from './CCAD_element';
 import {
     init_cad,
     init_two_cad,
     list,
+    undoList,
     raster_dx,
     raster_dz,
     raster_xmax,
@@ -77,6 +79,7 @@ import {
     max_Lastfall,
     max_value_lasten,
     set_max_lastfall,
+    zero_max_lastfall,
 } from './cad_draw_elementlasten';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { drDialogKnotenmasse } from '../components/dr-dialog_knotenmasse';
@@ -326,6 +329,7 @@ export function read_daten(eingabedaten: string): boolean {
             console.log('textarea', txtarea.value);
             if (jobj.freetxt !== undefined) txtarea.value = jobj.freetxt;
 
+            zero_max_lastfall();                    // Werte des alten Projekts verwerfen, set_max_lastfall kann nur erhöhen
             set_max_lastfall(jobj.max_Lastfall);
         }
 
@@ -475,9 +479,12 @@ export function read_daten(eingabedaten: string): boolean {
         }
         reset_ID_counter();
 
-        list.size = 0;
+        list.clear();          // ist nach clearTables() schon leer, zur Sicherheit
+        undoList.clear();      // Redo darf nicht auf Objekte des alten Projekts zugreifen
+        const mit_seq = version >= 4;     // ab Version 4 ist die Eingabereihenfolge gespeichert
         for (let i = 0; i < jobj.elements.length; i++) {
             let element = jobj.elements[i] as TCAD_Element;
+            const anzahl_vorher = list.size;
             if (element.className === 'TCAD_Stab') {
                 const obj = new TCAD_Stab(
                     null,
@@ -502,6 +509,7 @@ export function read_daten(eingabedaten: string): boolean {
                 list.append(obj);
                 let neloads = jobj.elements[i].elast.length;
                 for (let j = 0; j < neloads; j++) {
+                    const nlasten_vorher = obj.elast.length;
                     if (jobj.elements[i].elast[j].className === 'TCAD_Streckenlast') {
                         obj.add_streckenlast(
                             jobj.elements[i].elast[j].lastfall,
@@ -550,6 +558,8 @@ export function read_daten(eingabedaten: string): boolean {
                             jobj.elements[i].elast[j].w0e
                         );
                     }
+                    // Eingabereihenfolge (für Undo) aus der Datei übernehmen, falls gespeichert
+                    if (mit_seq && obj.elast.length > nlasten_vorher) take_cad_seq(obj.elast[obj.elast.length - 1], jobj.elements[i].elast[j].seq);
                 }
             } else if (element.className === 'TCAD_Lager') {
                 const obj = new TCAD_Lager(
@@ -617,6 +627,8 @@ export function read_daten(eingabedaten: string): boolean {
                 );
                 list.append(obj);
             }
+            // Eingabereihenfolge (für Undo) aus der Datei übernehmen, falls gespeichert
+            if (mit_seq && list.size > anzahl_vorher) take_cad_seq(list.getTail(), jobj.elements[i].seq);
         }
 
         // for (let i = 0; i < list.size; i++) {
@@ -624,14 +636,13 @@ export function read_daten(eingabedaten: string): boolean {
         //     console.log("eingelesen", obj);
         // }
 
-        max_value_lasten.length = 0;
-        for (let i = 0; i < jobj.max_value_lasten.length; i++) {
-            max_value_lasten.push(new CMAXVALUESLOAD());
-            max_value_lasten[i].eload = jobj.max_value_lasten[i].eload;
-        }
-
-        for (let i = 0; i < jobj.max_value_lasten.length; i++) {
-            console.log('max_value_lasten[i].eload', max_value_lasten[i].eload);
+        // Skalierung der Streckenlasten aus der Datei übernehmen.
+        // max_value_lasten hat nach set_max_lastfall() oben genau max_Lastfall Einträge,
+        // set_max_lastfall(i + 1) hält Länge und max_Lastfall gleich, falls die Datei mehr Einträge hat.
+        const file_max_values = (jobj.max_value_lasten ?? []) as CMAXVALUESLOAD[];
+        for (let i = 0; i < file_max_values.length; i++) {
+            set_max_lastfall(i + 1);
+            max_value_lasten[i].eload = file_max_values[i].eload;
         }
 
         let el = shadow?.getElementById('id_kombinationen_tabelle') as HTMLElement;
@@ -958,21 +969,18 @@ export function str_inputToJSON() {
             qsClassName[i] = get_querschnitt_classname(i);
         }
 
+        // flache Kopie speichern: two_obj am echten Objekt NICHT löschen, sonst kann Undo/Löschen
+        // die Grafik nach einem Speichern (auch automatisch bei visibilitychange) nicht mehr entfernen
         let elements = [] as TCAD_Element[];
-        let zuruec: TCAD_Element;
-        for (let i = 0; i < list.size; i++) {
-            let obj = list.getNext(i) as TCAD_Element;
-            obj.two_obj = null;
-            elements.push(obj);
-            zuruec = elements[i];
-            console.log('zurueck', zuruec);
+        for (const obj of list) {
+            elements.push({ ...obj, two_obj: null } as TCAD_Element);
         }
 
         if (max_Lastfall === 0) set_max_lastfall(1);
 
         let polyData = {
             created_by: 'd2beam-gui',
-            version: 3,
+            version: 4,             // 4: Elemente und Elementlasten enthalten seq (Eingabereihenfolge für Undo)
 
             system: system,
             dateiname: currentFilename,

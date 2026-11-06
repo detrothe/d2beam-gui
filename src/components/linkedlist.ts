@@ -18,7 +18,6 @@ export class LinkedList {
     size: number;
     current_pos: number;
 
-    // index_mem = 0;
     current_next: Node | null;
 
     constructor() {
@@ -59,10 +58,9 @@ export class LinkedList {
         this.size++;
     }
 
-    // insert data at a specific position
+    // insert data at a specific position (0 ... size, size = append)
     insertAt(data: any, position: number): void {
-        berechnungErforderlich(true);
-        if (position < 0 || position > this.size - 1) {
+        if (position < 0 || position > this.size) {
             throw Error('Position ' + position + ' is not in the list');
         }
         if (position == 0) {
@@ -73,12 +71,8 @@ export class LinkedList {
             this.append(data);
             return;
         }
-        let currentNode: Node = this.head as Node;
-        let index: number = 0;
-        while (index < position) {
-            currentNode = currentNode.next as Node;
-            index++;
-        }
+        berechnungErforderlich(true);
+        const currentNode = this.nodeAt(position);
         const newNode: Node = new Node(data);
         newNode.next = currentNode;
         newNode.prev = currentNode.prev;
@@ -87,28 +81,35 @@ export class LinkedList {
         this.size++;
     }
 
-    // remove a node at a specific position ad return its data
+    // remove a node at a specific position and return its data
     removeAt(position: number): any {
-        berechnungErforderlich(true);
         if (position < 0 || position > this.size - 1) {
             throw Error('Position ' + position + ' is not in the list');
         }
-        if (position == 0) {
-            return this.removeHead();
+        const node = this.nodeAt(position);
+        this.unlink(node);
+        return node.data;
+    }
+
+    // remove the first node holding data (identity), returns true if found
+    remove(data: any): boolean {
+        for (let node = this.head; node; node = node.next) {
+            if (node.data === data) {
+                this.unlink(node);
+                return true;
+            }
         }
-        if (position == this.size - 1) {
-            return this.removeTail();
-        }
-        let current: Node = this.head as Node;
-        let index: number = 0;
-        while (index < position) {
-            current = current.next as Node;
+        return false;
+    }
+
+    // position of data (identity) or -1
+    indexOf(data: any): number {
+        let index = 0;
+        for (let node = this.head; node; node = node.next) {
+            if (node.data === data) return index;
             index++;
         }
-        (current.prev as Node).next = current.next;
-        (current.next as Node).prev = current.prev;
-        this.size--;
-        return current.data;
+        return -1;
     }
 
     // return node data at a specific position
@@ -116,32 +117,34 @@ export class LinkedList {
         if (position < 0 || position >= this.size) {
             throw Error('Position ' + position + ' is not in the list');
         }
-        let current = this.head;
-        let index = 0;
-        while (index < position) {
-            current = (current as Node).next;
-            index++;
-        }
-        return (current as Node).data;
+        return this.nodeAt(position).data;
     }
 
     // get next data, only to be used in for loop (i=0 ... list.size)
+    // ACHTUNG: es gibt nur einen Cursor pro Liste, verschachtelte Schleifen über
+    // dieselbe Liste stören sich gegenseitig. Dafür besser for (const obj of list) verwenden.
     getNext(ind: number): any {
-
         if (ind === 0) {
+            if (!this.head) throw Error('getNext on an empty list');
             this.current_pos = 0
-
-            let current = this.head;
-            this.current_next = (current as Node).next;
-            //this.index_mem = 0;
-
-            return (this.head as Node).data;
+            this.current_next = this.head.next;
+            return this.head.data;
         } else {
-            let data = (this.current_next as Node).data
-            this.current_next = (this.current_next as Node).next;
-            //this.index_mem++;
-
+            if (!this.current_next) throw Error('getNext beyond the end of the list');
+            const data = this.current_next.data
+            this.current_next = this.current_next.next;
+            this.current_pos = ind;
             return data;
+        }
+    }
+
+    // unabhängiger Iterator, verschachtelbar:  for (const obj of list) { ... }
+    *[Symbol.iterator](): IterableIterator<any> {
+        let node = this.head;
+        while (node) {
+            const next = node.next;    // vorher merken, falls node während der Schleife entfernt wird
+            yield node.data;
+            node = next;
         }
     }
 
@@ -151,11 +154,6 @@ export class LinkedList {
             throw Error('No head in an empty list');
         }
         this.current_pos = 0
-
-        // let current = this.head;
-        // this.current_next = (current as Node).next;
-        // this.index_mem = 0;
-
         return (this.head as Node).data;
     }
 
@@ -172,16 +170,9 @@ export class LinkedList {
         if (this.size == 0) {
             throw Error('No head in an empty list');
         }
-        berechnungErforderlich(true);
-        const data: any = (this.head as Node).data;
-        this.head = (this.head as Node).next;
-        if (this.head) {
-            this.head.prev = null;
-        } else {
-            this.tail = null;
-        }
-        this.size--;
-        return data;
+        const node = this.head as Node;
+        this.unlink(node);
+        return node.data;
     }
 
     // remove list tail and return its data
@@ -189,16 +180,19 @@ export class LinkedList {
         if (this.size == 0) {
             throw Error('No tail in an empty list');
         }
-        berechnungErforderlich(true);
-        const data: any = (this.tail as Node).data;
-        this.tail = (this.tail as Node).prev;
-        if (this.tail) {
-            this.tail.next = null;
-        } else {
-            this.head = null;
-        }
-        this.size--;
-        return data;
+        const node = this.tail as Node;
+        this.unlink(node);
+        return node.data;
+    }
+
+    // remove all entries
+    clear(): void {
+        if (this.size > 0) berechnungErforderlich(true);
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+        this.current_pos = -1;
+        this.current_next = null;
     }
 
     // print list content in the console
@@ -207,14 +201,35 @@ export class LinkedList {
             console.log('Empty list');
             return;
         }
-        let current: Node = this.head as Node;
-        let result: any[] = [];
-        for (let i: number = 0; i < this.size; i++) {
-            result.push(current.data);
-            if (current.next) {
-                current = current.next;
-            }
+        console.log([...this].join(' <-> '));
+    }
+
+    //------------------------------------------------------------------------------------------------
+    private nodeAt(position: number): Node {
+        // von der näheren Seite her laufen
+        if (position < this.size / 2) {
+            let node = this.head as Node;
+            for (let i = 0; i < position; i++) node = node.next as Node;
+            return node;
+        } else {
+            let node = this.tail as Node;
+            for (let i = this.size - 1; i > position; i--) node = node.prev as Node;
+            return node;
         }
-        console.log(result.join(' <-> '));
+    }
+
+    private unlink(node: Node): void {
+        berechnungErforderlich(true);
+        if (node.prev) node.prev.next = node.next;
+        else this.head = node.next;
+        if (node.next) node.next.prev = node.prev;
+        else this.tail = node.prev;
+
+        // getNext-Cursor nicht auf einem entfernten Knoten stehen lassen
+        if (this.current_next === node) this.current_next = node.next;
+
+        node.next = null;
+        node.prev = null;
+        this.size--;
     }
 }

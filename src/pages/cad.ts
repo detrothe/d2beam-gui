@@ -336,15 +336,9 @@ export function two_cad_clear() {
    //    two.clear();
    // }
 
-   let size = list.size;
-   for (let i = 0; i < size; i++) {
-      list.removeTail();
-   }
-
-   size = undoList.size;
-   for (let i = 0; i < size; i++) {
-      undoList.removeTail();
-   }
+   list.clear();
+   undoList.clear();
+   selected_element.group = null;     // gehört zur alten Zeichnung, two.clear() in init_cad entfernt sie
    console.log("list...", list.size, undoList.size)
 
    CADNodes.length = 0

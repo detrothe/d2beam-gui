@@ -3,9 +3,22 @@ import { testArea4 } from "./lib";
 import { System, TLoads, TMass, TNode } from "./rechnen";
 
 //―――――――――――――――――――――――――――――――――――――――――――――
+// fortlaufende Nummer für Elemente und Elementlasten, legt die Reihenfolge für Undo fest
+let cad_seq_counter = 0;
+export function next_cad_seq(): number { return ++cad_seq_counter; }
+
+// gespeicherte Nummer beim Einlesen übernehmen, Zähler bleibt über allen vergebenen Nummern
+export function take_cad_seq(ziel: { seq: number }, gespeichert: any): void {
+    if (typeof gespeichert !== 'number' || !Number.isFinite(gespeichert)) return;   // ältere Datei ohne seq
+    ziel.seq = gespeichert;
+    if (gespeichert > cad_seq_counter) cad_seq_counter = gespeichert;
+}
+
+//―――――――――――――――――――――――――――――――――――――――――――――
 export class TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――
 
+    seq = next_cad_seq();       // Zeitpunkt der Eingabe (bzw. des letzten Redo)
     two_obj: any;
     qname: string = '';
     className = 'TCAD_Element';
@@ -314,6 +327,7 @@ export class TCAD_Knoten extends TCAD_Element {
 export class TCAD_ElLast {
     //―――――――――――――――――――――――――――――――――――――――――
 
+    seq = next_cad_seq();       // Zeitpunkt der Eingabe (bzw. des letzten Redo)
     className = 'TCAD_ElLast'
     lastfall = 1
     isActive = true;
