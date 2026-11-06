@@ -15,7 +15,9 @@ const localeNames: {
 } = {
     de: 'Deutsch',
     "en-GB": 'English',
-    'es-ES': 'Español'
+    'es-ES': 'Español',
+    'fr-FR': 'Français',
+    'it-IT': 'Italiano'
 };
 
 // Note we use updateWhenLocaleChanges here so that we're always up to date with

@@ -1096,6 +1096,22 @@ Bearbeitet von: Melis Muster" title="Buchstaben in Fett durch <b> und </b> einra
               style="border: none; overflow: scroll; background-color: white; display: none;"
             >
             </iframe>
+            <iframe
+              id="id_doc_fr"
+              src="Kurzdokumentation_french.html"
+              width="100%"
+              height="1500px"
+              style="border: none; overflow: scroll; background-color: white; display: none;"
+            >
+            </iframe>
+            <iframe
+              id="id_doc_it"
+              src="Kurzdokumentation_italian.html"
+              width="100%"
+              height="1500px"
+              style="border: none; overflow: scroll; background-color: white; display: none;"
+            >
+            </iframe>
           </div>
         </div>
       </sl-tab-panel>

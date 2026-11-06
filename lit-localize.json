@@ -3,7 +3,9 @@
   "sourceLocale": "de",
   "targetLocales": [
     "es-ES",
-    "en-GB"
+    "en-GB",
+    "fr-FR",
+    "it-IT"
   ],
   "tsConfig": "./tsconfig.json",
   "output": {

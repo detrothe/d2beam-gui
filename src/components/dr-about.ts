@@ -13,6 +13,8 @@ class DrAbout extends HTMLElement {
         <li><a href="/Kurzdokumentation_deutsch.html">Deutsch</a></li>
         <li><a href="/Kurzdokumentation_english.html">English</a></li>
         <li><a href="/Kurzdokumentation_spanish.html">Español</a></li>
+        <li><a href="/Kurzdokumentation_french.html">Français</a></li>
+        <li><a href="/Kurzdokumentation_italian.html">Italiano</a></li>
       </ul>
     `;
     }

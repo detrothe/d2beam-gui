@@ -18,3 +18,34 @@ This is a simple 2D frame analysis app. It can solve linear elastic systems on y
 ## Try it
 
 You can try the current test version at https://d2beam-gui.netlify.app 😊.
+
+## Languages and translations
+
+The app is available in German (source language), English, Spanish, French and Italian.
+
+| Language | Status |
+|---|---|
+| German (`de`) | source language |
+| English (`en-GB`) | reviewed |
+| Spanish (`es-ES`) | not yet reviewed by a native speaker |
+| French (`fr-FR`) | not yet reviewed by a native speaker |
+| Italian (`it-IT`) | not yet reviewed by a native speaker |
+
+Help from native speakers with a background in structural engineering is very welcome, for example civil engineering students. Corrections of single terms are just as helpful as a full review.
+
+### Where the texts are
+
+- **App texts:** `xliff/<locale>.xlf`. Each `<trans-unit>` contains the German `<source>` and the translated `<target>`. Use the English file for comparison.
+- **Short documentation (Info tab):** `public/Kurzdokumentation_<language>.html`
+
+Terms that need particular attention in French and Italian are, for example: *Schiefstellung* (global imperfection), *kinematisch* (mechanism), *Bettung* (elastic foundation, Winkler) and *Vorspannung* (prestress).
+
+### Workflow
+
+```bash
+npx lit-localize extract   # after code changes: adds new texts to xliff/*.xlf
+# edit the <target> entries in xliff/<locale>.xlf
+npx lit-localize build     # generates src/generated/locales/*.ts
+```
+
+Please send corrections as a pull request or by e-mail to statikverstehen&#x40;web.de.

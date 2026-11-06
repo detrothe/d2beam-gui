@@ -779,12 +779,16 @@ export function update_button_language() {
     shadow.getElementById("id_doc_de")!.style.display = 'none';
     shadow.getElementById("id_doc_en")!.style.display = 'none';
     shadow.getElementById("id_doc_es")!.style.display = 'none';
+    shadow.getElementById("id_doc_fr")!.style.display = 'none';
+    shadow.getElementById("id_doc_it")!.style.display = 'none';
 
     console.log("in update_button_language", user_language)
 
     if (user_language == 'de') shadow.getElementById("id_doc_de")!.style.display = 'block';
     else if (user_language == 'en-GB') shadow.getElementById("id_doc_en")!.style.display = 'block';
     else if (user_language == 'es-ES') shadow.getElementById("id_doc_es")!.style.display = 'block';
+    else if (user_language == 'fr-FR') shadow.getElementById("id_doc_fr")!.style.display = 'block';
+    else if (user_language == 'it-IT') shadow.getElementById("id_doc_it")!.style.display = 'block';
   }
 
   // Tabellenüberschriften anpassen

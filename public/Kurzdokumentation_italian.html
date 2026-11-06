@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="it">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, minimal-ui">
+		<title>Programma d2beam-GUI per telai piani</title>
+		<meta name="author" content="Prof. Dr.-Ing. Detlef Rothe">
+		<meta name="AppVersion" content="15.0000">
+		<script id="MathJax-script" async
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		<style type="text/css">
+		body {
+			font-size: 1em;
+			font-family: "FreeSans", sans-serif;
+			line-height: 150%;
+		}
+
+		p {
+			line-height: 150%;
+			text-align: left;
+			margin-bottom: 0.6em;
+			direction: ltr;
+			background: transparent
+		}
+
+		ul {
+			line-height: 150%;
+		}
+
+		h1 {
+			color: #1c1c6a;
+			line-height: 115%;
+			text-align: left;
+			page-break-inside: avoid;
+			margin-top: 2em;
+			margin-bottom: 0;
+			direction: ltr;
+			background: transparent;
+			page-break-after: avoid
+		}
+
+		h1.western {
+			font-size: 1.2em;
+			font-weight: bold
+		}
+
+
+		h2 {
+			color: #1c1c6a;
+			line-height: 115%;
+			text-align: left;
+			page-break-inside: avoid;
+			margin-top: 0.83em;
+			margin-bottom: 0;
+			direction: ltr;
+			background: transparent;
+			page-break-after: avoid
+		}
+
+		h2.western {
+			font-size: 1.125em;
+			font-weight: bold
+		}
+
+
+		a:link {
+			color: #1c1c6a;
+			text-decoration: none
+		}
+
+		a:visited {
+			color: #1c1c6a;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: none;
+		}
+
+		a:active {
+			text-decoration: none;
+		}
+
+		a[href^="#"]:before {
+			content: '➡ ';
+		}
+        </style>
+	</head>
+	<body
+		lang="it-IT"
+		link="#0000ff"
+		vlink="#800000"
+		dir="ltr">
+		<h1 class="western">Indice</h1>
+		<p class="western">
+			<a href="#uebersicht">Panoramica</a>
+			<br>
+			<a href="#gui">Inserimento grafico</a>
+			<br>
+			<a href="#vorzeichen">Sistema di riferimento e convenzioni di segno</a>
+			<br>
+			<a href="#hinweiseApp">Note sull'uso dell'app</a>
+			<br>
+			<a href="#darstellung_2D">Rappresentazioni 2D</a>
+			<br>
+			<a href="#svg">Salvare il grafico</a>
+			<br>
+			<a href="#bezeichnungen">Denominazioni</a>
+			<br>
+			<a href="#voreinstellungen">Preferenze</a>
+			<br>
+			<a href="#installation">Installazione dell'app sul desktop</a>
+			<br>
+			<a href="#kompatibilitaet">Compatibilità</a>
+			<br>
+			<a href="#tastatur">
+				Aiuto: la mia tastiera non ha il tasto meno, tastiera virtuale
+			</a>
+			<br>
+			<a href="#faq">Domande e risposte</a>
+			<br>
+			<a href="#kontakt">Contatti e segnalazione di errori</a>
+			<br>
+			<h1 lang="it-IT" class="western" id="uebersicht">
+				<a href="#">Panoramica</a>
+			</h1>
+			<p>
+				Con questa applicazione web si possono analizzare telai e travature reticolari
+				piane con il metodo degli elementi finiti.
+				Sono disponibili opzioni di calcolo per analisi statiche e dinamiche, [1], [2], [3].
+				I calcoli statici possono essere eseguiti secondo la teoria del I e del II ordine.
+				Nei calcoli dinamici è attualmente possibile determinare autovalori e modi propri.
+				L'elemento asta denominato d2beam (tipo 0) può considerare le deformazioni da
+				taglio secondo la teoria di Timoshenko.
+				L'asta reticolare è un classico elemento a 2 nodi.
+				Il punto di partenza dell'elemento d2beam è un elemento trave rettilineo a 4 nodi
+				deformabile a taglio [1], i cui nodi interni vengono condensati, in modo che
+				l'utente lavori con un elemento a 2 nodi. Per i calcoli secondo la teoria del
+				I ordine, le matrici dell'elemento corrispondono alla soluzione che si ottiene
+				anche con l'equazione differenziale della trave di Timoshenko. In questo caso i
+				risultati sono quindi esatti.
+			</p>
+			<p>
+				Dopo aver cliccato sul pulsante «Inizia un nuovo inserimento» si può scegliere
+				tra il calcolo di un telaio e quello di una travatura reticolare pura.
+				La scelta «Travatura reticolare» semplifica l'inserimento delle reticolari.
+				Naturalmente le reticolari possono essere calcolate anche con gli elementi del
+				telaio, se si inseriscono cerniere alle estremità delle aste.
+				<br>
+				Gli elementi hanno un nodo iniziale e un nodo finale, indicati con a ed e,
+				oppure con 1 e 2.
+			</p>
+			<p></p>
+			<p></p>
+			<p>
+				Caratteristiche del programma:
+			</p>
+			<ul>
+				<li>
+					<p>La sezione è costante per ogni elemento</p>
+				</li>
+				<li>
+					<p>
+						Materiale elastico lineare per le aste.
+					</p>
+				</li>
+				<li>
+					<p>
+						Le deformazioni da taglio vengono considerate tramite un fattore di
+						correzione del taglio. Inserendo 0 si calcola con elementi indeformabili
+						a taglio.
+					</p>
+				</li>
+				<li>
+					<p>
+						Con la teoria del II ordine l'imperfezione globale può essere considerata
+						comodamente tramite il primo modo proprio.
+						Nei telai tipici (incastrati alla base, liberi di spostarsi in sommità) è
+						sufficiente indicare lo spostamento massimo senza indicare il nodo
+						(inserimento 0). Il verso dell'imperfezione viene assunto uguale allo
+						spostamento esistente del grado di libertà corrispondente, ricavato dal
+						calcolo preliminare secondo la teoria del I ordine, necessario anche per
+						determinare gli sforzi normali.
+						<br>
+						Nei sistemi semplici a nodi fissi il 1° modo proprio corrisponde a
+						un'imperfezione locale dell'asta e può essere usato come tale.
+						<br>
+						L'imperfezione calcolata dal programma può essere verificata nella
+						rappresentazione grafica. Se il risultato non è adatto, occorre indicare
+						nell'inserimento il nodo desiderato e la direzione.
+					</p>
+				</li>
+				<li>
+					<p>
+						Suolo elastico opzionale delle aste inflesse secondo Winkler.
+					</p>
+				</li>
+				<li>
+					<p>
+						Si possono definire combinazioni di carico con i relativi coefficienti
+						parziali. Con la teoria del II ordine vengono calcolate solo le
+						combinazioni di carico.
+					</p>
+				</li>
+			</ul>
+			<p>
+				<br>
+				<br>
+			</p>
+			<h2 class="western" id="gui">
+				<a href="#">Inserimento grafico</a>
+			</h2>
+			<p>
+				L'inserimento del sistema statico avviene nella scheda Sistema. A seconda
+				dell'hardware disponibile si può inserire con il mouse, la penna o il dito.
+			</p>
+			<p>
+				Durante l'inserimento vanno rispettati i seguenti punti:
+				<ul>
+					<li>
+						Le sezioni vengono definite nella scheda Sezioni. Prima di inserire le
+						aste deve essere creata almeno una sezione.
+						In seguito è possibile apportare modifiche in questa scheda.
+					</li>
+					<li>
+						Nei calcoli secondo la teoria del II ordine vengono calcolate solo le
+						combinazioni dei casi di carico, che devono essere definite prima del
+						calcolo nella scheda Combinazioni.
+					</li>
+					<li>L'inserimento grafico del sistema avviene nella scheda Sistema.</li>
+					<li>
+						Il calcolo vero e proprio viene avviato nella scheda Principale. Dopo un
+						calcolo riuscito, nella scheda Risultati si possono visualizzare
+						deformazioni, sollecitazioni ecc.
+					</li>
+				</ul>
+			</p>
+			<p>
+				<b>Spiegazione delle icone nella scheda Sistema</b>
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/undo.png"
+					name="undo"
+					title="pulsante annulla"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Annulla: elimina l'ultimo elemento creato (nodo, asta, vincolo,
+				carico nodale o carico sull'elemento) e lo sposta nel cestino interno.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/redo.png"
+					name="redo"
+					title="pulsante ripristina"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Ripristina: recupera l'ultimo elemento spostato nel cestino.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/loeschen.png"
+					name="loeschen"
+					title="pulsante elimina"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Elimina: elimina un elemento su cui si clicca e lo sposta nel cestino
+				interno.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/select.png"
+					name="select"
+					title="pulsante seleziona"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Seleziona: cliccare su un elemento esistente. Compare poi una finestra
+				di dialogo in cui si possono apportare modifiche.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/knoten.png"
+					name="knoten"
+					title="pulsante nodo"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Nodo: inserimento delle coordinate dei nodi (x,z) tramite una finestra
+				di dialogo. Nota: l'inserimento dei nodi è necessario solo se un nodo di un'asta
+				non cade nelle intersezioni delle linee della griglia.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/edit_knoten.png"
+					name="edit_knoten"
+					title="pulsante modifica nodo"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Modifica nodo: qui si possono modificare le coordinate (x,z) dei nodi
+				esistenti.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/lager.png"
+					name="lager"
+					title="pulsante vincolo"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Vincolo: inserimento dei vincoli. Nota: i vincoli possono essere posti
+				solo su nodi esistenti.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/einstellungen.png"
+					name="einstellungen"
+					title="pulsante impostazioni"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Impostazioni: qui si possono effettuare impostazioni utili per
+				l'inserimento grafico.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/reset.png"
+					name="reset"
+					title="pulsante reimposta"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Reimposta: il sistema viene ridisegnato. Zoom e spostamento vengono
+				reimpostati.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/default_querschnitt.png"
+					name="default_querschnitt"
+					title="elenco sezione predefinita"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Elenco Sezione predefinita: il nome della sezione visualizzato viene usato per il
+				prossimo inserimento di un'asta. Nella scheda Sezioni si possono definire tutte
+				le sezioni che si vogliono.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/stab.png"
+					name="stab"
+					title="pulsante asta"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Asta: un'asta è definita dal nodo iniziale e dal nodo finale. Valgono le
+				seguenti regole di aggancio: prima si cercano nodi già esistenti entro il raggio
+				di aggancio (la lunghezza delle linee del cursore indica il raggio di aggancio) e
+				si usa il nodo più vicino alla croce del cursore. Se non si trova nulla, si usano
+				i punti blu della griglia. Se anche lì non si trova nulla entro il raggio di
+				aggancio, vale la posizione attuale del cursore, arrotondata a 1 mm.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/knotenlast.png"
+					name="knotenlast"
+					title="pulsante carico nodale"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Carico nodale: inserimento dei carichi nodali. Nota: i carichi nodali
+				possono essere posti solo su nodi esistenti.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/elementlast.png"
+					name="elementlast"
+					title="pulsante carico sull'elemento"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Carico sull'elemento: inserimento dei carichi sulle aste. Nota: i carichi
+				sulle aste possono agire solo su aste esistenti.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/knotenmasse.png"
+					name="knotenmasse"
+					title="pulsante massa nodale"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Pulsante Massa nodale: inserimento di masse nodali e momenti d'inerzia di massa.
+				Nota: le masse nodali possono essere poste solo su nodi esistenti.
+				Vengono considerate solo se nella scheda Principale è stato scelto il tipo di
+				calcolo
+				<i>dinamico</i>.
+			</p>
+			<p>
+				<br>
+				<br>
+			</p>
+			<h2 class="western" id="vorzeichen">
+				<a href="#">Sistema di riferimento e convenzioni di segno</a>
+			</h2>
+			<img
+				src="/assets/def_d2beam.png"
+				name="definition_d2beam"
+				title="Definizione dell'elemento asta d2beam"
+				style="max-width:100%; width:400px; height:auto; border:0px; margin: auto; display: block;">
+			<p style="text-align: center;">
+				Elemento asta d2beam con estremità rigide e cerniere
+			</p>
+			<img
+				src="/assets/vorzeichen_lager_notxt.png"
+				name="vorzeichen_lager"
+				title="Convenzioni di segno dei vincoli"
+				style="max-width:100%; width:209px; height:auto; border:0px; margin: auto; display: block;">
+			<p style="text-align: center;">Reazioni di un vincolo ruotato</p>
+			<img
+				src="/assets/gedrehtes_lager_notxt.png"
+				name="gedrehtes_lager"
+				title="vincolo ruotato"
+				style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+			<p style="text-align: center;">Vincolo rigido ruotato</p>
+			<img
+				src="/assets/definition_federn.png"
+				name="definition_federn"
+				title="Definizione delle molle"
+				style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+			<p style="text-align: center;">Molle di vincolo ruotate</p>
+			<p>
+				<h1 class="western" id="hinweiseApp">
+					<a href="#">
+						Altre note sull'uso dell'app
+					</a>
+				</h1>
+			</p>
+			<p>
+				<h2 class="western">Inserimento</h2>
+			</p>
+			<p>
+				Come separatore decimale sono ammessi la virgola o il punto.
+				Il separatore delle migliaia non è ammesso.
+			</p>
+			<p>
+				Per velocizzare l'inserimento, singoli valori delle celle o righe delle tabelle
+				possono essere copiati o generati.
+				Tenendo premuto il tasto DESTRO del mouse si può selezionare un blocco.
+				Rilasciando il tasto compare un menu contestuale.
+				<br>
+				Con i
+				<b>touchscreen:</b>
+				scorrendo con il dito o con la penna, le celle selezionate vengono evidenziate a
+				colori come con il mouse. Sollevando il dito o la penna compare il menu
+				contestuale.
+				Durante la modalità di selezione non si possono inserire valori. La scelta
+				<i>close</i>
+				chiude la finestra di dialogo e rimuove la selezione.
+			</p>
+			<p>
+				<ul>
+					<li>
+						<b>copy first cell value:</b>
+						il valore della prima cella selezionata viene copiato nelle altre celle
+						selezionate.
+					</li>
+					<li>
+						<b>copy first row values:</b>
+						occorre selezionare almeno due righe. I valori della riga superiore
+						vengono copiati verso il basso, colonna per colonna.
+					</li>
+					<li>
+						<b>increment by 1:</b>
+						occorre selezionare almeno due righe. I valori della riga superiore
+						vengono aumentati di 1, colonna per colonna.
+					</li>
+					<li>
+						<b>increment by delta:</b>
+						occorre selezionare almeno tre righe. Vengono determinate, colonna per
+						colonna, le differenze tra la riga superiore e quella sottostante. Le
+						righe sottostanti vengono modificate colonna per colonna con i valori
+						delta calcolati.
+					</li>
+					<li>
+						<b>copy to clipboard:</b>
+						il contenuto delle celle selezionate viene copiato negli appunti e può
+						essere inserito, ad esempio, in altri punti della tabella. I valori
+						possono anche essere trasferiti ad altri programmi (foglio di calcolo).
+					</li>
+					<li>
+						<b>insert from clipboard:</b>
+						il contenuto degli appunti viene inserito a partire dalla cella in alto
+						a sinistra dell'area selezionata.
+					</li>
+					<li>
+						<b>close:</b>
+						la finestra di dialogo viene chiusa senza ulteriori azioni.
+					</li>
+				</ul>
+			</p>
+			<p>
+				Su iOS la scelta nel menu contestuale avviene con un doppio clic.
+			</p>
+			<p>
+				Nota: a qualsiasi tablet e smartphone si possono collegare un mouse e/o una
+				tastiera Bluetooth.
+			</p>
+			<p>
+				Per sfruttare meglio lo spazio limitato dello schermo di smartphone e tablet, il
+				numero di righe delle tabelle delle coordinate dei nodi e degli elementi viene
+				determinato dall'inserimento del numero di nodi ed elementi. Occorre quindi prima
+				inserire il nuovo numero di elementi e nodi e poi modificare la dimensione delle
+				tabelle con il pulsante «Adatta la tabella». L'operazione può essere ripetuta
+				quante volte si vuole.
+			</p>
+			<p>
+				<h2 class="western" id="darstellung_2D">
+					<a href="#">
+						Rappresentazioni 2D
+					</a>
+				</h2>
+			</p>
+			<p>Le opzioni di visualizzazione possono essere combinate liberamente.</p>
+			<p>
+				<ul>
+					<li>
+						<b>Etichette:</b>
+						etichettatura degli elementi, delle sollecitazioni e delle deformazioni.
+						Il tipo di etichettatura dipende dalle altre opzioni scelte.
+					</li>
+					<li>
+						<b>Linee del sistema:</b> rappresentazione del sistema.
+					</li>
+					<li>
+						<b>Deformazioni:</b> rappresentazione del sistema deformato.
+					</li>
+					<li>
+						<b>Sforzo normale:</b> diagrammi degli sforzi normali
+					</li>
+					<li>
+						<b>Taglio:</b> diagrammi del taglio
+					</li>
+					<li>
+						<b>Momento:</b> diagrammi dei momenti
+					</li>
+					<li>
+						<b>Modi propri:</b>
+						rappresentazione dei modi propri. Nell'elenco in alto a destra si può
+						scegliere tra i modi propri calcolati.
+					</li>
+					<li>
+						<b>Imperfezione globale:</b>
+						rappresentazione dell'imperfezione globale utilizzata, basata sul primo
+						modo proprio.
+						Attenzione: l'imperfezione utilizzata dipende dalla combinazione scelta.
+						Solo con la teoria del II ordine.
+					</li>
+					<li>
+						<b>Imperfezione locale:</b>
+						rappresentazione delle imperfezioni delle aste inserite, solo con la
+						teoria del II ordine.
+					</li>
+					<li>
+						<b>Scala:</b>
+						scalatura della grandezza delle sollecitazioni e delle deformazioni.
+					</li>
+					<li>
+						<b>Mostra carichi:</b>
+						rappresentazione dei carichi in funzione del caso di carico scelto.
+					</li>
+					<li>
+						<b>Mostra reazioni vincolari:</b>
+						rappresentazione delle reazioni vincolari calcolate e dei simboli.
+					</li>
+					<li>
+						<b>Mostra contorno:</b>
+						per la rappresentazione vengono usate le altezze delle sezioni delle aste
+						inserite.
+					</li>
+					<li>
+						<b>Deformazione totale:</b>
+						solo con la teoria del II ordine. Normalmente vengono mostrate le
+						deformazioni relative. Se si sceglie questa opzione, le imperfezioni
+						vengono sommate alle deformazioni relative.
+					</li>
+					<li>
+						<b>Equilibrio delle sollecitazioni:</b>
+						solo con la teoria del II ordine. Se si sceglie questa opzione, le
+						sollecitazioni lungo l'asta vengono mostrate nelle direzioni del sistema
+						di riferimento locale del sistema indeformato (sollecitazioni di
+						equilibrio).
+						Se l'opzione non è scelta, le sollecitazioni di equilibrio N e V
+						<sub>z</sub>
+						vengono trasformate nella direzione della sezione ruotata. Queste sono
+						dette anche sollecitazioni di verifica e vanno usate per il
+						dimensionamento.
+						<br>
+						Questa opzione non ha alcun effetto sul momento flettente M
+						<sub>y</sub>!
+					</li>
+					<li>
+						<b>Reset:</b> le impostazioni vengono reimpostate.
+					</li>
+				</ul>
+			</p>
+			<p>
+				<h2 class="western" id="svg">
+					<a href="#">Salvare il grafico</a>
+				</h2>
+			</p>
+			<p>
+				Con il pulsante
+				<i>save svg</i>
+				si può salvare la rappresentazione grafica attuale in un file in formato svg
+				(formato vettoriale).
+				Il disegno può essere importato come immagine in qualsiasi programma che supporti
+				il formato vettoriale svg, ad esempio Inkscape, LibreOffice e Microsoft Office
+				(dalla versione 2016). Trattandosi di un formato vettoriale, il grafico può
+				essere modificato.
+			</p>
+			<p>
+				<h2 class="western" id="bezeichnungen">
+					<a href="#">Denominazioni</a>
+				</h2>
+			</p>
+			<p>Incidenze nodali degli elementi
+				<br>
+				nod a = incidenza nodale all'inizio dell'elemento
+				<br>
+				nod e = incidenza nodale alla fine dell'elemento
+			</p>
+			<p>
+				Le convenzioni di segno e le denominazioni corrispondono a quelle usuali della
+				statica, vedi [2].
+			</p>
+			<p>
+				<h2 class="western" id="voreinstellungen">
+					<a href="#">Preferenze</a>
+				</h2>
+			</p>
+			<p>
+				Nel menu ꔷꔷꔷ (tre punti) si possono impostare la dimensione del carattere e il
+				colore delle tabelle.
+				<br>
+				Le impostazioni della pagina possono essere salvate come preferenze nella memoria
+				locale del browser utilizzato e sono di nuovo disponibili dopo un riavvio del
+				programma. Le preferenze possono essere cancellate con il pulsante sottostante.
+				<br>
+				La memoria locale (local storage) non è costituita da cookie. Questa applicazione
+				web esegue tutti i calcoli sul computer locale, nel browser, in JavaScript. Non
+				vengono scambiati dati con un server web. Dopo l'avvio del programma non è quindi
+				più necessaria una connessione di rete.
+			</p>
+			<p>
+				<h2 class="western" id="installation">
+					<a href="#">
+						Installazione come app sul desktop
+					</a>
+				</h2>
+			</p>
+			<p>
+				Questa applicazione è programmata come applicazione web (web app), in modo da
+				poter essere installata sul desktop con tutti i sistemi operativi.
+				Sul desktop viene creata un'icona. L'app si comporta così come un'app installata
+				da uno store.
+				D2beam viene comunque eseguita nel browser installato, ma senza elementi di
+				comando come la barra degli indirizzi. L'installazione varia a seconda del
+				sistema operativo, della sua versione e del browser.
+				<br>
+				Dopo aver avviato d2beam per la prima volta nel browser, su Android nel browser
+				Chrome si sceglie in alto a destra nel menu dell'applicazione
+				<i>(menu a tre punti)</i>
+				l'opzione «Installa app».
+				Compare una finestra di dialogo da confermare. Poi il browser può essere chiuso.
+				Sul desktop c'è ora una nuova icona con il nome d2beam.
+			</p>
+			<p>
+				Per l'installazione su iOS occorre usare il browser Safari.
+				Qui il comando si chiama «Aggiungi alla schermata Home», con un simbolo di
+				aggiunta.
+			</p>
+			<p>
+				L'installazione su Microsoft Windows è simile a quella su Android. Nel browser
+				Edge, nel menu dell'applicazione
+				<i> (menu a tre punti)</i>
+				si trova la seguente sezione
+				<img
+					src="/assets/app-install-windows.png"
+					name="Bild4"
+					title="installazione windows"
+					style="max-width:100%; width:423px; height:auto; border:0px; margin: auto; display: block;">
+				<br>
+				Con le versioni più recenti di Chrome può darsi che venga chiesto direttamente se
+				si desidera un'installazione, vedi il simbolo a destra nella barra degli
+				indirizzi:
+				<img
+					src="/assets/chrome_install.png"
+					name="chrome_install"
+					title="installazione chrome"
+					style="max-width:100%; width:436px; height:auto; border:0px; margin: auto; display: block;">
+			</p>
+			<p>
+				Su macOS per l'installazione occorre usare il browser Microsoft Edge o Google
+				Chrome.
+			</p>
+			<p>
+				Il browser Firefox attualmente non supporta l'installazione.
+				<br>
+				Con i sistemi operativi Microsoft Windows e Linux, in alternativa, si può passare
+				alla modalità a schermo intero con il tasto F11.
+			</p>
+			<p>
+				La disinstallazione su Android, iOS e Linux avviene semplicemente eliminando
+				l'icona dal desktop. Su Windows l'app viene disinstallata come un normale
+				programma.
+			</p>
+			<h2 class="western" id="kompatibilitaet">
+				<a href="#">
+					Compatibilità e problemi
+				</a>
+			</h2>
+			<p>
+				Sono stati testati i seguenti sistemi operativi: Windows 10↑, macOS
+				Catalina 10.15.7↑, Ubuntu 22.04↑, Android 9-16, iOS 15.7.3↑.
+			</p>
+			<p>
+				Sono stati testati i seguenti browser nella versione più recente:
+				Chrome, Chromium, Edge, Safari, Firefox.
+				Vengono testate e supportate solo le versioni attuali.
+			</p>
+			<h2 class="western" id="tastatur">
+				<a href="#">
+					Tastiera virtuale
+				</a>
+			</h2>
+			<p>
+				Su alcuni dispositivi Android, in particolare di Samsung, la tastiera numerica
+				non contiene un tasto per il segno meno.
+				Purtroppo la specifica HTML lascia al produttore del dispositivo la scelta se la
+				tastiera numerica debba contenere un tasto per il segno meno. A giudicare dai
+				numerosi messaggi su Internet, il senso di questa scelta è chiaro a poche persone.
+				In questi casi si consiglia di installare una tastiera virtuale aggiuntiva. Come
+				alternativa si può usare, ad esempio, la tastiera Android originale di Google,
+				Gboard, dal Play Store. Dopo l'installazione la tastiera deve ancora essere
+				attivata, preferibilmente direttamente nel Play Store. In seguito si può sempre
+				passare da una tastiera installata all'altra (icona in basso a destra sulla
+				tastiera).
+			</p>
+			<h2 class="western" id="faq">
+				<a href="#">Domande e risposte</a>
+			</h2>
+			<p>
+				<ul>
+					<li>
+						Domanda: ho inserito alcuni nodi di troppo che ora non mi servono più.
+						Devo eliminarli?
+						<br>
+						Risposta: no. I nodi a cui non è collegato alcun elemento vengono ignorati.
+					</li>
+					<li>Domanda: che cos'è l'ID del nodo?
+						<br>
+						Risposta: ogni nodo ha un proprio numero interno (ID del nodo), che viene
+						generato automaticamente alla creazione del nodo.
+						È indipendente dalla numerazione dei nodi FE assegnata in seguito.
+						L'ID del nodo viene mostrato nella finestra di dialogo dei nodi nella
+						scheda Sistema quando scegli il pulsante
+						<i>Modifica nodo</i>
+						<img
+							src="/assets/gui-icons/edit_knoten.png"
+							name="edit_knoten"
+							title="pulsante modifica nodo"
+							style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+						e clicchi su un nodo esistente.
+					</li>
+				</ul>
+			</p>
+			<p>
+				<br>
+			</p>
+			<h2 class="western" id="kontakt">
+				<a href="#">
+					Contatti e segnalazione di errori
+				</a>
+			</h2>
+			<p>
+				Per suggerimenti, richieste e segnalazioni di errori usa il seguente indirizzo
+				e-mail: statikverstehen&#x40;web.de (in tedesco o in inglese).
+				<br>
+				In caso di segnalazione di errori, una copia del file di input in allegato è di
+				solito utile.
+				<br>
+				<br>
+			</p>
+			<h1 class="western">
+				<a href="#">Bibliografia (in tedesco)</a>
+			</h1>
+			<p>
+				[1] Klaus Knothe, Heribert Wessels:
+				Finite Elemente, Eine Einführung für Ingenieure, 5.Auflage, Ernst W.
+				&amp; Sohn Verlag, 2017
+			</p>
+			<p>
+				[2] Matthias Kraus; Rolf Kindmann:
+				Finite-Elemente-Methoden im Stahlbau, 2.Auflage, Ernst W. &amp; Sohn
+				Verlag, 2019
+			</p>
+			<p>
+				[3] Horst Werkle:
+				Finite Elemente in der Baustatik, 4.Auflage, Ernst W. &amp; Sohn
+				Verlag, 2021
+			</p>
+		</p>
+	</body>
+</html>

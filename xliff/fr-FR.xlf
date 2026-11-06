@@ -1,0 +1,1641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="fr-FR" source-language="de" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="s0bff33921e8709f6">
+  <source>Bedienfeld anzeigen</source>
+  <target>Afficher le panneau de commande</target>
+</trans-unit>
+<trans-unit id="s2b41d1fba90e38cb">
+  <source>Beschriftung</source>
+  <target>Étiquettes</target>
+</trans-unit>
+<trans-unit id="se3f50870e34f1521">
+  <source>Systemlinien</source>
+  <target>Lignes du système</target>
+</trans-unit>
+<trans-unit id="s4208b8c9f9ba4783">
+  <source>Verformungen</source>
+  <target>Déformations</target>
+</trans-unit>
+<trans-unit id="s3d1362f3061410b4">
+  <source>Normalkraft</source>
+  <target>Effort normal</target>
+</trans-unit>
+<trans-unit id="s51ac13fc60ec8d42">
+  <source>Querkraft</source>
+  <target>Effort tranchant</target>
+</trans-unit>
+<trans-unit id="s3d21e2828d9cbcdd">
+  <source>Moment</source>
+  <target>Moment</target>
+</trans-unit>
+<trans-unit id="sc9383464bcc002fe">
+  <source>Knickfigur</source>
+  <target>Mode de flambement</target>
+</trans-unit>
+<trans-unit id="sc9ffcae4af440f51">
+  <source>Schiefstellung</source>
+  <target>Imperfection globale</target>
+</trans-unit>
+<trans-unit id="s59afc2d10f246311">
+  <source>Stabvorverformung</source>
+  <target>Imperfection locale</target>
+</trans-unit>
+<trans-unit id="s8d3551f00a88687e">
+  <source>Skalierung</source>
+  <target>Échelle</target>
+</trans-unit>
+<trans-unit id="s8baaaf87af7af7d7">
+  <source>Lasten anzeigen</source>
+  <target>Afficher les charges</target>
+</trans-unit>
+<trans-unit id="sd0d2dfe921d156c5">
+  <source>Lagerkräfte anzeigen</source>
+  <target>Afficher les réactions d'appui</target>
+</trans-unit>
+<trans-unit id="s56d117dffa5a0f36">
+  <source>Dynamik</source>
+  <target>Dynamique</target>
+</trans-unit>
+<trans-unit id="scfc306ddc5333ba2">
+  <source>Eigenformen</source>
+  <target>Modes propres</target>
+</trans-unit>
+<trans-unit id="s0641fdf7c4cc8625">
+  <source>animate Eigenformen</source>
+  <target>Animer les modes propres</target>
+</trans-unit>
+<trans-unit id="s65ada9f53688cb8f">
+  <source>Massen anzeigen</source>
+  <target>Afficher les masses</target>
+</trans-unit>
+<trans-unit id="scc6d3482dd1b2057">
+  <source>Optionen</source>
+  <target>Options</target>
+</trans-unit>
+<trans-unit id="s51851ec717862dad">
+  <source>Umriss anzeigen</source>
+  <target>Afficher le contour</target>
+</trans-unit>
+<trans-unit id="se48ef32e03a831e9">
+  <source>Gesamtverformung</source>
+  <target>Déformation totale</target>
+</trans-unit>
+<trans-unit id="s0a9a66a4199b4e6a">
+  <source>Gleichgewicht SG</source>
+  <target>Équilibre des efforts</target>
+</trans-unit>
+<trans-unit id="s082fee50a17a58f9">
+  <source>Einstellungen GUI</source>
+  <target>Paramètres GUI</target>
+</trans-unit>
+<trans-unit id="s1121453a4f564119">
+  <source>Keine Fingererkennung bei Stiftbenutzung für Systemeingabe</source>
+  <target>Pas de détection du doigt lors de l'utilisation d'un stylet pour la saisie du système</target>
+</trans-unit>
+<trans-unit id="s02a67a5e0d12eb12">
+  <source>keine Einheiten anzeigen in Grafik</source>
+  <target>Ne pas afficher les unités dans le graphique</target>
+</trans-unit>
+<trans-unit id="s2c8573c23edad989">
+  <source>Stifteingabe wie Fingereingabe</source>
+  <target>Saisie au stylet comme saisie au doigt</target>
+</trans-unit>
+<trans-unit id="s567a79132ce99d3d">
+  <source>Fangweite Cursor:</source>
+  <target>Rayon d'accrochage du curseur :</target>
+</trans-unit>
+<trans-unit id="s5c4d149a121ec91a">
+  <source>Faktor für Lagersymbole:</source>
+  <target>Facteur pour les symboles d'appui :</target>
+</trans-unit>
+<trans-unit id="s0278681b3145d48b">
+  <source>Cursor Offset Faktor bei Touch (Finger) Eingabe (bei 0 befindet sich der Cursor direkt unter dem Finger):</source>
+  <target>Facteur de décalage du curseur pour la saisie tactile (doigt) (à 0, le curseur se trouve directement sous le doigt) :</target>
+</trans-unit>
+<trans-unit id="sa67929a9032d7484">
+  <source>Faktor für dx:</source>
+  <target>Facteur pour dx :</target>
+</trans-unit>
+<trans-unit id="sa67221a90327483e">
+  <source>Faktor für dz:</source>
+  <target>Facteur pour dz :</target>
+</trans-unit>
+<trans-unit id="s521b400e2fa70dc8">
+  <source>Raster</source>
+  <target>Grille</target>
+</trans-unit>
+<trans-unit id="s51967beda3ece227">
+  <source>Offset Raster</source>
+  <target>Décalage de la grille</target>
+</trans-unit>
+<trans-unit id="sc88524dc7bec3ba6">
+  <source>Initial darzustellender Rasterbereich</source>
+  <target>Zone de grille affichée au départ</target>
+</trans-unit>
+<trans-unit id="s062463b6cb2ba47f">
+  <source>Auswahl als Standardwerte im Browser speichern</source>
+  <target>Enregistrer la sélection comme valeurs par défaut dans le navigateur</target>
+</trans-unit>
+<trans-unit id="s08b05d07b5566bef">
+  <source>ok</source>
+  <target>ok</target>
+</trans-unit>
+<trans-unit id="s8f411426731b6d29">
+  <source>Abbrechen</source>
+  <target>Annuler</target>
+</trans-unit>
+<trans-unit id="sb60d0d6316ed7878">
+  <source>Elementlasten</source>
+  <target>Charges sur éléments</target>
+</trans-unit>
+<trans-unit id="s158540ce0c07369d">
+  <source>Wähle eine Option</source>
+  <target>Choisir une option</target>
+</trans-unit>
+<trans-unit id="sef2a8e389cc8bc15">
+  <source>Streckenlasten</source>
+  <target>Charges réparties</target>
+</trans-unit>
+<trans-unit id="s852c56c86f4f4449">
+  <source>Einzellasten</source>
+  <target>Charges ponctuelles</target>
+</trans-unit>
+<trans-unit id="sa28084132e46d192">
+  <source>Temperatur</source>
+  <target>Température</target>
+</trans-unit>
+<trans-unit id="s0d1bad2ed40c305a">
+  <source>Vorspannung</source>
+  <target>Précontrainte</target>
+</trans-unit>
+<trans-unit id="sde5e53bd97d6062e">
+  <source>Spannschloss</source>
+  <target>Ridoir</target>
+</trans-unit>
+<trans-unit id="s9a0c3a9a16547042">
+  <source>Vorverformungen</source>
+  <target>Imperfections</target>
+</trans-unit>
+<trans-unit id="s2b34a0f5704c95c2">
+  <source>Art der Trapezstreckenlast :</source>
+  <target>Type de charge répartie trapézoïdale :</target>
+</trans-unit>
+<trans-unit id="sfb0478b32732aa30">
+  <source>senkrecht auf Stab</source>
+  <target>perpendiculaire à la barre</target>
+</trans-unit>
+<trans-unit id="sdfe48192defca7bd">
+  <source>in globaler z-Richtung</source>
+  <target>selon la direction z globale</target>
+</trans-unit>
+<trans-unit id="sbdf2a01274e3cbf4">
+  <source>in globaler z-Richtung, Projektion</source>
+  <target>selon la direction z globale, projection</target>
+</trans-unit>
+<trans-unit id="s490ad1b0503cba5f">
+  <source>in globaler x-Richtung</source>
+  <target>selon la direction x globale</target>
+</trans-unit>
+<trans-unit id="se2ac2973eaf6ddc6">
+  <source>in globaler x-Richtung, Projektion</source>
+  <target>selon la direction x globale, projection</target>
+</trans-unit>
+<trans-unit id="s07276530e6884c15">
+  <source>Temperatur an Unter- und Oberseite</source>
+  <target>Température aux faces inférieure et supérieure</target>
+</trans-unit>
+<trans-unit id="sd3ac07153a11e41f">
+  <source>Zentrische Vorspannung</source>
+  <target>Précontrainte centrée</target>
+</trans-unit>
+<trans-unit id="sc00669f0970fdc31">
+  <source>Stabvorverformungen (nur bei Th.II.O.)</source>
+  <target>Imperfections locales des barres (uniquement en Th. 2nd ordre)</target>
+</trans-unit>
+<trans-unit id="sa3216da3cd96b94b">
+  <source>Streckenlast darf nicht null sein</source>
+  <target>La charge répartie ne doit pas être nulle</target>
+</trans-unit>
+<trans-unit id="s18fcff9c5e03f48e">
+  <source>Einzellasten dürfen nicht null sein</source>
+  <target>Les charges ponctuelles ne doivent pas être nulles</target>
+</trans-unit>
+<trans-unit id="s684d7269ec02e919">
+  <source>Kurzinformationen GUI</source>
+  <target>Informations rapides GUI</target>
+</trans-unit>
+<trans-unit id="s6672f37e4875d9be">
+  <source>Eingabe mit dem Finger bei einem Touchscreen</source>
+  <target>Saisie au doigt sur un écran tactile</target>
+</trans-unit>
+<trans-unit id="sb9d2ebb8b6b2ade4">
+  <source>Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
+            neben dem Finger. Platziere den Eingabefinger auf dem Screen und
+            bewege den &lt;b&gt;Cursor&lt;/b&gt; zu der gewünschten Stelle, und hebe dann
+            den Finger vom Screen ab. Das Anheben des Fingers hat hier die
+            gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei
+            der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann
+            ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
+            die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
+            Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
+            Finger kannst du unter Einstellungen GUI ändern.</source>
+  <target>Pour permettre une saisie précise, le curseur de saisie se trouve à côté du doigt. Pose le doigt sur l'écran, déplace le &lt;b&gt;curseur&lt;/b&gt; à l'endroit souhaité, puis lève le doigt. Lever le doigt a ici la même fonction qu'un clic gauche de la souris. Si une autre saisie est nécessaire, comme pour l'extrémité de la barre, repose le doigt sur l'écran et déplace le curseur à l'endroit souhaité. Lever à nouveau le doigt termine la saisie. Tu peux modifier la distance et la position (signe) du curseur par rapport au doigt sous Paramètres GUI.</target>
+</trans-unit>
+<trans-unit id="s46e0e618bf2299ec">
+  <source>Knoteneingabe und Rasterlinien</source>
+  <target>Saisie des nœuds et lignes de grille</target>
+</trans-unit>
+<trans-unit id="sb09c495962730e6a">
+  <source>Die Eingabe von Knoten über den Dialog ist nicht zwingend
+            erforderlich. Bei der Eingabe von Stabanfang und -ende wird zuerst
+            nach einem vorhandenen Knoten innerhalb der Fangweite (Die
+            Linienlängen des Cursors geben das Fangfenster an) gesucht. Wird
+            kein Knoten gefunden, wird der nächste Rasterpunkt (Schnittpunkt der
+            Rasterlinien) gewählt, sofern er innerhalb des Fangfensters des
+            Cursors liegt. Ein gefundener Rasterpunkt wird als blaues Rechteck
+            angezeigt. Andernfalls werden die Koordinaten des Cursors genommen.
+            Der Abstand der Rasterlinien kann unter
+            Einstellungen GUI geändert werden.</source>
+  <target>La saisie des nœuds par la boîte de dialogue n'est pas obligatoire. Lors de la saisie du début et de la fin d'une barre, le programme cherche d'abord un nœud existant dans le rayon d'accrochage (la longueur des lignes du curseur indique la fenêtre d'accrochage). Si aucun nœud n'est trouvé, le point de grille le plus proche (intersection des lignes de grille) est choisi, à condition qu'il se trouve dans la fenêtre d'accrochage du curseur. Un point de grille trouvé est affiché sous forme de rectangle bleu. Sinon, les coordonnées du curseur sont utilisées. L'espacement des lignes de grille peut être modifié sous Paramètres GUI.</target>
+</trans-unit>
+<trans-unit id="s6e859bbc09f177dc">
+  <source>Rasterbereich</source>
+  <target>Zone de grille</target>
+</trans-unit>
+<trans-unit id="s4777a861e6d0676b">
+  <source>Der unter Einstellungen GUI einstellbare Rasterbereich dient
+            nur zur Orientierung bei der Eingabe. Im Normalfall wird er so
+            eingestellt, dass das gesamte System darin dargestellt werden kann.</source>
+  <target>La zone de grille, réglable sous Paramètres GUI, sert uniquement d'orientation pendant la saisie. Normalement, on la règle de sorte que tout le système puisse y être représenté.</target>
+</trans-unit>
+<trans-unit id="s1af650f3abc723be">
+  <source>Weitere Informationen zur grafischen Eingabe findest du im Tab Info.</source>
+  <target>Tu trouveras plus d'informations sur la saisie graphique dans l'onglet Info.</target>
+</trans-unit>
+<trans-unit id="s2b7c0ebed1d5f1a8">
+  <source>Knotenkoordinaten</source>
+  <target>Coordonnées des nœuds</target>
+</trans-unit>
+<trans-unit id="sd82c3dbc52e9abee">
+  <source>Die ID wird bei TH.II.O. im Tab Vorverformungen benötigt</source>
+  <target>L'ID est nécessaire en Th. 2nd ordre dans l'onglet Imperfections</target>
+</trans-unit>
+<trans-unit id="sc376f0e2470cb265">
+  <source>Knoten ID</source>
+  <target>ID du nœud</target>
+</trans-unit>
+<trans-unit id="sc381fe2ae57c2313">
+  <source>Anwenden</source>
+  <target>Appliquer</target>
+</trans-unit>
+<trans-unit id="se07bc1727af675c8">
+  <source>Knotenlast</source>
+  <target>Charge nodale</target>
+</trans-unit>
+<trans-unit id="sc508c6ac4435de64">
+  <source>nur Lastfall ändern</source>
+  <target>Modifier uniquement le cas de charge</target>
+</trans-unit>
+<trans-unit id="s917e0dd0ca03b10a">
+  <source>Lastfall :</source>
+  <target>Cas de charge :</target>
+</trans-unit>
+<trans-unit id="s35e97643d1f8de40">
+  <source>Winkel im Gegenuhrzeigersinn positiv</source>
+  <target>Angle positif dans le sens antihoraire</target>
+</trans-unit>
+<trans-unit id="s42d04fe173ce3377">
+  <source>Knotenmasse</source>
+  <target>Masse nodale</target>
+</trans-unit>
+<trans-unit id="sd17365872c4f61e7">
+  <source>Knotenlager</source>
+  <target>Appui nodal</target>
+</trans-unit>
+<trans-unit id="s7d0cc518c494a80e">
+  <source>Drehung des Knotens (Lagers), im Gegenuhrzeigersinn positiv</source>
+  <target>Rotation du nœud (de l'appui), positive dans le sens antihoraire</target>
+</trans-unit>
+<trans-unit id="sefe2e947928bba8c">
+  <source>Lagerbedingungen</source>
+  <target>Conditions d'appui</target>
+</trans-unit>
+<trans-unit id="s6a83752762ead46e">
+  <source>Lager starr</source>
+  <target>Appui rigide</target>
+</trans-unit>
+<trans-unit id="s5d9967b49bd47559">
+  <source>oder</source>
+  <target>ou</target>
+</trans-unit>
+<trans-unit id="sa192adcf9373e01a">
+  <source>Federkonstante</source>
+  <target>Raideur du ressort</target>
+</trans-unit>
+<trans-unit id="sf2b3ecba8ce0ddf7">
+  <source>neue Eingabe</source>
+  <target>Nouvelle saisie</target>
+</trans-unit>
+<trans-unit id="s8d5fcddffb49d365">
+  <source>Hinweis: Alle Eingaben werden gelöscht !</source>
+  <target>Remarque : toutes les saisies seront supprimées !</target>
+</trans-unit>
+<trans-unit id="s5b4332874f0c4bf5">
+  <source>Die Tabellengrößen können später jederzeit mit den Buttons, die sich
+            oberhalb der Tabellen befinden, geändert werden.&lt;br /&gt;
+            Nach den Änderungen ist eine Neuberechnung erforderlich</source>
+  <target>La taille des tableaux peut être modifiée à tout moment avec les boutons situés au-dessus des tableaux.&lt;br /&gt; Après les modifications, un nouveau calcul est nécessaire</target>
+</trans-unit>
+<trans-unit id="s1802ab88151d5b76">
+  <source>Art des Systems :</source>
+  <target>Type de système :</target>
+</trans-unit>
+<trans-unit id="s83c549670e2c85da">
+  <source>Stabwerk</source>
+  <target>Portique</target>
+</trans-unit>
+<trans-unit id="s9f1c28507d0dfda8">
+  <source>Fachwerk</source>
+  <target>Treillis</target>
+</trans-unit>
+<trans-unit id="s9af710578a457088">
+  <source>Die Art des Systems kann nachträglich nicht mehr geändert werden !</source>
+  <target>Le type de système ne peut plus être modifié par la suite !</target>
+</trans-unit>
+<trans-unit id="sa5a52c4169e1e648">
+  <source>Stab-Eigenschaften</source>
+  <target>Propriétés de la barre</target>
+</trans-unit>
+<trans-unit id="sfaadd489dfa358bf">
+  <source>Querschnitt</source>
+  <target>Section</target>
+</trans-unit>
+<trans-unit id="s5bfa8df7ff3f340a">
+  <source>Art des Stabes</source>
+  <target>Type de barre</target>
+</trans-unit>
+<trans-unit id="sd64c04f6cc0ee34c">
+  <source>Biegestab d2beam</source>
+  <target>Barre fléchie d2beam</target>
+</trans-unit>
+<trans-unit id="s293d1a977716f4a1">
+  <source>FW-Stab Zug + Druck</source>
+  <target>Barre de treillis traction + compression</target>
+</trans-unit>
+<trans-unit id="sb51fce4a6488bd2e">
+  <source>FW-Stab nur Zug</source>
+  <target>Barre de treillis traction seule</target>
+</trans-unit>
+<trans-unit id="see27cf5ab63de49f">
+  <source>FW-Stab nur Druck</source>
+  <target>Barre de treillis compression seule</target>
+</trans-unit>
+<trans-unit id="s2bcf54e43d1edf0c">
+  <source>Gelenke</source>
+  <target>Articulations</target>
+</trans-unit>
+<trans-unit id="s2c0dccac51d58d5e">
+  <source>Starre Stabenden</source>
+  <target>Extrémités de barre rigides</target>
+</trans-unit>
+<trans-unit id="sfb513c9f05f2007c">
+  <source>starr a:</source>
+  <target>rigide a :</target>
+</trans-unit>
+<trans-unit id="sfb5eb49f05fd56c0">
+  <source>starr e:</source>
+  <target>rigide e :</target>
+</trans-unit>
+<trans-unit id="se67a90c06f82c248">
+  <source>Stabbettung</source>
+  <target>Appui élastique de la barre</target>
+</trans-unit>
+<trans-unit id="s6e0487907409b2ab">
+  <source>Eingabe des Querschnitts</source>
+  <target>Saisie de la section</target>
+</trans-unit>
+<trans-unit id="s9d1fbad1be94c6eb">
+  <source>Name (eindeutig):</source>
+  <target>Nom (unique) :</target>
+</trans-unit>
+<trans-unit id="s660fdf5d11e3304d">
+  <source>Definition des Querschnitts</source>
+  <target>Définition de la section</target>
+</trans-unit>
+<trans-unit id="sd9ced2484d57c5f6">
+  <source>Rechteck</source>
+  <target>Rectangle</target>
+</trans-unit>
+<trans-unit id="se01b5e871f140405">
+  <source>Querschnittswerte</source>
+  <target>Caractéristiques de section</target>
+</trans-unit>
+<trans-unit id="sa02d94fa5282edbf">
+  <source>Profil</source>
+  <target>Profilé</target>
+</trans-unit>
+<trans-unit id="s09351f07b5c76656">
+  <source>TQ</source>
+  <target>Sec. T</target>
+</trans-unit>
+<trans-unit id="sbdd50376173d3875">
+  <source>Querschnittshöhe:</source>
+  <target>Hauteur de la section :</target>
+</trans-unit>
+<trans-unit id="s11d133bf4147f948">
+  <source>Querschnittbreite:</source>
+  <target>Largeur de la section :</target>
+</trans-unit>
+<trans-unit id="s2f66686ba092753a">
+  <source>E-Modul:</source>
+  <target>Module d'élasticité :</target>
+</trans-unit>
+<trans-unit id="sc2d13cc512db2d69">
+  <source>Wichte:</source>
+  <target>Poids volumique :</target>
+</trans-unit>
+<trans-unit id="sd9a9e869e96dea5d">
+  <source>Schubfaktor:</source>
+  <target>Coefficient de cisaillement :</target>
+</trans-unit>
+<trans-unit id="s2e71c3c8995c98ce">
+  <source>Querdehnzahl:</source>
+  <target>Coefficient de Poisson :</target>
+</trans-unit>
+<trans-unit id="sbd63df02a0b7c518">
+  <source>Temp-Koeffizient</source>
+  <target>Coefficient de dilatation thermique</target>
+</trans-unit>
+<trans-unit id="s5c2cea4a0d9a497d">
+  <source>Faktor Dehnsteifigkeit:</source>
+  <target>Facteur de rigidité axiale :</target>
+</trans-unit>
+<trans-unit id="sf1810e8beefc64c1">
+  <source>Wähle ein Profil</source>
+  <target>Choisir un profilé</target>
+</trans-unit>
+<trans-unit id="s405ad46ccb89bcf3">
+  <source>Beanspruchung um Querschnittsachse</source>
+  <target>Sollicitation autour de l'axe de la section</target>
+</trans-unit>
+<trans-unit id="s261612b31bf5a144">
+  <source>Profilname für Name des Querschnitts übernehmen</source>
+  <target>Reprendre le nom du profilé comme nom de la section</target>
+</trans-unit>
+<trans-unit id="sf1d1814712830712">
+  <source>T-Querschnitt</source>
+  <target>Section en T</target>
+</trans-unit>
+<trans-unit id="sd789dfa5d904d857">
+  <source>Flanschbreite</source>
+  <target>Largeur de la table</target>
+</trans-unit>
+<trans-unit id="sa7cda0c4526f2663">
+  <source>Flanschhöhe</source>
+  <target>Épaisseur de la table</target>
+</trans-unit>
+<trans-unit id="sc839bb100aee7447">
+  <source>Stegbreite oben</source>
+  <target>Largeur de l'âme en haut</target>
+</trans-unit>
+<trans-unit id="s4f8b788ac6b3f559">
+  <source>Stegbreite unten</source>
+  <target>Largeur de l'âme en bas</target>
+</trans-unit>
+<trans-unit id="s32b071a71459e623">
+  <source>Steghöhe</source>
+  <target>Hauteur de l'âme</target>
+</trans-unit>
+<trans-unit id="s7d268ed1a95e365d">
+  <source>Name für Querschnitt schon vergeben</source>
+  <target>Nom de section déjà utilisé</target>
+</trans-unit>
+<trans-unit id="s43416e6180c07e85">
+  <source>Knotenverformung</source>
+  <target>Déplacement imposé du nœud</target>
+</trans-unit>
+<trans-unit id="sbb33101f6d46481f">
+  <source>selektiere mehrere Elemente</source>
+  <target>Sélectionner plusieurs éléments</target>
+</trans-unit>
+<trans-unit id="sbb57c970d148a7d8">
+  <source>selektiere nach Element-Typ</source>
+  <target>Sélectionner par type d'élément</target>
+</trans-unit>
+<trans-unit id="sf3dec101a866cd9c">
+  <source>deselektiere alle Elemente</source>
+  <target>Désélectionner tous les éléments</target>
+</trans-unit>
+<trans-unit id="s2547cec150cd5726">
+  <source>deselektiere mehrere Elemente</source>
+  <target>Désélectionner plusieurs éléments</target>
+</trans-unit>
+<trans-unit id="s11a8f7c1aed9eeb8">
+  <source>Kopiere selektierte Elemente</source>
+  <target>Copier les éléments sélectionnés</target>
+</trans-unit>
+<trans-unit id="s76692b76c761818c">
+  <source>Editiere selektierte Elemente</source>
+  <target>Modifier les éléments sélectionnés</target>
+</trans-unit>
+<trans-unit id="s566b0c00d97da6b2">
+  <source>Messen</source>
+  <target>Mesurer</target>
+</trans-unit>
+<trans-unit id="s08395b5ece17be10">
+  <source>Bemaßung parallel</source>
+  <target>Cotation parallèle</target>
+</trans-unit>
+<trans-unit id="s62bbd61a5ded4527">
+  <source>Bemaßung horizontal</source>
+  <target>Cotation horizontale</target>
+</trans-unit>
+<trans-unit id="s8973491fa3b25481">
+  <source>Bemaßung vertikal</source>
+  <target>Cotation verticale</target>
+</trans-unit>
+<trans-unit id="s180a3aad88575d3d">
+  <source>Rasterlinien</source>
+  <target>Lignes de grille</target>
+</trans-unit>
+<trans-unit id="s650d928168a2cc45">
+  <source>Stab Querschnittsname</source>
+  <target>Nom de section des barres</target>
+</trans-unit>
+<trans-unit id="s391b70f7d352f798">
+  <source>Lager</source>
+  <target>Appuis</target>
+</trans-unit>
+<trans-unit id="sc729044b272a9ffb">
+  <source>Knotenlasten</source>
+  <target>Charges nodales</target>
+</trans-unit>
+<trans-unit id="s562ad517c760d37b">
+  <source>Knotenmassen</source>
+  <target>Masses nodales</target>
+</trans-unit>
+<trans-unit id="sd64b92494d15400a">
+  <source>Knotenverformungen</source>
+  <target>Déplacements imposés des nœuds</target>
+</trans-unit>
+<trans-unit id="s149a0a21f95cfb5d">
+  <source>Bemaßung</source>
+  <target>Cotation</target>
+</trans-unit>
+<trans-unit id="s8868c976698b6e74">
+  <source>Ausblenden</source>
+  <target>Masquer</target>
+</trans-unit>
+<trans-unit id="s4cd219280214a6b1">
+  <source>Zeige :</source>
+  <target>Afficher :</target>
+</trans-unit>
+<trans-unit id="sb205170315fd9dbe">
+  <source>alle Lastfälle</source>
+  <target>tous les cas de charge</target>
+</trans-unit>
+<trans-unit id="s917e29d0ca03e09e">
+  <source>Lastfall <x id="0" equiv-text="${i + 1}"/></source>
+  <target>Cas de charge <x id="0" equiv-text="${i + 1}"/></target>
+</trans-unit>
+<trans-unit id="s42a8fafacf7d0fa7">
+  <source>System als svg-Datei speichern</source>
+  <target>Enregistrer le système comme fichier svg</target>
+</trans-unit>
+<trans-unit id="s9fba2bcfd7807411">
+  <source>Haupt</source>
+  <target>Principal</target>
+</trans-unit>
+<trans-unit id="s763d87fc3b6b3f5b">
+  <source>Kombinationen</source>
+  <target>Combinaisons</target>
+</trans-unit>
+<trans-unit id="scb099bdf627764bb">
+  <source>Ausdruck</source>
+  <target>Impression</target>
+</trans-unit>
+<trans-unit id="sbb1b7f4e054767ec">
+  <source>Tabellen</source>
+  <target>Tableaux</target>
+</trans-unit>
+<trans-unit id="s4740b165d808bdda">
+  <source>zeige Einführungsvideos</source>
+  <target>Afficher les vidéos d'introduction</target>
+</trans-unit>
+<trans-unit id="s3b2332f82896832c">
+  <source>aktueller Dateiname:</source>
+  <target>Nom du fichier actuel :</target>
+</trans-unit>
+<trans-unit id="s8adcdb8a4fce3119">
+  <source>Objektdaten speichern</source>
+  <target>Enregistrer les données du projet</target>
+</trans-unit>
+<trans-unit id="s4a73475a66d0ff67">
+  <source>Objektdaten einlesen</source>
+  <target>Charger les données du projet</target>
+</trans-unit>
+<trans-unit id="s7899fc50b891ee9e">
+  <source>Projekt (freier Text mit HTML Formatierung für fett):</source>
+  <target>Projet (texte libre avec mise en forme HTML pour le gras) :</target>
+</trans-unit>
+<trans-unit id="s9234cde5c4c75943">
+  <source>neue Eingabe beginnen</source>
+  <target>Commencer une nouvelle saisie</target>
+</trans-unit>
+<trans-unit id="se18e2431d4b6e0cd">
+  <source>Eingabe prüfen</source>
+  <target>Vérifier la saisie</target>
+</trans-unit>
+<trans-unit id="s58d53b5fea623adc">
+  <source>Berechnungsart:</source>
+  <target>Type de calcul :</target>
+</trans-unit>
+<trans-unit id="s7b709460ddf6cbb0">
+  <source>statisch</source>
+  <target>statique</target>
+</trans-unit>
+<trans-unit id="s49eceeebc54b289d">
+  <source>dynamisch</source>
+  <target>dynamique</target>
+</trans-unit>
+<trans-unit id="sa340e0670e759df0">
+  <source>Berechnung nach:</source>
+  <target>Calcul selon :</target>
+</trans-unit>
+<trans-unit id="sbe7f22a0e58f9911">
+  <source>Th. I. Ordnung</source>
+  <target>Th. 1er ordre</target>
+</trans-unit>
+<trans-unit id="sab2e8866b3e797d4">
+  <source>Th. II. Ordnung</source>
+  <target>Th. 2nd ordre</target>
+</trans-unit>
+<trans-unit id="sf06dab1ce58009f2">
+  <source>Materialeigenschaften:</source>
+  <target>Propriétés des matériaux :</target>
+</trans-unit>
+<trans-unit id="sac3191c5ecc66e60">
+  <source>linear</source>
+  <target>linéaire</target>
+</trans-unit>
+<trans-unit id="se5eb876756457fc8">
+  <source>nichtlinear</source>
+  <target>non linéaire</target>
+</trans-unit>
+<trans-unit id="se9f528070d8cf418">
+  <source>Rechnen</source>
+  <target>Calculer</target>
+</trans-unit>
+<trans-unit id="s165017f6138f8d2c">
+  <source>neuer Querschnitt</source>
+  <target>Nouvelle section</target>
+</trans-unit>
+<trans-unit id="s1ad39a021f0b54c6">
+  <source>Linear elastisch Querschnittswerte</source>
+  <target>Caractéristiques de section élastiques linéaires</target>
+</trans-unit>
+<trans-unit id="s8c35b76b6f2c60c2">
+  <source>Hier nichts eintragen, Änderungen werden nicht berücksichtigt, nur zur Info</source>
+  <target>Ne rien saisir ici, les modifications ne sont pas prises en compte, à titre d'information uniquement</target>
+</trans-unit>
+<trans-unit id="sc1d21b56736029e4">
+  <source>Eingabe der Lastfälle</source>
+  <target>Saisie des cas de charge</target>
+</trans-unit>
+<trans-unit id="s078637e8ea734ef8">
+  <source>Anzahl Lastfälle :</source>
+  <target>Nombre de cas de charge :</target>
+</trans-unit>
+<trans-unit id="s3ee5664c49a38eff">
+  <source>Tabelle anpassen</source>
+  <target>Ajuster le tableau</target>
+</trans-unit>
+<trans-unit id="s45deb552041bc081">
+  <source>Eingabe der Kombinationen</source>
+  <target>Saisie des combinaisons</target>
+</trans-unit>
+<trans-unit id="sf1761da387d5b4f7">
+  <source>und der Multiplikatoren (Lastfaktoren), mit denen die einzelnen Lastfälle multipliziert werden sollen.</source>
+  <target>et des multiplicateurs (coefficients de charge) par lesquels les différents cas de charge doivent être multipliés.</target>
+</trans-unit>
+<trans-unit id="sf3f260df2cc0cf33">
+  <source>Eine leere Zelle oder null bedeutet, dass der Lastfall nicht an der Kombination beteiligt ist.</source>
+  <target>Une cellule vide ou zéro signifie que le cas de charge ne participe pas à la combinaison.</target>
+</trans-unit>
+<trans-unit id="s6431d4f0541960d3">
+  <source>Ein Kommentar ist optional.</source>
+  <target>Un commentaire est facultatif.</target>
+</trans-unit>
+<trans-unit id="s5c1fb6f38c79e9c4">
+  <source>Bei Theorie I.Ordnung und linearen Materialeigenschaften sind Kombinationen optional. Bei Theorie II. Ordnung und/oder nichtlinearen Materialeigenschaften muss mindestens eine Kombination definiert sein.</source>
+  <target>En théorie du 1er ordre avec des propriétés de matériaux linéaires, les combinaisons sont facultatives. En théorie du 2nd ordre et/ou avec des propriétés de matériaux non linéaires, au moins une combinaison doit être définie.</target>
+</trans-unit>
+<trans-unit id="sd207de3949fd3751">
+  <source>Lf = Lastfall</source>
+  <target>CC = cas de charge</target>
+</trans-unit>
+<trans-unit id="scbc97ad387a601ff">
+  <source>Anzahl Kombinationen:</source>
+  <target>Nombre de combinaisons :</target>
+</trans-unit>
+<trans-unit id="sf5dc25851d9359f5">
+  <source>Die Schiefstellung des Systems wird nur bei Berechnungen nach Theorie II. Ordnung berücksichtigt</source>
+  <target>L'imperfection globale du système n'est prise en compte que dans les calculs selon la théorie du 2nd ordre</target>
+</trans-unit>
+<trans-unit id="s9741672b82323e9b">
+  <source>Hinweise:</source>
+  <target>Remarques :</target>
+</trans-unit>
+<trans-unit id="s02c3c22410854873">
+  <source>Die Knoten-ID wird im Knotendialog im Tab System angezeigt, wenn du den Button &lt;Knoten bearbeiten&gt; wählst und danach einen Knoten anklickst.</source>
+  <target>L'ID du nœud est affiché dans la boîte de dialogue des nœuds de l'onglet Système lorsque tu choisis le bouton &lt;Modifier le nœud&gt; puis cliques sur un nœud.</target>
+</trans-unit>
+<trans-unit id="s9d05f95c9b651f6b">
+  <source>edit-knoten button</source>
+  <target>Bouton Modifier le nœud</target>
+</trans-unit>
+<trans-unit id="sdb4cee89615a9395">
+  <source>Wenn das Eingabefeld für Δ leer ist, wird keine Schiefstellung berücksichtigt.</source>
+  <target>Si le champ de saisie pour Δ est vide, aucune imperfection globale n'est prise en compte.</target>
+</trans-unit>
+<trans-unit id="s9e749bbf5b0e64b0">
+  <source>Wenn das Eingabefeld für Knoten-ID leer ist, wird der Freiheitsgrad mit dem größten Wert aus der Knickfigur-Berechnung mit dem Wert von Δ skaliert.</source>
+  <target>Si le champ de saisie de l'ID du nœud est vide, le degré de liberté ayant la plus grande valeur issue du calcul du mode de flambement est mis à l'échelle avec la valeur de Δ.</target>
+</trans-unit>
+<trans-unit id="s66f1b01569c36879">
+  <source>Schiefstellung des gesamten Systems mithilfe der ersten Eigenform</source>
+  <target>Imperfection globale de tout le système à l'aide du premier mode propre</target>
+</trans-unit>
+<trans-unit id="s873e4ab6fd271d36">
+  <source>0 oder leer = automatische Skalierung auf den Größtwert aus der Eigenwertberechnung</source>
+  <target>0 ou vide = mise à l'échelle automatique sur la valeur maximale du calcul des valeurs propres</target>
+</trans-unit>
+<trans-unit id="s3e8ad165ae2213f8">
+  <source>Knoten-ID:</source>
+  <target>ID du nœud :</target>
+</trans-unit>
+<trans-unit id="s8c9b6040d2e5f671">
+  <source>Richtung :</source>
+  <target>Direction :</target>
+</trans-unit>
+<trans-unit id="s8c55f55aab69a063">
+  <source>Vorverformung am Knoten in gewählter Richtung</source>
+  <target>Imperfection au nœud dans la direction choisie</target>
+</trans-unit>
+<trans-unit id="s060500f0260f3e8b">
+  <source>erstelle pdf-Datei</source>
+  <target>Créer un fichier pdf</target>
+</trans-unit>
+<trans-unit id="s511b90c4aedcd781">
+  <source>Stabteilungen für Ausgabe der Schnittgrößen</source>
+  <target>Divisions des barres pour la sortie des efforts internes</target>
+</trans-unit>
+<trans-unit id="se26058465f7402fe">
+  <source>Stabteilungen Ausgabe:</source>
+  <target>Divisions des barres en sortie :</target>
+</trans-unit>
+<trans-unit id="s12f5eaaf5e8e8e14">
+  <source>Einheit für Kraft in Ausgabe</source>
+  <target>Unité de force en sortie</target>
+</trans-unit>
+<trans-unit id="sc66bf5fdac3b982a">
+  <source>Einheit für Kraft in Ausgabe:</source>
+  <target>Unité de force en sortie :</target>
+</trans-unit>
+<trans-unit id="s1b33c217a3161e77">
+  <source>Einheit für Bemaßung</source>
+  <target>Unité de cotation</target>
+</trans-unit>
+<trans-unit id="s4f111b2a1e957cd7">
+  <source>Einheit für Bemaßung:</source>
+  <target>Unité de cotation :</target>
+</trans-unit>
+<trans-unit id="sf64e65dc8874622d">
+  <source>Allgemein:</source>
+  <target>Général :</target>
+</trans-unit>
+<trans-unit id="sd80b8cadd831dc08">
+  <source>max. Euklidische Fehlertoleranz eps für Verformungen</source>
+  <target>Tolérance d'erreur euclidienne max. eps pour les déformations</target>
+</trans-unit>
+<trans-unit id="sb9c2dd24a319f32b">
+  <source>eps tol Verformung:</source>
+  <target>eps tol déformation :</target>
+</trans-unit>
+<trans-unit id="safd4b9bcb2691c5a">
+  <source>max. Euklidische Fehlertoleranz eps für Kräfte</source>
+  <target>Tolérance d'erreur euclidienne max. eps pour les efforts</target>
+</trans-unit>
+<trans-unit id="sc88adba699c1f842">
+  <source>eps tol Kraft:</source>
+  <target>eps tol effort :</target>
+</trans-unit>
+<trans-unit id="sb3b01c6fc152389c">
+  <source>für Theorie II. Ordnung:</source>
+  <target>pour la théorie du 2nd ordre :</target>
+</trans-unit>
+<trans-unit id="scf4f2b1466aee8de">
+  <source>max. Anzahl Iterationen bei Th. II. Ordnung</source>
+  <target>Nombre max. d'itérations en Th. 2nd ordre</target>
+</trans-unit>
+<trans-unit id="sa886a246793b8bd4">
+  <source>max. Anzahl Gleichgewichts-Iterationen:</source>
+  <target>Nombre max. d'itérations d'équilibre :</target>
+</trans-unit>
+<trans-unit id="s978e7cb7f7e53f40">
+  <source>Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet</source>
+  <target>Nombre de valeurs propres à calculer ; pour l'imperfection globale, le premier mode propre est toujours utilisé</target>
+</trans-unit>
+<trans-unit id="s4f57bf6f517adce3">
+  <source>Anzahl Knickfiguren :</source>
+  <target>Nombre de modes de flambement :</target>
+</trans-unit>
+<trans-unit id="sbc19aa5c50f0b65c">
+  <source>Art der geometrischen Steifigkeitsmatrix</source>
+  <target>Type de matrice de rigidité géométrique</target>
+</trans-unit>
+<trans-unit id="se8d84cd92bdac9a7">
+  <source>Geom. Steifigkeitsmatrix:</source>
+  <target>Matrice de rigidité géom. :</target>
+</trans-unit>
+<trans-unit id="s95de9ae6bc7dc2c7">
+  <source>vollständiger Ansatz</source>
+  <target>Approche complète</target>
+</trans-unit>
+<trans-unit id="s6b427fe9afbad9f8">
+  <source>nur P-Δ Effekt</source>
+  <target>Effet P-Δ uniquement</target>
+</trans-unit>
+<trans-unit id="sc812a78cf4984cef">
+  <source>Ausgabe Schnittgrößen in Tab Ergebnisse und pdf-Datei, Neuberechnung erforderlich</source>
+  <target>Sortie des efforts internes dans l'onglet Résultats et le fichier pdf, nouveau calcul nécessaire</target>
+</trans-unit>
+<trans-unit id="seb6990c94d13b2fb">
+  <source>Ausgabe Schnittgrößen:</source>
+  <target>Sortie des efforts internes :</target>
+</trans-unit>
+<trans-unit id="s2fabff037b897689">
+  <source>Gleichgewichtsschnittgrößen</source>
+  <target>Efforts internes d'équilibre</target>
+</trans-unit>
+<trans-unit id="s51d78bbd47a21d03">
+  <source>Nachweisschnittgrößen</source>
+  <target>Efforts internes de vérification</target>
+</trans-unit>
+<trans-unit id="s7416239bea68ee24">
+  <source>für Theorie II. Ordnung und Dynamik:</source>
+  <target>pour la théorie du 2nd ordre et la dynamique :</target>
+</trans-unit>
+<trans-unit id="s87e3a94c399ad324">
+  <source>Auswahl des Eigenwert solvers, Neuberechnung erforderlich</source>
+  <target>Choix du solveur de valeurs propres, nouveau calcul nécessaire</target>
+</trans-unit>
+<trans-unit id="sfff66c1f8228ab1a">
+  <source>Eigenwertberechnung:</source>
+  <target>Calcul des valeurs propres :</target>
+</trans-unit>
+<trans-unit id="sd8e81de2031fda10">
+  <source>GNU GSL QR Methode</source>
+  <target>Méthode QR GNU GSL</target>
+</trans-unit>
+<trans-unit id="s8a2654ded66a56c1">
+  <source>simultane Vektoriteration</source>
+  <target>Itération vectorielle simultanée</target>
+</trans-unit>
+<trans-unit id="s696d69c098c43cec">
+  <source>ARPACK Lanczos Iteration</source>
+  <target>Itération de Lanczos ARPACK</target>
+</trans-unit>
+<trans-unit id="sd86f00c775d79ea5">
+  <source>max. Anzahl der Iterationen für die Vektoriterationen</source>
+  <target>Nombre max. d'itérations pour l'itération vectorielle</target>
+</trans-unit>
+<trans-unit id="s2016e03373773b29">
+  <source>max. Anzahl Iterationen für Vektoriteration :</source>
+  <target>Nombre max. d'itérations pour l'itération vectorielle :</target>
+</trans-unit>
+<trans-unit id="see364b206e44f2b9">
+  <source>Gleichungssystem darstellen</source>
+  <target>Afficher le système d'équations</target>
+</trans-unit>
+<trans-unit id="sf23bed29f06d75fe">
+  <source>Anzahl Eigenwerte:</source>
+  <target>Nombre de valeurs propres :</target>
+</trans-unit>
+<trans-unit id="s846311b9c04c189d">
+  <source>Zur Verbesserung der Konvergenz bei der Iteration der Eigenwerte:</source>
+  <target>Pour améliorer la convergence lors de l'itération des valeurs propres :</target>
+</trans-unit>
+<trans-unit id="s0f3b73d4323545ab">
+  <source>Mindestwert auf der Diagonalen der Massenmatrix :</source>
+  <target>Valeur minimale sur la diagonale de la matrice de masse :</target>
+</trans-unit>
+<trans-unit id="s0c6f4bc0ae2a0d3b">
+  <source>Schriftgröße:</source>
+  <target>Taille de police :</target>
+</trans-unit>
+<trans-unit id="s2153b0c36b61fda8">
+  <source>nur für Touchscreens:</source>
+  <target>uniquement pour écrans tactiles :</target>
+</trans-unit>
+<trans-unit id="s2ad271c4bf69a58d">
+  <source>Selektion von Zellen mit Finger erlauben</source>
+  <target>Autoriser la sélection de cellules au doigt</target>
+</trans-unit>
+<trans-unit id="sdb44853a9a24fec0">
+  <source>Standardwerte im Speicher des Browsers löschen</source>
+  <target>Supprimer les valeurs par défaut de la mémoire du navigateur</target>
+</trans-unit>
+<trans-unit id="s8db89619f41917b4">
+  <source>Pin</source>
+  <target>Épingler</target>
+</trans-unit>
+<trans-unit id="sb2246a8686ca9805">
+  <source>Schließen</source>
+  <target>Fermer</target>
+</trans-unit>
+<trans-unit id="se772e5c544d8fb9b">
+  <source>Weitere Aktivitäten</source>
+  <target>Autres activités</target>
+</trans-unit>
+<trans-unit id="s6750e087f400b3eb">
+  <source>isAndroid =</source>
+  <target>isAndroid =</target>
+</trans-unit>
+<trans-unit id="s446b034c92eb3e59">
+  <source>Die zuletzt gespeicherte Eingabe konnte nicht gelesen werden. Es wird mit einer leeren Eingabe gestartet.</source>
+  <target>La dernière saisie enregistrée n'a pas pu être lue. Démarrage avec une saisie vide.</target>
+</trans-unit>
+<trans-unit id="s7129495aed9d8046">
+  <source>Ergebnisse</source>
+  <target>Résultats</target>
+</trans-unit>
+<trans-unit id="s1ec4b4cd6d7f0728">
+  <source>Kombination</source>
+  <target>Combinaison</target>
+</trans-unit>
+<trans-unit id="s4b2db88798392408">
+  <source>im Knoten-Koordinatensystem</source>
+  <target>dans le repère du nœud</target>
+</trans-unit>
+<trans-unit id="s147ea22dc2e6281c">
+  <source>Lagerreaktionen</source>
+  <target>Réactions d'appui</target>
+</trans-unit>
+<trans-unit id="s5b181c0144d4e645">
+  <source>Stabendkräfte/-momente</source>
+  <target>Efforts/moments aux extrémités des barres</target>
+</trans-unit>
+<trans-unit id="sef2b3c73b1c4629a">
+  <source>(Gleichgewichtsschnittgrößen)</source>
+  <target>(Efforts internes d'équilibre)</target>
+</trans-unit>
+<trans-unit id="sc56f7f1f284db55e">
+  <source>Federkräfte/-momente</source>
+  <target>Efforts/moments dans les ressorts</target>
+</trans-unit>
+<trans-unit id="sc73caa6ce42c140b">
+  <source>erforderliche Knotenkräfte/-momente für vorgegebene Knotenverformungen</source>
+  <target>Efforts/moments nodaux nécessaires pour les déplacements imposés des nœuds</target>
+</trans-unit>
+<trans-unit id="s310f53d4e287b7e9">
+  <source>Eigenwert</source>
+  <target>Valeur propre</target>
+</trans-unit>
+<trans-unit id="s248330e3462ea530">
+  <source>Stabschnittgrößen und lokale Verformungen</source>
+  <target>Efforts internes des barres et déformations locales</target>
+</trans-unit>
+<trans-unit id="s79ca317bf315602e">
+  <source>Nachweisschnittgrößen und lokale Verformungen</source>
+  <target>Efforts internes de vérification et déformations locales</target>
+</trans-unit>
+<trans-unit id="s190747c04bd639f7">
+  <source>Element</source>
+  <target>Élément</target>
+</trans-unit>
+<trans-unit id="se4c2febcec9ce2e4">
+  <source>Eigenwerte</source>
+  <target>Valeurs propres</target>
+</trans-unit>
+<trans-unit id="s6b41d9a2d30afe5d">
+  <source>Frequenz</source>
+  <target>Fréquence</target>
+</trans-unit>
+<trans-unit id="s2ea376e3da085b13">
+  <source>Periode</source>
+  <target>Période</target>
+</trans-unit>
+<trans-unit id="sf47f0457e968c00d">
+  <source>Eigenform</source>
+  <target>Mode propre</target>
+</trans-unit>
+<trans-unit id="s63440ec92d8737c3">
+  <source>ersten Knoten picken</source>
+  <target>Sélectionner le premier nœud</target>
+</trans-unit>
+<trans-unit id="s938b55f81f0d53cc">
+  <source>zurück</source>
+  <target>retour</target>
+</trans-unit>
+<trans-unit id="s40c7f83f01e8702b">
+  <source>aktuelle Aktion beenden</source>
+  <target>Terminer l'action en cours</target>
+</trans-unit>
+<trans-unit id="s0f11179d35c7ca57">
+  <source>aktiver Querschnitt</source>
+  <target>Section active</target>
+</trans-unit>
+<trans-unit id="s64bde8e4857adf2f">
+  <source>undo</source>
+  <target>annuler</target>
+</trans-unit>
+<trans-unit id="s4cf0781fbfe66969">
+  <source>redo</source>
+  <target>rétablir</target>
+</trans-unit>
+<trans-unit id="s05265fbf99932950">
+  <source>Element löschen</source>
+  <target>Supprimer un élément</target>
+</trans-unit>
+<trans-unit id="s7982ab7959568ab9">
+  <source>Element auswählen und danach editieren</source>
+  <target>Sélectionner un élément puis le modifier</target>
+</trans-unit>
+<trans-unit id="s8de142262ddffdc9">
+  <source>Element auswählen durch Klick und danach editieren</source>
+  <target>Sélectionner un élément par un clic puis le modifier</target>
+</trans-unit>
+<trans-unit id="s7a2c2a63fbd9e7a3">
+  <source>Eingabe Knoten</source>
+  <target>Saisir un nœud</target>
+</trans-unit>
+<trans-unit id="s1ab5ceb0caa4ac22">
+  <source>Eingabe von Knotenkoordinaten</source>
+  <target>Saisie des coordonnées des nœuds</target>
+</trans-unit>
+<trans-unit id="se59e12933d763e65">
+  <source>Knoten bearbeiten</source>
+  <target>Modifier le nœud</target>
+</trans-unit>
+<trans-unit id="s68dcdd432794b14d">
+  <source>Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken</source>
+  <target>Modifier les coordonnées d'un nœud : sélectionner d'abord un nœud existant</target>
+</trans-unit>
+<trans-unit id="s917ea53ba1ad9f9e">
+  <source>Eingabe Stab</source>
+  <target>Saisir une barre</target>
+</trans-unit>
+<trans-unit id="s2c9170533952c430">
+  <source>Knotenlager eingeben</source>
+  <target>Saisir un appui nodal</target>
+</trans-unit>
+<trans-unit id="s97cb3fe71c6686b4">
+  <source>Eingabe Knotenlasten</source>
+  <target>Saisir des charges nodales</target>
+</trans-unit>
+<trans-unit id="s0bf516a8f909ff39">
+  <source>Eingabe Elementlasten</source>
+  <target>Saisir des charges sur éléments</target>
+</trans-unit>
+<trans-unit id="sdbea3d97e0950350">
+  <source>Eingabe Knotenmassen</source>
+  <target>Saisir des masses nodales</target>
+</trans-unit>
+<trans-unit id="s784d82bd15c49b4a">
+  <source>Einstellungen</source>
+  <target>Paramètres</target>
+</trans-unit>
+<trans-unit id="se29e08d15abe94a4">
+  <source>Reset Screen</source>
+  <target>Réinitialiser l'affichage</target>
+</trans-unit>
+<trans-unit id="s19991f9668db8bb8">
+  <source>Kurzanleitung &amp; Information</source>
+  <target>Guide rapide &amp; informations</target>
+</trans-unit>
+<trans-unit id="s9a350e6f2e8a1f84">
+  <source>Mehr Aktivitäten</source>
+  <target>Plus d'activités</target>
+</trans-unit>
+<trans-unit id="s09194207b5af2717">
+  <source>Lf</source>
+  <target>CC</target>
+</trans-unit>
+<trans-unit id="sfa72df8d294b941c">
+  <source>Lastfall</source>
+  <target>Cas de charge</target>
+</trans-unit>
+<trans-unit id="sf526b80172d34180">
+  <source>Bezeichnung (optional)</source>
+  <target>Désignation (facultatif)</target>
+</trans-unit>
+<trans-unit id="sb5cba5aac7e66bcf">
+  <source>Kombi</source>
+  <target>Comb.</target>
+</trans-unit>
+<trans-unit id="s8d213b8465f934a5">
+  <source>Kommentar</source>
+  <target>Commentaire</target>
+</trans-unit>
+<trans-unit id="sc53a7f3e79fdf193">
+  <source>Verschieben der Ansicht (Pan) ein-/ausschalten</source>
+  <target>Activer/désactiver le déplacement de la vue (pan)</target>
+</trans-unit>
+<trans-unit id="sdafd6ac4a928a349">
+  <source>Verschieben der Ansicht (Pan) ein-/ausschalten, Text 123 bedeutet, dass Werte der Schnittgrößen/Verformungen mit Cursor angezeigt werden können</source>
+  <target>Activer/désactiver le déplacement de la vue (pan) ; le texte 123 signifie que les valeurs des efforts internes/déformations peuvent être affichées avec le curseur</target>
+</trans-unit>
+<trans-unit id="sfe6eb2b8c21847bc">
+  <source>Pick ein Element</source>
+  <target>Sélectionner un élément</target>
+</trans-unit>
+<trans-unit id="s0dc0a5c66a137db7">
+  <source>Pick Element, Lager oder Last</source>
+  <target>Sélectionner un élément, un appui ou une charge</target>
+</trans-unit>
+<trans-unit id="s42dee0a9650c7116">
+  <source>Knoten picken</source>
+  <target>Sélectionner un nœud</target>
+</trans-unit>
+<trans-unit id="scec808ea4f5deb2d">
+  <source>Pick Knoten</source>
+  <target>Sélectionner un nœud</target>
+</trans-unit>
+<trans-unit id="s32b6b574fc24ee40">
+  <source>ersten Punkt picken</source>
+  <target>Sélectionner le premier point</target>
+</trans-unit>
+<trans-unit id="s5ceeb541246402e4">
+  <source>Der darzustellende Rasterbereich enthält unzulässige Werte</source>
+  <target>La zone de grille à afficher contient des valeurs non valides</target>
+</trans-unit>
+<trans-unit id="s95fc09c1f1d89d30">
+  <source>Lastfall muss größer 0 sein</source>
+  <target>Le cas de charge doit être supérieur à 0</target>
+</trans-unit>
+<trans-unit id="s8ce209eb53d7f1f8">
+  <source>mindestens ein Lastkomponente muss ungleich null sein</source>
+  <target>Au moins une composante de charge doit être non nulle</target>
+</trans-unit>
+<trans-unit id="s8cda330f7171b61b">
+  <source>Element picken</source>
+  <target>Sélectionner un élément</target>
+</trans-unit>
+<trans-unit id="s057a38695e9b5f0d">
+  <source>mind. eine Last muss ungleich null sein</source>
+  <target>Au moins une charge doit être non nulle</target>
+</trans-unit>
+<trans-unit id="sb40103231670e3fe">
+  <source>mind. eine Temperatur muss ungleich null sein</source>
+  <target>Au moins une température doit être non nulle</target>
+</trans-unit>
+<trans-unit id="s7d7b08def4b4d34b">
+  <source>Vorspannung muss ungleich null sein</source>
+  <target>La précontrainte doit être non nulle</target>
+</trans-unit>
+<trans-unit id="s26d9b7fbfaa42c4e">
+  <source>Spannweg ds muss ungleich null sein</source>
+  <target>La course de serrage ds doit être non nulle</target>
+</trans-unit>
+<trans-unit id="s19afcf0b0dfe1028">
+  <source>mind. eine Stabverformung muss ungleich null sein</source>
+  <target>Au moins une imperfection de barre doit être non nulle</target>
+</trans-unit>
+<trans-unit id="s3729124a9f912673">
+  <source>keine Lagerbedingungen eingegeben</source>
+  <target>Aucune condition d'appui saisie</target>
+</trans-unit>
+<trans-unit id="s5f914f515e785df8">
+  <source>Angriffspunkt Einzellast auf Stab</source>
+  <target>Le point d'application de la charge ponctuelle sur la barre</target>
+</trans-unit>
+<trans-unit id="s162733daa0aa2102">
+  <source>ist größer Stablänge, siehe Tab Tabellen</source>
+  <target>est supérieur à la longueur de la barre, voir l'onglet Tableaux</target>
+</trans-unit>
+<trans-unit id="s7d0cb3c2effc8ec2">
+  <source>Angriffspunkt x muss größer gleich null sein</source>
+  <target>Le point d'application x doit être supérieur ou égal à zéro</target>
+</trans-unit>
+<trans-unit id="scaceacd849f5602a">
+  <source>Es ist noch kein Querschnitt definiert</source>
+  <target>Aucune section n'est encore définie</target>
+</trans-unit>
+<trans-unit id="s64bf79d9b257f4ed">
+  <source>Anfangsknoten eingeben</source>
+  <target>Saisir le nœud de départ</target>
+</trans-unit>
+<trans-unit id="s743caaab8a3b30c6">
+  <source>Stabende eingeben</source>
+  <target>Saisir la fin de la barre</target>
+</trans-unit>
+<trans-unit id="scd88c6c749958373">
+  <source>zweiten Punkt picken</source>
+  <target>Sélectionner le deuxième point</target>
+</trans-unit>
+<trans-unit id="s08ce83e7dca73406">
+  <source>zweiten Knoten picken</source>
+  <target>Sélectionner le deuxième nœud</target>
+</trans-unit>
+<trans-unit id="s0edfd76b37e30722">
+  <source>Pfeilspitze picken</source>
+  <target>Sélectionner la pointe de la flèche</target>
+</trans-unit>
+<trans-unit id="s6c307b3a1a718b75">
+  <source>keinen Knoten gepickt</source>
+  <target>Aucun nœud sélectionné</target>
+</trans-unit>
+<trans-unit id="s655dacda54bf73f1">
+  <source>Knoten hat schon ein Lager</source>
+  <target>Le nœud a déjà un appui</target>
+</trans-unit>
+<trans-unit id="s5c7d90867a472c06">
+  <source>keinen Knoten gefunden</source>
+  <target>Aucun nœud trouvé</target>
+</trans-unit>
+<trans-unit id="s8a7299b02b0cdded">
+  <source>Knoten hat schon eine Knotenmasse</source>
+  <target>Le nœud a déjà une masse nodale</target>
+</trans-unit>
+<trans-unit id="sb35dba047ce53a93">
+  <source>Stablänge zu klein</source>
+  <target>Longueur de barre trop petite</target>
+</trans-unit>
+<trans-unit id="sd5073c88655e8a55">
+  <source>Stabanfang eingeben</source>
+  <target>Saisir le début de la barre</target>
+</trans-unit>
+<trans-unit id="sa855ac92fbe2586a">
+  <source>Masslinienpunkt picken</source>
+  <target>Sélectionner un point de la ligne de cote</target>
+</trans-unit>
+<trans-unit id="s6f05d8235e842502">
+  <source>Maßlänge zu klein</source>
+  <target>Cote trop petite</target>
+</trans-unit>
+<trans-unit id="s45c6ed4f68df387a">
+  <source>Maßlänge dx zu klein</source>
+  <target>Cote dx trop petite</target>
+</trans-unit>
+<trans-unit id="sbc39d486419572b4">
+  <source>Maßlänge dz zu klein</source>
+  <target>Cote dz trop petite</target>
+</trans-unit>
+<trans-unit id="s062bb2601193f751">
+  <source>Die gewählte Datei hat kein gültiges Format und kann nicht gelesen werden.</source>
+  <target>Le fichier choisi n'a pas un format valide et ne peut pas être lu.</target>
+</trans-unit>
+<trans-unit id="s5df5a7143fe08d90">
+  <source>Die gewählte Datei ist NICHT für dieses Programm erstellt worden</source>
+  <target>Le fichier choisi n'a PAS été créé pour ce programme.</target>
+</trans-unit>
+<trans-unit id="s1dbcc8895a8f9ef2">
+  <source>Die Datei konnte nicht vollständig gelesen werden. Die bisherige Eingabe wurde wiederhergestellt.</source>
+  <target>Le fichier n'a pas pu être lu entièrement. La saisie précédente a été restaurée.</target>
+</trans-unit>
+<trans-unit id="s63c590d099d72b1b">
+  <source>Die Datei konnte nicht gelesen werden.</source>
+  <target>Le fichier n'a pas pu être lu.</target>
+</trans-unit>
+<trans-unit id="sb8c1a3de0e553097">
+  <source>alle Kombinationen</source>
+  <target>toutes les combinaisons</target>
+</trans-unit>
+<trans-unit id="s0f686499875d27cb">
+  <source>Die Option `nichtlinear` ist zu wählen, wenn das System Fachwerkstäbe enthält, die nur Zug- oder Druckkräfte übertragen können. Die Berechnung erfolgt dann iterativ.</source>
+  <target>L'option `non linéaire` doit être choisie si le système contient des barres de treillis qui ne peuvent transmettre que des efforts de traction ou de compression. Le calcul est alors itératif.</target>
+</trans-unit>
+<trans-unit id="s945b20402df2f6d3">
+  <source>Die simultane Vektoriteration konvergiert sehr langsam, aber meist erfolgreich. Der Startvektor wird durch Zufallszahlen zu Beginn jeder neuen Berechnung bestimmt. Deshalb kann eine erneute Berechnung nach einer erfolglosen Berechnung zum Erfolg führen.</source>
+  <target>L'itération vectorielle simultanée converge très lentement, mais le plus souvent avec succès. Le vecteur de départ est déterminé par des nombres aléatoires au début de chaque nouveau calcul. C'est pourquoi un nouveau calcul après un échec peut aboutir.</target>
+</trans-unit>
+<trans-unit id="s99a3b734f631f963">
+  <source>Die QR Methode aus der GNU Bibliothek konvergiert sehr schnell, wenn sie konvergiert.</source>
+  <target>La méthode QR de la bibliothèque GNU converge très rapidement lorsqu'elle converge.</target>
+</trans-unit>
+<trans-unit id="sc607f3ce142369a0">
+  <source>Der ARPACK (ARnoldi PACKage) Eigenwertlöser ist für die Berechnung einiger Eigenwerte und -vektoren großer Systeme entwickelt worden. Er konvergiert schnell, auch bei mehreren gesuchten Eigenwerten.</source>
+  <target>Le solveur de valeurs propres ARPACK (ARnoldi PACKage) a été développé pour calculer quelques valeurs et vecteurs propres de grands systèmes. Il converge rapidement, même lorsque plusieurs valeurs propres sont recherchées.</target>
+</trans-unit>
+<trans-unit id="sd98b69251f066fa1">
+  <source>Stab</source>
+  <target>Barre</target>
+</trans-unit>
+<trans-unit id="s83977996c90f160f">
+  <source>Seite</source>
+  <target>Page</target>
+</trans-unit>
+<trans-unit id="s0c78d81f84bec0f1">
+  <source>Ebenes Stabwerk d2beam</source>
+  <target>Ossature plane d2beam</target>
+</trans-unit>
+<trans-unit id="s3d1befec83497b6a">
+  <source>Eingabeprotokoll</source>
+  <target>Récapitulatif des données</target>
+</trans-unit>
+<trans-unit id="sba7b1a93d2c78556">
+  <source>Knotenkoordinaten und Lager</source>
+  <target>Coordonnées des nœuds et appuis</target>
+</trans-unit>
+<trans-unit id="see5d95ad45ad21b9">
+  <source>starr</source>
+  <target>rigide</target>
+</trans-unit>
+<trans-unit id="sdee1d2056321d187">
+  <source>Elementdaten</source>
+  <target>Données des éléments</target>
+</trans-unit>
+<trans-unit id="sa09badfa322f689e">
+  <source>Arten der Trapezstreckenlasten</source>
+  <target>Types de charges réparties trapézoïdales</target>
+</trans-unit>
+<trans-unit id="sec4cbb6bd2ef1ef8">
+  <source>0 = Trapezstreckenlast senkrecht auf Stab</source>
+  <target>0 = charge répartie trapézoïdale perpendiculaire à la barre</target>
+</trans-unit>
+<trans-unit id="sbdc80c210da4f43e">
+  <source>1 = Trapezstreckenlast in globaler z-Richtung</source>
+  <target>1 = charge répartie trapézoïdale selon la direction z globale</target>
+</trans-unit>
+<trans-unit id="se4be79a595da5232">
+  <source>2 = Trapezstreckenlast in globaler z-Richtung, Projektion</source>
+  <target>2 = charge répartie trapézoïdale selon la direction z globale, projection</target>
+</trans-unit>
+<trans-unit id="s664087ea02c8cea6">
+  <source>3 = Trapezstreckenlast in globaler x-Richtung</source>
+  <target>3 = charge répartie trapézoïdale selon la direction x globale</target>
+</trans-unit>
+<trans-unit id="s8e7c0bda7fd27bb2">
+  <source>4 = Trapezstreckenlast in globaler x-Richtung, Projektion</source>
+  <target>4 = charge répartie trapézoïdale selon la direction x globale, projection</target>
+</trans-unit>
+<trans-unit id="sf9f8d719a044edca">
+  <source>Art</source>
+  <target>Type</target>
+</trans-unit>
+<trans-unit id="s8798cd87ae5032f5">
+  <source>Temperaturlasten</source>
+  <target>Charges de température</target>
+</trans-unit>
+<trans-unit id="se2fb2b9a1f52a30a">
+  <source>Lastfälle</source>
+  <target>Cas de charge</target>
+</trans-unit>
+<trans-unit id="s9278a256ab573265">
+  <source>Bezeichnung</source>
+  <target>Désignation</target>
+</trans-unit>
+<trans-unit id="sa889c8c779c7bee1">
+  <source>Kombinationen und Last-Multiplikatoren</source>
+  <target>Combinaisons et multiplicateurs de charge</target>
+</trans-unit>
+<trans-unit id="s20765a8467f7fd60">
+  <source>Erläuterung</source>
+  <target>Explication</target>
+</trans-unit>
+<trans-unit id="s4d18bf5810bf162c">
+  <source>Berechnung nach Theorie I. Ordnung</source>
+  <target>Calcul selon la théorie du 1er ordre</target>
+</trans-unit>
+<trans-unit id="s48a5e2e7abae422b">
+  <source>Berechnung nach Theorie II. Ordnung</source>
+  <target>Calcul selon la théorie du 2nd ordre</target>
+</trans-unit>
+<trans-unit id="sa81e2cdaf6921adc">
+  <source>System</source>
+  <target>Système</target>
+</trans-unit>
+<trans-unit id="sfea6f3a7cfc9e79f">
+  <source>Winkel</source>
+  <target>Angle</target>
+</trans-unit>
+<trans-unit id="s6ba8ff3a3676ea08">
+  <source>Knoten</source>
+  <target>Nœuds</target>
+</trans-unit>
+<trans-unit id="s1af77ca35c56537f">
+  <source>Freihheitsgrade</source>
+  <target>Degrés de liberté</target>
+</trans-unit>
+<trans-unit id="s805e18010aa2ee49">
+  <source>Wichte</source>
+  <target>Poids vol.</target>
+</trans-unit>
+<trans-unit id="s98b90047028ffa6e">
+  <source>Querschnitte</source>
+  <target>Sections</target>
+</trans-unit>
+<trans-unit id="se0b33ac830cd2272">
+  <source>Stabelemente</source>
+  <target>Éléments barres</target>
+</trans-unit>
+<trans-unit id="safecc3c08471a71b">
+  <source>Inzidenzvektor</source>
+  <target>Vecteur d'incidence</target>
+</trans-unit>
+<trans-unit id="s2be84d4c857586bd">
+  <source>Länge</source>
+  <target>Longueur</target>
+</trans-unit>
+<trans-unit id="s45d4a50b4d28b89c">
+  <source>Masse</source>
+  <target>Masse</target>
+</trans-unit>
+<trans-unit id="seaa553e3cdf42989">
+  <source>Summe der Knotenmassen</source>
+  <target>Somme des masses nodales</target>
+</trans-unit>
+<trans-unit id="s7ec9a790330ec265">
+  <source>Summe der Massenträgheitsmomente</source>
+  <target>Somme des moments d'inertie de masse</target>
+</trans-unit>
+<trans-unit id="sb8025bd7145eb802">
+  <source>Summe der Elementmassen</source>
+  <target>Somme des masses des éléments</target>
+</trans-unit>
+<trans-unit id="s5439c2772db668d2">
+  <source>Lösche Querschnitt</source>
+  <target>Supprimer la section</target>
+</trans-unit>
+<trans-unit id="saee0655be78ad4e8">
+  <source>Es gibt mindestens ein Element, das den Querschnitt verwendet</source>
+  <target>Il existe au moins un élément qui utilise la section</target>
+</trans-unit>
+<trans-unit id="s8ac4f010f5d4bb4f">
+  <source>Eingabefehler bitte erst beheben</source>
+  <target>Corrige d'abord les erreurs de saisie</target>
+</trans-unit>
+<trans-unit id="sad58d4d06a8b1460">
+  <source>Im Tab Ergebnisse wurde das System soweit möglich gezeichnet</source>
+  <target>Dans l'onglet Résultats, le système a été dessiné dans la mesure du possible</target>
+</trans-unit>
+<trans-unit id="se62b642f5b1a32fd">
+  <source>Es muss mindestens 1 Querschnitt definiert sein</source>
+  <target>Au moins 1 section doit être définie</target>
+</trans-unit>
+<trans-unit id="s32164771e94afcad">
+  <source>Es muss mindestens 1 Element definiert sein</source>
+  <target>Au moins 1 élément doit être défini</target>
+</trans-unit>
+<trans-unit id="s1654f3b8ada9e06f">
+  <source>Es müssen mindestens 2 Knoten definiert sein</source>
+  <target>Au moins 2 nœuds doivent être définis</target>
+</trans-unit>
+<trans-unit id="s5828b3ac62d964ec">
+  <source>Es muss mindestens 1 Kombination definiert sein</source>
+  <target>Au moins 1 combinaison doit être définie</target>
+</trans-unit>
+<trans-unit id="sfecd3a744c81cdc9">
+  <source>Dem Element</source>
+  <target>Aucune section n'est attribuée à l'élément</target>
+</trans-unit>
+<trans-unit id="s0482241b31714309">
+  <source>ist kein Querschnitt zugeordnet</source>
+  <target> </target>
+</trans-unit>
+<trans-unit id="s0a1749fba7dd142d">
+  <source>An Kombination</source>
+  <target>Aucun cas de charge ne participe à la combinaison</target>
+</trans-unit>
+<trans-unit id="s3029e00f65e4fa86">
+  <source>ist kein Lastfall beteiligt</source>
+  <target> </target>
+</trans-unit>
+<trans-unit id="s07ae3396a71a6b0f">
+  <source>Anzahl Fehler in Eingabe:</source>
+  <target>Nombre d'erreurs dans la saisie :</target>
+</trans-unit>
+<trans-unit id="sf75ff0ddff5d24b4">
+  <source>Steifigkeitsmatrix nicht positiv definit.</source>
+  <target>Matrice de rigidité non définie positive.</target>
+</trans-unit>
+<trans-unit id="sf53ac660804801a1">
+  <source>Mögliche Ursache: das System ist vermutlich kinematisch.</source>
+  <target>Cause possible : le système est probablement un mécanisme (cinématique).</target>
+</trans-unit>
+<trans-unit id="s397719ef0d7a6ec8">
+  <source>Toleranz eps_force in Lastfall</source>
+  <target>Tolérance eps_force dans le cas de charge</target>
+</trans-unit>
+<trans-unit id="s9405bcae771cf187">
+  <source>Toleranz bei den Kräften eingehalten</source>
+  <target>Tolérance sur les efforts respectée</target>
+</trans-unit>
+<trans-unit id="s678b94e997eed396">
+  <source>++++ geforderte Genauigkeit bei den Kräften nicht erreicht, das System auf mögliche Kinematiken überprüfen</source>
+  <target>++++ précision requise sur les efforts non atteinte, vérifier si le système présente des mécanismes</target>
+</trans-unit>
+<trans-unit id="s3458010cbd46deee">
+  <source>Es muss mindestens eine Kombination definiert sein</source>
+  <target>Au moins une combinaison doit être définie</target>
+</trans-unit>
+<trans-unit id="s3229ddf751598ad2">
+  <source>Steifigkeitsmatrix nicht positiv definit in Kombination</source>
+  <target>Matrice de rigidité non définie positive dans la combinaison</target>
+</trans-unit>
+<trans-unit id="s8dd82a7653b2754b">
+  <source>Mögliche Ursachen: Lasten zu hoch in dieser Kombination. Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.</source>
+  <target>Causes possibles : charges trop élevées dans cette combinaison. Si le message apparaît aussi lors d'un calcul selon la théorie du 1er ordre, le système est un mécanisme (cinématique).</target>
+</trans-unit>
+<trans-unit id="saa847ba46ef6ea16">
+  <source>Toleranz in Iterationsschritt</source>
+  <target>Tolérance à l'itération</target>
+</trans-unit>
+<trans-unit id="s73acc8dac42c1ccb">
+  <source>Konvergenz bei den Verformungen erreicht</source>
+  <target>Convergence des déformations atteinte</target>
+</trans-unit>
+<trans-unit id="sf5406b5dcdef3a26">
+  <source>++++ keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen ++++</source>
+  <target>++++ pas de convergence des déformations, augmenter le nombre d'itérations ++++</target>
+</trans-unit>
+<trans-unit id="sf610db2715075c15">
+  <source>Konvergenz bei den Kräften erreicht</source>
+  <target>Convergence des efforts atteinte</target>
+</trans-unit>
+<trans-unit id="s3d65885cdcd6c17c">
+  <source>++++ keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen ++++</source>
+  <target>++++ pas de convergence des efforts, augmenter le nombre d'itérations ++++</target>
+</trans-unit>
+<trans-unit id="sbad21220dd5ef4aa">
+  <source>Ꚛ FEHLER - In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten</source>
+  <target>Ꚛ ERREUR - La tolérance sur les efforts n'a pas été respectée dans au moins un cas de charge</target>
+</trans-unit>
+<trans-unit id="s81cf40be8b8b8d45">
+  <source>In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten.</source>
+  <target>La tolérance sur les efforts n'a pas été respectée dans au moins un cas de charge.</target>
+</trans-unit>
+<trans-unit id="sdd624efda3f25db6">
+  <source>Mögliche Ursache: Das System ist kinematisch.</source>
+  <target>Cause possible : le système est un mécanisme (cinématique).</target>
+</trans-unit>
+<trans-unit id="s892405389a3a5dbd">
+  <source>Die Ergebnisse sind wahrscheinlich nicht brauchbar!</source>
+  <target>Les résultats sont probablement inutilisables !</target>
+</trans-unit>
+<trans-unit id="s917adb24fdaed8f5">
+  <source>In mindestens einer Kombination keine Konvergenz der Verformungen/Kräfte erreicht.</source>
+  <target>Pas de convergence des déformations/efforts dans au moins une combinaison.</target>
+</trans-unit>
+<trans-unit id="s8ac46269880e846d">
+  <source>Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. Kinematiken überprüfen.</source>
+  <target>Solutions possibles : augmenter les itérations, réduire les charges ou agrandir les sections. Vérifier les mécanismes.</target>
+</trans-unit>
+<trans-unit id="sa9b1f339d01156e0">
+  <source>Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Eigenwerte</source>
+  <target>Ꚛ ERREUR - Pas de convergence des valeurs propres dans au moins une combinaison</target>
+</trans-unit>
+<trans-unit id="s5e5f2629828806eb">
+  <source>In mindestens einer Kombination keine Konvergenz der Eigenwerte erreicht.</source>
+  <target>Pas de convergence des valeurs propres dans au moins une combinaison.</target>
+</trans-unit>
+<trans-unit id="sb7482aa61c57cd96">
+  <source>Mögliche Lösungen: Anderen Eigenwertlöser probieren, und/oder Anzahl der Eigenwerte reduzieren, siehe Tab Pro.</source>
+  <target>Solutions possibles : essayer un autre solveur de valeurs propres et/ou réduire le nombre de valeurs propres, voir l'onglet Pro.</target>
+</trans-unit>
+<trans-unit id="s475dc3809bbcad73">
+  <source>Ꚛ FEHLER - In mindestens einer Kombination war alpha_cr</source>
+  <target>Ꚛ ERREUR - Dans au moins une combinaison, alpha_cr était</target>
+</trans-unit>
+<trans-unit id="s838cc0f7aeda0734">
+  <source>In mindestens einer Kombination war alpha_cr</source>
+  <target>Dans au moins une combinaison, alpha_cr était</target>
+</trans-unit>
+<trans-unit id="s7ce8e2f713417b9b">
+  <source>Mögliche Lösungen: Lasten reduzieren oder Querschnitte vergrößern.</source>
+  <target>Solutions possibles : réduire les charges ou agrandir les sections.</target>
+</trans-unit>
+<trans-unit id="s829b912bb4a4d5f9">
+  <source>Die Ergebnisse sind nicht brauchbar!</source>
+  <target>Les résultats sont inutilisables !</target>
+</trans-unit>
+<trans-unit id="se3f55a8eba7c3707">
+  <source>Berechnung erfolgreich beendet</source>
+  <target>Calcul terminé avec succès</target>
+</trans-unit>
+<trans-unit id="s4d87dd473addb7af">
+  <source>Mögliche Ursachen: Lasten zu hoch in dieser Kombination.</source>
+  <target>Causes possibles : charges trop élevées dans cette combinaison.</target>
+</trans-unit>
+<trans-unit id="s4829aafde5473623">
+  <source>Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.</source>
+  <target>Si le message apparaît aussi lors d'un calcul selon la théorie du 1er ordre, le système est un mécanisme (cinématique).</target>
+</trans-unit>
+<trans-unit id="sb61bc52e9b4ecf92">
+  <source>Länge von Element</source>
+  <target>Longueur de l'élément</target>
+</trans-unit>
+<trans-unit id="saa75b01360e48f68">
+  <source>ist null</source>
+  <target>est nulle</target>
+</trans-unit>
+<trans-unit id="s90b0d535974c7970">
+  <source>Das ist keine zulässige Zahl in Zeile</source>
+  <target>Ce n'est pas un nombre valide à la ligne</target>
+</trans-unit>
+</body>
+</file>
+</xliff>

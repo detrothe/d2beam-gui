@@ -1,0 +1,1641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="it-IT" source-language="de" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="s0bff33921e8709f6">
+  <source>Bedienfeld anzeigen</source>
+  <target>Mostra pannello di controllo</target>
+</trans-unit>
+<trans-unit id="s2b41d1fba90e38cb">
+  <source>Beschriftung</source>
+  <target>Etichette</target>
+</trans-unit>
+<trans-unit id="se3f50870e34f1521">
+  <source>Systemlinien</source>
+  <target>Linee del sistema</target>
+</trans-unit>
+<trans-unit id="s4208b8c9f9ba4783">
+  <source>Verformungen</source>
+  <target>Deformazioni</target>
+</trans-unit>
+<trans-unit id="s3d1362f3061410b4">
+  <source>Normalkraft</source>
+  <target>Sforzo normale</target>
+</trans-unit>
+<trans-unit id="s51ac13fc60ec8d42">
+  <source>Querkraft</source>
+  <target>Taglio</target>
+</trans-unit>
+<trans-unit id="s3d21e2828d9cbcdd">
+  <source>Moment</source>
+  <target>Momento</target>
+</trans-unit>
+<trans-unit id="sc9383464bcc002fe">
+  <source>Knickfigur</source>
+  <target>Modo di instabilità</target>
+</trans-unit>
+<trans-unit id="sc9ffcae4af440f51">
+  <source>Schiefstellung</source>
+  <target>Imperfezione globale</target>
+</trans-unit>
+<trans-unit id="s59afc2d10f246311">
+  <source>Stabvorverformung</source>
+  <target>Imperfezione locale</target>
+</trans-unit>
+<trans-unit id="s8d3551f00a88687e">
+  <source>Skalierung</source>
+  <target>Scala</target>
+</trans-unit>
+<trans-unit id="s8baaaf87af7af7d7">
+  <source>Lasten anzeigen</source>
+  <target>Mostra carichi</target>
+</trans-unit>
+<trans-unit id="sd0d2dfe921d156c5">
+  <source>Lagerkräfte anzeigen</source>
+  <target>Mostra reazioni vincolari</target>
+</trans-unit>
+<trans-unit id="s56d117dffa5a0f36">
+  <source>Dynamik</source>
+  <target>Dinamica</target>
+</trans-unit>
+<trans-unit id="scfc306ddc5333ba2">
+  <source>Eigenformen</source>
+  <target>Modi propri</target>
+</trans-unit>
+<trans-unit id="s0641fdf7c4cc8625">
+  <source>animate Eigenformen</source>
+  <target>Anima modi propri</target>
+</trans-unit>
+<trans-unit id="s65ada9f53688cb8f">
+  <source>Massen anzeigen</source>
+  <target>Mostra masse</target>
+</trans-unit>
+<trans-unit id="scc6d3482dd1b2057">
+  <source>Optionen</source>
+  <target>Opzioni</target>
+</trans-unit>
+<trans-unit id="s51851ec717862dad">
+  <source>Umriss anzeigen</source>
+  <target>Mostra contorno</target>
+</trans-unit>
+<trans-unit id="se48ef32e03a831e9">
+  <source>Gesamtverformung</source>
+  <target>Deformazione totale</target>
+</trans-unit>
+<trans-unit id="s0a9a66a4199b4e6a">
+  <source>Gleichgewicht SG</source>
+  <target>Equilibrio delle sollecitazioni</target>
+</trans-unit>
+<trans-unit id="s082fee50a17a58f9">
+  <source>Einstellungen GUI</source>
+  <target>Impostazioni GUI</target>
+</trans-unit>
+<trans-unit id="s1121453a4f564119">
+  <source>Keine Fingererkennung bei Stiftbenutzung für Systemeingabe</source>
+  <target>Nessun riconoscimento del dito quando si usa la penna per l'inserimento del sistema</target>
+</trans-unit>
+<trans-unit id="s02a67a5e0d12eb12">
+  <source>keine Einheiten anzeigen in Grafik</source>
+  <target>Non mostrare le unità nel grafico</target>
+</trans-unit>
+<trans-unit id="s2c8573c23edad989">
+  <source>Stifteingabe wie Fingereingabe</source>
+  <target>Inserimento con penna come con il dito</target>
+</trans-unit>
+<trans-unit id="s567a79132ce99d3d">
+  <source>Fangweite Cursor:</source>
+  <target>Raggio di aggancio del cursore:</target>
+</trans-unit>
+<trans-unit id="s5c4d149a121ec91a">
+  <source>Faktor für Lagersymbole:</source>
+  <target>Fattore per i simboli dei vincoli:</target>
+</trans-unit>
+<trans-unit id="s0278681b3145d48b">
+  <source>Cursor Offset Faktor bei Touch (Finger) Eingabe (bei 0 befindet sich der Cursor direkt unter dem Finger):</source>
+  <target>Fattore di spostamento del cursore per l'inserimento touch (dito) (con 0 il cursore si trova direttamente sotto il dito):</target>
+</trans-unit>
+<trans-unit id="sa67929a9032d7484">
+  <source>Faktor für dx:</source>
+  <target>Fattore per dx:</target>
+</trans-unit>
+<trans-unit id="sa67221a90327483e">
+  <source>Faktor für dz:</source>
+  <target>Fattore per dz:</target>
+</trans-unit>
+<trans-unit id="s521b400e2fa70dc8">
+  <source>Raster</source>
+  <target>Griglia</target>
+</trans-unit>
+<trans-unit id="s51967beda3ece227">
+  <source>Offset Raster</source>
+  <target>Offset griglia</target>
+</trans-unit>
+<trans-unit id="sc88524dc7bec3ba6">
+  <source>Initial darzustellender Rasterbereich</source>
+  <target>Area della griglia visualizzata inizialmente</target>
+</trans-unit>
+<trans-unit id="s062463b6cb2ba47f">
+  <source>Auswahl als Standardwerte im Browser speichern</source>
+  <target>Salva la selezione come valori predefiniti nel browser</target>
+</trans-unit>
+<trans-unit id="s08b05d07b5566bef">
+  <source>ok</source>
+  <target>ok</target>
+</trans-unit>
+<trans-unit id="s8f411426731b6d29">
+  <source>Abbrechen</source>
+  <target>Annulla</target>
+</trans-unit>
+<trans-unit id="sb60d0d6316ed7878">
+  <source>Elementlasten</source>
+  <target>Carichi sugli elementi</target>
+</trans-unit>
+<trans-unit id="s158540ce0c07369d">
+  <source>Wähle eine Option</source>
+  <target>Scegli un'opzione</target>
+</trans-unit>
+<trans-unit id="sef2a8e389cc8bc15">
+  <source>Streckenlasten</source>
+  <target>Carichi distribuiti</target>
+</trans-unit>
+<trans-unit id="s852c56c86f4f4449">
+  <source>Einzellasten</source>
+  <target>Carichi concentrati</target>
+</trans-unit>
+<trans-unit id="sa28084132e46d192">
+  <source>Temperatur</source>
+  <target>Temperatura</target>
+</trans-unit>
+<trans-unit id="s0d1bad2ed40c305a">
+  <source>Vorspannung</source>
+  <target>Precompressione</target>
+</trans-unit>
+<trans-unit id="sde5e53bd97d6062e">
+  <source>Spannschloss</source>
+  <target>Tenditore</target>
+</trans-unit>
+<trans-unit id="s9a0c3a9a16547042">
+  <source>Vorverformungen</source>
+  <target>Imperfezioni</target>
+</trans-unit>
+<trans-unit id="s2b34a0f5704c95c2">
+  <source>Art der Trapezstreckenlast :</source>
+  <target>Tipo di carico distribuito trapezoidale:</target>
+</trans-unit>
+<trans-unit id="sfb0478b32732aa30">
+  <source>senkrecht auf Stab</source>
+  <target>perpendicolare all'asta</target>
+</trans-unit>
+<trans-unit id="sdfe48192defca7bd">
+  <source>in globaler z-Richtung</source>
+  <target>in direzione z globale</target>
+</trans-unit>
+<trans-unit id="sbdf2a01274e3cbf4">
+  <source>in globaler z-Richtung, Projektion</source>
+  <target>in direzione z globale, proiezione</target>
+</trans-unit>
+<trans-unit id="s490ad1b0503cba5f">
+  <source>in globaler x-Richtung</source>
+  <target>in direzione x globale</target>
+</trans-unit>
+<trans-unit id="se2ac2973eaf6ddc6">
+  <source>in globaler x-Richtung, Projektion</source>
+  <target>in direzione x globale, proiezione</target>
+</trans-unit>
+<trans-unit id="s07276530e6884c15">
+  <source>Temperatur an Unter- und Oberseite</source>
+  <target>Temperatura al lembo inferiore e superiore</target>
+</trans-unit>
+<trans-unit id="sd3ac07153a11e41f">
+  <source>Zentrische Vorspannung</source>
+  <target>Precompressione centrata</target>
+</trans-unit>
+<trans-unit id="sc00669f0970fdc31">
+  <source>Stabvorverformungen (nur bei Th.II.O.)</source>
+  <target>Imperfezioni locali delle aste (solo con teoria del II ordine)</target>
+</trans-unit>
+<trans-unit id="sa3216da3cd96b94b">
+  <source>Streckenlast darf nicht null sein</source>
+  <target>Il carico distribuito non deve essere nullo</target>
+</trans-unit>
+<trans-unit id="s18fcff9c5e03f48e">
+  <source>Einzellasten dürfen nicht null sein</source>
+  <target>I carichi concentrati non devono essere nulli</target>
+</trans-unit>
+<trans-unit id="s684d7269ec02e919">
+  <source>Kurzinformationen GUI</source>
+  <target>Informazioni rapide GUI</target>
+</trans-unit>
+<trans-unit id="s6672f37e4875d9be">
+  <source>Eingabe mit dem Finger bei einem Touchscreen</source>
+  <target>Inserimento con il dito su touchscreen</target>
+</trans-unit>
+<trans-unit id="sb9d2ebb8b6b2ade4">
+  <source>Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
+            neben dem Finger. Platziere den Eingabefinger auf dem Screen und
+            bewege den &lt;b&gt;Cursor&lt;/b&gt; zu der gewünschten Stelle, und hebe dann
+            den Finger vom Screen ab. Das Anheben des Fingers hat hier die
+            gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei
+            der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann
+            ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
+            die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
+            Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
+            Finger kannst du unter Einstellungen GUI ändern.</source>
+  <target>Per consentire un inserimento preciso, il cursore si trova accanto al dito. Appoggia il dito sullo schermo, sposta il &lt;b&gt;cursore&lt;/b&gt; nel punto desiderato e poi solleva il dito. Sollevare il dito ha qui la stessa funzione del clic sinistro del mouse. Se è necessario un ulteriore inserimento, come per la fine dell'asta, appoggia di nuovo il dito sullo schermo e sposta il cursore nel punto desiderato. Sollevando di nuovo il dito l'inserimento termina. La distanza e la posizione (segno) del cursore rispetto al dito si possono modificare in Impostazioni GUI.</target>
+</trans-unit>
+<trans-unit id="s46e0e618bf2299ec">
+  <source>Knoteneingabe und Rasterlinien</source>
+  <target>Inserimento dei nodi e linee della griglia</target>
+</trans-unit>
+<trans-unit id="sb09c495962730e6a">
+  <source>Die Eingabe von Knoten über den Dialog ist nicht zwingend
+            erforderlich. Bei der Eingabe von Stabanfang und -ende wird zuerst
+            nach einem vorhandenen Knoten innerhalb der Fangweite (Die
+            Linienlängen des Cursors geben das Fangfenster an) gesucht. Wird
+            kein Knoten gefunden, wird der nächste Rasterpunkt (Schnittpunkt der
+            Rasterlinien) gewählt, sofern er innerhalb des Fangfensters des
+            Cursors liegt. Ein gefundener Rasterpunkt wird als blaues Rechteck
+            angezeigt. Andernfalls werden die Koordinaten des Cursors genommen.
+            Der Abstand der Rasterlinien kann unter
+            Einstellungen GUI geändert werden.</source>
+  <target>L'inserimento dei nodi tramite la finestra di dialogo non è obbligatorio. Durante l'inserimento dell'inizio e della fine di un'asta, il programma cerca prima un nodo esistente entro il raggio di aggancio (la lunghezza delle linee del cursore indica la finestra di aggancio). Se non viene trovato alcun nodo, viene scelto il punto della griglia più vicino (intersezione delle linee della griglia), purché si trovi entro la finestra di aggancio del cursore. Un punto della griglia trovato viene mostrato come rettangolo blu. Altrimenti vengono usate le coordinate del cursore. La distanza tra le linee della griglia si può modificare in Impostazioni GUI.</target>
+</trans-unit>
+<trans-unit id="s6e859bbc09f177dc">
+  <source>Rasterbereich</source>
+  <target>Area della griglia</target>
+</trans-unit>
+<trans-unit id="s4777a861e6d0676b">
+  <source>Der unter Einstellungen GUI einstellbare Rasterbereich dient
+            nur zur Orientierung bei der Eingabe. Im Normalfall wird er so
+            eingestellt, dass das gesamte System darin dargestellt werden kann.</source>
+  <target>L'area della griglia, impostabile in Impostazioni GUI, serve solo come orientamento durante l'inserimento. Di norma la si imposta in modo che l'intero sistema possa esservi rappresentato.</target>
+</trans-unit>
+<trans-unit id="s1af650f3abc723be">
+  <source>Weitere Informationen zur grafischen Eingabe findest du im Tab Info.</source>
+  <target>Ulteriori informazioni sull'inserimento grafico si trovano nella scheda Info.</target>
+</trans-unit>
+<trans-unit id="s2b7c0ebed1d5f1a8">
+  <source>Knotenkoordinaten</source>
+  <target>Coordinate dei nodi</target>
+</trans-unit>
+<trans-unit id="sd82c3dbc52e9abee">
+  <source>Die ID wird bei TH.II.O. im Tab Vorverformungen benötigt</source>
+  <target>L'ID serve con la teoria del II ordine nella scheda Imperfezioni</target>
+</trans-unit>
+<trans-unit id="sc376f0e2470cb265">
+  <source>Knoten ID</source>
+  <target>ID nodo</target>
+</trans-unit>
+<trans-unit id="sc381fe2ae57c2313">
+  <source>Anwenden</source>
+  <target>Applica</target>
+</trans-unit>
+<trans-unit id="se07bc1727af675c8">
+  <source>Knotenlast</source>
+  <target>Carico nodale</target>
+</trans-unit>
+<trans-unit id="sc508c6ac4435de64">
+  <source>nur Lastfall ändern</source>
+  <target>Modifica solo il caso di carico</target>
+</trans-unit>
+<trans-unit id="s917e0dd0ca03b10a">
+  <source>Lastfall :</source>
+  <target>Caso di carico:</target>
+</trans-unit>
+<trans-unit id="s35e97643d1f8de40">
+  <source>Winkel im Gegenuhrzeigersinn positiv</source>
+  <target>Angolo positivo in senso antiorario</target>
+</trans-unit>
+<trans-unit id="s42d04fe173ce3377">
+  <source>Knotenmasse</source>
+  <target>Massa nodale</target>
+</trans-unit>
+<trans-unit id="sd17365872c4f61e7">
+  <source>Knotenlager</source>
+  <target>Vincolo nodale</target>
+</trans-unit>
+<trans-unit id="s7d0cc518c494a80e">
+  <source>Drehung des Knotens (Lagers), im Gegenuhrzeigersinn positiv</source>
+  <target>Rotazione del nodo (del vincolo), positiva in senso antiorario</target>
+</trans-unit>
+<trans-unit id="sefe2e947928bba8c">
+  <source>Lagerbedingungen</source>
+  <target>Condizioni di vincolo</target>
+</trans-unit>
+<trans-unit id="s6a83752762ead46e">
+  <source>Lager starr</source>
+  <target>Vincolo rigido</target>
+</trans-unit>
+<trans-unit id="s5d9967b49bd47559">
+  <source>oder</source>
+  <target>oppure</target>
+</trans-unit>
+<trans-unit id="sa192adcf9373e01a">
+  <source>Federkonstante</source>
+  <target>Rigidezza della molla</target>
+</trans-unit>
+<trans-unit id="sf2b3ecba8ce0ddf7">
+  <source>neue Eingabe</source>
+  <target>Nuovo inserimento</target>
+</trans-unit>
+<trans-unit id="s8d5fcddffb49d365">
+  <source>Hinweis: Alle Eingaben werden gelöscht !</source>
+  <target>Nota: tutti i dati inseriti verranno cancellati!</target>
+</trans-unit>
+<trans-unit id="s5b4332874f0c4bf5">
+  <source>Die Tabellengrößen können später jederzeit mit den Buttons, die sich
+            oberhalb der Tabellen befinden, geändert werden.&lt;br /&gt;
+            Nach den Änderungen ist eine Neuberechnung erforderlich</source>
+  <target>Le dimensioni delle tabelle possono essere modificate in qualsiasi momento con i pulsanti posti sopra le tabelle.&lt;br /&gt; Dopo le modifiche è necessario un nuovo calcolo</target>
+</trans-unit>
+<trans-unit id="s1802ab88151d5b76">
+  <source>Art des Systems :</source>
+  <target>Tipo di sistema:</target>
+</trans-unit>
+<trans-unit id="s83c549670e2c85da">
+  <source>Stabwerk</source>
+  <target>Telaio</target>
+</trans-unit>
+<trans-unit id="s9f1c28507d0dfda8">
+  <source>Fachwerk</source>
+  <target>Travatura reticolare</target>
+</trans-unit>
+<trans-unit id="s9af710578a457088">
+  <source>Die Art des Systems kann nachträglich nicht mehr geändert werden !</source>
+  <target>Il tipo di sistema non può più essere modificato in seguito!</target>
+</trans-unit>
+<trans-unit id="sa5a52c4169e1e648">
+  <source>Stab-Eigenschaften</source>
+  <target>Proprietà dell'asta</target>
+</trans-unit>
+<trans-unit id="sfaadd489dfa358bf">
+  <source>Querschnitt</source>
+  <target>Sezione</target>
+</trans-unit>
+<trans-unit id="s5bfa8df7ff3f340a">
+  <source>Art des Stabes</source>
+  <target>Tipo di asta</target>
+</trans-unit>
+<trans-unit id="sd64c04f6cc0ee34c">
+  <source>Biegestab d2beam</source>
+  <target>Asta inflessa d2beam</target>
+</trans-unit>
+<trans-unit id="s293d1a977716f4a1">
+  <source>FW-Stab Zug + Druck</source>
+  <target>Asta reticolare trazione + compressione</target>
+</trans-unit>
+<trans-unit id="sb51fce4a6488bd2e">
+  <source>FW-Stab nur Zug</source>
+  <target>Asta reticolare solo trazione</target>
+</trans-unit>
+<trans-unit id="see27cf5ab63de49f">
+  <source>FW-Stab nur Druck</source>
+  <target>Asta reticolare solo compressione</target>
+</trans-unit>
+<trans-unit id="s2bcf54e43d1edf0c">
+  <source>Gelenke</source>
+  <target>Cerniere</target>
+</trans-unit>
+<trans-unit id="s2c0dccac51d58d5e">
+  <source>Starre Stabenden</source>
+  <target>Estremità rigide dell'asta</target>
+</trans-unit>
+<trans-unit id="sfb513c9f05f2007c">
+  <source>starr a:</source>
+  <target>rigido a:</target>
+</trans-unit>
+<trans-unit id="sfb5eb49f05fd56c0">
+  <source>starr e:</source>
+  <target>rigido e:</target>
+</trans-unit>
+<trans-unit id="se67a90c06f82c248">
+  <source>Stabbettung</source>
+  <target>Suolo elastico dell'asta</target>
+</trans-unit>
+<trans-unit id="s6e0487907409b2ab">
+  <source>Eingabe des Querschnitts</source>
+  <target>Inserimento della sezione</target>
+</trans-unit>
+<trans-unit id="s9d1fbad1be94c6eb">
+  <source>Name (eindeutig):</source>
+  <target>Nome (univoco):</target>
+</trans-unit>
+<trans-unit id="s660fdf5d11e3304d">
+  <source>Definition des Querschnitts</source>
+  <target>Definizione della sezione</target>
+</trans-unit>
+<trans-unit id="sd9ced2484d57c5f6">
+  <source>Rechteck</source>
+  <target>Rettangolo</target>
+</trans-unit>
+<trans-unit id="se01b5e871f140405">
+  <source>Querschnittswerte</source>
+  <target>Caratteristiche della sezione</target>
+</trans-unit>
+<trans-unit id="sa02d94fa5282edbf">
+  <source>Profil</source>
+  <target>Profilato</target>
+</trans-unit>
+<trans-unit id="s09351f07b5c76656">
+  <source>TQ</source>
+  <target>Sez. T</target>
+</trans-unit>
+<trans-unit id="sbdd50376173d3875">
+  <source>Querschnittshöhe:</source>
+  <target>Altezza della sezione:</target>
+</trans-unit>
+<trans-unit id="s11d133bf4147f948">
+  <source>Querschnittbreite:</source>
+  <target>Larghezza della sezione:</target>
+</trans-unit>
+<trans-unit id="s2f66686ba092753a">
+  <source>E-Modul:</source>
+  <target>Modulo elastico:</target>
+</trans-unit>
+<trans-unit id="sc2d13cc512db2d69">
+  <source>Wichte:</source>
+  <target>Peso specifico:</target>
+</trans-unit>
+<trans-unit id="sd9a9e869e96dea5d">
+  <source>Schubfaktor:</source>
+  <target>Fattore di taglio:</target>
+</trans-unit>
+<trans-unit id="s2e71c3c8995c98ce">
+  <source>Querdehnzahl:</source>
+  <target>Coefficiente di Poisson:</target>
+</trans-unit>
+<trans-unit id="sbd63df02a0b7c518">
+  <source>Temp-Koeffizient</source>
+  <target>Coefficiente di dilatazione termica</target>
+</trans-unit>
+<trans-unit id="s5c2cea4a0d9a497d">
+  <source>Faktor Dehnsteifigkeit:</source>
+  <target>Fattore di rigidezza assiale:</target>
+</trans-unit>
+<trans-unit id="sf1810e8beefc64c1">
+  <source>Wähle ein Profil</source>
+  <target>Scegli un profilato</target>
+</trans-unit>
+<trans-unit id="s405ad46ccb89bcf3">
+  <source>Beanspruchung um Querschnittsachse</source>
+  <target>Sollecitazione attorno all'asse della sezione</target>
+</trans-unit>
+<trans-unit id="s261612b31bf5a144">
+  <source>Profilname für Name des Querschnitts übernehmen</source>
+  <target>Usa il nome del profilato come nome della sezione</target>
+</trans-unit>
+<trans-unit id="sf1d1814712830712">
+  <source>T-Querschnitt</source>
+  <target>Sezione a T</target>
+</trans-unit>
+<trans-unit id="sd789dfa5d904d857">
+  <source>Flanschbreite</source>
+  <target>Larghezza dell'ala</target>
+</trans-unit>
+<trans-unit id="sa7cda0c4526f2663">
+  <source>Flanschhöhe</source>
+  <target>Spessore dell'ala</target>
+</trans-unit>
+<trans-unit id="sc839bb100aee7447">
+  <source>Stegbreite oben</source>
+  <target>Larghezza dell'anima in alto</target>
+</trans-unit>
+<trans-unit id="s4f8b788ac6b3f559">
+  <source>Stegbreite unten</source>
+  <target>Larghezza dell'anima in basso</target>
+</trans-unit>
+<trans-unit id="s32b071a71459e623">
+  <source>Steghöhe</source>
+  <target>Altezza dell'anima</target>
+</trans-unit>
+<trans-unit id="s7d268ed1a95e365d">
+  <source>Name für Querschnitt schon vergeben</source>
+  <target>Nome della sezione già in uso</target>
+</trans-unit>
+<trans-unit id="s43416e6180c07e85">
+  <source>Knotenverformung</source>
+  <target>Spostamento impresso del nodo</target>
+</trans-unit>
+<trans-unit id="sbb33101f6d46481f">
+  <source>selektiere mehrere Elemente</source>
+  <target>Seleziona più elementi</target>
+</trans-unit>
+<trans-unit id="sbb57c970d148a7d8">
+  <source>selektiere nach Element-Typ</source>
+  <target>Seleziona per tipo di elemento</target>
+</trans-unit>
+<trans-unit id="sf3dec101a866cd9c">
+  <source>deselektiere alle Elemente</source>
+  <target>Deseleziona tutti gli elementi</target>
+</trans-unit>
+<trans-unit id="s2547cec150cd5726">
+  <source>deselektiere mehrere Elemente</source>
+  <target>Deseleziona più elementi</target>
+</trans-unit>
+<trans-unit id="s11a8f7c1aed9eeb8">
+  <source>Kopiere selektierte Elemente</source>
+  <target>Copia gli elementi selezionati</target>
+</trans-unit>
+<trans-unit id="s76692b76c761818c">
+  <source>Editiere selektierte Elemente</source>
+  <target>Modifica gli elementi selezionati</target>
+</trans-unit>
+<trans-unit id="s566b0c00d97da6b2">
+  <source>Messen</source>
+  <target>Misura</target>
+</trans-unit>
+<trans-unit id="s08395b5ece17be10">
+  <source>Bemaßung parallel</source>
+  <target>Quotatura parallela</target>
+</trans-unit>
+<trans-unit id="s62bbd61a5ded4527">
+  <source>Bemaßung horizontal</source>
+  <target>Quotatura orizzontale</target>
+</trans-unit>
+<trans-unit id="s8973491fa3b25481">
+  <source>Bemaßung vertikal</source>
+  <target>Quotatura verticale</target>
+</trans-unit>
+<trans-unit id="s180a3aad88575d3d">
+  <source>Rasterlinien</source>
+  <target>Linee della griglia</target>
+</trans-unit>
+<trans-unit id="s650d928168a2cc45">
+  <source>Stab Querschnittsname</source>
+  <target>Nome della sezione delle aste</target>
+</trans-unit>
+<trans-unit id="s391b70f7d352f798">
+  <source>Lager</source>
+  <target>Vincoli</target>
+</trans-unit>
+<trans-unit id="sc729044b272a9ffb">
+  <source>Knotenlasten</source>
+  <target>Carichi nodali</target>
+</trans-unit>
+<trans-unit id="s562ad517c760d37b">
+  <source>Knotenmassen</source>
+  <target>Masse nodali</target>
+</trans-unit>
+<trans-unit id="sd64b92494d15400a">
+  <source>Knotenverformungen</source>
+  <target>Spostamenti impressi dei nodi</target>
+</trans-unit>
+<trans-unit id="s149a0a21f95cfb5d">
+  <source>Bemaßung</source>
+  <target>Quotatura</target>
+</trans-unit>
+<trans-unit id="s8868c976698b6e74">
+  <source>Ausblenden</source>
+  <target>Nascondi</target>
+</trans-unit>
+<trans-unit id="s4cd219280214a6b1">
+  <source>Zeige :</source>
+  <target>Mostra:</target>
+</trans-unit>
+<trans-unit id="sb205170315fd9dbe">
+  <source>alle Lastfälle</source>
+  <target>tutti i casi di carico</target>
+</trans-unit>
+<trans-unit id="s917e29d0ca03e09e">
+  <source>Lastfall <x id="0" equiv-text="${i + 1}"/></source>
+  <target>Caso di carico <x id="0" equiv-text="${i + 1}"/></target>
+</trans-unit>
+<trans-unit id="s42a8fafacf7d0fa7">
+  <source>System als svg-Datei speichern</source>
+  <target>Salva il sistema come file svg</target>
+</trans-unit>
+<trans-unit id="s9fba2bcfd7807411">
+  <source>Haupt</source>
+  <target>Principale</target>
+</trans-unit>
+<trans-unit id="s763d87fc3b6b3f5b">
+  <source>Kombinationen</source>
+  <target>Combinazioni</target>
+</trans-unit>
+<trans-unit id="scb099bdf627764bb">
+  <source>Ausdruck</source>
+  <target>Stampa</target>
+</trans-unit>
+<trans-unit id="sbb1b7f4e054767ec">
+  <source>Tabellen</source>
+  <target>Tabelle</target>
+</trans-unit>
+<trans-unit id="s4740b165d808bdda">
+  <source>zeige Einführungsvideos</source>
+  <target>Mostra i video introduttivi</target>
+</trans-unit>
+<trans-unit id="s3b2332f82896832c">
+  <source>aktueller Dateiname:</source>
+  <target>Nome del file attuale:</target>
+</trans-unit>
+<trans-unit id="s8adcdb8a4fce3119">
+  <source>Objektdaten speichern</source>
+  <target>Salva i dati del progetto</target>
+</trans-unit>
+<trans-unit id="s4a73475a66d0ff67">
+  <source>Objektdaten einlesen</source>
+  <target>Carica i dati del progetto</target>
+</trans-unit>
+<trans-unit id="s7899fc50b891ee9e">
+  <source>Projekt (freier Text mit HTML Formatierung für fett):</source>
+  <target>Progetto (testo libero con formattazione HTML per il grassetto):</target>
+</trans-unit>
+<trans-unit id="s9234cde5c4c75943">
+  <source>neue Eingabe beginnen</source>
+  <target>Inizia un nuovo inserimento</target>
+</trans-unit>
+<trans-unit id="se18e2431d4b6e0cd">
+  <source>Eingabe prüfen</source>
+  <target>Verifica l'inserimento</target>
+</trans-unit>
+<trans-unit id="s58d53b5fea623adc">
+  <source>Berechnungsart:</source>
+  <target>Tipo di calcolo:</target>
+</trans-unit>
+<trans-unit id="s7b709460ddf6cbb0">
+  <source>statisch</source>
+  <target>statico</target>
+</trans-unit>
+<trans-unit id="s49eceeebc54b289d">
+  <source>dynamisch</source>
+  <target>dinamico</target>
+</trans-unit>
+<trans-unit id="sa340e0670e759df0">
+  <source>Berechnung nach:</source>
+  <target>Calcolo secondo:</target>
+</trans-unit>
+<trans-unit id="sbe7f22a0e58f9911">
+  <source>Th. I. Ordnung</source>
+  <target>Teoria del I ordine</target>
+</trans-unit>
+<trans-unit id="sab2e8866b3e797d4">
+  <source>Th. II. Ordnung</source>
+  <target>Teoria del II ordine</target>
+</trans-unit>
+<trans-unit id="sf06dab1ce58009f2">
+  <source>Materialeigenschaften:</source>
+  <target>Proprietà dei materiali:</target>
+</trans-unit>
+<trans-unit id="sac3191c5ecc66e60">
+  <source>linear</source>
+  <target>lineare</target>
+</trans-unit>
+<trans-unit id="se5eb876756457fc8">
+  <source>nichtlinear</source>
+  <target>non lineare</target>
+</trans-unit>
+<trans-unit id="se9f528070d8cf418">
+  <source>Rechnen</source>
+  <target>Calcola</target>
+</trans-unit>
+<trans-unit id="s165017f6138f8d2c">
+  <source>neuer Querschnitt</source>
+  <target>Nuova sezione</target>
+</trans-unit>
+<trans-unit id="s1ad39a021f0b54c6">
+  <source>Linear elastisch Querschnittswerte</source>
+  <target>Caratteristiche della sezione elastiche lineari</target>
+</trans-unit>
+<trans-unit id="s8c35b76b6f2c60c2">
+  <source>Hier nichts eintragen, Änderungen werden nicht berücksichtigt, nur zur Info</source>
+  <target>Non inserire nulla qui, le modifiche non vengono considerate, solo a titolo informativo</target>
+</trans-unit>
+<trans-unit id="sc1d21b56736029e4">
+  <source>Eingabe der Lastfälle</source>
+  <target>Inserimento dei casi di carico</target>
+</trans-unit>
+<trans-unit id="s078637e8ea734ef8">
+  <source>Anzahl Lastfälle :</source>
+  <target>Numero di casi di carico:</target>
+</trans-unit>
+<trans-unit id="s3ee5664c49a38eff">
+  <source>Tabelle anpassen</source>
+  <target>Adatta la tabella</target>
+</trans-unit>
+<trans-unit id="s45deb552041bc081">
+  <source>Eingabe der Kombinationen</source>
+  <target>Inserimento delle combinazioni</target>
+</trans-unit>
+<trans-unit id="sf1761da387d5b4f7">
+  <source>und der Multiplikatoren (Lastfaktoren), mit denen die einzelnen Lastfälle multipliziert werden sollen.</source>
+  <target>e dei moltiplicatori (coefficienti dei carichi) per i quali devono essere moltiplicati i singoli casi di carico.</target>
+</trans-unit>
+<trans-unit id="sf3f260df2cc0cf33">
+  <source>Eine leere Zelle oder null bedeutet, dass der Lastfall nicht an der Kombination beteiligt ist.</source>
+  <target>Una cella vuota o zero significa che il caso di carico non partecipa alla combinazione.</target>
+</trans-unit>
+<trans-unit id="s6431d4f0541960d3">
+  <source>Ein Kommentar ist optional.</source>
+  <target>Un commento è facoltativo.</target>
+</trans-unit>
+<trans-unit id="s5c1fb6f38c79e9c4">
+  <source>Bei Theorie I.Ordnung und linearen Materialeigenschaften sind Kombinationen optional. Bei Theorie II. Ordnung und/oder nichtlinearen Materialeigenschaften muss mindestens eine Kombination definiert sein.</source>
+  <target>Con la teoria del I ordine e proprietà dei materiali lineari le combinazioni sono facoltative. Con la teoria del II ordine e/o proprietà dei materiali non lineari deve essere definita almeno una combinazione.</target>
+</trans-unit>
+<trans-unit id="sd207de3949fd3751">
+  <source>Lf = Lastfall</source>
+  <target>CC = caso di carico</target>
+</trans-unit>
+<trans-unit id="scbc97ad387a601ff">
+  <source>Anzahl Kombinationen:</source>
+  <target>Numero di combinazioni:</target>
+</trans-unit>
+<trans-unit id="sf5dc25851d9359f5">
+  <source>Die Schiefstellung des Systems wird nur bei Berechnungen nach Theorie II. Ordnung berücksichtigt</source>
+  <target>L'imperfezione globale del sistema viene considerata solo nei calcoli secondo la teoria del II ordine</target>
+</trans-unit>
+<trans-unit id="s9741672b82323e9b">
+  <source>Hinweise:</source>
+  <target>Note:</target>
+</trans-unit>
+<trans-unit id="s02c3c22410854873">
+  <source>Die Knoten-ID wird im Knotendialog im Tab System angezeigt, wenn du den Button &lt;Knoten bearbeiten&gt; wählst und danach einen Knoten anklickst.</source>
+  <target>L'ID del nodo viene mostrato nella finestra di dialogo dei nodi nella scheda Sistema quando scegli il pulsante &lt;Modifica nodo&gt; e poi clicchi su un nodo.</target>
+</trans-unit>
+<trans-unit id="s9d05f95c9b651f6b">
+  <source>edit-knoten button</source>
+  <target>Pulsante Modifica nodo</target>
+</trans-unit>
+<trans-unit id="sdb4cee89615a9395">
+  <source>Wenn das Eingabefeld für Δ leer ist, wird keine Schiefstellung berücksichtigt.</source>
+  <target>Se il campo di inserimento per Δ è vuoto, non viene considerata alcuna imperfezione globale.</target>
+</trans-unit>
+<trans-unit id="s9e749bbf5b0e64b0">
+  <source>Wenn das Eingabefeld für Knoten-ID leer ist, wird der Freiheitsgrad mit dem größten Wert aus der Knickfigur-Berechnung mit dem Wert von Δ skaliert.</source>
+  <target>Se il campo di inserimento dell'ID del nodo è vuoto, il grado di libertà con il valore maggiore risultante dal calcolo del modo di instabilità viene scalato con il valore di Δ.</target>
+</trans-unit>
+<trans-unit id="s66f1b01569c36879">
+  <source>Schiefstellung des gesamten Systems mithilfe der ersten Eigenform</source>
+  <target>Imperfezione globale dell'intero sistema mediante il primo modo proprio</target>
+</trans-unit>
+<trans-unit id="s873e4ab6fd271d36">
+  <source>0 oder leer = automatische Skalierung auf den Größtwert aus der Eigenwertberechnung</source>
+  <target>0 o vuoto = scalatura automatica sul valore massimo del calcolo degli autovalori</target>
+</trans-unit>
+<trans-unit id="s3e8ad165ae2213f8">
+  <source>Knoten-ID:</source>
+  <target>ID nodo:</target>
+</trans-unit>
+<trans-unit id="s8c9b6040d2e5f671">
+  <source>Richtung :</source>
+  <target>Direzione:</target>
+</trans-unit>
+<trans-unit id="s8c55f55aab69a063">
+  <source>Vorverformung am Knoten in gewählter Richtung</source>
+  <target>Imperfezione nel nodo nella direzione scelta</target>
+</trans-unit>
+<trans-unit id="s060500f0260f3e8b">
+  <source>erstelle pdf-Datei</source>
+  <target>Crea file pdf</target>
+</trans-unit>
+<trans-unit id="s511b90c4aedcd781">
+  <source>Stabteilungen für Ausgabe der Schnittgrößen</source>
+  <target>Suddivisioni delle aste per l'output delle sollecitazioni</target>
+</trans-unit>
+<trans-unit id="se26058465f7402fe">
+  <source>Stabteilungen Ausgabe:</source>
+  <target>Suddivisioni delle aste in output:</target>
+</trans-unit>
+<trans-unit id="s12f5eaaf5e8e8e14">
+  <source>Einheit für Kraft in Ausgabe</source>
+  <target>Unità di forza in output</target>
+</trans-unit>
+<trans-unit id="sc66bf5fdac3b982a">
+  <source>Einheit für Kraft in Ausgabe:</source>
+  <target>Unità di forza in output:</target>
+</trans-unit>
+<trans-unit id="s1b33c217a3161e77">
+  <source>Einheit für Bemaßung</source>
+  <target>Unità di quotatura</target>
+</trans-unit>
+<trans-unit id="s4f111b2a1e957cd7">
+  <source>Einheit für Bemaßung:</source>
+  <target>Unità di quotatura:</target>
+</trans-unit>
+<trans-unit id="sf64e65dc8874622d">
+  <source>Allgemein:</source>
+  <target>Generale:</target>
+</trans-unit>
+<trans-unit id="sd80b8cadd831dc08">
+  <source>max. Euklidische Fehlertoleranz eps für Verformungen</source>
+  <target>Tolleranza d'errore euclidea max. eps per le deformazioni</target>
+</trans-unit>
+<trans-unit id="sb9c2dd24a319f32b">
+  <source>eps tol Verformung:</source>
+  <target>eps tol deformazione:</target>
+</trans-unit>
+<trans-unit id="safd4b9bcb2691c5a">
+  <source>max. Euklidische Fehlertoleranz eps für Kräfte</source>
+  <target>Tolleranza d'errore euclidea max. eps per le forze</target>
+</trans-unit>
+<trans-unit id="sc88adba699c1f842">
+  <source>eps tol Kraft:</source>
+  <target>eps tol forza:</target>
+</trans-unit>
+<trans-unit id="sb3b01c6fc152389c">
+  <source>für Theorie II. Ordnung:</source>
+  <target>per la teoria del II ordine:</target>
+</trans-unit>
+<trans-unit id="scf4f2b1466aee8de">
+  <source>max. Anzahl Iterationen bei Th. II. Ordnung</source>
+  <target>Numero max. di iterazioni con la teoria del II ordine</target>
+</trans-unit>
+<trans-unit id="sa886a246793b8bd4">
+  <source>max. Anzahl Gleichgewichts-Iterationen:</source>
+  <target>Numero max. di iterazioni di equilibrio:</target>
+</trans-unit>
+<trans-unit id="s978e7cb7f7e53f40">
+  <source>Anzahl der zu berechnenden Eigenwerte, für die Schiefstellung wird immer die erste Eigenform verwendet</source>
+  <target>Numero di autovalori da calcolare; per l'imperfezione globale viene sempre usato il primo modo proprio</target>
+</trans-unit>
+<trans-unit id="s4f57bf6f517adce3">
+  <source>Anzahl Knickfiguren :</source>
+  <target>Numero di modi di instabilità:</target>
+</trans-unit>
+<trans-unit id="sbc19aa5c50f0b65c">
+  <source>Art der geometrischen Steifigkeitsmatrix</source>
+  <target>Tipo di matrice di rigidezza geometrica</target>
+</trans-unit>
+<trans-unit id="se8d84cd92bdac9a7">
+  <source>Geom. Steifigkeitsmatrix:</source>
+  <target>Matrice di rigidezza geom.:</target>
+</trans-unit>
+<trans-unit id="s95de9ae6bc7dc2c7">
+  <source>vollständiger Ansatz</source>
+  <target>Approccio completo</target>
+</trans-unit>
+<trans-unit id="s6b427fe9afbad9f8">
+  <source>nur P-Δ Effekt</source>
+  <target>Solo effetto P-Δ</target>
+</trans-unit>
+<trans-unit id="sc812a78cf4984cef">
+  <source>Ausgabe Schnittgrößen in Tab Ergebnisse und pdf-Datei, Neuberechnung erforderlich</source>
+  <target>Output delle sollecitazioni nella scheda Risultati e nel file pdf, è necessario un nuovo calcolo</target>
+</trans-unit>
+<trans-unit id="seb6990c94d13b2fb">
+  <source>Ausgabe Schnittgrößen:</source>
+  <target>Output delle sollecitazioni:</target>
+</trans-unit>
+<trans-unit id="s2fabff037b897689">
+  <source>Gleichgewichtsschnittgrößen</source>
+  <target>Sollecitazioni di equilibrio</target>
+</trans-unit>
+<trans-unit id="s51d78bbd47a21d03">
+  <source>Nachweisschnittgrößen</source>
+  <target>Sollecitazioni di verifica</target>
+</trans-unit>
+<trans-unit id="s7416239bea68ee24">
+  <source>für Theorie II. Ordnung und Dynamik:</source>
+  <target>per la teoria del II ordine e la dinamica:</target>
+</trans-unit>
+<trans-unit id="s87e3a94c399ad324">
+  <source>Auswahl des Eigenwert solvers, Neuberechnung erforderlich</source>
+  <target>Scelta del risolutore degli autovalori, è necessario un nuovo calcolo</target>
+</trans-unit>
+<trans-unit id="sfff66c1f8228ab1a">
+  <source>Eigenwertberechnung:</source>
+  <target>Calcolo degli autovalori:</target>
+</trans-unit>
+<trans-unit id="sd8e81de2031fda10">
+  <source>GNU GSL QR Methode</source>
+  <target>Metodo QR GNU GSL</target>
+</trans-unit>
+<trans-unit id="s8a2654ded66a56c1">
+  <source>simultane Vektoriteration</source>
+  <target>Iterazione vettoriale simultanea</target>
+</trans-unit>
+<trans-unit id="s696d69c098c43cec">
+  <source>ARPACK Lanczos Iteration</source>
+  <target>Iterazione di Lanczos ARPACK</target>
+</trans-unit>
+<trans-unit id="sd86f00c775d79ea5">
+  <source>max. Anzahl der Iterationen für die Vektoriterationen</source>
+  <target>Numero max. di iterazioni per l'iterazione vettoriale</target>
+</trans-unit>
+<trans-unit id="s2016e03373773b29">
+  <source>max. Anzahl Iterationen für Vektoriteration :</source>
+  <target>Numero max. di iterazioni per l'iterazione vettoriale:</target>
+</trans-unit>
+<trans-unit id="see364b206e44f2b9">
+  <source>Gleichungssystem darstellen</source>
+  <target>Mostra il sistema di equazioni</target>
+</trans-unit>
+<trans-unit id="sf23bed29f06d75fe">
+  <source>Anzahl Eigenwerte:</source>
+  <target>Numero di autovalori:</target>
+</trans-unit>
+<trans-unit id="s846311b9c04c189d">
+  <source>Zur Verbesserung der Konvergenz bei der Iteration der Eigenwerte:</source>
+  <target>Per migliorare la convergenza nell'iterazione degli autovalori:</target>
+</trans-unit>
+<trans-unit id="s0f3b73d4323545ab">
+  <source>Mindestwert auf der Diagonalen der Massenmatrix :</source>
+  <target>Valore minimo sulla diagonale della matrice delle masse:</target>
+</trans-unit>
+<trans-unit id="s0c6f4bc0ae2a0d3b">
+  <source>Schriftgröße:</source>
+  <target>Dimensione del carattere:</target>
+</trans-unit>
+<trans-unit id="s2153b0c36b61fda8">
+  <source>nur für Touchscreens:</source>
+  <target>solo per touchscreen:</target>
+</trans-unit>
+<trans-unit id="s2ad271c4bf69a58d">
+  <source>Selektion von Zellen mit Finger erlauben</source>
+  <target>Consenti la selezione delle celle con il dito</target>
+</trans-unit>
+<trans-unit id="sdb44853a9a24fec0">
+  <source>Standardwerte im Speicher des Browsers löschen</source>
+  <target>Elimina i valori predefiniti dalla memoria del browser</target>
+</trans-unit>
+<trans-unit id="s8db89619f41917b4">
+  <source>Pin</source>
+  <target>Fissa</target>
+</trans-unit>
+<trans-unit id="sb2246a8686ca9805">
+  <source>Schließen</source>
+  <target>Chiudi</target>
+</trans-unit>
+<trans-unit id="se772e5c544d8fb9b">
+  <source>Weitere Aktivitäten</source>
+  <target>Altre attività</target>
+</trans-unit>
+<trans-unit id="s6750e087f400b3eb">
+  <source>isAndroid =</source>
+  <target>isAndroid =</target>
+</trans-unit>
+<trans-unit id="s446b034c92eb3e59">
+  <source>Die zuletzt gespeicherte Eingabe konnte nicht gelesen werden. Es wird mit einer leeren Eingabe gestartet.</source>
+  <target>Non è stato possibile leggere l'ultimo inserimento salvato. Si avvia con un inserimento vuoto.</target>
+</trans-unit>
+<trans-unit id="s7129495aed9d8046">
+  <source>Ergebnisse</source>
+  <target>Risultati</target>
+</trans-unit>
+<trans-unit id="s1ec4b4cd6d7f0728">
+  <source>Kombination</source>
+  <target>Combinazione</target>
+</trans-unit>
+<trans-unit id="s4b2db88798392408">
+  <source>im Knoten-Koordinatensystem</source>
+  <target>nel sistema di riferimento del nodo</target>
+</trans-unit>
+<trans-unit id="s147ea22dc2e6281c">
+  <source>Lagerreaktionen</source>
+  <target>Reazioni vincolari</target>
+</trans-unit>
+<trans-unit id="s5b181c0144d4e645">
+  <source>Stabendkräfte/-momente</source>
+  <target>Forze/momenti alle estremità delle aste</target>
+</trans-unit>
+<trans-unit id="sef2b3c73b1c4629a">
+  <source>(Gleichgewichtsschnittgrößen)</source>
+  <target>(Sollecitazioni di equilibrio)</target>
+</trans-unit>
+<trans-unit id="sc56f7f1f284db55e">
+  <source>Federkräfte/-momente</source>
+  <target>Forze/momenti nelle molle</target>
+</trans-unit>
+<trans-unit id="sc73caa6ce42c140b">
+  <source>erforderliche Knotenkräfte/-momente für vorgegebene Knotenverformungen</source>
+  <target>Forze/momenti nodali necessari per gli spostamenti impressi dei nodi</target>
+</trans-unit>
+<trans-unit id="s310f53d4e287b7e9">
+  <source>Eigenwert</source>
+  <target>Autovalore</target>
+</trans-unit>
+<trans-unit id="s248330e3462ea530">
+  <source>Stabschnittgrößen und lokale Verformungen</source>
+  <target>Sollecitazioni delle aste e deformazioni locali</target>
+</trans-unit>
+<trans-unit id="s79ca317bf315602e">
+  <source>Nachweisschnittgrößen und lokale Verformungen</source>
+  <target>Sollecitazioni di verifica e deformazioni locali</target>
+</trans-unit>
+<trans-unit id="s190747c04bd639f7">
+  <source>Element</source>
+  <target>Elemento</target>
+</trans-unit>
+<trans-unit id="se4c2febcec9ce2e4">
+  <source>Eigenwerte</source>
+  <target>Autovalori</target>
+</trans-unit>
+<trans-unit id="s6b41d9a2d30afe5d">
+  <source>Frequenz</source>
+  <target>Frequenza</target>
+</trans-unit>
+<trans-unit id="s2ea376e3da085b13">
+  <source>Periode</source>
+  <target>Periodo</target>
+</trans-unit>
+<trans-unit id="sf47f0457e968c00d">
+  <source>Eigenform</source>
+  <target>Modo proprio</target>
+</trans-unit>
+<trans-unit id="s63440ec92d8737c3">
+  <source>ersten Knoten picken</source>
+  <target>Seleziona il primo nodo</target>
+</trans-unit>
+<trans-unit id="s938b55f81f0d53cc">
+  <source>zurück</source>
+  <target>indietro</target>
+</trans-unit>
+<trans-unit id="s40c7f83f01e8702b">
+  <source>aktuelle Aktion beenden</source>
+  <target>Termina l'azione corrente</target>
+</trans-unit>
+<trans-unit id="s0f11179d35c7ca57">
+  <source>aktiver Querschnitt</source>
+  <target>Sezione attiva</target>
+</trans-unit>
+<trans-unit id="s64bde8e4857adf2f">
+  <source>undo</source>
+  <target>annulla</target>
+</trans-unit>
+<trans-unit id="s4cf0781fbfe66969">
+  <source>redo</source>
+  <target>ripristina</target>
+</trans-unit>
+<trans-unit id="s05265fbf99932950">
+  <source>Element löschen</source>
+  <target>Elimina elemento</target>
+</trans-unit>
+<trans-unit id="s7982ab7959568ab9">
+  <source>Element auswählen und danach editieren</source>
+  <target>Seleziona un elemento e poi modificalo</target>
+</trans-unit>
+<trans-unit id="s8de142262ddffdc9">
+  <source>Element auswählen durch Klick und danach editieren</source>
+  <target>Seleziona un elemento con un clic e poi modificalo</target>
+</trans-unit>
+<trans-unit id="s7a2c2a63fbd9e7a3">
+  <source>Eingabe Knoten</source>
+  <target>Inserisci nodo</target>
+</trans-unit>
+<trans-unit id="s1ab5ceb0caa4ac22">
+  <source>Eingabe von Knotenkoordinaten</source>
+  <target>Inserimento delle coordinate dei nodi</target>
+</trans-unit>
+<trans-unit id="se59e12933d763e65">
+  <source>Knoten bearbeiten</source>
+  <target>Modifica nodo</target>
+</trans-unit>
+<trans-unit id="s68dcdd432794b14d">
+  <source>Ändern von Knotenkoordinaten, zuerst einen vorhandenen Knoten picken</source>
+  <target>Modifica delle coordinate di un nodo: seleziona prima un nodo esistente</target>
+</trans-unit>
+<trans-unit id="s917ea53ba1ad9f9e">
+  <source>Eingabe Stab</source>
+  <target>Inserisci asta</target>
+</trans-unit>
+<trans-unit id="s2c9170533952c430">
+  <source>Knotenlager eingeben</source>
+  <target>Inserisci vincolo nodale</target>
+</trans-unit>
+<trans-unit id="s97cb3fe71c6686b4">
+  <source>Eingabe Knotenlasten</source>
+  <target>Inserisci carichi nodali</target>
+</trans-unit>
+<trans-unit id="s0bf516a8f909ff39">
+  <source>Eingabe Elementlasten</source>
+  <target>Inserisci carichi sugli elementi</target>
+</trans-unit>
+<trans-unit id="sdbea3d97e0950350">
+  <source>Eingabe Knotenmassen</source>
+  <target>Inserisci masse nodali</target>
+</trans-unit>
+<trans-unit id="s784d82bd15c49b4a">
+  <source>Einstellungen</source>
+  <target>Impostazioni</target>
+</trans-unit>
+<trans-unit id="se29e08d15abe94a4">
+  <source>Reset Screen</source>
+  <target>Reimposta la vista</target>
+</trans-unit>
+<trans-unit id="s19991f9668db8bb8">
+  <source>Kurzanleitung &amp; Information</source>
+  <target>Guida rapida &amp; informazioni</target>
+</trans-unit>
+<trans-unit id="s9a350e6f2e8a1f84">
+  <source>Mehr Aktivitäten</source>
+  <target>Altre attività</target>
+</trans-unit>
+<trans-unit id="s09194207b5af2717">
+  <source>Lf</source>
+  <target>CC</target>
+</trans-unit>
+<trans-unit id="sfa72df8d294b941c">
+  <source>Lastfall</source>
+  <target>Caso di carico</target>
+</trans-unit>
+<trans-unit id="sf526b80172d34180">
+  <source>Bezeichnung (optional)</source>
+  <target>Descrizione (facoltativa)</target>
+</trans-unit>
+<trans-unit id="sb5cba5aac7e66bcf">
+  <source>Kombi</source>
+  <target>Comb.</target>
+</trans-unit>
+<trans-unit id="s8d213b8465f934a5">
+  <source>Kommentar</source>
+  <target>Commento</target>
+</trans-unit>
+<trans-unit id="sc53a7f3e79fdf193">
+  <source>Verschieben der Ansicht (Pan) ein-/ausschalten</source>
+  <target>Attiva/disattiva lo spostamento della vista (pan)</target>
+</trans-unit>
+<trans-unit id="sdafd6ac4a928a349">
+  <source>Verschieben der Ansicht (Pan) ein-/ausschalten, Text 123 bedeutet, dass Werte der Schnittgrößen/Verformungen mit Cursor angezeigt werden können</source>
+  <target>Attiva/disattiva lo spostamento della vista (pan); il testo 123 significa che i valori delle sollecitazioni/deformazioni possono essere visualizzati con il cursore</target>
+</trans-unit>
+<trans-unit id="sfe6eb2b8c21847bc">
+  <source>Pick ein Element</source>
+  <target>Seleziona un elemento</target>
+</trans-unit>
+<trans-unit id="s0dc0a5c66a137db7">
+  <source>Pick Element, Lager oder Last</source>
+  <target>Seleziona elemento, vincolo o carico</target>
+</trans-unit>
+<trans-unit id="s42dee0a9650c7116">
+  <source>Knoten picken</source>
+  <target>Seleziona un nodo</target>
+</trans-unit>
+<trans-unit id="scec808ea4f5deb2d">
+  <source>Pick Knoten</source>
+  <target>Seleziona un nodo</target>
+</trans-unit>
+<trans-unit id="s32b6b574fc24ee40">
+  <source>ersten Punkt picken</source>
+  <target>Seleziona il primo punto</target>
+</trans-unit>
+<trans-unit id="s5ceeb541246402e4">
+  <source>Der darzustellende Rasterbereich enthält unzulässige Werte</source>
+  <target>L'area della griglia da visualizzare contiene valori non validi</target>
+</trans-unit>
+<trans-unit id="s95fc09c1f1d89d30">
+  <source>Lastfall muss größer 0 sein</source>
+  <target>Il caso di carico deve essere maggiore di 0</target>
+</trans-unit>
+<trans-unit id="s8ce209eb53d7f1f8">
+  <source>mindestens ein Lastkomponente muss ungleich null sein</source>
+  <target>Almeno una componente del carico deve essere diversa da zero</target>
+</trans-unit>
+<trans-unit id="s8cda330f7171b61b">
+  <source>Element picken</source>
+  <target>Seleziona un elemento</target>
+</trans-unit>
+<trans-unit id="s057a38695e9b5f0d">
+  <source>mind. eine Last muss ungleich null sein</source>
+  <target>Almeno un carico deve essere diverso da zero</target>
+</trans-unit>
+<trans-unit id="sb40103231670e3fe">
+  <source>mind. eine Temperatur muss ungleich null sein</source>
+  <target>Almeno una temperatura deve essere diversa da zero</target>
+</trans-unit>
+<trans-unit id="s7d7b08def4b4d34b">
+  <source>Vorspannung muss ungleich null sein</source>
+  <target>La precompressione deve essere diversa da zero</target>
+</trans-unit>
+<trans-unit id="s26d9b7fbfaa42c4e">
+  <source>Spannweg ds muss ungleich null sein</source>
+  <target>La corsa di tensione ds deve essere diversa da zero</target>
+</trans-unit>
+<trans-unit id="s19afcf0b0dfe1028">
+  <source>mind. eine Stabverformung muss ungleich null sein</source>
+  <target>Almeno un'imperfezione dell'asta deve essere diversa da zero</target>
+</trans-unit>
+<trans-unit id="s3729124a9f912673">
+  <source>keine Lagerbedingungen eingegeben</source>
+  <target>Nessuna condizione di vincolo inserita</target>
+</trans-unit>
+<trans-unit id="s5f914f515e785df8">
+  <source>Angriffspunkt Einzellast auf Stab</source>
+  <target>Il punto di applicazione del carico concentrato sull'asta</target>
+</trans-unit>
+<trans-unit id="s162733daa0aa2102">
+  <source>ist größer Stablänge, siehe Tab Tabellen</source>
+  <target>è maggiore della lunghezza dell'asta, vedi scheda Tabelle</target>
+</trans-unit>
+<trans-unit id="s7d0cb3c2effc8ec2">
+  <source>Angriffspunkt x muss größer gleich null sein</source>
+  <target>Il punto di applicazione x deve essere maggiore o uguale a zero</target>
+</trans-unit>
+<trans-unit id="scaceacd849f5602a">
+  <source>Es ist noch kein Querschnitt definiert</source>
+  <target>Non è ancora definita alcuna sezione</target>
+</trans-unit>
+<trans-unit id="s64bf79d9b257f4ed">
+  <source>Anfangsknoten eingeben</source>
+  <target>Inserisci il nodo iniziale</target>
+</trans-unit>
+<trans-unit id="s743caaab8a3b30c6">
+  <source>Stabende eingeben</source>
+  <target>Inserisci la fine dell'asta</target>
+</trans-unit>
+<trans-unit id="scd88c6c749958373">
+  <source>zweiten Punkt picken</source>
+  <target>Seleziona il secondo punto</target>
+</trans-unit>
+<trans-unit id="s08ce83e7dca73406">
+  <source>zweiten Knoten picken</source>
+  <target>Seleziona il secondo nodo</target>
+</trans-unit>
+<trans-unit id="s0edfd76b37e30722">
+  <source>Pfeilspitze picken</source>
+  <target>Seleziona la punta della freccia</target>
+</trans-unit>
+<trans-unit id="s6c307b3a1a718b75">
+  <source>keinen Knoten gepickt</source>
+  <target>Nessun nodo selezionato</target>
+</trans-unit>
+<trans-unit id="s655dacda54bf73f1">
+  <source>Knoten hat schon ein Lager</source>
+  <target>Il nodo ha già un vincolo</target>
+</trans-unit>
+<trans-unit id="s5c7d90867a472c06">
+  <source>keinen Knoten gefunden</source>
+  <target>Nessun nodo trovato</target>
+</trans-unit>
+<trans-unit id="s8a7299b02b0cdded">
+  <source>Knoten hat schon eine Knotenmasse</source>
+  <target>Il nodo ha già una massa nodale</target>
+</trans-unit>
+<trans-unit id="sb35dba047ce53a93">
+  <source>Stablänge zu klein</source>
+  <target>Lunghezza dell'asta troppo piccola</target>
+</trans-unit>
+<trans-unit id="sd5073c88655e8a55">
+  <source>Stabanfang eingeben</source>
+  <target>Inserisci l'inizio dell'asta</target>
+</trans-unit>
+<trans-unit id="sa855ac92fbe2586a">
+  <source>Masslinienpunkt picken</source>
+  <target>Seleziona un punto della linea di quota</target>
+</trans-unit>
+<trans-unit id="s6f05d8235e842502">
+  <source>Maßlänge zu klein</source>
+  <target>Quota troppo piccola</target>
+</trans-unit>
+<trans-unit id="s45c6ed4f68df387a">
+  <source>Maßlänge dx zu klein</source>
+  <target>Quota dx troppo piccola</target>
+</trans-unit>
+<trans-unit id="sbc39d486419572b4">
+  <source>Maßlänge dz zu klein</source>
+  <target>Quota dz troppo piccola</target>
+</trans-unit>
+<trans-unit id="s062bb2601193f751">
+  <source>Die gewählte Datei hat kein gültiges Format und kann nicht gelesen werden.</source>
+  <target>Il file scelto non ha un formato valido e non può essere letto.</target>
+</trans-unit>
+<trans-unit id="s5df5a7143fe08d90">
+  <source>Die gewählte Datei ist NICHT für dieses Programm erstellt worden</source>
+  <target>Il file scelto NON è stato creato per questo programma.</target>
+</trans-unit>
+<trans-unit id="s1dbcc8895a8f9ef2">
+  <source>Die Datei konnte nicht vollständig gelesen werden. Die bisherige Eingabe wurde wiederhergestellt.</source>
+  <target>Non è stato possibile leggere completamente il file. L'inserimento precedente è stato ripristinato.</target>
+</trans-unit>
+<trans-unit id="s63c590d099d72b1b">
+  <source>Die Datei konnte nicht gelesen werden.</source>
+  <target>Non è stato possibile leggere il file.</target>
+</trans-unit>
+<trans-unit id="sb8c1a3de0e553097">
+  <source>alle Kombinationen</source>
+  <target>tutte le combinazioni</target>
+</trans-unit>
+<trans-unit id="s0f686499875d27cb">
+  <source>Die Option `nichtlinear` ist zu wählen, wenn das System Fachwerkstäbe enthält, die nur Zug- oder Druckkräfte übertragen können. Die Berechnung erfolgt dann iterativ.</source>
+  <target>L'opzione `non lineare` va scelta se il sistema contiene aste reticolari che possono trasmettere solo forze di trazione o di compressione. Il calcolo avviene quindi in modo iterativo.</target>
+</trans-unit>
+<trans-unit id="s945b20402df2f6d3">
+  <source>Die simultane Vektoriteration konvergiert sehr langsam, aber meist erfolgreich. Der Startvektor wird durch Zufallszahlen zu Beginn jeder neuen Berechnung bestimmt. Deshalb kann eine erneute Berechnung nach einer erfolglosen Berechnung zum Erfolg führen.</source>
+  <target>L'iterazione vettoriale simultanea converge molto lentamente, ma di solito con successo. Il vettore iniziale viene determinato con numeri casuali all'inizio di ogni nuovo calcolo. Per questo un nuovo calcolo dopo uno non riuscito può avere successo.</target>
+</trans-unit>
+<trans-unit id="s99a3b734f631f963">
+  <source>Die QR Methode aus der GNU Bibliothek konvergiert sehr schnell, wenn sie konvergiert.</source>
+  <target>Il metodo QR della libreria GNU converge molto rapidamente, quando converge.</target>
+</trans-unit>
+<trans-unit id="sc607f3ce142369a0">
+  <source>Der ARPACK (ARnoldi PACKage) Eigenwertlöser ist für die Berechnung einiger Eigenwerte und -vektoren großer Systeme entwickelt worden. Er konvergiert schnell, auch bei mehreren gesuchten Eigenwerten.</source>
+  <target>Il risolutore di autovalori ARPACK (ARnoldi PACKage) è stato sviluppato per il calcolo di alcuni autovalori e autovettori di grandi sistemi. Converge rapidamente, anche quando si cercano più autovalori.</target>
+</trans-unit>
+<trans-unit id="sd98b69251f066fa1">
+  <source>Stab</source>
+  <target>Asta</target>
+</trans-unit>
+<trans-unit id="s83977996c90f160f">
+  <source>Seite</source>
+  <target>Pagina</target>
+</trans-unit>
+<trans-unit id="s0c78d81f84bec0f1">
+  <source>Ebenes Stabwerk d2beam</source>
+  <target>Telaio piano d2beam</target>
+</trans-unit>
+<trans-unit id="s3d1befec83497b6a">
+  <source>Eingabeprotokoll</source>
+  <target>Riepilogo dei dati di input</target>
+</trans-unit>
+<trans-unit id="sba7b1a93d2c78556">
+  <source>Knotenkoordinaten und Lager</source>
+  <target>Coordinate dei nodi e vincoli</target>
+</trans-unit>
+<trans-unit id="see5d95ad45ad21b9">
+  <source>starr</source>
+  <target>rigido</target>
+</trans-unit>
+<trans-unit id="sdee1d2056321d187">
+  <source>Elementdaten</source>
+  <target>Dati degli elementi</target>
+</trans-unit>
+<trans-unit id="sa09badfa322f689e">
+  <source>Arten der Trapezstreckenlasten</source>
+  <target>Tipi di carichi distribuiti trapezoidali</target>
+</trans-unit>
+<trans-unit id="sec4cbb6bd2ef1ef8">
+  <source>0 = Trapezstreckenlast senkrecht auf Stab</source>
+  <target>0 = carico distribuito trapezoidale perpendicolare all'asta</target>
+</trans-unit>
+<trans-unit id="sbdc80c210da4f43e">
+  <source>1 = Trapezstreckenlast in globaler z-Richtung</source>
+  <target>1 = carico distribuito trapezoidale in direzione z globale</target>
+</trans-unit>
+<trans-unit id="se4be79a595da5232">
+  <source>2 = Trapezstreckenlast in globaler z-Richtung, Projektion</source>
+  <target>2 = carico distribuito trapezoidale in direzione z globale, proiezione</target>
+</trans-unit>
+<trans-unit id="s664087ea02c8cea6">
+  <source>3 = Trapezstreckenlast in globaler x-Richtung</source>
+  <target>3 = carico distribuito trapezoidale in direzione x globale</target>
+</trans-unit>
+<trans-unit id="s8e7c0bda7fd27bb2">
+  <source>4 = Trapezstreckenlast in globaler x-Richtung, Projektion</source>
+  <target>4 = carico distribuito trapezoidale in direzione x globale, proiezione</target>
+</trans-unit>
+<trans-unit id="sf9f8d719a044edca">
+  <source>Art</source>
+  <target>Tipo</target>
+</trans-unit>
+<trans-unit id="s8798cd87ae5032f5">
+  <source>Temperaturlasten</source>
+  <target>Carichi termici</target>
+</trans-unit>
+<trans-unit id="se2fb2b9a1f52a30a">
+  <source>Lastfälle</source>
+  <target>Casi di carico</target>
+</trans-unit>
+<trans-unit id="s9278a256ab573265">
+  <source>Bezeichnung</source>
+  <target>Descrizione</target>
+</trans-unit>
+<trans-unit id="sa889c8c779c7bee1">
+  <source>Kombinationen und Last-Multiplikatoren</source>
+  <target>Combinazioni e moltiplicatori dei carichi</target>
+</trans-unit>
+<trans-unit id="s20765a8467f7fd60">
+  <source>Erläuterung</source>
+  <target>Spiegazione</target>
+</trans-unit>
+<trans-unit id="s4d18bf5810bf162c">
+  <source>Berechnung nach Theorie I. Ordnung</source>
+  <target>Calcolo secondo la teoria del I ordine</target>
+</trans-unit>
+<trans-unit id="s48a5e2e7abae422b">
+  <source>Berechnung nach Theorie II. Ordnung</source>
+  <target>Calcolo secondo la teoria del II ordine</target>
+</trans-unit>
+<trans-unit id="sa81e2cdaf6921adc">
+  <source>System</source>
+  <target>Sistema</target>
+</trans-unit>
+<trans-unit id="sfea6f3a7cfc9e79f">
+  <source>Winkel</source>
+  <target>Angolo</target>
+</trans-unit>
+<trans-unit id="s6ba8ff3a3676ea08">
+  <source>Knoten</source>
+  <target>Nodi</target>
+</trans-unit>
+<trans-unit id="s1af77ca35c56537f">
+  <source>Freihheitsgrade</source>
+  <target>Gradi di libertà</target>
+</trans-unit>
+<trans-unit id="s805e18010aa2ee49">
+  <source>Wichte</source>
+  <target>Peso spec.</target>
+</trans-unit>
+<trans-unit id="s98b90047028ffa6e">
+  <source>Querschnitte</source>
+  <target>Sezioni</target>
+</trans-unit>
+<trans-unit id="se0b33ac830cd2272">
+  <source>Stabelemente</source>
+  <target>Elementi asta</target>
+</trans-unit>
+<trans-unit id="safecc3c08471a71b">
+  <source>Inzidenzvektor</source>
+  <target>Vettore di incidenza</target>
+</trans-unit>
+<trans-unit id="s2be84d4c857586bd">
+  <source>Länge</source>
+  <target>Lunghezza</target>
+</trans-unit>
+<trans-unit id="s45d4a50b4d28b89c">
+  <source>Masse</source>
+  <target>Massa</target>
+</trans-unit>
+<trans-unit id="seaa553e3cdf42989">
+  <source>Summe der Knotenmassen</source>
+  <target>Somma delle masse nodali</target>
+</trans-unit>
+<trans-unit id="s7ec9a790330ec265">
+  <source>Summe der Massenträgheitsmomente</source>
+  <target>Somma dei momenti d'inerzia di massa</target>
+</trans-unit>
+<trans-unit id="sb8025bd7145eb802">
+  <source>Summe der Elementmassen</source>
+  <target>Somma delle masse degli elementi</target>
+</trans-unit>
+<trans-unit id="s5439c2772db668d2">
+  <source>Lösche Querschnitt</source>
+  <target>Elimina la sezione</target>
+</trans-unit>
+<trans-unit id="saee0655be78ad4e8">
+  <source>Es gibt mindestens ein Element, das den Querschnitt verwendet</source>
+  <target>Esiste almeno un elemento che usa la sezione</target>
+</trans-unit>
+<trans-unit id="s8ac4f010f5d4bb4f">
+  <source>Eingabefehler bitte erst beheben</source>
+  <target>Correggi prima gli errori di inserimento</target>
+</trans-unit>
+<trans-unit id="sad58d4d06a8b1460">
+  <source>Im Tab Ergebnisse wurde das System soweit möglich gezeichnet</source>
+  <target>Nella scheda Risultati il sistema è stato disegnato per quanto possibile</target>
+</trans-unit>
+<trans-unit id="se62b642f5b1a32fd">
+  <source>Es muss mindestens 1 Querschnitt definiert sein</source>
+  <target>Deve essere definita almeno 1 sezione</target>
+</trans-unit>
+<trans-unit id="s32164771e94afcad">
+  <source>Es muss mindestens 1 Element definiert sein</source>
+  <target>Deve essere definito almeno 1 elemento</target>
+</trans-unit>
+<trans-unit id="s1654f3b8ada9e06f">
+  <source>Es müssen mindestens 2 Knoten definiert sein</source>
+  <target>Devono essere definiti almeno 2 nodi</target>
+</trans-unit>
+<trans-unit id="s5828b3ac62d964ec">
+  <source>Es muss mindestens 1 Kombination definiert sein</source>
+  <target>Deve essere definita almeno 1 combinazione</target>
+</trans-unit>
+<trans-unit id="sfecd3a744c81cdc9">
+  <source>Dem Element</source>
+  <target>Nessuna sezione è assegnata all'elemento</target>
+</trans-unit>
+<trans-unit id="s0482241b31714309">
+  <source>ist kein Querschnitt zugeordnet</source>
+  <target> </target>
+</trans-unit>
+<trans-unit id="s0a1749fba7dd142d">
+  <source>An Kombination</source>
+  <target>Nessun caso di carico partecipa alla combinazione</target>
+</trans-unit>
+<trans-unit id="s3029e00f65e4fa86">
+  <source>ist kein Lastfall beteiligt</source>
+  <target> </target>
+</trans-unit>
+<trans-unit id="s07ae3396a71a6b0f">
+  <source>Anzahl Fehler in Eingabe:</source>
+  <target>Numero di errori nell'inserimento:</target>
+</trans-unit>
+<trans-unit id="sf75ff0ddff5d24b4">
+  <source>Steifigkeitsmatrix nicht positiv definit.</source>
+  <target>Matrice di rigidezza non definita positiva.</target>
+</trans-unit>
+<trans-unit id="sf53ac660804801a1">
+  <source>Mögliche Ursache: das System ist vermutlich kinematisch.</source>
+  <target>Causa possibile: il sistema è probabilmente labile.</target>
+</trans-unit>
+<trans-unit id="s397719ef0d7a6ec8">
+  <source>Toleranz eps_force in Lastfall</source>
+  <target>Tolleranza eps_force nel caso di carico</target>
+</trans-unit>
+<trans-unit id="s9405bcae771cf187">
+  <source>Toleranz bei den Kräften eingehalten</source>
+  <target>Tolleranza sulle forze rispettata</target>
+</trans-unit>
+<trans-unit id="s678b94e997eed396">
+  <source>++++ geforderte Genauigkeit bei den Kräften nicht erreicht, das System auf mögliche Kinematiken überprüfen</source>
+  <target>++++ precisione richiesta sulle forze non raggiunta, verificare se il sistema è labile</target>
+</trans-unit>
+<trans-unit id="s3458010cbd46deee">
+  <source>Es muss mindestens eine Kombination definiert sein</source>
+  <target>Deve essere definita almeno una combinazione</target>
+</trans-unit>
+<trans-unit id="s3229ddf751598ad2">
+  <source>Steifigkeitsmatrix nicht positiv definit in Kombination</source>
+  <target>Matrice di rigidezza non definita positiva nella combinazione</target>
+</trans-unit>
+<trans-unit id="s8dd82a7653b2754b">
+  <source>Mögliche Ursachen: Lasten zu hoch in dieser Kombination. Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.</source>
+  <target>Cause possibili: carichi troppo elevati in questa combinazione. Se il messaggio compare anche in un calcolo secondo la teoria del I ordine, il sistema è labile.</target>
+</trans-unit>
+<trans-unit id="saa847ba46ef6ea16">
+  <source>Toleranz in Iterationsschritt</source>
+  <target>Tolleranza nel passo di iterazione</target>
+</trans-unit>
+<trans-unit id="s73acc8dac42c1ccb">
+  <source>Konvergenz bei den Verformungen erreicht</source>
+  <target>Convergenza delle deformazioni raggiunta</target>
+</trans-unit>
+<trans-unit id="sf5406b5dcdef3a26">
+  <source>++++ keine Konvergenz bei den Verformungen erreicht, Anzahl der Iterationen erhöhen ++++</source>
+  <target>++++ nessuna convergenza delle deformazioni, aumentare il numero di iterazioni ++++</target>
+</trans-unit>
+<trans-unit id="sf610db2715075c15">
+  <source>Konvergenz bei den Kräften erreicht</source>
+  <target>Convergenza delle forze raggiunta</target>
+</trans-unit>
+<trans-unit id="s3d65885cdcd6c17c">
+  <source>++++ keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen ++++</source>
+  <target>++++ nessuna convergenza delle forze, aumentare il numero di iterazioni ++++</target>
+</trans-unit>
+<trans-unit id="sbad21220dd5ef4aa">
+  <source>Ꚛ FEHLER - In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten</source>
+  <target>Ꚛ ERRORE - In almeno un caso di carico la tolleranza sulle forze non è stata rispettata</target>
+</trans-unit>
+<trans-unit id="s81cf40be8b8b8d45">
+  <source>In mindestens einem Lastfall wurde die Krafttoleranz nicht eingehalten.</source>
+  <target>In almeno un caso di carico la tolleranza sulle forze non è stata rispettata.</target>
+</trans-unit>
+<trans-unit id="sdd624efda3f25db6">
+  <source>Mögliche Ursache: Das System ist kinematisch.</source>
+  <target>Causa possibile: il sistema è labile.</target>
+</trans-unit>
+<trans-unit id="s892405389a3a5dbd">
+  <source>Die Ergebnisse sind wahrscheinlich nicht brauchbar!</source>
+  <target>I risultati probabilmente non sono utilizzabili!</target>
+</trans-unit>
+<trans-unit id="s917adb24fdaed8f5">
+  <source>In mindestens einer Kombination keine Konvergenz der Verformungen/Kräfte erreicht.</source>
+  <target>In almeno una combinazione non è stata raggiunta la convergenza delle deformazioni/forze.</target>
+</trans-unit>
+<trans-unit id="s8ac46269880e846d">
+  <source>Mögliche Lösungen: Iterationen erhöhen oder Lasten reduzieren oder Querschnitte vergrößern. Kinematiken überprüfen.</source>
+  <target>Soluzioni possibili: aumentare le iterazioni, ridurre i carichi o aumentare le sezioni. Verificare la labilità.</target>
+</trans-unit>
+<trans-unit id="sa9b1f339d01156e0">
+  <source>Ꚛ FEHLER - Es gab in mindestens einer Kombination keine Konvergenz der Eigenwerte</source>
+  <target>Ꚛ ERRORE - In almeno una combinazione non c'è stata convergenza degli autovalori</target>
+</trans-unit>
+<trans-unit id="s5e5f2629828806eb">
+  <source>In mindestens einer Kombination keine Konvergenz der Eigenwerte erreicht.</source>
+  <target>In almeno una combinazione non è stata raggiunta la convergenza degli autovalori.</target>
+</trans-unit>
+<trans-unit id="sb7482aa61c57cd96">
+  <source>Mögliche Lösungen: Anderen Eigenwertlöser probieren, und/oder Anzahl der Eigenwerte reduzieren, siehe Tab Pro.</source>
+  <target>Soluzioni possibili: provare un altro risolutore di autovalori e/o ridurre il numero di autovalori, vedi scheda Pro.</target>
+</trans-unit>
+<trans-unit id="s475dc3809bbcad73">
+  <source>Ꚛ FEHLER - In mindestens einer Kombination war alpha_cr</source>
+  <target>Ꚛ ERRORE - In almeno una combinazione alpha_cr era</target>
+</trans-unit>
+<trans-unit id="s838cc0f7aeda0734">
+  <source>In mindestens einer Kombination war alpha_cr</source>
+  <target>In almeno una combinazione alpha_cr era</target>
+</trans-unit>
+<trans-unit id="s7ce8e2f713417b9b">
+  <source>Mögliche Lösungen: Lasten reduzieren oder Querschnitte vergrößern.</source>
+  <target>Soluzioni possibili: ridurre i carichi o aumentare le sezioni.</target>
+</trans-unit>
+<trans-unit id="s829b912bb4a4d5f9">
+  <source>Die Ergebnisse sind nicht brauchbar!</source>
+  <target>I risultati non sono utilizzabili!</target>
+</trans-unit>
+<trans-unit id="se3f55a8eba7c3707">
+  <source>Berechnung erfolgreich beendet</source>
+  <target>Calcolo terminato con successo</target>
+</trans-unit>
+<trans-unit id="s4d87dd473addb7af">
+  <source>Mögliche Ursachen: Lasten zu hoch in dieser Kombination.</source>
+  <target>Cause possibili: carichi troppo elevati in questa combinazione.</target>
+</trans-unit>
+<trans-unit id="s4829aafde5473623">
+  <source>Tritt die Meldung auch bei einer Berechnung nach Th. I. Ordnung auf, dann ist das System kinematisch.</source>
+  <target>Se il messaggio compare anche in un calcolo secondo la teoria del I ordine, il sistema è labile.</target>
+</trans-unit>
+<trans-unit id="sb61bc52e9b4ecf92">
+  <source>Länge von Element</source>
+  <target>Lunghezza dell'elemento</target>
+</trans-unit>
+<trans-unit id="saa75b01360e48f68">
+  <source>ist null</source>
+  <target>è nulla</target>
+</trans-unit>
+<trans-unit id="s90b0d535974c7970">
+  <source>Das ist keine zulässige Zahl in Zeile</source>
+  <target>Questo non è un numero valido nella riga</target>
+</trans-unit>
+</body>
+</file>
+</xliff>

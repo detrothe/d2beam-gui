@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, minimal-ui">
+		<title>Programme d2beam-GUI pour ossatures planes</title>
+		<meta name="author" content="Prof. Dr.-Ing. Detlef Rothe">
+		<meta name="AppVersion" content="15.0000">
+		<script id="MathJax-script" async
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		<style type="text/css">
+		body {
+			font-size: 1em;
+			font-family: "FreeSans", sans-serif;
+			line-height: 150%;
+		}
+
+		p {
+			line-height: 150%;
+			text-align: left;
+			margin-bottom: 0.6em;
+			direction: ltr;
+			background: transparent
+		}
+
+		ul {
+			line-height: 150%;
+		}
+
+		h1 {
+			color: #1c1c6a;
+			line-height: 115%;
+			text-align: left;
+			page-break-inside: avoid;
+			margin-top: 2em;
+			margin-bottom: 0;
+			direction: ltr;
+			background: transparent;
+			page-break-after: avoid
+		}
+
+		h1.western {
+			font-size: 1.2em;
+			font-weight: bold
+		}
+
+
+		h2 {
+			color: #1c1c6a;
+			line-height: 115%;
+			text-align: left;
+			page-break-inside: avoid;
+			margin-top: 0.83em;
+			margin-bottom: 0;
+			direction: ltr;
+			background: transparent;
+			page-break-after: avoid
+		}
+
+		h2.western {
+			font-size: 1.125em;
+			font-weight: bold
+		}
+
+
+		a:link {
+			color: #1c1c6a;
+			text-decoration: none
+		}
+
+		a:visited {
+			color: #1c1c6a;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: none;
+		}
+
+		a:active {
+			text-decoration: none;
+		}
+
+		a[href^="#"]:before {
+			content: '➡ ';
+		}
+        </style>
+	</head>
+	<body
+		lang="fr-FR"
+		link="#0000ff"
+		vlink="#800000"
+		dir="ltr">
+		<h1 class="western">Sommaire</h1>
+		<p class="western">
+			<a href="#uebersicht">Vue d'ensemble</a>
+			<br>
+			<a href="#gui">Saisie graphique</a>
+			<br>
+			<a href="#vorzeichen">Repère et conventions de signe</a>
+			<br>
+			<a href="#hinweiseApp">Remarques sur l'utilisation de l'application</a>
+			<br>
+			<a href="#darstellung_2D">Représentations 2D</a>
+			<br>
+			<a href="#svg">Enregistrer le graphique</a>
+			<br>
+			<a href="#bezeichnungen">Désignations</a>
+			<br>
+			<a href="#voreinstellungen">Préférences</a>
+			<br>
+			<a href="#installation">Installation de l'application sur le bureau</a>
+			<br>
+			<a href="#kompatibilitaet">Compatibilité</a>
+			<br>
+			<a href="#tastatur">
+				Aide : mon clavier n'a pas de touche moins, clavier virtuel
+			</a>
+			<br>
+			<a href="#faq">Questions et réponses</a>
+			<br>
+			<a href="#kontakt">Contact et signalement d'erreurs</a>
+			<br>
+			<h1 lang="fr-FR" class="western" id="uebersicht">
+				<a href="#">Vue d'ensemble</a>
+			</h1>
+			<p>
+				Cette application web permet d'analyser des portiques et des treillis plans
+				par la méthode des éléments finis.
+				Des options de calcul sont disponibles pour les analyses statiques et dynamiques, [1], [2], [3].
+				Les calculs statiques peuvent être effectués selon la théorie du 1er et du 2nd ordre.
+				Pour les calculs dynamiques, il est actuellement possible de déterminer les valeurs
+				propres et les modes propres.
+				L'élément de barre nommé d2beam (type 0) peut prendre en compte les déformations
+				d'effort tranchant selon la théorie de Timoshenko.
+				La barre de treillis est un élément classique à 2 nœuds.
+				L'élément d2beam est basé sur un élément de poutre droit à 4 nœuds avec déformations
+				d'effort tranchant [1], dont les nœuds intérieurs sont condensés, de sorte que
+				l'utilisateur travaille avec un élément à 2 nœuds. Pour les calculs selon la théorie du
+				1er ordre, les matrices élémentaires correspondent à la solution que l'on obtient
+				également avec l'équation différentielle de la poutre de Timoshenko. Les résultats
+				sont donc exacts dans ce cas.
+			</p>
+			<p>
+				Après avoir cliqué sur le bouton « Commencer une nouvelle saisie », on peut choisir
+				entre le calcul d'un portique et celui d'un treillis pur.
+				Le choix « Treillis » simplifie la saisie des treillis. Bien entendu, les treillis
+				peuvent aussi être calculés avec les éléments de portique si l'on saisit des
+				articulations (rotules) aux extrémités des barres.
+				<br>
+				Les éléments ont un nœud de début et un nœud de fin, désignés par a et e,
+				ou par 1 et 2.
+			</p>
+			<p></p>
+			<p></p>
+			<p>
+				Caractéristiques du programme :
+			</p>
+			<ul>
+				<li>
+					<p>La section est constante par élément</p>
+				</li>
+				<li>
+					<p>
+						Matériau élastique linéaire pour les barres.
+					</p>
+				</li>
+				<li>
+					<p>
+						Les déformations d'effort tranchant sont prises en compte par un coefficient
+						de correction de cisaillement. Si l'on saisit 0, le calcul est effectué avec
+						des éléments infiniment rigides au cisaillement.
+					</p>
+				</li>
+				<li>
+					<p>
+						En théorie du 2nd ordre, l'imperfection globale peut être prise en compte
+						facilement à l'aide du premier mode propre.
+						Pour les portiques typiques (encastrés en pied, libres de se déplacer en tête),
+						il suffit d'indiquer le plus grand déplacement sans indiquer le nœud (saisie 0).
+						Le sens de l'imperfection est pris identique au déplacement existant du degré
+						de liberté correspondant, issu du calcul préalable selon la théorie du 1er ordre,
+						qui est également nécessaire pour déterminer les efforts normaux.
+						<br>
+						Pour les systèmes simples à nœuds fixes, le 1er mode propre correspond à une
+						imperfection locale de barre et peut être utilisé comme telle.
+						<br>
+						L'imperfection calculée par le programme peut être vérifiée dans la
+						représentation graphique. Si le résultat ne convient pas, il faut indiquer
+						le nœud souhaité et la direction dans la saisie.
+					</p>
+				</li>
+				<li>
+					<p>
+						Appui élastique continu optionnel des barres fléchies selon Winkler.
+					</p>
+				</li>
+				<li>
+					<p>
+						Des combinaisons de charges avec les coefficients partiels correspondants
+						peuvent être définies. En théorie du 2nd ordre, seules les combinaisons
+						de charges sont calculées.
+					</p>
+				</li>
+			</ul>
+			<p>
+				<br>
+				<br>
+			</p>
+			<h2 class="western" id="gui">
+				<a href="#">Saisie graphique</a>
+			</h2>
+			<p>
+				La saisie du système statique se fait dans l'onglet Système. Selon le matériel
+				disponible, la saisie peut se faire à la souris, au stylet ou au doigt.
+			</p>
+			<p>
+				Les points suivants sont à respecter lors de la saisie :
+				<ul>
+					<li>
+						Les sections sont définies dans l'onglet Sections. Au moins une section
+						doit être créée avant la saisie des barres.
+						Des modifications sont possibles ultérieurement dans cet onglet.
+					</li>
+					<li>
+						Pour les calculs selon la théorie du 2nd ordre, seules les combinaisons
+						de cas de charge sont calculées ; elles doivent être définies avant le
+						calcul dans l'onglet Combinaisons.
+					</li>
+					<li>La saisie graphique du système se fait dans l'onglet Système.</li>
+					<li>
+						Le calcul proprement dit est lancé dans l'onglet Principal. Après un calcul
+						réussi, les déformations, efforts internes, etc. peuvent être affichés dans
+						l'onglet Résultats.
+					</li>
+				</ul>
+			</p>
+			<p>
+				<b>Explications des icônes de l'onglet Système</b>
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/undo.png"
+					name="undo"
+					title="bouton annuler"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Annuler : supprime le dernier élément créé (nœud, barre, appui,
+				charge nodale ou charge sur élément) et le place dans la corbeille interne.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/redo.png"
+					name="redo"
+					title="bouton rétablir"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Rétablir : récupère le dernier élément placé dans la corbeille.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/loeschen.png"
+					name="loeschen"
+					title="bouton supprimer"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Supprimer : supprime un élément sur lequel on clique et le place dans
+				la corbeille interne.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/select.png"
+					name="select"
+					title="bouton sélectionner"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Sélectionner : cliquer sur un élément existant. Une boîte de dialogue
+				apparaît ensuite, dans laquelle des modifications peuvent être effectuées.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/knoten.png"
+					name="knoten"
+					title="bouton nœud"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Nœud : saisie des coordonnées des nœuds (x,z) à l'aide d'une boîte de
+				dialogue. Remarque : la saisie de nœuds n'est nécessaire que si un nœud de barre
+				ne se trouve pas à une intersection des lignes de grille.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/edit_knoten.png"
+					name="edit_knoten"
+					title="bouton modifier le nœud"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Modifier le nœud : les coordonnées (x,z) des nœuds existants peuvent être
+				modifiées ici.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/lager.png"
+					name="lager"
+					title="bouton appui"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Appui : saisie des appuis. Remarque : les appuis ne peuvent être placés
+				que sur des nœuds existants.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/einstellungen.png"
+					name="einstellungen"
+					title="bouton paramètres"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Paramètres : on peut effectuer ici des réglages utiles pour la saisie
+				graphique.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/reset.png"
+					name="reset"
+					title="bouton réinitialiser"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Réinitialiser : le système est redessiné. Le zoom et le déplacement
+				sont réinitialisés.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/default_querschnitt.png"
+					name="default_querschnitt"
+					title="liste section par défaut"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Liste Section par défaut : le nom de section affiché est utilisé pour la
+				prochaine saisie de barre. Un nombre quelconque de sections peut être défini
+				dans l'onglet Sections.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/stab.png"
+					name="stab"
+					title="bouton barre"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Barre : une barre est définie par son nœud de début et son nœud de fin.
+				Les règles d'accrochage suivantes s'appliquent : on cherche d'abord, dans le
+				rayon d'accrochage (la longueur des lignes du curseur indique le rayon
+				d'accrochage), des nœuds déjà existants, et le nœud le plus proche de la croix
+				du curseur est utilisé. Si rien n'est trouvé, les points bleus de la grille sont
+				utilisés. Si rien n'est trouvé non plus dans le rayon d'accrochage, c'est la
+				position actuelle du curseur, arrondie à 1 mm, qui est prise.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/knotenlast.png"
+					name="knotenlast"
+					title="bouton charge nodale"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Charge nodale : saisie des charges nodales. Remarque : les charges
+				nodales ne peuvent être placées que sur des nœuds existants.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/elementlast.png"
+					name="elementlast"
+					title="bouton charge sur élément"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Charge sur élément : saisie des charges sur les barres. Remarque : les
+				charges sur barres ne peuvent agir que sur des barres existantes.
+			</p>
+			<p>
+				<img
+					src="/assets/gui-icons/knotenmasse.png"
+					name="knotenmasse"
+					title="bouton masse nodale"
+					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				Bouton Masse nodale : saisie des masses nodales et des moments d'inertie de
+				masse. Remarque : les masses nodales ne peuvent être placées que sur des nœuds
+				existants. Elles ne sont prises en compte que si le type de calcul
+				<i>dynamique</i>
+				a été choisi dans l'onglet Principal.
+			</p>
+			<p>
+				<br>
+				<br>
+			</p>
+			<h2 class="western" id="vorzeichen">
+				<a href="#">Repère et conventions de signe</a>
+			</h2>
+			<img
+				src="/assets/def_d2beam.png"
+				name="definition_d2beam"
+				title="Définition de l'élément de barre d2beam"
+				style="max-width:100%; width:400px; height:auto; border:0px; margin: auto; display: block;">
+			<p style="text-align: center;">
+				Élément de barre d2beam avec extrémités rigides et articulations
+			</p>
+			<img
+				src="/assets/vorzeichen_lager_notxt.png"
+				name="vorzeichen_lager"
+				title="Conventions de signe des appuis"
+				style="max-width:100%; width:209px; height:auto; border:0px; margin: auto; display: block;">
+			<p style="text-align: center;">Réactions d'un appui incliné</p>
+			<img
+				src="/assets/gedrehtes_lager_notxt.png"
+				name="gedrehtes_lager"
+				title="appui incliné"
+				style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+			<p style="text-align: center;">Appui rigide incliné</p>
+			<img
+				src="/assets/definition_federn.png"
+				name="definition_federn"
+				title="Définition des ressorts"
+				style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+			<p style="text-align: center;">Ressorts d'appui inclinés</p>
+			<p>
+				<h1 class="western" id="hinweiseApp">
+					<a href="#">
+						Autres remarques sur l'utilisation de l'application
+					</a>
+				</h1>
+			</p>
+			<p>
+				<h2 class="western">Saisie</h2>
+			</p>
+			<p>
+				La virgule ou le point sont admis comme séparateur décimal.
+				Un séparateur de milliers n'est pas admis.
+			</p>
+			<p>
+				Pour accélérer la saisie, des valeurs de cellules ou des lignes des tableaux
+				peuvent être copiées ou générées.
+				Un bloc peut être sélectionné en maintenant le bouton DROIT de la souris enfoncé.
+				Après avoir relâché le bouton, un menu contextuel apparaît.
+				<br>
+				Sur les
+				<b>écrans tactiles :</b>
+				en glissant le doigt ou le stylet, les cellules sélectionnées sont mises en
+				couleur comme avec la souris. Après avoir levé le doigt ou le stylet, le menu
+				contextuel apparaît.
+				Pendant le mode de sélection, aucune valeur ne peut être saisie. Le choix
+				<i>close</i>
+				ferme la boîte de dialogue et supprime la sélection.
+			</p>
+			<p>
+				<ul>
+					<li>
+						<b>copy first cell value :</b>
+						la valeur de la première cellule sélectionnée est copiée dans les autres
+						cellules sélectionnées.
+					</li>
+					<li>
+						<b>copy first row values :</b>
+						il faut sélectionner au moins deux lignes. Les valeurs de la ligne
+						supérieure sont copiées vers le bas, colonne par colonne.
+					</li>
+					<li>
+						<b>increment by 1 :</b>
+						il faut sélectionner au moins deux lignes. Les valeurs de la ligne
+						supérieure sont augmentées de 1, colonne par colonne.
+					</li>
+					<li>
+						<b>increment by delta :</b>
+						il faut sélectionner au moins trois lignes. Les différences entre la ligne
+						supérieure et la ligne suivante sont déterminées colonne par colonne. Les
+						lignes suivantes sont modifiées colonne par colonne avec les valeurs delta
+						calculées.
+					</li>
+					<li>
+						<b>copy to clipboard :</b>
+						le contenu des cellules sélectionnées est copié dans le presse-papiers et
+						peut par exemple être inséré à d'autres endroits du tableau. Les valeurs
+						peuvent aussi être transmises à d'autres programmes (tableur).
+					</li>
+					<li>
+						<b>insert from clipboard :</b>
+						le contenu du presse-papiers est inséré à partir de la cellule supérieure
+						gauche de la zone sélectionnée.
+					</li>
+					<li>
+						<b>close :</b>
+						la boîte de dialogue est fermée sans autre action.
+					</li>
+				</ul>
+			</p>
+			<p>
+				Sous iOS, le choix dans le menu contextuel se fait par un double clic.
+			</p>
+			<p>
+				Remarque : une souris et/ou un clavier Bluetooth peuvent être connectés à toute
+				tablette et tout smartphone.
+			</p>
+			<p>
+				Pour mieux utiliser l'espace d'écran limité des smartphones et des tablettes, le
+				nombre de lignes des tableaux des coordonnées des nœuds et des éléments est
+				déterminé par la saisie du nombre de nœuds et d'éléments. Il faut donc d'abord
+				saisir le nouveau nombre d'éléments et de nœuds, puis modifier la taille des
+				tableaux avec le bouton « Ajuster le tableau ». L'opération peut être répétée
+				autant de fois que nécessaire.
+			</p>
+			<p>
+				<h2 class="western" id="darstellung_2D">
+					<a href="#">
+						Représentations 2D
+					</a>
+				</h2>
+			</p>
+			<p>Les options d'affichage peuvent être combinées librement.</p>
+			<p>
+				<ul>
+					<li>
+						<b>Étiquettes :</b>
+						étiquetage des éléments, des efforts internes et des déformations. Le type
+						d'étiquetage dépend des autres options choisies.
+					</li>
+					<li>
+						<b>Lignes du système :</b> représentation du système.
+					</li>
+					<li>
+						<b>Déformations :</b> représentation du système déformé.
+					</li>
+					<li>
+						<b>Effort normal :</b> diagrammes des efforts normaux
+					</li>
+					<li>
+						<b>Effort tranchant :</b> diagrammes des efforts tranchants
+					</li>
+					<li>
+						<b>Moment :</b> diagrammes des moments
+					</li>
+					<li>
+						<b>Modes propres :</b>
+						représentation des modes propres. Dans la liste en haut à droite, vous
+						pouvez choisir parmi les modes propres calculés.
+					</li>
+					<li>
+						<b>Imperfection globale :</b>
+						représentation de l'imperfection globale utilisée, basée sur le premier
+						mode propre.
+						Attention, l'imperfection utilisée dépend de la combinaison choisie.
+						Uniquement en théorie du 2nd ordre.
+					</li>
+					<li>
+						<b>Imperfection locale :</b>
+						représentation des imperfections de barre saisies, uniquement en théorie
+						du 2nd ordre.
+					</li>
+					<li>
+						<b>Échelle :</b>
+						mise à l'échelle de la taille des efforts internes et des déformations.
+					</li>
+					<li>
+						<b>Afficher les charges :</b>
+						représentation des charges en fonction du cas de charge choisi.
+					</li>
+					<li>
+						<b>Afficher les réactions d'appui :</b>
+						représentation des réactions d'appui calculées et des symboles.
+					</li>
+					<li>
+						<b>Afficher le contour :</b>
+						les hauteurs de section saisies des barres sont utilisées pour la
+						représentation.
+					</li>
+					<li>
+						<b>Déformation totale :</b>
+						uniquement en théorie du 2nd ordre. Normalement, les déformations relatives
+						sont affichées. Si cette option est choisie, les imperfections sont ajoutées
+						aux déformations relatives.
+					</li>
+					<li>
+						<b>Équilibre des efforts :</b>
+						uniquement en théorie du 2nd ordre. Si cette option est choisie, les efforts
+						internes le long de la barre sont affichés dans les directions du repère
+						local du système non déformé (efforts internes d'équilibre).
+						Si l'option n'est pas choisie, les efforts internes d'équilibre N et V
+						<sub>z</sub>
+						sont transformés dans la direction de la section ayant tourné. Ceux-ci sont
+						aussi appelés efforts internes de vérification et doivent être utilisés pour
+						le dimensionnement.
+						<br>
+						Cette option n'a aucune influence sur le moment fléchissant M
+						<sub>y</sub> !
+					</li>
+					<li>
+						<b>Reset :</b> les réglages sont réinitialisés.
+					</li>
+				</ul>
+			</p>
+			<p>
+				<h2 class="western" id="svg">
+					<a href="#">Enregistrer le graphique</a>
+				</h2>
+			</p>
+			<p>
+				Le bouton
+				<i>save svg</i>
+				permet d'enregistrer la représentation graphique actuelle dans un fichier au
+				format svg (format vectoriel).
+				Le dessin peut être importé comme image dans tout programme qui prend en charge
+				le format vectoriel svg, par exemple Inkscape, LibreOffice et Microsoft Office
+				(à partir de la version 2016). Comme il s'agit d'un format vectoriel, le
+				graphique peut être retravaillé.
+			</p>
+			<p>
+				<h2 class="western" id="bezeichnungen">
+					<a href="#">Désignations</a>
+				</h2>
+			</p>
+			<p>Incidences nodales des éléments
+				<br>
+				nod a = incidence nodale au début de l'élément
+				<br>
+				nod e = incidence nodale à la fin de l'élément
+			</p>
+			<p>
+				Les conventions de signe et les désignations correspondent à celles habituellement
+				utilisées en statique, voir [2].
+			</p>
+			<p>
+				<h2 class="western" id="voreinstellungen">
+					<a href="#">Préférences</a>
+				</h2>
+			</p>
+			<p>
+				Dans le menu ꔷꔷꔷ (trois points), on peut régler la taille de police et la couleur
+				des tableaux.
+				<br>
+				Les réglages de la page peuvent être enregistrés comme préférences dans la mémoire
+				locale du navigateur utilisé et sont à nouveau disponibles après un redémarrage du
+				programme. Les préférences peuvent être supprimées avec le bouton situé en dessous.
+				<br>
+				La mémoire locale (local storage) n'est pas constituée de cookies. Cette
+				application web effectue tous les calculs sur l'ordinateur local, dans le
+				navigateur, en JavaScript. Aucune donnée n'est échangée avec un serveur web.
+				Après le démarrage du programme, aucune connexion réseau n'est donc plus
+				nécessaire.
+			</p>
+			<p>
+				<h2 class="western" id="installation">
+					<a href="#">
+						Installation comme application sur le bureau
+					</a>
+				</h2>
+			</p>
+			<p>
+				Cette application est programmée comme application web (web app), de sorte
+				qu'elle peut être installée sur le bureau sous tous les systèmes d'exploitation.
+				Une icône est alors créée sur le bureau. L'application se comporte ainsi comme une
+				application installée depuis un store.
+				D2beam continue bien sûr de s'exécuter dans le navigateur installé, mais sans
+				éléments de commande comme la barre d'adresse. L'installation diffère selon le
+				système d'exploitation, sa version et le navigateur.
+				<br>
+				Après avoir lancé d2beam une première fois dans le navigateur, on choisit sous
+				Android, dans le navigateur Chrome, en haut à droite dans le menu de l'application
+				<i>(menu à trois points)</i>
+				l'option « Installer l'application ».
+				Une boîte de dialogue apparaît, qu'il faut confirmer. Le navigateur peut ensuite
+				être fermé. Une nouvelle icône nommée d2beam se trouve maintenant sur le bureau.
+			</p>
+			<p>
+				Pour l'installation sous iOS, il faut utiliser le navigateur Safari.
+				La commande s'appelle ici « Sur l'écran d'accueil », avec un symbole d'ajout.
+			</p>
+			<p>
+				L'installation sous Microsoft Windows est semblable à celle sous Android. Dans le
+				navigateur Edge, la section suivante se trouve dans le menu de l'application
+				<i> (menu à trois points)</i>
+				<img
+					src="/assets/app-install-windows.png"
+					name="Bild4"
+					title="installation windows"
+					style="max-width:100%; width:423px; height:auto; border:0px; margin: auto; display: block;">
+				<br>
+				Avec les versions récentes de Chrome, il vous est éventuellement demandé
+				directement si une installation est souhaitée, voir le symbole à droite dans la
+				barre d'adresse :
+				<img
+					src="/assets/chrome_install.png"
+					name="chrome_install"
+					title="installation chrome"
+					style="max-width:100%; width:436px; height:auto; border:0px; margin: auto; display: block;">
+			</p>
+			<p>
+				Sous macOS, il faut utiliser le navigateur Microsoft Edge ou Google Chrome pour
+				l'installation.
+			</p>
+			<p>
+				Le navigateur Firefox ne prend actuellement pas en charge l'installation.
+				<br>
+				Sous les systèmes d'exploitation Microsoft Windows et Linux, on peut aussi passer
+				en mode plein écran avec la touche F11.
+			</p>
+			<p>
+				La désinstallation sous Android, iOS et Linux se fait simplement en supprimant
+				l'icône du bureau. Sous Windows, l'application est désinstallée comme un programme
+				normal.
+			</p>
+			<h2 class="western" id="kompatibilitaet">
+				<a href="#">
+					Compatibilité et problèmes
+				</a>
+			</h2>
+			<p>
+				Les systèmes d'exploitation suivants ont été testés : Windows 10↑, macOS
+				Catalina 10.15.7↑, Ubuntu 22.04↑, Android 9-16, iOS 15.7.3↑.
+			</p>
+			<p>
+				Les navigateurs suivants ont été testés dans leur version la plus récente :
+				Chrome, Chromium, Edge, Safari, Firefox.
+				Seules les versions actuelles sont testées et prises en charge.
+			</p>
+			<h2 class="western" id="tastatur">
+				<a href="#">
+					Clavier virtuel
+				</a>
+			</h2>
+			<p>
+				Sur certains appareils Android, en particulier de Samsung, le clavier numérique
+				ne contient pas de touche pour le signe moins.
+				Malheureusement, la spécification HTML laisse au fabricant de l'appareil le choix
+				de prévoir ou non une touche pour le signe moins sur le clavier numérique. À en
+				juger par les nombreux messages sur Internet, peu de gens en comprennent la raison.
+				Dans ces cas, il est recommandé d'installer un clavier virtuel supplémentaire. Le
+				clavier Android original de Google, Gboard, disponible dans le Play Store, est par
+				exemple une alternative. Après l'installation, le clavier doit encore être activé,
+				de préférence directement dans le Play Store. On peut ensuite toujours passer d'un
+				clavier installé à l'autre (icône en bas à droite du clavier).
+			</p>
+			<h2 class="western" id="faq">
+				<a href="#">Questions et réponses</a>
+			</h2>
+			<p>
+				<ul>
+					<li>
+						Question : j'ai saisi quelques nœuds de trop dont je n'ai plus besoin.
+						Dois-je les supprimer ?
+						<br>
+						Réponse : non. Les nœuds auxquels aucun élément n'est relié sont ignorés.
+					</li>
+					<li>Question : qu'est-ce que l'ID du nœud ?
+						<br>
+						Réponse : chaque nœud possède un numéro interne propre (ID du nœud), qui
+						est créé automatiquement lors de la création du nœud.
+						Il est indépendant de la numérotation des nœuds EF attribuée plus tard.
+						L'ID du nœud est affiché dans la boîte de dialogue des nœuds de l'onglet
+						Système lorsque tu choisis le bouton
+						<i>Modifier le nœud</i>
+						<img
+							src="/assets/gui-icons/edit_knoten.png"
+							name="edit_knoten"
+							title="bouton modifier le nœud"
+							style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+						et cliques sur un nœud existant.
+					</li>
+				</ul>
+			</p>
+			<p>
+				<br>
+			</p>
+			<h2 class="western" id="kontakt">
+				<a href="#">
+					Contact et signalement d'erreurs
+				</a>
+			</h2>
+			<p>
+				Pour les remarques, suggestions et signalements d'erreurs, utilise l'adresse
+				e-mail suivante : statikverstehen&#x40;web.de (en allemand ou en anglais).
+				<br>
+				Pour un signalement d'erreur, une copie du fichier de saisie en pièce jointe est
+				généralement utile.
+				<br>
+				<br>
+			</p>
+			<h1 class="western">
+				<a href="#">Bibliographie (en allemand)</a>
+			</h1>
+			<p>
+				[1] Klaus Knothe, Heribert Wessels:
+				Finite Elemente, Eine Einführung für Ingenieure, 5.Auflage, Ernst W.
+				&amp; Sohn Verlag, 2017
+			</p>
+			<p>
+				[2] Matthias Kraus; Rolf Kindmann:
+				Finite-Elemente-Methoden im Stahlbau, 2.Auflage, Ernst W. &amp; Sohn
+				Verlag, 2019
+			</p>
+			<p>
+				[3] Horst Werkle:
+				Finite Elemente in der Baustatik, 4.Auflage, Ernst W. &amp; Sohn
+				Verlag, 2021
+			</p>
+		</p>
+	</body>
+</html>

@@ -43,5 +43,7 @@ if (locale) {
   console.log("Locale from localStorage=", locale)
 }
 else {
-  if (browserLanguage !== "de") setLocale("en-GB");
+  // Browsersprache übernehmen, wenn es eine Übersetzung gibt, sonst Englisch
+  const browserLocales: { [key: string]: string } = { en: 'en-GB', es: 'es-ES', fr: 'fr-FR', it: 'it-IT' };
+  if (browserLanguage !== "de") setLocale(browserLocales[browserLanguage] ?? "en-GB");
 }
