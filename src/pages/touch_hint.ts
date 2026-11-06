@@ -1,24 +1,67 @@
 //------------------------------------------------------------------------------------------------
-// Hilfetext-Fenster bei langem Drücken (Touch/Stift) – Ersatz für hover/title, das dort nicht geht.
+// Hilfetext-Fenster für Buttons – Ersatz für den title-Tooltip, der bei Touch/Stift und auf
+// iPadOS (auch mit Maus) nicht funktioniert.
 //
 // Verwendung:  enableTouchHints(container)
 //   - gilt für alle Elemente im Container mit Attribut data-hint oder title
 //   - Text: data-hint (falls gesetzt), sonst title
-//   - Maus: keine Änderung, dort bleibt der normale title-Tooltip
-//   - nach dem Hinweis wird der folgende click unterdrückt, die Button-Aktion wird also nicht ausgelöst
+//   - Touch/Stift: Anzeige bei langem Drücken; der folgende click wird unterdrückt,
+//     die Button-Aktion wird also nicht ausgelöst
+//   - Maus: Anzeige beim Überfahren (title wird währenddessen entfernt, damit der
+//     Browser-Tooltip nicht doppelt erscheint)
 //------------------------------------------------------------------------------------------------
 
 const LONG_PRESS_MS = 300;   // so lange muss gedrückt werden, bis der Hinweis erscheint
 const HIDE_AFTER_MS = 1500;  // so lange bleibt der Hinweis nach dem Loslassen sichtbar
 const MOVE_TOLERANCE = 10;   // px, bei größerer Bewegung gilt es nicht als langes Drücken
-const HINT_SELECTOR = '[data-hint],[title]';
+const HOVER_DELAY_MS = 500;  // Maus: so lange über dem Button, bis der Hinweis erscheint
+const HINT_SELECTOR = '[data-hint],[title],[data-hint-title]';
 
 let bubble: HTMLDivElement | null = null;
 let pressTimer = 0;
 let hideTimer = 0;
+let hoverTimer = 0;
+let hoverTarget: HTMLElement | null = null;
 let hintShownFor: Element | null = null;
 let startX = 0;
 let startY = 0;
+
+//------------------------------------------------------------------------------------------------
+function hintText(el: HTMLElement): string {
+    //--------------------------------------------------------------------------------------------
+    return el.dataset.hint || el.title || el.dataset.hintTitle || '';
+}
+
+//------------------------------------------------------------------------------------------------
+// Maus-Hover: title während des Hovers entfernen, damit der Browser-Tooltip nicht zusätzlich
+// erscheint (Safari auf iPadOS zeigt ihn ohnehin nicht an), danach wiederherstellen.
+//------------------------------------------------------------------------------------------------
+function startHover(el: HTMLElement) {
+    //--------------------------------------------------------------------------------------------
+    hoverTarget = el;
+    const t = el.getAttribute('title');
+    if (t !== null) {
+        el.dataset.hintTitle = t;
+        el.removeAttribute('title');
+    }
+    const text = hintText(el);
+    window.clearTimeout(hoverTimer);
+    if (text) hoverTimer = window.setTimeout(() => showHint(el, text), HOVER_DELAY_MS);
+}
+
+//------------------------------------------------------------------------------------------------
+function endHover() {
+    //--------------------------------------------------------------------------------------------
+    window.clearTimeout(hoverTimer);
+    const el = hoverTarget;
+    hoverTarget = null;
+    if (el && el.dataset.hintTitle !== undefined) {
+        // falls der title inzwischen neu gesetzt wurde (Sprachwechsel), den neuen behalten
+        if (!el.hasAttribute('title')) el.setAttribute('title', el.dataset.hintTitle);
+        delete el.dataset.hintTitle;
+    }
+    hideTouchHint();
+}
 
 //------------------------------------------------------------------------------------------------
 function getBubble(): HTMLDivElement {
@@ -102,14 +145,34 @@ export function enableTouchHints(root: HTMLElement) {
     root.style.setProperty('-webkit-user-select', 'none');
     root.style.setProperty('user-select', 'none');
 
+    // Maus: Hinweis beim Überfahren (ersetzt den title-Tooltip, der auf iPadOS fehlt)
+    root.addEventListener('pointerover', (ev: PointerEvent) => {
+        if (ev.pointerType !== 'mouse') return;
+        const target = (ev.target as Element).closest<HTMLElement>(HINT_SELECTOR);
+        if (target === hoverTarget) return;
+        endHover();
+        if (target && root.contains(target)) startHover(target);
+    });
+
+    root.addEventListener('pointerout', (ev: PointerEvent) => {
+        if (ev.pointerType !== 'mouse' || !hoverTarget) return;
+        const to = (ev.relatedTarget as Element | null)?.closest?.(HINT_SELECTOR);
+        if (to === hoverTarget) return;   // nur innerhalb des Buttons bewegt (z.B. auf das SVG)
+        endHover();
+    });
+
     root.addEventListener('pointerdown', (ev: PointerEvent) => {
         hintShownFor = null;
         window.clearTimeout(pressTimer);
-        if (ev.pointerType === 'mouse') return;
+        if (ev.pointerType === 'mouse') {   // Klick: Hinweis sofort ausblenden
+            window.clearTimeout(hoverTimer);
+            hideTouchHint();
+            return;
+        }
 
         const target = (ev.target as Element).closest<HTMLElement>(HINT_SELECTOR);
         if (!target || !root.contains(target)) return;
-        const text = target.dataset.hint || target.title;
+        const text = hintText(target);
         if (!text) return;
 
         startX = ev.clientX;
