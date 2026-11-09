@@ -1244,17 +1244,9 @@
   <source>Pfeilspitze picken</source>
   <target>Sélectionner la pointe de la flèche</target>
 </trans-unit>
-<trans-unit id="s6c307b3a1a718b75">
-  <source>keinen Knoten gepickt</source>
-  <target>Aucun nœud sélectionné</target>
-</trans-unit>
 <trans-unit id="s655dacda54bf73f1">
   <source>Knoten hat schon ein Lager</source>
   <target>Le nœud a déjà un appui</target>
-</trans-unit>
-<trans-unit id="s5c7d90867a472c06">
-  <source>keinen Knoten gefunden</source>
-  <target>Aucun nœud trouvé</target>
 </trans-unit>
 <trans-unit id="s8a7299b02b0cdded">
   <source>Knoten hat schon eine Knotenmasse</source>
@@ -1869,6 +1861,10 @@ Réalisé par : Alex Exemple</target>
 <trans-unit id="sd5a4e2f1d7e717ed">
   <source>Am Ort (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) liegen zwei Knoten übereinander, die Stäbe daran sind nicht miteinander verbunden</source>
   <target>En (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>), deux nœuds sont superposés ; les barres qui y sont reliées ne sont pas connectées entre elles</target>
+</trans-unit>
+<trans-unit id="s595b29d1049a33cd">
+  <source>kein Knoten mit Stab gefunden</source>
+  <target>aucun nœud relié à une barre trouvé</target>
 </trans-unit>
 </body>
 </file>

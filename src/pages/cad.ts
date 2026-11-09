@@ -34,6 +34,7 @@ import {
    add_element_nodes,
    CADNodes,
    find_nearest_cad_node,
+   find_nearest_stab_node,
    get_cad_node_X,
    get_cad_node_Z,
    remove_element_nodes,
@@ -1291,7 +1292,7 @@ function penDown(ev: PointerEvent) {
 
          // find next CAD node
 
-         let index = find_nearest_cad_node(xc, zc);
+         let index = buttons_control.bemassung_aktiv ? find_nearest_stab_node(xc, zc) : find_nearest_cad_node(xc, zc);
          //console.log("mouseup, index", index, xc, zc)
          if (index > -1) {
             let x = get_cad_node_X(index);
@@ -1315,7 +1316,7 @@ function penDown(ev: PointerEvent) {
             else if (buttons_control.copy_selected_aktiv) set_help_text(msg('Pfeilspitze picken'));
          } else {
             if (buttons_control.bemassung_aktiv) {
-               alertdialog('ok', msg('keinen Knoten gepickt'));
+               alertdialog('ok', msg('kein Knoten mit Stab gefunden'));
                //buttons_control.input_started = 0;
                return;
             }
@@ -1360,7 +1361,7 @@ function penDown(ev: PointerEvent) {
                   alertdialog(msg('ok'), msg('keine Lagerbedingungen eingegeben'));
                }
                else {
-                  let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+                  let index1 = find_nearest_stab_node(start_x_wc, start_z_wc);   // nur Knoten mit Stab
                   if (index1 > -1) {
                      // Überprüfe, ob Knoten schon Lager hat
                      let vorhanden = check_doppeltes_Lager(index1)
@@ -1379,14 +1380,14 @@ function penDown(ev: PointerEvent) {
                      }
                   } else {
                      //console.log('Keinen Knoten gefunden');
-                     alertdialog('ok', msg('keinen Knoten gefunden'));
+                     alertdialog('ok', msg('kein Knoten mit Stab gefunden'));
                   }
                }
             }
 
             if (buttons_control.knotenlast_eingabe_aktiv) {
 
-               let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+               let index1 = find_nearest_stab_node(start_x_wc, start_z_wc);   // nur Knoten mit Stab
                if (index1 > -1) {
                   let knlast = new TLoads();
                   let ok = read_knotenlast_dialog(knlast);
@@ -1403,12 +1404,12 @@ function penDown(ev: PointerEvent) {
                   }
                } else {
                   //console.log('Keinen Knoten gefunden');
-                  alertdialog('ok', msg('keinen Knoten gefunden'));
+                  alertdialog('ok', msg('kein Knoten mit Stab gefunden'));
                }
             }
             else if (buttons_control.knotenmasse_eingabe_aktiv) {
 
-               let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+               let index1 = find_nearest_stab_node(start_x_wc, start_z_wc);   // nur Knoten mit Stab
                if (index1 > -1) {
                   let vorhanden = check_doppelte_Masse(index1)
                   if (vorhanden) {
@@ -1430,12 +1431,12 @@ function penDown(ev: PointerEvent) {
                   }
                } else {
                   //console.log('Keinen Knoten gefunden');
-                  alertdialog('ok', msg('keinen Knoten gefunden'));
+                  alertdialog('ok', msg('kein Knoten mit Stab gefunden'));
                }
             }
             else if (buttons_control.knotenverformung_eingabe_aktiv) {
 
-               let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+               let index1 = find_nearest_stab_node(start_x_wc, start_z_wc);   // nur Knoten mit Stab
                if (index1 > -1) {
                   let nodeDisp = new CNodeDisp();
                   let ok = read_knotenverformung_dialog(nodeDisp);
@@ -1451,7 +1452,7 @@ function penDown(ev: PointerEvent) {
                      two.update();
                   }
                } else {
-                  alertdialog('ok', msg('keinen Knoten gefunden'));
+                  alertdialog('ok', msg('kein Knoten mit Stab gefunden'));
                }
             }
 
@@ -1461,6 +1462,16 @@ function penDown(ev: PointerEvent) {
          }
       }
    }
+}
+
+//--------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------
+function fang_nur_stabknoten(): boolean {
+   //-----------------------------------------------------------------------------------------------------
+   // Modi, in denen nur Knoten mit Stab gefangen werden dürfen (Bemaßung: Punkt 1 und 2, Punkt 3 ist frei)
+   return buttons_control.lager_eingabe_aktiv || buttons_control.knotenlast_eingabe_aktiv ||
+      buttons_control.knotenmasse_eingabe_aktiv || buttons_control.knotenverformung_eingabe_aktiv ||
+      (buttons_control.bemassung_aktiv && buttons_control.input_started < 2);
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -1670,7 +1681,7 @@ function mousemove(ev: MouseEvent) {
 
          // find next CAD node
 
-         let index = find_nearest_cad_node(xc, zc);
+         let index = fang_nur_stabknoten() ? find_nearest_stab_node(xc, zc) : find_nearest_cad_node(xc, zc);
          if (index > -1) {
             nodePoint = two.makeRoundedRectangle(tr.xPix(get_cad_node_X(index)), tr.zPix(get_cad_node_Z(index)), 15 / devicePixelRatio, 15 / devicePixelRatio, 4);
             nodePoint.fill = '#001111';
@@ -1791,7 +1802,7 @@ function mouseup(ev: any) {
             // let zc = tr.zWorld(yo);
             // find next CAD node
 
-            let index = find_nearest_cad_node(xc, zc);
+            let index = buttons_control.bemassung_aktiv ? find_nearest_stab_node(xc, zc) : find_nearest_cad_node(xc, zc);
             // console.log('mouseup, index', index, xc, zc);
             if (index > -1) {
                let x = get_cad_node_X(index);
@@ -1809,7 +1820,7 @@ function mouseup(ev: any) {
                else if (buttons_control.copy_selected_aktiv) set_help_text(msg('Pfeilspitze picken'));
             } else {
                if (buttons_control.bemassung_aktiv) {
-                  alertdialog('ok', msg('keinen Knoten gepickt'));
+                  alertdialog('ok', msg('kein Knoten mit Stab gefunden'));
                   //buttons_control.input_started = 0;
                   return;
                }
@@ -1855,7 +1866,7 @@ function mouseup(ev: any) {
                      alertdialog(msg('ok'), msg('keine Lagerbedingungen eingegeben'));
                   }
                   else {
-                     let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+                     let index1 = find_nearest_stab_node(start_x_wc, start_z_wc);   // nur Knoten mit Stab
                      if (index1 > -1) {
                         // Überprüfe, ob Knoten schon Lager hat
                         let vorhanden = check_doppeltes_Lager(index1)
@@ -1874,13 +1885,13 @@ function mouseup(ev: any) {
                            two.update();
                         }
                      } else {
-                        alertdialog('ok', msg('keinen Knoten gefunden'));
+                        alertdialog('ok', msg('kein Knoten mit Stab gefunden'));
                      }
                   }
                }
                else if (buttons_control.knotenlast_eingabe_aktiv) {               // Knotenlast
 
-                  let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+                  let index1 = find_nearest_stab_node(start_x_wc, start_z_wc);   // nur Knoten mit Stab
                   if (index1 > -1) {
                      let knlast = new TLoads();
                      let ok = read_knotenlast_dialog(knlast);
@@ -1896,13 +1907,13 @@ function mouseup(ev: any) {
                         two.update();
                      }
                   } else {
-                     alertdialog('ok', 'keinen Knoten gefunden');
+                     alertdialog('ok', msg('kein Knoten mit Stab gefunden'));
                   }
                }
                else if (buttons_control.knotenmasse_eingabe_aktiv) {              // Knotenmasse
                   //console.log("Knotenmasse eingabe aktiv")
 
-                  let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+                  let index1 = find_nearest_stab_node(start_x_wc, start_z_wc);   // nur Knoten mit Stab
                   if (index1 > -1) {
                      let vorhanden = check_doppelte_Masse(index1)
                      if (vorhanden) {
@@ -1923,12 +1934,12 @@ function mouseup(ev: any) {
                         //console.log('getBoundingClientRect', group.getBoundingClientRect());
                      }
                   } else {
-                     alertdialog('ok', msg('keinen Knoten gefunden'));
+                     alertdialog('ok', msg('kein Knoten mit Stab gefunden'));
                   }
                }
                else if (buttons_control.knotenverformung_eingabe_aktiv) {           // Knotenverformung
 
-                  let index1 = find_nearest_cad_node(start_x_wc, start_z_wc);
+                  let index1 = find_nearest_stab_node(start_x_wc, start_z_wc);   // nur Knoten mit Stab
                   if (index1 > -1) {
                      let nodeDisp = new CNodeDisp();
                      let ok = read_knotenverformung_dialog(nodeDisp);
@@ -1944,7 +1955,7 @@ function mouseup(ev: any) {
                         two.update();
                      }
                   } else {
-                     alertdialog('ok', msg('keinen Knoten gefunden'));
+                     alertdialog('ok', msg('kein Knoten mit Stab gefunden'));
                   }
                }
 
@@ -1967,7 +1978,7 @@ function mouseup(ev: any) {
                foundNodePoint = false;
             } else {
                if (buttons_control.bemassung_aktiv) {
-                  alertdialog('ok', msg('keinen Knoten gepickt'));
+                  alertdialog('ok', msg('kein Knoten mit Stab gefunden'));
                   return;
                }
                if (foundRasterPoint) {

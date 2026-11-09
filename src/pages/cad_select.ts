@@ -12,7 +12,7 @@ import { buttons_control, drawer_1_control, set_help_text, showDialog_elementlas
 import { draw_knotenlast, draw_knotenmasse, draw_lager, drawStab } from "./cad_draw_elemente"
 import { find_max_Lastfall, find_maxValues_eloads, set_max_lastfall } from "./cad_draw_elementlasten"
 import { showDialog_knotenverformung } from "./cad_knotenverformung"
-import { add_cad_node, add_element_nodes, find_nearest_cad_node, get_cad_node_X, get_cad_node_Z } from "./cad_node"
+import { add_cad_node, add_element_nodes, find_nearest_stab_node, get_cad_node_X, get_cad_node_Z } from "./cad_node"
 import { TCAD_Element, TCAD_Stab, TCAD_Streckenlast, TCAD_Einzellast, TCAD_Temperaturlast, TCAD_Vorspannung, TCAD_Spannschloss, TCAD_Stabvorverformung, TCAD_Knotenlast, TCAD_Knotenmasse, TCAD_Lager, TCAD_Knotenverformung } from "./CCAD_element"
 import { berechnungErforderlich } from "./globals"
 import { querschnittset } from "./querschnitte"
@@ -231,7 +231,7 @@ export function copy_selected(dx0: number, dz0: number) {
 
                 let dx = dx0, dz = dz0;
                 for (let i = 0; i < ncopies; i++) {
-                    let index = find_nearest_cad_node(x1 + dx, z1 + dz);
+                    let index = find_nearest_stab_node(x1 + dx, z1 + dz);
                     let vorhanden = check_doppelte_Masse(index);
 
                     if (index > -1) {
@@ -264,7 +264,7 @@ export function copy_selected(dx0: number, dz0: number) {
 
                 let dx = dx0, dz = dz0;
                 for (let i = 0; i < ncopies; i++) {
-                    let index = find_nearest_cad_node(x1 + dx, z1 + dz);
+                    let index = find_nearest_stab_node(x1 + dx, z1 + dz);
                     if (index > -1) {
                         let vorhanden = check_doppeltes_Lager(index)
                         if (vorhanden) {
@@ -298,7 +298,7 @@ export function copy_selected(dx0: number, dz0: number) {
 
                 let dx = dx0, dz = dz0;
                 for (let i = 0; i < ncopies; i++) {
-                    let index = find_nearest_cad_node(x1 + dx, z1 + dz);
+                    let index = find_nearest_stab_node(x1 + dx, z1 + dz);
                     if (index > -1) {
                         let group = null;
                         const el = new TCAD_Knotenlast(group, index, knlast, CAD_KNLAST);

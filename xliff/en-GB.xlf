@@ -1529,17 +1529,9 @@
   <source>Pfeilspitze picken</source>
   <target>pick at an arrowhead</target>
 </trans-unit>
-<trans-unit id="s6c307b3a1a718b75">
-  <source>keinen Knoten gepickt</source>
-  <target>No node was picked</target>
-</trans-unit>
 <trans-unit id="s655dacda54bf73f1">
   <source>Knoten hat schon ein Lager</source>
   <target>The node already has support</target>
-</trans-unit>
-<trans-unit id="s5c7d90867a472c06">
-  <source>keinen Knoten gefunden</source>
-  <target>no node found</target>
 </trans-unit>
 <trans-unit id="s8a7299b02b0cdded">
   <source>Knoten hat schon eine Knotenmasse</source>
@@ -1870,6 +1862,10 @@ Prepared by: Alex Example</target>
 <trans-unit id="sd5a4e2f1d7e717ed">
   <source>Am Ort (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) liegen zwei Knoten übereinander, die Stäbe daran sind nicht miteinander verbunden</source>
   <target>At (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) two nodes lie on top of each other; the members attached to them are not connected</target>
+</trans-unit>
+<trans-unit id="s595b29d1049a33cd">
+  <source>kein Knoten mit Stab gefunden</source>
+  <target>no node with a member found</target>
 </trans-unit>
 </body>
 </file>

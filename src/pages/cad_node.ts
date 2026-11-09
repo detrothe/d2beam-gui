@@ -1,5 +1,5 @@
 import Two from "two.js";
-import { get_fangweite_cursor, two } from "./cad";
+import { CAD_STAB, get_fangweite_cursor, list, two } from "./cad";
 
 export let CADNodes = [] as TCADNode[];
 
@@ -88,6 +88,35 @@ export function find_nearest_cad_node(x: number, z: number) {
                 min_abstand = abstand2;
                 index = i;
             }
+        }
+    }
+    return index;
+}
+
+//------------------------------------------------------------------------------------------------
+export function find_nearest_stab_node(x: number, z: number) {
+    //--------------------------------------------------------------------------------------------
+    // wie find_nearest_cad_node, aber nur Knoten, an denen mindestens ein Stab hängt.
+    // Lager, Knotenlasten, Knotenverformungen, Massen und die ersten beiden Bemaßungspunkte
+    // dürfen nur an solchen Knoten liegen (nel zählt auch Bemaßungspunkte, Knoten-Elemente usw.).
+
+    const stabknoten = new Set<number>();
+    for (const obj of list) {
+        if (obj.elTyp === CAD_STAB) {
+            stabknoten.add(obj.index1);
+            stabknoten.add((obj as any).index2);
+        }
+    }
+
+    let index = -1;
+    let min_abstand2 = get_fangweite_cursor() * get_fangweite_cursor();
+    for (const i of stabknoten) {
+        const dx = CADNodes[i].x - x;
+        const dz = CADNodes[i].z - z;
+        const abstand2 = dx * dx + dz * dz;
+        if (abstand2 < min_abstand2) {
+            min_abstand2 = abstand2;
+            index = i;
         }
     }
     return index;

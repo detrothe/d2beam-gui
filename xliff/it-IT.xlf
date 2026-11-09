@@ -1244,17 +1244,9 @@
   <source>Pfeilspitze picken</source>
   <target>Seleziona la punta della freccia</target>
 </trans-unit>
-<trans-unit id="s6c307b3a1a718b75">
-  <source>keinen Knoten gepickt</source>
-  <target>Nessun nodo selezionato</target>
-</trans-unit>
 <trans-unit id="s655dacda54bf73f1">
   <source>Knoten hat schon ein Lager</source>
   <target>Il nodo ha già un vincolo</target>
-</trans-unit>
-<trans-unit id="s5c7d90867a472c06">
-  <source>keinen Knoten gefunden</source>
-  <target>Nessun nodo trovato</target>
 </trans-unit>
 <trans-unit id="s8a7299b02b0cdded">
   <source>Knoten hat schon eine Knotenmasse</source>
@@ -1869,6 +1861,10 @@ Elaborato da: Alex Esempio</target>
 <trans-unit id="sd5a4e2f1d7e717ed">
   <source>Am Ort (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) liegen zwei Knoten übereinander, die Stäbe daran sind nicht miteinander verbunden</source>
   <target>In (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) due nodi sono sovrapposti; le aste collegate non sono unite tra loro</target>
+</trans-unit>
+<trans-unit id="s595b29d1049a33cd">
+  <source>kein Knoten mit Stab gefunden</source>
+  <target>nessun nodo con asta trovato</target>
 </trans-unit>
 </body>
 </file>
