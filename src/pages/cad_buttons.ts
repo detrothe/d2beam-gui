@@ -94,7 +94,7 @@ import { mode_multi_selected_elementlast_aendern, mode_multi_selected_knotenlast
 import { drHaupt } from "../components/dr-haupt";
 import { user_language } from '..';
 import { show_property_dialog } from './cad_contextmenu';
-import { alertdialog } from "./confirm_dialog"
+import { alertdialog, ConfirmDialog } from "./confirm_dialog"
 
 import type { drMyDrawer } from '../components/dr-my_drawer';
 
@@ -349,6 +349,75 @@ function find_newest_elementlast(): { stab: TCAD_Stab, index: number, seq: numbe
     }
   }
   return newest;
+}
+
+//--------------------------------------------------------------------------------------------------------
+// Stab + Knotenelemente, die gemeinsam entfernt wurden; Redo bringt sie in einem Schritt zurück
+class CDelGruppe {
+  gruppe = true;
+  objs: TCAD_Element[];       // Knotenelemente zuerst, der Stab zuletzt (wird beim Redo das jüngste Element)
+  constructor(objs: TCAD_Element[]) {
+    this.objs = objs;
+  }
+}
+
+let undo_redo_laeuft = false;   // verhindert erneutes Auslösen, während die Rückfrage offen ist
+
+//--------------------------------------------------------------------------------------------------------
+function knotenelement_name(obj: TCAD_Element): string {
+  //----------------------------------------------------------------------------------------------------
+  if (obj.elTyp === CAD_LAGER) return msg('Lager');
+  if (obj.elTyp === CAD_KNLAST) return msg('Knotenlast');
+  if (obj.elTyp === CAD_KNOTVERFORMUNG) return msg('Knotenverformung');
+  if (obj.elTyp === CAD_KNMASSE) return msg('Knotenmasse');
+  return '';
+}
+
+//--------------------------------------------------------------------------------------------------------
+function knotenelemente_ohne_stab(stab: TCAD_Stab): TCAD_Element[] {
+  //----------------------------------------------------------------------------------------------------
+  // Lager, Knotenlasten, Knotenverformungen und Massen, an deren Knoten nach dem Entfernen von
+  // `stab` kein Stab mehr hängt. Sie gingen sonst nicht in die Berechnung ein.
+  const ergebnis: TCAD_Element[] = [];
+  for (const k of [stab.index1, stab.index2]) {
+    let weiterer_stab = false;
+    for (const o of list) {
+      if (o !== stab && o.elTyp === CAD_STAB && (o.index1 === k || (o as TCAD_Stab).index2 === k)) { weiterer_stab = true; break; }
+    }
+    if (weiterer_stab) continue;
+    for (const o of list) {
+      if (o.index1 === k && knotenelement_name(o) !== '' && !ergebnis.includes(o)) ergebnis.push(o);
+    }
+  }
+  return ergebnis;
+}
+
+//--------------------------------------------------------------------------------------------------------
+async function rueckfrage_knotenelemente(elemente: TCAD_Element[]): Promise<boolean> {
+  //----------------------------------------------------------------------------------------------------
+  // true = fortfahren und die Knotenelemente mit entfernen, false = abbrechen
+  if (elemente.length === 0) return true;
+  const proKnoten = new Map<number, string[]>();
+  for (const o of elemente) {
+    if (!proKnoten.has(o.index1)) proKnoten.set(o.index1, []);
+    proKnoten.get(o.index1)!.push(knotenelement_name(o));
+  }
+  const zeilen = [...proKnoten].map(([k, namen]) => `(${get_cad_node_X(k)}, ${get_cad_node_Z(k)}): ${namen.join(', ')}`);
+  const dialog = new ConfirmDialog({
+    trueButton_Text: msg('ok'),
+    falseButton_Text: msg('Abbrechen'),
+    question_Text: msg('An folgenden Knoten hängt danach kein Stab mehr:') + '<br>' + zeilen.join('<br>') +
+      '<br><br>' + msg('Diese Elemente werden mit entfernt. Fortfahren?'),
+  });
+  return await dialog.confirm() === true;
+}
+
+//--------------------------------------------------------------------------------------------------------
+function entferne_knotenelement(obj: TCAD_Element) {
+  //----------------------------------------------------------------------------------------------------
+  list.remove(obj);
+  two.remove(obj.two_obj);
+  remove_element_nodes(obj.index1);
 }
 
 export const buttons_control = new Cbuttons_control();
@@ -895,10 +964,22 @@ export function delete_help_text() {
 }
 
 //--------------------------------------------------------------------------------------------------------
-export function unDo_button() {
+export async function unDo_button() {
   //----------------------------------------------------------------------------------------------------
   console.log("unDo", list.size)
 
+  if (undo_redo_laeuft) return;
+  undo_redo_laeuft = true;
+  try {
+    await unDo_ausfuehren();
+  } finally {
+    undo_redo_laeuft = false;
+  }
+}
+
+//--------------------------------------------------------------------------------------------------------
+async function unDo_ausfuehren() {
+  //----------------------------------------------------------------------------------------------------
   if (list.size > 0) {
     let obj = list.getTail();
     console.log("obj eltyp", obj.elTyp);
@@ -912,7 +993,15 @@ export function unDo_button() {
       return;
     }
 
+    let undo_eintrag: any = obj;
+
     if ((obj as TCAD_Element).elTyp === CAD_STAB) {
+      // hängen danach Lager/Lasten/Massen an einem Knoten ohne Stab: nachfragen und mit entfernen
+      const knotenelemente = knotenelemente_ohne_stab(obj as TCAD_Stab);
+      if (!(await rueckfrage_knotenelemente(knotenelemente))) return;
+      for (const k of knotenelemente) entferne_knotenelement(k);
+      if (knotenelemente.length > 0) undo_eintrag = new CDelGruppe([...knotenelemente, obj]);
+
       remove_element_nodes((obj as TCAD_Stab).index1)
       remove_element_nodes((obj as TCAD_Stab).index2)
     }
@@ -950,7 +1039,7 @@ export function unDo_button() {
 
     obj = list.removeTail();
 
-    undoList.append(obj);
+    undoList.append(undo_eintrag);
 
     // erst nach dem Entfernen neu bestimmen, ein Stab nimmt seine Elementlasten mit
     find_max_Lastfall();
@@ -962,6 +1051,8 @@ export function unDo_button() {
 export function reDo_button() {
   //----------------------------------------------------------------------------------------------------
   console.log("reDo", undoList.size)
+
+  if (undo_redo_laeuft) return;     // Rückfrage von Undo/Löschen ist noch offen
 
   if (undoList.size > 0) {
     let obj = undoList.removeTail();
@@ -990,65 +1081,76 @@ export function reDo_button() {
       obj.obj_element.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
     }
     else {
-      obj.seq = next_cad_seq();   // wieder eingefügt = jüngstes Element, nimmt seine Elementlasten mit
-      list.append(obj);
+      // eine Gruppe (Knotenelemente + Stab) kommt in einem Schritt zurück, der Stab zuletzt
+      const objs: any[] = obj.gruppe ? obj.objs : [obj];
+      for (const o of objs) {
+        o.seq = next_cad_seq();   // wieder eingefügt = jüngstes Element, nimmt seine Elementlasten mit
+        list.append(o);
+      }
 
       // vor dem Zeichnen neu bestimmen, ein Stab bringt seine Elementlasten wieder mit
       find_max_Lastfall();
       find_maxValues_eloads();
 
-      if (obj.elTyp === CAD_STAB) {
-        group = drawStab(obj, tr);
-        two.add(group);
-        add_element_nodes(obj.index1);
-        add_element_nodes(obj.index2);
-      }
-      else if (obj.elTyp === CAD_LAGER) {
-
-        group = draw_lager(tr, obj)
-        two.add(group);
-        add_element_nodes(obj.index1);
-      }
-      else if (obj.elTyp === CAD_KNLAST) {
-        let index1 = obj.index1
-        group = draw_knotenlast(tr, obj, index1, 1.0, 0)
-        two.add(group);
-        add_element_nodes(obj.index1);
-      }
-      else if (obj.elTyp === CAD_KNOTVERFORMUNG) {
-        group = draw_knotenverformung(tr, obj, 1.0, 0)
-        two.add(group);
-        add_element_nodes(obj.index1);
-      }
-      else if (obj.elTyp === CAD_KNOTEN) {
-        //console.log("KNOTEN reDo", obj.x1, obj.z1)
-        add_element_nodes(obj.index1);
-        group = draw_knoten(obj, tr)
-        two.add(group);
-      }
-      else if (obj.elTyp === CAD_KNMASSE) {
-        //console.log("KNOTEN reDo", obj.x1, obj.z1)
-
-        let index1 = obj.index1
-        group = draw_knotenmasse(tr, obj, get_cad_node_X(index1), get_cad_node_Z(index1))
-        two.add(group);
-        add_element_nodes(index1);
-      }
-      else if (obj.elTyp === CAD_BEMASSUNG) {
-        group = drawBemassung(obj, tr);
-        two.add(group);
-        add_element_nodes(obj.index1);
-        add_element_nodes(obj.index2);
-        add_element_nodes(obj.index3);
-        add_element_nodes(obj.index4);
-      }
-
-      obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
+      for (const o of objs) redo_zeichnen(o);
     }
 
     init_cad(2);
     //two.update();
   }
+}
+
+//--------------------------------------------------------------------------------------------------------
+function redo_zeichnen(obj: any) {
+  //----------------------------------------------------------------------------------------------------
+  let group: any
+  if (obj.elTyp === CAD_STAB) {
+    group = drawStab(obj, tr);
+    two.add(group);
+    add_element_nodes(obj.index1);
+    add_element_nodes(obj.index2);
+  }
+  else if (obj.elTyp === CAD_LAGER) {
+
+    group = draw_lager(tr, obj)
+    two.add(group);
+    add_element_nodes(obj.index1);
+  }
+  else if (obj.elTyp === CAD_KNLAST) {
+    let index1 = obj.index1
+    group = draw_knotenlast(tr, obj, index1, 1.0, 0)
+    two.add(group);
+    add_element_nodes(obj.index1);
+  }
+  else if (obj.elTyp === CAD_KNOTVERFORMUNG) {
+    group = draw_knotenverformung(tr, obj, 1.0, 0)
+    two.add(group);
+    add_element_nodes(obj.index1);
+  }
+  else if (obj.elTyp === CAD_KNOTEN) {
+    //console.log("KNOTEN reDo", obj.x1, obj.z1)
+    add_element_nodes(obj.index1);
+    group = draw_knoten(obj, tr)
+    two.add(group);
+  }
+  else if (obj.elTyp === CAD_KNMASSE) {
+    //console.log("KNOTEN reDo", obj.x1, obj.z1)
+
+    let index1 = obj.index1
+    group = draw_knotenmasse(tr, obj, get_cad_node_X(index1), get_cad_node_Z(index1))
+    two.add(group);
+    add_element_nodes(index1);
+  }
+  else if (obj.elTyp === CAD_BEMASSUNG) {
+    group = drawBemassung(obj, tr);
+    two.add(group);
+    add_element_nodes(obj.index1);
+    add_element_nodes(obj.index2);
+    add_element_nodes(obj.index3);
+    add_element_nodes(obj.index4);
+  }
+
+  obj.setTwoObj(group); // alte line zuvor am Anfang dieser Funktion gelöscht
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -1109,7 +1211,7 @@ export function Select_button() {
 }
 
 //--------------------------------------------------------------------------------------------------------
-export function delete_element(xc: number, zc: number) {
+export async function delete_element(xc: number, zc: number) {
   //----------------------------------------------------------------------------------------------------
 
   console.log("delete_element")
@@ -1418,19 +1520,33 @@ export function delete_element(xc: number, zc: number) {
     gefunden = true;
   }
   else if (stab_gefunden && min_abstand < get_fangweite_cursor()) {          // Stab   index >= 0 && min_abstand < 0.25
-    if (list.size > 0) {
-      let obj = list.removeAt(index_stab);
-      two.remove(obj.two_obj);
-      two.update();
+    if (list.size > 0 && !undo_redo_laeuft) {
+      const obj = list.getAt(index_stab) as TCAD_Stab;
+      // hängen danach Lager/Lasten/Massen an einem Knoten ohne Stab: nachfragen und mit entfernen
+      const knotenelemente = knotenelemente_ohne_stab(obj);
+      undo_redo_laeuft = true;
+      let weiter = false;
+      try {
+        weiter = await rueckfrage_knotenelemente(knotenelemente);
+      } finally {
+        undo_redo_laeuft = false;
+      }
+      if (weiter) {
+        for (const k of knotenelemente) entferne_knotenelement(k);
+        list.remove(obj);
+        two.remove(obj.two_obj);
+        two.update();
 
-      remove_element_nodes((obj as TCAD_Stab).index1)
-      remove_element_nodes((obj as TCAD_Stab).index2)
+        remove_element_nodes(obj.index1)
+        remove_element_nodes(obj.index2)
 
-      undoList.append(obj);          // Elementlasten bleiben am Stab hängen und kommen mit Redo zurück
-      find_max_Lastfall();
-      find_maxValues_eloads();
-      //buttons_control.reset();
-      gefunden = true;
+        // Elementlasten bleiben am Stab hängen und kommen mit Redo zurück, Knotenelemente über die Gruppe
+        undoList.append(knotenelemente.length > 0 ? new CDelGruppe([...knotenelemente, obj]) : obj);
+        find_max_Lastfall();
+        find_maxValues_eloads();
+        //buttons_control.reset();
+        gefunden = true;
+      }
     }
   }
   else if (bemassung_gefunden && min_abstand_bemassung < get_fangweite_cursor()) {          // Stab   index >= 0 && min_abstand < 0.25

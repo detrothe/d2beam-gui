@@ -1814,6 +1814,18 @@ Elaborato da: Alex Esempio</target>
   <source>keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen</source>
   <target>convergenza delle forze non raggiunta, aumentare il numero di iterazioni</target>
 </trans-unit>
+<trans-unit id="s667c60282900d704">
+  <source>An folgenden Knoten hängt danach kein Stab mehr:</source>
+  <target>In seguito nessuna asta sarà più collegata ai seguenti nodi:</target>
+</trans-unit>
+<trans-unit id="s2bff4c614f314e63">
+  <source>Diese Elemente werden mit entfernt. Fortfahren?</source>
+  <target>Anche questi elementi verranno rimossi. Continuare?</target>
+</trans-unit>
+<trans-unit id="sf1619a45654def43">
+  <source><x id="0" equiv-text="${name}"/> bei (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>): an diesem Knoten hängt kein Stab</source>
+  <target><x id="0" equiv-text="${name}"/> in (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>): nessuna asta è collegata a questo nodo</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

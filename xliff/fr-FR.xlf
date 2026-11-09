@@ -1814,6 +1814,18 @@ Réalisé par : Alex Exemple</target>
   <source>keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen</source>
   <target>pas de convergence des efforts, augmentez le nombre d'itérations</target>
 </trans-unit>
+<trans-unit id="s667c60282900d704">
+  <source>An folgenden Knoten hängt danach kein Stab mehr:</source>
+  <target>Après cela, aucune barre ne sera plus reliée aux nœuds suivants :</target>
+</trans-unit>
+<trans-unit id="s2bff4c614f314e63">
+  <source>Diese Elemente werden mit entfernt. Fortfahren?</source>
+  <target>Ces éléments seront également supprimés. Continuer ?</target>
+</trans-unit>
+<trans-unit id="sf1619a45654def43">
+  <source><x id="0" equiv-text="${name}"/> bei (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>): an diesem Knoten hängt kein Stab</source>
+  <target><x id="0" equiv-text="${name}"/> en (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>) : aucune barre n'est reliée à ce nœud</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

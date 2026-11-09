@@ -1,4 +1,4 @@
-import { msg } from '@lit/localize';
+import { msg, str } from '@lit/localize';
 import { drButtonPM } from "../components/dr-button-pm";
 
 import { alertdialog } from "./confirm_dialog"
@@ -78,6 +78,10 @@ export function cad_rechnen() {
         set_nnodes(0);
         node.length = 0
 
+        // alte FE-Nummern verwerfen: ein Knoten, der früher an einem Stab hing, behielt sonst seine
+        // Nummer, und Lager/Lasten daran landeten nach dem Löschen von Stäben auf einem anderen Knoten
+        for (let i = 0; i < CADNodes.length; i++) CADNodes[i].index_FE = -1
+
         for (let i = 0; i < CADNodes.length; i++) {
             if (CADNodes[i].nel > 0) {
                 node.push(new TNode())
@@ -91,6 +95,21 @@ export function cad_rechnen() {
         }
 
         set_nnodesTotal(nnodes)
+
+        // Knotenelemente an Knoten ohne Stab gehen nicht in die Berechnung ein -> klare Meldung
+        for (const obj of list) {
+            let name = ''
+            if (obj.elTyp === CAD_LAGER) name = msg('Lager')
+            else if (obj.elTyp === CAD_KNLAST) name = msg('Knotenlast')
+            else if (obj.elTyp === CAD_KNOTVERFORMUNG) name = msg('Knotenverformung')
+            else if (obj.elTyp === CAD_KNMASSE) name = msg('Knotenmasse')
+            else continue
+            const k = CADNodes[obj.index1]
+            if (k.index_FE < 0) {
+                write(msg(str`${name} bei (${k.x}, ${k.z}): an diesem Knoten hängt kein Stab`))
+                fatal_error = true
+            }
+        }
 
         let el = shadow.getElementById("id_button_nnodes") as drButtonPM;
         el.setValue(nnodes);
@@ -127,7 +146,7 @@ export function cad_rechnen() {
                     if (index > -1) {
                         let ind = CADNodes[index].index_FE
                         //console.log("ind", ind)
-                        if (ind < 0) alertdialog("ok", "Lager ind " + (ind) + "hängt an keinem Knoten, FATAL ERROR");
+                        if (ind < 0) continue;   // Knoten ohne Stab, bereits oben gemeldet
                         for (let j = 0; j < ndof; j++) {
                             let child = tabelle.rows[ind + 1].cells[j + 3].firstElementChild as HTMLInputElement;
                             if (obj.node.L_org[j] === 1) {
@@ -679,6 +698,10 @@ export function cad_rechnen() {
                         wert = obj.nodeDisp.phi0;
                         if (wert.length === 0) nodeDisp0[nel].dispL[2] = false; else nodeDisp0[nel].dispL[2] = true;     // true=definierte Knotenverformung
                         nodeDisp0[nel].phi0 = Number(wert.replace(/,/g, "."));
+                    } else {
+                        nodeDisp0[nel].node = -1   // Knoten ohne Stab, bereits oben gemeldet (Vorgabe 0 wäre FE-Knoten 1)
+                        nodeDisp0[nel].lf = obj.nodeDisp.lf   // sonst zusätzliche, irreführende Meldungen zum Lastfall
+                        if (nodeDisp0[nel].lf > check_max_lastfall) check_max_lastfall = nodeDisp0[nel].lf;
                     }
                     nel++
 

@@ -1815,6 +1815,18 @@ Prepared by: Alex Example</target>
   <source>keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen</source>
   <target>forces did not converge, increase the number of iterations</target>
 </trans-unit>
+<trans-unit id="s667c60282900d704">
+  <source>An folgenden Knoten hängt danach kein Stab mehr:</source>
+  <target>No member will be connected to the following nodes afterwards:</target>
+</trans-unit>
+<trans-unit id="s2bff4c614f314e63">
+  <source>Diese Elemente werden mit entfernt. Fortfahren?</source>
+  <target>These elements will be removed as well. Continue?</target>
+</trans-unit>
+<trans-unit id="sf1619a45654def43">
+  <source><x id="0" equiv-text="${name}"/> bei (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>): an diesem Knoten hängt kein Stab</source>
+  <target><x id="0" equiv-text="${name}"/> at (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>): no member is connected to this node</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
