@@ -1806,17 +1806,9 @@ Réalisé par : Alex Exemple</target>
   <source>keine Konvergenz bei den Kräften erreicht, Anzahl der Iterationen erhöhen</source>
   <target>pas de convergence des efforts, augmentez le nombre d'itérations</target>
 </trans-unit>
-<trans-unit id="s667c60282900d704">
-  <source>An folgenden Knoten hängt danach kein Stab mehr:</source>
-  <target>Après cela, aucune barre ne sera plus reliée aux nœuds suivants :</target>
-</trans-unit>
 <trans-unit id="s2bff4c614f314e63">
   <source>Diese Elemente werden mit entfernt. Fortfahren?</source>
   <target>Ces éléments seront également supprimés. Continuer ?</target>
-</trans-unit>
-<trans-unit id="sf1619a45654def43">
-  <source><x id="0" equiv-text="${name}"/> bei (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>): an diesem Knoten hängt kein Stab</source>
-  <target><x id="0" equiv-text="${name}"/> en (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>) : aucune barre n'est reliée à ce nœud</target>
 </trans-unit>
 <trans-unit id="s87d35b36686fcd59">
   <source>Wiederherstellen nicht möglich:</source>
@@ -1825,18 +1817,6 @@ Réalisé par : Alex Exemple</target>
 <trans-unit id="s468a32581b1af31b">
   <source>Bitte zuerst das vorhandene Element löschen.</source>
   <target>Veuillez d'abord supprimer l'élément existant.</target>
-</trans-unit>
-<trans-unit id="sb46b7a8f0499933b">
-  <source>Am Knoten (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) ist bereits ein Lager vorhanden.</source>
-  <target>Le nœud (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) a déjà un appui.</target>
-</trans-unit>
-<trans-unit id="sfb9129800a0f183d">
-  <source>Am Knoten (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) ist bereits eine Knotenmasse vorhanden.</source>
-  <target>Le nœud (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) a déjà une masse nodale.</target>
-</trans-unit>
-<trans-unit id="s52cab441146c12f4">
-  <source>Zwischen (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) und (<x id="2" equiv-text="${get_cad_node_X(o.index2)}"/>, <x id="3" equiv-text="${get_cad_node_Z(o.index2)}"/>) ist bereits ein Stab vorhanden.</source>
-  <target>Il existe déjà une barre entre (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) et (<x id="2" equiv-text="${get_cad_node_X(o.index2)}"/>, <x id="3" equiv-text="${get_cad_node_Z(o.index2)}"/>).</target>
 </trans-unit>
 <trans-unit id="s5e26cdb111c801fd">
   <source>Mindestens ein Stab wurde nicht kopiert, weil zwischen den Zielknoten bereits ein Stab vorhanden ist.</source>
@@ -1854,14 +1834,6 @@ Réalisé par : Alex Exemple</target>
   <source>Zwischen diesen Knoten gibt es bereits einen Stab</source>
   <target>Il existe déjà une barre entre ces nœuds</target>
 </trans-unit>
-<trans-unit id="s4248507833351cdf">
-  <source>An der Stelle (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) liegt bereits ein Knoten. Knoten können nicht aufeinander geschoben werden.</source>
-  <target>Il existe déjà un nœud en (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>). Les nœuds ne peuvent pas être déplacés l'un sur l'autre.</target>
-</trans-unit>
-<trans-unit id="sd5a4e2f1d7e717ed">
-  <source>Am Ort (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) liegen zwei Knoten übereinander, die Stäbe daran sind nicht miteinander verbunden</source>
-  <target>En (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>), deux nœuds sont superposés ; les barres qui y sont reliées ne sont pas connectées entre elles</target>
-</trans-unit>
 <trans-unit id="s595b29d1049a33cd">
   <source>kein Knoten mit Stab gefunden</source>
   <target>aucun nœud relié à une barre trouvé</target>
@@ -1869,6 +1841,34 @@ Réalisé par : Alex Exemple</target>
 <trans-unit id="s3c6c0728f4b8b155">
   <source>Knoten existiert bereits</source>
   <target>Le nœud existe déjà</target>
+</trans-unit>
+<trans-unit id="s3d90fb6abd9302b2">
+  <source>An folgenden Knoten hängt nach dem Löschen kein Stab mehr:</source>
+  <target>Après la suppression, aucune barre ne sera plus reliée aux nœuds suivants :</target>
+</trans-unit>
+<trans-unit id="s300df406f4c1d3e3">
+  <source>Am Knoten (x=<x id="0" equiv-text="${x}"/>, z=<x id="1" equiv-text="${z}"/>) ist bereits ein Lager vorhanden.</source>
+  <target>Le nœud (x=<x id="0" equiv-text="${x}"/>, z=<x id="1" equiv-text="${z}"/>) a déjà un appui.</target>
+</trans-unit>
+<trans-unit id="s7db0e79109be8975">
+  <source>Am Knoten (x=<x id="0" equiv-text="${x}"/>, z=<x id="1" equiv-text="${z}"/>) ist bereits eine Knotenmasse vorhanden.</source>
+  <target>Le nœud (x=<x id="0" equiv-text="${x}"/>, z=<x id="1" equiv-text="${z}"/>) a déjà une masse nodale.</target>
+</trans-unit>
+<trans-unit id="sabc9c8c96d0bc318">
+  <source>Zwischen (x=<x id="0" equiv-text="${x}"/>, z=<x id="1" equiv-text="${z}"/>) und (x=<x id="2" equiv-text="${get_cad_node_X(o.index2)}"/>, z=<x id="3" equiv-text="${get_cad_node_Z(o.index2)}"/>) ist bereits ein Stab vorhanden.</source>
+  <target>Il existe déjà une barre entre (x=<x id="0" equiv-text="${x}"/>, z=<x id="1" equiv-text="${z}"/>) et (x=<x id="2" equiv-text="${get_cad_node_X(o.index2)}"/>, z=<x id="3" equiv-text="${get_cad_node_Z(o.index2)}"/>).</target>
+</trans-unit>
+<trans-unit id="s428f13e0ff7102bb">
+  <source>An der Stelle (x=<x id="0" equiv-text="${x}"/>, z=<x id="1" equiv-text="${z}"/>) liegt bereits ein Knoten. Knoten können nicht aufeinander geschoben werden.</source>
+  <target>Il existe déjà un nœud en (x=<x id="0" equiv-text="${x}"/>, z=<x id="1" equiv-text="${z}"/>). Les nœuds ne peuvent pas être déplacés l'un sur l'autre.</target>
+</trans-unit>
+<trans-unit id="s143881ee934bfa65">
+  <source>Am Ort (x=<x id="0" equiv-text="${node[i].x}"/>, z=<x id="1" equiv-text="${node[i].z}"/>) liegen zwei Knoten übereinander, die Stäbe daran sind nicht miteinander verbunden</source>
+  <target>En (x=<x id="0" equiv-text="${node[i].x}"/>, z=<x id="1" equiv-text="${node[i].z}"/>), deux nœuds sont superposés ; les barres qui y sont reliées ne sont pas connectées entre elles</target>
+</trans-unit>
+<trans-unit id="s9def9b921fdc9c1b">
+  <source><x id="0" equiv-text="${name}"/> bei (x=<x id="1" equiv-text="${k.x}"/>, z=<x id="2" equiv-text="${k.z}"/>): an diesem Knoten hängt kein Stab</source>
+  <target><x id="0" equiv-text="${name}"/> en (x=<x id="1" equiv-text="${k.x}"/>, z=<x id="2" equiv-text="${k.z}"/>) : aucune barre n'est reliée à ce nœud</target>
 </trans-unit>
 </body>
 </file>

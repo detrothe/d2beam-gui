@@ -403,11 +403,11 @@ async function rueckfrage_knotenelemente(elemente: TCAD_Element[]): Promise<bool
     if (!proKnoten.has(o.index1)) proKnoten.set(o.index1, []);
     proKnoten.get(o.index1)!.push(knotenelement_name(o));
   }
-  const zeilen = [...proKnoten].map(([k, namen]) => `(${get_cad_node_X(k)}, ${get_cad_node_Z(k)}): ${namen.join(', ')}`);
+  const zeilen = [...proKnoten].map(([k, namen]) => `(x=${get_cad_node_X(k)}, z=${get_cad_node_Z(k)}): ${namen.join(', ')}`);
   const dialog = new ConfirmDialog({
     trueButton_Text: msg('ok'),
     falseButton_Text: msg('Abbrechen'),
-    question_Text: msg('An folgenden Knoten hängt danach kein Stab mehr:') + '<br>' + zeilen.join('<br>') +
+    question_Text: msg('An folgenden Knoten hängt nach dem Löschen kein Stab mehr:') + '<br>' + zeilen.join('<br>') +
       '<br><br>' + msg('Diese Elemente werden mit entfernt. Fortfahren?'),
   });
   return await dialog.confirm() === true;
@@ -1118,11 +1118,11 @@ function redo_konflikt(objs: any[]): string {
   for (const o of objs) {
     const x = get_cad_node_X(o.index1), z = get_cad_node_Z(o.index1);
     if (o.elTyp === CAD_LAGER && check_doppeltes_Lager(o.index1))
-      return msg(str`Am Knoten (${x}, ${z}) ist bereits ein Lager vorhanden.`);
+      return msg(str`Am Knoten (x=${x}, z=${z}) ist bereits ein Lager vorhanden.`);
     if (o.elTyp === CAD_KNMASSE && check_doppelte_Masse(o.index1))
-      return msg(str`Am Knoten (${x}, ${z}) ist bereits eine Knotenmasse vorhanden.`);
+      return msg(str`Am Knoten (x=${x}, z=${z}) ist bereits eine Knotenmasse vorhanden.`);
     if (o.elTyp === CAD_STAB && check_doppelter_Stab(o.index1, o.index2))
-      return msg(str`Zwischen (${x}, ${z}) und (${get_cad_node_X(o.index2)}, ${get_cad_node_Z(o.index2)}) ist bereits ein Stab vorhanden.`);
+      return msg(str`Zwischen (x=${x}, z=${z}) und (x=${get_cad_node_X(o.index2)}, z=${get_cad_node_Z(o.index2)}) ist bereits ein Stab vorhanden.`);
   }
   return '';
 }
@@ -3565,7 +3565,7 @@ export function update_knoten(flag = 0) {
         if (i === verschoben || CADNodes[i].nel === 0) continue;
         const dx = CADNodes[i].x - x, dz = CADNodes[i].z - z;
         if (dx * dx + dz * dz < 0.01 * 0.01) {
-          alertdialog('ok', msg(str`An der Stelle (${x}, ${z}) liegt bereits ein Knoten. Knoten können nicht aufeinander geschoben werden.`));
+          alertdialog('ok', msg(str`An der Stelle (x=${x}, z=${z}) liegt bereits ein Knoten. Knoten können nicht aufeinander geschoben werden.`));
           return;
         }
       }

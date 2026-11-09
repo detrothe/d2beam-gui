@@ -108,7 +108,7 @@ export function cad_rechnen() {
             for (let j = i + 1; j < nnodes; j++) {
                 const dx = node[i].x - node[j].x, dz = node[i].z - node[j].z;
                 if (dx * dx + dz * dz < 0.01 * 0.01) {
-                    write(msg(str`Am Ort (${node[i].x}, ${node[i].z}) liegen zwei Knoten übereinander, die Stäbe daran sind nicht miteinander verbunden`));
+                    write(msg(str`Am Ort (x=${node[i].x}, z=${node[i].z}) liegen zwei Knoten übereinander, die Stäbe daran sind nicht miteinander verbunden`));
                     fatal_error = true; anzahl_fehler_cad++;
                 }
             }
@@ -124,7 +124,7 @@ export function cad_rechnen() {
             else continue
             const k = CADNodes[obj.index1]
             if (k.index_FE < 0) {
-                write(msg(str`${name} bei (${k.x}, ${k.z}): an diesem Knoten hängt kein Stab`))
+                write(msg(str`${name} bei (x=${k.x}, z=${k.z}): an diesem Knoten hängt kein Stab`))
                 fatal_error = true; anzahl_fehler_cad++;
             }
         }
