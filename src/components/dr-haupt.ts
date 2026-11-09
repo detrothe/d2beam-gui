@@ -110,7 +110,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v2.2.1, 6-Nov-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v2.2.1, 9-Nov-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
