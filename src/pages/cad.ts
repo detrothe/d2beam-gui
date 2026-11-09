@@ -1466,15 +1466,9 @@ function penDown(ev: PointerEvent) {
 //--------------------------------------------------------------------------------------------------------
 export function check_doppeltes_Lager(index1: number): boolean {
    //-----------------------------------------------------------------------------------------------------
-
-   for (let i = 0; i < list.size; i++) {
-      let obj = list.getNext(i) as TCAD_Lager;
-      if (obj.elTyp === CAD_LAGER) {
-         if (obj.index1 === index1) {
-            return true
-            break;
-         }
-      }
+   // eigener Iterator statt getNext, damit die Prüfung auch innerhalb einer getNext-Schleife sicher ist
+   for (const obj of list) {
+      if (obj.elTyp === CAD_LAGER && obj.index1 === index1) return true;
    }
    return false;
 }
@@ -1482,14 +1476,20 @@ export function check_doppeltes_Lager(index1: number): boolean {
 //--------------------------------------------------------------------------------------------------------
 export function check_doppelte_Masse(index1: number): boolean {
    //-----------------------------------------------------------------------------------------------------
+   for (const obj of list) {
+      if (obj.elTyp === CAD_KNMASSE && obj.index1 === index1) return true;
+   }
+   return false;
+}
 
-   for (let i = 0; i < list.size; i++) {
-      let obj = list.getNext(i) as TCAD_Knotenmasse;
-      if (obj.elTyp === CAD_KNMASSE) {
-         if (obj.index1 === index1) {
-            return true
-            break;
-         }
+//--------------------------------------------------------------------------------------------------------
+export function check_doppelter_Stab(index1: number, index2: number): boolean {
+   //-----------------------------------------------------------------------------------------------------
+   // zwei Stäbe zwischen denselben Knoten ergäben doppelte Steifigkeit
+   for (const obj of list) {
+      if (obj.elTyp === CAD_STAB) {
+         const i1 = obj.index1, i2 = (obj as TCAD_Stab).index2;
+         if ((i1 === index1 && i2 === index2) || (i1 === index2 && i2 === index1)) return true;
       }
    }
    return false;
@@ -2002,16 +2002,20 @@ function mouseup(ev: any) {
                if (sl > 0.001) {
                   let index1 = add_cad_node(start_x_wc, start_z_wc, 1);
                   let index2 = add_cad_node(end_x_wc, end_z_wc, 1);
-                  add_element_nodes(index1);
-                  add_element_nodes(index2);
-                  const obj = new TCAD_Stab(group, index1, index2, default_querschnitt, buttons_control.typ_cad_element);
-                  list.append(obj);
+                  if (check_doppelter_Stab(index1, index2)) {
+                     alertdialog('ok', msg('Zwischen diesen Knoten gibt es bereits einen Stab'));
+                  } else {
+                     add_element_nodes(index1);
+                     add_element_nodes(index2);
+                     const obj = new TCAD_Stab(group, index1, index2, default_querschnitt, buttons_control.typ_cad_element);
+                     list.append(obj);
 
-                  group = drawStab(obj, tr);
-                  two.add(group);
-                  two.update();
+                     group = drawStab(obj, tr);
+                     two.add(group);
+                     two.update();
 
-                  obj.setTwoObj(group)
+                     obj.setTwoObj(group)
+                  }
                }
                else {
                   alertdialog('ok', msg('Stablänge zu klein') + ' = ' + sl + 'm');

@@ -1826,6 +1826,42 @@ Réalisé par : Alex Exemple</target>
   <source><x id="0" equiv-text="${name}"/> bei (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>): an diesem Knoten hängt kein Stab</source>
   <target><x id="0" equiv-text="${name}"/> en (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>) : aucune barre n'est reliée à ce nœud</target>
 </trans-unit>
+<trans-unit id="s87d35b36686fcd59">
+  <source>Wiederherstellen nicht möglich:</source>
+  <target>Restauration impossible :</target>
+</trans-unit>
+<trans-unit id="s468a32581b1af31b">
+  <source>Bitte zuerst das vorhandene Element löschen.</source>
+  <target>Veuillez d'abord supprimer l'élément existant.</target>
+</trans-unit>
+<trans-unit id="sb46b7a8f0499933b">
+  <source>Am Knoten (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) ist bereits ein Lager vorhanden.</source>
+  <target>Le nœud (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) a déjà un appui.</target>
+</trans-unit>
+<trans-unit id="sfb9129800a0f183d">
+  <source>Am Knoten (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) ist bereits eine Knotenmasse vorhanden.</source>
+  <target>Le nœud (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) a déjà une masse nodale.</target>
+</trans-unit>
+<trans-unit id="s52cab441146c12f4">
+  <source>Zwischen (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) und (<x id="2" equiv-text="${get_cad_node_X(o.index2)}"/>, <x id="3" equiv-text="${get_cad_node_Z(o.index2)}"/>) ist bereits ein Stab vorhanden.</source>
+  <target>Il existe déjà une barre entre (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) et (<x id="2" equiv-text="${get_cad_node_X(o.index2)}"/>, <x id="3" equiv-text="${get_cad_node_Z(o.index2)}"/>).</target>
+</trans-unit>
+<trans-unit id="s5e26cdb111c801fd">
+  <source>Mindestens ein Stab wurde nicht kopiert, weil zwischen den Zielknoten bereits ein Stab vorhanden ist.</source>
+  <target>Au moins une barre n'a pas été copiée, car une barre existe déjà entre les nœuds cibles.</target>
+</trans-unit>
+<trans-unit id="se3630e5b5c48a574">
+  <source>einer oder mehrere Knoten hat(haben) schon eine Knotenmasse, nur eine Masse pro Knoten ist zulässig, es erfolgte keine Änderung bei den betroffenen Knoten.</source>
+  <target>Un ou plusieurs nœuds ont déjà une masse nodale. Une seule masse par nœud est autorisée ; les nœuds concernés n'ont pas été modifiés.</target>
+</trans-unit>
+<trans-unit id="sb213a7198841ce3a">
+  <source>einer oder mehrere Knoten hat(haben) schon eine Lagerung, nur ein Lager pro Knoten ist zulässig, es erfolgte keine Änderung bei den betroffenen Knoten.</source>
+  <target>Un ou plusieurs nœuds ont déjà un appui. Un seul appui par nœud est autorisé ; les nœuds concernés n'ont pas été modifiés.</target>
+</trans-unit>
+<trans-unit id="s59c4f50a5787fc24">
+  <source>Zwischen diesen Knoten gibt es bereits einen Stab</source>
+  <target>Il existe déjà une barre entre ces nœuds</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

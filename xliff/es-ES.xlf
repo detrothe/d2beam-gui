@@ -1828,6 +1828,42 @@ Elaborado por: Alex Ejemplo</target>
   <source><x id="0" equiv-text="${name}"/> bei (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>): an diesem Knoten hängt kein Stab</source>
   <target><x id="0" equiv-text="${name}"/> en (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>): ninguna barra está conectada a este nudo</target>
 </trans-unit>
+<trans-unit id="s87d35b36686fcd59">
+  <source>Wiederherstellen nicht möglich:</source>
+  <target>No es posible restaurar:</target>
+</trans-unit>
+<trans-unit id="s468a32581b1af31b">
+  <source>Bitte zuerst das vorhandene Element löschen.</source>
+  <target>Elimine primero el elemento existente.</target>
+</trans-unit>
+<trans-unit id="sb46b7a8f0499933b">
+  <source>Am Knoten (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) ist bereits ein Lager vorhanden.</source>
+  <target>El nudo (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) ya tiene un apoyo.</target>
+</trans-unit>
+<trans-unit id="sfb9129800a0f183d">
+  <source>Am Knoten (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) ist bereits eine Knotenmasse vorhanden.</source>
+  <target>El nudo (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) ya tiene una masa nodal.</target>
+</trans-unit>
+<trans-unit id="s52cab441146c12f4">
+  <source>Zwischen (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) und (<x id="2" equiv-text="${get_cad_node_X(o.index2)}"/>, <x id="3" equiv-text="${get_cad_node_Z(o.index2)}"/>) ist bereits ein Stab vorhanden.</source>
+  <target>Ya existe una barra entre (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) y (<x id="2" equiv-text="${get_cad_node_X(o.index2)}"/>, <x id="3" equiv-text="${get_cad_node_Z(o.index2)}"/>).</target>
+</trans-unit>
+<trans-unit id="s5e26cdb111c801fd">
+  <source>Mindestens ein Stab wurde nicht kopiert, weil zwischen den Zielknoten bereits ein Stab vorhanden ist.</source>
+  <target>Al menos una barra no se copió porque ya existe una barra entre los nudos de destino.</target>
+</trans-unit>
+<trans-unit id="se3630e5b5c48a574">
+  <source>einer oder mehrere Knoten hat(haben) schon eine Knotenmasse, nur eine Masse pro Knoten ist zulässig, es erfolgte keine Änderung bei den betroffenen Knoten.</source>
+  <target>Uno o más nudos ya tienen una masa nodal. Solo se permite una masa por nudo; los nudos afectados no se modificaron.</target>
+</trans-unit>
+<trans-unit id="sb213a7198841ce3a">
+  <source>einer oder mehrere Knoten hat(haben) schon eine Lagerung, nur ein Lager pro Knoten ist zulässig, es erfolgte keine Änderung bei den betroffenen Knoten.</source>
+  <target>Uno o más nudos ya tienen un apoyo. Solo se permite un apoyo por nudo; los nudos afectados no se modificaron.</target>
+</trans-unit>
+<trans-unit id="s59c4f50a5787fc24">
+  <source>Zwischen diesen Knoten gibt es bereits einen Stab</source>
+  <target>Ya existe una barra entre estos nudos</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

@@ -1827,6 +1827,42 @@ Prepared by: Alex Example</target>
   <source><x id="0" equiv-text="${name}"/> bei (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>): an diesem Knoten hängt kein Stab</source>
   <target><x id="0" equiv-text="${name}"/> at (<x id="1" equiv-text="${k.x}"/>, <x id="2" equiv-text="${k.z}"/>): no member is connected to this node</target>
 </trans-unit>
+<trans-unit id="s87d35b36686fcd59">
+  <source>Wiederherstellen nicht möglich:</source>
+  <target>Restoring is not possible:</target>
+</trans-unit>
+<trans-unit id="s468a32581b1af31b">
+  <source>Bitte zuerst das vorhandene Element löschen.</source>
+  <target>Please delete the existing element first.</target>
+</trans-unit>
+<trans-unit id="sb46b7a8f0499933b">
+  <source>Am Knoten (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) ist bereits ein Lager vorhanden.</source>
+  <target>Node (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) already has a support.</target>
+</trans-unit>
+<trans-unit id="sfb9129800a0f183d">
+  <source>Am Knoten (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) ist bereits eine Knotenmasse vorhanden.</source>
+  <target>Node (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) already has a nodal mass.</target>
+</trans-unit>
+<trans-unit id="s52cab441146c12f4">
+  <source>Zwischen (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) und (<x id="2" equiv-text="${get_cad_node_X(o.index2)}"/>, <x id="3" equiv-text="${get_cad_node_Z(o.index2)}"/>) ist bereits ein Stab vorhanden.</source>
+  <target>There is already a member between (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) and (<x id="2" equiv-text="${get_cad_node_X(o.index2)}"/>, <x id="3" equiv-text="${get_cad_node_Z(o.index2)}"/>).</target>
+</trans-unit>
+<trans-unit id="s5e26cdb111c801fd">
+  <source>Mindestens ein Stab wurde nicht kopiert, weil zwischen den Zielknoten bereits ein Stab vorhanden ist.</source>
+  <target>At least one member was not copied because there is already a member between the target nodes.</target>
+</trans-unit>
+<trans-unit id="se3630e5b5c48a574">
+  <source>einer oder mehrere Knoten hat(haben) schon eine Knotenmasse, nur eine Masse pro Knoten ist zulässig, es erfolgte keine Änderung bei den betroffenen Knoten.</source>
+  <target>One or more nodes already have a nodal mass. Only one mass per node is allowed; the affected nodes were not changed.</target>
+</trans-unit>
+<trans-unit id="sb213a7198841ce3a">
+  <source>einer oder mehrere Knoten hat(haben) schon eine Lagerung, nur ein Lager pro Knoten ist zulässig, es erfolgte keine Änderung bei den betroffenen Knoten.</source>
+  <target>One or more nodes already have a support. Only one support per node is allowed; the affected nodes were not changed.</target>
+</trans-unit>
+<trans-unit id="s59c4f50a5787fc24">
+  <source>Zwischen diesen Knoten gibt es bereits einen Stab</source>
+  <target>There is already a member between these nodes</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

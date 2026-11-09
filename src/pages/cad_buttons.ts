@@ -1,9 +1,10 @@
-import { msg } from '@lit/localize';
+import { msg, str } from '@lit/localize';
 import { getLocale, setLocaleFromUrl } from './localization';
 import { enableTouchHints } from './touch_hint';
 
 
 import {
+  check_doppeltes_Lager, check_doppelte_Masse, check_doppelter_Stab,
   list, undoList, Stab_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST,
   keydown, CAD_STAB, CAD_LAGER, selected_element, CAD_ELLAST,
   click_zurueck_cad,
@@ -1083,6 +1084,16 @@ export function reDo_button() {
     else {
       // eine Gruppe (Knotenelemente + Stab) kommt in einem Schritt zurück, der Stab zuletzt
       const objs: any[] = obj.gruppe ? obj.objs : [obj];
+
+      // Inzwischen ein neues Lager / eine neue Masse / ein neuer Stab an derselben Stelle?
+      // Dann nicht doppelt einfügen, Eintrag bleibt für ein späteres Redo erhalten.
+      const konflikt = redo_konflikt(objs);
+      if (konflikt) {
+        undoList.append(obj);
+        alertdialog('ok', msg('Wiederherstellen nicht möglich:') + '<br>' + konflikt + '<br>' +
+          msg('Bitte zuerst das vorhandene Element löschen.'));
+        return;
+      }
       for (const o of objs) {
         o.seq = next_cad_seq();   // wieder eingefügt = jüngstes Element, nimmt seine Elementlasten mit
         list.append(o);
@@ -1098,6 +1109,22 @@ export function reDo_button() {
     init_cad(2);
     //two.update();
   }
+}
+
+//--------------------------------------------------------------------------------------------------------
+function redo_konflikt(objs: any[]): string {
+  //----------------------------------------------------------------------------------------------------
+  // Text der ersten Doppelung, die ein Redo erzeugen würde, sonst ''
+  for (const o of objs) {
+    const x = get_cad_node_X(o.index1), z = get_cad_node_Z(o.index1);
+    if (o.elTyp === CAD_LAGER && check_doppeltes_Lager(o.index1))
+      return msg(str`Am Knoten (${x}, ${z}) ist bereits ein Lager vorhanden.`);
+    if (o.elTyp === CAD_KNMASSE && check_doppelte_Masse(o.index1))
+      return msg(str`Am Knoten (${x}, ${z}) ist bereits eine Knotenmasse vorhanden.`);
+    if (o.elTyp === CAD_STAB && check_doppelter_Stab(o.index1, o.index2))
+      return msg(str`Zwischen (${x}, ${z}) und (${get_cad_node_X(o.index2)}, ${get_cad_node_Z(o.index2)}) ist bereits ein Stab vorhanden.`);
+  }
+  return '';
 }
 
 //--------------------------------------------------------------------------------------------------------
