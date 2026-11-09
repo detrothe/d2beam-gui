@@ -22,7 +22,7 @@ import { show_controller_THIIO, show_controller_bettung, show_controller_pruefen
 import { ausgabe, ausgabe_kombinationen_Th_I_O, dyn_ausgabe } from "./ausgabe"
 import { alertdialog, AlertDialog } from "../pages/confirm_dialog";
 import { SlCheckbox } from "@shoelace-style/shoelace";
-import { cad_rechnen } from "./cad_rechnen";
+import { cad_rechnen, get_anzahl_fehler_cad } from "./cad_rechnen";
 import {
     default_querschnitt, incr_querschnittSets, nQuerschnittSets, querschnitts_zaehler, querschnittset,
     set_default_querschnitt, set_querschnitts_zaehler, add_new_cross_section,
@@ -748,7 +748,7 @@ function check_input() {
     //---------------------------------------------------------------------------------------------------------------
 
 
-    let fehler = 0;
+    let fehler = get_anzahl_fehler_cad();   // bereits von cad_rechnen gemeldete Fehler mitzählen
 
     if (nQuerschnittSets === 0) { write(msg('Es muss mindestens 1 Querschnitt definiert sein') + '\n'); fehler++; }
     if (nelem < 1) { write(msg('Es muss mindestens 1 Element definiert sein')); fehler++; }

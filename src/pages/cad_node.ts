@@ -53,6 +53,8 @@ export function add_cad_node(x: number, z: number, option = 0) {
         if (abstand2 < min_abstand) {
             min_abstand = abstand2;
             index = i;
+        } else if (abstand2 === min_abstand && index >= 0 && CADNodes[index].nel === 0 && CADNodes[i].nel > 0) {
+            index = i;   // gleich weit entfernt: benutzten Knoten statt verwaistem nehmen
         }
     }
 

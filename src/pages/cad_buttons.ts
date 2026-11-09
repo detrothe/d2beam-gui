@@ -3556,6 +3556,21 @@ export function update_knoten(flag = 0) {
     console.log('drDialogKnoten', ele.getValueX());
     console.log('drDialogKnoten', ele.getValueZ());
 
+    // Liegt am Zielort schon ein Knoten mit Elementen, entstünden zwei deckungsgleiche, aber nicht
+    // verbundene Knoten (Stäbe sähen verbunden aus, wären es statisch aber nicht) -> abweisen
+    {
+      const x = ele.getValueX(), z = ele.getValueZ();
+      const verschoben = flag === 0 ? obj_knoten.index1 : index_CADPunkt;
+      for (let i = 0; i < CADNodes.length; i++) {
+        if (i === verschoben || CADNodes[i].nel === 0) continue;
+        const dx = CADNodes[i].x - x, dz = CADNodes[i].z - z;
+        if (dx * dx + dz * dz < 0.01 * 0.01) {
+          alertdialog('ok', msg(str`An der Stelle (${x}, ${z}) liegt bereits ein Knoten. Knoten können nicht aufeinander geschoben werden.`));
+          return;
+        }
+      }
+    }
+
     if (flag === 0) {
       // (obj_knoten as TCAD_Lager).x1 = ele.getValueX();
       // (obj_knoten as TCAD_Lager).z1 = ele.getValueZ();
@@ -3587,36 +3602,17 @@ export function update_knoten(flag = 0) {
       index = index_CADPunkt
     }
 
-    // Verschiebe alle Elemente an dem Knoten
-
-    for (let i = 0; i < list.size; i++) {
-      let obj = list.getNext(i) as TCAD_Element;
-      if (obj.elTyp === CAD_STAB) {
-        console.log("update_knoten", index, (obj as TCAD_Stab).index1, (obj as TCAD_Stab).index2)
-        if (index === (obj as TCAD_Stab).index1) redraw_stab(obj as TCAD_Stab);
-        if (index === (obj as TCAD_Stab).index2) redraw_stab(obj as TCAD_Stab);
-      }
-      else if (obj.elTyp === CAD_KNLAST) {
-        if (index === obj.index1) {
-          redraw_knotenlast(obj as TCAD_Knotenlast);
-        }
-      }
-      else if (obj.elTyp === CAD_KNMASSE) {
-        if (index === obj.index1) {
-          redraw_knotenmasse(obj as TCAD_Knotenmasse);
-        }
-      }
-      else if (obj.elTyp === CAD_LAGER) {
-        if (index === obj.index1) {
-          redraw_lager(obj as TCAD_Lager);
-        }
-      }
-      else if (obj.elTyp === CAD_BEMASSUNG) {
-        //console.log("update_knoten", index, (obj as TCAD_Stab).index1, (obj as TCAD_Stab).index2)
+    // Bemaßungen am Knoten: Lage der Maßlinie (index3/index4) neu berechnen
+    for (const obj of list) {
+      if (obj.elTyp === CAD_BEMASSUNG) {
         if (index === (obj as TCAD_Bemassung).index1 || index === (obj as TCAD_Bemassung).index2) redraw_bemassung(obj as TCAD_Bemassung);
       }
     }
-    two.update();
+
+    // Alles neu zeichnen: Pfeile von Knotenlasten/Knotenverformungen werden über einen Versatz je Knoten
+    // gestapelt, der nur beim vollständigen Neuzeichnen zurückgesetzt wird. Einzelnes Neuzeichnen hat den
+    // Versatz aufaddiert, die Pfeile standen dann zu weit vom Knoten weg. Zoom und Pan bleiben erhalten.
+    init_cad(2);
 
     berechnungErforderlich(true);
   }

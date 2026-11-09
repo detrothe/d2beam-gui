@@ -1862,6 +1862,14 @@ Elaborato da: Alex Esempio</target>
   <source>Zwischen diesen Knoten gibt es bereits einen Stab</source>
   <target>Esiste già un'asta tra questi nodi</target>
 </trans-unit>
+<trans-unit id="s4248507833351cdf">
+  <source>An der Stelle (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) liegt bereits ein Knoten. Knoten können nicht aufeinander geschoben werden.</source>
+  <target>Esiste già un nodo in (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>). I nodi non possono essere spostati uno sull'altro.</target>
+</trans-unit>
+<trans-unit id="sd5a4e2f1d7e717ed">
+  <source>Am Ort (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) liegen zwei Knoten übereinander, die Stäbe daran sind nicht miteinander verbunden</source>
+  <target>In (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) due nodi sono sovrapposti; le aste collegate non sono unite tra loro</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

@@ -1863,6 +1863,14 @@ Prepared by: Alex Example</target>
   <source>Zwischen diesen Knoten gibt es bereits einen Stab</source>
   <target>There is already a member between these nodes</target>
 </trans-unit>
+<trans-unit id="s4248507833351cdf">
+  <source>An der Stelle (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) liegt bereits ein Knoten. Knoten können nicht aufeinander geschoben werden.</source>
+  <target>There is already a node at (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>). Nodes cannot be moved onto each other.</target>
+</trans-unit>
+<trans-unit id="sd5a4e2f1d7e717ed">
+  <source>Am Ort (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) liegen zwei Knoten übereinander, die Stäbe daran sind nicht miteinander verbunden</source>
+  <target>At (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) two nodes lie on top of each other; the members attached to them are not connected</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

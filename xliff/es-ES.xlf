@@ -1864,6 +1864,14 @@ Elaborado por: Alex Ejemplo</target>
   <source>Zwischen diesen Knoten gibt es bereits einen Stab</source>
   <target>Ya existe una barra entre estos nudos</target>
 </trans-unit>
+<trans-unit id="s4248507833351cdf">
+  <source>An der Stelle (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>) liegt bereits ein Knoten. Knoten können nicht aufeinander geschoben werden.</source>
+  <target>Ya existe un nudo en (<x id="0" equiv-text="${x}"/>, <x id="1" equiv-text="${z}"/>). Los nudos no se pueden desplazar uno sobre otro.</target>
+</trans-unit>
+<trans-unit id="sd5a4e2f1d7e717ed">
+  <source>Am Ort (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) liegen zwei Knoten übereinander, die Stäbe daran sind nicht miteinander verbunden</source>
+  <target>En (<x id="0" equiv-text="${node[i].x}"/>, <x id="1" equiv-text="${node[i].z}"/>) hay dos nudos superpuestos; las barras conectadas a ellos no están unidas entre sí</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

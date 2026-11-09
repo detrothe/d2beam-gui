@@ -21,6 +21,11 @@ import { myFormat, myFormat_en, testNumber, write } from "./utility";
 
 
 
+// Anzahl der Eingabefehler, die cad_rechnen ins Ausgabefeld geschrieben hat; check_input zählt sie mit,
+// damit "Anzahl Fehler in Eingabe" zur Meldung "Eingabefehler bitte erst beheben" passt
+let anzahl_fehler_cad = 0;
+export function get_anzahl_fehler_cad() { return anzahl_fehler_cad; }
+
 export function cad_rechnen() {
 
     console.log("in cad_rechnen")
@@ -31,6 +36,7 @@ export function cad_rechnen() {
     if (shadow) {
 
         fatal_error = false;
+        anzahl_fehler_cad = 0;
         let check_max_lastfall = 1   // für Eigengewichtslastfall
 
         // Markiere alle Knoten /Punkte, an denen Stäbe hängen
@@ -96,6 +102,18 @@ export function cad_rechnen() {
 
         set_nnodesTotal(nnodes)
 
+        // deckungsgleiche Knoten (z. B. aus älteren Dateien oder durch Verschieben entstanden): die Stäbe
+        // daran sehen verbunden aus, sind es statisch aber nicht -> melden statt falsch rechnen
+        for (let i = 0; i < nnodes; i++) {
+            for (let j = i + 1; j < nnodes; j++) {
+                const dx = node[i].x - node[j].x, dz = node[i].z - node[j].z;
+                if (dx * dx + dz * dz < 0.01 * 0.01) {
+                    write(msg(str`Am Ort (${node[i].x}, ${node[i].z}) liegen zwei Knoten übereinander, die Stäbe daran sind nicht miteinander verbunden`));
+                    fatal_error = true; anzahl_fehler_cad++;
+                }
+            }
+        }
+
         // Knotenelemente an Knoten ohne Stab gehen nicht in die Berechnung ein -> klare Meldung
         for (const obj of list) {
             let name = ''
@@ -107,7 +125,7 @@ export function cad_rechnen() {
             const k = CADNodes[obj.index1]
             if (k.index_FE < 0) {
                 write(msg(str`${name} bei (${k.x}, ${k.z}): an diesem Knoten hängt kein Stab`))
-                fatal_error = true
+                fatal_error = true; anzahl_fehler_cad++;
             }
         }
 
@@ -230,6 +248,7 @@ export function cad_rechnen() {
 
                     if (element[ielem].sl < 1e-12) {
                         write(msg('Länge von Element') + " " + String(ielem + 1) + " " + msg('ist null'))
+                        fatal_error = true; anzahl_fehler_cad++;    // Berechnung würde sonst abstürzen
                         element[ielem].cosinus = 1.0
                         element[ielem].sinus = 0.0
                         element[ielem].alpha = 0.0
@@ -511,7 +530,7 @@ export function cad_rechnen() {
                                 let elemNo = obj.elNo - 1
                                 if (x - 0.0001 > element[elemNo].sl) {
                                     write(msg('Angriffspunkt Einzellast auf Stab') + " " + String(elemNo + 1) + " " + msg('ist größer Stablänge, siehe Tab Tabellen'))
-                                    fatal_error = true;
+                                    fatal_error = true; anzahl_fehler_cad++;
                                 } else {
                                     if (x > element[elemNo].sl) x = element[elemNo].sl;
                                 }
