@@ -2499,12 +2499,14 @@ export function draw_cad_knoten() {
       let x = ele.getValueX();
       let z = ele.getValueZ();
 
-      let index = add_cad_node(x, z);
+      let index = add_cad_node(x, z);   // -1: neuer Knoten angelegt, sonst Index des vorhandenen
 
       console.log('index draw_cad_knoten ', index);
-      if (index === -1) {
+      // Ein vorhandener, aber verwaister Knoten (nel = 0, z. B. nach dem Löschen eines Stabs) ist
+      // unsichtbar und wird wiederverwendet, statt "Knoten existiert bereits" zu melden.
+      if (index === -1 || CADNodes[index].nel === 0) {
 
-         let index1 = CADNodes.length - 1;
+         let index1 = index === -1 ? CADNodes.length - 1 : index;
          add_element_nodes(index1)
 
          let group = new Two.Group();
@@ -2520,7 +2522,7 @@ export function draw_cad_knoten() {
          obj.setTwoObj(group);
 
       } else {
-         alertdialog('ok', 'Knoten existiert bereits');
+         alertdialog('ok', msg('Knoten existiert bereits'));
       }
    }
 
