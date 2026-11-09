@@ -1019,11 +1019,8 @@ async function unDo_ausfuehren() {
       remove_element_nodes((obj as TCAD_Knotenmasse).index1)
     }
     else if ((obj as TCAD_Element).elTyp === CAD_KNOTEN) {
-      let index = (obj as TCAD_Knoten).index1
-      if (CADNodes[index].nel > 1) {
-        alertdialog("ok", "An dem Knoten hängen noch andere Elemente, erst diese löschen");
-        return;
-      }
+      // Das Knoten-Element ist nur die Markierung. Andere Elemente hängen am Knotenindex, nicht an ihm;
+      // hängt noch ein Stab am Knoten, bleibt der Knoten erhalten. Eine Sperre ließ Undo hier hängen.
       remove_element_nodes((obj as TCAD_Knoten).index1)
     }
     else if ((obj as TCAD_Element).elTyp === CAD_BEMASSUNG) {
@@ -1502,19 +1499,14 @@ export async function delete_element(xc: number, zc: number) {
     gefunden = true;
   }
   else if (knoten_gefunden) {
-    let obj = list.getAt(index_knoten);
-    let index = (obj as TCAD_Knoten).index1
-    if (CADNodes[index].nel === 1) {
-      obj = list.removeAt(index_knoten);
-      two.remove(obj.two_obj);
-      two.update();
-      undoList.append(obj);
-      remove_element_nodes((obj as TCAD_Knoten).index1)
-      //buttons_control.reset();
-      gefunden = true;
-    } else {
-      alertdialog("ok", "An dem Knoten hängen noch andere Elemente, erst diese löschen");
-    }
+    // nur die Markierung entfernen; am Knoten hängende Stäbe usw. bleiben (siehe unDo_ausfuehren)
+    let obj = list.removeAt(index_knoten);
+    two.remove(obj.two_obj);
+    two.update();
+    undoList.append(obj);
+    remove_element_nodes((obj as TCAD_Knoten).index1)
+    //buttons_control.reset();
+    gefunden = true;
   }
   else if (knotenlast_gefunden) {
     let obj = list.removeAt(index_knlast);
