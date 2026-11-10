@@ -1623,10 +1623,6 @@ function mousemove(ev: MouseEvent) {
 
          if (buttons_control.input_started === 1) {
             rubberband = new Two.Group();
-            let band = new Two.Line(start_x, start_y, xo, yo);
-            band.linewidth = 1; /// devicePixelRatio;
-            band.dashes = [2, 2];
-            rubberband.add(band);
 
             let dx = xo - start_x
             let dy = yo - start_y
@@ -1634,6 +1630,35 @@ function mousemove(ev: MouseEvent) {
 
             let sinus = dy / sl;
             let cosinus = dx / sl;
+
+            if (buttons_control.copy_selected_aktiv) {
+               // Kopiervektor als Pfeil mit gefüllter Spitze darstellen
+               if (sl > 0) {
+                  const head_len = Math.min(14, sl);
+                  const head_half = head_len * 0.4;
+                  const xb = xo - cosinus * head_len;      // Basis der Pfeilspitze
+                  const yb = yo - sinus * head_len;
+                  const shaft = new Two.Line(start_x, start_y, xb, yb);
+                  shaft.linewidth = 1.5;
+                  shaft.stroke = '#000000';
+                  rubberband.add(shaft);
+
+                  const head = new Two.Path([
+                     new Two.Anchor(xo, yo),
+                     new Two.Anchor(xb - sinus * head_half, yb + cosinus * head_half),
+                     new Two.Anchor(xb + sinus * head_half, yb - cosinus * head_half),
+                  ], true);
+                  head.fill = '#000000';
+                  head.stroke = '#000000';
+                  head.linewidth = 1;
+                  rubberband.add(head);
+               }
+            } else {
+               let band = new Two.Line(start_x, start_y, xo, yo);
+               band.linewidth = 1; /// devicePixelRatio;
+               band.dashes = [2, 2];
+               rubberband.add(band);
+            }
             let alpha = Math.atan2(dy, dx)
 
             let xm = (xo + start_x) / 2. + (sinus * 11 + cosinus * 1) // devicePixelRatio  war 17
