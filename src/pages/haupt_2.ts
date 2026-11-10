@@ -92,6 +92,17 @@ function anzahl(shadow: ShadowRoot, id: string): number {
 }
 
 //---------------------------------------------------------------------------------------------------------------
+export function tabelleZeilenGeaendert(ev: Event) {
+  //-------------------------------------------------------------------------------------------------------------
+  // dr-tabelle hat selbst Zeilen gelöscht/wiederhergestellt -> zugehörigen Zähler nachziehen
+  const tabelle = ev.target as HTMLElement;
+  const paar = TABELLEN.find(([, idTabelle]) => idTabelle === tabelle.id);
+  if (!paar) return;
+  const root = tabelle.getRootNode() as ShadowRoot;
+  (root.getElementById(paar[0]) as drButtonPM | null)?.setValue((ev as CustomEvent).detail.value);
+}
+
+//---------------------------------------------------------------------------------------------------------------
 export function resizeTables() {
   //-------------------------------------------------------------------------------------------------------------
 

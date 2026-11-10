@@ -47,6 +47,7 @@ import {
   create_pdf,
   resizeTables,
   show_video,
+  tabelleZeilenGeaendert,
 } from '../pages/haupt_2';
 
 import {
@@ -790,6 +791,8 @@ export class drHaupt extends LitElement {
           coltext=${coltext_lf}
           colwidth='["4","8","3"]'
           lf_languagechanged='Lf'
+          allow_delete_row
+          @rows-changed=${tabelleZeilenGeaendert}
         ></dr-tabelle>
       </sl-tab-panel>
 

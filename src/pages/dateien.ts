@@ -460,6 +460,7 @@ export function read_daten(eingabedaten: string): boolean {
 
                 let nSpalten = tabelle.rows[0].cells.length;
 
+                (el as any)?.clear_undo?.();   // Undo der gelöschten Kombinationen gehört zum alten Projekt
                 for (i = 1; i < tabelle.rows.length; i++) {
                     for (j = 1; j < nSpalten; j++) {
                         let child = tabelle.rows[i].cells[j]
@@ -650,6 +651,7 @@ export function read_daten(eingabedaten: string): boolean {
 
         let nSpalten = tabelle.rows[0].cells.length;
 
+        (el as any)?.clear_undo?.();   // Undo der gelöschten Kombinationen gehört zum alten Projekt
         for (i = 1; i < tabelle.rows.length; i++) {
             for (j = 1; j < nSpalten; j++) {
                 let child = tabelle.rows[i].cells[j]

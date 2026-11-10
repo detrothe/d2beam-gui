@@ -5,6 +5,13 @@ import { Detect } from '../pages/haupt';
 
 import { berechnungErforderlich, touch_support_table } from "../pages/globals";
 import { write } from '../pages/utility'
+import { msg, str } from '@lit/localize';
+import { ConfirmDialog } from '../pages/confirm_dialog';
+
+const TRASH_SVG =
+   '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" ' +
+   'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+   '<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>';
 
 // const contextMenuLinkClassName = "context-menu__link";
 // const contextMenuActive = "context-menu--active";
@@ -201,10 +208,20 @@ class DrTabelle extends HTMLElement {
    private onTouchMove = (ev: any) => this.TOUCH_MOVE(ev);
    private onKeyDown = (ev: Event) => this.KEYDOWN(ev as KeyboardEvent);
 
-   private onValueChanged = () => berechnungErforderlich(true);
+   // manuelle Eingabe macht die Lösch-Schnappschüsse ungültig
+   private onValueChanged = () => { this.clear_undo(); berechnungErforderlich(true); };
 
    lastClientX = 0;
    lastClientY = 0;
+
+   // Attribut allow_delete_row: Löschen-Button in der No-Spalte jeder Zeile, mit lokalem Undo/Redo.
+   // Muss beim Erstellen der Tabelle gesetzt sein.
+   allowDeleteRow = false;
+   undoStack: string[][][] = [];   // Schnappschüsse aller Zellwerte (Zeile, Spalte) vor einer Änderung
+   redoStack: string[][][] = [];
+   undoBar: HTMLDivElement | null = null;
+   btnUndo: HTMLButtonElement | null = null;
+   btnRedo: HTMLButtonElement | null = null;
 
    //---------------------------------------------------------------------------------------------------------------
    connectedCallback() {
@@ -214,6 +231,8 @@ class DrTabelle extends HTMLElement {
 
       // Bei erneutem Einhängen (Verschieben im DOM, Lit-Rerender) nichts neu aufbauen
       if (this.shadow.getElementById('mytable')) return;
+
+      if (this.allowDeleteRow) this.create_undo_bar();
 
       const table = document.createElement('table');
       this.shadow.appendChild(table);
@@ -263,15 +282,14 @@ class DrTabelle extends HTMLElement {
             //this.columns.length
             // columns.length
 
-            let newCell, newText;
+            let newCell;
             if (iSpalte === 0) {
                newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
-               newText = document.createTextNode(String(iZeile)); // Append a text node to the cell
                newCell.style.textAlign = 'center';
                //   >>> newCell.style.backgroundColor = color_table_in   //'#b3ae00'   //'rgb(150,180, 180)';
                newCell.style.padding = '0px';
                newCell.style.margin = '0px';
-               newCell.appendChild(newText);
+               this.fill_no_cell(newCell, iZeile);
                //newCell.setAttribute('title', 'Knotennummer')
             } else {
                //console.log('this.typs', '|' + this.typs[iSpalte] + '|');
@@ -369,6 +387,18 @@ class DrTabelle extends HTMLElement {
       //------------------------------------------------------------------------------------------------------------
       //console.log('attributeChangedCallback', name, oldValue, newValue);
 
+      if (name === 'allow_delete_row') {
+         this.allowDeleteRow = newValue !== null && newValue !== 'false';
+         return;
+      }
+
+      // Zeilen-/Spaltenzahl wird von außen geändert -> Lösch-Schnappschüsse passen nicht mehr.
+      // resizeTables() setzt nzeilen auch mit unverändertem Wert, das darf Undo nicht löschen.
+      if (oldValue !== null) {
+         if (name === 'nzeilen' && Number(newValue) !== Number(this.nZeilen)) this.clear_undo();
+         if (name === 'nspalten' && Number(newValue) !== Number(this.nSpalten)) this.clear_undo();
+      }
+
       if (name === 'add_new_option') {
          this.add_new_select_option();
 
@@ -387,6 +417,7 @@ class DrTabelle extends HTMLElement {
 
       } else if (name === 'clear') {
          this.clear_Tabelle('mytable');
+         this.clear_undo();
          berechnungErforderlich(true);
 
       } else if (name === 'option_deleted') {
@@ -470,7 +501,8 @@ class DrTabelle extends HTMLElement {
    static get observedAttributes() {
       //------------------------------------------------------------------------------------------------------------
       return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext',
-         'option_deleted', 'hide_column', 'show_column', 'id', 'lf_languagechanged', 'columns_languagechanged'];
+         'option_deleted', 'hide_column', 'show_column', 'id', 'lf_languagechanged', 'columns_languagechanged',
+         'allow_delete_row'];
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -489,6 +521,141 @@ class DrTabelle extends HTMLElement {
    lf_languageChanged(lf: string) {
       //------------------------------------------------------------------------------------------------------------
       this.colText = lf;
+      this.update_delete_texts();
+   }
+
+   //---------------------------------------------------------------------------------------------------------------
+   // Zeilen löschen mit Undo/Redo (nur bei allow_delete_row)
+   //---------------------------------------------------------------------------------------------------------------
+
+   private fill_no_cell(cell: HTMLTableCellElement, iZeile: number) {
+      cell.appendChild(document.createTextNode(String(iZeile)));
+      if (!this.allowDeleteRow) return;
+
+      cell.style.whiteSpace = 'nowrap';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'del_row';
+      btn.title = msg('Zeile löschen');
+      btn.innerHTML = TRASH_SVG;
+      // Zeilen behalten ihren Index (es werden nur Werte verschoben), daher bleibt iZeile gültig
+      btn.addEventListener('click', async (ev) => {
+         ev.stopPropagation();
+         const dialog = new ConfirmDialog({
+            trueButton_Text: "ja",
+            falseButton_Text: "nein",
+            question_Text: msg(str`Zeile ${iZeile} wirklich löschen?`),
+         });
+         if (await dialog.confirm()) this.delete_row(iZeile);
+      });
+      cell.appendChild(btn);
+   }
+
+   private create_undo_bar() {
+      const bar = document.createElement('div');
+      bar.className = 'undo_bar';
+      bar.style.display = 'none';
+
+      const make = (onClick: () => void) => {
+         const b = document.createElement('button');
+         b.type = 'button';
+         b.className = 'undo_button';
+         b.addEventListener('click', onClick);
+         bar.appendChild(b);
+         return b;
+      };
+      this.btnUndo = make(() => this.undo_delete());
+      this.btnRedo = make(() => this.redo_delete());
+      this.undoBar = bar;
+      this.shadow.appendChild(bar);
+      this.update_delete_texts();
+   }
+
+   private update_delete_texts() {
+      if (!this.allowDeleteRow) return;
+      if (this.btnUndo) this.btnUndo.textContent = '↶ ' + msg('Löschen rückgängig');
+      if (this.btnRedo) this.btnRedo.textContent = '↷ ' + msg('Löschen wiederherstellen');
+      this.shadow.querySelectorAll('.del_row').forEach((b: HTMLElement) => b.title = msg('Zeile löschen'));
+   }
+
+   private update_undo_bar() {
+      if (!this.undoBar || !this.btnUndo || !this.btnRedo) return;
+      this.btnUndo.disabled = this.undoStack.length === 0;
+      this.btnRedo.disabled = this.redoStack.length === 0;
+      // nur sichtbar, solange es etwas rückgängig zu machen gibt
+      this.undoBar.style.display = (this.undoStack.length || this.redoStack.length) ? '' : 'none';
+   }
+
+   /** Undo/Redo verwerfen, z.B. nach manueller Eingabe oder beim Einlesen einer Datei */
+   clear_undo() {
+      if (this.undoStack.length === 0 && this.redoStack.length === 0) return;
+      this.undoStack = [];
+      this.redoStack = [];
+      this.update_undo_bar();
+   }
+
+   private get_werte(): string[][] {
+      const table = this.shadow.getElementById('mytable') as HTMLTableElement;
+      const nSpalten = table.rows[0].cells.length;
+      const werte: string[][] = [];
+      for (let i = 1; i < table.rows.length; i++) {
+         const zeile: string[] = [];
+         for (let j = 1; j < nSpalten; j++) {
+            const child = table.rows[i].cells[j].firstElementChild as HTMLInputElement | HTMLSelectElement | null;
+            zeile.push(child ? child.value : '');
+         }
+         werte.push(zeile);
+      }
+      return werte;
+   }
+
+   private set_werte(werte: string[][]) {
+      this.resize_Tabelle('mytable', werte.length, Number(this.nSpalten));
+      const table = this.shadow.getElementById('mytable') as HTMLTableElement;
+      for (let i = 1; i < table.rows.length; i++) {
+         const zeile = werte[i - 1];
+         for (let j = 1; j < table.rows[i].cells.length; j++) {
+            const child = table.rows[i].cells[j].firstElementChild as HTMLInputElement | HTMLSelectElement | null;
+            if (child) child.value = zeile[j - 1] ?? '';
+         }
+      }
+   }
+
+   private rows_changed() {
+      this.toggleMenuOff();
+      this.update_undo_bar();
+      // Zähler (dr-button-pm) außerhalb der Tabelle nachziehen, sonst stellt resizeTables() die Zeile wieder her
+      this.dispatchEvent(new CustomEvent('rows-changed', {
+         detail: { value: Number(this.nZeilen) },
+         bubbles: true,
+         composed: true,
+      }));
+      berechnungErforderlich(true);
+   }
+
+   delete_row(iZeile: number) {
+      const werte = this.get_werte();
+      if (iZeile < 1 || iZeile > werte.length) return;
+      this.undoStack.push(werte);
+      this.redoStack = [];
+      this.set_werte(werte.filter((_, i) => i !== iZeile - 1));
+      this.rows_changed();
+   }
+
+   undo_delete() {
+      const snap = this.undoStack.pop();
+      if (!snap) return;
+      this.redoStack.push(this.get_werte());
+      this.set_werte(snap);
+      this.rows_changed();
+   }
+
+   redo_delete() {
+      const snap = this.redoStack.pop();
+      if (!snap) return;
+      this.undoStack.push(this.get_werte());
+      this.set_werte(snap);
+      this.rows_changed();
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -875,16 +1042,15 @@ class DrTabelle extends HTMLElement {
             let newRow = table.insertRow(-1);
 
             for (let iSpalte = 0; iSpalte <= nColNew; iSpalte++) {
-               let newCell, newText;
+               let newCell;
                if (iSpalte === 0) {
                   newCell = newRow.insertCell(iSpalte); // Insert a cell in the row at index 0
-                  newText = document.createTextNode(String(iZeile)); // Append a text node to the cell
                   newCell.style.textAlign = 'center';
                   //TODO newCell.style.backgroundColor = color_table_in; //'#b3ae00'  //'rgb(150,180, 180)';
                   newCell.style.padding = '0px';
                   newCell.style.margin = '0px';
                   newCell.style.fontSize = '1rem';
-                  newCell.appendChild(newText);
+                  this.fill_no_cell(newCell, iZeile);
                } else {
                   let el;
                   if (this.typs[iSpalte] === 'select') {
