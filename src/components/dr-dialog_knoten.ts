@@ -139,12 +139,12 @@ export class drDialogKnoten extends LitElement {
 
       <p>
         x:
-        <input type="number" id="id_x" name="x" pattern="[0-9.,eE+-]*" value="" />
+        <input type="number" step="any" id="id_x" name="x" pattern="[0-9.,eE+-]*" value="" />
         [m]
       </p>
       <p>
         z:
-        <input type="number" id="id_z" name="z" pattern="[0-9.,eE+-]*" value="" />
+        <input type="number" step="any" id="id_z" name="z" pattern="[0-9.,eE+-]*" value="" />
         [m]
       </p>
 

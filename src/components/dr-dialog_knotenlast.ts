@@ -152,20 +152,20 @@ export class drDialogKnotenlast extends LitElement {
             <tbody>
                <tr>
                   <td title=${msg('Winkel im Gegenuhrzeigersinn positiv')}>alpha :</td>
-                  <td><input type="number" id="id_alpha" name="alpha" pattern="[0-9.,eE+-]*" value="0.0" />[°]</td>
+                  <td><input type="number" step="any" id="id_alpha" name="alpha" pattern="[0-9.,eE+-]*" value="0.0" />[°]</td>
                </tr>
                <tr>
                   <td>P<sub>x'</sub> :</td>
-                  <td><input type="number" id="id_px" name="px" pattern="[0-9.,eE+-]*" value="" /> [kN]</td>
+                  <td><input type="number" step="any" id="id_px" name="px" pattern="[0-9.,eE+-]*" value="" /> [kN]</td>
                </tr>
                <tr>
                   <td>P<sub>z'</sub> :</td>
-                  <td><input type="number" id="id_pz" name="pz" pattern="[0-9.,eE+-]*" value="" /> [kN]</td>
+                  <td><input type="number" step="any" id="id_pz" name="pz" pattern="[0-9.,eE+-]*" value="" /> [kN]</td>
                </tr>
 
                <tr id="id_MY">
                   <td>M<sub>y</sub> :</td>
-                  <td><input type="number" id="id_my" name="my" pattern="[0-9.,eE+-]*" value="" /> [kNm]</td>
+                  <td><input type="number" step="any" id="id_my" name="my" pattern="[0-9.,eE+-]*" value="" /> [kNm]</td>
                </tr>
             </tbody>
          </table>

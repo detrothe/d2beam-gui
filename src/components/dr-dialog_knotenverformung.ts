@@ -149,16 +149,16 @@ export class drDialogKnotenverformung extends LitElement {
 
           <tr>
             <td>u<sub>x&prime;0</sub> :</td>
-            <td><input type="number" id="id_ux0" name="ux0" pattern="[0-9.,eE+-]*" value="" /> [mm]</td>
+            <td><input type="number" step="any" id="id_ux0" name="ux0" pattern="[0-9.,eE+-]*" value="" /> [mm]</td>
           </tr>
           <tr>
             <td>u<sub>z&prime;0</sub> :</td>
-            <td><input type="number" id="id_uz0" name="uz0" pattern="[0-9.,eE+-]*" value="" /> [mm]</td>
+            <td><input type="number" step="any" id="id_uz0" name="uz0" pattern="[0-9.,eE+-]*" value="" /> [mm]</td>
           </tr>
 
           <tr id="id_PHI">
             <td>φ<sub>0</sub> :</td>
-            <td><input type="number" id="id_phi0" name="phi0" pattern="[0-9.,eE+-]*" value="" /> [mrad]</td>
+            <td><input type="number" step="any" id="id_phi0" name="phi0" pattern="[0-9.,eE+-]*" value="" /> [mrad]</td>
           </tr>
         </tbody>
       </table>

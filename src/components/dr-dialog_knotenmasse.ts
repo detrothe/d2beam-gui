@@ -135,12 +135,12 @@ export class drDialogKnotenmasse extends LitElement {
 
       <p>
         M:
-        <input type="number" id="id_M" name="M" pattern="[0-9.,eE+-]*" value="" />
+        <input type="number" step="any" id="id_M" name="M" pattern="[0-9.,eE+-]*" value="" />
         [t]
       </p>
       <p id="id_MY">
         θ<sub>y</sub>:
-        <input type="number" id="id_thetay" name="thetay" pattern="[0-9.,eE+-]*" value="" />
+        <input type="number" step="any" id="id_thetay" name="thetay" pattern="[0-9.,eE+-]*" value="" />
         [tm²]
       </p>
 

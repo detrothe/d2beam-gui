@@ -160,7 +160,7 @@ export class drDialogElementlasten extends LitElement {
       <div id="id_streckenlast">
         <p>
           <!-- Art: -->
-          <!-- <input type="number" id="id_art" name="art" pattern="[0-9.,eE+-]*" value="" /> -->
+          <!-- <input type="number" step="any" id="id_art" name="art" pattern="[0-9.,eE+-]*" value="" /> -->
           <sl-select id="id_art" label=${msg('Art der Trapezstreckenlast :')} value="0">
             <sl-option value="0">${msg('senkrecht auf Stab')}</sl-option>
             <sl-option value="1">${msg('in globaler z-Richtung')}</sl-option>
@@ -171,10 +171,10 @@ export class drDialogElementlasten extends LitElement {
         </p>
         <p>
           p<sub>a</sub>
-          <input type="number" id="id_pa" name="pa" pattern="[0-9.,eE+-]*" value="" />
+          <input type="number" step="any" id="id_pa" name="pa" pattern="[0-9.,eE+-]*" value="" />
           [kN/m]<br />
           p<sub>e</sub>
-          <input type="number" id="id_pe" name="pa" pattern="[0-9.,eE+-]*" value="" />
+          <input type="number" step="any" id="id_pe" name="pa" pattern="[0-9.,eE+-]*" value="" />
           [kN/m]
         </p>
       </div>
@@ -185,17 +185,17 @@ export class drDialogElementlasten extends LitElement {
           <tbody>
             <tr>
               <td>x</td>
-              <td><input type="number" id="id_x" name="x" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td><input type="number" step="any" id="id_x" name="x" pattern="[0-9.,eE+-]*" value="" /></td>
               <td>[m]</td>
             </tr>
             <tr>
               <td>P</td>
-              <td><input type="number" id="id_P" name="P" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td><input type="number" step="any" id="id_P" name="P" pattern="[0-9.,eE+-]*" value="" /></td>
               <td>[kN]</td>
             </tr>
             <tr>
               <td>M</td>
-              <td><input type="number" id="id_M" name="M" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td><input type="number" step="any" id="id_M" name="M" pattern="[0-9.,eE+-]*" value="" /></td>
               <td>[kNm]</td>
             </tr>
           </tbody>
@@ -206,10 +206,10 @@ export class drDialogElementlasten extends LitElement {
         <p>${msg('Temperatur an Unter- und Oberseite')}</p>
         <p>
           T<sub>u</sub>
-          <input type="number" id="id_Tu" name="Tu" pattern="[0-9.,eE+-]*" value="" />
+          <input type="number" step="any" id="id_Tu" name="Tu" pattern="[0-9.,eE+-]*" value="" />
           [°]<br />
           T<sub>o</sub>
-          <input type="number" id="id_To" name="To" pattern="[0-9.,eE+-]*" value="" />
+          <input type="number" step="any" id="id_To" name="To" pattern="[0-9.,eE+-]*" value="" />
           [°]
         </p>
       </div>
@@ -218,7 +218,7 @@ export class drDialogElementlasten extends LitElement {
         <p>${msg('Zentrische Vorspannung')}</p>
         <p>
           σ<sub>v</sub>
-          <input type="number" id="id_sigmaV" name="sigmaV" pattern="[0-9.,eE+-]*" value="" />
+          <input type="number" step="any" id="id_sigmaV" name="sigmaV" pattern="[0-9.,eE+-]*" value="" />
           [N/mm²]
         </p>
       </div>
@@ -227,7 +227,7 @@ export class drDialogElementlasten extends LitElement {
         <p>${msg('Spannschloss')}</p>
         <p>
           &Delta;s
-          <input type="number" id="id_ds" name="ds" pattern="[0-9.,eE+-]*" value="" />
+          <input type="number" step="any" id="id_ds" name="ds" pattern="[0-9.,eE+-]*" value="" />
           [mm]
         </p>
       </div>
@@ -238,17 +238,17 @@ export class drDialogElementlasten extends LitElement {
           <tbody>
             <tr>
               <td>w<sub>0a</sub></td>
-              <td><input type="number" id="id_w0a" name="w0a" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td><input type="number" step="any" id="id_w0a" name="w0a" pattern="[0-9.,eE+-]*" value="" /></td>
               <td>[mm]</td>
             </tr>
             <tr>
               <td>w<sub>0m</sub></td>
-              <td><input type="number" id="id_w0m" name="w0m" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td><input type="number" step="any" id="id_w0m" name="w0m" pattern="[0-9.,eE+-]*" value="" /></td>
               <td>[mm]</td>
             </tr>
             <tr>
               <td>w<sub>0e</sub></td>
-              <td><input type="number" id="id_w0e" name="w0e" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td><input type="number" step="any" id="id_w0e" name="w0e" pattern="[0-9.,eE+-]*" value="" /></td>
               <td>[mm]</td>
             </tr>
           </tbody>

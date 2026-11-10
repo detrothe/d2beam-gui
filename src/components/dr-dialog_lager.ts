@@ -135,7 +135,7 @@ export class drDialogLager extends LitElement {
       <p>
         ${msg('Drehung des Knotens (Lagers), im Gegenuhrzeigersinn positiv')}
       </p>
-      <p><input type="number" id="id_alpha" name="alpha" pattern="[0-9.,eE+-]*" value="0.0" />°</p>
+      <p><input type="number" step="any" id="id_alpha" name="alpha" pattern="[0-9.,eE+-]*" value="0.0" />°</p>
       <br />
       <p>
         <b>${msg('Lagerbedingungen')}</b>
@@ -157,7 +157,7 @@ export class drDialogLager extends LitElement {
             <td>&nbsp;</td>
             <td>k<sub>x'</sub>:</td>
             <td>
-              <input type="number" id="id_kx" name="kx" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" step="any" id="id_kx" name="kx" pattern="[0-9.,eE+-]*" value="" />
             </td>
             <td>kN/m</td>
           </tr>
@@ -168,7 +168,7 @@ export class drDialogLager extends LitElement {
             <td>&nbsp;</td>
             <td>k<sub>z'</sub>:</td>
             <td>
-              <input type="number" id="id_kz" name="kz" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" step="any" id="id_kz" name="kz" pattern="[0-9.,eE+-]*" value="" />
             </td>
             <td>kN/m</td>
           </tr>
@@ -180,7 +180,7 @@ export class drDialogLager extends LitElement {
             <td>&nbsp;</td>
             <td>k<sub>&phi;</sub>:</td>
             <td>
-              <input type="number" id="id_kphi" name="kphi" pattern="[0-9.,eE+-]*" value="" />
+              <input type="number" step="any" id="id_kphi" name="kphi" pattern="[0-9.,eE+-]*" value="" />
             </td>
             <td>kNm/rad</td>
           </tr>

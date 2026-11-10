@@ -1,5 +1,7 @@
 {
   "files.trimTrailingWhitespace": true,
+  // lit-plugin kennt step="any" nicht (meldet "Type '"any"' is not assignable to 'number'")
+  "lit-plugin.rules.no-incompatible-type-binding": "off",
   "markdownlint.config": {
     "MD028": false,
     "MD025": {

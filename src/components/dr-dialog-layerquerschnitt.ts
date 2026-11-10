@@ -114,17 +114,17 @@ export class drLayerQuerSchnitt extends LitElement {
                   <tbody>
                      <tr>
                         <td>E-Modul:</td>
-                        <td><input id="emodul" type="number" /></td>
+                        <td><input id="emodul" type="number" step="any" /></td>
                         <td>&nbsp;[MN/m²]</td>
                      </tr>
                      <tr>
                         <td>Bettung k<sub>s</sub>:</td>
-                        <td><input id="bettung" type="number" /></td>
+                        <td><input id="bettung" type="number" step="any" /></td>
                         <td>&nbsp;[kN/m²]</td>
                      </tr>
                      <tr>
                         <td>Wichte:</td>
-                        <td><input id="wichte" type="number" /></td>
+                        <td><input id="wichte" type="number" step="any" /></td>
                         <td>&nbsp;[kN/m³]</td>
                      </tr>
                   </tbody>
@@ -133,7 +133,7 @@ export class drLayerQuerSchnitt extends LitElement {
 
             <sl-tab-panel name="tab-querschnitt">
                <label for="offset">Offset: </label>
-               <input id="offset" type="number" /> &nbsp;[cm] <br />
+               <input id="offset" type="number" step="any" /> &nbsp;[cm] <br />
                <label for="nschichten">Anzahl Schichten: </label>
                <input id="nschichten" type="number" /><br />
 

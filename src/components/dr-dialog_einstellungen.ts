@@ -186,7 +186,7 @@ export class drDialogEinstellungen extends LitElement {
                      ${msg('Faktor für Lagersymbole:')}
                   </td>
                   <td>
-                     <input type="number" id="id_fact_lager" name="fact_lager" pattern="[0-9.,eE+-]*" value="1" />
+                     <input type="number" step="any" id="id_fact_lager" name="fact_lager" pattern="[0-9.,eE+-]*" value="1" />
                      [-]
                   </td>
                </tr>
@@ -200,12 +200,12 @@ export class drDialogEinstellungen extends LitElement {
          </p>
          <p>
             ${msg('Faktor für dx:')}
-            <input type="number" id="id_dx_offset_factor" name="dx_offset" pattern="[0-9.,eE+-]*" value="0" />
+            <input type="number" step="any" id="id_dx_offset_factor" name="dx_offset" pattern="[0-9.,eE+-]*" value="0" />
             [-]
          </p>
          <p>
             ${msg('Faktor für dz:')}
-            <input type="number" id="id_dz_offset_factor" name="dz_offset" pattern="[0-9.,eE+-]*" value="-1" />
+            <input type="number" step="any" id="id_dz_offset_factor" name="dz_offset" pattern="[0-9.,eE+-]*" value="-1" />
             [-]
          </p>
 
@@ -223,18 +223,18 @@ export class drDialogEinstellungen extends LitElement {
             <tbody>
                <tr>
                   <td>dx:</td>
-                  <td><input type="number" id="id_dx" name="dx" pattern="[0-9.,eE+-]*" value="0.5" /></td>
+                  <td><input type="number" step="any" id="id_dx" name="dx" pattern="[0-9.,eE+-]*" value="0.5" /></td>
                   <td>[m]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                   <td>x:</td>
-                  <td><input type="number" id="id_rasteroffset_x" name="offset_x" pattern="[0-9.,eE+-]*" value="0.0" /></td>
+                  <td><input type="number" step="any" id="id_rasteroffset_x" name="offset_x" pattern="[0-9.,eE+-]*" value="0.0" /></td>
                   <td>[m]</td>
                </tr>
                <tr>
                   <td>dz:</td>
-                  <td><input type="number" id="id_dz" name="dz" pattern="[0-9.,eE+-]*" value="0.5" /></td>
+                  <td><input type="number" step="any" id="id_dz" name="dz" pattern="[0-9.,eE+-]*" value="0.5" /></td>
                   <td>[m]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                   <td>z:</td>
-                  <td><input type="number" id="id_rasteroffset_z" name="offset_x" pattern="[0-9.,eE+-]*" value="0.0" /></td>
+                  <td><input type="number" step="any" id="id_rasteroffset_z" name="offset_x" pattern="[0-9.,eE+-]*" value="0.0" /></td>
                   <td>[m]</td>
                </tr>
             </tbody>
@@ -246,18 +246,18 @@ export class drDialogEinstellungen extends LitElement {
             <tbody>
                <tr>
                   <td>x<sub>min</sub></td>
-                  <td><input type="number" id="id_xmin" name="xmin" pattern="[0-9.,eE+-]*" value="-1.0" /></td>
+                  <td><input type="number" step="any" id="id_xmin" name="xmin" pattern="[0-9.,eE+-]*" value="-1.0" /></td>
                   <td>[m]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                   <td>x<sub>max</sub></td>
-                  <td><input type="number" id="id_xmax" name="xmax" pattern="[0-9.,eE+-]*" value="10.0" /></td>
+                  <td><input type="number" step="any" id="id_xmax" name="xmax" pattern="[0-9.,eE+-]*" value="10.0" /></td>
                   <td>[m]</td>
                </tr>
                <tr>
                   <td>z<sub>min</sub></td>
-                  <td><input type="number" id="id_zmin" name="zmin" pattern="[0-9.,eE+-]*" value="-1.0" /></td>
+                  <td><input type="number" step="any" id="id_zmin" name="zmin" pattern="[0-9.,eE+-]*" value="-1.0" /></td>
                   <td>[m]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                   <td>z<sub>max</sub></td>
-                  <td><input type="number" id="id_zmax" name="zmax" pattern="[0-9.,eE+-]*" value="9.0" /></td>
+                  <td><input type="number" step="any" id="id_zmax" name="zmax" pattern="[0-9.,eE+-]*" value="9.0" /></td>
                   <td>[m]</td>
                </tr>
             </tbody>

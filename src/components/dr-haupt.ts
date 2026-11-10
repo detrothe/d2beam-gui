@@ -1073,7 +1073,7 @@ export class drHaupt extends LitElement {
         </p>
         <p>${msg('Zur Verbesserung der Konvergenz bei der Iteration der Eigenwerte:')}<br>
            ${msg('Mindestwert auf der Diagonalen der Massenmatrix :')}
-           <input type="number" id="id_minMass" name="minmass" class="input_tab" pattern="[0-9.,eE+-]*" value="0.0" /> kg
+           <input type="number" step="any" id="id_minMass" name="minmass" class="input_tab" pattern="[0-9.,eE+-]*" value="0.0" /> kg
         </p>
 
 

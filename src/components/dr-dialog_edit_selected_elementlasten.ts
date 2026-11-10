@@ -149,10 +149,10 @@ export class drDialogEdit_selected_elementlasten extends LitElement {
          <div id="id_div_p" style="display: none;">
             <p>
                p<sub>a</sub>
-               <input type="number" id="id_pa" name="pa" pattern="[0-9.,eE+-]*" value="" />
+               <input type="number" step="any" id="id_pa" name="pa" pattern="[0-9.,eE+-]*" value="" />
                [kN/m]<br />
                p<sub>e</sub>
-               <input type="number" id="id_pe" name="pa" pattern="[0-9.,eE+-]*" value="" />
+               <input type="number" step="any" id="id_pe" name="pa" pattern="[0-9.,eE+-]*" value="" />
                [kN/m]
             </p>
          </div>

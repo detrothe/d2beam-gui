@@ -148,11 +148,11 @@ export class drDialogKopieren extends LitElement {
          <div id="id_div" style="display: none;">
             <p>
                dx :
-               <input type="number" id="id_dx" name="dx" pattern="[0-9.,eE+-]*" value="" /> &nbsp;m
+               <input type="number" step="any" id="id_dx" name="dx" pattern="[0-9.,eE+-]*" value="" /> &nbsp;m
             </p>
             <p>
                dz :
-               <input type="number" id="id_dz" name="dz" pattern="[0-9.,eE+-]*" value="" /> &nbsp;m
+               <input type="number" step="any" id="id_dz" name="dz" pattern="[0-9.,eE+-]*" value="" /> &nbsp;m
             </p>
          </div>
          <p>

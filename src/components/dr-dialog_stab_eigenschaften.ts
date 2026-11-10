@@ -186,7 +186,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
                      <td>k<sub>x,a</sub>:</td>
                      <td>
-                        <input type="number" id="id_kxa" name="kxa" pattern="[0-9.,eE+-]*" value="" disabled />
+                        <input type="number" step="any" id="id_kxa" name="kxa" pattern="[0-9.,eE+-]*" value="" disabled />
                      </td>
                      <td>kN/m</td>
                   </tr>
@@ -197,7 +197,7 @@ export class drDialogStabEigenschaften extends LitElement {
                      </td>
                      <td>k<sub>z,a</sub>:</td>
                      <td>
-                        <input type="number" id="id_kza" name="kza" pattern="[0-9.,eE+-]*" value="" disabled />
+                        <input type="number" step="any" id="id_kza" name="kza" pattern="[0-9.,eE+-]*" value="" disabled />
                      </td>
                      <td>kN/m</td>
                   </tr>
@@ -208,7 +208,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
                      <td>k<sub>&phi;,a</sub>:</td>
                      <td>
-                        <input type="number" id="id_kphi_a" name="kphi_a" pattern="[0-9.,eE+-]*" value="" disabled />
+                        <input type="number" step="any" id="id_kphi_a" name="kphi_a" pattern="[0-9.,eE+-]*" value="" disabled />
                      </td>
                      <td>kNm/rad</td>
                   </tr>
@@ -220,7 +220,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
                      <td>k<sub>x,e</sub>:</td>
                      <td>
-                        <input type="number" id="id_kxe" name="kxe" pattern="[0-9.,eE+-]*" value="" disabled />
+                        <input type="number" step="any" id="id_kxe" name="kxe" pattern="[0-9.,eE+-]*" value="" disabled />
                      </td>
                      <td>kN/m</td>
                   </tr>
@@ -231,7 +231,7 @@ export class drDialogStabEigenschaften extends LitElement {
                      </td>
                      <td>k<sub>z,e</sub>:</td>
                      <td>
-                        <input type="number" id="id_kze" name="kze" pattern="[0-9.,eE+-]*" value="" disabled />
+                        <input type="number" step="any" id="id_kze" name="kze" pattern="[0-9.,eE+-]*" value="" disabled />
                      </td>
                      <td>kN/m</td>
                   </tr>
@@ -242,7 +242,7 @@ export class drDialogStabEigenschaften extends LitElement {
 
                      <td>k<sub>&phi;,e</sub>:</td>
                      <td>
-                        <input type="number" id="id_kphi_e" name="kphi_e" pattern="[0-9.,eE+-]*" value="" disabled />
+                        <input type="number" step="any" id="id_kphi_e" name="kphi_e" pattern="[0-9.,eE+-]*" value="" disabled />
                      </td>
                      <td>kNm/rad</td>
                   </tr>
@@ -252,19 +252,19 @@ export class drDialogStabEigenschaften extends LitElement {
             <p><b>${msg('Starre Stabenden')}</b></p>
             <p>
                ${msg('starr a:')}
-               <input type="number" id="id_a" name="a" pattern="[0-9.,eE+-]*" value="" />
+               <input type="number" step="any" id="id_a" name="a" pattern="[0-9.,eE+-]*" value="" />
                [m]
             </p>
             <p>
                ${msg('starr e:')}
-               <input type="number" id="id_e" name="e" pattern="[0-9.,eE+-]*" value="" />
+               <input type="number" step="any" id="id_e" name="e" pattern="[0-9.,eE+-]*" value="" />
                [m]
             </p>
 
             <p><b>${msg('Stabbettung')}</b></p>
             <p>
                k<sub>b</sub>:
-               <input type="number" id="id_kb" name="kb" pattern="[0-9.,eE+-]*" value="" />
+               <input type="number" step="any" id="id_kb" name="kb" pattern="[0-9.,eE+-]*" value="" />
                [kN/m²]
             </p>
          </div>
