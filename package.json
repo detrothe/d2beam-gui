@@ -15,7 +15,7 @@
     "html-to-pdfmake": "^2.5.36",
     "jspdf": "^4.2.1",
     "lit": "^3.3.3",
-    "two.js": "0.8.15",
+    "two.js": "0.8.24",
     "urlpattern-polyfill": "^10.1.0"
   },
   "devDependencies": {

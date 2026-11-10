@@ -609,10 +609,8 @@ export function init_two_cad(svg_id = 'artboard_cad') {
 
       var params = {
          fullscreen: false,
-         type: Two.Types.canvas,
+         type: (svg_id === 'svg_artboard_cad') ? Two.Types.svg : Two.Types.canvas,
       };
-
-      if (svg_id === 'svg_artboard_cad') params.type = Two.Types.svg;
 
       two = null;
       const artboard = shadow.getElementById(svg_id) as any;

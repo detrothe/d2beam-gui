@@ -454,10 +454,8 @@ export function init_two(svg_id = 'artboard', setEvents = true) {
 
         var params = {
             fullscreen: false,
-            type: Two.Types.canvas
+            type: (svg_id === 'svg_artboard') ? Two.Types.svg : Two.Types.canvas,
         };
-
-        if (svg_id === 'svg_artboard') params.type = Two.Types.svg
 
         if (two) two.clear();
         two = null;
