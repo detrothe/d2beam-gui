@@ -12,7 +12,10 @@
       "noUnusedParameters": true,
       "noImplicitReturns": true,
       "noFallthroughCasesInSwitch": true,
-      "moduleResolution": "node",
+      "moduleResolution": "bundler",
+      "paths": {
+          "canvg": ["./node_modules/canvg/lib/index.d.ts"]
+      },
       "allowSyntheticDefaultImports": true,
       "experimentalDecorators": true,
       "forceConsistentCasingInFileNames": true,

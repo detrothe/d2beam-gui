@@ -23,11 +23,11 @@ import '@shoelace-style/shoelace/dist/components/radio-button/radio-button.js';
 import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
 import '@shoelace-style/shoelace/dist/components/select/select.js';
 import '@shoelace-style/shoelace/dist/components/option/option.js';
-import '@shoelace-style/shoelace/dist/components/menu/menu';
-import '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
-import '@shoelace-style/shoelace/dist/components/divider/divider';
-import '@shoelace-style/shoelace/dist/components/drawer/drawer';
-import '@shoelace-style/shoelace/dist/components/range/range';
+import '@shoelace-style/shoelace/dist/components/menu/menu.js';
+import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
+import '@shoelace-style/shoelace/dist/components/divider/divider.js';
+import '@shoelace-style/shoelace/dist/components/drawer/drawer.js';
+import '@shoelace-style/shoelace/dist/components/range/range.js';
 // import '@shoelace-style/shoelace/dist/components/icon/icon';
 // import { setBasePath,getBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 

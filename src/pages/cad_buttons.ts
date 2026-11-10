@@ -58,7 +58,7 @@ import {
 import { two, tr, show_lastfall } from "./cad";
 import "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
 import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.js";
-import "@shoelace-style/shoelace/dist/components/drawer/drawer";
+import "@shoelace-style/shoelace/dist/components/drawer/drawer.js";
 
 import "../components/dr-dialog_lager";
 import "../components/dr-dialog_knoten";
