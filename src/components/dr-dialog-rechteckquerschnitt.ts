@@ -12,6 +12,7 @@ import { check_if_name_exists } from '../pages/querschnitte';
 import { myFormat, myFormat_en } from '../pages/utility';
 import { alertdialog, AlertDialog } from '../pages/confirm_dialog';
 import { CQuer_polygon } from '../pages/quer1';
+import { draw_querschnitt, export_svg, grafik_rechteck, grafik_TQ } from '../pages/querschnitt_grafik';
 
 import "../styles/dr-dialog.css";
 // import { alertdialog } from '../pages/rechnen';
@@ -192,6 +193,11 @@ export class drRechteckQuerSchnitt extends LitElement {
    private _initialName = '';
    private new_cross_section = true;
 
+   @state() private grafik_rechteck_an = false;
+   @state() private grafik_TQ_an = false;
+   @state() private grafik_rechteck_ok = false;   // Grafik konnte gezeichnet werden (für Export)
+   @state() private grafik_TQ_ok = false;
+
    @property({ type: String }) title = 'D2Beam RechteckQuerschnitt';
    @property({ type: String }) EA = 'EA =';
    @state() EI = 'EI =';
@@ -338,6 +344,33 @@ export class drRechteckQuerSchnitt extends LitElement {
          .btn_small:hover {
             background-color: RoyalBlue;
          }
+
+         .grafik_buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0.5rem 5px;
+         }
+
+         .grafik {
+            margin: 0 5px 0.5rem 5px;
+            padding: 4px;
+            background-color: white;
+            border: thin solid #e7c157;
+            border-radius: 5px;
+            color: black;
+         }
+
+         .grafik_hinweis {
+            padding: 1rem 0.5rem;
+            color: #a00000;
+            font-size: 0.9rem;
+         }
+
+         .grafik_werte {
+            font-size: 0.875rem;
+            padding: 0 0.25rem 0.25rem 0.25rem;
+         }
       `;
    }
 
@@ -422,12 +455,12 @@ export class drRechteckQuerSchnitt extends LitElement {
                      <td title="die Querschnittshöhe ist für die Grafik immer einzugeben">
                         ${msg('Querschnittshöhe:')}
                      </td>
-                     <td><input id="height" type="number" step="any" value="40" @change="${this._recalc_Rechteck}" /></td>
+                     <td><input id="height" type="number" step="any" value="40" @change="${this._recalc_Rechteck}" @input="${this._redraw_rechteck}" /></td>
                      <td>&nbsp;[cm]</td>
                   </tr>
                   <tr>
                      <td><span id="id_row_width">${msg('Querschnittbreite:')}</span></td>
-                     <td><input id="width" type="number" step="any" value="30" @change="${this._recalc_Rechteck}" /></td>
+                     <td><input id="width" type="number" step="any" value="30" @change="${this._recalc_Rechteck}" @input="${this._redraw_rechteck}" /></td>
                      <td>&nbsp;[cm]</td>
                   </tr>
 
@@ -454,7 +487,7 @@ export class drRechteckQuerSchnitt extends LitElement {
                         <span id="id_row_zso" disabled style="visibility:visible">z<sub>so</sub>:</span>
                      </td>
                      <td>
-                        <input id="zso" type="number" value="0" disabled />
+                        <input id="zso" type="number"  step="any" value="0" disabled />
                      </td>
                      <td>&nbsp;[cm]</td>
                      <td>
@@ -515,6 +548,18 @@ export class drRechteckQuerSchnitt extends LitElement {
                </tbody>
             </table>
 
+            <div id="id_rechteck_grafik_bereich">
+               <div class="grafik_buttons">
+                  <sl-button size="small" @click="${this._toggle_grafik_rechteck}">
+                     ${this.grafik_rechteck_an ? msg('Grafik ausblenden') : msg('Querschnitt anzeigen')}
+                  </sl-button>
+                  ${this.grafik_rechteck_an
+            ? html`<sl-button size="small" ?disabled=${!this.grafik_rechteck_ok} @click="${this._export_rechteck}">${msg('SVG speichern')}</sl-button>`
+            : ''}
+               </div>
+               <div id="id_rechteck_grafik" class="grafik" ?hidden=${!this.grafik_rechteck_an}></div>
+            </div>
+
             <form method="dialog">
                <sl-button id="Anmeldung" value="ok" @click="${this._dialog_ok}">${msg('ok')}</sl-button>
                <sl-button id="Abbruch" value="cancel" @click="${this._dialog_abbruch}">${msg('Abbrechen')}</sl-button>
@@ -553,41 +598,51 @@ export class drRechteckQuerSchnitt extends LitElement {
                   <tr>
                      <td>${msg('Flanschbreite')}</td>
                      <td>
-                        <input id="id_TQ_flanschbreite" type="number" value="" />
+                        <input id="id_TQ_flanschbreite" type="number" step="any" value="" @input="${this._redraw_TQ}" />
                      </td>
                      <td>cm</td>
                   </tr>
                   <tr>
                      <td>${msg('Flanschhöhe')}</td>
                      <td>
-                        <input id="id_TQ_flanschhoehe" type="number" value="" />
+                        <input id="id_TQ_flanschhoehe" type="number" step="any" value="" @input="${this._redraw_TQ}" />
                      </td>
                      <td>cm</td>
                   </tr>
                   <tr>
                      <td>${msg('Stegbreite oben')}</td>
                      <td>
-                        <input id="id_TQ_stegbreite_oben" type="number" value="" />
+                        <input id="id_TQ_stegbreite_oben" type="number" step="any" value="" @input="${this._redraw_TQ}" />
                      </td>
                      <td>cm</td>
                   </tr>
                   <tr>
                      <td>${msg('Stegbreite unten')}</td>
                      <td>
-                        <input id="id_TQ_stegbreite_unten" type="number" value="" />
+                        <input id="id_TQ_stegbreite_unten" type="number" step="any" value="" @input="${this._redraw_TQ}" />
                      </td>
                      <td>cm</td>
                   </tr>
                   <tr>
                      <td>${msg('Steghöhe')}</td>
                      <td>
-                        <input id="id_TQ_steghoehe" type="number" value="" />
+                        <input id="id_TQ_steghoehe" type="number" step="any" value="" @input="${this._redraw_TQ}" />
                      </td>
                      <td>cm</td>
                   </tr>
                </tbody>
             </table>
-            <br /><br />
+
+            <div class="grafik_buttons">
+               <sl-button size="small" @click="${this._toggle_grafik_TQ}">
+                  ${this.grafik_TQ_an ? msg('Grafik ausblenden') : msg('Querschnitt anzeigen')}
+               </sl-button>
+               ${this.grafik_TQ_an
+            ? html`<sl-button size="small" ?disabled=${!this.grafik_TQ_ok} @click="${this._export_TQ}">${msg('SVG speichern')}</sl-button>`
+            : ''}
+            </div>
+            <div id="id_TQ_grafik" class="grafik" ?hidden=${!this.grafik_TQ_an}></div>
+            <br />
 
             <form method="dialog">
                <sl-button id="id_btn_TQ_ok" value="ok" @click="${this._dialog_TQ_ok}">${msg('ok')}</sl-button>
@@ -785,43 +840,50 @@ export class drRechteckQuerSchnitt extends LitElement {
    //    }
    // }
 
+   //----------------------------------------------------------------------------------------------
+   /** Eingabewerte des T-Querschnitts, null wenn nicht alle Werte > 0 eingegeben sind */
+   private _TQ_eingabe() {
+      const shadow = this.shadowRoot;
+      if (!shadow) return null;
+      const wert = (id: string) => {
+         const str = (shadow.getElementById(id) as HTMLInputElement).value.replace(/,/g, '.').trim();
+         return str === '' ? NaN : Number(str);
+      };
+      const bf = wert('id_TQ_flanschbreite');
+      const hf = wert('id_TQ_flanschhoehe');
+      const bw_o = wert('id_TQ_stegbreite_oben');
+      const bw_u = wert('id_TQ_stegbreite_unten');
+      const hw = wert('id_TQ_steghoehe');
+      if (![bf, hf, bw_o, bw_u, hw].every((v) => Number.isFinite(v) && v > 0)) return null;
+      return { bf, hf, bw_o, bw_u, hw };
+   }
+
+   //----------------------------------------------------------------------------------------------
+   /** Polygon des T-Querschnitts (y nach rechts, z nach unten, Ursprung Oberkante Mitte) */
+   private _TQ_polygon(bf: number, hf: number, bw_o: number, bw_u: number, hw: number) {
+      const h = hf + hw;
+      const y = [-bf / 2, bf / 2, bf / 2, bw_o / 2, bw_u / 2, -bw_u / 2, -bw_o / 2, -bf / 2];
+      const z = [0, 0, hf, hf, h, h, hf, hf];
+      const quer = new CQuer_polygon(0);
+      quer.set_data(8, y, z);
+      quer.calc();
+      return { y, z, quer };
+   }
+
    async _dialog_TQ_ok() {
       console.log('_dialog_TQ_ok');
       const shadow = this.shadowRoot;
       if (shadow) {
-         let flanschbreite = Number((shadow.getElementById('id_TQ_flanschbreite') as HTMLInputElement).value.replace(/,/g, '.'));
-         let flanschhoehe = Number((shadow.getElementById('id_TQ_flanschhoehe') as HTMLInputElement).value.replace(/,/g, '.'));
-         let stegbreite_oben = Number((shadow.getElementById('id_TQ_stegbreite_oben') as HTMLInputElement).value.replace(/,/g, '.'));
-         let stegbreite_unten = Number((shadow.getElementById('id_TQ_stegbreite_unten') as HTMLInputElement).value.replace(/,/g, '.'));
-         let steghoehe = Number((shadow.getElementById('id_TQ_steghoehe') as HTMLInputElement).value.replace(/,/g, '.'));
+         const e = this._TQ_eingabe();
+         if (e === null) {
+            alertdialog('ok', msg('Bitte alle Maße des T-Querschnitts mit Werten größer 0 eingeben.'));
+            return;
+         }
 
-         let hoehe = flanschhoehe + steghoehe;
+         let hoehe = e.hf + e.hw;
          (shadow?.getElementById('height') as HTMLInputElement).value = myFormat_en(hoehe, 1, 3);
 
-         const y: number[] = Array(8);
-         const z: number[] = Array(8);
-
-         y[0] = -flanschbreite / 2;
-         y[1] = flanschbreite / 2;
-         y[2] = flanschbreite / 2;
-         y[3] = stegbreite_oben / 2;
-         y[4] = stegbreite_unten / 2;
-         y[5] = -stegbreite_unten / 2;
-         y[6] = -stegbreite_oben / 2;
-         y[7] = -flanschbreite / 2;
-
-         z[0] = 0;
-         z[1] = 0;
-         z[2] = flanschhoehe;
-         z[3] = flanschhoehe;
-         z[4] = hoehe;
-         z[5] = hoehe;
-         z[6] = flanschhoehe;
-         z[7] = flanschhoehe;
-
-         const quer = new CQuer_polygon(0);
-         quer.set_data(8, y, z);
-         quer.calc();
+         const { quer } = this._TQ_polygon(e.bf, e.hf, e.bw_o, e.bw_u, e.hw);
 
          (shadow?.getElementById('area') as HTMLInputElement).value = myFormat_en(quer.area, 1, 4);
          (shadow?.getElementById('traeg_y') as HTMLInputElement).value = myFormat_en(quer.Iy_s, 1, 2);
@@ -833,6 +895,89 @@ export class drRechteckQuerSchnitt extends LitElement {
          (shadow.getElementById('dialog_TQ') as HTMLDialogElement).close('ok');
 
       }
+   }
+
+   //----------------------------------------------------------------------------------------------
+   //                       Grafik
+   //----------------------------------------------------------------------------------------------
+
+   private _grafik_hinweis(container: HTMLElement, text: string) {
+      const div = document.createElement('div');
+      div.className = 'grafik_hinweis';
+      div.textContent = text;
+      container.replaceChildren(div);
+   }
+
+   private _grafik_werte(container: HTMLElement, area: number, Iy: number, zso: number) {
+      const div = document.createElement('div');
+      div.className = 'grafik_werte';
+      div.innerHTML = `A = ${myFormat(area, 0, 2)} cm², I<sub>y</sub> = ${myFormat(Iy, 0, 1)} cm<sup>4</sup>, z<sub>so</sub> = ${myFormat(zso, 0, 2)} cm`;
+      container.appendChild(div);
+   }
+
+   async _toggle_grafik_TQ() {
+      this.grafik_TQ_an = !this.grafik_TQ_an;
+      await this.updateComplete;   // Container erst sichtbar machen, dann Breite messen
+      this._redraw_TQ();
+   }
+
+   _redraw_TQ() {
+      if (!this.grafik_TQ_an) return;
+      const container = this.shadowRoot?.getElementById('id_TQ_grafik') as HTMLDivElement | null;
+      if (!container) return;
+
+      const e = this._TQ_eingabe();
+      if (e === null) {
+         this.grafik_TQ_ok = false;
+         this._grafik_hinweis(container, msg('Die Grafik wird angezeigt, sobald alle Maße mit Werten größer 0 eingegeben sind.'));
+         return;
+      }
+      const { y, z, quer } = this._TQ_polygon(e.bf, e.hf, e.bw_o, e.bw_u, e.hw);
+      draw_querschnitt(container, grafik_TQ(e.bf, e.hf, e.bw_o, e.bw_u, e.hw, y, z, quer.zs));
+      this._grafik_werte(container, quer.area, quer.Iy_s, quer.zs);
+      this.grafik_TQ_ok = true;
+   }
+
+   _export_TQ() {
+      const svg = this.shadowRoot?.querySelector('#id_TQ_grafik svg') as SVGSVGElement | null;
+      if (!svg) return;
+      const qname = (this.shadowRoot?.getElementById('qname') as HTMLInputElement).value;
+      export_svg(svg, qname || 'T-Querschnitt');
+   }
+
+   async _toggle_grafik_rechteck() {
+      this.grafik_rechteck_an = !this.grafik_rechteck_an;
+      await this.updateComplete;
+      this._redraw_rechteck();
+   }
+
+   _redraw_rechteck() {
+      if (!this.grafik_rechteck_an) return;
+      const shadow = this.shadowRoot;
+      const container = shadow?.getElementById('id_rechteck_grafik') as HTMLDivElement | null;
+      if (!shadow || !container) return;
+
+      const wert = (id: string) => {
+         const str = (shadow.getElementById(id) as HTMLInputElement).value.replace(/,/g, '.').trim();
+         return str === '' ? NaN : Number(str);
+      };
+      const h = wert('height');
+      const b = wert('width');
+      if (!(Number.isFinite(h) && h > 0 && Number.isFinite(b) && b > 0)) {
+         this.grafik_rechteck_ok = false;
+         this._grafik_hinweis(container, msg('Die Grafik wird angezeigt, sobald Höhe und Breite mit Werten größer 0 eingegeben sind.'));
+         return;
+      }
+      draw_querschnitt(container, grafik_rechteck(b, h));
+      this._grafik_werte(container, b * h, (b * h * h * h) / 12, h / 2);
+      this.grafik_rechteck_ok = true;
+   }
+
+   _export_rechteck() {
+      const svg = this.shadowRoot?.querySelector('#id_rechteck_grafik svg') as SVGSVGElement | null;
+      if (!svg) return;
+      const qname = (this.shadowRoot?.getElementById('qname') as HTMLInputElement).value;
+      export_svg(svg, qname || 'Rechteck');
    }
 
    _dialog_TQ_abbruch() {
@@ -937,6 +1082,10 @@ export class drRechteckQuerSchnitt extends LitElement {
       inp('traeg_y').disabled = rechteck;
       inp('area').disabled = rechteck;
       inp('zso').disabled = rechteck;
+
+      // Grafik im Hauptdialog nur für Rechteck
+      (root.getElementById('id_rechteck_grafik_bereich') as HTMLDivElement).hidden = !rechteck;
+      if (rechteck) this._redraw_rechteck();
    }
 
    /** Zustand der Eingabefelder passend zur gewählten Radio-Gruppe setzen (öffnet keinen Dialog) */
@@ -956,5 +1105,6 @@ export class drRechteckQuerSchnitt extends LitElement {
    _TQ() {
       this._applyMode(4);
       (this.shadowRoot?.getElementById('dialog_TQ') as HTMLDialogElement).showModal();
+      this._redraw_TQ();
    }
 }
