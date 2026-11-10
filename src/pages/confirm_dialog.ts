@@ -32,18 +32,17 @@ export class ConfirmDialog {
                 return;
             }
 
+            // Jedes Schließen landet hier, auch Escape (returnValue dann '' -> wie "nein")
+            this.dialog.addEventListener("close", () => {
+                resolve(this.dialog.returnValue === 'true');
+                this._destroy();
+            }, { once: true });
+
             this.dialog.showModal();
             //this.trueButton.focus();
 
-            this.trueButton.addEventListener("click", () => {
-                resolve(true);
-                this._destroy();
-            });
-
-            this.falseButton.addEventListener("click", () => {
-                resolve(false);
-                this._destroy();
-            });
+            this.trueButton.addEventListener("click", () => this.dialog.close('true'));
+            this.falseButton.addEventListener("click", () => this.dialog.close('false'));
         });
     }
 
@@ -128,13 +127,16 @@ export class AlertDialog {
                 return;
             }
 
+            // Jedes Schließen landet hier, auch Escape (gilt wie "ok", sonst hinge der Aufrufer im await)
+            this.dialog.addEventListener("close", () => {
+                resolve(true);
+                this._destroy();
+            }, { once: true });
+
             this.dialog.showModal();
             //this.trueButton.focus();
 
-            this.trueButton.addEventListener("click", () => {
-                resolve(true);
-                this._destroy();
-            });
+            this.trueButton.addEventListener("click", () => this.dialog.close('true'));
 
         });
     }
