@@ -1920,6 +1920,38 @@ Elaborado por: Alex Ejemplo</target>
   <source>Grafik als SVG-Datei speichern</source>
   <target>Guardar el gráfico como archivo SVG</target>
 </trans-unit>
+<trans-unit id="s024ea829b08630c0">
+  <source>Die Einführungsvideos sind auch im letzten Tab ꔷꔷꔷ (ganz rechts) zu finden. Dort kann dieser Button im Tab Haupt ausgeblendet werden, wenn er nicht mehr benötigt wird.</source>
+  <target>Los vídeos introductorios también se encuentran en la última pestaña ꔷꔷꔷ (a la derecha). Allí se puede ocultar este botón en la pestaña Principal si ya no se necesita.</target>
+</trans-unit>
+<trans-unit id="s6d49fd879d22fbcc">
+  <source>Einführungsvideos:</source>
+  <target>Vídeos introductorios:</target>
+</trans-unit>
+<trans-unit id="s09ecc08d27ceeb1d">
+  <source>Button im Tab Haupt anzeigen</source>
+  <target>Mostrar el botón en la pestaña Principal</target>
+</trans-unit>
+<trans-unit id="s87907654e6c72194">
+  <source>Größe der Buttons im Tab System:</source>
+  <target>Tamaño de los botones en la pestaña Sistema:</target>
+</trans-unit>
+<trans-unit id="s7fc67ba5acbb8f4e">
+  <source>klein</source>
+  <target>pequeño</target>
+</trans-unit>
+<trans-unit id="s61053f0e3ebbd272">
+  <source>normal</source>
+  <target>normal</target>
+</trans-unit>
+<trans-unit id="sfb4d047243d64522">
+  <source>groß</source>
+  <target>grande</target>
+</trans-unit>
+<trans-unit id="s5c48fa4765ab5b8a">
+  <source>sehr groß</source>
+  <target>muy grande</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

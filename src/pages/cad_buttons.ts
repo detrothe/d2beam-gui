@@ -509,7 +509,7 @@ export function cad_buttons() {
     undo_button = document.createElement("button");
 
     undo_button.value = "undo";
-    undo_button.className = "btn_svg";
+    undo_button.className = "btn_cad";
     undo_button.innerHTML = `<svg fill="#ffffff" height="1rem" width="1rem" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 	 viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
 <path d="M256,1C179.8,1,111.7,34.4,64.9,87.2L0,22.3V193h170.7l-60.2-60.2C145.6,91.5,197.5,65,256,65c106.1,0,192,85.9,192,192
@@ -523,7 +523,7 @@ export function cad_buttons() {
     redo_button = document.createElement("button");
 
     redo_button.value = "redo";
-    redo_button.className = "btn_svg";
+    redo_button.className = "btn_cad";
     redo_button.innerHTML = `<svg fill="#ffffff" height="1rem" width="1rem" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 	 viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
 <path d="M512,192V21.3l-64.9,64.9C400.3,33.4,332.2,0,256,0C114.6,0,0,114.6,0,256s114.6,256,256,256c70.7,0,134.7-28.6,181-75
@@ -537,7 +537,7 @@ export function cad_buttons() {
     trash_button = document.createElement("button");
 
     trash_button.value = "delete";
-    trash_button.className = "btn_svg";
+    trash_button.className = "btn_cad";
     // trash_button.innerHTML = '<i class = "fa fa-trash"></i>';
     trash_button.innerHTML = `<svg fill="#ffffff" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"	 width="1rem" height="1rem" viewBox="0 0 48.639 48.639"	 xml:space="preserve">
 	<g>
@@ -562,7 +562,7 @@ export function cad_buttons() {
     select_button = document.createElement("button");
 
     select_button.value = "select";
-    select_button.className = "btn_svg";
+    select_button.className = "btn_cad";
     select_button.innerHTML = `<svg version="1.1" id="Uploaded to svgrepo.com" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 	 width="1rem" height="1rem" viewBox="0 0 32 32" xml:space="preserve">
 <style type="text/css">
@@ -584,7 +584,7 @@ export function cad_buttons() {
     knoten_button = document.createElement("button");
 
     knoten_button.value = "Knoten";
-    knoten_button.className = "btn_svg";
+    knoten_button.className = "btn_cad";
     knoten_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="7" y="7" width="10" height="10" rx="2" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
@@ -598,7 +598,7 @@ export function cad_buttons() {
     edit_knoten_button = document.createElement("button");
 
     edit_knoten_button.value = "Knoten bearbeiten";
-    edit_knoten_button.className = "btn_svg";
+    edit_knoten_button.className = "btn_cad";
     edit_knoten_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M8 8H13M8 12H16M8 16H11M7.2 4H16.8C17.9201 4 18.4802 4 18.908 4.21799C19.2843 4.40973 19.5903 4.71569 19.782 5.09202C20 5.51984 20 6.0799 20 7.2V16.8C20 17.9201 20 18.4802 19.782 18.908C19.5903 19.2843 19.2843 19.5903 18.908 19.782C18.4802 20 17.9201 20 16.8 20H7.2C6.0799 20 5.51984 20 5.09202 19.782C4.71569 19.5903 4.40973 19.2843 4.21799 18.908C4 18.4802 4 17.9201 4 16.8V7.2C4 6.0799 4 5.51984 4.21799 5.09202C4.40973 4.71569 4.71569 4.40973 5.09202 4.21799C5.51984 4 6.0799 4 7.2 4Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
@@ -611,7 +611,7 @@ export function cad_buttons() {
     stab_button = document.createElement("button");
 
     stab_button.value = "Stab";
-    stab_button.className = "btn_svg";
+    stab_button.className = "btn_cad";
     // stab_button.innerHTML = msg('Stab');
 
     stab_button.innerHTML = `
@@ -632,7 +632,7 @@ export function cad_buttons() {
     lager_button = document.createElement("button");
 
     lager_button.value = "Lager";
-    lager_button.className = "btn";
+    lager_button.className = "btn_cad";
     lager_button.innerHTML = "Δ";
     lager_button.addEventListener("click", Lager_button);
 
@@ -643,7 +643,7 @@ export function cad_buttons() {
     knotlast_button = document.createElement("button");
 
     knotlast_button.value = "Knotenlast";
-    knotlast_button.className = "btn_svg";
+    knotlast_button.className = "btn_cad";
     knotlast_button.innerHTML = `
       <svg version="1.2" width="1.107rem" height="1rem" viewBox="0 0 1825.686 1649.212" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
         <defs class="ClipPathGroup">
@@ -677,7 +677,7 @@ export function cad_buttons() {
     ellast_button = document.createElement("button");
 
     ellast_button.value = "Elementlast";
-    ellast_button.className = "btn_svg";
+    ellast_button.className = "btn_cad";
     // ellast_button.innerHTML = msg('ElLast');
     ellast_button.innerHTML = `
       <svg version="1.2" width="1rem" height="1rem" viewBox="947 673 2857 1531" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
@@ -711,7 +711,7 @@ export function cad_buttons() {
     knotmass_button = document.createElement("button");
 
     knotmass_button.value = "Knotenmasse";
-    knotmass_button.className = "btn_svg";
+    knotmass_button.className = "btn_cad";
     knotmass_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="8" cy="8" r="7" fill="#ffffff"/>
     </svg>`;
@@ -725,7 +725,7 @@ export function cad_buttons() {
     cog_button = document.createElement("button");
 
     cog_button.value = "Einstellungen";
-    cog_button.className = "btn_svg";
+    cog_button.className = "btn_cad";
     cog_button.innerHTML = `<svg fill="#ffffff" height="1rem" width="1rem" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         viewBox="0 0 294 294" xml:space="preserve">
         <path d="M279.333,117h-18.178C258.423,107,254.3,96.814,249,87.747l13.383-13.361c5.857-5.857,5.858-15.344,0-21.202l-20.737-20.733
@@ -752,7 +752,7 @@ export function cad_buttons() {
     refresh_button = document.createElement("button");
 
     refresh_button.value = "refresh";
-    refresh_button.className = "btn_svg";
+    refresh_button.className = "btn_cad";
     refresh_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17 9a1 1 0 01-1-1c0-.551-.448-1-1-1H5.414l1.293 1.293a.999.999 0 11-1.414 1.414l-3-3a.999.999 0 010-1.414l3-3a.997.997 0 011.414 0 .999.999 0 010 1.414L5.414 5H15c1.654 0 3 1.346 3 3a1 1 0 01-1 1zM3 11a1 1 0 011 1c0 .551.448 1 1 1h9.586l-1.293-1.293a.999.999 0 111.414-1.414l3 3a.999.999 0 010 1.414l-3 3a.999.999 0 11-1.414-1.414L14.586 15H5c-1.654 0-3-1.346-3-3a1 1 0 011-1z" fill="#ffffff"/></svg>`;
     // refresh_button.innerHTML = '<i class = "fa fa-refresh"></i>';
     refresh_button.addEventListener("click", reset_cad);
@@ -763,7 +763,7 @@ export function cad_buttons() {
     info_button = document.createElement("button");
 
     info_button.value = "info";
-    info_button.className = "btn";
+    info_button.className = "btn_cad";
     info_button.innerHTML = '<b>i</b>';
     info_button.addEventListener("click", Info_button);
     // stab_button.addEventListener('keydown', keydown);
@@ -775,7 +775,7 @@ export function cad_buttons() {
     drawer_button = document.createElement("button");
 
     drawer_button.value = "drawer";
-    drawer_button.className = "btn";
+    drawer_button.className = "btn_cad";
     drawer_button.innerHTML = 'A';
     drawer_button.addEventListener("click", Drawer_button);
     // stab_button.addEventListener('keydown', keydown);

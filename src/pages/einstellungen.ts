@@ -39,6 +39,7 @@ export function add_listeners_einstellungen() {
         shadow.getElementById("id_cb_deleteLocalStorage")?.addEventListener('click', deleteLocalStorage);
 
         shadow.getElementById("id_fontsize")?.addEventListener('change', set_font_size);
+        shadow.getElementById("id_cad_button_size")?.addEventListener('change', set_cad_button_size);
         shadow.getElementById("id_color_table_out")?.addEventListener('change', set_color_table_out);
         shadow.getElementById("id_color_table_in")?.addEventListener('change', set_color_table_in);
     }
@@ -57,6 +58,20 @@ function set_body_width() {
     }
 }
 */
+//----------------------------------------------------------------------------------------------
+function apply_cad_button_size(size: string) {
+    //------------------------------------------------------------------------------------------
+    // CSS-Variable am Host von dr-haupt, wird in dessen Shadow-DOM für .btn_cad vererbt
+    document.getElementById('id_haupt')?.style.setProperty('--cad_btn_size', size);
+}
+
+//----------------------------------------------------------------------------------------------
+function set_cad_button_size() {
+    //------------------------------------------------------------------------------------------
+    const el = document.getElementById('id_haupt')?.shadowRoot?.getElementById("id_cad_button_size") as HTMLSelectElement | null;
+    if (el) apply_cad_button_size(el.value);
+}
+
 //----------------------------------------------------------------------------------------------
 function set_font_size() {
     //------------------------------------------------------------------------------------------
@@ -318,6 +333,9 @@ function saveLocalStorage() {
 
         window.localStorage.setItem('touch_support_tables', String(touch_support_table));
 
+        const el_cad_size = shadow.getElementById("id_cad_button_size") as HTMLSelectElement | null;
+        if (el_cad_size) window.localStorage.setItem('cad_button_size', el_cad_size.value);
+
         let els = shadow.getElementById("id_locale-picker") as HTMLSelectElement;
         let shad = els.shadowRoot?.getElementById("id_locale") as HTMLSelectElement;
         let locale = shad?.value;
@@ -424,6 +442,15 @@ export function readLocalStorage() {
             const el = shadow.getElementById("id_touch_support_tables") as SlCheckbox
             el.checked = false
             set_touch_support_table(false)
+        }
+
+        const cad_button_size = window.localStorage.getItem('cad_button_size');
+        if (cad_button_size) {
+            const el = shadow.getElementById("id_cad_button_size") as HTMLSelectElement | null;
+            if (el) {
+                el.value = cad_button_size;
+                if (el.value === cad_button_size) apply_cad_button_size(cad_button_size);   // nur gültige Werte
+            }
         }
 
         let locale = window.localStorage.getItem('locale');

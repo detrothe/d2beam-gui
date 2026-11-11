@@ -1,7 +1,7 @@
 console.log("in dr-haupt");
 
 import { LitElement, html, css } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
+import { property, customElement, state } from 'lit/decorators.js';
 //import { property, customElement } from 'lit/decorators.js';
 import { msg, localized, updateWhenLocaleChanges } from '@lit/localize';
 
@@ -60,6 +60,8 @@ import { berechnungErforderlich } from '../pages/globals';
 import { click_neuer_querschnitt_rechteck } from '../pages/querschnitte'
 import '../pages/locale-picker'
 import { init_haupt3 } from '../pages/haupt3';
+import { enableTouchHints } from '../pages/touch_hint';
+import { alertdialog } from '../pages/confirm_dialog';
 import { global_css } from '../styles/global-css';
 
 document.adoptedStyleSheets = [
@@ -119,9 +121,40 @@ let theFooter = '2D structural analysis of frames and trusses, v2.2.1, 11-Nov-20
 
 let hostname = window.location.hostname;
 
+// Einführungsvideos: Button im Tab Haupt ausblendbar (Einstellung im Tab ꔷꔷꔷ)
+const INTRO_VIDEO_HIDDEN_KEY = 'd2beam_intro_video_hidden';
+const INTRO_VIDEO_HINT_KEY = 'd2beam_intro_video_hint_shown';
+
+function storage_get(key: string) {
+  try { return window.localStorage.getItem(key); } catch { return null; }
+}
+function storage_set(key: string, value: string | null) {
+  try {
+    if (value === null) window.localStorage.removeItem(key);
+    else window.localStorage.setItem(key, value);
+  } catch { /* Speicher gesperrt: Einstellung gilt nur bis zum Neuladen */ }
+}
+
 @localized()
 @customElement('dr-haupt')
 export class drHaupt extends LitElement {
+
+  @state() private introVideoHidden = storage_get(INTRO_VIDEO_HIDDEN_KEY) === '1';
+
+  // Klick auf den Button im Tab Haupt: beim ersten Mal Hinweis auf die Einstellung im Tab ꔷꔷꔷ
+  private async _click_intro_video() {
+    if (storage_get(INTRO_VIDEO_HINT_KEY) !== '1') {
+      await alertdialog('ok', msg('Die Einführungsvideos sind auch im letzten Tab ꔷꔷꔷ (ganz rechts) zu finden. Dort kann dieser Button im Tab Haupt ausgeblendet werden, wenn er nicht mehr benötigt wird.'));
+      storage_set(INTRO_VIDEO_HINT_KEY, '1');
+    }
+    show_video();
+  }
+
+  private _change_intro_video_visible(e: Event) {
+    const checked = (e.target as HTMLInputElement).checked;
+    this.introVideoHidden = !checked;
+    storage_set(INTRO_VIDEO_HIDDEN_KEY, checked ? null : '1');
+  }
 
 
   //static styles = [global_css];
@@ -159,6 +192,9 @@ export class drHaupt extends LitElement {
   async firstUpdated() {
     console.log("fertig drHaupt")
     init_haupt3();
+    // Hilfetexte (Hover/langes Drücken) für Neu/Einlesen/Speichern
+    const el_toolbar = this.shadowRoot?.getElementById('id_file_toolbar');
+    if (el_toolbar) enableTouchHints(el_toolbar);
   }
 
   render() {
@@ -184,20 +220,37 @@ export class drHaupt extends LitElement {
 
         <tastatur-hinweis></tastatur-hinweis>
 
+        ${this.introVideoHidden ? '' : html`
         <p>
-         <sl-button id="intro_video" value="video" variant="primary"  outline @click="${show_video}" style='width:20rem;color:"DodgerBlue";'><b>${msg('zeige Einführungsvideos')}</b></sl-button>
-        </p>
+         <sl-button id="intro_video" value="video" variant="primary"  outline @click="${this._click_intro_video}" style='width:20rem;color:"DodgerBlue";'><b>${msg('zeige Einführungsvideos')}</b></sl-button>
+        </p>`}
 
         <p>&nbsp;&nbsp;${msg('aktueller Dateiname:')}&nbsp;<span id="id_current_filename"> </span><br />
         </p>
-        <p>
-          <button type="button" id="saveFile" style="min-width:8em;">
-            ${msg('Objektdaten speichern')}
+        <div id="id_file_toolbar" class="file_toolbar">
+          <button type="button" id="clear" class="btn_file" @click="${button_neue_eingabe}"
+            title="${msg('neue Eingabe beginnen')}" aria-label="${msg('neue Eingabe beginnen')}">
+            <svg width="1.4rem" height="1.4rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+              <path d="M14 3v5h5"/>
+              <path d="M12 11v6M9 14h6"/>
+            </svg>
           </button>
-          <button type="button" id="readFile" style="min-width:8em;">
-            ${msg('Objektdaten einlesen')}
+          <button type="button" id="readFile" class="btn_file"
+            title="${msg('Objektdaten einlesen')}" aria-label="${msg('Objektdaten einlesen')}">
+            <svg width="1.4rem" height="1.4rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 14l1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>
+            </svg>
           </button>
-        </p>
+          <button type="button" id="saveFile" class="btn_file"
+            title="${msg('Objektdaten speichern')}" aria-label="${msg('Objektdaten speichern')}">
+            <svg width="1.4rem" height="1.4rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 3h11l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/>
+              <path d="M7 3v5h8V3"/>
+              <rect x="7" y="13" width="10" height="8" rx="1"/>
+            </svg>
+          </button>
+        </div>
 
         <hr />
 
@@ -210,23 +263,6 @@ export class drHaupt extends LitElement {
         <table id="querschnittwerte_table">
           <tbody>
           <tr>
-              <td></td>
-              <td>
-                <sl-button id="clear" value="clear" @click="${button_neue_eingabe}" style="min-width:100%;">${msg('neue Eingabe beginnen')}</sl-button>
-              </td>
-            </tr>
-            <tr>
-              <td></td>
-              <td>
-                <sl-button id="id_check" value="check" @click="${button_eingabe_ueberpruefen}" style="min-width:100%;">${msg('Eingabe prüfen')}</sl-button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-               &nbsp;
-              </td>
-            </tr>
-            <tr>
               <td>&nbsp;&nbsp; ${msg('Berechnungsart:')}</td>
               <td>
                 <select @change="${berechnungsart_changed}" name="stadyn" id="id_stadyn" style="min-width:100%;">
@@ -275,6 +311,12 @@ export class drHaupt extends LitElement {
               </td>
             </tr>
 
+            <tr>
+              <td></td>
+              <td>
+                <sl-button id="id_check" value="check" @click="${button_eingabe_ueberpruefen}" style="min-width:100%;">${msg('Eingabe prüfen')}</sl-button>
+              </td>
+            </tr>
             <tr>
               <td></td>
               <td>
@@ -1140,6 +1182,36 @@ export class drHaupt extends LitElement {
               <tr>
                 <td>Language:</td>
                 <td><locale-picker id="id_locale-picker"></locale-picker></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>${msg('Einführungsvideos:')}</td>
+                <td>
+                  <sl-button variant="primary" outline @click="${show_video}">${msg('zeige Einführungsvideos')}</sl-button>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <sl-checkbox id="id_intro_video_visible" ?checked=${!this.introVideoHidden}
+                    @sl-change="${this._change_intro_video_visible}">${msg('Button im Tab Haupt anzeigen')}</sl-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>${msg('Größe der Buttons im Tab System:')}</td>
+                <td>
+                  <select name="cadButtonSize" id="id_cad_button_size">
+                    <option value="1.75rem">${msg('klein')}</option>
+                    <option value="2rem" selected>${msg('normal')}</option>
+                    <option value="2.5rem">${msg('groß')}</option>
+                    <option value="3rem">${msg('sehr groß')}</option>
+                  </select>
+                </td>
               </tr>
               <tr>
                 <td>&nbsp;</td>

@@ -553,6 +553,57 @@ export const global_css = css`
       color: white;
    }
 
+   .file_toolbar {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0.5rem 0 1rem 0.5rem;
+   }
+
+   .btn_file {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.5rem;
+      padding: 0;
+      cursor: pointer;
+   }
+
+   .btn_file:hover {
+      background-color: RoyalBlue;
+      color: white;
+   }
+
+   /* Werkzeug-Buttons im Tab System (undo … A): alle gleich groß, Inhalt zentriert.
+      Größe über --cad_btn_size, einstellbar im Tab ꔷꔷꔷ */
+   .btn_cad {
+      --cad_btn_size_eff: var(--cad_btn_size, 2rem);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      box-sizing: border-box;
+      width: var(--cad_btn_size_eff);
+      height: var(--cad_btn_size_eff);
+      padding: 0;
+      margin: 0.1875rem 0 0.1875rem 0.25rem;
+      background-color: light-dark(var(--button_cad), rgb(64, 64, 64));
+      border: 1px solid #5a5a62;
+      border-radius: 4px;
+      color: white;
+      font-size: calc(var(--cad_btn_size_eff) * 0.5);
+      line-height: 1;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+   }
+
+   .btn_cad svg {
+      width: calc(var(--cad_btn_size_eff) * 0.55);
+      height: calc(var(--cad_btn_size_eff) * 0.55);
+      flex-shrink: 0;
+   }
+
    .btn_svg {
       height: 2rem;
       background-color: light-dark(var(--button_cad), rgb(64, 64, 64));
