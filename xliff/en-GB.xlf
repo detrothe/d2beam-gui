@@ -1957,6 +1957,14 @@ Die Datei wird im Default Download Ordner gespeichert</source>
   <target>File name with extension, e.g. test.d2beam
 The file is saved in the default download folder</target>
 </trans-unit>
+<trans-unit id="s4e05f3df9f35d3ad">
+  <source>Die Datei war schon vorhanden. Android hat deshalb eine neue Datei angelegt:</source>
+  <target>The file already existed. Android has therefore created a new file:</target>
+</trans-unit>
+<trans-unit id="sff2eaf49ed34b97c">
+  <source>Zum Überschreiben im Speichern-Dialog nicht auf „Speichern“ tippen, sondern die vorhandene Datei in der Liste antippen und das Ersetzen bestätigen.</source>
+  <target>To overwrite it, do not tap “Save” in the save dialog; instead tap the existing file in the list and confirm the replacement.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

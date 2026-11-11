@@ -735,6 +735,8 @@ function filedialog_read() {
     console.log('nach click in filedialog_read');
 }
 
+let hinweis_ueberschreiben_gezeigt = false;
+
 //------------------------------------------------------------------------------------------------
 function basisname(name: string) {
     //--------------------------------------------------------------------------------------------
@@ -813,6 +815,16 @@ async function handleFileSelect_save() {
             await fileStream.close();
 
             set_current_filename(fileHandle.name);
+
+            // Android legt bei vorhandenem Namen über "Speichern" eine neue Datei "name (1).json" an.
+            // Überschreiben geht nur durch Antippen der Datei in der Liste – darauf hinweisen
+            // (höchstens einmal pro Sitzung).
+            if (isAndroid && !hinweis_ueberschreiben_gezeigt && /\s\(\d+\)\.json$/i.test(fileHandle.name)) {
+                hinweis_ueberschreiben_gezeigt = true;
+                const name_html = String(fileHandle.name).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                alertdialog('ok', msg('Die Datei war schon vorhanden. Android hat deshalb eine neue Datei angelegt:') + '<br>' + name_html + '<br><br>' +
+                    msg('Zum Überschreiben im Speichern-Dialog nicht auf „Speichern“ tippen, sondern die vorhandene Datei in der Liste antippen und das Ersetzen bestätigen.'));
+            }
         } catch (error: any) {
             //alert(error.name);
             alert(error.message);

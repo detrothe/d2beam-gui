@@ -1956,6 +1956,14 @@ Die Datei wird im Default Download Ordner gespeichert</source>
   <target>Nome del file con estensione, ad es. test.d2beam
 Il file viene salvato nella cartella di download predefinita</target>
 </trans-unit>
+<trans-unit id="s4e05f3df9f35d3ad">
+  <source>Die Datei war schon vorhanden. Android hat deshalb eine neue Datei angelegt:</source>
+  <target>Il file esisteva già. Android ha quindi creato un nuovo file:</target>
+</trans-unit>
+<trans-unit id="sff2eaf49ed34b97c">
+  <source>Zum Überschreiben im Speichern-Dialog nicht auf „Speichern“ tippen, sondern die vorhandene Datei in der Liste antippen und das Ersetzen bestätigen.</source>
+  <target>Per sovrascriverlo, nella finestra di salvataggio non toccare «Salva», ma tocca il file esistente nell’elenco e conferma la sostituzione.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
