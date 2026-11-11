@@ -765,6 +765,8 @@ async function handleFileSelect_save() {
             // text/plain hängt dieser ".txt" an. Mit application/octet-stream bleibt der Name.
             const isAndroid = /Android/i.test(navigator.userAgent);
             const mimeType = isAndroid ? 'application/octet-stream' : 'text/plain';
+            // DIAGNOSE (vorübergehend): welcher Weg, welcher Typ, welcher Name
+            if (isAndroid) alert('DIAGNOSE 1/2\nWeg: showSaveFilePicker\nMIME: ' + mimeType + '\nVorschlag: ' + currentFilename + '\nUA: ' + navigator.userAgent);
             // @ts-ignore
             const fileHandle = await window.showSaveFilePicker({
                 suggestedName: currentFilename,
@@ -786,6 +788,8 @@ async function handleFileSelect_save() {
             await fileStream.write(myBlob);
             await fileStream.close();
 
+            // DIAGNOSE (vorübergehend)
+            if (isAndroid) alert('DIAGNOSE 2/2\nGespeichert als: ' + fileHandle.name);
             set_current_filename(fileHandle.name);
         } catch (error: any) {
             //alert(error.name);
@@ -834,6 +838,8 @@ async function handleFileSelect_save() {
         // Android: Chrome erkennt bei octet-stream den Inhalt als Text und Android hängt dann
         // trotzdem ".txt" an; ein eigener, unbekannter Typ wird nicht umgedeutet.
         const isAndroid = /Android/i.test(navigator.userAgent);
+        // DIAGNOSE (vorübergehend)
+        if (isAndroid) alert('DIAGNOSE\nWeg: Download (saveAs)\nMIME: application/x-d2beam\nName: ' + filename + '\nhasSaveFS_Access: ' + app.hasSaveFS_Access);
         const myFile = new File([jsonse], filename, {
             type: isAndroid ? 'application/x-d2beam' : 'application/octet-stream',
         });
