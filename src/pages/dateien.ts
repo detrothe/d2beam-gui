@@ -736,6 +736,20 @@ function filedialog_read() {
 }
 
 //------------------------------------------------------------------------------------------------
+function basisname(name: string) {
+    //--------------------------------------------------------------------------------------------
+    // Dateiname ohne Endungen und Zähler früherer Speicherungen,
+    // z.B. "test.d2beam (4).txt" -> "test", "test.d2beam.json" -> "test"
+    let basis = String(name).trim();
+    let alt = '';
+    while (alt !== basis) {
+        alt = basis;
+        basis = basis.replace(/\.(txt|json|d2beam)$/i, '').replace(/\s*\(\d+\)$/, '');
+    }
+    return basis === '' ? 'empty' : basis;
+}
+
+//------------------------------------------------------------------------------------------------
 async function handleFileSelect_save() {
     //--------------------------------------------------------------------------------------------
 
@@ -753,29 +767,41 @@ async function handleFileSelect_save() {
 
     let filename: any;
 
-    // Android: der Speichern-Dialog (Chrome) hängt immer ".txt" an, auch bei Namen mit .d2beam
-    // und unabhängig vom angegebenen MIME-Typ. Daher dort immer der Download-Weg.
+    // Android: der Speichern-Dialog (Chrome) kennt die Endung .d2beam nicht und hängt ".txt" an.
+    // Dort wird deshalb als .d2beam.json (application/json) gespeichert; für Android zählt nur die
+    // letzte Endung .json, die es kennt. Desktop: unverändert .d2beam.
     const isAndroid = /Android/i.test(navigator.userAgent);
 
-    if (app.hasSaveFS_Access && !isAndroid) {
+    if (app.hasSaveFS_Access) {
         //window.alert("showSaveFilePicker bekannt")
 
         try {
             // (A) CREATE BLOB OBJECT
-            const myBlob = new Blob([jsonse], { type: 'text/plain' });
+            const myBlob = new Blob([jsonse], { type: isAndroid ? 'application/json' : 'text/plain' });
 
             // (B) FILE HANDLER & FILE STREAM
             // @ts-ignore
-            const fileHandle = await window.showSaveFilePicker({
-                suggestedName: currentFilename,
-                startIn: lastFileHandle,
-                types: [
-                    {
-                        description: 'Text file',
-                        accept: { 'text/plain': ['.d2beam'] },
-                    },
-                ],
-            });
+            const fileHandle = await window.showSaveFilePicker(isAndroid
+                ? {
+                    suggestedName: basisname(currentFilename) + '.d2beam.json',
+                    startIn: lastFileHandle,
+                    types: [
+                        {
+                            description: 'd2beam (JSON)',
+                            accept: { 'application/json': ['.json'] },
+                        },
+                    ],
+                }
+                : {
+                    suggestedName: currentFilename,
+                    startIn: lastFileHandle,
+                    types: [
+                        {
+                            description: 'Text file',
+                            accept: { 'text/plain': ['.d2beam'] },
+                        },
+                    ],
+                });
             console.log('fileHandle', fileHandle);
             lastFileHandle = fileHandle;
 
