@@ -753,7 +753,11 @@ async function handleFileSelect_save() {
 
     let filename: any;
 
-    if (app.hasSaveFS_Access) {
+    // Android: der Speichern-Dialog (Chrome) hängt immer ".txt" an, auch bei Namen mit .d2beam
+    // und unabhängig vom angegebenen MIME-Typ. Daher dort immer der Download-Weg.
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    if (app.hasSaveFS_Access && !isAndroid) {
         //window.alert("showSaveFilePicker bekannt")
 
         try {
@@ -761,18 +765,14 @@ async function handleFileSelect_save() {
             const myBlob = new Blob([jsonse], { type: 'text/plain' });
 
             // (B) FILE HANDLER & FILE STREAM
-            // Chrome auf Android reicht den MIME-Typ an den Android-Dateidialog weiter; bei
-            // text/plain hängt dieser ".txt" an. Mit application/octet-stream bleibt der Name.
-            const isAndroid = /Android/i.test(navigator.userAgent);
-            const mimeType = isAndroid ? 'application/octet-stream' : 'text/plain';
             // @ts-ignore
             const fileHandle = await window.showSaveFilePicker({
                 suggestedName: currentFilename,
                 startIn: lastFileHandle,
                 types: [
                     {
-                        description: 'd2beam',
-                        accept: { [mimeType]: ['.d2beam'] },
+                        description: 'Text file',
+                        accept: { 'text/plain': ['.d2beam'] },
                     },
                 ],
             });
@@ -786,8 +786,6 @@ async function handleFileSelect_save() {
             await fileStream.write(myBlob);
             await fileStream.close();
 
-            // DIAGNOSE (vorübergehend), erst nach dem Dialog: alert vorher verbraucht die Nutzergeste
-            if (isAndroid) alert('DIAGNOSE\nWeg: showSaveFilePicker\nMIME: ' + mimeType + '\nVorschlag: ' + currentFilename + '\nGespeichert als: ' + fileHandle.name + '\nUA: ' + navigator.userAgent);
             set_current_filename(fileHandle.name);
         } catch (error: any) {
             //alert(error.name);
@@ -822,9 +820,11 @@ async function handleFileSelect_save() {
 
 
         //window.alert("showSaveFilePicker UNBEKANNT");
+        // Vorschlag ohne angehängtes ".txt" früherer Speicherungen (z.B. "test.d2beam (4).txt")
+        const vorschlag = String(currentFilename).replace(/\.txt$/i, '');
         filename = window.prompt(
             msg('Name der Datei mit Extension, z.B. test.d2beam\nDie Datei wird im Default Download Ordner gespeichert'),
-            currentFilename
+            vorschlag
         );
         if (filename === null) return;          // Abbruch
         filename = filename.trim();
@@ -835,9 +835,6 @@ async function handleFileSelect_save() {
         // iPadOS: application/octet-stream genügt.
         // Android: Chrome erkennt bei octet-stream den Inhalt als Text und Android hängt dann
         // trotzdem ".txt" an; ein eigener, unbekannter Typ wird nicht umgedeutet.
-        const isAndroid = /Android/i.test(navigator.userAgent);
-        // DIAGNOSE (vorübergehend)
-        if (isAndroid) alert('DIAGNOSE\nWeg: Download (saveAs)\nMIME: application/x-d2beam\nName: ' + filename + '\nhasSaveFS_Access: ' + app.hasSaveFS_Access);
         const myFile = new File([jsonse], filename, {
             type: isAndroid ? 'application/x-d2beam' : 'application/octet-stream',
         });
