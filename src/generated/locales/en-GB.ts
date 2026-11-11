@@ -487,6 +487,8 @@ Prepared by: Alex Example`,
 'sfb4d047243d64522': `large`,
 'sfb513c9f05f2007c': `rigid a:`,
 'sfb5eb49f05fd56c0': `rigid e:`,
+'sfcff2de7b62009df': `File name with extension, e.g. test.d2beam
+The file is saved in the default download folder`,
 'sfe6eb2b8c21847bc': `Pick an element`,
 'sfea6f3a7cfc9e79f': `angle`,
 'sfecd3a744c81cdc9': `No cross-section is assigned to element`,

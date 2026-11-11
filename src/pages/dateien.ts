@@ -817,14 +817,20 @@ async function handleFileSelect_save() {
 
         //window.alert("showSaveFilePicker UNBEKANNT");
         filename = window.prompt(
-            'Name der Datei mit Extension, z.B. test.txt\nDie Datei wird im Default Download Ordner gespeichert',
+            msg('Name der Datei mit Extension, z.B. test.d2beam\nDie Datei wird im Default Download Ordner gespeichert'),
             currentFilename
         );
+        if (filename === null) return;          // Abbruch
+        filename = filename.trim();
+        if (filename === '') return;
+        if (!/\.[^./\\]+$/.test(filename)) filename += '.d2beam';   // ohne Endung: .d2beam anhängen
+
+        // application/octet-stream statt text/plain: sonst hängen Android und iPadOS ".txt" an
         const myFile = new File([jsonse], filename, {
-            type: 'text/plain;charset=utf-8',
+            type: 'application/octet-stream',
         });
         try {
-            saveAs(myFile);
+            saveAs(myFile, filename);
             set_current_filename(filename);
         } catch (error: any) {
             //alert(error.name);

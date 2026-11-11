@@ -1950,6 +1950,12 @@ Réalisé par : Alex Exemple</target>
   <source>sehr groß</source>
   <target>très grand</target>
 </trans-unit>
+<trans-unit id="sfcff2de7b62009df">
+  <source>Name der Datei mit Extension, z.B. test.d2beam
+Die Datei wird im Default Download Ordner gespeichert</source>
+  <target>Nom du fichier avec extension, p. ex. test.d2beam
+Le fichier est enregistré dans le dossier de téléchargement par défaut</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

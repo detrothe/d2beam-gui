@@ -486,6 +486,8 @@ Réalisé par : Alex Exemple`,
 'sfb4d047243d64522': `grand`,
 'sfb513c9f05f2007c': `rigide a :`,
 'sfb5eb49f05fd56c0': `rigide e :`,
+'sfcff2de7b62009df': `Nom du fichier avec extension, p. ex. test.d2beam
+Le fichier est enregistré dans le dossier de téléchargement par défaut`,
 'sfe6eb2b8c21847bc': `Sélectionner un élément`,
 'sfea6f3a7cfc9e79f': `Angle`,
 'sfecd3a744c81cdc9': `Aucune section n'est attribuée à l'élément`,

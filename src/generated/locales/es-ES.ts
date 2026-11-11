@@ -488,6 +488,8 @@ Elaborado por: Alex Ejemplo`,
 'sfb4d047243d64522': `grande`,
 'sfb513c9f05f2007c': `rígido a:`,
 'sfb5eb49f05fd56c0': `rígido e:`,
+'sfcff2de7b62009df': `Nombre del archivo con extensión, p. ej. test.d2beam
+El archivo se guarda en la carpeta de descargas predeterminada`,
 'sfe6eb2b8c21847bc': `Selecciona un elemento`,
 'sfea6f3a7cfc9e79f': `ángulo`,
 'sfecd3a744c81cdc9': `No hay ninguna sección transversal asignada al elemento`,

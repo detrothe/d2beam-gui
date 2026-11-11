@@ -1951,6 +1951,12 @@ Prepared by: Alex Example</target>
   <source>sehr groß</source>
   <target>very large</target>
 </trans-unit>
+<trans-unit id="sfcff2de7b62009df">
+  <source>Name der Datei mit Extension, z.B. test.d2beam
+Die Datei wird im Default Download Ordner gespeichert</source>
+  <target>File name with extension, e.g. test.d2beam
+The file is saved in the default download folder</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
