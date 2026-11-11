@@ -761,14 +761,18 @@ async function handleFileSelect_save() {
             const myBlob = new Blob([jsonse], { type: 'text/plain' });
 
             // (B) FILE HANDLER & FILE STREAM
+            // Chrome auf Android reicht den MIME-Typ an den Android-Dateidialog weiter; bei
+            // text/plain hängt dieser ".txt" an. Mit application/octet-stream bleibt der Name.
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            const mimeType = isAndroid ? 'application/octet-stream' : 'text/plain';
             // @ts-ignore
             const fileHandle = await window.showSaveFilePicker({
                 suggestedName: currentFilename,
                 startIn: lastFileHandle,
                 types: [
                     {
-                        description: 'Text file',
-                        accept: { 'text/plain': ['.d2beam'] },
+                        description: 'd2beam',
+                        accept: { [mimeType]: ['.d2beam'] },
                     },
                 ],
             });
