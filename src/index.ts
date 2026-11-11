@@ -40,6 +40,7 @@ window.addEventListener('lit-localize-status', (event) => {
         console.log(`******************** Loaded new locale: ${event.detail.readyLocale}`);
         user_language = event.detail.readyLocale;
         update_button_language();
+        update_select_texts();
         // check_for_new_version();
     } else if (event.detail.status === 'error') {
         console.error(
@@ -134,7 +135,7 @@ function navigate() {
 import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
 import { init_cad, init_two_cad } from './pages/cad';
-import { reset_controlpanel_grafik } from './pages/grafik';
+import { reset_controlpanel_grafik, update_select_texts } from './pages/grafik';
 import { reset_gui } from './components/dr-control-panel.js';
 import { update_button_language } from './pages/cad_buttons.js';
 import { AlertDialog } from './pages/confirm_dialog.js';

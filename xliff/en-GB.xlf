@@ -1911,6 +1911,14 @@ Prepared by: Alex Example</target>
   <source>Löschen wiederherstellen</source>
   <target>Redo delete</target>
 </trans-unit>
+<trans-unit id="s293aa6a6446fb153">
+  <source>Export</source>
+  <target>Export</target>
+</trans-unit>
+<trans-unit id="s8f61ad6669fb2d2c">
+  <source>Grafik als SVG-Datei speichern</source>
+  <target>Save graphic as SVG file</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

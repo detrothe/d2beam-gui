@@ -495,6 +495,48 @@ export function init_panel() {
     }
 }
 
+//---------------------------------------------------------------------------------------------------
+// Optionen der Auswahllisten (Lastfall, Kombination, Eigenform, Knickfigur) werden per DOM erzeugt
+// und nicht von Lit gerendert. Art und Nummer werden deshalb an der Option gespeichert, damit
+// update_select_texts() sie nach einem Sprachwechsel neu beschriften kann.
+
+type TOptionArt = 'lastfall' | 'kombination' | 'alle_kombinationen' | 'eigenform' | 'knickfigur';
+
+function option_text(art: string, nr: number) {
+    switch (art) {
+        case 'lastfall': return msg('Lastfall') + ' ' + nr;
+        case 'kombination': return msg('Kombination') + ' ' + nr;
+        case 'alle_kombinationen': return msg('alle Kombinationen');
+        case 'eigenform': return msg('Eigenform') + ' ' + nr;
+        case 'knickfigur': return msg('Knickfigur') + ' ' + nr;
+    }
+    return '';
+}
+
+function create_option(art: TOptionArt, value: number, nr: number) {
+    const option = document.createElement('option');
+    option.value = String(value);
+    option.dataset.art = art;
+    option.dataset.nr = String(nr);
+    option.textContent = option_text(art, nr);
+    return option;
+}
+
+//---------------------------------------------------------------------------------------------------
+export function update_select_texts() {
+    //-----------------------------------------------------------------------------------------------
+    const shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (!shadow) return;
+    for (const id of ['id_select_loadcase', 'id_select_eigenvalue', 'id_select_dyn_eigenvalue']) {
+        const el_select = shadow.getElementById(id) as HTMLSelectElement | null;
+        if (!el_select) continue;
+        for (const option of el_select.options) {
+            const art = option.dataset.art;
+            if (art) option.textContent = option_text(art, Number(option.dataset.nr));
+        }
+    }
+}
+
 //--------------------------------------------------------------------------------------------------- i n i t _ g r a f i k
 
 export function init_grafik(flag: number) {
@@ -570,27 +612,17 @@ export function init_grafik(flag: number) {
 
         if (THIIO_flag === 0 && matprop_flag === 0) {
 
-            let option: any
             for (let i = 0; i < nlastfaelle; i++) {
-                option = document.createElement('option');
-                option.value = String(+i + 1)
-                option.textContent = msg('Lastfall') + ' ' + (+i + 1);
-                el_select.appendChild(option);
+                el_select.appendChild(create_option('lastfall', +i + 1, +i + 1));
             }
 
             for (let i = 0; i < nkombinationen; i++) {
-                option = document.createElement('option');
-                option.value = String(+i + 1 + nlastfaelle)
-                option.textContent = msg('Kombination') + ' ' + (+i + 1);
-                el_select.appendChild(option);
+                el_select.appendChild(create_option('kombination', +i + 1 + nlastfaelle, +i + 1));
             }
 
             if (nkombinationen > 0) {
 
-                option = document.createElement('option');
-                option.value = String(+nkombinationen + 1 + nlastfaelle)
-                option.textContent = msg('alle Kombinationen');
-                el_select.appendChild(option);
+                el_select.appendChild(create_option('alle_kombinationen', +nkombinationen + 1 + nlastfaelle, 0));
             }
 
             if (stadyn === 0) { // Statik, Th. I. Ordnung: keine Knickfiguren
@@ -602,10 +634,7 @@ export function init_grafik(flag: number) {
                 el_select_dyn_eigv.style.display = "block"
 
                 for (let i = 0; i < dyn_neigv; i++) {
-                    let option = document.createElement('option');
-                    option.value = String(+i + 1)
-                    option.textContent = msg('Eigenform') + ' ' + (+i + 1);
-                    el_select_dyn_eigv.appendChild(option);
+                    el_select_dyn_eigv.appendChild(create_option('eigenform', +i + 1, +i + 1));
                 }
             }
 
@@ -613,29 +642,19 @@ export function init_grafik(flag: number) {
 
             el_select_dyn_eigv.style.display = "none"
 
-            let option: any
             for (let i = 0; i < nkombinationen; i++) {
-                option = document.createElement('option');
-                option.value = String(+i + 1)
-                option.textContent = msg('Kombination') + ' ' + (+i + 1);
-                el_select.appendChild(option);
+                el_select.appendChild(create_option('kombination', +i + 1, +i + 1));
             }
 
             if (nkombinationen > 0) {
 
-                option = document.createElement('option');
-                option.value = String(+nkombinationen + 1)
-                option.textContent = msg('alle Kombinationen');
-                el_select.appendChild(option);
+                el_select.appendChild(create_option('alle_kombinationen', +nkombinationen + 1, 0));
             }
 
             el_select_eigv.style.display = "block"
 
             for (let i = 0; i < neigv; i++) {
-                let option = document.createElement('option');
-                option.value = String(+i + 1)
-                option.textContent = msg('Knickfigur') + ' ' + (+i + 1);
-                el_select_eigv.appendChild(option);
+                el_select_eigv.appendChild(create_option('knickfigur', +i + 1, +i + 1));
             }
         }
     }

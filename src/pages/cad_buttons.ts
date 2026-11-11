@@ -877,6 +877,7 @@ export function update_button_language() {
   querschnitt_default_select.title = msg('aktiver Querschnitt');
 
   set_pan_button_titles();
+  set_svg_button_texts();
 
   const elHaupt = document.getElementById('id_haupt');
   let shadow = elHaupt?.shadowRoot;
@@ -937,6 +938,20 @@ export function set_pan_button_titles() {
   if (el_cad) el_cad.title = msg('Verschieben der Ansicht (Pan) ein-/ausschalten');
   const el_grafik = shadow.getElementById('id_button_pan_grafik');
   if (el_grafik) el_grafik.title = msg('Verschieben der Ansicht (Pan) ein-/ausschalten, Text 123 bedeutet, dass Werte der Schnittgrößen/Verformungen mit Cursor angezeigt werden können');
+}
+
+//--------------------------------------------------------------------------------------------------------
+export function set_svg_button_texts() {
+  //------------------------------------------------------------------------------------------------------
+  // Export-Button im Tab Ergebnisse: kurzer Text, Erklärung als Hilfetext (Hover/langes Drücken)
+  const shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (!shadow) return;
+
+  const el = shadow.getElementById('id_button_copy_svg');
+  if (el) {
+    el.textContent = msg('Export');
+    el.title = msg('Grafik als SVG-Datei speichern');
+  }
 }
 
 //--------------------------------------------------------------------------------------------------------

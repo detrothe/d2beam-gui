@@ -1,4 +1,4 @@
-import { cad_buttons, set_pan_button_titles } from './cad_buttons';
+import { cad_buttons, set_pan_button_titles, set_svg_button_texts } from './cad_buttons';
 import { enableTouchHints } from './touch_hint';
 import { addListener_filesave } from './dateien';
 import { add_listeners_einstellungen, readLocalStorage, readLocalStorage_cad } from './einstellungen';
@@ -62,7 +62,10 @@ export function init_haupt3() {
         //     <path d="M8 2H4a2 2 0 0 0-2 2v4m20 0V4a2 2 0 0 0-2-2h-4m0 20h4a2 2 0 0 0 2-2v-4M8 22H4a2 2 0 0 1-2-2v-4" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
         //     </svg>        `;
 
-        shadow.getElementById('id_button_copy_svg')?.addEventListener('click', copy_svg, false);
+        const el_copy_svg = shadow.getElementById('id_button_copy_svg') as HTMLButtonElement;
+        el_copy_svg?.addEventListener('click', copy_svg, false);
+        set_svg_button_texts();
+        if (el_copy_svg) enableTouchHints(el_copy_svg);
 
         const checkbox = shadow.getElementById('id_glsystem_darstellen');
         checkbox!.addEventListener('sl-change', (event) => {

@@ -1910,6 +1910,14 @@ Réalisé par : Alex Exemple</target>
   <source>Löschen wiederherstellen</source>
   <target>Rétablir la suppression</target>
 </trans-unit>
+<trans-unit id="s293aa6a6446fb153">
+  <source>Export</source>
+  <target>Exporter</target>
+</trans-unit>
+<trans-unit id="s8f61ad6669fb2d2c">
+  <source>Grafik als SVG-Datei speichern</source>
+  <target>Enregistrer le graphique comme fichier SVG</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

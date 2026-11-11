@@ -1912,6 +1912,14 @@ Elaborado por: Alex Ejemplo</target>
   <source>Löschen wiederherstellen</source>
   <target>Rehacer eliminación</target>
 </trans-unit>
+<trans-unit id="s293aa6a6446fb153">
+  <source>Export</source>
+  <target>Exportar</target>
+</trans-unit>
+<trans-unit id="s8f61ad6669fb2d2c">
+  <source>Grafik als SVG-Datei speichern</source>
+  <target>Guardar el gráfico como archivo SVG</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

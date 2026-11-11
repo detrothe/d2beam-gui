@@ -339,7 +339,7 @@ export class drHaupt extends LitElement {
           <div id="id_grafik_group">
             <div id="id_div_select_lc">
               <select id="id_select_loadcase" on></select>
-              <button id="id_button_copy_svg">save svg</button>
+              <button id="id_button_copy_svg">Export</button>
             </div>
             <div id="id_div_select_eigv">
               <select id="id_select_eigenvalue" on></select>
