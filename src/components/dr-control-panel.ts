@@ -58,19 +58,27 @@ export class drControlPanel extends LitElement {
            .basis {
               display: block;
            }
-           .dynamik {
-              display: none;
-           }
 
-           .optionen {
-              display: none;
-           }
-
-           .container div {
-              display: none;
+           .container > div {
               background: black;
               color: white;
               padding: 5px;
+           }
+
+           /* Ausgeblendete Zeilen und Header werden nicht aus dem Layout genommen, sondern auf
+              Höhe 0 zusammengeklappt und unsichtbar gemacht. Sie bestimmen so weiterhin die
+              Spaltenbreite mit, und das Panel ist offen wie geschlossen immer gleich breit
+              (so breit wie im voll aufgeklappten Zustand der jeweiligen Sprache).
+              Das Ein-/Ausblenden im Code per style.display bleibt unverändert. */
+           .container > div:not([style*='display: block']),
+           .container > header.dynamik:not([style*='display: block']),
+           .container > header.optionen:not([style*='display: block']) {
+              display: block !important;
+              visibility: hidden;
+              height: 0;
+              padding-top: 0;
+              padding-bottom: 0;
+              overflow: hidden;
            }
            .item1 {
               grid-column-start: 1;
@@ -131,6 +139,21 @@ export class drControlPanel extends LitElement {
            button:hover {
               color: yellow;
            }
+
+           header button {
+              display: flex;
+              align-items: center;
+              gap: 0.4em;
+           }
+
+           .chevron {
+              flex-shrink: 0;
+              transition: transform 0.15s ease-in-out;
+           }
+
+           button[aria-expanded='true'] .chevron {
+              transform: rotate(90deg);
+           }
         `;
     }
 
@@ -139,17 +162,54 @@ export class drControlPanel extends LitElement {
         updateWhenLocaleChanges(this);
     }
 
+    private _observer: MutationObserver | null = null;
+
+    firstUpdated() {
+        // Die Zeilen werden an vielen Stellen direkt über style.display ein-/ausgeblendet.
+        // Die Pfeile im Header folgen daher der tatsächlichen Sichtbarkeit.
+        const container = this.shadowRoot?.querySelector('.container');
+        if (container) {
+            this._observer = new MutationObserver(() => this._updateArrows());
+            this._observer.observe(container, { attributes: true, attributeFilter: ['style'], subtree: true });
+        }
+        this._updateArrows();
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this._observer?.disconnect();
+        this._observer = null;
+    }
+
+    _updateArrows() {
+        const isOpen = (selector: string) => {
+            const elall = this.shadowRoot?.querySelectorAll(selector);
+            if (!elall) return false;
+            for (let el of elall) {
+                if ((el as HTMLElement).style.display === 'block') return true;
+            }
+            return false;
+        };
+        const setExpanded = (id: string, open: boolean) => {
+            const button = this.shadowRoot?.getElementById(id);
+            if (button) button.setAttribute('aria-expanded', open ? 'true' : 'false');
+        };
+        setExpanded('id_header_button', isOpen('.zeile'));
+        setExpanded('id_dynamik_button', isOpen('.zeile_dynamik'));
+        setExpanded('id_optionen_button', isOpen('.zeile_optionen'));
+    }
+
     //----------------------------------------------------------------------------------------------
 
     render() {
         return html`
          <div class="container">
             <header class='basis'>
-               <button @click="${this._click_header}" id="id_header_button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 100 100" xml:space="preserve">
-                <path d="M38 83 5 50l6.9-7L38 69.1 64.1 43l6.9 7z"/>
+               <button @click="${this._click_header}" id="id_header_button" aria-expanded="false">
+                <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="0.9rem" height="0.9rem" viewBox="0 0 100 100" aria-hidden="true">
+                <path d="M35 15 70 50 35 85" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                  ${msg('Bedienfeld anzeigen')}
+                  ${msg('Bedienfeld')}
                </button>
             </header>
 
@@ -231,9 +291,9 @@ export class drControlPanel extends LitElement {
 
 
             <header class='dynamik'>
-             <button @click="${this._click_dynamik}" id="id_dynamik_button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 100 100" xml:space="preserve">
-                <path d="M38 83 5 50l6.9-7L38 69.1 64.1 43l6.9 7z"/>
+             <button @click="${this._click_dynamik}" id="id_dynamik_button" aria-expanded="false">
+                <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="0.9rem" height="0.9rem" viewBox="0 0 100 100" aria-hidden="true">
+                <path d="M35 15 70 50 35 85" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                   ${msg('Dynamik')}
                </button>
@@ -256,9 +316,9 @@ export class drControlPanel extends LitElement {
             </div>
 
             <header class='optionen'>
-             <button @click="${this._click_optionen}" id="id_optionen_button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 100 100" xml:space="preserve">
-                <path d="M38 83 5 50l6.9-7L38 69.1 64.1 43l6.9 7z"/>
+             <button @click="${this._click_optionen}" id="id_optionen_button" aria-expanded="false">
+                <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="0.9rem" height="0.9rem" viewBox="0 0 100 100" aria-hidden="true">
+                <path d="M35 15 70 50 35 85" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                   ${msg('Optionen')}
                </button>
@@ -319,6 +379,11 @@ export class drControlPanel extends LitElement {
             this.showController_thiio(false);
             if (THIIO_flag !== 0 && !this.show_main) {
                 this.showController_thiio(true);
+            }
+
+            if (System !== 0) {   // Fachwerk: keine Querkraft und kein Moment
+                this.showController(false, 'V');
+                this.showController(false, 'M');
             }
 
             this.show_main = !this.show_main;

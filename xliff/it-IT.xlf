@@ -2,9 +2,9 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 <file target-language="it-IT" source-language="de" original="lit-localize-inputs" datatype="plaintext">
 <body>
-<trans-unit id="s0bff33921e8709f6">
-  <source>Bedienfeld anzeigen</source>
-  <target>Mostra pannello di controllo</target>
+<trans-unit id="s442aa7de41fece0d">
+  <source>Bedienfeld</source>
+  <target>Pannello di controllo</target>
 </trans-unit>
 <trans-unit id="s2b41d1fba90e38cb">
   <source>Beschriftung</source>
@@ -1869,6 +1869,46 @@ Elaborato da: Alex Esempio</target>
 <trans-unit id="s9def9b921fdc9c1b">
   <source><x id="0" equiv-text="${name}"/> bei (x=<x id="1" equiv-text="${k.x}"/>, z=<x id="2" equiv-text="${k.z}"/>): an diesem Knoten hängt kein Stab</source>
   <target><x id="0" equiv-text="${name}"/> in (x=<x id="1" equiv-text="${k.x}"/>, z=<x id="2" equiv-text="${k.z}"/>): nessuna asta è collegata a questo nodo</target>
+</trans-unit>
+<trans-unit id="se9b8495e889630ac">
+  <source>Grafik ausblenden</source>
+  <target>Nascondi grafico</target>
+</trans-unit>
+<trans-unit id="s786c8d3912b174a4">
+  <source>Querschnitt anzeigen</source>
+  <target>Mostra sezione</target>
+</trans-unit>
+<trans-unit id="se0035478d23b746c">
+  <source>SVG speichern</source>
+  <target>Salva SVG</target>
+</trans-unit>
+<trans-unit id="seda1187a8e92a392">
+  <source>Bitte alle Maße des T-Querschnitts mit Werten größer 0 eingeben.</source>
+  <target>Inserire tutte le dimensioni della sezione a T con valori maggiori di 0.</target>
+</trans-unit>
+<trans-unit id="s9ae72fe07cfa84d9">
+  <source>Die Grafik wird angezeigt, sobald alle Maße mit Werten größer 0 eingegeben sind.</source>
+  <target>Il grafico viene visualizzato non appena tutte le dimensioni sono inserite con valori maggiori di 0.</target>
+</trans-unit>
+<trans-unit id="s451abb26200370b2">
+  <source>Die Grafik wird angezeigt, sobald Höhe und Breite mit Werten größer 0 eingegeben sind.</source>
+  <target>Il grafico viene visualizzato non appena altezza e larghezza sono inserite con valori maggiori di 0.</target>
+</trans-unit>
+<trans-unit id="s1ec6656427d93e0f">
+  <source>Zeile löschen</source>
+  <target>Elimina riga</target>
+</trans-unit>
+<trans-unit id="s34e3267de95173eb">
+  <source>Zeile <x id="0" equiv-text="${iZeile}"/> wirklich löschen?</source>
+  <target>Eliminare davvero la riga <x id="0" equiv-text="${iZeile}"/>?</target>
+</trans-unit>
+<trans-unit id="s923e8c23e10ef290">
+  <source>Löschen rückgängig</source>
+  <target>Annulla eliminazione</target>
+</trans-unit>
+<trans-unit id="scdbeef85e98901d2">
+  <source>Löschen wiederherstellen</source>
+  <target>Ripeti eliminazione</target>
 </trans-unit>
 </body>
 </file>
