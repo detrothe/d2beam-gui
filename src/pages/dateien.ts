@@ -765,8 +765,6 @@ async function handleFileSelect_save() {
             // text/plain hängt dieser ".txt" an. Mit application/octet-stream bleibt der Name.
             const isAndroid = /Android/i.test(navigator.userAgent);
             const mimeType = isAndroid ? 'application/octet-stream' : 'text/plain';
-            // DIAGNOSE (vorübergehend): welcher Weg, welcher Typ, welcher Name
-            if (isAndroid) alert('DIAGNOSE 1/2\nWeg: showSaveFilePicker\nMIME: ' + mimeType + '\nVorschlag: ' + currentFilename + '\nUA: ' + navigator.userAgent);
             // @ts-ignore
             const fileHandle = await window.showSaveFilePicker({
                 suggestedName: currentFilename,
@@ -788,8 +786,8 @@ async function handleFileSelect_save() {
             await fileStream.write(myBlob);
             await fileStream.close();
 
-            // DIAGNOSE (vorübergehend)
-            if (isAndroid) alert('DIAGNOSE 2/2\nGespeichert als: ' + fileHandle.name);
+            // DIAGNOSE (vorübergehend), erst nach dem Dialog: alert vorher verbraucht die Nutzergeste
+            if (isAndroid) alert('DIAGNOSE\nWeg: showSaveFilePicker\nMIME: ' + mimeType + '\nVorschlag: ' + currentFilename + '\nGespeichert als: ' + fileHandle.name + '\nUA: ' + navigator.userAgent);
             set_current_filename(fileHandle.name);
         } catch (error: any) {
             //alert(error.name);
