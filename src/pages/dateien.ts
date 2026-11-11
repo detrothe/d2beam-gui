@@ -825,9 +825,13 @@ async function handleFileSelect_save() {
         if (filename === '') return;
         if (!/\.[^./\\]+$/.test(filename)) filename += '.d2beam';   // ohne Endung: .d2beam anhängen
 
-        // application/octet-stream statt text/plain: sonst hängen Android und iPadOS ".txt" an
+        // Nicht text/plain, sonst hängen Android und iPadOS ".txt" an.
+        // iPadOS: application/octet-stream genügt.
+        // Android: Chrome erkennt bei octet-stream den Inhalt als Text und Android hängt dann
+        // trotzdem ".txt" an; ein eigener, unbekannter Typ wird nicht umgedeutet.
+        const isAndroid = /Android/i.test(navigator.userAgent);
         const myFile = new File([jsonse], filename, {
-            type: 'application/octet-stream',
+            type: isAndroid ? 'application/x-d2beam' : 'application/octet-stream',
         });
         try {
             saveAs(myFile, filename);
