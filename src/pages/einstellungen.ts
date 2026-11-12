@@ -40,9 +40,9 @@ export function add_listeners_einstellungen() {
 
         shadow.getElementById("id_fontsize")?.addEventListener('change', set_font_size);
         shadow.getElementById("id_cad_button_size")?.addEventListener('change', set_cad_button_size);
-        shadow.getElementById("id_color_table_out")?.addEventListener('input', set_color_table_out);
-        shadow.getElementById("id_color_table_text")?.addEventListener('input', set_color_table_text);
-        shadow.getElementById("id_accent_color")?.addEventListener('input', set_accent_color);
+        shadow.getElementById("id_color_table_out")?.addEventListener('sl-input', set_color_table_out);
+        shadow.getElementById("id_color_table_text")?.addEventListener('sl-input', set_color_table_text);
+        shadow.getElementById("id_accent_color")?.addEventListener('sl-input', set_accent_color);
         shadow.getElementById("id_accent_color_reset")?.addEventListener('click', reset_accent_color);
     }
 }

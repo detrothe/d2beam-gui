@@ -53,9 +53,6 @@ export const global_css = css`
          background-color: hsl(198.4 93.2% 59.6%);
       }
 
-      #id_color_table_text,
-      #id_color_table_out,
-      #id_accent_color,
       #id_fontsize,
       .input_tab {
          border-color: #43434a;
@@ -80,9 +77,6 @@ export const global_css = css`
          background-color: hsl(198.4 93.2% 59.6%);
       }
 
-      #id_color_table_text,
-      #id_color_table_out,
-      #id_accent_color,
       #id_fontsize,
       .input_tab {
          border-color: #d4d4d8;
@@ -100,8 +94,6 @@ export const global_css = css`
       font-size: 1rem;
    }
 
-   #id_color_table_text,
-   #id_color_table_out,
    #id_fontsize {
       font-size: 0.875rem;
       border-radius: 4px;
@@ -110,24 +102,21 @@ export const global_css = css`
       min-width: 100%;
    }
 
-   /* Akzentfarbe + Button "Standard" zusammen so breit wie die Farbfelder darüber */
+   /* Farbauswahl (sl-color-picker) im Tab ꔷꔷꔷ: Quadrat mit abgerundeten Ecken statt Kreis,
+      im Stil der übrigen Eingabefelder (Höhe wie die Auswahllisten) */
+   sl-color-picker::part(trigger) {
+      width: 2rem;
+      height: 2rem;
+      /* größer als die 4px der Buttons: Shoelace zeichnet innen einen Rahmen und einen hellen
+         Ring, die die sichtbare Rundung der Farbfläche verkleinern */
+      border-radius: 0.5rem;
+   }
+
+   /* Akzentfarbe mit Button "Standard" daneben */
    .accent_row {
       display: flex;
-      gap: 0.25rem;
-      align-items: stretch;
-   }
-
-   #id_accent_color {
-      flex: 1 1 auto;
-      min-width: 0;
-      font-size: 0.875rem;
-      border-radius: 4px;
-      border-width: 1px;
-      padding: 0.4rem;
-   }
-
-   #id_accent_color_reset {
-      flex: none;
+      gap: 0.5rem;
+      align-items: center;
    }
 
    table {

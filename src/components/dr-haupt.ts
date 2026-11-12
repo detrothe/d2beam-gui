@@ -27,6 +27,7 @@ import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
 import '@shoelace-style/shoelace/dist/components/drawer/drawer.js';
 import '@shoelace-style/shoelace/dist/components/range/range.js';
+import '@shoelace-style/shoelace/dist/components/color-picker/color-picker.js';
 // import '@shoelace-style/shoelace/dist/components/icon/icon';
 // import { setBasePath,getBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 
@@ -1249,7 +1250,8 @@ export class drHaupt extends LitElement {
                   ${msg('Hintergrundfarbe Tabellen:')} &nbsp;
                 </td>
                 <td>
-                  <input type="color" id="id_color_table_out" value="#cfd915" />
+                  <sl-color-picker id="id_color_table_out" value="#cfd915" format="hex" hoist
+                    swatches="#cfd915;#b3ae00;#ffffff;#f5f5f5;#d8d8d8;#828282;#404040;#000000;#0284c7;#2e7d32;#c62828;#ef6c00" label="${msg('Hintergrundfarbe Tabellen:')}"></sl-color-picker>
                 </td>
               </tr>
               <tr>
@@ -1257,8 +1259,9 @@ export class drHaupt extends LitElement {
                   ${msg('Textfarbe Tabellen:')} &nbsp;
                 </td>
                 <td>
-                  <input type="color" id="id_color_table_text" value="#000000"
-                    title="${msg('Wird beim Ändern der Hintergrundfarbe automatisch hell oder dunkel gesetzt')}" />
+                  <sl-color-picker id="id_color_table_text" value="#000000" format="hex" hoist
+                    swatches="#cfd915;#b3ae00;#ffffff;#f5f5f5;#d8d8d8;#828282;#404040;#000000;#0284c7;#2e7d32;#c62828;#ef6c00" label="${msg('Textfarbe Tabellen:')}"
+                    title="${msg('Wird beim Ändern der Hintergrundfarbe automatisch hell oder dunkel gesetzt')}"></sl-color-picker>
                 </td>
               </tr>
               <tr>
@@ -1267,8 +1270,9 @@ export class drHaupt extends LitElement {
                 </td>
                 <td>
                   <div class="accent_row">
-                    <input type="color" id="id_accent_color" value="#0284c7"
-                      title="${msg('Farbe für Kästchen, Regler, hervorgehobene Buttons und den aktiven Tab')}" />
+                    <sl-color-picker id="id_accent_color" value="#0284c7" format="hex" hoist
+                      swatches="#cfd915;#b3ae00;#ffffff;#f5f5f5;#d8d8d8;#828282;#404040;#000000;#0284c7;#2e7d32;#c62828;#ef6c00" label="${msg('Akzentfarbe:')}"
+                      title="${msg('Farbe für Kästchen, Regler, hervorgehobene Buttons und den aktiven Tab')}"></sl-color-picker>
                     <button type="button" id="id_accent_color_reset">${msg('Standard')}</button>
                   </div>
                 </td>
