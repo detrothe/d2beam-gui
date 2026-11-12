@@ -87,8 +87,9 @@ export const global_css = css`
          background-color: hsl(198.4 93.2% 59.6%);
       }
 
-      #id_color_table_in,
+      #id_color_table_text,
       #id_color_table_out,
+      #id_accent_color,
       #id_fontsize,
       .input_tab {
          border-color: #43434a;
@@ -121,8 +122,9 @@ export const global_css = css`
          background-color: hsl(198.4 93.2% 59.6%);
       }
 
-      #id_color_table_in,
+      #id_color_table_text,
       #id_color_table_out,
+      #id_accent_color,
       #id_fontsize,
       .input_tab {
          border-color: #d4d4d8;
@@ -140,7 +142,7 @@ export const global_css = css`
       font-size: 1rem;
    }
 
-   #id_color_table_in,
+   #id_color_table_text,
    #id_color_table_out,
    #id_fontsize {
       font-size: 0.875rem;
@@ -148,6 +150,26 @@ export const global_css = css`
       border-width: 1px;
       padding: 0.4rem;
       min-width: 100%;
+   }
+
+   /* Akzentfarbe + Button "Standard" zusammen so breit wie die Farbfelder darüber */
+   .accent_row {
+      display: flex;
+      gap: 0.25rem;
+      align-items: stretch;
+   }
+
+   #id_accent_color {
+      flex: 1 1 auto;
+      min-width: 0;
+      font-size: 0.875rem;
+      border-radius: 4px;
+      border-width: 1px;
+      padding: 0.4rem;
+   }
+
+   #id_accent_color_reset {
+      flex: none;
    }
 
    table {
@@ -549,7 +571,7 @@ export const global_css = css`
 
    /* Darker background on mouse-over */
    .btn_small:hover {
-      background-color: RoyalBlue;
+      background-color: var(--user_accent, RoyalBlue);   /* Akzentfarbe aus Tab ꔷꔷꔷ */
       color: white;
    }
 
@@ -570,7 +592,7 @@ export const global_css = css`
    }
 
    .btn_file:hover {
-      background-color: RoyalBlue;
+      background-color: var(--user_accent, RoyalBlue);   /* Akzentfarbe aus Tab ꔷꔷꔷ */
       color: white;
    }
 

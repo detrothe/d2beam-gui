@@ -49,7 +49,8 @@ export class drControlPanel extends LitElement {
               /* border-radius: 3px; */
            }
            header {
-              background: #b3ae00;
+              /* Farben wie die Tabellen, einstellbar im Tab ꔷꔷꔷ */
+              background: var(--table_bg, #b3ae00);
               grid-column-start: 1;
               grid-column-end: 4;
               padding: 5px;
@@ -129,7 +130,7 @@ export class drControlPanel extends LitElement {
 
            button {
               width: 100%;
-              color: black;
+              color: var(--table_fg, black);
               background-color: transparent;
               border: 0px;
               font-size: 1rem;

@@ -1966,6 +1966,30 @@ El archivo se guarda en la carpeta de descargas predeterminada</target>
   <source>Zum Überschreiben im Speichern-Dialog nicht auf „Speichern“ tippen, sondern die vorhandene Datei in der Liste antippen und das Ersetzen bestätigen.</source>
   <target>Para sobrescribirlo, no toque «Guardar» en el diálogo de guardado; toque el archivo existente en la lista y confirme el reemplazo.</target>
 </trans-unit>
+<trans-unit id="s980285ed945f4920">
+  <source>Hintergrundfarbe Tabellen:</source>
+  <target>Color de fondo de las tablas:</target>
+</trans-unit>
+<trans-unit id="s4b8b3b2c5928212b">
+  <source>Textfarbe Tabellen:</source>
+  <target>Color del texto de las tablas:</target>
+</trans-unit>
+<trans-unit id="s4da64b8d0fc6bc9c">
+  <source>Wird beim Ändern der Hintergrundfarbe automatisch hell oder dunkel gesetzt</source>
+  <target>Se ajusta automáticamente a claro u oscuro al cambiar el color de fondo</target>
+</trans-unit>
+<trans-unit id="s4c948185a2c3dc94">
+  <source>Akzentfarbe:</source>
+  <target>Color de acento:</target>
+</trans-unit>
+<trans-unit id="s586dcfa515c22ce3">
+  <source>Farbe für Kästchen, Regler, hervorgehobene Buttons und den aktiven Tab</source>
+  <target>Color de casillas, controles deslizantes, botones destacados y la pestaña activa</target>
+</trans-unit>
+<trans-unit id="s53a526d5c80c3e28">
+  <source>Standard</source>
+  <target>Predeterminado</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

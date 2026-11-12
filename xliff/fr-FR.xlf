@@ -1964,6 +1964,30 @@ Le fichier est enregistré dans le dossier de téléchargement par défaut</targ
   <source>Zum Überschreiben im Speichern-Dialog nicht auf „Speichern“ tippen, sondern die vorhandene Datei in der Liste antippen und das Ersetzen bestätigen.</source>
   <target>Pour l’écraser, n’appuyez pas sur « Enregistrer » dans la boîte de dialogue, mais touchez le fichier existant dans la liste et confirmez le remplacement.</target>
 </trans-unit>
+<trans-unit id="s980285ed945f4920">
+  <source>Hintergrundfarbe Tabellen:</source>
+  <target>Couleur de fond des tableaux :</target>
+</trans-unit>
+<trans-unit id="s4b8b3b2c5928212b">
+  <source>Textfarbe Tabellen:</source>
+  <target>Couleur du texte des tableaux :</target>
+</trans-unit>
+<trans-unit id="s4da64b8d0fc6bc9c">
+  <source>Wird beim Ändern der Hintergrundfarbe automatisch hell oder dunkel gesetzt</source>
+  <target>Réglée automatiquement en clair ou foncé lors du changement de la couleur de fond</target>
+</trans-unit>
+<trans-unit id="s4c948185a2c3dc94">
+  <source>Akzentfarbe:</source>
+  <target>Couleur d'accent :</target>
+</trans-unit>
+<trans-unit id="s586dcfa515c22ce3">
+  <source>Farbe für Kästchen, Regler, hervorgehobene Buttons und den aktiven Tab</source>
+  <target>Couleur des cases à cocher, curseurs, boutons mis en évidence et de l'onglet actif</target>
+</trans-unit>
+<trans-unit id="s53a526d5c80c3e28">
+  <source>Standard</source>
+  <target>Par défaut</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

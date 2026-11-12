@@ -113,7 +113,7 @@ console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v2.2.3, 11-Nov-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v2.2.1, 12-Nov-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -1248,24 +1248,31 @@ export class drHaupt extends LitElement {
               </tr>
               <tr>
                 <td style="white-space:nowrap">
-                  Tabellenfarbe außen: &nbsp;
+                  ${msg('Hintergrundfarbe Tabellen:')} &nbsp;
                 </td>
                 <td>
-                  <input
-                    id="id_color_table_out"
-                    value="#CFD915"
-                  />
+                  <input type="color" id="id_color_table_out" value="#cfd915" />
                 </td>
               </tr>
               <tr>
                 <td style="white-space:nowrap">
-                  Tabellenfarbe innen: &nbsp;
+                  ${msg('Textfarbe Tabellen:')} &nbsp;
                 </td>
                 <td>
-                  <input
-                    id="id_color_table_in"
-                    value="#b3ae00"
-                  />
+                  <input type="color" id="id_color_table_text" value="#000000"
+                    title="${msg('Wird beim Ändern der Hintergrundfarbe automatisch hell oder dunkel gesetzt')}" />
+                </td>
+              </tr>
+              <tr>
+                <td style="white-space:nowrap">
+                  ${msg('Akzentfarbe:')} &nbsp;
+                </td>
+                <td>
+                  <div class="accent_row">
+                    <input type="color" id="id_accent_color" value="#0284c7"
+                      title="${msg('Farbe für Kästchen, Regler, hervorgehobene Buttons und den aktiven Tab')}" />
+                    <button type="button" id="id_accent_color_reset">${msg('Standard')}</button>
+                  </div>
                 </td>
               </tr>
             </tbody>

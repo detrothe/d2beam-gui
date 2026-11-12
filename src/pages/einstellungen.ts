@@ -17,8 +17,8 @@ export let current_unit_stress = 'kN/cm²'
 export let unit_length_factor = 1               // Multiplikator von cm nach neuer Einheit
 export let unit_stress_factor = 1               // Multiplikator von kN/cm² nach neuer Einheit
 export let my_fontsize = '1em'
-export let color_table_out = '#CFD915'
-export let color_table_in = '#b3ae00'
+export let color_table_out = '#cfd915'     // Hintergrundfarbe der Tabellen (und Header des Bedienfelds)
+export let color_table_text = '#000000'    // Textfarbe dazu
 
 let old_unit_length = 'cm'
 //console.log("vor readLocalStorage")
@@ -40,8 +40,10 @@ export function add_listeners_einstellungen() {
 
         shadow.getElementById("id_fontsize")?.addEventListener('change', set_font_size);
         shadow.getElementById("id_cad_button_size")?.addEventListener('change', set_cad_button_size);
-        shadow.getElementById("id_color_table_out")?.addEventListener('change', set_color_table_out);
-        shadow.getElementById("id_color_table_in")?.addEventListener('change', set_color_table_in);
+        shadow.getElementById("id_color_table_out")?.addEventListener('input', set_color_table_out);
+        shadow.getElementById("id_color_table_text")?.addEventListener('input', set_color_table_text);
+        shadow.getElementById("id_accent_color")?.addEventListener('input', set_accent_color);
+        shadow.getElementById("id_accent_color_reset")?.addEventListener('click', reset_accent_color);
     }
 }
 
@@ -102,46 +104,78 @@ function set_font_size() {
 }
 
 //----------------------------------------------------------------------------------------------
-function set_color_table_out() {
+function apply_table_colors() {
     //------------------------------------------------------------------------------------------
-
-    const elHaupt = document.getElementById('id_haupt') as drHaupt;
-    let shadow = elHaupt.shadowRoot;
-    if (shadow) {
-        const el = shadow.getElementById("id_color_table_out") as HTMLInputElement;
-        color_table_out = el.value
-        //console.log("color_table_out", color_table_out)
-
-        const ntabelle = shadow.getElementById("nodeTable") as HTMLTableElement;
-        ntabelle.style.backgroundColor = color_table_out
-
-        const etabelle = shadow.getElementById("elemTable") as HTMLTableElement;
-        etabelle.style.backgroundColor = color_table_out
-    }
-
+    // CSS-Variablen am Dokument: werden in alle Shadow-DOMs vererbt (dr-tabelle, Bedienfeld)
+    const root = document.documentElement;
+    root.style.setProperty('--table_bg', color_table_out);
+    root.style.setProperty('--table_fg', color_table_text);
 }
 
 //----------------------------------------------------------------------------------------------
-function set_color_table_in() {
+function kontrastfarbe(hex: string) {
     //------------------------------------------------------------------------------------------
+    // schwarz oder weiß, je nachdem was auf der Hintergrundfarbe besser lesbar ist (WCAG-Luminanz)
+    const m = /^#([0-9a-f]{6})$/i.exec(hex);
+    if (!m) return '#000000';
+    const n = parseInt(m[1], 16);
+    const lin = (c: number) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+    const L = 0.2126 * lin((n >> 16) & 255) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+    // Kontrast zu schwarz (L+0.05)/0.05 gegen Kontrast zu weiß 1.05/(L+0.05)
+    return (L + 0.05) / 0.05 >= 1.05 / (L + 0.05) ? '#000000' : '#ffffff';
+}
 
-    const elHaupt = document.getElementById('id_haupt') as drHaupt;
-    let shadow = elHaupt.shadowRoot;
-    if (shadow) {
-        const el = shadow.getElementById("id_color_table_in") as HTMLInputElement;
-        color_table_in = el.value
-        //console.log("color_table_in", color_table_in)
+//----------------------------------------------------------------------------------------------
+function set_color_table_out() {
+    //------------------------------------------------------------------------------------------
+    // neue Hintergrundfarbe; Textfarbe wird automatisch hell oder dunkel gesetzt
+    const shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (!shadow) return;
+    const el = shadow.getElementById("id_color_table_out") as HTMLInputElement;
+    color_table_out = el.value;
+    color_table_text = kontrastfarbe(color_table_out);
+    const el_text = shadow.getElementById("id_color_table_text") as HTMLInputElement | null;
+    if (el_text) el_text.value = color_table_text;
+    apply_table_colors();
+}
 
-
-        const ntabelle = shadow.getElementById("nodeTable") as HTMLTableElement;
-        for (let i = 1; i < ntabelle.rows.length; i++) {
-            ntabelle.rows[i].cells[0].style.backgroundColor = color_table_in
-        }
-        const etabelle = shadow.getElementById("elemTable") as HTMLTableElement;
-        for (let i = 1; i < etabelle.rows.length; i++) {
-            etabelle.rows[i].cells[0].style.backgroundColor = color_table_in
-        }
+//----------------------------------------------------------------------------------------------
+function apply_accent_color(color: string | null) {
+    //------------------------------------------------------------------------------------------
+    // null = Shoelace-Standard (Blau). Die Stufen --sl-color-primary-* stehen in global.css.
+    const root = document.documentElement;
+    if (color) {
+        root.style.setProperty('--user_accent', color);
+        root.dataset.accent = '1';
+    } else {
+        root.style.removeProperty('--user_accent');
+        delete root.dataset.accent;
     }
+}
+
+//----------------------------------------------------------------------------------------------
+function set_accent_color() {
+    //------------------------------------------------------------------------------------------
+    const el = document.getElementById('id_haupt')?.shadowRoot?.getElementById("id_accent_color") as HTMLInputElement | null;
+    if (el) apply_accent_color(el.value);
+}
+
+//----------------------------------------------------------------------------------------------
+function reset_accent_color() {
+    //------------------------------------------------------------------------------------------
+    apply_accent_color(null);
+    const el = document.getElementById('id_haupt')?.shadowRoot?.getElementById("id_accent_color") as HTMLInputElement | null;
+    if (el) el.value = '#0284c7';   // Shoelace sky-600
+}
+
+//----------------------------------------------------------------------------------------------
+function set_color_table_text() {
+    //------------------------------------------------------------------------------------------
+    const shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (!shadow) return;
+    const el = shadow.getElementById("id_color_table_text") as HTMLInputElement;
+    color_table_text = el.value;
+    apply_table_colors();
 }
 
 //----------------------------------------------------------------------------------------------
@@ -323,18 +357,24 @@ function saveLocalStorage() {
         el = shadow.getElementById("id_color_table_out") as HTMLInputElement;
         color_table_out = el.value
 
-        el = shadow.getElementById("id_color_table_in") as HTMLInputElement;
-        color_table_in = el.value
+        el = shadow.getElementById("id_color_table_text") as HTMLInputElement;
+        color_table_text = el.value
 
         //window.localStorage.setItem('current_unit_length', current_unit_length);
         window.localStorage.setItem('my_fontsize', my_fontsize);
         window.localStorage.setItem('color_table_out', color_table_out);
-        window.localStorage.setItem('color_table_in', color_table_in);
+        window.localStorage.setItem('color_table_text', color_table_text);
+        window.localStorage.removeItem('color_table_in');   // frühere Einstellung, entfällt
 
         window.localStorage.setItem('touch_support_tables', String(touch_support_table));
 
         const el_cad_size = shadow.getElementById("id_cad_button_size") as HTMLSelectElement | null;
         if (el_cad_size) window.localStorage.setItem('cad_button_size', el_cad_size.value);
+
+        // Akzentfarbe nur speichern, wenn eine eigene gewählt ist (sonst Standard behalten)
+        const el_accent = shadow.getElementById("id_accent_color") as HTMLInputElement | null;
+        if (el_accent && document.documentElement.dataset.accent) window.localStorage.setItem('accent_color', el_accent.value);
+        else window.localStorage.removeItem('accent_color');
 
         let els = shadow.getElementById("id_locale-picker") as HTMLSelectElement;
         let shad = els.shadowRoot?.getElementById("id_locale") as HTMLSelectElement;
@@ -423,11 +463,16 @@ export function readLocalStorage() {
             color_table_out = color
         }
 
-        color = window.localStorage.getItem('color_table_in');
+        color = window.localStorage.getItem('color_table_text');
         if (color) {
-            const el = shadow.getElementById("id_color_table_in") as HTMLInputElement
+            const el = shadow.getElementById("id_color_table_text") as HTMLInputElement
             el.value = color
-            color_table_in = color
+            color_table_text = color
+        }
+
+        // nur bei gespeicherten Farben anwenden, sonst bleiben die Vorgaben der Komponenten
+        if (window.localStorage.getItem('color_table_out') || window.localStorage.getItem('color_table_text')) {
+            apply_table_colors();
         }
 
 
@@ -442,6 +487,13 @@ export function readLocalStorage() {
             const el = shadow.getElementById("id_touch_support_tables") as SlCheckbox
             el.checked = false
             set_touch_support_table(false)
+        }
+
+        const accent_color = window.localStorage.getItem('accent_color');
+        if (accent_color) {
+            const el = shadow.getElementById("id_accent_color") as HTMLInputElement | null;
+            if (el) el.value = accent_color;
+            apply_accent_color(accent_color);
         }
 
         const cad_button_size = window.localStorage.getItem('cad_button_size');
@@ -462,7 +514,7 @@ export function readLocalStorage() {
         }
 
         console.log("exit readLocalStorage")
-        console.log("readLocalStorage", my_fontsize, color_table_out, color_table_in)
+        console.log("readLocalStorage", my_fontsize, color_table_out, color_table_text)
     }
 }
 

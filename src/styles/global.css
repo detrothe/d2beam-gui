@@ -504,7 +504,7 @@ input[type="number"] {
 
 /* Darker background on mouse-over */
 .btn_small:hover {
-  background-color: RoyalBlue;
+  background-color: var(--user_accent, RoyalBlue);   /* Akzentfarbe aus Tab ꔷꔷꔷ */
 }
 
 
@@ -563,4 +563,40 @@ input[type="number"] {
 
 #div_add_cross_section:active {
   background-color: "#ff0000";
+}
+
+/* ------------------------------------------------------------------------------------------
+   Akzentfarbe (Tab ꔷꔷꔷ): ersetzt das Shoelace-Blau. Aktiv, wenn <html data-accent> gesetzt ist;
+   die Farbe selbst kommt als --user_accent. Die Stufen werden aus der einen Farbe gemischt.
+   Shoelace kehrt die Stufen im dunklen Design um (50 = dunkel, 950 = hell).
+   ------------------------------------------------------------------------------------------ */
+:root[data-accent] {
+  accent-color: var(--user_accent);   /* native Checkboxen, Radios, Regler */
+  --sl-color-primary-50: color-mix(in srgb, var(--user_accent) 7%, white);
+  --sl-color-primary-100: color-mix(in srgb, var(--user_accent) 15%, white);
+  --sl-color-primary-200: color-mix(in srgb, var(--user_accent) 30%, white);
+  --sl-color-primary-300: color-mix(in srgb, var(--user_accent) 50%, white);
+  --sl-color-primary-400: color-mix(in srgb, var(--user_accent) 70%, white);
+  --sl-color-primary-500: color-mix(in srgb, var(--user_accent) 85%, white);
+  --sl-color-primary-600: var(--user_accent);
+  --sl-color-primary-700: color-mix(in srgb, var(--user_accent) 85%, black);
+  --sl-color-primary-800: color-mix(in srgb, var(--user_accent) 70%, black);
+  --sl-color-primary-900: color-mix(in srgb, var(--user_accent) 55%, black);
+  --sl-color-primary-950: color-mix(in srgb, var(--user_accent) 40%, black);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-accent] {
+    --sl-color-primary-50: color-mix(in srgb, var(--user_accent) 40%, black);
+    --sl-color-primary-100: color-mix(in srgb, var(--user_accent) 55%, black);
+    --sl-color-primary-200: color-mix(in srgb, var(--user_accent) 70%, black);
+    --sl-color-primary-300: color-mix(in srgb, var(--user_accent) 85%, black);
+    --sl-color-primary-400: color-mix(in srgb, var(--user_accent) 92%, black);
+    --sl-color-primary-500: color-mix(in srgb, var(--user_accent) 96%, black);
+    --sl-color-primary-600: var(--user_accent);
+    --sl-color-primary-700: color-mix(in srgb, var(--user_accent) 85%, white);
+    --sl-color-primary-800: color-mix(in srgb, var(--user_accent) 70%, white);
+    --sl-color-primary-900: color-mix(in srgb, var(--user_accent) 50%, white);
+    --sl-color-primary-950: color-mix(in srgb, var(--user_accent) 15%, white);
+  }
 }

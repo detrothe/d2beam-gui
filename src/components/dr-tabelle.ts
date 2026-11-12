@@ -392,6 +392,14 @@ class DrTabelle extends HTMLElement {
          return;
       }
 
+      // Farben dieser Tabelle (überschreiben die vererbten Werte aus dem Tab ꔷꔷꔷ)
+      if (name === 'color_table' || name === 'color_text') {
+         const variable = name === 'color_table' ? '--table_bg' : '--table_fg';
+         if (newValue) this.style.setProperty(variable, newValue);
+         else this.style.removeProperty(variable);
+         return;
+      }
+
       // Zeilen-/Spaltenzahl wird von außen geändert -> Lösch-Schnappschüsse passen nicht mehr.
       // resizeTables() setzt nzeilen auch mit unverändertem Wert, das darf Undo nicht löschen.
       if (oldValue !== null) {
@@ -502,7 +510,7 @@ class DrTabelle extends HTMLElement {
       //------------------------------------------------------------------------------------------------------------
       return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext',
          'option_deleted', 'hide_column', 'show_column', 'id', 'lf_languagechanged', 'columns_languagechanged',
-         'allow_delete_row'];
+         'allow_delete_row', 'color_table', 'color_text'];
    }
 
    //---------------------------------------------------------------------------------------------------------------

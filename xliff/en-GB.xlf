@@ -1965,6 +1965,30 @@ The file is saved in the default download folder</target>
   <source>Zum Überschreiben im Speichern-Dialog nicht auf „Speichern“ tippen, sondern die vorhandene Datei in der Liste antippen und das Ersetzen bestätigen.</source>
   <target>To overwrite it, do not tap “Save” in the save dialog; instead tap the existing file in the list and confirm the replacement.</target>
 </trans-unit>
+<trans-unit id="s980285ed945f4920">
+  <source>Hintergrundfarbe Tabellen:</source>
+  <target>Table background colour:</target>
+</trans-unit>
+<trans-unit id="s4b8b3b2c5928212b">
+  <source>Textfarbe Tabellen:</source>
+  <target>Table text colour:</target>
+</trans-unit>
+<trans-unit id="s4da64b8d0fc6bc9c">
+  <source>Wird beim Ändern der Hintergrundfarbe automatisch hell oder dunkel gesetzt</source>
+  <target>Set automatically to light or dark when the background colour is changed</target>
+</trans-unit>
+<trans-unit id="s4c948185a2c3dc94">
+  <source>Akzentfarbe:</source>
+  <target>Accent colour:</target>
+</trans-unit>
+<trans-unit id="s586dcfa515c22ce3">
+  <source>Farbe für Kästchen, Regler, hervorgehobene Buttons und den aktiven Tab</source>
+  <target>Colour for checkboxes, sliders, highlighted buttons and the active tab</target>
+</trans-unit>
+<trans-unit id="s53a526d5c80c3e28">
+  <source>Standard</source>
+  <target>Default</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

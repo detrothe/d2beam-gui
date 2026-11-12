@@ -1964,6 +1964,30 @@ Il file viene salvato nella cartella di download predefinita</target>
   <source>Zum Überschreiben im Speichern-Dialog nicht auf „Speichern“ tippen, sondern die vorhandene Datei in der Liste antippen und das Ersetzen bestätigen.</source>
   <target>Per sovrascriverlo, nella finestra di salvataggio non toccare «Salva», ma tocca il file esistente nell’elenco e conferma la sostituzione.</target>
 </trans-unit>
+<trans-unit id="s980285ed945f4920">
+  <source>Hintergrundfarbe Tabellen:</source>
+  <target>Colore di sfondo delle tabelle:</target>
+</trans-unit>
+<trans-unit id="s4b8b3b2c5928212b">
+  <source>Textfarbe Tabellen:</source>
+  <target>Colore del testo delle tabelle:</target>
+</trans-unit>
+<trans-unit id="s4da64b8d0fc6bc9c">
+  <source>Wird beim Ändern der Hintergrundfarbe automatisch hell oder dunkel gesetzt</source>
+  <target>Impostato automaticamente chiaro o scuro quando si cambia il colore di sfondo</target>
+</trans-unit>
+<trans-unit id="s4c948185a2c3dc94">
+  <source>Akzentfarbe:</source>
+  <target>Colore di accento:</target>
+</trans-unit>
+<trans-unit id="s586dcfa515c22ce3">
+  <source>Farbe für Kästchen, Regler, hervorgehobene Buttons und den aktiven Tab</source>
+  <target>Colore per caselle di controllo, cursori, pulsanti evidenziati e la scheda attiva</target>
+</trans-unit>
+<trans-unit id="s53a526d5c80c3e28">
+  <source>Standard</source>
+  <target>Predefinito</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

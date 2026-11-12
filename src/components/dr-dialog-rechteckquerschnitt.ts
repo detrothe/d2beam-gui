@@ -342,7 +342,7 @@ export class drRechteckQuerSchnitt extends LitElement {
          }
          /* Darker background on mouse-over */
          .btn_small:hover {
-            background-color: RoyalBlue;
+            background-color: var(--user_accent, RoyalBlue);   /* Akzentfarbe aus Tab ꔷꔷꔷ */
          }
 
          .grafik_buttons {
