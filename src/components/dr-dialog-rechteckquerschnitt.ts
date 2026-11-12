@@ -14,7 +14,6 @@ import { alertdialog, AlertDialog } from '../pages/confirm_dialog';
 import { CQuer_polygon } from '../pages/quer1';
 import { draw_querschnitt, export_svg, grafik_rechteck, grafik_TQ } from '../pages/querschnitt_grafik';
 
-import "../styles/dr-dialog.css";
 // import { alertdialog } from '../pages/rechnen';
 
 // Profilename, E-Modul, A, Iy, Iz, Wichte, h, b, kappa_Vz, kappa_Vy
@@ -216,10 +215,9 @@ export class drRechteckQuerSchnitt extends LitElement {
 
          @media (prefers-color-scheme: dark) {
             input:disabled {
-            color: #000;
-            -webkit-text-fill-color: #000;
-            background-color: var(--table-bgcolor-light);
-            /*opacity: 0.75;*/
+            color: var(--table_fg, #000);
+            -webkit-text-fill-color: var(--table_fg, #000);
+            background-color: var(--table_bg, var(--table-bgcolor-light));
             }
          }
 
@@ -250,14 +248,20 @@ export class drRechteckQuerSchnitt extends LitElement {
             outline: 2px solid #dd0000;
          }
 
+         /* Umschalter Rechteck/Querschnittswerte/Profil/TQ: Outline-Buttons ohne eigenen Hintergrund,
+            sie liegen auf der Tabellenfarbe -> Tabellen-Textfarbe (Tab ꔷꔷꔷ). Ausgewählt bzw. beim
+            Hovern: Akzentfarbe als Hintergrund mit weißer Schrift. */
          @media (prefers-color-scheme: dark) {
-            sl-radio-button::part(button) { color: white; }
-            /* sl-radio-button::part(button--checked) { color: #4da3ff; } */
+            sl-radio-button::part(button) { color: var(--table_fg, white); }
          }
 
          @media (prefers-color-scheme: light) {
-            sl-radio-button::part(button) { color: var(--sl-color-neutral-600); }
-            /*sl-radio-button::part(button--checked) { color: var(--sl-color-primary-600); } */
+            sl-radio-button::part(button) { color: var(--table_fg, var(--sl-color-neutral-600)); }
+         }
+
+         sl-radio-button::part(button--checked),
+         sl-radio-button::part(button):hover {
+            color: white;
          }
 
          /* .input_int {
@@ -284,11 +288,21 @@ export class drRechteckQuerSchnitt extends LitElement {
             border-spacing: 0px;
             padding: 5px;
             margin: 5px;
-            background-color: var(--table-bgcolor-light);   /* rgb(207, 217, 21); */
+            /* Farben wie die Tabellen, einstellbar im Tab ꔷꔷꔷ */
+            background-color: var(--table_bg, var(--table-bgcolor-light));
             border-radius: 5px;
             font-size: 1rem;
-            color: black;
+            color: var(--table_fg, black);
          }
+
+      /* Beschriftungen der Shoelace-Elemente erben die Textfarbe nicht von selbst; im dunklen Design
+         wären sie hell auf hellem Grund. So nehmen sie die Textfarbe der Umgebung: in der Tabelle
+         die der Tabellen (Tab ꔷꔷꔷ), sonst die des Dialogs. */
+      sl-checkbox::part(label),
+      sl-radio::part(label),
+      sl-radio-group::part(form-control-label) {
+        color: inherit;
+      }
 
          td.selected {
             /*background-color: rgb(206, 196, 46);*/

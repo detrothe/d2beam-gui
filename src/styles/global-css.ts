@@ -1,31 +1,10 @@
-/*
-  This file is used for all of your global styles and CSS variables.
-  Check here https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties for more info on using CSS variables.
-*/
+// Styles im Shadow-DOM von dr-haupt (und damit für alles, was dort gerendert wird).
+// Regeln für das normale Dokument (html, body, :root-Variablen, Hinweisfenster) stehen in global.css,
+// denn Selektoren wie :root, html, body greifen im Shadow-DOM nicht.
 
 import { css } from 'lit';
 
 export const global_css = css`
-   :root {
-      --font-family: sans-serif;
-      --fsize: 1em;
-      font-size: var(--fsize);
-      --button_cad: rgb(64, 64, 64);
-      --group_cad: rgb(90, 90, 90);
-   }
-
-   html,
-   body {
-      /*font-family: var(--font-family); */
-      font-family:
-         -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-         Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-         'Segoe UI Symbol';
-      padding: 0;
-      margin: 0;
-      font-size: var(--fsize);
-      overscroll-behavior: none; /* kein pull to refresh , kein reload bei Ziehen mit Finger von oben nach unten */
-   }
 
    sl-tree {
       width: fit-content;
@@ -49,22 +28,10 @@ export const global_css = css`
    }
 
    @media (prefers-color-scheme: dark) {
-      html,
-      body {
-         background-color: rgb(64, 64, 64);
-         color: white;
-
-         font-size: 1rem;
-      }
-
-
       button {
          font-size: 0.875rem;
-         /*1rem;*/
          border-radius: 4px;
          border-width: 1px;
-         /* border-color: #303030;
-    color: #f4efef; */
          border-color: #43434a;
          color: #b6b6be;
          background-color: #1a1a1e;
@@ -72,7 +39,6 @@ export const global_css = css`
       }
 
       select {
-         /*margin: 0;*/
          height: 2rem;
          font-size: 0.875rem;
          border-radius: 4px;
@@ -99,17 +65,9 @@ export const global_css = css`
    }
 
    @media (prefers-color-scheme: light) {
-      html,
-      body {
-         background-color: #f5f5f5;
-         color: black;
-         font-size: 1rem;
-      }
-
       button,
       select {
          font-size: 0.875rem;
-         /*1rem;*/
          border-radius: 4px;
          border-width: 1px;
          background-color: #ffffff;
@@ -180,9 +138,7 @@ export const global_css = css`
       font-size: 1rem;
    }
 
-   /* Style the footer */
    .footer {
-      /* grid-area: footer;  */
       color: #181818;
       background-color: #f1f1f1;
       margin: 0;
@@ -226,7 +182,6 @@ export const global_css = css`
    }
 
    #output {
-      /*width: calc(100%-5px);*/
       width: 100%;
       height: 100%;
       font-size: 0.875rem;
@@ -247,7 +202,6 @@ export const global_css = css`
          sans-serif;
       margin: 0px;
       padding: 0px;
-      padding-left: 0px;
       border-width: 0;
    }
 
@@ -310,9 +264,7 @@ export const global_css = css`
    #id_cad_group {
       position: absolute;
       top: 0px;
-      /* var(--abst_gl_v);*/
       left: 0px;
-      /*z-index: 90;*/
       margin: 0;
       padding: 0;
       font-size: 1rem;
@@ -331,10 +283,6 @@ export const global_css = css`
    }
 
    #id_div_select_lc {
-      /*position: relative;
-  top: 2px;
-   var(--abst_gl_v);
-  left: 250px; */
       z-index: 90;
       margin: 0;
       padding: 0;
@@ -353,10 +301,6 @@ export const global_css = css`
    }
 
    #id_div_select_eigv {
-      /*position: relative;
-  top: 2px;
-   var(--abst_gl_v);
-  left: 405px;*/
       z-index: 90;
       margin: 0;
       padding: 0;
@@ -364,10 +308,6 @@ export const global_css = css`
    }
 
    #id_div_select_dyn_eigv {
-      /*position: relative;
-  top: 2px;
-   var(--abst_gl_v);
-  left: 405px;*/
       z-index: 90;
       margin: 0;
       padding: 0;
@@ -375,9 +315,6 @@ export const global_css = css`
    }
 
    #id_button_copy_svg {
-      /*position: relative;
-  top: 2px;
-   left: 560px; */
       z-index: 90;
       margin: 0;
       padding: 4px;
@@ -399,44 +336,12 @@ export const global_css = css`
       padding: 4px;
       height: 2rem;
    }
-   #panel_gui {
-      position: absolute;
-      top: 2px;
-      /* var(--abst_gl_v);*/
-
-      left: 2px;
-      z-index: 90;
-      margin: 0;
-      padding: 0;
-      background-color: brown;
-      font-size: 1rem;
-   }
-
-   #id_grafik {
-      margin: 0px;
-      padding: 0px;
-      background-color: #d8d8d8;
-   }
-
-   #id_cad {
-      margin: 0px;
-      padding: 0px;
-      background-color: #ba355f;
-   }
-
    #id_einstellungen {
       padding: 0;
       margin: 0;
       padding-left: 5px;
       background-color: light-dark(#d8d8d8, rgb(55, 55, 55));
-      /*color:#181818*/
-      /*background-color: darkkhaki;*/
    }
-
-   /* .c_hilfe {
-  text-align: left;
-}
- */
 
    #id_button_zurueck_grafik {
       position: absolute;
@@ -457,7 +362,6 @@ export const global_css = css`
       left: 0.5rem;
       z-index: 5;
       margin: 0;
-      /*padding: 0.3125rem;*/
       padding: 0.4375rem 0.75rem;
       border: none;
       font-size: 1rem;
@@ -471,74 +375,12 @@ export const global_css = css`
       left: 0.5rem;
       z-index: 5;
       margin: 0;
-      /*padding: 0.3125rem;*/
       padding: 0.4375rem 0.75rem;
       font-size: 1rem;
       border: none;
       background-color: light-dark(var(--button_cad), rgb(64, 64, 64));
       color: #f1f1f1;
    }
-   /* #id_querschnitt_default {
-   position: absolute;
-   top: 3.125rem;
-   left: 6rem;
-   z-index: 5;
-   margin: 0;
-   padding: 0.3125rem;
-   font-size: 1rem;
-   width: 8rem;
-   border-color:"DodgerBlue";
-   color:"DodgerBlue";
-} */
-
-   .confirm-dialog-button {
-      background-color: rgb(234, 231, 231);
-      color: #1a1a1e;
-      border: 1px solid #444;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-      padding: 0.75rem 1rem;
-      min-width: 5rem;
-   }
-
-   .confirm-dialog {
-      max-width: 25rem;
-      padding: 1rem;
-      width: 60vw;
-      border: 2px solid #444;
-      border-radius: 6px;
-      background: rgba(255, 251, 240);
-      color: #1a1a1e;
-
-      &::backdrop {
-         background-color: rgba(0, 0, 0, 0.3);
-      }
-   }
-
-   .confirm-dialog-question {
-      font-size: 1rem;
-      font-style: italic;
-      font-weight: 600;
-      color: #1a1a1e;
-   }
-
-   .confirm-dialog-button-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      margin: 1rem -1rem -1rem;
-
-      > * {
-         margin: 1rem;
-      }
-   }
-
-   /*Festlegung im Default-Stylesheet der Browser*/
-   .confirm-dialog:not([open]) {
-      display: none;
-   }
-
    .btn {
       height: 2rem;
       background-color: light-dark(var(--button_cad), rgb(64, 64, 64));
@@ -559,7 +401,7 @@ export const global_css = css`
       background-color: light-dark(#f8f8f8, rgb(64, 64, 64));
       border: none;
       color: light-dark(rgb(64, 64, 64), white);
-      padding: 0.3rem 0.6rem; /* 0.4375 0.75rem;*/
+      padding: 0.3rem 0.6rem;
       font-size: 1rem;
       cursor: pointer;
       margin-left: 0.25rem;
@@ -569,7 +411,6 @@ export const global_css = css`
       border-radius: 3px;
    }
 
-   /* Darker background on mouse-over */
    .btn_small:hover {
       background-color: var(--user_accent, RoyalBlue);   /* Akzentfarbe aus Tab ꔷꔷꔷ */
       color: white;
@@ -626,39 +467,17 @@ export const global_css = css`
       flex-shrink: 0;
    }
 
-   .btn_svg {
-      height: 2rem;
-      background-color: light-dark(var(--button_cad), rgb(64, 64, 64));
-      border: none;
-      color: white;
-      padding: 0.3rem 0.5rem;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-left: 0.25rem;
-      margin-bottom: 0rem;
-      margin-top: 0rem;
-      border-radius: 3px;
-      -webkit-user-select: none;
-      user-select: none;
-   }
-
    .helptext {
       background-color: var(--group_cad);
       border: none;
       color: white;
-      /*padding: 0.4375rem 0.75rem;*/
       font-size: 0.875rem;
       cursor: pointer;
       margin-left: 1rem;
       margin-bottom: 0.1875rem;
       margin-top: 0.1875rem;
-      /*border-radius: 3px;*/
    }
-   /*
-.output_table_ein {
-  border-spacing: 1px 0px;
-}
-*/
+
    .output_table_ein td,
    .output_table_ein th {
       padding-left: 5px;
@@ -674,27 +493,6 @@ export const global_css = css`
    .table_ein_cell_center {
       text-align: center;
       background-color: #ffc966;
-      /* background-color: #ffe550;  alt gelb*/
-   }
-
-   .table_ein_cell_right {
-      text-align: right;
-      padding-right: 1rem;
-   }
-
-   #div_add_cross_section {
-      /* display: 'flex'; */
-      align-items: 'center';
-      background-color: '#ff0000';
-      color: '#ff0000';
-      border: '0px';
-   }
-
-   #div_add_cross_section:focus {
-      background-color: '#ff0000';
-   }
-   #div_add_cross_section:active {
-      background-color: '#ff0000';
    }
 
    .class-my-drawer {
@@ -704,40 +502,23 @@ export const global_css = css`
       top: 0px;
       right: 0px;
       width: 16rem;
-      /* height: -webkit-fill-available; */
       height: 100%;
       z-index: 200;
       color: white;
       background-color: rgb(90, 90, 90);
       pointer-events: all;
       cursor: pointer;
-      /* transition: width 2s; */
       overflow-y: auto;
    }
+
    #id_control_panel {
       position: relative;
       flex: none;
       z-index: 90;
-      margin: 1;
-      padding: 1;
       font-size: 1rem;
-      /* background-color:'#ff0000'; */
-      border: 2px;
       border-radius: 5px;
       overflow: hidden;
    }
-
-   // #id_sl_tab_group { height: 100%; }
-   // #id_sl_tab_group::part(base) { height: 100%; display: flex; flex-direction: column; }
-   // #id_sl_tab_group::part(body) { flex: 1; min-height: 0; }
-
-   // sl-tab-panel[name='tab-grafik'] { --padding: 0; overflow: hidden; }   // height: 100%;
-   // sl-tab-panel[name='tab-cad'] { --padding: 0; overflow: hidden; }   // height: 100%;
-
-   //   sl-tab-panel[name='tab-grafik'],
-   //   sl-tab-panel[name='tab-cad'] {
-   //     --padding: 0;
-   //   }
 
    sl-tab-panel#id_tab-cad::part(base) {
       padding: 0;
@@ -747,40 +528,5 @@ export const global_css = css`
       padding: 0;
    }
 
-   // #id_grafik {
-   //    position: relative;
-   //    height: 100%;
-   //    display: flex;
-   //    flex-direction: column;
-   //    overflow: hidden;
-   //    margin: 0;
-   //    padding: 0;
-   //    background-color: #ffffff;
-   // }
-
-   // #artboard {
-   //    flex: 1;
-   //    min-height: 80vh;
-   //    position: relative;
-   //    margin: 0;
-   //    padding: 0;
-   //    background-color: #ffffff;
-   // }
-
-   // #artboard > svg,
-   // #artboard > canvas {
-   //    position: absolute;
-   //    inset: 0;
-   //    display: block;
-   // }
-
-   // #id_grafik.fullscreen {
-   //    position: fixed;
-   //    inset: 0;
-   //    height: auto;
-   //    z-index: 100;
-   // }
-
-   // #id_grafik_group, #id_div_select_lc { display: flex; align-items: center; gap: 0.25rem; }
 `;
 

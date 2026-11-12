@@ -84,8 +84,18 @@ export class drDialogNeueEingabe extends LitElement {
             border-spacing: 0px;
             padding: 5px;
             margin: 5px;
-            background-color: rgb(207, 217, 21);
+            /* Farben wie die Tabellen, einstellbar im Tab ꔷꔷꔷ */
+            background-color: var(--table_bg, rgb(207, 217, 21));
+            color: var(--table_fg, inherit);
             border-radius: 5px;
+         }
+
+         /* Beschriftungen der Shoelace-Elemente erben die Textfarbe nicht von selbst: so nehmen sie
+            die der Umgebung (in der Tabelle die Tabellen-Textfarbe aus Tab ꔷꔷꔷ) */
+         sl-checkbox::part(label),
+         sl-radio::part(label),
+         sl-radio-group::part(form-control-label) {
+            color: inherit;
          }
 
          td.selected {

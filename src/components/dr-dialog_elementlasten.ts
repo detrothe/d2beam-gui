@@ -3,7 +3,6 @@ import { LitElement, css, html } from "lit";
 import { property, customElement } from "lit/decorators.js";
 import { msg, localized } from '@lit/localize';
 
-import "../styles/dr-dialog.css";
 import { alertdialog } from "../pages/confirm_dialog";
 
 @localized()

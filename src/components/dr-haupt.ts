@@ -6,7 +6,6 @@ import { property, customElement, state } from 'lit/decorators.js';
 import { msg, localized, updateWhenLocaleChanges } from '@lit/localize';
 
 //import '../styles/global-css'
-import '../styles/contextMenu-css'
 // import '../styles/global.css'
 //import styles from '../styles/lil-gui.css?raw'
 
@@ -69,7 +68,6 @@ document.adoptedStyleSheets = [
   global_css.styleSheet!,
 ];
 
-//import { contextMenu_css } from '../styles/contextMenu-css';
 
 console.log('in dr-haupt');
 
@@ -174,7 +172,7 @@ export class drHaupt extends LitElement {
   }
   @media (prefers-color-scheme: dark) {
       sl-tab::part(base) { color: yellow; font-size: 1rem;}
-      sl-tab[active]::part(base) { color: #4da3ff; }
+      sl-tab[active]::part(base) { color: var(--user_accent, #4da3ff); }   /* Akzentfarbe aus Tab ꔷꔷꔷ */
   }
 
   @media (prefers-color-scheme: light) {

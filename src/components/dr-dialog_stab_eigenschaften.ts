@@ -3,7 +3,6 @@ import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 import {msg, localized} from '@lit/localize';
 
-import '../styles/dr-dialog.css';
 
 @localized()
 @customElement('dr-dialog_stab_eigenschaften')
@@ -93,10 +92,19 @@ export class drDialogStabEigenschaften extends LitElement {
             border-spacing: 0px;
             padding: 5px;
             margin: 5px;
-            background-color: light-dark(var(--table-bgcolor-light), var(--table-bgcolor-dark));
-            color: black;
+            /* Farben wie die Tabellen, einstellbar im Tab ꔷꔷꔷ */
+            background-color: var(--table_bg, light-dark(var(--table-bgcolor-light), var(--table-bgcolor-dark)));
+            color: var(--table_fg, black);
             border-radius: 5px;
          }
+
+      /* Beschriftungen der Shoelace-Elemente erben die Textfarbe nicht von selbst: so nehmen sie
+         die der Umgebung (in der Tabelle die Tabellen-Textfarbe aus Tab ꔷꔷꔷ) */
+      sl-checkbox::part(label),
+      sl-radio::part(label),
+      sl-radio-group::part(form-control-label) {
+        color: inherit;
+      }
 
          td.selected {
             /*background-color: rgb(206, 196, 46);*/

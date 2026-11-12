@@ -8,7 +8,6 @@ import { allLocales } from './generated/locale-codes.js';
 
 // import './styles/global.css';
 import './styles/contextMenu.css';
-import './styles/dr-drawer.css';
 
 import { Workbox } from 'workbox-window';
 
