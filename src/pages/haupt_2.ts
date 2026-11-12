@@ -435,6 +435,10 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
       elSel = shadow.getElementById('id_einheit_kraft_option') as HTMLSelectElement;
       elSel.options[0].selected = true;
 
+      // Projekt-Freitext (wird auch in der pdf-Ergebnisdatei verwendet) gehört zur alten Eingabe
+      const el_freetext = shadow.getElementById('freetext') as HTMLTextAreaElement | null;
+      if (el_freetext) el_freetext.value = '';
+
       readLocalStorage_cad();
 
       {

@@ -327,7 +327,7 @@ export function read_daten(eingabedaten: string): boolean {
                 'freetext'
             ) as HTMLTextAreaElement;
             console.log('textarea', txtarea.value);
-            if (jobj.freetxt !== undefined) txtarea.value = jobj.freetxt;
+            txtarea.value = jobj.freetxt ?? '';   // ohne Freitext in der Datei nicht den des alten Projekts behalten
 
             zero_max_lastfall();                    // Werte des alten Projekts verwerfen, set_max_lastfall kann nur erhöhen
             set_max_lastfall(jobj.max_Lastfall);
