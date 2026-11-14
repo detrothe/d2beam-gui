@@ -101,14 +101,14 @@ for (let i = 1; i <= Number(nlastfaelle_init); i++) {
   column_string_kombitabelle = column_string_kombitabelle + ', "Lf ' + i + '"';
 }
 column_string_kombitabelle = column_string_kombitabelle + ']';
-console.log('column_string_kombitabelle', column_string_kombitabelle);
+//console.log('column_string_kombitabelle', column_string_kombitabelle);
 
 typs_string_kombitabelle = '["-", "text"';
 for (let i = 1; i <= Number(nlastfaelle_init); i++) {
   typs_string_kombitabelle = typs_string_kombitabelle + ', "number"';
 }
 typs_string_kombitabelle = typs_string_kombitabelle + ']';
-console.log('typs_string_kombitabelle', typs_string_kombitabelle);
+//console.log('typs_string_kombitabelle', typs_string_kombitabelle);
 
 
 //########################################################################################################################
