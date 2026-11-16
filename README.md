@@ -37,6 +37,7 @@ Help from native speakers with a background in structural engineering is very we
 
 - **App texts:** `xliff/<locale>.xlf`. Each `<trans-unit>` contains the German `<source>` and the translated `<target>`. Use the English file for comparison.
 - **Short documentation (Info tab):** `public/Kurzdokumentation_<language>.html`
+- **Button icons in the short documentation:** `public/assets/gui-icons/*.png` are generated from the running app. Start the dev server (`npm run dev-task`), then run `npm run icons` in a second terminal (needs Node ≥ 22 and Chrome/Chromium, path via `CHROME=...` if needed).
 
 Terms that need particular attention in French and Italian are, for example: *Schiefstellung* (global imperfection), *kinematisch* (mechanism), *Bettung* (elastic foundation, Winkler) and *Vorspannung* (prestress).
 

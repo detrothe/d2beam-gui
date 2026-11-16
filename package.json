@@ -48,7 +48,8 @@
     "dev-task": "vite",
     "start": "npm run dev",
     "start-remote": "vite --host",
-    "preview": "vite preview --open"
+    "preview": "vite preview --open",
+    "icons": "node scripts/gui-icons.mjs"
   },
   "allowScripts": {
     "core-js@3.50.0": true,
