@@ -64,7 +64,7 @@ export function calculate() {
   //console.log('calculate');
 
   //resizeTables();
-  rechnen(1);
+  return rechnen(1);
 }
 
 

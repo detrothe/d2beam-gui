@@ -4,7 +4,7 @@ import { msg, str } from '@lit/localize';
 //import { app, nlastfaelle_init} from "./haupt"
 import { TFVector, TFArray2D, TFArray3D, TFArray3D_0 } from "./TFArray"
 
-import { berechnungErfolgreich, berechnungErforderlich } from './globals'
+import { berechnungErfolgreich, berechnungErforderlich, berechnung_erfolgreich } from './globals'
 
 import { testNumber, myFormat, write } from './utility'
 //import {Module} from '../../d2beam_wasm.js'
@@ -530,11 +530,19 @@ export function incr_neq() {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-export function rechnen(flag = 1) {
+// Ergebnis von rechnen(1):
+//   'ok'              Berechnung erfolgreich
+//   'fehler'          Eingabefehler (bzw. Abbruch), Meldungen stehen nur im Ausgabefenster des Tab Haupt
+//   'fehler_gemeldet' Berechnung fehlgeschlagen, der Fehler wurde bereits per Dialog gemeldet
+export type RechenStatus = 'ok' | 'fehler' | 'fehler_gemeldet';
+
+export function rechnen(flag = 1): Promise<RechenStatus> {
     //-----------------------------------------------------------------------------------------------------------
 
     // flag = 0 : Eingabe überprüfen
     console.log("in rechnen");
+
+    let status: Promise<RechenStatus> = Promise.resolve('fehler');
 
     const elHaupt = document.getElementById('id_haupt');
     let shadow = elHaupt?.shadowRoot;
@@ -692,7 +700,9 @@ export function rechnen(flag = 1) {
                 write('\n' + msg('Eingabefehler bitte erst beheben'))
             } else {
                 init_panel();
-                calculate();
+                status = calculate().then(
+                    (ret): RechenStatus => (ret === 0 && berechnung_erfolgreich) ? 'ok' : 'fehler_gemeldet',
+                    (e): RechenStatus => { console.error('Fehler in calculate', e); return 'fehler'; });
                 if (stadyn === 0) reset_dyn_eigenformen();
                 show_controller_results(true);
                 // if (THIIO_flag === 0) show_controller_THIIO(false);
@@ -707,7 +717,7 @@ export function rechnen(flag = 1) {
 
             let fehler = check_input();
 
-            if (fatal_error || fehler > 0) return;
+            if (fatal_error || fehler > 0) return status;
 
             // für die Grafik
 
@@ -739,6 +749,7 @@ export function rechnen(flag = 1) {
         }
     }
 
+    return status;
 }
 
 

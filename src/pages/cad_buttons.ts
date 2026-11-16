@@ -1,6 +1,7 @@
 import { msg, str } from '@lit/localize';
 import { getLocale, setLocaleFromUrl } from './localization';
 import { enableTouchHints } from './touch_hint';
+import { rechnen } from './rechnen';
 
 
 import {
@@ -133,6 +134,7 @@ let cog_button: HTMLButtonElement;
 let refresh_button: HTMLButtonElement;
 let info_button: HTMLButtonElement;
 let drawer_button: HTMLButtonElement;
+let rechnen_button: HTMLButtonElement;
 
 let querschnitt_default_select: HTMLSelectElement;
 
@@ -783,6 +785,18 @@ export function cad_buttons() {
     drawer_button.id = "id_cad_drawer_button";
 
 
+    rechnen_button = document.createElement("button");
+
+    rechnen_button.value = "rechnen";
+    rechnen_button.className = "btn_cad";
+    // Taschenrechner (Bootstrap Icons "calculator", MIT)
+    rechnen_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="0 0 16 16" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/><path d="M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/></svg>`;
+    rechnen_button.addEventListener("click", Rechnen_button);
+    rechnen_button.title = msg('Rechnen');
+    rechnen_button.id = "id_cad_rechnen_button";
+    // Zustand vom Rechnen-Button im Tab Haupt übernehmen (primary = neue Berechnung erforderlich)
+    if (shadow.getElementById("rechnen")?.getAttribute("variant") === "primary") rechnen_button.classList.add("btn_cad_rechnen_aktiv");
+
     const help_text = document.createElement("span");
     help_text.innerHTML = "grafische Eingabe System"
     help_text.className = "helptext";
@@ -809,6 +823,7 @@ export function cad_buttons() {
     div.appendChild(refresh_button);
     div.appendChild(info_button);
     div.appendChild(drawer_button);
+    div.appendChild(rechnen_button);
 
     enableTouchHints(div);   // Hilfetext bei langem Drücken (Touch/Stift) für alle Buttons mit title/data-hint
 
@@ -819,6 +834,32 @@ export function cad_buttons() {
 
     div2.style.top = String(h)
   }
+}
+
+//--------------------------------------------------------------------------------------------------------
+async function Rechnen_button() {
+  //------------------------------------------------------------------------------------------------------
+  // gleiche Funktion wie der Button Rechnen im Tab Haupt, bei Erfolg direkt in den Tab Ergebnisse
+
+  buttons_control.reset();   // laufende CAD-Eingabe beenden
+
+  const status = await rechnen(1);   // wie calculate() in haupt_2.ts (dortiger Import erzeugt einen Modulzyklus)
+
+  const shadow = document.getElementById('id_haupt')?.shadowRoot;
+  if (!shadow) return;
+
+  if (status === 'ok') {
+    (shadow.getElementById('id_panel_grafik') as HTMLElement | null)?.click();
+  } else if (status === 'fehler') {
+    // Meldungen stehen sonst nur im Ausgabefenster des Tab Haupt
+    // nur die eigentlichen Meldungen: ohne Leerzeilen, Trennstrich und die abschließende Zusammenfassung
+    const zeilen = ((shadow.getElementById('output') as HTMLTextAreaElement | null)?.value ?? '')
+      .split('\n').map(z => z.trim())
+      .filter(z => z !== '' && !/^_+$/.test(z) && z !== msg('Eingabefehler bitte erst beheben'));
+    const text = zeilen.map(z => z.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')).join('<br>');
+    alertdialog('ok', msg('Eingabefehler bitte erst beheben') + (text ? '<br><br>' + text : ''));
+  }
+  // 'fehler_gemeldet': Dialog wurde bereits von der Berechnung angezeigt
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -873,6 +914,7 @@ export function update_button_language() {
   refresh_button.title = msg('Reset Screen');
   info_button.title = msg('Kurzanleitung & Information');
   drawer_button.title = msg('Mehr Aktivitäten');
+  rechnen_button.title = msg('Rechnen');
 
   querschnitt_default_select.title = msg('aktiver Querschnitt');
 
@@ -1082,6 +1124,7 @@ export function reDo_button() {
       }
       obj.obj_elast.seq = next_cad_seq();
       obj.obj_element.elast.splice(Math.min(obj.index, obj.obj_element.elast.length), 0, obj.obj_elast)
+      berechnungErforderlich(true);
       //obj.obj_element.nStreckenlasten++;
 
       // vor dem Zeichnen neu bestimmen, drawStab braucht max_value_lasten für alle Lastfälle

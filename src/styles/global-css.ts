@@ -450,6 +450,11 @@ export const global_css = css`
       user-select: none;
    }
 
+   /* Rechnen-Button im Tab System: Akzentfarbe, sobald eine neue Berechnung erforderlich ist */
+   .btn_cad.btn_cad_rechnen_aktiv {
+      background-color: var(--user_accent, RoyalBlue);
+   }
+
    .btn_cad svg {
       width: calc(var(--cad_btn_size_eff) * 0.55);
       height: calc(var(--cad_btn_size_eff) * 0.55);

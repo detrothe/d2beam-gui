@@ -12,6 +12,7 @@ export function berechnungErfolgreich(wert: boolean) {
     let shadow = elHaupt?.shadowRoot;
     if (shadow) {
         shadow.getElementById("rechnen")!.setAttribute("variant", "default")
+        shadow.getElementById("id_cad_rechnen_button")?.classList.remove("btn_cad_rechnen_aktiv")
     }
 }
 export function berechnungErforderlich(ev: boolean = true) { // ev:any
@@ -19,6 +20,7 @@ export function berechnungErforderlich(ev: boolean = true) { // ev:any
     const shadow = document.getElementById('id_haupt')?.shadowRoot;
     if (shadow) {
         shadow.getElementById("rechnen")?.setAttribute("variant", "primary")   //style.color = "#dd0000"
+        shadow.getElementById("id_cad_rechnen_button")?.classList.add("btn_cad_rechnen_aktiv")   // Akzentfarbe im Tab System
     }
 }
 

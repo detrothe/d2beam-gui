@@ -737,6 +737,7 @@ export function update_multi_selected_elementlast() {
 
             find_maxValues_eloads();
 
+            berechnungErforderlich(true);
             init_cad(2);
         }
     }
@@ -784,6 +785,7 @@ export function update_multi_selected_knotenlast() {
             }
         }
 
+        berechnungErforderlich(true);
         init_cad(2);
     }
 }
@@ -905,6 +907,7 @@ export function update_multi_selected_knotenmasse() {
             }
         }
 
+        berechnungErforderlich(true);
         init_cad(2);
     }
 }
@@ -940,6 +943,7 @@ export function update_multi_selected_knotenverformung() {
             }
         }
 
+        berechnungErforderlich(true);
         init_cad(2);
     }
 }

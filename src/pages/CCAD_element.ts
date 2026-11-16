@@ -1,6 +1,7 @@
 import { CNodeDisp } from "./cad_knotenverformung";
 import { testArea4 } from "./lib";
 import { System, TLoads, TMass, TNode } from "./rechnen";
+import { berechnungErforderlich } from "./globals";
 
 //―――――――――――――――――――――――――――――――――――――――――――――
 // fortlaufende Nummer für Elemente und Elementlasten, legt die Reihenfolge für Undo fest
@@ -173,6 +174,7 @@ export class TCAD_Stab extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――――――
     add_streckenlast(lf: number, art: number, pa: number, pe: number): void {
         this.elast.push(new TCAD_Streckenlast(lf, art, pa, pe))
+        berechnungErforderlich(true);   // Elementlasten gehen nicht über LinkedList.append
         //this.nStreckenlasten++;
         console.log("add_streckenlast, lf,art= ", lf, art, pa, pe)
     }
@@ -180,6 +182,7 @@ export class TCAD_Stab extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――――――
     add_einzellast(lf: number, x: number, P: number, M: number): void {
         this.elast.push(new TCAD_Einzellast(lf, x, P, M))
+        berechnungErforderlich(true);   // Elementlasten gehen nicht über LinkedList.append
         //this.nStreckenlasten++;
         console.log("add_einzellast, lf,art= ", lf, x, P, M)
     }
@@ -187,6 +190,7 @@ export class TCAD_Stab extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――――――
     add_temperaturlast(lf: number, To: number, Tu: number): void {
         this.elast.push(new TCAD_Temperaturlast(lf, To, Tu))
+        berechnungErforderlich(true);   // Elementlasten gehen nicht über LinkedList.append
         //this.nStreckenlasten++;
         console.log("add_streckenlast, lf,art= ", lf, To, Tu)
     }
@@ -194,18 +198,21 @@ export class TCAD_Stab extends TCAD_Element {
     //―――――――――――――――――――――――――――――――――――――――――――――
     add_vorspannung(lf: number, sigmaV: number): void {
         this.elast.push(new TCAD_Vorspannung(lf, sigmaV))
+        berechnungErforderlich(true);   // Elementlasten gehen nicht über LinkedList.append
         //this.nStreckenlasten++;
         console.log("add_vorspannung, lf,art= ", lf, sigmaV)
     }
     //―――――――――――――――――――――――――――――――――――――――――――――
     add_spannschloss(lf: number, ds: number): void {
         this.elast.push(new TCAD_Spannschloss(lf, ds))
+        berechnungErforderlich(true);   // Elementlasten gehen nicht über LinkedList.append
         //this.nStreckenlasten++;
         console.log("add_spannschloss, lf,art= ", lf, ds)
     }
     //―――――――――――――――――――――――――――――――――――――――――――――
     add_stabvorverformung(lf: number, w0a: number, w0m: number, w0e: number): void {
         this.elast.push(new TCAD_Stabvorverformung(lf, w0a, w0m, w0e))
+        berechnungErforderlich(true);   // Elementlasten gehen nicht über LinkedList.append
         //this.nStreckenlasten++;
         console.log("add_stabvorverformung, lf,art= ", lf, w0a, w0m, w0e)
     }
