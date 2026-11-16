@@ -140,7 +140,7 @@
 		este caso, los resultados son, por lo tanto, exactos.
 	</p>
 	<p>
-		Después de hacer clic en el botón «Iniciar nuevo proyecto», puede elegir entre calcular una estructura de
+		Después de hacer clic en el botón «Iniciar nuevo proyecto», puedes elegir entre calcular una estructura de
 		celosía o una estructura de marco. Al seleccionar «celosía» se simplifica la introducción de datos para las
 		estructuras de celosía. Por supuesto, las estructuras de celosía también se pueden calcular con elementos de
 		marco si se introducen articulaciones de momento para los miembros.
@@ -164,17 +164,17 @@
 		</li>
 		<li>
 			<p>
-				Las deformaciones por empuje se tienen en cuenta mediante un factor de
-				corrección de empuje.
+				Las deformaciones por cortante se tienen en cuenta mediante un factor de
+				corrección de cortante.
 				Si se introduce un valor de 0,
-				se calcula con elementos rígidos al empuje.
+				se calcula con elementos rígidos a cortante.
 			</p>
 		</li>
 		<li>
 			<p>
 				En la teoría de segundo orden, la imperfección se puede tener en cuenta
 				fácilmente a través de la primera forma propia.
-				En los sistemas de bastidores típicos (fijados en la parte inferior y
+				En los sistemas de pórticos típicos (fijados en la parte inferior y
 				móviles en la parte superior), basta con indicar el mayor
 				desplazamiento sin especificar el nodo (entrada 0). La dirección de la
 				imperfección se establece igual
@@ -325,19 +325,19 @@
 	<p>
 		<img src="/assets/gui-icons/knotenlast.png" name="knotenlast" title="knotenlast button"
 			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-		Botón de carga de nodo: Introduzca las cargas de los nodos. Nota: Las cargas
+		Botón de carga de nodo: Introduce las cargas de los nodos. Nota: Las cargas
 		de los nodos solo se pueden establecer en los nodos existentes.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/elementlast.png" name="elementlast" title="element button"
 			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-		Elementlast Button: Eingabe von Stablasten. Hinweis: Stablasten können
-		nur auf vorhandene Stäbe wirken.
+		Botón Carga de elemento: Introduce las cargas de las barras. Nota: Las cargas
+		de barra solo pueden actuar sobre barras existentes.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/knotenmasse.png" name="knotenmasse" title="knotenmasse button"
 			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
-		Botón Masa de nodo: Introduzca las masas de los nodos y
+		Botón Masa de nodo: Introduce las masas de los nodos y
 		los momentos de inercia. Nota: Las masas de los nodos solo se pueden
 		establecer en los nodos existentes. Solo se tienen en cuenta si se ha
 		seleccionado el tipo de cálculo <i>dinámico</i> en la pestaña Principal.
@@ -489,19 +489,19 @@
 		<li>
 			<b>forma propia:</b>
 			Visualización de formas propias. En el cuadro de selección de la parte
-			superior derecha, puede seleccionar entre las formas propias calculadas.
+			superior derecha, puedes seleccionar entre las formas propias calculadas.
 		</li>
 		<li>
 			<b>imperfección:</b>
 			Representación de la imperfección utilizada, basada en la primera forma
 			propia.
-			Tenga en cuenta que la imperfección utilizada depende de la combinación
+			Ten en cuenta que la imperfección utilizada depende de la combinación
 			seleccionada. Solo para la teoría de segundo orden.
 		</li>
 		<li>
 			<b>imperfección local:</b>
 			Representación de las imperfecciones locales introducidas, solo en la
-			teoría II. Orden.
+			teoría de segundo orden.
 		</li>
 		<li>
 			<b>escalado:</b>
@@ -523,7 +523,7 @@
 		</li>
 		<li>
 			<b>deformación total:</b>
-			Solo en el orden II. Normalmente se muestran las deformaciones relativas.
+			Solo en teoría de segundo orden. Normalmente se muestran las deformaciones relativas.
 			Si se selecciona la opción, las deformaciones previas se suman a las
 			deformaciones relativas.
 		</li>
@@ -533,9 +533,9 @@
 			mostrarán los valores de corte a lo largo de la barra en las direcciones
 			del sistema de coordenadas local del sistema sin deformar (valores de
 			corte de equilibrio).
-			Si no se selecciona la opción, los acciones internas de equilibrio N y V
-			<sub>z</sub> en la dirección de la sección transversal girada. Estas
-			también se denominan acciones internas de verificación y deben utilizarse
+			Si no se selecciona la opción, los esfuerzos internos de equilibrio N y V
+			<sub>z</sub> se transforman en la dirección de la sección transversal girada. Estos
+			también se denominan esfuerzos internos de verificación y deben utilizarse
 			para el cálculo.
 			<br>
 			Esta opción no tiene ningún efecto sobre el momento M<sub>y</sub>!
@@ -581,16 +581,14 @@
 	</h2>
 	</p>
 	<p>
-		En el menú ꔷꔷꔷ puntos se puede ajustar el tamaño de la fuente y el
+		En el menú ꔷꔷꔷ (tres puntos) se puede ajustar el tamaño de la fuente y el
 		color de la tabla .
 		<br>
 		Los ajustes de la página se pueden guardar como ajustes predeterminados
-		en la memoria local memoria local del navegador utilizado
+		en la memoria local del navegador utilizado
 		y estarán disponibles de nuevo tras reiniciar el programa. Los ajustes
 		preestablecidos se pueden borrar con el botón situado debajo.
 		<br>
-		La memoria local (local storage) no son
-		cookies. Esta aplicación web realiza todos los
 		El almacenamiento local (local storage) no son
 		cookies. Esta aplicación web realiza todos los
 		cálculos en el ordenador local en el navegador en JavaScript. No se
@@ -622,9 +620,9 @@
 		Android, en el navegador Chrome, en la esquina superior derecha
 		del menú de aplicaciones
 		<i>(menú de tres puntos)</i>
-		la opción «Instalar aplicación». Aparecerá un cuadro de diálogo que
-		deberá confirmar. A continuación,
-		podrá cerrar el navegador . En el escritorio aparecerá
+		selecciona la opción «Instalar aplicación». Aparecerá un cuadro de diálogo que
+		deberás confirmar. A continuación,
+		podrás cerrar el navegador. En el escritorio aparecerá
 		un nuevo icono con el nombre D2beam-gui.
 	</p>
 	<p>
@@ -640,10 +638,10 @@
 			style="max-width:100%; width:423px; height:auto; border:0px; margin: auto; display: block;">
 		<!--width:423px; height:111px-->
 		<br>
-		En las versiones más recientes de Chrome, es posible que se le
+		En las versiones más recientes de Chrome, es posible que se te
 		pregunte directamente
-		si desea realizar la instalación,
-		véase el símbolo a la derecha de la barra de direcciones :
+		si deseas realizar la instalación,
+		mira el símbolo a la derecha de la barra de direcciones:
 		<img src="/assets/chrome_install.png" name="chrome_install" title="chrome install"
 			style="max-width:100%; width:436px; height:auto; border:0px; margin: auto; display: block;">
 		<!--width:436px; height:155px-->
@@ -697,7 +695,7 @@
 		Play Store es una alternativa. El
 		teclado aún debe activarse después de la instalación. Es mejor
 		hacerlo de inmediato en Play Store.
-		Más adelante, siempre puede cambiar entre los teclados instalados
+		Más adelante, siempre puedes cambiar entre los teclados instalados
 		(icono en la parte inferior derecha del teclado).
 	</p>
 	<h2 class="western" id="faq">
@@ -706,7 +704,7 @@
 	<p>
 	<ul>
 		<li>
-			Pregunta: He introducido algunos nodos de más que ahoraya no
+			Pregunta: He introducido algunos nodos de más que ahora ya no
 			necesito. ¿Tengo que borrarlos?
 			<br>
 			Respuesta: No. Los nodos que no tienen elementos «colgados»
