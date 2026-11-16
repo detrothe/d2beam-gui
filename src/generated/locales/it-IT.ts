@@ -2,14 +2,15 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+    import {html} from 'lit';
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      's024ea829b08630c0': `I video introduttivi si trovano anche nell'ultima scheda ꔷꔷꔷ (a destra). Lì è possibile nascondere questo pulsante nella scheda Principale se non serve più.`,
+      'hb9d2ebb8b6b2ade4': html`Per consentire un inserimento preciso, il cursore si trova accanto al dito. Appoggia il dito sullo schermo, sposta il <b>cursore</b> nel punto desiderato e poi solleva il dito. Sollevare il dito ha qui la stessa funzione del clic sinistro del mouse. Se è necessario un ulteriore inserimento, come per la fine dell'asta, appoggia di nuovo il dito sullo schermo e sposta il cursore nel punto desiderato. Sollevando di nuovo il dito l'inserimento termina. La distanza e la posizione (segno) del cursore rispetto al dito si possono modificare in Impostazioni GUI.`,
+'s024ea829b08630c0': `I video introduttivi si trovano anche nell'ultima scheda ꔷꔷꔷ (a destra). Lì è possibile nascondere questo pulsante nella scheda Principale se non serve più.`,
 's0278681b3145d48b': `Fattore di spostamento del cursore per l'inserimento touch (dito) (con 0 il cursore si trova direttamente sotto il dito):`,
 's02a67a5e0d12eb12': `Non mostrare le unità nel grafico`,
 's02c3c22410854873': `L'ID del nodo viene mostrato nella finestra di dialogo dei nodi nella scheda Sistema quando scegli il pulsante &lt;Modifica nodo&gt; e poi clicchi su un nodo.`,
@@ -363,7 +364,6 @@ Elaborato da: Alex Esempio`,
 'sb85dea9ef6d4eb2a': `Matrice di massa globale`,
 'sb8c1a3de0e553097': `tutte le combinazioni`,
 'sb9c2dd24a319f32b': `eps tol deformazione:`,
-'sb9d2ebb8b6b2ade4': `Per consentire un inserimento preciso, il cursore si trova accanto al dito. Appoggia il dito sullo schermo, sposta il &lt;b&gt;cursore&lt;/b&gt; nel punto desiderato e poi solleva il dito. Sollevare il dito ha qui la stessa funzione del clic sinistro del mouse. Se è necessario un ulteriore inserimento, come per la fine dell'asta, appoggia di nuovo il dito sullo schermo e sposta il cursore nel punto desiderato. Sollevando di nuovo il dito l'inserimento termina. La distanza e la posizione (segno) del cursore rispetto al dito si possono modificare in Impostazioni GUI.`,
 'sba7b1a93d2c78556': `Coordinate dei nodi e vincoli`,
 'sbad21220dd5ef4aa': `Ꚛ ERRORE - In almeno un caso di carico la tolleranza sulle forze non è stata rispettata`,
 'sbb1b7f4e054767ec': `Tabelle`,

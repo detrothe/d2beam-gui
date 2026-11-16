@@ -353,19 +353,6 @@
   <source>Weitere Informationen zur grafischen Eingabe findest du im Tab Info.</source>
   <target>You can find more information about graphical input in the Info tab.</target>
 </trans-unit>
-<trans-unit id="sb9d2ebb8b6b2ade4">
-  <source>Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
-            neben dem Finger. Platziere den Eingabefinger auf dem Screen und
-            bewege den &lt;b&gt;Cursor&lt;/b&gt; zu der gewünschten Stelle, und hebe dann
-            den Finger vom Screen ab. Das Anheben des Fingers hat hier die
-            gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei
-            der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann
-            ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
-            die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
-            Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
-            Finger kannst du unter Einstellungen GUI ändern.</source>
-   <target>To enable precise input, the input cursor is located next to your finger. Place your input finger on the screen and move the cursor to the desired location, then lift your finger from the screen. Lifting your finger has the same function as pressing the left mouse button. If, as when entering the end of the bar, further input is required, place your finger back on the screen and move the cursor to the desired location. Lifting your finger again ends the input. You can change the distance and position (sign) of the cursor from your finger under Settings GUI.</target>
-</trans-unit>
 <trans-unit id="s4777a861e6d0676b">
   <source>Der unter Einstellungen GUI einstellbare Rasterbereich dient
             nur zur Orientierung bei der Eingabe. Im Normalfall wird er so
@@ -1988,6 +1975,19 @@ The file is saved in the default download folder</target>
 <trans-unit id="s53a526d5c80c3e28">
   <source>Standard</source>
   <target>Default</target>
+</trans-unit>
+<trans-unit id="hb9d2ebb8b6b2ade4">
+  <source>Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
+            neben dem Finger. Platziere den Eingabefinger auf dem Screen und
+            bewege den <x id="0" equiv-text="&lt;b&gt;"/>Cursor<x id="1" equiv-text="&lt;/b&gt;"/> zu der gewünschten Stelle, und hebe dann
+            den Finger vom Screen ab. Das Anheben des Fingers hat hier die
+            gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei
+            der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann
+            ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
+            die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
+            Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
+            Finger kannst du unter Einstellungen GUI ändern.</source>
+  <target>To enable precise input, the input cursor is located next to your finger. Place your input finger on the screen and move the <x id="0" equiv-text="&lt;b&gt;"/>cursor<x id="1" equiv-text="&lt;/b&gt;"/> to the desired location, then lift your finger from the screen. Lifting your finger has the same function as pressing the left mouse button. If, as when entering the end of the bar, further input is required, place your finger back on the screen and move the cursor to the desired location. Lifting your finger again ends the input. You can change the distance and position (sign) of the cursor from your finger under Settings GUI.</target>
 </trans-unit>
 </body>
 </file>

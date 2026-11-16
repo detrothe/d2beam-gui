@@ -2,14 +2,15 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+    import {html} from 'lit';
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      's024ea829b08630c0': `Les vidéos d'introduction se trouvent aussi dans le dernier onglet ꔷꔷꔷ (tout à droite). Vous pouvez y masquer ce bouton dans l'onglet Principal si vous n'en avez plus besoin.`,
+      'hb9d2ebb8b6b2ade4': html`Pour permettre une saisie précise, le curseur de saisie se trouve à côté du doigt. Pose le doigt sur l'écran, déplace le <b>curseur</b> à l'endroit souhaité, puis lève le doigt. Lever le doigt a ici la même fonction qu'un clic gauche de la souris. Si une autre saisie est nécessaire, comme pour l'extrémité de la barre, repose le doigt sur l'écran et déplace le curseur à l'endroit souhaité. Lever à nouveau le doigt termine la saisie. Tu peux modifier la distance et la position (signe) du curseur par rapport au doigt sous Paramètres GUI.`,
+'s024ea829b08630c0': `Les vidéos d'introduction se trouvent aussi dans le dernier onglet ꔷꔷꔷ (tout à droite). Vous pouvez y masquer ce bouton dans l'onglet Principal si vous n'en avez plus besoin.`,
 's0278681b3145d48b': `Facteur de décalage du curseur pour la saisie tactile (doigt) (à 0, le curseur se trouve directement sous le doigt) :`,
 's02a67a5e0d12eb12': `Ne pas afficher les unités dans le graphique`,
 's02c3c22410854873': `L'ID du nœud est affiché dans la boîte de dialogue des nœuds de l'onglet Système lorsque tu choisis le bouton &lt;Modifier le nœud&gt; puis cliques sur un nœud.`,
@@ -363,7 +364,6 @@ Réalisé par : Alex Exemple`,
 'sb85dea9ef6d4eb2a': `Matrice de masse globale`,
 'sb8c1a3de0e553097': `toutes les combinaisons`,
 'sb9c2dd24a319f32b': `eps tol déformation :`,
-'sb9d2ebb8b6b2ade4': `Pour permettre une saisie précise, le curseur de saisie se trouve à côté du doigt. Pose le doigt sur l'écran, déplace le &lt;b&gt;curseur&lt;/b&gt; à l'endroit souhaité, puis lève le doigt. Lever le doigt a ici la même fonction qu'un clic gauche de la souris. Si une autre saisie est nécessaire, comme pour l'extrémité de la barre, repose le doigt sur l'écran et déplace le curseur à l'endroit souhaité. Lever à nouveau le doigt termine la saisie. Tu peux modifier la distance et la position (signe) du curseur par rapport au doigt sous Paramètres GUI.`,
 'sba7b1a93d2c78556': `Coordonnées des nœuds et appuis`,
 'sbad21220dd5ef4aa': `Ꚛ ERREUR - La tolérance sur les efforts n'a pas été respectée dans au moins un cas de charge`,
 'sbb1b7f4e054767ec': `Tableaux`,

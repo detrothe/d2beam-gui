@@ -353,19 +353,6 @@
   <source>Weitere Informationen zur grafischen Eingabe findest du im Tab Info.</source>
   <target>Encontrarás más información sobre la entrada gráfica en la pestaña Información.</target>
 </trans-unit>
-<trans-unit id="sb9d2ebb8b6b2ade4">
-  <source>Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
-            neben dem Finger. Platziere den Eingabefinger auf dem Screen und
-            bewege den &lt;b&gt;Cursor&lt;/b&gt; zu der gewünschten Stelle, und hebe dann
-            den Finger vom Screen ab. Das Anheben des Fingers hat hier die
-            gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei
-            der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann
-            ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
-            die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
-            Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
-            Finger kannst du unter Einstellungen GUI ändern.</source>
-  <target>Para permitir entradas precisas, el cursor de entrada se encuentra  junto al dedo. Coloca el dedo de entrada en la pantalla y     mueve el cursor al lugar deseado, y luego levanta            el dedo de la pantalla. Levantar el dedo tiene aquí la            misma función que pulsar el botón izquierdo del ratón. Si, al igual que al introducir el extremo de la barra, se requiere otra entrada, vuelve a colocar el dedo en la pantalla y mueve el cursor al lugar deseado. Al levantar el dedo de nuevo, se finaliza la entrada. Puedes cambiar la distancia y la posición (signo) del cursor con respecto al dedo en Ajustes GUI.</target>
-</trans-unit>
 <trans-unit id="s4777a861e6d0676b">
   <source>Der unter Einstellungen GUI einstellbare Rasterbereich dient
             nur zur Orientierung bei der Eingabe. Im Normalfall wird er so
@@ -1989,6 +1976,19 @@ El archivo se guarda en la carpeta de descargas predeterminada</target>
 <trans-unit id="s53a526d5c80c3e28">
   <source>Standard</source>
   <target>Predeterminado</target>
+</trans-unit>
+<trans-unit id="hb9d2ebb8b6b2ade4">
+  <source>Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
+            neben dem Finger. Platziere den Eingabefinger auf dem Screen und
+            bewege den <x id="0" equiv-text="&lt;b&gt;"/>Cursor<x id="1" equiv-text="&lt;/b&gt;"/> zu der gewünschten Stelle, und hebe dann
+            den Finger vom Screen ab. Das Anheben des Fingers hat hier die
+            gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei
+            der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann
+            ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
+            die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
+            Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
+            Finger kannst du unter Einstellungen GUI ändern.</source>
+  <target>Para permitir entradas precisas, el cursor de entrada se encuentra junto al dedo. Coloca el dedo de entrada en la pantalla y mueve el <x id="0" equiv-text="&lt;b&gt;"/>cursor<x id="1" equiv-text="&lt;/b&gt;"/> al lugar deseado, y luego levanta el dedo de la pantalla. Levantar el dedo tiene aquí la misma función que pulsar el botón izquierdo del ratón. Si, al igual que al introducir el extremo de la barra, se requiere otra entrada, vuelve a colocar el dedo en la pantalla y mueve el cursor al lugar deseado. Al levantar el dedo de nuevo, se finaliza la entrada. Puedes cambiar la distancia y la posición (signo) del cursor con respecto al dedo en Ajustes GUI.</target>
 </trans-unit>
 </body>
 </file>

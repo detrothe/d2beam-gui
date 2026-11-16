@@ -2,14 +2,15 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+    import {html} from 'lit';
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      's024ea829b08630c0': `Los vídeos introductorios también se encuentran en la última pestaña ꔷꔷꔷ (a la derecha). Allí se puede ocultar este botón en la pestaña Principal si ya no se necesita.`,
+      'hb9d2ebb8b6b2ade4': html`Para permitir entradas precisas, el cursor de entrada se encuentra junto al dedo. Coloca el dedo de entrada en la pantalla y mueve el <b>cursor</b> al lugar deseado, y luego levanta el dedo de la pantalla. Levantar el dedo tiene aquí la misma función que pulsar el botón izquierdo del ratón. Si, al igual que al introducir el extremo de la barra, se requiere otra entrada, vuelve a colocar el dedo en la pantalla y mueve el cursor al lugar deseado. Al levantar el dedo de nuevo, se finaliza la entrada. Puedes cambiar la distancia y la posición (signo) del cursor con respecto al dedo en Ajustes GUI.`,
+'s024ea829b08630c0': `Los vídeos introductorios también se encuentran en la última pestaña ꔷꔷꔷ (a la derecha). Allí se puede ocultar este botón en la pestaña Principal si ya no se necesita.`,
 's0278681b3145d48b': `Factor de desplazamiento del cursor en la entrada táctil (dedo) (en 0, el cursor se encuentra directamente debajo del dedo):`,
 's02a67a5e0d12eb12': `No mostrar unidades en el gráfico`,
 's02c3c22410854873': `El ID del nodo se muestra en el cuadro de diálogo del nodo, en la pestaña Sistema, cuando seleccionas el botón 'Editar nodo' y, a continuación, haces clic en un nodo.`,
@@ -365,7 +366,6 @@ Elaborado por: Alex Ejemplo`,
 'sb85dea9ef6d4eb2a': `Matriz de masa global`,
 'sb8c1a3de0e553097': `Todas las combinaciones`,
 'sb9c2dd24a319f32b': `deformación eps tol:`,
-'sb9d2ebb8b6b2ade4': `Para permitir entradas precisas, el cursor de entrada se encuentra  junto al dedo. Coloca el dedo de entrada en la pantalla y     mueve el cursor al lugar deseado, y luego levanta            el dedo de la pantalla. Levantar el dedo tiene aquí la            misma función que pulsar el botón izquierdo del ratón. Si, al igual que al introducir el extremo de la barra, se requiere otra entrada, vuelve a colocar el dedo en la pantalla y mueve el cursor al lugar deseado. Al levantar el dedo de nuevo, se finaliza la entrada. Puedes cambiar la distancia y la posición (signo) del cursor con respecto al dedo en Ajustes GUI.`,
 'sba7b1a93d2c78556': `Coordenadas y soportes de los nodos`,
 'sbad21220dd5ef4aa': `Ꚛ ERROR: en al menos un caso de carga no se ha alcanzado la tolerancia de fuerza.`,
 'sbb1b7f4e054767ec': `Tablas`,

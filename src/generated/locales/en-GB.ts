@@ -2,14 +2,15 @@
     // Do not modify this file by hand!
     // Re-generate this file by running lit-localize
 
-    
+    import {html} from 'lit';
     import {str} from '@lit/localize';
 
     /* eslint-disable no-irregular-whitespace */
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      's024ea829b08630c0': `The introductory videos can also be found in the last tab ꔷꔷꔷ (far right). There you can hide this button in the Main tab if you no longer need it.`,
+      'hb9d2ebb8b6b2ade4': html`To enable precise input, the input cursor is located next to your finger. Place your input finger on the screen and move the <b>cursor</b> to the desired location, then lift your finger from the screen. Lifting your finger has the same function as pressing the left mouse button. If, as when entering the end of the bar, further input is required, place your finger back on the screen and move the cursor to the desired location. Lifting your finger again ends the input. You can change the distance and position (sign) of the cursor from your finger under Settings GUI.`,
+'s024ea829b08630c0': `The introductory videos can also be found in the last tab ꔷꔷꔷ (far right). There you can hide this button in the Main tab if you no longer need it.`,
 's0278681b3145d48b': `Cursor offset factor for touch (finger) input (at 0, the cursor is directly under the finger):`,
 's02a67a5e0d12eb12': `Do not display units in graph`,
 's02c3c22410854873': `The node ID is displayed in the node dialog in the System tab when you select the 'Edit Node' button and then click on a node.`,
@@ -364,7 +365,6 @@ Prepared by: Alex Example`,
 'sb85dea9ef6d4eb2a': `Global mass matrix`,
 'sb8c1a3de0e553097': `All combinations`,
 'sb9c2dd24a319f32b': `eps tol deformation:`,
-'sb9d2ebb8b6b2ade4': `To enable precise input, the input cursor is located next to your finger. Place your input finger on the screen and move the cursor to the desired location, then lift your finger from the screen. Lifting your finger has the same function as pressing the left mouse button. If, as when entering the end of the bar, further input is required, place your finger back on the screen and move the cursor to the desired location. Lifting your finger again ends the input. You can change the distance and position (sign) of the cursor from your finger under Settings GUI.`,
 'sba7b1a93d2c78556': `Node coordinates and supports`,
 'sbad21220dd5ef4aa': `Ꚛ ERROR - The force tolerance was not achieved in at least one load case.`,
 'sbb1b7f4e054767ec': `Tables`,

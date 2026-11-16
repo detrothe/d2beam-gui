@@ -230,19 +230,6 @@
   <source>Eingabe mit dem Finger bei einem Touchscreen</source>
   <target>Saisie au doigt sur un écran tactile</target>
 </trans-unit>
-<trans-unit id="sb9d2ebb8b6b2ade4">
-  <source>Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
-            neben dem Finger. Platziere den Eingabefinger auf dem Screen und
-            bewege den &lt;b&gt;Cursor&lt;/b&gt; zu der gewünschten Stelle, und hebe dann
-            den Finger vom Screen ab. Das Anheben des Fingers hat hier die
-            gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei
-            der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann
-            ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
-            die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
-            Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
-            Finger kannst du unter Einstellungen GUI ändern.</source>
-  <target>Pour permettre une saisie précise, le curseur de saisie se trouve à côté du doigt. Pose le doigt sur l'écran, déplace le &lt;b&gt;curseur&lt;/b&gt; à l'endroit souhaité, puis lève le doigt. Lever le doigt a ici la même fonction qu'un clic gauche de la souris. Si une autre saisie est nécessaire, comme pour l'extrémité de la barre, repose le doigt sur l'écran et déplace le curseur à l'endroit souhaité. Lever à nouveau le doigt termine la saisie. Tu peux modifier la distance et la position (signe) du curseur par rapport au doigt sous Paramètres GUI.</target>
-</trans-unit>
 <trans-unit id="s46e0e618bf2299ec">
   <source>Knoteneingabe und Rasterlinien</source>
   <target>Saisie des nœuds et lignes de grille</target>
@@ -1987,6 +1974,19 @@ Le fichier est enregistré dans le dossier de téléchargement par défaut</targ
 <trans-unit id="s53a526d5c80c3e28">
   <source>Standard</source>
   <target>Par défaut</target>
+</trans-unit>
+<trans-unit id="hb9d2ebb8b6b2ade4">
+  <source>Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
+            neben dem Finger. Platziere den Eingabefinger auf dem Screen und
+            bewege den <x id="0" equiv-text="&lt;b&gt;"/>Cursor<x id="1" equiv-text="&lt;/b&gt;"/> zu der gewünschten Stelle, und hebe dann
+            den Finger vom Screen ab. Das Anheben des Fingers hat hier die
+            gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei
+            der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann
+            ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
+            die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
+            Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
+            Finger kannst du unter Einstellungen GUI ändern.</source>
+  <target>Pour permettre une saisie précise, le curseur de saisie se trouve à côté du doigt. Pose le doigt sur l'écran, déplace le <x id="0" equiv-text="&lt;b&gt;"/>curseur<x id="1" equiv-text="&lt;/b&gt;"/> à l'endroit souhaité, puis lève le doigt. Lever le doigt a ici la même fonction qu'un clic gauche de la souris. Si une autre saisie est nécessaire, comme pour l'extrémité de la barre, repose le doigt sur l'écran et déplace le curseur à l'endroit souhaité. Lever à nouveau le doigt termine la saisie. Tu peux modifier la distance et la position (signe) du curseur par rapport au doigt sous Paramètres GUI.</target>
 </trans-unit>
 </body>
 </file>

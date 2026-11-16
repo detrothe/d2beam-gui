@@ -230,19 +230,6 @@
   <source>Eingabe mit dem Finger bei einem Touchscreen</source>
   <target>Inserimento con il dito su touchscreen</target>
 </trans-unit>
-<trans-unit id="sb9d2ebb8b6b2ade4">
-  <source>Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
-            neben dem Finger. Platziere den Eingabefinger auf dem Screen und
-            bewege den &lt;b&gt;Cursor&lt;/b&gt; zu der gewünschten Stelle, und hebe dann
-            den Finger vom Screen ab. Das Anheben des Fingers hat hier die
-            gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei
-            der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann
-            ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
-            die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
-            Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
-            Finger kannst du unter Einstellungen GUI ändern.</source>
-  <target>Per consentire un inserimento preciso, il cursore si trova accanto al dito. Appoggia il dito sullo schermo, sposta il &lt;b&gt;cursore&lt;/b&gt; nel punto desiderato e poi solleva il dito. Sollevare il dito ha qui la stessa funzione del clic sinistro del mouse. Se è necessario un ulteriore inserimento, come per la fine dell'asta, appoggia di nuovo il dito sullo schermo e sposta il cursore nel punto desiderato. Sollevando di nuovo il dito l'inserimento termina. La distanza e la posizione (segno) del cursore rispetto al dito si possono modificare in Impostazioni GUI.</target>
-</trans-unit>
 <trans-unit id="s46e0e618bf2299ec">
   <source>Knoteneingabe und Rasterlinien</source>
   <target>Inserimento dei nodi e linee della griglia</target>
@@ -1987,6 +1974,19 @@ Il file viene salvato nella cartella di download predefinita</target>
 <trans-unit id="s53a526d5c80c3e28">
   <source>Standard</source>
   <target>Predefinito</target>
+</trans-unit>
+<trans-unit id="hb9d2ebb8b6b2ade4">
+  <source>Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
+            neben dem Finger. Platziere den Eingabefinger auf dem Screen und
+            bewege den <x id="0" equiv-text="&lt;b&gt;"/>Cursor<x id="1" equiv-text="&lt;/b&gt;"/> zu der gewünschten Stelle, und hebe dann
+            den Finger vom Screen ab. Das Anheben des Fingers hat hier die
+            gleiche Funktion wie das Drücken der linken Maustaste. Wird, wie bei
+            der Eingabe des Stabendes, eine weitere Eingabe erforderlich, dann
+            ist der Finger wieder auf den Bildschirm zu setzen und der Cursor an
+            die gewünschte Stelle zu bewegen. Das erneute Anheben beendet die
+            Eingabe. Den Abstand und die Lage (Vorzeichen) des Cursors vom
+            Finger kannst du unter Einstellungen GUI ändern.</source>
+  <target>Per consentire un inserimento preciso, il cursore si trova accanto al dito. Appoggia il dito sullo schermo, sposta il <x id="0" equiv-text="&lt;b&gt;"/>cursore<x id="1" equiv-text="&lt;/b&gt;"/> nel punto desiderato e poi solleva il dito. Sollevare il dito ha qui la stessa funzione del clic sinistro del mouse. Se è necessario un ulteriore inserimento, come per la fine dell'asta, appoggia di nuovo il dito sullo schermo e sposta il cursore nel punto desiderato. Sollevando di nuovo il dito l'inserimento termina. La distanza e la posizione (segno) del cursore rispetto al dito si possono modificare in Impostazioni GUI.</target>
 </trans-unit>
 </body>
 </file>

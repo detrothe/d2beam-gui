@@ -170,7 +170,7 @@ export class drDialogInfo extends LitElement {
 
          <p>
             <b>${msg('Eingabe mit dem Finger bei einem Touchscreen')}</b><br />
-            ${msg(`Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
+            ${msg(html`Um exakte Eingaben zu ermöglichen, befindet sich der Eingabecursor
             neben dem Finger. Platziere den Eingabefinger auf dem Screen und
             bewege den <b>Cursor</b> zu der gewünschten Stelle, und hebe dann
             den Finger vom Screen ab. Das Anheben des Fingers hat hier die
