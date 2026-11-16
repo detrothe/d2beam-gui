@@ -140,6 +140,7 @@ import { update_button_language } from './pages/cad_buttons.js';
 import { AlertDialog } from './pages/confirm_dialog.js';
 import { confirmdialog, alertdialog } from './pages/confirm_dialog';
 import { clearTables } from './pages/haupt_2';
+import { zeige_willkommen_beim_start } from './components/dr-dialog_willkommen';
 
 const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
 console.log(msg("isAndroid ="), isAndroid, navigator.userAgent.toLowerCase().indexOf("android"))
@@ -367,6 +368,13 @@ else {
     });
 
 }
+
+// Willkommensdialog: erst nach den load-Listenern oben registriert, damit die letzte Eingabe
+// schon gelesen ist (Button "Letztes System öffnen"). Kommt die App nur aus dem Hintergrund
+// zurück, gibt es kein load-Ereignis und damit auch keinen Willkommensdialog.
+window.addEventListener('load', () => {
+    zeige_willkommen_beim_start();
+});
 
 /*async*/ function autoEingabeLesen() {
 

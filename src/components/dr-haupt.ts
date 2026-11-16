@@ -63,6 +63,7 @@ import { init_haupt3 } from '../pages/haupt3';
 import { enableTouchHints } from '../pages/touch_hint';
 import { alertdialog } from '../pages/confirm_dialog';
 import { global_css } from '../styles/global-css';
+import { willkommen_ist_ausgeblendet, willkommen_ausblenden } from './dr-dialog_willkommen';
 
 document.adoptedStyleSheets = [
   ...document.adoptedStyleSheets,
@@ -139,6 +140,19 @@ function storage_set(key: string, value: string | null) {
 export class drHaupt extends LitElement {
 
   @state() private introVideoHidden = storage_get(INTRO_VIDEO_HIDDEN_KEY) === '1';
+  @state() private willkommenHidden = willkommen_ist_ausgeblendet();
+
+  // Checkbox im Tab ꔷꔷꔷ: Willkommensdialog beim Start anzeigen
+  private _change_willkommen_visible(e: Event) {
+    const checked = (e.target as HTMLInputElement).checked;
+    this.willkommenHidden = !checked;
+    willkommen_ausblenden(!checked);
+  }
+
+  // im Willkommensdialog "nicht mehr anzeigen" angehakt
+  private _willkommen_ausgeblendet() {
+    this.willkommenHidden = true;
+  }
 
   // Klick auf den Button im Tab Haupt: beim ersten Mal Hinweis auf die Einstellung im Tab ꔷꔷꔷ
   private async _click_intro_video() {
@@ -334,6 +348,7 @@ export class drHaupt extends LitElement {
         </div>
 
         <dr-dialog_neue_eingabe id="id_dialog_neue_eingabe"></dr-dialog_neue_eingabe>
+        <dr-dialog_willkommen id="id_dialog_willkommen" @willkommen-ausgeblendet="${this._willkommen_ausgeblendet}"></dr-dialog_willkommen>
 
         <div id="id_container" class="footer" >${theFooter}
           <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
@@ -365,7 +380,6 @@ export class drHaupt extends LitElement {
         <dr-dialog_knotenmasse id="id_dialog_knotenmasse"></dr-dialog_knotenmasse>
         <dr-dialog_stab_eigenschaften id="id_dialog_stab_eigenschaften"></dr-dialog_stab_eigenschaften>
         <dr-dialog_einstellungen id="id_dialog_einstellungen"></dr-dialog_einstellungen>
-        <dr-dialog_info id="id_dialog_info"></dr-dialog_info>
         <dr-dialog_messen id="id_dialog_messen"></dr-dialog_messen>
         <dr-dialog_bemassung id="id_dialog_bemassung"></dr-dialog_bemassung>
         <dr-dialog_knotenverformung id="id_dialog_knotenverformung"></dr-dialog_knotenverformung>
@@ -1206,6 +1220,16 @@ export class drHaupt extends LitElement {
                 <td>&nbsp;</td>
               </tr>
               <tr>
+                <td>${msg('Willkommensdialog:')}</td>
+                <td>
+                  <sl-checkbox id="id_willkommen_visible" ?checked=${!this.willkommenHidden}
+                    @sl-change="${this._change_willkommen_visible}">${msg('beim Start anzeigen')}</sl-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
                 <td>${msg('Größe der Buttons im Tab System:')}</td>
                 <td>
                   <select name="cadButtonSize" id="id_cad_button_size">
@@ -1298,6 +1322,10 @@ export class drHaupt extends LitElement {
         </div>
       </sl-tab-panel>
     </sl-tab-group>
+
+    <!-- Info-Dialog außerhalb der Tab-Panels: wird auch aus Tab Haupt (Willkommensdialog) geöffnet,
+         in einem ausgeblendeten Panel wäre er modal, aber unsichtbar -->
+    <dr-dialog_info id="id_dialog_info"></dr-dialog_info>
 
   `;
 

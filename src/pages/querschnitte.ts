@@ -742,6 +742,36 @@ export function dialog_querschnitt_closed(e: any) {
 
 
 //---------------------------------------------------------------------------------------------------------------
+export function standard_querschnitt_anlegen(qname: string) {
+    //------------------------------------------------------------------------------------------------------------
+    // Legt einen Querschnitt mit den Startwerten des Rechteck-Dialogs an, ohne den Dialog zu zeigen.
+    // Aufgerufen vom Willkommensdialog nach "Neues System".
+
+    if (check_if_name_exists(qname)) {
+        return;
+    }
+
+    const shadow = (document.getElementById('id_haupt') as drHaupt).shadowRoot;
+    if (!shadow) return;
+
+    const root = (shadow.getElementById("id_dialog_rechteck") as drRechteckQuerSchnitt).shadowRoot!;
+    const num = (elemId: string) =>
+        Number((root.getElementById(elemId) as HTMLInputElement).value.replace(/,/g, "."));
+
+    incr_querschnitts_zaehler();
+    const id = "mat-" + querschnitts_zaehler;
+
+    incr_querschnittSets();
+    set_querschnittRechteck(qname, id, num("emodul"), num("traeg_y"), num("area"), num("height"), num("width"),
+        num("id_defquerschnitt"), num("wichte"), num("schubfaktor"), num("querdehnzahl"), num("zso"), num("alpha_t"),
+        num("id_TQ_flanschbreite"), num("id_TQ_flanschhoehe"), num("id_TQ_stegbreite_oben"), num("id_TQ_stegbreite_unten"),
+        num("id_TQ_steghoehe"), num("id_fakt_dehn"));
+    add_new_cross_section(qname, id);
+
+    berechnungErforderlich(true);
+}
+
+//---------------------------------------------------------------------------------------------------------------
 export function set_querschnittRechteck(name: string, id: string, emodul: number, Iy: number, area: number, height: number, width: number,
     definedQuerschnitt: number, wichte: number, schubfaktor: number, querdehnzahl: number, zso: number, alphaT: number,
     flanschbreite: number, flanschhoehe: number, stegbreite_oben: number, stegbreite_unten: number, steghoehe: number, faktor_dehn: number) {

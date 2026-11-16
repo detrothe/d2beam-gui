@@ -1988,6 +1988,58 @@ Le fichier est enregistré dans le dossier de téléchargement par défaut</targ
             Finger kannst du unter Einstellungen GUI ändern.</source>
   <target>Pour permettre une saisie précise, le curseur de saisie se trouve à côté du doigt. Pose le doigt sur l'écran, déplace le <x id="0" equiv-text="&lt;b&gt;"/>curseur<x id="1" equiv-text="&lt;/b&gt;"/> à l'endroit souhaité, puis lève le doigt. Lever le doigt a ici la même fonction qu'un clic gauche de la souris. Si une autre saisie est nécessaire, comme pour l'extrémité de la barre, repose le doigt sur l'écran et déplace le curseur à l'endroit souhaité. Lever à nouveau le doigt termine la saisie. Tu peux modifier la distance et la position (signe) du curseur par rapport au doigt sous Paramètres GUI.</target>
 </trans-unit>
+<trans-unit id="s57d9500cadfb07d1">
+  <source>Dort weitermachen, wo du aufgehört hast.</source>
+  <target>Reprends là où tu t’es arrêté.</target>
+</trans-unit>
+<trans-unit id="s4575e1d889edbec4">
+  <source>Letztes System öffnen</source>
+  <target>Ouvrir le dernier système</target>
+</trans-unit>
+<trans-unit id="s8c5885814d8e3b43">
+  <source>Willkommen bei D2Beam</source>
+  <target>Bienvenue dans D2Beam</target>
+</trans-unit>
+<trans-unit id="s25a12c30a4450a08">
+  <source>Ebene Stab- und Fachwerke nach Theorie I. und II. Ordnung. Wie möchtest du beginnen?</source>
+  <target>Portiques et treillis plans selon la théorie du premier et du second ordre. Comment veux-tu commencer ?</target>
+</trans-unit>
+<trans-unit id="s2b88bbf30271c140">
+  <source>Neues System</source>
+  <target>Nouveau système</target>
+</trans-unit>
+<trans-unit id="s5f849f19cbb3c039">
+  <source>Stabwerk oder Fachwerk anlegen. Ein Standard-Querschnitt ist schon dabei, du startest direkt im Tab System.</source>
+  <target>Crée un portique ou un treillis. Une section standard est déjà incluse et tu commences directement dans l’onglet Système.</target>
+</trans-unit>
+<trans-unit id="seef3fab04664b73e">
+  <source>Einführungsvideos</source>
+  <target>Vidéos d’introduction</target>
+</trans-unit>
+<trans-unit id="s136275d07f842a33">
+  <source>In wenigen Minuten vom ersten Stab bis zur Momentenlinie. Öffnet sich in einem neuen Browser-Tab.</source>
+  <target>De la première barre au diagramme des moments en quelques minutes. S’ouvre dans un nouvel onglet du navigateur.</target>
+</trans-unit>
+<trans-unit id="sb0c60676c52655e3">
+  <source>Datei öffnen</source>
+  <target>Ouvrir un fichier</target>
+</trans-unit>
+<trans-unit id="sd7751a9ce025657c">
+  <source>Diesen Dialog nicht mehr anzeigen</source>
+  <target>Ne plus afficher cette boîte de dialogue</target>
+</trans-unit>
+<trans-unit id="sf3dd0b2cc55b8e6b">
+  <source>Willkommensdialog:</source>
+  <target>Boîte de dialogue d’accueil :</target>
+</trans-unit>
+<trans-unit id="s57f7fa2678cdfb6f">
+  <source>beim Start anzeigen</source>
+  <target>afficher au démarrage</target>
+</trans-unit>
+<trans-unit id="sf5d94ddae3bbefee">
+  <source>Kurzinformationen zur grafischen Eingabe</source>
+  <target>Informations rapides sur la saisie graphique</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

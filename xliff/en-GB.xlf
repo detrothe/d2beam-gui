@@ -1989,6 +1989,58 @@ The file is saved in the default download folder</target>
             Finger kannst du unter Einstellungen GUI ändern.</source>
   <target>To enable precise input, the input cursor is located next to your finger. Place your input finger on the screen and move the <x id="0" equiv-text="&lt;b&gt;"/>cursor<x id="1" equiv-text="&lt;/b&gt;"/> to the desired location, then lift your finger from the screen. Lifting your finger has the same function as pressing the left mouse button. If, as when entering the end of the bar, further input is required, place your finger back on the screen and move the cursor to the desired location. Lifting your finger again ends the input. You can change the distance and position (sign) of the cursor from your finger under Settings GUI.</target>
 </trans-unit>
+<trans-unit id="s57d9500cadfb07d1">
+  <source>Dort weitermachen, wo du aufgehört hast.</source>
+  <target>Continue where you left off.</target>
+</trans-unit>
+<trans-unit id="s4575e1d889edbec4">
+  <source>Letztes System öffnen</source>
+  <target>Open last system</target>
+</trans-unit>
+<trans-unit id="s8c5885814d8e3b43">
+  <source>Willkommen bei D2Beam</source>
+  <target>Welcome to D2Beam</target>
+</trans-unit>
+<trans-unit id="s25a12c30a4450a08">
+  <source>Ebene Stab- und Fachwerke nach Theorie I. und II. Ordnung. Wie möchtest du beginnen?</source>
+  <target>Plane frames and trusses, first- and second-order theory. How would you like to start?</target>
+</trans-unit>
+<trans-unit id="s2b88bbf30271c140">
+  <source>Neues System</source>
+  <target>New system</target>
+</trans-unit>
+<trans-unit id="s5f849f19cbb3c039">
+  <source>Stabwerk oder Fachwerk anlegen. Ein Standard-Querschnitt ist schon dabei, du startest direkt im Tab System.</source>
+  <target>Create a frame or truss. A default cross section is already included, and you start directly in the System tab.</target>
+</trans-unit>
+<trans-unit id="seef3fab04664b73e">
+  <source>Einführungsvideos</source>
+  <target>Introductory videos</target>
+</trans-unit>
+<trans-unit id="s136275d07f842a33">
+  <source>In wenigen Minuten vom ersten Stab bis zur Momentenlinie. Öffnet sich in einem neuen Browser-Tab.</source>
+  <target>From the first member to the bending moment diagram in a few minutes. Opens in a new browser tab.</target>
+</trans-unit>
+<trans-unit id="sb0c60676c52655e3">
+  <source>Datei öffnen</source>
+  <target>Open file</target>
+</trans-unit>
+<trans-unit id="sd7751a9ce025657c">
+  <source>Diesen Dialog nicht mehr anzeigen</source>
+  <target>Don’t show this dialog again</target>
+</trans-unit>
+<trans-unit id="sf3dd0b2cc55b8e6b">
+  <source>Willkommensdialog:</source>
+  <target>Welcome dialog:</target>
+</trans-unit>
+<trans-unit id="s57f7fa2678cdfb6f">
+  <source>beim Start anzeigen</source>
+  <target>show at startup</target>
+</trans-unit>
+<trans-unit id="sf5d94ddae3bbefee">
+  <source>Kurzinformationen zur grafischen Eingabe</source>
+  <target>Brief information on graphical input</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
