@@ -186,7 +186,13 @@ export function init_haupt3() {
                 document.documentElement.style.overflow = (aktiverTabName === 'tab-info') ? 'hidden' : '';
                 if (aktiverTabName === 'tab-info') requestAnimationFrame(() => set_info());   // erst nach dem Einblenden messbar
             });
-            window.addEventListener('resize', () => requestAnimationFrame(() => set_info()));   // nach dem neuen Layout messen
+            // nach dem neuen Layout messen; iPadOS meldet beim Drehen die neue Größe teils verspätet
+            let timer_info: number | undefined;
+            window.addEventListener('resize', () => {
+                requestAnimationFrame(() => set_info());
+                clearTimeout(timer_info);
+                timer_info = window.setTimeout(() => set_info(), 300);
+            });
         }
 
     }

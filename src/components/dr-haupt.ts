@@ -1129,7 +1129,7 @@ export class drHaupt extends LitElement {
       <!--------------------------------------------------------------------------------------->
       <sl-tab-panel name="tab-info">
         <div id="id_hilfe" class="c_hilfe">
-          <div id="id_doc_frame" style="position: relative; width: 760px; left:50%;">
+          <div id="id_doc_frame" style="width: min(760px, 100%); margin: 0 auto;">   <!-- zentriert per CSS, auch beim Drehen -->
             <iframe
               id="id_doc_de"
               src="Kurzdokumentation_deutsch.html"

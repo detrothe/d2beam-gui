@@ -74,8 +74,9 @@ export function myFormat_en(wert: any, minDecimal: any, maxDecimal: any, notatio
 //------------------------------------------------------------------------------------------------
 export function set_info() {
     //--------------------------------------------------------------------------------------------
-    // Größe der iframes mit den Kurzdokumentationen im Tab Info: Breite max. 760px, Höhe bis zum
-    // unteren Fensterrand, damit nur das iframe scrollt und kein äußerer Scrollbalken entsteht
+    // Höhe der iframes mit den Kurzdokumentationen im Tab Info bis zum unteren Fensterrand,
+    // damit nur das iframe scrollt und kein äußerer Scrollbalken entsteht.
+    // Breite und Zentrierung macht CSS (id_doc_frame: width min(760px, 100%), margin auto).
 
     const DOC_IDS = ['id_doc_de', 'id_doc_en', 'id_doc_es', 'id_doc_fr', 'id_doc_it'];
 
@@ -90,14 +91,7 @@ export function set_info() {
     // sonst halten sich vertikaler und horizontaler Scrollbalken gegenseitig
     if (sichtbar) for (const f of frames) f.setAttribute('height', '200px');
 
-    const clientWidth = document.documentElement.clientWidth;      // erzwingt Layout mit kleiner Höhe
-    const clientHeight = document.documentElement.clientHeight;
-    const breite = Math.min(clientWidth, 760);
-
-    for (const f of frames) f.setAttribute('width', breite + 'px');
-
-    const left = Math.max(0, (clientWidth - breite) / 2);
-    (shadow.getElementById("id_doc_frame") as HTMLDivElement).style.left = left + 'px';
+    const clientHeight = document.documentElement.clientHeight;    // erzwingt Layout mit kleiner Höhe
 
     // Höhe nur messbar, wenn der Tab Info sichtbar ist (sonst top = 0)
     if (!sichtbar) return;
