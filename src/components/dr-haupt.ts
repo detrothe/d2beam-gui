@@ -171,6 +171,10 @@ export class drHaupt extends LitElement {
     #querschnittwerte_table { border-spacing: 2px; }
     #querschnittwerte_table td:first-child { font-size: 0.9rem; }
   }
+  /* Scroll-Pfeil der Tab-Leiste ragt sonst bei schmalen Fenstern 2px über den Rand
+     -> horizontaler und damit auch vertikaler Scrollbalken der ganzen Seite */
+  sl-tab-group::part(nav) { overflow: hidden; }
+
   @media (prefers-color-scheme: dark) {
       sl-tab::part(base) { color: yellow; font-size: 1rem;}
       sl-tab[active]::part(base) { color: var(--user_accent, #4da3ff); }   /* Akzentfarbe aus Tab ꔷꔷꔷ */

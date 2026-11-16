@@ -181,7 +181,12 @@ export function init_haupt3() {
                 } else {
                     set_unterdrueckeKontextmenue(false);
                 }
+           
+                // Tab Info: nur das iframe der Kurzdokumentation scrollt, die Seite selbst nie
+                document.documentElement.style.overflow = (aktiverTabName === 'tab-info') ? 'hidden' : '';
+                if (aktiverTabName === 'tab-info') requestAnimationFrame(() => set_info());   // erst nach dem Einblenden messbar
             });
+            window.addEventListener('resize', () => requestAnimationFrame(() => set_info()));   // nach dem neuen Layout messen
         }
 
     }

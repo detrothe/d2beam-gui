@@ -74,24 +74,42 @@ export function myFormat_en(wert: any, minDecimal: any, maxDecimal: any, notatio
 //------------------------------------------------------------------------------------------------
 export function set_info() {
     //--------------------------------------------------------------------------------------------
+    // Größe der iframes mit den Kurzdokumentationen im Tab Info: Breite max. 760px, Höhe bis zum
+    // unteren Fensterrand, damit nur das iframe scrollt und kein äußerer Scrollbalken entsteht
 
-    let clientWidth = document.documentElement.clientWidth;
-    let clientHeight = document.documentElement.clientHeight;
-    let breite = Math.min(clientWidth, 760);
+    const DOC_IDS = ['id_doc_de', 'id_doc_en', 'id_doc_es', 'id_doc_fr', 'id_doc_it'];
 
-    const elHaupt = document.getElementById('id_haupt');
-    let shadow = elHaupt?.shadowRoot;
-    if (shadow) {
-        shadow.getElementById("id_doc_de")?.setAttribute("width", breite + "px");
-        shadow.getElementById("id_doc_de")?.setAttribute("height", clientHeight + "px");
-        shadow.getElementById("id_doc_en")?.setAttribute("width", breite + "px");
-        shadow.getElementById("id_doc_en")?.setAttribute("height", clientHeight + "px");
-        shadow.getElementById("id_doc_es")?.setAttribute("width", breite + "px");
-        shadow.getElementById("id_doc_es")?.setAttribute("height", clientHeight + "px");
-        let left = (clientWidth - breite) / 2
-        if (left < 0) left = 0;
-        (shadow.getElementById("id_doc_frame") as HTMLDivElement).style.left = left + 'px';
-        //console.log("id_doc_frame", (clientWidth - breite) / 2)
+    const shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (!shadow) return;
+
+    const frames = DOC_IDS.map(id => shadow.getElementById(id) as HTMLIFrameElement | null)
+        .filter((f): f is HTMLIFrameElement => f !== null);
+    const sichtbar = frames.find(f => f.offsetParent !== null);
+
+    // erst verkleinern, damit von der alten Größe verursachte Scrollbalken verschwinden,
+    // sonst halten sich vertikaler und horizontaler Scrollbalken gegenseitig
+    if (sichtbar) for (const f of frames) f.setAttribute('height', '200px');
+
+    const clientWidth = document.documentElement.clientWidth;      // erzwingt Layout mit kleiner Höhe
+    const clientHeight = document.documentElement.clientHeight;
+    const breite = Math.min(clientWidth, 760);
+
+    for (const f of frames) f.setAttribute('width', breite + 'px');
+
+    const left = Math.max(0, (clientWidth - breite) / 2);
+    (shadow.getElementById("id_doc_frame") as HTMLDivElement).style.left = left + 'px';
+
+    // Höhe nur messbar, wenn der Tab Info sichtbar ist (sonst top = 0)
+    if (!sichtbar) return;
+
+    let hoehe = clientHeight - sichtbar.getBoundingClientRect().top;
+    for (const f of frames) f.setAttribute('height', Math.max(200, hoehe) + 'px');
+
+    // was danach noch übersteht (Innenabstand des Tab-Panels, Footer, ...) abziehen
+    const ueberstand = document.documentElement.scrollHeight - clientHeight;
+    if (ueberstand > 0) {
+        hoehe -= ueberstand;
+        for (const f of frames) f.setAttribute('height', Math.max(200, hoehe) + 'px');
     }
 }
 
