@@ -681,29 +681,11 @@ export function cad_buttons() {
     ellast_button.value = "Elementlast";
     ellast_button.className = "btn_cad";
     // ellast_button.innerHTML = msg('ElLast');
-    ellast_button.innerHTML = `
-      <svg version="1.2" width="1rem" height="1rem" viewBox="947 673 2857 1531" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
-        <g class="Master_Slide">
-          <g class="Background"/>
-          <g class="BackgroundObjects"/>
-        </g>
-        <g class="SlideGroup">
-          <g class="Slide" clip-path="url(#a)">
-            <g class="Page">
-              <g fill="none">
-                <path class="BoundingBox" d="M947 2687h2857v117H947z"/>
-                <path stroke="#ffffff" stroke-width="306" d="m1000 2740 2750 10"/>
-              </g>
-              <g>
-                <path class="BoundingBox" fill="none" d="M973 973h2806v1306H973z"/>
-                <path fill="#b2b2b2" d="m1000 1249 2751-249v1251H1000z"/>
-                <path fill="none" stroke="#ffffff" stroke-width="53" d="m1000 1249 2751-249v1251H1000z"/>
-              </g>
-            </g>
-          </g>
-        </g>
-      </svg>
-    `;
+    // Balken mit Trapezlast; quadratische viewBox entspricht dem bisherigen Ausschnitt (xMidYMid)
+    ellast_button.innerHTML = `<svg width="1rem" height="1rem" viewBox="947 10 2857 2857" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#b2b2b2" stroke="#ffffff" stroke-width="53" d="m1000 1249 2751-249v1251H1000z"/>
+      <path fill="none" stroke="#ffffff" stroke-width="306" d="m1000 2740 2750 10"/>
+    </svg>`;
     ellast_button.addEventListener("click", Elementlast_button);
     // stab_button.addEventListener('keydown', keydown);
     ellast_button.title = msg('Eingabe Elementlasten');
