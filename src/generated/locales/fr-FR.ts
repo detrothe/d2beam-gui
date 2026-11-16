@@ -9,7 +9,8 @@
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      'hb9d2ebb8b6b2ade4': html`Pour permettre une saisie précise, le curseur de saisie se trouve à côté du doigt. Pose le doigt sur l'écran, déplace le <b>curseur</b> à l'endroit souhaité, puis lève le doigt. Lever le doigt a ici la même fonction qu'un clic gauche de la souris. Si une autre saisie est nécessaire, comme pour l'extrémité de la barre, repose le doigt sur l'écran et déplace le curseur à l'endroit souhaité. Lever à nouveau le doigt termine la saisie. Tu peux modifier la distance et la position (signe) du curseur par rapport au doigt sous Paramètres GUI.`,
+      'h1f7ab6eb51e4e521': html`La taille des tableaux peut être modifiée à tout moment avec les boutons situés au-dessus des tableaux.<br>Après les modifications, un nouveau calcul est nécessaire.`,
+'hb9d2ebb8b6b2ade4': html`Pour permettre une saisie précise, le curseur de saisie se trouve à côté du doigt. Pose le doigt sur l'écran, déplace le <b>curseur</b> à l'endroit souhaité, puis lève le doigt. Lever le doigt a ici la même fonction qu'un clic gauche de la souris. Si une autre saisie est nécessaire, comme pour l'extrémité de la barre, repose le doigt sur l'écran et déplace le curseur à l'endroit souhaité. Lever à nouveau le doigt termine la saisie. Tu peux modifier la distance et la position (signe) du curseur par rapport au doigt sous Paramètres GUI.`,
 's024ea829b08630c0': `Les vidéos d'introduction se trouvent aussi dans le dernier onglet ꔷꔷꔷ (tout à droite). Vous pouvez y masquer ce bouton dans l'onglet Principal si vous n'en avez plus besoin.`,
 's0278681b3145d48b': `Facteur de décalage du curseur pour la saisie tactile (doigt) (à 0, le curseur se trouve directement sous le doigt) :`,
 's02a67a5e0d12eb12': `Ne pas afficher les unités dans le graphique`,
@@ -189,7 +190,6 @@ Réalisé par : Alex Exemple`,
 's59afc2d10f246311': `Imperfection locale`,
 's59c4f50a5787fc24': `Il existe déjà une barre entre ces nœuds`,
 's5b181c0144d4e645': `Efforts/moments aux extrémités des barres`,
-'s5b4332874f0c4bf5': `La taille des tableaux peut être modifiée à tout moment avec les boutons situés au-dessus des tableaux.&lt;br /&gt; Après les modifications, un nouveau calcul est nécessaire`,
 's5bfa8df7ff3f340a': `Type de barre`,
 's5c1fb6f38c79e9c4': `En théorie du 1er ordre avec des propriétés de matériaux linéaires, les combinaisons sont facultatives. En théorie du 2nd ordre et/ou avec des propriétés de matériaux non linéaires, au moins une combinaison doit être définie.`,
 's5c2cea4a0d9a497d': `Facteur de rigidité axiale :`,

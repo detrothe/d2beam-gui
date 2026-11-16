@@ -9,7 +9,8 @@
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      'hb9d2ebb8b6b2ade4': html`To enable precise input, the input cursor is located next to your finger. Place your input finger on the screen and move the <b>cursor</b> to the desired location, then lift your finger from the screen. Lifting your finger has the same function as pressing the left mouse button. If, as when entering the end of the bar, further input is required, place your finger back on the screen and move the cursor to the desired location. Lifting your finger again ends the input. You can change the distance and position (sign) of the cursor from your finger under Settings GUI.`,
+      'h1f7ab6eb51e4e521': html`The table sizes can be changed at any time later using the buttons located above the tables.<br>A recalculation is necessary after the changes.`,
+'hb9d2ebb8b6b2ade4': html`To enable precise input, the input cursor is located next to your finger. Place your input finger on the screen and move the <b>cursor</b> to the desired location, then lift your finger from the screen. Lifting your finger has the same function as pressing the left mouse button. If, as when entering the end of the bar, further input is required, place your finger back on the screen and move the cursor to the desired location. Lifting your finger again ends the input. You can change the distance and position (sign) of the cursor from your finger under Settings GUI.`,
 's024ea829b08630c0': `The introductory videos can also be found in the last tab ꔷꔷꔷ (far right). There you can hide this button in the Main tab if you no longer need it.`,
 's0278681b3145d48b': `Cursor offset factor for touch (finger) input (at 0, the cursor is directly under the finger):`,
 's02a67a5e0d12eb12': `Do not display units in graph`,
@@ -189,8 +190,6 @@ Prepared by: Alex Example`,
 's59afc2d10f246311': `local imperfection`,
 's59c4f50a5787fc24': `There is already a member between these nodes`,
 's5b181c0144d4e645': `Element forces/moments`,
-'s5b4332874f0c4bf5': `The table sizes can be changed at any time later using the buttons located above the tables.
-           A recalculation is necessary after the changes.`,
 's5bfa8df7ff3f340a': `Type of element`,
 's5c1fb6f38c79e9c4': `For first-order theory and linear material properties, combinations are optional. For second-order theory and/or nonlinear material properties, at least one combination must be defined.`,
 's5c2cea4a0d9a497d': `Axial stiffness factor:`,

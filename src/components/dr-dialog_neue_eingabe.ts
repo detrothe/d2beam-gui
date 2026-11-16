@@ -139,9 +139,9 @@ export class drDialogNeueEingabe extends LitElement {
 
          <p>${msg('Hinweis: Alle Eingaben werden gelöscht !')}</p>
          <p>
-            ${msg(`Die Tabellengrößen können später jederzeit mit den Buttons, die sich
+            ${msg(html`Die Tabellengrößen können später jederzeit mit den Buttons, die sich
             oberhalb der Tabellen befinden, geändert werden.<br />
-            Nach den Änderungen ist eine Neuberechnung erforderlich`)}
+            Nach den Änderungen ist eine Neuberechnung erforderlich.`)}
          </p>
 
          <p>

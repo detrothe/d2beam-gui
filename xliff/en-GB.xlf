@@ -234,13 +234,6 @@
   <source>Hinweis: Alle Eingaben werden gelöscht !</source>
   <target>Note: All entries will be deleted!</target>
 </trans-unit>
-<trans-unit id="s5b4332874f0c4bf5">
-  <source>Die Tabellengrößen können später jederzeit mit den Buttons, die sich
-            oberhalb der Tabellen befinden, geändert werden.&lt;br /&gt;
-            Nach den Änderungen ist eine Neuberechnung erforderlich</source>
-  <target>The table sizes can be changed at any time later using the buttons located above the tables.
-           A recalculation is necessary after the changes.</target>
-</trans-unit>
 <trans-unit id="s1802ab88151d5b76">
   <source>Art des Systems :</source>
   <target>Type of system</target>
@@ -2040,6 +2033,12 @@ The file is saved in the default download folder</target>
 <trans-unit id="sf5d94ddae3bbefee">
   <source>Kurzinformationen zur grafischen Eingabe</source>
   <target>Brief information on graphical input</target>
+</trans-unit>
+<trans-unit id="h1f7ab6eb51e4e521">
+  <source>Die Tabellengrößen können später jederzeit mit den Buttons, die sich
+            oberhalb der Tabellen befinden, geändert werden.<x id="0" equiv-text="&lt;br&gt;"/>
+            Nach den Änderungen ist eine Neuberechnung erforderlich.</source>
+  <target>The table sizes can be changed at any time later using the buttons located above the tables.<x id="0" equiv-text="&lt;br&gt;"/>A recalculation is necessary after the changes.</target>
 </trans-unit>
 </body>
 </file>

@@ -9,7 +9,8 @@
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      'hb9d2ebb8b6b2ade4': html`Per consentire un inserimento preciso, il cursore si trova accanto al dito. Appoggia il dito sullo schermo, sposta il <b>cursore</b> nel punto desiderato e poi solleva il dito. Sollevare il dito ha qui la stessa funzione del clic sinistro del mouse. Se è necessario un ulteriore inserimento, come per la fine dell'asta, appoggia di nuovo il dito sullo schermo e sposta il cursore nel punto desiderato. Sollevando di nuovo il dito l'inserimento termina. La distanza e la posizione (segno) del cursore rispetto al dito si possono modificare in Impostazioni GUI.`,
+      'h1f7ab6eb51e4e521': html`Le dimensioni delle tabelle possono essere modificate in qualsiasi momento con i pulsanti posti sopra le tabelle.<br>Dopo le modifiche è necessario un nuovo calcolo.`,
+'hb9d2ebb8b6b2ade4': html`Per consentire un inserimento preciso, il cursore si trova accanto al dito. Appoggia il dito sullo schermo, sposta il <b>cursore</b> nel punto desiderato e poi solleva il dito. Sollevare il dito ha qui la stessa funzione del clic sinistro del mouse. Se è necessario un ulteriore inserimento, come per la fine dell'asta, appoggia di nuovo il dito sullo schermo e sposta il cursore nel punto desiderato. Sollevando di nuovo il dito l'inserimento termina. La distanza e la posizione (segno) del cursore rispetto al dito si possono modificare in Impostazioni GUI.`,
 's024ea829b08630c0': `I video introduttivi si trovano anche nell'ultima scheda ꔷꔷꔷ (a destra). Lì è possibile nascondere questo pulsante nella scheda Principale se non serve più.`,
 's0278681b3145d48b': `Fattore di spostamento del cursore per l'inserimento touch (dito) (con 0 il cursore si trova direttamente sotto il dito):`,
 's02a67a5e0d12eb12': `Non mostrare le unità nel grafico`,
@@ -189,7 +190,6 @@ Elaborato da: Alex Esempio`,
 's59afc2d10f246311': `Imperfezione locale`,
 's59c4f50a5787fc24': `Esiste già un'asta tra questi nodi`,
 's5b181c0144d4e645': `Forze/momenti alle estremità delle aste`,
-'s5b4332874f0c4bf5': `Le dimensioni delle tabelle possono essere modificate in qualsiasi momento con i pulsanti posti sopra le tabelle.&lt;br /&gt; Dopo le modifiche è necessario un nuovo calcolo`,
 's5bfa8df7ff3f340a': `Tipo di asta`,
 's5c1fb6f38c79e9c4': `Con la teoria del I ordine e proprietà dei materiali lineari le combinazioni sono facoltative. Con la teoria del II ordine e/o proprietà dei materiali non lineari deve essere definita almeno una combinazione.`,
 's5c2cea4a0d9a497d': `Fattore di rigidezza assiale:`,

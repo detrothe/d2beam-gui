@@ -9,7 +9,8 @@
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      'hb9d2ebb8b6b2ade4': html`Para permitir entradas precisas, el cursor de entrada se encuentra junto al dedo. Coloca el dedo de entrada en la pantalla y mueve el <b>cursor</b> al lugar deseado, y luego levanta el dedo de la pantalla. Levantar el dedo tiene aquí la misma función que pulsar el botón izquierdo del ratón. Si, al igual que al introducir el extremo de la barra, se requiere otra entrada, vuelve a colocar el dedo en la pantalla y mueve el cursor al lugar deseado. Al levantar el dedo de nuevo, se finaliza la entrada. Puedes cambiar la distancia y la posición (signo) del cursor con respecto al dedo en Ajustes GUI.`,
+      'h1f7ab6eb51e4e521': html`El tamaño de las tablas se puede modificar en cualquier momento utilizando los botones situados encima de las mismas.<br>Tras los cambios, es necesario realizar un nuevo cálculo.`,
+'hb9d2ebb8b6b2ade4': html`Para permitir entradas precisas, el cursor de entrada se encuentra junto al dedo. Coloca el dedo de entrada en la pantalla y mueve el <b>cursor</b> al lugar deseado, y luego levanta el dedo de la pantalla. Levantar el dedo tiene aquí la misma función que pulsar el botón izquierdo del ratón. Si, al igual que al introducir el extremo de la barra, se requiere otra entrada, vuelve a colocar el dedo en la pantalla y mueve el cursor al lugar deseado. Al levantar el dedo de nuevo, se finaliza la entrada. Puedes cambiar la distancia y la posición (signo) del cursor con respecto al dedo en Ajustes GUI.`,
 's024ea829b08630c0': `Los vídeos introductorios también se encuentran en la última pestaña ꔷꔷꔷ (a la derecha). Allí se puede ocultar este botón en la pestaña Principal si ya no se necesita.`,
 's0278681b3145d48b': `Factor de desplazamiento del cursor en la entrada táctil (dedo) (en 0, el cursor se encuentra directamente debajo del dedo):`,
 's02a67a5e0d12eb12': `No mostrar unidades en el gráfico`,
@@ -189,8 +190,6 @@ Elaborado por: Alex Ejemplo`,
 's59afc2d10f246311': `imperfección local`,
 's59c4f50a5787fc24': `Ya existe una barra entre estos nudos`,
 's5b181c0144d4e645': `Fuerzas/momentos de los elementos`,
-'s5b4332874f0c4bf5': `El tamaño de las tablas se puede modificar en cualquier momento utilizando los botones situados encima de las mismas.
-          Tras los cambios, es necesario realizar un nuevo cálculo.`,
 's5bfa8df7ff3f340a': `Tipo de elemento`,
 's5c1fb6f38c79e9c4': `En el caso de la teoría de primer orden y las propiedades lineales de los materiales, las combinaciones son opcionales. En el caso de la teoría de segundo orden y/o las propiedades no lineales de los materiales, se debe definir al menos una combinación.`,
 's5c2cea4a0d9a497d': `factor de rigidez axial:`,

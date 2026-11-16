@@ -234,13 +234,6 @@
   <source>Hinweis: Alle Eingaben werden gelöscht !</source>
 <target>Aviso: ¡Se borrarán todos los datos introducidos!</target>
 </trans-unit>
-<trans-unit id="s5b4332874f0c4bf5">
-  <source>Die Tabellengrößen können später jederzeit mit den Buttons, die sich
-            oberhalb der Tabellen befinden, geändert werden.&lt;br /&gt;
-            Nach den Änderungen ist eine Neuberechnung erforderlich</source>
-  <target>El tamaño de las tablas se puede modificar en cualquier momento utilizando los botones situados encima de las mismas.
-          Tras los cambios, es necesario realizar un nuevo cálculo.</target>
-</trans-unit>
 <trans-unit id="s1802ab88151d5b76">
   <source>Art des Systems :</source>
 <target>Tipo de sistema:</target>
@@ -2041,6 +2034,12 @@ El archivo se guarda en la carpeta de descargas predeterminada</target>
 <trans-unit id="sf5d94ddae3bbefee">
   <source>Kurzinformationen zur grafischen Eingabe</source>
   <target>Información breve sobre la entrada gráfica</target>
+</trans-unit>
+<trans-unit id="h1f7ab6eb51e4e521">
+  <source>Die Tabellengrößen können später jederzeit mit den Buttons, die sich
+            oberhalb der Tabellen befinden, geändert werden.<x id="0" equiv-text="&lt;br&gt;"/>
+            Nach den Änderungen ist eine Neuberechnung erforderlich.</source>
+  <target>El tamaño de las tablas se puede modificar en cualquier momento utilizando los botones situados encima de las mismas.<x id="0" equiv-text="&lt;br&gt;"/>Tras los cambios, es necesario realizar un nuevo cálculo.</target>
 </trans-unit>
 </body>
 </file>
