@@ -3,13 +3,11 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport"
-			content="width=device-width, initial-scale=1, minimal-ui">
+			content="width=device-width, initial-scale=1">
 		<title>Stabwerksprogramm d2beam-GUI für ebene Systeme</title>
 		<meta name="author" content="Prof. Dr.-Ing. Detlef Rothe">
 		<meta name="AppVersion" content="15.0000">
-		<script id="MathJax-script" async
-			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-		<style type="text/css">
+		<style>
 		body {
 			font-size: 1em;
 			font-family: "FreeSans", sans-serif;
@@ -17,83 +15,57 @@
 		}
 
 		p {
-			line-height: 150%;
-			text-align: left;
 			margin-bottom: 0.6em;
-			direction: ltr;
-			background: transparent
 		}
 
-		ul {
-			line-height: 150%;
-		}
-
-		h1 {
-			color: #1c1c6a;
-			line-height: 115%;
-			text-align: left;
-			page-break-inside: avoid;
-			margin-top: 2em;
-			margin-bottom: 0;
-			direction: ltr;
-			background: transparent;
-			page-break-after: avoid
-		}
-
-		h1.western {
-			font-size: 1.2em;
-			font-weight: bold
-		}
-
-
+		h1,
 		h2 {
 			color: #1c1c6a;
 			line-height: 115%;
-			text-align: left;
-			page-break-inside: avoid;
-			margin-top: 0.83em;
+			font-weight: bold;
 			margin-bottom: 0;
-			direction: ltr;
-			background: transparent;
-			page-break-after: avoid
 		}
 
-		h2.western {
+		h1 {
+			font-size: 1.2em;
+			margin-top: 2em;
+		}
+
+		h2 {
 			font-size: 1.125em;
-			font-weight: bold
+			margin-top: 0.83em;
 		}
 
-
-		a:link {
-			color: #1c1c6a;
-			text-decoration: none
-		}
-
-		a:visited {
+		a {
 			color: #1c1c6a;
 			text-decoration: none;
 		}
 
-		a:hover {
-			text-decoration: none;
-		}
-
-		a:active {
-			text-decoration: none;
-		}
-
-		a[href^="#"]:before {
+		/* Pfeil nur vor den Links im Inhaltsverzeichnis; die Überschriften
+		   (href="#", Sprung nach oben) bekommen keinen */
+		a[href^="#"]:not([href="#"])::before {
 			content: '➡ ';
 		}
-        </style>
+
+		/* kleine Icons der Buttons im Fließtext */
+		img.icon {
+			height: 25px;
+			width: auto;
+			max-width: 100%;
+		}
+
+		/* Abbildungen, zentriert; Breite über das width-Attribut */
+		img.bild {
+			display: block;
+			margin: auto;
+			max-width: 100%;
+			height: auto;
+		}
+	</style>
 	</head>
-	<body
-		lang="de-DE"
-		link="#0000ff"
-		vlink="#800000"
-		dir="ltr">
-		<h1 class="western">Inhaltsverzeichnis</h1>
-		<p class="western">
+	<body>
+		<h1>Inhaltsverzeichnis</h1>
+		<p>
 			<a href="#uebersicht">Übersicht</a>
 			<br>
 			<a href="#gui">Grafische Eingabe</a>
@@ -123,7 +95,8 @@
 			<br>
 			<a href="#kontakt">Kontakt und Fehlermeldungen</a>
 			<br>
-			<h1 lang="de-DE" class="western" id="uebersicht">
+			</p>
+			<h1 id="uebersicht">
 				<a href="#">Übersicht</a>
 			</h1>
 			<p>
@@ -219,7 +192,7 @@
 				<br>
 				<br>
 			</p>
-			<h2 class="western" id="gui">
+			<h2 id="gui">
 				<a href="#">Grafische Eingabe</a>
 			</h2>
 			<p>
@@ -261,7 +234,7 @@
 					src="/assets/gui-icons/undo.png"
 					name="undo"
 					title="undo button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Undo Button: Löscht das zuletzt erstellte Element (Knoten, Stab, Lager,
 				Knotenlast oder Elementlast)
 				und speichert es im internen Papierkorb.
@@ -271,7 +244,7 @@
 					src="/assets/gui-icons/redo.png"
 					name="redo"
 					title="redo button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Redo Button: Holt das zuletzt in den Papierkorb gestellte Element
 				zurück.
 			</p>
@@ -280,7 +253,7 @@
 					src="/assets/gui-icons/loeschen.png"
 					name="loeschen"
 					title="löschen button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Löschen Button: Löscht ein anzuklickendes Element und speichert es im
 				internen Papierkorb.
 			</p>
@@ -289,7 +262,7 @@
 					src="/assets/gui-icons/select.png"
 					name="select"
 					title="select button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Select Button: Es ist ein vorhandenes Element anzuklicken. Danach
 				erscheint ein Dialog, in dem Änderungen
 				vorgenommen werden können.
@@ -299,7 +272,7 @@
 					src="/assets/gui-icons/knoten.png"
 					name="knoten"
 					title="knoten button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Knoten Button: Eingabe von Knotenkoordinaten (x,z) mithilfe eines
 				Dialogs. Hinweis: Die Eingabe von Knoten ist
 				nur
@@ -311,7 +284,7 @@
 					src="/assets/gui-icons/edit_knoten.png"
 					name="edit_knoten"
 					title="edit-knoten button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Edit Knoten Button: Die Koordinaten (x,z) von vorhandenen Knoten können
 				hier geändert werden.
 			</p>
@@ -320,7 +293,7 @@
 					src="/assets/gui-icons/lager.png"
 					name="lager"
 					title="lager button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Lager Button: Eingabe von Lagern. Hinweis: Lager können nur an
 				vorhandene Knoten gesetzt werden.
 			</p>
@@ -329,7 +302,7 @@
 					src="/assets/gui-icons/einstellungen.png"
 					name="einstellungen"
 					title="einstellungen button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Einstellungen Button: Hier können Einstellungen vorgenommen werden, die
 				für die grafische Eingabe nützlich sind.
 			</p>
@@ -338,7 +311,7 @@
 					src="/assets/gui-icons/reset.png"
 					name="reset"
 					title="reset button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Reset Button: Das System wird neu gezeichnet. Zoom und Drag werden
 				zurückgesetzt.
 			</p>
@@ -347,7 +320,7 @@
 					src="/assets/gui-icons/default_querschnitt.png"
 					name="default_querschnitt"
 					title="default_querschnitt combobox"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Default_Querschnitt Combobox: Der angezeigte Querschnittsname wird bei
 				der nächsten Stabeingabe verwendet. Es
 				können im Tab
@@ -358,7 +331,7 @@
 					src="/assets/gui-icons/stab.png"
 					name="stab"
 					title="stab button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Stab Button: Ein Stab wird durch Anfangs- und Endknoten definiert. Es
 				gelten folgende Fangregeln: Zuerst wird
 				innerhalb der
@@ -375,7 +348,7 @@
 					src="/assets/gui-icons/knotenlast.png"
 					name="knotenlast"
 					title="knotenlast button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Knotenlast Button: Eingabe von Knotenlasten. Hinweis: Knotenlasten
 				können nur an vorhandene Knoten gesetzt
 				werden.
@@ -385,7 +358,7 @@
 					src="/assets/gui-icons/elementlast.png"
 					name="elementlast"
 					title="element button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Elementlast Button: Eingabe von Stablasten. Hinweis: Stablasten können
 				nur auf vorhandene Stäbe wirken.
 			</p>
@@ -394,7 +367,7 @@
 					src="/assets/gui-icons/knotenmasse.png"
 					name="knotenmasse"
 					title="knotenmasse button"
-					style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+					class="icon">
 				Knotenmasse Button: Eingabe von Knotenmassen und
 				Massenträgheitsmomenten. Hinweis: Knotenmassen können nur an
 				vorhandene Knoten gesetzt werden.
@@ -406,14 +379,14 @@
 				<br>
 				<br>
 			</p>
-			<h2 class="western" id="vorzeichen">
+			<h2 id="vorzeichen">
 				<a href="#">Koordinatensystem und Vorzeichen</a>
 			</h2>
 			<img
 				src="/assets/def_d2beam.png"
 				name="definition_d2beam"
 				title="Definition Stabelement d2beam"
-				style="max-width:100%; width:400px; height:auto; border:0px; margin: auto; display: block;">
+				class="bild" width="400">
 			<p style="text-align: center;">
 				Stabelement d2beam mit starren Enden und
 				Gelenken
@@ -422,22 +395,22 @@
 				src="/assets/vorzeichen_lager_notxt.png"
 				name="vorzeichen_lager"
 				title="Vorzeichen Lager"
-				style="max-width:100%; width:209px; height:auto; border:0px; margin: auto; display: block;">
+				class="bild" width="209">
 			<p style="text-align: center;">Lagerkräfte am gedrehten Lager</p>
 			<img
 				src="/assets/gedrehtes_lager_notxt.png"
 				name="gedrehtes_lager"
 				title="gedrehtes Lager"
-				style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+				class="bild" width="175">
 			<p style="text-align: center;">starres Lager gedreht</p>
 			<img
 				src="/assets/definition_federn.png"
 				name="definition_federn"
 				title="Definition Federn"
-				style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+				class="bild" width="175">
 			<p style="text-align: center;">Lagerfedern gedreht</p>
 			<p>
-				<h1 class="western" id="hinweiseApp">
+				<h1 id="hinweiseApp">
 					<a href="#">
 						Weitere Hinweise zur
 						Bedienung der App
@@ -445,7 +418,7 @@
 				</h1>
 			</p>
 			<p>
-				<h2 class="western">Eingabe</h2>
+				<h2>Eingabe</h2>
 			</p>
 			<p>
 				Als Dezimal-Trennzeichen ist das Komma oder der Punkt zulässig.
@@ -541,7 +514,7 @@
 				werden.
 			</p>
 			<p>
-				<h2 class="western" id="darstellung_2D">
+				<h2 id="darstellung_2D">
 					<a href="#">
 						Darstellungen 2D
 					</a>
@@ -645,7 +618,7 @@
 				</ul>
 			</p>
 			<p>
-				<h2 class="western" id="svg">
+				<h2 id="svg">
 					<a href="#">Grafik speichern</a>
 				</h2>
 			</p>
@@ -663,7 +636,7 @@
 				kann die Grafik bearbeitet werden.
 			</p>
 			<p>
-				<h2 class="western" id="bezeichnungen">
+				<h2 id="bezeichnungen">
 					<a href="#">Bezeichnungen</a>
 				</h2>
 			</p>
@@ -678,7 +651,7 @@
 				Statik, siehe [2].
 			</p>
 			<p>
-				<h2 class="western" id="voreinstellungen">
+				<h2 id="voreinstellungen">
 					<a href="#">Voreinstellungen</a>
 				</h2>
 			</p>
@@ -702,7 +675,7 @@
 				erforderlich.
 			</p>
 			<p>
-				<h2 class="western" id="installation">
+				<h2 id="installation">
 					<a href="#">
 						Installation als App
 						auf dem Desktop
@@ -745,7 +718,7 @@
 					src="/assets/app-install-windows.png"
 					name="Bild4"
 					title="install windows"
-					style="max-width:100%; width:423px; height:auto; border:0px; margin: auto; display: block;">
+					class="bild" width="423">
 				<!--width:423px; height:111px-->
 				<br>
 				Bei neueren Chrome Versionen werden Sie unter Umständen direkt
@@ -755,7 +728,7 @@
 					src="/assets/chrome_install.png"
 					name="chrome_install"
 					title="chrome install"
-					style="max-width:100%; width:436px; height:auto; border:0px; margin: auto; display: block;">
+					class="bild" width="436">
 				<!--width:436px; height:155px-->
 			</p>
 			<p>
@@ -775,7 +748,7 @@
 				Desktop. Unter Windows wird die App wie ein normales Programm
 				deinstalliert.
 			</p>
-			<h2 class="western" id="kompatibilitaet">
+			<h2 id="kompatibilitaet">
 				<a href="#">
 					Kompatibilität und
 					Probleme
@@ -792,7 +765,7 @@
 				Nur die aktuellen Versionen werden getestet und unterstützt.
 			</p>
 			<!--  <p>Probleme: Unter Android Firefox funktioniert die Selektion der Zellen in den Tabellen nicht.</p>  -->
-			<h2 class="western" id="tastatur">
+			<h2 id="tastatur">
 				<a href="#">
 					Virtuelle
 					Tastatur
@@ -817,7 +790,7 @@
 				den installierten Tastaturen wechseln ( Icon rechts unten auf der
 				Tastatur).
 			</p>
-			<h2 class="western" id="faq">
+			<h2 id="faq">
 				<a href="#">Fragen und Antworten</a>
 			</h2>
 			<p>
@@ -844,7 +817,7 @@
 							src="/assets/gui-icons/edit_knoten.png"
 							name="edit_knoten"
 							title="edit-knoten button"
-							style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+							class="icon">
 						wählst und einen vorhandenen Knoten anklickst.
 					</li>
 				</ul>
@@ -852,7 +825,7 @@
 			<p>
 				<br>
 			</p>
-			<h2 class="western" id="kontakt">
+			<h2 id="kontakt">
 				<a href="#">
 					Kontakt und
 					Fehlermeldungen
@@ -868,7 +841,7 @@
 				<br>
 				<br>
 			</p>
-			<h1 class="western">
+			<h1>
 				<a href="#">Literatur</a>
 			</h1>
 			<p>
@@ -886,6 +859,5 @@
 				Finite Elemente in der Baustatik, 4. Auflage, Springer Vieweg, 2021
 				<br>Englische Ausgabe: Finite Elements in Structural Analysis, Springer, 2021
 			</p>
-		</p>
 	</body>
 </html>

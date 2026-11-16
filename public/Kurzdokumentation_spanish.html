@@ -3,12 +3,11 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Programa marco d2beam-GUI para sistemas planos</title>
 	<meta name="author" content="Prof. Dr.-Ing. Detlef Rothe">
 	<meta name="AppVersion" content="15.0000">
-	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-	<style type="text/css">
+	<style>
 		body {
 			font-size: 1em;
 			font-family: "FreeSans", sans-serif;
@@ -16,80 +15,58 @@
 		}
 
 		p {
-			line-height: 150%;
-			text-align: left;
 			margin-bottom: 0.6em;
-			direction: ltr;
-			background: transparent
 		}
 
-		ul {
-			line-height: 150%;
-		}
-
-		h1 {
-			color: #1c1c6a;
-			line-height: 115%;
-			text-align: left;
-			page-break-inside: avoid;
-			margin-top: 2em;
-			margin-bottom: 0;
-			direction: ltr;
-			background: transparent;
-			page-break-after: avoid
-		}
-
-		h1.western {
-			font-size: 1.2em;
-			font-weight: bold
-		}
-
-
+		h1,
 		h2 {
 			color: #1c1c6a;
 			line-height: 115%;
-			text-align: left;
-			page-break-inside: avoid;
-			margin-top: 0.83em;
+			font-weight: bold;
 			margin-bottom: 0;
-			direction: ltr;
-			background: transparent;
-			page-break-after: avoid
 		}
 
-		h2.western {
+		h1 {
+			font-size: 1.2em;
+			margin-top: 2em;
+		}
+
+		h2 {
 			font-size: 1.125em;
-			font-weight: bold
+			margin-top: 0.83em;
 		}
 
-
-		a:link {
-			color: #1c1c6a;
-			text-decoration: none
-		}
-
-		a:visited {
+		a {
 			color: #1c1c6a;
 			text-decoration: none;
 		}
 
-		a:hover {
-			text-decoration: none;
-		}
-
-		a:active {
-			text-decoration: none;
-		}
-
-		a[href^="#"]:before {
+		/* Pfeil nur vor den Links im Inhaltsverzeichnis; die Überschriften
+		   (href="#", Sprung nach oben) bekommen keinen */
+		a[href^="#"]:not([href="#"])::before {
 			content: '➡ ';
+		}
+
+		/* kleine Icons der Buttons im Fließtext */
+		img.icon {
+			height: 25px;
+			width: auto;
+			max-width: 100%;
+		}
+
+		/* Abbildungen, zentriert; Breite über das width-Attribut */
+		img.bild {
+			display: block;
+			margin: auto;
+			max-width: 100%;
+			height: auto;
 		}
 	</style>
 </head>
 
-<body lang="de-DE" link="#0000ff" vlink="#800000" dir="ltr">
-	<h1 class="western">Índice</h1>
-	<p class="western">
+<body>
+	<h1>Índice</h1>
+	<p>
 		<a href="#uebersicht">Introducción</a>
 		<br>
 		<a href="#gui">Entrada gráfica</a>
@@ -119,7 +96,8 @@
 		<br>
 		<a href="#kontakt">Contacto y mensajes de error</a>
 		<br>
-	<h1 lang="de-DE" class="western" id="uebersicht">
+		</p>
+	<h1 id="uebersicht">
 		<a href="#">Introducción</a>
 	</h1>
 	<p>
@@ -208,7 +186,7 @@
 		<br>
 		<br>
 	</p>
-	<h2 class="western" id="gui">
+	<h2 id="gui">
 		<a href="#">Entrada gráfica</a>
 	</h2>
 	<p>
@@ -248,64 +226,64 @@
 	</p>
 	<p>
 		<img src="/assets/gui-icons/undo.png" name="undo" title="undo button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón Deshacer: Elimina el último elemento creado (nodo, barra, apoyo, carga
 		de
 		nodo o carga de elemento) y lo guarda en la papelera interna.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/redo.png" name="redo" title="redo button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón Rehacer: Recupera el último elemento enviado a la papelera.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/loeschen.png" name="loeschen" title="löschen button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón Eliminar: elimina un elemento seleccionable y lo guarda en la
 		papelera interna.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/select.png" name="select" title="select button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón Seleccionar: hay que hacer clic en un elemento existente. A
 		continuación, aparecerá un cuadro de diálogo en el que se podrán realizar
 		cambios.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/knoten.png" name="knoten" title="knoten button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón Nodo: introduce las coordenadas de los nodos (x, z) mediante un cuadro
 		de diálogo. Nota: Solo es necesario introducir nodos si un nodo de barra no
 		se encuentra en las intersecciones de las líneas de la cuadrícula.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón Editar nodo: Las coordenadas (x, z) de los nodos existentes se pueden
 		modificar aquí.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/lager.png" name="lager" title="lager button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón soporte: introducción de soporte. Nota: los soportes solo se pueden
 		colocar en nodos existentes.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/einstellungen.png" name="einstellungen" title="einstellungen button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón Configuración: aquí se pueden realizar ajustes que son útiles para la
 		entrada gráfica.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/reset.png" name="reset" title="reset button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón de reinicio: el sistema se redibuja. El zoom y el arrastre se
 		restablecen.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/default_querschnitt.png" name="default_querschnitt"
 			title="default_querschnitt combobox"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Cuadro combinado de sección transversal predeterminado: el nombre de la
 		sección transversal que se muestra se utiliza para la siguiente barra
 		introducida. Se puede definir cualquier número de secciones transversales en
@@ -313,7 +291,7 @@
 	</p>
 	<p>
 		<img src="/assets/gui-icons/stab.png" name="stab" title="stab button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón de barra: Una barra se define por los nodos inicial y final. Se
 		aplican las siguientes reglas de ajuste: En primer lugar, se buscan los
 		nodos existentes dentro del rango de ajuste (las longitudes de las líneas
@@ -324,19 +302,19 @@
 	</p>
 	<p>
 		<img src="/assets/gui-icons/knotenlast.png" name="knotenlast" title="knotenlast button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón de carga de nodo: Introduce las cargas de los nodos. Nota: Las cargas
 		de los nodos solo se pueden establecer en los nodos existentes.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/elementlast.png" name="elementlast" title="element button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón Carga de elemento: Introduce las cargas de las barras. Nota: Las cargas
 		de barra solo pueden actuar sobre barras existentes.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/knotenmasse.png" name="knotenmasse" title="knotenmasse button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Botón Masa de nodo: Introduce las masas de los nodos y
 		los momentos de inercia. Nota: Las masas de los nodos solo se pueden
 		establecer en los nodos existentes. Solo se tienen en cuenta si se ha
@@ -346,26 +324,26 @@
 		<br>
 		<br>
 	</p>
-	<h2 class="western" id="vorzeichen">
+	<h2 id="vorzeichen">
 		<a href="#">Sistema de coordenadas y signos</a>
 	</h2>
 	<img src="/assets/def_d2beam.png" name="definition_d2beam" title="Definition Stabelement d2beam"
-		style="max-width:100%; width:400px; height:auto; border:0px; margin: auto; display: block;">
+		class="bild" width="400">
 	<p style="text-align: center;">
 		Elemento de barra d2beam con extremos rígidos
 		y articulaciones
 	</p>
 	<img src="/assets/vorzeichen_lager_notxt.png" name="vorzeichen_lager" title="Vorzeichen Lager"
-		style="max-width:100%; width:209px; height:auto; border:0px; margin: auto; display: block;">
+		class="bild" width="209">
 	<p style="text-align: center;">Fuerzas soportadas en el soporte girado</p>
 	<img src="/assets/gedrehtes_lager_notxt.png" name="gedrehtes_lager" title="gedrehtes Lager"
-		style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+		class="bild" width="175">
 	<p style="text-align: center;">Soporte rígido girado</p>
 	<img src="/assets/definition_federn.png" name="definition_federn" title="Definition Federn"
-		style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+		class="bild" width="175">
 	<p style="text-align: center;">Resorte de soporte girado</p>
 	<p>
-	<h1 class="western" id="hinweiseApp">
+	<h1 id="hinweiseApp">
 		<a href="#">
 			Instrucciones para usar la
 			aplicación
@@ -373,7 +351,7 @@
 	</h1>
 	</p>
 	<p>
-	<h2 class="western">Entrada</h2>
+	<h2>Entrada</h2>
 	</p>
 	<p>
 		Como separador decimal se permite la coma o el punto.
@@ -457,7 +435,7 @@
 		repetirse tantas veces como sea necesario.
 	</p>
 	<p>
-	<h2 class="western" id="darstellung_2D">
+	<h2 id="darstellung_2D">
 		<a href="#">
 			Representación en 2D
 		</a>
@@ -546,7 +524,7 @@
 	</ul>
 	</p>
 	<p>
-	<h2 class="western" id="svg">
+	<h2 id="svg">
 		<a href="#">Guardar captura de pantalla</a>
 	</h2>
 	</p>
@@ -561,7 +539,7 @@
 		gráfico se puede editar.
 	</p>
 	<p>
-	<h2 class="western" id="bezeichnungen">
+	<h2 id="bezeichnungen">
 		<a href="#">Denominaciones</a>
 	</h2>
 	</p>
@@ -576,7 +554,7 @@
 		estática, véase [2].
 	</p>
 	<p>
-	<h2 class="western" id="voreinstellungen">
+	<h2 id="voreinstellungen">
 		<a href="#">Ajustes preestablecidos</a>
 	</h2>
 	</p>
@@ -598,7 +576,7 @@
 		.
 	</p>
 	<p>
-	<h2 class="western" id="installation">
+	<h2 id="installation">
 		<a href="#">
 			Instalación de la
 			aplicación en el escritorio
@@ -635,7 +613,7 @@
 		en Android. En el navegador Edge, en el menú de aplicaciones
 		<i> (menú de tres puntos)</i>
 		<img src="/assets/app-install-windows.png" name="Bild4" title="install windows"
-			style="max-width:100%; width:423px; height:auto; border:0px; margin: auto; display: block;">
+			class="bild" width="423">
 		<!--width:423px; height:111px-->
 		<br>
 		En las versiones más recientes de Chrome, es posible que se te
@@ -643,7 +621,7 @@
 		si deseas realizar la instalación,
 		mira el símbolo a la derecha de la barra de direcciones:
 		<img src="/assets/chrome_install.png" name="chrome_install" title="chrome install"
-			style="max-width:100%; width:436px; height:auto; border:0px; margin: auto; display: block;">
+			class="bild" width="436">
 		<!--width:436px; height:155px-->
 	</p>
 	<p>
@@ -663,7 +641,7 @@
 		escritorio. En Windows, la aplicación se desinstala como un programa
 		normal .
 	</p>
-	<h2 class="western" id="kompatibilitaet">
+	<h2 id="kompatibilitaet">
 		<a href="#">
 			Compatibilidad y
 			problemas
@@ -679,7 +657,7 @@
 		Solo se prueban y admiten las versiones actuales.
 	</p>
 	<!--  <p>Probleme: Unter Android Firefox funktioniert die Selektion der Zellen in den Tabellen nicht.</p>  -->
-	<h2 class="western" id="tastatur">
+	<h2 id="tastatur">
 		<a href="#">Teclado virtual</a>
 	</h2>
 	<p>
@@ -698,7 +676,7 @@
 		Más adelante, siempre puedes cambiar entre los teclados instalados
 		(icono en la parte inferior derecha del teclado).
 	</p>
-	<h2 class="western" id="faq">
+	<h2 id="faq">
 		<a href="#">Preguntas y respuestas</a>
 	</h2>
 	<p>
@@ -721,7 +699,7 @@
 			seleccionas el botón
 			<i>Editar nodo</i>
 			<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
-				style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				class="icon">
 			y haces clic en un nodo existente.
 		</li>
 	</ul>
@@ -729,7 +707,7 @@
 	<p>
 		<br>
 	</p>
-	<h2 class="western" id="kontakt">
+	<h2 id="kontakt">
 		<a href="#">
 			Contacto y mensajes de
 			error
@@ -744,7 +722,7 @@
 		<br>
 		<br>
 	</p>
-	<h1 class="western">
+	<h1>
 		<a href="#">Bibliografía</a>
 	</h1>
 	<p>
@@ -761,7 +739,6 @@
 		[3] Horst Werkle:
 		Finite Elemente in der Baustatik, 4. Auflage, Springer Vieweg, 2021
 		<br>Edición inglesa: Finite Elements in Structural Analysis, Springer, 2021
-	</p>
 	</p>
 </body>
 

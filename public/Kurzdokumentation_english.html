@@ -3,12 +3,11 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>d2beam-GUI frame program for plane systems</title>
 	<meta name="author" content="Prof. Dr.-Ing. Detlef Rothe">
 	<meta name="AppVersion" content="15.0000">
-	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-	<style type="text/css">
+	<style>
 		body {
 			font-size: 1em;
 			font-family: "FreeSans", sans-serif;
@@ -16,80 +15,58 @@
 		}
 
 		p {
-			line-height: 150%;
-			text-align: left;
 			margin-bottom: 0.6em;
-			direction: ltr;
-			background: transparent
 		}
 
-		ul {
-			line-height: 150%;
-		}
-
-		h1 {
-			color: #1c1c6a;
-			line-height: 115%;
-			text-align: left;
-			page-break-inside: avoid;
-			margin-top: 2em;
-			margin-bottom: 0;
-			direction: ltr;
-			background: transparent;
-			page-break-after: avoid
-		}
-
-		h1.western {
-			font-size: 1.2em;
-			font-weight: bold
-		}
-
-
+		h1,
 		h2 {
 			color: #1c1c6a;
 			line-height: 115%;
-			text-align: left;
-			page-break-inside: avoid;
-			margin-top: 0.83em;
+			font-weight: bold;
 			margin-bottom: 0;
-			direction: ltr;
-			background: transparent;
-			page-break-after: avoid
 		}
 
-		h2.western {
+		h1 {
+			font-size: 1.2em;
+			margin-top: 2em;
+		}
+
+		h2 {
 			font-size: 1.125em;
-			font-weight: bold
+			margin-top: 0.83em;
 		}
 
-
-		a:link {
-			color: #1c1c6a;
-			text-decoration: none
-		}
-
-		a:visited {
+		a {
 			color: #1c1c6a;
 			text-decoration: none;
 		}
 
-		a:hover {
-			text-decoration: none;
-		}
-
-		a:active {
-			text-decoration: none;
-		}
-
-		a[href^="#"]:before {
+		/* Pfeil nur vor den Links im Inhaltsverzeichnis; die Überschriften
+		   (href="#", Sprung nach oben) bekommen keinen */
+		a[href^="#"]:not([href="#"])::before {
 			content: '➡ ';
+		}
+
+		/* kleine Icons der Buttons im Fließtext */
+		img.icon {
+			height: 25px;
+			width: auto;
+			max-width: 100%;
+		}
+
+		/* Abbildungen, zentriert; Breite über das width-Attribut */
+		img.bild {
+			display: block;
+			margin: auto;
+			max-width: 100%;
+			height: auto;
 		}
 	</style>
 </head>
 
-<body lang="de-DE" link="#0000ff" vlink="#800000" dir="ltr">
-	<h1 class="western">Table of Contents</h1>
-	<p class="western">
+<body>
+	<h1>Table of Contents</h1>
+	<p>
 		<a href="#uebersicht">Introduction</a>
 		<br>
 		<a href="#gui">Graphical input</a>
@@ -116,7 +93,8 @@
 		<br>
 		<a href="#kontakt">Contact and error messages</a>
 		<br>
-	<h1 lang="de-DE" class="western" id="uebersicht">
+		</p>
+	<h1 id="uebersicht">
 		<a href="#">Introduction</a>
 	</h1>
 	<p>
@@ -205,7 +183,7 @@
 		<br>
 		<br>
 	</p>
-	<h2 class="western" id="gui">
+	<h2 id="gui">
 		<a href="#">Graphical input</a>
 	</h2>
 	<p>
@@ -245,68 +223,68 @@
 	</p>
 	<p>
 		<img src="/assets/gui-icons/undo.png" name="undo" title="undo button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Undo Button: Deletes the last created element (node, member, support, node
 		load, or element load) and saves it in the internal recycle bin.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/redo.png" name="redo" title="redo button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Redo Button: Recovers the last item placed in the recycle bin.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/loeschen.png" name="loeschen" title="löschen button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Delete button: Deletes a clickable element and saves it in the internal
 		trash can.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/select.png" name="select" title="select button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Select button: Click on an existing element. A dialog box will then appear
 		in which changes can be made.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/knoten.png" name="knoten" title="knoten button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Node button: Enter node coordinates (x, z) using a dialog box. Note:
 		Entering nodes is only necessary if a member node does not fall at the
 		intersection of grid lines.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Edit Node Button: The coordinates (x,z) of existing nodes can be changed
 		here.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/lager.png" name="lager" title="lager button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Support button: Entering supports. Note: Supports can only be set at
 		existing nodes.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/einstellungen.png" name="einstellungen" title="einstellungen button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Settings button: Here you can configure settings that are useful for
 		graphical input.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/reset.png" name="reset" title="reset button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Reset button: The system is redrawn. Zoom and drag are reset.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/default_querschnitt.png" name="default_querschnitt"
 			title="default_querschnitt combobox"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Default cross-section combo box: The cross-section name displayed is used
 		for the next bar entry. Any number of cross-sections can be defined in the
 		Cross-sections tab.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/stab.png" name="stab" title="stab button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Bar button: A bar is defined by start and end nodes. The following snapping
 		rules apply: First, existing nodes are searched for within the snap range
 		(the lengths of the cursor lines indicate the snap range) and the node
@@ -316,19 +294,19 @@
 	</p>
 	<p>
 		<img src="/assets/gui-icons/knotenlast.png" name="knotenlast" title="knotenlast button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Nodal load button: Enter nodal loads. Note: Nodal loads can only be set at
 		existing nodes.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/elementlast.png" name="elementlast" title="element button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Element load button: Entering member loads. Note: Member loads can only act
 		on existing members.
 	</p>
 	<p>
 		<img src="/assets/gui-icons/knotenmasse.png" name="knotenmasse" title="knotenmasse button"
-			style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+			class="icon">
 		Nodal mass button: Enter nodal masses and
 		mass moments of inertia. Note: Nodal masses can only be set at existing
 		nodes. They are only taken into account if the calculation type
@@ -338,30 +316,30 @@
 		<br>
 		<br>
 	</p>
-	<h2 class="western" id="vorzeichen">
+	<h2 id="vorzeichen">
 		<a href="#">Coordinate system and sign definitions</a>
 	</h2>
 	<img src="/assets/def_d2beam.png" name="definition_d2beam" title="Definition Stabelement d2beam"
-		style="max-width:100%; width:400px; height:auto; border:0px; margin: auto; display: block;">
+		class="bild" width="400">
 	<p style="text-align: center;">
 		Beam element d2beam with rigid ends and joints
 	</p>
 	<img src="/assets/vorzeichen_lager_notxt.png" name="vorzeichen_lager" title="Vorzeichen Lager"
-		style="max-width:100%; width:209px; height:auto; border:0px; margin: auto; display: block;">
+		class="bild" width="209">
 	<p style="text-align: center;">bearing forces at the rotated support</p>
 	<img src="/assets/gedrehtes_lager_notxt.png" name="gedrehtes_lager" title="gedrehtes Lager"
-		style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+		class="bild" width="175">
 	<p style="text-align: center;">rigid bearing rotated</p>
 	<img src="/assets/definition_federn.png" name="definition_federn" title="Definition Federn"
-		style="max-width:100%; width:175px; height:auto; border:0px; margin: auto; display: block;">
+		class="bild" width="175">
 	<p style="text-align: center;">support spring rotated</p>
 	<p>
-	<h1 class="western" id="hinweiseApp">
+	<h1 id="hinweiseApp">
 		<a href="#">Further information on using the app</a>
 	</h1>
 	</p>
 	<p>
-	<h2 class="western">Input</h2>
+	<h2>Input</h2>
 	</p>
 	<p>
 		The comma or period is permitted as the decimal separator.
@@ -444,7 +422,7 @@
 		'resize tables' button. The process can be repeated as often as necessary.
 	</p>
 	<p>
-	<h2 class="western" id="darstellung_2D">
+	<h2 id="darstellung_2D">
 		<a href="#">2D representations</a>
 	</h2>
 	</p>
@@ -533,7 +511,7 @@
 	</ul>
 	</p>
 	<p>
-	<h2 class="western" id="svg">
+	<h2 id="svg">
 		<a href="#">Save screenshot</a>
 	</h2>
 	</p>
@@ -548,7 +526,7 @@
 		2016 onwards). Since it is a vector format, the graphic can be edited.
 	</p>
 	<p>
-	<h2 class="western" id="bezeichnungen">
+	<h2 id="bezeichnungen">
 		<a href="#">Designations</a>
 	</h2>
 	</p>
@@ -564,7 +542,7 @@
 		see [2].
 	</p>
 	<p>
-	<h2 class="western" id="voreinstellungen">
+	<h2 id="voreinstellungen">
 		<a href="#">Default settings</a>
 	</h2>
 	</p>
@@ -590,7 +568,7 @@
 		.
 	</p>
 	<p>
-	<h2 class="western" id="installation">
+	<h2 id="installation">
 		<a href="#">Installing the app on your desktop</a>
 	</h2>
 	</p>
@@ -624,13 +602,13 @@
 		the following section is available in the application menu
 		<i> (three-dot menu)</i>
 		<img src="/assets/app-install-windows.png" name="Bild4" title="install windows"
-			style="max-width:100%; width:423px; height:auto; border:0px; margin: auto; display: block;">
+			class="bild" width="423">
 		<!--width:423px; height:111px-->
 		<br>
 		In newer versions of Chrome, you may be asked directly whether you want
 		to install it. See the icon on the right in the address bar:
 		<img src="/assets/chrome_install.png" name="chrome_install" title="chrome install"
-			style="max-width:100%; width:436px; height:auto; border:0px; margin: auto; display: block;">
+			class="bild" width="436">
 		<!--width:436px; height:155px-->
 	</p>
 	<p>
@@ -649,7 +627,7 @@
 		the icon on the desktop.
 		On Windows, the app is uninstalled like a normal program.
 	</p>
-	<h2 class="western" id="kompatibilitaet">
+	<h2 id="kompatibilitaet">
 		<a href="#">Compatibility and issues</a>
 	</h2>
 	<p>
@@ -662,7 +640,7 @@
 		Only the latest versions are tested and supported.
 	</p>
 	<!--  <p>Probleme: Unter Android Firefox funktioniert die Selektion der Zellen in den Tabellen nicht.</p>  -->
-	<h2 class="western" id="tastatur">
+	<h2 id="tastatur">
 		<a href="#">Virtual keyboard</a>
 	</h2>
 	<p>
@@ -681,7 +659,7 @@
 		Later, you can always switch between the installed keyboards (icon at
 		the bottom right of the keyboard).
 	</p>
-	<h2 class="western" id="faq">
+	<h2 id="faq">
 		<a href="#">Questions and answers</a>
 	</h2>
 	<p>
@@ -704,7 +682,7 @@
 			<i>Edit Node</i>
 			button
 			<img src="/assets/gui-icons/edit_knoten.png" name="edit_knoten" title="edit-knoten button"
-				style="max-width:100%; width:auto; height:25px; border:0px; margin: auto;">
+				class="icon">
 			and click on an existing node.
 		</li>
 	</ul>
@@ -712,7 +690,7 @@
 	<p>
 		<br>
 	</p>
-	<h2 class="western" id="kontakt">
+	<h2 id="kontakt">
 		<a href="#">Contact and error messages</a>
 	</h2>
 	<p>
@@ -724,7 +702,7 @@
 		<br>
 		<br>
 	</p>
-	<h1 class="western">
+	<h1>
 		<a href="#">Literature</a>
 	</h1>
 	<p>
@@ -741,7 +719,6 @@
 		[3] Horst Werkle:
 		Finite Elemente in der Baustatik, 4. Auflage, Springer Vieweg, 2021
 		<br>English edition: Finite Elements in Structural Analysis, Springer, 2021
-	</p>
 	</p>
 </body>
 
