@@ -7,7 +7,7 @@ import { rechnen } from './rechnen';
 import {
   check_doppeltes_Lager, check_doppelte_Masse, check_doppelter_Stab,
   list, undoList, Stab_button, lager_eingabe_beenden, CAD_KNOTEN, CAD_KNLAST,
-  keydown, CAD_STAB, CAD_LAGER, selected_element, CAD_ELLAST,
+  keydown, cad_aktion_beenden, CAD_STAB, CAD_LAGER, selected_element, CAD_ELLAST,
   click_zurueck_cad,
   redraw_stab,
   redraw_knotenlast,
@@ -4084,6 +4084,6 @@ export function Lager_button(ev: Event) {
 function click_ESC_cad() {
   //----------------------------------------------------------------------------------------------------
 
-  buttons_control.reset();
+  cad_aktion_beenden();   // wie die Taste Esc, entfernt auch das Gummiband einer begonnenen Eingabe
 }
 

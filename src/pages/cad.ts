@@ -2182,17 +2182,52 @@ export function keydown(ev: any) {
    //console.log('KEYDOWN, keycode, key, code: ', ev.keyCode, ev.key, ev.code);
 
    if (ev.key === 'Escape') {
-      if (rubberband_drawn) two.remove(rubberband);
-      if (masslinien_drawn) two.remove(masslinien_band);
-      if (rubberband_drawn || masslinien_drawn) two.update();
-
-      input_active = false;
-      rubberband_drawn = false;
-      masslinien_drawn = false;
-      buttons_control.input_started = 0;
-      delete_help_text();
+      cad_aktion_beenden();
    }
 }
+
+//------------------------------------------------------------------------------------------------
+export function cad_aktion_beenden() {
+   //--------------------------------------------------------------------------------------------
+   // Taste Esc und esc-Button im Tab System: laufende Aktion (z. B. begonnene Stabeingabe) beenden
+
+   if (rubberband_drawn) two.remove(rubberband);
+   if (masslinien_drawn) two.remove(masslinien_band);
+   if (rubberband_drawn || masslinien_drawn) two.update();
+
+   input_active = false;
+   rubberband_drawn = false;
+   masslinien_drawn = false;
+   buttons_control.reset();
+   delete_help_text();
+}
+
+//------------------------------------------------------------------------------------------------
+function esc_taste_global(ev: KeyboardEvent) {
+   //--------------------------------------------------------------------------------------------
+   // Esc soll im Tab System immer wirken, nicht nur, solange der CAD-Button den Fokus hat.
+   // Der Listener am Button verliert den Fokus, sobald man ins Zeichenfeld klickt.
+
+   if (ev.key !== 'Escape') {
+      return;
+   }
+   const shadow = document.getElementById('id_haupt')?.shadowRoot;
+   if (!shadow) {
+      return;
+   }
+   const tab_cad = shadow.getElementById('id_panel_CAD');
+   if (tab_cad === null || !tab_cad.hasAttribute('active')) {
+      return;
+   }
+   // Esc in einem offenen Dialog schließt nur den Dialog
+   for (const el of ev.composedPath()) {
+      if (el instanceof HTMLDialogElement) {
+         return;
+      }
+   }
+   cad_aktion_beenden();
+}
+document.addEventListener('keydown', esc_taste_global);
 
 // --------------------------  T O U C H  T O U C H  T O U C H  T O U C H  T O U C H  --------------------
 //--------------------------------------------------------------------------------------------------------
