@@ -12,44 +12,30 @@ import { showDialog_info } from '../pages/cad_buttons';
 
 export const WILLKOMMEN_HIDDEN_KEY = 'd2beam_willkommen_hidden';
 
-// Zeitpunkt, zu dem die App zuletzt verlassen wurde (Reload, Hintergrund, Schließen).
-// Wird die Seite kurz danach neu geladen (Reload, oder iPadOS/Android hat die App im
-// Hintergrund beendet), ist das kein neuer Start: dann keinen Willkommensdialog zeigen.
-const ZULETZT_AKTIV_KEY = 'd2beam_zuletzt_aktiv';
-const PAUSE_OHNE_DIALOG_MS = 30 * 60 * 1000; // 30 Minuten
+// Marker im sessionStorage: wird beim ersten Laden gesetzt. Der sessionStorage bleibt bei
+// Reload und beim Wiederherstellen eines Tabs aus dem Hintergrund erhalten und ist erst nach
+// dem Schließen von Tab/App leer. Nur dann ist es ein neuer Start mit Willkommensdialog.
+const SESSION_MARKER_KEY = 'd2beam_session_gestartet';
 
-function zuletzt_aktiv_merken() {
+// prüft den Marker und setzt ihn; true, wenn er schon vorhanden war
+function session_laeuft_schon(): boolean {
    try {
-      window.localStorage.setItem(ZULETZT_AKTIV_KEY, String(Date.now()));
+      if (window.sessionStorage.getItem(SESSION_MARKER_KEY) === '1') {
+         return true;
+      }
+      window.sessionStorage.setItem(SESSION_MARKER_KEY, '1');
    } catch {
-      /* Speicher gesperrt */
-   }
-}
-
-function kurz_vorher_aktiv(): boolean {
-   let wert: string | null = null;
-   try {
-      wert = window.localStorage.getItem(ZULETZT_AKTIV_KEY);
-   } catch {
-      return false;
-   }
-   if (wert === null) {
-      return false;
-   }
-   const pause = Date.now() - Number(wert);
-   if (pause >= 0 && pause < PAUSE_OHNE_DIALOG_MS) {
-      return true;
+      /* Speicher gesperrt: Dialog wie bei einem neuen Start zeigen */
    }
    return false;
 }
 
-window.addEventListener('pagehide', zuletzt_aktiv_merken);
-window.addEventListener('beforeunload', zuletzt_aktiv_merken);
-document.addEventListener('visibilitychange', function () {
-   if (document.visibilityState === 'hidden') {
-      zuletzt_aktiv_merken();
-   }
-});
+// Zeitstempel der früheren 30-Minuten-Regel aufräumen
+try {
+   window.localStorage.removeItem('d2beam_zuletzt_aktiv');
+} catch {
+   /* Speicher gesperrt */
+}
 
 export function willkommen_ist_ausgeblendet(): boolean {
    try {
@@ -106,10 +92,10 @@ function get_projekt_titel(): string {
 
 // Aufruf beim Start (index.ts), nachdem die letzte Eingabe automatisch gelesen wurde
 export function zeige_willkommen_beim_start() {
-   if (willkommen_ist_ausgeblendet()) {
+   if (session_laeuft_schon()) {
       return;
    }
-   if (kurz_vorher_aktiv()) {
+   if (willkommen_ist_ausgeblendet()) {
       return;
    }
    const shadow = get_haupt_shadow();
