@@ -19,6 +19,7 @@ import { reset_gui } from '../components/dr-control-panel';
 
 // import { addListener_filesave } from './dateien';
 import { reset_controlpanel_grafik } from './grafik';
+import { verwerfen_bestaetigt } from './dateien';
 // import { set_info, write } from './utility';
 
 import { my_jspdf } from './mypdf';
@@ -311,9 +312,12 @@ export function clearTables() {
 
 //---------------------------------------------------------------------------------------------------------------
 
-export function button_neue_eingabe() {
+// Rückgabe: true = Dialog Neue Eingabe wurde geöffnet, false = wegen ungespeicherter Änderungen abgebrochen
+export async function button_neue_eingabe(): Promise<boolean> {
   //------------------------------------------------------------------------------------------------------------
   console.log('button_neue_eingabe()');
+
+  if (!(await verwerfen_bestaetigt(true))) return false;
 
   const elHaupt = document.getElementById('id_haupt') as drHaupt;
   let shadow = elHaupt.shadowRoot;
@@ -330,6 +334,7 @@ export function button_neue_eingabe() {
 
     (el?.shadowRoot?.getElementById('dialog_neue_eingabe') as HTMLDialogElement).showModal();
   }
+  return true;
 }
 
 //---------------------------------------------------------------------------------------------------------------

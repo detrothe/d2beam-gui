@@ -2076,6 +2076,14 @@ Il file viene salvato nella cartella di download predefinita</target>
   <source>Ein Ordner kann nicht geöffnet werden. Bitte eine Datei ablegen.</source>
   <target>Non è possibile aprire una cartella. Trascina un file.</target>
 </trans-unit>
+<trans-unit id="s8447d363e2d35512">
+  <source>Trotzdem neu beginnen</source>
+  <target>Ricomincia comunque</target>
+</trans-unit>
+<trans-unit id="s8f7e1d20e64bb022">
+  <source>Die aktuelle Eingabe hat Änderungen, die noch nicht in einer Datei gespeichert sind. Sie gehen bei einer neuen Eingabe verloren.</source>
+  <target>L’input attuale contiene modifiche non ancora salvate in un file. Andranno perse con un nuovo input.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

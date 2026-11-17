@@ -2077,6 +2077,14 @@ El archivo se guarda en la carpeta de descargas predeterminada</target>
   <source>Ein Ordner kann nicht geöffnet werden. Bitte eine Datei ablegen.</source>
   <target>No se puede abrir una carpeta. Por favor, suelte un archivo.</target>
 </trans-unit>
+<trans-unit id="s8447d363e2d35512">
+  <source>Trotzdem neu beginnen</source>
+  <target>Empezar de nuevo de todos modos</target>
+</trans-unit>
+<trans-unit id="s8f7e1d20e64bb022">
+  <source>Die aktuelle Eingabe hat Änderungen, die noch nicht in einer Datei gespeichert sind. Sie gehen bei einer neuen Eingabe verloren.</source>
+  <target>La entrada actual tiene cambios que aún no se han guardado en un archivo. Se perderán al comenzar una nueva entrada.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

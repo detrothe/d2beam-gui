@@ -86,6 +86,7 @@ import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { drDialogKnotenmasse } from '../components/dr-dialog_knotenmasse';
 import { TCAD_Bemassung } from './cad_bemassung';
 import { drHaupt } from '../components/dr-haupt';
+import type { drDialogWillkommen } from '../components/dr-dialog_willkommen';
 
 // import { capabilities, isAbortError } from './saveFile'
 
@@ -713,13 +714,15 @@ function hat_ungespeicherte_aenderungen(): boolean {
     return gemerkt !== stand_hash(str_inputToJSON());
 }
 
-// true = es darf eine andere Datei geöffnet werden
-async function verwerfen_bestaetigt(): Promise<boolean> {
+// true = die aktuelle Eingabe darf ersetzt werden (andere Datei öffnen bzw. neue Eingabe)
+export async function verwerfen_bestaetigt(neue_eingabe = false): Promise<boolean> {
     if (!hat_ungespeicherte_aenderungen()) return true;
     return (await confirmdialog(
-        msg('Trotzdem öffnen'),
+        neue_eingabe ? msg('Trotzdem neu beginnen') : msg('Trotzdem öffnen'),
         msg('Abbrechen'),
-        msg('Die aktuelle Eingabe hat Änderungen, die noch nicht in einer Datei gespeichert sind. Sie gehen beim Öffnen einer anderen Datei verloren.')
+        neue_eingabe
+            ? msg('Die aktuelle Eingabe hat Änderungen, die noch nicht in einer Datei gespeichert sind. Sie gehen bei einer neuen Eingabe verloren.')
+            : msg('Die aktuelle Eingabe hat Änderungen, die noch nicht in einer Datei gespeichert sind. Sie gehen beim Öffnen einer anderen Datei verloren.')
     )) as boolean;
 }
 
@@ -826,10 +829,31 @@ function zeige_drop_overlay(sichtbar: boolean) {
             'padding:2rem 3rem; border:3px dashed #fff; border-radius:12px; color:#fff;' +
             'font-size:1.5rem; font-weight:600; text-align:center; max-width:80vw;';
         drop_overlay.appendChild(box);
+        // Als Popover liegt das Overlay in der obersten Ebene des Browsers und damit auch über
+        // modalen Dialogen (z.B. dem Willkommensdialog), die jeden z-index überdecken.
+        if (popover_moeglich) {
+            drop_overlay.popover = 'manual';
+            drop_overlay.style.cssText +=
+                'width:100%; height:100%; max-width:none; max-height:none; margin:0; border:0; padding:0;';
+        }
         document.body.appendChild(drop_overlay);
     }
     if (sichtbar) (drop_overlay.firstElementChild as HTMLElement).textContent = msg('Datei hier ablegen, um sie zu öffnen');
     drop_overlay.style.display = sichtbar ? 'flex' : 'none';
+    if (popover_moeglich) {
+        const offen = drop_overlay.matches(':popover-open');
+        if (sichtbar && !offen) drop_overlay.showPopover();
+        else if (!sichtbar && offen) drop_overlay.hidePopover();
+    }
+}
+
+const popover_moeglich = typeof HTMLElement !== 'undefined' && 'showPopover' in HTMLElement.prototype;
+
+// Willkommensdialog schließen, sonst wird die Datei unsichtbar hinter ihm geladen
+function willkommen_schliessen() {
+    const el = document.getElementById('id_haupt') as drHaupt | null;
+    const w = el?.shadowRoot?.querySelector('dr-dialog_willkommen') as drDialogWillkommen | null;
+    w?.schliessen();
 }
 
 async function datei_abgelegt(e: DragEvent) {
@@ -845,6 +869,7 @@ async function datei_abgelegt(e: DragEvent) {
         return;
     }
     const f = dt.files[0];   // vor dem ersten await holen, danach ist dataTransfer leer
+    willkommen_schliessen();
 
     drop_laeuft = true;
     try {

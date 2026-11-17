@@ -2076,6 +2076,14 @@ Le fichier est enregistré dans le dossier de téléchargement par défaut</targ
   <source>Ein Ordner kann nicht geöffnet werden. Bitte eine Datei ablegen.</source>
   <target>Un dossier ne peut pas être ouvert. Veuillez déposer un fichier.</target>
 </trans-unit>
+<trans-unit id="s8447d363e2d35512">
+  <source>Trotzdem neu beginnen</source>
+  <target>Recommencer quand même</target>
+</trans-unit>
+<trans-unit id="s8f7e1d20e64bb022">
+  <source>Die aktuelle Eingabe hat Änderungen, die noch nicht in einer Datei gespeichert sind. Sie gehen bei einer neuen Eingabe verloren.</source>
+  <target>La saisie actuelle contient des modifications qui n’ont pas encore été enregistrées dans un fichier. Elles seront perdues lors d’une nouvelle saisie.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

@@ -411,7 +411,8 @@ export class drDialogWillkommen extends LitElement {
       return this.shadowRoot.getElementById('id_nicht_mehr_anzeigen') as HTMLInputElement | null;
    }
 
-   private schliessen() {
+   // auch von außen, z.B. wenn eine Datei per Drag & Drop abgelegt wird
+   schliessen() {
       const dlg = this.get_dialog();
       if (dlg !== null && dlg.open) {
          dlg.close();
@@ -428,9 +429,11 @@ export class drDialogWillkommen extends LitElement {
    }
 
    //----------------------------------------------------------------------------------------------
-   private _neues_system() {
+   private async _neues_system() {
       this.schliessen();
-      button_neue_eingabe();
+      if (!(await button_neue_eingabe())) {
+         return;   // ungespeicherte Änderungen, Benutzer hat abgebrochen
+      }
       const shadow = get_haupt_shadow();
       if (shadow === null) {
          return;

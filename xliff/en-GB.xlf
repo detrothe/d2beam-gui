@@ -2076,6 +2076,14 @@ The file is saved in the default download folder</target>
   <source>Ein Ordner kann nicht geöffnet werden. Bitte eine Datei ablegen.</source>
   <target>A folder cannot be opened. Please drop a file.</target>
 </trans-unit>
+<trans-unit id="s8447d363e2d35512">
+  <source>Trotzdem neu beginnen</source>
+  <target>Start new anyway</target>
+</trans-unit>
+<trans-unit id="s8f7e1d20e64bb022">
+  <source>Die aktuelle Eingabe hat Änderungen, die noch nicht in einer Datei gespeichert sind. Sie gehen bei einer neuen Eingabe verloren.</source>
+  <target>The current input has changes that have not yet been saved to a file. They will be lost when starting a new input.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
