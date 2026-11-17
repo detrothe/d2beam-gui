@@ -70,6 +70,11 @@ let prevDiff = -1;
 
 let two: any = null;
 
+// false, solange keine (gültigen) Ergebnisse vorliegen: vor dem ersten Rechnen und nach
+// "neue Eingabe" bzw. Datei einlesen. Dann zeichnet drawsystem() im Tab Ergebnisse nichts,
+// auch nicht beim Zoomen, Verschieben oder bei Änderungen im Control-Panel.
+let grafik_hat_inhalt = false;
+
 let xminw = 0.0, xmaxw = 0.0, zminw = 0.0, zmaxw = 0.0
 let xmint = 0.0, xmaxt = 0.0, zmint = 0.0, zmaxt = 0.0
 
@@ -537,6 +542,32 @@ export function update_select_texts() {
     }
 }
 
+//---------------------------------------------------------------------------------------------------
+export function ergebnisse_grafik_loeschen() {
+    //-----------------------------------------------------------------------------------------------
+    // Tab Ergebnisse leeren und Auswahllisten/Export-Button ausblenden (wie beim Programmstart)
+
+    grafik_hat_inhalt = false;
+
+    const shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (!shadow) return;
+
+    const el_group = shadow.getElementById('id_grafik_group') as HTMLDivElement | null;
+    if (el_group !== null) {
+        el_group.style.display = 'none';
+    }
+    for (const id of ['id_select_loadcase', 'id_select_eigenvalue', 'id_select_dyn_eigenvalue']) {
+        const el_select = shadow.getElementById(id) as HTMLSelectElement | null;
+        if (el_select !== null) {
+            el_select.replaceChildren();
+        }
+    }
+    if (two !== null) {
+        two.clear();
+        two.update();
+    }
+}
+
 //--------------------------------------------------------------------------------------------------- i n i t _ g r a f i k
 
 export function init_grafik(flag: number) {
@@ -584,6 +615,13 @@ export function init_grafik(flag: number) {
     const elHaupt = document.getElementById('id_haupt');
     let shadow = elHaupt?.shadowRoot;
     if (shadow) {
+
+        // Auswahllisten und Export-Button sind bis zum ersten Rechnen ausgeblendet (dr-haupt.ts)
+        const el_group = shadow.getElementById('id_grafik_group') as HTMLDivElement | null;
+        if (el_group !== null) {
+            el_group.style.display = '';
+        }
+        grafik_hat_inhalt = true;
 
         const el_select = shadow.getElementById('id_select_loadcase') as HTMLSelectElement;
 
@@ -1058,6 +1096,7 @@ function draw_werte(x0: number, z0: number) {
 export function drawsystem(svg_id = 'artboard') {
 
     if (two === null) return;
+    if (svg_id === 'artboard' && !grafik_hat_inhalt) return;
 
     let show_selection = true;
     if (svg_id != 'artboard') show_selection = false;  // nur System für pdf-Ausgabe erzeugen

@@ -17,7 +17,7 @@ import { CTimoshenko_beam } from "./timoshenko_beam"
 import { CTruss } from "./truss"
 import { CSpring } from "./feder"
 import { CKoppelfeder } from "./koppelfeder"
-import { init_grafik, drawsystem, init_two, init_panel, set_unit_grafik, reset_dyn_eigenformen } from "./grafik";
+import { init_grafik, drawsystem, init_two, init_panel, set_unit_grafik, reset_dyn_eigenformen, ergebnisse_grafik_loeschen } from "./grafik";
 import { show_controller_THIIO, show_controller_bettung, show_controller_pruefen, show_controller_results, show_controller_truss } from "../components/dr-control-panel"
 import { ausgabe, ausgabe_kombinationen_Th_I_O, dyn_ausgabe } from "./ausgabe"
 import { alertdialog, AlertDialog } from "../pages/confirm_dialog";
@@ -536,6 +536,28 @@ export function incr_neq() {
 //   'fehler_gemeldet' Berechnung fehlgeschlagen, der Fehler wurde bereits per Dialog gemeldet
 export type RechenStatus = 'ok' | 'fehler' | 'fehler_gemeldet';
 
+//---------------------------------------------------------------------------------------------------------------
+export function alte_ergebnisse_loeschen() {
+    //-----------------------------------------------------------------------------------------------------------
+    // nach "neue Eingabe" und Datei einlesen: Ergebnisse der vorigen Berechnung in allen Tabs entfernen
+
+    const shadow = document.getElementById('id_haupt')?.shadowRoot;
+    if (!shadow) return;
+
+    const el_output = shadow.getElementById('output') as HTMLTextAreaElement | null;   // Tab Haupt
+    if (el_output !== null) {
+        el_output.value = '';
+    }
+
+    const el_ausdruck = shadow.getElementById('id_newDiv');   // Tab Ausdruck
+    if (el_ausdruck !== null) {
+        el_ausdruck.remove();
+    }
+
+    ergebnisse_grafik_loeschen();   // Tab Ergebnisse
+}
+
+//---------------------------------------------------------------------------------------------------------------
 export function rechnen(flag = 1): Promise<RechenStatus> {
     //-----------------------------------------------------------------------------------------------------------
 

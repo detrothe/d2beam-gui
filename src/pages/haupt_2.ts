@@ -25,7 +25,7 @@ import { my_jspdf } from './mypdf';
 
 //import { init_contextmenu } from '../components/dr-tabelle';
 
-import { rechnen, show_gleichungssystem, setSystem, System, hideColumnsForFachwerk, set_stadyn } from './rechnen';
+import { rechnen, show_gleichungssystem, setSystem, System, hideColumnsForFachwerk, set_stadyn, alte_ergebnisse_loeschen } from './rechnen';
 
 import { nQuerschnittSets, del_last_querschnittSet, dialog_querschnitt_closed, removeAll_def_querschnitt, set_querschnitts_zaehler } from './querschnitte';
 
@@ -355,6 +355,8 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
       setSystem(system);
 
       console.log('Dialog neue Eingabe mit ok geschlossen', system);
+
+      alte_ergebnisse_loeschen();   // Ergebnisse des bisherigen Systems in allen Tabs entfernen
 
       let el = shadow.getElementById('id_button_nnodes') as drButtonPM;
       console.log('el id_button_nnodes', el);

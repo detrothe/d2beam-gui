@@ -36,6 +36,7 @@ import {
     stadyn,
     System,
     TLoads,
+    alte_ergebnisse_loeschen,
 } from './rechnen';
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select.js';
 import { CADNodes, reset_ID_counter, TCADNode } from './cad_node';
@@ -131,6 +132,9 @@ export function read_daten(eingabedaten: string): boolean {
         );
         return false;
     }
+
+    // Datei ist gültig: Ergebnisse des bisherigen Systems verwerfen
+    alte_ergebnisse_loeschen();
 
     // in Tabelle schreiben
 

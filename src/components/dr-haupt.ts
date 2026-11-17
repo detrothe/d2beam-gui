@@ -395,7 +395,8 @@ export class drHaupt extends LitElement {
         <!-- <div id="id_grafik" > -->
           <div id="id_grafik_oben">
           <dr-control-panel id="id_control_panel"></dr-control-panel>
-          <div id="id_grafik_group">
+          <!-- bis zum ersten Rechnen ohne Inhalt: ausgeblendet, init_grafik() blendet ein -->
+          <div id="id_grafik_group" style="display:none">
             <div id="id_div_select_lc">
               <select id="id_select_loadcase" on></select>
               <button id="id_button_copy_svg">Export</button>
