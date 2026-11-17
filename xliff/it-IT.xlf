@@ -2056,6 +2056,26 @@ Il file viene salvato nella cartella di download predefinita</target>
   <source>Zurück zum Willkommensdialog</source>
   <target>Torna alla finestra di benvenuto</target>
 </trans-unit>
+<trans-unit id="s5eac1304516362bf">
+  <source>Trotzdem öffnen</source>
+  <target>Apri comunque</target>
+</trans-unit>
+<trans-unit id="scad3deae7a47353c">
+  <source>Die aktuelle Eingabe hat Änderungen, die noch nicht in einer Datei gespeichert sind. Sie gehen beim Öffnen einer anderen Datei verloren.</source>
+  <target>L’input attuale contiene modifiche non ancora salvate in un file. Andranno perse all’apertura di un altro file.</target>
+</trans-unit>
+<trans-unit id="s1962daed2c91b5f7">
+  <source>Datei hier ablegen, um sie zu öffnen</source>
+  <target>Trascina qui il file per aprirlo</target>
+</trans-unit>
+<trans-unit id="s9bde3948b3ba38f2">
+  <source>Bitte nur eine Datei ablegen.</source>
+  <target>Trascina un solo file.</target>
+</trans-unit>
+<trans-unit id="s6c60e4153d08b777">
+  <source>Ein Ordner kann nicht geöffnet werden. Bitte eine Datei ablegen.</source>
+  <target>Non è possibile aprire una cartella. Trascina un file.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

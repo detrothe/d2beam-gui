@@ -2,7 +2,7 @@
 
 import '@shoelace-style/shoelace/dist/components/select/select.js';
 
-import { alertdialog } from "./confirm_dialog"
+import { alertdialog, confirmdialog } from "./confirm_dialog"
 import { msg } from '@lit/localize';
 
 import { drButtonPM } from '../components/dr-button-pm';
@@ -673,70 +673,214 @@ export function read_daten(eingabedaten: string): boolean {
 }
 
 //------------------------------------------------------------------------------------------------
-function filedialog_read() {
+// Ungespeicherte Änderungen erkennen
+//------------------------------------------------------------------------------------------------
+// Nach dem Öffnen und Speichern einer Datei wird ein Hash der Eingabe gemerkt (im localStorage,
+// damit er auch nach einem Neustart mit der automatisch wiederhergestellten Eingabe passt).
+// Weicht die aktuelle Eingabe davon ab, gibt es ungespeicherte Änderungen.
+
+const GESPEICHERT_KEY = 'd2beam_gespeicherter_stand';
+
+function stand_hash(s: string): string {
+    // cyrb53, ein schneller 53-Bit-Hash
+    let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+    for (let i = 0; i < s.length; i++) {
+        const ch = s.charCodeAt(i);
+        h1 = Math.imul(h1 ^ ch, 2654435761);
+        h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
+}
+
+function als_gespeichert_merken() {
+    try {
+        window.localStorage.setItem(GESPEICHERT_KEY, stand_hash(str_inputToJSON()));
+    } catch (error) {
+        console.error('als_gespeichert_merken: localStorage nicht verfügbar', error);
+    }
+}
+
+function hat_ungespeicherte_aenderungen(): boolean {
+    if (CADNodes.length === 0 && list.size === 0) return false;   // leeres System, nichts zu verlieren
+    let gemerkt: string | null = null;
+    try {
+        gemerkt = window.localStorage.getItem(GESPEICHERT_KEY);
+    } catch (error) {
+        console.error('hat_ungespeicherte_aenderungen: localStorage nicht verfügbar', error);
+    }
+    return gemerkt !== stand_hash(str_inputToJSON());
+}
+
+// true = es darf eine andere Datei geöffnet werden
+async function verwerfen_bestaetigt(): Promise<boolean> {
+    if (!hat_ungespeicherte_aenderungen()) return true;
+    return (await confirmdialog(
+        msg('Trotzdem öffnen'),
+        msg('Abbrechen'),
+        msg('Die aktuelle Eingabe hat Änderungen, die noch nicht in einer Datei gespeichert sind. Sie gehen beim Öffnen einer anderen Datei verloren.')
+    )) as boolean;
+}
+
+//------------------------------------------------------------------------------------------------
+function datei_einlesen(f: File) {
+    //--------------------------------------------------------------------------------------------
+    // Das bestehende Modell wird erst gelöscht, wenn die Datei geprüft ist (das macht read_daten
+    // selbst über clearTables()). Scheitert das Einlesen mittendrin, wird die bisherige Eingabe
+    // wiederhergestellt.
+
+    const filename = f.name;
+    console.log('filename: ', filename);
+
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+        const sicherung = str_inputToJSON();   // aktuelles Modell merken
+
+        let ok = false;
+        let geaendert = false;                 // wurde der Zustand schon (teilweise) überschrieben?
+        try {
+            ok = read_daten(e.target.result as string);
+        } catch (error) {
+            console.error('datei_einlesen: Fehler beim Einlesen', error);
+            geaendert = true;
+        }
+
+        if (!ok && !geaendert) return;         // Datei abgelehnt, Modell unverändert
+
+        if (!ok) {
+            try {
+                read_daten(sicherung);
+            } catch (error) {
+                console.error('datei_einlesen: Wiederherstellen fehlgeschlagen', error);
+                clearTables();
+            }
+            alertdialog(
+                'ok',
+                msg('Die Datei konnte nicht vollständig gelesen werden. Die bisherige Eingabe wurde wiederhergestellt.')
+            );
+        }
+
+        init_two_cad();
+        init_cad(0);
+        reset_gui();
+        reset_controlpanel_grafik();
+        if (ok) {
+            set_current_filename(filename);
+            als_gespeichert_merken();
+        }
+    };
+
+    reader.onerror = () => {
+        console.error('datei_einlesen: Datei konnte nicht gelesen werden', reader.error);
+        alertdialog('ok', msg('Die Datei konnte nicht gelesen werden.'));
+    };
+
+    reader.readAsText(f);
+}
+
+//------------------------------------------------------------------------------------------------
+async function filedialog_read() {
     //--------------------------------------------------------------------------------------------
 
-    let i, j;
+    if (!(await verwerfen_bestaetigt())) return;
 
-    let input = document.createElement('input') as any;
+    const input = document.createElement('input');
     input.type = 'file';
-    // @ts-ignore
-    input.onchange = (_) => {
-        // Das bestehende Modell wird erst gelöscht, wenn die Datei geprüft ist (das macht read_daten
-        // selbst über clearTables()). Scheitert das Einlesen mittendrin, wird die bisherige Eingabe
-        // wiederhergestellt.
-
-        const f: File | undefined = input.files?.[0];
-        if (!f) return;
-        const filename = f.name;
-        console.log('filename: ', filename);
-
-        const reader = new FileReader();
-
-        reader.onload = (e: any) => {
-            const sicherung = str_inputToJSON();   // aktuelles Modell merken
-
-            let ok = false;
-            let geaendert = false;                 // wurde der Zustand schon (teilweise) überschrieben?
-            try {
-                ok = read_daten(e.target.result as string);
-            } catch (error) {
-                console.error('filedialog_read: Fehler beim Einlesen', error);
-                geaendert = true;
-            }
-
-            if (!ok && !geaendert) return;         // Datei abgelehnt, Modell unverändert
-
-            if (!ok) {
-                try {
-                    read_daten(sicherung);
-                } catch (error) {
-                    console.error('filedialog_read: Wiederherstellen fehlgeschlagen', error);
-                    clearTables();
-                }
-                alertdialog(
-                    'ok',
-                    msg('Die Datei konnte nicht vollständig gelesen werden. Die bisherige Eingabe wurde wiederhergestellt.')
-                );
-            }
-
-            init_two_cad();
-            init_cad(0);
-            reset_gui();
-            reset_controlpanel_grafik();
-            if (ok) set_current_filename(filename);
-        };
-
-        reader.onerror = () => {
-            console.error('filedialog_read: Datei konnte nicht gelesen werden', reader.error);
-            alertdialog('ok', msg('Die Datei konnte nicht gelesen werden.'));
-        };
-
-        reader.readAsText(f);
+    input.onchange = () => {
+        const f = input.files?.[0];
+        if (f) datei_einlesen(f);
     };
 
     input.click();
     console.log('nach click in filedialog_read');
+}
+
+//------------------------------------------------------------------------------------------------
+// Drag & Drop einer Eingabedatei, nur im Tab Haupt, Ablegen auf dem ganzen Fenster
+//------------------------------------------------------------------------------------------------
+
+let drag_zaehler = 0;          // dragenter/dragleave feuern auch für jedes Kind-Element
+let drop_overlay: HTMLDivElement | null = null;
+let drop_laeuft = false;       // Rückfrage oder Einlesen noch nicht fertig
+
+function ist_tab_haupt(): boolean {
+    const el = document.getElementById('id_haupt') as drHaupt | null;
+    const tab = el?.shadowRoot?.querySelector('sl-tab[panel="tab-haupt"]');
+    return !!tab?.hasAttribute('active');
+}
+
+function zieht_dateien(e: DragEvent): boolean {
+    return !!e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files');
+}
+
+function zeige_drop_overlay(sichtbar: boolean) {
+    if (!drop_overlay) {
+        drop_overlay = document.createElement('div');
+        drop_overlay.style.cssText =
+            'position:fixed; inset:0; z-index:100000; display:none; align-items:center; justify-content:center;' +
+            'background:rgba(0,0,0,0.45); pointer-events:none;';
+        const box = document.createElement('div');
+        box.style.cssText =
+            'padding:2rem 3rem; border:3px dashed #fff; border-radius:12px; color:#fff;' +
+            'font-size:1.5rem; font-weight:600; text-align:center; max-width:80vw;';
+        drop_overlay.appendChild(box);
+        document.body.appendChild(drop_overlay);
+    }
+    if (sichtbar) (drop_overlay.firstElementChild as HTMLElement).textContent = msg('Datei hier ablegen, um sie zu öffnen');
+    drop_overlay.style.display = sichtbar ? 'flex' : 'none';
+}
+
+async function datei_abgelegt(e: DragEvent) {
+    const dt = e.dataTransfer;
+    if (!dt || dt.files.length === 0) return;
+    if (dt.files.length > 1) {
+        alertdialog('ok', msg('Bitte nur eine Datei ablegen.'));
+        return;
+    }
+    const eintrag = dt.items?.[0]?.webkitGetAsEntry?.();
+    if (eintrag?.isDirectory) {
+        alertdialog('ok', msg('Ein Ordner kann nicht geöffnet werden. Bitte eine Datei ablegen.'));
+        return;
+    }
+    const f = dt.files[0];   // vor dem ersten await holen, danach ist dataTransfer leer
+
+    drop_laeuft = true;
+    try {
+        if (await verwerfen_bestaetigt()) datei_einlesen(f);
+    } finally {
+        drop_laeuft = false;
+    }
+}
+
+function addListener_drop() {
+    // dragover/drop für Dateien immer abfangen, sonst öffnet der Browser die Datei selbst
+    // anstelle der App. Außerhalb des Tabs Haupt wird das Ablegen nur verweigert.
+    window.addEventListener('dragenter', (e) => {
+        if (!zieht_dateien(e)) return;
+        e.preventDefault();
+        drag_zaehler++;
+        if (ist_tab_haupt() && !drop_laeuft) zeige_drop_overlay(true);
+    });
+    window.addEventListener('dragleave', (e) => {
+        if (!zieht_dateien(e)) return;
+        drag_zaehler = Math.max(0, drag_zaehler - 1);
+        if (drag_zaehler === 0) zeige_drop_overlay(false);
+    });
+    window.addEventListener('dragover', (e) => {
+        if (!zieht_dateien(e)) return;
+        e.preventDefault();
+        e.dataTransfer!.dropEffect = ist_tab_haupt() && !drop_laeuft ? 'copy' : 'none';
+    });
+    window.addEventListener('drop', (e) => {
+        if (!zieht_dateien(e)) return;
+        e.preventDefault();
+        drag_zaehler = 0;
+        zeige_drop_overlay(false);
+        if (!ist_tab_haupt() || drop_laeuft) return;
+        datei_abgelegt(e);
+    });
 }
 
 let hinweis_ueberschreiben_gezeigt = false;
@@ -819,6 +963,7 @@ async function handleFileSelect_save() {
             await fileStream.close();
 
             set_current_filename(fileHandle.name);
+            als_gespeichert_merken();
 
             // Android legt bei vorhandenem Namen über "Speichern" eine neue Datei "name (1).json" an.
             // Überschreiben geht nur durch Antippen der Datei in der Liste – darauf hinweisen
@@ -883,6 +1028,7 @@ async function handleFileSelect_save() {
         try {
             saveAs(myFile, filename);
             set_current_filename(filename);
+            als_gespeichert_merken();
         } catch (error: any) {
             //alert(error.name);
             alert(error.message);
@@ -1115,6 +1261,7 @@ export function addListener_filesave() {
     el.shadowRoot
         ?.getElementById('saveFile')
         ?.addEventListener('click', handleFileSelect_save, false);
+    addListener_drop();
 }
 console.log('ende dateien.ts');
 
