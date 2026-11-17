@@ -274,6 +274,10 @@ export class drHaupt extends LitElement {
      -> horizontaler und damit auch vertikaler Scrollbalken der ganzen Seite */
   sl-tab-group::part(nav) { overflow: hidden; }
 
+  /* Tab Dynamik nur bei Berechnungsart dynamisch zeigen; das disabled-Attribut setzt der Code
+     (berechnungsart_changed, read_daten), Shoelace spiegelt es als Attribut */
+  #id_tab_mass[disabled] { display: none; }
+
   /* Tab ꔷꔷꔷ: ungespeicherte Änderungen, Rahmen in der Akzentfarbe (Text bleibt bei jeder Farbe lesbar) */
   #id_cb_saveLocalStorage.speichern_hinweis {
     outline: 3px solid var(--sl-color-primary-600);
