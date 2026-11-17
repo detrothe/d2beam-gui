@@ -2040,6 +2040,22 @@ Le fichier est enregistré dans le dossier de téléchargement par défaut</targ
             Nach den Änderungen ist eine Neuberechnung erforderlich.</source>
   <target>La taille des tableaux peut être modifiée à tout moment avec les boutons situés au-dessus des tableaux.<x id="0" equiv-text="&lt;br&gt;"/>Après les modifications, un nouveau calcul est nécessaire.</target>
 </trans-unit>
+<trans-unit id="s3e6c50dc11f1fd14">
+  <source>Tipp: Schriftgröße, Größe der Buttons im Tab System und Farben kannst du im Tab ꔷꔷꔷ (ganz rechts) einstellen. Damit sie beim nächsten Start noch gelten, dort auf „Auswahl als Standardwerte im Browser speichern“ drücken.</source>
+  <target>Astuce : la taille de police, la taille des boutons de l’onglet Système et les couleurs se règlent dans l’onglet ꔷꔷꔷ (tout à droite). Pour les conserver au prochain démarrage, appuie là-bas sur « Enregistrer la sélection comme valeurs par défaut dans le navigateur ».</target>
+</trans-unit>
+<trans-unit id="sb04e5ac15943e95a">
+  <source>Zu den Einstellungen</source>
+  <target>Aller aux réglages</target>
+</trans-unit>
+<trans-unit id="s2a527d2aa4924cec">
+  <source>Es gibt Änderungen, die noch nicht gespeichert sind.</source>
+  <target>Certaines modifications ne sont pas encore enregistrées.</target>
+</trans-unit>
+<trans-unit id="s775558e24e932964">
+  <source>Zurück zum Willkommensdialog</source>
+  <target>Retour à la boîte de dialogue d’accueil</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

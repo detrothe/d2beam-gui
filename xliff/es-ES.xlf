@@ -2041,6 +2041,22 @@ El archivo se guarda en la carpeta de descargas predeterminada</target>
             Nach den Änderungen ist eine Neuberechnung erforderlich.</source>
   <target>El tamaño de las tablas se puede modificar en cualquier momento utilizando los botones situados encima de las mismas.<x id="0" equiv-text="&lt;br&gt;"/>Tras los cambios, es necesario realizar un nuevo cálculo.</target>
 </trans-unit>
+<trans-unit id="s3e6c50dc11f1fd14">
+  <source>Tipp: Schriftgröße, Größe der Buttons im Tab System und Farben kannst du im Tab ꔷꔷꔷ (ganz rechts) einstellen. Damit sie beim nächsten Start noch gelten, dort auf „Auswahl als Standardwerte im Browser speichern“ drücken.</source>
+  <target>Consejo: el tamaño de letra, el tamaño de los botones de la pestaña Sistema y los colores se pueden ajustar en la pestaña ꔷꔷꔷ (a la derecha del todo). Para que se mantengan en el próximo inicio, pulsa allí «Guardar la selección como valores predeterminados en el navegador».</target>
+</trans-unit>
+<trans-unit id="sb04e5ac15943e95a">
+  <source>Zu den Einstellungen</source>
+  <target>Ir a los ajustes</target>
+</trans-unit>
+<trans-unit id="s2a527d2aa4924cec">
+  <source>Es gibt Änderungen, die noch nicht gespeichert sind.</source>
+  <target>Hay cambios que aún no se han guardado.</target>
+</trans-unit>
+<trans-unit id="s775558e24e932964">
+  <source>Zurück zum Willkommensdialog</source>
+  <target>Volver al diálogo de bienvenida</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

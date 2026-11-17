@@ -2040,6 +2040,22 @@ The file is saved in the default download folder</target>
             Nach den Änderungen ist eine Neuberechnung erforderlich.</source>
   <target>The table sizes can be changed at any time later using the buttons located above the tables.<x id="0" equiv-text="&lt;br&gt;"/>A recalculation is necessary after the changes.</target>
 </trans-unit>
+<trans-unit id="s3e6c50dc11f1fd14">
+  <source>Tipp: Schriftgröße, Größe der Buttons im Tab System und Farben kannst du im Tab ꔷꔷꔷ (ganz rechts) einstellen. Damit sie beim nächsten Start noch gelten, dort auf „Auswahl als Standardwerte im Browser speichern“ drücken.</source>
+  <target>Tip: you can adjust the font size, the size of the buttons in the System tab and the colours in the ꔷꔷꔷ tab (far right). To keep them for the next start, press “Save selection as default values in browser” there.</target>
+</trans-unit>
+<trans-unit id="sb04e5ac15943e95a">
+  <source>Zu den Einstellungen</source>
+  <target>Go to settings</target>
+</trans-unit>
+<trans-unit id="s2a527d2aa4924cec">
+  <source>Es gibt Änderungen, die noch nicht gespeichert sind.</source>
+  <target>There are changes that have not been saved yet.</target>
+</trans-unit>
+<trans-unit id="s775558e24e932964">
+  <source>Zurück zum Willkommensdialog</source>
+  <target>Back to the welcome dialog</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

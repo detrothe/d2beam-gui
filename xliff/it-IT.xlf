@@ -2040,6 +2040,22 @@ Il file viene salvato nella cartella di download predefinita</target>
             Nach den Änderungen ist eine Neuberechnung erforderlich.</source>
   <target>Le dimensioni delle tabelle possono essere modificate in qualsiasi momento con i pulsanti posti sopra le tabelle.<x id="0" equiv-text="&lt;br&gt;"/>Dopo le modifiche è necessario un nuovo calcolo.</target>
 </trans-unit>
+<trans-unit id="s3e6c50dc11f1fd14">
+  <source>Tipp: Schriftgröße, Größe der Buttons im Tab System und Farben kannst du im Tab ꔷꔷꔷ (ganz rechts) einstellen. Damit sie beim nächsten Start noch gelten, dort auf „Auswahl als Standardwerte im Browser speichern“ drücken.</source>
+  <target>Suggerimento: la dimensione del carattere, la dimensione dei pulsanti nella scheda Sistema e i colori si impostano nella scheda ꔷꔷꔷ (all’estrema destra). Per mantenerli al prossimo avvio, premi lì «Salva la selezione come valori predefiniti nel browser».</target>
+</trans-unit>
+<trans-unit id="sb04e5ac15943e95a">
+  <source>Zu den Einstellungen</source>
+  <target>Vai alle impostazioni</target>
+</trans-unit>
+<trans-unit id="s2a527d2aa4924cec">
+  <source>Es gibt Änderungen, die noch nicht gespeichert sind.</source>
+  <target>Ci sono modifiche non ancora salvate.</target>
+</trans-unit>
+<trans-unit id="s775558e24e932964">
+  <source>Zurück zum Willkommensdialog</source>
+  <target>Torna alla finestra di benvenuto</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

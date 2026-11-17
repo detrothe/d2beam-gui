@@ -76,6 +76,8 @@ export class LocalePicker extends LitElement {
             url.searchParams.set('locale', newLocale);
             window.history.pushState(null, '', url.toString());
             setLocaleFromUrl();
+            // Tab ꔷꔷꔷ: Speichern-Button markieren (natives change kommt nicht aus dem Shadow-DOM heraus)
+            this.dispatchEvent(new CustomEvent('einstellung-geaendert', { bubbles: true, composed: true }));
         }
     }
 }

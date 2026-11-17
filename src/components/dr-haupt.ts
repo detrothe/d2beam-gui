@@ -63,7 +63,7 @@ import { init_haupt3 } from '../pages/haupt3';
 import { enableTouchHints } from '../pages/touch_hint';
 import { alertdialog } from '../pages/confirm_dialog';
 import { global_css } from '../styles/global-css';
-import { willkommen_ist_ausgeblendet, willkommen_ausblenden } from './dr-dialog_willkommen';
+import { willkommen_ist_ausgeblendet, willkommen_ausblenden, drDialogWillkommen } from './dr-dialog_willkommen';
 
 document.adoptedStyleSheets = [
   ...document.adoptedStyleSheets,
@@ -149,6 +149,46 @@ export class drHaupt extends LitElement {
     willkommen_ausblenden(!checked);
   }
 
+  // über "Zu den Einstellungen" aus dem Willkommensdialog in den Tab ꔷꔷꔷ gekommen
+  @state() private vonWillkommen = false;
+
+  private _willkommen_zu_einstellungen() {
+    this.vonWillkommen = true;
+  }
+
+  private _zurueck_zum_willkommen() {
+    this.vonWillkommen = false;
+    const shadow = this.shadowRoot;
+    if (shadow === null) {
+      return;
+    }
+    const tab_haupt = shadow.getElementById('id_tab_group');
+    if (tab_haupt !== null) {
+      tab_haupt.click();
+    }
+    const dlg = shadow.getElementById('id_dialog_willkommen') as drDialogWillkommen | null;
+    if (dlg !== null) {
+      dlg.wieder_oeffnen();
+    }
+  }
+
+  // anderer Tab gewählt: Zurück-Button im Tab ꔷꔷꔷ nicht mehr zeigen
+  private _tab_gewechselt(e: CustomEvent) {
+    if (e.target !== e.currentTarget) {
+      return;   // sl-tab-show einer inneren Tab-Gruppe
+    }
+    if (e.detail.name !== 'tab-einstellungen') {
+      this.vonWillkommen = false;
+    }
+  }
+
+  private _render_zurueck_zum_willkommen() {
+    if (!this.vonWillkommen) {
+      return '';
+    }
+    return html`<p><sl-button variant="primary" @click="${this._zurueck_zum_willkommen}">← ${msg('Zurück zum Willkommensdialog')}</sl-button></p>`;
+  }
+
   // im Willkommensdialog "nicht mehr anzeigen" angehakt
   private _willkommen_ausgeblendet() {
     this.willkommenHidden = true;
@@ -161,6 +201,51 @@ export class drHaupt extends LitElement {
       storage_set(INTRO_VIDEO_HINT_KEY, '1');
     }
     show_video();
+  }
+
+  // Tab ꔷꔷꔷ: Einstellung geändert, aber noch nicht im Browser gespeichert -> Speichern-Button markieren
+  @state() private einstellungenGeaendert = false;
+
+  private _einstellung_geaendert(e: Event) {
+    const ziel = e.target as HTMLElement | null;
+    if (ziel === null) {
+      return;
+    }
+    // diese beiden Checkboxen werden sofort gespeichert
+    if (ziel.id === 'id_intro_video_visible' || ziel.id === 'id_willkommen_visible') {
+      return;
+    }
+    this.einstellungenGeaendert = true;
+  }
+
+  private _einstellungen_klick(e: Event) {
+    const ziel = e.target as HTMLElement | null;
+    if (ziel === null) {
+      return;
+    }
+    const button = ziel.closest('button');
+    if (button === null) {
+      return;
+    }
+    if (button.id === 'id_cb_saveLocalStorage') {
+      this.einstellungenGeaendert = false;
+    } else if (button.id === 'id_accent_color_reset') {
+      this.einstellungenGeaendert = true;
+    }
+  }
+
+  private _klasse_speichern(): string {
+    if (this.einstellungenGeaendert) {
+      return 'speichern_hinweis';
+    }
+    return '';
+  }
+
+  private _render_speichern_hinweis() {
+    if (!this.einstellungenGeaendert) {
+      return '';
+    }
+    return html`<br /><span class="speichern_hinweis_text">${msg('Es gibt Änderungen, die noch nicht gespeichert sind.')}</span>`;
   }
 
   private _change_intro_video_visible(e: Event) {
@@ -188,6 +273,20 @@ export class drHaupt extends LitElement {
   /* Scroll-Pfeil der Tab-Leiste ragt sonst bei schmalen Fenstern 2px über den Rand
      -> horizontaler und damit auch vertikaler Scrollbalken der ganzen Seite */
   sl-tab-group::part(nav) { overflow: hidden; }
+
+  /* Tab ꔷꔷꔷ: ungespeicherte Änderungen, Rahmen in der Akzentfarbe (Text bleibt bei jeder Farbe lesbar) */
+  #id_cb_saveLocalStorage.speichern_hinweis {
+    outline: 3px solid var(--sl-color-primary-600);
+    outline-offset: 2px;
+    font-weight: 700;
+  }
+  .speichern_hinweis_text {
+    display: inline-block;
+    margin-top: 0.4rem;
+    font-size: 0.875rem;
+    color: var(--sl-color-primary-600);
+    font-weight: 600;
+  }
 
   @media (prefers-color-scheme: dark) {
       sl-tab::part(base) { color: yellow; font-size: 1rem;}
@@ -217,7 +316,7 @@ export class drHaupt extends LitElement {
   render() {
     return html`
 
-      <sl-tab-group id="id_sl_tab_group">
+      <sl-tab-group id="id_sl_tab_group" @sl-tab-show="${this._tab_gewechselt}">
       <sl-tab id="id_tab_group" slot="nav" panel="tab-haupt">${msg('Haupt')}</sl-tab>
       <sl-tab id="id_panel_CAD" slot="nav" panel="tab-cad">${msg('System')}</sl-tab>
       <sl-tab id="id_panel_grafik" slot="nav" panel="tab-grafik">${msg('Ergebnisse')}</sl-tab>
@@ -348,7 +447,6 @@ export class drHaupt extends LitElement {
         </div>
 
         <dr-dialog_neue_eingabe id="id_dialog_neue_eingabe"></dr-dialog_neue_eingabe>
-        <dr-dialog_willkommen id="id_dialog_willkommen" @willkommen-ausgeblendet="${this._willkommen_ausgeblendet}"></dr-dialog_willkommen>
 
         <div id="id_container" class="footer" >${theFooter}
           <a href="https://statikverstehen.de">&#169; statikverstehen.de</a>
@@ -1193,7 +1291,10 @@ export class drHaupt extends LitElement {
       <sl-tab-panel name="tab-einstellungen"
         ><p><b>${msg('Einstellungen')}</b><br /><br /></p>
 
-        <div id="id_einstellungen">
+        <div id="id_einstellungen" @change="${this._einstellung_geaendert}" @sl-change="${this._einstellung_geaendert}"
+          @sl-input="${this._einstellung_geaendert}" @einstellung-geaendert="${this._einstellung_geaendert}"
+          @click="${this._einstellungen_klick}">
+          ${this._render_zurueck_zum_willkommen()}
           <br />
           <table>
             <tbody>
@@ -1311,9 +1412,10 @@ export class drHaupt extends LitElement {
 
           <br /><br />
           <p>
-            <button type="button" id="id_cb_saveLocalStorage">
+            <button type="button" id="id_cb_saveLocalStorage" class="${this._klasse_speichern()}">
               ${msg('Auswahl als Standardwerte im Browser speichern')}
             </button>
+            ${this._render_speichern_hinweis()}
           </p>
           <p>
             <button type="button" id="id_cb_deleteLocalStorage">
@@ -1324,9 +1426,11 @@ export class drHaupt extends LitElement {
       </sl-tab-panel>
     </sl-tab-group>
 
-    <!-- Info-Dialog außerhalb der Tab-Panels: wird auch aus Tab Haupt (Willkommensdialog) geöffnet,
-         in einem ausgeblendeten Panel wäre er modal, aber unsichtbar -->
+    <!-- Dialoge außerhalb der Tab-Panels: werden auch geöffnet, während ein anderer Tab aktiv ist;
+         in einem ausgeblendeten Panel wären sie modal, aber unsichtbar -->
     <dr-dialog_info id="id_dialog_info"></dr-dialog_info>
+    <dr-dialog_willkommen id="id_dialog_willkommen" @willkommen-ausgeblendet="${this._willkommen_ausgeblendet}"
+      @willkommen-zu-einstellungen="${this._willkommen_zu_einstellungen}"></dr-dialog_willkommen>
 
   `;
 

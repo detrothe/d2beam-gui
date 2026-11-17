@@ -278,6 +278,23 @@ export class drDialogWillkommen extends LitElement {
          filter: brightness(1.08);
       }
 
+      .d2-start p.d2-start-tipp {
+         margin: 0;
+         font-size: 13px;
+         line-height: 1.5;
+      }
+      .d2-inline-link {
+         display: inline;
+         min-height: 0;
+         padding: 0;
+         border: 0;
+         background: transparent;
+         font: inherit;
+         font-weight: 700;
+         color: var(--d2-accent);
+         text-decoration: underline;
+         cursor: pointer;
+      }
       .d2-start-footer {
          display: flex;
          flex-wrap: wrap;
@@ -371,6 +388,14 @@ export class drDialogWillkommen extends LitElement {
       }
    }
 
+   // nach "Zu den Einstellungen": Dialog im selben Zustand wieder zeigen (Checkbox bleibt, wie sie war)
+   wieder_oeffnen() {
+      const dlg = this.get_dialog();
+      if (dlg !== null && !dlg.open) {
+         dlg.showModal();
+      }
+   }
+
    //----------------------------------------------------------------------------------------------
    private get_dialog(): HTMLDialogElement | null {
       if (this.shadowRoot === null) {
@@ -423,6 +448,20 @@ export class drDialogWillkommen extends LitElement {
    private _letztes_system() {
       this.schliessen();
       zeige_tab('id_panel_CAD');
+   }
+
+   private _einstellungen() {
+      // dr-haupt zeigt daraufhin im Tab ꔷꔷꔷ den Button "Zurück zum Willkommensdialog"
+      this.dispatchEvent(new CustomEvent('willkommen-zu-einstellungen', { bubbles: true, composed: true }));
+      this.schliessen();
+      const shadow = get_haupt_shadow();
+      if (shadow === null) {
+         return;
+      }
+      const tab = shadow.querySelector('sl-tab[panel="tab-einstellungen"]') as HTMLElement | null;
+      if (tab !== null) {
+         tab.click();
+      }
    }
 
    private _videos() {
@@ -496,6 +535,11 @@ export class drDialogWillkommen extends LitElement {
                      <span class="d2-desc">${msg('In wenigen Minuten vom ersten Stab bis zur Momentenlinie. Öffnet sich in einem neuen Browser-Tab.')}</span>
                   </button>
                </div>
+
+               <p class="d2-start-tipp">
+                  ${msg('Tipp: Schriftgröße, Größe der Buttons im Tab System und Farben kannst du im Tab ꔷꔷꔷ (ganz rechts) einstellen. Damit sie beim nächsten Start noch gelten, dort auf „Auswahl als Standardwerte im Browser speichern“ drücken.')}
+                  <button type="button" class="d2-inline-link" @click="${this._einstellungen}">${msg('Zu den Einstellungen')}</button>
+               </p>
 
                <div class="d2-start-footer">
                   <div class="d2-start-links">
