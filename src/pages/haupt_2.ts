@@ -20,6 +20,7 @@ import { reset_gui } from '../components/dr-control-panel';
 // import { addListener_filesave } from './dateien';
 import { reset_controlpanel_grafik } from './grafik';
 import { verwerfen_bestaetigt } from './dateien';
+import { getLocale } from './localization';
 // import { set_info, write } from './utility';
 
 import { my_jspdf } from './mypdf';
@@ -38,7 +39,7 @@ import { init_cad, set_einheit_bemassung, set_raster_dx, set_raster_dz, set_rast
 import { set_max_lastfall, zero_max_lastfall } from './cad_draw_elementlasten';
 import { reset_cad_nodes } from './cad_node';
 // import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
-import { app, set_current_filename } from './haupt';
+import { set_current_filename } from './haupt';
 import { drHaupt } from '../components/dr-haupt';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 
@@ -620,7 +621,9 @@ export function elementTabelle_bettung_anzeigen(check: boolean) {
 //---------------------------------------------------------------------------------------------------------------
 export function show_video() {
   //-------------------------------------------------------------------------------------------------------------
-  if (app.browserLanguage === "de") {
+  // Die Videos sind je nach Sprache verschieden: deutsch auf statikverstehen.de, alle anderen auf fea-apps.de.
+  // Maßgebend ist die in der App eingestellte Sprache, nicht die Browsersprache.
+  if (getLocale() === 'de') {
     window.open('https://statikverstehen.de/videos/videos.html', '_blank', 'noopener');
   } else {
     window.open('https://fea-apps.de/videos/videos.html', '_blank', 'noopener');
