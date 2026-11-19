@@ -27,51 +27,25 @@ body {
 }
 
 /*
-  Installierte PWA: wegen viewport-fit=cover (index.html) reicht die Seite unter Statusleiste,
-  Notch und Home-Balken. Innenabstand hält den Inhalt davon frei.
-  Streifen oben: iPadOS legt in der installierten PWA (auch im Vollbild, wo die Safe Area 0 ist)
-  einen grauen Schleier über die obere Zeile. Ein fest positioniertes Element von mind. 40px Höhe
-  am oberen Rand beseitigt ihn (WebKit richtet den oberen Rand danach aus). Fast durchsichtig,
-  damit es den Inhalt darunter nicht verdeckt. Im Browser greift nichts davon.
+  Installierte PWA auf iPhone/iPad (@supports -webkit-touch-callout gibt es nur bei WebKit auf
+  iOS/iPadOS): iPadOS 26/27 legt oben einen grauen Schleier über die Seite, der sich von der Seite
+  aus nicht abschalten lässt. Inhalt deshalb etwas nach unten rücken, damit die obere Zeile lesbar
+  bleibt. cad.ts/grafik.ts ziehen den Innenabstand des body über body_padding_vertikal() ab.
 */
-#pwa-statusbar-shim {
-  display: none;
-}
+@supports (-webkit-touch-callout: none) {
+  @media (display-mode: standalone) {
+    :root {
+      --pwa-abstand-oben: 12px;
+    }
 
-@media (display-mode: standalone) {
-  body {
-    padding-top: env(safe-area-inset-top);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+    body {
+      padding-top: var(--pwa-abstand-oben);
+    }
 
-  /* :host von dr-haupt hat height: 100dvh, Regel von außen hat Vorrang */
-  dr-haupt {
-    height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-  }
-
-  #pwa-statusbar-shim {
-    display: block;
-    position: fixed;
-    top: 5px;   /* TEST: startet außerhalb 0-4px, wird nach load per Script auf 0 geschoben (index.html) */
-    left: 0;
-    right: 0;
-    height: max(env(safe-area-inset-top), 40px);
-    transition: top 0.05s linear;
-    background-color: rgb(255, 0, 0);   /* TEST rot deckend */
-    pointer-events: none;
-    z-index: 2147483647;
-  }
-
-  #pwa-statusbar-shim.active {
-    top: 0;
-  }
-}
-
-@media (display-mode: standalone) and (prefers-color-scheme: dark) {
-  #pwa-statusbar-shim {
-    background-color: rgb(255, 0, 0);   /* TEST rot deckend */
+    /* :host von dr-haupt hat height: 100dvh, Regel von außen hat Vorrang */
+    dr-haupt {
+      height: calc(100dvh - var(--pwa-abstand-oben));
+    }
   }
 }
 

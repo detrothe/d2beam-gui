@@ -7,7 +7,7 @@
     <base href="/">
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src https:"> -->
     <!-- This meta viewport ensures the webpage's dimensions change according to the device it's on. This is called Responsive Web Design.-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
     <!-- content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" -->
     <meta name="description" content="Ebenes Stabwerkprogramm, Theorie I. und II. Ordnung, Statik">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
@@ -15,7 +15,6 @@
     <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="D2Beam">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <!-- This tag is used by the PWA D2BEAM CLI to identify template projects. Don't remove if you are using the CLI. -->
     <meta name="pwa-starter-template-identity" content="pwa-starter">
@@ -80,13 +79,6 @@
 
 <body>
     <!-- deckender Streifen unter der Statusleiste der installierten PWA (iPadOS-Schleier), siehe global.css -->
-    <div id="pwa-statusbar-shim" aria-hidden="true"></div>
-    <script>
-        // TEST iPadOS-Schleier: Streifen erst nach dem Laden in den Bereich top 0-4px schieben
-        window.addEventListener('load', () => {
-            requestAnimationFrame(() => document.getElementById('pwa-statusbar-shim')?.classList.add('active'));
-        });
-    </script>
     <!-- <script>
             if ('serviceWorker' in navigator) {
                let result = navigator.serviceWorker.register('sw.js');
