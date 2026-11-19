@@ -26,6 +26,9 @@ export class drButtonPM extends LitElement {
    /** Optionales Maximum. `undefined` = keine Obergrenze. */
    @property({ type: Number }) maxValue?: number;
 
+   /** Komplett gesperrt (z.B. Tab Tabellen, nur zur Info): beide Buttons und Eingabefeld. */
+   @property({ type: Boolean, reflect: true }) disabled = false;
+
    @query('input') private _input!: HTMLInputElement;
 
    static override styles = css`
@@ -91,6 +94,14 @@ export class drButtonPM extends LitElement {
          line-height: calc(var(--sl-input-height-medium) - 2px);
          vertical-align: middle;
          color: var(--dr-text-color);
+      }
+
+      /* gesperrt (Eigenschaft disabled): Zahl bleibt normal lesbar, iOS blasst sonst ab */
+      .input_int:disabled {
+         opacity: 1;
+         color: var(--dr-text-color);
+         -webkit-text-fill-color: var(--dr-text-color);
+         background-color: transparent;
       }
 
       input,
@@ -213,7 +224,7 @@ export class drButtonPM extends LitElement {
          <button
             class="spinner decrement"
             aria-label="Wert verringern"
-            ?disabled="${this._atMin}"
+            ?disabled="${this.disabled || this._atMin}"
             @click="${this._decrement}"
          >
             -
@@ -225,11 +236,12 @@ export class drButtonPM extends LitElement {
             name="nnodes"
             class="input_int"
             .value="${String(this.nel)}"
+            ?disabled="${this.disabled}"
             @change="${this._onInputChange}"
          /><button
             class="spinner increment"
             aria-label="Wert erhöhen"
-            ?disabled="${this._atMax}"
+            ?disabled="${this.disabled || this._atMax}"
             @click="${this._increment}"
          >
             +

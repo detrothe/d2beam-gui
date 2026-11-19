@@ -568,7 +568,7 @@ export class drHaupt extends LitElement {
                 </p>
                 <p>
                   Anzahl Knoten:
-                  <dr-button-pm id="id_button_nnodes" nel="${nnodes_init}" inputid="nnodes"></dr-button-pm>
+                  <dr-button-pm disabled id="id_button_nnodes" nel="${nnodes_init}" inputid="nnodes"></dr-button-pm>
                   <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
                 </p>
               </td>
@@ -605,7 +605,7 @@ export class drHaupt extends LitElement {
         </p>
         <p>
           Anzahl Knoten mit<br />vorgebenenen Verformungen:
-          <dr-button-pm id="id_button_nnodedisps" nel="${nnodedisps_init}" inputid="nnodedisps"></dr-button-pm>
+          <dr-button-pm disabled id="id_button_nnodedisps" nel="${nnodedisps_init}" inputid="nnodedisps"></dr-button-pm>
           <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
 
@@ -661,7 +661,7 @@ export class drHaupt extends LitElement {
         <p>
           Anzahl Elemente:
 
-          <dr-button-pm id="id_button_nelem" nel="${nelem_init}" inputid="nelem"></dr-button-pm>
+          <dr-button-pm disabled id="id_button_nelem" nel="${nelem_init}" inputid="nelem"></dr-button-pm>
           <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
 
@@ -690,7 +690,7 @@ export class drHaupt extends LitElement {
         <p>
           Anzahl Koppelfedern:
 
-          <dr-button-pm id="id_button_nkoppelfedern" nel="${nkoppelfedern_init}" inputid="nkoppelfedern"></dr-button-pm>
+          <dr-button-pm disabled id="id_button_nkoppelfedern" nel="${nkoppelfedern_init}" inputid="nkoppelfedern"></dr-button-pm>
           <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
 
@@ -709,7 +709,7 @@ export class drHaupt extends LitElement {
         <p>
           Anzahl Knotenlasten:
 
-          <dr-button-pm id="id_button_nnodalloads" nel="${nnodalloads_init}" inputid="nnodalloads"></dr-button-pm>
+          <dr-button-pm disabled id="id_button_nnodalloads" nel="${nnodalloads_init}" inputid="nnodalloads"></dr-button-pm>
           <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
           <br /><br />
         </p>
@@ -737,7 +737,7 @@ export class drHaupt extends LitElement {
         </p>
         <p>
           Anzahl Streckenlasten:
-          <dr-button-pm
+          <dr-button-pm disabled
             id="id_button_nstreckenlasten"
             nel="${nstreckenlasten_init}"
             inputid="nelemloads"
@@ -760,7 +760,7 @@ export class drHaupt extends LitElement {
         <p>
           <br />
           Anzahl Einzellasten:
-          <dr-button-pm
+          <dr-button-pm disabled
             id="id_button_neinzellasten"
             nel="${neinzellasten_init}"
             inputid="nelemloads"
@@ -784,7 +784,7 @@ export class drHaupt extends LitElement {
         </p>
         <p>
           Anzahl Temperaturlasten:
-          <dr-button-pm
+          <dr-button-pm disabled
             id="id_button_ntemperaturlasten"
             nel="${ntemperaturlasten_init}"
             inputid="nelemloads"
@@ -807,7 +807,7 @@ export class drHaupt extends LitElement {
         </p>
         <p>
           Anzahl der Vorspannungen:
-          <dr-button-pm
+          <dr-button-pm disabled
             id="id_button_nvorspannungen"
             nel="${nvorspannungen_init}"
             inputid="nvorspannungen"
@@ -830,7 +830,7 @@ export class drHaupt extends LitElement {
         </p>
         <p>
           Anzahl Spannschlösser:
-          <dr-button-pm
+          <dr-button-pm disabled
             id="id_button_nspannschloesser"
             nel="${nspannschloesser_init}"
             inputid="nspannschloesser"
@@ -860,7 +860,7 @@ export class drHaupt extends LitElement {
 
         <p>
           Anzahl Stabvorverformungen:
-          <dr-button-pm id="id_button_nstabvorverformungen" nel="${nstabvorverfomungen_init}" inputid="nstabvorverformungen"></dr-button-pm>
+          <dr-button-pm disabled id="id_button_nstabvorverformungen" nel="${nstabvorverfomungen_init}" inputid="nstabvorverformungen"></dr-button-pm>
           <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
         <dr-tabelle
@@ -881,7 +881,7 @@ export class drHaupt extends LitElement {
       <p>
           Anzahl Knotenmassen:
 
-          <dr-button-pm id="id_button_nnodalmass" nel="${nnodalmass_init}" inputid="nnodalmass"></dr-button-pm>
+          <dr-button-pm disabled id="id_button_nnodalmass" nel="${nnodalmass_init}" inputid="nnodalmass"></dr-button-pm>
           <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
         <dr-tabelle
