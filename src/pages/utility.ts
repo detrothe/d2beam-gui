@@ -109,6 +109,12 @@ export function set_info() {
 
 
 //--------------------------------------------------------------------------------------------------------
+// Innenabstand des body oben/unten (Safe Area der installierten PWA, siehe global.css), sonst 0
+export function body_padding_vertikal(): { oben: number; unten: number } {
+    const st = getComputedStyle(document.body);
+    return { oben: parseFloat(st.paddingTop) || 0, unten: parseFloat(st.paddingBottom) || 0 };
+}
+
 export function write(str: string, wert?: number) {
     //----------------------------------------------------------------------------------------------------
 

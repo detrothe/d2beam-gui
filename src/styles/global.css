@@ -26,6 +26,48 @@ body {
   overscroll-behavior: none;   /* kein pull to refresh, kein Reload bei Ziehen mit Finger von oben nach unten */
 }
 
+/*
+  Installierte PWA: wegen viewport-fit=cover (index.html) reicht die Seite unter Statusleiste,
+  Notch und Home-Balken. Innenabstand hält den Inhalt davon frei; der Streifen oben deckt den
+  Bereich unter der Statusleiste in Hintergrundfarbe ab (iPadOS legt dort sonst einen Schleier
+  über den Inhalt). Im Browser und ohne Safe Area sind alle env()-Werte 0 -> keine Wirkung.
+*/
+#pwa-statusbar-shim {
+  display: none;
+}
+
+@media (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* :host von dr-haupt hat height: 100dvh, Regel von außen hat Vorrang */
+  dr-haupt {
+    height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+
+  #pwa-statusbar-shim {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top);
+    background-color: #f5f5f5;   /* wie body hell */
+    pointer-events: none;
+    z-index: 2147483647;
+  }
+}
+
+@media (display-mode: standalone) and (prefers-color-scheme: dark) {
+  #pwa-statusbar-shim {
+    background-color: rgb(64, 64, 64);   /* wie body dunkel */
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   html,
   body {
