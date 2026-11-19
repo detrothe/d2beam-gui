@@ -28,9 +28,11 @@ body {
 
 /*
   Installierte PWA: wegen viewport-fit=cover (index.html) reicht die Seite unter Statusleiste,
-  Notch und Home-Balken. Innenabstand hält den Inhalt davon frei; der Streifen oben deckt den
-  Bereich unter der Statusleiste in Hintergrundfarbe ab (iPadOS legt dort sonst einen Schleier
-  über den Inhalt). Im Browser und ohne Safe Area sind alle env()-Werte 0 -> keine Wirkung.
+  Notch und Home-Balken. Innenabstand hält den Inhalt davon frei.
+  Streifen oben: iPadOS legt in der installierten PWA (auch im Vollbild, wo die Safe Area 0 ist)
+  einen grauen Schleier über die obere Zeile. Ein fest positioniertes Element von mind. 40px Höhe
+  am oberen Rand beseitigt ihn (WebKit richtet den oberen Rand danach aus). Fast durchsichtig,
+  damit es den Inhalt darunter nicht verdeckt. Im Browser greift nichts davon.
 */
 #pwa-statusbar-shim {
   display: none;
@@ -55,8 +57,8 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: env(safe-area-inset-top);
-    background-color: #f5f5f5;   /* wie body hell */
+    height: max(env(safe-area-inset-top), 40px);
+    background-color: rgba(245, 245, 245, 0.02);   /* wie body hell, fast durchsichtig */
     pointer-events: none;
     z-index: 2147483647;
   }
@@ -64,7 +66,7 @@ body {
 
 @media (display-mode: standalone) and (prefers-color-scheme: dark) {
   #pwa-statusbar-shim {
-    background-color: rgb(64, 64, 64);   /* wie body dunkel */
+    background-color: rgba(64, 64, 64, 0.02);   /* wie body dunkel, fast durchsichtig */
   }
 }
 
