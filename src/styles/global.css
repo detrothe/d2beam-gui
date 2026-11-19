@@ -54,13 +54,18 @@ body {
   #pwa-statusbar-shim {
     display: block;
     position: fixed;
-    top: 0;
+    top: 5px;   /* TEST: startet außerhalb 0-4px, wird nach load per Script auf 0 geschoben (index.html) */
     left: 0;
     right: 0;
     height: max(env(safe-area-inset-top), 40px);
+    transition: top 0.05s linear;
     background-color: rgb(255, 0, 0);   /* TEST rot deckend */
     pointer-events: none;
     z-index: 2147483647;
+  }
+
+  #pwa-statusbar-shim.active {
+    top: 0;
   }
 }
 

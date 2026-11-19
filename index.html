@@ -81,6 +81,12 @@
 <body>
     <!-- deckender Streifen unter der Statusleiste der installierten PWA (iPadOS-Schleier), siehe global.css -->
     <div id="pwa-statusbar-shim" aria-hidden="true"></div>
+    <script>
+        // TEST iPadOS-Schleier: Streifen erst nach dem Laden in den Bereich top 0-4px schieben
+        window.addEventListener('load', () => {
+            requestAnimationFrame(() => document.getElementById('pwa-statusbar-shim')?.classList.add('active'));
+        });
+    </script>
     <!-- <script>
             if ('serviceWorker' in navigator) {
                let result = navigator.serviceWorker.register('sw.js');
