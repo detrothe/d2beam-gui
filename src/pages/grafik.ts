@@ -4,7 +4,7 @@ import { msg } from '@lit/localize';
 import Two from 'two.js'
 
 import { CTrans } from './trans';
-import { myFormat, write, body_padding_vertikal } from './utility'
+import { myFormat, write } from './utility'
 //import { CTimoshenko_beam } from "./timoshenko_beam"
 import { xmin, xmax, zmin, zmax, slmax, nlastfaelle, nkombinationen, neigv, nelTeilungen, load, maxValue_eload_komb, stadyn, nur_eingabe_ueberpruefen, matprop_flag, nelem_koppelfedern, nelem_Balken, maxBettung, maxpress_all, max_press_kombi, dyn_omega, faktor_einheit_kraft, einheit_kraft } from "./rechnen";
 import { el as element, node, nelem, nnodes, nloads, neloads, eload, nstabvorverfomungen, stabvorverformung } from "./rechnen";
@@ -1222,14 +1222,14 @@ export function drawsystem(svg_id = 'artboard') {
         if (fullscreen) {
             grafik_top = 0
             ele.style.position = 'absolute'
-            height = document.documentElement.clientHeight - 4 - body_padding_vertikal().oben - body_padding_vertikal().unten;
+            height = document.documentElement.clientHeight - 4;
         } else {
             grafik_top = shadow.getElementById("id_panel_grafik")!.getBoundingClientRect().bottom;
             console.log("grafik_top", grafik_top)
             //console.log("HEIGHT id_grafik boundingRect", ele.getBoundingClientRect(), '|', ele);
             //write("grafik top: " + grafik_top)
             // if (grafik_top === 0) grafik_top = 69
-            height = document.documentElement.clientHeight - grafik_top - 8 - body_padding_vertikal().unten //- 17 //- el?.getBoundingClientRect()?.height;
+            height = document.documentElement.clientHeight - grafik_top - 8 //- 17 //- el?.getBoundingClientRect()?.height;
             console.log("height", height)
         }
     }

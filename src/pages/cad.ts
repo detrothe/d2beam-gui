@@ -3,7 +3,7 @@ import Two from 'two.js';
 
 import { CTrans } from './trans';
 import { draw_arrow_alpha } from './grafik';
-import { myFormat, write, body_padding_vertikal } from './utility';
+import { myFormat, write } from './utility';
 import { LinkedList } from '../components/linkedlist';
 import { stadyn, TLoads, TMass, TNode, TNodeDisp } from './rechnen';
 import { alertdialog } from './confirm_dialog';
@@ -681,7 +681,7 @@ export function init_cad(flag: number) {
       if (fullscreen) {
          grafik_top = 0;
          ele.style.position = 'absolute';
-         height = document.documentElement.clientHeight - 4 - body_padding_vertikal().oben - body_padding_vertikal().unten;
+         height = document.documentElement.clientHeight - 4;
       } else {
 
          //console.log("id_cad.top", shadow.getElementById("id_cad_group")!.getBoundingClientRect().top)
@@ -696,7 +696,7 @@ export function init_cad(flag: number) {
          grafik_top = body.getBoundingClientRect().top;
          //console.log("grafik_top CAD neu", grafik_top)
 
-         height = document.documentElement.clientHeight - grafik_top - 8 - body_padding_vertikal().unten // 4 - 17 - 18; //- el?.getBoundingClientRect()?.height;
+         height = document.documentElement.clientHeight - grafik_top - 8 // 4 - 17 - 18; //- el?.getBoundingClientRect()?.height;
       }
 
       let breite: number;
