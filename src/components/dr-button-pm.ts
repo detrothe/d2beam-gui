@@ -70,11 +70,11 @@ export class drButtonPM extends LitElement {
          }
       }
 
-      /* Hintergrund wie beim aktiven Button, sonst scheint im dunklen Modus
-         beim deaktivierten Button das Grau der Seite durch */
+      /* Nur das Zeichen abblassen, nicht den ganzen Button: mit opacity würde im dunklen
+         Modus durch den Hintergrund das Grau der Seite scheinen (z.B. "-" bei 0 Zeilen) */
       .spinner:disabled {
-         opacity: 0.4;
          cursor: not-allowed;
+         color: color-mix(in srgb, var(--dr-text-color) 40%, transparent);
          background-color: var(--dr-bg-color);
       }
 
