@@ -9,7 +9,7 @@ import { allLocales } from './generated/locale-codes.js';
 // import './styles/global.css';
 import './styles/contextMenu.css';
 
-import { Workbox } from 'workbox-window';
+import { starte_versionspruefung } from './pages/sw_update';
 
 console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 if (process.env.NODE_ENV !== "development") {
@@ -27,7 +27,7 @@ export function set_user_language(wert: string) { user_language = wert; };
 
 console.log("Anfang index.ts")
 
-check_for_new_version();
+starte_versionspruefung();
 
 
 window.addEventListener('lit-localize-status', (event) => {
@@ -138,7 +138,7 @@ import { reset_controlpanel_grafik, update_select_texts } from './pages/grafik';
 import { reset_gui } from './components/dr-control-panel.js';
 import { update_button_language } from './pages/cad_buttons.js';
 import { AlertDialog } from './pages/confirm_dialog.js';
-import { confirmdialog, alertdialog } from './pages/confirm_dialog';
+import { alertdialog } from './pages/confirm_dialog';
 import { clearTables } from './pages/haupt_2';
 import { zeige_willkommen_beim_start } from './components/dr-dialog_willkommen';
 
@@ -419,26 +419,6 @@ window.addEventListener('load', () => {
 
 //     URL.revokeObjectURL(url);
 // }
-
-async function check_for_new_version() {
-    if ('serviceWorker' in navigator) {
-        const wb = new Workbox('/sw.js');
-
-        wb.addEventListener('installed', async event => {
-            if (event.isUpdate) {
-                // const ok = alertdialog('Es gibt eine neue Version.');
-                // if (ok) {
-                //   window.location.reload();
-                // }
-                let ok = await confirmdialog('ja', 'nein', 'Es gibt eine neue Version. Jetzt updaten?');
-                if (ok) window.location.reload();
-            }
-        }
-        );
-        wb.register();
-    }
-
-}
 
 function handleGlobalContextMenu(event: MouseEvent): void {
 

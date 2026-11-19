@@ -62,7 +62,9 @@ export default defineConfig({
     // minifyOnlyPublicHtml(),
 
     VitePWA({
-      registerType: "autoUpdate",
+      // prompt: neue Version übernimmt erst nach Rückfrage (src/pages/sw_update.ts)
+      registerType: "prompt",
+      injectRegister: false,
       strategies: "generateSW",
       manifest: {
         name: "D2Beam GUI",
@@ -131,7 +133,6 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 4000000,
         cleanupOutdatedCaches: true,
         clientsClaim: true,
-        skipWaiting: true,
         navigateFallback: "/index.html"
       },
       devOptions: {
