@@ -2084,6 +2084,22 @@ Le fichier est enregistré dans le dossier de téléchargement par défaut</targ
   <source>Die aktuelle Eingabe hat Änderungen, die noch nicht in einer Datei gespeichert sind. Sie gehen bei einer neuen Eingabe verloren.</source>
   <target>La saisie actuelle contient des modifications qui n’ont pas encore été enregistrées dans un fichier. Elles seront perdues lors d’une nouvelle saisie.</target>
 </trans-unit>
+<trans-unit id="s7a3c69b0add512f8">
+  <source>Es gibt keine ausreichende Lagerung</source>
+  <target>La structure n’a pas d’appuis suffisants</target>
+</trans-unit>
+<trans-unit id="s6e92250ee8d02278">
+  <source>Jetzt neu laden</source>
+  <target>Recharger maintenant</target>
+</trans-unit>
+<trans-unit id="se9da8cc1cf1518b1">
+  <source>Später</source>
+  <target>Plus tard</target>
+</trans-unit>
+<trans-unit id="sb29df2a56f19c0f6">
+  <source>Es gibt eine neue Version. Jetzt neu laden? Die aktuelle Eingabe bleibt erhalten.</source>
+  <target>Une nouvelle version est disponible. Recharger maintenant ? La saisie actuelle est conservée.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

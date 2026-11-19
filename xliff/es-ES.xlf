@@ -2085,6 +2085,22 @@ El archivo se guarda en la carpeta de descargas predeterminada</target>
   <source>Die aktuelle Eingabe hat Änderungen, die noch nicht in einer Datei gespeichert sind. Sie gehen bei einer neuen Eingabe verloren.</source>
   <target>La entrada actual tiene cambios que aún no se han guardado en un archivo. Se perderán al comenzar una nueva entrada.</target>
 </trans-unit>
+<trans-unit id="s7a3c69b0add512f8">
+  <source>Es gibt keine ausreichende Lagerung</source>
+  <target>La estructura no tiene apoyos suficientes</target>
+</trans-unit>
+<trans-unit id="s6e92250ee8d02278">
+  <source>Jetzt neu laden</source>
+  <target>Recargar ahora</target>
+</trans-unit>
+<trans-unit id="se9da8cc1cf1518b1">
+  <source>Später</source>
+  <target>Más tarde</target>
+</trans-unit>
+<trans-unit id="sb29df2a56f19c0f6">
+  <source>Es gibt eine neue Version. Jetzt neu laden? Die aktuelle Eingabe bleibt erhalten.</source>
+  <target>Hay una nueva versión. ¿Recargar ahora? Los datos introducidos se conservan.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
