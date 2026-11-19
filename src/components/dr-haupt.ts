@@ -113,7 +113,7 @@ typs_string_kombitabelle = typs_string_kombitabelle + ']';
 
 
 //########################################################################################################################
-let theFooter = '2D structural analysis of frames and trusses, v2.5.0, 19-Nov-2026, ';
+let theFooter = '2D structural analysis of frames and trusses, v2.5.1, 19-Nov-2026, ';
 //########################################################################################################################
 
 // console.log("getBasePath()",getBasePath())
@@ -882,8 +882,7 @@ export class drHaupt extends LitElement {
           Anzahl Knotenmassen:
 
           <dr-button-pm id="id_button_nnodalmass" nel="${nnodalmass_init}" inputid="nnodalmass"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button>
-          <br /><br />
+          <!-- <sl-button id="resize" value="resize" @click="${resizeTables}">Tabelle anpassen</sl-button> -->
         </p>
         <dr-tabelle
           id="id_knotenmassen_tabelle"
