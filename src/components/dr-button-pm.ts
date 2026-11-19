@@ -63,14 +63,19 @@ export class drButtonPM extends LitElement {
          vertical-align: middle;
       }
 
-      .spinner:hover {
-         background: lightgrey;
+      /* nur bei echter Maus: auf Touch-Geräten bleibt :hover nach dem Tippen sonst hängen */
+      @media (hover: hover) {
+         .spinner:not(:disabled):hover {
+            background: lightgrey;
+         }
       }
 
+      /* Hintergrund wie beim aktiven Button, sonst scheint im dunklen Modus
+         beim deaktivierten Button das Grau der Seite durch */
       .spinner:disabled {
          opacity: 0.4;
          cursor: not-allowed;
-         background: none;
+         background-color: var(--dr-bg-color);
       }
 
       .input_int {
