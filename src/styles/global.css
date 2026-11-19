@@ -58,7 +58,7 @@ body {
     left: 0;
     right: 0;
     height: max(env(safe-area-inset-top), 40px);
-    background-color: rgba(245, 245, 245, 0.02);   /* wie body hell, fast durchsichtig */
+    background-color: rgba(255, 0, 0, 0.25);   /* TEST rot */
     pointer-events: none;
     z-index: 2147483647;
   }
@@ -66,7 +66,7 @@ body {
 
 @media (display-mode: standalone) and (prefers-color-scheme: dark) {
   #pwa-statusbar-shim {
-    background-color: rgba(64, 64, 64, 0.02);   /* wie body dunkel, fast durchsichtig */
+    background-color: rgba(255, 0, 0, 0.25);   /* TEST rot */
   }
 }
 
