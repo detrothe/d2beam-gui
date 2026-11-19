@@ -15,7 +15,7 @@ import { msg } from '@lit/localize';
 import { confirmdialog } from './confirm_dialog';
 import { str_inputToJSON } from './dateien';
 
-const PRUEF_ABSTAND_MS = 2 * 60 * 1000;   // TEST, wieder auf 24 * 60 * 60 * 1000 setzen
+const PRUEF_ABSTAND_MS = 24 * 60 * 60 * 1000;
 const LETZTE_PRUEFUNG_KEY = 'sw_letzte_pruefung_D2BEAM_GUI';
 
 let dialog_offen = false;
