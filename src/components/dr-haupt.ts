@@ -953,6 +953,7 @@ export class drHaupt extends LitElement {
           colwidth='["4","8","3"]'
           lf_languagechanged='Lf'
           allow_delete_row
+          allow_insert_row
           @rows-changed=${tabelleZeilenGeaendert}
         ></dr-tabelle>
       </sl-tab-panel>
