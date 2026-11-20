@@ -2101,6 +2101,18 @@ El archivo se guarda en la carpeta de descargas predeterminada</target>
   <source>Es gibt eine neue Version. Jetzt neu laden? Die aktuelle Eingabe bleibt erhalten.</source>
   <target>Hay una nueva versión. ¿Recargar ahora? Los datos introducidos se conservan.</target>
 </trans-unit>
+<trans-unit id="sc1a732f8b025abbd">
+  <source>Zeile oberhalb einfügen</source>
+  <target>Insertar fila encima</target>
+</trans-unit>
+<trans-unit id="s062a673dafbdd5dd">
+  <source>Rückgängig</source>
+  <target>Deshacer</target>
+</trans-unit>
+<trans-unit id="s650d622acd1fe2a3">
+  <source>Wiederherstellen</source>
+  <target>Rehacer</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

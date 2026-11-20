@@ -2100,6 +2100,18 @@ The file is saved in the default download folder</target>
   <source>Es gibt eine neue Version. Jetzt neu laden? Die aktuelle Eingabe bleibt erhalten.</source>
   <target>A new version is available. Reload now? The current input will be kept.</target>
 </trans-unit>
+<trans-unit id="sc1a732f8b025abbd">
+  <source>Zeile oberhalb einfügen</source>
+  <target>Insert row above</target>
+</trans-unit>
+<trans-unit id="s062a673dafbdd5dd">
+  <source>Rückgängig</source>
+  <target>Undo</target>
+</trans-unit>
+<trans-unit id="s650d622acd1fe2a3">
+  <source>Wiederherstellen</source>
+  <target>Redo</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

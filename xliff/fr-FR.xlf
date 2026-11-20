@@ -2100,6 +2100,18 @@ Le fichier est enregistré dans le dossier de téléchargement par défaut</targ
   <source>Es gibt eine neue Version. Jetzt neu laden? Die aktuelle Eingabe bleibt erhalten.</source>
   <target>Une nouvelle version est disponible. Recharger maintenant ? La saisie actuelle est conservée.</target>
 </trans-unit>
+<trans-unit id="sc1a732f8b025abbd">
+  <source>Zeile oberhalb einfügen</source>
+  <target>Insérer une ligne au-dessus</target>
+</trans-unit>
+<trans-unit id="s062a673dafbdd5dd">
+  <source>Rückgängig</source>
+  <target>Annuler</target>
+</trans-unit>
+<trans-unit id="s650d622acd1fe2a3">
+  <source>Wiederherstellen</source>
+  <target>Rétablir</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

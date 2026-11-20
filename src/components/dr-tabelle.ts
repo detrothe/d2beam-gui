@@ -8,6 +8,12 @@ import { write } from '../pages/utility'
 import { msg, str } from '@lit/localize';
 import { ConfirmDialog } from '../pages/confirm_dialog';
 
+// Zeile oberhalb einfügen (allow_insert_row)
+const INSERT_SVG =
+   '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" ' +
+   'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+   '<path d="M12 5v14M5 12h14"/></svg>';
+
 const TRASH_SVG =
    '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" ' +
    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
@@ -217,6 +223,9 @@ class DrTabelle extends HTMLElement {
    // Attribut allow_delete_row: Löschen-Button in der No-Spalte jeder Zeile, mit lokalem Undo/Redo.
    // Muss beim Erstellen der Tabelle gesetzt sein.
    allowDeleteRow = false;
+   // Attribut allow_insert_row: Button „+“ in der No-Spalte fügt oberhalb eine leere
+   // Zeile ein; gleiches Undo/Redo wie beim Löschen. Muss ebenfalls beim Erstellen der Tabelle gesetzt sein.
+   allowInsertRow = false;
    undoStack: string[][][] = [];   // Schnappschüsse aller Zellwerte (Zeile, Spalte) vor einer Änderung
    redoStack: string[][][] = [];
    undoBar: HTMLDivElement | null = null;
@@ -232,7 +241,7 @@ class DrTabelle extends HTMLElement {
       // Bei erneutem Einhängen (Verschieben im DOM, Lit-Rerender) nichts neu aufbauen
       if (this.shadow.getElementById('mytable')) return;
 
-      if (this.allowDeleteRow) this.create_undo_bar();
+      if (this.allowDeleteRow || this.allowInsertRow) this.create_undo_bar();
 
       const table = document.createElement('table');
       this.shadow.appendChild(table);
@@ -391,6 +400,10 @@ class DrTabelle extends HTMLElement {
          this.allowDeleteRow = newValue !== null && newValue !== 'false';
          return;
       }
+      if (name === 'allow_insert_row') {
+         this.allowInsertRow = newValue !== null && newValue !== 'false';
+         return;
+      }
 
       // Farben dieser Tabelle (überschreiben die vererbten Werte aus dem Tab ꔷꔷꔷ)
       if (name === 'color_table' || name === 'color_text') {
@@ -510,7 +523,7 @@ class DrTabelle extends HTMLElement {
       //------------------------------------------------------------------------------------------------------------
       return ['nzeilen', 'nspalten', 'columns', 'typs', 'add_new_option', 'namechanged', 'clear', 'colwidth', 'coltext',
          'option_deleted', 'hide_column', 'show_column', 'id', 'lf_languagechanged', 'columns_languagechanged',
-         'allow_delete_row', 'color_table', 'color_text'];
+         'allow_delete_row', 'allow_insert_row', 'color_table', 'color_text'];
    }
 
    //---------------------------------------------------------------------------------------------------------------
@@ -538,9 +551,24 @@ class DrTabelle extends HTMLElement {
 
    private fill_no_cell(cell: HTMLTableCellElement, iZeile: number) {
       cell.appendChild(document.createTextNode(String(iZeile)));
-      if (!this.allowDeleteRow) return;
+      if (!this.allowDeleteRow && !this.allowInsertRow) return;
 
       cell.style.whiteSpace = 'nowrap';
+
+      if (this.allowInsertRow) {
+         const ins = document.createElement('button');
+         ins.type = 'button';
+         ins.className = 'ins_row';
+         ins.title = msg('Zeile oberhalb einfügen');
+         ins.innerHTML = INSERT_SVG;
+         ins.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            this.insert_row(iZeile);
+         });
+         cell.appendChild(ins);
+      }
+      if (!this.allowDeleteRow) return;
+
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'del_row';
@@ -580,10 +608,13 @@ class DrTabelle extends HTMLElement {
    }
 
    private update_delete_texts() {
-      if (!this.allowDeleteRow) return;
-      if (this.btnUndo) this.btnUndo.textContent = '↶ ' + msg('Löschen rückgängig');
-      if (this.btnRedo) this.btnRedo.textContent = '↷ ' + msg('Löschen wiederherstellen');
+      if (!this.allowDeleteRow && !this.allowInsertRow) return;
+      // nur Löschen: Texte wie bisher; mit Einfügen allgemein, da Undo/Redo dann beides umfasst
+      const allgemein = this.allowInsertRow;
+      if (this.btnUndo) this.btnUndo.textContent = '↶ ' + (allgemein ? msg('Rückgängig') : msg('Löschen rückgängig'));
+      if (this.btnRedo) this.btnRedo.textContent = '↷ ' + (allgemein ? msg('Wiederherstellen') : msg('Löschen wiederherstellen'));
       this.shadow.querySelectorAll('.del_row').forEach((b: HTMLElement) => b.title = msg('Zeile löschen'));
+      this.shadow.querySelectorAll('.ins_row').forEach((b: HTMLElement) => b.title = msg('Zeile oberhalb einfügen'));
    }
 
    private update_undo_bar() {
@@ -647,6 +678,18 @@ class DrTabelle extends HTMLElement {
       this.undoStack.push(werte);
       this.redoStack = [];
       this.set_werte(werte.filter((_, i) => i !== iZeile - 1));
+      this.rows_changed();
+   }
+
+   /** Leere Zeile oberhalb von iZeile einfügen (Werte darunter rutschen eine Zeile nach unten). */
+   insert_row(iZeile: number) {
+      const werte = this.get_werte();
+      if (iZeile < 1 || iZeile > werte.length + 1) return;
+      this.undoStack.push(werte);
+      this.redoStack = [];
+      const neu = werte.slice();
+      neu.splice(iZeile - 1, 0, Array(werte[0]?.length ?? Number(this.nSpalten)).fill(''));
+      this.set_werte(neu);   // resize_Tabelle setzt nZeilen/nTabRow
       this.rows_changed();
    }
 

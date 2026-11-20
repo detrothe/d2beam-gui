@@ -46,7 +46,8 @@ table {
 }
 
 /* Zeile löschen (Attribut allow_delete_row) */
-button.del_row {
+button.del_row,
+button.ins_row {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -62,6 +63,13 @@ button.del_row {
   opacity: 0.75;
   cursor: pointer;
   touch-action: manipulation;
+}
+
+button.ins_row:hover,
+button.ins_row:focus-visible {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: #1b5e20;
+  opacity: 1;
 }
 
 button.del_row:hover,
