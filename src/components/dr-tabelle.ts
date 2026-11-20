@@ -681,6 +681,23 @@ class DrTabelle extends HTMLElement {
       this.rows_changed();
    }
 
+   /**
+    * Zeilenzahl ändern wie über das Attribut nzeilen, aber mit Undo/Redo: beim Verkleinern landen die
+    * Werte der entfernten Zeilen im Rückgängig-Speicher wie beim Löschen (z.B. Zähler „−“ einer App).
+    */
+   set_nzeilen_undo(n: number) {
+      const werte = this.get_werte();
+      n = Math.max(0, Math.round(n));
+      if (n === werte.length) return;
+      this.undoStack.push(werte);
+      this.redoStack = [];
+      const nSpalten = werte[0]?.length ?? Number(this.nSpalten);
+      const neu = werte.slice(0, n);
+      while (neu.length < n) neu.push(Array(nSpalten).fill(''));
+      this.set_werte(neu);   // resize_Tabelle setzt nZeilen/nTabRow
+      this.rows_changed();
+   }
+
    /** Leere Zeile oberhalb von iZeile einfügen (Werte darunter rutschen eine Zeile nach unten). */
    insert_row(iZeile: number) {
       const werte = this.get_werte();
