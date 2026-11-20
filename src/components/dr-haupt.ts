@@ -46,6 +46,7 @@ import {
   calculate,
   create_pdf,
   resizeTables,
+  tabellenAnpassen,
   show_video,
   tabelleZeilenGeaendert,
 } from '../pages/haupt_2';
@@ -910,7 +911,7 @@ export class drHaupt extends LitElement {
         <p>
           ${msg('Anzahl Lastfälle :')}
           <dr-button-pm id="id_button_nlastfaelle" nel="${nlastfaelle_init}" inputid="nlastfaelle"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">${msg('Tabelle anpassen')}</sl-button>
+          <sl-button id="resize" value="resize" @click="${tabellenAnpassen}">${msg('Tabelle anpassen')}</sl-button>
         </p>
         <dr-tabelle
           id="id_lastfaelle_tabelle"
@@ -940,7 +941,7 @@ export class drHaupt extends LitElement {
         <p>
           ${msg('Anzahl Kombinationen:')}
           <dr-button-pm id="id_button_nkombinationen" nel="${nkombinationen_init}" inputid="nkombinationen"></dr-button-pm>
-          <sl-button id="resize" value="resize" @click="${resizeTables}">${msg('Tabelle anpassen')}</sl-button>
+          <sl-button id="resize" value="resize" @click="${tabellenAnpassen}">${msg('Tabelle anpassen')}</sl-button>
         </p>
 
         <dr-tabelle

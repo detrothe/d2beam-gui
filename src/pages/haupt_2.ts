@@ -94,6 +94,13 @@ function anzahl(shadow: ShadowRoot, id: string): number {
 }
 
 //---------------------------------------------------------------------------------------------------------------
+export function tabellenAnpassen() {
+  //-------------------------------------------------------------------------------------------------------------
+  // Button "Tabelle anpassen" (eigene Funktion, sonst käme das Klick-Ereignis als Parameter mitUndo an)
+  resizeTables(true);
+}
+
+//---------------------------------------------------------------------------------------------------------------
 export function tabelleZeilenGeaendert(ev: Event) {
   //-------------------------------------------------------------------------------------------------------------
   // dr-tabelle hat selbst Zeilen gelöscht/wiederhergestellt -> zugehörigen Zähler nachziehen
@@ -105,14 +112,23 @@ export function tabelleZeilenGeaendert(ev: Event) {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-export function resizeTables() {
+export function resizeTables(mitUndo = false) {
   //-------------------------------------------------------------------------------------------------------------
+  // mitUndo: Tabellen mit Löschen/Einfügen (allow_delete_row/allow_insert_row) ändern ihre Zeilenzahl mit
+  // Rückgängig – beim Verkleinern landen die entfernten Zeilen im Rückgängig-Speicher wie beim Papierkorb.
+  // Nur für den Button "Tabelle anpassen"; beim Einlesen, neuer Eingabe usw. ohne Undo.
 
   const shadow = document.getElementById('id_haupt')?.shadowRoot;
   if (!shadow) return;
 
   for (const [button, tabelle] of TABELLEN) {
-    shadow.getElementById(tabelle)?.setAttribute('nzeilen', String(anzahl(shadow, button)));
+    const el = shadow.getElementById(tabelle) as (HTMLElement & { set_nzeilen_undo?: (n: number) => void }) | null;
+    const n = anzahl(shadow, button);
+    if (mitUndo && el?.set_nzeilen_undo && (el.hasAttribute('allow_delete_row') || el.hasAttribute('allow_insert_row'))) {
+      el.set_nzeilen_undo(n);
+    } else {
+      el?.setAttribute('nzeilen', String(n));
+    }
   }
   // Kombinationen: eine Spalte je Lastfall plus Kommentarspalte
   shadow.getElementById('id_kombinationen_tabelle')
