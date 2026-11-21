@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://d2beam.statikverstehen.de/</loc>
+    <loc>https://d2beam-gui.statikverstehen.de/</loc>
     <lastmod>2026-11-21</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://d2beam.statikverstehen.de/Kurzdokumentation_deutsch.html</loc>
+    <loc>https://d2beam-gui.statikverstehen.de/Kurzdokumentation_deutsch.html</loc>
     <lastmod>2026-11-21</lastmod>
     <priority>0.8</priority>
   </url>

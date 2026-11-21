@@ -89,7 +89,7 @@ function startSprache(): string {
 }
 
 /** Adressen der veröffentlichten Ausgaben (Deutsch auf statikverstehen.de, die anderen Sprachen auf fea-apps.de) */
-const URL_DE = 'https://d2beam.statikverstehen.de/';
+const URL_DE = 'https://d2beam-gui.statikverstehen.de/';
 const URL_INTL = 'https://d2beam.fea-apps.de/';
 
 /** kanonische Adresse je Sprache, passend zu den hreflang-Links in index.html */

@@ -1,6 +1,6 @@
-# gilt für d2beam.statikverstehen.de (Deutsch) und d2beam.fea-apps.de (andere Sprachen)
+# gilt für d2beam-gui.statikverstehen.de (Deutsch) und d2beam.fea-apps.de (andere Sprachen)
 User-agent: *
 Allow: /
 
-Sitemap: https://d2beam.statikverstehen.de/sitemap.xml
+Sitemap: https://d2beam-gui.statikverstehen.de/sitemap.xml
 Sitemap: https://d2beam.fea-apps.de/sitemap_intl.xml
