@@ -6,6 +6,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>d2beam-GUI frame program for plane systems</title>
 	<meta name="author" content="Prof. Dr.-Ing. Detlef Rothe">
+	<meta name="description" content="Documentation of d2beam, the free web app for 2D frame and truss analysis: graphical input, sign conventions, first and second order analysis, imperfections, buckling eigenvalues, load combinations, usage.">
+	<link rel="canonical" href="https://d2beam.fea-apps.de/Kurzdokumentation_english.html">
+	<link rel="alternate" hreflang="de" href="https://d2beam.statikverstehen.de/Kurzdokumentation_deutsch.html">
+	<link rel="alternate" hreflang="en" href="https://d2beam.fea-apps.de/Kurzdokumentation_english.html">
+	<link rel="alternate" hreflang="es" href="https://d2beam.fea-apps.de/Kurzdokumentation_spanish.html">
+	<link rel="alternate" hreflang="fr" href="https://d2beam.fea-apps.de/Kurzdokumentation_french.html">
+	<link rel="alternate" hreflang="it" href="https://d2beam.fea-apps.de/Kurzdokumentation_italian.html">
+	<link rel="alternate" hreflang="x-default" href="https://d2beam.fea-apps.de/Kurzdokumentation_english.html">
 	<meta name="AppVersion" content="15.0000">
 	<style>
 		body {
@@ -65,6 +73,9 @@
 </head>
 
 <body>
+	<!-- Link zur App nur, wenn die Seite direkt (z. B. aus einer Suchmaschine) und nicht im Tab Info geöffnet ist -->
+	<p id="app_link" hidden><a href="/?lang=en"><b>&#9654; Open d2beam – analyse plane frames and trusses</b></a></p>
+	<script>if (window.self === window.top) document.getElementById('app_link').hidden = false;</script>
 	<h1>Table of Contents</h1>
 	<p>
 		<a href="#uebersicht">Introduction</a>

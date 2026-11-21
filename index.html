@@ -3,13 +3,58 @@
 
 <head>
     <meta charset="utf-8">
-    <title>PWA d2beam</title>
+    <title>d2beam – 2D frame and truss analysis | Ebene Stabwerke berechnen</title>
     <base href="/">
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src https:"> -->
     <!-- This meta viewport ensures the webpage's dimensions change according to the device it's on. This is called Responsive Web Design.-->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
     <!-- content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" -->
-    <meta name="description" content="Ebenes Stabwerkprogramm, Theorie I. und II. Ordnung, Statik">
+    <!-- Titel, Beschreibung, lang und canonical setzt src/pages/localization.ts (seitenMetaAktualisieren) je nach
+         Sprache. Die Werte hier gelten für Dienste, die kein JavaScript ausführen (Linkvorschau in LinkedIn, Mail …). -->
+    <meta name="description" content="Kostenloses Stabwerkprogramm im Browser: ebene Rahmen und Fachwerke, Theorie I. und II. Ordnung, Knicklast – Free web app for 2D frame and truss analysis, first and second order, buckling">
+    <meta name="author" content="Prof. Dr.-Ing. Detlef Rothe">
+
+    <!-- Sprachversionen: Deutsch auf statikverstehen.de, die anderen Sprachen auf fea-apps.de (Start mit ?lang=) -->
+    <link rel="alternate" hreflang="de" href="https://d2beam.statikverstehen.de/">
+    <link rel="alternate" hreflang="en" href="https://d2beam.fea-apps.de/">
+    <link rel="alternate" hreflang="es" href="https://d2beam.fea-apps.de/?lang=es">
+    <link rel="alternate" hreflang="fr" href="https://d2beam.fea-apps.de/?lang=fr">
+    <link rel="alternate" hreflang="it" href="https://d2beam.fea-apps.de/?lang=it">
+    <link rel="alternate" hreflang="x-default" href="https://d2beam.fea-apps.de/">
+
+    <!-- Linkvorschau (Open Graph, auch von LinkedIn, Mastodon, Messengern genutzt) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="d2beam">
+    <meta property="og:title" content="d2beam – 2D frame and truss analysis in the browser">
+    <meta property="og:description" content="Free web app for plane frames and trusses (FEM): first and second order analysis, imperfections, buckling eigenvalues, load combinations. Graphical input with mouse, pen or finger, works offline.">
+    <meta property="og:image" content="https://d2beam.fea-apps.de/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Plane frame with loads in the graphical input of d2beam">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- strukturierte Daten für Suchmaschinen (schema.org) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "d2beam",
+        "alternateName": "D2Beam GUI",
+        "description": "Free web app for the analysis of plane frames and trusses with the finite element method: first and second order analysis, Timoshenko and Bernoulli beams, pre-deformations and imperfections, buckling eigenvalues and alpha_cr, line and nodal loads, temperature, load cases and combinations. CAD-like graphical input with mouse, pen or finger on smartphone, tablet and PC, offline as PWA.",
+        "url": "https://d2beam.fea-apps.de/",
+        "sameAs": ["https://d2beam.statikverstehen.de/"],
+        "image": "https://d2beam.fea-apps.de/og-image.png",
+        "applicationCategory": "EducationalApplication",
+        "applicationSubCategory": "Structural engineering",
+        "operatingSystem": "Any (web browser)",
+        "browserRequirements": "Requires JavaScript and WebAssembly",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+        "inLanguage": ["de", "en", "es", "fr", "it"],
+        "author": { "@type": "Person", "name": "Prof. Dr.-Ing. Detlef Rothe" },
+        "keywords": "2D frame analysis, truss analysis, structural analysis, second order analysis, buckling load, FEM, Stabwerk, Fachwerk, Theorie II. Ordnung, Knicklast, Statik, análisis de pórticos, celosías, segundo orden, calcul de portiques, treillis, second ordre, calcolo telai, travature reticolari, secondo ordine"
+    }
+    </script>
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f3f3">
     <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
