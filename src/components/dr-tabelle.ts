@@ -1,12 +1,11 @@
 import styles from './dr-tabelle.css?raw';
 
-import { nQuerschnittSets, get_querschnittRechteck_name } from '../pages/querschnitte';
-import { Detect } from '../pages/haupt';
-
-import { berechnungErforderlich, touch_support_table } from "../pages/globals";
-import { write } from '../pages/utility'
-import { msg, str } from '@lit/localize';
-import { ConfirmDialog } from '../pages/confirm_dialog';
+// Quelle: ~/git-code/dr-tabelle, verteilt mit dr-tabelle-verteilen.sh – nicht im Projekt ändern.
+// Alles Projektspezifische kommt aus tabelle_umgebung.ts.
+import {
+   nQuerschnittSets, get_querschnittRechteck_name, Detect,
+   berechnungErforderlich, touch_support_table, write, msg, str, ConfirmDialog,
+} from './tabelle_umgebung';
 
 // Zeile oberhalb einfügen (allow_insert_row)
 const INSERT_SVG =
