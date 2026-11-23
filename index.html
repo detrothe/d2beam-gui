@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="sl-theme-dark">
 
 <head>
     <meta charset="utf-8">
     <title>d2beam – 2D frame and truss analysis | Ebene Stabwerke berechnen</title>
     <base href="/">
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src https:"> -->
+    <!-- Content Security Policy: Skripte, Verbindungen und Worker nur von der eigenen Domain (wie duennqs).
+         Schützt die Besucher, falls je fremder Code in dist/ gerät (er könnte nichts nachladen und nichts wegschicken).
+         'wasm-unsafe-eval' braucht die Berechnung (WebAssembly, d2beam_wasm.js); blob:/data: brauchen PDF, Bilder,
+         Datei-Download und Shoelace-Symbole; 'unsafe-inline' bei Stilen braucht Lit/Shoelace;
+         object-src blob: braucht Safari (iPad/iPhone), um die PDF mit seinem eingebauten Viewer anzuzeigen.
+         Keine Inline-Skripte und keine onload=/onclick=-Attribute verwenden, die blockiert die CSP. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' data:; worker-src 'self'; manifest-src 'self'; frame-src 'self' blob:; object-src blob:; base-uri 'self'; form-action 'none'">
     <!-- This meta viewport ensures the webpage's dimensions change according to the device it's on. This is called Responsive Web Design.-->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
     <!-- content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" -->
@@ -60,6 +66,10 @@
     <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="D2Beam">
+    <!-- Favicon (Vorlage icon-quelle/d2beam-favicon.svg, erzeugt mit icon-quelle/favicon-erzeugen.sh) -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <!-- This tag is used by the PWA D2BEAM CLI to identify template projects. Don't remove if you are using the CLI. -->
     <meta name="pwa-starter-template-identity" content="pwa-starter">
@@ -114,8 +124,9 @@
     </style>
 
     <link rel="stylesheet" media="(prefers-color-scheme:light)" href="./src/styles/light.css">
-    <link rel="stylesheet" media="(prefers-color-scheme:dark)" href="./src/styles/dark.css"
-        onload="document.documentElement.classList.add('sl-theme-dark');">
+    <!-- Klasse sl-theme-dark steht fest am <html> (früher onload-Handler hier, den die CSP verbietet);
+         ob die dunklen Farben gelten, entscheidet weiterhin das media-Attribut -->
+    <link rel="stylesheet" media="(prefers-color-scheme:dark)" href="./src/styles/dark.css">
 
     <script src="d2beam_wasm.js"></script>
 
