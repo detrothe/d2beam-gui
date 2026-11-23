@@ -86,6 +86,7 @@ import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 import { drDialogKnotenmasse } from '../components/dr-dialog_knotenmasse';
 import { TCAD_Bemassung } from './cad_bemassung';
 import { drHaupt } from '../components/dr-haupt';
+import { spaltenbreiten_lesen, spaltenbreiten_setzen } from '../components/dr-tabelle';
 import type { drDialogWillkommen } from '../components/dr-dialog_willkommen';
 
 // import { capabilities, isAbortError } from './saveFile'
@@ -664,6 +665,9 @@ export function read_daten(eingabedaten: string): boolean {
                 child.value = jobj.combination[i - 1][j - 1];
             }
         }
+
+        // vom Benutzer gezogene Spaltenbreiten (ältere Dateien ohne Eintrag: Standardbreiten)
+        if (shadow) spaltenbreiten_setzen(shadow, jobj.spaltenbreiten);
     }
     else {
         return false;
@@ -1260,6 +1264,7 @@ export function str_inputToJSON() {
             cadNodes: CADNodes,
             elements: elements,
             max_value_lasten: max_value_lasten,
+            spaltenbreiten: spaltenbreiten_lesen(shadow),
         };
 
         return JSON.stringify(polyData);

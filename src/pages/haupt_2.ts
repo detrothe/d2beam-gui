@@ -41,6 +41,7 @@ import { reset_cad_nodes } from './cad_node';
 // import { info_Eigenwertberechnung, info_Materialeigenschaften } from './infos';
 import { set_current_filename } from './haupt';
 import { drHaupt } from '../components/dr-haupt';
+import { spaltenbreiten_setzen } from '../components/dr-tabelle';
 import { drDialogEinstellungen } from '../components/dr-dialog_einstellungen';
 
 console.log("in haupt2>")
@@ -313,6 +314,8 @@ export function clearTables() {
 
     el = shadow.getElementById('id_koppelfedern_tabelle');
     el?.setAttribute('clear', '0');
+
+    spaltenbreiten_setzen(shadow, undefined);   // gezogene Spaltenbreiten gehören zum alten Projekt
 
     while (nQuerschnittSets > 0) {
       del_last_querschnittSet();

@@ -2113,6 +2113,10 @@ El archivo se guarda en la carpeta de descargas predeterminada</target>
   <source>Wiederherstellen</source>
   <target>Rehacer</target>
 </trans-unit>
+<trans-unit id="s8808d1dc381aea7b">
+  <source>Spaltenbreite ändern (Doppelklick: an Inhalt anpassen)</source>
+  <target>Cambiar el ancho de columna (doble clic: ajustar al contenido)</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

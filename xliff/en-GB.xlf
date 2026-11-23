@@ -2112,6 +2112,10 @@ The file is saved in the default download folder</target>
   <source>Wiederherstellen</source>
   <target>Redo</target>
 </trans-unit>
+<trans-unit id="s8808d1dc381aea7b">
+  <source>Spaltenbreite ändern (Doppelklick: an Inhalt anpassen)</source>
+  <target>Change column width (double-click: fit to content)</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
