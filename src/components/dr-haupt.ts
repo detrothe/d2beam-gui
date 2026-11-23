@@ -262,13 +262,6 @@ export class drHaupt extends LitElement {
     display: block;
     height: 100dvh;
   }
-  /* breite Tabellen (z. B. Kombinationen mit vielen Lastfällen) scrollen in sich selbst.
-     Firefox verschiebt sonst die ganze Seite waagerecht, Chrome scrollt das Tab-Panel */
-  dr-tabelle {
-    display: block;
-    max-width: 100%;
-    overflow-x: auto;
-  }
   #freetext {
     max-width: 100%;
     box-sizing: border-box;
