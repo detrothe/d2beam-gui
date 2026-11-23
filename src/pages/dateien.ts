@@ -1214,7 +1214,8 @@ export function str_inputToJSON() {
 
         let polyData = {
             created_by: 'd2beam-gui',
-            version: 4,             // 4: Elemente und Elementlasten enthalten seq (Eingabereihenfolge für Undo)
+            version: 5,             // 4: Elemente und Elementlasten enthalten seq (Eingabereihenfolge für Undo)
+                                    // 5: spaltenbreiten (gezogene Spaltenbreiten der Tabellen)
 
             system: system,
             dateiname: currentFilename,
