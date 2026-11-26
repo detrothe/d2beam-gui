@@ -82,6 +82,8 @@ export class CTimoshenko_beam extends CElement {
 
     F: number[] = Array(10)        // Stabendgrößen nach WGV im globalen Koordinatensystem
     FL: number[] = Array(6)        // Stabendgrößen nach KGV im lokalen Koordinatensystem
+    FL_lf: number[][] = []         // FL je Lastfall (Th. I. O.), für die Zustandslinien der starren Enden
+    FL_komb: number[][] = []       // FL je Kombination (Th. II. O. bzw. nichtlinear)
     Fe: number[] = Array(10)       // Vorverformungen aus Schiefstellung 1. Eigenwert
     FeVor: number[] = Array(10)    // Vorverformungen aus Stabschiefstellung
 
@@ -1657,6 +1659,11 @@ export class CTimoshenko_beam extends CElement {
 
         //console.log("________________________________________________________________")
         //console.log("class element: berechneElementSchnittgroessen von ", ielem, iLastf)
+
+        // Stabendgrößen dieses Lastfalls bzw. dieser Kombination merken: an den starren Enden
+        // gelten V und N vor einer Einzellast am Rand des elastischen Bereichs, nicht dahinter
+        if (THIIO_flag === 0 && matprop_flag === 0) this.FL_lf[iLastf] = this.FL.slice()
+        else this.FL_komb[iLastf] = this.FL.slice()
 
         const eta = this.eta
         const sl = this.sl
