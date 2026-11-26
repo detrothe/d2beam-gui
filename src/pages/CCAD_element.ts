@@ -82,6 +82,7 @@ export class TCAD_Stab extends TCAD_Element {
     aL = 0.0                             // starres Stabende limks (Stabanfang)
     aR = 0.0                             // starres Stabende rechts
     k_0 = 0.0                            // Bettungsmodul nach Winkler
+    nTeil = 1                            // Anzahl FE-Elemente, in die der Stab für die Berechnung geteilt wird (Zielteilung)
 
     elast = [] as TCAD_ElLast[];
 
@@ -172,16 +173,16 @@ export class TCAD_Stab extends TCAD_Element {
     }
 
     //―――――――――――――――――――――――――――――――――――――――――――――
-    add_streckenlast(lf: number, art: number, pa: number, pe: number): void {
-        this.elast.push(new TCAD_Streckenlast(lf, art, pa, pe))
+    add_streckenlast(lf: number, art: number, pa: number, pe: number, xa = 0.0, xb = -1.0): void {
+        this.elast.push(new TCAD_Streckenlast(lf, art, pa, pe, xa, xb))
         berechnungErforderlich(true);   // Elementlasten gehen nicht über LinkedList.append
         //this.nStreckenlasten++;
         console.log("add_streckenlast, lf,art= ", lf, art, pa, pe)
     }
 
     //―――――――――――――――――――――――――――――――――――――――――――――
-    add_einzellast(lf: number, x: number, P: number, M: number): void {
-        this.elast.push(new TCAD_Einzellast(lf, x, P, M))
+    add_einzellast(lf: number, x: number, P: number, M: number, Px = 0.0, alpha = 0.0, stabbezug = true): void {
+        this.elast.push(new TCAD_Einzellast(lf, x, P, M, Px, alpha, stabbezug))
         berechnungErforderlich(true);   // Elementlasten gehen nicht über LinkedList.append
         //this.nStreckenlasten++;
         console.log("add_einzellast, lf,art= ", lf, x, P, M)
@@ -380,14 +381,18 @@ export class TCAD_Streckenlast extends TCAD_ElLast {
     //―――――――――――――――――――――――――――――――――――――――――
 
     art = 0  // 0=senkrecht auf Stab, 1=
-    pL = 0.0
-    pR = 0.0
+    pL = 0.0    // Ordinate am Lastanfang xa
+    pR = 0.0    // Ordinate am Lastende xb
+    xa = 0.0    // Lastanfang in m ab Stabanfang, entlang der Stabachse
+    xb = -1.0   // Lastende in m ab Stabanfang, -1 = bis Stabende
 
-    constructor(lf: number, art: number, pa: number, pe: number) {
+    constructor(lf: number, art: number, pa: number, pe: number, xa = 0.0, xb = -1.0) {
         super(lf, 0)
         this.art = art
         this.pL = pa
         this.pR = pe
+        this.xa = xa
+        this.xb = xb
         this.className = 'TCAD_Streckenlast'
     }
 
@@ -399,16 +404,30 @@ export class TCAD_Einzellast extends TCAD_ElLast {
 
 
     xe = 0.0
-    P = 0.0
+    // Kraft mit Komponenten Px, Pz in einem um alpha gedrehten Koordinatensystem (alpha in Grad,
+    // im Gegenuhrzeigersinn positiv, wie bei der Knotenlast). stabbezug = true: alpha wird von der
+    // Stabachse aus gemessen, mit alpha = 0 ist Px längs und Pz senkrecht zum Stab (bisherige Einzellast P).
+    // stabbezug = false: alpha wird von der globalen x-Achse aus gemessen.
+    Px = 0.0
+    Pz = 0.0
+    alpha = 0.0
+    stabbezug = true
     M = 0.0
+
+    /** @deprecated bisherige Einzellast senkrecht zum Stab, nur noch Pz; Px, alpha und stabbezug verwenden */
+    get P() { return this.Pz }
+    set P(wert: number) { this.Pz = wert }
 
     xM: number[] = Array(4).fill(0.0)   // Weltkoordinaten des gezeichneten Momentenpfeils
     zM: number[] = Array(4).fill(0.0)
 
-    constructor(lf: number, x: number, P: number, M: number) {
+    constructor(lf: number, x: number, P: number, M: number, Px = 0.0, alpha = 0.0, stabbezug = true) {
         super(lf, 1)
         this.xe = x
-        this.P = P
+        this.Pz = P
+        this.Px = Px
+        this.alpha = alpha
+        this.stabbezug = stabbezug
         this.M = M
         this.className = 'TCAD_Einzellast'
     }

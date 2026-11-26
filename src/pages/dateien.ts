@@ -89,6 +89,9 @@ import { drHaupt } from '../components/dr-haupt';
 import { spaltenbreiten_lesen, spaltenbreiten_setzen } from '../components/dr-tabelle';
 import type { drDialogWillkommen } from '../components/dr-dialog_willkommen';
 
+// Version des Dateiformats der Eingabedateien (Änderungen siehe Kommentar bei polyData.version)
+const DATEI_VERSION = 6;
+
 // import { capabilities, isAbortError } from './saveFile'
 
 //import { current_unit_length, set_current_unit_length } from "./einstellungen"
@@ -133,6 +136,13 @@ export function read_daten(eingabedaten: string): boolean {
             msg('Die gewählte Datei ist NICHT für dieses Programm erstellt worden')
         );
         return false;
+    }
+
+    if (typeof version === 'number' && version > DATEI_VERSION) {
+        alertdialog(
+            'ok',
+            msg('Die Datei wurde mit einer neueren Programmversion erstellt. Neue Eingaben (z. B. Teilstreckenlasten) können fehlen oder falsch gelesen werden. Bitte die App aktualisieren.')
+        );
     }
 
     // Datei ist gültig: Ergebnisse des bisherigen Systems verwerfen
@@ -501,6 +511,7 @@ export function read_daten(eingabedaten: string): boolean {
                     jobj.elements[i].elTyp
                 );
                 obj.k_0 = jobj.elements[i].k_0;
+                obj.nTeil = jobj.elements[i].nTeil ?? 1;      // ab Version 6
                 obj.aL = jobj.elements[i].aL;
                 obj.aR = jobj.elements[i].aR;
                 obj.nGelenke = jobj.elements[i].nGelenke;
@@ -522,7 +533,9 @@ export function read_daten(eingabedaten: string): boolean {
                             jobj.elements[i].elast[j].lastfall,
                             jobj.elements[i].elast[j].art,
                             jobj.elements[i].elast[j].pL,
-                            jobj.elements[i].elast[j].pR
+                            jobj.elements[i].elast[j].pR,
+                            jobj.elements[i].elast[j].xa ?? 0.0,     // ab Version 6, vorher immer ganze Stablänge
+                            jobj.elements[i].elast[j].xb ?? -1.0
                         );
                     } else if (
                         jobj.elements[i].elast[j].className === 'TCAD_Einzellast'
@@ -530,8 +543,11 @@ export function read_daten(eingabedaten: string): boolean {
                         obj.add_einzellast(
                             jobj.elements[i].elast[j].lastfall,
                             jobj.elements[i].elast[j].xe,
-                            jobj.elements[i].elast[j].P,
-                            jobj.elements[i].elast[j].M
+                            jobj.elements[i].elast[j].Pz ?? jobj.elements[i].elast[j].P,   // bis Version 5 nur P senkrecht zum Stab
+                            jobj.elements[i].elast[j].M,
+                            jobj.elements[i].elast[j].Px ?? 0.0,
+                            jobj.elements[i].elast[j].alpha ?? 0.0,
+                            jobj.elements[i].elast[j].stabbezug ?? true
                         );
                     } else if (
                         jobj.elements[i].elast[j].className === 'TCAD_Temperaturlast'
@@ -1214,8 +1230,10 @@ export function str_inputToJSON() {
 
         let polyData = {
             created_by: 'd2beam-gui',
-            version: 5,             // 4: Elemente und Elementlasten enthalten seq (Eingabereihenfolge für Undo)
+            version: DATEI_VERSION, // 4: Elemente und Elementlasten enthalten seq (Eingabereihenfolge für Undo)
                                     // 5: spaltenbreiten (gezogene Spaltenbreiten der Tabellen)
+                                    // 6: Stab.nTeil (Elementteilung), Streckenlast.xa/xb (Teilstreckenlast),
+                                    //    Einzellast.Px/Pz/alpha/stabbezug statt P
 
             system: system,
             dateiname: currentFilename,

@@ -181,6 +181,7 @@ export function copy_selected(dx0: number, dz0: number) {
                         stab_obj.cosinus = (obj as TCAD_Stab).cosinus;
                         stab_obj.alpha = (obj as TCAD_Stab).alpha;
                         stab_obj.stabTyp = (obj as TCAD_Stab).stabTyp;
+                        stab_obj.nTeil = (obj as TCAD_Stab).nTeil;
 
                         if (copy_eload) {
 
@@ -188,10 +189,10 @@ export function copy_selected(dx0: number, dz0: number) {
                             for (let j = 0; j < neloads; j++) {
                                 if ((obj as TCAD_Stab).elast[j].className === "TCAD_Streckenlast") {
                                     let ob = (obj as TCAD_Stab).elast[j] as TCAD_Streckenlast
-                                    stab_obj.add_streckenlast(ob.lastfall, ob.art, ob.pL, ob.pR);
+                                    stab_obj.add_streckenlast(ob.lastfall, ob.art, ob.pL, ob.pR, ob.xa, ob.xb);
                                 } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Einzellast") {
                                     let ob = (obj as TCAD_Stab).elast[j] as TCAD_Einzellast
-                                    stab_obj.add_einzellast(ob.lastfall, ob.xe, ob.P, ob.M);
+                                    stab_obj.add_einzellast(ob.lastfall, ob.xe, ob.Pz, ob.M, ob.Px, ob.alpha, ob.stabbezug);
                                 } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Temperaturlast") {
                                     let ob = (obj as TCAD_Stab).elast[j] as TCAD_Temperaturlast
                                     stab_obj.add_temperaturlast(ob.lastfall, ob.To, ob.Tu);
