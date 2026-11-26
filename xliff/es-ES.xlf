@@ -1382,14 +1382,6 @@
   <source>Länge von Element</source>
   <target>La longitud del elemento</target>
 </trans-unit>
-<trans-unit id="s5f914f515e785df8">
-  <source>Angriffspunkt Einzellast auf Stab</source>
-  <target>El punto de aplicación de la carga puntual sobre la barra</target>
-</trans-unit>
-<trans-unit id="s162733daa0aa2102">
-  <source>ist größer Stablänge, siehe Tab Tabellen</source>
-  <target>es mayor que la longitud de la barra, véase la tabla</target>
-</trans-unit>
 <trans-unit id="sfecd3a744c81cdc9">
   <source>Dem Element</source>
   <target>No hay ninguna sección transversal asignada al elemento</target>
@@ -2116,6 +2108,98 @@ El archivo se guarda en la carpeta de descargas predeterminada</target>
 <trans-unit id="s8808d1dc381aea7b">
   <source>Spaltenbreite ändern (Doppelklick: an Inhalt anpassen)</source>
   <target>Cambiar el ancho de columna (doble clic: ajustar al contenido)</target>
+</trans-unit>
+<trans-unit id="sf5cb2f05e46ebacb">
+  <source>Lastanfang und -ende ab Beginn des elastischen Stabteils, xe = −1: bis Stabende</source>
+  <target>Inicio y fin de la carga medidos desde el inicio de la parte elástica de la barra, xe = −1: hasta el extremo de la barra</target>
+</trans-unit>
+<trans-unit id="sfd3978c5345ed032">
+  <source>Bezug</source>
+  <target>Referencia</target>
+</trans-unit>
+<trans-unit id="s8859f34d22bd7def">
+  <source>Stabachse</source>
+  <target>eje de la barra</target>
+</trans-unit>
+<trans-unit id="s8d77fc6635d1c6f0">
+  <source>global x, z</source>
+  <target>global x, z</target>
+</trans-unit>
+<trans-unit id="s2bfbc21255e74f49">
+  <source>x ab Beginn des elastischen Stabteils. Bezug Stabachse mit α = 0: Px längs, Pz senkrecht zum Stab.</source>
+  <target>x desde el inicio de la parte elástica de la barra. Referencia eje de la barra con α = 0: Px a lo largo, Pz perpendicular a la barra.</target>
+</trans-unit>
+<trans-unit id="s1f7a88a0a643f409">
+  <source>Anfang, Stich, Ende</source>
+  <target>inicio, flecha, fin</target>
+</trans-unit>
+<trans-unit id="sed422cc24b13fa2b">
+  <source>Ordinaten Anfang, Mitte, Ende</source>
+  <target>ordenadas inicio, centro, fin</target>
+</trans-unit>
+<trans-unit id="sf2c1e513de7360fa">
+  <source>Stich</source>
+  <target>flecha</target>
+</trans-unit>
+<trans-unit id="s97b937c95abe6a02">
+  <source>Mitte</source>
+  <target>centro</target>
+</trans-unit>
+<trans-unit id="s5f6d2fa9c59b1e57">
+  <source>Lastanfang xa muss &gt;= 0 sein und Lastende xe größer als xa (oder −1 für bis Stabende)</source>
+  <target>El inicio de la carga xa debe ser &gt;= 0 y el fin xe mayor que xa (o −1 hasta el extremo de la barra)</target>
+</trans-unit>
+<trans-unit id="s8118b37ab6378cb5">
+  <source>FE-Elementteilung</source>
+  <target>División en elementos finitos</target>
+</trans-unit>
+<trans-unit id="see2c27d2b0f06107">
+  <source>Der elastische Teil des Stabes wird für die Berechnung in so viele finite Elemente geteilt. Bei Theorie II. Ordnung und Bettung werden die Ergebnisse mit mehr Elementen genauer.</source>
+  <target>Para el cálculo, la parte elástica de la barra se divide en este número de elementos finitos. Con teoría de segundo orden y fundación elástica, los resultados son más precisos con más elementos.</target>
+</trans-unit>
+<trans-unit id="s61e37fab0a038628">
+  <source>Anzahl Elemente:</source>
+  <target>Número de elementos:</target>
+</trans-unit>
+<trans-unit id="s2441b418ce2d144d">
+  <source>Stab <x id="0" equiv-text="${obj.elNo}"/>: die starren Enden sind zusammen nicht kürzer als der Stab</source>
+  <target>Barra <x id="0" equiv-text="${obj.elNo}"/>: los extremos rígidos juntos no son más cortos que la barra</target>
+</trans-unit>
+<trans-unit id="s652970bb52a4d6a9">
+  <source>Stab <x id="0" equiv-text="${obj.elNo}"/>: Lastpunkt zusammengefasst (Abstand kleiner <x id="1" equiv-text="${myFormat(tol, 1, 4)}"/> m): <x id="2" equiv-text="${h}"/></source>
+  <target>Barra <x id="0" equiv-text="${obj.elNo}"/>: punto de carga agrupado (distancia menor que <x id="1" equiv-text="${myFormat(tol, 1, 4)}"/> m): <x id="2" equiv-text="${h}"/></target>
+</trans-unit>
+<trans-unit id="sf14cfbb2d3dc1f16">
+  <source>Stab <x id="0" equiv-text="${obj.elNo}"/>: Einzellasten sind auf Fachwerkstäben nicht möglich</source>
+  <target>Barra <x id="0" equiv-text="${obj.elNo}"/>: no se pueden aplicar cargas puntuales en barras de celosía</target>
+</trans-unit>
+<trans-unit id="sb10cb4189c885566">
+  <source>Stab <x id="0" equiv-text="${obj.elNo}"/>: Angriffspunkt der Einzellast x=<x id="1" equiv-text="${el_last.xe}"/> liegt nicht im elastischen Stabteil (0 bis <x id="2" equiv-text="${myFormat(L_el, 1, 3)}"/> m)</source>
+  <target>Barra <x id="0" equiv-text="${obj.elNo}"/>: el punto de aplicación de la carga puntual x=<x id="1" equiv-text="${el_last.xe}"/> no está en la parte elástica de la barra (0 a <x id="2" equiv-text="${myFormat(L_el, 1, 3)}"/> m)</target>
+</trans-unit>
+<trans-unit id="s43e36dd8136ae690">
+  <source>Stab <x id="0" equiv-text="${obj.elNo}"/>: Einzellast mit Längsanteil am Stabende mit Normalkraftgelenk ist nicht möglich</source>
+  <target>Barra <x id="0" equiv-text="${obj.elNo}"/>: no es posible una carga puntual con componente axial en un extremo de barra con articulación de esfuerzo normal</target>
+</trans-unit>
+<trans-unit id="see1cd0a231e0038c">
+  <source>Stab <x id="0" equiv-text="${obj.elNo}"/>: Elemente <x id="1" equiv-text="${plan.elem0 + 1}"/> bis <x id="2" equiv-text="${plan.elem0 + n}"/></source>
+  <target>Barra <x id="0" equiv-text="${obj.elNo}"/>: elementos <x id="1" equiv-text="${plan.elem0 + 1}"/> a <x id="2" equiv-text="${plan.elem0 + n}"/></target>
+</trans-unit>
+<trans-unit id="sd539c9a13e136727">
+  <source>Stab <x id="0" equiv-text="${obj.elNo}"/>: Streckenlast von xa=<x id="1" equiv-text="${xa}"/> bis xe=<x id="2" equiv-text="${sl.xb}"/> liegt nicht im elastischen Stabteil (0 bis <x id="3" equiv-text="${myFormat(plan.L_el, 1, 3)}"/> m)</source>
+  <target>Barra <x id="0" equiv-text="${obj.elNo}"/>: la carga distribuida de xa=<x id="1" equiv-text="${xa}"/> a xe=<x id="2" equiv-text="${sl.xb}"/> no está en la parte elástica de la barra (0 a <x id="3" equiv-text="${myFormat(plan.L_el, 1, 3)}"/> m)</target>
+</trans-unit>
+<trans-unit id="sd571d1dd0604b2b0">
+  <source>Stab <x id="0" equiv-text="${obj.elNo}"/>: Teilstreckenlasten sind auf Fachwerkstäben nicht möglich</source>
+  <target>Barra <x id="0" equiv-text="${obj.elNo}"/>: no se pueden aplicar cargas distribuidas parciales en barras de celosía</target>
+</trans-unit>
+<trans-unit id="s93f5663f0af4f216">
+  <source>Stab <x id="0" equiv-text="${obj.elNo}"/>: Teilstreckenlast ist kürzer als die Fangtoleranz und wird nicht berücksichtigt</source>
+  <target>Barra <x id="0" equiv-text="${obj.elNo}"/>: la carga distribuida parcial es más corta que la tolerancia y no se tiene en cuenta</target>
+</trans-unit>
+<trans-unit id="sca8db0b1190f39d4">
+  <source>Die Datei wurde mit einer neueren Programmversion erstellt. Neue Eingaben (z. B. Teilstreckenlasten) können fehlen oder falsch gelesen werden. Bitte die App aktualisieren.</source>
+  <target>El archivo se creó con una versión más reciente del programa. Las entradas nuevas (p. ej. cargas distribuidas parciales) pueden faltar o leerse incorrectamente. Actualiza la aplicación.</target>
 </trans-unit>
 </body>
 </file>

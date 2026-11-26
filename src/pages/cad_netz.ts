@@ -34,18 +34,18 @@ export function stab_teilen(L_el: number, nTeil: number, tol: number,
     const hinweise: string[] = []
     const feste: number[] = [0.0, L_el]
 
-    const hinzu = (x: number, art: string) => {
+    const hinzu = (x: number) => {
         if (x <= 0.0 || x >= L_el) return
         const f = fange_punkt(x, feste, tol)
         if (f !== x) {
-            if (Math.abs(f - x) > 1e-9 * Math.max(1.0, L_el)) hinweise.push(`${art} x=${x} -> ${f}`)
+            if (Math.abs(f - x) > 1e-9 * Math.max(1.0, L_el)) hinweise.push(`x=${x} -> ${f}`)
             return
         }
         feste.push(x)
     }
 
-    for (const x of [...punkte_einzellast].sort((a, b) => a - b)) hinzu(x, 'Einzellast')
-    for (const x of [...punkte_streckenlast].sort((a, b) => a - b)) hinzu(x, 'Streckenlast')
+    for (const x of [...punkte_einzellast].sort((a, b) => a - b)) hinzu(x)
+    for (const x of [...punkte_streckenlast].sort((a, b) => a - b)) hinzu(x)
 
     feste.sort((a, b) => a - b)
 
