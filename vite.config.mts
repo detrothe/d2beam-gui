@@ -2,6 +2,18 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import htmlMinifier from 'vite-plugin-html-minifier';
+import { rmSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+// Claude Code legt beim Schreiben in public/ einen leeren Ordner .claude/.cc-writes an.
+// Vite würde ihn nach dist/ kopieren; er soll aber nicht auf den Server.
+const removeClaudeDir = () => ({
+  name: 'remove-claude-dir',
+  apply: 'build' as const,
+  closeBundle() {
+    rmSync(resolve(__dirname, 'dist/.claude'), { recursive: true, force: true });
+  }
+});
 
 // import fs from 'fs';
 // import path from 'path';
@@ -59,6 +71,7 @@ export default defineConfig({
   },
   plugins: [
     htmlMinifier({ minify: true }),
+    removeClaudeDir(),
     // minifyOnlyPublicHtml(),
 
     VitePWA({
