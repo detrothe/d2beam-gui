@@ -211,8 +211,8 @@ export class TCAD_Stab extends TCAD_Element {
         console.log("add_spannschloss, lf,art= ", lf, ds)
     }
     //―――――――――――――――――――――――――――――――――――――――――――――
-    add_stabvorverformung(lf: number, w0a: number, w0m: number, w0e: number): void {
-        this.elast.push(new TCAD_Stabvorverformung(lf, w0a, w0m, w0e))
+    add_stabvorverformung(lf: number, w0a: number, w0m: number, w0e: number, eingabeart = 0): void {
+        this.elast.push(new TCAD_Stabvorverformung(lf, w0a, w0m, w0e, eingabeart))
         berechnungErforderlich(true);   // Elementlasten gehen nicht über LinkedList.append
         //this.nStreckenlasten++;
         console.log("add_stabvorverformung, lf,art= ", lf, w0a, w0m, w0e)
@@ -495,16 +495,26 @@ export class TCAD_Spannschloss extends TCAD_ElLast {
 export class TCAD_Stabvorverformung extends TCAD_ElLast {
     //―――――――――――――――――――――――――――――――――――――――――
 
+    // eingabeart = 0: w0a, w0m = Stich gegenüber der Sehne, w0e (bisherige Eingabe)
+    // eingabeart = 1: w0a, w0m = Ordinate in Stabmitte, w0e (drei Ordinaten)
+    eingabeart = 0
     w0a = 0.0
     w0m = 0.0
     w0e = 0.0
 
-    constructor(lf: number, w0a: number, w0m: number, w0e: number) {
+    constructor(lf: number, w0a: number, w0m: number, w0e: number, eingabeart = 0) {
         super(lf, 5)
         this.w0a = w0a
         this.w0m = w0m
         this.w0e = w0e
+        this.eingabeart = eingabeart
         this.className = 'TCAD_Stabvorverformung'
+    }
+
+    // Stich gegenüber der Sehne, unabhängig von der Eingabeart (so rechnet der Kern)
+    get_stich() {
+        if (this.eingabeart === 1) return this.w0m - (this.w0a + this.w0e) / 2.0
+        return this.w0m
     }
 
 }

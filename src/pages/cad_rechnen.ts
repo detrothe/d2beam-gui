@@ -634,7 +634,7 @@ export function cad_rechnen() {
                         else if (typ === 5) {
 
                             let w0a = (obj.elast[j] as TCAD_Stabvorverformung).w0a
-                            let w0m = (obj.elast[j] as TCAD_Stabvorverformung).w0m
+                            let w0m = (obj.elast[j] as TCAD_Stabvorverformung).get_stich()   // Kern erwartet den Stich
                             let w0e = (obj.elast[j] as TCAD_Stabvorverformung).w0e
 
                             stabvorverformung.push(new TStabvorverformung())

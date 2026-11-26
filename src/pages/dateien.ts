@@ -578,7 +578,8 @@ export function read_daten(eingabedaten: string): boolean {
                             jobj.elements[i].elast[j].lastfall,
                             jobj.elements[i].elast[j].w0a,
                             jobj.elements[i].elast[j].w0m,
-                            jobj.elements[i].elast[j].w0e
+                            jobj.elements[i].elast[j].w0e,
+                            jobj.elements[i].elast[j].eingabeart ?? 0     // ab Version 6
                         );
                     }
                     // Eingabereihenfolge (für Undo) aus der Datei übernehmen, falls gespeichert
@@ -1234,6 +1235,7 @@ export function str_inputToJSON() {
                                     // 5: spaltenbreiten (gezogene Spaltenbreiten der Tabellen)
                                     // 6: Stab.nTeil (Elementteilung), Streckenlast.xa/xb (Teilstreckenlast),
                                     //    Einzellast.Px/Pz/alpha/stabbezug statt P
+                                    //    Stabvorverformung.eingabeart (0: Stich, 1: drei Ordinaten)
 
             system: system,
             dateiname: currentFilename,

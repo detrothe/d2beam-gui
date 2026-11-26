@@ -204,7 +204,7 @@ export function copy_selected(dx0: number, dz0: number) {
                                     stab_obj.add_spannschloss(ob.lastfall, ob.ds);
                                 } else if ((obj as TCAD_Stab).elast[j].className === "TCAD_Stabvorverformung") {
                                     let ob = (obj as TCAD_Stab).elast[j] as TCAD_Stabvorverformung
-                                    stab_obj.add_stabvorverformung(ob.lastfall, ob.w0a, ob.w0m, ob.w0e);
+                                    stab_obj.add_stabvorverformung(ob.lastfall, ob.w0a, ob.w0m, ob.w0e, ob.eingabeart);
                                 }
                             }
                         }
