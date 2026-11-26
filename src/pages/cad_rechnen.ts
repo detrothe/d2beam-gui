@@ -18,6 +18,21 @@ import {
     TStabvorverformung
 } from "./rechnen";
 import { myFormat, myFormat_en, testNumber, write } from "./utility";
+import { fange_punkt, stab_teilen, vorverformung_teil } from "./cad_netz";
+
+// Teilung eines CAD-Stabes in FE-Elemente (siehe cad_netz.ts)
+interface TTeilPlan {
+    obj: TCAD_Stab
+    nod: number[]          // FE-Knoten an den Teilungspunkten
+    xs: number[]           // Teilungspunkte ab Beginn des elastischen Stabteils
+    feste: number[]        // Teilungspunkte aus Lasten und Stabenden
+    L_el: number           // elastische Länge
+    tol: number            // Fangtoleranz für Lastpunkte
+    teilbar: boolean       // Biegestab (Fachwerkstäbe werden nicht geteilt)
+    elem0: number          // Index des ersten Teilelements
+    co: number
+    si: number
+}
 
 
 
@@ -130,6 +145,135 @@ export function cad_rechnen() {
         }
     }
 
+    //          E l e m e n t t e i l u n g
+    //
+    // Jeder CAD-Stab wird in Teilelemente zerlegt: Knoten an Einzellasten, an den Grenzen von
+    // Teilstreckenlasten und dazwischen nach der gewünschten Anzahl Elemente. Positionen x sind ab
+    // Beginn des elastischen Stabteils gemessen. Neue Knoten werden hinter den CAD-Knoten angehängt.
+
+    const plaene: TTeilPlan[] = []
+    const knotenlasten_einzellast: TLoads[] = []                  // Einzellasten an Zwischenknoten bzw. Längsanteil am Stabende
+    const einzellasten_art6: { element: number, lf: number, x: number, P: number, M: number }[] = []
+
+    {
+        // Systemgröße für die Fangtoleranz: Diagonale um alle Knoten
+        let xmin = Infinity, xmax = -Infinity, zmin = Infinity, zmax = -Infinity
+        for (let i = 0; i < nnodes; i++) {
+            xmin = Math.min(xmin, node[i].x); xmax = Math.max(xmax, node[i].x)
+            zmin = Math.min(zmin, node[i].z); zmax = Math.max(zmax, node[i].z)
+        }
+        const D = nnodes > 0 ? Math.sqrt((xmax - xmin) ** 2 + (zmax - zmin) ** 2) : 1.0
+
+        let ielem = 0
+        for (let i = 0; i < list.size; i++) {
+            const obj = list.getNext(i) as TCAD_Stab;
+            if (obj.elTyp !== CAD_STAB) continue
+
+            const nodA = CADNodes[obj.index1].index_FE
+            const nodB = CADNodes[obj.index2].index_FE
+            const dx = node[nodB].x - node[nodA].x
+            const dz = node[nodB].z - node[nodA].z
+            const L = Math.sqrt(dx * dx + dz * dz)
+            const co = L > 1e-12 ? dx / L : 1.0
+            const si = L > 1e-12 ? dz / L : 0.0
+            const L_el = L - obj.aL - obj.aR
+            const teilbar = System !== FACHWERK && obj.get_stabtyp() === 0 && L_el > 1e-9
+            const tol = Math.min(0.01 * L_el, 1e-3 * D)
+            const eps = 1e-9 * Math.max(1.0, L)
+
+            if (L > 1e-12 && L_el <= 1e-9) {
+                write(msg(str`Stab ${obj.elNo}: die starren Enden sind zusammen nicht kürzer als der Stab`))
+                fatal_error = true; anzahl_fehler_cad++;
+            }
+
+            let teilung = { xs: [0.0, Math.max(L_el, 0.0)], feste: [0.0, Math.max(L_el, 0.0)], hinweise: [] as string[] }
+            if (teilbar) {
+                const p_einzel: number[] = [], p_strecke: number[] = []
+                for (const last of obj.elast) {
+                    if (last.typ === 1) p_einzel.push((last as TCAD_Einzellast).xe)
+                    else if (last.typ === 0) {
+                        p_strecke.push((last as TCAD_Streckenlast).xa)
+                        if ((last as TCAD_Streckenlast).xb >= 0.0) p_strecke.push((last as TCAD_Streckenlast).xb)
+                    }
+                }
+                teilung = stab_teilen(L_el, obj.nTeil, tol, p_einzel, p_strecke)
+                for (const h of teilung.hinweise) write(msg(str`Stab ${obj.elNo}: Lastpunkt zusammengefasst (Abstand kleiner ${myFormat(tol, 1, 4)} m): ${h}`))
+            }
+
+            // FE-Knoten entlang des Stabes
+            const nod = [nodA]
+            for (let k = 1; k < teilung.xs.length - 1; k++) {
+                const s = obj.aL + teilung.xs[k]
+                node.push(new TNode())
+                node[nnodes].x = node[nodA].x + co * s
+                node[nnodes].z = node[nodA].z + si * s
+                node[nnodes].is_used = true
+                nod.push(nnodes)
+                inc_nnodes();
+            }
+            nod.push(nodB)
+
+            const plan: TTeilPlan = { obj, nod, xs: teilung.xs, feste: teilung.feste, L_el, tol, teilbar, elem0: ielem, co, si }
+            plaene.push(plan)
+            const n = teilung.xs.length - 1
+            ielem += n
+
+            // Einzellasten: an Zwischenknoten als Knotenlast; am Rand des elastischen Teils Quer-
+            // anteil und Moment als Elementlast (Lastseite eines Gelenks, Hebelarm starres Ende),
+            // Längsanteil als Knotenlast am Endknoten (der starre Arm liegt in Stabrichtung)
+            for (const last of obj.elast) {
+                if (last.typ !== 1) continue
+                const el_last = last as TCAD_Einzellast
+                if (!teilbar) {
+                    write(msg(str`Stab ${obj.elNo}: Einzellasten sind auf Fachwerkstäben nicht möglich`))
+                    fatal_error = true; anzahl_fehler_cad++;
+                    continue
+                }
+                if (el_last.xe < -eps || el_last.xe > L_el + eps) {
+                    write(msg(str`Stab ${obj.elNo}: Angriffspunkt der Einzellast x=${el_last.xe} liegt nicht im elastischen Stabteil (0 bis ${myFormat(L_el, 1, 3)} m)`))
+                    fatal_error = true; anzahl_fehler_cad++;
+                    continue
+                }
+                const [Pxg, Pzg] = el_last.get_global(co, si)
+                const M = el_last.M
+                const lf = el_last.lastfall
+                const x = fange_punkt(Math.min(Math.max(el_last.xe, 0.0), L_el), teilung.feste, tol)
+
+                if (x <= eps || x >= L_el - eps) {
+                    const links = x <= eps
+                    const N = Pxg * co + Pzg * si          // Längsanteil
+                    const Q = -Pxg * si + Pzg * co         // Queranteil (lokal z)
+                    const e = links ? ielem - n : ielem - 1
+                    if (Q !== 0.0 || M !== 0.0) {
+                        einzellasten_art6.push({ element: e, lf, x: links ? 0.0 : teilung.xs[n] - teilung.xs[n - 1], P: Q, M })
+                    }
+                    if (Math.abs(N) > 1e-12) {
+                        if (obj.gelenk[links ? 0 : 3] === 1) {
+                            write(msg(str`Stab ${obj.elNo}: Einzellast mit Längsanteil am Stabende mit Normalkraftgelenk ist nicht möglich`))
+                            fatal_error = true; anzahl_fehler_cad++;
+                        } else {
+                            const kl = new TLoads()
+                            kl.node = links ? nodA : nodB; kl.lf = lf
+                            kl.Px = kl.Px_org = N * co; kl.Pz = kl.Pz_org = N * si; kl.p[2] = 0.0
+                            knotenlasten_einzellast.push(kl)
+                        }
+                    }
+                } else {
+                    const k = teilung.xs.indexOf(x)
+                    const kl = new TLoads()
+                    kl.node = nod[k]; kl.lf = lf
+                    kl.Px = kl.Px_org = Pxg; kl.Pz = kl.Pz_org = Pzg; kl.p[2] = M
+                    knotenlasten_einzellast.push(kl)
+                }
+            }
+        }
+
+        set_nnodesTotal(nnodes)
+        set_nelem(ielem)
+        set_nelem_Balken(ielem)
+        set_nelemTotal(ielem)
+    }
+
     let el = shadow.getElementById("id_button_nnodes") as drButtonPM;
     el.setValue(nnodes);
 
@@ -206,17 +350,15 @@ export function cad_rechnen() {
 
     }
 
-    // jetzt die Staebe
+    // jetzt die Staebe (Teilelemente)
 
     {
-
         let el = shadow.getElementById("id_button_nelem") as drButtonPM;
         el.setValue(nelem);
 
         const elTab = shadow.getElementById("id_element_tabelle");
         elTab?.setAttribute("nzeilen", '0');
         elTab?.setAttribute("nzeilen", String(nelem));
-        //elTab?.setAttribute("clear", "0");
     }
 
     {
@@ -228,15 +370,16 @@ export function cad_rechnen() {
 
         element.length = 0
         let ielem = 0
-        for (let i = 0; i < list.size; i++) {
-            let obj = list.getNext(i) as TCAD_Stab;
-            if (obj.elTyp === CAD_STAB) {
+        for (const plan of plaene) {
+            const obj = plan.obj
+            const n = plan.xs.length - 1
+
+            for (let k = 0; k < n; k++) {
                 element.push(new TElement())
 
-                let index = obj.index1;
-                let nod1 = CADNodes[index].index_FE
-                index = obj.index2;
-                let nod2 = CADNodes[index].index_FE
+                const nod1 = plan.nod[k]
+                const nod2 = plan.nod[k + 1]
+                const erstes = k === 0, letztes = k === n - 1
 
                 element[ielem].qname = obj.name_querschnitt.trim();
                 element[ielem].nod[0] = nod1
@@ -247,10 +390,9 @@ export function cad_rechnen() {
                 element[ielem].z1 = node[nod1].z;
                 element[ielem].z2 = node[nod2].z;
 
-
                 const dx = element[ielem].x2 - element[ielem].x1;
                 const dz = element[ielem].z2 - element[ielem].z1;
-                element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Stablänge
+                element[ielem].sl = Math.sqrt(dx * dx + dz * dz);      // Länge Teilelement mit starren Enden
 
                 if (element[ielem].sl < 1e-12) {
                     write(msg('Länge von Element') + " " + String(ielem + 1) + " " + msg('ist null'))
@@ -264,25 +406,28 @@ export function cad_rechnen() {
                     element[ielem].alpha = Math.atan2(dz, dx)
                 }
 
-                for (let i = 0; i < 6; i++) element[ielem].gelenk[i] = obj.gelenk[i];
-                element[ielem].nGelenke = obj.nGelenke;
+                // Gelenke und starre Enden nur an den Enden des CAD-Stabes
+                let nGelenke = 0
+                for (let i = 0; i < 6; i++) {
+                    const am_ende = i < 3 ? erstes : letztes
+                    element[ielem].gelenk[i] = am_ende ? obj.gelenk[i] : 0
+                    if (element[ielem].gelenk[i] === 1) nGelenke++
+                }
+                element[ielem].nGelenke = nGelenke;
 
-                element[ielem].aL = obj.aL
-                element[ielem].aR = obj.aR
+                element[ielem].aL = erstes ? obj.aL : 0.0
+                element[ielem].aR = letztes ? obj.aR : 0.0
                 element[ielem].k_0 = obj.k_0
                 if (obj.k_0 !== 0.0) {
                     nelem_Balken_Bettung++;
                     if (Math.abs(obj.k_0) > maxBettung) maxBettung = Math.abs(obj.k_0)
                 }
                 element[ielem].elTyp = obj.get_stabtyp();
-                //console.log("stab typ",element[ielem].elTyp)
 
                 ielem++
 
                 let child = tabelle.rows[ielem].cells[1].firstElementChild as HTMLInputElement;
-                //console.log("CHILD", child)
                 child.value = obj.name_querschnitt
-                //child.innerHTML = obj.name_querschnitt
                 child = tabelle.rows[ielem].cells[2].firstElementChild as HTMLInputElement;
                 child.value = String(+obj.get_stabtyp())
                 child = tabelle.rows[ielem].cells[3].firstElementChild as HTMLInputElement;
@@ -291,19 +436,20 @@ export function cad_rechnen() {
                 child.value = String(+nod2 + 1)
 
                 for (let i = 0; i < 6; i++) {
-                    if (obj.gelenk[i] === 1) {
+                    if (element[ielem - 1].gelenk[i] === 1) {
                         child = tabelle.rows[ielem].cells[5 + i].firstElementChild as HTMLInputElement;
                         child.value = '1'
                     }
                 }
                 child = tabelle.rows[ielem].cells[11].firstElementChild as HTMLInputElement;
-                child.value = String(obj.aL)
+                child.value = String(element[ielem - 1].aL)
                 child = tabelle.rows[ielem].cells[12].firstElementChild as HTMLInputElement;
-                child.value = String(obj.aR)
+                child.value = String(element[ielem - 1].aR)
                 child = tabelle.rows[ielem].cells[13].firstElementChild as HTMLInputElement;
                 child.value = String(obj.k_0)
-
             }
+
+            if (n > 1) write(msg(str`Stab ${obj.elNo}: Elemente ${plan.elem0 + 1} bis ${plan.elem0 + n}`))
         }
 
         set_nelem_Balken_Bettung(nelem_Balken_Bettung);
@@ -316,19 +462,21 @@ export function cad_rechnen() {
         }
     }
 
-    // jetzt die Knotenlasten
+    // jetzt die Knotenlasten (aus dem CAD und aus Einzellasten auf Stäben)
 
     {
+        const nknlast_gesamt = nknlast + knotenlasten_einzellast.length
+        set_nloads(nknlast_gesamt);
 
         let el = shadow.getElementById("id_button_nnodalloads") as drButtonPM;
-        el.setValue(nknlast);
+        el.setValue(nknlast_gesamt);
 
         const elTab = shadow.getElementById("id_knotenlasten_tabelle");
-        elTab?.setAttribute("nzeilen", String(nknlast));
+        elTab?.setAttribute("nzeilen", String(nknlast_gesamt));
 
         load.length = 0
 
-        if (nknlast > 0) {
+        if (nknlast_gesamt > 0) {
             elTab?.setAttribute("clear", "0");
 
             let tabelle = elTab?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
@@ -365,17 +513,32 @@ export function cad_rechnen() {
                     child = tabelle.rows[nel].cells[5].firstElementChild as HTMLInputElement;
                     child.value = String(obj.knlast.p[2])
                 }
+            }
 
+            for (const kl of knotenlasten_einzellast) {
+                load.push(kl)
+                if (kl.lf > check_max_lastfall) check_max_lastfall = kl.lf;
+                nel++
+
+                let child = tabelle.rows[nel].cells[1].firstElementChild as HTMLInputElement;
+                child.value = String(kl.node + 1)
+                child = tabelle.rows[nel].cells[2].firstElementChild as HTMLInputElement;
+                child.value = String(kl.lf)
+                child = tabelle.rows[nel].cells[3].firstElementChild as HTMLInputElement;
+                child.value = myFormat_en(kl.Px, 1, 4)
+                child = tabelle.rows[nel].cells[4].firstElementChild as HTMLInputElement;
+                child.value = myFormat_en(kl.Pz, 1, 4)
+                child = tabelle.rows[nel].cells[5].firstElementChild as HTMLInputElement;
+                child.value = String(kl.p[2])
             }
         }
     }
 
 
-    // jetzt die Streckenlasten
+    // jetzt die Elementlasten, aufgeteilt auf die Teilelemente
 
     {
-
-        // Eigengewicht für Balken
+        // Eigengewicht für alle Balken-Teilelemente
 
         eload.length = 0
         for (let i = 0; i < nelem_Balken; i++) {
@@ -385,300 +548,159 @@ export function cad_rechnen() {
             eload[i].art = 1
         }
 
-        let nStreckenlasten = 0
-        let nTemperaturlasten = 0
-        let nEinzellasten = 0
-        let nVorspannungen = 0
-        let nSpannschloesser = 0
-        let nStabvorverfomungen = 0
-
-        for (let i = 0; i < list.size; i++) {
-            let obj = list.getNext(i) as TCAD_Stab;
-            if (obj.elTyp === CAD_STAB) {
-                for (let j = 0; j < obj.elast.length; j++) {
-                    let typ = obj.elast[j].typ
-                    if (typ === 0) {
-                        nStreckenlasten++;
-                    } else if (typ === 1) {
-                        nEinzellasten++
-                    } else if (typ === 2) {
-                        nTemperaturlasten++
-                    } else if (typ === 3) {
-                        nVorspannungen++
-                    } else if (typ === 4) {
-                        nSpannschloesser++
-                    } else if (typ === 5) {
-                        nStabvorverfomungen++
-                    }
-                }
-            }
-        }
-        //console.log("nTemperaturlasten,nStreckenlasten,...", nTemperaturlasten, nStreckenlasten, nEinzellasten, nVorspannungen, nSpannschloesser, nStabvorverfomungen)
-
-        set_nstabvorverfomungen(nStabvorverfomungen);
-
-        // Streckenlasten
-        let el = shadow.getElementById("id_button_nstreckenlasten") as drButtonPM;
-        el.setValue(nStreckenlasten);
-        set_nstreckenlasten(nStreckenlasten);
-
-        const elTabStreckenlast = shadow.getElementById("id_streckenlasten_tabelle");
-        elTabStreckenlast?.setAttribute("nzeilen", String(nStreckenlasten));
-        elTabStreckenlast?.setAttribute("clear", "0");
-
-        let tabelleStreckenlast = elTabStreckenlast?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-        // Einzellastenlasten
-        el = shadow.getElementById("id_button_neinzellasten") as drButtonPM;
-        el.setValue(nEinzellasten);
-        set_neinzellasten(nEinzellasten);
-
-        const elTabEinzellast = shadow.getElementById("id_einzellasten_tabelle");
-        elTabEinzellast?.setAttribute("nzeilen", String(nEinzellasten));
-        elTabEinzellast?.setAttribute("clear", "0");
-
-        let tabelleEinzellast = elTabEinzellast?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-
-        // Temperaturlasten
-        el = shadow.getElementById("id_button_ntemperaturlasten") as drButtonPM;
-        el.setValue(nTemperaturlasten);
-        set_ntemperaturlasten(nTemperaturlasten);
-
-        const elTabTemplast = shadow.getElementById("id_temperaturlasten_tabelle");
-        elTabTemplast?.setAttribute("nzeilen", String(nTemperaturlasten));
-        elTabTemplast?.setAttribute("clear", "0");
-
-        let tabelleTemplast = elTabTemplast?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-        // Vorspannung
-        el = shadow.getElementById("id_button_nvorspannungen") as drButtonPM;
-        el.setValue(nVorspannungen);
-        set_nvorspannungen(nVorspannungen);
-
-        const elTabVorspannung = shadow.getElementById("id_vorspannungen_tabelle");
-        elTabVorspannung?.setAttribute("nzeilen", String(nVorspannungen));
-        elTabVorspannung?.setAttribute("clear", "0");
-
-        let tabelleVorspannung = elTabVorspannung?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-        // Spannschloss
-        el = shadow.getElementById("id_button_nspannschloesser") as drButtonPM;
-        el.setValue(nSpannschloesser);
-        set_nspannschloesser(nSpannschloesser);
-
-        const elTabSpannschloss = shadow.getElementById("id_spannschloesser_tabelle");
-        elTabSpannschloss?.setAttribute("nzeilen", String(nSpannschloesser));
-        elTabSpannschloss?.setAttribute("clear", "0");
-
-        let tabelleSpannschloss = elTabSpannschloss?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
-
-
-        // Stabvorverformungen
+        const z_strecke: number[][] = [], z_einzel: number[][] = [], z_temp: number[][] = []
+        const z_vorsp: number[][] = [], z_spann: number[][] = [], z_vorverf: number[][] = []
 
         stabvorverformung.length = 0
-        el = shadow.getElementById("id_button_nstabvorverformungen") as drButtonPM;
-        el.setValue(nStabvorverfomungen);
 
-        const elTabStabvorverformung = shadow.getElementById("id_stabvorverfomungen_tabelle");
-        elTabStabvorverformung?.setAttribute("nzeilen", String(nStabvorverfomungen));
-        elTabStabvorverformung?.setAttribute("clear", "0");
+        for (const plan of plaene) {
+            const obj = plan.obj
+            const n = plan.xs.length - 1
+            const eps = 1e-9 * Math.max(1.0, plan.L_el)
 
-        let tabelleStabvorverformung = elTabStabvorverformung?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+            for (let j = 0; j < obj.elast.length; j++) {
+                const lf = (obj.elast[j] as TCAD_ElLast).lastfall
+                if (lf > check_max_lastfall) check_max_lastfall = lf;
+                const typ = obj.elast[j].typ
 
-        let ielem = nelem_Balken
-        let iel_Verform = 0
-        let irowStreckenlast = 1
-        let irowTemplast = 1
-        let irowEinzellast = 1
-        let irowVorspannung = 1
-        let irowSpannschloss = 1
-        let irowStabvorverformung = 1
-        for (let i = 0; i < list.size; i++) {
-            let obj = list.getNext(i) as TCAD_Stab;
-            if (obj.elTyp === CAD_STAB) {
+                if (typ === 0) {                                     // Streckenlast, auch Teilstreckenlast
+                    const sl = obj.elast[j] as TCAD_Streckenlast
+                    const xa = sl.xa
+                    const xb = sl.xb < 0.0 ? plan.L_el : sl.xb
+                    const teil = xa > eps || xb < plan.L_el - eps
+                    if (xa < -eps || xb > plan.L_el + eps || xb <= xa) {
+                        write(msg(str`Stab ${obj.elNo}: Streckenlast von xa=${xa} bis xe=${sl.xb} liegt nicht im elastischen Stabteil (0 bis ${myFormat(plan.L_el, 1, 3)} m)`))
+                        fatal_error = true; anzahl_fehler_cad++;
+                        continue
+                    }
+                    if (teil && !plan.teilbar) {
+                        write(msg(str`Stab ${obj.elNo}: Teilstreckenlasten sind auf Fachwerkstäben nicht möglich`))
+                        fatal_error = true; anzahl_fehler_cad++;
+                        continue
+                    }
+                    // Lastgrenzen liegen auf Teilungspunkten (ggf. zusammengefasst); Resultierende erhalten
+                    const xa2 = teil ? fange_punkt(xa, plan.feste, plan.tol) : 0.0
+                    const xb2 = teil ? fange_punkt(xb, plan.feste, plan.tol) : plan.L_el
+                    if (xb2 - xa2 <= eps) {
+                        write(msg(str`Stab ${obj.elNo}: Teilstreckenlast ist kürzer als die Fangtoleranz und wird nicht berücksichtigt`))
+                        continue
+                    }
+                    const f = (xb - xa) / (xb2 - xa2)
+                    const p = (s: number) => f * (sl.pL + (sl.pR - sl.pL) * (s - xa2) / (xb2 - xa2))
 
-                if (obj.elast.length > 0) {
-                    for (let j = 0; j < obj.elast.length; j++) {
-
-                        let lf = (obj.elast[j] as TCAD_ElLast).lastfall
-                        // if (lf > nlastfaelle) {
-                        //     fatal_error = true;
-                        //     write('Stab ' + obj.elNo + ', Lastfall einer Elementlast ist größer als in Tab Kombinationen definiert: ' + lf + ': Nummer des Lastfalls muss <= Anzahl Lastfälle sein');
-                        // }
-                        if (lf > check_max_lastfall) check_max_lastfall = lf;
-
-                        let typ = obj.elast[j].typ
-                        if (typ === 0) { // Streckenlast
-
-
-                            let art = (obj.elast[j] as TCAD_Streckenlast).art
-                            {   // VORLÄUFIG bis Schritt 4 (Elementteilung): Teilstreckenlasten werden noch nicht gerechnet
-                                const sl = obj.elast[j] as TCAD_Streckenlast
-                                if (sl.xa !== 0 || sl.xb !== -1) {
-                                    write('Stab ' + obj.elNo + ': Teilstreckenlasten werden noch nicht berechnet')
-                                    fatal_error = true; anzahl_fehler_cad++;
-                                }
-                            }
-                            let pL = (obj.elast[j] as TCAD_Streckenlast).pL
-                            let pR = (obj.elast[j] as TCAD_Streckenlast).pR
-                            //console.log("typeof", typeof obj.elast[j], lf)
-                            eload.push(new TElLoads())
-                            eload[ielem].element = obj.elNo - 1
-                            eload[ielem].lf = lf
-                            eload[ielem].art = art
-                            eload[ielem].pL = pL
-                            eload[ielem].pR = pR
-                            ielem++;
-
-                            let child = tabelleStreckenlast.rows[irowStreckenlast].cells[1].firstElementChild as HTMLInputElement;
-                            child.value = String(obj.elNo)
-                            child = tabelleStreckenlast.rows[irowStreckenlast].cells[2].firstElementChild as HTMLInputElement;
-                            child.value = String(lf)
-                            child = tabelleStreckenlast.rows[irowStreckenlast].cells[3].firstElementChild as HTMLInputElement;
-                            child.value = String(art)
-                            child = tabelleStreckenlast.rows[irowStreckenlast].cells[4].firstElementChild as HTMLInputElement;
-                            child.value = String(pL)
-                            child = tabelleStreckenlast.rows[irowStreckenlast].cells[5].firstElementChild as HTMLInputElement;
-                            child.value = String(pR)
-                            irowStreckenlast++;
-                        }
-                        else if (typ === 1) {
-                            let x = (obj.elast[j] as TCAD_Einzellast).xe
-                            {   // VORLÄUFIG bis Schritt 4 (Elementteilung): nur Last senkrecht zum Stab
-                                const el = obj.elast[j] as TCAD_Einzellast
-                                if (el.Px !== 0 || el.alpha !== 0 || !el.stabbezug) {
-                                    write('Stab ' + obj.elNo + ': schräge Einzellasten werden noch nicht berechnet')
-                                    fatal_error = true; anzahl_fehler_cad++;
-                                }
-                            }
-
-                            let elemNo = obj.elNo - 1
-                            if (x - 0.0001 > element[elemNo].sl) {
-                                write(msg('Angriffspunkt Einzellast auf Stab') + " " + String(elemNo + 1) + " " + msg('ist größer Stablänge, siehe Tab Tabellen'))
-                                fatal_error = true; anzahl_fehler_cad++;
-                            } else {
-                                if (x > element[elemNo].sl) x = element[elemNo].sl;
-                            }
-                            let P = (obj.elast[j] as TCAD_Einzellast).P
-                            let M = (obj.elast[j] as TCAD_Einzellast).M
-
-                            eload.push(new TElLoads())
-                            eload[ielem].element = elemNo
-                            eload[ielem].lf = lf
-                            eload[ielem].art = 6
-                            eload[ielem].x = x
-                            eload[ielem].P = P
-                            eload[ielem].M = M
-                            ielem++;
-
-                            let child = tabelleEinzellast.rows[irowEinzellast].cells[1].firstElementChild as HTMLInputElement;
-                            child.value = String(obj.elNo)
-                            child = tabelleEinzellast.rows[irowEinzellast].cells[2].firstElementChild as HTMLInputElement;
-                            child.value = String(lf)
-                            child = tabelleEinzellast.rows[irowEinzellast].cells[3].firstElementChild as HTMLInputElement;
-                            child.value = String(x)
-                            child = tabelleEinzellast.rows[irowEinzellast].cells[4].firstElementChild as HTMLInputElement;
-                            child.value = String(P)
-                            child = tabelleEinzellast.rows[irowEinzellast].cells[5].firstElementChild as HTMLInputElement;
-                            child.value = String(M)
-                            irowEinzellast++;
-                        }
-                        else if (typ === 2) {
-
-                            let To = (obj.elast[j] as TCAD_Temperaturlast).To
-                            let Tu = (obj.elast[j] as TCAD_Temperaturlast).Tu
-                            //console.log("typeof", typeof obj.elast[j], lf)
-                            eload.push(new TElLoads())
-                            eload[ielem].element = obj.elNo - 1
-                            eload[ielem].lf = lf
-                            eload[ielem].art = 5
-                            eload[ielem].To = To
-                            eload[ielem].Tu = Tu
-                            ielem++;
-
-                            let child = tabelleTemplast.rows[irowTemplast].cells[1].firstElementChild as HTMLInputElement;
-                            child.value = String(obj.elNo)
-                            child = tabelleTemplast.rows[irowTemplast].cells[2].firstElementChild as HTMLInputElement;
-                            child.value = String(lf)
-                            child = tabelleTemplast.rows[irowTemplast].cells[3].firstElementChild as HTMLInputElement;
-                            child.value = String(Tu)
-                            child = tabelleTemplast.rows[irowTemplast].cells[4].firstElementChild as HTMLInputElement;
-                            child.value = String(To)
-                            irowTemplast++;
-                        }
-                        else if (typ === 3) {
-
-                            let sigmaV = (obj.elast[j] as TCAD_Vorspannung).sigmaV
-
-                            eload.push(new TElLoads())
-                            eload[ielem].element = obj.elNo - 1
-                            eload[ielem].lf = lf
-                            eload[ielem].art = 9
-                            eload[ielem].sigmaV = sigmaV * 1000.0; //von MN/m² in kN/m²
-                            ielem++;
-
-                            let child = tabelleVorspannung.rows[irowVorspannung].cells[1].firstElementChild as HTMLInputElement;
-                            child.value = String(obj.elNo)
-                            child = tabelleVorspannung.rows[irowVorspannung].cells[2].firstElementChild as HTMLInputElement;
-                            child.value = String(lf)
-                            child = tabelleVorspannung.rows[irowVorspannung].cells[3].firstElementChild as HTMLInputElement;
-                            child.value = String(sigmaV)
-                            irowVorspannung++;
-                        }
-                        else if (typ === 4) {
-
-                            let ds = (obj.elast[j] as TCAD_Spannschloss).ds
-
-                            eload.push(new TElLoads())
-                            eload[ielem].element = obj.elNo - 1
-                            eload[ielem].lf = lf
-                            eload[ielem].art = 10
-                            eload[ielem].delta_s = ds / 1000.;  // von mm in m
-                            ielem++;
-
-                            let child = tabelleSpannschloss.rows[irowSpannschloss].cells[1].firstElementChild as HTMLInputElement;
-                            child.value = String(obj.elNo)
-                            child = tabelleSpannschloss.rows[irowSpannschloss].cells[2].firstElementChild as HTMLInputElement;
-                            child.value = String(lf)
-                            child = tabelleSpannschloss.rows[irowSpannschloss].cells[3].firstElementChild as HTMLInputElement;
-                            child.value = String(ds)
-                            irowSpannschloss++;
-                        }
-                        else if (typ === 5) {
-
-                            let w0a = (obj.elast[j] as TCAD_Stabvorverformung).w0a
-                            let w0m = (obj.elast[j] as TCAD_Stabvorverformung).get_stich()   // Kern erwartet den Stich
-                            let w0e = (obj.elast[j] as TCAD_Stabvorverformung).w0e
-
-                            stabvorverformung.push(new TStabvorverformung())
-                            stabvorverformung[iel_Verform].element = obj.elNo - 1
-                            stabvorverformung[iel_Verform].lf = lf
-                            stabvorverformung[iel_Verform].p[0] = w0a / 1000.;  // von mm in m
-                            stabvorverformung[iel_Verform].p[1] = w0e / 1000.;  // von mm in m
-                            stabvorverformung[iel_Verform].p[2] = w0m / 1000.;  // von mm in m
-                            console.log("stabvorverformung[iel_Verform]", iel_Verform, '|', stabvorverformung[iel_Verform])
-                            iel_Verform++;
-
-                            let child = tabelleStabvorverformung.rows[irowStabvorverformung].cells[1].firstElementChild as HTMLInputElement;
-                            child.value = String(obj.elNo)
-                            child = tabelleStabvorverformung.rows[irowStabvorverformung].cells[2].firstElementChild as HTMLInputElement;
-                            child.value = String(lf)
-                            child = tabelleStabvorverformung.rows[irowStabvorverformung].cells[3].firstElementChild as HTMLInputElement;
-                            child.value = String(w0a)
-                            child = tabelleStabvorverformung.rows[irowStabvorverformung].cells[4].firstElementChild as HTMLInputElement;
-                            child.value = String(w0e)
-                            child = tabelleStabvorverformung.rows[irowStabvorverformung].cells[5].firstElementChild as HTMLInputElement;
-                            child.value = String(w0m)
-                            irowStabvorverformung++;
-                        }
+                    for (let k = 0; k < n; k++) {
+                        const s0 = plan.xs[k], s1 = plan.xs[k + 1]
+                        if (s0 < xa2 - eps || s1 > xb2 + eps) continue
+                        const ie = eload.length
+                        eload.push(new TElLoads())
+                        eload[ie].element = plan.elem0 + k
+                        eload[ie].lf = lf
+                        eload[ie].art = sl.art
+                        eload[ie].pL = p(s0)
+                        eload[ie].pR = p(s1)
+                        z_strecke.push([plan.elem0 + k + 1, lf, sl.art, eload[ie].pL, eload[ie].pR])
                     }
                 }
+                else if (typ === 2) {                                // Temperatur: alle Teilelemente
+                    const t = obj.elast[j] as TCAD_Temperaturlast
+                    for (let k = 0; k < n; k++) {
+                        const ie = eload.length
+                        eload.push(new TElLoads())
+                        eload[ie].element = plan.elem0 + k
+                        eload[ie].lf = lf
+                        eload[ie].art = 5
+                        eload[ie].To = t.To
+                        eload[ie].Tu = t.Tu
+                        z_temp.push([plan.elem0 + k + 1, lf, t.Tu, t.To])
+                    }
+                }
+                else if (typ === 3) {                                // Vorspannung: alle Teilelemente
+                    const sigmaV = (obj.elast[j] as TCAD_Vorspannung).sigmaV
+                    for (let k = 0; k < n; k++) {
+                        const ie = eload.length
+                        eload.push(new TElLoads())
+                        eload[ie].element = plan.elem0 + k
+                        eload[ie].lf = lf
+                        eload[ie].art = 9
+                        eload[ie].sigmaV = sigmaV * 1000.0; //von MN/m² in kN/m²
+                        z_vorsp.push([plan.elem0 + k + 1, lf, sigmaV])
+                    }
+                }
+                else if (typ === 4) {                                // Spannschloss: nur einmal, mittleres Teilelement
+                    const ds = (obj.elast[j] as TCAD_Spannschloss).ds
+                    const k = Math.floor(n / 2)
+                    const ie = eload.length
+                    eload.push(new TElLoads())
+                    eload[ie].element = plan.elem0 + k
+                    eload[ie].lf = lf
+                    eload[ie].art = 10
+                    eload[ie].delta_s = ds / 1000.;  // von mm in m
+                    z_spann.push([plan.elem0 + k + 1, lf, ds])
+                }
+                else if (typ === 5) {                                // Stabvorverformung: Parabel über den ganzen Stab
+                    const vv = obj.elast[j] as TCAD_Stabvorverformung
+                    const stich = vv.get_stich()   // Kern erwartet den Stich
+                    for (let k = 0; k < n; k++) {
+                        const [w0a, w0e, w0m] = vorverformung_teil(vv.w0a, stich, vv.w0e, plan.L_el, plan.xs[k], plan.xs[k + 1])
+                        const sv = new TStabvorverformung()
+                        sv.element = plan.elem0 + k
+                        sv.lf = lf
+                        sv.p[0] = w0a / 1000.;  // von mm in m
+                        sv.p[1] = w0e / 1000.;
+                        sv.p[2] = w0m / 1000.;
+                        stabvorverformung.push(sv)
+                        z_vorverf.push([plan.elem0 + k + 1, lf, w0a, w0e, w0m])
+                    }
+                }
+                // typ 1 (Einzellast) ist bei der Elementteilung schon verteilt worden
             }
         }
 
-        set_neloads(nelem_Balken + nStreckenlasten + nTemperaturlasten + nEinzellasten + nVorspannungen + nSpannschloesser);
-        set_ntotalEloads(nelem_Balken + nStreckenlasten + nTemperaturlasten + nEinzellasten + nVorspannungen + nSpannschloesser)
+        // Einzellasten am Rand des elastischen Teils bleiben Elementlasten (art 6)
+        for (const e6 of einzellasten_art6) {
+            const ie = eload.length
+            eload.push(new TElLoads())
+            eload[ie].element = e6.element
+            eload[ie].lf = e6.lf
+            eload[ie].art = 6
+            eload[ie].x = e6.x
+            eload[ie].P = e6.P
+            eload[ie].M = e6.M
+            z_einzel.push([e6.element + 1, e6.lf, e6.x, e6.P, e6.M])
+        }
+
+        // Tabellen füllen (nur Anzeige)
+        const fuelle = (id_button: string, id_tabelle: string, zeilen: number[][]) => {
+            const b = shadow.getElementById(id_button) as drButtonPM;
+            b.setValue(zeilen.length);
+            const elTab = shadow.getElementById(id_tabelle);
+            elTab?.setAttribute("nzeilen", String(zeilen.length));
+            elTab?.setAttribute("clear", "0");
+            const tabelle = elTab?.shadowRoot?.getElementById('mytable') as HTMLTableElement;
+            for (let i = 0; i < zeilen.length; i++) {
+                for (let c = 0; c < zeilen[i].length; c++) {
+                    const child = tabelle.rows[i + 1].cells[c + 1].firstElementChild as HTMLInputElement;
+                    const w = zeilen[i][c]
+                    child.value = Number.isInteger(w) ? String(w) : myFormat_en(w, 1, 4)
+                }
+            }
+        }
+        fuelle("id_button_nstreckenlasten", "id_streckenlasten_tabelle", z_strecke)
+        fuelle("id_button_neinzellasten", "id_einzellasten_tabelle", z_einzel)
+        fuelle("id_button_ntemperaturlasten", "id_temperaturlasten_tabelle", z_temp)
+        fuelle("id_button_nvorspannungen", "id_vorspannungen_tabelle", z_vorsp)
+        fuelle("id_button_nspannschloesser", "id_spannschloesser_tabelle", z_spann)
+        fuelle("id_button_nstabvorverformungen", "id_stabvorverfomungen_tabelle", z_vorverf)
+
+        set_nstreckenlasten(z_strecke.length);
+        set_neinzellasten(z_einzel.length);
+        set_ntemperaturlasten(z_temp.length);
+        set_nvorspannungen(z_vorsp.length);
+        set_nspannschloesser(z_spann.length);
+        set_nstabvorverfomungen(z_vorverf.length);
+
+        set_neloads(eload.length);
+        set_ntotalEloads(eload.length)
     }
 
     //                  V o r v e r f o r m u n g e n
