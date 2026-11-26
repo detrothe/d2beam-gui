@@ -431,6 +431,32 @@ export class TCAD_Einzellast extends TCAD_ElLast {
         this.M = M
         this.className = 'TCAD_Einzellast'
     }
+    // true, wenn eine Kraft (nicht nur ein Moment) angreift
+    hat_kraft() {
+        return this.Px !== 0.0 || this.Pz !== 0.0
+    }
+
+    // Einheitsvektoren (global x, z) der Richtungen von Px und Pz;
+    // coStab/siStab: Richtung der Stabachse (TCAD_Stab.cosinus/sinus), z zeigt nach unten
+    richtungen(coStab: number, siStab: number) {
+        let bx = 1.0, bz = 0.0, nx = 0.0, nz = 1.0          // Bezugssystem global
+        if (this.stabbezug) {
+            bx = coStab; bz = siStab; nx = -siStab; nz = coStab  // Stabachse, lokales z
+        }
+        const phi = this.alpha * Math.PI / 180.0             // im Gegenuhrzeigersinn positiv
+        const ca = Math.cos(phi), sa = Math.sin(phi)
+        return {
+            ex: [ca * bx - sa * nx, ca * bz - sa * nz],
+            ez: [sa * bx + ca * nx, sa * bz + ca * nz]
+        }
+    }
+
+    // Kraftkomponenten im globalen x-z-System
+    get_global(coStab: number, siStab: number) {
+        const r = this.richtungen(coStab, siStab)
+        return [this.Px * r.ex[0] + this.Pz * r.ez[0], this.Px * r.ex[1] + this.Pz * r.ez[1]]
+    }
+
     set_drawLast_M_xz(x: number[], z: number[]) {
         for (let i = 0; i < 4; i++) {
             this.xM[i] = x[i]

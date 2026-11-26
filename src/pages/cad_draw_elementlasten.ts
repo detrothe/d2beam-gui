@@ -297,6 +297,17 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     let p_L = (obj.elast[j] as TCAD_Streckenlast).pL
                     let p_R = (obj.elast[j] as TCAD_Streckenlast).pR
 
+                    // Teilstreckenlast: nur von xa bis xb zeichnen (ab Beginn des elastischen Stabteils)
+                    const stab_x1 = x1, stab_z1 = z1, stab_x2 = x2, stab_z2 = z2
+                    {
+                        const L_el = Math.sqrt((stab_x2 - stab_x1) ** 2 + (stab_z2 - stab_z1) ** 2)
+                        const sl = obj.elast[j] as TCAD_Streckenlast
+                        const xa = Math.min(Math.max(sl.xa, 0.0), L_el)
+                        const xb = (sl.xb < 0.0) ? L_el : Math.min(Math.max(sl.xb, xa), L_el)
+                        x1 = stab_x1 + co * xa; z1 = stab_z1 + si * xa
+                        x2 = stab_x1 + co * xb; z2 = stab_z1 + si * xb
+                    }
+
                     // if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === lf_show[iLoop])) {
 
                     if ((obj.elast[j] as TCAD_Streckenlast).art === 0) {
@@ -878,6 +889,8 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         dp = pMax
                         ax_projektion += dp + a_spalt
                     }
+
+                    x1 = stab_x1; z1 = stab_z1; x2 = stab_x2; z2 = stab_z2
                 }
 
                 else if (typ === 2 || typ === 3 || typ === 4) {      // Temperatur, Vorspannung, Spannschloss    /*eload[ieload].art === 5 || eload[ieload].art === 9 || eload[ieload].art === 10*/
@@ -956,9 +969,9 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     let plength = tr.Pix0(slmax_cad / 70) /*35*/, delta = 12
                     let marker = tr.World0(10 / devicePixelRatio)
 
-                    let x = (obj.elast[j] as TCAD_Einzellast).xe
-                    let P = (obj.elast[j] as TCAD_Einzellast).P
-                    let M = (obj.elast[j] as TCAD_Einzellast).M
+                    const el_last = obj.elast[j] as TCAD_Einzellast
+                    let x = el_last.xe
+                    let M = el_last.M
 
                     let xM1 = x1 + co * x + si * marker;
                     let zM1 = z1 + si * x - co * marker;
@@ -978,39 +991,37 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     if (base_x[j] > -1) {
                         shift = ae_x[base_x[j]]
                     }
-                    if (P != 0.0) {
-                        let dpx = si * plength
-                        let dpz = co * plength
-                        let ddx = si * (delta + shift)
-                        let ddz = co * (delta + shift)
-                        let wert = P * fact[iLoop]
-                        let xl = x1 + co * x
-                        let zl = z1 + si * x
-                        //console.log("GRAFIK Einzellast", xl, zl, wert)
+                    if (el_last.hat_kraft()) {
+                        // Px und Pz als Pfeile in ihren Richtungen (Stabachse bzw. global, um alpha gedreht),
+                        // jeweils auf der Seite, von der die positive Komponente kommt
+                        const r = el_last.richtungen(co, si)
+                        const xl = x1 + co * x
+                        const zl = z1 + si * x
                         let grp = new Two.Group();
 
-                        if (wert < 0.0) {
-                            let gr = draw_arrow(tr, xl + ddx, zl - ddz, xl + ddx + dpx, zl - ddz - dpz, element_selected, style_pfeil_knotenlast_element)
-                            grp.add(gr)
-                        } else {
-                            let gr = draw_arrow(tr, xl + ddx + dpx, zl - ddz - dpz, xl + ddx, zl - ddz, element_selected, style_pfeil_knotenlast_element)
-                            grp.add(gr)
-                        }
+                        for (const [komp, e, name] of [[el_last.Px, r.ex, 'x'], [el_last.Pz, r.ez, 'z']] as [number, number[], string][]) {
+                            if (komp === 0.0) continue
+                            const wert = komp * fact[iLoop]
+                            const xn = xl - e[0] * (delta + shift), zn = zl - e[1] * (delta + shift)                       // nahe am Stab
+                            const xf = xl - e[0] * (delta + shift + plength), zf = zl - e[1] * (delta + shift + plength)  // weit weg
 
-                        xpix = tr.xPix(xl + ddx + dpx) + 5
-                        zpix = tr.zPix(zl - ddz - dpz) + 9 / devicePixelRatio;
-                        let str = myFormat(Math.abs(wert), 1, 3) + unit_force
-                        if (max_Lastfall > 1) str = iLastfall + '|' + str
-                        const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
-                        txt.alignment = 'left'
-                        txt.baseline = 'top'
-                        //group.add(txt)
-                        grp.add(txt)
+                            if (wert < 0.0) grp.add(draw_arrow(tr, xn, zn, xf, zf, element_selected, style_pfeil_knotenlast_element))
+                            else grp.add(draw_arrow(tr, xf, zf, xn, zn, element_selected, style_pfeil_knotenlast_element))
+
+                            xpix = tr.xPix(xf) + 5
+                            zpix = tr.zPix(zf) + 9 / devicePixelRatio;
+                            let str = myFormat(Math.abs(wert), 1, 3) + unit_force
+                            if (el_last.Px !== 0.0) str = 'P' + name + '=' + str      // bei zwei Komponenten unterscheidbar
+                            if (max_Lastfall > 1) str = iLastfall + '|' + str
+                            const txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast_element)
+                            txt.alignment = 'left'
+                            txt.baseline = 'top'
+                            grp.add(txt)
+                        }
                         let rect = grp.getBoundingClientRect()
 
                         group.add(grp)
 
-                        // const vertices = [];
                         xtr[0] = tr.xWorld(rect.left)
                         ztr[0] = tr.zWorld(rect.top)
                         xtr[1] = tr.xWorld(rect.left)
@@ -1020,7 +1031,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                         xtr[3] = tr.xWorld(rect.left + rect.width)
                         ztr[3] = tr.zWorld(rect.top);
 
-                        (obj.elast[j] as TCAD_Streckenlast).set_drawLast_xz(xtr, ztr)   // Koordinaten merken für Picken
+                        el_last.set_drawLast_xz(xtr, ztr)   // Koordinaten merken für Picken
                         if (buttons_control.show_boundingRect) group.add(draw_BoundingClientRect_xz(tr, xtr, ztr))
 
                     }
@@ -1117,6 +1128,7 @@ export function draw_elementlasten(tr: CTrans, obj: TCAD_Stab) {
                     xpix = (xtr[0] + xtr[1] + xtr[2] + xtr[3]) / 4.
                     zpix = (ztr[0] + ztr[1] + ztr[2] + ztr[3]) / 4.
                     let str = 'w0 a,m,e ' + w0a + ',' + w0m + ',' + w0e + 'mm';
+                    if ((obj.elast[j] as TCAD_Stabvorverformung).eingabeart === 1) str = 'w0 Ord. a,m,e ' + w0a + ',' + w0m + ',' + w0e + 'mm';
                     if (max_Lastfall > 1) str = iLastfall + '|' + str
 
                     let txt = new Two.Text(str, xpix, zpix, style_txt_knotenlast)

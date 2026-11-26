@@ -1342,7 +1342,7 @@ export async function delete_element(xc: number, zc: number) {
             }
           }
           else if (typ === 1) {
-            if ((obj.elast[j] as TCAD_Einzellast).P !== 0.0) {
+            if ((obj.elast[j] as TCAD_Einzellast).hat_kraft()) {
               let x = Array(4)
               let z = Array(4);
 
@@ -1869,7 +1869,7 @@ export function select_element(xc: number, zc: number) {
               }
             }
             else if (typ === 1) {
-              if ((obj.elast[j] as TCAD_Einzellast).P !== 0.0) {
+              if ((obj.elast[j] as TCAD_Einzellast).hat_kraft()) {
                 let x = Array(4)
                 let z = Array(4);
 
@@ -1990,7 +1990,7 @@ export function select_element(xc: number, zc: number) {
         let lf = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).lastfall
         ele.set_lastfall(lf)
         let x = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).xe
-        let P = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).P
+        let P = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).Pz
         let M = (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).M
         ele.set_x(x)
         ele.set_P(P)
@@ -3417,7 +3417,7 @@ function update_elementlast() {
         } else {
 
           (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).xe = x;
-          (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).P = P;
+          (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).Pz = P;
           (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).M = M;
           (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).Px = Px;
           (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).alpha = ele.get_alpha();
@@ -3839,7 +3839,7 @@ export function show_selected_element(xc: number, zc: number) {
             }
           }
           else if (typ === 1) {
-            if ((obj.elast[j] as TCAD_Einzellast).P !== 0.0) {
+            if ((obj.elast[j] as TCAD_Einzellast).hat_kraft()) {
               let x = Array(4)
               let z = Array(4);
 

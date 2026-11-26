@@ -707,7 +707,7 @@ export function update_multi_selected_elementlast() {
                                 obj.elast[j].lastfall = lf;
                                 set_max_lastfall(lf);
                                 (obj.elast[j] as TCAD_Einzellast).xe = el.get_x();
-                                (obj.elast[j] as TCAD_Einzellast).P = el.get_P();
+                                (obj.elast[j] as TCAD_Einzellast).Pz = el.get_P();
                                 (obj.elast[j] as TCAD_Einzellast).M = el.get_M();
                                 (obj.elast[j] as TCAD_Einzellast).Px = el.get_Px();
                                 (obj.elast[j] as TCAD_Einzellast).alpha = el.get_alpha();
