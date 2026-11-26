@@ -73,6 +73,7 @@ export function show_property_dialog() {
         el.setStarrA((picked_obj as TCAD_Stab).get_starrA())
         el.setStarrE((picked_obj as TCAD_Stab).get_starrE())
         el.setBettung((picked_obj as TCAD_Stab).get_bettung())
+        el.setNTeil((picked_obj as TCAD_Stab).nTeil)
 
         el.set_stabtyp((picked_obj as TCAD_Stab).get_stabtyp())
 
@@ -118,6 +119,7 @@ function dialog_stab_eigenschaften_closed(this: any, _e: any) {
             (picked_obj as TCAD_Stab).set_starrA(el.getStarrA());
             (picked_obj as TCAD_Stab).set_starrE(el.getStarrE());
             (picked_obj as TCAD_Stab).set_bettung(el.getBettung());
+            (picked_obj as TCAD_Stab).nTeil = el.getNTeil();
 
             (picked_obj as TCAD_Stab).set_stabtyp(el.get_stabtyp());
 
@@ -216,13 +218,13 @@ function dialog_addElementlast_closed(this: any, e: any) {
                 let art = ele.get_art();
 
                 //console.log("in add_elementlast ", index, lf, art, pa, pe)
-                (picked_obj as TCAD_Stab).add_streckenlast(lf, art, pa, pe)
+                (picked_obj as TCAD_Stab).add_streckenlast(lf, art, pa, pe, ele.get_xa(), ele.get_xb())
 
                 if (Math.abs(pa) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pa);
                 if (Math.abs(pe) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pe);
             }
             else if (typ === 1) {
-                (picked_obj as TCAD_Stab).add_einzellast(lf, ele.get_x(), ele.get_P(), ele.get_M());
+                (picked_obj as TCAD_Stab).add_einzellast(lf, ele.get_x(), ele.get_P(), ele.get_M(), ele.get_Px(), ele.get_alpha(), ele.get_stabbezug());
             }
             else if (typ === 2) {
                 (picked_obj as TCAD_Stab).add_temperaturlast(lf, ele.get_To(), ele.get_Tu());
@@ -234,7 +236,7 @@ function dialog_addElementlast_closed(this: any, e: any) {
                 (picked_obj as TCAD_Stab).add_spannschloss(lf, ele.get_ds());
             }
             else if (typ === 5) {
-                (picked_obj as TCAD_Stab).add_stabvorverformung(lf, ele.get_w0a(), ele.get_w0m(), ele.get_w0e());
+                (picked_obj as TCAD_Stab).add_stabvorverformung(lf, ele.get_w0a(), ele.get_w0m(), ele.get_w0e(), ele.get_w0_eingabeart());
             }
 
             if (selected_element.group) {

@@ -1995,6 +1995,9 @@ export function select_element(xc: number, zc: number) {
         ele.set_x(x)
         ele.set_P(P)
         ele.set_M(M)
+        ele.set_Px((obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).Px)
+        ele.set_alpha((obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).alpha)
+        ele.set_stabbezug((obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).stabbezug)
         ele.set_typ('1')
         mode_elementlast_aendern = true
 
@@ -2024,6 +2027,8 @@ export function select_element(xc: number, zc: number) {
           ele.set_pa(pa)
           ele.set_pe(pe)
           ele.set_art(art)
+          ele.set_xa((obj_ellast.elast[index_ellast] as TCAD_Streckenlast).xa)
+          ele.set_xb((obj_ellast.elast[index_ellast] as TCAD_Streckenlast).xb)
         }
         else if (typ === 2) {
           let To = (obj_ellast.elast[index_ellast] as TCAD_Temperaturlast).To
@@ -2037,7 +2042,7 @@ export function select_element(xc: number, zc: number) {
         }
         else if (typ === 4) {
           let ds = (obj_ellast.elast[index_ellast] as TCAD_Spannschloss).ds
-          ele.set_sigmaV(ds)
+          ele.set_ds(ds)
         }
         else if (typ === 5) {
           let w0a = (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0a
@@ -2046,6 +2051,7 @@ export function select_element(xc: number, zc: number) {
           ele.set_w0a(w0a)
           ele.set_w0m(w0m)
           ele.set_w0e(w0e)
+          ele.set_w0_eingabeart((obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).eingabeart)
         }
 
         mode_elementlast_aendern = true;
@@ -2286,13 +2292,13 @@ export function add_elementlast(xc: number, zc: number) {
           let art = ele.get_art()
 
           console.log("in add_elementlast ", index, lf, art, pa, pe)
-          obj.add_streckenlast(lf, art, pa, pe)
+          obj.add_streckenlast(lf, art, pa, pe, ele.get_xa(), ele.get_xb())
 
           if (Math.abs(pa) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pa);
           if (Math.abs(pe) > max_value_lasten[lf - 1].eload) max_value_lasten[lf - 1].eload = Math.abs(pe);
         }
         else if (typ === 1) {
-          obj.add_einzellast(lf, ele.get_x(), ele.get_P(), ele.get_M())
+          obj.add_einzellast(lf, ele.get_x(), ele.get_P(), ele.get_M(), ele.get_Px(), ele.get_alpha(), ele.get_stabbezug())
         }
         else if (typ === 2) {
           obj.add_temperaturlast(lf, ele.get_To(), ele.get_Tu())
@@ -2304,7 +2310,7 @@ export function add_elementlast(xc: number, zc: number) {
           obj.add_spannschloss(lf, ele.get_ds())
         }
         else if (typ === 5) {
-          obj.add_stabvorverformung(lf, ele.get_w0a(), ele.get_w0m(), ele.get_w0e())
+          obj.add_stabvorverformung(lf, ele.get_w0a(), ele.get_w0m(), ele.get_w0e(), ele.get_w0_eingabeart())
         }
 
         two.remove(obj.two_obj);
@@ -3398,12 +3404,13 @@ function update_elementlast() {
         let x = ele.get_x();
         let P = ele.get_P();
         let M = ele.get_M();
+        let Px = ele.get_Px();
 
         if (x < 0) {
           ok = false;
           alertdialog('ok', msg('Angriffspunkt x muss größer gleich null sein'));
 
-        } else if (P === 0 && M === 0) {
+        } else if (Px === 0 && P === 0 && M === 0) {
           ok = false;
           alertdialog('ok', msg('mind. eine Last muss ungleich null sein'));
 
@@ -3412,6 +3419,9 @@ function update_elementlast() {
           (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).xe = x;
           (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).P = P;
           (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).M = M;
+          (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).Px = Px;
+          (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).alpha = ele.get_alpha();
+          (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).stabbezug = ele.get_stabbezug();
           (obj_eleinzellast.elast[index_eleinzellast] as TCAD_Einzellast).lastfall = lf;
         }
       }
@@ -3432,6 +3442,8 @@ function update_elementlast() {
             (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).pR = pe;
             (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).lastfall = lf;
             (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).art = art;
+            (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).xa = ele.get_xa();
+            (obj_ellast.elast[index_ellast] as TCAD_Streckenlast).xb = ele.get_xb();
           }
         }
         else if (typ === 2) {    // Temperatur
@@ -3486,6 +3498,7 @@ function update_elementlast() {
             (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0a = w0a;
             (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0m = w0m;
             (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).w0e = w0e;
+            (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).eingabeart = ele.get_w0_eingabeart();
             (obj_ellast.elast[index_ellast] as TCAD_Stabvorverformung).lastfall = lf;
           }
         }

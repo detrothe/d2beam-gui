@@ -275,6 +275,12 @@ export class drDialogStabEigenschaften extends LitElement {
                <input type="number" step="any" id="id_kb" name="kb" pattern="[0-9.,eE+-]*" value="" />
                [kN/m²]
             </p>
+
+            <p><b>${msg('FE-Elementteilung')}</b></p>
+            <p title=${msg('Der elastische Teil des Stabes wird für die Berechnung in so viele finite Elemente geteilt. Bei Theorie II. Ordnung und Bettung werden die Ergebnisse mit mehr Elementen genauer.')}>
+               ${msg('Anzahl Elemente:')}
+               <input type="number" step="1" min="1" id="id_nteil" name="nteil" pattern="[0-9]*" value="1" />
+            </p>
          </div>
 
          <form method="dialog">
@@ -338,6 +344,17 @@ export class drDialogStabEigenschaften extends LitElement {
   }
 
   //---------------------------------------------------------------------------------------------------------------
+  getNTeil() {
+    // Anzahl FE-Elemente je Stab, ganze Zahl >= 1
+    const wert = Number((this.shadowRoot?.getElementById('id_nteil') as HTMLInputElement).value.replace(/,/g, '.'));
+    if (!isFinite(wert) || wert < 1) return 1;
+    return Math.round(wert);
+  }
+
+  setNTeil(wert: number) {
+    (this.shadowRoot?.getElementById('id_nteil') as HTMLInputElement).value = String(wert);
+  }
+
   getBettung() {
     //-------------------------------------------------------------------------------------------------------------
 

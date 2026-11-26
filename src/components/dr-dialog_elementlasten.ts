@@ -38,6 +38,11 @@ export class drDialogElementlasten extends LitElement {
         color: black;
       }
 
+      .hinweis {
+        font-size: 0.875rem;
+        color: #555;
+      }
+
       @media (prefers-color-scheme: dark) {
         button,
         select {
@@ -176,6 +181,15 @@ export class drDialogElementlasten extends LitElement {
           <input type="number" step="any" id="id_pe" name="pa" pattern="[0-9.,eE+-]*" value="" />
           [kN/m]
         </p>
+        <p>
+          x<sub>a</sub>
+          <input type="number" step="any" id="id_xa" name="xa" pattern="[0-9.,eE+-]*" value="0" />
+          [m]<br />
+          x<sub>e</sub>
+          <input type="number" step="any" id="id_xb" name="xb" pattern="[0-9.,eE+-]*" value="-1" />
+          [m]
+        </p>
+        <p class="hinweis">${msg('Lastanfang und -ende ab Beginn des elastischen Stabteils, xe = −1: bis Stabende')}</p>
       </div>
 
       <div id="id_einzellast" style="display:none;">
@@ -188,7 +202,26 @@ export class drDialogElementlasten extends LitElement {
               <td>[m]</td>
             </tr>
             <tr>
-              <td>P</td>
+              <td>${msg('Bezug')}</td>
+              <td colspan="2">
+                <select id="id_bezug">
+                  <option value="1" selected>${msg('Stabachse')}</option>
+                  <option value="0">${msg('global x, z')}</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td title=${msg('Winkel im Gegenuhrzeigersinn positiv')}>&alpha;</td>
+              <td><input type="number" step="any" id="id_alpha" name="alpha" pattern="[0-9.,eE+-]*" value="0" /></td>
+              <td>[°]</td>
+            </tr>
+            <tr>
+              <td>P<sub>x</sub></td>
+              <td><input type="number" step="any" id="id_Px" name="Px" pattern="[0-9.,eE+-]*" value="" /></td>
+              <td>[kN]</td>
+            </tr>
+            <tr>
+              <td>P<sub>z</sub></td>
               <td><input type="number" step="any" id="id_P" name="P" pattern="[0-9.,eE+-]*" value="" /></td>
               <td>[kN]</td>
             </tr>
@@ -199,6 +232,7 @@ export class drDialogElementlasten extends LitElement {
             </tr>
           </tbody>
         </table>
+        <p class="hinweis">${msg('x ab Beginn des elastischen Stabteils. Bezug Stabachse mit α = 0: Px längs, Pz senkrecht zum Stab.')}</p>
       </div>
 
       <div id="id_temperatur" style="display:none;">
@@ -233,6 +267,12 @@ export class drDialogElementlasten extends LitElement {
 
       <div id="id_vorverformungen" style="display:none;">
         <p>${msg('Stabvorverformungen (nur bei Th.II.O.)')}</p>
+        <p>
+          <select id="id_w0_eingabeart" @change="${this._w0_eingabeart_changed}">
+            <option value="0" selected>${msg('Anfang, Stich, Ende')}</option>
+            <option value="1">${msg('Ordinaten Anfang, Mitte, Ende')}</option>
+          </select>
+        </p>
         <table id="einstellungen_table">
           <tbody>
             <tr>
@@ -241,7 +281,7 @@ export class drDialogElementlasten extends LitElement {
               <td>[mm]</td>
             </tr>
             <tr>
-              <td>w<sub>0m</sub></td>
+              <td><span id="id_w0m_stich">w<sub>0m</sub> (${msg('Stich')})</span><span id="id_w0m_mitte" style="display:none;">w<sub>0</sub> (${msg('Mitte')})</span></td>
               <td><input type="number" step="any" id="id_w0m" name="w0m" pattern="[0-9.,eE+-]*" value="" /></td>
               <td>[mm]</td>
             </tr>
@@ -280,8 +320,13 @@ export class drDialogElementlasten extends LitElement {
         alertdialog("ok", msg('Streckenlast darf nicht null sein'));
         return;
       }
+      const xa = this.get_xa(), xb = this.get_xb();
+      if (!isFinite(xa) || !isFinite(xb) || xa < 0 || (xb !== -1 && xb <= xa)) {
+        alertdialog("ok", msg('Lastanfang xa muss >= 0 sein und Lastende xe größer als xa (oder −1 für bis Stabende)'));
+        return;
+      }
     } else if (typ === 1) {
-      if (this.get_P() === 0 && this.get_M() === 0) {
+      if (this.get_Px() === 0 && this.get_P() === 0 && this.get_M() === 0) {
         alertdialog("ok", msg('Einzellasten dürfen nicht null sein'));
         return;
       }
@@ -326,6 +371,58 @@ export class drDialogElementlasten extends LitElement {
     const shadow = this.shadowRoot;
     let wert = Number((shadow?.getElementById("id_pe") as HTMLInputElement).value.replace(/,/g, "."));
     return wert;
+  }
+
+  get_xa() {
+    return Number((this.shadowRoot?.getElementById("id_xa") as HTMLInputElement).value.replace(/,/g, "."));
+  }
+  get_xb() {
+    const wert = (this.shadowRoot?.getElementById("id_xb") as HTMLInputElement).value.trim();
+    if (wert === '') return -1;   // leer = bis Stabende
+    return Number(wert.replace(/,/g, "."));
+  }
+  set_xa(wert: number) {
+    (this.shadowRoot?.getElementById("id_xa") as HTMLInputElement).value = String(wert);
+  }
+  set_xb(wert: number) {
+    (this.shadowRoot?.getElementById("id_xb") as HTMLInputElement).value = String(wert);
+  }
+
+  // Einzellast: P = Pz, dazu Px, alpha [°] und Bezug (true = Stabachse, false = global)
+  get_Px() {
+    return Number((this.shadowRoot?.getElementById("id_Px") as HTMLInputElement).value.replace(/,/g, "."));
+  }
+  set_Px(wert: number) {
+    (this.shadowRoot?.getElementById("id_Px") as HTMLInputElement).value = String(wert);
+  }
+  get_alpha() {
+    return Number((this.shadowRoot?.getElementById("id_alpha") as HTMLInputElement).value.replace(/,/g, "."));
+  }
+  set_alpha(wert: number) {
+    (this.shadowRoot?.getElementById("id_alpha") as HTMLInputElement).value = String(wert);
+  }
+  get_stabbezug() {
+    return (this.shadowRoot?.getElementById("id_bezug") as HTMLSelectElement).value === "1";
+  }
+  set_stabbezug(wert: boolean) {
+    (this.shadowRoot?.getElementById("id_bezug") as HTMLSelectElement).value = wert ? "1" : "0";
+  }
+
+  // Stabvorverformung: 0 = Anfang, Stich, Ende; 1 = Ordinaten Anfang, Mitte, Ende
+  get_w0_eingabeart() {
+    return Number((this.shadowRoot?.getElementById("id_w0_eingabeart") as HTMLSelectElement).value);
+  }
+  set_w0_eingabeart(wert: number) {
+    (this.shadowRoot?.getElementById("id_w0_eingabeart") as HTMLSelectElement).value = String(wert);
+    this._w0_eingabeart_changed();
+  }
+  _w0_eingabeart_changed() {
+    const stich = this.shadowRoot?.getElementById("id_w0m_stich") as HTMLElement;
+    const mitte = this.shadowRoot?.getElementById("id_w0m_mitte") as HTMLElement;
+    if (!stich || !mitte) return;
+    const ordinaten = this.get_w0_eingabeart() === 1;
+    stich.style.display = ordinaten ? "none" : "inline";
+    mitte.style.display = ordinaten ? "inline" : "none";
   }
 
   get_Tu() {

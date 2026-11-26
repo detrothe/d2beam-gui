@@ -634,12 +634,13 @@ export function update_multi_selected_elementlast() {
                 let x = el.get_x();
                 let P = el.get_P();
                 let M = el.get_M();
+                let Px = el.get_Px();
 
                 if (x < 0) {
                     ok = false;
                     alertdialog('ok', msg('Angriffspunkt x muss größer gleich null sein'));
 
-                } else if (P === 0 && M === 0) {
+                } else if (Px === 0 && P === 0 && M === 0) {
                     ok = false;
                     alertdialog('ok', 'mind. eine Last muss ungleich null sein');
                 }
@@ -699,6 +700,8 @@ export function update_multi_selected_elementlast() {
                                 (obj.elast[j] as TCAD_Streckenlast).art = el.get_art();
                                 (obj.elast[j] as TCAD_Streckenlast).pL = el.get_pa();
                                 (obj.elast[j] as TCAD_Streckenlast).pR = el.get_pe();
+                                (obj.elast[j] as TCAD_Streckenlast).xa = el.get_xa();
+                                (obj.elast[j] as TCAD_Streckenlast).xb = el.get_xb();
                             }
                             else if (typ === 1 && obj.elast[j].typ === typ) {  // Einzelllast
                                 obj.elast[j].lastfall = lf;
@@ -706,6 +709,9 @@ export function update_multi_selected_elementlast() {
                                 (obj.elast[j] as TCAD_Einzellast).xe = el.get_x();
                                 (obj.elast[j] as TCAD_Einzellast).P = el.get_P();
                                 (obj.elast[j] as TCAD_Einzellast).M = el.get_M();
+                                (obj.elast[j] as TCAD_Einzellast).Px = el.get_Px();
+                                (obj.elast[j] as TCAD_Einzellast).alpha = el.get_alpha();
+                                (obj.elast[j] as TCAD_Einzellast).stabbezug = el.get_stabbezug();
                             }
                             else if (typ === 2 && obj.elast[j].typ === typ) {  // Temperatur
                                 obj.elast[j].lastfall = lf;
@@ -729,6 +735,7 @@ export function update_multi_selected_elementlast() {
                                 (obj.elast[j] as TCAD_Stabvorverformung).w0a = el.get_w0a();
                                 (obj.elast[j] as TCAD_Stabvorverformung).w0m = el.get_w0m();
                                 (obj.elast[j] as TCAD_Stabvorverformung).w0e = el.get_w0e();
+                                (obj.elast[j] as TCAD_Stabvorverformung).eingabeart = el.get_w0_eingabeart();
                             }
                         }
 
@@ -810,6 +817,7 @@ function showDialog_edit_selected_staebe() {
         el.setStarrA(0.0)
         el.setStarrE(0.0)
         el.setBettung(0.0)
+        el.setNTeil(1)
 
         //el.set_stabtyp((picked_obj as TCAD_Stab).get_stabtyp())
 
@@ -854,6 +862,7 @@ function dialog_stab_eigenschaften_closed(this: any, _e: any) {
             const starr_a = el.getStarrA();
             const starr_e = el.getStarrE();
             const bettung = el.getBettung();
+            const nTeil = el.getNTeil();
 
             const stab_typ = el.get_stabtyp();
 
@@ -864,6 +873,7 @@ function dialog_stab_eigenschaften_closed(this: any, _e: any) {
                 if (obj.multiSelected) {
 
                     obj.set_bettung(bettung);
+                    obj.nTeil = nTeil;
                     obj.set_name_querschnitt(name_querschnitt);
                     obj.set_starrA(starr_a);
                     obj.set_starrE(starr_e);

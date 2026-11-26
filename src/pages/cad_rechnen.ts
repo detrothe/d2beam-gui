@@ -513,6 +513,13 @@ export function cad_rechnen() {
 
 
                             let art = (obj.elast[j] as TCAD_Streckenlast).art
+                            {   // VORLÄUFIG bis Schritt 4 (Elementteilung): Teilstreckenlasten werden noch nicht gerechnet
+                                const sl = obj.elast[j] as TCAD_Streckenlast
+                                if (sl.xa !== 0 || sl.xb !== -1) {
+                                    write('Stab ' + obj.elNo + ': Teilstreckenlasten werden noch nicht berechnet')
+                                    fatal_error = true; anzahl_fehler_cad++;
+                                }
+                            }
                             let pL = (obj.elast[j] as TCAD_Streckenlast).pL
                             let pR = (obj.elast[j] as TCAD_Streckenlast).pR
                             //console.log("typeof", typeof obj.elast[j], lf)
@@ -538,6 +545,13 @@ export function cad_rechnen() {
                         }
                         else if (typ === 1) {
                             let x = (obj.elast[j] as TCAD_Einzellast).xe
+                            {   // VORLÄUFIG bis Schritt 4 (Elementteilung): nur Last senkrecht zum Stab
+                                const el = obj.elast[j] as TCAD_Einzellast
+                                if (el.Px !== 0 || el.alpha !== 0 || !el.stabbezug) {
+                                    write('Stab ' + obj.elNo + ': schräge Einzellasten werden noch nicht berechnet')
+                                    fatal_error = true; anzahl_fehler_cad++;
+                                }
+                            }
 
                             let elemNo = obj.elNo - 1
                             if (x - 0.0001 > element[elemNo].sl) {
