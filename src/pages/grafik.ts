@@ -1093,6 +1093,43 @@ function draw_werte(x0: number, z0: number) {
 //---------------------------------------------------------- d r a w s y s t e m  -------------------
 //---------------------------------------------------------- d r a w s y s t e m  -------------------
 
+//--------------------------------------------------------------------------------------------------------
+function sg_starre_enden(ielem: number, iLastf: number, art: number): number[] | null {
+    //----------------------------------------------------------------------------------------------------
+    // Schnittgrößen an den starren Enden aus den Stabendgrößen des elastischen Teils (KGV, lokal):
+    // [Knoten links, Anfang elastischer Teil, Ende elastischer Teil, Knoten rechts]
+    // art: 0 = Moment, 1 = Querkraft, 2 = Normalkraft
+    // null, wenn der Stab keine starren Enden hat oder keine Stabendgrößen vorliegen
+
+    const aL = stab[ielem].aL, aR = stab[ielem].aR
+    if (!(aL > 0.0 || aR > 0.0)) return null
+
+    const elem = element[ielem] as any
+    let f: number[] | undefined
+    if (THIIO_flag === 0 && matprop_flag === 0) {
+        if (!elem.FL_lf) return null
+        if (iLastf < nlastfaelle) {
+            f = elem.FL_lf[iLastf]
+        } else {                                       // Kombination: Lastfälle überlagern
+            const iKomb = iLastf - nlastfaelle
+            f = Array(6).fill(0.0)
+            for (let lf = 0; lf < nlastfaelle; lf++) {
+                const fl = elem.FL_lf[lf]
+                if (!fl) return null
+                for (let i = 0; i < 6; i++) f[i] += fl[i] * kombiTabelle[iKomb][lf]
+            }
+        }
+    } else {
+        if (!elem.FL_komb) return null
+        f = elem.FL_komb[iLastf]
+    }
+    if (!f) return null
+
+    if (art === 0) return [f[2] - f[1] * aL, f[2], f[5], f[5] + f[4] * aR]
+    if (art === 1) return [f[1], f[1], f[4], f[4]]
+    return [f[0], f[0], f[3], f[3]]
+}
+
 export function drawsystem(svg_id = 'artboard') {
 
     if (two === null) return;
@@ -2084,6 +2121,22 @@ export function drawsystem(svg_id = 'artboard') {
                     }
                 }
 
+                // Werte an starren Enden gehen nicht in die Maximalwerte der Elemente ein; sind sie größer
+                // (z. B. elastischer Teil ohne Schnittgrößen), sonst würde gar nichts gezeichnet
+                {
+                    const art_sg = show_momentenlinien ? 0 : (show_querkraftlinien ? 1 : 2)
+                    let max_starr = 0.0
+                    for (let ielem = 0; ielem < nelem; ielem++) {
+                        if (!stab[ielem].isActive) continue
+                        for (let loop = 0; loop < nLoop; loop++) {
+                            const w = sg_starre_enden(ielem, lf_index + loop, art_sg)
+                            if (w) max_starr = Math.max(max_starr, Math.abs(w[0]), Math.abs(w[1]), Math.abs(w[2]), Math.abs(w[3]))
+                        }
+                    }
+                    const max_elemente = (scalefactor > 0.0 && isFinite(scalefactor)) ? 0.05 * slmax / scalefactor : 0.0
+                    if (max_starr > max_elemente) scalefactor = 0.05 * slmax / max_starr
+                }
+
                 scalefactor *= scaleFactor_panel
                 //console.log("SCALEFACTOR", 1. / scalefactor)
 
@@ -2094,6 +2147,7 @@ export function drawsystem(svg_id = 'artboard') {
                     if (scalefactor === Infinity || scalefactor > 1.e10) break;
 
                     const nelTeilungen = element[ielem].nTeilungen
+                    const sg_starr = sg_starre_enden(ielem, lf_index, show_momentenlinien ? 0 : (show_querkraftlinien ? 1 : 2))
                     let sg: number[] = new Array(nelTeilungen)
 
 
@@ -2134,27 +2188,23 @@ export function drawsystem(svg_id = 'artboard') {
                         //console.log("GRAFIK  Mx,Vx or N", nelTeilungen, sg)
 
 
-                        if (aL > 0.0) {
-                            let wert = 0;
+                        const w_starr = (loop === 0) ? sg_starr : sg_starre_enden(ielem, lf_index + loop, show_momentenlinien ? 0 : (show_querkraftlinien ? 1 : 2))
+
+                        if (aL > 0.0 && w_starr) {
+                            // Linie vom Knoten über den starren Bereich bis zum Anfang des elastischen Teils
+                            const wert = w_starr[0]
                             let xx0 = tr.xPix(stab[ielem].x1)
                             let zz0 = tr.zPix(stab[ielem].z1)
-                            if (show_momentenlinien) {
-                                let sgV: number[] = new Array(nelTeilungen)
-                                element[ielem].get_elementSchnittgroesse_Querkraft(sgV, lf_index + loop, show_gleichgewichtSG);
-                                wert = sg[0] - sgV[0] * aL;
-                                xx1 = tr.xPix(stab[ielem].x1 - si * wert * scalefactor)
-                                zz1 = tr.zPix(stab[ielem].z1 + co * wert * scalefactor)
-                            }
-                            else {
-                                xx1 = tr.xPix(stab[ielem].x1 - si * sg[0] * scalefactor)
-                                zz1 = tr.zPix(stab[ielem].z1 + co * sg[0] * scalefactor)
-                                wert = sg[0]
-                            }
-                            xx2 = tr.xPix(xs1 - si * sg[0] * scalefactor)
-                            zz2 = tr.zPix(zs1 + co * sg[0] * scalefactor)
+                            xx1 = tr.xPix(stab[ielem].x1 - si * wert * scalefactor)
+                            zz1 = tr.zPix(stab[ielem].z1 + co * wert * scalefactor)
+                            xx2 = tr.xPix(xs1 - si * w_starr[1] * scalefactor)
+                            zz2 = tr.zPix(zs1 + co * w_starr[1] * scalefactor)
                             let line = two.makeLine(xx0, zz0, xx1, zz1);
                             line.linewidth = 1;
                             line = two.makeLine(xx1, zz1, xx2, zz2);
+                            line.linewidth = 1;
+                            // Sprung am Übergang zum elastischen Teil (Einzellast/-moment am Rand)
+                            line = two.makeLine(xx2, zz2, tr.xPix(xs1 - si * sg[0] * scalefactor), tr.zPix(zs1 + co * sg[0] * scalefactor));
                             line.linewidth = 1;
 
                             werte.push(new TWerte())
@@ -2164,27 +2214,19 @@ export function drawsystem(svg_id = 'artboard') {
                             index_werte++
                         }
 
-                        if (aR > 0.0) {
-                            let wert = 0;
+                        if (aR > 0.0 && w_starr) {
+                            const wert = w_starr[3]
                             let xx0 = tr.xPix(stab[ielem].x2)
                             let zz0 = tr.zPix(stab[ielem].z2)
-                            if (show_momentenlinien) {
-                                let sgV: number[] = new Array(nelTeilungen)
-                                element[ielem].get_elementSchnittgroesse_Querkraft(sgV, lf_index + loop, show_gleichgewichtSG);
-                                wert = sg[nelTeilungen - 1] + sgV[nelTeilungen - 1] * aR;
-                                xx1 = tr.xPix(stab[ielem].x2 - si * wert * scalefactor)
-                                zz1 = tr.zPix(stab[ielem].z2 + co * wert * scalefactor)
-                            }
-                            else {
-                                xx1 = tr.xPix(stab[ielem].x2 - si * sg[nelTeilungen - 1] * scalefactor)
-                                zz1 = tr.zPix(stab[ielem].z2 + co * sg[nelTeilungen - 1] * scalefactor)
-                                wert = sg[0]
-                            }
-                            xx2 = tr.xPix(xs2 - si * sg[nelTeilungen - 1] * scalefactor)
-                            zz2 = tr.zPix(zs2 + co * sg[nelTeilungen - 1] * scalefactor)
+                            xx1 = tr.xPix(stab[ielem].x2 - si * wert * scalefactor)
+                            zz1 = tr.zPix(stab[ielem].z2 + co * wert * scalefactor)
+                            xx2 = tr.xPix(xs2 - si * w_starr[2] * scalefactor)
+                            zz2 = tr.zPix(zs2 + co * w_starr[2] * scalefactor)
                             let line = two.makeLine(xx0, zz0, xx1, zz1);
                             line.linewidth = 1;
                             line = two.makeLine(xx1, zz1, xx2, zz2);
+                            line.linewidth = 1;
+                            line = two.makeLine(xx2, zz2, tr.xPix(xs2 - si * sg[nelTeilungen - 1] * scalefactor), tr.zPix(zs2 + co * sg[nelTeilungen - 1] * scalefactor));
                             line.linewidth = 1;
 
                             werte.push(new TWerte())
