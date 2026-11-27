@@ -70,7 +70,6 @@ export class CTruss extends CElement {
 
     transU: number[][] = []       // Transformation von global nach lokal
     //transF: number[][] = []       // Transformation von lokal nach global = transU ^T
-    TfG2L: number[][] = []        // Transformation der Kraefte von global nach lokal
 
     estiffG: number[][] = []      // globale Elementsteigkeitsmatrix mit Berücksichtigung der Gelenke
     emassG: number[][] = []      // globale Elementmassenmatrix mit Berücksichtigung der Gelenke
@@ -201,13 +200,9 @@ export class CTruss extends CElement {
         this.estm = Array.from(Array(4), () => new Array(4));
         this.estmL2 = Array.from(Array(4), () => new Array(4));
         this.ksig = Array.from(Array(4), () => new Array(4));
-        //this.trans = Array.from(Array(6), () => new Array(6).fill(0.0));
-        //this.estiff = Array.from(Array(6), () => new Array(6));
         this.estiff_sig = Array.from(Array(4), () => new Array(4));
 
         this.transU = Array.from(Array(4), () => new Array(4).fill(0.0));
-        //this.transF = Array.from(Array(4), () => new Array(4).fill(0.0));
-        this.TfG2L = Array.from(Array(4), () => new Array(4).fill(0.0));
 
         this.estiffG = Array.from(Array(4), () => new Array(4));
 
@@ -244,173 +239,6 @@ export class CTruss extends CElement {
         this.transU[2][3] = t23
         this.transU[3][2] = t32
         this.transU[3][3] = t33
-
-        // ind = 5;
-        // if (this.gelenk[0] > 0) {
-        //     ind++;
-        //     this.transU[0][ind] = 1.0
-        //     this.transF[ind][0] = 1.0
-        // } else {
-        //     this.transU[0][0] = t00 // this.cosinus
-        //     this.transU[0][1] = t01 // this.sinus
-        //     this.transF[0][0] = t00 // this.cosinus
-        //     this.transF[1][0] = t01 // this.sinus
-        //     this.TfG2L[0][0] = t00
-        //     this.TfG2L[1][0] = t10
-        //     this.TfG2L[2][0] = this.aL * t10
-        // }
-        // if (this.gelenk[1] > 0) {
-        //     ind++;
-        //     this.transU[1][ind] = 1.0
-        //     this.transF[ind][1] = 1.0
-        // } else {
-        //     this.transU[1][0] = t10  // -this.sinus
-        //     this.transU[1][1] = t11  // this.cosinus
-        //     this.transF[0][1] = t10  // -this.sinus
-        //     this.transF[1][1] = t11  // this.cosinus
-        //     this.transU[1][2] = -this.aL
-        //     this.transF[2][1] = -this.aL
-        //     this.TfG2L[0][1] = t01
-        //     this.TfG2L[1][1] = t11
-        //     this.TfG2L[2][1] = this.aL * t11
-        // }
-        // if (this.gelenk[2] > 0) {
-        //     ind++;
-        //     this.transU[2][ind] = 1.0
-        //     this.transF[ind][2] = 1.0
-        //     // this.transU[1][2] = -this.aL
-        //     // this.transF[2][1] = -this.aL
-        //     this.TfG2L[2][2] = 1.0
-        // } else {
-        //     this.transU[2][2] = 1.0
-        //     // this.transU[1][2] = -this.aL
-        //     this.transF[2][2] = 1.0
-        //     // this.transF[2][1] = -this.aL
-        //     this.TfG2L[2][2] = 1.0
-        // }
-        // // this.transU[2][2] = 1.0
-        // // this.transF[2][2] = 1.0
-
-
-        // cophi = node[this.nod2].co
-        // siphi = node[this.nod2].si
-
-        // let t33 = this.cosinus * cophi - this.sinus * siphi    //this.cosinus
-        // let t34 = this.sinus * cophi + this.cosinus * siphi    //this.sinus
-        // let t43 = -t34
-        // let t44 = t33
-
-
-        // if (this.gelenk[3] > 0) {
-        //     ind++;
-        //     this.transU[3][ind] = 1.0
-        //     this.transF[ind][3] = 1.0
-        // } else {
-        //     this.transU[3][3] = t33  // this.cosinus
-        //     this.transU[3][4] = t34  // this.sinus
-        //     this.transF[3][3] = t33  // this.cosinus
-        //     this.transF[4][3] = t34  // this.sinus
-        //     this.TfG2L[3][3] = t33
-        //     this.TfG2L[4][3] = t43
-        //     this.TfG2L[5][3] = -this.aR * t43
-        // }
-        // if (this.gelenk[4] > 0) {
-        //     ind++;
-        //     this.transU[4][ind] = 1.0
-        //     this.transF[ind][4] = 1.0
-
-        // } else {
-        //     this.transU[4][3] = t43  // -this.sinus
-        //     this.transU[4][4] = t44  // this.cosinus
-        //     this.transF[3][4] = t43  // -this.sinus
-        //     this.transF[4][4] = t44  // this.cosinus
-        //     this.transU[4][5] = this.aR
-        //     this.transF[5][4] = this.aR
-        //     this.TfG2L[3][4] = t34
-        //     this.TfG2L[4][4] = t44
-        //     this.TfG2L[5][4] = -this.aR * t44
-
-        // }
-        // if (this.gelenk[5] > 0) {
-        //     ind++;
-        //     this.transU[5][ind] = 1.0
-        //     this.transF[ind][5] = 1.0
-        //     // this.transU[4][5] = this.aR
-        //     // this.transF[5][4] = this.aR
-        //     this.TfG2L[5][5] = 1.0
-        // } else {
-        //     this.transU[5][5] = 1.0
-        //     // this.transU[4][5] = this.aR
-        //     this.transF[5][5] = 1.0
-        //     // this.transF[5][4] = this.aR
-        //     this.TfG2L[5][5] = 1.0
-        // }
-        // // this.transU[5][5] = 1.0
-        // // this.transF[5][5] = 1.0
-
-        // for (let j = 0; j < 6; j++) {
-        //     console.log("this.transU", (ielem + 1), this.transU[j])
-        //     //console.log("this.TfG2L. ielem", (ielem + 1), this.TfG2L[j])
-        // }
-
-        // ind = 5;
-        // if (this.gelenk[0] > 0) {
-        //     ind++;
-        //     this.transF[ind][0] = 1.0
-        // } else {
-        //     this.transF[0][0] = this.cosinus
-        //     this.transF[1][0] = this.sinus
-        // }
-        // if (this.gelenk[1] > 0) {
-        //     ind++;
-        //     this.transF[ind][1] = 1.0
-        // } else {
-        //     this.transF[0][1] = -this.sinus
-        //     this.transF[1][1] = this.cosinus
-        // }
-        // this.transF[2][2] = 1.0
-
-        // if (this.gelenk[3] > 0) {
-        //     ind++;
-        //     this.transF[ind][3] = 1.0
-        // } else {
-        //     this.transF[3][3] = this.cosinus
-        //     this.transF[4][3] = this.sinus
-        // }
-        // if (this.gelenk[4] > 0) {
-        //     ind++;
-        //     this.transF[ind][4] = 1.0
-        // } else {
-        //     this.transF[3][4] = -this.sinus
-        //     this.transF[4][4] = this.cosinus
-        // }
-        // this.transF[5][5] = 1.0
-
-        // for (let j = 0; j < this.neqeG; j++) {
-        //     console.log("this.transF", this.transF[j])
-        // }
-
-        // Drehung der Lager berücksichtigen
-
-        // let cophi = node[this.nod1].co
-        // let siphi = node[this.nod1].si
-
-        // this.trans[0][0] = this.cosinus * cophi - this.sinus * siphi    //this.cosinus
-        // this.trans[0][1] = this.sinus * cophi + this.cosinus * siphi    //this.sinus
-        // this.trans[1][0] = -this.trans[0][1]
-        // this.trans[1][1] = this.trans[0][0]
-        // this.trans[2][2] = 1.0
-
-
-        // cophi = node[this.nod2].co
-        // siphi = node[this.nod2].si
-
-        // this.trans[3][3] = this.cosinus * cophi - this.sinus * siphi   //this.cosinus
-        // this.trans[3][4] = this.sinus * cophi + this.cosinus * siphi   //this.sinus
-        // this.trans[4][3] = -this.trans[3][4]
-        // this.trans[4][4] = this.trans[3][3]
-        // this.trans[5][5] = 1.0
-
 
         this.nTeilungen = nelTeilungen    // übernahme der Voreinstellung
 
@@ -903,7 +731,6 @@ export class CTruss extends CElement {
             sum = 0.0
             for (j = 0; j < this.neqe; j++) {
                 sum += this.transU[i][j] * this.F[j]
-                //sum += this.TfG2L[i][j] * this.F[j]
             }
             this.FL[i] = sum
         }
