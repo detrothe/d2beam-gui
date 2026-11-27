@@ -2,7 +2,7 @@
 title: "d2beam – Theorie-Handbuch"
 subtitle: "Der Timoshenko-Balken im Weggrößenverfahren"
 author: "Prof. Dr.-Ing. Detlef Rothe"
-date: "Entwurf, Stand 27.11.2026 – Teile 1 bis 4"
+date: "Entwurf, Stand 27.11.2026 – Teile 1 bis 5"
 lang: de
 ---
 
@@ -41,10 +41,13 @@ Teil 3 (Kapitel 11 und 12) behandelt
 Teil 4 (Kapitel 13) behandelt die Dynamik: Massenmatrix, Knotenmassen und Eigenfrequenzen, dazu
 mögliche Erweiterungen.
 
+Teil 5 (Kapitel 14) behandelt die nichtlineare Berechnung mit Fachwerkstäben, die nur Zug- oder nur
+Druckkräfte übertragen.
+
 ## Annahmen
 
 - Ebene Stabwerke in der $x$-$z$-Ebene, Belastung in dieser Ebene.
-- Linear-elastischer Werkstoff (die nichtlineare Werkstoffoption wird später gesondert behandelt).
+- Linear-elastischer Werkstoff. Die Option „nichtlinear“ für Zug- und Druckstäbe behandelt Kapitel 14.
 - Kleine Verformungen: Gleichgewicht am unverformten System (Theorie I. Ordnung). Die Erweiterung auf
   Theorie II. Ordnung folgt in einem späteren Teil.
 - **Timoshenko-Balken:** Die Querschnitte bleiben eben, stehen nach der Verformung aber nicht mehr senkrecht auf
@@ -1259,6 +1262,90 @@ vorhandenen Matrizen auf:
 - **Zeitverlaufsberechnung** mit Dämpfung (z. B. Rayleigh-Dämpfung
   $\mathbf{C} = a_0\mathbf{M} + a_1\mathbf{K}$) und einem Zeitintegrationsverfahren wie Newmark.
 - **Einfluss der Normalkraft auf die Eigenfrequenzen** mit $\mathbf{K} + \mathbf{K}_{\sigma}$ aus Kapitel 11.
+
+# Nichtlineare Berechnung: Stäbe nur für Zug oder nur für Druck
+
+## Anwendungsbereich
+
+Mit der Option **Materialeigenschaften „nichtlinear“** kann d2beam Fachwerkstäbe berechnen, die nur
+Zugkräfte (z. B. Seile, schlanke Verbandsdiagonalen) oder nur Druckkräfte (z. B. Kontaktstellen,
+Druckstreben) übertragen. Die Stabart wird im Dialog „Stabeigenschaften“ gewählt: FW-Stab Zug und Druck, nur
+Zug oder nur Druck. Biegestäbe und normale Fachwerkstäbe bleiben linear-elastisch.
+
+Ob ein solcher Stab mitwirkt, hängt vom Verformungszustand ab, der wiederum davon abhängt, welche Stäbe
+mitwirken. Die Berechnung ist deshalb iterativ und wird wie bei Theorie II. Ordnung für **Lastkombinationen**
+durchgeführt. Beide Optionen lassen sich kombinieren.
+
+## Fachwerkstab
+
+Der Fachwerkstab hat an jedem Ende die Verschiebungen $u$ und $w$. Steif ist er nur in Längsrichtung:
+
+$$
+\mathbf{k} = \frac{E_t A}{L}
+\begin{bmatrix} 1 & 0 & -1 & 0 \\ 0 & 0 & 0 & 0 \\ -1 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix}
+\quad \text{für } u_a, w_a, u_e, w_e .
+$$
+
+$E_t$ ist der aktuelle Tangentenmodul: $E_t = E$, solange der Stab mitwirkt, sonst $E_t = 0$. Die
+Transformation entspricht Abschnitt 5.1 ohne den Drehfreiheitsgrad (Programm: `truss.ts`).
+
+## Zustand eines Stabes
+
+Maßgebend ist die Längenänderung des Stabes aus den gesamten Knotenverschiebungen (einschließlich
+vorgegebener Knotenverformungen), ergänzt um eine Ersatzverlängerung $u_0$ aus Vorspannung
+($u_0 = \sigma_V L/E$) oder Spannschloss ($u_0 = \delta_s$):
+
+$$
+\Delta L = u_e - u_a + u_0 .
+$$
+
+- **nur Zug:** Bei $\Delta L < 0$ würde der Stab gedrückt. Er fällt aus: $E_t = 0$, $N = 0$.
+- **nur Druck:** Bei $\Delta L > 0$ würde der Stab gezogen. Er fällt aus.
+- Sonst wirkt der Stab mit $E_t = E$ mit.
+
+Elementlasten eines ausgefallenen Stabes werden in diesem Iterationsschritt nicht angesetzt.
+
+## Iteration
+
+d2beam verwendet ein Newton-Raphson-Verfahren mit der Tangentensteifigkeit (`nonlinear` in `rechnen.ts`):
+
+$$
+\mathbf{K}_T(\mathbf{u}_i)\,\Delta\mathbf{u} = \mathbf{R} - \mathbf{R}_{int}(\mathbf{u}_i), \qquad
+\mathbf{u}_{i+1} = \mathbf{u}_i + \Delta\mathbf{u} .
+$$
+
+$\mathbf{R}$ ist der Lastvektor der Kombination, $\mathbf{R}_{int}$ der Vektor der inneren Kräfte aller
+mitwirkenden Stäbe. Im Schritt 0 wirken alle Stäbe mit. Danach wird für jeden Stab der Zustand bestimmt und die
+Tangentensteifigkeit neu aufgebaut. Abgebrochen wird mit denselben Kriterien wie bei Theorie II. Ordnung
+(Abschnitt 11.3).
+
+Da das Verhalten jedes Stabes stückweise linear ist, ändert sich nach wenigen Schritten nichts mehr: Sobald
+die Menge der mitwirkenden Stäbe gleich bleibt, ist die Lösung im nächsten Schritt exakt. Wechselt ein Stab
+dagegen ständig zwischen den Zuständen hin und her, wird die eingestellte Höchstzahl der Iterationen erreicht;
+das Protokoll zeigt dann, dass keine Konvergenz erreicht wurde.
+
+Fallen so viele Stäbe aus, dass das System kinematisch wird, ist die Steifigkeitsmatrix singulär und d2beam
+bricht mit einer Meldung ab.
+
+## Beispiel
+
+![Bild 17: Fachwerk mit zwei Diagonalen „nur Zug“ unter Horizontallast](bilder/nur_zug){width=65%}
+
+Ein quadratisches Fachwerkfeld (4 m × 4 m) mit zwei gekreuzten Diagonalen „nur Zug“ wird oben links durch
+$H = 100$ kN belastet (Bild 17, App-Test `t11`). Linear gerechnet würden sich beide Diagonalen die Last teilen,
+eine davon mit Druck. Nichtlinear fällt die gedrückte Diagonale aus, und es ergibt sich das statisch bestimmte
+Fachwerk mit
+
+$$
+N_{\text{Diag}} = \sqrt{2}\,H = 141{,}4\ \mathrm{kN}, \qquad N_{\text{Riegel}} = N_{\text{Stütze, rechts}} = -100\ \mathrm{kN} .
+$$
+
+d2beam erreicht die Lösung nach zwei Iterationsschritten.
+
+## Im Rechenkern vorbereitet
+
+Der Rechenkern enthält außerdem Koppelfedern mit elastisch-ideal-plastischem Verhalten (Federsteifigkeit bis
+zu einer Grenzkraft, danach konstante Kraft). Über die grafische Eingabe sind sie derzeit nicht erreichbar.
 
 # Anhang A: Nachrechnung mit SymPy {-}
 

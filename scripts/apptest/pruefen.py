@@ -153,6 +153,13 @@ for _name, _sollw in (('t10a_dynamik_drehmasse_false', ((0, 62.832), (2, 251.327
         PRUEFUNGEN.append((_name, f'Eigenfrequenz {_i + 1} [Hz]', _soll, 0.006 * _soll, _f))
 
 
+# Fachwerk mit zwei Diagonalen "nur Zug": gezogene Diagonale 141,42 kN, gedrückte fällt aus
+for _el, _soll in ((4, 141.42), (5, 0.0), (3, -100.0), (2, -100.0), (1, 0.0)):
+    def _f(z, el=_el):
+        return zahl(tabelle(z, 'Stabendkräfte')[el - 1][1])
+    PRUEFUNGEN.append(('t11_nichtlinear_nur_zug', f'Normalkraft Stab {_el} [kN]', _soll, 0.01, _f))
+
+
 def main():
     ordner = sys.argv[1] if len(sys.argv) > 1 else 'neu'
     fehler = 0

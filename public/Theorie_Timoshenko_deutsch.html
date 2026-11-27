@@ -61,7 +61,7 @@ h1, h2, h3 { break-after: avoid; }
 <h1 class="title">d2beam – Theorie-Handbuch</h1>
 <p class="subtitle">Der Timoshenko-Balken im Weggrößenverfahren</p>
 <p class="author">Prof. Dr.-Ing. Detlef Rothe</p>
-<p class="date">Entwurf, Stand 27.11.2026 – Teile 1 bis 4</p>
+<p class="date">Entwurf, Stand 27.11.2026 – Teile 1 bis 5</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <h2 id="toc-title">Inhalt</h2>
@@ -186,6 +186,17 @@ Gelenke</a></li>
 Elementteilung</a></li>
 <li><a href="#mögliche-erweiterungen" id="toc-mögliche-erweiterungen"><span class="toc-section-number">13.6</span> Mögliche Erweiterungen</a></li>
 </ul></li>
+<li><a href="#nichtlineare-berechnung-stäbe-nur-für-zug-oder-nur-für-druck" id="toc-nichtlineare-berechnung-stäbe-nur-für-zug-oder-nur-für-druck"><span class="toc-section-number">14</span> Nichtlineare Berechnung: Stäbe nur
+für Zug oder nur für Druck</a>
+<ul>
+<li><a href="#anwendungsbereich" id="toc-anwendungsbereich"><span class="toc-section-number">14.1</span> Anwendungsbereich</a></li>
+<li><a href="#fachwerkstab" id="toc-fachwerkstab"><span class="toc-section-number">14.2</span> Fachwerkstab</a></li>
+<li><a href="#zustand-eines-stabes" id="toc-zustand-eines-stabes"><span class="toc-section-number">14.3</span> Zustand eines Stabes</a></li>
+<li><a href="#iteration-1" id="toc-iteration-1"><span class="toc-section-number">14.4</span> Iteration</a></li>
+<li><a href="#beispiel" id="toc-beispiel"><span class="toc-section-number">14.5</span> Beispiel</a></li>
+<li><a href="#im-rechenkern-vorbereitet" id="toc-im-rechenkern-vorbereitet"><span class="toc-section-number">14.6</span> Im Rechenkern
+vorbereitet</a></li>
+</ul></li>
 <li><a href="#anhang-a-nachrechnung-mit-sympy" id="toc-anhang-a-nachrechnung-mit-sympy">Anhang A: Nachrechnung mit
 SymPy</a></li>
 <li><a href="#literatur" id="toc-literatur">Literatur</a></li>
@@ -229,13 +240,15 @@ Iteration und Ersatzimperfektionen,</li>
 </ul>
 <p>Teil 4 (Kapitel 13) behandelt die Dynamik: Massenmatrix, Knotenmassen
 und Eigenfrequenzen, dazu mögliche Erweiterungen.</p>
+<p>Teil 5 (Kapitel 14) behandelt die nichtlineare Berechnung mit
+Fachwerkstäben, die nur Zug- oder nur Druckkräfte übertragen.</p>
 <h2 data-number="1.2" id="annahmen"><span class="header-section-number">1.2</span> Annahmen</h2>
 <ul>
 <li>Ebene Stabwerke in der
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-Ebene,
 Belastung in dieser Ebene.</li>
-<li>Linear-elastischer Werkstoff (die nichtlineare Werkstoffoption wird
-später gesondert behandelt).</li>
+<li>Linear-elastischer Werkstoff. Die Option „nichtlinear“ für Zug- und
+Druckstäbe behandelt Kapitel 14.</li>
 <li>Kleine Verformungen: Gleichgewicht am unverformten System (Theorie
 I. Ordnung). Die Erweiterung auf Theorie II. Ordnung folgt in einem
 späteren Teil.</li>
@@ -2165,6 +2178,110 @@ mit
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐊</mi><mo>+</mo><msub><mi>𝐊</mi><mi>σ</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{K} + \mathbf{K}_{\sigma}</annotation></semantics></math>
 aus Kapitel 11.</li>
 </ul>
+<h1 data-number="14" id="nichtlineare-berechnung-stäbe-nur-für-zug-oder-nur-für-druck"><span class="header-section-number">14</span> Nichtlineare Berechnung: Stäbe
+nur für Zug oder nur für Druck</h1>
+<h2 data-number="14.1" id="anwendungsbereich"><span class="header-section-number">14.1</span> Anwendungsbereich</h2>
+<p>Mit der Option <strong>Materialeigenschaften „nichtlinear“</strong>
+kann d2beam Fachwerkstäbe berechnen, die nur Zugkräfte (z. B. Seile,
+schlanke Verbandsdiagonalen) oder nur Druckkräfte (z. B. Kontaktstellen,
+Druckstreben) übertragen. Die Stabart wird im Dialog „Stabeigenschaften“
+gewählt: FW-Stab Zug und Druck, nur Zug oder nur Druck. Biegestäbe und
+normale Fachwerkstäbe bleiben linear-elastisch.</p>
+<p>Ob ein solcher Stab mitwirkt, hängt vom Verformungszustand ab, der
+wiederum davon abhängt, welche Stäbe mitwirken. Die Berechnung ist
+deshalb iterativ und wird wie bei Theorie II. Ordnung für
+<strong>Lastkombinationen</strong> durchgeführt. Beide Optionen lassen
+sich kombinieren.</p>
+<h2 data-number="14.2" id="fachwerkstab"><span class="header-section-number">14.2</span> Fachwerkstab</h2>
+<p>Der Fachwerkstab hat an jedem Ende die Verschiebungen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>u</mi><annotation encoding="application/x-tex">u</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>.
+Steif ist er nur in Längsrichtung:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐤</mi><mo>=</mo><mfrac><mrow><msub><mi>E</mi><mi>t</mi></msub><mi>A</mi></mrow><mi>L</mi></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">für </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>u</mi><mi>a</mi></msub><mo>,</mo><msub><mi>w</mi><mi>a</mi></msub><mo>,</mo><msub><mi>u</mi><mi>e</mi></msub><mo>,</mo><msub><mi>w</mi><mi>e</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{k} = \frac{E_t A}{L}
+\begin{bmatrix} 1 &amp; 0 &amp; -1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 0 \\ -1 &amp; 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 0 \end{bmatrix}
+\quad \text{für } u_a, w_a, u_e, w_e .
+</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>E</mi><mi>t</mi></msub><annotation encoding="application/x-tex">E_t</annotation></semantics></math>
+ist der aktuelle Tangentenmodul:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mi>t</mi></msub><mo>=</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">E_t = E</annotation></semantics></math>,
+solange der Stab mitwirkt, sonst
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mi>t</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">E_t = 0</annotation></semantics></math>.
+Die Transformation entspricht Abschnitt 5.1 ohne den Drehfreiheitsgrad
+(Programm: <code>truss.ts</code>).</p>
+<h2 data-number="14.3" id="zustand-eines-stabes"><span class="header-section-number">14.3</span> Zustand eines Stabes</h2>
+<p>Maßgebend ist die Längenänderung des Stabes aus den gesamten
+Knotenverschiebungen (einschließlich vorgegebener Knotenverformungen),
+ergänzt um eine Ersatzverlängerung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>u</mi><mn>0</mn></msub><annotation encoding="application/x-tex">u_0</annotation></semantics></math>
+aus Vorspannung
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mn>0</mn></msub><mo>=</mo><msub><mi>σ</mi><mi>V</mi></msub><mi>L</mi><mi>/</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">u_0 = \sigma_V L/E</annotation></semantics></math>)
+oder Spannschloss
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mn>0</mn></msub><mo>=</mo><msub><mi>δ</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">u_0 = \delta_s</annotation></semantics></math>):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>L</mi><mo>=</mo><msub><mi>u</mi><mi>e</mi></msub><mo>−</mo><msub><mi>u</mi><mi>a</mi></msub><mo>+</mo><msub><mi>u</mi><mn>0</mn></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Delta L = u_e - u_a + u_0 .
+</annotation></semantics></math></p>
+<ul>
+<li><strong>nur Zug:</strong> Bei
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>L</mi><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\Delta L &lt; 0</annotation></semantics></math>
+würde der Stab gedrückt. Er fällt aus:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mi>t</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">E_t = 0</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">N = 0</annotation></semantics></math>.</li>
+<li><strong>nur Druck:</strong> Bei
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>L</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\Delta L &gt; 0</annotation></semantics></math>
+würde der Stab gezogen. Er fällt aus.</li>
+<li>Sonst wirkt der Stab mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mi>t</mi></msub><mo>=</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">E_t = E</annotation></semantics></math>
+mit.</li>
+</ul>
+<p>Elementlasten eines ausgefallenen Stabes werden in diesem
+Iterationsschritt nicht angesetzt.</p>
+<h2 data-number="14.4" id="iteration-1"><span class="header-section-number">14.4</span> Iteration</h2>
+<p>d2beam verwendet ein Newton-Raphson-Verfahren mit der
+Tangentensteifigkeit (<code>nonlinear</code> in
+<code>rechnen.ts</code>):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐊</mi><mi>T</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>𝐮</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi mathvariant="normal">Δ</mi><mi>𝐮</mi><mo>=</mo><mi>𝐑</mi><mo>−</mo><msub><mi>𝐑</mi><mrow><mi>i</mi><mi>n</mi><mi>t</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>𝐮</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>𝐮</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>𝐮</mi><mi>i</mi></msub><mo>+</mo><mi mathvariant="normal">Δ</mi><mi>𝐮</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{K}_T(\mathbf{u}_i)\,\Delta\mathbf{u} = \mathbf{R} - \mathbf{R}_{int}(\mathbf{u}_i), \qquad
+\mathbf{u}_{i+1} = \mathbf{u}_i + \Delta\mathbf{u} .
+</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐑</mi><annotation encoding="application/x-tex">\mathbf{R}</annotation></semantics></math>
+ist der Lastvektor der Kombination,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐑</mi><mrow><mi>i</mi><mi>n</mi><mi>t</mi></mrow></msub><annotation encoding="application/x-tex">\mathbf{R}_{int}</annotation></semantics></math>
+der Vektor der inneren Kräfte aller mitwirkenden Stäbe. Im Schritt 0
+wirken alle Stäbe mit. Danach wird für jeden Stab der Zustand bestimmt
+und die Tangentensteifigkeit neu aufgebaut. Abgebrochen wird mit
+denselben Kriterien wie bei Theorie II. Ordnung (Abschnitt 11.3).</p>
+<p>Da das Verhalten jedes Stabes stückweise linear ist, ändert sich nach
+wenigen Schritten nichts mehr: Sobald die Menge der mitwirkenden Stäbe
+gleich bleibt, ist die Lösung im nächsten Schritt exakt. Wechselt ein
+Stab dagegen ständig zwischen den Zuständen hin und her, wird die
+eingestellte Höchstzahl der Iterationen erreicht; das Protokoll zeigt
+dann, dass keine Konvergenz erreicht wurde.</p>
+<p>Fallen so viele Stäbe aus, dass das System kinematisch wird, ist die
+Steifigkeitsmatrix singulär und d2beam bricht mit einer Meldung ab.</p>
+<h2 data-number="14.5" id="beispiel"><span class="header-section-number">14.5</span> Beispiel</h2>
+<figure>
+<img role="img" aria-label="Bild 17: Fachwerk mit zwei Diagonalen „nur Zug“ unter Horizontallast" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMzMwIiB2aWV3Qm94PSIwIDAgNjAwIDMzMCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSIxNDAuMCIgeTE9IjI5MC4wIiB4Mj0iMTQwLjAiIHkyPSI3MC4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjM4MC4wIiB5MT0iMjkwLjAiIHgyPSIzODAuMCIgeTI9IjcwLjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iMTQwLjAiIHkxPSI3MC4wIiB4Mj0iMzgwLjAiIHkyPSI3MC4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjE0MC4wIiB5MT0iMjkwLjAiIHgyPSIzODAuMCIgeTI9IjcwLjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iMTQwLjAiIHkxPSI3MC4wIiB4Mj0iMzgwLjAiIHkyPSIyOTAuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1kYXNoYXJyYXk9IjgsNiIvPgo8Y2lyY2xlIGN4PSIxNDAuMCIgY3k9IjcwLjAiIHI9IjUiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxjaXJjbGUgY3g9IjM4MC4wIiBjeT0iNzAuMCIgcj0iNSIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPGNpcmNsZSBjeD0iMTQwLjAiIGN5PSIyOTAuMCIgcj0iNSIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPGNpcmNsZSBjeD0iMzgwLjAiIGN5PSIyOTAuMCIgcj0iNSIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBhdGggZD0iTSAxMjYgMzE0IEwgMTQwIDI5NSBMIDE1NCAzMTQgWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBhdGggZD0iTSAzNjYgMzE0IEwgMzgwIDI5NSBMIDM5NCAzMTQgWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPGxpbmUgeDE9IjMwLjAiIHkxPSI3MC4wIiB4Mj0iMTE4LjAiIHkyPSI3MC4wIiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjEzMi4wLDcwLjAgMTE4LjAsNjQuMSAxMTguMCw3NS45IiBmaWxsPSIjYzAwMDAwIi8+Cjx0ZXh0IHg9IjI4LjAiIHk9IjU4LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXdlaWdodD0ibm9ybWFsIj5IID0gMTAwIGtOPC90ZXh0Pgo8dGV4dCB4PSIyMzIuMCIgeT0iMjc4LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXdlaWdodD0ibm9ybWFsIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQiIHBhaW50LW9yZGVyPSJzdHJva2UiPk4gPSArMTQxLDQga048L3RleHQ+Cjx0ZXh0IHg9IjM5Mi4wIiB5PSIyNjIuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjODA4MDgwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgcGFpbnQtb3JkZXI9InN0cm9rZSI+TiA9IDAgKGF1c2dlZmFsbGVuKTwvdGV4dD4KPHRleHQgeD0iMjYwLjAiIHk9IjU2LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9Im5vcm1hbCI+TiA9IOKIkjEwMCBrTjwvdGV4dD4KPHRleHQgeD0iMzk0LjAiIHk9IjE4MC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC13ZWlnaHQ9Im5vcm1hbCI+TiA9IOKIkjEwMCBrTjwvdGV4dD4KPHRleHQgeD0iMTI2LjAiIHk9IjE4MC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtd2VpZ2h0PSJub3JtYWwiPk4gPSAwPC90ZXh0Pgo8bGluZSB4MT0iMjYwLjAiIHkxPSIzMjIuMCIgeDI9IjE0OC4wIiB5Mj0iMzIyLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIxLjAiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMTQwLjAsMzIyLjAgMTQ4LjAsMzI1LjQgMTQ4LjAsMzE4LjYiIGZpbGw9IiM4MDgwODAiLz4KPGxpbmUgeDE9IjI2MC4wIiB5MT0iMzIyLjAiIHgyPSIzNzIuMCIgeTI9IjMyMi4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4wIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjM4MC4wLDMyMi4wIDM3Mi4wLDMxOC42IDM3Mi4wLDMyNS40IiBmaWxsPSIjODA4MDgwIi8+Cjx0ZXh0IHg9IjI2MC4wIiB5PSIzMTYuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPjQgbTwvdGV4dD4KPC9zdmc+Cg==" style="width:65.0%" alt="Bild 17: Fachwerk mit zwei Diagonalen „nur Zug“ unter Horizontallast" />
+<figcaption aria-hidden="true">Bild 17: Fachwerk mit zwei Diagonalen
+„nur Zug“ unter Horizontallast</figcaption>
+</figure>
+<p>Ein quadratisches Fachwerkfeld (4 m × 4 m) mit zwei gekreuzten
+Diagonalen „nur Zug“ wird oben links durch
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">H = 100</annotation></semantics></math>
+kN belastet (Bild 17, App-Test <code>t11</code>). Linear gerechnet
+würden sich beide Diagonalen die Last teilen, eine davon mit Druck.
+Nichtlinear fällt die gedrückte Diagonale aus, und es ergibt sich das
+statisch bestimmte Fachwerk mit</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mtext mathvariant="normal">Diag</mtext></msub><mo>=</mo><msqrt><mn>2</mn></msqrt><mspace width="0.167em"></mspace><mi>H</mi><mo>=</mo><mn>141</mn><mo>,</mo><mn>4</mn><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">k</mi><mi mathvariant="normal">N</mi></mrow><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>N</mi><mtext mathvariant="normal">Riegel</mtext></msub><mo>=</mo><msub><mi>N</mi><mtext mathvariant="normal">Stütze, rechts</mtext></msub><mo>=</mo><mi>−</mi><mn>100</mn><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">k</mi><mi mathvariant="normal">N</mi></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+N_{\text{Diag}} = \sqrt{2}\,H = 141{,}4\ \mathrm{kN}, \qquad N_{\text{Riegel}} = N_{\text{Stütze, rechts}} = -100\ \mathrm{kN} .
+</annotation></semantics></math></p>
+<p>d2beam erreicht die Lösung nach zwei Iterationsschritten.</p>
+<h2 data-number="14.6" id="im-rechenkern-vorbereitet"><span class="header-section-number">14.6</span> Im Rechenkern vorbereitet</h2>
+<p>Der Rechenkern enthält außerdem Koppelfedern mit
+elastisch-ideal-plastischem Verhalten (Federsteifigkeit bis zu einer
+Grenzkraft, danach konstante Kraft). Über die grafische Eingabe sind sie
+derzeit nicht erreichbar.</p>
 <h1 class="unnumbered" id="anhang-a-nachrechnung-mit-sympy">Anhang A:
 Nachrechnung mit SymPy</h1>
 <p>Im Ordner <code>doku/theorie/sympy</code> liegen die Skripte, mit

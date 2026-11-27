@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="330" viewBox="0 0 600 330">
+<rect width="100%" height="100%" fill="white"/>
+<line x1="140.0" y1="290.0" x2="140.0" y2="70.0" stroke="#000000" stroke-width="4" stroke-linecap="butt"/>
+<line x1="380.0" y1="290.0" x2="380.0" y2="70.0" stroke="#000000" stroke-width="4" stroke-linecap="butt"/>
+<line x1="140.0" y1="70.0" x2="380.0" y2="70.0" stroke="#000000" stroke-width="4" stroke-linecap="butt"/>
+<line x1="140.0" y1="290.0" x2="380.0" y2="70.0" stroke="#000000" stroke-width="4" stroke-linecap="butt"/>
+<line x1="140.0" y1="70.0" x2="380.0" y2="290.0" stroke="#808080" stroke-width="2.5" stroke-linecap="butt" stroke-dasharray="8,6"/>
+<circle cx="140.0" cy="70.0" r="5" fill="white" stroke="#000000" stroke-width="1.5"/>
+<circle cx="380.0" cy="70.0" r="5" fill="white" stroke="#000000" stroke-width="1.5"/>
+<circle cx="140.0" cy="290.0" r="5" fill="white" stroke="#000000" stroke-width="1.5"/>
+<circle cx="380.0" cy="290.0" r="5" fill="white" stroke="#000000" stroke-width="1.5"/>
+<path d="M 126 314 L 140 295 L 154 314 Z" fill="white" stroke="#000000" stroke-width="1.5"/>
+<path d="M 366 314 L 380 295 L 394 314 Z" fill="white" stroke="#000000" stroke-width="1.5"/>
+<line x1="30.0" y1="70.0" x2="118.0" y2="70.0" stroke="#c00000" stroke-width="3.5" stroke-linecap="butt"/>
+<polygon points="132.0,70.0 118.0,64.1 118.0,75.9" fill="#c00000"/>
+<text x="28.0" y="58.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="15" fill="#c00000" text-anchor="start" font-weight="normal">H = 100 kN</text>
+<text x="232.0" y="278.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="15" fill="#000000" text-anchor="start" font-weight="normal" stroke="white" stroke-width="4" paint-order="stroke">N = +141,4 kN</text>
+<text x="392.0" y="262.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" fill="#808080" text-anchor="start" font-weight="normal" stroke="white" stroke-width="4" paint-order="stroke">N = 0 (ausgefallen)</text>
+<text x="260.0" y="56.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" fill="#000000" text-anchor="middle" font-weight="normal">N = −100 kN</text>
+<text x="394.0" y="180.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" fill="#000000" text-anchor="start" font-weight="normal">N = −100 kN</text>
+<text x="126.0" y="180.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" fill="#000000" text-anchor="end" font-weight="normal">N = 0</text>
+<line x1="260.0" y1="322.0" x2="148.0" y2="322.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="140.0,322.0 148.0,325.4 148.0,318.6" fill="#808080"/>
+<line x1="260.0" y1="322.0" x2="372.0" y2="322.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="380.0,322.0 372.0,318.6 372.0,325.4" fill="#808080"/>
+<text x="260.0" y="316.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#000000" text-anchor="middle" font-style="italic">4 m</text>
+</svg>

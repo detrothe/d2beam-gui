@@ -83,8 +83,10 @@ class Svg:
     def circle(self, cx, cy, r, fill='white', stroke=SCHWARZ, width=1.5):
         self.add(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r}" fill="{fill}" stroke="{stroke}" stroke-width="{width}"/>')
 
-    def text(self, x, y, s, size=17, color=SCHWARZ, anchor='middle', italic=False, weight='normal'):
+    def text(self, x, y, s, size=17, color=SCHWARZ, anchor='middle', italic=False, weight='normal', halo=False):
         st = ' font-style="italic"' if italic else ''
+        if halo:
+            st += ' stroke="white" stroke-width="4" paint-order="stroke"'
         self.add(f'<text x="{x:.1f}" y="{y:.1f}" font-family="{FONT}" font-size="{size}" fill="{color}" '
                  f'text-anchor="{anchor}" font-weight="{weight}"{st}>{s}</text>')
 
@@ -640,6 +642,29 @@ def bild_eigenformen():
     s.save('eigenformen')
 
 
+def bild_nur_zug():
+    """Fachwerk mit zwei Diagonalen 'nur Zug': gedrückte Diagonale fällt aus."""
+    s = Svg(600, 330)
+    C, D, A, B = (140, 70), (380, 70), (140, 290), (380, 290)
+    for p, q in ((A, C), (B, D), (C, D)):
+        s.line(*p, *q, SCHWARZ, 4)
+    s.line(*A, *D, SCHWARZ, 4)                       # gezogen
+    s.line(*C, *B, GRAU, 2.5, dash='8,6')            # ausgefallen
+    for p in (C, D, A, B):
+        s.circle(*p, 5)
+    for p in (A, B):
+        s.path(f'M {p[0] - 14} {p[1] + 24} L {p[0]} {p[1] + 5} L {p[0] + 14} {p[1] + 24} Z', SCHWARZ, 1.5, fill='white')
+    s.arrow(C[0] - 110, C[1], C[0] - 8, C[1], ROT, 3.5, head=14)
+    s.text(C[0] - 112, C[1] - 12, 'H = 100 kN', 15, ROT, anchor='start')
+    s.text(232, 278, 'N = +141,4 kN', 15, SCHWARZ, anchor='start', halo=True)
+    s.text(392, 262, 'N = 0 (ausgefallen)', 14, GRAU, anchor='start', halo=True)
+    s.text((C[0] + D[0]) / 2, C[1] - 14, 'N = −100 kN', 14, SCHWARZ)
+    s.text(D[0] + 14, (D[1] + B[1]) / 2, 'N = −100 kN', 14, SCHWARZ, anchor='start')
+    s.text(C[0] - 14, (C[1] + A[1]) / 2, 'N = 0', 14, SCHWARZ, anchor='end')
+    s.dim(A[0], B[0], 322, '4 m', '')
+    s.save('nur_zug')
+
+
 if __name__ == '__main__':
     bild_stab_uebersicht()
     bild_stabendgroessen()
@@ -657,4 +682,5 @@ if __name__ == '__main__':
     bild_th2_schnitt()
     bild_imperfektionen()
     bild_eigenformen()
+    bild_nur_zug()
     print('SVG geschrieben')

@@ -27,3 +27,4 @@ python3 scripts/apptest/pruefen.py neu      # Soll/Ist-Vergleich
 | t6–t8 | Th. II. O. mit Stabvorverformung und Elementteilung |
 | t9 | Knickeigenwerte mit GSL- und ARPACK-Löser |
 | t10 | Eigenfrequenzen ohne/mit Drehträgheit |
+| t11 | nichtlineare Berechnung: Fachwerk mit Diagonalen „nur Zug“ |

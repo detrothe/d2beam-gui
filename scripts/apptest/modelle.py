@@ -111,4 +111,12 @@ for dm in ("false", "true"):
     a = m.knoten(0, 0); b = m.knoten(5, 0); st = m.stab(a, b, nTeil=16); st["name_querschnitt"] = "d"
     m.lager(a, (1, 1, 0)); m.lager(b, (0, 1, 0))
     m.save(f"t10{'b' if dm == 'true' else 'a'}_dynamik_drehmasse_{dm}.d2beam")
+
+# T11: nichtlinear, Fachwerk 4 x 4 m mit zwei Diagonalen "nur Zug", H = 100 kN oben links
+m = M("t11", nlf=1, kombis=[["K1", "1"]]); m.d["matprop_flag"] = "1"; m.d["system"] = 1
+C = m.knoten(0, 0); D = m.knoten(4, 0); A = m.knoten(0, 4); B = m.knoten(4, 4)
+for (i, j, typ) in ((A, C, 1), (B, D, 1), (C, D, 1), (A, D, 2), (C, B, 2)):
+    st = m.stab(i, j); st["stabTyp"] = typ
+m.knotenlast(C, 1, 100.0, 0.0); m.lager(A, (1, 1, 0)); m.lager(B, (1, 1, 0))
+m.save("t11_nichtlinear_nur_zug.d2beam")
 print("Modelle geschrieben")
