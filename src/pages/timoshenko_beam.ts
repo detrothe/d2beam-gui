@@ -428,13 +428,7 @@ export class CTimoshenko_beam extends CElement {
         // this.trans[4][4] = this.trans[3][3]
         // this.trans[5][5] = 1.0
 
-        if (this.k_0 > 0.0) {
-            this.nTeilungen = 2
-            this.x_ = Array(this.nTeilungen)
-            this.x_[0] = 0.0
-            this.x_[1] = this.sl
-        }
-        else {
+        {   // auch gebettete Balken mit voller Ausgabeteilung (früher nur Anfang und Ende)
             this.nTeilungen = nelTeilungen    // übernahme der Voreinstellung
 
             this.x_ = Array(this.nTeilungen + 1)
@@ -1709,121 +1703,35 @@ export class CTimoshenko_beam extends CElement {
         }
 
 
-        if (this.k_0 > 0.0) { // gebetteter Balken, nur Anfangs- und Endwerte werden ausgegeben
-
-            console.log("k0 > 0, el teilungen", this.nTeilungen)
-
-            for (let iteil = 0; iteil < 2; iteil++) {
-                if (THIIO_flag === 0 && matprop_flag === 0) {
-
-                    Nx = this.FL[3 * iteil]
-                    Vx = this.FL[3 * iteil + 1]
-                    Mx = this.FL[3 * iteil + 2]
-                    ux = this.edispL[3 * iteil]
-                    wx = this.edispL[3 * iteil + 1]
-                    phix = -this.edispL[3 * iteil + 2]
-
+        {
+            // Bettung nach Winkler: Bettungskraft -k·w exakt über die Formfunktionen integriert, mit
+            // derselben kubischen Biegelinie w_h(x) wie die konsistente Bettungsmatrix. Damit schließen
+            // V und M am Stabende genau mit den Stabendgrößen ab.
+            // w_h(x) = b[0] + b[1] x + b[2] x² + b[3] x³ aus den Endverformungen (inkl. Knotenverformungen)
+            const bw = [0.0, 0.0, 0.0, 0.0]
+            if (this.k_0 > 0.0) {
+                const ed = edisp.slice()
+                if (THIIO_flag === 0 && matprop_flag === 0) {    // Th. II enthält die Knotenverformungen schon
                     for (let ieload = 0; ieload < neloads; ieload++) {
-                        if ((eload[ieload].element === ielem) && (eload[ieload].lf - 1 === iLastf)) {
-
-                            if (eload[ieload].art === 8) {         // Knotenverformung
-                                let edisp0 = Array(6)
-                                for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i];
-                                let x = this.x_[iteil]
-                                const x2 = x * x
-                                Nu[0] = (1.0 - x / sl);
-                                Nu[1] = x / sl
-                                Nw[0] = (2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x + sl ** 3 + 12. * eta * sl) / nenner;
-                                Nw[1] = -((sl * x ** 3 + (-2. * sl ** 2 - 6. * eta) * x ** 2 + (sl ** 3 + 6. * eta * sl) * x) / nenner);
-                                Nw[2] = -((2. * x ** 3 - 3. * sl * x ** 2 - 12. * eta * x) / nenner);
-                                Nw[3] = -((sl * x ** 3 + (6. * eta - sl ** 2) * x ** 2 - 6. * eta * sl * x) / nenner);
-                                ux += Nu[0] * edisp0[0] + Nu[1] * edisp0[3]
-                                wx += Nw[0] * edisp0[1] + Nw[1] * edisp0[2] + Nw[2] * edisp0[4] + Nw[3] * edisp0[5];
-
-                                Nphi[0] = 6.0 * (sl * x - x2) / nenner
-                                Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl3) / nenner
-                                Nphi[2] = -6.0 * (sl * x - x2) / nenner
-                                Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
-                                phix -= Nphi[0] * edisp0[1] + Nphi[1] * edisp0[2] + Nphi[2] * edisp0[4] + Nphi[3] * edisp0[5];  // im Uhrzeigersinn
-                            }
+                        if (eload[ieload].element === ielem && eload[ieload].lf - 1 === iLastf && eload[ieload].art === 8) {
+                            for (let i = 0; i < 6; i++) ed[i] += eload[ieload].dispL0[i]
                         }
                     }
-
-                    press = -wx * this.k_0
-
-                    disp = Math.sqrt(ux * ux + wx * wx) * 1000.0      // in mm
-
-                    if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
-                    if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
-                    if (Math.abs(Mx) > maxValue_lf[iLastf].My) maxValue_lf[iLastf].My = Math.abs(Mx)
-                    if (Math.abs(press) > maxValue_lf[iLastf].press) maxValue_lf[iLastf].press = Math.abs(press)
-                    if (disp > maxValue_lf[iLastf].disp) maxValue_lf[iLastf].disp = disp
-
-                    this.M_[iLastf][iteil] = Mx
-                    this.V_[iLastf][iteil] = Vx
-                    this.N_[iLastf][iteil] = Nx
-                    this.u_[iLastf][iteil] = ux
-                    this.w_[iLastf][iteil] = wx
-                    this.phi_[iLastf][iteil] = phix
-                    this.bettung_[iLastf][iteil] = press
-
                 }
-                else /*if (THIIO_flag === 1)*/ {
-
-
-                    Nx = this.FL[3 * iteil]
-                    Vx = this.FL[3 * iteil + 1]
-                    Mx = this.FL[3 * iteil + 2]
-                    ux = this.edispL[3 * iteil]
-                    wx = this.edispL[3 * iteil + 1]
-                    phix = -this.edispL[3 * iteil + 2]
-
-                    for (let ieload = 0; ieload < neloads; ieload++) {
-
-                        if (eload[ieload].element === ielem) {
-                            const index = eload[ieload].lf - 1
-                            if (kombiTabelle[iLastf][index] !== 0.0) {
-
-                                if (eload[ieload].art === 8) {         // Knotenverformung
-                                    if (iteil === 0) {
-                                        ux += eload[ieload].dispL0[0] * kombiTabelle[iLastf][index];
-                                        wx += eload[ieload].dispL0[1] * kombiTabelle[iLastf][index];
-                                        phix += eload[ieload].dispL0[2] * kombiTabelle[iLastf][index];
-                                    } else {
-                                        ux += eload[ieload].dispL0[3] * kombiTabelle[iLastf][index];
-                                        wx += eload[ieload].dispL0[4] * kombiTabelle[iLastf][index];
-                                        phix += eload[ieload].dispL0[5] * kombiTabelle[iLastf][index];
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    press = -wx * this.k_0
-
-                    disp = Math.sqrt(ux * ux + wx * wx) * 1000.0
-
-                    if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
-                    if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
-                    if (Math.abs(Mx) > maxValue_komb[iLastf].My) maxValue_komb[iLastf].My = Math.abs(Mx)
-                    if (Math.abs(press) > maxValue_komb[iLastf].press) maxValue_komb[iLastf].press = Math.abs(press)
-                    if (disp > maxValue_komb[iLastf].disp) maxValue_komb[iLastf].disp = disp
-
-                    this.M_komb[iLastf][iteil] = Mx
-                    this.V_komb[iLastf][iteil] = Vx
-                    this.N_komb[iLastf][iteil] = Nx
-                    this.u_komb[iLastf][iteil] = ux
-                    this.uG_komb[iLastf][iteil] = uxG
-                    this.w_komb[iLastf][iteil] = wx
-                    this.wG_komb[iLastf][iteil] = wxG
-                    this.phi_komb[iLastf][iteil] = phix
-                    this.bettung_komb[iLastf][iteil] = -wx * this.k_0
-
-                }  // ende TH II Ordnung
+                const cN = [   // Koeffizienten von Nw[0..3] (Potenzen x^0..x^3), siehe Nw unten
+                    [(sl3 + 12. * eta * sl) / nenner, -12. * eta / nenner, -3. * sl / nenner, 2. / nenner],
+                    [0.0, -(sl3 + 6. * eta * sl) / nenner, (2. * sl2 + 6. * eta) / nenner, -sl / nenner],
+                    [0.0, 12. * eta / nenner, 3. * sl / nenner, -2. / nenner],
+                    [0.0, 6. * eta * sl / nenner, (sl2 - 6. * eta) / nenner, -sl / nenner]
+                ]
+                const d = [ed[1], ed[2], ed[4], ed[5]]
+                for (let k = 0; k < 4; k++) bw[k] = cN[0][k] * d[0] + cN[1][k] * d[1] + cN[2][k] * d[2] + cN[3][k] * d[3]
             }
+            const k0 = this.k_0
+            // ∫0^x k·w ds  und  ∫0^x k·w(s)·(x - s) ds
+            const bett_V = (x: number) => k0 * (bw[0] * x + bw[1] * x ** 2 / 2. + bw[2] * x ** 3 / 3. + bw[3] * x ** 4 / 4.)
+            const bett_M = (x: number) => k0 * (bw[0] * x ** 2 / 2. + bw[1] * x ** 3 / 6. + bw[2] * x ** 4 / 12. + bw[3] * x ** 5 / 20.)
 
-        }
-        else {
 
             //let d_x = this.sl / (nelTeilungen)
 
@@ -2127,15 +2035,12 @@ export class CTimoshenko_beam extends CElement {
 
                     // Bettung berücksichtigen
 
-                    if (iteil > 0 && this.k_0 > 0.0) {
-                        let dx = x - this.x_[iteil - 1]
-                        let wl = this.w_[iLastf][iteil - 1]
-                        dM += dV * dx
-                        dV += this.k_0 * (wl + wx) * dx / 2.
-                        Vx += dV
-                        dM += this.k_0 * (wl * dx * dx / 2. + (wx - wl) * dx / 2. * dx / 3.)
-                        Mx += dM
-                    }
+                    if (this.k_0 > 0.0) {
+                        Vx += bett_V(x)
+                        Mx += bett_M(x)
+                        press = -wx * this.k_0
+                        if (Math.abs(press) > maxValue_lf[iLastf].press) maxValue_lf[iLastf].press = Math.abs(press)
+                    } else press = 0.0
 
                     if (Math.abs(Nx) > maxValue_lf[iLastf].N) maxValue_lf[iLastf].N = Math.abs(Nx)
                     if (Math.abs(Vx) > maxValue_lf[iLastf].Vz) maxValue_lf[iLastf].Vz = Math.abs(Vx)
@@ -2148,7 +2053,7 @@ export class CTimoshenko_beam extends CElement {
                     this.u_[iLastf][iteil] = ux
                     this.w_[iLastf][iteil] = wx
                     this.phi_[iLastf][iteil] = phix
-                    this.bettung_[iLastf][iteil] = 0.0
+                    this.bettung_[iLastf][iteil] = press
 
                 }
                 else if (THIIO_flag === 1 || matprop_flag > 0) { // ikomb=iLastf
@@ -2429,6 +2334,13 @@ export class CTimoshenko_beam extends CElement {
 
                     disp = Math.sqrt(ux * ux + wx * wx) * 1000.0
 
+                    // Bettung berücksichtigen
+                    if (this.k_0 > 0.0) {
+                        Vx += bett_V(x)
+                        Mx += bett_M(x)
+                        press = -wx * this.k_0
+                        if (Math.abs(press) > maxValue_komb[iLastf].press) maxValue_komb[iLastf].press = Math.abs(press)
+                    } else press = 0.0
 
                     if (Math.abs(Nx) > maxValue_komb[iLastf].N) maxValue_komb[iLastf].N = Math.abs(Nx)
                     if (Math.abs(Vx) > maxValue_komb[iLastf].Vz) maxValue_komb[iLastf].Vz = Math.abs(Vx)
@@ -2444,7 +2356,7 @@ export class CTimoshenko_beam extends CElement {
                     this.wG_komb[iLastf][iteil] = wxG
                     this.phi_komb[iLastf][iteil] = phix
                     this.phiG_komb[iLastf][iteil] = phixG
-                    this.bettung_komb[iLastf][iteil] = 0.0
+                    this.bettung_komb[iLastf][iteil] = press
 
                     if (this.normalkraft >= 0.0) {
                         this.Vb_komb[iLastf][iteil] = Vx

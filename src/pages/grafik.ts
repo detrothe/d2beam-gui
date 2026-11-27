@@ -5329,7 +5329,10 @@ function draw_bodenpressung() {
         } else {
             nLoop = nkombinationen
             lf_index = 0
-            scalefactor = 0.05 * slmax / maxpress_all
+            // maxpress_all wird nur bei Th. I. O. (Überlagerung) berechnet
+            let max_press = 0.0
+            for (let i = 0; i < nkombinationen; i++) max_press = Math.max(max_press, maxValue_komb[i].press)
+            if (max_press > 0.0) scalefactor = 0.05 * slmax / max_press
         }
     }
 
