@@ -622,6 +622,24 @@ def bild_imperfektionen():
     s.save('imperfektionen')
 
 
+def bild_eigenformen():
+    """Erste drei Eigenformen des Einfeldträgers."""
+    s = Svg(720, 330)
+    xa, xe = 80, 540
+    for j, y in ((1, 60), (2, 160), (3, 260)):
+        s.line(xa, y, xe, y, GRAU, 1.5, dash='6,4')
+        pts = []
+        for k in range(61):
+            t = k / 60
+            pts.append(f'{xa + t * (xe - xa):.1f} {y + 32 * math.sin(j * math.pi * t):.1f}')
+        s.path('M ' + ' L '.join(pts), ROT, 3)
+        for xx in (xa, xe):
+            s.path(f'M {xx - 10} {y + 16} L {xx} {y} L {xx + 10} {y + 16} Z', SCHWARZ, 1.5, fill='white')
+        s.sym(xa - 20, y + 6, 'φ', str(j), anchor='end')
+        s.text(xe + 15, y + 6, f'f{j} = {j * j} · f1' if j > 1 else 'f1', 14, GRAU, anchor='start')
+    s.save('eigenformen')
+
+
 if __name__ == '__main__':
     bild_stab_uebersicht()
     bild_stabendgroessen()
@@ -638,4 +656,5 @@ if __name__ == '__main__':
     bild_starr_momente()
     bild_th2_schnitt()
     bild_imperfektionen()
+    bild_eigenformen()
     print('SVG geschrieben')

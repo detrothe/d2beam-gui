@@ -61,7 +61,7 @@ h1, h2, h3 { break-after: avoid; }
 <h1 class="title">d2beam – Theorie-Handbuch</h1>
 <p class="subtitle">Der Timoshenko-Balken im Weggrößenverfahren</p>
 <p class="author">Prof. Dr.-Ing. Detlef Rothe</p>
-<p class="date">Entwurf, Stand 27.11.2026 – Teile 1 bis 3</p>
+<p class="date">Entwurf, Stand 27.11.2026 – Teile 1 bis 4</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <h2 id="toc-title">Inhalt</h2>
@@ -174,6 +174,18 @@ Ordnung</a></li>
 <li><a href="#bedeutung-von-alpha_cr" id="toc-bedeutung-von-alpha_cr"><span class="toc-section-number">12.2</span> Bedeutung von
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>α</mi><mrow><mi>c</mi><mi>r</mi></mrow></msub><annotation encoding="application/x-tex">\alpha_{cr}</annotation></semantics></math></a></li>
 </ul></li>
+<li><a href="#dynamik-eigenfrequenzen-und-eigenformen" id="toc-dynamik-eigenfrequenzen-und-eigenformen"><span class="toc-section-number">13</span> Dynamik: Eigenfrequenzen und
+Eigenformen</a>
+<ul>
+<li><a href="#bewegungsgleichung" id="toc-bewegungsgleichung"><span class="toc-section-number">13.1</span> Bewegungsgleichung</a></li>
+<li><a href="#elementmassenmatrix" id="toc-elementmassenmatrix"><span class="toc-section-number">13.2</span> Elementmassenmatrix</a></li>
+<li><a href="#transformation-starre-enden-und-gelenke" id="toc-transformation-starre-enden-und-gelenke"><span class="toc-section-number">13.3</span> Transformation, starre Enden und
+Gelenke</a></li>
+<li><a href="#knotenmassen" id="toc-knotenmassen"><span class="toc-section-number">13.4</span> Knotenmassen</a></li>
+<li><a href="#genauigkeit-und-elementteilung-1" id="toc-genauigkeit-und-elementteilung-1"><span class="toc-section-number">13.5</span> Genauigkeit und
+Elementteilung</a></li>
+<li><a href="#mögliche-erweiterungen" id="toc-mögliche-erweiterungen"><span class="toc-section-number">13.6</span> Mögliche Erweiterungen</a></li>
+</ul></li>
 <li><a href="#anhang-a-nachrechnung-mit-sympy" id="toc-anhang-a-nachrechnung-mit-sympy">Anhang A: Nachrechnung mit
 SymPy</a></li>
 <li><a href="#literatur" id="toc-literatur">Literatur</a></li>
@@ -215,7 +227,8 @@ mehrere finite Elemente teilt,</li>
 Iteration und Ersatzimperfektionen,</li>
 <li>die Knickeigenwerte.</li>
 </ul>
-<p>Die Dynamik folgt in einem weiteren Teil.</p>
+<p>Teil 4 (Kapitel 13) behandelt die Dynamik: Massenmatrix, Knotenmassen
+und Eigenfrequenzen, dazu mögliche Erweiterungen.</p>
 <h2 data-number="1.2" id="annahmen"><span class="header-section-number">1.2</span> Annahmen</h2>
 <ul>
 <li>Ebene Stabwerke in der
@@ -1903,6 +1916,234 @@ Ordnung liegt näherungsweise bei
 </ul>
 <p>Für die Genauigkeit gilt dasselbe wie in Abschnitt 11.2: Gedrückte
 Stäbe sollten geteilt werden.</p>
+<h1 data-number="13" id="dynamik-eigenfrequenzen-und-eigenformen"><span class="header-section-number">13</span> Dynamik: Eigenfrequenzen und
+Eigenformen</h1>
+<h2 data-number="13.1" id="bewegungsgleichung"><span class="header-section-number">13.1</span> Bewegungsgleichung</h2>
+<p>Für die freie, ungedämpfte Schwingung gilt</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐌</mi><mspace width="0.167em"></mspace><mover><mi>𝐮</mi><mo accent="true">̈</mo></mover><mo>+</mo><mi>𝐊</mi><mspace width="0.167em"></mspace><mi>𝐮</mi><mo>=</mo><mn>𝟎</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{M}\,\ddot{\mathbf{u}} + \mathbf{K}\,\mathbf{u} = \mathbf{0} .
+</annotation></semantics></math></p>
+<p>Mit dem Ansatz
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐮</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>𝛟</mi><mspace width="0.167em"></mspace><mi>sin</mi><mo>⁡</mo><mo stretchy="false" form="prefix">(</mo><mi>ω</mi><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathbf{u}(t) = \boldsymbol{\phi}\,\sin(\omega t)</annotation></semantics></math>
+folgt das allgemeine Eigenwertproblem</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐊</mi><mo>−</mo><msup><mi>ω</mi><mn>2</mn></msup><mspace width="0.167em"></mspace><mi>𝐌</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>𝛟</mi><mo>=</mo><mn>𝟎</mn><mo>,</mo><mspace width="2.0em"></mspace><mi>f</mi><mo>=</mo><mfrac><mi>ω</mi><mrow><mn>2</mn><mi>π</mi></mrow></mfrac><mo>,</mo><mspace width="2.0em"></mspace><mi>T</mi><mo>=</mo><mfrac><mn>1</mn><mi>f</mi></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\left( \mathbf{K} - \omega^2\,\mathbf{M} \right) \boldsymbol{\phi} = \mathbf{0} ,
+\qquad f = \frac{\omega}{2\pi}, \qquad T = \frac{1}{f} .
+</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐊</mi><annotation encoding="application/x-tex">\mathbf{K}</annotation></semantics></math>
+ist die Steifigkeitsmatrix nach Theorie I. Ordnung (einschließlich
+Bettung, Federn und Gelenken),
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐌</mi><annotation encoding="application/x-tex">\mathbf{M}</annotation></semantics></math>
+die Massenmatrix. d2beam rechnet mit den Einheiten kN, m, s und t
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mspace width="0.222em"></mspace><mi mathvariant="normal">t</mi><mo>=</mo><mn>1</mn><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">k</mi><mi mathvariant="normal">N</mi><mspace width="0.167em"></mspace><msup><mi mathvariant="normal">s</mi><mn mathvariant="normal">2</mn></msup><mi mathvariant="normal">/</mi><mi mathvariant="normal">m</mi></mrow></mrow><annotation encoding="application/x-tex">1\ \mathrm{t} = 1\ \mathrm{kN\,s^2/m}</annotation></semantics></math>).
+Ausgegeben werden die gewünschte Anzahl der kleinsten Eigenfrequenzen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mi>j</mi></msub><annotation encoding="application/x-tex">f_j</annotation></semantics></math>,
+die Perioden
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>T</mi><mi>j</mi></msub><annotation encoding="application/x-tex">T_j</annotation></semantics></math>
+und die Eigenformen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝛟</mi><mi>j</mi></msub><annotation encoding="application/x-tex">\boldsymbol{\phi}_j</annotation></semantics></math>
+(Programm: <code>dyn_eigenwert</code> in <code>rechnen.ts</code>). Für
+die Lösung stehen dieselben drei Verfahren zur Wahl wie bei den
+Knickeigenwerten.</p>
+<figure>
+<img role="img" aria-label="Bild 16: Die ersten drei Eigenformen des Einfeldträgers" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MjAiIGhlaWdodD0iMzMwIiB2aWV3Qm94PSIwIDAgNzIwIDMzMCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSI4MC4wIiB5MT0iNjAuMCIgeDI9IjU0MC4wIiB5Mj0iNjAuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1kYXNoYXJyYXk9IjYsNCIvPgo8cGF0aCBkPSJNIDgwLjAgNjAuMCBMIDg3LjcgNjEuNyBMIDk1LjMgNjMuMyBMIDEwMy4wIDY1LjAgTCAxMTAuNyA2Ni43IEwgMTE4LjMgNjguMyBMIDEyNi4wIDY5LjkgTCAxMzMuNyA3MS41IEwgMTQxLjMgNzMuMCBMIDE0OS4wIDc0LjUgTCAxNTYuNyA3Ni4wIEwgMTY0LjMgNzcuNCBMIDE3Mi4wIDc4LjggTCAxNzkuNyA4MC4xIEwgMTg3LjMgODEuNCBMIDE5NS4wIDgyLjYgTCAyMDIuNyA4My44IEwgMjEwLjMgODQuOSBMIDIxOC4wIDg1LjkgTCAyMjUuNyA4Ni44IEwgMjMzLjMgODcuNyBMIDI0MS4wIDg4LjUgTCAyNDguNyA4OS4yIEwgMjU2LjMgODkuOSBMIDI2NC4wIDkwLjQgTCAyNzEuNyA5MC45IEwgMjc5LjMgOTEuMyBMIDI4Ny4wIDkxLjYgTCAyOTQuNyA5MS44IEwgMzAyLjMgOTIuMCBMIDMxMC4wIDkyLjAgTCAzMTcuNyA5Mi4wIEwgMzI1LjMgOTEuOCBMIDMzMy4wIDkxLjYgTCAzNDAuNyA5MS4zIEwgMzQ4LjMgOTAuOSBMIDM1Ni4wIDkwLjQgTCAzNjMuNyA4OS45IEwgMzcxLjMgODkuMiBMIDM3OS4wIDg4LjUgTCAzODYuNyA4Ny43IEwgMzk0LjMgODYuOCBMIDQwMi4wIDg1LjkgTCA0MDkuNyA4NC45IEwgNDE3LjMgODMuOCBMIDQyNS4wIDgyLjYgTCA0MzIuNyA4MS40IEwgNDQwLjMgODAuMSBMIDQ0OC4wIDc4LjggTCA0NTUuNyA3Ny40IEwgNDYzLjMgNzYuMCBMIDQ3MS4wIDc0LjUgTCA0NzguNyA3My4wIEwgNDg2LjMgNzEuNSBMIDQ5NC4wIDY5LjkgTCA1MDEuNyA2OC4zIEwgNTA5LjMgNjYuNyBMIDUxNy4wIDY1LjAgTCA1MjQuNyA2My4zIEwgNTMyLjMgNjEuNyBMIDU0MC4wIDYwLjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik0gNzAgNzYgTCA4MCA2MCBMIDkwIDc2IFoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxwYXRoIGQ9Ik0gNTMwIDc2IEwgNTQwIDYwIEwgNTUwIDc2IFoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IHg9IjYwLjAiIHk9IjY2LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zdHlsZT0iaXRhbGljIj7Phjx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMyIgZm9udC1zdHlsZT0ibm9ybWFsIj4xPC90c3Bhbj48L3RleHQ+Cjx0ZXh0IHg9IjU1NS4wIiB5PSI2Ni4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM4MDgwODAiIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC13ZWlnaHQ9Im5vcm1hbCI+ZjE8L3RleHQ+CjxsaW5lIHgxPSI4MC4wIiB5MT0iMTYwLjAiIHgyPSI1NDAuMCIgeTI9IjE2MC4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWRhc2hhcnJheT0iNiw0Ii8+CjxwYXRoIGQ9Ik0gODAuMCAxNjAuMCBMIDg3LjcgMTYzLjMgTCA5NS4zIDE2Ni43IEwgMTAzLjAgMTY5LjkgTCAxMTAuNyAxNzMuMCBMIDExOC4zIDE3Ni4wIEwgMTI2LjAgMTc4LjggTCAxMzMuNyAxODEuNCBMIDE0MS4zIDE4My44IEwgMTQ5LjAgMTg1LjkgTCAxNTYuNyAxODcuNyBMIDE2NC4zIDE4OS4yIEwgMTcyLjAgMTkwLjQgTCAxNzkuNyAxOTEuMyBMIDE4Ny4zIDE5MS44IEwgMTk1LjAgMTkyLjAgTCAyMDIuNyAxOTEuOCBMIDIxMC4zIDE5MS4zIEwgMjE4LjAgMTkwLjQgTCAyMjUuNyAxODkuMiBMIDIzMy4zIDE4Ny43IEwgMjQxLjAgMTg1LjkgTCAyNDguNyAxODMuOCBMIDI1Ni4zIDE4MS40IEwgMjY0LjAgMTc4LjggTCAyNzEuNyAxNzYuMCBMIDI3OS4zIDE3My4wIEwgMjg3LjAgMTY5LjkgTCAyOTQuNyAxNjYuNyBMIDMwMi4zIDE2My4zIEwgMzEwLjAgMTYwLjAgTCAzMTcuNyAxNTYuNyBMIDMyNS4zIDE1My4zIEwgMzMzLjAgMTUwLjEgTCAzNDAuNyAxNDcuMCBMIDM0OC4zIDE0NC4wIEwgMzU2LjAgMTQxLjIgTCAzNjMuNyAxMzguNiBMIDM3MS4zIDEzNi4yIEwgMzc5LjAgMTM0LjEgTCAzODYuNyAxMzIuMyBMIDM5NC4zIDEzMC44IEwgNDAyLjAgMTI5LjYgTCA0MDkuNyAxMjguNyBMIDQxNy4zIDEyOC4yIEwgNDI1LjAgMTI4LjAgTCA0MzIuNyAxMjguMiBMIDQ0MC4zIDEyOC43IEwgNDQ4LjAgMTI5LjYgTCA0NTUuNyAxMzAuOCBMIDQ2My4zIDEzMi4zIEwgNDcxLjAgMTM0LjEgTCA0NzguNyAxMzYuMiBMIDQ4Ni4zIDEzOC42IEwgNDk0LjAgMTQxLjIgTCA1MDEuNyAxNDQuMCBMIDUwOS4zIDE0Ny4wIEwgNTE3LjAgMTUwLjEgTCA1MjQuNyAxNTMuMyBMIDUzMi4zIDE1Ni43IEwgNTQwLjAgMTYwLjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik0gNzAgMTc2IEwgODAgMTYwIEwgOTAgMTc2IFoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxwYXRoIGQ9Ik0gNTMwIDE3NiBMIDU0MCAxNjAgTCA1NTAgMTc2IFoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IHg9IjYwLjAiIHk9IjE2Ni4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+z4Y8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+MjwvdHNwYW4+PC90ZXh0Pgo8dGV4dCB4PSI1NTUuMCIgeT0iMTY2LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzgwODA4MCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXdlaWdodD0ibm9ybWFsIj5mMiA9IDQgwrcgZjE8L3RleHQ+CjxsaW5lIHgxPSI4MC4wIiB5MT0iMjYwLjAiIHgyPSI1NDAuMCIgeTI9IjI2MC4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWRhc2hhcnJheT0iNiw0Ii8+CjxwYXRoIGQ9Ik0gODAuMCAyNjAuMCBMIDg3LjcgMjY1LjAgTCA5NS4zIDI2OS45IEwgMTAzLjAgMjc0LjUgTCAxMTAuNyAyNzguOCBMIDExOC4zIDI4Mi42IEwgMTI2LjAgMjg1LjkgTCAxMzMuNyAyODguNSBMIDE0MS4zIDI5MC40IEwgMTQ5LjAgMjkxLjYgTCAxNTYuNyAyOTIuMCBMIDE2NC4zIDI5MS42IEwgMTcyLjAgMjkwLjQgTCAxNzkuNyAyODguNSBMIDE4Ny4zIDI4NS45IEwgMTk1LjAgMjgyLjYgTCAyMDIuNyAyNzguOCBMIDIxMC4zIDI3NC41IEwgMjE4LjAgMjY5LjkgTCAyMjUuNyAyNjUuMCBMIDIzMy4zIDI2MC4wIEwgMjQxLjAgMjU1LjAgTCAyNDguNyAyNTAuMSBMIDI1Ni4zIDI0NS41IEwgMjY0LjAgMjQxLjIgTCAyNzEuNyAyMzcuNCBMIDI3OS4zIDIzNC4xIEwgMjg3LjAgMjMxLjUgTCAyOTQuNyAyMjkuNiBMIDMwMi4zIDIyOC40IEwgMzEwLjAgMjI4LjAgTCAzMTcuNyAyMjguNCBMIDMyNS4zIDIyOS42IEwgMzMzLjAgMjMxLjUgTCAzNDAuNyAyMzQuMSBMIDM0OC4zIDIzNy40IEwgMzU2LjAgMjQxLjIgTCAzNjMuNyAyNDUuNSBMIDM3MS4zIDI1MC4xIEwgMzc5LjAgMjU1LjAgTCAzODYuNyAyNjAuMCBMIDM5NC4zIDI2NS4wIEwgNDAyLjAgMjY5LjkgTCA0MDkuNyAyNzQuNSBMIDQxNy4zIDI3OC44IEwgNDI1LjAgMjgyLjYgTCA0MzIuNyAyODUuOSBMIDQ0MC4zIDI4OC41IEwgNDQ4LjAgMjkwLjQgTCA0NTUuNyAyOTEuNiBMIDQ2My4zIDI5Mi4wIEwgNDcxLjAgMjkxLjYgTCA0NzguNyAyOTAuNCBMIDQ4Ni4zIDI4OC41IEwgNDk0LjAgMjg1LjkgTCA1MDEuNyAyODIuNiBMIDUwOS4zIDI3OC44IEwgNTE3LjAgMjc0LjUgTCA1MjQuNyAyNjkuOSBMIDUzMi4zIDI2NS4wIEwgNTQwLjAgMjYwLjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik0gNzAgMjc2IEwgODAgMjYwIEwgOTAgMjc2IFoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxwYXRoIGQ9Ik0gNTMwIDI3NiBMIDU0MCAyNjAgTCA1NTAgMjc2IFoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IHg9IjYwLjAiIHk9IjI2Ni4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+z4Y8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+MzwvdHNwYW4+PC90ZXh0Pgo8dGV4dCB4PSI1NTUuMCIgeT0iMjY2LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzgwODA4MCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXdlaWdodD0ibm9ybWFsIj5mMyA9IDkgwrcgZjE8L3RleHQ+Cjwvc3ZnPgo=" style="width:80.0%" alt="Bild 16: Die ersten drei Eigenformen des Einfeldträgers" />
+<figcaption aria-hidden="true">Bild 16: Die ersten drei Eigenformen des
+Einfeldträgers</figcaption>
+</figure>
+<h2 data-number="13.2" id="elementmassenmatrix"><span class="header-section-number">13.2</span> Elementmassenmatrix</h2>
+<p>Die kinetische Energie des Stabes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="false"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo>∫</mo><mi>μ</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><msup><mover><mi>u</mi><mo accent="true">̇</mo></mover><mn>2</mn></msup><mo>+</mo><msup><mover><mi>w</mi><mo accent="true">̇</mo></mover><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\tfrac12 \int \mu\,(\dot u^2 + \dot w^2)\,dx</annotation></semantics></math>
+führt mit denselben Ansatzfunktionen wie für die Steifigkeit auf die
+<strong>konsistente Massenmatrix</strong></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐦</mi><mo>=</mo><mi>μ</mi><msubsup><mo>∫</mo><mn>0</mn><mi>L</mi></msubsup><msup><mi>𝐍</mi><mi>T</mi></msup><mspace width="0.167em"></mspace><mi>𝐍</mi><mspace width="0.167em"></mspace><mi>d</mi><mi>x</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{m} = \mu \int_0^L \mathbf{N}^T\,\mathbf{N}\,dx .
+</annotation></semantics></math></p>
+<p>Die Masse je Meter ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mi>γ</mi><mspace width="0.167em"></mspace><mi>A</mi><mi>/</mi><mi>g</mi></mrow><annotation encoding="application/x-tex">\mu = \gamma\,A / g</annotation></semantics></math>.
+Im Programm wird dabei
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><mn>10</mn><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn mathvariant="normal">2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">g = 10\ \mathrm{m/s^2}</annotation></semantics></math>
+gesetzt (<code>mue</code> in <code>initialisiereElementdaten</code>),
+die Massen sind also um etwa 2 % kleiner als mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><mn>9</mn><mo>,</mo><mn>81</mn><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn mathvariant="normal">2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">g = 9{,}81\ \mathrm{m/s^2}</annotation></semantics></math>.</p>
+<p><strong>Längsanteil</strong> (lineare Ansatzfunktionen):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐦</mi><mi>u</mi></msub><mo>=</mo><mfrac><mrow><mi>μ</mi><mi>L</mi></mrow><mn>6</mn></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>2</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{m}_u = \frac{\mu L}{6}\begin{bmatrix} 2 &amp; 1 \\ 1 &amp; 2 \end{bmatrix} .
+</annotation></semantics></math></p>
+<p><strong>Biegeanteil</strong> mit den Timoshenko-Ansatzfunktionen aus
+Abschnitt 4.4 (für
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>a</mi></msub><mo>,</mo><msub><mi>φ</mi><mi>a</mi></msub><mo>,</mo><msub><mi>w</mi><mi>e</mi></msub><mo>,</mo><msub><mi>φ</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">w_a, \varphi_a, w_e,
+\varphi_e</annotation></semantics></math>, symmetrisch):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>m</mi><mn>11</mn></msub><mo>=</mo><msub><mi>m</mi><mn>33</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>μ</mi><mi>L</mi></mrow><mn>840</mn></mfrac><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>280</mn><mo>+</mo><mn>28</mn><mi>ψ</mi><mo>+</mo><mn>4</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>m</mi><mn>12</mn></msub><mo>=</mo><mi>−</mi><msub><mi>m</mi><mn>34</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mfrac><mrow><mi>μ</mi><msup><mi>L</mi><mn>2</mn></msup></mrow><mn>840</mn></mfrac><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>35</mn><mo>+</mo><mn>7</mn><mi>ψ</mi><mo>+</mo><mn>2</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>m</mi><mn>13</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>μ</mi><mi>L</mi></mrow><mn>840</mn></mfrac><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>140</mn><mo>−</mo><mn>28</mn><mi>ψ</mi><mo>−</mo><mn>4</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>m</mi><mn>14</mn></msub><mo>=</mo><mi>−</mi><msub><mi>m</mi><mn>23</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>μ</mi><msup><mi>L</mi><mn>2</mn></msup></mrow><mn>840</mn></mfrac><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>35</mn><mo>−</mo><mn>7</mn><mi>ψ</mi><mo>−</mo><mn>2</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>m</mi><mn>22</mn></msub><mo>=</mo><msub><mi>m</mi><mn>44</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>μ</mi><msup><mi>L</mi><mn>3</mn></msup></mrow><mn>840</mn></mfrac><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>7</mn><mo>+</mo><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>m</mi><mn>24</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mfrac><mrow><mi>μ</mi><msup><mi>L</mi><mn>3</mn></msup></mrow><mn>840</mn></mfrac><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>7</mn><mo>−</mo><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+m_{11} = m_{33} &amp;= \frac{\mu L}{840}\,(280 + 28\psi + 4\psi^2), &amp;
+m_{12} = -m_{34} &amp;= -\frac{\mu L^2}{840}\,(35 + 7\psi + 2\psi^2), \\
+m_{13} &amp;= \frac{\mu L}{840}\,(140 - 28\psi - 4\psi^2), &amp;
+m_{14} = -m_{23} &amp;= \frac{\mu L^2}{840}\,(35 - 7\psi - 2\psi^2), \\
+m_{22} = m_{44} &amp;= \frac{\mu L^3}{840}\,(7 + \psi^2), &amp;
+m_{24} &amp;= -\frac{\mu L^3}{840}\,(7 - \psi^2) .
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Schubstarr
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ψ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\psi = 1</annotation></semantics></math>)
+ist das die bekannte Matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>μ</mi><mi>L</mi></mrow><mn>420</mn></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>156</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>22</mn><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>54</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>13</mn><mi>L</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>4</mn><msup><mi>L</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>13</mn><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>3</mn><msup><mi>L</mi><mn>2</mn></msup></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>156</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>22</mn><mi>L</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>4</mn><msup><mi>L</mi><mn>2</mn></msup></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\frac{\mu L}{420}\left[\begin{smallmatrix} 156 &amp; -22L &amp; 54 &amp; 13L \\ &amp; 4L^2 &amp; -13L &amp; -3L^2 \\ &amp; &amp; 156 &amp; 22L \\ &amp; &amp; &amp; 4L^2 \end{smallmatrix}\right]</annotation></semantics></math>
+(mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>φ</mi><mo>=</mo><mi>−</mi><msup><mi>w</mi><mo>′</mo></msup></mrow><annotation encoding="application/x-tex">\varphi = -w&#39;</annotation></semantics></math>).
+Die Formeln wurden mit SymPy aus den Ansatzfunktionen nachgerechnet
+(<code>bettung_ksig_masse.py</code>). Im Programm:
+<code>berechneLokaleElementmassenmatrix</code>.</p>
+<p><strong>Nicht enthalten</strong> ist die Drehträgheit des
+Querschnitts. Sie wäre</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐦</mi><mi>φ</mi></msub><mo>=</mo><mi>ρ</mi><mspace width="0.167em"></mspace><msub><mi>I</mi><mi>y</mi></msub><msubsup><mo>∫</mo><mn>0</mn><mi>L</mi></msubsup><msubsup><mi>𝐍</mi><mi>φ</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><msub><mi>𝐍</mi><mi>φ</mi></msub><mspace width="0.167em"></mspace><mi>d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{m}_\varphi = \rho\,I_y \int_0^L \mathbf{N}_\varphi^T\,\mathbf{N}_\varphi\,dx
+</annotation></semantics></math></p>
+<p>und ist bei schlanken Stäben vernachlässigbar, bei gedrungenen Stäben
+und höheren Eigenformen aber von gleicher Größenordnung wie der Einfluss
+der Schubverformung.</p>
+<h2 data-number="13.3" id="transformation-starre-enden-und-gelenke"><span class="header-section-number">13.3</span> Transformation, starre Enden
+und Gelenke</h2>
+<p>Die Elementmassenmatrix wird wie die Steifigkeitsmatrix
+transformiert:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐌</mi><mi>e</mi></msub><mo>=</mo><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><mi>𝐦</mi><mspace width="0.167em"></mspace><msub><mi>𝐓</mi><mi>U</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{M}_e = \mathbf{T}_U^T\,\mathbf{m}\,\mathbf{T}_U .
+</annotation></semantics></math></p>
+<p>Damit sind gedrehte Lager und Gelenke automatisch berücksichtigt. Die
+Masse wird nur über die elastische Länge
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+verteilt; <strong>die starren Enden sind masselos</strong>. Soll ihre
+Masse berücksichtigt werden, kann sie näherungsweise als Knotenmasse
+angesetzt werden.</p>
+<h2 data-number="13.4" id="knotenmassen"><span class="header-section-number">13.4</span> Knotenmassen</h2>
+<p>Zusätzlich können an den Knoten Einzelmassen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+(in t) und Massenträgheitsmomente
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mi>y</mi></msub><annotation encoding="application/x-tex">\theta_y</annotation></semantics></math>
+(in tm²) angeordnet werden.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+wirkt in beiden Verschiebungsrichtungen,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mi>y</mi></msub><annotation encoding="application/x-tex">\theta_y</annotation></semantics></math>
+auf den Drehfreiheitsgrad. Die Werte werden auf die Diagonale der
+Massenmatrix addiert.</p>
+<p>Freiheitsgrade ganz ohne Masse machen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐌</mi><annotation encoding="application/x-tex">\mathbf{M}</annotation></semantics></math>
+singulär. Für diesen Fall kann in den Voreinstellungen eine Mindestmasse
+angegeben werden, die auf alle Diagonalglieder mit dem Wert null gesetzt
+wird. Sie sollte klein gegenüber den übrigen Massen sein, damit sie die
+Ergebnisse nicht verfälscht.</p>
+<h2 data-number="13.5" id="genauigkeit-und-elementteilung-1"><span class="header-section-number">13.5</span> Genauigkeit und
+Elementteilung</h2>
+<p>Die konsistente Massenmatrix liefert Eigenfrequenzen, die zu groß
+sind und mit feinerer Teilung von oben gegen den exakten Wert gehen. Die
+Tabelle zeigt einen Einfeldträger
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">L = 5</annotation></semantics></math>
+m,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>I</mi><mo>=</mo><msup><mn>10</mn><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">EI = 10^4</annotation></semantics></math>
+kNm²,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mn>0</mn><mo>,</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">\mu = 0{,}25</annotation></semantics></math>
+t/m, Skript <code>dynamik_konvergenz.py</code>). Exakt ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>j</mi></msub><mo>=</mo><mfrac><mrow><msup><mi>j</mi><mn>2</mn></msup><mi>π</mi></mrow><mrow><mn>2</mn><msup><mi>L</mi><mn>2</mn></msup></mrow></mfrac><msqrt><mrow><mi>E</mi><mi>I</mi><mi>/</mi><mi>μ</mi></mrow></msqrt></mrow><annotation encoding="application/x-tex">f_j = \frac{j^2\pi}{2L^2}\sqrt{EI/\mu}</annotation></semantics></math>,
+beim Timoshenko-Stab ohne Drehträgheit geteilt durch
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msqrt><mrow><mn>1</mn><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mi>π</mi><mi>/</mi><mi>L</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mspace width="0.167em"></mspace><mi>η</mi></mrow></msqrt><annotation encoding="application/x-tex">\sqrt{1 + (j\pi/L)^2\,\eta}</annotation></semantics></math>:</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">Elemente</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mn>1</mn></msub><annotation encoding="application/x-tex">f_1</annotation></semantics></math>
+schubstarr</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mn>2</mn></msub><annotation encoding="application/x-tex">f_2</annotation></semantics></math>
+schubstarr</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mn>3</mn></msub><annotation encoding="application/x-tex">f_3</annotation></semantics></math>
+schubstarr</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mn>3</mn></msub><annotation encoding="application/x-tex">f_3</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><mn>0</mn><mo>,</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">\eta = 0{,}25</annotation></semantics></math>
+m²</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">+11,0 %</td>
+<td style="text-align: center;">+27,2 %</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">+0,4 %</td>
+<td style="text-align: center;">+11,0 %</td>
+<td style="text-align: center;">+24,0 %</td>
+<td style="text-align: center;">+67,2 %</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">+0,03 %</td>
+<td style="text-align: center;">+0,4 %</td>
+<td style="text-align: center;">+1,8 %</td>
+<td style="text-align: center;">+10,5 %</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">0,00 %</td>
+<td style="text-align: center;">+0,03 %</td>
+<td style="text-align: center;">+0,13 %</td>
+<td style="text-align: center;">+2,7 %</td>
+</tr>
+<tr>
+<td style="text-align: center;">exakt</td>
+<td style="text-align: center;">12,57 Hz</td>
+<td style="text-align: center;">50,27 Hz</td>
+<td style="text-align: center;">113,10 Hz</td>
+<td style="text-align: center;">82,30 Hz</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Faustregel:</strong> Für die
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>-te
+Eigenform sollte ein Stab in mindestens
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mspace width="0.167em"></mspace><mi>j</mi></mrow><annotation encoding="application/x-tex">4\,j</annotation></semantics></math>
+Elemente geteilt sein (schubstarr). Bei ausgeprägter Schubverformung ist
+eine feinere Teilung nötig.</p>
+<h2 data-number="13.6" id="mögliche-erweiterungen"><span class="header-section-number">13.6</span> Mögliche Erweiterungen</h2>
+<p>Die Dynamik soll in d2beam weiter ausgebaut werden. Die folgenden
+Erweiterungen bauen direkt auf den vorhandenen Matrizen auf:</p>
+<ul>
+<li><strong>Drehträgheit</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐦</mi><mi>φ</mi></msub><annotation encoding="application/x-tex">\mathbf{m}_\varphi</annotation></semantics></math>
+(siehe oben), z. B. als Option.</li>
+<li><strong>Modale Beteiligungsfaktoren und effektive Massen</strong>
+für eine Anregung in Richtung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐫</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>
+(Einsvektor in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>-
+oder
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-Richtung):
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">Γ</mi><mi>j</mi></msub><mo>=</mo><mfrac><mrow><msubsup><mi>𝛟</mi><mi>j</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><mi>𝐌</mi><mspace width="0.167em"></mspace><mi>𝐫</mi></mrow><mrow><msubsup><mi>𝛟</mi><mi>j</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><mi>𝐌</mi><mspace width="0.167em"></mspace><msub><mi>𝛟</mi><mi>j</mi></msub></mrow></mfrac><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>m</mi><mrow><mi>e</mi><mi>f</mi><mi>f</mi><mo>,</mo><mi>j</mi></mrow></msub><mo>=</mo><msubsup><mi mathvariant="normal">Γ</mi><mi>j</mi><mn>2</mn></msubsup><mspace width="0.278em"></mspace><msubsup><mi>𝛟</mi><mi>j</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><mi>𝐌</mi><mspace width="0.167em"></mspace><msub><mi>𝛟</mi><mi>j</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Gamma_j = \frac{\boldsymbol{\phi}_j^T\,\mathbf{M}\,\mathbf{r}}{\boldsymbol{\phi}_j^T\,\mathbf{M}\,\boldsymbol{\phi}_j},
+\qquad
+m_{eff,j} = \Gamma_j^2\;\boldsymbol{\phi}_j^T\,\mathbf{M}\,\boldsymbol{\phi}_j .
+</annotation></semantics></math> Daran lässt sich ablesen, wie viele
+Eigenformen für eine Erdbebenberechnung nötig sind (Summe der effektiven
+Massen mindestens 90 % der Gesamtmasse).</li>
+<li><strong>Antwortspektrenverfahren:</strong> maximale modale Antworten
+aus einem Bemessungsspektrum
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>d</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>T</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_d(T_j)</annotation></semantics></math>,
+Überlagerung mit SRSS oder CQC.</li>
+<li><strong>Zeitverlaufsberechnung</strong> mit Dämpfung (z. B.
+Rayleigh-Dämpfung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐂</mi><mo>=</mo><msub><mi>a</mi><mn>0</mn></msub><mi>𝐌</mi><mo>+</mo><msub><mi>a</mi><mn>1</mn></msub><mi>𝐊</mi></mrow><annotation encoding="application/x-tex">\mathbf{C} = a_0\mathbf{M} + a_1\mathbf{K}</annotation></semantics></math>)
+und einem Zeitintegrationsverfahren wie Newmark.</li>
+<li><strong>Einfluss der Normalkraft auf die Eigenfrequenzen</strong>
+mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐊</mi><mo>+</mo><msub><mi>𝐊</mi><mi>σ</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{K} + \mathbf{K}_{\sigma}</annotation></semantics></math>
+aus Kapitel 11.</li>
+</ul>
 <h1 class="unnumbered" id="anhang-a-nachrechnung-mit-sympy">Anhang A:
 Nachrechnung mit SymPy</h1>
 <p>Im Ordner <code>doku/theorie/sympy</code> liegen die Skripte, mit
@@ -1929,6 +2170,8 @@ in Abhängigkeit von der Elementteilung.</li>
 gelagerten Stabes in Abhängigkeit von der Elementteilung.</li>
 <li><code>vorverformung.py</code>: Ersatzlasten der parabelförmigen
 Stabvorverformung gegen die konsistente Herleitung.</li>
+<li><code>dynamik_konvergenz.py</code>: Eigenfrequenzen des
+Einfeldträgers in Abhängigkeit von der Elementteilung.</li>
 </ul>
 <p>Aufruf jeweils mit <code>python3 &lt;skript&gt;.py</code> (benötigt
 das Paket <code>sympy</code>).</p>

@@ -2,7 +2,7 @@
 title: "d2beam – Theorie-Handbuch"
 subtitle: "Der Timoshenko-Balken im Weggrößenverfahren"
 author: "Prof. Dr.-Ing. Detlef Rothe"
-date: "Entwurf, Stand 27.11.2026 – Teile 1 bis 3"
+date: "Entwurf, Stand 27.11.2026 – Teile 1 bis 4"
 lang: de
 ---
 
@@ -38,7 +38,8 @@ Teil 3 (Kapitel 11 und 12) behandelt
 - die Theorie II. Ordnung mit geometrischer Steifigkeitsmatrix, Iteration und Ersatzimperfektionen,
 - die Knickeigenwerte.
 
-Die Dynamik folgt in einem weiteren Teil.
+Teil 4 (Kapitel 13) behandelt die Dynamik: Massenmatrix, Knotenmassen und Eigenfrequenzen, dazu
+mögliche Erweiterungen.
 
 ## Annahmen
 
@@ -1116,6 +1117,137 @@ Vektoriteration und die Lanczos-Iteration von ARPACK (Vorgabe).
 
 Für die Genauigkeit gilt dasselbe wie in Abschnitt 11.2: Gedrückte Stäbe sollten geteilt werden.
 
+# Dynamik: Eigenfrequenzen und Eigenformen
+
+## Bewegungsgleichung
+
+Für die freie, ungedämpfte Schwingung gilt
+
+$$
+\mathbf{M}\,\ddot{\mathbf{u}} + \mathbf{K}\,\mathbf{u} = \mathbf{0} .
+$$
+
+Mit dem Ansatz $\mathbf{u}(t) = \boldsymbol{\phi}\,\sin(\omega t)$ folgt das allgemeine Eigenwertproblem
+
+$$
+\left( \mathbf{K} - \omega^2\,\mathbf{M} \right) \boldsymbol{\phi} = \mathbf{0} ,
+\qquad f = \frac{\omega}{2\pi}, \qquad T = \frac{1}{f} .
+$$
+
+$\mathbf{K}$ ist die Steifigkeitsmatrix nach Theorie I. Ordnung (einschließlich Bettung, Federn und
+Gelenken), $\mathbf{M}$ die Massenmatrix. d2beam rechnet mit den Einheiten kN, m, s und t
+($1\ \mathrm{t} = 1\ \mathrm{kN\,s^2/m}$). Ausgegeben werden die gewünschte Anzahl der kleinsten Eigenfrequenzen
+$f_j$, die Perioden $T_j$ und die Eigenformen $\boldsymbol{\phi}_j$ (Programm: `dyn_eigenwert` in
+`rechnen.ts`). Für die Lösung stehen dieselben drei Verfahren zur Wahl wie bei den Knickeigenwerten.
+
+![Bild 16: Die ersten drei Eigenformen des Einfeldträgers](bilder/eigenformen){width=80%}
+
+## Elementmassenmatrix
+
+Die kinetische Energie des Stabes $\tfrac12 \int \mu\,(\dot u^2 + \dot w^2)\,dx$ führt mit denselben
+Ansatzfunktionen wie für die Steifigkeit auf die **konsistente Massenmatrix**
+
+$$
+\mathbf{m} = \mu \int_0^L \mathbf{N}^T\,\mathbf{N}\,dx .
+$$
+
+Die Masse je Meter ist $\mu = \gamma\,A / g$. Im Programm wird dabei $g = 10\ \mathrm{m/s^2}$ gesetzt (`mue`
+in `initialisiereElementdaten`), die Massen sind also um etwa 2 % kleiner als mit $g = 9{,}81\ \mathrm{m/s^2}$.
+
+**Längsanteil** (lineare Ansatzfunktionen):
+
+$$
+\mathbf{m}_u = \frac{\mu L}{6}\begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix} .
+$$
+
+**Biegeanteil** mit den Timoshenko-Ansatzfunktionen aus Abschnitt 4.4 (für $w_a, \varphi_a, w_e,
+\varphi_e$, symmetrisch):
+
+$$
+\begin{aligned}
+m_{11} = m_{33} &= \frac{\mu L}{840}\,(280 + 28\psi + 4\psi^2), &
+m_{12} = -m_{34} &= -\frac{\mu L^2}{840}\,(35 + 7\psi + 2\psi^2), \\
+m_{13} &= \frac{\mu L}{840}\,(140 - 28\psi - 4\psi^2), &
+m_{14} = -m_{23} &= \frac{\mu L^2}{840}\,(35 - 7\psi - 2\psi^2), \\
+m_{22} = m_{44} &= \frac{\mu L^3}{840}\,(7 + \psi^2), &
+m_{24} &= -\frac{\mu L^3}{840}\,(7 - \psi^2) .
+\end{aligned}
+$$
+
+Schubstarr ($\psi = 1$) ist das die bekannte Matrix $\frac{\mu L}{420}\left[\begin{smallmatrix} 156 & -22L & 54 & 13L \\ & 4L^2 & -13L & -3L^2 \\ & & 156 & 22L \\ & & & 4L^2 \end{smallmatrix}\right]$
+(mit $\varphi = -w'$). Die Formeln wurden mit SymPy aus den Ansatzfunktionen nachgerechnet
+(`bettung_ksig_masse.py`). Im Programm: `berechneLokaleElementmassenmatrix`.
+
+**Nicht enthalten** ist die Drehträgheit des Querschnitts. Sie wäre
+
+$$
+\mathbf{m}_\varphi = \rho\,I_y \int_0^L \mathbf{N}_\varphi^T\,\mathbf{N}_\varphi\,dx
+$$
+
+und ist bei schlanken Stäben vernachlässigbar, bei gedrungenen Stäben und höheren Eigenformen aber von
+gleicher Größenordnung wie der Einfluss der Schubverformung.
+
+## Transformation, starre Enden und Gelenke
+
+Die Elementmassenmatrix wird wie die Steifigkeitsmatrix transformiert:
+
+$$
+\mathbf{M}_e = \mathbf{T}_U^T\,\mathbf{m}\,\mathbf{T}_U .
+$$
+
+Damit sind gedrehte Lager und Gelenke automatisch berücksichtigt. Die Masse wird nur über die elastische Länge
+$L$ verteilt; **die starren Enden sind masselos**. Soll ihre Masse berücksichtigt werden, kann sie näherungsweise
+als Knotenmasse angesetzt werden.
+
+## Knotenmassen
+
+Zusätzlich können an den Knoten Einzelmassen $m$ (in t) und Massenträgheitsmomente $\theta_y$ (in tm²)
+angeordnet werden. $m$ wirkt in beiden Verschiebungsrichtungen, $\theta_y$ auf den Drehfreiheitsgrad. Die Werte
+werden auf die Diagonale der Massenmatrix addiert.
+
+Freiheitsgrade ganz ohne Masse machen $\mathbf{M}$ singulär. Für diesen Fall kann in den Voreinstellungen eine
+Mindestmasse angegeben werden, die auf alle Diagonalglieder mit dem Wert null gesetzt wird. Sie sollte klein
+gegenüber den übrigen Massen sein, damit sie die Ergebnisse nicht verfälscht.
+
+## Genauigkeit und Elementteilung
+
+Die konsistente Massenmatrix liefert Eigenfrequenzen, die zu groß sind und mit feinerer Teilung von oben gegen
+den exakten Wert gehen. Die Tabelle zeigt einen Einfeldträger ($L = 5$ m, $EI = 10^4$ kNm², $\mu = 0{,}25$ t/m,
+Skript `dynamik_konvergenz.py`). Exakt ist $f_j = \frac{j^2\pi}{2L^2}\sqrt{EI/\mu}$, beim Timoshenko-Stab ohne
+Drehträgheit geteilt durch $\sqrt{1 + (j\pi/L)^2\,\eta}$:
+
+| Elemente | $f_1$ schubstarr | $f_2$ schubstarr | $f_3$ schubstarr | $f_3$, $\eta = 0{,}25$ m² |
+|:---:|:---:|:---:|:---:|:---:|
+| 1 | +11,0 % | +27,2 % | – | – |
+| 2 | +0,4 % | +11,0 % | +24,0 % | +67,2 % |
+| 4 | +0,03 % | +0,4 % | +1,8 % | +10,5 % |
+| 8 | 0,00 % | +0,03 % | +0,13 % | +2,7 % |
+| exakt | 12,57 Hz | 50,27 Hz | 113,10 Hz | 82,30 Hz |
+
+**Faustregel:** Für die $j$-te Eigenform sollte ein Stab in mindestens $4\,j$ Elemente geteilt sein
+(schubstarr). Bei ausgeprägter Schubverformung ist eine feinere Teilung nötig.
+
+## Mögliche Erweiterungen
+
+Die Dynamik soll in d2beam weiter ausgebaut werden. Die folgenden Erweiterungen bauen direkt auf den
+vorhandenen Matrizen auf:
+
+- **Drehträgheit** $\mathbf{m}_\varphi$ (siehe oben), z. B. als Option.
+- **Modale Beteiligungsfaktoren und effektive Massen** für eine Anregung in Richtung $\mathbf{r}$ (Einsvektor in
+  $x$- oder $z$-Richtung):
+  $$
+  \Gamma_j = \frac{\boldsymbol{\phi}_j^T\,\mathbf{M}\,\mathbf{r}}{\boldsymbol{\phi}_j^T\,\mathbf{M}\,\boldsymbol{\phi}_j},
+  \qquad
+  m_{eff,j} = \Gamma_j^2\;\boldsymbol{\phi}_j^T\,\mathbf{M}\,\boldsymbol{\phi}_j .
+  $$
+  Daran lässt sich ablesen, wie viele Eigenformen für eine Erdbebenberechnung nötig sind (Summe der effektiven
+  Massen mindestens 90 % der Gesamtmasse).
+- **Antwortspektrenverfahren:** maximale modale Antworten aus einem Bemessungsspektrum $S_d(T_j)$,
+  Überlagerung mit SRSS oder CQC.
+- **Zeitverlaufsberechnung** mit Dämpfung (z. B. Rayleigh-Dämpfung
+  $\mathbf{C} = a_0\mathbf{M} + a_1\mathbf{K}$) und einem Zeitintegrationsverfahren wie Newmark.
+- **Einfluss der Normalkraft auf die Eigenfrequenzen** mit $\mathbf{K} + \mathbf{K}_{\sigma}$ aus Kapitel 11.
+
 # Anhang A: Nachrechnung mit SymPy {-}
 
 Im Ordner `doku/theorie/sympy` liegen die Skripte, mit denen die Formeln dieses Teils nachgerechnet wurden:
@@ -1131,6 +1263,7 @@ Im Ordner `doku/theorie/sympy` liegen die Skripte, mit denen die Formeln dieses 
 - `bettung_konvergenz.py`: Genauigkeit der Bettungsmatrix in Abhängigkeit von der Elementteilung.
 - `knicken_konvergenz.py`: Knicklast des gelenkig gelagerten Stabes in Abhängigkeit von der Elementteilung.
 - `vorverformung.py`: Ersatzlasten der parabelförmigen Stabvorverformung gegen die konsistente Herleitung.
+- `dynamik_konvergenz.py`: Eigenfrequenzen des Einfeldträgers in Abhängigkeit von der Elementteilung.
 
 Aufruf jeweils mit `python3 <skript>.py` (benötigt das Paket `sympy`).
 
