@@ -501,11 +501,13 @@ und transformiert die sechs Knotenanteile dann in die lokalen Stabendgrößen am
 $\mathbf{F} = \mathbf{T}_U^T\mathbf{f}$ lässt sich dafür nicht einfach umkehren. Stattdessen nutzen wir das
 Gleichgewicht am starren Ende.
 
-![Bild 9: Gleichgewicht am starren Ende (Konvention II, lokale Richtungen)](bilder/kraefte_starr){width=80%}
+![Bild 9: Links das starre Ende, rechts der Anfang des elastischen Stabes, jeweils mit den Kräften in lokalen Richtungen (Konvention II)](bilder/kraefte_starr){width=100%}
 
 Zuerst werden die Knotenkräfte mit der orthogonalen Matrix $\mathbf{T}_a$ in die lokale Richtung gedreht. Am
-starren Ende (Bild 9) greifen am Knoten die Kräfte $F_K$, $V_K$, $M_K$ an, am Punkt $a$ die Stabendgrößen des
-elastischen Stabes mit umgekehrtem Vorzeichen. Kräftegleichgewicht und Momentengleichgewicht um den Punkt $a$
+starren Ende (Bild 9, links) greifen am Knoten die Kräfte $F_K$, $V_K$, $M_K$ an. Im Punkt $a$ ist das starre
+Ende mit dem elastischen Stab verbunden. Auf den elastischen Stab wirken dort seine Stabendgrößen $F_a$,
+$V_a$, $M_a$ in Konvention II (Bild 9, rechts), auf das starre Ende nach dem Prinzip actio = reactio dieselben
+Kräfte mit umgekehrter Richtung. Kräftegleichgewicht und Momentengleichgewicht um den Punkt $a$
 liefern
 
 $$
@@ -593,6 +595,9 @@ Elementlasten.
 ## Lastarten der Streckenlast
 
 ![Bild 10: Die fünf Arten der Trapezstreckenlast](bilder/lastarten){width=100%}
+
+Bei den Projektionslasten (Art 2 und 4) ist die Last wie üblich über bzw. neben dem Stab auf der
+Projektionslänge dargestellt. In der App werden diese Lasten aus Platzgründen in Stabmitte gezeichnet.
 
 Die Streckenlast verläuft linear von $p_a$ am Stabanfang bis $p_e$ am Stabende. Sie wird zuerst in eine
 Querlast $q$ (Richtung $z_L$) und eine Längslast $n$ (Richtung $x_L$) zerlegt, jeweils bezogen auf die
@@ -1033,8 +1038,11 @@ $\boldsymbol{\Delta}_0$ von Knotenvorverformungen.
 **Stabvorverformung.** Für einzelne Stäbe kann eine Vorkrümmung als Parabel vorgegeben werden:
 
 $$
-w_0(x) = w_{0a} + (w_{0e} - w_{0a})\,\xi + 4\,v_{0m}\,\xi\,(1 - \xi), \qquad \xi = x/L .
+w_0(x) = w_{0a} + (w_{0e} - w_{0a})\,\xi + 4\,w_{0m}\,\xi\,(1 - \xi), \qquad \xi = x/L .
 $$
+
+$w_{0a}$ und $w_{0e}$ sind die Vorverformungen an den Stabenden, $w_{0m}$ der Stich der Parabel gegenüber der
+Sehne in Stabmitte (Bild 14, rechts).
 
 Bei der Elementteilung erhält jedes Teilelement die Werte $w_0$ an seinen Enden und den Stich gegenüber
 seiner Sehne (`vorverformung_teil` in `cad_netz.ts`).
@@ -1051,8 +1059,8 @@ mit den lokalen Vorverformungen $\boldsymbol{\delta}_0$ des Elements. Für die S
 $\boldsymbol{\delta}_0 = \mathbf{T}_U\,\boldsymbol{\Delta}_0$. Für die Parabel ist
 
 $$
-\boldsymbol{\delta}_{0,b} = \left[\, w_{0a},\ -\frac{w_{0e} - w_{0a}}{L} - \frac{4 v_{0m}}{L},\
-w_{0e},\ -\frac{w_{0e} - w_{0a}}{L} + \frac{4 v_{0m}}{L} \,\right]^T .
+\boldsymbol{\delta}_{0,b} = \left[\, w_{0a},\ -\frac{w_{0e} - w_{0a}}{L} - \frac{4 w_{0m}}{L},\
+w_{0e},\ -\frac{w_{0e} - w_{0a}}{L} + \frac{4 w_{0m}}{L} \,\right]^T .
 $$
 
 Beim schubstarren Stab ist das für die Parabel exakt (Skript `vorverformung.py`). Die Ersatzlasten werden

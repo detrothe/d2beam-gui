@@ -272,12 +272,12 @@ def bild_kinematik():
     qx, qy = -math.sin(tb), math.cos(tb)
     s.line(cx - 115 * qx, cy - 115 * qy, cx + 115 * qx, cy + 115 * qy, ROT, 4)
     # Winkel
-    s.arc(cx, cy, 170, 0, -22, SCHWARZ, 1.2)
+    s.arc_arrow(cx, cy, 170, 0, -22, SCHWARZ, 1.5, head=10)
     s.text(cx + 180, cy + 40, "w′", 18, italic=True, anchor='start')
-    s.arc(cx, cy, 95, -90, -90 - 13, ROT, 1.5)
+    s.arc_arrow(cx, cy, 95, -90, -90 - 13, ROT, 1.5, head=8)
     s.text(cx - 12, cy + 112, 'β', 18, ROT, italic=True, anchor='end')
-    s.arc(cx, cy, 60, 90 - 13, 90 - 22, SCHWARZ, 1.2)
-    s.text(cx + 22, cy - 66, 'γ', 18, italic=True, anchor='start')
+    s.arc_arrow(cx, cy, 108, 90 - 13, 90 - 22, SCHWARZ, 1.5, head=7)
+    s.text(cx + 30, cy - 112, 'γ', 18, italic=True, anchor='start')
     s.text(cx + 26 + 110 * nx * -1, cy - 110 * ny * 1 - 6, '⊥ Achse', 13, GRAU, anchor='start')
     s.text(cx - 115 * qx - 8, cy - 115 * qy - 8, 'Querschnitt', 13, ROT, anchor='end')
     s.text(cx + 220 * dx - 10, cy + 220 * dy + 24, 'verformte Stabachse', 13, anchor='end')
@@ -306,9 +306,7 @@ def bild_drehung():
     s.knoten(xa - 5, ya - 35, 'K', 'a')
     s.knoten(xe + 5, ye - 35, 'K', 'e')
     s.line(xa, ya, xa + 160, ya, SCHWARZ, 1)
-    s.arc(xa, ya, 130, 0, -25, SCHWARZ, 1.2)
-    s.arrow(xa + 129 * math.cos(math.radians(-5)) , ya + 129 * math.sin(math.radians(5)),
-            xa + 130 * math.cos(a), ya + 130 * math.sin(a), SCHWARZ, 1.2, head=8)
+    s.arc_arrow(xa, ya, 130, 0, -25, SCHWARZ, 1.5, head=10)
     s.sym(xa + 145, ya + 32, 'α')
     # lokale Achsen
     bx, by = xa + 200 * math.cos(a) + 45 * math.sin(a), ya + 200 * math.sin(a) - 45 * math.cos(a)
@@ -335,15 +333,15 @@ def bild_gedrehtes_lager():
     s.sym(ox + 200 * math.cos(t) + 6, oy - 200 * math.sin(t), "x′", color=ROT, anchor='start')
     s.arrow(ox, oy, ox + 140 * math.sin(t), oy + 140 * math.cos(t), ROT, 2)
     s.sym(ox + 150 * math.sin(t) + 8, oy + 150 * math.cos(t) + 6, "z′", color=ROT, anchor='start')
-    s.arc(ox, oy, 120, 0, 35, SCHWARZ, 1.2)
+    s.arc_arrow(ox, oy, 120, 0, 35, SCHWARZ, 1.5, head=10)
     s.sym(ox + 132, oy - 34, 'ϑ', anchor='start')
     # Stab in Richtung x_L, Winkel α im Uhrzeigersinn
     a = math.radians(20)
     s.line(ox, oy, ox + 230 * math.cos(a), oy + 230 * math.sin(a), SCHWARZ, 5)
     s.sym(ox + 240 * math.cos(a) + 4, oy + 240 * math.sin(a) + 16, 'x', 'L', anchor='start')
-    s.arc(ox, oy, 75, 0, -20, SCHWARZ, 1.2)
+    s.arc_arrow(ox, oy, 75, 0, -20, SCHWARZ, 1.5, head=9)
     s.sym(ox + 84, oy + 22, 'α', anchor='start')
-    s.arc(ox, oy, 165, 35, -20, GRAU, 1.0)
+    s.arc_arrow(ox, oy, 165, 35, -20, GRAU, 1.2, head=10)
     s.text(ox + 172, oy - 44, 'α + ϑ', 15, GRAU, italic=True, anchor='start')
     s.knoten(ox - 32, oy - 26, 'K', '')
     s.save('gedrehtes_lager')
@@ -407,7 +405,7 @@ def bild_gelenk_starr():
 
 def bild_kraefte_starr():
     """Gleichgewicht am starren Ende (Konvention II)."""
-    s = Svg(640, 230)
+    s = Svg(980, 250)
     kx, ax, y = 170, 450, 120
     s.line(kx, y, ax, y, SCHWARZ, 8)
     s.circle(kx, y, 4, fill='white')
@@ -429,6 +427,20 @@ def bild_kraefte_starr():
     s.arc_arrow(ax + 60, y + 2, 32, 100, -100, ROT, 3.5, head=14)
     s.sym(ax + 100, y - 40, 'M', 'a', color=ROT)
     s.dim(kx, ax, 205, 'ℓ', 'a', ext_from=y + 10)
+    s.text((kx + ax) / 2, 240, 'starres Ende', 13, GRAU)
+    # rechts: Anfang des elastischen Stabes mit den Stabendgrößen f_a (Konvention II)
+    bs = ax + 340
+    s.line(bs, y, bs + 160, y, SCHWARZ, 4)
+    s.line(bs + 160, y - 18, bs + 160, y + 18, GRAU, 1, dash='3,3')
+    s.circle(bs, y, 4, fill='white')
+    s.sym(bs + 8, y + 34, 'a', anchor='start')
+    s.arrow(bs - 110, y, bs - 20, y, ROT, 3.5, head=14)
+    s.sym(bs - 112, y - 10, 'F', 'a', color=ROT, anchor='end')
+    s.arrow(bs - 15, y - 75, bs - 15, y - 8, ROT, 3.5, head=14)
+    s.sym(bs - 30, y - 80, 'V', 'a', color=ROT)
+    s.arc_arrow(bs - 60, y + 2, 32, 80, 280, ROT, 3.5, head=14)
+    s.sym(bs - 100, y - 40, 'M', 'a', color=ROT)
+    s.text(bs + 80, 240, 'elastischer Stab', 13, GRAU)
     s.save('kraefte_starr')
 
 
@@ -452,21 +464,29 @@ def bild_lastarten():
             if i == 0:          # senkrecht auf den Stab (in +z_L)
                 nx, ny = -math.sin(a), math.cos(a)
                 s.arrow(px - 38 * nx, py - 38 * ny, px - 3 * nx, py - 3 * ny, BLAU, 1.4, head=7)
-            elif i in (1, 2):   # vertikal
+            elif i == 1:        # vertikal, je m Stablänge
                 s.arrow(px, py - 42, px, py - 3, BLAU, 1.4, head=7)
-            else:               # horizontal
+            elif i == 3:        # horizontal, je m Stablänge
                 s.arrow(px - 42, py, px - 3, py, BLAU, 1.4, head=7)
+            elif i == 2:        # vertikal, auf der Grundrissprojektion (horizontales Lastband über dem Stab)
+                s.arrow(px, ya - 50, px, ya - 18, BLAU, 1.4, head=7)
+            else:               # horizontal, auf der Projektion in z (vertikales Lastband neben dem Stab)
+                s.arrow(xa - 55, py, xa - 23, py, BLAU, 1.4, head=7)
         if i == 0:
             nx, ny = -math.sin(a), math.cos(a)
             s.line(xa - 38 * nx, ya - 38 * ny, xe - 38 * nx, ye - 38 * ny, BLAU, 1.2)
-        elif i in (1, 2):
+        elif i == 1:
             s.line(xa, ya - 42, xe, ye - 42, BLAU, 1.2)
-        else:
+        elif i == 3:
             s.line(xa - 42, ya, xe - 42, ye, BLAU, 1.2)
+        elif i == 2:
+            s.line(xa, ya - 50, xe, ya - 50, BLAU, 1.2)
+        else:
+            s.line(xa - 55, ya, xa - 55, ye, BLAU, 1.2)
         if i == 2:              # Bezugslänge: horizontale Projektion
             s.dim(xa, xe, 200, 'L', 'x', ext_from=ye + 8)
         if i == 4:              # Bezugslänge: vertikale Projektion
-            s.line(xe + 8, ya, xe + 26, ya, GRAU, 0.8)
+            s.line(xa + 4, ya, xe + 26, ya, GRAU, 0.8, dash='2,3')
             s.line(xe + 8, ye, xe + 26, ye, GRAU, 0.8)
             s.arrow(xe + 20, (ya + ye) / 2, xe + 20, ya, GRAU, 1.0, head=8)
             s.arrow(xe + 20, (ya + ye) / 2, xe + 20, ye, GRAU, 1.0, head=8)
@@ -533,14 +553,17 @@ def bild_starr_momente():
     s.sym(xe, y - 14, 'e')
     # Momentenlinie (unten positiv): Stützmomente negativ an den Knoten
     f = lambda m: y + 90 + 1.0 * m
-    MK, Ma = -60, -20
-    Me, MKe = -10, -45
+    Ma, Me, A = -20, -10, 40              # Momente am elastischen Stab, Parabelstich
+    Lp = xe - xa
+    m_el = lambda t: Ma + (Me - Ma) * t + 4 * A * t * (1 - t)
+    s0 = ((Me - Ma) + 4 * A) / Lp         # Steigung dM/dx bei a (= Querkraft, stetig)
+    s1 = ((Me - Ma) - 4 * A) / Lp         # Steigung bei e
+    MK = Ma - s0 * (xa - xK)              # starres Ende: Gerade mit derselben Steigung, kein Knick
+    MKe = Me + s1 * (xKe - xe)
     pts = [(xK, f(MK)), (xa, f(Ma))]
     for j in range(1, 20):
         t = j / 20
-        xx = xa + t * (xe - xa)
-        m = Ma + (Me - Ma) * t + 4 * 95 * t * (1 - t)
-        pts.append((xx, f(m)))
+        pts.append((xa + t * Lp, f(m_el(t))))
     pts += [(xe, f(Me)), (xKe, f(MKe))]
     s.line(xK, y + 90, xKe, y + 90, SCHWARZ, 1)
     d = 'M ' + ' L '.join(f'{px:.1f} {py:.1f}' for px, py in pts)
@@ -605,7 +628,7 @@ def bild_imperfektionen():
     # rechts: Stab mit Vorkrümmung (Parabel) und Sehnendrehung
     xa, xe, ya = 400, 660, 90
     s.line(xa, ya, xe, ya, GRAU, 1.5, dash='6,4')
-    w0a, w0e, v0 = 0, 30, 45
+    w0a, w0e, v0 = 15, 35, 45
     pts = []
     for j in range(21):
         t = j / 20
@@ -615,10 +638,12 @@ def bild_imperfektionen():
     s.line(xa, ya + w0a, xe, ya + w0e, GRAU, 1, dash='3,3')
     xm = (xa + xe) / 2
     s.arrow(xm, ya + (w0a + w0e) / 2, xm, ya + (w0a + w0e) / 2 + v0, ROT, 1.5, head=8)
-    s.sym(xm + 8, ya + (w0a + w0e) / 2 + v0 / 2 + 8, 'v', '0m', color=ROT, size=16, anchor='start')
+    s.sym(xm + 8, ya + (w0a + w0e) / 2 + v0 / 2 + 8, 'w', '0m', color=ROT, size=16, anchor='start')
+    s.arrow(xa - 14, ya, xa - 14, ya + w0a, ROT, 1.5, head=6)
+    s.sym(xa - 20, ya + w0a / 2 + 14, 'w', '0a', color=ROT, size=16, anchor='end')
     s.arrow(xe + 14, ya, xe + 14, ya + w0e, ROT, 1.5, head=8)
     s.sym(xe + 20, ya + w0e / 2 + 6, 'w', '0e', color=ROT, size=16, anchor='start')
-    s.sym(xa - 6, ya - 8, 'a', anchor='end')
+    s.sym(xa, ya - 10, 'a')
     s.sym(xe, ya - 10, 'e')
     s.text((xa + xe) / 2, 290, 'Stabvorverformung (Parabel)', 13, GRAU)
     s.save('imperfektionen')

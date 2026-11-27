@@ -12,9 +12,8 @@
 <circle cx="453.1" cy="218.7" r="15" fill="#ddd9c3" stroke="#808080" stroke-width="1.2"/>
 <text x="453.1" y="224.7" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#000000" text-anchor="middle" font-style="italic">K<tspan dy="5" font-size="12" font-style="normal">e</tspan></text>
 <line x1="140.0" y1="110.0" x2="300.0" y2="110.0" stroke="#000000" stroke-width="1" stroke-linecap="butt"/>
-<path d="M 270.0 110.0 A 130 130 0 0 1 257.8 164.9" fill="none" stroke="#000000" stroke-width="1.2"/>
-<line x1="268.5" y1="121.2" x2="259.7" y2="157.2" stroke="#000000" stroke-width="1.2" stroke-linecap="butt"/>
-<polygon points="257.8,164.9 263.0,158.0 256.5,156.4" fill="#000000"/>
+<path d="M 270.0 110.0 A 130 130 0 0 1 261.7 155.7" fill="none" stroke="#000000" stroke-width="1.5"/>
+<polygon points="257.8,164.9 265.6,157.4 257.8,154.1" fill="#000000"/>
 <text x="285.0" y="142.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#000000" text-anchor="middle" font-style="italic">α</text>
 <line x1="340.3" y1="153.7" x2="412.8" y2="187.5" stroke="#2f5597" stroke-width="2" stroke-linecap="butt"/>
 <polygon points="421.8,191.8 414.6,183.7 411.0,191.4" fill="#2f5597"/>
