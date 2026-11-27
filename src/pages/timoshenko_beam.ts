@@ -1383,7 +1383,7 @@ export class CTimoshenko_beam extends CElement {
         v0[1] = stabvorverformung_komb[this.ielem][ikomb].w0a
         v0[4] = stabvorverformung_komb[this.ielem][ikomb].w0e
 
-        v0[2] = -(v0[4] - v0[1] / this.sl)
+        v0[2] = -(v0[4] - v0[1]) / this.sl
         v0[5] = v0[2]
 
         let v0m = stabvorverformung_komb[this.ielem][ikomb].w0m
