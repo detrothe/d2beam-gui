@@ -49,6 +49,8 @@
     "start": "npm run dev",
     "start-remote": "vite --host",
     "preview": "vite preview --open",
+    "dev-wach": "systemd-inhibit --what=sleep:idle --why=\"d2beam Test\" vite --host",
+    "preview-wach": "systemd-inhibit --what=sleep:idle --why=\"d2beam Test\" vite preview --host",
     "icons": "node scripts/gui-icons.mjs"
   },
   "allowScripts": {
