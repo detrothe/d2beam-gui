@@ -3334,7 +3334,7 @@ function eigenwertberechnung(iKomb: number, stiff: number[][], stiff_sig: number
         //console.log("eig_solver",eig_solver)
         if (eig_solver === 0) {
             console.log("c_gsl_eigenwert")
-            status = c_gsl_eigenwert(kstiff_sig_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, dyn_neigv)
+            status = c_gsl_eigenwert(kstiff_sig_ptr, kstiff_ptr, omega_ptr, eigenform_ptr, neq, neigv)
         } else if (eig_solver === 1) {
             console.log("c_simvektoriteration", neq, neigv, niter_neigv)
             status = c_simvektoriteration(kstiff_ptr, kstiff_sig_ptr, omega_ptr, eigenform_ptr, neq, neigv, niter_neigv);
