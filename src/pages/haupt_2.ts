@@ -425,6 +425,9 @@ function dialog_neue_eingabe_closed(this: any, e: any) {
       let els = shadow.getElementById('id_P_delta_option') as HTMLSelectElement;
       els.value = 'false';
 
+      els = shadow.getElementById('id_drehmasse_option') as HTMLSelectElement;
+      els.value = 'false';
+
       els = shadow.getElementById('id_ausgabe_SG_option') as HTMLSelectElement;
       els.value = 'true';
 

@@ -254,6 +254,7 @@ export function read_daten(eingabedaten: string): boolean {
             // else slel.setAttribute('value', jobj.P_delta); //.setValue(jobj.P_delta);
 
             (shadow.getElementById('id_P_delta_option') as HTMLSelectElement).value = String(jobj.P_delta ?? 'false');
+            (shadow.getElementById('id_drehmasse_option') as HTMLSelectElement).value = String(jobj.drehmasse ?? 'false');
 
             let slel = shadow?.getElementById('id_ausgabe_SG_option') as HTMLSelectElement;
             if (jobj.ausgabe_SG === undefined) slel.value = 'true';
@@ -1105,6 +1106,7 @@ export function str_inputToJSON() {
         nelem_koppelfedern,
         matprop_flag,
         min_mass,
+        drehmasse,
         einheit_kraft,
         einheit_bemassung;
 
@@ -1169,6 +1171,9 @@ export function str_inputToJSON() {
 
         el = shadow.getElementById('id_minMass') as HTMLInputElement;
         min_mass = el.value;
+
+        el = shadow.getElementById('id_drehmasse_option') as HTMLSelectElement;
+        drehmasse = el.value;
 
         //el = shadow.getElementById('id_dialog_neue_eingabe') as HTMLElement;
         let system = System; //Number((el.shadowRoot?.getElementById("id_system") as HTMLSelectElement).value);
@@ -1236,6 +1241,7 @@ export function str_inputToJSON() {
                                     // 6: Stab.nTeil (Elementteilung), Streckenlast.xa/xb (Teilstreckenlast),
                                     //    Einzellast.Px/Pz/alpha/stabbezug statt P
                                     //    Stabvorverformung.eingabeart (0: Stich, 1: drei Ordinaten)
+                                    //    drehmasse ('true'/'false', Drehträgheit in der Massenmatrix; fehlt = 'false')
 
             system: system,
             dateiname: currentFilename,
@@ -1277,6 +1283,7 @@ export function str_inputToJSON() {
 
             maxBettung: maxBettung,
             minMass: min_mass,
+            drehmasse: drehmasse,
 
             loadcases: lastfaelle,
             combination: kombination,

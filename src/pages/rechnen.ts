@@ -91,6 +91,7 @@ export let eigenform_dyn = [] as number[][]
 export let maxValue_dyn_eigenform = [] as number[]
 export let dyn_neigv = 1;
 export let min_mass = 0.0;
+export let drehmasse = false;      // Drehträgheit der Querschnitte in der Massenmatrix
 
 export let neigv: number = 2;
 export let nNodeDisps = 0;
@@ -682,6 +683,9 @@ export function rechnen(flag = 1): Promise<RechenStatus> {
 
         el = shadow.getElementById('id_minMass') as HTMLInputElement;
         min_mass = Number(el.value) / 1000.;  // von kg zu Tonnen
+
+        el = shadow.getElementById('id_drehmasse_option') as HTMLSelectElement;
+        drehmasse = (el?.value === 'true');
 
         console.log("niter_neigv = ", niter_neigv)
 

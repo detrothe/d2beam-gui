@@ -2200,6 +2200,22 @@ Le fichier est enregistré dans le dossier de téléchargement par défaut</targ
   <source>Die Datei wurde mit einer neueren Programmversion erstellt. Neue Eingaben (z. B. Teilstreckenlasten) können fehlen oder falsch gelesen werden. Bitte die App aktualisieren.</source>
   <target>Le fichier a été créé avec une version plus récente du programme. Les nouvelles saisies (p. ex. charges réparties partielles) peuvent manquer ou être mal lues. Mets l'application à jour.</target>
 </trans-unit>
+<trans-unit id="sa04280051a9561c3">
+  <source>Massenträgheit der Querschnitte bei Drehung (rho·I), wichtig bei gedrungenen Stäben und höheren Eigenformen, Neuberechnung erforderlich</source>
+  <target>Inertie de rotation des sections (rho·I), importante pour les barres trapues et les modes propres supérieurs, nouveau calcul nécessaire</target>
+</trans-unit>
+<trans-unit id="sdc93e055266eb16f">
+  <source>Drehträgheit der Querschnitte:</source>
+  <target>Inertie de rotation des sections :</target>
+</trans-unit>
+<trans-unit id="sfd3847f69e426808">
+  <source>nicht berücksichtigen</source>
+  <target>ne pas prendre en compte</target>
+</trans-unit>
+<trans-unit id="s8b2f21fa9bdd100a">
+  <source>berücksichtigen</source>
+  <target>prendre en compte</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

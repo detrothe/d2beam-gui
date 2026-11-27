@@ -2200,6 +2200,22 @@ The file is saved in the default download folder</target>
   <source>Die Datei wurde mit einer neueren Programmversion erstellt. Neue Eingaben (z. B. Teilstreckenlasten) können fehlen oder falsch gelesen werden. Bitte die App aktualisieren.</source>
   <target>The file was created with a newer version of the program. New input (e.g. partial distributed loads) may be missing or read incorrectly. Please update the app.</target>
 </trans-unit>
+<trans-unit id="sa04280051a9561c3">
+  <source>Massenträgheit der Querschnitte bei Drehung (rho·I), wichtig bei gedrungenen Stäben und höheren Eigenformen, Neuberechnung erforderlich</source>
+  <target>Rotational inertia of the cross-sections (rho·I), important for stocky members and higher mode shapes, recalculation required</target>
+</trans-unit>
+<trans-unit id="sdc93e055266eb16f">
+  <source>Drehträgheit der Querschnitte:</source>
+  <target>Rotational inertia of cross-sections:</target>
+</trans-unit>
+<trans-unit id="sfd3847f69e426808">
+  <source>nicht berücksichtigen</source>
+  <target>do not consider</target>
+</trans-unit>
+<trans-unit id="s8b2f21fa9bdd100a">
+  <source>berücksichtigen</source>
+  <target>consider</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

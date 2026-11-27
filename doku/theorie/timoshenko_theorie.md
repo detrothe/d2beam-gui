@@ -1151,8 +1151,8 @@ $$
 \mathbf{m} = \mu \int_0^L \mathbf{N}^T\,\mathbf{N}\,dx .
 $$
 
-Die Masse je Meter ist $\mu = \gamma\,A / g$. Im Programm wird dabei $g = 10\ \mathrm{m/s^2}$ gesetzt (`mue`
-in `initialisiereElementdaten`), die Massen sind also um etwa 2 % kleiner als mit $g = 9{,}81\ \mathrm{m/s^2}$.
+Die Masse je Meter ist $\mu = \gamma\,A / g$ mit dem im Bauwesen üblichen Wert $g = 10\ \mathrm{m/s^2}$
+(`mue` in `initialisiereElementdaten`).
 
 **Längsanteil** (lineare Ansatzfunktionen):
 
@@ -1178,14 +1178,26 @@ Schubstarr ($\psi = 1$) ist das die bekannte Matrix $\frac{\mu L}{420}\left[\beg
 (mit $\varphi = -w'$). Die Formeln wurden mit SymPy aus den Ansatzfunktionen nachgerechnet
 (`bettung_ksig_masse.py`). Im Programm: `berechneLokaleElementmassenmatrix`.
 
-**Nicht enthalten** ist die Drehträgheit des Querschnitts. Sie wäre
+**Drehträgheit (Option).** Wahlweise berücksichtigt d2beam auch die Massenträgheit der Querschnitte bei
+ihrer Drehung (Tab Dynamik, „Drehträgheit der Querschnitte“). Mit $J = \rho\,I_y = \gamma\,I_y/g$ kommt hinzu
 
 $$
-\mathbf{m}_\varphi = \rho\,I_y \int_0^L \mathbf{N}_\varphi^T\,\mathbf{N}_\varphi\,dx
+\mathbf{m}_\varphi = J \int_0^L \mathbf{N}_\varphi^T\,\mathbf{N}_\varphi\,dx
+= \frac{J}{30\,L}
+\begin{bmatrix}
+36\psi^2 & b & -36\psi^2 & b \\
+b & c & -b & d \\
+-36\psi^2 & -b & 36\psi^2 & -b \\
+b & d & -b & c
+\end{bmatrix}
 $$
 
-und ist bei schlanken Stäben vernachlässigbar, bei gedrungenen Stäben und höheren Eigenformen aber von
-gleicher Größenordnung wie der Einfluss der Schubverformung.
+mit $b = L\,(15\psi - 18\psi^2)$, $c = L^2\,(10 - 15\psi + 9\psi^2)$ und $d = L^2\,(5 - 15\psi + 9\psi^2)$
+(Skript `drehmasse.py`). Schubstarr ($\psi = 1$) ist das die bekannte Matrix
+$\frac{J}{30L}\left[\begin{smallmatrix} 36 & -3L & -36 & -3L \\ & 4L^2 & 3L & -L^2 \\ & & 36 & 3L \\ & & & 4L^2 \end{smallmatrix}\right]$.
+Bei schlanken Stäben ist der Einfluss vernachlässigbar. Bei gedrungenen Stäben und höheren Eigenformen ist er
+von gleicher Größenordnung wie der Einfluss der Schubverformung: Beim Einfeldträger mit $L = 5$ m und
+$h = 1$ m sinkt die dritte Biegeeigenfrequenz durch die Drehträgheit um 12 % (App-Test `t10`).
 
 ## Transformation, starre Enden und Gelenke
 
@@ -1196,8 +1208,9 @@ $$
 $$
 
 Damit sind gedrehte Lager und Gelenke automatisch berücksichtigt. Die Masse wird nur über die elastische Länge
-$L$ verteilt; **die starren Enden sind masselos**. Soll ihre Masse berücksichtigt werden, kann sie näherungsweise
-als Knotenmasse angesetzt werden.
+$L$ verteilt; **die starren Enden sind masselos**. Das ist gewollt: Ein starres Ende bildet oft einen Bereich ab,
+der zu einem anderen Bauteil gehört, z. B. den Anschluss eines Riegels in einer Wandscheibe, und dessen Masse dort
+erfasst wird. Gehört die Masse doch zum Stab, kann sie als Knotenmasse angesetzt werden.
 
 ## Knotenmassen
 
@@ -1232,7 +1245,6 @@ Drehträgheit geteilt durch $\sqrt{1 + (j\pi/L)^2\,\eta}$:
 Die Dynamik soll in d2beam weiter ausgebaut werden. Die folgenden Erweiterungen bauen direkt auf den
 vorhandenen Matrizen auf:
 
-- **Drehträgheit** $\mathbf{m}_\varphi$ (siehe oben), z. B. als Option.
 - **Modale Beteiligungsfaktoren und effektive Massen** für eine Anregung in Richtung $\mathbf{r}$ (Einsvektor in
   $x$- oder $z$-Richtung):
   $$
@@ -1264,6 +1276,10 @@ Im Ordner `doku/theorie/sympy` liegen die Skripte, mit denen die Formeln dieses 
 - `knicken_konvergenz.py`: Knicklast des gelenkig gelagerten Stabes in Abhängigkeit von der Elementteilung.
 - `vorverformung.py`: Ersatzlasten der parabelförmigen Stabvorverformung gegen die konsistente Herleitung.
 - `dynamik_konvergenz.py`: Eigenfrequenzen des Einfeldträgers in Abhängigkeit von der Elementteilung.
+- `drehmasse.py`: Drehträgheitsmatrix aus den Ansatzfunktionen.
+
+Zusätzlich rechnet ein App-Test (`scripts/apptest/`) Testmodelle in der App selbst und vergleicht die Ergebnisse
+mit Handrechnungen und exakten Lösungen.
 
 Aufruf jeweils mit `python3 <skript>.py` (benötigt das Paket `sympy`).
 

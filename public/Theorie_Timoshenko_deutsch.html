@@ -1959,12 +1959,10 @@ führt mit denselben Ansatzfunktionen wie für die Steifigkeit auf die
 \mathbf{m} = \mu \int_0^L \mathbf{N}^T\,\mathbf{N}\,dx .
 </annotation></semantics></math></p>
 <p>Die Masse je Meter ist
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mi>γ</mi><mspace width="0.167em"></mspace><mi>A</mi><mi>/</mi><mi>g</mi></mrow><annotation encoding="application/x-tex">\mu = \gamma\,A / g</annotation></semantics></math>.
-Im Programm wird dabei
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mi>γ</mi><mspace width="0.167em"></mspace><mi>A</mi><mi>/</mi><mi>g</mi></mrow><annotation encoding="application/x-tex">\mu = \gamma\,A / g</annotation></semantics></math>
+mit dem im Bauwesen üblichen Wert
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><mn>10</mn><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn mathvariant="normal">2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">g = 10\ \mathrm{m/s^2}</annotation></semantics></math>
-gesetzt (<code>mue</code> in <code>initialisiereElementdaten</code>),
-die Massen sind also um etwa 2 % kleiner als mit
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><mn>9</mn><mo>,</mo><mn>81</mn><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn mathvariant="normal">2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">g = 9{,}81\ \mathrm{m/s^2}</annotation></semantics></math>.</p>
+(<code>mue</code> in <code>initialisiereElementdaten</code>).</p>
 <p><strong>Längsanteil</strong> (lineare Ansatzfunktionen):</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐦</mi><mi>u</mi></msub><mo>=</mo><mfrac><mrow><mi>μ</mi><mi>L</mi></mrow><mn>6</mn></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>2</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
 \mathbf{m}_u = \frac{\mu L}{6}\begin{bmatrix} 2 &amp; 1 \\ 1 &amp; 2 \end{bmatrix} .
@@ -1992,14 +1990,38 @@ ist das die bekannte Matrix
 Die Formeln wurden mit SymPy aus den Ansatzfunktionen nachgerechnet
 (<code>bettung_ksig_masse.py</code>). Im Programm:
 <code>berechneLokaleElementmassenmatrix</code>.</p>
-<p><strong>Nicht enthalten</strong> ist die Drehträgheit des
-Querschnitts. Sie wäre</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐦</mi><mi>φ</mi></msub><mo>=</mo><mi>ρ</mi><mspace width="0.167em"></mspace><msub><mi>I</mi><mi>y</mi></msub><msubsup><mo>∫</mo><mn>0</mn><mi>L</mi></msubsup><msubsup><mi>𝐍</mi><mi>φ</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><msub><mi>𝐍</mi><mi>φ</mi></msub><mspace width="0.167em"></mspace><mi>d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">
-\mathbf{m}_\varphi = \rho\,I_y \int_0^L \mathbf{N}_\varphi^T\,\mathbf{N}_\varphi\,dx
+<p><strong>Drehträgheit (Option).</strong> Wahlweise berücksichtigt
+d2beam auch die Massenträgheit der Querschnitte bei ihrer Drehung (Tab
+Dynamik, „Drehträgheit der Querschnitte“). Mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi><mo>=</mo><mi>ρ</mi><mspace width="0.167em"></mspace><msub><mi>I</mi><mi>y</mi></msub><mo>=</mo><mi>γ</mi><mspace width="0.167em"></mspace><msub><mi>I</mi><mi>y</mi></msub><mi>/</mi><mi>g</mi></mrow><annotation encoding="application/x-tex">J = \rho\,I_y = \gamma\,I_y/g</annotation></semantics></math>
+kommt hinzu</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐦</mi><mi>φ</mi></msub><mo>=</mo><mi>J</mi><msubsup><mo>∫</mo><mn>0</mn><mi>L</mi></msubsup><msubsup><mi>𝐍</mi><mi>φ</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><msub><mi>𝐍</mi><mi>φ</mi></msub><mspace width="0.167em"></mspace><mi>d</mi><mi>x</mi><mo>=</mo><mfrac><mi>J</mi><mrow><mn>30</mn><mspace width="0.167em"></mspace><mi>L</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>36</mn><msup><mi>ψ</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mi>b</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>36</mn><msup><mi>ψ</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mi>b</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>b</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>c</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mi>b</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>d</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>36</mn><msup><mi>ψ</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mi>b</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>36</mn><msup><mi>ψ</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mi>b</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>b</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>d</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mi>b</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>c</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+\mathbf{m}_\varphi = J \int_0^L \mathbf{N}_\varphi^T\,\mathbf{N}_\varphi\,dx
+= \frac{J}{30\,L}
+\begin{bmatrix}
+36\psi^2 &amp; b &amp; -36\psi^2 &amp; b \\
+b &amp; c &amp; -b &amp; d \\
+-36\psi^2 &amp; -b &amp; 36\psi^2 &amp; -b \\
+b &amp; d &amp; -b &amp; c
+\end{bmatrix}
 </annotation></semantics></math></p>
-<p>und ist bei schlanken Stäben vernachlässigbar, bei gedrungenen Stäben
-und höheren Eigenformen aber von gleicher Größenordnung wie der Einfluss
-der Schubverformung.</p>
+<p>mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mi>L</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>15</mn><mi>ψ</mi><mo>−</mo><mn>18</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">b = L\,(15\psi - 18\psi^2)</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><msup><mi>L</mi><mn>2</mn></msup><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>10</mn><mo>−</mo><mn>15</mn><mi>ψ</mi><mo>+</mo><mn>9</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">c = L^2\,(10 - 15\psi + 9\psi^2)</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>=</mo><msup><mi>L</mi><mn>2</mn></msup><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo>−</mo><mn>15</mn><mi>ψ</mi><mo>+</mo><mn>9</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">d = L^2\,(5 - 15\psi + 9\psi^2)</annotation></semantics></math>
+(Skript <code>drehmasse.py</code>). Schubstarr
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ψ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\psi = 1</annotation></semantics></math>)
+ist das die bekannte Matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mi>J</mi><mrow><mn>30</mn><mi>L</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>36</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>3</mn><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>36</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>3</mn><mi>L</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>4</mn><msup><mi>L</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mn>3</mn><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><msup><mi>L</mi><mn>2</mn></msup></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>36</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3</mn><mi>L</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>4</mn><msup><mi>L</mi><mn>2</mn></msup></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\frac{J}{30L}\left[\begin{smallmatrix} 36 &amp; -3L &amp; -36 &amp; -3L \\ &amp; 4L^2 &amp; 3L &amp; -L^2 \\ &amp; &amp; 36 &amp; 3L \\ &amp; &amp; &amp; 4L^2 \end{smallmatrix}\right]</annotation></semantics></math>.
+Bei schlanken Stäben ist der Einfluss vernachlässigbar. Bei gedrungenen
+Stäben und höheren Eigenformen ist er von gleicher Größenordnung wie der
+Einfluss der Schubverformung: Beim Einfeldträger mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">L = 5</annotation></semantics></math>
+m und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">h = 1</annotation></semantics></math>
+m sinkt die dritte Biegeeigenfrequenz durch die Drehträgheit um 12 %
+(App-Test <code>t10</code>).</p>
 <h2 data-number="13.3" id="transformation-starre-enden-und-gelenke"><span class="header-section-number">13.3</span> Transformation, starre Enden
 und Gelenke</h2>
 <p>Die Elementmassenmatrix wird wie die Steifigkeitsmatrix
@@ -2010,9 +2032,11 @@ transformiert:</p>
 <p>Damit sind gedrehte Lager und Gelenke automatisch berücksichtigt. Die
 Masse wird nur über die elastische Länge
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
-verteilt; <strong>die starren Enden sind masselos</strong>. Soll ihre
-Masse berücksichtigt werden, kann sie näherungsweise als Knotenmasse
-angesetzt werden.</p>
+verteilt; <strong>die starren Enden sind masselos</strong>. Das ist
+gewollt: Ein starres Ende bildet oft einen Bereich ab, der zu einem
+anderen Bauteil gehört, z. B. den Anschluss eines Riegels in einer
+Wandscheibe, und dessen Masse dort erfasst wird. Gehört die Masse doch
+zum Stab, kann sie als Knotenmasse angesetzt werden.</p>
 <h2 data-number="13.4" id="knotenmassen"><span class="header-section-number">13.4</span> Knotenmassen</h2>
 <p>Zusätzlich können an den Knoten Einzelmassen
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
@@ -2114,9 +2138,6 @@ eine feinere Teilung nötig.</p>
 <p>Die Dynamik soll in d2beam weiter ausgebaut werden. Die folgenden
 Erweiterungen bauen direkt auf den vorhandenen Matrizen auf:</p>
 <ul>
-<li><strong>Drehträgheit</strong>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐦</mi><mi>φ</mi></msub><annotation encoding="application/x-tex">\mathbf{m}_\varphi</annotation></semantics></math>
-(siehe oben), z. B. als Option.</li>
 <li><strong>Modale Beteiligungsfaktoren und effektive Massen</strong>
 für eine Anregung in Richtung
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐫</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>
@@ -2172,7 +2193,12 @@ gelagerten Stabes in Abhängigkeit von der Elementteilung.</li>
 Stabvorverformung gegen die konsistente Herleitung.</li>
 <li><code>dynamik_konvergenz.py</code>: Eigenfrequenzen des
 Einfeldträgers in Abhängigkeit von der Elementteilung.</li>
+<li><code>drehmasse.py</code>: Drehträgheitsmatrix aus den
+Ansatzfunktionen.</li>
 </ul>
+<p>Zusätzlich rechnet ein App-Test (<code>scripts/apptest/</code>)
+Testmodelle in der App selbst und vergleicht die Ergebnisse mit
+Handrechnungen und exakten Lösungen.</p>
 <p>Aufruf jeweils mit <code>python3 &lt;skript&gt;.py</code> (benötigt
 das Paket <code>sympy</code>).</p>
 <h1 class="unnumbered" id="literatur">Literatur</h1>

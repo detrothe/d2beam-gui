@@ -2201,6 +2201,22 @@ El archivo se guarda en la carpeta de descargas predeterminada</target>
   <source>Die Datei wurde mit einer neueren Programmversion erstellt. Neue Eingaben (z. B. Teilstreckenlasten) können fehlen oder falsch gelesen werden. Bitte die App aktualisieren.</source>
   <target>El archivo se creó con una versión más reciente del programa. Las entradas nuevas (p. ej. cargas distribuidas parciales) pueden faltar o leerse incorrectamente. Actualiza la aplicación.</target>
 </trans-unit>
+<trans-unit id="sa04280051a9561c3">
+  <source>Massenträgheit der Querschnitte bei Drehung (rho·I), wichtig bei gedrungenen Stäben und höheren Eigenformen, Neuberechnung erforderlich</source>
+  <target>Inercia rotacional de las secciones transversales (rho·I), importante en barras robustas y modos propios superiores, se requiere un nuevo cálculo</target>
+</trans-unit>
+<trans-unit id="sdc93e055266eb16f">
+  <source>Drehträgheit der Querschnitte:</source>
+  <target>Inercia rotacional de las secciones:</target>
+</trans-unit>
+<trans-unit id="sfd3847f69e426808">
+  <source>nicht berücksichtigen</source>
+  <target>no considerar</target>
+</trans-unit>
+<trans-unit id="s8b2f21fa9bdd100a">
+  <source>berücksichtigen</source>
+  <target>considerar</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

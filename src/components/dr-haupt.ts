@@ -1238,6 +1238,13 @@ export class drHaupt extends LitElement {
            ${msg('Mindestwert auf der Diagonalen der Massenmatrix :')}
            <input type="number" step="any" id="id_minMass" name="minmass" class="input_tab" pattern="[0-9.,eE+-]*" value="0.0" /> kg
         </p>
+        <p title=${msg('Massenträgheit der Querschnitte bei Drehung (rho·I), wichtig bei gedrungenen Stäben und höheren Eigenformen, Neuberechnung erforderlich')}>
+           ${msg('Drehträgheit der Querschnitte:')}
+           <select id="id_drehmasse_option">
+              <option value='false' @click=${berechnungErforderlich} selected >${msg('nicht berücksichtigen')}</option>
+              <option value='true' @click=${berechnungErforderlich} >${msg('berücksichtigen')}</option>
+           </select>
+        </p>
 
 
 

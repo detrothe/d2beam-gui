@@ -4,7 +4,7 @@ import { CElement } from "./element"
 import {
     node, element, eload, lagerkraft, neloads, kombiTabelle, THIIO_flag, incr_neq, neq, u_lf, u0_komb, eigenform_container_u,
     nelTeilungen, ntotalEloads, nlastfaelle, nkombinationen, maxValue_komb, maxValue_lf, nstabvorverfomungen, stabvorverformung, P_delta,
-    stadyn, eigenform_dyn, stabvorverformung_komb,
+    stadyn, eigenform_dyn, stabvorverformung_komb, drehmasse,
     R_internal,
     matprop_flag
 } from "./rechnen"
@@ -656,6 +656,20 @@ export class CTimoshenko_beam extends CElement {
         this.emass[5][3] = 0.0
         this.emass[5][4] = this.emass[4][5]
         this.emass[5][5] = this.emass[2][2]
+
+        if (drehmasse) {
+            // Drehträgheit rho·I · ∫ Nphi^T·Nphi dx mit den Timoshenko-Ansatzfunktionen (Theorie-Handbuch 13.2)
+            const J = this.wichte * this.Iy / 10                         // rho·I in t·m (g = 10 m/s²)
+            const f = J / (30 * sl)
+            const a = 36 * psi2                                          // w-w
+            const b = sl * (15 * psi - 18 * psi2)                        // w_a-phi_a, w_a-phi_e
+            const c = L2 * (10 - 15 * psi + 9 * psi2)                    // phi-phi gleiches Ende
+            const d = L2 * (5 - 15 * psi + 9 * psi2)                     // phi_a-phi_e
+            const r = [[a, b, -a, b], [b, c, -b, d], [-a, -b, a, -b], [b, d, -b, c]]
+            const idx = [1, 2, 4, 5]
+            for (let i = 0; i < 4; i++)
+                for (let j = 0; j < 4; j++) this.emass[idx[i]][idx[j]] += f * r[i][j]
+        }
 
 
         // for (let j = 0; j < 6; j++) {
