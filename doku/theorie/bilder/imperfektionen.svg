@@ -19,12 +19,12 @@
 <line x1="530.0" y1="115.0" x2="530.0" y2="152.0" stroke="#c00000" stroke-width="1.5" stroke-linecap="butt"/>
 <polygon points="530.0,160.0 533.4,152.0 526.6,152.0" fill="#c00000"/>
 <text x="538.0" y="145.5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#c00000" text-anchor="start" font-style="italic">w<tspan dy="5" font-size="12" font-style="normal">0m</tspan></text>
-<line x1="386.0" y1="90.0" x2="386.0" y2="99.0" stroke="#c00000" stroke-width="1.5" stroke-linecap="butt"/>
-<polygon points="386.0,105.0 388.5,99.0 383.5,99.0" fill="#c00000"/>
-<text x="380.0" y="111.5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#c00000" text-anchor="end" font-style="italic">w<tspan dy="5" font-size="12" font-style="normal">0a</tspan></text>
-<line x1="674.0" y1="90.0" x2="674.0" y2="117.0" stroke="#c00000" stroke-width="1.5" stroke-linecap="butt"/>
-<polygon points="674.0,125.0 677.4,117.0 670.6,117.0" fill="#c00000"/>
-<text x="680.0" y="113.5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#c00000" text-anchor="start" font-style="italic">w<tspan dy="5" font-size="12" font-style="normal">0e</tspan></text>
+<line x1="400.0" y1="90.0" x2="400.0" y2="99.0" stroke="#c00000" stroke-width="1.5" stroke-linecap="butt"/>
+<polygon points="400.0,105.0 402.5,99.0 397.5,99.0" fill="#c00000"/>
+<text x="392.0" y="111.5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#c00000" text-anchor="end" font-style="italic">w<tspan dy="5" font-size="12" font-style="normal">0a</tspan></text>
+<line x1="660.0" y1="90.0" x2="660.0" y2="117.0" stroke="#c00000" stroke-width="1.5" stroke-linecap="butt"/>
+<polygon points="660.0,125.0 663.4,117.0 656.6,117.0" fill="#c00000"/>
+<text x="668.0" y="113.5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#c00000" text-anchor="start" font-style="italic">w<tspan dy="5" font-size="12" font-style="normal">0e</tspan></text>
 <text x="400.0" y="80.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#000000" text-anchor="middle" font-style="italic">a</text>
 <text x="660.0" y="80.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#000000" text-anchor="middle" font-style="italic">e</text>
 <text x="530.0" y="290.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" fill="#808080" text-anchor="middle" font-weight="normal">Stabvorverformung (Parabel)</text>

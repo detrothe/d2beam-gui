@@ -469,9 +469,9 @@ def bild_lastarten():
             elif i == 3:        # horizontal, je m Stablänge
                 s.arrow(px - 42, py, px - 3, py, BLAU, 1.4, head=7)
             elif i == 2:        # vertikal, auf der Grundrissprojektion (horizontales Lastband über dem Stab)
-                s.arrow(px, ya - 50, px, ya - 18, BLAU, 1.4, head=7)
+                s.arrow(px, ya - 50, px, py - 3, BLAU, 1.4, head=7)
             else:               # horizontal, auf der Projektion in z (vertikales Lastband neben dem Stab)
-                s.arrow(xa - 55, py, xa - 23, py, BLAU, 1.4, head=7)
+                s.arrow(xa - 55, py, px - 3, py, BLAU, 1.4, head=7)
         if i == 0:
             nx, ny = -math.sin(a), math.cos(a)
             s.line(xa - 38 * nx, ya - 38 * ny, xe - 38 * nx, ye - 38 * ny, BLAU, 1.2)
@@ -639,10 +639,10 @@ def bild_imperfektionen():
     xm = (xa + xe) / 2
     s.arrow(xm, ya + (w0a + w0e) / 2, xm, ya + (w0a + w0e) / 2 + v0, ROT, 1.5, head=8)
     s.sym(xm + 8, ya + (w0a + w0e) / 2 + v0 / 2 + 8, 'w', '0m', color=ROT, size=16, anchor='start')
-    s.arrow(xa - 14, ya, xa - 14, ya + w0a, ROT, 1.5, head=6)
-    s.sym(xa - 20, ya + w0a / 2 + 14, 'w', '0a', color=ROT, size=16, anchor='end')
-    s.arrow(xe + 14, ya, xe + 14, ya + w0e, ROT, 1.5, head=8)
-    s.sym(xe + 20, ya + w0e / 2 + 6, 'w', '0e', color=ROT, size=16, anchor='start')
+    s.arrow(xa, ya, xa, ya + w0a, ROT, 1.5, head=6)
+    s.sym(xa - 8, ya + w0a / 2 + 14, 'w', '0a', color=ROT, size=16, anchor='end')
+    s.arrow(xe, ya, xe, ya + w0e, ROT, 1.5, head=8)
+    s.sym(xe + 8, ya + w0e / 2 + 6, 'w', '0e', color=ROT, size=16, anchor='start')
     s.sym(xa, ya - 10, 'a')
     s.sym(xe, ya - 10, 'e')
     s.text((xa + xe) / 2, 290, 'Stabvorverformung (Parabel)', 13, GRAU)
