@@ -2,7 +2,7 @@
 # Baut das Theorie-Handbuch aus timoshenko_theorie.md:
 #   HTML  -> ../../public/Theorie_Timoshenko_deutsch.html  (MathML, Bilder eingebettet)
 #   DOCX  -> ausgabe/Theorie_Timoshenko_deutsch.docx        (Formeln als Word-/OnlyOffice-Formelobjekte)
-#   PDF   -> ausgabe/Theorie_Timoshenko_deutsch.pdf         (XeLaTeX)
+#   PDF   -> ausgabe/Theorie_Timoshenko_deutsch.pdf         (XeLaTeX), Kopie nach ../../public/
 # pandoc: im PATH oder unter ~/git-code/tools/pandoc-*/bin/pandoc
 set -e
 cd "$(dirname "$0")"
@@ -23,7 +23,10 @@ GEMEINSAM=(--number-sections --toc --toc-depth=2 -M toc-title="Inhalt")
 
 # HTML (SVG-Bilder)
 "$PANDOC" "$QUELLE" -s --mathml --embed-resources --css theorie.css "${GEMEINSAM[@]}" \
+  -H html_kopf.html -B html_anfang.html \
   --default-image-extension=svg -o "../../public/$NAME.html"
+# canonical erst nachträglich einfügen, sonst versucht --embed-resources die Seite zu laden
+sed -i "s#</title>#</title>\n  <link rel=\"canonical\" href=\"https://d2beam-gui.statikverstehen.de/$NAME.html\">#" "../../public/$NAME.html"
 
 # Bildpfade für DOCX/PDF umbiegen: bilder/x -> bilder/png/x bzw. bilder/pdf/x
 sed 's#](bilder/\([a-z0-9_]*\))#](bilder/png/\1)#' "$QUELLE" > ausgabe/_docx.md
@@ -35,4 +38,5 @@ sed 's#](bilder/\([a-z0-9_]*\))#](bilder/pdf/\1)#' "$QUELLE" > ausgabe/_pdf.md
   -V colorlinks=true -V linkcolor=blue \
   -H latex_kopf.tex -o "ausgabe/$NAME.pdf"
 rm -f ausgabe/_docx.md ausgabe/_pdf.md
-echo "fertig: public/$NAME.html, ausgabe/$NAME.docx, ausgabe/$NAME.pdf"
+cp "ausgabe/$NAME.pdf" "../../public/$NAME.pdf"     # PDF zum Herunterladen, im HTML verlinkt
+echo "fertig: public/$NAME.html, public/$NAME.pdf, ausgabe/$NAME.docx, ausgabe/$NAME.pdf"

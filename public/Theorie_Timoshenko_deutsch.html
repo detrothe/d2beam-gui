@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Prof. Dr.-Ing. Detlef Rothe" />
   <title>d2beam – Theorie-Handbuch</title>
+  <link rel="canonical" href="https://d2beam-gui.statikverstehen.de/Theorie_Timoshenko_deutsch.html">
   <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,13 +56,18 @@ figure, math[display="block"] { break-inside: avoid; }
 h1, h2, h3 { break-after: avoid; }
 }
 </style>
+  <meta name="description" content="Theorie-Handbuch zu d2beam: der Timoshenko-Balken im Weggrößenverfahren mit Transformationen, starren Enden, Gelenken, Elementlasten, Bettung, Theorie II. Ordnung, Knickeigenwerten, Dynamik und nichtlinearer Berechnung.">
 </head>
 <body>
+<!-- Link zur App nur, wenn die Seite direkt und nicht in der App geöffnet ist -->
+<p id="app_link" hidden><a href="/"><b>▶ d2beam öffnen – ebene Stabwerke und Fachwerke berechnen</b></a></p>
+<script>if (window.self === window.top) document.getElementById('app_link').hidden = false;</script>
+<p class="pdf_link"><a href="Theorie_Timoshenko_deutsch.pdf" target="_blank">Handbuch als PDF (zum Ausdrucken)</a></p>
 <header id="title-block-header">
 <h1 class="title">d2beam – Theorie-Handbuch</h1>
 <p class="subtitle">Der Timoshenko-Balken im Weggrößenverfahren</p>
 <p class="author">Prof. Dr.-Ing. Detlef Rothe</p>
-<p class="date">Entwurf, Stand 27.11.2026 – Teile 1 bis 5</p>
+<p class="date">Stand 28.11.2026</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <h2 id="toc-title">Inhalt</h2>
@@ -250,8 +256,8 @@ Belastung in dieser Ebene.</li>
 <li>Linear-elastischer Werkstoff. Die Option „nichtlinear“ für Zug- und
 Druckstäbe behandelt Kapitel 14.</li>
 <li>Kleine Verformungen: Gleichgewicht am unverformten System (Theorie
-I. Ordnung). Die Erweiterung auf Theorie II. Ordnung folgt in einem
-späteren Teil.</li>
+I. Ordnung). Die Erweiterung auf Theorie II. Ordnung behandelt Kapitel
+11.</li>
 <li><strong>Timoshenko-Balken:</strong> Die Querschnitte bleiben eben,
 stehen nach der Verformung aber nicht mehr senkrecht auf der Stabachse.
 Die Schubverformung wird also berücksichtigt. Mit Schubfaktor
@@ -623,7 +629,8 @@ sind das die kubischen Hermite-Polynome des Bernoulli-Balkens (mit
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>φ</mi><mo>=</mo><mi>−</mi><msup><mi>w</mi><mo>′</mo></msup></mrow><annotation encoding="application/x-tex">\varphi = -w&#39;</annotation></semantics></math>).
 Diese Funktionen sind für den unbelasteten Timoshenko-Balken
 <strong>exakt</strong>. d2beam verwendet sie, um die Matrizen für
-Bettung, Theorie II. Ordnung und Masse zu bilden (folgende Teile).</p>
+Bettung, Theorie II. Ordnung und Masse zu bilden (Kapitel 10, 11 und
+13).</p>
 <h1 data-number="5" id="transformationen"><span class="header-section-number">5</span> Transformationen</h1>
 <p>Die Steifigkeitsbeziehung aus Kapitel 4 gilt im lokalen System des
 elastischen Stabes. Für das Gesamtsystem brauchen wir sie für die
@@ -1032,8 +1039,8 @@ Stabendverformungen
 (im Knotensystem, bei gedrehten Lagern also in
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mo>′</mo></msup><annotation encoding="application/x-tex">x&#39;</annotation></semantics></math>,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>z</mi><mo>′</mo></msup><annotation encoding="application/x-tex">z&#39;</annotation></semantics></math>).</li>
-<li>Schnittgrößen und Verformungen entlang der Stabachse (folgender
-Teil).</li>
+<li>Schnittgrößen und Verformungen entlang der Stabachse (Kapitel
+9).</li>
 </ol>
 <h1 data-number="7" id="elementlasten"><span class="header-section-number">7</span> Elementlasten</h1>
 <h2 data-number="7.1" id="grundgedanke"><span class="header-section-number">7.1</span> Grundgedanke</h2>

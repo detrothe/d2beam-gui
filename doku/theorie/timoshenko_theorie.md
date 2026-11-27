@@ -2,7 +2,7 @@
 title: "d2beam – Theorie-Handbuch"
 subtitle: "Der Timoshenko-Balken im Weggrößenverfahren"
 author: "Prof. Dr.-Ing. Detlef Rothe"
-date: "Entwurf, Stand 27.11.2026 – Teile 1 bis 5"
+date: "Stand 28.11.2026"
 lang: de
 ---
 
@@ -49,7 +49,7 @@ Druckkräfte übertragen.
 - Ebene Stabwerke in der $x$-$z$-Ebene, Belastung in dieser Ebene.
 - Linear-elastischer Werkstoff. Die Option „nichtlinear“ für Zug- und Druckstäbe behandelt Kapitel 14.
 - Kleine Verformungen: Gleichgewicht am unverformten System (Theorie I. Ordnung). Die Erweiterung auf
-  Theorie II. Ordnung folgt in einem späteren Teil.
+  Theorie II. Ordnung behandelt Kapitel 11.
 - **Timoshenko-Balken:** Die Querschnitte bleiben eben, stehen nach der Verformung aber nicht mehr senkrecht auf
   der Stabachse. Die Schubverformung wird also berücksichtigt. Mit Schubfaktor $0$ rechnet d2beam schubstarr;
   dann gehen alle Formeln in die bekannten Formeln des Bernoulli-Balkens über.
@@ -301,7 +301,7 @@ $$
 
 Für $\lambda = 0$ sind das die kubischen Hermite-Polynome des Bernoulli-Balkens (mit $\varphi = -w'$). Diese
 Funktionen sind für den unbelasteten Timoshenko-Balken **exakt**. d2beam verwendet sie, um die Matrizen für
-Bettung, Theorie II. Ordnung und Masse zu bilden (folgende Teile).
+Bettung, Theorie II. Ordnung und Masse zu bilden (Kapitel 10, 11 und 13).
 
 # Transformationen
 
@@ -567,7 +567,7 @@ gehaltene Freiheitsgrade).
    $\mathbf{f} = \mathbf{T}_F\,\mathbf{F}$, Stabendverformungen $\boldsymbol{\delta} = \mathbf{T}_U\boldsymbol{\Delta}$.
 7. Lagerkräfte aus dem Knotengleichgewicht: $\mathbf{A}_j = -\sum \mathbf{F} + \sum \mathbf{P}_j$
    (im Knotensystem, bei gedrehten Lagern also in $x'$, $z'$).
-8. Schnittgrößen und Verformungen entlang der Stabachse (folgender Teil).
+8. Schnittgrößen und Verformungen entlang der Stabachse (Kapitel 9).
 
 # Elementlasten
 
