@@ -14,8 +14,8 @@
 <line x1="30.0" y1="70.0" x2="118.0" y2="70.0" stroke="#c00000" stroke-width="3.5" stroke-linecap="butt"/>
 <polygon points="132.0,70.0 118.0,64.1 118.0,75.9" fill="#c00000"/>
 <text x="28.0" y="58.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="15" fill="#c00000" text-anchor="start" font-weight="normal">H = 100 kN</text>
-<text x="232.0" y="278.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="15" fill="#000000" text-anchor="start" font-weight="normal" stroke="white" stroke-width="4" paint-order="stroke">N = +141,4 kN</text>
-<text x="392.0" y="262.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" fill="#808080" text-anchor="start" font-weight="normal" stroke="white" stroke-width="4" paint-order="stroke">N = 0 (ausgefallen)</text>
+<text x="198.7" y="224.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" fill="#000000" text-anchor="middle" font-weight="normal" transform="rotate(-42.5 198.7 224.0)" stroke="white" stroke-width="4" paint-order="stroke">N = +141,4 kN</text>
+<text x="318.9" y="221.8" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" fill="#808080" text-anchor="middle" font-weight="normal" transform="rotate(42.5 318.9 221.8)" stroke="white" stroke-width="4" paint-order="stroke">N = 0 (ausgefallen)</text>
 <text x="260.0" y="56.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" fill="#000000" text-anchor="middle" font-weight="normal">N = −100 kN</text>
 <text x="394.0" y="180.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" fill="#000000" text-anchor="start" font-weight="normal">N = −100 kN</text>
 <text x="126.0" y="180.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="14" fill="#000000" text-anchor="end" font-weight="normal">N = 0</text>

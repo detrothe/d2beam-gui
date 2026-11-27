@@ -83,8 +83,10 @@ class Svg:
     def circle(self, cx, cy, r, fill='white', stroke=SCHWARZ, width=1.5):
         self.add(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r}" fill="{fill}" stroke="{stroke}" stroke-width="{width}"/>')
 
-    def text(self, x, y, s, size=17, color=SCHWARZ, anchor='middle', italic=False, weight='normal', halo=False):
+    def text(self, x, y, s, size=17, color=SCHWARZ, anchor='middle', italic=False, weight='normal', halo=False, rotate=0):
         st = ' font-style="italic"' if italic else ''
+        if rotate:
+            st += f' transform="rotate({rotate:.1f} {x:.1f} {y:.1f})"'
         if halo:
             st += ' stroke="white" stroke-width="4" paint-order="stroke"'
         self.add(f'<text x="{x:.1f}" y="{y:.1f}" font-family="{FONT}" font-size="{size}" fill="{color}" '
@@ -681,8 +683,12 @@ def bild_nur_zug():
         s.path(f'M {p[0] - 14} {p[1] + 24} L {p[0]} {p[1] + 5} L {p[0] + 14} {p[1] + 24} Z', SCHWARZ, 1.5, fill='white')
     s.arrow(C[0] - 110, C[1], C[0] - 8, C[1], ROT, 3.5, head=14)
     s.text(C[0] - 112, C[1] - 12, 'H = 100 kN', 15, ROT, anchor='start')
-    s.text(232, 278, 'N = +141,4 kN', 15, SCHWARZ, anchor='start', halo=True)
-    s.text(392, 262, 'N = 0 (ausgefallen)', 14, GRAU, anchor='start', halo=True)
+    # Beschriftung der Diagonalen parallel zum Stab, leicht oberhalb
+    for p, q, t, txt, col in ((A, D, 0.27, 'N = +141,4 kN', SCHWARZ), (C, B, 0.72, 'N = 0 (ausgefallen)', GRAU)):
+        a = math.atan2(q[1] - p[1], q[0] - p[0])
+        x = p[0] + t * (q[0] - p[0]) + 9 * math.sin(a)
+        y = p[1] + t * (q[1] - p[1]) - 9 * math.cos(a)
+        s.text(x, y, txt, 13, col, halo=True, rotate=math.degrees(a))
     s.text((C[0] + D[0]) / 2, C[1] - 14, 'N = −100 kN', 14, SCHWARZ)
     s.text(D[0] + 14, (D[1] + B[1]) / 2, 'N = −100 kN', 14, SCHWARZ, anchor='start')
     s.text(C[0] - 14, (C[1] + A[1]) / 2, 'N = 0', 14, SCHWARZ, anchor='end')
