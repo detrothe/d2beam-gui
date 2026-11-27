@@ -471,9 +471,9 @@ def bild_lastarten():
             elif i == 3:        # horizontal, je m Stablänge
                 s.arrow(px - 42, py, px - 3, py, BLAU, 1.4, head=7)
             elif i == 2:        # vertikal, auf der Grundrissprojektion (horizontales Lastband über dem Stab)
-                s.arrow(px, ya - 50, px, py - 3, BLAU, 1.4, head=7)
+                s.arrow(px, ya - 50, px, ya - 18, BLAU, 1.4, head=7)
             else:               # horizontal, auf der Projektion in z (vertikales Lastband neben dem Stab)
-                s.arrow(xa - 55, py, px - 3, py, BLAU, 1.4, head=7)
+                s.arrow(xa - 55, py, xa - 23, py, BLAU, 1.4, head=7)
         if i == 0:
             nx, ny = -math.sin(a), math.cos(a)
             s.line(xa - 38 * nx, ya - 38 * ny, xe - 38 * nx, ye - 38 * ny, BLAU, 1.2)
@@ -483,8 +483,10 @@ def bild_lastarten():
             s.line(xa - 42, ya, xe - 42, ye, BLAU, 1.2)
         elif i == 2:
             s.line(xa, ya - 50, xe, ya - 50, BLAU, 1.2)
+            s.line(xa, ya - 18, xe, ya - 18, BLAU, 1.2)     # Rechteck: Strich unter den Pfeilspitzen
         else:
             s.line(xa - 55, ya, xa - 55, ye, BLAU, 1.2)
+            s.line(xa - 23, ya, xa - 23, ye, BLAU, 1.2)
         if i == 2:              # Bezugslänge: horizontale Projektion
             s.dim(xa, xe, 200, 'L', 'x', ext_from=ye + 8)
         if i == 4:              # Bezugslänge: vertikale Projektion
