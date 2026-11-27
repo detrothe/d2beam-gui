@@ -1134,8 +1134,8 @@ export class CTimoshenko_beam extends CElement {
         }
         else if (eload[ieload].art === 4) {                     // Trapezstreckenlast x-Richtung, Projektion
 
-            let pL = eload[ieload].pL * this.dz / sl
-            let pR = eload[ieload].pR * this.dz / sl
+            let pL = eload[ieload].pL * this.dz / this.sl0
+            let pR = eload[ieload].pR * this.dz / this.sl0
 
             let pzL = -this.sinus * pL                          // Lastanteil senkrecht auf Stab
             let pzR = -this.sinus * pR
@@ -1229,21 +1229,18 @@ export class CTimoshenko_beam extends CElement {
 
         else if (eload[ieload].art === 8) {              // Knotenverformungen
 
-            if (eload[ieload].node0 === this.nod1) {
-                eload[ieload].dispL0[0] = this.transU[0][0] * eload[ieload].dispx0 + this.transU[0][1] * eload[ieload].dispz0
-                eload[ieload].dispL0[1] = this.transU[1][0] * eload[ieload].dispx0 + this.transU[1][1] * eload[ieload].dispz0
-                eload[ieload].dispL0[2] = eload[ieload].phi0
-                eload[ieload].dispL0[3] = 0.0
-                eload[ieload].dispL0[4] = 0.0
-                eload[ieload].dispL0[5] = 0.0
-            } else {
-                eload[ieload].dispL0[0] = 0.0
-                eload[ieload].dispL0[1] = 0.0
-                eload[ieload].dispL0[2] = 0.0
-                eload[ieload].dispL0[3] = this.transU[3][3] * eload[ieload].dispx0 + this.transU[3][4] * eload[ieload].dispz0
-                eload[ieload].dispL0[4] = this.transU[4][3] * eload[ieload].dispx0 + this.transU[4][4] * eload[ieload].dispz0
-                eload[ieload].dispL0[5] = eload[ieload].phi0
-
+            // vorgegebene Knotenverformung (Knotensystem) mit den Zeilen von transU auf die elastischen
+            // Stabenden übertragen: berücksichtigt starre Enden (-aL·phi0 bzw. +aR·phi0) und Gelenke
+            // (Zeilen gelenkiger Freiheitsgrade haben in den Knotenspalten keine Einträge)
+            const d0 = Array(6).fill(0.0)
+            const off = (eload[ieload].node0 === this.nod1) ? 0 : 3
+            d0[off] = eload[ieload].dispx0
+            d0[off + 1] = eload[ieload].dispz0
+            d0[off + 2] = eload[ieload].phi0
+            for (let i = 0; i < 6; i++) {
+                let sum = 0.0
+                for (let j = 0; j < 6; j++) sum += this.transU[i][j] * d0[j]
+                eload[ieload].dispL0[i] = sum
             }
             for (let j = 0; j < 6; j++) {
                 let sum = 0.0
@@ -1770,7 +1767,7 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
-                                ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                ux += x * (sl - x) * ((2.0 * sl - x) * pxL + (sl + x) * pxR) / (6.0 * sl * EA)
 
                                 let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
                                 wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
@@ -1799,7 +1796,7 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
-                                ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                ux += x * (sl - x) * ((2.0 * sl - x) * pxL + (sl + x) * pxR) / (6.0 * sl * EA)
 
                                 let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
                                 wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
@@ -1824,7 +1821,7 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
-                                ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                ux += x * (sl - x) * ((2.0 * sl - x) * pxL + (sl + x) * pxR) / (6.0 * sl * EA)
 
                                 let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
                                 wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
@@ -1838,8 +1835,8 @@ export class CTimoshenko_beam extends CElement {
                             else if (eload[ieload].art === 4) {                         // Trapezstreckenlast x-Richtung, Projektion
 
                                 //console.log("Projektion",this.dx, sl)
-                                const pL = eload[ieload].pL * this.dz / sl
-                                const pR = eload[ieload].pR * this.dz / sl
+                                const pL = eload[ieload].pL * this.dz / this.sl0
+                                const pR = eload[ieload].pR * this.dz / this.sl0
 
                                 let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
                                 let pzR = -this.sinus * pR
@@ -1853,7 +1850,7 @@ export class CTimoshenko_beam extends CElement {
                                 Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                 Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
-                                ux += (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                ux += x * (sl - x) * ((2.0 * sl - x) * pxL + (sl + x) * pxR) / (6.0 * sl * EA)
 
                                 let wl = pzL / 24.0 * x ** 4 + dpz / 120 / sl * x ** 5 - eload[ieload].C1 / 6 * x ** 3 - eload[ieload].C2 / 2 * x * x
                                 wl = (wl + this.eta * (-pzL / 2 * x * x - dpz / sl / 6 * x ** 3 + eload[ieload].C1 * x)) / EI
@@ -1942,15 +1939,12 @@ export class CTimoshenko_beam extends CElement {
                                 Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
                                 phix -= Nphi[0] * edisp0[1] + Nphi[1] * edisp0[2] + Nphi[2] * edisp0[4] + Nphi[3] * edisp0[5];  // im Uhrzeigersinn
 
-                                if (this.aL > 0.0) {
-                                    this.u_starr[iLastf][0] += this.cosinus * edisp0[0] - this.sinus * edisp0[1]
-                                    this.w_starr[iLastf][0] += this.sinus * edisp0[0] + this.cosinus * edisp0[1]
-                                    this.phi_starr[iLastf][0] += edisp0[2]
-                                }
-                                if (this.aR > 0.0) {
-                                    this.u_starr[iLastf][1] += this.cosinus * edisp0[3] - this.sinus * edisp0[4]
-                                    this.w_starr[iLastf][1] += this.sinus * edisp0[3] + this.cosinus * edisp0[4]
-                                    this.phi_starr[iLastf][1] += edisp0[5]
+                                // starre Enden: Knotenverformung direkt (wie this.u im Knotensystem)
+                                const iEnde = (eload[ieload].node0 === this.nod1) ? 0 : 1
+                                if ((iEnde === 0 && this.aL > 0.0) || (iEnde === 1 && this.aR > 0.0)) {
+                                    this.u_starr[iLastf][iEnde] += eload[ieload].dispx0
+                                    this.w_starr[iLastf][iEnde] += eload[ieload].dispz0
+                                    this.phi_starr[iLastf][iEnde] += eload[ieload].phi0
                                 }
                             }
                         }
@@ -2021,6 +2015,10 @@ export class CTimoshenko_beam extends CElement {
                                     wx += wl
                                     wxG += wl
 
+                                    const dphi = (pL / 6.0 * x ** 3 + dp / 24 / sl * x ** 4 - eload[ieload].C1 * fact / 2 * x ** 2 - eload[ieload].C2 * fact * x) / EI
+                                    phix += dphi
+                                    phixG += dphi
+
                                 }
                                 else if (eload[ieload].art === 1) {         // Trapezstreckenlast z-Richtung
 
@@ -2040,7 +2038,7 @@ export class CTimoshenko_beam extends CElement {
                                     Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
 
-                                    let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                    let ul = x * (sl - x) * ((2.0 * sl - x) * pxL + (sl + x) * pxR) / (6.0 * sl * EA)
                                     ux += ul
                                     uxG += ul
 
@@ -2052,7 +2050,9 @@ export class CTimoshenko_beam extends CElement {
                                     wx += wl
                                     wxG += wl
 
-                                    phix += (pzL / 6.0 * x ** 3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x) / EI
+                                    const dphi = (pzL / 6.0 * x ** 3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 * fact / 2 * x ** 2 - eload[ieload].C2 * fact * x) / EI
+                                    phix += dphi
+                                    phixG += dphi
 
                                 }
                                 else if (eload[ieload].art === 2) {         // Trapezstreckenlast z-Richtung, Projektion
@@ -2073,7 +2073,7 @@ export class CTimoshenko_beam extends CElement {
                                     Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                     Mx = Mx - pzL * x * x / 2. - dpz * x * x * x / sl / 6.
 
-                                    let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                    let ul = x * (sl - x) * ((2.0 * sl - x) * pxL + (sl + x) * pxR) / (6.0 * sl * EA)
                                     ux += ul
                                     uxG += ul
 
@@ -2086,13 +2086,15 @@ export class CTimoshenko_beam extends CElement {
                                     wx += wl
                                     wxG += wl
 
-                                    phix += (pzL / 6.0 * x ** 3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x ** 2 - eload[ieload].C2 * x) / EI
+                                    const dphi = (pzL / 6.0 * x ** 3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 * fact / 2 * x ** 2 - eload[ieload].C2 * fact * x) / EI
+                                    phix += dphi
+                                    phixG += dphi
 
                                 }
                                 else if (eload[ieload].art === 3) {                         // Trapezstreckenlast x-Richtung
 
-                                    const pL = eload[ieload].pL
-                                    const pR = eload[ieload].pR
+                                    const pL = eload[ieload].pL * kombiTabelle[iLastf][index]
+                                    const pR = eload[ieload].pR * kombiTabelle[iLastf][index]
 
                                     let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
                                     let pzR = -this.sinus * pR
@@ -2106,7 +2108,7 @@ export class CTimoshenko_beam extends CElement {
                                     Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                     Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
-                                    let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                    let ul = x * (sl - x) * ((2.0 * sl - x) * pxL + (sl + x) * pxR) / (6.0 * sl * EA)
                                     ux += ul
                                     uxG += ul
 
@@ -2119,14 +2121,16 @@ export class CTimoshenko_beam extends CElement {
                                     wx += wl
                                     wxG += wl
 
-                                    phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
+                                    const dphi = (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 * fact / 2 * x2 - eload[ieload].C2 * fact * x) / EI
+                                    phix += dphi
+                                    phixG += dphi
 
                                 }
                                 else if (eload[ieload].art === 4) {                         // Trapezstreckenlast x-Richtung, Projektion
 
                                     //console.log("Projektion",this.dx, sl)
-                                    const pL = eload[ieload].pL * this.dz / sl
-                                    const pR = eload[ieload].pR * this.dz / sl
+                                    const pL = eload[ieload].pL * this.dz / this.sl0 * kombiTabelle[iLastf][index]
+                                    const pR = eload[ieload].pR * this.dz / this.sl0 * kombiTabelle[iLastf][index]
 
                                     let pzL = -this.sinus * pL                              // Lastanteil senkrecht auf Stab
                                     let pzR = -this.sinus * pR
@@ -2140,7 +2144,7 @@ export class CTimoshenko_beam extends CElement {
                                     Vx = Vx - pzL * x - dpz * x * x / sl / 2.
                                     Mx = Mx - pzL * x * x / 2 - dpz * x * x * x / sl / 6.
 
-                                    let ul = (pxL + dpx * x / 3.0) * x * (sl - x) / 2.0 / EA
+                                    let ul = x * (sl - x) * ((2.0 * sl - x) * pxL + (sl + x) * pxR) / (6.0 * sl * EA)
                                     ux += ul
                                     uxG += ul
 
@@ -2149,7 +2153,9 @@ export class CTimoshenko_beam extends CElement {
                                     wx += wl
                                     wxG += wl
 
-                                    phix += (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 / 2 * x2 - eload[ieload].C2 * x) / EI
+                                    const dphi = (pzL / 6.0 * x3 + dpz / 24 / sl * x ** 4 - eload[ieload].C1 * fact / 2 * x2 - eload[ieload].C2 * fact * x) / EI
+                                    phix += dphi
+                                    phixG += dphi
 
                                     if (this.NL < 0.0) Mx = Mx - this.NL * wl + (pxL + pxR) * x / 4 * dwx
                                 }
@@ -2184,7 +2190,9 @@ export class CTimoshenko_beam extends CElement {
                                             Nphi[1] = (3 * sl * xx2 + (-12 * eta - 4 * sl ** 2) * xx + 12 * sl * eta + sl ** 3) / nenner
                                             Nphi[2] = -6.0 * (sl * xx - xx2) / nenner
                                             Nphi[3] = (3 * sl * xx2 + (12 * eta - 2 * sl ** 2) * xx) / nenner
-                                            phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
+                                            const dphi = Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5]
+                                            phix -= dphi  // im Uhrzeigersinn
+                                            phixG -= dphi
 
                                             //console.log("Nw,edisp", wx, edisp, Nw)
                                         } else {
@@ -2202,7 +2210,9 @@ export class CTimoshenko_beam extends CElement {
                                             Nphi[1] = (3 * sl * x2 + (-12 * eta - 4 * sl2) * x + 12 * sl * eta + sl2 * sl) / nenner
                                             Nphi[2] = -6.0 * (sl * x - x2) / nenner
                                             Nphi[3] = (3 * sl * x2 + (12 * eta - 2 * sl2) * x) / nenner
-                                            phix -= Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5];  // im Uhrzeigersinn
+                                            const dphi = Nphi[0] * edisp[1] + Nphi[1] * edisp[2] + Nphi[2] * edisp[4] + Nphi[3] * edisp[5]
+                                            phix -= dphi  // im Uhrzeigersinn
+                                            phixG -= dphi
 
                                         }
                                         if (this.NL < 0.0) Mx = Mx - this.NL * wl
@@ -2218,25 +2228,22 @@ export class CTimoshenko_beam extends CElement {
                                 }
                                 else if (eload[ieload].art === 8) {         // Knotenverformung
 
-                                    let edisp0 = Array(6)
-                                    for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
-
                                     // wL += eload[ieload].dispL0[1] * kombiTabelle[iLastf][index];
                                     // for (let i = 0; i < 6; i++)  edisp[i] += eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
                                     // wLG += eload[ieload].dispL0[1] * kombiTabelle[iLastf][index];
                                     // for (let i = 0; i < 6; i++)  edispG[i] += eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
 
-                                    if (this.aL > 0.0) {
-                                        this.u_komb_starr[iLastf][0] += this.cosinus * edisp0[0] - this.sinus * edisp0[1]
-                                        this.w_komb_starr[iLastf][0] += this.sinus * edisp0[0] + this.cosinus * edisp0[1]
-                                        this.uG_komb_starr[iLastf][0] += this.cosinus * edisp0[0] - this.sinus * edisp0[1]
-                                        this.wG_komb_starr[iLastf][0] += this.sinus * edisp0[0] + this.cosinus * edisp0[1]
-                                    }
-                                    if (this.aR > 0.0) {
-                                        this.u_komb_starr[iLastf][1] += this.cosinus * edisp0[3] - this.sinus * edisp0[4]
-                                        this.w_komb_starr[iLastf][1] += this.sinus * edisp0[3] + this.cosinus * edisp0[4]
-                                        this.uG_komb_starr[iLastf][1] += this.cosinus * edisp0[3] - this.sinus * edisp0[4]
-                                        this.wG_komb_starr[iLastf][1] += this.sinus * edisp0[3] + this.cosinus * edisp0[4]
+                                    // starre Enden: Knotenverformung direkt (wie this.u im Knotensystem)
+                                    const iEnde = (eload[ieload].node0 === this.nod1) ? 0 : 1
+                                    if ((iEnde === 0 && this.aL > 0.0) || (iEnde === 1 && this.aR > 0.0)) {
+                                        const ux0 = eload[ieload].dispx0 * fact, wz0 = eload[ieload].dispz0 * fact
+                                        const p0 = eload[ieload].phi0 * fact
+                                        this.u_komb_starr[iLastf][iEnde] += ux0
+                                        this.w_komb_starr[iLastf][iEnde] += wz0
+                                        this.phi_komb_starr[iLastf][iEnde] += p0
+                                        this.uG_komb_starr[iLastf][iEnde] += ux0
+                                        this.wG_komb_starr[iLastf][iEnde] += wz0
+                                        this.phiG_komb_starr[iLastf][iEnde] += p0
                                     }
                                     //     let edisp0 = Array(6)
                                     //     for (let i = 0; i < 6; i++) edisp0[i] = eload[ieload].dispL0[i] * kombiTabelle[iLastf][index];
