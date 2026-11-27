@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="270" viewBox="0 0 560 270">
+<rect width="100%" height="100%" fill="white"/>
+<rect x="190" y="110.0" width="180" height="40" fill="#eeeeee" stroke="#000000" stroke-width="1.5"/>
+<line x1="190.0" y1="144.0" x2="370.0" y2="144.0" stroke="#000000" stroke-width="1" stroke-linecap="butt" stroke-dasharray="6,4"/>
+<line x1="205.0" y1="60.0" x2="205.0" y2="98.0" stroke="#2f5597" stroke-width="1.5" stroke-linecap="butt"/>
+<polygon points="205.0,106.0 208.4,98.0 201.6,98.0" fill="#2f5597"/>
+<line x1="235.0" y1="60.0" x2="235.0" y2="98.0" stroke="#2f5597" stroke-width="1.5" stroke-linecap="butt"/>
+<polygon points="235.0,106.0 238.4,98.0 231.6,98.0" fill="#2f5597"/>
+<line x1="265.0" y1="60.0" x2="265.0" y2="98.0" stroke="#2f5597" stroke-width="1.5" stroke-linecap="butt"/>
+<polygon points="265.0,106.0 268.4,98.0 261.6,98.0" fill="#2f5597"/>
+<line x1="295.0" y1="60.0" x2="295.0" y2="98.0" stroke="#2f5597" stroke-width="1.5" stroke-linecap="butt"/>
+<polygon points="295.0,106.0 298.4,98.0 291.6,98.0" fill="#2f5597"/>
+<line x1="325.0" y1="60.0" x2="325.0" y2="98.0" stroke="#2f5597" stroke-width="1.5" stroke-linecap="butt"/>
+<polygon points="325.0,106.0 328.4,98.0 321.6,98.0" fill="#2f5597"/>
+<line x1="355.0" y1="60.0" x2="355.0" y2="98.0" stroke="#2f5597" stroke-width="1.5" stroke-linecap="butt"/>
+<polygon points="355.0,106.0 358.4,98.0 351.6,98.0" fill="#2f5597"/>
+<line x1="190.0" y1="60.0" x2="370.0" y2="60.0" stroke="#2f5597" stroke-width="1.5" stroke-linecap="butt"/>
+<text x="310.0" y="52.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#2f5597" text-anchor="middle" font-style="italic">q(x)</text>
+<line x1="180.0" y1="130.0" x2="114.0" y2="130.0" stroke="#c00000" stroke-width="3" stroke-linecap="butt"/>
+<polygon points="100.0,130.0 114.0,135.9 114.0,124.1" fill="#c00000"/>
+<text x="90.0" y="136.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#c00000" text-anchor="end" font-style="italic">N</text>
+<line x1="176.0" y1="180.0" x2="176.0" y2="134.0" stroke="#c00000" stroke-width="3" stroke-linecap="butt"/>
+<polygon points="176.0,120.0 170.1,134.0 181.9,134.0" fill="#c00000"/>
+<text x="160.0" y="196.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#c00000" text-anchor="middle" font-style="italic">V</text>
+<path d="M 163.0 173.3 A 50 50 0 0 1 152.0 95.3" fill="none" stroke="#c00000" stroke-width="3"/>
+<polygon points="163.0,86.7 148.4,90.7 155.6,99.9" fill="#c00000"/>
+<text x="140.0" y="82.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#c00000" text-anchor="middle" font-style="italic">M</text>
+<line x1="380.0" y1="130.0" x2="446.0" y2="130.0" stroke="#c00000" stroke-width="3" stroke-linecap="butt"/>
+<polygon points="460.0,130.0 446.0,124.1 446.0,135.9" fill="#c00000"/>
+<text x="470.0" y="136.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#c00000" text-anchor="start" font-style="italic">N + dN</text>
+<line x1="384.0" y1="80.0" x2="384.0" y2="126.0" stroke="#c00000" stroke-width="3" stroke-linecap="butt"/>
+<polygon points="384.0,140.0 389.9,126.0 378.1,126.0" fill="#c00000"/>
+<text x="400.0" y="196.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#c00000" text-anchor="start" font-style="italic">V + dV</text>
+<path d="M 397.0 173.3 A 50 50 0 0 0 408.0 95.3" fill="none" stroke="#c00000" stroke-width="3"/>
+<polygon points="397.0,86.7 404.4,99.9 411.6,90.7" fill="#c00000"/>
+<text x="420.0" y="82.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#c00000" text-anchor="start" font-style="italic">M + dM</text>
+<line x1="190.0" y1="154.0" x2="190.0" y2="231.0" stroke="#808080" stroke-width="0.8" stroke-linecap="butt"/>
+<line x1="370.0" y1="154.0" x2="370.0" y2="231.0" stroke="#808080" stroke-width="0.8" stroke-linecap="butt"/>
+<line x1="280.0" y1="225.0" x2="198.0" y2="225.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="190.0,225.0 198.0,228.4 198.0,221.6" fill="#808080"/>
+<line x1="280.0" y1="225.0" x2="362.0" y2="225.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="370.0,225.0 362.0,221.6 362.0,228.4" fill="#808080"/>
+<text x="280.0" y="219.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#000000" text-anchor="middle" font-style="italic">dx</text>
+<line x1="30.0" y1="230.0" x2="80.0" y2="230.0" stroke="#2f5597" stroke-width="2" stroke-linecap="butt"/>
+<polygon points="90.0,230.0 80.0,225.8 80.0,234.2" fill="#2f5597"/>
+<text x="98.0" y="236.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#2f5597" text-anchor="start" font-style="italic">x</text>
+<line x1="30.0" y1="230.0" x2="30.0" y2="255.0" stroke="#2f5597" stroke-width="2" stroke-linecap="butt"/>
+<polygon points="30.0,265.0 34.2,255.0 25.8,255.0" fill="#2f5597"/>
+<text x="42.0" y="266.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#2f5597" text-anchor="start" font-style="italic">z</text>
+</svg>

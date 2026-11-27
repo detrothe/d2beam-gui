@@ -1,0 +1,33 @@
+/* Stil des Theorie-Handbuchs, angelehnt an die Kurzdokumentation */
+body {
+  font-family: "FreeSans", "DejaVu Sans", Arial, sans-serif;
+  font-size: 1em;
+  line-height: 150%;
+  max-width: 52em;
+  margin: 0 auto;
+  padding: 1em 1.5em 4em 1.5em;
+  color: #111;
+}
+h1, h2, h3 { color: #1c1c6a; line-height: 120%; }
+h1 { font-size: 1.35em; margin-top: 2em; }
+h2 { font-size: 1.15em; margin-top: 1.4em; }
+h3 { font-size: 1.05em; }
+header h1.title { font-size: 1.8em; margin-top: 0.5em; }
+header .subtitle { font-size: 1.2em; color: #1c1c6a; }
+header .author, header .date { color: #555; margin: 0.2em 0; }
+a { color: #1c1c6a; text-decoration: none; }
+nav#TOC { border: 1px solid #ccc; border-radius: 6px; padding: 0.5em 1em; background: #fafafa; }
+nav#TOC ul { list-style: none; padding-left: 1.2em; }
+nav#TOC > ul { padding-left: 0; }
+figure { margin: 1.5em 0; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+figcaption { font-size: 0.92em; color: #333; margin-top: 0.4em; }
+math[display="block"] { margin: 0.8em 0; overflow-x: auto; overflow-y: hidden; }
+code { font-size: 0.92em; background: #f2f2f2; padding: 0 0.2em; border-radius: 3px; }
+span.header-section-number { margin-right: 0.4em; }
+@media print {
+  body { max-width: none; padding: 0; font-size: 10.5pt; }
+  nav#TOC { border: none; background: none; }
+  figure, math[display="block"] { break-inside: avoid; }
+  h1, h2, h3 { break-after: avoid; }
+}

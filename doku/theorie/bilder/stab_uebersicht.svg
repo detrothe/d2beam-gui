@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="290" viewBox="0 0 680 290">
+<rect width="100%" height="100%" fill="white"/>
+<line x1="70.0" y1="95.0" x2="170.0" y2="95.0" stroke="#000000" stroke-width="8" stroke-linecap="butt"/>
+<line x1="510.0" y1="95.0" x2="610.0" y2="95.0" stroke="#000000" stroke-width="8" stroke-linecap="butt"/>
+<line x1="170.0" y1="95.0" x2="510.0" y2="95.0" stroke="#000000" stroke-width="3" stroke-linecap="butt"/>
+<line x1="175.0" y1="104.0" x2="505.0" y2="104.0" stroke="#000000" stroke-width="1" stroke-linecap="butt" stroke-dasharray="6,4"/>
+<circle cx="170.0" cy="95.0" r="6" fill="white" stroke="#000000" stroke-width="1.5"/>
+<circle cx="510.0" cy="95.0" r="6" fill="white" stroke="#000000" stroke-width="1.5"/>
+<circle cx="70.0" cy="57.0" r="15" fill="#ddd9c3" stroke="#808080" stroke-width="1.2"/>
+<text x="70.0" y="63.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#000000" text-anchor="middle" font-style="italic">K<tspan dy="5" font-size="12" font-style="normal">a</tspan></text>
+<circle cx="610.0" cy="57.0" r="15" fill="#ddd9c3" stroke="#808080" stroke-width="1.2"/>
+<text x="610.0" y="63.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#000000" text-anchor="middle" font-style="italic">K<tspan dy="5" font-size="12" font-style="normal">e</tspan></text>
+<text x="170.0" y="79.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" fill="#000000" text-anchor="middle" font-style="italic">a</text>
+<text x="510.0" y="79.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="17" fill="#000000" text-anchor="middle" font-style="italic">e</text>
+<text x="120.0" y="81.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" fill="#808080" text-anchor="middle" font-weight="normal">starr</text>
+<text x="560.0" y="81.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" fill="#808080" text-anchor="middle" font-weight="normal">starr</text>
+<text x="340.0" y="81.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" fill="#808080" text-anchor="middle" font-weight="normal">elastisch (Timoshenko)</text>
+<text x="188.0" y="129.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" fill="#808080" text-anchor="start" font-weight="normal">Gelenk</text>
+<text x="492.0" y="129.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" fill="#808080" text-anchor="end" font-weight="normal">Gelenk</text>
+<line x1="330.0" y1="135.0" x2="380.0" y2="135.0" stroke="#2f5597" stroke-width="2" stroke-linecap="butt"/>
+<polygon points="390.0,135.0 380.0,130.8 380.0,139.2" fill="#2f5597"/>
+<line x1="330.0" y1="135.0" x2="330.0" y2="170.0" stroke="#2f5597" stroke-width="2" stroke-linecap="butt"/>
+<polygon points="330.0,180.0 334.2,170.0 325.8,170.0" fill="#2f5597"/>
+<text x="400.0" y="140.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#2f5597" text-anchor="start" font-style="italic">x<tspan dy="5" font-size="13" font-style="normal">L</tspan></text>
+<text x="340.0" y="185.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#2f5597" text-anchor="start" font-style="italic">z<tspan dy="5" font-size="13" font-style="normal">L</tspan></text>
+<line x1="70.0" y1="103.0" x2="70.0" y2="231.0" stroke="#808080" stroke-width="0.8" stroke-linecap="butt"/>
+<line x1="170.0" y1="103.0" x2="170.0" y2="231.0" stroke="#808080" stroke-width="0.8" stroke-linecap="butt"/>
+<line x1="120.0" y1="225.0" x2="78.0" y2="225.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="70.0,225.0 78.0,228.4 78.0,221.6" fill="#808080"/>
+<line x1="120.0" y1="225.0" x2="162.0" y2="225.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="170.0,225.0 162.0,221.6 162.0,228.4" fill="#808080"/>
+<text x="120.0" y="219.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#000000" text-anchor="middle" font-style="italic">ℓ<tspan dy="5" font-size="12" font-style="normal">a</tspan></text>
+<line x1="170.0" y1="109.0" x2="170.0" y2="231.0" stroke="#808080" stroke-width="0.8" stroke-linecap="butt"/>
+<line x1="510.0" y1="109.0" x2="510.0" y2="231.0" stroke="#808080" stroke-width="0.8" stroke-linecap="butt"/>
+<line x1="340.0" y1="225.0" x2="178.0" y2="225.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="170.0,225.0 178.0,228.4 178.0,221.6" fill="#808080"/>
+<line x1="340.0" y1="225.0" x2="502.0" y2="225.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="510.0,225.0 502.0,221.6 502.0,228.4" fill="#808080"/>
+<text x="340.0" y="219.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#000000" text-anchor="middle" font-style="italic">L</text>
+<line x1="510.0" y1="103.0" x2="510.0" y2="231.0" stroke="#808080" stroke-width="0.8" stroke-linecap="butt"/>
+<line x1="610.0" y1="103.0" x2="610.0" y2="231.0" stroke="#808080" stroke-width="0.8" stroke-linecap="butt"/>
+<line x1="560.0" y1="225.0" x2="518.0" y2="225.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="510.0,225.0 518.0,228.4 518.0,221.6" fill="#808080"/>
+<line x1="560.0" y1="225.0" x2="602.0" y2="225.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="610.0,225.0 602.0,221.6 602.0,228.4" fill="#808080"/>
+<text x="560.0" y="219.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#000000" text-anchor="middle" font-style="italic">ℓ<tspan dy="5" font-size="12" font-style="normal">e</tspan></text>
+<line x1="70.0" y1="231.0" x2="70.0" y2="276.0" stroke="#808080" stroke-width="0.8" stroke-linecap="butt"/>
+<line x1="610.0" y1="231.0" x2="610.0" y2="276.0" stroke="#808080" stroke-width="0.8" stroke-linecap="butt"/>
+<line x1="340.0" y1="270.0" x2="78.0" y2="270.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="70.0,270.0 78.0,273.4 78.0,266.6" fill="#808080"/>
+<line x1="340.0" y1="270.0" x2="602.0" y2="270.0" stroke="#808080" stroke-width="1.0" stroke-linecap="butt"/>
+<polygon points="610.0,270.0 602.0,266.6 602.0,273.4" fill="#808080"/>
+<text x="340.0" y="264.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#000000" text-anchor="middle" font-style="italic">L<tspan dy="5" font-size="12" font-style="normal">0</tspan></text>
+</svg>

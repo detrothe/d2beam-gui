@@ -1,0 +1,5 @@
+ausgabe/
+bilder/png/
+bilder/pdf/
+sympy/ansatz.pkl
+__pycache__/

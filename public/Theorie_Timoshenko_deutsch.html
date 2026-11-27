@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Prof. Dr.-Ing. Detlef Rothe" />
+  <title>d2beam – Theorie-Handbuch</title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+  <style type="text/css">
+body {
+font-family: "FreeSans", "DejaVu Sans", Arial, sans-serif;
+font-size: 1em;
+line-height: 150%;
+max-width: 52em;
+margin: 0 auto;
+padding: 1em 1.5em 4em 1.5em;
+color: #111;
+}
+h1, h2, h3 { color: #1c1c6a; line-height: 120%; }
+h1 { font-size: 1.35em; margin-top: 2em; }
+h2 { font-size: 1.15em; margin-top: 1.4em; }
+h3 { font-size: 1.05em; }
+header h1.title { font-size: 1.8em; margin-top: 0.5em; }
+header .subtitle { font-size: 1.2em; color: #1c1c6a; }
+header .author, header .date { color: #555; margin: 0.2em 0; }
+a { color: #1c1c6a; text-decoration: none; }
+nav#TOC { border: 1px solid #ccc; border-radius: 6px; padding: 0.5em 1em; background: #fafafa; }
+nav#TOC ul { list-style: none; padding-left: 1.2em; }
+nav#TOC > ul { padding-left: 0; }
+figure { margin: 1.5em 0; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+figcaption { font-size: 0.92em; color: #333; margin-top: 0.4em; }
+math[display="block"] { margin: 0.8em 0; overflow-x: auto; overflow-y: hidden; }
+code { font-size: 0.92em; background: #f2f2f2; padding: 0 0.2em; border-radius: 3px; }
+span.header-section-number { margin-right: 0.4em; }
+@media print {
+body { max-width: none; padding: 0; font-size: 10.5pt; }
+nav#TOC { border: none; background: none; }
+figure, math[display="block"] { break-inside: avoid; }
+h1, h2, h3 { break-after: avoid; }
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">d2beam – Theorie-Handbuch</h1>
+<p class="subtitle">Der Timoshenko-Balken im Weggrößenverfahren</p>
+<p class="author">Prof. Dr.-Ing. Detlef Rothe</p>
+<p class="date">Entwurf, Stand 27.11.2026 – Teil 1</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<h2 id="toc-title">Inhalt</h2>
+<ul>
+<li><a href="#einleitung" id="toc-einleitung"><span class="toc-section-number">1</span> Einleitung</a>
+<ul>
+<li><a href="#worum-es-geht" id="toc-worum-es-geht"><span class="toc-section-number">1.1</span> Worum es geht</a></li>
+<li><a href="#annahmen" id="toc-annahmen"><span class="toc-section-number">1.2</span> Annahmen</a></li>
+<li><a href="#aufbau-eines-stabelements" id="toc-aufbau-eines-stabelements"><span class="toc-section-number">1.3</span> Aufbau eines Stabelements</a></li>
+</ul></li>
+<li><a href="#koordinatensysteme-und-vorzeichen" id="toc-koordinatensysteme-und-vorzeichen"><span class="toc-section-number">2</span> Koordinatensysteme und
+Vorzeichen</a>
+<ul>
+<li><a href="#globales-und-lokales-koordinatensystem" id="toc-globales-und-lokales-koordinatensystem"><span class="toc-section-number">2.1</span> Globales und lokales
+Koordinatensystem</a></li>
+<li><a href="#schnittgrößen-vorzeichenkonvention-i" id="toc-schnittgrößen-vorzeichenkonvention-i"><span class="toc-section-number">2.2</span> Schnittgrößen
+(Vorzeichenkonvention I)</a></li>
+<li><a href="#stabendgrößen-und-weggrößen-vorzeichenkonvention-ii" id="toc-stabendgrößen-und-weggrößen-vorzeichenkonvention-ii"><span class="toc-section-number">2.3</span> Stabendgrößen und Weggrößen
+(Vorzeichenkonvention II)</a></li>
+<li><a href="#drehwinkel-varphi-und-querschnittsdrehung-beta" id="toc-drehwinkel-varphi-und-querschnittsdrehung-beta"><span class="toc-section-number">2.4</span> Drehwinkel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>φ</mi><annotation encoding="application/x-tex">\varphi</annotation></semantics></math>
+und Querschnittsdrehung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math></a></li>
+</ul></li>
+<li><a href="#differentialgleichungen-des-timoshenko-balkens" id="toc-differentialgleichungen-des-timoshenko-balkens"><span class="toc-section-number">3</span> Differentialgleichungen des
+Timoshenko-Balkens</a>
+<ul>
+<li><a href="#gleichgewicht" id="toc-gleichgewicht"><span class="toc-section-number">3.1</span> Gleichgewicht</a></li>
+<li><a href="#kinematik" id="toc-kinematik"><span class="toc-section-number">3.2</span> Kinematik</a></li>
+<li><a href="#werkstoffgesetz" id="toc-werkstoffgesetz"><span class="toc-section-number">3.3</span> Werkstoffgesetz</a></li>
+<li><a href="#lösung-der-differentialgleichungen-für-den-unbelasteten-stab" id="toc-lösung-der-differentialgleichungen-für-den-unbelasteten-stab"><span class="toc-section-number">3.4</span> Lösung der Differentialgleichungen
+für den unbelasteten Stab</a></li>
+</ul></li>
+<li><a href="#elementsteifigkeitsmatrix" id="toc-elementsteifigkeitsmatrix"><span class="toc-section-number">4</span> Elementsteifigkeitsmatrix</a>
+<ul>
+<li><a href="#biegeanteil" id="toc-biegeanteil"><span class="toc-section-number">4.1</span> Biegeanteil</a></li>
+<li><a href="#längsanteil" id="toc-längsanteil"><span class="toc-section-number">4.2</span> Längsanteil</a></li>
+<li><a href="#die-steifigkeitsbeziehung" id="toc-die-steifigkeitsbeziehung"><span class="toc-section-number">4.3</span> Die Steifigkeitsbeziehung</a></li>
+<li><a href="#ansatzfunktionen" id="toc-ansatzfunktionen"><span class="toc-section-number">4.4</span> Ansatzfunktionen</a></li>
+</ul></li>
+<li><a href="#transformationen" id="toc-transformationen"><span class="toc-section-number">5</span> Transformationen</a>
+<ul>
+<li><a href="#drehung-um-den-stabwinkel-alpha" id="toc-drehung-um-den-stabwinkel-alpha"><span class="toc-section-number">5.1</span> Drehung um den Stabwinkel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></a></li>
+<li><a href="#gedrehte-lager" id="toc-gedrehte-lager"><span class="toc-section-number">5.2</span> Gedrehte Lager</a></li>
+<li><a href="#starre-enden" id="toc-starre-enden"><span class="toc-section-number">5.3</span> Starre Enden</a></li>
+<li><a href="#gelenke" id="toc-gelenke"><span class="toc-section-number">5.4</span> Gelenke</a></li>
+<li><a href="#transformation-der-steifigkeitsbeziehung" id="toc-transformation-der-steifigkeitsbeziehung"><span class="toc-section-number">5.5</span> Transformation der
+Steifigkeitsbeziehung</a></li>
+<li><a href="#rücktransformation-der-kräfte" id="toc-rücktransformation-der-kräfte"><span class="toc-section-number">5.6</span> Rücktransformation der
+Kräfte</a></li>
+</ul></li>
+<li><a href="#gesamtsystem-und-ablauf-der-berechnung" id="toc-gesamtsystem-und-ablauf-der-berechnung"><span class="toc-section-number">6</span> Gesamtsystem und Ablauf der
+Berechnung</a>
+<ul>
+<li><a href="#zuordnung-der-freiheitsgrade" id="toc-zuordnung-der-freiheitsgrade"><span class="toc-section-number">6.1</span> Zuordnung der
+Freiheitsgrade</a></li>
+<li><a href="#ablauf" id="toc-ablauf"><span class="toc-section-number">6.2</span> Ablauf</a></li>
+</ul></li>
+<li><a href="#anhang-a-nachrechnung-mit-sympy" id="toc-anhang-a-nachrechnung-mit-sympy">Anhang A: Nachrechnung mit
+SymPy</a></li>
+<li><a href="#literatur" id="toc-literatur">Literatur</a></li>
+</ul>
+</nav>
+<h1 data-number="1" id="einleitung"><span class="header-section-number">1</span> Einleitung</h1>
+<h2 data-number="1.1" id="worum-es-geht"><span class="header-section-number">1.1</span> Worum es geht</h2>
+<p>Dieses Handbuch erklärt, was d2beam beim Rechnen mit einem Stab
+tatsächlich tut. Es richtet sich an dich als Studierende oder
+Studierender, die oder der die Ergebnisse nachvollziehen möchte, und an
+Kolleginnen und Kollegen, die das Programm in der Lehre einsetzen oder
+weiterentwickeln.</p>
+<p>Alle Formeln in diesem Handbuch wurden mit dem Programmcode
+abgeglichen. Die symbolischen Herleitungen der Matrizen wurden
+zusätzlich mit dem Computeralgebrasystem SymPy nachgerechnet (siehe
+Anhang A). Wo es hilft, ist angegeben, in welcher Funktion von
+<code>timoshenko_beam.ts</code> die Formel umgesetzt ist.</p>
+<p>Teil 1 behandelt</p>
+<ul>
+<li>die Koordinatensysteme und Vorzeichenregeln,</li>
+<li>die Differentialgleichungen des Timoshenko-Balkens,</li>
+<li>die Elementsteifigkeitsmatrix,</li>
+<li>die Transformationen für gedrehte Stäbe, gedrehte Lager, starre
+Stabenden und Gelenke,</li>
+<li>den Ablauf der Berechnung im Gesamtsystem.</li>
+</ul>
+<p>Elementlasten, Zustandslinien, Bettung, Theorie II. Ordnung,
+Knickeigenwerte und Dynamik folgen in weiteren Teilen.</p>
+<h2 data-number="1.2" id="annahmen"><span class="header-section-number">1.2</span> Annahmen</h2>
+<ul>
+<li>Ebene Stabwerke in der
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-Ebene,
+Belastung in dieser Ebene.</li>
+<li>Linear-elastischer Werkstoff (die nichtlineare Werkstoffoption wird
+später gesondert behandelt).</li>
+<li>Kleine Verformungen: Gleichgewicht am unverformten System (Theorie
+I. Ordnung). Die Erweiterung auf Theorie II. Ordnung folgt in einem
+späteren Teil.</li>
+<li><strong>Timoshenko-Balken:</strong> Die Querschnitte bleiben eben,
+stehen nach der Verformung aber nicht mehr senkrecht auf der Stabachse.
+Die Schubverformung wird also berücksichtigt. Mit Schubfaktor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math>
+rechnet d2beam schubstarr; dann gehen alle Formeln in die bekannten
+Formeln des Bernoulli-Balkens über.</li>
+</ul>
+<h2 data-number="1.3" id="aufbau-eines-stabelements"><span class="header-section-number">1.3</span> Aufbau eines Stabelements</h2>
+<p>Ein Stab in d2beam verbindet zwei Knoten
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>a</mi></msub><annotation encoding="application/x-tex">K_a</annotation></semantics></math>
+(Stabanfang) und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>e</mi></msub><annotation encoding="application/x-tex">K_e</annotation></semantics></math>
+(Stabende). Er kann an jedem Ende ein <strong>starres Ende</strong> der
+Länge
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ℓ</mi><mi>a</mi></msub><annotation encoding="application/x-tex">\ell_a</annotation></semantics></math>
+bzw.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ℓ</mi><mi>e</mi></msub><annotation encoding="application/x-tex">\ell_e</annotation></semantics></math>
+besitzen, z. B. um die Ausdehnung eines Knotenbereichs in einem Rahmen
+abzubilden. Dazwischen liegt der <strong>elastische Stab</strong> der
+Länge</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>=</mo><msub><mi>L</mi><mn>0</mn></msub><mo>−</mo><msub><mi>ℓ</mi><mi>a</mi></msub><mo>−</mo><msub><mi>ℓ</mi><mi>e</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">L = L_0 - \ell_a - \ell_e ,</annotation></semantics></math></p>
+<p>dessen Enden wir mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>
+bezeichnen.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+ist der Abstand der beiden Knoten. Am Übergang vom starren Ende zum
+elastischen Stab können <strong>Gelenke</strong> angeordnet werden
+(Momenten-, Querkraft- oder Normalkraftgelenk).</p>
+<figure>
+<img role="img" aria-label="Bild 1: Stabelement mit starren Enden und Gelenken" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2ODAiIGhlaWdodD0iMjkwIiB2aWV3Qm94PSIwIDAgNjgwIDI5MCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSI3MC4wIiB5MT0iOTUuMCIgeDI9IjE3MC4wIiB5Mj0iOTUuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI1MTAuMCIgeTE9Ijk1LjAiIHgyPSI2MTAuMCIgeTI9Ijk1LjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iMTcwLjAiIHkxPSI5NS4wIiB4Mj0iNTEwLjAiIHkyPSI5NS4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjE3NS4wIiB5MT0iMTA0LjAiIHgyPSI1MDUuMCIgeTI9IjEwNC4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1kYXNoYXJyYXk9IjYsNCIvPgo8Y2lyY2xlIGN4PSIxNzAuMCIgY3k9Ijk1LjAiIHI9IjYiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxjaXJjbGUgY3g9IjUxMC4wIiBjeT0iOTUuMCIgcj0iNiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPGNpcmNsZSBjeD0iNzAuMCIgY3k9IjU3LjAiIHI9IjE1IiBmaWxsPSIjZGRkOWMzIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4yIi8+Cjx0ZXh0IHg9IjcwLjAiIHk9IjYzLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5LPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJub3JtYWwiPmE8L3RzcGFuPjwvdGV4dD4KPGNpcmNsZSBjeD0iNjEwLjAiIGN5PSI1Ny4wIiByPSIxNSIgZmlsbD0iI2RkZDljMyIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMiIvPgo8dGV4dCB4PSI2MTAuMCIgeT0iNjMuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPks8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Im5vcm1hbCI+ZTwvdHNwYW4+PC90ZXh0Pgo8dGV4dCB4PSIxNzAuMCIgeT0iNzkuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE3IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPmE8L3RleHQ+Cjx0ZXh0IHg9IjUxMC4wIiB5PSI3OS4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTciIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+ZTwvdGV4dD4KPHRleHQgeD0iMTIwLjAiIHk9IjgxLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzgwODA4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9Im5vcm1hbCI+c3RhcnI8L3RleHQ+Cjx0ZXh0IHg9IjU2MC4wIiB5PSI4MS4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiM4MDgwODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJub3JtYWwiPnN0YXJyPC90ZXh0Pgo8dGV4dCB4PSIzNDAuMCIgeT0iODEuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjODA4MDgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0ibm9ybWFsIj5lbGFzdGlzY2ggKFRpbW9zaGVua28pPC90ZXh0Pgo8dGV4dCB4PSIxODguMCIgeT0iMTI5LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzgwODA4MCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXdlaWdodD0ibm9ybWFsIj5HZWxlbms8L3RleHQ+Cjx0ZXh0IHg9IjQ5Mi4wIiB5PSIxMjkuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjODA4MDgwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXdlaWdodD0ibm9ybWFsIj5HZWxlbms8L3RleHQ+CjxsaW5lIHgxPSIzMzAuMCIgeTE9IjEzNS4wIiB4Mj0iMzgwLjAiIHkyPSIxMzUuMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMzkwLjAsMTM1LjAgMzgwLjAsMTMwLjggMzgwLjAsMTM5LjIiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjMzMC4wIiB5MT0iMTM1LjAiIHgyPSIzMzAuMCIgeTI9IjE3MC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIzMzAuMCwxODAuMCAzMzQuMiwxNzAuMCAzMjUuOCwxNzAuMCIgZmlsbD0iIzJmNTU5NyIvPgo8dGV4dCB4PSI0MDAuMCIgeT0iMTQwLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzJmNTU5NyIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPng8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+TDwvdHNwYW4+PC90ZXh0Pgo8dGV4dCB4PSIzNDAuMCIgeT0iMTg1LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzJmNTU5NyIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPno8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+TDwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iNzAuMCIgeTE9IjEwMy4wIiB4Mj0iNzAuMCIgeTI9IjIzMS4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMC44IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iMTcwLjAiIHkxPSIxMDMuMCIgeDI9IjE3MC4wIiB5Mj0iMjMxLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIxMjAuMCIgeTE9IjIyNS4wIiB4Mj0iNzguMCIgeTI9IjIyNS4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4wIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjcwLjAsMjI1LjAgNzguMCwyMjguNCA3OC4wLDIyMS42IiBmaWxsPSIjODA4MDgwIi8+CjxsaW5lIHgxPSIxMjAuMCIgeTE9IjIyNS4wIiB4Mj0iMTYyLjAiIHkyPSIyMjUuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIxNzAuMCwyMjUuMCAxNjIuMCwyMjEuNiAxNjIuMCwyMjguNCIgZmlsbD0iIzgwODA4MCIvPgo8dGV4dCB4PSIxMjAuMCIgeT0iMjE5LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj7ihJM8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Im5vcm1hbCI+YTwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iMTcwLjAiIHkxPSIxMDkuMCIgeDI9IjE3MC4wIiB5Mj0iMjMxLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI1MTAuMCIgeTE9IjEwOS4wIiB4Mj0iNTEwLjAiIHkyPSIyMzEuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjAuOCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjM0MC4wIiB5MT0iMjI1LjAiIHgyPSIxNzguMCIgeTI9IjIyNS4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4wIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjE3MC4wLDIyNS4wIDE3OC4wLDIyOC40IDE3OC4wLDIyMS42IiBmaWxsPSIjODA4MDgwIi8+CjxsaW5lIHgxPSIzNDAuMCIgeTE9IjIyNS4wIiB4Mj0iNTAyLjAiIHkyPSIyMjUuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI1MTAuMCwyMjUuMCA1MDIuMCwyMjEuNiA1MDIuMCwyMjguNCIgZmlsbD0iIzgwODA4MCIvPgo8dGV4dCB4PSIzNDAuMCIgeT0iMjE5LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5MPC90ZXh0Pgo8bGluZSB4MT0iNTEwLjAiIHkxPSIxMDMuMCIgeDI9IjUxMC4wIiB5Mj0iMjMxLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI2MTAuMCIgeTE9IjEwMy4wIiB4Mj0iNjEwLjAiIHkyPSIyMzEuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjAuOCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjU2MC4wIiB5MT0iMjI1LjAiIHgyPSI1MTguMCIgeTI9IjIyNS4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4wIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjUxMC4wLDIyNS4wIDUxOC4wLDIyOC40IDUxOC4wLDIyMS42IiBmaWxsPSIjODA4MDgwIi8+CjxsaW5lIHgxPSI1NjAuMCIgeTE9IjIyNS4wIiB4Mj0iNjAyLjAiIHkyPSIyMjUuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI2MTAuMCwyMjUuMCA2MDIuMCwyMjEuNiA2MDIuMCwyMjguNCIgZmlsbD0iIzgwODA4MCIvPgo8dGV4dCB4PSI1NjAuMCIgeT0iMjE5LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj7ihJM8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Im5vcm1hbCI+ZTwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iNzAuMCIgeTE9IjIzMS4wIiB4Mj0iNzAuMCIgeTI9IjI3Ni4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMC44IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iNjEwLjAiIHkxPSIyMzEuMCIgeDI9IjYxMC4wIiB5Mj0iMjc2LjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzNDAuMCIgeTE9IjI3MC4wIiB4Mj0iNzguMCIgeTI9IjI3MC4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4wIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjcwLjAsMjcwLjAgNzguMCwyNzMuNCA3OC4wLDI2Ni42IiBmaWxsPSIjODA4MDgwIi8+CjxsaW5lIHgxPSIzNDAuMCIgeTE9IjI3MC4wIiB4Mj0iNjAyLjAiIHkyPSIyNzAuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI2MTAuMCwyNzAuMCA2MDIuMCwyNjYuNiA2MDIuMCwyNzMuNCIgZmlsbD0iIzgwODA4MCIvPgo8dGV4dCB4PSIzNDAuMCIgeT0iMjY0LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5MPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJub3JtYWwiPjA8L3RzcGFuPjwvdGV4dD4KPC9zdmc+Cg==" style="width:95.0%" alt="Bild 1: Stabelement mit starren Enden und Gelenken" />
+<figcaption aria-hidden="true">Bild 1: Stabelement mit starren Enden und
+Gelenken</figcaption>
+</figure>
+<p>Ohne starre Enden
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ℓ</mi><mi>a</mi></msub><mo>=</mo><msub><mi>ℓ</mi><mi>e</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ell_a = \ell_e = 0</annotation></semantics></math>)
+fallen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>a</mi></msub><annotation encoding="application/x-tex">K_a</annotation></semantics></math>
+mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>e</mi></msub><annotation encoding="application/x-tex">K_e</annotation></semantics></math>
+mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>
+zusammen. Die Herleitungen in Kapitel 3 und 4 beziehen sich immer auf
+den elastischen Stab von
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+nach
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>.
+Die starren Enden und Gelenke kommen erst in Kapitel 5 über die
+Transformation hinzu.</p>
+<h1 data-number="2" id="koordinatensysteme-und-vorzeichen"><span class="header-section-number">2</span> Koordinatensysteme und
+Vorzeichen</h1>
+<h2 data-number="2.1" id="globales-und-lokales-koordinatensystem"><span class="header-section-number">2.1</span> Globales und lokales
+Koordinatensystem</h2>
+<p>Das <strong>globale</strong> Koordinatensystem hat die
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>-Achse
+nach rechts und die
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-Achse
+nach unten. Jeder Stab hat ein <strong>lokales</strong>
+Koordinatensystem
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>L</mi></msub><annotation encoding="application/x-tex">x_L</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>L</mi></msub><annotation encoding="application/x-tex">z_L</annotation></semantics></math>:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>L</mi></msub><annotation encoding="application/x-tex">x_L</annotation></semantics></math>
+zeigt vom Stabanfang zum Stabende,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>L</mi></msub><annotation encoding="application/x-tex">z_L</annotation></semantics></math>
+ist dazu um
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>90</mn><mi>°</mi></mrow><annotation encoding="application/x-tex">90°</annotation></semantics></math>
+im Uhrzeigersinn gedreht. Der Winkel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+zwischen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>L</mi></msub><annotation encoding="application/x-tex">x_L</annotation></semantics></math>
+ist positiv im Uhrzeigersinn (Bild 5).</p>
+<p>Drehungen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>φ</mi><annotation encoding="application/x-tex">\varphi</annotation></semantics></math>
+und Momente in Konvention II (siehe unten) sind bei dieser Achsenlage
+<strong>positiv entgegen dem Uhrzeigersinn</strong>.</p>
+<h2 data-number="2.2" id="schnittgrößen-vorzeichenkonvention-i"><span class="header-section-number">2.2</span> Schnittgrößen
+(Vorzeichenkonvention I)</h2>
+<p>Für die Schnittgrößen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>
+entlang des Stabes gilt die übliche Vorzeichenregel der Statik: Am
+positiven Schnittufer (Normale in Richtung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><msub><mi>x</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">+x_L</annotation></semantics></math>)
+zeigen positive Schnittgrößen in die positiven Koordinatenrichtungen, am
+negativen Schnittufer entgegengesetzt. Ein positives Moment erzeugt Zug
+an der gestrichelten Faser (Unterseite,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><msub><mi>z</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">+z_L</annotation></semantics></math>).</p>
+<figure>
+<img role="img" aria-label="Bild 2: Positive Schnittgrößen am infinitesimalen Element (Konvention I)" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NjAiIGhlaWdodD0iMjcwIiB2aWV3Qm94PSIwIDAgNTYwIDI3MCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxyZWN0IHg9IjE5MCIgeT0iMTEwLjAiIHdpZHRoPSIxODAiIGhlaWdodD0iNDAiIGZpbGw9IiNlZWVlZWUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPGxpbmUgeDE9IjE5MC4wIiB5MT0iMTQ0LjAiIHgyPSIzNzAuMCIgeTI9IjE0NC4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1kYXNoYXJyYXk9IjYsNCIvPgo8bGluZSB4MT0iMjA1LjAiIHkxPSI2MC4wIiB4Mj0iMjA1LjAiIHkyPSI5OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjIwNS4wLDEwNi4wIDIwOC40LDk4LjAgMjAxLjYsOTguMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMjM1LjAiIHkxPSI2MC4wIiB4Mj0iMjM1LjAiIHkyPSI5OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjIzNS4wLDEwNi4wIDIzOC40LDk4LjAgMjMxLjYsOTguMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMjY1LjAiIHkxPSI2MC4wIiB4Mj0iMjY1LjAiIHkyPSI5OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjI2NS4wLDEwNi4wIDI2OC40LDk4LjAgMjYxLjYsOTguMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMjk1LjAiIHkxPSI2MC4wIiB4Mj0iMjk1LjAiIHkyPSI5OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjI5NS4wLDEwNi4wIDI5OC40LDk4LjAgMjkxLjYsOTguMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMzI1LjAiIHkxPSI2MC4wIiB4Mj0iMzI1LjAiIHkyPSI5OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjMyNS4wLDEwNi4wIDMyOC40LDk4LjAgMzIxLjYsOTguMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMzU1LjAiIHkxPSI2MC4wIiB4Mj0iMzU1LjAiIHkyPSI5OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjM1NS4wLDEwNi4wIDM1OC40LDk4LjAgMzUxLjYsOTguMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMTkwLjAiIHkxPSI2MC4wIiB4Mj0iMzcwLjAiIHkyPSI2MC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8dGV4dCB4PSIzMTAuMCIgeT0iNTIuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMmY1NTk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPnEoeCk8L3RleHQ+CjxsaW5lIHgxPSIxODAuMCIgeTE9IjEzMC4wIiB4Mj0iMTE0LjAiIHkyPSIxMzAuMCIgc3Ryb2tlPSIjYzAwMDAwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMTAwLjAsMTMwLjAgMTE0LjAsMTM1LjkgMTE0LjAsMTI0LjEiIGZpbGw9IiNjMDAwMDAiLz4KPHRleHQgeD0iOTAuMCIgeT0iMTM2LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zdHlsZT0iaXRhbGljIj5OPC90ZXh0Pgo8bGluZSB4MT0iMTc2LjAiIHkxPSIxODAuMCIgeDI9IjE3Ni4wIiB5Mj0iMTM0LjAiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjE3Ni4wLDEyMC4wIDE3MC4xLDEzNC4wIDE4MS45LDEzNC4wIiBmaWxsPSIjYzAwMDAwIi8+Cjx0ZXh0IHg9IjE2MC4wIiB5PSIxOTYuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPlY8L3RleHQ+CjxwYXRoIGQ9Ik0gMTYzLjAgMTczLjMgQSA1MCA1MCAwIDAgMSAxNTIuMCA5NS4zIiBmaWxsPSJub25lIiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iMyIvPgo8cG9seWdvbiBwb2ludHM9IjE2My4wLDg2LjcgMTQ4LjQsOTAuNyAxNTUuNiw5OS45IiBmaWxsPSIjYzAwMDAwIi8+Cjx0ZXh0IHg9IjE0MC4wIiB5PSI4Mi4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiNjMDAwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+TTwvdGV4dD4KPGxpbmUgeDE9IjM4MC4wIiB5MT0iMTMwLjAiIHgyPSI0NDYuMCIgeTI9IjEzMC4wIiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI0NjAuMCwxMzAuMCA0NDYuMCwxMjQuMSA0NDYuMCwxMzUuOSIgZmlsbD0iI2MwMDAwMCIvPgo8dGV4dCB4PSI0NzAuMCIgeT0iMTM2LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPk4gKyBkTjwvdGV4dD4KPGxpbmUgeDE9IjM4NC4wIiB5MT0iODAuMCIgeDI9IjM4NC4wIiB5Mj0iMTI2LjAiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjM4NC4wLDE0MC4wIDM4OS45LDEyNi4wIDM3OC4xLDEyNi4wIiBmaWxsPSIjYzAwMDAwIi8+Cjx0ZXh0IHg9IjQwMC4wIiB5PSIxOTYuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+ViArIGRWPC90ZXh0Pgo8cGF0aCBkPSJNIDM5Ny4wIDE3My4zIEEgNTAgNTAgMCAwIDAgNDA4LjAgOTUuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KPHBvbHlnb24gcG9pbnRzPSIzOTcuMCw4Ni43IDQwNC40LDk5LjkgNDExLjYsOTAuNyIgZmlsbD0iI2MwMDAwMCIvPgo8dGV4dCB4PSI0MjAuMCIgeT0iODIuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+TSArIGRNPC90ZXh0Pgo8bGluZSB4MT0iMTkwLjAiIHkxPSIxNTQuMCIgeDI9IjE5MC4wIiB5Mj0iMjMxLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzNzAuMCIgeTE9IjE1NC4wIiB4Mj0iMzcwLjAiIHkyPSIyMzEuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjAuOCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjI4MC4wIiB5MT0iMjI1LjAiIHgyPSIxOTguMCIgeTI9IjIyNS4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4wIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjE5MC4wLDIyNS4wIDE5OC4wLDIyOC40IDE5OC4wLDIyMS42IiBmaWxsPSIjODA4MDgwIi8+CjxsaW5lIHgxPSIyODAuMCIgeTE9IjIyNS4wIiB4Mj0iMzYyLjAiIHkyPSIyMjUuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIzNzAuMCwyMjUuMCAzNjIuMCwyMjEuNiAzNjIuMCwyMjguNCIgZmlsbD0iIzgwODA4MCIvPgo8dGV4dCB4PSIyODAuMCIgeT0iMjE5LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5keDwvdGV4dD4KPGxpbmUgeDE9IjMwLjAiIHkxPSIyMzAuMCIgeDI9IjgwLjAiIHkyPSIyMzAuMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iOTAuMCwyMzAuMCA4MC4wLDIyNS44IDgwLjAsMjM0LjIiIGZpbGw9IiMyZjU1OTciLz4KPHRleHQgeD0iOTguMCIgeT0iMjM2LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzJmNTU5NyIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPng8L3RleHQ+CjxsaW5lIHgxPSIzMC4wIiB5MT0iMjMwLjAiIHgyPSIzMC4wIiB5Mj0iMjU1LjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjMwLjAsMjY1LjAgMzQuMiwyNTUuMCAyNS44LDI1NS4wIiBmaWxsPSIjMmY1NTk3Ii8+Cjx0ZXh0IHg9IjQyLjAiIHk9IjI2Ni4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMyZjU1OTciIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC1zdHlsZT0iaXRhbGljIj56PC90ZXh0Pgo8L3N2Zz4K" style="width:75.0%" alt="Bild 2: Positive Schnittgrößen am infinitesimalen Element (Konvention I)" />
+<figcaption aria-hidden="true">Bild 2: Positive Schnittgrößen am
+infinitesimalen Element (Konvention I)</figcaption>
+</figure>
+<p>Mit dieser Konvention werden die Zustandslinien gezeichnet und die
+Schnittgrößen ausgegeben.</p>
+<h2 data-number="2.3" id="stabendgrößen-und-weggrößen-vorzeichenkonvention-ii"><span class="header-section-number">2.3</span> Stabendgrößen und Weggrößen
+(Vorzeichenkonvention II)</h2>
+<p>Für das Weggrößenverfahren ist eine andere Regel bequemer: An
+<strong>beiden</strong> Stabenden sind Kräfte und Verschiebungen positiv
+in Richtung der lokalen Achsen, Momente und Drehungen positiv entgegen
+dem Uhrzeigersinn.</p>
+<figure>
+<img role="img" aria-label="Bild 3: Positive Stabendgrößen und Stabendverformungen am elastischen Stab (Konvention II)" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MjAiIGhlaWdodD0iMzMwIiB2aWV3Qm94PSIwIDAgNzIwIDMzMCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSIxNzAuMCIgeTE9IjExMC4wIiB4Mj0iNTQwLjAiIHkyPSIxMTAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIxNzUuMCIgeTE9IjEyMC4wIiB4Mj0iMzEwLjAiIHkyPSIxMjAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtZGFzaGFycmF5PSI2LDQiLz4KPHRleHQgeD0iMTYyLjAiIHk9IjYyLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5hPC90ZXh0Pgo8dGV4dCB4PSI1NDguMCIgeT0iNjIuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPmU8L3RleHQ+CjxsaW5lIHgxPSI1MC4wIiB5MT0iMTEwLjAiIHgyPSIxMjQuMCIgeTI9IjExMC4wIiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIxNDAuMCwxMTAuMCAxMjQuMCwxMDMuMyAxMjQuMCwxMTYuNyIgZmlsbD0iI2MwMDAwMCIvPgo8dGV4dCB4PSI0NS4wIiB5PSIxMzYuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPkY8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+YTwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iMTQ1LjAiIHkxPSI0MC4wIiB4Mj0iMTQ1LjAiIHkyPSI5MC4wIiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIxNDUuMCwxMDYuMCAxNTEuNyw5MC4wIDEzOC4zLDkwLjAiIGZpbGw9IiNjMDAwMDAiLz4KPHRleHQgeD0iMTMwLjAiIHk9IjM4LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5WPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEzIiBmb250LXN0eWxlPSJub3JtYWwiPmE8L3RzcGFuPjwvdGV4dD4KPHBhdGggZD0iTSAxMDAuOSA3OC41IEEgMzQgMzQgMCAwIDAgODUuMSAxNDQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzAwMDAwIiBzdHJva2Utd2lkdGg9IjQiLz4KPHBvbHlnb24gcG9pbnRzPSIxMDAuOSwxNDUuNSA4NS41LDEzNy44IDg0LjcsMTUxLjIiIGZpbGw9IiNjMDAwMDAiLz4KPHRleHQgeD0iNTguMCIgeT0iNzAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPk08dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+YTwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iNTcwLjAiIHkxPSIxMTAuMCIgeDI9IjY0NC4wIiB5Mj0iMTEwLjAiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjY2MC4wLDExMC4wIDY0NC4wLDEwMy4zIDY0NC4wLDExNi43IiBmaWxsPSIjYzAwMDAwIi8+Cjx0ZXh0IHg9IjY2Mi4wIiB5PSI5Ni4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiNjMDAwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+Rjx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMyIgZm9udC1zdHlsZT0ibm9ybWFsIj5lPC90c3Bhbj48L3RleHQ+CjxsaW5lIHgxPSI1NjUuMCIgeTE9IjQwLjAiIHgyPSI1NjUuMCIgeTI9IjkwLjAiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjU2NS4wLDEwNi4wIDU3MS43LDkwLjAgNTU4LjMsOTAuMCIgZmlsbD0iI2MwMDAwMCIvPgo8dGV4dCB4PSI1ODAuMCIgeT0iMzguMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPlY8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+ZTwvdHNwYW4+PC90ZXh0Pgo8cGF0aCBkPSJNIDYwOS4xIDE0NS41IEEgMzQgMzQgMCAwIDAgNjI0LjkgNzkuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzAwMDAwIiBzdHJva2Utd2lkdGg9IjQiLz4KPHBvbHlnb24gcG9pbnRzPSI2MDkuMSw3OC41IDYyNC41LDg2LjIgNjI1LjMsNzIuOCIgZmlsbD0iI2MwMDAwMCIvPgo8dGV4dCB4PSI2NTguMCIgeT0iMTYyLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5NPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEzIiBmb250LXN0eWxlPSJub3JtYWwiPmU8L3RzcGFuPjwvdGV4dD4KPGxpbmUgeDE9IjE3MC4wIiB5MT0iMTEwLjAiIHgyPSIxNzAuMCIgeTI9IjE3MC4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjE3MC4wLDE4MC4wIDE3NC4yLDE3MC4wIDE2NS44LDE3MC4wIiBmaWxsPSIjMDAwMDAwIi8+Cjx0ZXh0IHg9IjE1Mi4wIiB5PSIxNTUuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPnc8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+YTwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iMTcwLjAiIHkxPSIxODAuMCIgeDI9IjIwMC4wIiB5Mj0iMTgwLjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMjEwLjAsMTgwLjAgMjAwLjAsMTc1LjggMjAwLjAsMTg0LjIiIGZpbGw9IiMwMDAwMDAiLz4KPHRleHQgeD0iMTg0LjAiIHk9IjIwNi4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+dTx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMyIgZm9udC1zdHlsZT0ibm9ybWFsIj5hPC90c3Bhbj48L3RleHQ+CjxsaW5lIHgxPSI1NDAuMCIgeTE9IjExMC4wIiB4Mj0iNTQwLjAiIHkyPSIyMTUuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI1NDAuMCwyMjUuMCA1NDQuMiwyMTUuMCA1MzUuOCwyMTUuMCIgZmlsbD0iIzAwMDAwMCIvPgo8dGV4dCB4PSI1NTguMCIgeT0iMTcwLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj53PHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEzIiBmb250LXN0eWxlPSJub3JtYWwiPmU8L3RzcGFuPjwvdGV4dD4KPGxpbmUgeDE9IjU0MC4wIiB5MT0iMjI1LjAiIHgyPSI1NzAuMCIgeTI9IjIyNS4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjU4MC4wLDIyNS4wIDU3MC4wLDIyMC44IDU3MC4wLDIyOS4yIiBmaWxsPSIjMDAwMDAwIi8+Cjx0ZXh0IHg9IjU2Ni4wIiB5PSIyNTEuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPnU8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+ZTwvdHNwYW4+PC90ZXh0Pgo8cGF0aCBkPSJNIDIxMCAxODAgQyAzMzAgMTEwLCA0MTAgMzE1LCA1ODAgMjI1IiBmaWxsPSJub25lIiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iMyIvPgo8bGluZSB4MT0iMjEwLjAiIHkxPSIxODAuMCIgeDI9IjMwMC4wIiB5Mj0iMTgwLjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iMjEwLjAiIHkxPSIxODAuMCIgeDI9IjMwMC4wIiB5Mj0iMTI4LjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cGF0aCBkPSJNIDI4MC4wIDE4MC4wIEEgNzAgNzAgMCAwIDAgMjc0LjYgMTUzLjEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBvbHlnb24gcG9pbnRzPSIyNzAuNiwxNDUuMCAyNzEuMiwxNTQuNyAyNzguMCwxNTEuNCIgZmlsbD0iIzAwMDAwMCIvPgo8dGV4dCB4PSIzMDIuMCIgeT0iMTY4LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPs+GPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEzIiBmb250LXN0eWxlPSJub3JtYWwiPmE8L3RzcGFuPjwvdGV4dD4KPGxpbmUgeDE9IjU4MC4wIiB5MT0iMjI1LjAiIHgyPSI0OTAuMCIgeTI9IjIyNS4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjU4MC4wIiB5MT0iMjI1LjAiIHgyPSI0OTAuMCIgeTI9IjI1NS4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBhdGggZD0iTSA1MDUuMCAyMjUuMCBBIDc1IDc1IDAgMCAwIDUwNi40IDIzOS41IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNTA4LjcsMjQ4LjIgNTEwLjEsMjM4LjUgNTAyLjgsMjQwLjQiIGZpbGw9IiMwMDAwMDAiLz4KPHRleHQgeD0iNDgwLjAiIHk9IjI2Ny4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+z4Y8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+ZTwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iNjAwLjAiIHkxPSIyODUuMCIgeDI9IjY3MC4wIiB5Mj0iMjg1LjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjY4MC4wLDI4NS4wIDY3MC4wLDI4MC44IDY3MC4wLDI4OS4yIiBmaWxsPSIjMmY1NTk3Ii8+Cjx0ZXh0IHg9IjY5MC4wIiB5PSIyOTAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMmY1NTk3IiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+eDx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMyIgZm9udC1zdHlsZT0ibm9ybWFsIj5MPC90c3Bhbj48L3RleHQ+CjxsaW5lIHgxPSI0MC4wIiB5MT0iMjEwLjAiIHgyPSI0MC4wIiB5Mj0iMjgwLjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjQwLjAsMjkwLjAgNDQuMiwyODAuMCAzNS44LDI4MC4wIiBmaWxsPSIjMmY1NTk3Ii8+Cjx0ZXh0IHg9IjUyLjAiIHk9IjMwMC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMyZjU1OTciIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC1zdHlsZT0iaXRhbGljIj56PHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEzIiBmb250LXN0eWxlPSJub3JtYWwiPkw8L3RzcGFuPjwvdGV4dD4KPC9zdmc+Cg==" style="width:95.0%" alt="Bild 3: Positive Stabendgrößen und Stabendverformungen am elastischen Stab (Konvention II)" />
+<figcaption aria-hidden="true">Bild 3: Positive Stabendgrößen und
+Stabendverformungen am elastischen Stab (Konvention II)</figcaption>
+</figure>
+<p>Die Stabendgrößen und Stabendverformungen fassen wir zu Vektoren
+zusammen:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐟</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>F</mi><mi>a</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>V</mi><mi>a</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>M</mi><mi>a</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>F</mi><mi>e</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>V</mi><mi>e</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>M</mi><mi>e</mi></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><mi>𝛅</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>u</mi><mi>a</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>w</mi><mi>a</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>φ</mi><mi>a</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>u</mi><mi>e</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>w</mi><mi>e</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>φ</mi><mi>e</mi></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{f} = \begin{bmatrix} F_a \\ V_a \\ M_a \\ F_e \\ V_e \\ M_e \end{bmatrix}, \qquad
+\boldsymbol{\delta} = \begin{bmatrix} u_a \\ w_a \\ \varphi_a \\ u_e \\ w_e \\ \varphi_e \end{bmatrix} .
+</annotation></semantics></math></p>
+<p>Am Stabende
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>
+ist das Schnittufer positiv, am Stabanfang
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+negativ. Daraus folgt der Zusammenhang zwischen beiden Konventionen:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>F</mi><mi>a</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>V</mi><mi>a</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>M</mi><mi>a</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>F</mi><mi>e</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>V</mi><mi>e</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>M</mi><mi>e</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+F_a &amp;= -N(0), &amp; V_a &amp;= -V(0), &amp; M_a &amp;= -M(0), \\
+F_e &amp;= N(L),  &amp; V_e &amp;= V(L),  &amp; M_e &amp;= M(L).
+\end{aligned}
+</annotation></semantics></math></p>
+<p>d2beam rechnet intern mit Konvention II und dreht am Ende der
+Berechnung die Vorzeichen am Stabanfang um
+(<code>berechneInterneKraefte</code>: „Linke Seite Vorzeichen nach
+KGV“). Ausgegeben werden die Stabendgrößen deshalb in Konvention I.</p>
+<h2 data-number="2.4" id="drehwinkel-varphi-und-querschnittsdrehung-beta"><span class="header-section-number">2.4</span> Drehwinkel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>φ</mi><annotation encoding="application/x-tex">\varphi</annotation></semantics></math>
+und Querschnittsdrehung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math></h2>
+<p>Beim Timoshenko-Balken ist die Drehung des Querschnitts nicht mehr
+gleich der Neigung der Biegelinie. In den Differentialgleichungen
+(Kapitel 3) verwenden wir die Querschnittsdrehung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>,
+die – wie
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>w</mi><mo>′</mo></msup><annotation encoding="application/x-tex">w&#39;</annotation></semantics></math>
+– positiv <strong>im</strong> Uhrzeigersinn ist. Der Freiheitsgrad
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>φ</mi><annotation encoding="application/x-tex">\varphi</annotation></semantics></math>
+ist positiv <strong>entgegen</strong> dem Uhrzeigersinn. Es gilt
+also</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>φ</mi><mo>=</mo><mi>−</mi><mi>β</mi><mo>,</mo><mspace width="2.0em"></mspace><mtext mathvariant="normal">beim schubstarren Stab:</mtext><mspace width="1.0em"></mspace><mi>φ</mi><mo>=</mo><mi>−</mi><msup><mi>w</mi><mo>′</mo></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\varphi = -\beta , \qquad \text{beim schubstarren Stab:} \quad \varphi = -w&#39; .
+</annotation></semantics></math></p>
+<p>In der Ausgabe von d2beam steht die Querschnittsdrehung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>.</p>
+<h1 data-number="3" id="differentialgleichungen-des-timoshenko-balkens"><span class="header-section-number">3</span> Differentialgleichungen des
+Timoshenko-Balkens</h1>
+<h2 data-number="3.1" id="gleichgewicht"><span class="header-section-number">3.1</span> Gleichgewicht</h2>
+<p>Am infinitesimalen Element (Bild 2) mit der Querlast
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">q(x)</annotation></semantics></math>
+in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-Richtung
+und der Längslast
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">n(x)</annotation></semantics></math>
+in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>-Richtung
+gilt</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>d</mi><mi>N</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mi>−</mi><mi>n</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><mfrac><mrow><mi>d</mi><mi>V</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mi>−</mi><mi>q</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><mfrac><mrow><mi>d</mi><mi>M</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\frac{dN}{dx} = -n(x), \qquad \frac{dV}{dx} = -q(x), \qquad \frac{dM}{dx} = V(x).
+</annotation></semantics></math></p>
+<h2 data-number="3.2" id="kinematik"><span class="header-section-number">3.2</span> Kinematik</h2>
+<figure>
+<img role="img" aria-label="Bild 4: Kinematik des Timoshenko-Balkens" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NjAiIGhlaWdodD0iMzMwIiB2aWV3Qm94PSIwIDAgNTYwIDMzMCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSI2MC4wIiB5MT0iMTYwLjAiIHgyPSI1MDAuMCIgeTI9IjE2MC4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4yIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWRhc2hhcnJheT0iNiw0Ii8+CjxsaW5lIHgxPSIyODAuMCIgeTE9IjQwLjAiIHgyPSIyODAuMCIgeTI9IjI4MC4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4yIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWRhc2hhcnJheT0iNiw0Ii8+CjxsaW5lIHgxPSI3Ni4wIiB5MT0iNzcuNiIgeDI9IjQ4NC4wIiB5Mj0iMjQyLjQiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iMzI1LjAiIHkxPSI0OC43IiB4Mj0iMjM1LjAiIHkyPSIyNzEuMyIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1kYXNoYXJyYXk9IjMsMyIvPgo8bGluZSB4MT0iMzA1LjkiIHkxPSI0Ny45IiB4Mj0iMjU0LjEiIHkyPSIyNzIuMSIgc3Ryb2tlPSIjYzAwMDAwIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxwYXRoIGQ9Ik0gNDUwLjAgMTYwLjAgQSAxNzAgMTcwIDAgMCAxIDQzNy42IDIyMy43IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS4yIi8+Cjx0ZXh0IHg9IjQ2MC4wIiB5PSIyMDAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZvbnQtc3R5bGU9Iml0YWxpYyI+d+KAsjwvdGV4dD4KPHBhdGggZD0iTSAyODAuMCAyNTUuMCBBIDk1IDk1IDAgMCAxIDI1OC42IDI1Mi42IiBmaWxsPSJub25lIiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IHg9IjI2OC4wIiB5PSIyNzIuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXdlaWdodD0ibm9ybWFsIiBmb250LXN0eWxlPSJpdGFsaWMiPs6yPC90ZXh0Pgo8cGF0aCBkPSJNIDI5My41IDEwMS41IEEgNjAgNjAgMCAwIDEgMzAyLjUgMTA0LjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KPHRleHQgeD0iMzAyLjAiIHk9Ijk0LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXdlaWdodD0ibm9ybWFsIiBmb250LXN0eWxlPSJpdGFsaWMiPs6zPC90ZXh0Pgo8dGV4dCB4PSIzNDcuMiIgeT0iNTIuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjODA4MDgwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtd2VpZ2h0PSJub3JtYWwiPuKKpSBBY2hzZTwvdGV4dD4KPHRleHQgeD0iMjk3LjkiIHk9IjM5LjkiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC13ZWlnaHQ9Im5vcm1hbCI+UXVlcnNjaG5pdHQ8L3RleHQ+Cjx0ZXh0IHg9IjQ3NC4wIiB5PSIyNjYuNCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXdlaWdodD0ibm9ybWFsIj52ZXJmb3JtdGUgU3RhYmFjaHNlPC90ZXh0Pgo8bGluZSB4MT0iNDAuMCIgeTE9IjI5MC4wIiB4Mj0iOTAuMCIgeTI9IjI5MC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIxMDAuMCwyOTAuMCA5MC4wLDI4NS44IDkwLjAsMjk0LjIiIGZpbGw9IiMyZjU1OTciLz4KPHRleHQgeD0iMTA4LjAiIHk9IjI5Ni4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMyZjU1OTciIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC1zdHlsZT0iaXRhbGljIj54PC90ZXh0Pgo8bGluZSB4MT0iNDAuMCIgeTE9IjI5MC4wIiB4Mj0iNDAuMCIgeTI9IjMxNS4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI0MC4wLDMyNS4wIDQ0LjIsMzE1LjAgMzUuOCwzMTUuMCIgZmlsbD0iIzJmNTU5NyIvPgo8dGV4dCB4PSI1Mi4wIiB5PSIzMjYuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMmY1NTk3IiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+eiwgdzwvdGV4dD4KPHRleHQgeD0iNTMwLjAiIHk9IjMwMC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTciIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZvbnQtc3R5bGU9Iml0YWxpYyI+zrMgPSB34oCyIOKIkiDOsjwvdGV4dD4KPC9zdmc+Cg==" style="width:65.0%" alt="Bild 4: Kinematik des Timoshenko-Balkens" />
+<figcaption aria-hidden="true">Bild 4: Kinematik des
+Timoshenko-Balkens</figcaption>
+</figure>
+<p>Ein Querschnitt verschiebt sich um
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>u</mi><annotation encoding="application/x-tex">u</annotation></semantics></math>
+in Stabrichtung und um
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
+quer dazu und dreht sich um
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>.
+Beim Bernoulli-Balken bleibt der Querschnitt senkrecht zur verformten
+Achse, d. h.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><msup><mi>w</mi><mo>′</mo></msup></mrow><annotation encoding="application/x-tex">\beta = w&#39;</annotation></semantics></math>.
+Beim Timoshenko-Balken unterscheiden sich beide Winkel um die mittlere
+Gleitung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>γ</mi><mi>m</mi></msub><annotation encoding="application/x-tex">\gamma_m</annotation></semantics></math>
+(Bild 4):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>d</mi><mi>w</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mi>β</mi><mo>+</mo><msub><mi>γ</mi><mi>m</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\frac{dw}{dx} = \beta + \gamma_m .
+</annotation></semantics></math></p>
+<h2 data-number="3.3" id="werkstoffgesetz"><span class="header-section-number">3.3</span> Werkstoffgesetz</h2>
+<p>Normalkraft, Moment und Querkraft hängen über die Steifigkeiten mit
+den Verzerrungen zusammen:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>d</mi><mi>u</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mfrac><mi>N</mi><mrow><mi>E</mi><mi>A</mi></mrow></mfrac><mo>,</mo><mspace width="2.0em"></mspace><mfrac><mrow><mi>d</mi><mi>β</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mi>−</mi><mfrac><mi>M</mi><mrow><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow></mfrac><mo>−</mo><msub><mi>κ</mi><mi>T</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>γ</mi><mi>m</mi></msub><mo>=</mo><mfrac><mi>V</mi><mrow><mi>G</mi><msub><mi>A</mi><mi>s</mi></msub></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\frac{du}{dx} = \frac{N}{EA}, \qquad
+\frac{d\beta}{dx} = -\frac{M}{EI_y} - \kappa_T, \qquad
+\gamma_m = \frac{V}{G A_s} .
+</annotation></semantics></math></p>
+<p>Dabei ist</p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>κ</mi><mi>T</mi></msub><mo>=</mo><msub><mi>α</mi><mi>T</mi></msub><mspace width="0.167em"></mspace><mi mathvariant="normal">Δ</mi><mi>T</mi><mi>/</mi><mi>h</mi></mrow><annotation encoding="application/x-tex">\kappa_T = \alpha_T \, \Delta T / h</annotation></semantics></math>
+die Krümmung aus einem Temperaturunterschied
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>T</mi><mo>=</mo><msub><mi>T</mi><mi>u</mi></msub><mo>−</mo><msub><mi>T</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">\Delta T = T_u - T_o</annotation></semantics></math>
+(wird bei den Elementlasten behandelt),</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mi>E</mi><mrow><mn>2</mn><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>ν</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">G = \dfrac{E}{2\,(1+\nu)}</annotation></semantics></math>
+der Schubmodul mit der Querdehnzahl
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ν</mi><annotation encoding="application/x-tex">\nu</annotation></semantics></math>,</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>A</mi><mi>s</mi></msub><mo>=</mo><msub><mi>κ</mi><mi>s</mi></msub><mo>⋅</mo><mi>A</mi></mrow><annotation encoding="application/x-tex">A_s = \kappa_s \cdot A</annotation></semantics></math>
+die Schubfläche mit dem <strong>Schubfaktor</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mi>s</mi></msub><annotation encoding="application/x-tex">\kappa_s</annotation></semantics></math>
+aus der Querschnittseingabe (z. B.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mi>/</mi><mn>6</mn></mrow><annotation encoding="application/x-tex">5/6</annotation></semantics></math>
+für das Rechteck).</li>
+</ul>
+<p>Für die Schubverformung führen wir die Abkürzung</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><mfrac><mrow><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow><mrow><mi>G</mi><msub><mi>A</mi><mi>s</mi></msub></mrow></mfrac><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mrow><mtext mathvariant="normal">Einheit </mtext><mspace width="0.333em"></mspace></mrow><msup><mi mathvariant="normal">m</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+\eta = \frac{E I_y}{G A_s} \qquad (\text{Einheit } \mathrm{m}^2)
+</annotation></semantics></math></p>
+<p>ein. Beim schubstarren Stab (Schubfaktor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math>
+in d2beam) ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\eta = 0</annotation></semantics></math>.</p>
+<p>In d2beam kann die Dehnsteifigkeit mit einem Faktor
+(<code>faktor_dehn</code>) multipliziert werden, z. B. um einen Stab
+näherungsweise dehnstarr zu machen. Er steckt im Folgenden in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>A</mi></mrow><annotation encoding="application/x-tex">EA</annotation></semantics></math>.</p>
+<h2 data-number="3.4" id="lösung-der-differentialgleichungen-für-den-unbelasteten-stab"><span class="header-section-number">3.4</span> Lösung der
+Differentialgleichungen für den unbelasteten Stab</h2>
+<p>Für die Steifigkeitsmatrix genügt der unbelastete Stab
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">q = 0</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>κ</mi><mi>T</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\kappa_T = 0</annotation></semantics></math>).
+Die Lasten kommen bei den Elementlasten hinzu. Mit den
+Integrationskonstanten
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>1</mn></msub><mi>…</mi><msub><mi>C</mi><mn>4</mn></msub></mrow><annotation encoding="application/x-tex">C_1 \ldots C_4</annotation></semantics></math>
+erhält man durch fortgesetzte Integration</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>C</mi><mn>1</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>C</mi><mn>1</mn></msub><mspace width="0.167em"></mspace><mi>x</mi><mo>+</mo><msub><mi>C</mi><mn>2</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>β</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mfrac><mn>1</mn><mrow><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>C</mi><mn>1</mn></msub><mfrac><msup><mi>x</mi><mn>2</mn></msup><mn>2</mn></mfrac><mo>+</mo><msub><mi>C</mi><mn>2</mn></msub><mspace width="0.167em"></mspace><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>C</mi><mn>3</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mfrac><mn>1</mn><mrow><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>C</mi><mn>1</mn></msub><mfrac><msup><mi>x</mi><mn>3</mn></msup><mn>6</mn></mfrac><mo>+</mo><msub><mi>C</mi><mn>2</mn></msub><mfrac><msup><mi>x</mi><mn>2</mn></msup><mn>2</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>C</mi><mn>3</mn></msub><mspace width="0.167em"></mspace><mi>x</mi><mo>+</mo><msub><mi>C</mi><mn>4</mn></msub><mo>+</mo><mfrac><mi>η</mi><mrow><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow></mfrac><mspace width="0.167em"></mspace><msub><mi>C</mi><mn>1</mn></msub><mspace width="0.167em"></mspace><mi>x</mi><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+V(x) &amp;= C_1 , \\
+M(x) &amp;= C_1\, x + C_2 , \\
+\beta(x) &amp;= -\frac{1}{E I_y}\left( C_1 \frac{x^2}{2} + C_2\, x \right) + C_3 , \\
+w(x) &amp;= -\frac{1}{E I_y}\left( C_1 \frac{x^3}{6} + C_2 \frac{x^2}{2} \right) + C_3\, x + C_4
+        + \frac{\eta}{E I_y}\, C_1\, x .
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Der letzte Summand in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">w(x)</annotation></semantics></math>
+ist der Anteil aus der Schubverformung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∫</mo><msub><mi>γ</mi><mi>m</mi></msub><mspace width="0.167em"></mspace><mi>d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\int \gamma_m\,dx</annotation></semantics></math>.</p>
+<h1 data-number="4" id="elementsteifigkeitsmatrix"><span class="header-section-number">4</span> Elementsteifigkeitsmatrix</h1>
+<h2 data-number="4.1" id="biegeanteil"><span class="header-section-number">4.1</span> Biegeanteil</h2>
+<p>Die Randbedingungen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>w</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">w(0) = w_a</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>φ</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mi>β</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>φ</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">\varphi(0) = -\beta(0) = \varphi_a</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>w</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">w(L) = w_e</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>φ</mi><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>φ</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">\varphi(L) = \varphi_e</annotation></semantics></math>
+ergeben ein lineares Gleichungssystem für die Konstanten:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>w</mi><mi>a</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>φ</mi><mi>a</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>w</mi><mi>e</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>φ</mi><mi>e</mi></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mi>L</mi><mspace width="0.167em"></mspace><mi>η</mi></mrow><mrow><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow></mfrac></mstyle><mo>−</mo><mstyle displaystyle="true"><mfrac><msup><mi>L</mi><mn>3</mn></msup><mrow><mn>6</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mstyle displaystyle="true"><mfrac><msup><mi>L</mi><mn>2</mn></msup><mrow><mn>2</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><msup><mi>L</mi><mn>2</mn></msup><mrow><mn>2</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mi>L</mi><mrow><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>C</mi><mn>1</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>C</mi><mn>2</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>C</mi><mn>3</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>C</mi><mn>4</mn></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mspace width="2.0em"></mspace><mtext mathvariant="normal">kurz</mtext><mspace width="1.0em"></mspace><msub><mi>𝛅</mi><mi>b</mi></msub><mo>=</mo><mi>𝐀</mi><mspace width="0.167em"></mspace><mi>𝐂</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\begin{bmatrix} w_a \\ \varphi_a \\ w_e \\ \varphi_e \end{bmatrix} =
+\begin{bmatrix}
+0 &amp; 0 &amp; 0 &amp; 1 \\
+0 &amp; 0 &amp; -1 &amp; 0 \\
+\dfrac{L\,\eta}{E I_y} - \dfrac{L^3}{6 E I_y} &amp; -\dfrac{L^2}{2 E I_y} &amp; L &amp; 1 \\
+\dfrac{L^2}{2 E I_y} &amp; \dfrac{L}{E I_y} &amp; -1 &amp; 0
+\end{bmatrix}
+\begin{bmatrix} C_1 \\ C_2 \\ C_3 \\ C_4 \end{bmatrix}
+\qquad \text{kurz} \quad \boldsymbol{\delta}_b = \mathbf{A}\,\mathbf{C} .
+</annotation></semantics></math></p>
+<p>Mit dem <strong>Schubparameter</strong></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ψ</mi><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mstyle displaystyle="true"><mfrac><mrow><mn>12</mn><mspace width="0.167em"></mspace><mi>η</mi></mrow><msup><mi>L</mi><mn>2</mn></msup></mfrac></mstyle></mrow></mfrac><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mstyle displaystyle="true"><mfrac><mrow><mn>12</mn><mspace width="0.167em"></mspace><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow><mrow><mi>G</mi><msub><mi>A</mi><mi>s</mi></msub><mspace width="0.167em"></mspace><msup><mi>L</mi><mn>2</mn></msup></mrow></mfrac></mstyle></mrow></mfrac><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>ψ</mi><mo>=</mo><mn>1</mn><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> beim schubstarren Stab</mtext></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+\psi = \frac{1}{1 + \dfrac{12\,\eta}{L^2}} = \frac{1}{1 + \dfrac{12\, E I_y}{G A_s\, L^2}}
+\qquad (\psi = 1 \text{ beim schubstarren Stab})
+</annotation></semantics></math></p>
+<p>lautet die Lösung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐂</mi><mo>=</mo><msup><mi>𝐀</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><msub><mi>𝛅</mi><mi>b</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{C} = \mathbf{A}^{-1}\boldsymbol{\delta}_b</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>C</mi><mn>1</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mspace width="0.167em"></mspace><mi>ψ</mi></mrow><msup><mi>L</mi><mn>3</mn></msup></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mn>12</mn><mspace width="0.167em"></mspace><msub><mi>w</mi><mi>a</mi></msub><mo>+</mo><mn>6</mn><mi>L</mi><mspace width="0.167em"></mspace><msub><mi>φ</mi><mi>a</mi></msub><mo>+</mo><mn>12</mn><mspace width="0.167em"></mspace><msub><mi>w</mi><mi>e</mi></msub><mo>+</mo><mn>6</mn><mi>L</mi><mspace width="0.167em"></mspace><msub><mi>φ</mi><mi>e</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>C</mi><mn>2</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow><msup><mi>L</mi><mn>2</mn></msup></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mn>6</mn><mi>ψ</mi><mspace width="0.167em"></mspace><msub><mi>w</mi><mi>a</mi></msub><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mn>3</mn><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>L</mi><mspace width="0.167em"></mspace><msub><mi>φ</mi><mi>a</mi></msub><mo>−</mo><mn>6</mn><mi>ψ</mi><mspace width="0.167em"></mspace><msub><mi>w</mi><mi>e</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>3</mn><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>L</mi><mspace width="0.167em"></mspace><msub><mi>φ</mi><mi>e</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>C</mi><mn>3</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><msub><mi>φ</mi><mi>a</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>C</mi><mn>4</mn></msub><mo>=</mo><msub><mi>w</mi><mi>a</mi></msub><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+C_1 &amp;= \frac{E I_y\,\psi}{L^3}\left( -12\, w_a + 6L\,\varphi_a + 12\, w_e + 6L\,\varphi_e \right), \\
+C_2 &amp;= \frac{E I_y}{L^2}\left( 6\psi\, w_a - (1+3\psi)\,L\,\varphi_a - 6\psi\, w_e + (1-3\psi)\,L\,\varphi_e \right), \\
+C_3 &amp;= -\varphi_a , \qquad C_4 = w_a .
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Die Stabendgrößen folgen aus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>
+an den Stabenden mit den Beziehungen aus Abschnitt 2.3:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>a</mi></msub><mo>=</mo><mi>−</mi><msub><mi>C</mi><mn>1</mn></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>M</mi><mi>a</mi></msub><mo>=</mo><mi>−</mi><msub><mi>C</mi><mn>2</mn></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>V</mi><mi>e</mi></msub><mo>=</mo><msub><mi>C</mi><mn>1</mn></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>M</mi><mi>e</mi></msub><mo>=</mo><msub><mi>C</mi><mn>1</mn></msub><mi>L</mi><mo>+</mo><msub><mi>C</mi><mn>2</mn></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+V_a = -C_1, \quad M_a = -C_2, \quad V_e = C_1, \quad M_e = C_1 L + C_2 .
+</annotation></semantics></math></p>
+<h2 data-number="4.2" id="längsanteil"><span class="header-section-number">4.2</span> Längsanteil</h2>
+<p>Aus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>u</mi><mo>′</mo></msup><mo>=</mo><mi>N</mi><mi>/</mi><mi>E</mi><mi>A</mi></mrow><annotation encoding="application/x-tex">u&#39; = N/EA</annotation></semantics></math>
+folgt
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mi>E</mi><mi>A</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><msub><mi>u</mi><mi>e</mi></msub><mo>−</mo><msub><mi>u</mi><mi>a</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">N = EA\,(u_e - u_a)/L</annotation></semantics></math>
+und damit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>a</mi></msub><mo>=</mo><mi>−</mi><mi>N</mi></mrow><annotation encoding="application/x-tex">F_a = -N</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>e</mi></msub><mo>=</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">F_e = N</annotation></semantics></math>.</p>
+<h2 data-number="4.3" id="die-steifigkeitsbeziehung"><span class="header-section-number">4.3</span> Die Steifigkeitsbeziehung</h2>
+<p>Zusammengefasst ergibt sich die Steifigkeitsbeziehung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐟</mi><mo>=</mo><mi>𝐤</mi><mspace width="0.167em"></mspace><mi>𝛅</mi></mrow><annotation encoding="application/x-tex">\mathbf{f} = \mathbf{k}\,\boldsymbol{\delta}</annotation></semantics></math>
+(ohne Lasten) mit</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐤</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mi>E</mi><mi>A</mi></mrow><mi>L</mi></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mstyle displaystyle="true"><mfrac><mrow><mi>E</mi><mi>A</mi></mrow><mi>L</mi></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mn>12</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>3</mn></msup></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mstyle displaystyle="true"><mfrac><mrow><mn>6</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>2</mn></msup></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mstyle displaystyle="true"><mfrac><mrow><mn>12</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>3</mn></msup></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mstyle displaystyle="true"><mfrac><mrow><mn>6</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>2</mn></msup></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mstyle displaystyle="true"><mfrac><mrow><mn>6</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>2</mn></msup></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mn>3</mn><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow><mi>L</mi></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mn>6</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>2</mn></msup></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mi>ψ</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow><mi>L</mi></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mstyle displaystyle="true"><mfrac><mrow><mi>E</mi><mi>A</mi></mrow><mi>L</mi></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mi>E</mi><mi>A</mi></mrow><mi>L</mi></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mstyle displaystyle="true"><mfrac><mrow><mn>12</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>3</mn></msup></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mn>6</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>2</mn></msup></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mn>12</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>3</mn></msup></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mn>6</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>2</mn></msup></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mstyle displaystyle="true"><mfrac><mrow><mn>6</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>2</mn></msup></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mi>ψ</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow><mi>L</mi></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mn>6</mn><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mi>ψ</mi></mrow><msup><mi>L</mi><mn>2</mn></msup></mfrac></mstyle></mtd><mtd columnalign="center" style="text-align: center"><mstyle displaystyle="true"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mn>3</mn><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow><mi>L</mi></mfrac></mstyle></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{k} =
+\begin{bmatrix}
+\dfrac{EA}{L} &amp; 0 &amp; 0 &amp; -\dfrac{EA}{L} &amp; 0 &amp; 0 \\[2mm]
+0 &amp; \dfrac{12 EI_y\psi}{L^3} &amp; -\dfrac{6 EI_y\psi}{L^2} &amp; 0 &amp; -\dfrac{12 EI_y\psi}{L^3} &amp; -\dfrac{6 EI_y\psi}{L^2} \\[2mm]
+0 &amp; -\dfrac{6 EI_y\psi}{L^2} &amp; \dfrac{(1+3\psi)\,EI_y}{L} &amp; 0 &amp; \dfrac{6 EI_y\psi}{L^2} &amp; \dfrac{(3\psi-1)\,EI_y}{L} \\[2mm]
+-\dfrac{EA}{L} &amp; 0 &amp; 0 &amp; \dfrac{EA}{L} &amp; 0 &amp; 0 \\[2mm]
+0 &amp; -\dfrac{12 EI_y\psi}{L^3} &amp; \dfrac{6 EI_y\psi}{L^2} &amp; 0 &amp; \dfrac{12 EI_y\psi}{L^3} &amp; \dfrac{6 EI_y\psi}{L^2} \\[2mm]
+0 &amp; -\dfrac{6 EI_y\psi}{L^2} &amp; \dfrac{(3\psi-1)\,EI_y}{L} &amp; 0 &amp; \dfrac{6 EI_y\psi}{L^2} &amp; \dfrac{(1+3\psi)\,EI_y}{L}
+\end{bmatrix} .
+</annotation></semantics></math></p>
+<p>Im Programm: <code>berechneLokaleElementsteifigkeitmatrix</code>,
+Matrix <code>estm</code>.</p>
+<p><strong>Kontrolle schubstarr:</strong> Mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ψ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\psi = 1</annotation></semantics></math>
+wird
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mn>3</mn><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">(1+3\psi) = 4</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mi>ψ</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">(3\psi-1) = 2</annotation></semantics></math>.
+Man erhält die bekannte Steifigkeitsmatrix des Bernoulli-Balkens mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mi>E</mi><mi>I</mi><mi>/</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">4EI/L</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>E</mi><mi>I</mi><mi>/</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">2EI/L</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mi>E</mi><mi>I</mi><mi>/</mi><msup><mi>L</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">6EI/L^2</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>12</mn><mi>E</mi><mi>I</mi><mi>/</mi><msup><mi>L</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">12EI/L^3</annotation></semantics></math>.</p>
+<p><strong>Einfluss der Schubverformung:</strong> In der Literatur wird
+oft
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Φ</mi><mo>=</mo><mn>12</mn><mi>E</mi><mi>I</mi><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mi>G</mi><msub><mi>A</mi><mi>s</mi></msub><msup><mi>L</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Phi = 12EI/(GA_sL^2)</annotation></semantics></math>
+verwendet, also
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ψ</mi><mo>=</mo><mn>1</mn><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\psi = 1/(1+\Phi)</annotation></semantics></math>.
+Dann lauten die Biegeterme
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>4</mn><mo>+</mo><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="postfix">)</mo><mi>E</mi><mi>I</mi></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="postfix">)</mo><mi>L</mi></mrow></mfrac><annotation encoding="application/x-tex">\frac{(4+\Phi)EI}{(1+\Phi)L}</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>−</mo><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="postfix">)</mo><mi>E</mi><mi>I</mi></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="postfix">)</mo><mi>L</mi></mrow></mfrac><annotation encoding="application/x-tex">\frac{(2-\Phi)EI}{(1+\Phi)L}</annotation></semantics></math>.
+Für einen Rechteckquerschnitt aus Stahlbeton mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mi>/</mi><mi>L</mi><mo>=</mo><mn>1</mn><mi>/</mi><mn>10</mn></mrow><annotation encoding="application/x-tex">h/L = 1/10</annotation></semantics></math>
+ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Φ</mi><mo>≈</mo><mn>0</mn><mo>,</mo><mn>03</mn></mrow><annotation encoding="application/x-tex">\Phi \approx 0{,}03</annotation></semantics></math>;
+die Schubverformung spielt erst bei gedrungenen Stäben
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mi>/</mi><mi>L</mi><mo>≳</mo><mn>1</mn><mi>/</mi><mn>5</mn></mrow><annotation encoding="application/x-tex">h/L \gtrsim 1/5</annotation></semantics></math>)
+eine nennenswerte Rolle.</p>
+<h2 data-number="4.4" id="ansatzfunktionen"><span class="header-section-number">4.4</span> Ansatzfunktionen</h2>
+<p>Setzt man die Konstanten in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">w(x)</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>φ</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mi>β</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\varphi(x) = -\beta(x)</annotation></semantics></math>
+ein, erhält man die Verformungen im Inneren des unbelasteten Stabes als
+Funktion der Stabendverformungen:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝐍</mi><mi>w</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>𝛅</mi><mi>b</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><mi>φ</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝐍</mi><mi>φ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>𝛅</mi><mi>b</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>𝛅</mi><mi>b</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">[</mo><msub><mi>w</mi><mi>a</mi></msub><mo>,</mo><mspace width="0.222em"></mspace><msub><mi>φ</mi><mi>a</mi></msub><mo>,</mo><mspace width="0.222em"></mspace><msub><mi>w</mi><mi>e</mi></msub><mo>,</mo><mspace width="0.222em"></mspace><msub><mi>φ</mi><mi>e</mi></msub><msup><mo stretchy="false" form="postfix">]</mo><mi>T</mi></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+w(x) = \mathbf{N}_w(x)\,\boldsymbol{\delta}_b , \qquad \varphi(x) = \mathbf{N}_\varphi(x)\,\boldsymbol{\delta}_b ,
+\qquad \boldsymbol{\delta}_b = [w_a,\ \varphi_a,\ w_e,\ \varphi_e]^T .
+</annotation></semantics></math></p>
+<p>Mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ξ</mi><mo>=</mo><mi>x</mi><mi>/</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">\xi = x/L</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi><mo>=</mo><mn>12</mn><mspace width="0.167em"></mspace><mi>η</mi><mi>/</mi><msup><mi>L</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\lambda = 12\,\eta / L^2</annotation></semantics></math>
+(also
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ψ</mi><mo>=</mo><mn>1</mn><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>λ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\psi = 1/(1+\lambda)</annotation></semantics></math>):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>N</mi><mrow><mi>w</mi><mo>,</mo><mn>1</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>ψ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>3</mn><msup><mi>ξ</mi><mn>2</mn></msup><mo>+</mo><mn>2</mn><msup><mi>ξ</mi><mn>3</mn></msup><mo>+</mo><mi>λ</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ξ</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>N</mi><mrow><mi>w</mi><mo>,</mo><mn>2</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mi>ψ</mi><mspace width="0.167em"></mspace><mi>L</mi><mspace width="0.167em"></mspace><mi>ξ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>2</mn><mi>ξ</mi><mo>+</mo><msup><mi>ξ</mi><mn>2</mn></msup><mo>+</mo><mstyle displaystyle="false"><mfrac><mi>λ</mi><mn>2</mn></mfrac></mstyle><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ξ</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>N</mi><mrow><mi>w</mi><mo>,</mo><mn>3</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>ψ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>3</mn><msup><mi>ξ</mi><mn>2</mn></msup><mo>−</mo><mn>2</mn><msup><mi>ξ</mi><mn>3</mn></msup><mo>+</mo><mi>λ</mi><mspace width="0.167em"></mspace><mi>ξ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>N</mi><mrow><mi>w</mi><mo>,</mo><mn>4</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>ψ</mi><mspace width="0.167em"></mspace><mi>L</mi><mspace width="0.167em"></mspace><mi>ξ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>ξ</mi><mo>−</mo><msup><mi>ξ</mi><mn>2</mn></msup><mo>+</mo><mstyle displaystyle="false"><mfrac><mi>λ</mi><mn>2</mn></mfrac></mstyle><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ξ</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+N_{w,1} &amp;= \psi\left(1 - 3\xi^2 + 2\xi^3 + \lambda\,(1-\xi)\right), \\
+N_{w,2} &amp;= -\psi\, L\,\xi\left( 1 - 2\xi + \xi^2 + \tfrac{\lambda}{2}\,(1-\xi) \right), \\
+N_{w,3} &amp;= \psi\left(3\xi^2 - 2\xi^3 + \lambda\,\xi\right), \\
+N_{w,4} &amp;= \psi\, L\,\xi\left( \xi - \xi^2 + \tfrac{\lambda}{2}\,(1-\xi) \right).
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Für
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\lambda = 0</annotation></semantics></math>
+sind das die kubischen Hermite-Polynome des Bernoulli-Balkens (mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>φ</mi><mo>=</mo><mi>−</mi><msup><mi>w</mi><mo>′</mo></msup></mrow><annotation encoding="application/x-tex">\varphi = -w&#39;</annotation></semantics></math>).
+Diese Funktionen sind für den unbelasteten Timoshenko-Balken
+<strong>exakt</strong>. d2beam verwendet sie, um die Matrizen für
+Bettung, Theorie II. Ordnung und Masse zu bilden (folgende Teile).</p>
+<h1 data-number="5" id="transformationen"><span class="header-section-number">5</span> Transformationen</h1>
+<p>Die Steifigkeitsbeziehung aus Kapitel 4 gilt im lokalen System des
+elastischen Stabes. Für das Gesamtsystem brauchen wir sie für die
+Knotenfreiheitsgrade. Dazu sind bis zu vier Schritte nötig:</p>
+<ol type="1">
+<li>Drehung vom globalen in das lokale System (Stabwinkel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>),</li>
+<li>ggf. Drehung des Knotensystems bei gedrehten Lagern (Winkel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϑ</mi><annotation encoding="application/x-tex">\vartheta</annotation></semantics></math>),</li>
+<li>Übertragung vom Knoten
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>a</mi></msub><annotation encoding="application/x-tex">K_a</annotation></semantics></math>
+zum Stabende
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+über das starre Ende,</li>
+<li>Einbau der Gelenke.</li>
+</ol>
+<h2 data-number="5.1" id="drehung-um-den-stabwinkel-alpha"><span class="header-section-number">5.1</span> Drehung um den Stabwinkel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></h2>
+<figure>
+<img role="img" aria-label="Bild 5: Gedrehter Stab im globalen Koordinatensystem" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MjAiIGhlaWdodD0iMzMwIiB2aWV3Qm94PSIwIDAgNjIwIDMzMCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSI1MC4wIiB5MT0iNDUuMCIgeDI9IjU4MC4wIiB5Mj0iNDUuMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNTkwLjAsNDUuMCA1ODAuMCw0MC44IDU4MC4wLDQ5LjIiIGZpbGw9IiMyZjU1OTciLz4KPHRleHQgeD0iNTk4LjAiIHk9IjUxLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzJmNTU5NyIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPng8L3RleHQ+CjxsaW5lIHgxPSI1MC4wIiB5MT0iNDUuMCIgeDI9IjUwLjAiIHkyPSIzMDUuMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNTAuMCwzMTUuMCA1NC4yLDMwNS4wIDQ1LjgsMzA1LjAiIGZpbGw9IiMyZjU1OTciLz4KPHRleHQgeD0iNjIuMCIgeT0iMzE4LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzJmNTU5NyIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPno8L3RleHQ+CjxsaW5lIHgxPSIxNDAuMCIgeTE9IjExMC4wIiB4Mj0iNDQ4LjEiIHkyPSIyNTMuNyIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxjaXJjbGUgY3g9IjEzNS4wIiBjeT0iNzUuMCIgcj0iMTUiIGZpbGw9IiNkZGQ5YzMiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KPHRleHQgeD0iMTM1LjAiIHk9IjgxLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5LPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJub3JtYWwiPmE8L3RzcGFuPjwvdGV4dD4KPGNpcmNsZSBjeD0iNDUzLjEiIGN5PSIyMTguNyIgcj0iMTUiIGZpbGw9IiNkZGQ5YzMiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KPHRleHQgeD0iNDUzLjEiIHk9IjIyNC43IiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+Szx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMiIgZm9udC1zdHlsZT0ibm9ybWFsIj5lPC90c3Bhbj48L3RleHQ+CjxsaW5lIHgxPSIxNDAuMCIgeTE9IjExMC4wIiB4Mj0iMzAwLjAiIHkyPSIxMTAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxwYXRoIGQ9Ik0gMjcwLjAgMTEwLjAgQSAxMzAgMTMwIDAgMCAxIDI1Ny44IDE2NC45IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxsaW5lIHgxPSIyNjguNSIgeTE9IjEyMS4yIiB4Mj0iMjU5LjciIHkyPSIxNTcuMiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIyNTcuOCwxNjQuOSAyNjMuMCwxNTguMCAyNTYuNSwxNTYuNCIgZmlsbD0iIzAwMDAwMCIvPgo8dGV4dCB4PSIyODUuMCIgeT0iMTQyLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj7OsTwvdGV4dD4KPGxpbmUgeDE9IjM0MC4zIiB5MT0iMTUzLjciIHgyPSI0MTIuOCIgeTI9IjE4Ny41IiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI0MjEuOCwxOTEuOCA0MTQuNiwxODMuNyA0MTEuMCwxOTEuNCIgZmlsbD0iIzJmNTU5NyIvPgo8dGV4dCB4PSI0MzYuOSIgeT0iMTkyLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzJmNTU5NyIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPng8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+TDwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iMTMwLjAiIHkxPSIxNDAuMCIgeDI9IjEwNC42IiB5Mj0iMTk0LjQiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjEwMC40LDIwMy40IDEwOC40LDE5Ni4yIDEwMC44LDE5Mi42IiBmaWxsPSIjMmY1NTk3Ii8+Cjx0ZXh0IHg9IjgyLjIiIHk9IjIyMi41IiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMyZjU1OTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+ejx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMyIgZm9udC1zdHlsZT0ibm9ybWFsIj5MPC90c3Bhbj48L3RleHQ+Cjx0ZXh0IHg9IjgwLjAiIHk9IjMwMC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiM4MDgwODAiIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC13ZWlnaHQ9Im5vcm1hbCI+zrEgPiAwIGltIFVocnplaWdlcnNpbm4gKHogbmFjaCB1bnRlbik8L3RleHQ+Cjwvc3ZnPgo=" style="width:80.0%" alt="Bild 5: Gedrehter Stab im globalen Koordinatensystem" />
+<figcaption aria-hidden="true">Bild 5: Gedrehter Stab im globalen
+Koordinatensystem</figcaption>
+</figure>
+<p>Eine Kraft mit den globalen Komponenten
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>F</mi><mi>x</mi></msub><annotation encoding="application/x-tex">F_x</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>F</mi><mi>z</mi></msub><annotation encoding="application/x-tex">F_z</annotation></semantics></math>
+hat in Stabrichtung und quer dazu die Komponenten</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>F</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>V</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>cos</mi><mo>⁡</mo><mi>α</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>sin</mi><mo>⁡</mo><mi>α</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mi>sin</mi><mo>⁡</mo><mi>α</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>cos</mi><mo>⁡</mo><mi>α</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>F</mi><mi>x</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>F</mi><mi>z</mi></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>𝐓</mi><mi>P</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>F</mi><mi>x</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>F</mi><mi>z</mi></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\begin{bmatrix} F \\ V \end{bmatrix} =
+\begin{bmatrix} \cos\alpha &amp; \sin\alpha \\ -\sin\alpha &amp; \cos\alpha \end{bmatrix}
+\begin{bmatrix} F_x \\ F_z \end{bmatrix}
+= \mathbf{T}_P \begin{bmatrix} F_x \\ F_z \end{bmatrix} .
+</annotation></semantics></math></p>
+<p>Verschiebungen sind ebenfalls Vektoren und werden genauso
+transformiert. Moment und Drehwinkel bleiben bei der Drehung um die
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>-Achse
+unverändert. Für ein Stabende gilt also</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐓</mi><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>cos</mi><mo>⁡</mo><mi>α</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>sin</mi><mo>⁡</mo><mi>α</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mi>sin</mi><mo>⁡</mo><mi>α</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>cos</mi><mo>⁡</mo><mi>α</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><msup><mi>𝐓</mi><mi>T</mi></msup><mi>𝐓</mi><mo>=</mo><mi>𝐈</mi><mo>,</mo><mspace width="1.0em"></mspace><msup><mi>𝐓</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>=</mo><msup><mi>𝐓</mi><mi>T</mi></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{T}(\alpha) =
+\begin{bmatrix} \cos\alpha &amp; \sin\alpha &amp; 0 \\ -\sin\alpha &amp; \cos\alpha &amp; 0 \\ 0 &amp; 0 &amp; 1 \end{bmatrix},
+\qquad \mathbf{T}^T\mathbf{T} = \mathbf{I}, \quad \mathbf{T}^{-1} = \mathbf{T}^T .
+</annotation></semantics></math></p>
+<p>Die Drehmatrix ist <strong>orthogonal</strong>. Das gilt für die
+folgenden Matrizen nicht mehr, deshalb leiten wir die Transformation in
+Abschnitt 5.5 allgemein her.</p>
+<h2 data-number="5.2" id="gedrehte-lager"><span class="header-section-number">5.2</span> Gedrehte Lager</h2>
+<figure>
+<img role="img" aria-label="Bild 6: Knotensystem eines gedrehten Lagers" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MjAiIGhlaWdodD0iMzYwIiB2aWV3Qm94PSIwIDAgNTIwIDM2MCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSIxNTAuMCIgeTE9IjIwMC4wIiB4Mj0iMzQwLjAiIHkyPSIyMDAuMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMzUwLjAsMjAwLjAgMzQwLjAsMTk1LjggMzQwLjAsMjA0LjIiIGZpbGw9IiMyZjU1OTciLz4KPHRleHQgeD0iMzYwLjAiIHk9IjIwNi4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMyZjU1OTciIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC1zdHlsZT0iaXRhbGljIj54PC90ZXh0Pgo8bGluZSB4MT0iMTUwLjAiIHkxPSIyMDAuMCIgeDI9IjE1MC4wIiB5Mj0iMzMwLjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjE1MC4wLDM0MC4wIDE1NC4yLDMzMC4wIDE0NS44LDMzMC4wIiBmaWxsPSIjMmY1NTk3Ii8+Cjx0ZXh0IHg9IjE2Mi4wIiB5PSIzNDguMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMmY1NTk3IiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+ejwvdGV4dD4KPGxpbmUgeDE9IjE1MC4wIiB5MT0iMjAwLjAiIHgyPSIyOTcuNCIgeTI9Ijk2LjgiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjMwNS42LDkxLjAgMjk1LjAsOTMuMyAyOTkuOSwxMDAuMiIgZmlsbD0iI2MwMDAwMCIvPgo8dGV4dCB4PSIzMTkuOCIgeT0iODUuMyIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+eOKAsjwvdGV4dD4KPGxpbmUgeDE9IjE1MC4wIiB5MT0iMjAwLjAiIHgyPSIyMjQuNiIgeTI9IjMwNi41IiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIyMzAuMywzMTQuNyAyMjguMCwzMDQuMSAyMjEuMSwzMDguOSIgZmlsbD0iI2MwMDAwMCIvPgo8dGV4dCB4PSIyNDQuMCIgeT0iMzI4LjkiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPnrigLI8L3RleHQ+CjxwYXRoIGQ9Ik0gMjcwLjAgMjAwLjAgQSAxMjAgMTIwIDAgMCAwIDI0OC4zIDEzMS4yIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS4yIi8+Cjx0ZXh0IHg9IjI4Mi4wIiB5PSIxNjYuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+z5E8L3RleHQ+CjxsaW5lIHgxPSIxNTAuMCIgeTE9IjIwMC4wIiB4Mj0iMzY2LjEiIHkyPSIyNzguNyIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjx0ZXh0IHg9IjM3OS41IiB5PSIyOTguMSIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+eDx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMyIgZm9udC1zdHlsZT0ibm9ybWFsIj5MPC90c3Bhbj48L3RleHQ+CjxwYXRoIGQ9Ik0gMjI1LjAgMjAwLjAgQSA3NSA3NSAwIDAgMSAyMjAuNSAyMjUuNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEuMiIvPgo8dGV4dCB4PSIyMzQuMCIgeT0iMjIyLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPs6xPC90ZXh0Pgo8cGF0aCBkPSJNIDI4NS4yIDEwNS40IEEgMTY1IDE2NSAwIDAgMSAzMDUuMCAyNTYuNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMCIvPgo8dGV4dCB4PSIzMjIuMCIgeT0iMTU2LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZmlsbD0iIzgwODA4MCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXdlaWdodD0ibm9ybWFsIiBmb250LXN0eWxlPSJpdGFsaWMiPs6xICsgz5E8L3RleHQ+CjxjaXJjbGUgY3g9IjExOC4wIiBjeT0iMTc0LjAiIHI9IjE1IiBmaWxsPSIjZGRkOWMzIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4yIi8+Cjx0ZXh0IHg9IjExOC4wIiB5PSIxODAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPks8L3RleHQ+Cjwvc3ZnPgo=" style="width:60.0%" alt="Bild 6: Knotensystem eines gedrehten Lagers" />
+<figcaption aria-hidden="true">Bild 6: Knotensystem eines gedrehten
+Lagers</figcaption>
+</figure>
+<p>An einem Knoten mit gedrehtem Lager beziehen sich die
+Knotenfreiheitsgrade
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>U</mi><mo>′</mo></msup><annotation encoding="application/x-tex">U&#39;</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>W</mi><mo>′</mo></msup><annotation encoding="application/x-tex">W&#39;</annotation></semantics></math>
+und die Lagerkräfte auf ein Knotensystem
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mo>′</mo></msup><annotation encoding="application/x-tex">x&#39;</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>z</mi><mo>′</mo></msup><annotation encoding="application/x-tex">z&#39;</annotation></semantics></math>,
+das um den Winkel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϑ</mi><annotation encoding="application/x-tex">\vartheta</annotation></semantics></math>
+<strong>entgegen</strong> dem Uhrzeigersinn gegen das globale System
+gedreht ist (in der App heißt dieser Winkel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>φ</mi><annotation encoding="application/x-tex">\varphi</annotation></semantics></math>;
+hier nennen wir ihn
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϑ</mi><annotation encoding="application/x-tex">\vartheta</annotation></semantics></math>,
+um ihn vom Drehfreiheitsgrad zu unterscheiden). Das gilt für
+<strong>alle</strong> Stäbe, die an diesem Knoten angeschlossen
+sind.</p>
+<p>Vom Knotensystem zum lokalen Stabsystem ist dann um den Winkel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>+</mo><mi>ϑ</mi></mrow><annotation encoding="application/x-tex">\alpha + \vartheta</annotation></semantics></math>
+zu drehen (Bild 6):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐓</mi><mi>a</mi></msub><mo>=</mo><mi>𝐓</mi><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo>+</mo><msub><mi>ϑ</mi><mi>a</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>𝐓</mi><mi>e</mi></msub><mo>=</mo><mi>𝐓</mi><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo>+</mo><msub><mi>ϑ</mi><mi>e</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\mathbf{T}_a = \mathbf{T}(\alpha + \vartheta_a), \qquad \mathbf{T}_e = \mathbf{T}(\alpha + \vartheta_e),
+</annotation></semantics></math></p>
+<p>mit den Elementen</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>t</mi><mn>00</mn></msub><mo>=</mo><mi>cos</mi><mo>⁡</mo><mi>α</mi><mi>cos</mi><mo>⁡</mo><mi>ϑ</mi><mo>−</mo><mi>sin</mi><mo>⁡</mo><mi>α</mi><mi>sin</mi><mo>⁡</mo><mi>ϑ</mi><mo>=</mo><mi>cos</mi><mo>⁡</mo><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo>+</mo><mi>ϑ</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>t</mi><mn>01</mn></msub><mo>=</mo><mi>sin</mi><mo>⁡</mo><mi>α</mi><mi>cos</mi><mo>⁡</mo><mi>ϑ</mi><mo>+</mo><mi>cos</mi><mo>⁡</mo><mi>α</mi><mi>sin</mi><mo>⁡</mo><mi>ϑ</mi><mo>=</mo><mi>sin</mi><mo>⁡</mo><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo>+</mo><mi>ϑ</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+t_{00} = \cos\alpha\cos\vartheta - \sin\alpha\sin\vartheta = \cos(\alpha+\vartheta), \qquad
+t_{01} = \sin\alpha\cos\vartheta + \cos\alpha\sin\vartheta = \sin(\alpha+\vartheta).
+</annotation></semantics></math></p>
+<p>So steht es auch im Programm (<code>t00</code>, <code>t01</code> bzw.
+<code>t33</code>, <code>t34</code>). Ohne gedrehtes Lager ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϑ</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\vartheta = 0</annotation></semantics></math>.</p>
+<p>Die Knotenverschiebungen in lokaler Richtung, aber noch am Knoten,
+bezeichnen wir mit dem Index
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>u</mi><mi>K</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>w</mi><mi>K</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>φ</mi><mi>K</mi></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>a</mi></msub><mo>=</mo><msub><mi>𝐓</mi><mi>a</mi></msub><msub><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msup><mi>U</mi><mo>′</mo></msup></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msup><mi>W</mi><mo>′</mo></msup></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi mathvariant="normal">Φ</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><msub><mi>K</mi><mi>a</mi></msub></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\begin{bmatrix} u_K \\ w_K \\ \varphi_K \end{bmatrix}_a = \mathbf{T}_a
+\begin{bmatrix} U&#39; \\ W&#39; \\ \Phi \end{bmatrix}_{K_a} .
+</annotation></semantics></math></p>
+<h2 data-number="5.3" id="starre-enden"><span class="header-section-number">5.3</span> Starre Enden</h2>
+<figure>
+<img role="img" aria-label="Bild 7: Kinematik des starren Endes am Stabanfang" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NjAiIGhlaWdodD0iMjYwIiB2aWV3Qm94PSIwIDAgNTYwIDI2MCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSIxMTAuMCIgeTE9IjE1MC4wIiB4Mj0iNDEwLjAiIHkyPSIxNTAuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtZGFzaGFycmF5PSIxMCw2Ii8+CjxsaW5lIHgxPSIxMTAuMCIgeTE9IjE1MC4wIiB4Mj0iNDAzLjQiIHkyPSI4Ny42IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGNpcmNsZSBjeD0iNzAuMCIgY3k9IjE2MC4wIiByPSIxNSIgZmlsbD0iI2RkZDljMyIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMiIvPgo8dGV4dCB4PSI3MC4wIiB5PSIxNjYuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPks8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Im5vcm1hbCI+YTwvdHNwYW4+PC90ZXh0Pgo8Y2lyY2xlIGN4PSIxMTAuMCIgY3k9IjE1MC4wIiByPSI0IiBmaWxsPSIjMDAwMDAwIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxjaXJjbGUgY3g9IjQwMy40IiBjeT0iODcuNiIgcj0iNCIgZmlsbD0iIzAwMDAwMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8dGV4dCB4PSI0MTkuNCIgeT0iODMuNiIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+YTwvdGV4dD4KPGNpcmNsZSBjeD0iNDEwLjAiIGN5PSIxNTAuMCIgcj0iNCIgZmlsbD0iIzgwODA4MCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cGF0aCBkPSJNIDI2MC4wIDE1MC4wIEEgMTUwIDE1MCAwIDAgMCAyNTguMyAxMjcuNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cG9seWdvbiBwb2ludHM9IjI1Ni43LDExOC44IDI1NC42LDEyOC4zIDI2Mi4wLDEyNy4wIiBmaWxsPSIjMDAwMDAwIi8+Cjx0ZXh0IHg9IjI3NS4wIiB5PSIxMzYuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+z4Y8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+SzwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iNDUwLjAiIHkxPSIxNTAuMCIgeDI9IjQ1MC4wIiB5Mj0iOTcuNiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI0NTAuMCw4OS42IDQ0Ni42LDk3LjYgNDUzLjQsOTcuNiIgZmlsbD0iIzAwMDAwMCIvPgo8bGluZSB4MT0iNDE4LjAiIHkxPSIxNTAuMCIgeDI9IjQ1OC4wIiB5Mj0iMTUwLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI0MTEuNCIgeTE9Ijg3LjYiIHgyPSI0NTguMCIgeTI9Ijg3LjYiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjx0ZXh0IHg9IjQ2Mi4wIiB5PSIxMjQuOCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE3IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZvbnQtc3R5bGU9Iml0YWxpYyI+4oSTPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJub3JtYWwiPmE8L3RzcGFuPjx0c3BhbiBkeT0iLTUiPiDCtyDPhjwvdHNwYW4+PHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJub3JtYWwiPks8L3RzcGFuPjwvdGV4dD4KPGxpbmUgeDE9IjExMC4wIiB5MT0iMTYwLjAiIHgyPSIxMTAuMCIgeTI9IjIyMS4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMC44IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iNDEwLjAiIHkxPSIxNjAuMCIgeDI9IjQxMC4wIiB5Mj0iMjIxLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIyNjAuMCIgeTE9IjIxNS4wIiB4Mj0iMTE4LjAiIHkyPSIyMTUuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIxMTAuMCwyMTUuMCAxMTguMCwyMTguNCAxMTguMCwyMTEuNiIgZmlsbD0iIzgwODA4MCIvPgo8bGluZSB4MT0iMjYwLjAiIHkxPSIyMTUuMCIgeDI9IjQwMi4wIiB5Mj0iMjE1LjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIxLjAiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNDEwLjAsMjE1LjAgNDAyLjAsMjExLjYgNDAyLjAsMjE4LjQiIGZpbGw9IiM4MDgwODAiLz4KPHRleHQgeD0iMjYwLjAiIHk9IjIwOS4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+4oSTPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJub3JtYWwiPmE8L3RzcGFuPjwvdGV4dD4KPC9zdmc+Cg==" style="width:70.0%" alt="Bild 7: Kinematik des starren Endes am Stabanfang" />
+<figcaption aria-hidden="true">Bild 7: Kinematik des starren Endes am
+Stabanfang</figcaption>
+</figure>
+<p>Das starre Ende ist ein Stück Stab ohne Verformung. Der Punkt
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+macht deshalb die Starrkörperbewegung des Knotens mit. Dreht sich der
+Knoten um
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>φ</mi><mi>K</mi></msub><annotation encoding="application/x-tex">\varphi_K</annotation></semantics></math>
+(entgegen dem Uhrzeigersinn), hebt sich der Punkt
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+im Abstand
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ℓ</mi><mi>a</mi></msub><annotation encoding="application/x-tex">\ell_a</annotation></semantics></math>
+um
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ℓ</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><msub><mi>φ</mi><mi>K</mi></msub></mrow><annotation encoding="application/x-tex">\ell_a\,\varphi_K</annotation></semantics></math>,
+also entgegen der positiven
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>-Richtung
+(Bild 7):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>a</mi></msub><mo>=</mo><msub><mi>u</mi><mi>K</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>w</mi><mi>a</mi></msub><mo>=</mo><msub><mi>w</mi><mi>K</mi></msub><mo>−</mo><msub><mi>ℓ</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><msub><mi>φ</mi><mi>K</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>φ</mi><mi>a</mi></msub><mo>=</mo><msub><mi>φ</mi><mi>K</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+u_a = u_K, \qquad w_a = w_K - \ell_a\,\varphi_K, \qquad \varphi_a = \varphi_K .
+</annotation></semantics></math></p>
+<p>Am Stabende liegt der Punkt
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>
+<strong>vor</strong> dem Knoten
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>e</mi></msub><annotation encoding="application/x-tex">K_e</annotation></semantics></math>,
+das Vorzeichen kehrt sich um:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>e</mi></msub><mo>=</mo><msub><mi>w</mi><mi>K</mi></msub><mo>+</mo><msub><mi>ℓ</mi><mi>e</mi></msub><mspace width="0.167em"></mspace><msub><mi>φ</mi><mi>K</mi></msub></mrow><annotation encoding="application/x-tex">w_e = w_K + \ell_e\,\varphi_K</annotation></semantics></math>.
+In Matrizenform:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐒</mi><mi>a</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><msub><mi>ℓ</mi><mi>a</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>𝐒</mi><mi>e</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>ℓ</mi><mi>e</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{S}_a = \begin{bmatrix} 1 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; -\ell_a \\ 0 &amp; 0 &amp; 1 \end{bmatrix}, \qquad
+\mathbf{S}_e = \begin{bmatrix} 1 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; \ell_e \\ 0 &amp; 0 &amp; 1 \end{bmatrix} .
+</annotation></semantics></math></p>
+<p>Ohne Gelenke ist die Transformation vom Knotensystem zum elastischen
+Stab damit</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛅</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>𝐒</mi><mi>a</mi></msub><msub><mi>𝐓</mi><mi>a</mi></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>𝟎</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>𝟎</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>𝐒</mi><mi>e</mi></msub><msub><mi>𝐓</mi><mi>e</mi></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>𝚫</mi><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>𝐒</mi><mi>a</mi></msub><msub><mi>𝐓</mi><mi>a</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>t</mi><mn>00</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>t</mi><mn>01</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><msub><mi>t</mi><mn>01</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>t</mi><mn>00</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><msub><mi>ℓ</mi><mi>a</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boldsymbol{\delta} =
+\begin{bmatrix} \mathbf{S}_a\mathbf{T}_a &amp; \mathbf{0} \\ \mathbf{0} &amp; \mathbf{S}_e\mathbf{T}_e \end{bmatrix}
+\boldsymbol{\Delta}, \qquad
+\mathbf{S}_a\mathbf{T}_a =
+\begin{bmatrix} t_{00} &amp; t_{01} &amp; 0 \\ -t_{01} &amp; t_{00} &amp; -\ell_a \\ 0 &amp; 0 &amp; 1 \end{bmatrix} .
+</annotation></semantics></math></p>
+<p>Das starre Ende wird also nicht als eigenes Element gerechnet,
+sondern steckt vollständig in der Transformationsmatrix. Die elastische
+Länge
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+geht in die Steifigkeitsmatrix ein, die Gesamtlänge
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+in die Richtung des Stabes.</p>
+<h2 data-number="5.4" id="gelenke"><span class="header-section-number">5.4</span> Gelenke</h2>
+<figure>
+<img role="img" aria-label="Bild 8: Momentengelenk am Übergang vom starren Ende zum elastischen Stab" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMjIwIiB2aWV3Qm94PSIwIDAgNjAwIDIyMCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSI5MC4wIiB5MT0iMTUwLjAiIHgyPSI1NTAuMCIgeTI9IjE1MC4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1kYXNoYXJyYXk9IjEwLDYiLz4KPGxpbmUgeDE9IjkwLjAiIHkxPSIxNTAuMCIgeDI9IjI4NS42IiB5Mj0iMTA4LjQiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI3IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cGF0aCBkPSJNIDI4NS42Mjk1MjAxNDY3NjExNCAxMDguNDE3NjYxODM2NDQ4MTMgQyAzNTUuNjI5NTIwMTQ2NzYxMTQgNzUuNDE3NjYxODM2NDQ4MTMsIDQ1NS42Mjk1MjAxNDY3NjExNCAxNjAsIDU1MCAxNjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxjaXJjbGUgY3g9IjI4NS42IiBjeT0iMTA4LjQiIHI9IjciIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxjaXJjbGUgY3g9IjUwLjAiIGN5PSIxNjAuMCIgcj0iMTUiIGZpbGw9IiNkZGQ5YzMiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KPHRleHQgeD0iNTAuMCIgeT0iMTY2LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5LPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJub3JtYWwiPmE8L3RzcGFuPjwvdGV4dD4KPGNpcmNsZSBjeD0iOTAuMCIgY3k9IjE1MC4wIiByPSI0IiBmaWxsPSIjMDAwMDAwIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxwYXRoIGQ9Ik0gMjIwLjAgMTUwLjAgQSAxMzAgMTMwIDAgMCAwIDIxOC43IDEzMS44IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMjE3LjIsMTIzLjAgMjE1LjAsMTMyLjUgMjIyLjQsMTMxLjIiIGZpbGw9IiMwMDAwMDAiLz4KPHRleHQgeD0iMjM1LjAiIHk9IjE0MC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC1zdHlsZT0iaXRhbGljIj7Phjx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMyIgZm9udC1zdHlsZT0ibm9ybWFsIj5LPC90c3Bhbj48L3RleHQ+CjxsaW5lIHgxPSIyODUuNiIgeTE9IjEwOC40IiB4Mj0iMzg1LjMiIHkyPSI2MS45IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjI4NS42IiB5MT0iMTA4LjQiIHgyPSIzOTUuNiIgeTI9IjEwOC40IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBhdGggZD0iTSAzODAuNiAxMDguNCBBIDk1IDk1IDAgMCAwIDM3NS4xIDc2LjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBvbHlnb24gcG9pbnRzPSIzNzEuNyw2OC4zIDM3MS42LDc4LjAgMzc4LjYsNzUuMiIgZmlsbD0iIzAwMDAwMCIvPgo8dGV4dCB4PSIzOTcuNiIgeT0iODYuNCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+z4Y8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+YTwvdHNwYW4+PC90ZXh0Pgo8dGV4dCB4PSIyODkuNiIgeT0iMTM4LjQiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5hPC90ZXh0Pgo8dGV4dCB4PSIyNzEuNiIgeT0iOTQuNCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjODA4MDgwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXdlaWdodD0ibm9ybWFsIj5HZWxlbms8L3RleHQ+Cjwvc3ZnPgo=" style="width:80.0%" alt="Bild 8: Momentengelenk am Übergang vom starren Ende zum elastischen Stab" />
+<figcaption aria-hidden="true">Bild 8: Momentengelenk am Übergang vom
+starren Ende zum elastischen Stab</figcaption>
+</figure>
+<p>Ein Gelenk entkoppelt eine Stabendverformung von der Knotenbewegung.
+In d2beam erhält jede gelenkige Stabendverformung einen
+<strong>zusätzlichen Freiheitsgrad</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Δ</mi><mi>G</mi></msub><annotation encoding="application/x-tex">\Delta_{G}</annotation></semantics></math>,
+der nur zu diesem Stab gehört. Er wird nach den sechs
+Knotenfreiheitsgraden angehängt, in der Reihenfolge
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>a</mi></msub><mo>,</mo><msub><mi>w</mi><mi>a</mi></msub><mo>,</mo><msub><mi>φ</mi><mi>a</mi></msub><mo>,</mo><msub><mi>u</mi><mi>e</mi></msub><mo>,</mo><msub><mi>w</mi><mi>e</mi></msub><mo>,</mo><msub><mi>φ</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">u_a, w_a, \varphi_a, u_e, w_e, \varphi_e</annotation></semantics></math>.
+Ein Stab mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>G</mi></msub><annotation encoding="application/x-tex">n_G</annotation></semantics></math>
+Gelenken hat also
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>+</mo><msub><mi>n</mi><mi>G</mi></msub></mrow><annotation encoding="application/x-tex">6 + n_G</annotation></semantics></math>
+Freiheitsgrade.</p>
+<p>In der Transformationsmatrix wird die Zeile der gelenkigen
+Stabendverformung durch einen Einheitsvektor auf den zusätzlichen
+Freiheitsgrad <strong>ersetzt</strong>. Die anderen Zeilen bleiben
+unverändert. Formal ist das eine Matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐆</mi><annotation encoding="application/x-tex">\mathbf{G}</annotation></semantics></math>,
+die von links multipliziert wird:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛅</mi><mo>=</mo><mi>𝐆</mi><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>𝐒</mi><mi>a</mi></msub><msub><mi>𝐓</mi><mi>a</mi></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>𝟎</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>𝟎</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>𝟎</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>𝐒</mi><mi>e</mi></msub><msub><mi>𝐓</mi><mi>e</mi></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>𝟎</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>𝟎</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>𝟎</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>𝐈</mi><msub><mi>n</mi><mi>G</mi></msub></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>𝚫</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>𝚫</mi><mi>G</mi></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>𝐓</mi><mi>U</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>𝚫</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>𝚫</mi><mi>G</mi></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boldsymbol{\delta} = \mathbf{G}
+\begin{bmatrix}
+\mathbf{S}_a\mathbf{T}_a &amp; \mathbf{0} &amp; \mathbf{0} \\
+\mathbf{0} &amp; \mathbf{S}_e\mathbf{T}_e &amp; \mathbf{0} \\
+\mathbf{0} &amp; \mathbf{0} &amp; \mathbf{I}_{n_G}
+\end{bmatrix}
+\begin{bmatrix} \boldsymbol{\Delta} \\ \boldsymbol{\Delta}_G \end{bmatrix}
+= \mathbf{T}_U
+\begin{bmatrix} \boldsymbol{\Delta} \\ \boldsymbol{\Delta}_G \end{bmatrix} .
+</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐆</mi><annotation encoding="application/x-tex">\mathbf{G}</annotation></semantics></math>
+hat
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>6</mn><annotation encoding="application/x-tex">6</annotation></semantics></math>
+Zeilen und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>+</mo><msub><mi>n</mi><mi>G</mi></msub></mrow><annotation encoding="application/x-tex">6 + n_G</annotation></semantics></math>
+Spalten. Zeile
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+ist der Einheitsvektor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐞</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\mathbf{e}_i</annotation></semantics></math>,
+wenn Stabendverformung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+kein Gelenk hat, sonst der Einheitsvektor auf den zugehörigen
+Gelenkfreiheitsgrad.</p>
+<p><strong>Wo sitzt das Gelenk?</strong> Weil
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐆</mi><annotation encoding="application/x-tex">\mathbf{G}</annotation></semantics></math>
+links von
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐒</mi><annotation encoding="application/x-tex">\mathbf{S}</annotation></semantics></math>
+steht, sitzt das Gelenk <strong>zwischen starrem Ende und elastischem
+Stab</strong>, also im Punkt
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+bzw.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>,
+nicht im Knoten (Bild 8). Bei einem Momentengelenk am Stabanfang bleibt
+deshalb in der Zeile für
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mi>a</mi></msub><annotation encoding="application/x-tex">w_a</annotation></semantics></math>
+der Term
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><msub><mi>ℓ</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">-\ell_a</annotation></semantics></math>
+stehen: Das starre Ende dreht sich mit dem Knoten
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>φ</mi><mi>K</mi></msub><annotation encoding="application/x-tex">\varphi_K</annotation></semantics></math>),
+nur der elastische Stab hat seine eigene Drehung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>φ</mi><mi>a</mi></msub><mo>=</mo><msub><mi mathvariant="normal">Δ</mi><mi>G</mi></msub></mrow><annotation encoding="application/x-tex">\varphi_a = \Delta_G</annotation></semantics></math>.
+Das entspricht der baupraktischen Vorstellung eines biegesteifen
+Anschlussbereichs mit einem Gelenk an dessen Rand.</p>
+<p><strong>Beispiel:</strong> Waagerechter Stab
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\alpha = 0</annotation></semantics></math>,
+kein gedrehtes Lager) mit starrem Ende
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ℓ</mi><mi>a</mi></msub><annotation encoding="application/x-tex">\ell_a</annotation></semantics></math>
+und Momentengelenk am Stabanfang. Der Vektor der Freiheitsgrade ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><msub><mi>U</mi><mi>a</mi></msub><mo>,</mo><msub><mi>W</mi><mi>a</mi></msub><mo>,</mo><msub><mi mathvariant="normal">Φ</mi><mi>a</mi></msub><mo>,</mo><msub><mi>U</mi><mi>e</mi></msub><mo>,</mo><msub><mi>W</mi><mi>e</mi></msub><mo>,</mo><msub><mi mathvariant="normal">Φ</mi><mi>e</mi></msub><mo>,</mo><msub><mi mathvariant="normal">Δ</mi><mi>G</mi></msub><msup><mo stretchy="false" form="postfix">]</mo><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">[U_a, W_a, \Phi_a, U_e, W_e, \Phi_e, \Delta_G]^T</annotation></semantics></math>,
+und</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐓</mi><mi>U</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><msub><mi>ℓ</mi><mi>a</mi></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{T}_U =
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; -\ell_a &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\
+0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0
+\end{bmatrix} .
+</annotation></semantics></math></p>
+<p>Im Programm heißt diese Matrix <code>transU</code> (aufgebaut in
+<code>initialisiereElementdaten</code>).</p>
+<h2 data-number="5.5" id="transformation-der-steifigkeitsbeziehung"><span class="header-section-number">5.5</span> Transformation der
+Steifigkeitsbeziehung</h2>
+<p>Weil
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐓</mi><mi>U</mi></msub><annotation encoding="application/x-tex">\mathbf{T}_U</annotation></semantics></math>
+nicht orthogonal und im Allgemeinen nicht einmal quadratisch ist, leiten
+wir die Transformation mit dem Prinzip der virtuellen Verschiebungen
+her. Die virtuelle Arbeit der Stabendgrößen muss in beiden
+Beschreibungen gleich sein:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><msup><mi>𝚫</mi><mi>T</mi></msup><mspace width="0.167em"></mspace><mi>𝐅</mi><mo>=</mo><mi>δ</mi><msup><mi>𝛅</mi><mi>T</mi></msup><mspace width="0.167em"></mspace><mi>𝐟</mi><mo>=</mo><mi>δ</mi><msup><mi>𝚫</mi><mi>T</mi></msup><mspace width="0.167em"></mspace><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><mi>𝐟</mi><mspace width="1.0em"></mspace><mo>⇒</mo><mspace width="1.0em"></mspace><mi>𝐅</mi><mo>=</mo><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><mi>𝐟</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\delta\boldsymbol{\Delta}^T\,\mathbf{F} = \delta\boldsymbol{\delta}^T\,\mathbf{f}
+= \delta\boldsymbol{\Delta}^T\,\mathbf{T}_U^T\,\mathbf{f}
+\quad\Rightarrow\quad \mathbf{F} = \mathbf{T}_U^T\,\mathbf{f} .
+</annotation></semantics></math></p>
+<p>Hier steht
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝚫</mi><annotation encoding="application/x-tex">\boldsymbol{\Delta}</annotation></semantics></math>
+kurz für alle
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>+</mo><msub><mi>n</mi><mi>G</mi></msub></mrow><annotation encoding="application/x-tex">6+n_G</annotation></semantics></math>
+Freiheitsgrade des Stabes. Mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐟</mi><mo>=</mo><mi>𝐤</mi><mspace width="0.167em"></mspace><mi>𝛅</mi><mo>+</mo><mi>𝐩</mi></mrow><annotation encoding="application/x-tex">\mathbf{f} = \mathbf{k}\,\boldsymbol{\delta} + \mathbf{p}</annotation></semantics></math>
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐩</mi><annotation encoding="application/x-tex">\mathbf{p}</annotation></semantics></math>:
+Elementlasten in lokalen Stabendgrößen) folgt</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐅</mi><mo>=</mo><munder><munder><mrow><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><mi>𝐤</mi><mspace width="0.167em"></mspace><msub><mi>𝐓</mi><mi>U</mi></msub></mrow><mo accent="true">⏟</mo></munder><msub><mi>𝐊</mi><mi>e</mi></msub></munder><mspace width="0.167em"></mspace><mi>𝚫</mi><mo>+</mo><munder><munder><mrow><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><mi>𝐩</mi></mrow><mo accent="true">⏟</mo></munder><msub><mi>𝐏</mi><mi>e</mi></msub></munder><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{F} = \underbrace{\mathbf{T}_U^T\,\mathbf{k}\,\mathbf{T}_U}_{\mathbf{K}_e}\,\boldsymbol{\Delta}
++ \underbrace{\mathbf{T}_U^T\,\mathbf{p}}_{\mathbf{P}_e} .
+</annotation></semantics></math></p>
+<p>Für den reinen Drehfall
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐓</mi><mi>U</mi></msub><mo>=</mo><mi>𝐓</mi></mrow><annotation encoding="application/x-tex">\mathbf{T}_U = \mathbf{T}</annotation></semantics></math>,
+orthogonal) ist das die bekannte Formel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐊</mi><mi>e</mi></msub><mo>=</mo><msup><mi>𝐓</mi><mi>T</mi></msup><mi>𝐤</mi><mspace width="0.167em"></mspace><mi>𝐓</mi></mrow><annotation encoding="application/x-tex">\mathbf{K}_e = \mathbf{T}^T\mathbf{k}\,\mathbf{T}</annotation></semantics></math>.
+Sie gilt aber auch mit starren Enden und Gelenken.</p>
+<p>Im Programm: <code>berechneElementsteifigkeitsmatrix</code> (Matrix
+<code>estiffG</code>) und für die Lasten
+<code>berechneElementlasten</code>. Die Gelenkfreiheitsgrade werden ganz
+normal mit in das Gesamtgleichungssystem eingebaut, eine statische
+Kondensation findet nicht statt.</p>
+<p><strong>Wie wirkt das Gelenk im Gleichungssystem?</strong> Die Zeile
+des Gleichungssystems für einen Gelenkfreiheitsgrad lautet
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>G</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">F_G = 0</annotation></semantics></math>
+(keine äußere Last).
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>F</mi><mi>G</mi></msub><annotation encoding="application/x-tex">F_G</annotation></semantics></math>
+ist nach
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐅</mi><mo>=</mo><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><mi>𝐟</mi></mrow><annotation encoding="application/x-tex">\mathbf{F} = \mathbf{T}_U^T\mathbf{f}</annotation></semantics></math>
+genau die zugehörige Stabendgröße des elastischen Stabes, bei einem
+Momentengelenk am Stabanfang also
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>a</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">M_a = 0</annotation></semantics></math>.</p>
+<h2 data-number="5.6" id="rücktransformation-der-kräfte"><span class="header-section-number">5.6</span> Rücktransformation der
+Kräfte</h2>
+<p>Nach dem Lösen des Gleichungssystems sind die Knotenverschiebungen
+bekannt. Die Stabendverformungen folgen direkt aus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛅</mi><mo>=</mo><msub><mi>𝐓</mi><mi>U</mi></msub><mspace width="0.167em"></mspace><mi>𝚫</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{\delta} = \mathbf{T}_U\,\boldsymbol{\Delta}</annotation></semantics></math>.
+Für die Kräfte berechnet d2beam zuerst die Stabendkräfte im
+Knotensystem</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐅</mi><mo>=</mo><msub><mi>𝐊</mi><mi>e</mi></msub><mspace width="0.167em"></mspace><mi>𝚫</mi><mo>+</mo><msub><mi>𝐏</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">
+\mathbf{F} = \mathbf{K}_e\,\boldsymbol{\Delta} + \mathbf{P}_e
+</annotation></semantics></math></p>
+<p>und transformiert die sechs Knotenanteile dann in die lokalen
+Stabendgrößen am elastischen Stab. Die Gleichung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐅</mi><mo>=</mo><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><mi>𝐟</mi></mrow><annotation encoding="application/x-tex">\mathbf{F} = \mathbf{T}_U^T\mathbf{f}</annotation></semantics></math>
+lässt sich dafür nicht einfach umkehren. Stattdessen nutzen wir das
+Gleichgewicht am starren Ende.</p>
+<figure>
+<img role="img" aria-label="Bild 9: Gleichgewicht am starren Ende (Konvention II, lokale Richtungen)" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMjMwIiB2aWV3Qm94PSIwIDAgNjQwIDIzMCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSIxNzAuMCIgeTE9IjEyMC4wIiB4Mj0iNDUwLjAiIHkyPSIxMjAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxjaXJjbGUgY3g9IjE3MC4wIiBjeT0iMTIwLjAiIHI9IjQiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxjaXJjbGUgY3g9IjQ1MC4wIiBjeT0iMTIwLjAiIHI9IjQiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IHg9IjE2NC4wIiB5PSIxNTQuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXN0eWxlPSJpdGFsaWMiPks8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+YTwvdHNwYW4+PC90ZXh0Pgo8dGV4dCB4PSI0NTguMCIgeT0iMTU0LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPmE8L3RleHQ+CjxsaW5lIHgxPSI2MC4wIiB5MT0iMTIwLjAiIHgyPSIxMzYuMCIgeTI9IjEyMC4wIiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjE1MC4wLDEyMC4wIDEzNi4wLDExNC4xIDEzNi4wLDEyNS45IiBmaWxsPSIjYzAwMDAwIi8+Cjx0ZXh0IHg9IjU4LjAiIHk9IjExMC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiNjMDAwMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+Rjx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMyIgZm9udC1zdHlsZT0ibm9ybWFsIj5LPC90c3Bhbj48L3RleHQ+CjxsaW5lIHgxPSIxNTUuMCIgeTE9IjQ1LjAiIHgyPSIxNTUuMCIgeTI9Ijk4LjAiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMTU1LjAsMTEyLjAgMTYwLjksOTguMCAxNDkuMSw5OC4wIiBmaWxsPSIjYzAwMDAwIi8+Cjx0ZXh0IHg9IjE0MC4wIiB5PSI0MC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiNjMDAwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+Vjx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMyIgZm9udC1zdHlsZT0ibm9ybWFsIj5LPC90c3Bhbj48L3RleHQ+CjxwYXRoIGQ9Ik0gMTE1LjYgOTAuNSBBIDMyIDMyIDAgMCAwIDEwMS43IDE1Mi45IiBmaWxsPSJub25lIiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iMy41Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMTE1LjYsMTUzLjUgMTAxLjksMTQ3LjAgMTAxLjQsMTU4LjgiIGZpbGw9IiNjMDAwMDAiLz4KPHRleHQgeD0iNzAuMCIgeT0iODAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPk08dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+SzwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iNTYwLjAiIHkxPSIxMjAuMCIgeDI9IjQ4NC4wIiB5Mj0iMTIwLjAiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNDcwLjAsMTIwLjAgNDg0LjAsMTI1LjkgNDg0LjAsMTE0LjEiIGZpbGw9IiNjMDAwMDAiLz4KPHRleHQgeD0iNTY0LjAiIHk9IjExMC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiNjMDAwMDAiIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC1zdHlsZT0iaXRhbGljIj5GPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEzIiBmb250LXN0eWxlPSJub3JtYWwiPmE8L3RzcGFuPjwvdGV4dD4KPGxpbmUgeDE9IjQ2NS4wIiB5MT0iMTEyLjAiIHgyPSI0NjUuMCIgeTI9IjU5LjAiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNDY1LjAsNDUuMCA0NTkuMSw1OS4wIDQ3MC45LDU5LjAiIGZpbGw9IiNjMDAwMDAiLz4KPHRleHQgeD0iNDgyLjAiIHk9IjQwLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5WPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEzIiBmb250LXN0eWxlPSJub3JtYWwiPmE8L3RzcGFuPjwvdGV4dD4KPHBhdGggZD0iTSA1MDQuNCA5MC41IEEgMzIgMzIgMCAwIDEgNTE4LjMgMTUyLjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjUiLz4KPHBvbHlnb24gcG9pbnRzPSI1MDQuNCwxNTMuNSA1MTguNiwxNTguOCA1MTguMSwxNDcuMCIgZmlsbD0iI2MwMDAwMCIvPgo8dGV4dCB4PSI1NTAuMCIgeT0iODAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPk08dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+YTwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iMTcwLjAiIHkxPSIxMzAuMCIgeDI9IjE3MC4wIiB5Mj0iMjExLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI0NTAuMCIgeTE9IjEzMC4wIiB4Mj0iNDUwLjAiIHkyPSIyMTEuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjAuOCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjMxMC4wIiB5MT0iMjA1LjAiIHgyPSIxNzguMCIgeTI9IjIwNS4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4wIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjE3MC4wLDIwNS4wIDE3OC4wLDIwOC40IDE3OC4wLDIwMS42IiBmaWxsPSIjODA4MDgwIi8+CjxsaW5lIHgxPSIzMTAuMCIgeTE9IjIwNS4wIiB4Mj0iNDQyLjAiIHkyPSIyMDUuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI0NTAuMCwyMDUuMCA0NDIuMCwyMDEuNiA0NDIuMCwyMDguNCIgZmlsbD0iIzgwODA4MCIvPgo8dGV4dCB4PSIzMTAuMCIgeT0iMTk5LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj7ihJM8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Im5vcm1hbCI+YTwvdHNwYW4+PC90ZXh0Pgo8L3N2Zz4K" style="width:80.0%" alt="Bild 9: Gleichgewicht am starren Ende (Konvention II, lokale Richtungen)" />
+<figcaption aria-hidden="true">Bild 9: Gleichgewicht am starren Ende
+(Konvention II, lokale Richtungen)</figcaption>
+</figure>
+<p>Zuerst werden die Knotenkräfte mit der orthogonalen Matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐓</mi><mi>a</mi></msub><annotation encoding="application/x-tex">\mathbf{T}_a</annotation></semantics></math>
+in die lokale Richtung gedreht. Am starren Ende (Bild 9) greifen am
+Knoten die Kräfte
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>F</mi><mi>K</mi></msub><annotation encoding="application/x-tex">F_K</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>V</mi><mi>K</mi></msub><annotation encoding="application/x-tex">V_K</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>M</mi><mi>K</mi></msub><annotation encoding="application/x-tex">M_K</annotation></semantics></math>
+an, am Punkt
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+die Stabendgrößen des elastischen Stabes mit umgekehrtem Vorzeichen.
+Kräftegleichgewicht und Momentengleichgewicht um den Punkt
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+liefern</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>a</mi></msub><mo>=</mo><msub><mi>F</mi><mi>K</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>V</mi><mi>a</mi></msub><mo>=</mo><msub><mi>V</mi><mi>K</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>M</mi><mi>a</mi></msub><mo>=</mo><msub><mi>M</mi><mi>K</mi></msub><mo>+</mo><msub><mi>ℓ</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><msub><mi>V</mi><mi>K</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+F_a = F_K, \qquad V_a = V_K, \qquad M_a = M_K + \ell_a\, V_K .
+</annotation></semantics></math></p>
+<p>Am Stabende entsprechend
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>e</mi></msub><mo>=</mo><msub><mi>M</mi><mi>K</mi></msub><mo>−</mo><msub><mi>ℓ</mi><mi>e</mi></msub><mspace width="0.167em"></mspace><msub><mi>V</mi><mi>K</mi></msub></mrow><annotation encoding="application/x-tex">M_e = M_K - \ell_e\, V_K</annotation></semantics></math>.
+In Matrizenform ist das gerade die inverse transponierte Matrix des
+starren Endes:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐟</mi><mi>a</mi></msub><mo>=</mo><msubsup><mi>𝐒</mi><mi>a</mi><mrow><mi>−</mi><mi>T</mi></mrow></msubsup><mspace width="0.167em"></mspace><msub><mi>𝐓</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><msub><mi>𝐅</mi><msub><mi>K</mi><mi>a</mi></msub></msub><mo>,</mo><mspace width="2.0em"></mspace><msubsup><mi>𝐒</mi><mi>a</mi><mrow><mi>−</mi><mi>T</mi></mrow></msubsup><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>ℓ</mi><mi>a</mi></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><msubsup><mi>𝐒</mi><mi>e</mi><mrow><mi>−</mi><mi>T</mi></mrow></msubsup><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><msub><mi>ℓ</mi><mi>e</mi></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{f}_a = \mathbf{S}_a^{-T}\,\mathbf{T}_a\,\mathbf{F}_{K_a}, \qquad
+\mathbf{S}_a^{-T} = \begin{bmatrix} 1 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 \\ 0 &amp; \ell_a &amp; 1 \end{bmatrix}, \qquad
+\mathbf{S}_e^{-T} = \begin{bmatrix} 1 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 \\ 0 &amp; -\ell_e &amp; 1 \end{bmatrix} .
+</annotation></semantics></math></p>
+<p>Das folgt auch formal aus der virtuellen Arbeit am starren Ende: Aus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝛅</mi><mi>a</mi></msub><mo>=</mo><msub><mi>𝐒</mi><mi>a</mi></msub><msub><mi>𝛅</mi><mi>K</mi></msub></mrow><annotation encoding="application/x-tex">\boldsymbol{\delta}_a = \mathbf{S}_a\boldsymbol{\delta}_K</annotation></semantics></math>
+folgt
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐟</mi><mi>K</mi></msub><mo>=</mo><msubsup><mi>𝐒</mi><mi>a</mi><mi>T</mi></msubsup><msub><mi>𝐟</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{f}_K = \mathbf{S}_a^T\mathbf{f}_a</annotation></semantics></math>
+und damit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐟</mi><mi>a</mi></msub><mo>=</mo><msubsup><mi>𝐒</mi><mi>a</mi><mrow><mi>−</mi><mi>T</mi></mrow></msubsup><msub><mi>𝐟</mi><mi>K</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{f}_a = \mathbf{S}_a^{-T}\mathbf{f}_K</annotation></semantics></math>.</p>
+<p>Die Matrix</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐓</mi><mi>F</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msubsup><mi>𝐒</mi><mi>a</mi><mrow><mi>−</mi><mi>T</mi></mrow></msubsup><msub><mi>𝐓</mi><mi>a</mi></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>𝟎</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>𝟎</mn></mtd><mtd columnalign="center" style="text-align: center"><msubsup><mi>𝐒</mi><mi>e</mi><mrow><mi>−</mi><mi>T</mi></mrow></msubsup><msub><mi>𝐓</mi><mi>e</mi></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+\mathbf{T}_{F} =
+\begin{bmatrix} \mathbf{S}_a^{-T}\mathbf{T}_a &amp; \mathbf{0} \\ \mathbf{0} &amp; \mathbf{S}_e^{-T}\mathbf{T}_e \end{bmatrix}
+</annotation></semantics></math></p>
+<p>heißt im Programm <code>TfG2L</code>. Wichtig: Sie hängt
+<strong>nicht</strong> von den Gelenken ab und ist immer voll besetzt.
+Das Gleichgewicht am starren Ende gilt unabhängig davon, welche
+Kraftkomponente im Gelenk freigegeben ist. Bei einem Querkraftgelenk an
+einem schrägen Stab enthält z. B. die globale Kraft
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>F</mi><mi>x</mi></msub><annotation encoding="application/x-tex">F_x</annotation></semantics></math>
+trotzdem einen Anteil der Normalkraft, der bei der Rücktransformation
+gebraucht wird.</p>
+<p><strong>Kontrolle Momentengelenk:</strong> Die Spalte von
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐓</mi><mi>U</mi></msub><annotation encoding="application/x-tex">\mathbf{T}_U</annotation></semantics></math>
+für
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Φ</mi><mi>a</mi></msub><annotation encoding="application/x-tex">\Phi_a</annotation></semantics></math>
+enthält nur noch den Eintrag
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><msub><mi>ℓ</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">-\ell_a</annotation></semantics></math>
+in der Zeile von
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mi>a</mi></msub><annotation encoding="application/x-tex">w_a</annotation></semantics></math>.
+Damit ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>K</mi></msub><mo>=</mo><mi>−</mi><msub><mi>ℓ</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><msub><mi>V</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">M_{K} = -\ell_a\,V_a</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>a</mi></msub><mo>=</mo><msub><mi>M</mi><mi>K</mi></msub><mo>+</mo><msub><mi>ℓ</mi><mi>a</mi></msub><msub><mi>V</mi><mi>a</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">M_a = M_K + \ell_a V_a = 0</annotation></semantics></math>,
+wie es sein muss.</p>
+<p>Zum Schluss werden die Vorzeichen am Stabanfang umgedreht (Konvention
+II → I, Abschnitt 2.3). Die Ergebnisse stehen in <code>FL</code> und als
+Anfangswerte
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mi>L</mi></msub><annotation encoding="application/x-tex">N_L</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>V</mi><mi>L</mi></msub><annotation encoding="application/x-tex">V_L</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>M</mi><mi>L</mi></msub><annotation encoding="application/x-tex">M_L</annotation></semantics></math>
+für die Zustandslinien zur Verfügung.</p>
+<h1 data-number="6" id="gesamtsystem-und-ablauf-der-berechnung"><span class="header-section-number">6</span> Gesamtsystem und Ablauf der
+Berechnung</h1>
+<h2 data-number="6.1" id="zuordnung-der-freiheitsgrade"><span class="header-section-number">6.1</span> Zuordnung der
+Freiheitsgrade</h2>
+<p>Jeder Knoten hat drei Freiheitsgrade (im Knotensystem). Gehaltene
+Freiheitsgrade erhalten keine Gleichungsnummer. Für jedes Gelenk wird
+eine weitere Gleichungsnummer vergeben. Der Zuordnungsvektor
+<code>lm</code> eines Stabes enthält für seine
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>+</mo><msub><mi>n</mi><mi>G</mi></msub></mrow><annotation encoding="application/x-tex">6 + n_G</annotation></semantics></math>
+Freiheitsgrade die Gleichungsnummern im Gesamtsystem (bzw.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math>
+für gehaltene Freiheitsgrade).</p>
+<h2 data-number="6.2" id="ablauf"><span class="header-section-number">6.2</span> Ablauf</h2>
+<ol type="1">
+<li>Daten einlesen (Knoten, Stäbe, Lager, Lasten).</li>
+<li>Für jeden Stab:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐤</mi><annotation encoding="application/x-tex">\mathbf{k}</annotation></semantics></math>
+im lokalen System,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐓</mi><mi>U</mi></msub><annotation encoding="application/x-tex">\mathbf{T}_U</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐓</mi><mi>F</mi></msub><annotation encoding="application/x-tex">\mathbf{T}_F</annotation></semantics></math>
+aufbauen,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐊</mi><mi>e</mi></msub><mo>=</mo><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><mi>𝐤</mi><mspace width="0.167em"></mspace><msub><mi>𝐓</mi><mi>U</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{K}_e = \mathbf{T}_U^T\mathbf{k}\,\mathbf{T}_U</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐏</mi><mi>e</mi></msub><mo>=</mo><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><mi>𝐩</mi></mrow><annotation encoding="application/x-tex">\mathbf{P}_e = \mathbf{T}_U^T\mathbf{p}</annotation></semantics></math>.</li>
+<li>Gesamtsteifigkeitsmatrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐊</mi><mi>g</mi></msub><mo>=</mo><mo>∑</mo><msub><mi>𝐊</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{K}_g = \sum \mathbf{K}_e</annotation></semantics></math>
+(Einbau über <code>lm</code>).</li>
+<li>Lastvektor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐑</mi><mi>g</mi></msub><mo>=</mo><mo>∑</mo><mi>𝐏</mi><mo>−</mo><mo>∑</mo><msub><mi>𝐏</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{R}_g = \sum \mathbf{P} - \sum \mathbf{P}_e</annotation></semantics></math>
+(Knotenlasten minus Elementlasten).</li>
+<li>Gleichungssystem
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐊</mi><mi>g</mi></msub><mspace width="0.167em"></mspace><msub><mi>𝚫</mi><mi>g</mi></msub><mo>=</mo><msub><mi>𝐑</mi><mi>g</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{K}_g\,\boldsymbol{\Delta}_g = \mathbf{R}_g</annotation></semantics></math>
+lösen.</li>
+<li>Für jeden Stab:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐅</mi><mo>=</mo><msub><mi>𝐊</mi><mi>e</mi></msub><mspace width="0.167em"></mspace><mi>𝚫</mi><mo>+</mo><msub><mi>𝐏</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{F} = \mathbf{K}_e\,\boldsymbol{\Delta} + \mathbf{P}_e</annotation></semantics></math>,
+lokale Stabendgrößen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐟</mi><mo>=</mo><msub><mi>𝐓</mi><mi>F</mi></msub><mspace width="0.167em"></mspace><mi>𝐅</mi></mrow><annotation encoding="application/x-tex">\mathbf{f} = \mathbf{T}_F\,\mathbf{F}</annotation></semantics></math>,
+Stabendverformungen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛅</mi><mo>=</mo><msub><mi>𝐓</mi><mi>U</mi></msub><mi>𝚫</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{\delta} = \mathbf{T}_U\boldsymbol{\Delta}</annotation></semantics></math>.</li>
+<li>Lagerkräfte aus dem Knotengleichgewicht:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐀</mi><mi>j</mi></msub><mo>=</mo><mi>−</mi><mo>∑</mo><mi>𝐅</mi><mo>+</mo><mo>∑</mo><msub><mi>𝐏</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{A}_j = -\sum \mathbf{F} + \sum \mathbf{P}_j</annotation></semantics></math>
+(im Knotensystem, bei gedrehten Lagern also in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mo>′</mo></msup><annotation encoding="application/x-tex">x&#39;</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>z</mi><mo>′</mo></msup><annotation encoding="application/x-tex">z&#39;</annotation></semantics></math>).</li>
+<li>Schnittgrößen und Verformungen entlang der Stabachse (folgender
+Teil).</li>
+</ol>
+<h1 class="unnumbered" id="anhang-a-nachrechnung-mit-sympy">Anhang A:
+Nachrechnung mit SymPy</h1>
+<p>Im Ordner <code>doku/theorie/sympy</code> liegen die Skripte, mit
+denen die Formeln dieses Teils nachgerechnet wurden:</p>
+<ul>
+<li><code>k_timoshenko.py</code>: Lösung der Differentialgleichung,
+Steifigkeitsmatrix, Vergleich mit dem Programmcode,
+Ansatzfunktionen.</li>
+<li><code>konstanten.py</code>: Matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐀</mi><annotation encoding="application/x-tex">\mathbf{A}</annotation></semantics></math>
+und Integrationskonstanten
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>1</mn></msub><mi>…</mi><msub><mi>C</mi><mn>4</mn></msub></mrow><annotation encoding="application/x-tex">C_1 \ldots C_4</annotation></semantics></math>.</li>
+<li><code>bettung_ksig_masse.py</code>: Bettungs-, geometrische und
+Massenmatrix aus den Ansatzfunktionen, Vergleich mit dem Programmcode
+(für die folgenden Teile).</li>
+</ul>
+<p>Aufruf jeweils mit <code>python3 &lt;skript&gt;.py</code> (benötigt
+das Paket <code>sympy</code>).</p>
+<h1 class="unnumbered" id="literatur">Literatur</h1>
+<ol type="1">
+<li>Meskouris, K.; Hake, E.: Statik der Stabtragwerke. Springer,
+2009.</li>
+<li>Kindmann, R.: Stahlbau, Teil 2: Stabilität und Theorie II. Ordnung.
+Ernst &amp; Sohn.</li>
+<li>Przemieniecki, J. S.: Theory of Matrix Structural Analysis.
+McGraw-Hill, 1968 (Dover 1985).</li>
+<li>Rothe, D.: Allgemeines Weggrößenverfahren. Vorlesungsunterlagen,
+Stand 5.2.2020.</li>
+</ol>
+</body>
+</html>
