@@ -61,7 +61,7 @@ h1, h2, h3 { break-after: avoid; }
 <h1 class="title">d2beam – Theorie-Handbuch</h1>
 <p class="subtitle">Der Timoshenko-Balken im Weggrößenverfahren</p>
 <p class="author">Prof. Dr.-Ing. Detlef Rothe</p>
-<p class="date">Entwurf, Stand 27.11.2026 – Teil 1</p>
+<p class="date">Entwurf, Stand 27.11.2026 – Teile 1 und 2</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <h2 id="toc-title">Inhalt</h2>
@@ -121,6 +121,43 @@ Berechnung</a>
 Freiheitsgrade</a></li>
 <li><a href="#ablauf" id="toc-ablauf"><span class="toc-section-number">6.2</span> Ablauf</a></li>
 </ul></li>
+<li><a href="#elementlasten" id="toc-elementlasten"><span class="toc-section-number">7</span> Elementlasten</a>
+<ul>
+<li><a href="#grundgedanke" id="toc-grundgedanke"><span class="toc-section-number">7.1</span> Grundgedanke</a></li>
+<li><a href="#lastarten-der-streckenlast" id="toc-lastarten-der-streckenlast"><span class="toc-section-number">7.2</span> Lastarten der
+Streckenlast</a></li>
+<li><a href="#querlast-trapezlast" id="toc-querlast-trapezlast"><span class="toc-section-number">7.3</span> Querlast (Trapezlast)</a></li>
+<li><a href="#längslast" id="toc-längslast"><span class="toc-section-number">7.4</span> Längslast</a></li>
+<li><a href="#temperatur" id="toc-temperatur"><span class="toc-section-number">7.5</span> Temperatur</a></li>
+<li><a href="#einzellast-und-einzelmoment-im-feld" id="toc-einzellast-und-einzelmoment-im-feld"><span class="toc-section-number">7.6</span> Einzellast und Einzelmoment im
+Feld</a></li>
+<li><a href="#vorspannung-und-spannschloss" id="toc-vorspannung-und-spannschloss"><span class="toc-section-number">7.7</span> Vorspannung und
+Spannschloss</a></li>
+<li><a href="#vorgegebene-knotenverformungen" id="toc-vorgegebene-knotenverformungen"><span class="toc-section-number">7.8</span> Vorgegebene
+Knotenverformungen</a></li>
+</ul></li>
+<li><a href="#elementteilung" id="toc-elementteilung"><span class="toc-section-number">8</span> Elementteilung</a>
+<ul>
+<li><a href="#warum-teilen" id="toc-warum-teilen"><span class="toc-section-number">8.1</span> Warum teilen?</a></li>
+<li><a href="#teilungspunkte" id="toc-teilungspunkte"><span class="toc-section-number">8.2</span> Teilungspunkte</a></li>
+<li><a href="#lasten-bei-der-teilung" id="toc-lasten-bei-der-teilung"><span class="toc-section-number">8.3</span> Lasten bei der Teilung</a></li>
+</ul></li>
+<li><a href="#schnittgrößen-und-verformungen-entlang-des-stabes" id="toc-schnittgrößen-und-verformungen-entlang-des-stabes"><span class="toc-section-number">9</span> Schnittgrößen und Verformungen
+entlang des Stabes</a>
+<ul>
+<li><a href="#überlagerung" id="toc-überlagerung"><span class="toc-section-number">9.1</span> Überlagerung</a></li>
+<li><a href="#verformungen" id="toc-verformungen"><span class="toc-section-number">9.2</span> Verformungen</a></li>
+<li><a href="#starre-enden-1" id="toc-starre-enden-1"><span class="toc-section-number">9.3</span> Starre Enden</a></li>
+</ul></li>
+<li><a href="#elastische-bettung" id="toc-elastische-bettung"><span class="toc-section-number">10</span> Elastische Bettung</a>
+<ul>
+<li><a href="#differentialgleichung" id="toc-differentialgleichung"><span class="toc-section-number">10.1</span> Differentialgleichung</a></li>
+<li><a href="#bettungsmatrix" id="toc-bettungsmatrix"><span class="toc-section-number">10.2</span> Bettungsmatrix</a></li>
+<li><a href="#zustandslinien-mit-bettung" id="toc-zustandslinien-mit-bettung"><span class="toc-section-number">10.3</span> Zustandslinien mit
+Bettung</a></li>
+<li><a href="#genauigkeit-und-elementteilung" id="toc-genauigkeit-und-elementteilung"><span class="toc-section-number">10.4</span> Genauigkeit und
+Elementteilung</a></li>
+</ul></li>
 <li><a href="#anhang-a-nachrechnung-mit-sympy" id="toc-anhang-a-nachrechnung-mit-sympy">Anhang A: Nachrechnung mit
 SymPy</a></li>
 <li><a href="#literatur" id="toc-literatur">Literatur</a></li>
@@ -138,7 +175,7 @@ abgeglichen. Die symbolischen Herleitungen der Matrizen wurden
 zusätzlich mit dem Computeralgebrasystem SymPy nachgerechnet (siehe
 Anhang A). Wo es hilft, ist angegeben, in welcher Funktion von
 <code>timoshenko_beam.ts</code> die Formel umgesetzt ist.</p>
-<p>Teil 1 behandelt</p>
+<p>Teil 1 (Kapitel 1 bis 6) behandelt</p>
 <ul>
 <li>die Koordinatensysteme und Vorzeichenregeln,</li>
 <li>die Differentialgleichungen des Timoshenko-Balkens,</li>
@@ -147,8 +184,17 @@ Anhang A). Wo es hilft, ist angegeben, in welcher Funktion von
 Stabenden und Gelenke,</li>
 <li>den Ablauf der Berechnung im Gesamtsystem.</li>
 </ul>
-<p>Elementlasten, Zustandslinien, Bettung, Theorie II. Ordnung,
-Knickeigenwerte und Dynamik folgen in weiteren Teilen.</p>
+<p>Teil 2 (Kapitel 7 bis 10) behandelt</p>
+<ul>
+<li>die Elementlasten und ihre Volleinspanngrößen,</li>
+<li>die Elementteilung, mit der d2beam einen Stab für die Berechnung in
+mehrere finite Elemente teilt,</li>
+<li>die Schnittgrößen und Verformungen entlang des Stabes
+(Zustandslinien),</li>
+<li>die elastische Bettung nach Winkler.</li>
+</ul>
+<p>Theorie II. Ordnung, Knickeigenwerte und Dynamik folgen in weiteren
+Teilen.</p>
 <h2 data-number="1.2" id="annahmen"><span class="header-section-number">1.2</span> Annahmen</h2>
 <ul>
 <li>Ebene Stabwerke in der
@@ -935,6 +981,601 @@ Stabendverformungen
 <li>Schnittgrößen und Verformungen entlang der Stabachse (folgender
 Teil).</li>
 </ol>
+<h1 data-number="7" id="elementlasten"><span class="header-section-number">7</span> Elementlasten</h1>
+<h2 data-number="7.1" id="grundgedanke"><span class="header-section-number">7.1</span> Grundgedanke</h2>
+<p>Lasten, die zwischen den Knoten auf einen Stab wirken, werden im
+Weggrößenverfahren über <strong>Volleinspanngrößen</strong>
+berücksichtigt: Man hält beide Stabenden fest
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛅</mi><mo>=</mo><mn>𝟎</mn></mrow><annotation encoding="application/x-tex">\boldsymbol{\delta} = \mathbf{0}</annotation></semantics></math>)
+und bestimmt die Stabendgrößen, die die Last dann hervorruft. Das ist
+der Lastvektor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐩</mi><annotation encoding="application/x-tex">\mathbf{p}</annotation></semantics></math>
+in</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐟</mi><mo>=</mo><mi>𝐤</mi><mspace width="0.167em"></mspace><mi>𝛅</mi><mo>+</mo><mi>𝐩</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{f} = \mathbf{k}\,\boldsymbol{\delta} + \mathbf{p} .
+</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐩</mi><annotation encoding="application/x-tex">\mathbf{p}</annotation></semantics></math>
+wird in Konvention II angegeben (im Programm <code>eload[].re</code>)
+und wie in Abschnitt 5.5 mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐏</mi><mi>e</mi></msub><mo>=</mo><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><mi>𝐩</mi></mrow><annotation encoding="application/x-tex">\mathbf{P}_e = \mathbf{T}_U^T\,\mathbf{p}</annotation></semantics></math>
+in das Knotensystem transformiert (<code>eload[].el_r</code>). Im
+Gesamtsystem steht
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐏</mi><mi>e</mi></msub><annotation encoding="application/x-tex">\mathbf{P}_e</annotation></semantics></math>
+mit negativem Vorzeichen auf der rechten Seite.</p>
+<p>Für die Zustandslinien (Kapitel 9) braucht man zusätzlich den Verlauf
+der Verformungen im eingespannten Stab, die
+<strong>Partikulärlösung</strong>. Auch sie wird hier hergeleitet.</p>
+<p>Alle Lasten beziehen sich auf den elastischen Stab
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>≤</mo><mi>x</mi><mo>≤</mo><mi>L</mi></mrow><annotation encoding="application/x-tex">0 \le x \le L</annotation></semantics></math>).
+Auf den starren Enden gibt es keine Elementlasten.</p>
+<h2 data-number="7.2" id="lastarten-der-streckenlast"><span class="header-section-number">7.2</span> Lastarten der Streckenlast</h2>
+<figure>
+<img role="img" aria-label="Bild 10: Die fünf Arten der Trapezstreckenlast" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDMwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDEwMzAgMjUwIj4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz4KPGxpbmUgeDE9IjUwLjAiIHkxPSI3MC4wIiB4Mj0iMTczLjYiIHkyPSIxMzUuNyIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjx0ZXh0IHg9IjExNS4wIiB5PSIyMzguMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0ibm9ybWFsIj4wOiBzZW5rcmVjaHQgYXVmIFN0YWI8L3RleHQ+CjxsaW5lIHgxPSI2Ny44IiB5MT0iMzYuNCIgeDI9IjU0LjciIHkyPSI2MS4yIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjUxLjQsNjcuNCA1Ny4zLDYyLjYgNTIuMSw1OS44IiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSI4OC40IiB5MT0iNDcuNCIgeDI9Ijc1LjMiIHkyPSI3Mi4xIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjcyLjAsNzguMyA3Ny45LDczLjUgNzIuNyw3MC43IiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSIxMDkuMCIgeTE9IjU4LjQiIHgyPSI5NS45IiB5Mj0iODMuMSIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI5Mi42LDg5LjMgOTguNSw4NC41IDkzLjMsODEuNyIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMTI5LjYiIHkxPSI2OS4zIiB4Mj0iMTE2LjUiIHkyPSI5NC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjExMy4yLDEwMC4yIDExOS4xLDk1LjQgMTEzLjksOTIuNyIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMTUwLjIiIHkxPSI4MC4zIiB4Mj0iMTM3LjEiIHkyPSIxMDUuMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIxMzMuOCwxMTEuMiAxMzkuNywxMDYuNCAxMzQuNSwxMDMuNiIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMTcwLjkiIHkxPSI5MS4yIiB4Mj0iMTU3LjciIHkyPSIxMTUuOSIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIxNTQuNCwxMjIuMSAxNjAuMywxMTcuMyAxNTUuMSwxMTQuNiIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMTkxLjUiIHkxPSIxMDIuMiIgeDI9IjE3OC4zIiB5Mj0iMTI2LjkiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMTc1LjAsMTMzLjEgMTgwLjksMTI4LjMgMTc1LjcsMTI1LjUiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjY3LjgiIHkxPSIzNi40IiB4Mj0iMTkxLjUiIHkyPSIxMDIuMiIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjI0Ni4wIiB5MT0iNzAuMCIgeDI9IjM2OS42IiB5Mj0iMTM1LjciIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8dGV4dCB4PSIzMTEuMCIgeT0iMjM4LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9Im5vcm1hbCI+MTogZ2xvYmFsIHosIFN0YWJsw6RuZ2U8L3RleHQ+CjxsaW5lIHgxPSIyNDYuMCIgeTE9IjI4LjAiIHgyPSIyNDYuMCIgeTI9IjYwLjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMjQ2LjAsNjcuMCAyNDguOSw2MC4wIDI0My4xLDYwLjAiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjI2Ni42IiB5MT0iMzkuMCIgeDI9IjI2Ni42IiB5Mj0iNzEuMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIyNjYuNiw3OC4wIDI2OS41LDcxLjAgMjYzLjcsNzEuMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMjg3LjIiIHkxPSI0OS45IiB4Mj0iMjg3LjIiIHkyPSI4MS45IiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjI4Ny4yLDg4LjkgMjkwLjEsODEuOSAyODQuMyw4MS45IiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSIzMDcuOCIgeTE9IjYwLjkiIHgyPSIzMDcuOCIgeTI9IjkyLjkiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMzA3LjgsOTkuOSAzMTAuNyw5Mi45IDMwNC45LDkyLjkiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjMyOC40IiB5MT0iNzEuOCIgeDI9IjMyOC40IiB5Mj0iMTAzLjgiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMzI4LjQsMTEwLjggMzMxLjMsMTAzLjggMzI1LjUsMTAzLjgiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjM0OS4wIiB5MT0iODIuOCIgeDI9IjM0OS4wIiB5Mj0iMTE0LjgiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMzQ5LjAsMTIxLjggMzUyLjAsMTE0LjggMzQ2LjEsMTE0LjgiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjM2OS42IiB5MT0iOTMuNyIgeDI9IjM2OS42IiB5Mj0iMTI1LjciIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMzY5LjYsMTMyLjcgMzcyLjYsMTI1LjcgMzY2LjcsMTI1LjciIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjI0Ni4wIiB5MT0iMjguMCIgeDI9IjM2OS42IiB5Mj0iOTMuNyIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjQ0Mi4wIiB5MT0iNzAuMCIgeDI9IjU2NS42IiB5Mj0iMTM1LjciIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8dGV4dCB4PSI1MDcuMCIgeT0iMjM4LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9Im5vcm1hbCI+MjogZ2xvYmFsIHosIFByb2pla3Rpb248L3RleHQ+CjxsaW5lIHgxPSI0NDIuMCIgeTE9IjI4LjAiIHgyPSI0NDIuMCIgeTI9IjYwLjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNDQyLjAsNjcuMCA0NDQuOSw2MC4wIDQzOS4xLDYwLjAiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjQ2Mi42IiB5MT0iMzkuMCIgeDI9IjQ2Mi42IiB5Mj0iNzEuMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI0NjIuNiw3OC4wIDQ2NS41LDcxLjAgNDU5LjcsNzEuMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iNDgzLjIiIHkxPSI0OS45IiB4Mj0iNDgzLjIiIHkyPSI4MS45IiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjQ4My4yLDg4LjkgNDg2LjEsODEuOSA0ODAuMyw4MS45IiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSI1MDMuOCIgeTE9IjYwLjkiIHgyPSI1MDMuOCIgeTI9IjkyLjkiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNTAzLjgsOTkuOSA1MDYuNyw5Mi45IDUwMC45LDkyLjkiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjUyNC40IiB5MT0iNzEuOCIgeDI9IjUyNC40IiB5Mj0iMTAzLjgiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNTI0LjQsMTEwLjggNTI3LjMsMTAzLjggNTIxLjUsMTAzLjgiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjU0NS4wIiB5MT0iODIuOCIgeDI9IjU0NS4wIiB5Mj0iMTE0LjgiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNTQ1LjAsMTIxLjggNTQ4LjAsMTE0LjggNTQyLjEsMTE0LjgiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjU2NS42IiB5MT0iOTMuNyIgeDI9IjU2NS42IiB5Mj0iMTI1LjciIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNTY1LjYsMTMyLjcgNTY4LjYsMTI1LjcgNTYyLjcsMTI1LjciIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjQ0Mi4wIiB5MT0iMjguMCIgeDI9IjU2NS42IiB5Mj0iOTMuNyIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjQ0Mi4wIiB5MT0iMTQzLjciIHgyPSI0NDIuMCIgeTI9IjIwNi4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMC44IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iNTY1LjYiIHkxPSIxNDMuNyIgeDI9IjU2NS42IiB5Mj0iMjA2LjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI1MDMuOCIgeTE9IjIwMC4wIiB4Mj0iNDUwLjAiIHkyPSIyMDAuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI0NDIuMCwyMDAuMCA0NTAuMCwyMDMuNCA0NTAuMCwxOTYuNiIgZmlsbD0iIzgwODA4MCIvPgo8bGluZSB4MT0iNTAzLjgiIHkxPSIyMDAuMCIgeDI9IjU1Ny42IiB5Mj0iMjAwLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIxLjAiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNTY1LjYsMjAwLjAgNTU3LjYsMTk2LjYgNTU3LjYsMjAzLjQiIGZpbGw9IiM4MDgwODAiLz4KPHRleHQgeD0iNTAzLjgiIHk9IjE5NC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+TDx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMiIgZm9udC1zdHlsZT0ibm9ybWFsIj54PC90c3Bhbj48L3RleHQ+CjxsaW5lIHgxPSI2MzguMCIgeTE9IjcwLjAiIHgyPSI3NjEuNiIgeTI9IjEzNS43IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHRleHQgeD0iNzAzLjAiIHk9IjIzOC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJub3JtYWwiPjM6IGdsb2JhbCB4LCBTdGFibMOkbmdlPC90ZXh0Pgo8bGluZSB4MT0iNTk2LjAiIHkxPSI3MC4wIiB4Mj0iNjI4LjAiIHkyPSI3MC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjYzNS4wLDcwLjAgNjI4LjAsNjcuMSA2MjguMCw3Mi45IiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSI2MTYuNiIgeTE9IjgxLjAiIHgyPSI2NDguNiIgeTI9IjgxLjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNjU1LjYsODEuMCA2NDguNiw3OC4wIDY0OC42LDgzLjkiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjYzNy4yIiB5MT0iOTEuOSIgeDI9IjY2OS4yIiB5Mj0iOTEuOSIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI2NzYuMiw5MS45IDY2OS4yLDg5LjAgNjY5LjIsOTQuOCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iNjU3LjgiIHkxPSIxMDIuOSIgeDI9IjY4OS44IiB5Mj0iMTAyLjkiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNjk2LjgsMTAyLjkgNjg5LjgsOTkuOSA2ODkuOCwxMDUuOCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iNjc4LjQiIHkxPSIxMTMuOCIgeDI9IjcxMC40IiB5Mj0iMTEzLjgiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNzE3LjQsMTEzLjggNzEwLjQsMTEwLjkgNzEwLjQsMTE2LjgiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjY5OS4wIiB5MT0iMTI0LjgiIHgyPSI3MzEuMCIgeTI9IjEyNC44IiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjczOC4wLDEyNC44IDczMS4wLDEyMS44IDczMS4wLDEyNy43IiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSI3MTkuNiIgeTE9IjEzNS43IiB4Mj0iNzUxLjYiIHkyPSIxMzUuNyIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI3NTguNiwxMzUuNyA3NTEuNiwxMzIuOCA3NTEuNiwxMzguNyIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iNTk2LjAiIHkxPSI3MC4wIiB4Mj0iNzE5LjYiIHkyPSIxMzUuNyIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjgzNC4wIiB5MT0iNzAuMCIgeDI9Ijk1Ny42IiB5Mj0iMTM1LjciIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8dGV4dCB4PSI4OTkuMCIgeT0iMjM4LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9Im5vcm1hbCI+NDogZ2xvYmFsIHgsIFByb2pla3Rpb248L3RleHQ+CjxsaW5lIHgxPSI3OTIuMCIgeTE9IjcwLjAiIHgyPSI4MjQuMCIgeTI9IjcwLjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iODMxLjAsNzAuMCA4MjQuMCw2Ny4xIDgyNC4wLDcyLjkiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjgxMi42IiB5MT0iODEuMCIgeDI9Ijg0NC42IiB5Mj0iODEuMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI4NTEuNiw4MS4wIDg0NC42LDc4LjAgODQ0LjYsODMuOSIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iODMzLjIiIHkxPSI5MS45IiB4Mj0iODY1LjIiIHkyPSI5MS45IiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9Ijg3Mi4yLDkxLjkgODY1LjIsODkuMCA4NjUuMiw5NC44IiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSI4NTMuOCIgeTE9IjEwMi45IiB4Mj0iODg1LjgiIHkyPSIxMDIuOSIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI4OTIuOCwxMDIuOSA4ODUuOCw5OS45IDg4NS44LDEwNS44IiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSI4NzQuNCIgeTE9IjExMy44IiB4Mj0iOTA2LjQiIHkyPSIxMTMuOCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI5MTMuNCwxMTMuOCA5MDYuNCwxMTAuOSA5MDYuNCwxMTYuOCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iODk1LjAiIHkxPSIxMjQuOCIgeDI9IjkyNy4wIiB5Mj0iMTI0LjgiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iOTM0LjAsMTI0LjggOTI3LjAsMTIxLjggOTI3LjAsMTI3LjciIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjkxNS42IiB5MT0iMTM1LjciIHgyPSI5NDcuNiIgeTI9IjEzNS43IiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9Ijk1NC42LDEzNS43IDk0Ny42LDEzMi44IDk0Ny42LDEzOC43IiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSI3OTIuMCIgeTE9IjcwLjAiIHgyPSI5MTUuNiIgeTI9IjEzNS43IiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS4yIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iOTY1LjYiIHkxPSI3MC4wIiB4Mj0iOTgzLjYiIHkyPSI3MC4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMC44IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iOTY1LjYiIHkxPSIxMzUuNyIgeDI9Ijk4My42IiB5Mj0iMTM1LjciIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI5NzcuNiIgeTE9IjEwMi45IiB4Mj0iOTc3LjYiIHkyPSI3OC4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4wIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9Ijk3Ny42LDcwLjAgOTc0LjMsNzguMCA5ODEuMCw3OC4wIiBmaWxsPSIjODA4MDgwIi8+CjxsaW5lIHgxPSI5NzcuNiIgeTE9IjEwMi45IiB4Mj0iOTc3LjYiIHkyPSIxMjcuNyIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI5NzcuNiwxMzUuNyA5ODEuMCwxMjcuNyA5NzQuMywxMjcuNyIgZmlsbD0iIzgwODA4MCIvPgo8dGV4dCB4PSI5ODcuNiIgeT0iMTA4LjkiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPkw8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Im5vcm1hbCI+ejwvdHNwYW4+PC90ZXh0Pgo8L3N2Zz4K" style="width:100.0%" alt="Bild 10: Die fünf Arten der Trapezstreckenlast" />
+<figcaption aria-hidden="true">Bild 10: Die fünf Arten der
+Trapezstreckenlast</figcaption>
+</figure>
+<p>Die Streckenlast verläuft linear von
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mi>a</mi></msub><annotation encoding="application/x-tex">p_a</annotation></semantics></math>
+am Stabanfang bis
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mi>e</mi></msub><annotation encoding="application/x-tex">p_e</annotation></semantics></math>
+am Stabende. Sie wird zuerst in eine Querlast
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>
+(Richtung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>L</mi></msub><annotation encoding="application/x-tex">z_L</annotation></semantics></math>)
+und eine Längslast
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+(Richtung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>L</mi></msub><annotation encoding="application/x-tex">x_L</annotation></semantics></math>)
+zerlegt, jeweils bezogen auf die Stablänge:</p>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 21%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">Art</th>
+<th style="text-align: left;">Richtung und Bezugslänge</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>
+(quer)</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+(längs)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: left;">senkrecht auf den Stab</td>
+<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math></td>
+<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math></td>
+</tr>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">global
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>,
+je m Stablänge</td>
+<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>cos</mi><mo>⁡</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">p\cos\alpha</annotation></semantics></math></td>
+<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>sin</mi><mo>⁡</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">p\sin\alpha</annotation></semantics></math></td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">global
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>,
+je m Grundrissprojektion</td>
+<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><msup><mi>cos</mi><mo>⁡</mo><mn>2</mn></msup><mi>α</mi></mrow><annotation encoding="application/x-tex">p\cos^2\alpha</annotation></semantics></math></td>
+<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>sin</mi><mo>⁡</mo><mi>α</mi><mi>cos</mi><mo>⁡</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">p\sin\alpha\cos\alpha</annotation></semantics></math></td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">global
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>,
+je m Stablänge</td>
+<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>p</mi><mi>sin</mi><mo>⁡</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">-p\sin\alpha</annotation></semantics></math></td>
+<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>cos</mi><mo>⁡</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">p\cos\alpha</annotation></semantics></math></td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">global
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>,
+je m Projektion auf die
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-Achse</td>
+<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>p</mi><msup><mi>sin</mi><mo>⁡</mo><mn>2</mn></msup><mi>α</mi></mrow><annotation encoding="application/x-tex">-p\sin^2\alpha</annotation></semantics></math></td>
+<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>sin</mi><mo>⁡</mo><mi>α</mi><mi>cos</mi><mo>⁡</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">p\sin\alpha\cos\alpha</annotation></semantics></math></td>
+</tr>
+</tbody>
+</table>
+<p>Bei den Projektionslasten (Art 2 und 4) wird die Last zuerst mit dem
+Verhältnis Projektionslänge zu Stablänge
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>x</mi></msub><mi>/</mi><msub><mi>L</mi><mn>0</mn></msub><mo>=</mo><mi>cos</mi><mo>⁡</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">L_x/L_0 = \cos\alpha</annotation></semantics></math>
+bzw.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>z</mi></msub><mi>/</mi><msub><mi>L</mi><mn>0</mn></msub><mo>=</mo><mi>sin</mi><mo>⁡</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">L_z/L_0 = \sin\alpha</annotation></semantics></math>)
+auf die Stablänge umgerechnet. Das <strong>Eigengewicht</strong> wird
+automatisch als Last der Art 1 mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mi>γ</mi><mo>⋅</mo><mi>A</mi></mrow><annotation encoding="application/x-tex">p = \gamma \cdot A</annotation></semantics></math>
+angesetzt.</p>
+<h2 data-number="7.3" id="querlast-trapezlast"><span class="header-section-number">7.3</span> Querlast (Trapezlast)</h2>
+<p>Für die Querlast
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>q</mi><mi>a</mi></msub><mo>+</mo><msub><mi>m</mi><mi>q</mi></msub><mspace width="0.167em"></mspace><mi>x</mi></mrow><annotation encoding="application/x-tex">q(x) = q_a + m_q\,x</annotation></semantics></math>
+mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>m</mi><mi>q</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>q</mi><mi>e</mi></msub><mo>−</mo><msub><mi>q</mi><mi>a</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">m_q = (q_e - q_a)/L</annotation></semantics></math>
+liefern die Gleichungen aus Kapitel 3</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><msub><mi>q</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><mi>x</mi><mo>−</mo><msub><mi>m</mi><mi>q</mi></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>2</mn></msup><mn>2</mn></mfrac><mo>+</mo><msub><mi>C</mi><mn>1</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><msub><mi>q</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>2</mn></msup><mn>2</mn></mfrac><mo>−</mo><msub><mi>m</mi><mi>q</mi></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>3</mn></msup><mn>6</mn></mfrac><mo>+</mo><msub><mi>C</mi><mn>1</mn></msub><mspace width="0.167em"></mspace><mi>x</mi><mo>+</mo><msub><mi>C</mi><mn>2</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mspace width="0.167em"></mspace><mi>β</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>q</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>3</mn></msup><mn>6</mn></mfrac><mo>+</mo><msub><mi>m</mi><mi>q</mi></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>4</mn></msup><mn>24</mn></mfrac><mo>−</mo><msub><mi>C</mi><mn>1</mn></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>2</mn></msup><mn>2</mn></mfrac><mo>−</mo><msub><mi>C</mi><mn>2</mn></msub><mspace width="0.167em"></mspace><mi>x</mi><mo>+</mo><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mspace width="0.167em"></mspace><msub><mi>C</mi><mn>3</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mspace width="0.167em"></mspace><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>q</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>4</mn></msup><mn>24</mn></mfrac><mo>+</mo><msub><mi>m</mi><mi>q</mi></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>5</mn></msup><mn>120</mn></mfrac><mo>−</mo><msub><mi>C</mi><mn>1</mn></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>3</mn></msup><mn>6</mn></mfrac><mo>−</mo><msub><mi>C</mi><mn>2</mn></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>2</mn></msup><mn>2</mn></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mspace width="1.0em"></mspace><mo>+</mo><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><msub><mi>q</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>2</mn></msup><mn>2</mn></mfrac><mo>−</mo><msub><mi>m</mi><mi>q</mi></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>3</mn></msup><mn>6</mn></mfrac><mo>+</mo><msub><mi>C</mi><mn>1</mn></msub><mspace width="0.167em"></mspace><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><msub><mi>C</mi><mn>3</mn></msub><mspace width="0.167em"></mspace><mi>x</mi><mo>+</mo><msub><mi>C</mi><mn>4</mn></msub><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+V(x) &amp;= -q_a\,x - m_q\,\frac{x^2}{2} + C_1 , \\
+M(x) &amp;= -q_a\,\frac{x^2}{2} - m_q\,\frac{x^3}{6} + C_1\,x + C_2 , \\
+E I_y\,\beta(x) &amp;= q_a\,\frac{x^3}{6} + m_q\,\frac{x^4}{24} - C_1\,\frac{x^2}{2} - C_2\,x + E I_y\, C_3 , \\
+E I_y\,w(x) &amp;= q_a\,\frac{x^4}{24} + m_q\,\frac{x^5}{120} - C_1\,\frac{x^3}{6} - C_2\,\frac{x^2}{2} \\
+  &amp;\quad + \eta\left( -q_a\,\frac{x^2}{2} - m_q\,\frac{x^3}{6} + C_1\,x \right) + E I_y\,(C_3\,x + C_4) .
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Beim beidseitig eingespannten Stab ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>β</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">w(0) = \beta(0) = 0</annotation></semantics></math>,
+also
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>3</mn></msub><mo>=</mo><msub><mi>C</mi><mn>4</mn></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">C_3 = C_4 = 0</annotation></semantics></math>.
+Aus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>β</mi><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">w(L) = \beta(L) = 0</annotation></semantics></math>
+folgen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>C</mi><mn>1</mn></msub><annotation encoding="application/x-tex">C_1</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>C</mi><mn>2</mn></msub><annotation encoding="application/x-tex">C_2</annotation></semantics></math>.
+Sie sind nichts anderes als Querkraft und Moment am Stabanfang des
+eingespannten Stabes:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>1</mn></msub><mo>=</mo><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">C_1 = V(0)</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>2</mn></msub><mo>=</mo><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">C_2 = M(0)</annotation></semantics></math>.
+Mit dem Schubparameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math>
+aus Abschnitt 4.1 lauten die Volleinspanngrößen</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>V</mi><mi>a</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mfrac><mi>L</mi><mn>60</mn></mfrac><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mn>20</mn><mo>+</mo><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>q</mi><mi>a</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>10</mn><mo>−</mo><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>q</mi><mi>e</mi></msub><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">]</mo><mo>,</mo></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>M</mi><mi>a</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><msup><mi>L</mi><mn>2</mn></msup><mn>120</mn></mfrac><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo>+</mo><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>q</mi><mi>a</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo>−</mo><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>q</mi><mi>e</mi></msub><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">]</mo><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>V</mi><mi>e</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mfrac><mi>L</mi><mn>60</mn></mfrac><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mn>10</mn><mo>−</mo><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>q</mi><mi>a</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>20</mn><mo>+</mo><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>q</mi><mi>e</mi></msub><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">]</mo><mo>,</mo></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>M</mi><mi>e</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mfrac><msup><mi>L</mi><mn>2</mn></msup><mn>120</mn></mfrac><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo>−</mo><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>q</mi><mi>a</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo>+</mo><mi>ψ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>q</mi><mi>e</mi></msub><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">]</mo><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+V_a &amp;= -\frac{L}{60}\Big[ (20+\psi)\, q_a + (10-\psi)\, q_e \Big], &amp;
+M_a &amp;= \frac{L^2}{120}\Big[ (5+\psi)\, q_a + (5-\psi)\, q_e \Big], \\
+V_e &amp;= -\frac{L}{60}\Big[ (10-\psi)\, q_a + (20+\psi)\, q_e \Big], &amp;
+M_e &amp;= -\frac{L^2}{120}\Big[ (5-\psi)\, q_a + (5+\psi)\, q_e \Big],
+\end{aligned}
+</annotation></semantics></math></p>
+<p>und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>1</mn></msub><mo>=</mo><mi>−</mi><msub><mi>V</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">C_1 = -V_a</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>2</mn></msub><mo>=</mo><mi>−</mi><msub><mi>M</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">C_2 = -M_a</annotation></semantics></math>.</p>
+<p><strong>Kontrollen:</strong></p>
+<ul>
+<li>Gleichlast
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><mi>a</mi></msub><mo>=</mo><msub><mi>q</mi><mi>e</mi></msub><mo>=</mo><mi>q</mi></mrow><annotation encoding="application/x-tex">q_a = q_e = q</annotation></semantics></math>):
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>a</mi></msub><mo>=</mo><msub><mi>V</mi><mi>e</mi></msub><mo>=</mo><mi>−</mi><mi>q</mi><mi>L</mi><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">V_a = V_e = -qL/2</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>a</mi></msub><mo>=</mo><mi>−</mi><msub><mi>M</mi><mi>e</mi></msub><mo>=</mo><mi>q</mi><msup><mi>L</mi><mn>2</mn></msup><mi>/</mi><mn>12</mn></mrow><annotation encoding="application/x-tex">M_a = -M_e = qL^2/12</annotation></semantics></math>,
+unabhängig von der Schubverformung.</li>
+<li>Schubstarr
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ψ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\psi = 1</annotation></semantics></math>):
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>a</mi></msub><mo>=</mo><mi>−</mi><mi>L</mi><mo stretchy="false" form="prefix">(</mo><mn>7</mn><msub><mi>q</mi><mi>a</mi></msub><mo>+</mo><mn>3</mn><msub><mi>q</mi><mi>e</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>20</mn></mrow><annotation encoding="application/x-tex">V_a = -L(7q_a + 3q_e)/20</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>a</mi></msub><mo>=</mo><msup><mi>L</mi><mn>2</mn></msup><mo stretchy="false" form="prefix">(</mo><mn>3</mn><msub><mi>q</mi><mi>a</mi></msub><mo>+</mo><mn>2</mn><msub><mi>q</mi><mi>e</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>60</mn></mrow><annotation encoding="application/x-tex">M_a = L^2(3q_a + 2q_e)/60</annotation></semantics></math>,
+die bekannten Werte aus den Tabellenwerken.</li>
+</ul>
+<p>Im Programm: <code>berechneElementlasten</code>, Arten 0 bis 4
+(Volleinspanngrößen und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>C</mi><mn>1</mn></msub><annotation encoding="application/x-tex">C_1</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>C</mi><mn>2</mn></msub><annotation encoding="application/x-tex">C_2</annotation></semantics></math>
+für die Zustandslinien).</p>
+<h2 data-number="7.4" id="längslast"><span class="header-section-number">7.4</span> Längslast</h2>
+<p>Für die Längslast
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>n</mi><mi>a</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>n</mi><mi>e</mi></msub><mo>−</mo><msub><mi>n</mi><mi>a</mi></msub><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>x</mi><mi>/</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">n(x) = n_a + (n_e - n_a)\,x/L</annotation></semantics></math>
+folgt aus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>A</mi><mspace width="0.167em"></mspace><msup><mi>u</mi><mo>″</mo></msup><mo>=</mo><mi>−</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">EA\,u&#39;&#39; = -n</annotation></semantics></math>
+mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>u</mi><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">u(0) = u(L) = 0</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>a</mi></msub><mo>=</mo><mi>−</mi><mfrac><mi>L</mi><mn>6</mn></mfrac><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>2</mn><msub><mi>n</mi><mi>a</mi></msub><mo>+</mo><msub><mi>n</mi><mi>e</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>F</mi><mi>e</mi></msub><mo>=</mo><mi>−</mi><mfrac><mi>L</mi><mn>6</mn></mfrac><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><msub><mi>n</mi><mi>a</mi></msub><mo>+</mo><mn>2</mn><msub><mi>n</mi><mi>e</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+F_a = -\frac{L}{6}\,(2 n_a + n_e), \qquad F_e = -\frac{L}{6}\,(n_a + 2 n_e)
+</annotation></semantics></math></p>
+<p>und die Partikulärlösung</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>p</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><mi>x</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo>−</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mn>6</mn><mspace width="0.167em"></mspace><mi>E</mi><mi>A</mi><mspace width="0.167em"></mspace><mi>L</mi></mrow></mfrac><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mi>L</mi><mo>−</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>n</mi><mi>a</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo>+</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>n</mi><mi>e</mi></msub><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">]</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+u_p(x) = \frac{x\,(L-x)}{6\,EA\,L}\Big[ (2L - x)\, n_a + (L + x)\, n_e \Big] .
+</annotation></semantics></math></p>
+<p>Bei konstanter Längslast ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>p</mi></msub><mo>=</mo><mi>n</mi><mspace width="0.167em"></mspace><mi>x</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo>−</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mi>E</mi><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">u_p = n\,x\,(L-x)/(2EA)</annotation></semantics></math>.</p>
+<h2 data-number="7.5" id="temperatur"><span class="header-section-number">7.5</span> Temperatur</h2>
+<p>Ein linear über die Querschnittshöhe veränderlicher Temperaturverlauf
+mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>T</mi><mi>o</mi></msub><annotation encoding="application/x-tex">T_o</annotation></semantics></math>
+am oberen und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>T</mi><mi>u</mi></msub><annotation encoding="application/x-tex">T_u</annotation></semantics></math>
+am unteren Rand bewirkt eine Dehnung der Schwerachse und eine
+Krümmung:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ε</mi><mi>T</mi></msub><mo>=</mo><msub><mi>α</mi><mi>T</mi></msub><mspace width="0.167em"></mspace><msub><mi>T</mi><mi>s</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>T</mi><mi>s</mi></msub><mo>=</mo><msub><mi>T</mi><mi>o</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>T</mi><mi>u</mi></msub><mo>−</mo><msub><mi>T</mi><mi>o</mi></msub><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mfrac><msub><mi>z</mi><mrow><mi>s</mi><mi>o</mi></mrow></msub><mi>h</mi></mfrac><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>κ</mi><mi>T</mi></msub><mo>=</mo><msub><mi>α</mi><mi>T</mi></msub><mspace width="0.167em"></mspace><mfrac><mrow><msub><mi>T</mi><mi>u</mi></msub><mo>−</mo><msub><mi>T</mi><mi>o</mi></msub></mrow><mi>h</mi></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\varepsilon_T = \alpha_T\,T_s, \quad T_s = T_o + (T_u - T_o)\,\frac{z_{so}}{h}, \qquad
+\kappa_T = \alpha_T\,\frac{T_u - T_o}{h} .
+</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mrow><mi>s</mi><mi>o</mi></mrow></msub><annotation encoding="application/x-tex">z_{so}</annotation></semantics></math>
+ist der Abstand des Schwerpunkts vom oberen Rand. Im eingespannten Stab
+sind die Verformungen null, also
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>u</mi><mo>′</mo></msup><mo>=</mo><mi>N</mi><mi>/</mi><mi>E</mi><mi>A</mi><mo>+</mo><msub><mi>ε</mi><mi>T</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">u&#39; = N/EA + \varepsilon_T = 0</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>β</mi><mo>′</mo></msup><mo>=</mo><mi>−</mi><mi>M</mi><mi>/</mi><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mo>−</mo><msub><mi>κ</mi><mi>T</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\beta&#39; = -M/EI_y - \kappa_T = 0</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>a</mi></msub><mo>=</mo><mi>−</mi><msub><mi>F</mi><mi>e</mi></msub><mo>=</mo><mi>E</mi><mi>A</mi><mspace width="0.167em"></mspace><msub><mi>ε</mi><mi>T</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>M</mi><mi>a</mi></msub><mo>=</mo><mi>−</mi><msub><mi>M</mi><mi>e</mi></msub><mo>=</mo><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub><mspace width="0.167em"></mspace><msub><mi>κ</mi><mi>T</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>V</mi><mi>a</mi></msub><mo>=</mo><msub><mi>V</mi><mi>e</mi></msub><mo>=</mo><mn>0</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">
+F_a = -F_e = EA\,\varepsilon_T, \qquad M_a = -M_e = EI_y\,\kappa_T, \qquad V_a = V_e = 0 .
+</annotation></semantics></math></p>
+<p>Weil keine Querkraft entsteht, hat die Schubverformung keinen
+Einfluss. Die Partikulärlösung ist null.</p>
+<h2 data-number="7.6" id="einzellast-und-einzelmoment-im-feld"><span class="header-section-number">7.6</span> Einzellast und Einzelmoment im
+Feld</h2>
+<figure>
+<img role="img" aria-label="Bild 11: Einzellast und Einzelmoment am beidseitig eingespannten Stab" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MjAiIGhlaWdodD0iMjMwIiB2aWV3Qm94PSIwIDAgNjIwIDIzMCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSI5MC4wIiB5MT0iMTEwLjAiIHgyPSI1MzAuMCIgeTI9IjExMC4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjkwLjAiIHkxPSI3MC4wIiB4Mj0iOTAuMCIgeTI9IjE1MC4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjkwLjAiIHkxPSI3MC4wIiB4Mj0iODAuMCIgeTI9IjYyLjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iOTAuMCIgeTE9IjgwLjAiIHgyPSI4MC4wIiB5Mj0iNzIuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI5MC4wIiB5MT0iOTAuMCIgeDI9IjgwLjAiIHkyPSI4Mi4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjkwLjAiIHkxPSIxMDAuMCIgeDI9IjgwLjAiIHkyPSI5Mi4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjkwLjAiIHkxPSIxMTAuMCIgeDI9IjgwLjAiIHkyPSIxMDIuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI5MC4wIiB5MT0iMTIwLjAiIHgyPSI4MC4wIiB5Mj0iMTEyLjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iOTAuMCIgeTE9IjEzMC4wIiB4Mj0iODAuMCIgeTI9IjEyMi4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjkwLjAiIHkxPSIxNDAuMCIgeDI9IjgwLjAiIHkyPSIxMzIuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI5MC4wIiB5MT0iMTUwLjAiIHgyPSI4MC4wIiB5Mj0iMTQyLjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iNTMwLjAiIHkxPSI3MC4wIiB4Mj0iNTMwLjAiIHkyPSIxNTAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI1MzAuMCIgeTE9IjcwLjAiIHgyPSI1NDAuMCIgeTI9IjYyLjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iNTMwLjAiIHkxPSI4MC4wIiB4Mj0iNTQwLjAiIHkyPSI3Mi4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjUzMC4wIiB5MT0iOTAuMCIgeDI9IjU0MC4wIiB5Mj0iODIuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI1MzAuMCIgeTE9IjEwMC4wIiB4Mj0iNTQwLjAiIHkyPSI5Mi4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjUzMC4wIiB5MT0iMTEwLjAiIHgyPSI1NDAuMCIgeTI9IjEwMi4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjUzMC4wIiB5MT0iMTIwLjAiIHgyPSI1NDAuMCIgeTI9IjExMi4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjUzMC4wIiB5MT0iMTMwLjAiIHgyPSI1NDAuMCIgeTI9IjEyMi4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjUzMC4wIiB5MT0iMTQwLjAiIHgyPSI1NDAuMCIgeTI9IjEzMi4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjUzMC4wIiB5MT0iMTUwLjAiIHgyPSI1NDAuMCIgeTI9IjE0Mi4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjMwMC4wIiB5MT0iMzAuMCIgeDI9IjMwMC4wIiB5Mj0iOTIuMCIgc3Ryb2tlPSIjYzAwMDAwIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIzMDAuMCwxMDYuMCAzMDUuOSw5Mi4wIDI5NC4xLDkyLjAiIGZpbGw9IiNjMDAwMDAiLz4KPHRleHQgeD0iMjg2LjAiIHk9IjI4LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zdHlsZT0iaXRhbGljIj5QPC90ZXh0Pgo8cGF0aCBkPSJNIDMxNy4wIDEzOS40IEEgMzQgMzQgMCAxIDAgMjY2LjAgMTA5LjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2MwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+Cjxwb2x5Z29uIHBvaW50cz0iMjY4LjEsMTIxLjYgMjcxLjAsMTA5LjAgMjYxLjAsMTEwLjciIGZpbGw9IiNjMDAwMDAiLz4KPHRleHQgeD0iMzQwLjAiIHk9IjgwLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPk08L3RleHQ+CjxsaW5lIHgxPSI5MC4wIiB5MT0iMTU1LjAiIHgyPSI5MC4wIiB5Mj0iMTk2LjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzMDAuMCIgeTE9IjE1NS4wIiB4Mj0iMzAwLjAiIHkyPSIxOTYuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjAuOCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjE5NS4wIiB5MT0iMTkwLjAiIHgyPSI5OC4wIiB5Mj0iMTkwLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIxLjAiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iOTAuMCwxOTAuMCA5OC4wLDE5My40IDk4LjAsMTg2LjYiIGZpbGw9IiM4MDgwODAiLz4KPGxpbmUgeDE9IjE5NS4wIiB5MT0iMTkwLjAiIHgyPSIyOTIuMCIgeTI9IjE5MC4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4wIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjMwMC4wLDE5MC4wIDI5Mi4wLDE4Ni42IDI5Mi4wLDE5My40IiBmaWxsPSIjODA4MDgwIi8+Cjx0ZXh0IHg9IjE5NS4wIiB5PSIxODQuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPng8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Im5vcm1hbCI+UDwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iOTAuMCIgeTE9IjE1NS4wIiB4Mj0iOTAuMCIgeTI9IjIyOC4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMC44IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iNTMwLjAiIHkxPSIxNTUuMCIgeDI9IjUzMC4wIiB5Mj0iMjI4LjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzMTAuMCIgeTE9IjIyMi4wIiB4Mj0iOTguMCIgeTI9IjIyMi4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4wIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjkwLjAsMjIyLjAgOTguMCwyMjUuNCA5OC4wLDIxOC42IiBmaWxsPSIjODA4MDgwIi8+CjxsaW5lIHgxPSIzMTAuMCIgeTE9IjIyMi4wIiB4Mj0iNTIyLjAiIHkyPSIyMjIuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI1MzAuMCwyMjIuMCA1MjIuMCwyMTguNiA1MjIuMCwyMjUuNCIgZmlsbD0iIzgwODA4MCIvPgo8dGV4dCB4PSIzMTAuMCIgeT0iMjE2LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5MPC90ZXh0Pgo8dGV4dCB4PSI4Mi4wIiB5PSI2MC4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+YTwvdGV4dD4KPHRleHQgeD0iNTM4LjAiIHk9IjYwLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPmU8L3RleHQ+Cjwvc3ZnPgo=" style="width:70.0%" alt="Bild 11: Einzellast und Einzelmoment am beidseitig eingespannten Stab" />
+<figcaption aria-hidden="true">Bild 11: Einzellast und Einzelmoment am
+beidseitig eingespannten Stab</figcaption>
+</figure>
+<p>Eine Einzellast
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>
+in Richtung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>L</mi></msub><annotation encoding="application/x-tex">z_L</annotation></semantics></math>
+und ein Einzelmoment
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>
+(positiv entgegen dem Uhrzeigersinn) greifen an der Stelle
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>P</mi></msub><annotation encoding="application/x-tex">x_P</annotation></semantics></math>
+an. Die Lösung setzt sich aus zwei Bereichen zusammen, die bei
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>P</mi></msub><annotation encoding="application/x-tex">x_P</annotation></semantics></math>
+stetig
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>)
+aneinander anschließen. Mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>α</mi><mi>P</mi></msub><mo>=</mo><msup><mi>L</mi><mn>3</mn></msup><mo>+</mo><mn>12</mn><mspace width="0.167em"></mspace><mi>η</mi><mspace width="0.167em"></mspace><mi>L</mi></mrow><annotation encoding="application/x-tex">\alpha_P = L^3 + 12\,\eta\,L</annotation></semantics></math>
+erhält man</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>V</mi><mi>a</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mfrac><mi>P</mi><msub><mi>α</mi><mi>P</mi></msub></mfrac><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">[</mo><msup><mi>L</mi><mn>3</mn></msup><mo>−</mo><mn>3</mn><mi>L</mi><mspace width="0.167em"></mspace><msubsup><mi>x</mi><mi>P</mi><mn>2</mn></msubsup><mo>+</mo><mn>2</mn><msubsup><mi>x</mi><mi>P</mi><mn>3</mn></msubsup><mo>+</mo><mn>12</mn><mspace width="0.167em"></mspace><mi>η</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo>−</mo><msub><mi>x</mi><mi>P</mi></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">]</mo><mo>−</mo><mfrac><mrow><mn>6</mn><mspace width="0.167em"></mspace><mi>M</mi></mrow><msub><mi>α</mi><mi>P</mi></msub></mfrac><mspace width="0.167em"></mspace><msub><mi>x</mi><mi>P</mi></msub><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo>−</mo><msub><mi>x</mi><mi>P</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>M</mi><mi>a</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mi>P</mi><msub><mi>α</mi><mi>P</mi></msub></mfrac><mspace width="0.167em"></mspace><msub><mi>x</mi><mi>P</mi></msub><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo>−</mo><msub><mi>x</mi><mi>P</mi></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">[</mo><mi>L</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo>−</mo><msub><mi>x</mi><mi>P</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mn>6</mn><mspace width="0.167em"></mspace><mi>η</mi><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">]</mo><mo>−</mo><mfrac><mi>M</mi><msub><mi>α</mi><mi>P</mi></msub></mfrac><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">[</mo><msup><mi>L</mi><mn>3</mn></msup><mo>−</mo><mn>4</mn><msup><mi>L</mi><mn>2</mn></msup><msub><mi>x</mi><mi>P</mi></msub><mo>+</mo><mn>3</mn><mi>L</mi><mspace width="0.167em"></mspace><msubsup><mi>x</mi><mi>P</mi><mn>2</mn></msubsup><mo>+</mo><mn>12</mn><mspace width="0.167em"></mspace><mi>η</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo>−</mo><msub><mi>x</mi><mi>P</mi></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">]</mo><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+V_a &amp;= -\frac{P}{\alpha_P}\Big[ L^3 - 3L\,x_P^2 + 2x_P^3 + 12\,\eta\,(L - x_P) \Big]
+       - \frac{6\,M}{\alpha_P}\,x_P\,(L - x_P) , \\
+M_a &amp;= \frac{P}{\alpha_P}\,x_P\,(L - x_P)\Big[ L\,(L - x_P) + 6\,\eta \Big]
+       - \frac{M}{\alpha_P}\Big[ L^3 - 4L^2 x_P + 3L\,x_P^2 + 12\,\eta\,(L - x_P) \Big] ,
+\end{aligned}
+</annotation></semantics></math></p>
+<p>und aus dem Gleichgewicht des ganzen Stabes</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>e</mi></msub><mo>=</mo><mi>−</mi><msub><mi>V</mi><mi>a</mi></msub><mo>−</mo><mi>P</mi><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>M</mi><mi>e</mi></msub><mo>=</mo><msub><mi>V</mi><mi>e</mi></msub><mspace width="0.167em"></mspace><mi>L</mi><mo>+</mo><mi>P</mi><mspace width="0.167em"></mspace><msub><mi>x</mi><mi>P</mi></msub><mo>−</mo><msub><mi>M</mi><mi>a</mi></msub><mo>−</mo><mi>M</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+V_e = -V_a - P, \qquad M_e = V_e\,L + P\,x_P - M_a - M .
+</annotation></semantics></math></p>
+<p>Für
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\eta = 0</annotation></semantics></math>
+ergeben sich die bekannten Werte, z. B.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>a</mi></msub><mo>=</mo><mi>P</mi><mspace width="0.167em"></mspace><msub><mi>x</mi><mi>P</mi></msub><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo>−</mo><msub><mi>x</mi><mi>P</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mi>/</mi><msup><mi>L</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">M_a = P\,x_P\,(L - x_P)^2/L^2</annotation></semantics></math>.</p>
+<p>Für die Zustandslinien werden zusätzlich Durchbiegung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mi>P</mi></msub><annotation encoding="application/x-tex">w_P</annotation></semantics></math>
+und Drehwinkel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>φ</mi><mi>P</mi></msub><annotation encoding="application/x-tex">\varphi_P</annotation></semantics></math>
+des eingespannten Stabes am Lastangriffspunkt gebraucht
+(<code>CwP</code>, <code>CphiP</code>, <code>CwM</code>,
+<code>CphiM</code> im Programm). Die Partikulärlösung besteht dann aus
+zwei eingespannten Teilstäben
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><msub><mi>x</mi><mi>P</mi></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0, x_P]</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><msub><mi>x</mi><mi>P</mi></msub><mo>,</mo><mi>L</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[x_P, L]</annotation></semantics></math>,
+deren gemeinsames Ende sich um
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mi>P</mi></msub><annotation encoding="application/x-tex">w_P</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>φ</mi><mi>P</mi></msub><annotation encoding="application/x-tex">\varphi_P</annotation></semantics></math>
+verformt; sie wird mit den Ansatzfunktionen aus Abschnitt 4.4 für die
+Teillängen berechnet.</p>
+<p><strong>Hinweis:</strong> Seit der Elementteilung (Kapitel 8) wirken
+Einzellasten im Inneren eines Stabes als Knotenlasten auf einen
+Zwischenknoten. Als Elementlast bleiben sie nur am Rand des elastischen
+Bereichs
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>P</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x_P = 0</annotation></semantics></math>
+oder
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>P</mi></msub><mo>=</mo><mi>L</mi></mrow><annotation encoding="application/x-tex">x_P = L</annotation></semantics></math>)
+erhalten, siehe Abschnitt 8.3.</p>
+<h2 data-number="7.7" id="vorspannung-und-spannschloss"><span class="header-section-number">7.7</span> Vorspannung und
+Spannschloss</h2>
+<p>Eine zentrische Vorspannung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>σ</mi><mi>V</mi></msub><annotation encoding="application/x-tex">\sigma_V</annotation></semantics></math>
+und ein Spannschloss, das den Stab um
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>δ</mi><mi>s</mi></msub><annotation encoding="application/x-tex">\delta_s</annotation></semantics></math>
+verkürzt, erzeugen im beidseitig festgehaltenen Stab die Normalkraft
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mn>0</mn></msub><mo>=</mo><msub><mi>σ</mi><mi>V</mi></msub><mi>A</mi></mrow><annotation encoding="application/x-tex">N_0 = \sigma_V A</annotation></semantics></math>
+bzw.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mn>0</mn></msub><mo>=</mo><mi>E</mi><mi>A</mi><mspace width="0.167em"></mspace><msub><mi>δ</mi><mi>s</mi></msub><mi>/</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">N_0 = EA\,\delta_s/L</annotation></semantics></math>
+(Zug). Damit ist</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>a</mi></msub><mo>=</mo><mi>−</mi><msub><mi>N</mi><mn>0</mn></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>F</mi><mi>e</mi></msub><mo>=</mo><msub><mi>N</mi><mn>0</mn></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+F_a = -N_0, \qquad F_e = N_0 .
+</annotation></semantics></math></p>
+<h2 data-number="7.8" id="vorgegebene-knotenverformungen"><span class="header-section-number">7.8</span> Vorgegebene
+Knotenverformungen</h2>
+<p>Eine vorgegebene Verschiebung oder Verdrehung eines gehaltenen
+Knotens (z. B. eine Lagersenkung) wird als Elementlast der
+angeschlossenen Stäbe behandelt. Aus den vorgegebenen Knotenwerten wird
+mit den Zeilen von
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐓</mi><mi>U</mi></msub><annotation encoding="application/x-tex">\mathbf{T}_U</annotation></semantics></math>
+der lokale Verformungsvektor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝛅</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\boldsymbol{\delta}_0</annotation></semantics></math>
+gebildet, und es ist</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐩</mi><mo>=</mo><mi>𝐤</mi><mspace width="0.167em"></mspace><msub><mi>𝛅</mi><mn>0</mn></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{p} = \mathbf{k}\,\boldsymbol{\delta}_0 .
+</annotation></semantics></math></p>
+<p>Bei Theorie II. Ordnung steht hier die Matrix einschließlich des
+geometrischen Anteils. In den Zustandslinien wird
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝛅</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\boldsymbol{\delta}_0</annotation></semantics></math>
+zu den Stabendverformungen addiert.</p>
+<h1 data-number="8" id="elementteilung"><span class="header-section-number">8</span> Elementteilung</h1>
+<h2 data-number="8.1" id="warum-teilen"><span class="header-section-number">8.1</span> Warum teilen?</h2>
+<p>Ein Timoshenko-Element mit den Ansatzfunktionen aus Abschnitt 4.4
+liefert für die Lasten aus Kapitel 7 die <strong>exakte</strong> Lösung
+der Stabtheorie I. Ordnung. Ein Element je Stab genügt dann. Bei der
+Bettung (Kapitel 10), bei Theorie II. Ordnung und in der Dynamik sind
+die Ansatzfunktionen dagegen nur Näherungen. Die Genauigkeit lässt sich
+verbessern, indem man den Stab in mehrere Elemente teilt.</p>
+<p>d2beam unterscheidet deshalb zwischen dem <strong>Stab</strong>, wie
+du ihn eingibst, und den <strong>finiten Elementen</strong>, mit denen
+gerechnet wird. Bei der Eingabe gibst du je Stab eine Zielteilung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>T</mi><mi>e</mi><mi>i</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{Teil}</annotation></semantics></math>
+an (Vorgabe 1).</p>
+<h2 data-number="8.2" id="teilungspunkte"><span class="header-section-number">8.2</span> Teilungspunkte</h2>
+<p>Der elastische Bereich
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>≤</mo><mi>x</mi><mo>≤</mo><mi>L</mi></mrow><annotation encoding="application/x-tex">0 \le x \le L</annotation></semantics></math>
+wird so geteilt (<code>stab_teilen</code> in
+<code>cad_netz.ts</code>):</p>
+<ol type="1">
+<li><strong>Feste Punkte</strong> sind die Stabenden, die Angriffspunkte
+der Einzellasten und die Grenzen von Teilstreckenlasten.</li>
+<li>Liegen zwei feste Punkte näher als eine Fangtoleranz beieinander,
+werden sie zusammengefasst. Einzellasten haben dabei Vorrang. Die
+Ausgabe meldet zusammengefasste Punkte.</li>
+<li>Jeder Abschnitt zwischen zwei festen Punkten wird gleichmäßig so
+geteilt, dass die Elemente höchstens etwa
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>/</mi><msub><mi>n</mi><mrow><mi>T</mi><mi>e</mi><mi>i</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">L/n_{Teil}</annotation></semantics></math>
+lang sind.</li>
+</ol>
+<p>An jedem inneren Teilungspunkt entsteht ein neuer Knoten. Starre
+Enden und Gelenke des Stabes gehören nur zum ersten bzw. letzten
+Element.</p>
+<h2 data-number="8.3" id="lasten-bei-der-teilung"><span class="header-section-number">8.3</span> Lasten bei der Teilung</h2>
+<ul>
+<li><strong>Streckenlasten</strong> werden auf alle Elemente verteilt,
+die im Lastbereich liegen. Anfangs- und Endwert je Element werden linear
+interpoliert. Wird die Grenze einer Teilstreckenlast auf einen
+benachbarten Punkt gefangen, wird die Last so skaliert, dass die
+Resultierende erhalten bleibt.</li>
+<li><strong>Einzellasten im Inneren</strong> werden zu Knotenlasten am
+entsprechenden Zwischenknoten (Kraftkomponenten in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
+und Moment).</li>
+<li><strong>Einzellasten am Rand des elastischen Bereichs</strong>
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>P</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x_P = 0</annotation></semantics></math>
+oder
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>P</mi></msub><mo>=</mo><mi>L</mi></mrow><annotation encoding="application/x-tex">x_P = L</annotation></semantics></math>)
+bleiben Elementlasten (Abschnitt 7.6): Queranteil und Moment wirken so
+auf der Stabseite eines eventuellen Gelenks und mit dem Hebelarm des
+starren Endes. Der Längsanteil wird als Knotenlast am Endknoten
+angesetzt, weil der starre Arm in Stabrichtung liegt. Bei einem
+Normalkraftgelenk an diesem Ende ist ein Längsanteil nicht möglich.</li>
+<li><strong>Temperatur</strong> und <strong>Vorspannung</strong> wirken
+auf alle Elemente, ein <strong>Spannschloss</strong> nur auf das
+mittlere.</li>
+</ul>
+<h1 data-number="9" id="schnittgrößen-und-verformungen-entlang-des-stabes"><span class="header-section-number">9</span> Schnittgrößen und Verformungen
+entlang des Stabes</h1>
+<h2 data-number="9.1" id="überlagerung"><span class="header-section-number">9.1</span> Überlagerung</h2>
+<p>Nach der Lösung des Gleichungssystems sind für jedes Element die
+Stabendverformungen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛅</mi><annotation encoding="application/x-tex">\boldsymbol{\delta}</annotation></semantics></math>
+und die Stabendgrößen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐟</mi><annotation encoding="application/x-tex">\mathbf{f}</annotation></semantics></math>
+bekannt (Abschnitt 5.6). Die Zustandslinien setzen sich aus zwei
+Anteilen zusammen:</p>
+<ol type="1">
+<li>dem <strong>homogenen Anteil</strong> aus den Stabendverformungen,
+berechnet mit den Ansatzfunktionen (Abschnitt 4.4), und</li>
+<li>dem <strong>Partikulärteil</strong> der Elementlasten am beidseitig
+eingespannten Stab (Kapitel 7).</li>
+</ol>
+<p>Für die Schnittgrößen ist es einfacher, vom Stabanfang aus mit dem
+Gleichgewicht zu rechnen. Mit den Stabendgrößen am Stabanfang in
+Konvention I
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mi>L</mi></msub><mo>=</mo><mi>−</mi><msub><mi>F</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">N_L = -F_a</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>L</mi></msub><mo>=</mo><mi>−</mi><msub><mi>V</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">V_L = -V_a</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>L</mi></msub><mo>=</mo><mi>−</mi><msub><mi>M</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">M_L = -M_a</annotation></semantics></math>)
+gilt (Programm: <code>berechneElementSchnittgroessen</code>):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>N</mi><mi>L</mi></msub><mo>−</mo><msub><mi>n</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><mi>x</mi><mo>−</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>n</mi><mi>e</mi></msub><mo>−</mo><msub><mi>n</mi><mi>a</mi></msub><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>2</mn></msup><mrow><mn>2</mn><mi>L</mi></mrow></mfrac><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>V</mi><mi>L</mi></msub><mo>−</mo><msub><mi>q</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><mi>x</mi><mo>−</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>q</mi><mi>e</mi></msub><mo>−</mo><msub><mi>q</mi><mi>a</mi></msub><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>2</mn></msup><mrow><mn>2</mn><mi>L</mi></mrow></mfrac><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>M</mi><mi>L</mi></msub><mo>+</mo><msub><mi>V</mi><mi>L</mi></msub><mspace width="0.167em"></mspace><mi>x</mi><mo>−</mo><msub><mi>q</mi><mi>a</mi></msub><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>2</mn></msup><mn>2</mn></mfrac><mo>−</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>q</mi><mi>e</mi></msub><mo>−</mo><msub><mi>q</mi><mi>a</mi></msub><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mfrac><msup><mi>x</mi><mn>3</mn></msup><mrow><mn>6</mn><mi>L</mi></mrow></mfrac><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+N(x) &amp;= N_L - n_a\,x - (n_e - n_a)\,\frac{x^2}{2L} , \\
+V(x) &amp;= V_L - q_a\,x - (q_e - q_a)\,\frac{x^2}{2L} , \\
+M(x) &amp;= M_L + V_L\,x - q_a\,\frac{x^2}{2} - (q_e - q_a)\,\frac{x^3}{6L} .
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Hinter einer Einzellast
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>&gt;</mo><msub><mi>x</mi><mi>P</mi></msub></mrow><annotation encoding="application/x-tex">x &gt; x_P</annotation></semantics></math>)
+kommen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>P</mi></mrow><annotation encoding="application/x-tex">-P</annotation></semantics></math>
+in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>M</mi><mo>−</mo><mi>P</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><msub><mi>x</mi><mi>P</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">-M - P\,(x - x_P)</annotation></semantics></math>
+in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>
+hinzu. An der Stelle
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>P</mi></msub><annotation encoding="application/x-tex">x_P</annotation></semantics></math>
+legt d2beam deshalb zwei Ausgabepunkte direkt hintereinander, um den
+Sprung darzustellen.</p>
+<h2 data-number="9.2" id="verformungen"><span class="header-section-number">9.2</span> Verformungen</h2>
+<p>Die Verformungen entlang des Stabes sind</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>u</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mfrac><mi>x</mi><mi>L</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>u</mi><mi>a</mi></msub><mo>+</mo><mfrac><mi>x</mi><mi>L</mi></mfrac><mspace width="0.167em"></mspace><msub><mi>u</mi><mi>e</mi></msub><mo>+</mo><msub><mi>u</mi><mi>p</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>𝐍</mi><mi>w</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>𝛅</mi><mi>b</mi></msub><mo>+</mo><msub><mi>w</mi><mi>p</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>β</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><msub><mi>𝐍</mi><mi>φ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>𝛅</mi><mi>b</mi></msub><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+u(x) &amp;= \left(1 - \frac{x}{L}\right) u_a + \frac{x}{L}\,u_e + u_p(x) , \\
+w(x) &amp;= \mathbf{N}_w(x)\,\boldsymbol{\delta}_b + w_p(x) , \\
+\beta(x) &amp;= -\mathbf{N}_\varphi(x)\,\boldsymbol{\delta}_b + \beta_p(x) .
+\end{aligned}
+</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mi>p</mi></msub><annotation encoding="application/x-tex">w_p</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>β</mi><mi>p</mi></msub><annotation encoding="application/x-tex">\beta_p</annotation></semantics></math>
+sind die Ausdrücke aus Abschnitt 7.3 mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>3</mn></msub><mo>=</mo><msub><mi>C</mi><mn>4</mn></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">C_3 = C_4 = 0</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>u</mi><mi>p</mi></msub><annotation encoding="application/x-tex">u_p</annotation></semantics></math>
+ist die Partikulärlösung der Längslast aus Abschnitt 7.4. Ausgegeben
+wird die Querschnittsdrehung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
+(positiv im Uhrzeigersinn). Weil die Ansatzfunktionen für den
+unbelasteten Timoshenko-Stab exakt sind, sind die Zustandslinien für
+Theorie I. Ordnung ohne Bettung <strong>exakt</strong>.</p>
+<h2 data-number="9.3" id="starre-enden-1"><span class="header-section-number">9.3</span> Starre Enden</h2>
+<figure>
+<img role="img" aria-label="Bild 12: Momentenlinie über starre Enden und elastischen Stab" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMjkwIiB2aWV3Qm94PSIwIDAgNjQwIDI5MCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSI4MC4wIiB5MT0iNjAuMCIgeDI9IjE4MC4wIiB5Mj0iNjAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI0ODAuMCIgeTE9IjYwLjAiIHgyPSI1ODAuMCIgeTI9IjYwLjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iMTgwLjAiIHkxPSI2MC4wIiB4Mj0iNDgwLjAiIHkyPSI2MC4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGNpcmNsZSBjeD0iODAuMCIgY3k9IjI4LjAiIHI9IjE1IiBmaWxsPSIjZGRkOWMzIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS4yIi8+Cjx0ZXh0IHg9IjgwLjAiIHk9IjM0LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5LPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJub3JtYWwiPmE8L3RzcGFuPjwvdGV4dD4KPGNpcmNsZSBjeD0iNTgwLjAiIGN5PSIyOC4wIiByPSIxNSIgZmlsbD0iI2RkZDljMyIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuMiIvPgo8dGV4dCB4PSI1ODAuMCIgeT0iMzQuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPks8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Im5vcm1hbCI+ZTwvdHNwYW4+PC90ZXh0Pgo8dGV4dCB4PSIxODAuMCIgeT0iNDYuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPmE8L3RleHQ+Cjx0ZXh0IHg9IjQ4MC4wIiB5PSI0Ni4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+ZTwvdGV4dD4KPGxpbmUgeDE9IjgwLjAiIHkxPSIxNTAuMCIgeDI9IjU4MC4wIiB5Mj0iMTUwLjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cGF0aCBkPSJNIDgwLjAgOTAuMCBMIDE4MC4wIDEzMC4wIEwgMTk1LjAgMTQ4LjYgTCAyMTAuMCAxNjUuMiBMIDIyNS4wIDE3OS45IEwgMjQwLjAgMTkyLjggTCAyNTUuMCAyMDMuOCBMIDI3MC4wIDIxMi44IEwgMjg1LjAgMjE5LjkgTCAzMDAuMCAyMjUuMiBMIDMxNS4wIDIyOC42IEwgMzMwLjAgMjMwLjAgTCAzNDUuMCAyMjkuNiBMIDM2MC4wIDIyNy4yIEwgMzc1LjAgMjIyLjkgTCAzOTAuMCAyMTYuOCBMIDQwNS4wIDIwOC44IEwgNDIwLjAgMTk4LjggTCA0MzUuMCAxODcuMCBMIDQ1MC4wIDE3My4yIEwgNDY1LjAgMTU3LjYgTCA0ODAuMCAxNDAuMCBMIDU4MC4wIDEwNS4wIEwgNTgwIDE1MCBMIDgwIDE1MCBaIiBmaWxsPSIjZjZkNWQ1IiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIvPgo8bGluZSB4MT0iODAuMCIgeTE9IjY2LjAiIHgyPSI4MC4wIiB5Mj0iMjYwLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtZGFzaGFycmF5PSI0LDMiLz4KPGxpbmUgeDE9IjE4MC4wIiB5MT0iNjYuMCIgeDI9IjE4MC4wIiB5Mj0iMjYwLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtZGFzaGFycmF5PSI0LDMiLz4KPGxpbmUgeDE9IjQ4MC4wIiB5MT0iNjYuMCIgeDI9IjQ4MC4wIiB5Mj0iMjYwLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtZGFzaGFycmF5PSI0LDMiLz4KPGxpbmUgeDE9IjU4MC4wIiB5MT0iNjYuMCIgeDI9IjU4MC4wIiB5Mj0iMjYwLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtZGFzaGFycmF5PSI0LDMiLz4KPHRleHQgeD0iNzQuMCIgeT0iOTQuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE1IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXN0eWxlPSJpdGFsaWMiPk08dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtc3R5bGU9Im5vcm1hbCI+SzwvdHNwYW4+PC90ZXh0Pgo8dGV4dCB4PSIxODYuMCIgeT0iMTI0LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPk0oMCk8L3RleHQ+Cjx0ZXh0IHg9IjQ3NC4wIiB5PSIxMzQuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE1IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXN0eWxlPSJpdGFsaWMiPk0oTCk8L3RleHQ+Cjx0ZXh0IHg9IjEzMC4wIiB5PSIyODAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjODA4MDgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0ibm9ybWFsIj5saW5lYXI8L3RleHQ+Cjx0ZXh0IHg9IjUzMC4wIiB5PSIyODAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjODA4MDgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0ibm9ybWFsIj5saW5lYXI8L3RleHQ+Cjx0ZXh0IHg9IjMzMC4wIiB5PSIyODAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjODA4MDgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0ibm9ybWFsIj5hdXMgWnVzdGFuZHNsaW5pZSBkZXMgZWxhc3Rpc2NoZW4gU3RhYmVzPC90ZXh0Pgo8L3N2Zz4K" style="width:80.0%" alt="Bild 12: Momentenlinie über starre Enden und elastischen Stab" />
+<figcaption aria-hidden="true">Bild 12: Momentenlinie über starre Enden
+und elastischen Stab</figcaption>
+</figure>
+<p>Auf den starren Enden wirken keine Lasten. Normal- und Querkraft sind
+dort konstant und gleich den Werten am Rand des elastischen Bereichs,
+das Moment verläuft linear (<code>sg_starre_enden</code> in
+<code>grafik.ts</code>):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><msub><mi>K</mi><mi>a</mi></msub></msub><mo>=</mo><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>ℓ</mi><mi>a</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>M</mi><msub><mi>K</mi><mi>e</mi></msub></msub><mo>=</mo><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>ℓ</mi><mi>e</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+M_{K_a} = M(0) - V(0)\,\ell_a, \qquad M_{K_e} = M(L) + V(L)\,\ell_e .
+</annotation></semantics></math></p>
+<p>Die Verformungen der starren Enden sind Starrkörperbewegungen der
+Knoten.</p>
+<h1 data-number="10" id="elastische-bettung"><span class="header-section-number">10</span> Elastische Bettung</h1>
+<h2 data-number="10.1" id="differentialgleichung"><span class="header-section-number">10.1</span> Differentialgleichung</h2>
+<figure>
+<img role="img" aria-label="Bild 13: Stab auf elastischer Bettung" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMjEwIiB2aWV3Qm94PSIwIDAgNjAwIDIxMCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSI3MC4wIiB5MT0iODAuMCIgeDI9IjUzMC4wIiB5Mj0iODAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI4MC4wIiB5MT0iMzIuMCIgeDI9IjgwLjAiIHkyPSI2OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjgwLjAsNzUuMCA4Mi45LDY4LjAgNzcuMSw2OC4wIiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSIxMDguMCIgeTE9IjMyLjAiIHgyPSIxMDguMCIgeTI9IjY4LjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMTA4LjAsNzUuMCAxMTAuOSw2OC4wIDEwNS4xLDY4LjAiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjEzNi4wIiB5MT0iMzIuMCIgeDI9IjEzNi4wIiB5Mj0iNjguMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIxMzYuMCw3NS4wIDEzOC45LDY4LjAgMTMzLjEsNjguMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMTY0LjAiIHkxPSIzMi4wIiB4Mj0iMTY0LjAiIHkyPSI2OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjE2NC4wLDc1LjAgMTY2LjksNjguMCAxNjEuMSw2OC4wIiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSIxOTIuMCIgeTE9IjMyLjAiIHgyPSIxOTIuMCIgeTI9IjY4LjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMTkyLjAsNzUuMCAxOTQuOSw2OC4wIDE4OS4xLDY4LjAiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjIyMC4wIiB5MT0iMzIuMCIgeDI9IjIyMC4wIiB5Mj0iNjguMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIyMjAuMCw3NS4wIDIyMi45LDY4LjAgMjE3LjEsNjguMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMjQ4LjAiIHkxPSIzMi4wIiB4Mj0iMjQ4LjAiIHkyPSI2OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjI0OC4wLDc1LjAgMjUwLjksNjguMCAyNDUuMSw2OC4wIiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSIyNzYuMCIgeTE9IjMyLjAiIHgyPSIyNzYuMCIgeTI9IjY4LjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMjc2LjAsNzUuMCAyNzguOSw2OC4wIDI3My4xLDY4LjAiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjMwNC4wIiB5MT0iMzIuMCIgeDI9IjMwNC4wIiB5Mj0iNjguMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIzMDQuMCw3NS4wIDMwNi45LDY4LjAgMzAxLjEsNjguMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iMzMyLjAiIHkxPSIzMi4wIiB4Mj0iMzMyLjAiIHkyPSI2OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjMzMi4wLDc1LjAgMzM0LjksNjguMCAzMjkuMSw2OC4wIiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSIzNjAuMCIgeTE9IjMyLjAiIHgyPSIzNjAuMCIgeTI9IjY4LjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMzYwLjAsNzUuMCAzNjIuOSw2OC4wIDM1Ny4xLDY4LjAiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjM4OC4wIiB5MT0iMzIuMCIgeDI9IjM4OC4wIiB5Mj0iNjguMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIzODguMCw3NS4wIDM5MC45LDY4LjAgMzg1LjEsNjguMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iNDE2LjAiIHkxPSIzMi4wIiB4Mj0iNDE2LjAiIHkyPSI2OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjQxNi4wLDc1LjAgNDE4LjksNjguMCA0MTMuMSw2OC4wIiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSI0NDQuMCIgeTE9IjMyLjAiIHgyPSI0NDQuMCIgeTI9IjY4LjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNDQ0LjAsNzUuMCA0NDYuOSw2OC4wIDQ0MS4xLDY4LjAiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjQ3Mi4wIiB5MT0iMzIuMCIgeDI9IjQ3Mi4wIiB5Mj0iNjguMCIgc3Ryb2tlPSIjMmY1NTk3IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI0NzIuMCw3NS4wIDQ3NC45LDY4LjAgNDY5LjEsNjguMCIgZmlsbD0iIzJmNTU5NyIvPgo8bGluZSB4MT0iNTAwLjAiIHkxPSIzMi4wIiB4Mj0iNTAwLjAiIHkyPSI2OC4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjUwMC4wLDc1LjAgNTAyLjksNjguMCA0OTcuMSw2OC4wIiBmaWxsPSIjMmY1NTk3Ii8+CjxsaW5lIHgxPSI1MjguMCIgeTE9IjMyLjAiIHgyPSI1MjguMCIgeTI9IjY4LjAiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNTI4LjAsNzUuMCA1MzAuOSw2OC4wIDUyNS4xLDY4LjAiIGZpbGw9IiMyZjU1OTciLz4KPGxpbmUgeDE9IjcwLjAiIHkxPSIzMi4wIiB4Mj0iNTMwLjAiIHkyPSIzMi4wIiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMS4yIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8dGV4dCB4PSIzMDAuMCIgeT0iMjQuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMmY1NTk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPnE8L3RleHQ+CjxsaW5lIHgxPSI2MC4wIiB5MT0iMTYwLjAiIHgyPSI1NDAuMCIgeTI9IjE2MC4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9IjYwLjAiIHkxPSIxNjAuMCIgeDI9IjUyLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI3Mi4wIiB5MT0iMTYwLjAiIHgyPSI2NC4wIiB5Mj0iMTcwLjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8bGluZSB4MT0iODQuMCIgeTE9IjE2MC4wIiB4Mj0iNzYuMCIgeTI9IjE3MC4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPGxpbmUgeDE9Ijk2LjAiIHkxPSIxNjAuMCIgeDI9Ijg4LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIxMDguMCIgeTE9IjE2MC4wIiB4Mj0iMTAwLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIxMjAuMCIgeTE9IjE2MC4wIiB4Mj0iMTEyLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIxMzIuMCIgeTE9IjE2MC4wIiB4Mj0iMTI0LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIxNDQuMCIgeTE9IjE2MC4wIiB4Mj0iMTM2LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIxNTYuMCIgeTE9IjE2MC4wIiB4Mj0iMTQ4LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIxNjguMCIgeTE9IjE2MC4wIiB4Mj0iMTYwLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIxODAuMCIgeTE9IjE2MC4wIiB4Mj0iMTcyLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIxOTIuMCIgeTE9IjE2MC4wIiB4Mj0iMTg0LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIyMDQuMCIgeTE9IjE2MC4wIiB4Mj0iMTk2LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIyMTYuMCIgeTE9IjE2MC4wIiB4Mj0iMjA4LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIyMjguMCIgeTE9IjE2MC4wIiB4Mj0iMjIwLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIyNDAuMCIgeTE9IjE2MC4wIiB4Mj0iMjMyLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIyNTIuMCIgeTE9IjE2MC4wIiB4Mj0iMjQ0LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIyNjQuMCIgeTE9IjE2MC4wIiB4Mj0iMjU2LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIyNzYuMCIgeTE9IjE2MC4wIiB4Mj0iMjY4LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIyODguMCIgeTE9IjE2MC4wIiB4Mj0iMjgwLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzMDAuMCIgeTE9IjE2MC4wIiB4Mj0iMjkyLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzMTIuMCIgeTE9IjE2MC4wIiB4Mj0iMzA0LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzMjQuMCIgeTE9IjE2MC4wIiB4Mj0iMzE2LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzMzYuMCIgeTE9IjE2MC4wIiB4Mj0iMzI4LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzNDguMCIgeTE9IjE2MC4wIiB4Mj0iMzQwLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzNjAuMCIgeTE9IjE2MC4wIiB4Mj0iMzUyLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzNzIuMCIgeTE9IjE2MC4wIiB4Mj0iMzY0LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzODQuMCIgeTE9IjE2MC4wIiB4Mj0iMzc2LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSIzOTYuMCIgeTE9IjE2MC4wIiB4Mj0iMzg4LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI0MDguMCIgeTE9IjE2MC4wIiB4Mj0iNDAwLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI0MjAuMCIgeTE9IjE2MC4wIiB4Mj0iNDEyLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI0MzIuMCIgeTE9IjE2MC4wIiB4Mj0iNDI0LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI0NDQuMCIgeTE9IjE2MC4wIiB4Mj0iNDM2LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI0NTYuMCIgeTE9IjE2MC4wIiB4Mj0iNDQ4LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI0NjguMCIgeTE9IjE2MC4wIiB4Mj0iNDYwLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI0ODAuMCIgeTE9IjE2MC4wIiB4Mj0iNDcyLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI0OTIuMCIgeTE9IjE2MC4wIiB4Mj0iNDg0LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI1MDQuMCIgeTE9IjE2MC4wIiB4Mj0iNDk2LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI1MTYuMCIgeTE9IjE2MC4wIiB4Mj0iNTA4LjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+CjxsaW5lIHgxPSI1MjguMCIgeTE9IjE2MC4wIiB4Mj0iNTIwLjAiIHkyPSIxNzAuMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5bGluZSBwb2ludHM9Ijg1LDg1LjAgOTIsOTYuNyA3OCwxMDguMyA5MiwxMjAuMCA3OCwxMzEuNyA5MiwxNDMuMyA4NSwxNTUuMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cG9seWxpbmUgcG9pbnRzPSIxMjUsODUuMCAxMzIsOTYuNyAxMTgsMTA4LjMgMTMyLDEyMC4wIDExOCwxMzEuNyAxMzIsMTQzLjMgMTI1LDE1NS4wIiBmaWxsPSJub25lIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjxwb2x5bGluZSBwb2ludHM9IjE2NSw4NS4wIDE3Miw5Ni43IDE1OCwxMDguMyAxNzIsMTIwLjAgMTU4LDEzMS43IDE3MiwxNDMuMyAxNjUsMTU1LjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBvbHlsaW5lIHBvaW50cz0iMjA1LDg1LjAgMjEyLDk2LjcgMTk4LDEwOC4zIDIxMiwxMjAuMCAxOTgsMTMxLjcgMjEyLDE0My4zIDIwNSwxNTUuMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cG9seWxpbmUgcG9pbnRzPSIyNDUsODUuMCAyNTIsOTYuNyAyMzgsMTA4LjMgMjUyLDEyMC4wIDIzOCwxMzEuNyAyNTIsMTQzLjMgMjQ1LDE1NS4wIiBmaWxsPSJub25lIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjxwb2x5bGluZSBwb2ludHM9IjI4NSw4NS4wIDI5Miw5Ni43IDI3OCwxMDguMyAyOTIsMTIwLjAgMjc4LDEzMS43IDI5MiwxNDMuMyAyODUsMTU1LjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBvbHlsaW5lIHBvaW50cz0iMzI1LDg1LjAgMzMyLDk2LjcgMzE4LDEwOC4zIDMzMiwxMjAuMCAzMTgsMTMxLjcgMzMyLDE0My4zIDMyNSwxNTUuMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cG9seWxpbmUgcG9pbnRzPSIzNjUsODUuMCAzNzIsOTYuNyAzNTgsMTA4LjMgMzcyLDEyMC4wIDM1OCwxMzEuNyAzNzIsMTQzLjMgMzY1LDE1NS4wIiBmaWxsPSJub25lIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjxwb2x5bGluZSBwb2ludHM9IjQwNSw4NS4wIDQxMiw5Ni43IDM5OCwxMDguMyA0MTIsMTIwLjAgMzk4LDEzMS43IDQxMiwxNDMuMyA0MDUsMTU1LjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBvbHlsaW5lIHBvaW50cz0iNDQ1LDg1LjAgNDUyLDk2LjcgNDM4LDEwOC4zIDQ1MiwxMjAuMCA0MzgsMTMxLjcgNDUyLDE0My4zIDQ0NSwxNTUuMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8cG9seWxpbmUgcG9pbnRzPSI0ODUsODUuMCA0OTIsOTYuNyA0NzgsMTA4LjMgNDkyLDEyMC4wIDQ3OCwxMzEuNyA0OTIsMTQzLjMgNDg1LDE1NS4wIiBmaWxsPSJub25lIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjxwb2x5bGluZSBwb2ludHM9IjUyNSw4NS4wIDUzMiw5Ni43IDUxOCwxMDguMyA1MzIsMTIwLjAgNTE4LDEzMS43IDUzMiwxNDMuMyA1MjUsMTU1LjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHRleHQgeD0iNTUwLjAiIHk9IjEyNi4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC1zdHlsZT0iaXRhbGljIj5rPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEzIiBmb250LXN0eWxlPSJub3JtYWwiPjA8L3RzcGFuPjwvdGV4dD4KPC9zdmc+Cg==" style="width:70.0%" alt="Bild 13: Stab auf elastischer Bettung" />
+<figcaption aria-hidden="true">Bild 13: Stab auf elastischer
+Bettung</figcaption>
+</figure>
+<p>Bei der Bettung nach Winkler ist die Bettungspressung proportional
+zur Durchbiegung. Je Meter Stablänge wirkt die Rückstellkraft
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><msub><mi>k</mi><mn>0</mn></msub><mspace width="0.167em"></mspace><mi>w</mi></mrow><annotation encoding="application/x-tex">-k_0\,w</annotation></semantics></math>,
+wobei
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mn>0</mn></msub><annotation encoding="application/x-tex">k_0</annotation></semantics></math>
+in kN/m² der Bettungsmodul mal der Breite des Stabes ist (z. B.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mn>0</mn></msub><mo>=</mo><msub><mi>k</mi><mi>s</mi></msub><mo>⋅</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">k_0 = k_s \cdot b</annotation></semantics></math>
+für einen Streifenfundament-Balken). Die Gleichgewichtsbedingung lautet
+damit</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>d</mi><mi>V</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mi>−</mi><mi>q</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mi>k</mi><mn>0</mn></msub><mspace width="0.167em"></mspace><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\frac{dV}{dx} = -q(x) + k_0\,w(x) .
+</annotation></semantics></math></p>
+<p>Die Bettung wirkt nur quer zur Stabachse.</p>
+<h2 data-number="10.2" id="bettungsmatrix"><span class="header-section-number">10.2</span> Bettungsmatrix</h2>
+<p>Die Arbeit der Bettungskräfte bei einer virtuellen Verschiebung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mi>w</mi><mo>=</mo><msub><mi>𝐍</mi><mi>w</mi></msub><mspace width="0.167em"></mspace><mi>δ</mi><msub><mi>𝛅</mi><mi>b</mi></msub></mrow><annotation encoding="application/x-tex">\delta w = \mathbf{N}_w\,\delta\boldsymbol{\delta}_b</annotation></semantics></math>
+führt auf die zusätzliche Steifigkeitsmatrix</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐤</mi><mi>B</mi></msub><mo>=</mo><msub><mi>k</mi><mn>0</mn></msub><msubsup><mo>∫</mo><mn>0</mn><mi>L</mi></msubsup><msubsup><mi>𝐍</mi><mi>w</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><msub><mi>𝐍</mi><mi>w</mi></msub><mspace width="0.167em"></mspace><mi>d</mi><mi>x</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\mathbf{k}_B = k_0 \int_0^L \mathbf{N}_w^T\,\mathbf{N}_w\,dx ,
+</annotation></semantics></math></p>
+<p>die zur Biegesteifigkeitsmatrix addiert wird. Mit den
+Timoshenko-Ansatzfunktionen und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mn>12</mn><mi>η</mi><mi>/</mi><msup><mi>L</mi><mn>2</mn></msup><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">n = (1 + 12\eta/L^2)^2</annotation></semantics></math>
+erhält man für die Freiheitsgrade
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>a</mi></msub><mo>,</mo><msub><mi>φ</mi><mi>a</mi></msub><mo>,</mo><msub><mi>w</mi><mi>e</mi></msub><mo>,</mo><msub><mi>φ</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">w_a, \varphi_a, w_e, \varphi_e</annotation></semantics></math>
+(Indizes 1 bis 4, die Matrix ist symmetrisch):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>k</mi><mrow><mi>B</mi><mo>,</mo><mn>11</mn></mrow></msub><mo>=</mo><msub><mi>k</mi><mrow><mi>B</mi><mo>,</mo><mn>33</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>k</mi><mn>0</mn></msub><mspace width="0.167em"></mspace><mfrac><mrow><mn>13</mn><msup><mi>L</mi><mn>4</mn></msup><mo>+</mo><mn>294</mn><mspace width="0.167em"></mspace><mi>η</mi><msup><mi>L</mi><mn>2</mn></msup><mo>+</mo><mn>1680</mn><mspace width="0.167em"></mspace><msup><mi>η</mi><mn>2</mn></msup></mrow><mrow><mn>35</mn><mspace width="0.167em"></mspace><mi>n</mi><mspace width="0.167em"></mspace><msup><mi>L</mi><mn>3</mn></msup></mrow></mfrac><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>k</mi><mrow><mi>B</mi><mo>,</mo><mn>12</mn></mrow></msub><mo>=</mo><mi>−</mi><msub><mi>k</mi><mrow><mi>B</mi><mo>,</mo><mn>34</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><msub><mi>k</mi><mn>0</mn></msub><mspace width="0.167em"></mspace><mfrac><mrow><mn>11</mn><msup><mi>L</mi><mn>4</mn></msup><mo>+</mo><mn>231</mn><mspace width="0.167em"></mspace><mi>η</mi><msup><mi>L</mi><mn>2</mn></msup><mo>+</mo><mn>1260</mn><mspace width="0.167em"></mspace><msup><mi>η</mi><mn>2</mn></msup></mrow><mrow><mn>210</mn><mspace width="0.167em"></mspace><mi>n</mi><mspace width="0.167em"></mspace><msup><mi>L</mi><mn>2</mn></msup></mrow></mfrac><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>k</mi><mrow><mi>B</mi><mo>,</mo><mn>13</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>k</mi><mn>0</mn></msub><mspace width="0.167em"></mspace><mfrac><mrow><mn>9</mn><msup><mi>L</mi><mn>4</mn></msup><mo>+</mo><mn>252</mn><mspace width="0.167em"></mspace><mi>η</mi><msup><mi>L</mi><mn>2</mn></msup><mo>+</mo><mn>1680</mn><mspace width="0.167em"></mspace><msup><mi>η</mi><mn>2</mn></msup></mrow><mrow><mn>70</mn><mspace width="0.167em"></mspace><mi>n</mi><mspace width="0.167em"></mspace><msup><mi>L</mi><mn>3</mn></msup></mrow></mfrac><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>k</mi><mrow><mi>B</mi><mo>,</mo><mn>14</mn></mrow></msub><mo>=</mo><mi>−</mi><msub><mi>k</mi><mrow><mi>B</mi><mo>,</mo><mn>23</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>k</mi><mn>0</mn></msub><mspace width="0.167em"></mspace><mfrac><mrow><mn>13</mn><msup><mi>L</mi><mn>4</mn></msup><mo>+</mo><mn>378</mn><mspace width="0.167em"></mspace><mi>η</mi><msup><mi>L</mi><mn>2</mn></msup><mo>+</mo><mn>2520</mn><mspace width="0.167em"></mspace><msup><mi>η</mi><mn>2</mn></msup></mrow><mrow><mn>420</mn><mspace width="0.167em"></mspace><mi>n</mi><mspace width="0.167em"></mspace><msup><mi>L</mi><mn>2</mn></msup></mrow></mfrac><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>k</mi><mrow><mi>B</mi><mo>,</mo><mn>22</mn></mrow></msub><mo>=</mo><msub><mi>k</mi><mrow><mi>B</mi><mo>,</mo><mn>44</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>k</mi><mn>0</mn></msub><mspace width="0.167em"></mspace><mfrac><mrow><msup><mi>L</mi><mn>4</mn></msup><mo>+</mo><mn>21</mn><mspace width="0.167em"></mspace><mi>η</mi><msup><mi>L</mi><mn>2</mn></msup><mo>+</mo><mn>126</mn><mspace width="0.167em"></mspace><msup><mi>η</mi><mn>2</mn></msup></mrow><mrow><mn>105</mn><mspace width="0.167em"></mspace><mi>n</mi><mspace width="0.167em"></mspace><mi>L</mi></mrow></mfrac><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>k</mi><mrow><mi>B</mi><mo>,</mo><mn>24</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><msub><mi>k</mi><mn>0</mn></msub><mspace width="0.167em"></mspace><mfrac><mrow><msup><mi>L</mi><mn>4</mn></msup><mo>+</mo><mn>28</mn><mspace width="0.167em"></mspace><mi>η</mi><msup><mi>L</mi><mn>2</mn></msup><mo>+</mo><mn>168</mn><mspace width="0.167em"></mspace><msup><mi>η</mi><mn>2</mn></msup></mrow><mrow><mn>140</mn><mspace width="0.167em"></mspace><mi>n</mi><mspace width="0.167em"></mspace><mi>L</mi></mrow></mfrac><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+k_{B,11} = k_{B,33} &amp;= k_0\,\frac{13L^4 + 294\,\eta L^2 + 1680\,\eta^2}{35\,n\,L^3} , \\
+k_{B,12} = -k_{B,34} &amp;= -k_0\,\frac{11L^4 + 231\,\eta L^2 + 1260\,\eta^2}{210\,n\,L^2} , \\
+k_{B,13} &amp;= k_0\,\frac{9L^4 + 252\,\eta L^2 + 1680\,\eta^2}{70\,n\,L^3} , \\
+k_{B,14} = -k_{B,23} &amp;= k_0\,\frac{13L^4 + 378\,\eta L^2 + 2520\,\eta^2}{420\,n\,L^2} , \\
+k_{B,22} = k_{B,44} &amp;= k_0\,\frac{L^4 + 21\,\eta L^2 + 126\,\eta^2}{105\,n\,L} , \\
+k_{B,24} &amp;= -k_0\,\frac{L^4 + 28\,\eta L^2 + 168\,\eta^2}{140\,n\,L} .
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Schubstarr
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\eta = 0</annotation></semantics></math>)
+ist das die bekannte konsistente Matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><msub><mi>k</mi><mn>0</mn></msub><mi>L</mi></mrow><mn>420</mn></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>156</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>22</mn><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>54</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>13</mn><mi>L</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>4</mn><msup><mi>L</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>13</mn><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>3</mn><msup><mi>L</mi><mn>2</mn></msup></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>156</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>22</mn><mi>L</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>4</mn><msup><mi>L</mi><mn>2</mn></msup></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\frac{k_0 L}{420}\left[\begin{smallmatrix} 156 &amp; -22L &amp; 54 &amp; 13L \\ &amp; 4L^2 &amp; -13L &amp; -3L^2 \\ &amp; &amp; 156 &amp; 22L \\ &amp; &amp; &amp; 4L^2 \end{smallmatrix}\right]</annotation></semantics></math>
+(mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>φ</mi><mo>=</mo><mi>−</mi><msup><mi>w</mi><mo>′</mo></msup></mrow><annotation encoding="application/x-tex">\varphi = -w&#39;</annotation></semantics></math>).
+Im Programm: <code>berechneLokaleElementsteifigkeitmatrix</code>,
+Abschnitt <code>k_0 &gt; 0</code>.</p>
+<h2 data-number="10.3" id="zustandslinien-mit-bettung"><span class="header-section-number">10.3</span> Zustandslinien mit
+Bettung</h2>
+<p>Die Bettungskraft wird mit derselben Näherung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>h</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝐍</mi><mi>w</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>𝛅</mi><mi>b</mi></msub></mrow><annotation encoding="application/x-tex">w_h(x) = \mathbf{N}_w(x)\,\boldsymbol{\delta}_b</annotation></semantics></math>
+wie in der Bettungsmatrix über den Stab integriert. Zu Querkraft und
+Moment aus Abschnitt 9.1 kommen</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>k</mi><mn>0</mn></msub><msubsup><mo>∫</mo><mn>0</mn><mi>x</mi></msubsup><msub><mi>w</mi><mi>h</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>d</mi><mi>s</mi><mo>,</mo><mspace width="2.0em"></mspace><mi mathvariant="normal">Δ</mi><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>k</mi><mn>0</mn></msub><msubsup><mo>∫</mo><mn>0</mn><mi>x</mi></msubsup><msub><mi>w</mi><mi>h</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>d</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">
+\Delta V(x) = k_0 \int_0^x w_h(s)\,ds, \qquad
+\Delta M(x) = k_0 \int_0^x w_h(s)\,(x - s)\,ds
+</annotation></semantics></math></p>
+<p>hinzu. So passen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>
+und
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>
+am Stabende genau zu den Stabendgrößen. Die ausgegebene Bettungspressung
+ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>B</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>k</mi><mn>0</mn></msub><mspace width="0.167em"></mspace><mi>w</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p_B(x) = -k_0\,w(x)</annotation></semantics></math>.</p>
+<h2 data-number="10.4" id="genauigkeit-und-elementteilung"><span class="header-section-number">10.4</span> Genauigkeit und
+Elementteilung</h2>
+<p>Die Ansatzfunktionen sind für den gebetteten Stab nicht mehr exakt.
+Maßgebend für die Güte ist das Verhältnis der Elementlänge
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ℓ</mi><mrow><mi>e</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">\ell_{el}</annotation></semantics></math>
+zur <strong>charakteristischen Länge</strong></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>c</mi></msub><mo>=</mo><mroot><mfrac><mrow><mn>4</mn><mspace width="0.167em"></mspace><mi>E</mi><msub><mi>I</mi><mi>y</mi></msub></mrow><msub><mi>k</mi><mn>0</mn></msub></mfrac><mn>4</mn></mroot><mi>.</mi></mrow><annotation encoding="application/x-tex">
+L_c = \sqrt[4]{\frac{4\,E I_y}{k_0}} .
+</annotation></semantics></math></p>
+<p>Die folgende Tabelle zeigt einen frei liegenden Balken
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">L = 10</annotation></semantics></math>
+m,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>I</mi><mo>=</mo><msup><mn>10</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">EI = 10^5</annotation></semantics></math>
+kNm²,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mn>0</mn></msub><mo>=</mo><mn>5</mn><mo>⋅</mo><msup><mn>10</mn><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">k_0 = 5\cdot10^4</annotation></semantics></math>
+kN/m²,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>c</mi></msub><mo>=</mo><mn>1</mn><mo>,</mo><mn>68</mn></mrow><annotation encoding="application/x-tex">L_c = 1{,}68</annotation></semantics></math>
+m) mit einer Einzellast
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>=</mo><mn>500</mn></mrow><annotation encoding="application/x-tex">P = 500</annotation></semantics></math>
+kN in Feldmitte. Verglichen werden Durchbiegung und Moment in Feldmitte
+mit der exakten Lösung der Differentialgleichung (Skript
+<code>bettung_konvergenz.py</code>):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Elemente</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ℓ</mi><mrow><mi>e</mi><mi>l</mi></mrow></msub><mi>/</mi><msub><mi>L</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">\ell_{el}/L_c</annotation></semantics></math></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
+[mm]</th>
+<th style="text-align: center;">Fehler</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>
+[kNm]</th>
+<th style="text-align: center;">Fehler</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2,97</td>
+<td style="text-align: center;">2,575</td>
+<td style="text-align: center;">−14,9 %</td>
+<td style="text-align: center;">220,4</td>
+<td style="text-align: center;">+5,2 %</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">1,49</td>
+<td style="text-align: center;">2,966</td>
+<td style="text-align: center;">−1,9 %</td>
+<td style="text-align: center;">209,0</td>
+<td style="text-align: center;">−0,3 %</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0,99</td>
+<td style="text-align: center;">3,012</td>
+<td style="text-align: center;">−0,4 %</td>
+<td style="text-align: center;">209,3</td>
+<td style="text-align: center;">−0,1 %</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">0,74</td>
+<td style="text-align: center;">3,020</td>
+<td style="text-align: center;">−0,1 %</td>
+<td style="text-align: center;">209,5</td>
+<td style="text-align: center;">0,0 %</td>
+</tr>
+<tr>
+<td style="text-align: center;">exakt</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">3,024</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">209,6</td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Empfehlung:</strong> Wähle die Zielteilung so, dass die
+Elemente nicht länger als die charakteristische Länge sind
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ℓ</mi><mrow><mi>e</mi><mi>l</mi></mrow></msub><mo>≤</mo><msub><mi>L</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">\ell_{el} \le L_c</annotation></semantics></math>).
+Dann liegen die Fehler unter 0,5 %.</p>
 <h1 class="unnumbered" id="anhang-a-nachrechnung-mit-sympy">Anhang A:
 Nachrechnung mit SymPy</h1>
 <p>Im Ordner <code>doku/theorie/sympy</code> liegen die Skripte, mit
@@ -948,8 +1589,15 @@ Ansatzfunktionen.</li>
 und Integrationskonstanten
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>1</mn></msub><mi>…</mi><msub><mi>C</mi><mn>4</mn></msub></mrow><annotation encoding="application/x-tex">C_1 \ldots C_4</annotation></semantics></math>.</li>
 <li><code>bettung_ksig_masse.py</code>: Bettungs-, geometrische und
-Massenmatrix aus den Ansatzfunktionen, Vergleich mit dem Programmcode
-(für die folgenden Teile).</li>
+Massenmatrix aus den Ansatzfunktionen, Vergleich mit dem
+Programmcode.</li>
+<li><code>ansatz_code.py</code>: Ansatzfunktionen der Zustandslinien im
+Programmcode gegen die Herleitung.</li>
+<li><code>elementlasten.py</code>: Volleinspanngrößen und
+Partikulärlösungen von Trapezlast, Längslast, Einzellast und
+Einzelmoment, Vergleich mit dem Programmcode.</li>
+<li><code>bettung_konvergenz.py</code>: Genauigkeit der Bettungsmatrix
+in Abhängigkeit von der Elementteilung.</li>
 </ul>
 <p>Aufruf jeweils mit <code>python3 &lt;skript&gt;.py</code> (benötigt
 das Paket <code>sympy</code>).</p>

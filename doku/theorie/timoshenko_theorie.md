@@ -2,7 +2,7 @@
 title: "d2beam – Theorie-Handbuch"
 subtitle: "Der Timoshenko-Balken im Weggrößenverfahren"
 author: "Prof. Dr.-Ing. Detlef Rothe"
-date: "Entwurf, Stand 27.11.2026 – Teil 1"
+date: "Entwurf, Stand 27.11.2026 – Teile 1 und 2"
 lang: de
 ---
 
@@ -18,7 +18,7 @@ Alle Formeln in diesem Handbuch wurden mit dem Programmcode abgeglichen. Die sym
 Matrizen wurden zusätzlich mit dem Computeralgebrasystem SymPy nachgerechnet (siehe Anhang A). Wo es hilft,
 ist angegeben, in welcher Funktion von `timoshenko_beam.ts` die Formel umgesetzt ist.
 
-Teil 1 behandelt
+Teil 1 (Kapitel 1 bis 6) behandelt
 
 - die Koordinatensysteme und Vorzeichenregeln,
 - die Differentialgleichungen des Timoshenko-Balkens,
@@ -26,7 +26,14 @@ Teil 1 behandelt
 - die Transformationen für gedrehte Stäbe, gedrehte Lager, starre Stabenden und Gelenke,
 - den Ablauf der Berechnung im Gesamtsystem.
 
-Elementlasten, Zustandslinien, Bettung, Theorie II. Ordnung, Knickeigenwerte und Dynamik folgen in weiteren Teilen.
+Teil 2 (Kapitel 7 bis 10) behandelt
+
+- die Elementlasten und ihre Volleinspanngrößen,
+- die Elementteilung, mit der d2beam einen Stab für die Berechnung in mehrere finite Elemente teilt,
+- die Schnittgrößen und Verformungen entlang des Stabes (Zustandslinien),
+- die elastische Bettung nach Winkler.
+
+Theorie II. Ordnung, Knickeigenwerte und Dynamik folgen in weiteren Teilen.
 
 ## Annahmen
 
@@ -551,6 +558,359 @@ gehaltene Freiheitsgrade).
    (im Knotensystem, bei gedrehten Lagern also in $x'$, $z'$).
 8. Schnittgrößen und Verformungen entlang der Stabachse (folgender Teil).
 
+# Elementlasten
+
+## Grundgedanke
+
+Lasten, die zwischen den Knoten auf einen Stab wirken, werden im Weggrößenverfahren über
+**Volleinspanngrößen** berücksichtigt: Man hält beide Stabenden fest
+($\boldsymbol{\delta} = \mathbf{0}$) und bestimmt die Stabendgrößen, die die Last dann hervorruft. Das ist der
+Lastvektor $\mathbf{p}$ in
+
+$$
+\mathbf{f} = \mathbf{k}\,\boldsymbol{\delta} + \mathbf{p} .
+$$
+
+$\mathbf{p}$ wird in Konvention II angegeben (im Programm `eload[].re`) und wie in Abschnitt 5.5 mit
+$\mathbf{P}_e = \mathbf{T}_U^T\,\mathbf{p}$ in das Knotensystem transformiert (`eload[].el_r`). Im
+Gesamtsystem steht $\mathbf{P}_e$ mit negativem Vorzeichen auf der rechten Seite.
+
+Für die Zustandslinien (Kapitel 9) braucht man zusätzlich den Verlauf der Verformungen im eingespannten Stab,
+die **Partikulärlösung**. Auch sie wird hier hergeleitet.
+
+Alle Lasten beziehen sich auf den elastischen Stab ($0 \le x \le L$). Auf den starren Enden gibt es keine
+Elementlasten.
+
+## Lastarten der Streckenlast
+
+![Bild 10: Die fünf Arten der Trapezstreckenlast](bilder/lastarten){width=100%}
+
+Die Streckenlast verläuft linear von $p_a$ am Stabanfang bis $p_e$ am Stabende. Sie wird zuerst in eine
+Querlast $q$ (Richtung $z_L$) und eine Längslast $n$ (Richtung $x_L$) zerlegt, jeweils bezogen auf die
+Stablänge:
+
+| Art | Richtung und Bezugslänge | $q$ (quer) | $n$ (längs) |
+|:---:|:---|:---:|:---:|
+| 0 | senkrecht auf den Stab | $p$ | $0$ |
+| 1 | global $z$, je m Stablänge | $p\cos\alpha$ | $p\sin\alpha$ |
+| 2 | global $z$, je m Grundrissprojektion | $p\cos^2\alpha$ | $p\sin\alpha\cos\alpha$ |
+| 3 | global $x$, je m Stablänge | $-p\sin\alpha$ | $p\cos\alpha$ |
+| 4 | global $x$, je m Projektion auf die $z$-Achse | $-p\sin^2\alpha$ | $p\sin\alpha\cos\alpha$ |
+
+Bei den Projektionslasten (Art 2 und 4) wird die Last zuerst mit dem Verhältnis Projektionslänge zu Stablänge
+($L_x/L_0 = \cos\alpha$ bzw. $L_z/L_0 = \sin\alpha$) auf die Stablänge umgerechnet. Das **Eigengewicht**
+wird automatisch als Last der Art 1 mit $p = \gamma \cdot A$ angesetzt.
+
+## Querlast (Trapezlast)
+
+Für die Querlast $q(x) = q_a + m_q\,x$ mit $m_q = (q_e - q_a)/L$ liefern die Gleichungen aus Kapitel 3
+
+$$
+\begin{aligned}
+V(x) &= -q_a\,x - m_q\,\frac{x^2}{2} + C_1 , \\
+M(x) &= -q_a\,\frac{x^2}{2} - m_q\,\frac{x^3}{6} + C_1\,x + C_2 , \\
+E I_y\,\beta(x) &= q_a\,\frac{x^3}{6} + m_q\,\frac{x^4}{24} - C_1\,\frac{x^2}{2} - C_2\,x + E I_y\, C_3 , \\
+E I_y\,w(x) &= q_a\,\frac{x^4}{24} + m_q\,\frac{x^5}{120} - C_1\,\frac{x^3}{6} - C_2\,\frac{x^2}{2} \\
+  &\quad + \eta\left( -q_a\,\frac{x^2}{2} - m_q\,\frac{x^3}{6} + C_1\,x \right) + E I_y\,(C_3\,x + C_4) .
+\end{aligned}
+$$
+
+Beim beidseitig eingespannten Stab ist $w(0) = \beta(0) = 0$, also $C_3 = C_4 = 0$. Aus $w(L) = \beta(L) = 0$
+folgen $C_1$ und $C_2$. Sie sind nichts anderes als Querkraft und Moment am Stabanfang des eingespannten
+Stabes: $C_1 = V(0)$, $C_2 = M(0)$. Mit dem Schubparameter $\psi$ aus Abschnitt 4.1 lauten die
+Volleinspanngrößen
+
+$$
+\begin{aligned}
+V_a &= -\frac{L}{60}\Big[ (20+\psi)\, q_a + (10-\psi)\, q_e \Big], &
+M_a &= \frac{L^2}{120}\Big[ (5+\psi)\, q_a + (5-\psi)\, q_e \Big], \\
+V_e &= -\frac{L}{60}\Big[ (10-\psi)\, q_a + (20+\psi)\, q_e \Big], &
+M_e &= -\frac{L^2}{120}\Big[ (5-\psi)\, q_a + (5+\psi)\, q_e \Big],
+\end{aligned}
+$$
+
+und $C_1 = -V_a$, $C_2 = -M_a$.
+
+**Kontrollen:**
+
+- Gleichlast ($q_a = q_e = q$): $V_a = V_e = -qL/2$, $M_a = -M_e = qL^2/12$, unabhängig von der
+  Schubverformung.
+- Schubstarr ($\psi = 1$): $V_a = -L(7q_a + 3q_e)/20$, $M_a = L^2(3q_a + 2q_e)/60$, die bekannten Werte
+  aus den Tabellenwerken.
+
+Im Programm: `berechneElementlasten`, Arten 0 bis 4 (Volleinspanngrößen und $C_1$, $C_2$ für die
+Zustandslinien).
+
+## Längslast
+
+Für die Längslast $n(x) = n_a + (n_e - n_a)\,x/L$ folgt aus $EA\,u'' = -n$ mit $u(0) = u(L) = 0$
+
+$$
+F_a = -\frac{L}{6}\,(2 n_a + n_e), \qquad F_e = -\frac{L}{6}\,(n_a + 2 n_e)
+$$
+
+und die Partikulärlösung
+
+$$
+u_p(x) = \frac{x\,(L-x)}{6\,EA\,L}\Big[ (2L - x)\, n_a + (L + x)\, n_e \Big] .
+$$
+
+Bei konstanter Längslast ist $u_p = n\,x\,(L-x)/(2EA)$.
+
+## Temperatur
+
+Ein linear über die Querschnittshöhe veränderlicher Temperaturverlauf mit $T_o$ am oberen und $T_u$ am unteren
+Rand bewirkt eine Dehnung der Schwerachse und eine Krümmung:
+
+$$
+\varepsilon_T = \alpha_T\,T_s, \quad T_s = T_o + (T_u - T_o)\,\frac{z_{so}}{h}, \qquad
+\kappa_T = \alpha_T\,\frac{T_u - T_o}{h} .
+$$
+
+$z_{so}$ ist der Abstand des Schwerpunkts vom oberen Rand. Im eingespannten Stab sind die Verformungen null,
+also $u' = N/EA + \varepsilon_T = 0$ und $\beta' = -M/EI_y - \kappa_T = 0$:
+
+$$
+F_a = -F_e = EA\,\varepsilon_T, \qquad M_a = -M_e = EI_y\,\kappa_T, \qquad V_a = V_e = 0 .
+$$
+
+Weil keine Querkraft entsteht, hat die Schubverformung keinen Einfluss. Die Partikulärlösung ist null.
+
+## Einzellast und Einzelmoment im Feld
+
+![Bild 11: Einzellast und Einzelmoment am beidseitig eingespannten Stab](bilder/einzellast){width=70%}
+
+Eine Einzellast $P$ in Richtung $z_L$ und ein Einzelmoment $M$ (positiv entgegen dem Uhrzeigersinn) greifen an
+der Stelle $x_P$ an. Die Lösung setzt sich aus zwei Bereichen zusammen, die bei $x_P$ stetig ($w$, $\beta$)
+aneinander anschließen. Mit $\alpha_P = L^3 + 12\,\eta\,L$ erhält man
+
+$$
+\begin{aligned}
+V_a &= -\frac{P}{\alpha_P}\Big[ L^3 - 3L\,x_P^2 + 2x_P^3 + 12\,\eta\,(L - x_P) \Big]
+       - \frac{6\,M}{\alpha_P}\,x_P\,(L - x_P) , \\
+M_a &= \frac{P}{\alpha_P}\,x_P\,(L - x_P)\Big[ L\,(L - x_P) + 6\,\eta \Big]
+       - \frac{M}{\alpha_P}\Big[ L^3 - 4L^2 x_P + 3L\,x_P^2 + 12\,\eta\,(L - x_P) \Big] ,
+\end{aligned}
+$$
+
+und aus dem Gleichgewicht des ganzen Stabes
+
+$$
+V_e = -V_a - P, \qquad M_e = V_e\,L + P\,x_P - M_a - M .
+$$
+
+Für $\eta = 0$ ergeben sich die bekannten Werte, z. B. $M_a = P\,x_P\,(L - x_P)^2/L^2$.
+
+Für die Zustandslinien werden zusätzlich Durchbiegung $w_P$ und Drehwinkel $\varphi_P$ des eingespannten
+Stabes am Lastangriffspunkt gebraucht (`CwP`, `CphiP`, `CwM`, `CphiM` im Programm). Die Partikulärlösung
+besteht dann aus zwei eingespannten Teilstäben $[0, x_P]$ und $[x_P, L]$, deren gemeinsames Ende sich um
+$w_P$, $\varphi_P$ verformt; sie wird mit den Ansatzfunktionen aus Abschnitt 4.4 für die Teillängen
+berechnet.
+
+**Hinweis:** Seit der Elementteilung (Kapitel 8) wirken Einzellasten im Inneren eines Stabes als Knotenlasten
+auf einen Zwischenknoten. Als Elementlast bleiben sie nur am Rand des elastischen Bereichs ($x_P = 0$ oder
+$x_P = L$) erhalten, siehe Abschnitt 8.3.
+
+## Vorspannung und Spannschloss
+
+Eine zentrische Vorspannung $\sigma_V$ und ein Spannschloss, das den Stab um $\delta_s$ verkürzt, erzeugen im
+beidseitig festgehaltenen Stab die Normalkraft $N_0 = \sigma_V A$ bzw. $N_0 = EA\,\delta_s/L$ (Zug).
+Damit ist
+
+$$
+F_a = -N_0, \qquad F_e = N_0 .
+$$
+
+## Vorgegebene Knotenverformungen
+
+Eine vorgegebene Verschiebung oder Verdrehung eines gehaltenen Knotens (z. B. eine Lagersenkung) wird als
+Elementlast der angeschlossenen Stäbe behandelt. Aus den vorgegebenen Knotenwerten wird mit den Zeilen von
+$\mathbf{T}_U$ der lokale Verformungsvektor $\boldsymbol{\delta}_0$ gebildet, und es ist
+
+$$
+\mathbf{p} = \mathbf{k}\,\boldsymbol{\delta}_0 .
+$$
+
+Bei Theorie II. Ordnung steht hier die Matrix einschließlich des geometrischen Anteils. In den
+Zustandslinien wird $\boldsymbol{\delta}_0$ zu den Stabendverformungen addiert.
+
+# Elementteilung
+
+## Warum teilen?
+
+Ein Timoshenko-Element mit den Ansatzfunktionen aus Abschnitt 4.4 liefert für die Lasten aus Kapitel 7 die
+**exakte** Lösung der Stabtheorie I. Ordnung. Ein Element je Stab genügt dann. Bei der Bettung (Kapitel 10),
+bei Theorie II. Ordnung und in der Dynamik sind die Ansatzfunktionen dagegen nur Näherungen. Die Genauigkeit
+lässt sich verbessern, indem man den Stab in mehrere Elemente teilt.
+
+d2beam unterscheidet deshalb zwischen dem **Stab**, wie du ihn eingibst, und den **finiten Elementen**, mit
+denen gerechnet wird. Bei der Eingabe gibst du je Stab eine Zielteilung $n_{Teil}$ an (Vorgabe 1).
+
+## Teilungspunkte
+
+Der elastische Bereich $0 \le x \le L$ wird so geteilt (`stab_teilen` in `cad_netz.ts`):
+
+1. **Feste Punkte** sind die Stabenden, die Angriffspunkte der Einzellasten und die Grenzen von
+   Teilstreckenlasten.
+2. Liegen zwei feste Punkte näher als eine Fangtoleranz beieinander, werden sie zusammengefasst. Einzellasten
+   haben dabei Vorrang. Die Ausgabe meldet zusammengefasste Punkte.
+3. Jeder Abschnitt zwischen zwei festen Punkten wird gleichmäßig so geteilt, dass die Elemente höchstens etwa
+   $L/n_{Teil}$ lang sind.
+
+An jedem inneren Teilungspunkt entsteht ein neuer Knoten. Starre Enden und Gelenke des Stabes gehören nur zum
+ersten bzw. letzten Element.
+
+## Lasten bei der Teilung
+
+- **Streckenlasten** werden auf alle Elemente verteilt, die im Lastbereich liegen. Anfangs- und Endwert je
+  Element werden linear interpoliert. Wird die Grenze einer Teilstreckenlast auf einen benachbarten Punkt
+  gefangen, wird die Last so skaliert, dass die Resultierende erhalten bleibt.
+- **Einzellasten im Inneren** werden zu Knotenlasten am entsprechenden Zwischenknoten (Kraftkomponenten in
+  $x$, $z$ und Moment).
+- **Einzellasten am Rand des elastischen Bereichs** ($x_P = 0$ oder $x_P = L$) bleiben Elementlasten
+  (Abschnitt 7.6): Queranteil und Moment wirken so auf der Stabseite eines eventuellen Gelenks und mit dem
+  Hebelarm des starren Endes. Der Längsanteil wird als Knotenlast am Endknoten angesetzt, weil der starre Arm in
+  Stabrichtung liegt. Bei einem Normalkraftgelenk an diesem Ende ist ein Längsanteil nicht möglich.
+- **Temperatur** und **Vorspannung** wirken auf alle Elemente, ein **Spannschloss** nur auf das mittlere.
+
+# Schnittgrößen und Verformungen entlang des Stabes
+
+## Überlagerung
+
+Nach der Lösung des Gleichungssystems sind für jedes Element die Stabendverformungen
+$\boldsymbol{\delta}$ und die Stabendgrößen $\mathbf{f}$ bekannt (Abschnitt 5.6). Die Zustandslinien setzen
+sich aus zwei Anteilen zusammen:
+
+1. dem **homogenen Anteil** aus den Stabendverformungen, berechnet mit den Ansatzfunktionen
+   (Abschnitt 4.4), und
+2. dem **Partikulärteil** der Elementlasten am beidseitig eingespannten Stab (Kapitel 7).
+
+Für die Schnittgrößen ist es einfacher, vom Stabanfang aus mit dem Gleichgewicht zu rechnen. Mit den
+Stabendgrößen am Stabanfang in Konvention I ($N_L = -F_a$, $V_L = -V_a$, $M_L = -M_a$) gilt
+(Programm: `berechneElementSchnittgroessen`):
+
+$$
+\begin{aligned}
+N(x) &= N_L - n_a\,x - (n_e - n_a)\,\frac{x^2}{2L} , \\
+V(x) &= V_L - q_a\,x - (q_e - q_a)\,\frac{x^2}{2L} , \\
+M(x) &= M_L + V_L\,x - q_a\,\frac{x^2}{2} - (q_e - q_a)\,\frac{x^3}{6L} .
+\end{aligned}
+$$
+
+Hinter einer Einzellast ($x > x_P$) kommen $-P$ in $V$ und $-M - P\,(x - x_P)$ in $M$ hinzu. An der Stelle
+$x_P$ legt d2beam deshalb zwei Ausgabepunkte direkt hintereinander, um den Sprung darzustellen.
+
+## Verformungen
+
+Die Verformungen entlang des Stabes sind
+
+$$
+\begin{aligned}
+u(x) &= \left(1 - \frac{x}{L}\right) u_a + \frac{x}{L}\,u_e + u_p(x) , \\
+w(x) &= \mathbf{N}_w(x)\,\boldsymbol{\delta}_b + w_p(x) , \\
+\beta(x) &= -\mathbf{N}_\varphi(x)\,\boldsymbol{\delta}_b + \beta_p(x) .
+\end{aligned}
+$$
+
+$w_p$ und $\beta_p$ sind die Ausdrücke aus Abschnitt 7.3 mit $C_3 = C_4 = 0$, $u_p$ ist die Partikulärlösung
+der Längslast aus Abschnitt 7.4. Ausgegeben wird die Querschnittsdrehung $\beta$ (positiv im Uhrzeigersinn).
+Weil die Ansatzfunktionen für den unbelasteten Timoshenko-Stab exakt sind, sind die Zustandslinien für
+Theorie I. Ordnung ohne Bettung **exakt**.
+
+## Starre Enden
+
+![Bild 12: Momentenlinie über starre Enden und elastischen Stab](bilder/starr_momente){width=80%}
+
+Auf den starren Enden wirken keine Lasten. Normal- und Querkraft sind dort konstant und gleich den Werten am
+Rand des elastischen Bereichs, das Moment verläuft linear (`sg_starre_enden` in `grafik.ts`):
+
+$$
+M_{K_a} = M(0) - V(0)\,\ell_a, \qquad M_{K_e} = M(L) + V(L)\,\ell_e .
+$$
+
+Die Verformungen der starren Enden sind Starrkörperbewegungen der Knoten.
+
+# Elastische Bettung
+
+## Differentialgleichung
+
+![Bild 13: Stab auf elastischer Bettung](bilder/bettung){width=70%}
+
+Bei der Bettung nach Winkler ist die Bettungspressung proportional zur Durchbiegung. Je Meter Stablänge
+wirkt die Rückstellkraft $-k_0\,w$, wobei $k_0$ in kN/m² der Bettungsmodul mal der Breite des Stabes ist
+(z. B. $k_0 = k_s \cdot b$ für einen Streifenfundament-Balken). Die Gleichgewichtsbedingung lautet damit
+
+$$
+\frac{dV}{dx} = -q(x) + k_0\,w(x) .
+$$
+
+Die Bettung wirkt nur quer zur Stabachse.
+
+## Bettungsmatrix
+
+Die Arbeit der Bettungskräfte bei einer virtuellen Verschiebung
+$\delta w = \mathbf{N}_w\,\delta\boldsymbol{\delta}_b$ führt auf die zusätzliche Steifigkeitsmatrix
+
+$$
+\mathbf{k}_B = k_0 \int_0^L \mathbf{N}_w^T\,\mathbf{N}_w\,dx ,
+$$
+
+die zur Biegesteifigkeitsmatrix addiert wird. Mit den Timoshenko-Ansatzfunktionen und
+$n = (1 + 12\eta/L^2)^2$ erhält man für die Freiheitsgrade $w_a, \varphi_a, w_e, \varphi_e$ (Indizes 1 bis 4,
+die Matrix ist symmetrisch):
+
+$$
+\begin{aligned}
+k_{B,11} = k_{B,33} &= k_0\,\frac{13L^4 + 294\,\eta L^2 + 1680\,\eta^2}{35\,n\,L^3} , \\
+k_{B,12} = -k_{B,34} &= -k_0\,\frac{11L^4 + 231\,\eta L^2 + 1260\,\eta^2}{210\,n\,L^2} , \\
+k_{B,13} &= k_0\,\frac{9L^4 + 252\,\eta L^2 + 1680\,\eta^2}{70\,n\,L^3} , \\
+k_{B,14} = -k_{B,23} &= k_0\,\frac{13L^4 + 378\,\eta L^2 + 2520\,\eta^2}{420\,n\,L^2} , \\
+k_{B,22} = k_{B,44} &= k_0\,\frac{L^4 + 21\,\eta L^2 + 126\,\eta^2}{105\,n\,L} , \\
+k_{B,24} &= -k_0\,\frac{L^4 + 28\,\eta L^2 + 168\,\eta^2}{140\,n\,L} .
+\end{aligned}
+$$
+
+Schubstarr ($\eta = 0$) ist das die bekannte konsistente Matrix
+$\frac{k_0 L}{420}\left[\begin{smallmatrix} 156 & -22L & 54 & 13L \\ & 4L^2 & -13L & -3L^2 \\ & & 156 & 22L \\ & & & 4L^2 \end{smallmatrix}\right]$
+(mit $\varphi = -w'$). Im Programm: `berechneLokaleElementsteifigkeitmatrix`, Abschnitt `k_0 > 0`.
+
+## Zustandslinien mit Bettung
+
+Die Bettungskraft wird mit derselben Näherung $w_h(x) = \mathbf{N}_w(x)\,\boldsymbol{\delta}_b$ wie in der
+Bettungsmatrix über den Stab integriert. Zu Querkraft und Moment aus Abschnitt 9.1 kommen
+
+$$
+\Delta V(x) = k_0 \int_0^x w_h(s)\,ds, \qquad
+\Delta M(x) = k_0 \int_0^x w_h(s)\,(x - s)\,ds
+$$
+
+hinzu. So passen $V$ und $M$ am Stabende genau zu den Stabendgrößen. Die ausgegebene Bettungspressung ist
+$p_B(x) = -k_0\,w(x)$.
+
+## Genauigkeit und Elementteilung
+
+Die Ansatzfunktionen sind für den gebetteten Stab nicht mehr exakt. Maßgebend für die Güte ist das Verhältnis
+der Elementlänge $\ell_{el}$ zur **charakteristischen Länge**
+
+$$
+L_c = \sqrt[4]{\frac{4\,E I_y}{k_0}} .
+$$
+
+Die folgende Tabelle zeigt einen frei liegenden Balken ($L = 10$ m, $EI = 10^5$ kNm², $k_0 = 5\cdot10^4$ kN/m²,
+$L_c = 1{,}68$ m) mit einer Einzellast $P = 500$ kN in Feldmitte. Verglichen werden Durchbiegung und Moment in
+Feldmitte mit der exakten Lösung der Differentialgleichung (Skript `bettung_konvergenz.py`):
+
+| Elemente | $\ell_{el}/L_c$ | $w$ [mm] | Fehler | $M$ [kNm] | Fehler |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| 2 | 2,97 | 2,575 | −14,9 % | 220,4 | +5,2 % |
+| 4 | 1,49 | 2,966 | −1,9 % | 209,0 | −0,3 % |
+| 6 | 0,99 | 3,012 | −0,4 % | 209,3 | −0,1 % |
+| 8 | 0,74 | 3,020 | −0,1 % | 209,5 | 0,0 % |
+| exakt | | 3,024 | | 209,6 | |
+
+**Empfehlung:** Wähle die Zielteilung so, dass die Elemente nicht länger als die charakteristische Länge
+sind ($\ell_{el} \le L_c$). Dann liegen die Fehler unter 0,5 %.
+
 # Anhang A: Nachrechnung mit SymPy {-}
 
 Im Ordner `doku/theorie/sympy` liegen die Skripte, mit denen die Formeln dieses Teils nachgerechnet wurden:
@@ -559,7 +919,11 @@ Im Ordner `doku/theorie/sympy` liegen die Skripte, mit denen die Formeln dieses 
   Ansatzfunktionen.
 - `konstanten.py`: Matrix $\mathbf{A}$ und Integrationskonstanten $C_1 \ldots C_4$.
 - `bettung_ksig_masse.py`: Bettungs-, geometrische und Massenmatrix aus den Ansatzfunktionen, Vergleich mit dem
-  Programmcode (für die folgenden Teile).
+  Programmcode.
+- `ansatz_code.py`: Ansatzfunktionen der Zustandslinien im Programmcode gegen die Herleitung.
+- `elementlasten.py`: Volleinspanngrößen und Partikulärlösungen von Trapezlast, Längslast, Einzellast und
+  Einzelmoment, Vergleich mit dem Programmcode.
+- `bettung_konvergenz.py`: Genauigkeit der Bettungsmatrix in Abhängigkeit von der Elementteilung.
 
 Aufruf jeweils mit `python3 <skript>.py` (benötigt das Paket `sympy`).
 

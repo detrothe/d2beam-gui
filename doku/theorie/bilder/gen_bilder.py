@@ -430,6 +430,130 @@ def bild_kraefte_starr():
     s.save('kraefte_starr')
 
 
+def bild_lastarten():
+    """Die fünf Arten der Trapezstreckenlast am schrägen Stab."""
+    s = Svg(1030, 250)
+    a = math.radians(28)
+    titel = ['0: senkrecht auf Stab', '1: global z, Stablänge', '2: global z, Projektion',
+             '3: global x, Stablänge', '4: global x, Projektion']
+    for i in range(5):
+        ox = 25 + i * 196
+        xa, ya = ox + 25, 70
+        Ls = 140
+        xe, ye = xa + Ls * math.cos(a), ya + Ls * math.sin(a)
+        s.line(xa, ya, xe, ye, SCHWARZ, 4)
+        s.text(ox + 90, 238, titel[i], 13, SCHWARZ)
+        n = 6
+        for j in range(n + 1):
+            t = j / n
+            px, py = xa + t * (xe - xa), ya + t * (ye - ya)
+            if i == 0:          # senkrecht auf den Stab (in +z_L)
+                nx, ny = -math.sin(a), math.cos(a)
+                s.arrow(px - 38 * nx, py - 38 * ny, px - 3 * nx, py - 3 * ny, BLAU, 1.4, head=7)
+            elif i in (1, 2):   # vertikal
+                s.arrow(px, py - 42, px, py - 3, BLAU, 1.4, head=7)
+            else:               # horizontal
+                s.arrow(px - 42, py, px - 3, py, BLAU, 1.4, head=7)
+        if i == 0:
+            nx, ny = -math.sin(a), math.cos(a)
+            s.line(xa - 38 * nx, ya - 38 * ny, xe - 38 * nx, ye - 38 * ny, BLAU, 1.2)
+        elif i in (1, 2):
+            s.line(xa, ya - 42, xe, ye - 42, BLAU, 1.2)
+        else:
+            s.line(xa - 42, ya, xe - 42, ye, BLAU, 1.2)
+        if i == 2:              # Bezugslänge: horizontale Projektion
+            s.dim(xa, xe, 200, 'L', 'x', ext_from=ye + 8)
+        if i == 4:              # Bezugslänge: vertikale Projektion
+            s.line(xe + 8, ya, xe + 26, ya, GRAU, 0.8)
+            s.line(xe + 8, ye, xe + 26, ye, GRAU, 0.8)
+            s.arrow(xe + 20, (ya + ye) / 2, xe + 20, ya, GRAU, 1.0, head=8)
+            s.arrow(xe + 20, (ya + ye) / 2, xe + 20, ye, GRAU, 1.0, head=8)
+            s.sym(xe + 30, (ya + ye) / 2 + 6, 'L', 'z', size=16, anchor='start')
+    s.save('lastarten')
+
+
+def bild_einzellast():
+    """Beidseitig eingespannter Stab mit Einzellast und Einzelmoment."""
+    s = Svg(620, 230)
+    xa, xe, y = 90, 530, 110
+    s.line(xa, y, xe, y, SCHWARZ, 4)
+    for xx, sgn in ((xa, -1), (xe, 1)):
+        s.line(xx, y - 40, xx, y + 40, SCHWARZ, 2)
+        for k in range(-40, 41, 10):
+            s.line(xx, y + k, xx + sgn * 10, y + k - 8, SCHWARZ, 1)
+    xp = 300
+    s.arrow(xp, y - 80, xp, y - 4, ROT, 3.5, head=14)
+    s.sym(xp - 14, y - 82, 'P', color=ROT, anchor='end')
+    s.arc_arrow(xp, y, 34, -60, 200, ROT, 3, head=12)
+    s.sym(xp + 40, y - 30, 'M', color=ROT, anchor='start')
+    s.dim(xa, xp, 190, 'x', 'P', ext_from=y + 45)
+    s.dim(xa, xe, 222, 'L', ext_from=y + 45)
+    s.sym(xa - 8, y - 50, 'a', anchor='end')
+    s.sym(xe + 8, y - 50, 'e', anchor='start')
+    s.save('einzellast')
+
+
+def bild_bettung():
+    """Elastisch gebetteter Stab (Winkler)."""
+    s = Svg(600, 210)
+    xa, xe, y = 70, 530, 80
+    s.line(xa, y, xe, y, SCHWARZ, 5)
+    for xx in range(xa + 10, xe, 28):
+        s.arrow(xx, y - 48, xx, y - 5, BLAU, 1.3, head=7)
+    s.line(xa, y - 48, xe, y - 48, BLAU, 1.2)
+    s.sym((xa + xe) / 2, y - 56, 'q', color=BLAU)
+    yb = 160
+    s.line(xa - 10, yb, xe + 10, yb, SCHWARZ, 2)
+    for k in range(xa - 10, xe + 10, 12):
+        s.line(k, yb, k - 8, yb + 10, SCHWARZ, 1)
+    for xx in range(xa + 15, xe, 40):
+        pts = []
+        n = 6
+        for j in range(n + 1):
+            yy = y + 5 + (yb - y - 10) * j / n
+            dx = 0 if j in (0, n) else (7 if j % 2 else -7)
+            pts.append(f'{xx + dx},{yy:.1f}')
+        s.add(f'<polyline points="{" ".join(pts)}" fill="none" stroke="{GRAU}" stroke-width="1.5"/>')
+    s.sym(xe + 20, (y + yb) / 2 + 6, 'k', '0', anchor='start')
+    s.save('bettung')
+
+
+def bild_starr_momente():
+    """Momentenlinie über starre Enden und elastischen Teil."""
+    s = Svg(640, 290)
+    xK, xa, xe, xKe, y = 80, 180, 480, 580, 60
+    s.line(xK, y, xa, y, SCHWARZ, 8)
+    s.line(xe, y, xKe, y, SCHWARZ, 8)
+    s.line(xa, y, xe, y, SCHWARZ, 3)
+    s.knoten(xK, y - 32, 'K', 'a')
+    s.knoten(xKe, y - 32, 'K', 'e')
+    s.sym(xa, y - 14, 'a')
+    s.sym(xe, y - 14, 'e')
+    # Momentenlinie (unten positiv): Stützmomente negativ an den Knoten
+    f = lambda m: y + 90 + 1.0 * m
+    MK, Ma = -60, -20
+    Me, MKe = -10, -45
+    pts = [(xK, f(MK)), (xa, f(Ma))]
+    for j in range(1, 20):
+        t = j / 20
+        xx = xa + t * (xe - xa)
+        m = Ma + (Me - Ma) * t + 4 * 95 * t * (1 - t)
+        pts.append((xx, f(m)))
+    pts += [(xe, f(Me)), (xKe, f(MKe))]
+    s.line(xK, y + 90, xKe, y + 90, SCHWARZ, 1)
+    d = 'M ' + ' L '.join(f'{px:.1f} {py:.1f}' for px, py in pts)
+    s.path(d + f' L {xKe} {y + 90} L {xK} {y + 90} Z', ROT, 2, fill='#f6d5d5')
+    for xx in (xK, xa, xe, xKe):
+        s.line(xx, y + 6, xx, y + 200, GRAU, 0.8, dash='4,3')
+    s.sym(xK - 6, f(MK) + 4, 'M', 'K', size=15, color=ROT, anchor='end')
+    s.sym(xa + 6, f(Ma) - 6, 'M(0)', size=15, color=ROT, anchor='start')
+    s.sym(xe - 6, f(Me) - 6, 'M(L)', size=15, color=ROT, anchor='end')
+    s.text(xK + 50, 280, 'linear', 13, GRAU)
+    s.text(xKe - 50, 280, 'linear', 13, GRAU)
+    s.text((xa + xe) / 2, 280, 'aus Zustandslinie des elastischen Stabes', 13, GRAU)
+    s.save('starr_momente')
+
+
 if __name__ == '__main__':
     bild_stab_uebersicht()
     bild_stabendgroessen()
@@ -440,4 +564,8 @@ if __name__ == '__main__':
     bild_starres_ende()
     bild_gelenk_starr()
     bild_kraefte_starr()
+    bild_lastarten()
+    bild_einzellast()
+    bild_bettung()
+    bild_starr_momente()
     print('SVG geschrieben')
