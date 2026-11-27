@@ -26,9 +26,9 @@ GEMEINSAM=(--number-sections --toc --toc-depth=2 -M toc-title="Inhalt")
   --default-image-extension=svg -o "../../public/$NAME.html"
 
 # Bildpfade für DOCX/PDF umbiegen: bilder/x -> bilder/png/x bzw. bilder/pdf/x
-sed 's#](bilder/\([a-z_]*\))#](bilder/png/\1)#' "$QUELLE" > ausgabe/_docx.md
+sed 's#](bilder/\([a-z0-9_]*\))#](bilder/png/\1)#' "$QUELLE" > ausgabe/_docx.md
 "$PANDOC" ausgabe/_docx.md "${GEMEINSAM[@]}" --default-image-extension=png -o "ausgabe/$NAME.docx"
-sed 's#](bilder/\([a-z_]*\))#](bilder/pdf/\1)#' "$QUELLE" > ausgabe/_pdf.md
+sed 's#](bilder/\([a-z0-9_]*\))#](bilder/pdf/\1)#' "$QUELLE" > ausgabe/_pdf.md
 "$PANDOC" ausgabe/_pdf.md "${GEMEINSAM[@]}" --default-image-extension=pdf --pdf-engine=xelatex \
   -V documentclass=scrartcl -V papersize=a4 -V geometry:margin=2.3cm -V fontsize=11pt \
   -V mainfont="DejaVu Serif" -V sansfont="DejaVu Sans" -V mathfont="Latin Modern Math" \

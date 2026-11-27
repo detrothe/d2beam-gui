@@ -61,7 +61,7 @@ h1, h2, h3 { break-after: avoid; }
 <h1 class="title">d2beam – Theorie-Handbuch</h1>
 <p class="subtitle">Der Timoshenko-Balken im Weggrößenverfahren</p>
 <p class="author">Prof. Dr.-Ing. Detlef Rothe</p>
-<p class="date">Entwurf, Stand 27.11.2026 – Teile 1 und 2</p>
+<p class="date">Entwurf, Stand 27.11.2026 – Teile 1 bis 3</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <h2 id="toc-title">Inhalt</h2>
@@ -158,6 +158,22 @@ Bettung</a></li>
 <li><a href="#genauigkeit-und-elementteilung" id="toc-genauigkeit-und-elementteilung"><span class="toc-section-number">10.4</span> Genauigkeit und
 Elementteilung</a></li>
 </ul></li>
+<li><a href="#theorie-ii.-ordnung" id="toc-theorie-ii.-ordnung"><span class="toc-section-number">11</span> Theorie II. Ordnung</a>
+<ul>
+<li><a href="#grundgedanke-1" id="toc-grundgedanke-1"><span class="toc-section-number">11.1</span> Grundgedanke</a></li>
+<li><a href="#geometrische-steifigkeitsmatrix" id="toc-geometrische-steifigkeitsmatrix"><span class="toc-section-number">11.2</span> Geometrische
+Steifigkeitsmatrix</a></li>
+<li><a href="#iteration" id="toc-iteration"><span class="toc-section-number">11.3</span> Iteration</a></li>
+<li><a href="#ersatzimperfektionen" id="toc-ersatzimperfektionen"><span class="toc-section-number">11.4</span> Ersatzimperfektionen</a></li>
+<li><a href="#schnittgrößen-nach-theorie-ii.-ordnung" id="toc-schnittgrößen-nach-theorie-ii.-ordnung"><span class="toc-section-number">11.5</span> Schnittgrößen nach Theorie II.
+Ordnung</a></li>
+</ul></li>
+<li><a href="#knickeigenwerte" id="toc-knickeigenwerte"><span class="toc-section-number">12</span> Knickeigenwerte</a>
+<ul>
+<li><a href="#eigenwertproblem" id="toc-eigenwertproblem"><span class="toc-section-number">12.1</span> Eigenwertproblem</a></li>
+<li><a href="#bedeutung-von-alpha_cr" id="toc-bedeutung-von-alpha_cr"><span class="toc-section-number">12.2</span> Bedeutung von
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>α</mi><mrow><mi>c</mi><mi>r</mi></mrow></msub><annotation encoding="application/x-tex">\alpha_{cr}</annotation></semantics></math></a></li>
+</ul></li>
 <li><a href="#anhang-a-nachrechnung-mit-sympy" id="toc-anhang-a-nachrechnung-mit-sympy">Anhang A: Nachrechnung mit
 SymPy</a></li>
 <li><a href="#literatur" id="toc-literatur">Literatur</a></li>
@@ -193,8 +209,13 @@ mehrere finite Elemente teilt,</li>
 (Zustandslinien),</li>
 <li>die elastische Bettung nach Winkler.</li>
 </ul>
-<p>Theorie II. Ordnung, Knickeigenwerte und Dynamik folgen in weiteren
-Teilen.</p>
+<p>Teil 3 (Kapitel 11 und 12) behandelt</p>
+<ul>
+<li>die Theorie II. Ordnung mit geometrischer Steifigkeitsmatrix,
+Iteration und Ersatzimperfektionen,</li>
+<li>die Knickeigenwerte.</li>
+</ul>
+<p>Die Dynamik folgt in einem weiteren Teil.</p>
 <h2 data-number="1.2" id="annahmen"><span class="header-section-number">1.2</span> Annahmen</h2>
 <ul>
 <li>Ebene Stabwerke in der
@@ -1576,6 +1597,312 @@ mit der exakten Lösung der Differentialgleichung (Skript
 Elemente nicht länger als die charakteristische Länge sind
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ℓ</mi><mrow><mi>e</mi><mi>l</mi></mrow></msub><mo>≤</mo><msub><mi>L</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">\ell_{el} \le L_c</annotation></semantics></math>).
 Dann liegen die Fehler unter 0,5 %.</p>
+<h1 data-number="11" id="theorie-ii.-ordnung"><span class="header-section-number">11</span> Theorie II. Ordnung</h1>
+<h2 data-number="11.1" id="grundgedanke-1"><span class="header-section-number">11.1</span> Grundgedanke</h2>
+<p>Bei Theorie II. Ordnung wird das Gleichgewicht am
+<strong>verformten</strong> System formuliert. Eine Druckkraft
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+erzeugt mit den Querverschiebungen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
+zusätzliche Momente
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>⋅</mo><mi>w</mi></mrow><annotation encoding="application/x-tex">N \cdot w</annotation></semantics></math>,
+die die Verformungen weiter vergrößern. d2beam verwendet die übliche
+<strong>linearisierte</strong> Theorie II. Ordnung:</p>
+<ul>
+<li>Die Verformungen sind klein
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>sin</mi><mo>⁡</mo><mi>β</mi><mo>≈</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">\sin\beta \approx \beta</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>cos</mi><mo>⁡</mo><mi>β</mi><mo>≈</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\cos\beta \approx 1</annotation></semantics></math>).</li>
+<li>Die Normalkraft ist je Element konstant. Sie wird aus dem vorherigen
+Rechenschritt übernommen und iterativ verbessert.</li>
+<li>Zugkräfte versteifen nicht: Ist die Normalkraft eines Elements
+positiv, wird mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">N = 0</annotation></semantics></math>
+gerechnet.</li>
+</ul>
+<p>Theorie II. Ordnung wird in d2beam immer für
+<strong>Lastkombinationen</strong> gerechnet, weil das
+Superpositionsprinzip nicht mehr gilt.</p>
+<h2 data-number="11.2" id="geometrische-steifigkeitsmatrix"><span class="header-section-number">11.2</span> Geometrische
+Steifigkeitsmatrix</h2>
+<p>Im Prinzip der virtuellen Verschiebungen kommt bei Theorie II.
+Ordnung die Arbeit der Normalkraft an der Verdrehung der Stabachse
+hinzu:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><msub><mi>W</mi><mi>N</mi></msub><mo>=</mo><msubsup><mo>∫</mo><mn>0</mn><mi>L</mi></msubsup><mi>N</mi><mspace width="0.167em"></mspace><msup><mi>w</mi><mo>′</mo></msup><mspace width="0.167em"></mspace><mi>δ</mi><msup><mi>w</mi><mo>′</mo></msup><mspace width="0.167em"></mspace><mi>d</mi><mi>x</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\delta W_N = \int_0^L N\, w&#39;\,\delta w&#39;\,dx .
+</annotation></semantics></math></p>
+<p>Mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><msub><mi>𝐍</mi><mi>w</mi></msub><mspace width="0.167em"></mspace><msub><mi>𝛅</mi><mi>b</mi></msub></mrow><annotation encoding="application/x-tex">w = \mathbf{N}_w\,\boldsymbol{\delta}_b</annotation></semantics></math>
+und konstantem
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+folgt die <strong>geometrische Steifigkeitsmatrix</strong></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐤</mi><mi>σ</mi></msub><mo>=</mo><msubsup><mo>∫</mo><mn>0</mn><mi>L</mi></msubsup><msubsup><mi>𝐍</mi><msup><mi>w</mi><mo>′</mo></msup><mi>T</mi></msubsup><mspace width="0.167em"></mspace><msub><mi>𝐍</mi><msup><mi>w</mi><mo>′</mo></msup></msub><mspace width="0.167em"></mspace><mi>d</mi><mi>x</mi><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>𝐤</mi><mrow><mi>I</mi><mi>I</mi></mrow></msub><mo>=</mo><mi>𝐤</mi><mo>+</mo><mi>N</mi><mspace width="0.167em"></mspace><msub><mi>𝐤</mi><mi>σ</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{k}_\sigma = \int_0^L \mathbf{N}_w&#39;^T\,\mathbf{N}_w&#39;\,dx , \qquad
+\mathbf{k}_{II} = \mathbf{k} + N\,\mathbf{k}_\sigma .
+</annotation></semantics></math></p>
+<p>Mit den Timoshenko-Ansatzfunktionen aus Abschnitt 4.4 erhält man für
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>a</mi></msub><mo>,</mo><msub><mi>φ</mi><mi>a</mi></msub><mo>,</mo><msub><mi>w</mi><mi>e</mi></msub><mo>,</mo><msub><mi>φ</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">w_a, \varphi_a, w_e, \varphi_e</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐤</mi><mi>σ</mi></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mn>60</mn><mspace width="0.167em"></mspace><mi>L</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>60</mn><mo>+</mo><mn>12</mn><msup><mi>ψ</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>6</mn><msup><mi>ψ</mi><mn>2</mn></msup><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mo stretchy="false" form="prefix">(</mo><mn>60</mn><mo>+</mo><mn>12</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>6</mn><msup><mi>ψ</mi><mn>2</mn></msup><mi>L</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>6</mn><msup><mi>ψ</mi><mn>2</mn></msup><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo>+</mo><mn>3</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msup><mi>L</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mn>6</mn><msup><mi>ψ</mi><mn>2</mn></msup><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mo stretchy="false" form="prefix">(</mo><mn>3</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo>−</mo><mn>5</mn><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msup><mi>L</mi><mn>2</mn></msup></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mo stretchy="false" form="prefix">(</mo><mn>60</mn><mo>+</mo><mn>12</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center" style="text-align: center"><mn>6</mn><msup><mi>ψ</mi><mn>2</mn></msup><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>60</mn><mo>+</mo><mn>12</mn><msup><mi>ψ</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mn>6</mn><msup><mi>ψ</mi><mn>2</mn></msup><mi>L</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>6</mn><msup><mi>ψ</mi><mn>2</mn></msup><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mo stretchy="false" form="prefix">(</mo><mn>3</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo>−</mo><mn>5</mn><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msup><mi>L</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mn>6</mn><msup><mi>ψ</mi><mn>2</mn></msup><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo>+</mo><mn>3</mn><msup><mi>ψ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msup><mi>L</mi><mn>2</mn></msup></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{k}_\sigma = \frac{1}{60\,L}
+\begin{bmatrix}
+60 + 12\psi^2 &amp; -6\psi^2 L &amp; -(60 + 12\psi^2) &amp; -6\psi^2 L \\
+-6\psi^2 L &amp; (5 + 3\psi^2)\,L^2 &amp; 6\psi^2 L &amp; (3\psi^2 - 5)\,L^2 \\
+-(60 + 12\psi^2) &amp; 6\psi^2 L &amp; 60 + 12\psi^2 &amp; 6\psi^2 L \\
+-6\psi^2 L &amp; (3\psi^2 - 5)\,L^2 &amp; 6\psi^2 L &amp; (5 + 3\psi^2)\,L^2
+\end{bmatrix} .
+</annotation></semantics></math></p>
+<p>Die Längsverschiebungen kommen in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐤</mi><mi>σ</mi></msub><annotation encoding="application/x-tex">\mathbf{k}_\sigma</annotation></semantics></math>
+nicht vor. Schubstarr
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ψ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\psi = 1</annotation></semantics></math>)
+ist das die bekannte Matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mrow><mn>30</mn><mi>L</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>36</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>3</mn><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>36</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>3</mn><mi>L</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>4</mn><msup><mi>L</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mn>3</mn><mi>L</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><msup><mi>L</mi><mn>2</mn></msup></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>36</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3</mn><mi>L</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"></mtd><mtd columnalign="center" style="text-align: center"><mn>4</mn><msup><mi>L</mi><mn>2</mn></msup></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\frac{1}{30L}\left[\begin{smallmatrix} 36 &amp; -3L &amp; -36 &amp; -3L \\ &amp; 4L^2 &amp; 3L &amp; -L^2 \\ &amp; &amp; 36 &amp; 3L \\ &amp; &amp; &amp; 4L^2 \end{smallmatrix}\right]</annotation></semantics></math>.
+Bei Druck ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">N &lt; 0</annotation></semantics></math>,
+die Steifigkeit nimmt also ab. Im Programm: Matrix <code>ksig</code> in
+<code>berechneLokaleElementsteifigkeitmatrix</code>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐤</mi><mrow><mi>I</mi><mi>I</mi></mrow></msub><annotation encoding="application/x-tex">\mathbf{k}_{II}</annotation></semantics></math>
+als <code>estmL2</code> in
+<code>berechneElementsteifigkeitsmatrix</code>.</p>
+<p><strong>P-Δ-Option:</strong> Mit der Option „P-Δ“ verwendet d2beam
+statt dessen nur</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>𝐤</mi><mi>σ</mi><mrow><mi>P</mi><mi mathvariant="normal">Δ</mi></mrow></msubsup><mo>=</mo><mfrac><mn>1</mn><mi>L</mi></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>1</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">für </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>w</mi><mi>a</mi></msub><mo>,</mo><msub><mi>w</mi><mi>e</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{k}_\sigma^{P\Delta} = \frac{1}{L}\begin{bmatrix} 1 &amp; -1 \\ -1 &amp; 1 \end{bmatrix}
+\quad \text{für } w_a, w_e .
+</annotation></semantics></math></p>
+<p>Damit wird nur die Schiefstellung der Stabsehne erfasst (P-Δ-Effekt),
+nicht die Verkrümmung des Stabes zwischen den Knoten (P-δ-Effekt).</p>
+<p><strong>Genauigkeit:</strong> Die Ansatzfunktionen sind bei Theorie
+II. Ordnung nicht mehr exakt. Wie gut die Näherung ist, zeigt die
+Knicklast eines beidseitig gelenkig gelagerten Stabes
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">L = 5</annotation></semantics></math>
+m,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>I</mi><mo>=</mo><msup><mn>10</mn><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">EI = 10^4</annotation></semantics></math>
+kNm², Skript <code>knicken_konvergenz.py</code>). Verglichen wird mit
+der Euler-Knicklast
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mi>E</mi></msub><mo>=</mo><msup><mi>π</mi><mn>2</mn></msup><mi>E</mi><mi>I</mi><mi>/</mi><msup><mi>L</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">N_E = \pi^2 EI/L^2</annotation></semantics></math>
+bzw. beim Timoshenko-Stab mit der Knicklast nach Engesser
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mrow><mi>c</mi><mi>r</mi></mrow></msub><mo>=</mo><msub><mi>N</mi><mi>E</mi></msub><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><msub><mi>N</mi><mi>E</mi></msub><mi>/</mi><mi>G</mi><msub><mi>A</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N_{cr} = N_E/(1 + N_E/GA_s)</annotation></semantics></math>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Elemente</th>
+<th style="text-align: center;">schubstarr</th>
+<th style="text-align: center;">Fehler</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><mn>0</mn><mo>,</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">\eta = 0{,}25</annotation></semantics></math>
+m²</th>
+<th style="text-align: center;">Fehler</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">4800,0 kN</td>
+<td style="text-align: center;">+21,6 %</td>
+<td style="text-align: center;">4800,0 kN</td>
+<td style="text-align: center;">+33,6 %</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">3977,5 kN</td>
+<td style="text-align: center;">+0,75 %</td>
+<td style="text-align: center;">3672,0 kN</td>
+<td style="text-align: center;">+2,2 %</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">3949,9 kN</td>
+<td style="text-align: center;">+0,05 %</td>
+<td style="text-align: center;">3609,5 kN</td>
+<td style="text-align: center;">+0,45 %</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">3948,0 kN</td>
+<td style="text-align: center;">0,00 %</td>
+<td style="text-align: center;">3597,1 kN</td>
+<td style="text-align: center;">+0,11 %</td>
+</tr>
+<tr>
+<td style="text-align: center;">exakt</td>
+<td style="text-align: center;">3947,8 kN</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">3593,2 kN</td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p>Mit einem Element je Stab ist die Knicklast deutlich zu groß.
+<strong>Für Theorie II. Ordnung und Knickeigenwerte sollten gedrückte
+Stäbe in mindestens 2, besser 4 Elemente geteilt werden</strong>
+(Zielteilung, Kapitel 8).</p>
+<h2 data-number="11.3" id="iteration"><span class="header-section-number">11.3</span> Iteration</h2>
+<p>Die Normalkräfte hängen von den Verformungen ab und umgekehrt. Für
+jede Kombination rechnet d2beam deshalb iterativ (<code>calculate</code>
+in <code>rechnen.ts</code>):</p>
+<ol type="1">
+<li><strong>Schritt 0:</strong> Berechnung nach Theorie I. Ordnung.
+Daraus die Normalkraft jedes Elements
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mstyle displaystyle="false"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N = \tfrac{1}{2}\,(N(0) + N(L))</annotation></semantics></math>,
+bei Zug
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">N = 0</annotation></semantics></math>.</li>
+<li><strong>Weitere Schritte:</strong> Gesamtsteifigkeitsmatrix mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐤</mi><mrow><mi>I</mi><mi>I</mi></mrow></msub><mo>=</mo><mi>𝐤</mi><mo>+</mo><mi>N</mi><mspace width="0.167em"></mspace><msub><mi>𝐤</mi><mi>σ</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{k}_{II} = \mathbf{k} + N\,\mathbf{k}_\sigma</annotation></semantics></math>,
+Lastvektor einschließlich der Ersatzlasten aus Imperfektionen (Abschnitt
+11.4), Lösen, neue Normalkräfte.</li>
+<li><strong>Abbruch</strong>, wenn sich die Verformungen nicht mehr
+ändern und das Gleichgewicht erfüllt ist:</li>
+</ol>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ε</mi><mi>u</mi></msub><mo>=</mo><mfrac><mrow><mo stretchy="true" form="prefix">‖</mo><msub><mi>𝐮</mi><mi>i</mi></msub><mo>−</mo><msub><mi>𝐮</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mo stretchy="true" form="postfix">‖</mo></mrow><mrow><mo stretchy="true" form="prefix">‖</mo><msub><mi>𝐮</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">‖</mo></mrow></mfrac><mo>&lt;</mo><msub><mi>ε</mi><mrow><mi>u</mi><mo>,</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>ε</mi><mi>F</mi></msub><mo>=</mo><mfrac><mrow><mo stretchy="true" form="prefix">‖</mo><mi>𝐑</mi><mo>−</mo><msub><mi>𝐑</mi><mrow><mi>i</mi><mi>n</mi><mi>t</mi></mrow></msub><mo stretchy="true" form="postfix">‖</mo></mrow><mrow><mo stretchy="true" form="prefix">‖</mo><mi>𝐑</mi><mo stretchy="true" form="postfix">‖</mo></mrow></mfrac><mo>&lt;</mo><msub><mi>ε</mi><mrow><mi>F</mi><mo>,</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\varepsilon_u = \frac{\lVert \mathbf{u}_i - \mathbf{u}_{i-1} \rVert}{\lVert \mathbf{u}_i \rVert} &lt; \varepsilon_{u,tol},
+\qquad
+\varepsilon_F = \frac{\lVert \mathbf{R} - \mathbf{R}_{int} \rVert}{\lVert \mathbf{R} \rVert} &lt; \varepsilon_{F,tol} ,
+</annotation></semantics></math></p>
+<p>oder wenn die eingestellte Höchstzahl der Iterationen erreicht ist.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐑</mi><mrow><mi>i</mi><mi>n</mi><mi>t</mi></mrow></msub><annotation encoding="application/x-tex">\mathbf{R}_{int}</annotation></semantics></math>
+sind die inneren Kräfte
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><msub><mi>𝐊</mi><mi>e</mi></msub><mi>𝚫</mi></mrow><annotation encoding="application/x-tex">\sum \mathbf{K}_e\boldsymbol{\Delta}</annotation></semantics></math>
+des aktuellen Schritts. Die Toleranzen und die Zahl der Iterationen
+stellst du in den Voreinstellungen ein; das Protokoll zeigt beide Werte
+für jeden Schritt.</p>
+<h2 data-number="11.4" id="ersatzimperfektionen"><span class="header-section-number">11.4</span> Ersatzimperfektionen</h2>
+<figure>
+<img role="img" aria-label="Bild 14: Ersatzimperfektionen" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MzAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNzMwIDMwMCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxsaW5lIHgxPSI3MC4wIiB5MT0iMjUwLjAiIHgyPSI3MC4wIiB5Mj0iNjAuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtZGFzaGFycmF5PSI2LDQiLz4KPGxpbmUgeDE9IjI1MC4wIiB5MT0iMjUwLjAiIHgyPSIyNTAuMCIgeTI9IjYwLjAiIHN0cm9rZT0iIzgwODA4MCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWRhc2hhcnJheT0iNiw0Ii8+CjxsaW5lIHgxPSI3MC4wIiB5MT0iNjAuMCIgeDI9IjI1MC4wIiB5Mj0iNjAuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtZGFzaGFycmF5PSI2LDQiLz4KPHBhdGggZD0iTSA3MCAyNTAgQyA3MCAxNzAsIDEwNSAxNDAsIDEwNSA2MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KPHBhdGggZD0iTSAyNTAgMjUwIEMgMjUwIDE3MCwgMjg1IDE0MCwgMjg1IDYwIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMyIvPgo8bGluZSB4MT0iMTA1LjAiIHkxPSI2MC4wIiB4Mj0iMjg1LjAiIHkyPSI2MC4wIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBhdGggZD0iTSA1OCAyNjQgTCA3MCAyNTAgTCA4MiAyNjQgWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBhdGggZD0iTSAyMzggMjY0IEwgMjUwIDI1MCBMIDI2MiAyNjQgWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPGxpbmUgeDE9IjI2MC4wIiB5MT0iMzguMCIgeDI9IjI3OS4wIiB5Mj0iMzguMCIgc3Ryb2tlPSIjYzAwMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIyODcuMCwzOC4wIDI3OS4wLDM0LjYgMjc5LjAsNDEuNCIgZmlsbD0iI2MwMDAwMCIvPgo8bGluZSB4MT0iMjUwLjAiIHkxPSIzMC4wIiB4Mj0iMjUwLjAiIHkyPSI0Ni4wIiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHRleHQgeD0iMjkzLjAiIHk9IjQ0LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPnU8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Im5vcm1hbCI+bWF4PC90c3Bhbj48L3RleHQ+Cjx0ZXh0IHg9IjE3NS4wIiB5PSIyOTAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjODA4MDgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0ibm9ybWFsIj5TY2hpZWZzdGVsbHVuZzogc2thbGllcnRlIDEuIEVpZ2VuZm9ybTwvdGV4dD4KPGxpbmUgeDE9IjQwMC4wIiB5MT0iOTAuMCIgeDI9IjY2MC4wIiB5Mj0iOTAuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1kYXNoYXJyYXk9IjYsNCIvPgo8cGF0aCBkPSJNIDQwMC4wIDkwLjAgTCA0MTMuMCAxMDAuMCBMIDQyNi4wIDEwOS4yIEwgNDM5LjAgMTE3LjUgTCA0NTIuMCAxMjQuOCBMIDQ2NS4wIDEzMS4yIEwgNDc4LjAgMTM2LjggTCA0OTEuMCAxNDEuNCBMIDUwNC4wIDE0NS4yIEwgNTE3LjAgMTQ4LjEgTCA1MzAuMCAxNTAuMCBMIDU0My4wIDE1MS4xIEwgNTU2LjAgMTUxLjIgTCA1NjkuMCAxNTAuNCBMIDU4Mi4wIDE0OC44IEwgNTk1LjAgMTQ2LjIgTCA2MDguMCAxNDIuOCBMIDYyMS4wIDEzOC40IEwgNjM0LjAgMTMzLjIgTCA2NDcuMCAxMjcuMSBMIDY2MC4wIDEyMC4wIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMyIvPgo8bGluZSB4MT0iNDAwLjAiIHkxPSI5MC4wIiB4Mj0iNjYwLjAiIHkyPSIxMjAuMCIgc3Ryb2tlPSIjODA4MDgwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtZGFzaGFycmF5PSIzLDMiLz4KPGxpbmUgeDE9IjUzMC4wIiB5MT0iMTA1LjAiIHgyPSI1MzAuMCIgeTI9IjE0Mi4wIiBzdHJva2U9IiNjMDAwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjUzMC4wLDE1MC4wIDUzMy40LDE0Mi4wIDUyNi42LDE0Mi4wIiBmaWxsPSIjYzAwMDAwIi8+Cjx0ZXh0IHg9IjUzOC4wIiB5PSIxMzUuNSIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjYzAwMDAwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc3R5bGU9Iml0YWxpYyI+djx0c3BhbiBkeT0iNSIgZm9udC1zaXplPSIxMiIgZm9udC1zdHlsZT0ibm9ybWFsIj4wbTwvdHNwYW4+PC90ZXh0Pgo8bGluZSB4MT0iNjc0LjAiIHkxPSI5MC4wIiB4Mj0iNjc0LjAiIHkyPSIxMTIuMCIgc3Ryb2tlPSIjYzAwMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI2NzQuMCwxMjAuMCA2NzcuNCwxMTIuMCA2NzAuNiwxMTIuMCIgZmlsbD0iI2MwMDAwMCIvPgo8dGV4dCB4PSI2ODAuMCIgeT0iMTExLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPnc8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Im5vcm1hbCI+MGU8L3RzcGFuPjwvdGV4dD4KPHRleHQgeD0iMzk0LjAiIHk9IjgyLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzAwMDAwMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zdHlsZT0iaXRhbGljIj5hPC90ZXh0Pgo8dGV4dCB4PSI2NjAuMCIgeT0iODAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPmU8L3RleHQ+Cjx0ZXh0IHg9IjUzMC4wIiB5PSIyOTAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjODA4MDgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0ibm9ybWFsIj5TdGFidm9ydmVyZm9ybXVuZyAoUGFyYWJlbCk8L3RleHQ+Cjwvc3ZnPgo=" style="width:95.0%" alt="Bild 14: Ersatzimperfektionen" />
+<figcaption aria-hidden="true">Bild 14:
+Ersatzimperfektionen</figcaption>
+</figure>
+<p><strong>Schiefstellung aus der Eigenform.</strong> Nach Schritt 0
+berechnet d2beam die erste Knickeigenform (Kapitel 12) und skaliert sie
+so, dass ihr größter Wert – oder der Wert an einem gewählten Knoten und
+in einer gewählten Richtung – gleich der vorgegebenen Vorverformung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>u</mi><mrow><mi>m</mi><mi>a</mi><mi>x</mi></mrow></msub><annotation encoding="application/x-tex">u_{max}</annotation></semantics></math>
+ist (Eingabe in mm bzw. mrad). Das Vorzeichen wird so gewählt, dass die
+Imperfektion in dieselbe Richtung zeigt wie die Verformung nach Theorie
+I. Ordnung an dieser Stelle, also ungünstig wirkt. Das Ergebnis ist ein
+Vektor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝚫</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\boldsymbol{\Delta}_0</annotation></semantics></math>
+von Knotenvorverformungen.</p>
+<p><strong>Stabvorverformung.</strong> Für einzelne Stäbe kann eine
+Vorkrümmung als Parabel vorgegeben werden:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>0</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>w</mi><mrow><mn>0</mn><mi>a</mi></mrow></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>w</mi><mrow><mn>0</mn><mi>e</mi></mrow></msub><mo>−</mo><msub><mi>w</mi><mrow><mn>0</mn><mi>a</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>ξ</mi><mo>+</mo><mn>4</mn><mspace width="0.167em"></mspace><msub><mi>v</mi><mrow><mn>0</mn><mi>m</mi></mrow></msub><mspace width="0.167em"></mspace><mi>ξ</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ξ</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><mi>ξ</mi><mo>=</mo><mi>x</mi><mi>/</mi><mi>L</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+w_0(x) = w_{0a} + (w_{0e} - w_{0a})\,\xi + 4\,v_{0m}\,\xi\,(1 - \xi), \qquad \xi = x/L .
+</annotation></semantics></math></p>
+<p>Bei der Elementteilung erhält jedes Teilelement die Werte
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mn>0</mn></msub><annotation encoding="application/x-tex">w_0</annotation></semantics></math>
+an seinen Enden und den Stich gegenüber seiner Sehne
+(<code>vorverformung_teil</code> in <code>cad_netz.ts</code>).</p>
+<p><strong>Ersatzlasten.</strong> Eine Vorverformung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mn>0</mn></msub><annotation encoding="application/x-tex">w_0</annotation></semantics></math>
+ändert die Neigung der Stabachse. In der virtuellen Arbeit der
+Normalkraft steht dann
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∫</mo><mi>N</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><msup><mi>w</mi><mo>′</mo></msup><mo>+</mo><msub><mi>w</mi><msup><mn>0</mn><mo>′</mo></msup></msub><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>δ</mi><msup><mi>w</mi><mo>′</mo></msup><mspace width="0.167em"></mspace><mi>d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\int N\,(w&#39; + w_0&#39;)\,\delta w&#39;\,dx</annotation></semantics></math>.
+Der Anteil mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><msup><mn>0</mn><mo>′</mo></msup></msub><annotation encoding="application/x-tex">w_0&#39;</annotation></semantics></math>
+hängt nicht von den Unbekannten ab und wirkt wie eine Last. Wird
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mn>0</mn></msub><annotation encoding="application/x-tex">w_0</annotation></semantics></math>
+mit den Ansatzfunktionen beschrieben, erhält man</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐩</mi><mn>0</mn></msub><mo>=</mo><mi>N</mi><mspace width="0.167em"></mspace><msub><mi>𝐤</mi><mi>σ</mi></msub><mspace width="0.167em"></mspace><msub><mi>𝛅</mi><mn>0</mn></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\mathbf{p}_0 = N\,\mathbf{k}_\sigma\,\boldsymbol{\delta}_0 ,
+</annotation></semantics></math></p>
+<p>mit den lokalen Vorverformungen
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝛅</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\boldsymbol{\delta}_0</annotation></semantics></math>
+des Elements. Für die Schiefstellung ist
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝛅</mi><mn>0</mn></msub><mo>=</mo><msub><mi>𝐓</mi><mi>U</mi></msub><mspace width="0.167em"></mspace><msub><mi>𝚫</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\boldsymbol{\delta}_0 = \mathbf{T}_U\,\boldsymbol{\Delta}_0</annotation></semantics></math>.
+Für die Parabel ist</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝛅</mi><mrow><mn>0</mn><mo>,</mo><mi>b</mi></mrow></msub><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">[</mo><mspace width="0.167em"></mspace><msub><mi>w</mi><mrow><mn>0</mn><mi>a</mi></mrow></msub><mo>,</mo><mspace width="0.222em"></mspace><mo>−</mo><mfrac><mrow><msub><mi>w</mi><mrow><mn>0</mn><mi>e</mi></mrow></msub><mo>−</mo><msub><mi>w</mi><mrow><mn>0</mn><mi>a</mi></mrow></msub></mrow><mi>L</mi></mfrac><mo>−</mo><mfrac><mrow><mn>4</mn><msub><mi>v</mi><mrow><mn>0</mn><mi>m</mi></mrow></msub></mrow><mi>L</mi></mfrac><mo>,</mo><mspace width="0.222em"></mspace><msub><mi>w</mi><mrow><mn>0</mn><mi>e</mi></mrow></msub><mo>,</mo><mspace width="0.222em"></mspace><mo>−</mo><mfrac><mrow><msub><mi>w</mi><mrow><mn>0</mn><mi>e</mi></mrow></msub><mo>−</mo><msub><mi>w</mi><mrow><mn>0</mn><mi>a</mi></mrow></msub></mrow><mi>L</mi></mfrac><mo>+</mo><mfrac><mrow><mn>4</mn><msub><mi>v</mi><mrow><mn>0</mn><mi>m</mi></mrow></msub></mrow><mi>L</mi></mfrac><mspace width="0.167em"></mspace><mo stretchy="true" form="postfix">]</mo></mrow><mi>T</mi></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boldsymbol{\delta}_{0,b} = \left[\, w_{0a},\ -\frac{w_{0e} - w_{0a}}{L} - \frac{4 v_{0m}}{L},\
+w_{0e},\ -\frac{w_{0e} - w_{0a}}{L} + \frac{4 v_{0m}}{L} \,\right]^T .
+</annotation></semantics></math></p>
+<p>Beim schubstarren Stab ist das für die Parabel exakt (Skript
+<code>vorverformung.py</code>). Die Ersatzlasten werden wie
+Elementlasten mit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><annotation encoding="application/x-tex">\mathbf{T}_U^T</annotation></semantics></math>
+transformiert und gehen ab Schritt 1 in den Lastvektor ein
+(<code>berechneElementlasten_Vorverformung</code>).</p>
+<h2 data-number="11.5" id="schnittgrößen-nach-theorie-ii.-ordnung"><span class="header-section-number">11.5</span> Schnittgrößen nach Theorie II.
+Ordnung</h2>
+<figure>
+<img role="img" aria-label="Bild 15: Schnittgrößen am verformten Stab" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNjQwIDMwMCI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0gNjAgODAgQyAxNTAgODAsIDIyMCAxMjAsIDMwMCAxNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxsaW5lIHgxPSI2MC4wIiB5MT0iMTUwLjAiIHgyPSI1NjAuMCIgeTI9IjE1MC4wIiBzdHJva2U9IiM4MDgwODAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1kYXNoYXJyYXk9IjYsNCIvPgo8dGV4dCB4PSI3MC4wIiB5PSIxNzAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjODA4MDgwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtd2VpZ2h0PSJub3JtYWwiPnVudmVyZm9ybXRlIEFjaHNlPC90ZXh0Pgo8bGluZSB4MT0iMzAwLjAiIHkxPSIxNTAuMCIgeDI9IjQwNS43IiB5Mj0iMTgwLjMiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWRhc2hhcnJheT0iMywzIi8+CjxsaW5lIHgxPSIzMDYuMCIgeTE9IjE1MC4wIiB4Mj0iNDE2LjAiIHkyPSIxNTAuMCIgc3Ryb2tlPSIjYzAwMDAwIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSI0MzAuMCwxNTAuMCA0MTYuMCwxNDQuMSA0MTYuMCwxNTUuOSIgZmlsbD0iI2MwMDAwMCIvPgo8dGV4dCB4PSI0MzguMCIgeT0iMTU2LjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9InN0YXJ0IiBmb250LXN0eWxlPSJpdGFsaWMiPk48L3RleHQ+CjxsaW5lIHgxPSIzMDAuMCIgeTE9IjE1Ni4wIiB4Mj0iMzAwLjAiIHkyPSIyNDYuMCIgc3Ryb2tlPSIjYzAwMDAwIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KPHBvbHlnb24gcG9pbnRzPSIzMDAuMCwyNjAuMCAzMDUuOSwyNDYuMCAyOTQuMSwyNDYuMCIgZmlsbD0iI2MwMDAwMCIvPgo8dGV4dCB4PSIyOTAuMCIgeT0iMjYyLjAiIGZvbnQtZmFtaWx5PSJEZWphVnUgU2FucywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2MwMDAwMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zdHlsZT0iaXRhbGljIj5UPC90ZXh0Pgo8bGluZSB4MT0iMzAzLjgiIHkxPSIxNTEuMSIgeDI9IjQwOC42IiB5Mj0iMTgxLjEiIHN0cm9rZT0iIzJmNTU5NyIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNDIwLjIsMTg0LjUgNDEwLjAsMTc2LjMgNDA3LjIsMTg2LjAiIGZpbGw9IiMyZjU1OTciLz4KPHRleHQgeD0iNDMzLjgiIHk9IjIwMS4yIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMyZjU1OTciIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC1zdHlsZT0iaXRhbGljIj5OPHRzcGFuIGR5PSI1IiBmb250LXNpemU9IjEzIiBmb250LXN0eWxlPSJub3JtYWwiPmI8L3RzcGFuPjwvdGV4dD4KPGxpbmUgeDE9IjI5OC45IiB5MT0iMTUzLjgiIHgyPSIyNzUuNyIgeTI9IjIzNC42IiBzdHJva2U9IiMyZjU1OTciIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPgo8cG9seWdvbiBwb2ludHM9IjI3Mi40LDI0Ni4xIDI4MC42LDIzNi4wIDI3MC45LDIzMy4yIiBmaWxsPSIjMmY1NTk3Ii8+Cjx0ZXh0IHg9IjI1Ny4zIiB5PSIyNjAuMCIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMmY1NTk3IiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXN0eWxlPSJpdGFsaWMiPlY8dHNwYW4gZHk9IjUiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtc3R5bGU9Im5vcm1hbCI+YjwvdHNwYW4+PC90ZXh0Pgo8cGF0aCBkPSJNIDM5MC4wIDE1MC4wIEEgOTAgOTAgMCAwIDEgMzg2LjUgMTc0LjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KPHRleHQgeD0iMzk4LjAiIHk9IjE3Mi4wIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMwMDAwMDAiIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC1zdHlsZT0iaXRhbGljIj7OsjwvdGV4dD4KPGNpcmNsZSBjeD0iMzAwLjAiIGN5PSIxNTAuMCIgcj0iMyIgZmlsbD0iIzAwMDAwMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8L3N2Zz4K" style="width:70.0%" alt="Bild 15: Schnittgrößen am verformten Stab" />
+<figcaption aria-hidden="true">Bild 15: Schnittgrößen am verformten
+Stab</figcaption>
+</figure>
+<p>Für die Zustandslinien wird das Gleichgewicht am verformten
+Stababschnitt von
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math>
+bis
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+gebildet. Mit den Kraftrichtungen der unverformten Achse (Bild 15) kommt
+zum Moment nach Abschnitt 9.1 der Anteil der Normalkraft hinzu:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>M</mi><mi>L</mi></msub><mo>+</mo><msub><mi>V</mi><mi>L</mi></msub><mspace width="0.167em"></mspace><mi>x</mi><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Lastanteile</mtext><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>N</mi><mi>L</mi></msub><mspace width="0.167em"></mspace><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><msub><mi>w</mi><mi>G</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>w</mi><mi>G</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+M(x) = M_L + V_L\,x - (\text{Lastanteile}) - N_L\,\big( w_G(x) - w_G(0) \big) .
+</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mi>G</mi></msub><annotation encoding="application/x-tex">w_G</annotation></semantics></math>
+ist die Gesamtverformung einschließlich Schiefstellung und
+Stabvorverformung. Bei Längslasten wird die Änderung der Normalkraft
+entlang des Stabes näherungsweise berücksichtigt.</p>
+<p>Die Querkraft in dieser Darstellung ist die
+<strong>Transversalkraft</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>
+senkrecht zur unverformten Achse. Für die Bemessung braucht man Normal-
+und Querkraft bezogen auf die verformte Achse (Querschnittsdrehung
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>β</mi><mi>G</mi></msub><annotation encoding="application/x-tex">\beta_G</annotation></semantics></math>):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mi>b</mi></msub><mo>=</mo><mi>N</mi><mo>+</mo><mi>T</mi><mspace width="0.167em"></mspace><msub><mi>β</mi><mi>G</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>V</mi><mi>b</mi></msub><mo>=</mo><mi>T</mi><mo>−</mo><mi>N</mi><mspace width="0.167em"></mspace><msub><mi>β</mi><mi>G</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+N_b = N + T\,\beta_G, \qquad V_b = T - N\,\beta_G .
+</annotation></semantics></math></p>
+<p>In den Voreinstellungen wählst du, ob
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>
+(Gleichgewichtsschnittgrößen) oder
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mi>b</mi></msub><annotation encoding="application/x-tex">N_b</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>V</mi><mi>b</mi></msub><annotation encoding="application/x-tex">V_b</annotation></semantics></math>
+(Bemessungsschnittgrößen) ausgegeben werden. Das Moment ist in beiden
+Fällen gleich.</p>
+<h1 data-number="12" id="knickeigenwerte"><span class="header-section-number">12</span> Knickeigenwerte</h1>
+<h2 data-number="12.1" id="eigenwertproblem"><span class="header-section-number">12.1</span> Eigenwertproblem</h2>
+<p>Der Faktor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>α</mi><mrow><mi>c</mi><mi>r</mi></mrow></msub><annotation encoding="application/x-tex">\alpha_{cr}</annotation></semantics></math>,
+mit dem die Normalkräfte einer Kombination erhöht werden müssen, damit
+das System instabil wird, folgt aus dem Eigenwertproblem</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐊</mi><mo>−</mo><msub><mi>α</mi><mrow><mi>c</mi><mi>r</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mi>𝐊</mi><mi>G</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>𝛟</mi><mo>=</mo><mn>𝟎</mn><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>𝐊</mi><mi>G</mi></msub><mo>=</mo><mi>−</mi><munder><mo>∑</mo><mi>e</mi></munder><msubsup><mi>𝐓</mi><mi>U</mi><mi>T</mi></msubsup><mspace width="0.167em"></mspace><msub><mi>N</mi><mi>e</mi></msub><mspace width="0.167em"></mspace><msub><mi>𝐤</mi><mi>σ</mi></msub><mspace width="0.167em"></mspace><msub><mi>𝐓</mi><mi>U</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\left( \mathbf{K} - \alpha_{cr}\,\mathbf{K}_G \right) \boldsymbol{\phi} = \mathbf{0},
+\qquad
+\mathbf{K}_G = -\sum_e \mathbf{T}_U^T\, N_e\,\mathbf{k}_\sigma\,\mathbf{T}_U .
+</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐊</mi><annotation encoding="application/x-tex">\mathbf{K}</annotation></semantics></math>
+ist die Steifigkeitsmatrix nach Theorie I. Ordnung,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐊</mi><mi>G</mi></msub><annotation encoding="application/x-tex">\mathbf{K}_G</annotation></semantics></math>
+die geometrische Matrix mit den Normalkräften
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mi>e</mi></msub><annotation encoding="application/x-tex">N_e</annotation></semantics></math>
+der Kombination (Druck negativ, deshalb das Minuszeichen).
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛟</mi><annotation encoding="application/x-tex">\boldsymbol{\phi}</annotation></semantics></math>
+ist die zugehörige Knickeigenform. Im Programm:
+<code>eigenwertberechnung</code> in <code>rechnen.ts</code>, die
+Elementanteile in
+<code>berechneElementsteifigkeitsmatrix_Ksig</code>.</p>
+<p>d2beam berechnet die gewünschte Anzahl der kleinsten Eigenwerte</p>
+<ul>
+<li>nach Schritt 0 mit den Normalkräften nach Theorie I. Ordnung (für
+die Schiefstellung) und</li>
+<li>am Ende der Iteration mit den endgültigen Normalkräften
+(Ausgabe).</li>
+</ul>
+<p>Für die Lösung stehen drei Verfahren zur Wahl: die QR-Methode der GNU
+Scientific Library, die simultane Vektoriteration und die
+Lanczos-Iteration von ARPACK (Vorgabe).</p>
+<h2 data-number="12.2" id="bedeutung-von-alpha_cr"><span class="header-section-number">12.2</span> Bedeutung von
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>α</mi><mrow><mi>c</mi><mi>r</mi></mrow></msub><annotation encoding="application/x-tex">\alpha_{cr}</annotation></semantics></math></h2>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>α</mi><mrow><mi>c</mi><mi>r</mi></mrow></msub><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\alpha_{cr} &lt; 1</annotation></semantics></math>:
+Das System ist unter der Kombination instabil. d2beam gibt eine
+Fehlermeldung aus.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>α</mi><mrow><mi>c</mi><mi>r</mi></mrow></msub><mo>≥</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\alpha_{cr} \ge 10</annotation></semantics></math>
+(bei elastischer Berechnung): Nach DIN EN 1993-1-1, 5.2.1 darf Theorie
+II. Ordnung vernachlässigt werden.</li>
+<li>Der Vergrößerungsfaktor der Verformungen und Momente aus Theorie II.
+Ordnung liegt näherungsweise bei
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>1</mn><mi>/</mi><msub><mi>α</mi><mrow><mi>c</mi><mi>r</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">1/(1 - 1/\alpha_{cr})</annotation></semantics></math>.</li>
+</ul>
+<p>Für die Genauigkeit gilt dasselbe wie in Abschnitt 11.2: Gedrückte
+Stäbe sollten geteilt werden.</p>
 <h1 class="unnumbered" id="anhang-a-nachrechnung-mit-sympy">Anhang A:
 Nachrechnung mit SymPy</h1>
 <p>Im Ordner <code>doku/theorie/sympy</code> liegen die Skripte, mit
@@ -1598,6 +1925,10 @@ Partikulärlösungen von Trapezlast, Längslast, Einzellast und
 Einzelmoment, Vergleich mit dem Programmcode.</li>
 <li><code>bettung_konvergenz.py</code>: Genauigkeit der Bettungsmatrix
 in Abhängigkeit von der Elementteilung.</li>
+<li><code>knicken_konvergenz.py</code>: Knicklast des gelenkig
+gelagerten Stabes in Abhängigkeit von der Elementteilung.</li>
+<li><code>vorverformung.py</code>: Ersatzlasten der parabelförmigen
+Stabvorverformung gegen die konsistente Herleitung.</li>
 </ul>
 <p>Aufruf jeweils mit <code>python3 &lt;skript&gt;.py</code> (benötigt
 das Paket <code>sympy</code>).</p>

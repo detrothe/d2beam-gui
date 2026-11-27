@@ -2,7 +2,7 @@
 title: "d2beam – Theorie-Handbuch"
 subtitle: "Der Timoshenko-Balken im Weggrößenverfahren"
 author: "Prof. Dr.-Ing. Detlef Rothe"
-date: "Entwurf, Stand 27.11.2026 – Teile 1 und 2"
+date: "Entwurf, Stand 27.11.2026 – Teile 1 bis 3"
 lang: de
 ---
 
@@ -33,7 +33,12 @@ Teil 2 (Kapitel 7 bis 10) behandelt
 - die Schnittgrößen und Verformungen entlang des Stabes (Zustandslinien),
 - die elastische Bettung nach Winkler.
 
-Theorie II. Ordnung, Knickeigenwerte und Dynamik folgen in weiteren Teilen.
+Teil 3 (Kapitel 11 und 12) behandelt
+
+- die Theorie II. Ordnung mit geometrischer Steifigkeitsmatrix, Iteration und Ersatzimperfektionen,
+- die Knickeigenwerte.
+
+Die Dynamik folgt in einem weiteren Teil.
 
 ## Annahmen
 
@@ -911,6 +916,206 @@ Feldmitte mit der exakten Lösung der Differentialgleichung (Skript `bettung_kon
 **Empfehlung:** Wähle die Zielteilung so, dass die Elemente nicht länger als die charakteristische Länge
 sind ($\ell_{el} \le L_c$). Dann liegen die Fehler unter 0,5 %.
 
+# Theorie II. Ordnung
+
+## Grundgedanke
+
+Bei Theorie II. Ordnung wird das Gleichgewicht am **verformten** System formuliert. Eine Druckkraft $N$
+erzeugt mit den Querverschiebungen $w$ zusätzliche Momente $N \cdot w$, die die Verformungen weiter
+vergrößern. d2beam verwendet die übliche **linearisierte** Theorie II. Ordnung:
+
+- Die Verformungen sind klein ($\sin\beta \approx \beta$, $\cos\beta \approx 1$).
+- Die Normalkraft ist je Element konstant. Sie wird aus dem vorherigen Rechenschritt übernommen und iterativ
+  verbessert.
+- Zugkräfte versteifen nicht: Ist die Normalkraft eines Elements positiv, wird mit $N = 0$ gerechnet.
+
+Theorie II. Ordnung wird in d2beam immer für **Lastkombinationen** gerechnet, weil das Superpositionsprinzip
+nicht mehr gilt.
+
+## Geometrische Steifigkeitsmatrix
+
+Im Prinzip der virtuellen Verschiebungen kommt bei Theorie II. Ordnung die Arbeit der Normalkraft an der
+Verdrehung der Stabachse hinzu:
+
+$$
+\delta W_N = \int_0^L N\, w'\,\delta w'\,dx .
+$$
+
+Mit $w = \mathbf{N}_w\,\boldsymbol{\delta}_b$ und konstantem $N$ folgt die **geometrische
+Steifigkeitsmatrix**
+
+$$
+\mathbf{k}_\sigma = \int_0^L \mathbf{N}_w'^T\,\mathbf{N}_w'\,dx , \qquad
+\mathbf{k}_{II} = \mathbf{k} + N\,\mathbf{k}_\sigma .
+$$
+
+Mit den Timoshenko-Ansatzfunktionen aus Abschnitt 4.4 erhält man für $w_a, \varphi_a, w_e, \varphi_e$
+
+$$
+\mathbf{k}_\sigma = \frac{1}{60\,L}
+\begin{bmatrix}
+60 + 12\psi^2 & -6\psi^2 L & -(60 + 12\psi^2) & -6\psi^2 L \\
+-6\psi^2 L & (5 + 3\psi^2)\,L^2 & 6\psi^2 L & (3\psi^2 - 5)\,L^2 \\
+-(60 + 12\psi^2) & 6\psi^2 L & 60 + 12\psi^2 & 6\psi^2 L \\
+-6\psi^2 L & (3\psi^2 - 5)\,L^2 & 6\psi^2 L & (5 + 3\psi^2)\,L^2
+\end{bmatrix} .
+$$
+
+Die Längsverschiebungen kommen in $\mathbf{k}_\sigma$ nicht vor. Schubstarr ($\psi = 1$) ist das die bekannte
+Matrix $\frac{1}{30L}\left[\begin{smallmatrix} 36 & -3L & -36 & -3L \\ & 4L^2 & 3L & -L^2 \\ & & 36 & 3L \\ & & & 4L^2 \end{smallmatrix}\right]$.
+Bei Druck ist $N < 0$, die Steifigkeit nimmt also ab. Im Programm: Matrix `ksig` in
+`berechneLokaleElementsteifigkeitmatrix`, $\mathbf{k}_{II}$ als `estmL2` in
+`berechneElementsteifigkeitsmatrix`.
+
+**P-Δ-Option:** Mit der Option „P-Δ“ verwendet d2beam statt dessen nur
+
+$$
+\mathbf{k}_\sigma^{P\Delta} = \frac{1}{L}\begin{bmatrix} 1 & -1 \\ -1 & 1 \end{bmatrix}
+\quad \text{für } w_a, w_e .
+$$
+
+Damit wird nur die Schiefstellung der Stabsehne erfasst (P-Δ-Effekt), nicht die Verkrümmung des Stabes
+zwischen den Knoten (P-δ-Effekt).
+
+**Genauigkeit:** Die Ansatzfunktionen sind bei Theorie II. Ordnung nicht mehr exakt. Wie gut die Näherung ist,
+zeigt die Knicklast eines beidseitig gelenkig gelagerten Stabes ($L = 5$ m, $EI = 10^4$ kNm², Skript
+`knicken_konvergenz.py`). Verglichen wird mit der Euler-Knicklast $N_E = \pi^2 EI/L^2$ bzw. beim
+Timoshenko-Stab mit der Knicklast nach Engesser $N_{cr} = N_E/(1 + N_E/GA_s)$:
+
+| Elemente | schubstarr | Fehler | $\eta = 0{,}25$ m² | Fehler |
+|:---:|:---:|:---:|:---:|:---:|
+| 1 | 4800,0 kN | +21,6 % | 4800,0 kN | +33,6 % |
+| 2 | 3977,5 kN | +0,75 % | 3672,0 kN | +2,2 % |
+| 4 | 3949,9 kN | +0,05 % | 3609,5 kN | +0,45 % |
+| 8 | 3948,0 kN | 0,00 % | 3597,1 kN | +0,11 % |
+| exakt | 3947,8 kN | | 3593,2 kN | |
+
+Mit einem Element je Stab ist die Knicklast deutlich zu groß. **Für Theorie II. Ordnung und Knickeigenwerte
+sollten gedrückte Stäbe in mindestens 2, besser 4 Elemente geteilt werden** (Zielteilung, Kapitel 8).
+
+## Iteration
+
+Die Normalkräfte hängen von den Verformungen ab und umgekehrt. Für jede Kombination rechnet d2beam deshalb
+iterativ (`calculate` in `rechnen.ts`):
+
+1. **Schritt 0:** Berechnung nach Theorie I. Ordnung. Daraus die Normalkraft jedes Elements
+   $N = \tfrac{1}{2}\,(N(0) + N(L))$, bei Zug $N = 0$.
+2. **Weitere Schritte:** Gesamtsteifigkeitsmatrix mit $\mathbf{k}_{II} = \mathbf{k} + N\,\mathbf{k}_\sigma$,
+   Lastvektor einschließlich der Ersatzlasten aus Imperfektionen (Abschnitt 11.4), Lösen, neue
+   Normalkräfte.
+3. **Abbruch**, wenn sich die Verformungen nicht mehr ändern und das Gleichgewicht erfüllt ist:
+
+$$
+\varepsilon_u = \frac{\lVert \mathbf{u}_i - \mathbf{u}_{i-1} \rVert}{\lVert \mathbf{u}_i \rVert} < \varepsilon_{u,tol},
+\qquad
+\varepsilon_F = \frac{\lVert \mathbf{R} - \mathbf{R}_{int} \rVert}{\lVert \mathbf{R} \rVert} < \varepsilon_{F,tol} ,
+$$
+
+oder wenn die eingestellte Höchstzahl der Iterationen erreicht ist. $\mathbf{R}_{int}$ sind die inneren
+Kräfte $\sum \mathbf{K}_e\boldsymbol{\Delta}$ des aktuellen Schritts. Die Toleranzen und die Zahl der
+Iterationen stellst du in den Voreinstellungen ein; das Protokoll zeigt beide Werte für jeden Schritt.
+
+## Ersatzimperfektionen
+
+![Bild 14: Ersatzimperfektionen](bilder/imperfektionen){width=95%}
+
+**Schiefstellung aus der Eigenform.** Nach Schritt 0 berechnet d2beam die erste Knickeigenform
+(Kapitel 12) und skaliert sie so, dass ihr größter Wert – oder der Wert an einem gewählten Knoten und in einer
+gewählten Richtung – gleich der vorgegebenen Vorverformung $u_{max}$ ist (Eingabe in mm bzw. mrad). Das
+Vorzeichen wird so gewählt, dass die Imperfektion in dieselbe Richtung zeigt wie die Verformung nach
+Theorie I. Ordnung an dieser Stelle, also ungünstig wirkt. Das Ergebnis ist ein Vektor
+$\boldsymbol{\Delta}_0$ von Knotenvorverformungen.
+
+**Stabvorverformung.** Für einzelne Stäbe kann eine Vorkrümmung als Parabel vorgegeben werden:
+
+$$
+w_0(x) = w_{0a} + (w_{0e} - w_{0a})\,\xi + 4\,v_{0m}\,\xi\,(1 - \xi), \qquad \xi = x/L .
+$$
+
+Bei der Elementteilung erhält jedes Teilelement die Werte $w_0$ an seinen Enden und den Stich gegenüber
+seiner Sehne (`vorverformung_teil` in `cad_netz.ts`).
+
+**Ersatzlasten.** Eine Vorverformung $w_0$ ändert die Neigung der Stabachse. In der virtuellen Arbeit der
+Normalkraft steht dann $\int N\,(w' + w_0')\,\delta w'\,dx$. Der Anteil mit $w_0'$ hängt nicht von den
+Unbekannten ab und wirkt wie eine Last. Wird $w_0$ mit den Ansatzfunktionen beschrieben, erhält man
+
+$$
+\mathbf{p}_0 = N\,\mathbf{k}_\sigma\,\boldsymbol{\delta}_0 ,
+$$
+
+mit den lokalen Vorverformungen $\boldsymbol{\delta}_0$ des Elements. Für die Schiefstellung ist
+$\boldsymbol{\delta}_0 = \mathbf{T}_U\,\boldsymbol{\Delta}_0$. Für die Parabel ist
+
+$$
+\boldsymbol{\delta}_{0,b} = \left[\, w_{0a},\ -\frac{w_{0e} - w_{0a}}{L} - \frac{4 v_{0m}}{L},\
+w_{0e},\ -\frac{w_{0e} - w_{0a}}{L} + \frac{4 v_{0m}}{L} \,\right]^T .
+$$
+
+Beim schubstarren Stab ist das für die Parabel exakt (Skript `vorverformung.py`). Die Ersatzlasten werden
+wie Elementlasten mit $\mathbf{T}_U^T$ transformiert und gehen ab Schritt 1 in den Lastvektor ein
+(`berechneElementlasten_Vorverformung`).
+
+## Schnittgrößen nach Theorie II. Ordnung
+
+![Bild 15: Schnittgrößen am verformten Stab](bilder/th2_schnitt){width=70%}
+
+Für die Zustandslinien wird das Gleichgewicht am verformten Stababschnitt von $0$ bis $x$ gebildet. Mit
+den Kraftrichtungen der unverformten Achse (Bild 15) kommt zum Moment nach Abschnitt 9.1 der Anteil der
+Normalkraft hinzu:
+
+$$
+M(x) = M_L + V_L\,x - (\text{Lastanteile}) - N_L\,\big( w_G(x) - w_G(0) \big) .
+$$
+
+$w_G$ ist die Gesamtverformung einschließlich Schiefstellung und Stabvorverformung. Bei Längslasten wird die
+Änderung der Normalkraft entlang des Stabes näherungsweise berücksichtigt.
+
+Die Querkraft in dieser Darstellung ist die **Transversalkraft** $T$ senkrecht zur unverformten Achse. Für die
+Bemessung braucht man Normal- und Querkraft bezogen auf die verformte Achse (Querschnittsdrehung $\beta_G$):
+
+$$
+N_b = N + T\,\beta_G, \qquad V_b = T - N\,\beta_G .
+$$
+
+In den Voreinstellungen wählst du, ob $N$, $T$ (Gleichgewichtsschnittgrößen) oder $N_b$, $V_b$
+(Bemessungsschnittgrößen) ausgegeben werden. Das Moment ist in beiden Fällen gleich.
+
+# Knickeigenwerte
+
+## Eigenwertproblem
+
+Der Faktor $\alpha_{cr}$, mit dem die Normalkräfte einer Kombination erhöht werden müssen, damit das
+System instabil wird, folgt aus dem Eigenwertproblem
+
+$$
+\left( \mathbf{K} - \alpha_{cr}\,\mathbf{K}_G \right) \boldsymbol{\phi} = \mathbf{0},
+\qquad
+\mathbf{K}_G = -\sum_e \mathbf{T}_U^T\, N_e\,\mathbf{k}_\sigma\,\mathbf{T}_U .
+$$
+
+$\mathbf{K}$ ist die Steifigkeitsmatrix nach Theorie I. Ordnung, $\mathbf{K}_G$ die geometrische Matrix mit
+den Normalkräften $N_e$ der Kombination (Druck negativ, deshalb das Minuszeichen). $\boldsymbol{\phi}$ ist die
+zugehörige Knickeigenform. Im Programm: `eigenwertberechnung` in `rechnen.ts`, die Elementanteile in
+`berechneElementsteifigkeitsmatrix_Ksig`.
+
+d2beam berechnet die gewünschte Anzahl der kleinsten Eigenwerte
+
+- nach Schritt 0 mit den Normalkräften nach Theorie I. Ordnung (für die Schiefstellung) und
+- am Ende der Iteration mit den endgültigen Normalkräften (Ausgabe).
+
+Für die Lösung stehen drei Verfahren zur Wahl: die QR-Methode der GNU Scientific Library, die simultane
+Vektoriteration und die Lanczos-Iteration von ARPACK (Vorgabe).
+
+## Bedeutung von $\alpha_{cr}$
+
+- $\alpha_{cr} < 1$: Das System ist unter der Kombination instabil. d2beam gibt eine Fehlermeldung aus.
+- $\alpha_{cr} \ge 10$ (bei elastischer Berechnung): Nach DIN EN 1993-1-1, 5.2.1 darf Theorie II. Ordnung
+  vernachlässigt werden.
+- Der Vergrößerungsfaktor der Verformungen und Momente aus Theorie II. Ordnung liegt näherungsweise bei
+  $1/(1 - 1/\alpha_{cr})$.
+
+Für die Genauigkeit gilt dasselbe wie in Abschnitt 11.2: Gedrückte Stäbe sollten geteilt werden.
+
 # Anhang A: Nachrechnung mit SymPy {-}
 
 Im Ordner `doku/theorie/sympy` liegen die Skripte, mit denen die Formeln dieses Teils nachgerechnet wurden:
@@ -924,6 +1129,8 @@ Im Ordner `doku/theorie/sympy` liegen die Skripte, mit denen die Formeln dieses 
 - `elementlasten.py`: Volleinspanngrößen und Partikulärlösungen von Trapezlast, Längslast, Einzellast und
   Einzelmoment, Vergleich mit dem Programmcode.
 - `bettung_konvergenz.py`: Genauigkeit der Bettungsmatrix in Abhängigkeit von der Elementteilung.
+- `knicken_konvergenz.py`: Knicklast des gelenkig gelagerten Stabes in Abhängigkeit von der Elementteilung.
+- `vorverformung.py`: Ersatzlasten der parabelförmigen Stabvorverformung gegen die konsistente Herleitung.
 
 Aufruf jeweils mit `python3 <skript>.py` (benötigt das Paket `sympy`).
 

@@ -554,6 +554,74 @@ def bild_starr_momente():
     s.save('starr_momente')
 
 
+def bild_th2_schnitt():
+    """Schnittgrößen am verformten Stab: N, T (Richtung unverformte Achse) und N_b, V_b."""
+    s = Svg(640, 300)
+    cx, cy = 300, 150
+    b = math.radians(16)
+    # verformte Achse links vom Schnitt
+    s.path(f'M 60 {cy - 70} C 150 {cy - 70}, 220 {cy - 30}, {cx} {cy}', SCHWARZ, 4)
+    s.line(60, cy, 560, cy, GRAU, 1, dash='6,4')
+    s.text(70, cy + 20, 'unverformte Achse', 13, GRAU, anchor='start')
+    # Tangente
+    tx, ty = math.cos(b), math.sin(b)
+    s.line(cx, cy, cx + 110 * tx, cy + 110 * ty, SCHWARZ, 1, dash='3,3')
+    # N und T (Richtungen der unverformten Achse)
+    s.arrow(cx + 6, cy, cx + 130, cy, ROT, 3.5, head=14)
+    s.sym(cx + 138, cy + 6, 'N', color=ROT, anchor='start')
+    s.arrow(cx, cy + 6, cx, cy + 110, ROT, 3.5, head=14)
+    s.sym(cx - 10, cy + 112, 'T', color=ROT, anchor='end')
+    # N_b, V_b (Richtungen der verformten Achse)
+    s.arrow(cx + 4 * tx, cy + 4 * ty, cx + 125 * tx, cy + 125 * ty, BLAU, 2.5, head=12)
+    s.sym(cx + 135 * tx + 4, cy + 135 * ty + 14, 'N', 'b', color=BLAU, anchor='start')
+    s.arrow(cx - 4 * ty, cy + 4 * tx, cx - 100 * ty, cy + 100 * tx, BLAU, 2.5, head=12)
+    s.sym(cx - 104 * ty - 14, cy + 104 * tx + 10, 'V', 'b', color=BLAU, anchor='end')
+    s.arc(cx, cy, 90, 0, -16, SCHWARZ, 1.2)
+    s.sym(cx + 98, cy + 22, 'β', size=16, anchor='start')
+    s.circle(cx, cy, 3, fill=SCHWARZ)
+    s.save('th2_schnitt')
+
+
+def bild_imperfektionen():
+    """Ersatzimperfektionen: Schiefstellung aus Eigenform und Vorkrümmung eines Stabes."""
+    s = Svg(730, 300)
+    # links: Rahmen mit Schiefstellung (skalierte Eigenform)
+    x1, x2, yo, yu = 70, 250, 60, 250
+    for xx in (x1, x2):
+        s.line(xx, yu, xx, yo, GRAU, 2, dash='6,4')
+    s.line(x1, yo, x2, yo, GRAU, 2, dash='6,4')
+    d = 35
+    s.path(f'M {x1} {yu} C {x1} {yu - 80}, {x1 + d} {yo + 80}, {x1 + d} {yo}', SCHWARZ, 3)
+    s.path(f'M {x2} {yu} C {x2} {yu - 80}, {x2 + d} {yo + 80}, {x2 + d} {yo}', SCHWARZ, 3)
+    s.line(x1 + d, yo, x2 + d, yo, SCHWARZ, 3)
+    for xx in (x1, x2):
+        s.path(f'M {xx - 12} {yu + 14} L {xx} {yu} L {xx + 12} {yu + 14} Z', SCHWARZ, 1.5, fill='white')
+    s.arrow(x2 + 10, yo - 22, x2 + d + 2, yo - 22, ROT, 1.5, head=8)
+    s.line(x2, yo - 30, x2, yo - 14, ROT, 1)
+    s.sym(x2 + d + 8, yo - 16, 'u', 'max', color=ROT, size=16, anchor='start')
+    s.text((x1 + x2) / 2 + 15, 290, 'Schiefstellung: skalierte 1. Eigenform', 13, GRAU)
+    # rechts: Stab mit Vorkrümmung (Parabel) und Sehnendrehung
+    xa, xe, ya = 400, 660, 90
+    s.line(xa, ya, xe, ya, GRAU, 1.5, dash='6,4')
+    w0a, w0e, v0 = 0, 30, 45
+    pts = []
+    for j in range(21):
+        t = j / 20
+        w = w0a + (w0e - w0a) * t + 4 * v0 * t * (1 - t)
+        pts.append(f'{xa + t * (xe - xa):.1f} {ya + w:.1f}')
+    s.path('M ' + ' L '.join(pts), SCHWARZ, 3)
+    s.line(xa, ya + w0a, xe, ya + w0e, GRAU, 1, dash='3,3')
+    xm = (xa + xe) / 2
+    s.arrow(xm, ya + (w0a + w0e) / 2, xm, ya + (w0a + w0e) / 2 + v0, ROT, 1.5, head=8)
+    s.sym(xm + 8, ya + (w0a + w0e) / 2 + v0 / 2 + 8, 'v', '0m', color=ROT, size=16, anchor='start')
+    s.arrow(xe + 14, ya, xe + 14, ya + w0e, ROT, 1.5, head=8)
+    s.sym(xe + 20, ya + w0e / 2 + 6, 'w', '0e', color=ROT, size=16, anchor='start')
+    s.sym(xa - 6, ya - 8, 'a', anchor='end')
+    s.sym(xe, ya - 10, 'e')
+    s.text((xa + xe) / 2, 290, 'Stabvorverformung (Parabel)', 13, GRAU)
+    s.save('imperfektionen')
+
+
 if __name__ == '__main__':
     bild_stab_uebersicht()
     bild_stabendgroessen()
@@ -568,4 +636,6 @@ if __name__ == '__main__':
     bild_einzellast()
     bild_bettung()
     bild_starr_momente()
+    bild_th2_schnitt()
+    bild_imperfektionen()
     print('SVG geschrieben')

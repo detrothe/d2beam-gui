@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="730" height="300" viewBox="0 0 730 300">
+<rect width="100%" height="100%" fill="white"/>
+<line x1="70.0" y1="250.0" x2="70.0" y2="60.0" stroke="#808080" stroke-width="2" stroke-linecap="butt" stroke-dasharray="6,4"/>
+<line x1="250.0" y1="250.0" x2="250.0" y2="60.0" stroke="#808080" stroke-width="2" stroke-linecap="butt" stroke-dasharray="6,4"/>
+<line x1="70.0" y1="60.0" x2="250.0" y2="60.0" stroke="#808080" stroke-width="2" stroke-linecap="butt" stroke-dasharray="6,4"/>
+<path d="M 70 250 C 70 170, 105 140, 105 60" fill="none" stroke="#000000" stroke-width="3"/>
+<path d="M 250 250 C 250 170, 285 140, 285 60" fill="none" stroke="#000000" stroke-width="3"/>
+<line x1="105.0" y1="60.0" x2="285.0" y2="60.0" stroke="#000000" stroke-width="3" stroke-linecap="butt"/>
+<path d="M 58 264 L 70 250 L 82 264 Z" fill="white" stroke="#000000" stroke-width="1.5"/>
+<path d="M 238 264 L 250 250 L 262 264 Z" fill="white" stroke="#000000" stroke-width="1.5"/>
+<line x1="260.0" y1="38.0" x2="279.0" y2="38.0" stroke="#c00000" stroke-width="1.5" stroke-linecap="butt"/>
+<polygon points="287.0,38.0 279.0,34.6 279.0,41.4" fill="#c00000"/>
+<line x1="250.0" y1="30.0" x2="250.0" y2="46.0" stroke="#c00000" stroke-width="1" stroke-linecap="butt"/>
+<text x="293.0" y="44.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#c00000" text-anchor="start" font-style="italic">u<tspan dy="5" font-size="12" font-style="normal">max</tspan></text>
+<text x="175.0" y="290.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" fill="#808080" text-anchor="middle" font-weight="normal">Schiefstellung: skalierte 1. Eigenform</text>
+<line x1="400.0" y1="90.0" x2="660.0" y2="90.0" stroke="#808080" stroke-width="1.5" stroke-linecap="butt" stroke-dasharray="6,4"/>
+<path d="M 400.0 90.0 L 413.0 100.0 L 426.0 109.2 L 439.0 117.5 L 452.0 124.8 L 465.0 131.2 L 478.0 136.8 L 491.0 141.4 L 504.0 145.2 L 517.0 148.1 L 530.0 150.0 L 543.0 151.1 L 556.0 151.2 L 569.0 150.4 L 582.0 148.8 L 595.0 146.2 L 608.0 142.8 L 621.0 138.4 L 634.0 133.2 L 647.0 127.1 L 660.0 120.0" fill="none" stroke="#000000" stroke-width="3"/>
+<line x1="400.0" y1="90.0" x2="660.0" y2="120.0" stroke="#808080" stroke-width="1" stroke-linecap="butt" stroke-dasharray="3,3"/>
+<line x1="530.0" y1="105.0" x2="530.0" y2="142.0" stroke="#c00000" stroke-width="1.5" stroke-linecap="butt"/>
+<polygon points="530.0,150.0 533.4,142.0 526.6,142.0" fill="#c00000"/>
+<text x="538.0" y="135.5" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#c00000" text-anchor="start" font-style="italic">v<tspan dy="5" font-size="12" font-style="normal">0m</tspan></text>
+<line x1="674.0" y1="90.0" x2="674.0" y2="112.0" stroke="#c00000" stroke-width="1.5" stroke-linecap="butt"/>
+<polygon points="674.0,120.0 677.4,112.0 670.6,112.0" fill="#c00000"/>
+<text x="680.0" y="111.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" fill="#c00000" text-anchor="start" font-style="italic">w<tspan dy="5" font-size="12" font-style="normal">0e</tspan></text>
+<text x="394.0" y="82.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#000000" text-anchor="end" font-style="italic">a</text>
+<text x="660.0" y="80.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="18" fill="#000000" text-anchor="middle" font-style="italic">e</text>
+<text x="530.0" y="290.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" fill="#808080" text-anchor="middle" font-weight="normal">Stabvorverformung (Parabel)</text>
+</svg>
