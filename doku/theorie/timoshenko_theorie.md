@@ -1429,10 +1429,16 @@ Aufruf jeweils mit `python3 <skript>.py` (benötigt das Paket `sympy`).
 
 # Literatur {-}
 
-1. Meskouris, K.; Hake, E.: Statik der Stabtragwerke. Springer, 2009.
-2. Kindmann, R.: Stahlbau, Teil 2: Stabilität und Theorie II. Ordnung. Ernst & Sohn.
-3. Przemieniecki, J. S.: Theory of Matrix Structural Analysis. McGraw-Hill, 1968 (Dover 1985).
-4. Rothe, D.: Allgemeines Weggrößenverfahren. Vorlesungsunterlagen, Stand 5.2.2020.
-5. Knothe, K.; Wessels, H.: Finite Elemente – Eine Einführung für Ingenieure. 5. Auflage, Springer Vieweg,
-   2017. Enthält die Steifigkeitsmatrizen des Timoshenko-Balkens einschließlich Theorie II. Ordnung sowie die
-   Massenmatrizen.
+::: {.literatur}
+\[1\] Meskouris, K.; Hake, E.: Statik der Stabtragwerke. Springer, 2009.
+
+\[2\] Kindmann, R.: Stahlbau, Teil 2: Stabilität und Theorie II. Ordnung. Ernst & Sohn.
+
+\[3\] Przemieniecki, J. S.: Theory of Matrix Structural Analysis. McGraw-Hill, 1968 (Dover 1985).
+
+\[4\] Rothe, D.: Allgemeines Weggrößenverfahren. Vorlesungsunterlagen, Stand 5.2.2020.
+
+\[5\] Knothe, K.; Wessels, H.: Finite Elemente – Eine Einführung für Ingenieure. 5. Auflage, Springer Vieweg, 2017.
+Enthält die Steifigkeitsmatrizen des Timoshenko-Balkens einschließlich Theorie II. Ordnung sowie die
+Massenmatrizen.
+:::

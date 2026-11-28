@@ -31,3 +31,10 @@ span.header-section-number { margin-right: 0.4em; }
   figure, math[display="block"] { break-inside: avoid; }
   h1, h2, h3 { break-after: avoid; }
 }
+
+/* Literaturverzeichnis: Nummer [n] hängend */
+.literatur p {
+  padding-left: 2.2em;
+  text-indent: -2.2em;
+  margin: 0.3em 0;
+}
