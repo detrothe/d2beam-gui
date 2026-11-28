@@ -1562,30 +1562,29 @@ export function drawsystem(svg_id = 'artboard') {
                     xx2 = xs1 + x * element[ielem].cosinus + uG * scalefactor
                     zz2 = zs1 + x * element[ielem].sinus + wG * scalefactor
                     if (show_umriss) {
-                        const phi = phiL[i]
+                        // Querschnitt um die überhöhte Querschnittsdrehung beta = phiL (im Uhrzeigersinn)
+                        // starr drehen. Die linearisierte Form u = ±h·beta·scalefactor, w = ∓h verlängert
+                        // den Querschnitt bei großer Überhöhung auf 2h·sqrt(1 + (beta·scalefactor)²), der
+                        // Stab wurde dort, wo beta groß ist (zum Auflager hin), scheinbar höher.
+                        const phi = phiL[i] * scalefactor
+                        const co = element[ielem].cosinus, si = element[ielem].sinus
+                        const ox = h * Math.sin(phi)      // lokaler Versatz der Oberkante zur Stabachse
+                        const oz = -h * Math.cos(phi)
+
+                        // Punkt auf der verformten Stabachse (global)
+                        const xa = xs1 + x * co + (co * uL[i] - si * wL[i]) * scalefactor
+                        const za = zs1 + x * si + (si * uL[i] + co * wL[i]) * scalefactor
 
                         // oben
-                        let uoben = uL[i] + phi * h;   //Math.sin(phi) * h
-                        let woben = wL[i] //- Math.cos(phi) * h
-
-                        let uobenG = element[ielem].cosinus * uoben - element[ielem].sinus * woben
-                        let wobenG = element[ielem].sinus * uoben + element[ielem].cosinus * woben
-
-                        let xoben2 = xs1 + x * element[ielem].cosinus + element[ielem].sinus * h + uobenG * scalefactor
-                        let zoben2 = zs1 + x * element[ielem].sinus - element[ielem].cosinus * h + wobenG * scalefactor
-                        // console.log("NEU OBEN", x, uoben, woben, uobenG, wobenG, xoben2, zoben2)
+                        let xoben2 = xa + co * ox - si * oz
+                        let zoben2 = za + si * ox + co * oz
 
                         umriss_x[i] = xp1 = tr.xPix(xoben2)
                         umriss_z[i] = zp1 = tr.zPix(zoben2)
 
-                        let uunten = uL[i] - phi * h;  //Math.sin(phi) * h
-                        let wunten = wL[i] //- Math.cos(phi) * h
-
-                        let uuntenG = element[ielem].cosinus * uunten - element[ielem].sinus * wunten
-                        let wuntenG = element[ielem].sinus * uunten + element[ielem].cosinus * wunten
-
-                        let xunten2 = xs1 + x * element[ielem].cosinus - element[ielem].sinus * h + uuntenG * scalefactor
-                        let zunten2 = zs1 + x * element[ielem].sinus + element[ielem].cosinus * h + wuntenG * scalefactor
+                        // unten
+                        let xunten2 = xa - co * ox + si * oz
+                        let zunten2 = za - si * ox - co * oz
                         umriss_x[2 * nelTeilungen - 1 - i] = xp2 = tr.xPix(xunten2)
                         umriss_z[2 * nelTeilungen - 1 - i] = zp2 = tr.zPix(zunten2)
 
