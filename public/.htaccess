@@ -30,7 +30,11 @@ RewriteRule ^code/.*$ - [L]
 RewriteRule ^sw\.js$ - [L]
 RewriteRule ^manifest\.webmanifest$ - [L]
 
-# 5. SPA Routing (alles andere → index.html)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.html [L]
+# 5. Routing
+# Die App kennt keine eigenen Pfade, nur / mit Parametern (?lang=…, ?locale=…).
+# Ausnahme: /openFile ist das Ziel der PWA-Dateizuordnung (file_handlers in vite.config.mts).
+RewriteRule ^openFile/?$ /index.html [L]
+
+# Alles andere, was es nicht gibt, bekommt einen echten 404-Fehler (kein „Soft 404“ für Google).
+# Früher wurde hier jede unbekannte Adresse mit index.html und Status 200 beantwortet.
+ErrorDocument 404 /404.html

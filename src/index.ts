@@ -4,7 +4,6 @@ import { msg } from '@lit/localize';
 import { allLocales } from './generated/locale-codes.js';
 
 // import './components/dr-about';
-// import './components/dr-404';
 
 // import './styles/global.css';
 import './styles/contextMenu.css';
@@ -51,85 +50,6 @@ window.addEventListener('lit-localize-status', (event) => {
 
 import './components/dr-haupt'
 
-
-//########################################################################################
-//                        eigener Router
-//########################################################################################
-
-// function navigate() {
-//     const path = window.location.pathname;
-//     const main = document.querySelector('main');
-//     if (!main) return;
-
-//     // SPA-Routen
-//     if (path === '/' || path === '/index.html') {
-//         main.innerHTML = `<dr-haupt id="id_haupt"></dr-haupt>`;
-//         return;
-//     }
-
-//     if (path === '/about') {
-//         main.innerHTML = `<dr-about></dr-about>`;
-//         return;
-//     }
-
-//     // Alles andere → 404
-//     main.innerHTML = `<dr-404></dr-404>`;
-// }
-function navigate() {
-    const path = window.location.pathname;
-    const main = document.querySelector('main');
-    if (!main) return;
-
-    // Startseite
-    if (path === '/' || path === '/index.html') {
-        const haupt = document.createElement('dr-haupt');
-        haupt.id = 'id_haupt';
-        main.replaceChildren(haupt);
-        return;
-    }
-
-    // About
-    if (path === '/about') {
-        const about = document.createElement('dr-about');
-        main.replaceChildren(about);
-        return;
-    }
-
-    // 404
-    const notfound = document.createElement('dr-404');
-    main.replaceChildren(notfound);
-}
-// Navigation beim Laden ausführen
-// navigate();
-
-// // Navigation ausführen, wenn der Nutzer zurück/nach vorne klickt
-// window.addEventListener('popstate', navigate);
-
-// document.addEventListener('click', (ev) => {
-//     const target = ev.target as HTMLElement;
-
-//     if (target.tagName === 'A') {
-//         const href = target.getAttribute('href');
-//         if (!href) return;
-
-//         // 1. Dokumentations-Dateien NICHT abfangen
-//         if (href.endsWith('.html')) {
-//             return; // Browser soll die Datei normal laden
-//         }
-
-//         // 2. SPA-Routen abfangen
-//         if (href.startsWith('/')) {
-//             ev.preventDefault();
-//             history.pushState({}, '', href);
-//             navigate();
-//         }
-//     }
-// });
-
-
-//########################################################################################
-//                        Ende Router
-//########################################################################################
 
 import { write } from './pages/utility'
 import { str_inputToJSON, read_daten } from './pages/dateien'
