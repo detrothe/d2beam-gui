@@ -4,3 +4,13 @@
 \floatplacement{figure}{H}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.6em}
+% Seitenzahl unten in der Mitte: Seite / Seiten gesamt
+\usepackage{lastpage}
+\usepackage{scrlayer-scrpage}
+\clearpairofpagestyles
+\usepackage{xcolor}
+\definecolor{anthrazit}{HTML}{3C3C3C}
+\setkomafont{pagefoot}{\normalfont\small\color{anthrazit}}
+\setkomafont{pagenumber}{}
+\cfoot*{\pagemark\,/\,\pageref*{LastPage}}
+\pagestyle{scrheadings}

@@ -292,6 +292,89 @@ def bild_kinematik():
     s.save('kinematik')
 
 
+def bild_verformungsanteile():
+    """Zerlegung w = w_b + w_v: links Schubverformung, rechts Biegeverformung am Element dx."""
+    s = Svg(1000, 360)
+    top, bot = 100, 200
+    ym = (top + bot) / 2
+    # ---------------------------------------------------------------- Schub
+    xl, xr = 120, 290
+    d = 40                                   # dw_v (überhöht)
+    s.text((xl + xr) / 2, 40, 'Schub', 18, weight='bold')
+    s.add(f'<rect x="{xl}" y="{top}" width="{xr - xl}" height="{bot - top}" fill="none" stroke="{GRAU}" '
+          f'stroke-width="1.2" stroke-dasharray="6,4"/>')
+    s.path(f'M {xl} {top} L {xr} {top + d} L {xr} {bot + d} L {xl} {bot} Z', SCHWARZ, 3, fill='#eeeeee')
+    s.line(xl, ym, xr, ym + d, SCHWARZ, 1, dash='6,4')
+    # Querkräfte
+    s.arrow(xl - 18, bot + 10, xl - 18, top - 10, ROT, 3, head=14)
+    s.sym(xl - 32, ym + 6, 'V', color=ROT, anchor='end')
+    s.arrow(xr + 18, top + d - 10, xr + 18, bot + d + 10, ROT, 3, head=14)
+    s.sym(xr + 30, ym + d + 6, 'V', color=ROT, anchor='start')
+    # Gleitung
+    g = math.degrees(math.atan2(d, xr - xl))
+    s.arc(xl, top, 95, 0, -g, SCHWARZ, 1.5)
+    s.sym(xl + 100, top + 42, 'γ', 'm', 18, anchor='start')
+    # dw_v
+    xd = xr + 75
+    s.line(xr + 4, top, xd + 60, top, GRAU, 1.2, dash='3,3')
+    s.line(xr + 4, top + d, xd + 60, top + d, GRAU, 1.2)
+    s.arrow(xd, top + 0.5 * d, xd, top, GRAU, 1.0, head=7)
+    s.arrow(xd, top + 0.5 * d, xd, top + d, GRAU, 1.0, head=7)
+    s.add(f'<text x="{xd + 10}" y="{top + d + 22}" font-family="{FONT}" font-size="17" font-style="italic">'
+          f'dw<tspan dy="5" font-size="12" font-style="normal">v</tspan><tspan dy="-5"> = γ</tspan>'
+          f'<tspan dy="5" font-size="12" font-style="normal">m</tspan><tspan dy="-5"> dx</tspan></text>')
+    s.dim(xl, xr, 290, 'dx', ext_from=bot + 4)
+    # ---------------------------------------------------------------- Biegung
+    xl = 560
+    L = 170
+    R = 420.0                                # Krümmungsradius (überhöht), Mittelpunkt oben
+    th = L / R
+    cy = ym - R
+    def p(t, z):
+        return xl + (R + z) * math.sin(t), cy + (R + z) * math.cos(t)
+    h = (bot - top) / 2
+    s.text(xl + L / 2, 40, 'Biegung', 18, weight='bold')
+    s.add(f'<rect x="{xl}" y="{top}" width="{L}" height="{bot - top}" fill="none" stroke="{GRAU}" '
+          f'stroke-width="1.2" stroke-dasharray="6,4"/>')
+    def bogen(z):
+        x1, y1 = p(0, z)
+        x2, y2 = p(th, z)
+        return x1, y1, x2, y2, R + z
+    xa, ya, xb, yb, ro = bogen(-h)
+    xc, yc, xd2, yd2, ru = bogen(h)
+    s.path(f'M {xa:.1f} {ya:.1f} A {ro:.1f} {ro:.1f} 0 0 0 {xb:.1f} {yb:.1f} L {xd2:.1f} {yd2:.1f} '
+           f'A {ru:.1f} {ru:.1f} 0 0 1 {xc:.1f} {yc:.1f} Z', SCHWARZ, 3, fill='#eeeeee')
+    x1, y1, x2, y2, rm = bogen(0)
+    s.path(f'M {x1:.1f} {y1:.1f} A {rm:.1f} {rm:.1f} 0 0 0 {x2:.1f} {y2:.1f}', SCHWARZ, 1, dash='6,4')
+    # Momente
+    s.arc_arrow(xl - 4, ym, 50, 240, 120, ROT, 3, head=14)
+    s.sym(xl - 56, ym - 50, 'M', color=ROT)
+    gd = math.degrees(th)
+    s.arc_arrow(x2 + 4 * math.cos(th), y2 - 4 * math.sin(th), 50, -60 + gd, 60 + gd, ROT, 3, head=14)
+    s.sym(x2 + 30, y2 - 62, 'M', color=ROT, anchor='start')
+    # Tangente am rechten Ende und Horizontale
+    s.line(x2 + 60, ym, x2 + 200, ym, GRAU, 1.2)
+    tx, ty = math.cos(th), -math.sin(th)
+    s.line(x2 + 60 * tx, y2 + 60 * ty, x2 + 220 * tx, y2 + 220 * ty, SCHWARZ, 1.2)
+    # Winkel dβ zwischen Horizontaler (durch Endpunkt) und Tangente
+    s.line(x2 + 60, y2, x2 + 210, y2, GRAU, 1.2, dash='3,3')
+    s.arc(x2, y2, 190, 0, gd, SCHWARZ, 1.5)
+    s.text(x2 + 196, y2 - 30, 'dβ &lt; 0', 17, anchor='start', italic=True)
+    # dw_b (Hebung)
+    xd = x2 + 110
+    s.arrow(xd, ym - 0.5 * (ym - y2) , xd, ym, GRAU, 1.0, head=7)
+    s.arrow(xd, ym - 0.5 * (ym - y2), xd, y2, GRAU, 1.0, head=7)
+    s.sym(xd + 10, ym + 22, 'dw', 'b', 17, anchor='start')
+    s.text(xd + 48, ym + 22, '&lt; 0', 17, anchor='start', italic=True)
+    s.dim(xl, xl + L, 290, 'dx', ext_from=bot + 4)
+    # Achsen
+    s.arrow(30, 320, 90, 320, BLAU, 2)
+    s.sym(98, 326, 'x', color=BLAU, anchor='start')
+    s.arrow(30, 320, 30, 355, BLAU, 2)
+    s.sym(42, 356, 'z, w', color=BLAU, anchor='start')
+    s.save('verformungsanteile')
+
+
 def bild_drehung():
     """Gedrehter Stab im globalen System."""
     s = Svg(620, 330)
@@ -703,6 +786,7 @@ if __name__ == '__main__':
     bild_stabendgroessen()
     bild_schnittgroessen()
     bild_kinematik()
+    bild_verformungsanteile()
     bild_drehung()
     bild_gedrehtes_lager()
     bild_starres_ende()

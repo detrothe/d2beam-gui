@@ -65,7 +65,7 @@ $$L = L_0 - \ell_a - \ell_e ,$$
 dessen Enden wir mit $a$ und $e$ bezeichnen. $L_0$ ist der Abstand der beiden Knoten. Am Übergang vom starren
 Ende zum elastischen Stab können **Gelenke** angeordnet werden (Momenten-, Querkraft- oder Normalkraftgelenk).
 
-![Bild 1: Stabelement mit starren Enden und Gelenken](bilder/stab_uebersicht){width=95%}
+![Bild 1.1: Stabelement mit starren Enden und Gelenken](bilder/stab_uebersicht){width=95%}
 
 Ohne starre Enden ($\ell_a = \ell_e = 0$) fallen $K_a$ mit $a$ und $K_e$ mit $e$ zusammen. Die Herleitungen in
 Kapitel 3 und 4 beziehen sich immer auf den elastischen Stab von $a$ nach $e$. Die starren Enden und Gelenke
@@ -78,7 +78,7 @@ kommen erst in Kapitel 5 über die Transformation hinzu.
 Das **globale** Koordinatensystem hat die $x$-Achse nach rechts und die $z$-Achse nach unten. Jeder Stab hat
 ein **lokales** Koordinatensystem $x_L$, $z_L$: $x_L$ zeigt vom Stabanfang zum Stabende, $z_L$ ist dazu um
 $90°$ im Uhrzeigersinn gedreht. Der Winkel $\alpha$ zwischen $x$ und $x_L$ ist positiv im Uhrzeigersinn
-(Bild 5).
+(Bild 5.1).
 
 Drehungen $\varphi$ und Momente in Konvention II (siehe unten) sind bei dieser Achsenlage **positiv entgegen dem
 Uhrzeigersinn**.
@@ -90,7 +90,7 @@ positiven Schnittufer (Normale in Richtung $+x_L$) zeigen positive Schnittgröß
 Koordinatenrichtungen, am negativen Schnittufer entgegengesetzt. Ein positives Moment erzeugt Zug an der
 gestrichelten Faser (Unterseite, $+z_L$).
 
-![Bild 2: Positive Schnittgrößen am infinitesimalen Element (Konvention I)](bilder/schnittgroessen){width=75%}
+![Bild 2.1: Positive Schnittgrößen am infinitesimalen Element (Konvention I)](bilder/schnittgroessen){width=75%}
 
 Mit dieser Konvention werden die Zustandslinien gezeichnet und die Schnittgrößen ausgegeben.
 
@@ -100,7 +100,7 @@ Für das Weggrößenverfahren ist eine andere Regel bequemer: An **beiden** Stab
 Verschiebungen positiv in Richtung der lokalen Achsen, Momente und Drehungen positiv entgegen dem
 Uhrzeigersinn.
 
-![Bild 3: Positive Stabendgrößen und Stabendverformungen am elastischen Stab (Konvention II)](bilder/stabendgroessen){width=95%}
+![Bild 2.2: Positive Stabendgrößen und Stabendverformungen am elastischen Stab (Konvention II)](bilder/stabendgroessen){width=95%}
 
 Die Stabendgrößen und Stabendverformungen fassen wir zu Vektoren zusammen:
 
@@ -139,7 +139,7 @@ In der Ausgabe von d2beam steht die Querschnittsdrehung $\beta$.
 
 ## Gleichgewicht
 
-Am infinitesimalen Element (Bild 2) mit der Querlast $q(x)$ in $z$-Richtung und der Längslast $n(x)$ in
+Am infinitesimalen Element (Bild 2.1) mit der Querlast $q(x)$ in $z$-Richtung und der Längslast $n(x)$ in
 $x$-Richtung gilt
 
 $$
@@ -148,14 +148,31 @@ $$
 
 ## Kinematik
 
-![Bild 4: Kinematik des Timoshenko-Balkens](bilder/kinematik){width=65%}
+![Bild 3.1: Kinematik des Timoshenko-Balkens](bilder/kinematik){width=65%}
 
 Ein Querschnitt verschiebt sich um $u$ in Stabrichtung und um $w$ quer dazu und dreht sich um $\beta$. Beim
 Bernoulli-Balken bleibt der Querschnitt senkrecht zur verformten Achse, d. h. $\beta = w'$. Beim
-Timoshenko-Balken unterscheiden sich beide Winkel um die mittlere Gleitung $\gamma_m$ (Bild 4):
+Timoshenko-Balken unterscheiden sich beide Winkel um die mittlere Gleitung $\gamma_m$ (Bild 3.1).
+
+Dazu zerlegen wir die Verschiebung $w$ in $z$-Richtung in einen Biegeanteil $w_b$ und einen Schubanteil $w_v$
+(Bild 3.2):
 
 $$
-\frac{dw}{dx} = \beta + \gamma_m .
+w(x) = w_b(x) + w_v(x) .
+$$
+
+![Bild 3.2: Schubverformung (links) und Biegeverformung (rechts) am Element $dx$, stark überhöht](bilder/verformungsanteile){width=95%}
+
+- **Schub:** Die Querkraft $V$ verzerrt das Element zum Parallelogramm. Die Querschnitte bleiben dabei
+  senkrecht, sie drehen sich nicht. Das rechte Ufer verschiebt sich gegenüber dem linken um
+  $dw_v = \gamma_m\,dx$, also ist $dw_v/dx = \gamma_m$.
+- **Biegung:** Der Querschnitt dreht sich um $\beta$ und bleibt senkrecht zur Biegelinie $w_b$, also ist
+  $dw_b/dx = \beta$.
+
+Ableiten von $w$ nach $x$ ergibt
+
+$$
+\frac{dw}{dx} = \frac{dw_b}{dx} + \frac{dw_v}{dx} = \beta + \gamma_m .
 $$
 
 ## Werkstoffgesetz
@@ -167,6 +184,10 @@ $$
 \frac{d\beta}{dx} = -\frac{M}{EI_y} - \kappa_T, \qquad
 \gamma_m = \frac{V}{G A_s} .
 $$
+
+Zum Minuszeichen in der mittleren Gleichung: Bei einem positiven Moment $M$ (Zug unten) dreht sich das rechte
+Ufer des Elements gegenüber dem linken entgegen dem Uhrzeigersinn, das Stabende hebt sich (Bild 3.2, rechts).
+Die Änderung $d\beta$ der Querschnittsdrehung ist also negativ, deshalb wird ein Minuszeichen eingeführt.
 
 Dabei ist
 
@@ -202,9 +223,11 @@ w(x) &= -\frac{1}{E I_y}\left( C_1 \frac{x^3}{6} + C_2 \frac{x^2}{2} \right) + C
 \end{aligned}
 $$
 
-Der letzte Summand in $w(x)$ ist der Anteil aus der Schubverformung $\int \gamma_m\,dx$.
+Der letzte Summand in $w(x)$ ist der Anteil aus der Schubverformung $w_v = \int \gamma_m\,dx$.
 
 # Elementsteifigkeitsmatrix
+
+Die Steifigkeitsmatrix des Timoshenko-Balkens ist z. B. auch bei Knothe/Wessels [5] hergeleitet.
 
 ## Biegeanteil
 
@@ -315,7 +338,7 @@ brauchen wir sie für die Knotenfreiheitsgrade. Dazu sind bis zu vier Schritte n
 
 ## Drehung um den Stabwinkel $\alpha$
 
-![Bild 5: Gedrehter Stab im globalen Koordinatensystem](bilder/drehung){width=80%}
+![Bild 5.1: Gedrehter Stab im globalen Koordinatensystem](bilder/drehung){width=80%}
 
 Eine Kraft mit den globalen Komponenten $F_x$, $F_z$ hat in Stabrichtung und quer dazu die Komponenten
 
@@ -340,14 +363,14 @@ Transformation in Abschnitt 5.5 allgemein her.
 
 ## Gedrehte Lager
 
-![Bild 6: Knotensystem eines gedrehten Lagers](bilder/gedrehtes_lager){width=60%}
+![Bild 5.2: Knotensystem eines gedrehten Lagers](bilder/gedrehtes_lager){width=60%}
 
 An einem Knoten mit gedrehtem Lager beziehen sich die Knotenfreiheitsgrade $U'$, $W'$ und die Lagerkräfte auf
 ein Knotensystem $x'$, $z'$, das um den Winkel $\vartheta$ **entgegen** dem Uhrzeigersinn gegen das globale
 System gedreht ist (in der App heißt dieser Winkel $\varphi$; hier nennen wir ihn $\vartheta$, um ihn vom
 Drehfreiheitsgrad zu unterscheiden). Das gilt für **alle** Stäbe, die an diesem Knoten angeschlossen sind.
 
-Vom Knotensystem zum lokalen Stabsystem ist dann um den Winkel $\alpha + \vartheta$ zu drehen (Bild 6):
+Vom Knotensystem zum lokalen Stabsystem ist dann um den Winkel $\alpha + \vartheta$ zu drehen (Bild 5.2):
 
 $$
 \mathbf{T}_a = \mathbf{T}(\alpha + \vartheta_a), \qquad \mathbf{T}_e = \mathbf{T}(\alpha + \vartheta_e),
@@ -371,11 +394,11 @@ $$
 
 ## Starre Enden
 
-![Bild 7: Kinematik des starren Endes am Stabanfang](bilder/starres_ende){width=70%}
+![Bild 5.3: Kinematik des starren Endes am Stabanfang](bilder/starres_ende){width=70%}
 
 Das starre Ende ist ein Stück Stab ohne Verformung. Der Punkt $a$ macht deshalb die Starrkörperbewegung des
 Knotens mit. Dreht sich der Knoten um $\varphi_K$ (entgegen dem Uhrzeigersinn), hebt sich der Punkt $a$ im
-Abstand $\ell_a$ um $\ell_a\,\varphi_K$, also entgegen der positiven $w$-Richtung (Bild 7):
+Abstand $\ell_a$ um $\ell_a\,\varphi_K$, also entgegen der positiven $w$-Richtung (Bild 5.3):
 
 $$
 u_a = u_K, \qquad w_a = w_K - \ell_a\,\varphi_K, \qquad \varphi_a = \varphi_K .
@@ -405,7 +428,7 @@ die Richtung des Stabes.
 
 ## Gelenke
 
-![Bild 8: Momentengelenk am Übergang vom starren Ende zum elastischen Stab](bilder/gelenk_starr){width=80%}
+![Bild 5.4: Momentengelenk am Übergang vom starren Ende zum elastischen Stab](bilder/gelenk_starr){width=80%}
 
 Ein Gelenk entkoppelt eine Stabendverformung von der Knotenbewegung. In d2beam erhält jede gelenkige
 Stabendverformung einen **zusätzlichen Freiheitsgrad** $\Delta_{G}$, der nur zu diesem Stab gehört. Er wird
@@ -432,26 +455,30 @@ $\mathbf{G}$ hat $6$ Zeilen und $6 + n_G$ Spalten. Zeile $i$ ist der Einheitsvek
 Stabendverformung $i$ kein Gelenk hat, sonst der Einheitsvektor auf den zugehörigen Gelenkfreiheitsgrad.
 
 **Wo sitzt das Gelenk?** Weil $\mathbf{G}$ links von $\mathbf{S}$ steht, sitzt das Gelenk **zwischen starrem
-Ende und elastischem Stab**, also im Punkt $a$ bzw. $e$, nicht im Knoten (Bild 8). Bei einem Momentengelenk am
+Ende und elastischem Stab**, also im Punkt $a$ bzw. $e$, nicht im Knoten (Bild 5.4). Bei einem Momentengelenk am
 Stabanfang bleibt deshalb in der Zeile für $w_a$ der Term $-\ell_a$ stehen: Das starre Ende dreht sich mit dem
 Knoten ($\varphi_K$), nur der elastische Stab hat seine eigene Drehung $\varphi_a = \Delta_G$. Das entspricht
 der baupraktischen Vorstellung eines biegesteifen Anschlussbereichs mit einem Gelenk an dessen Rand.
 
-**Beispiel:** Waagerechter Stab ($\alpha = 0$, kein gedrehtes Lager) mit starrem Ende $\ell_a$ und
+**Beispiel:** Stab mit dem Winkel $\alpha$ (keine gedrehten Lager, $\vartheta = 0$) mit starrem Ende $\ell_a$ und
 Momentengelenk am Stabanfang. Der Vektor der Freiheitsgrade ist
 $[U_a, W_a, \Phi_a, U_e, W_e, \Phi_e, \Delta_G]^T$, und
 
 $$
 \mathbf{T}_U =
 \begin{bmatrix}
-1 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 1 & -\ell_a & 0 & 0 & 0 & 0 \\
+\cos\alpha & \sin\alpha & 0 & 0 & 0 & 0 & 0 \\
+-\sin\alpha & \cos\alpha & -\ell_a & 0 & 0 & 0 & 0 \\
 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
-0 & 0 & 0 & 1 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & \cos\alpha & \sin\alpha & 0 & 0 \\
+0 & 0 & 0 & -\sin\alpha & \cos\alpha & 0 & 0 \\
 0 & 0 & 0 & 0 & 0 & 1 & 0
 \end{bmatrix} .
 $$
+
+Die Zeilen 1, 2 und 4 bis 6 sind die Zeilen von $\mathbf{S}_a\mathbf{T}_a$ bzw. $\mathbf{T}_e$. Die dritte Zeile
+($\varphi_a$) ist durch den Einheitsvektor auf $\Delta_G$ ersetzt. Für $\alpha = 0$ wird $\cos\alpha = 1$
+und $\sin\alpha = 0$.
 
 Im Programm heißt diese Matrix `transU` (aufgebaut in `initialisiereElementdaten`).
 
@@ -501,12 +528,12 @@ und transformiert die sechs Knotenanteile dann in die lokalen Stabendgrößen am
 $\mathbf{F} = \mathbf{T}_U^T\mathbf{f}$ lässt sich dafür nicht einfach umkehren. Stattdessen nutzen wir das
 Gleichgewicht am starren Ende.
 
-![Bild 9: Links das starre Ende, rechts der Anfang des elastischen Stabes, jeweils mit den Kräften in lokalen Richtungen (Konvention II)](bilder/kraefte_starr){width=100%}
+![Bild 5.5: Links das starre Ende, rechts der Anfang des elastischen Stabes, jeweils mit den Kräften in lokalen Richtungen (Konvention II)](bilder/kraefte_starr){width=100%}
 
 Zuerst werden die Knotenkräfte mit der orthogonalen Matrix $\mathbf{T}_a$ in die lokale Richtung gedreht. Am
-starren Ende (Bild 9, links) greifen am Knoten die Kräfte $F_K$, $V_K$, $M_K$ an. Im Punkt $a$ ist das starre
+starren Ende (Bild 5.5, links) greifen am Knoten die Kräfte $F_K$, $V_K$, $M_K$ an. Im Punkt $a$ ist das starre
 Ende mit dem elastischen Stab verbunden. Auf den elastischen Stab wirken dort seine Stabendgrößen $F_a$,
-$V_a$, $M_a$ in Konvention II (Bild 9, rechts), auf das starre Ende nach dem Prinzip actio = reactio dieselben
+$V_a$, $M_a$ in Konvention II (Bild 5.5, rechts), auf das starre Ende nach dem Prinzip actio = reactio dieselben
 Kräfte mit umgekehrter Richtung. Kräftegleichgewicht und Momentengleichgewicht um den Punkt $a$
 liefern
 
@@ -555,6 +582,16 @@ Gleichungsnummer. Für jedes Gelenk wird eine weitere Gleichungsnummer vergeben.
 Stabes enthält für seine $6 + n_G$ Freiheitsgrade die Gleichungsnummern im Gesamtsystem (bzw. $-1$ für
 gehaltene Freiheitsgrade).
 
+Die Gleichungsnummern werden zuerst für alle Knoten vergeben (Knoten für Knoten, je $U$, $W$, $\Phi$). Die
+zusätzlichen Freiheitsgrade der Gelenke werden erst danach beim Aufbau der Stäbe **am Ende angehängt**. In der
+Gesamtsteifigkeitsmatrix stehen sie deshalb in den letzten Zeilen und Spalten. Ihre Kopplungen zu den
+Knotenfreiheitsgraden des Stabes liegen dadurch zum Teil weit von der Hauptdiagonalen entfernt, die Matrix hat
+also keine kleine Bandbreite mehr. Das spielt in d2beam keine Rolle: Das Gleichungssystem wird immer mit der
+vollständigen Matrix mit dem Cholesky-Verfahren gelöst. Für Systeme in der Größe, für die die App gedacht ist,
+ist das weder ein Zeit- noch ein Speicherproblem. Ein Programm, das nur das Band oder das Profil der Matrix
+speichert, müsste die Gleichungen dagegen umnummerieren, damit die Gelenkfreiheitsgrade neben den
+Freiheitsgraden ihres Knotens liegen.
+
 ## Ablauf
 
 1. Daten einlesen (Knoten, Stäbe, Lager, Lasten).
@@ -568,6 +605,14 @@ gehaltene Freiheitsgrade).
 7. Lagerkräfte aus dem Knotengleichgewicht: $\mathbf{A}_j = -\sum \mathbf{F} + \sum \mathbf{P}_j$
    (im Knotensystem, bei gedrehten Lagern also in $x'$, $z'$).
 8. Schnittgrößen und Verformungen entlang der Stabachse (Kapitel 9).
+
+## Matrizen in der App ansehen
+
+Im Tab **Pro** kann man sich mit „Gleichungssystem darstellen“ die Elementmatrizen und die
+Gesamtsteifigkeitsbeziehung $\mathbf{K}_g\,\boldsymbol{\Delta}_g = \mathbf{R}_g$ anzeigen lassen und ausdrucken.
+Damit nicht für alle Lastfälle und Kombinationen alle Matrizen gespeichert werden müssen, wird nur der
+**letzte Rechengang** angezeigt. Zum Nachvollziehen von Hand rechnet man deshalb am besten nur einen Lastfall
+oder eine Kombination. Dort sieht man auch die Gelenkfreiheitsgrade am Ende der Gesamtsteifigkeitsmatrix.
 
 # Elementlasten
 
@@ -594,7 +639,7 @@ Elementlasten.
 
 ## Lastarten der Streckenlast
 
-![Bild 10: Die fünf Arten der Trapezstreckenlast](bilder/lastarten){width=100%}
+![Bild 7.1: Die fünf Arten der Trapezstreckenlast](bilder/lastarten){width=100%}
 
 Bei den Projektionslasten (Art 2 und 4) ist die Last wie üblich über bzw. neben dem Stab auf der
 Projektionslänge dargestellt. In der App werden diese Lasten aus Platzgründen in Stabmitte gezeichnet.
@@ -692,7 +737,7 @@ Weil keine Querkraft entsteht, hat die Schubverformung keinen Einfluss. Die Part
 
 ## Einzellast und Einzelmoment im Feld
 
-![Bild 11: Einzellast und Einzelmoment am beidseitig eingespannten Stab](bilder/einzellast){width=70%}
+![Bild 7.2: Einzellast und Einzelmoment am beidseitig eingespannten Stab](bilder/einzellast){width=70%}
 
 Eine Einzellast $P$ in Richtung $z_L$ und ein Einzelmoment $M$ (positiv entgegen dem Uhrzeigersinn) greifen an
 der Stelle $x_P$ an. Die Lösung setzt sich aus zwei Bereichen zusammen, die bei $x_P$ stetig ($w$, $\beta$)
@@ -833,7 +878,7 @@ Theorie I. Ordnung ohne Bettung **exakt**.
 
 ## Starre Enden
 
-![Bild 12: Momentenlinie über starre Enden und elastischen Stab](bilder/starr_momente){width=80%}
+![Bild 9.1: Momentenlinie über starre Enden und elastischen Stab](bilder/starr_momente){width=80%}
 
 Auf den starren Enden wirken keine Lasten. Normal- und Querkraft sind dort konstant und gleich den Werten am
 Rand des elastischen Bereichs, das Moment verläuft linear (`sg_starre_enden` in `grafik.ts`):
@@ -848,7 +893,7 @@ Die Verformungen der starren Enden sind Starrkörperbewegungen der Knoten.
 
 ## Differentialgleichung
 
-![Bild 13: Stab auf elastischer Bettung](bilder/bettung){width=70%}
+![Bild 10.1: Stab auf elastischer Bettung](bilder/bettung){width=70%}
 
 Bei der Bettung nach Winkler ist die Bettungspressung proportional zur Durchbiegung. Je Meter Stablänge
 wirkt die Rückstellkraft $-k_0\,w$, wobei $k_0$ in kN/m² der Bettungsmodul mal der Breite des Stabes ist
@@ -974,7 +1019,8 @@ Die Längsverschiebungen kommen in $\mathbf{k}_\sigma$ nicht vor. Schubstarr ($\
 Matrix $\frac{1}{30L}\left[\begin{smallmatrix} 36 & -3L & -36 & -3L \\ & 4L^2 & 3L & -L^2 \\ & & 36 & 3L \\ & & & 4L^2 \end{smallmatrix}\right]$.
 Bei Druck ist $N < 0$, die Steifigkeit nimmt also ab. Im Programm: Matrix `ksig` in
 `berechneLokaleElementsteifigkeitmatrix`, $\mathbf{k}_{II}$ als `estmL2` in
-`berechneElementsteifigkeitsmatrix`.
+`berechneElementsteifigkeitsmatrix`. Die geometrische Steifigkeitsmatrix des Timoshenko-Balkens findet sich
+auch bei Knothe/Wessels [5].
 
 **P-Δ-Option:** Mit der Option „P-Δ“ verwendet d2beam statt dessen nur
 
@@ -1026,7 +1072,7 @@ Iterationen stellst du in den Voreinstellungen ein; das Protokoll zeigt beide We
 
 ## Ersatzimperfektionen
 
-![Bild 14: Ersatzimperfektionen](bilder/imperfektionen){width=95%}
+![Bild 11.1: Ersatzimperfektionen](bilder/imperfektionen){width=95%}
 
 **Schiefstellung aus der Eigenform.** Nach Schritt 0 berechnet d2beam die erste Knickeigenform
 (Kapitel 12) und skaliert sie so, dass ihr größter Wert – oder der Wert an einem gewählten Knoten und in einer
@@ -1042,7 +1088,7 @@ w_0(x) = w_{0a} + (w_{0e} - w_{0a})\,\xi + 4\,w_{0m}\,\xi\,(1 - \xi), \qquad \xi
 $$
 
 $w_{0a}$ und $w_{0e}$ sind die Vorverformungen an den Stabenden, $w_{0m}$ der Stich der Parabel gegenüber der
-Sehne in Stabmitte (Bild 14, rechts).
+Sehne in Stabmitte (Bild 11.1, rechts).
 
 Bei der Elementteilung erhält jedes Teilelement die Werte $w_0$ an seinen Enden und den Stich gegenüber
 seiner Sehne (`vorverformung_teil` in `cad_netz.ts`).
@@ -1069,10 +1115,10 @@ wie Elementlasten mit $\mathbf{T}_U^T$ transformiert und gehen ab Schritt 1 in d
 
 ## Schnittgrößen nach Theorie II. Ordnung
 
-![Bild 15: Schnittgrößen am verformten Stab](bilder/th2_schnitt){width=70%}
+![Bild 11.2: Schnittgrößen am verformten Stab](bilder/th2_schnitt){width=70%}
 
 Für die Zustandslinien wird das Gleichgewicht am verformten Stababschnitt von $0$ bis $x$ gebildet. Mit
-den Kraftrichtungen der unverformten Achse (Bild 15) kommt zum Moment nach Abschnitt 9.1 der Anteil der
+den Kraftrichtungen der unverformten Achse (Bild 11.2) kommt zum Moment nach Abschnitt 9.1 der Anteil der
 Normalkraft hinzu:
 
 $$
@@ -1151,7 +1197,7 @@ Gelenken), $\mathbf{M}$ die Massenmatrix. d2beam rechnet mit den Einheiten kN, m
 $f_j$, die Perioden $T_j$ und die Eigenformen $\boldsymbol{\phi}_j$ (Programm: `dyn_eigenwert` in
 `rechnen.ts`). Für die Lösung stehen dieselben drei Verfahren zur Wahl wie bei den Knickeigenwerten.
 
-![Bild 16: Die ersten drei Eigenformen des Einfeldträgers](bilder/eigenformen){width=80%}
+![Bild 13.1: Die ersten drei Eigenformen des Einfeldträgers](bilder/eigenformen){width=80%}
 
 ## Elementmassenmatrix
 
@@ -1187,7 +1233,8 @@ $$
 
 Schubstarr ($\psi = 1$) ist das die bekannte Matrix $\frac{\mu L}{420}\left[\begin{smallmatrix} 156 & -22L & 54 & 13L \\ & 4L^2 & -13L & -3L^2 \\ & & 156 & 22L \\ & & & 4L^2 \end{smallmatrix}\right]$
 (mit $\varphi = -w'$). Die Formeln wurden mit SymPy aus den Ansatzfunktionen nachgerechnet
-(`bettung_ksig_masse.py`). Im Programm: `berechneLokaleElementmassenmatrix`.
+(`bettung_ksig_masse.py`). Im Programm: `berechneLokaleElementmassenmatrix`. Die Massenmatrizen des
+Timoshenko-Balkens stehen auch bei Knothe/Wessels [5].
 
 **Drehträgheit (Option).** Wahlweise berücksichtigt d2beam auch die Massenträgheit der Querschnitte bei
 ihrer Drehung (Tab Dynamik, „Drehträgheit der Querschnitte“). Mit $J = \rho\,I_y = \gamma\,I_y/g$ kommt hinzu
@@ -1337,10 +1384,10 @@ bricht mit einer Meldung ab.
 
 ## Beispiel
 
-![Bild 17: Fachwerk mit zwei Diagonalen „nur Zug“ unter Horizontallast](bilder/nur_zug){width=65%}
+![Bild 14.1: Fachwerk mit zwei Diagonalen „nur Zug“ unter Horizontallast](bilder/nur_zug){width=65%}
 
 Ein quadratisches Fachwerkfeld (4 m × 4 m) mit zwei gekreuzten Diagonalen „nur Zug“ wird oben links durch
-$H = 100$ kN belastet (Bild 17, App-Test `t11`). Linear gerechnet würden sich beide Diagonalen die Last teilen,
+$H = 100$ kN belastet (Bild 14.1, App-Test `t11`). Linear gerechnet würden sich beide Diagonalen die Last teilen,
 eine davon mit Druck. Nichtlinear fällt die gedrückte Diagonale aus, und es ergibt sich das statisch bestimmte
 Fachwerk mit
 
@@ -1357,7 +1404,9 @@ zu einer Grenzkraft, danach konstante Kraft). Über die grafische Eingabe sind s
 
 # Anhang A: Nachrechnung mit SymPy {-}
 
-Im Ordner `doku/theorie/sympy` liegen die Skripte, mit denen die Formeln dieses Teils nachgerechnet wurden:
+Die Formeln dieses Handbuchs wurden mit Python-Skripten und dem Computeralgebra-Paket SymPy nachgerechnet. Die
+Skripte liegen im Quellcode von d2beam auf GitHub im Ordner `doku/theorie/sympy`:
+<https://github.com/detrothe/d2beam-gui/tree/main/doku/theorie/sympy>
 
 - `k_timoshenko.py`: Lösung der Differentialgleichung, Steifigkeitsmatrix, Vergleich mit dem Programmcode,
   Ansatzfunktionen.
@@ -1384,3 +1433,6 @@ Aufruf jeweils mit `python3 <skript>.py` (benötigt das Paket `sympy`).
 2. Kindmann, R.: Stahlbau, Teil 2: Stabilität und Theorie II. Ordnung. Ernst & Sohn.
 3. Przemieniecki, J. S.: Theory of Matrix Structural Analysis. McGraw-Hill, 1968 (Dover 1985).
 4. Rothe, D.: Allgemeines Weggrößenverfahren. Vorlesungsunterlagen, Stand 5.2.2020.
+5. Knothe, K.; Wessels, H.: Finite Elemente – Eine Einführung für Ingenieure. 5. Auflage, Springer Vieweg,
+   2017. Enthält die Steifigkeitsmatrizen des Timoshenko-Balkens einschließlich Theorie II. Ordnung sowie die
+   Massenmatrizen.
