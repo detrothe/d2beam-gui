@@ -875,6 +875,29 @@
 							class="icon">
 						wählst und einen vorhandenen Knoten anklickst.
 					</li>
+					<li>Frage: Kann ich mir die Schubverformung allein ansehen, ohne den Anteil aus Biegung?
+						<br>
+						Antwort: Ja, mit einem kleinen Trick. Die Durchbiegung setzt sich aus einem Biegeanteil
+						(proportional zu 1/EI<sub>y</sub>) und einem Schubanteil (proportional zu 1/(G&middot;A<sub>s</sub>))
+						zusammen, siehe
+						<a href="Theorie_Timoshenko_deutsch.html#kinematik" target="_blank">Theorie-Handbuch, Abschnitt 3.2</a>.
+						Multipliziere im Querschnittsdialog das Trägheitsmoment I<sub>y</sub> mit 1000
+						(Definition <i>Querschnittswerte</i>, dann kann I<sub>y</sub> direkt eingegeben werden;
+						die Querschnittshöhe für die Grafik bleibt unverändert). Der Biegeanteil schrumpft
+						dadurch auf ein Tausendstel, der Schubanteil bleibt gleich. Die angezeigte Verformung
+						ist dann praktisch nur noch die Schubverformung.
+						<br>
+						Den Schubfaktor stattdessen sehr klein zu machen ist weniger geeignet: Wie klein er sein
+						muss, hängt von der Stablänge und den Einheiten ab
+						(beim Einfeldträger unter Gleichlast ist w<sub>b</sub>/w<sub>v</sub> = 5/48&middot;G&middot;A<sub>s</sub>&middot;L<sup>2</sup>/(E&middot;I<sub>y</sub>)).
+						<br>
+						Wichtig: Das gilt exakt nur für <b>statisch bestimmte</b> Systeme (Einfeldträger, Kragarm),
+						bei denen die Schnittgrößen nicht von den Steifigkeiten abhängen. Bei statisch
+						unbestimmten Systemen (Durchlaufträger, Einspannungen, Rahmen) lagern sich die
+						Schnittgrößen um, wenn man das Verhältnis von Biege- zu Schubsteifigkeit ändert. Man sieht
+						dann die Verformung eines anderen, schubweichen Systems, also nur qualitativ,
+						wie sich Schubverformungen äußern.
+					</li>
 				</ul>
 			</p>
 			<p>
