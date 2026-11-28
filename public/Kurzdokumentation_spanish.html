@@ -69,6 +69,10 @@
 			max-width: 100%;
 			height: auto;
 		}
+		.frage {
+			font-weight: bold;
+			color: #1c1c6a;
+		}
 	</style>
 </head>
 
@@ -726,13 +730,13 @@
 	<p>
 	<ul>
 		<li>
-			Pregunta: He introducido algunos nodos de más que ahora ya no
-			necesito. ¿Tengo que borrarlos?
+			<span class="frage">Pregunta: He introducido algunos nodos de más que ahora ya no
+			necesito. ¿Tengo que borrarlos?</span>
 			<br>
 			Respuesta: No. Los nodos que no tienen elementos «colgados»
 			se ignoran.
 		</li>
-		<li>Pregunta: ¿Qué es el ID de nodo?
+		<li><span class="frage">Pregunta: ¿Qué es el ID de nodo?</span>
 			<br>
 			Respuesta: Cada nodo tiene un número interno propio (ID de nodo) que
 			se genera automáticamente al crear el nodo.
@@ -746,7 +750,29 @@
 				class="icon">
 			y haces clic en un nodo existente.
 		</li>
-	</ul>
+		<li><span class="frage">Pregunta: ¿Puedo ver la deformación por cortante sola, sin la parte de flexión?</span>
+						<br>
+						Respuesta: Sí, con un pequeño truco. La flecha se compone de una parte de flexión
+						(proporcional a 1/EI<sub>y</sub>) y una parte de cortante (proporcional a 1/(G&middot;A<sub>s</sub>)),
+						véase el <a href="https://d2beam-gui.statikverstehen.de/Theorie_Timoshenko_deutsch.html#kinematik" target="_blank">manual de teoría, apartado 3.2</a> (en alemán).
+						En el cuadro de diálogo de la sección, multiplica el momento de inercia I<sub>y</sub> por 1000
+						(definición <i>Valores transversales</i>, así se puede introducir I<sub>y</sub> directamente;
+						la altura de la sección para el gráfico no cambia). La parte de flexión se reduce
+						a una milésima, la parte de cortante se mantiene. La deformación mostrada es entonces
+						prácticamente solo la deformación por cortante.
+						<br>
+						Hacer muy pequeño el coeficiente de forma es menos adecuado: lo pequeño que debe ser
+						depende de la longitud de la barra y de las unidades
+						(en una viga simplemente apoyada con carga uniforme, w<sub>b</sub>/w<sub>v</sub> = 5/48&middot;G&middot;A<sub>s</sub>&middot;L<sup>2</sup>/(E&middot;I<sub>y</sub>)).
+						<br>
+						Importante: esto solo es exacto en sistemas <b>isostáticos</b> (viga simplemente apoyada,
+						voladizo), en los que los esfuerzos no dependen de las rigideces. En sistemas
+						hiperestáticos (vigas continuas, empotramientos, pórticos) los esfuerzos se redistribuyen
+						al cambiar la relación entre rigidez a flexión y a cortante. Se ve entonces la deformación
+						de otro sistema, flexible a cortante, es decir, solo de forma cualitativa cómo se
+						manifiestan las deformaciones por cortante.
+					</li>
+				</ul>
 	</p>
 	<p>
 		<br>

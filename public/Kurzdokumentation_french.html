@@ -69,6 +69,10 @@
 			max-width: 100%;
 			height: auto;
 		}
+		.frage {
+			font-weight: bold;
+			color: #1c1c6a;
+		}
 	</style>
 	</head>
 	<body>
@@ -746,12 +750,12 @@
 			<p>
 				<ul>
 					<li>
-						Question : j'ai saisi quelques nœuds de trop dont je n'ai plus besoin.
-						Dois-je les supprimer ?
+						<span class="frage">Question : j'ai saisi quelques nœuds de trop dont je n'ai plus besoin.
+						Dois-je les supprimer ?</span>
 						<br>
 						Réponse : non. Les nœuds auxquels aucun élément n'est relié sont ignorés.
 					</li>
-					<li>Question : qu'est-ce que l'ID du nœud ?
+					<li><span class="frage">Question : qu'est-ce que l'ID du nœud ?</span>
 						<br>
 						Réponse : chaque nœud possède un numéro interne propre (ID du nœud), qui
 						est créé automatiquement lors de la création du nœud.
@@ -765,6 +769,28 @@
 							title="bouton modifier le nœud"
 							class="icon">
 						et cliques sur un nœud existant.
+					</li>
+					<li><span class="frage">Question : puis-je voir la déformation due à l'effort tranchant seule, sans la part de flexion ?</span>
+						<br>
+						Réponse : oui, avec une petite astuce. La flèche se compose d'une part de flexion
+						(proportionnelle à 1/EI<sub>y</sub>) et d'une part d'effort tranchant (proportionnelle à 1/(G&middot;A<sub>s</sub>)),
+						voir le <a href="https://d2beam-gui.statikverstehen.de/Theorie_Timoshenko_deutsch.html#kinematik" target="_blank">manuel théorique, section 3.2</a> (en allemand).
+						Dans la boîte de dialogue de la section, multiplie le moment d'inertie I<sub>y</sub> par 1000
+						(définition <i>Caractéristiques de section</i>, I<sub>y</sub> peut alors être saisi directement ;
+						la hauteur de section pour le graphique reste inchangée). La part de flexion est réduite
+						à un millième, la part d'effort tranchant reste la même. La déformation affichée est alors
+						pratiquement la seule déformation d'effort tranchant.
+						<br>
+						Rendre le coefficient de cisaillement très petit est moins adapté : la valeur nécessaire
+						dépend de la longueur de la barre et des unités
+						(pour une poutre sur deux appuis sous charge uniforme, w<sub>b</sub>/w<sub>v</sub> = 5/48&middot;G&middot;A<sub>s</sub>&middot;L<sup>2</sup>/(E&middot;I<sub>y</sub>)).
+						<br>
+						Important : cela n'est exact que pour les systèmes <b>isostatiques</b> (poutre sur deux
+						appuis, console), dont les efforts internes ne dépendent pas des rigidités. Dans les
+						systèmes hyperstatiques (poutres continues, encastrements, portiques), les efforts se
+						redistribuent lorsqu'on modifie le rapport entre rigidité de flexion et rigidité de
+						cisaillement. On voit alors la déformation d'un autre système, souple à l'effort tranchant,
+						donc seulement qualitativement comment se manifestent les déformations d'effort tranchant.
 					</li>
 				</ul>
 			</p>

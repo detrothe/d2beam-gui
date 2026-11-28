@@ -69,6 +69,10 @@
 			max-width: 100%;
 			height: auto;
 		}
+		.frage {
+			font-weight: bold;
+			color: #1c1c6a;
+		}
 	</style>
 	</head>
 	<body>
@@ -851,13 +855,13 @@
 			<p>
 				<ul>
 					<li>
-						Frage: Ich habe einige Knoten zu viel eingegeben, die ich jetzt
-						nicht mehr brauche. Muss ich sie löschen?
+						<span class="frage">Frage: Ich habe einige Knoten zu viel eingegeben, die ich jetzt
+						nicht mehr brauche. Muss ich sie löschen?</span>
 						<br>
 						Antwort: Nein. Knoten, an denen keine Elemente 'hängen',
 						werden ignoriert.
 					</li>
-					<li>Frage: Was ist die Knoten-ID?
+					<li><span class="frage">Frage: Was ist die Knoten-ID?</span>
 						<br>
 						Antwort: Jeder Knoten hat eine interne eigene Nummer (Knoten-ID), die
 						beim Erstellen des Knotens automatisch
@@ -875,7 +879,7 @@
 							class="icon">
 						wählst und einen vorhandenen Knoten anklickst.
 					</li>
-					<li>Frage: Kann ich mir die Schubverformung allein ansehen, ohne den Anteil aus Biegung?
+					<li><span class="frage">Frage: Kann ich mir die Schubverformung allein ansehen, ohne den Anteil aus Biegung?</span>
 						<br>
 						Antwort: Ja, mit einem kleinen Trick. Die Durchbiegung setzt sich aus einem Biegeanteil
 						(proportional zu 1/EI<sub>y</sub>) und einem Schubanteil (proportional zu 1/(G&middot;A<sub>s</sub>))

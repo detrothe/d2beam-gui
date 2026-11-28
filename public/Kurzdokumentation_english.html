@@ -69,6 +69,10 @@
 			max-width: 100%;
 			height: auto;
 		}
+		.frage {
+			font-weight: bold;
+			color: #1c1c6a;
+		}
 	</style>
 </head>
 
@@ -708,13 +712,13 @@
 	<p>
 	<ul>
 		<li>
-			Question: I have entered a few too many nodes that I no longer need. Do I need to delete them?
+			<span class="frage">Question: I have entered a few too many nodes that I no longer need. Do I need to delete them?</span>
 			<br>
 			Answer: No. Nodes that don't have any elements
 			'attached' to them are ignored.
 		</li>
 		<li>
-			Question: What is the node ID?
+			<span class="frage">Question: What is the node ID?</span>
 			<br>
 			Answer: Each node has its own internal number (node ID), which is
 			automatically generated when the node is created.
@@ -728,7 +732,29 @@
 				class="icon">
 			and click on an existing node.
 		</li>
-	</ul>
+		<li><span class="frage">Question: Can I look at the shear deformation alone, without the bending part?</span>
+						<br>
+						Answer: Yes, with a small trick. The deflection consists of a bending part
+						(proportional to 1/EI<sub>y</sub>) and a shear part (proportional to 1/(G&middot;A<sub>s</sub>)),
+						see the <a href="https://d2beam-gui.statikverstehen.de/Theorie_Timoshenko_deutsch.html#kinematik" target="_blank">theory manual, section 3.2</a> (in German).
+						In the cross-section dialog, multiply the moment of inertia I<sub>y</sub> by 1000
+						(definition <i>cross-sectional values</i>, then I<sub>y</sub> can be entered directly;
+						the cross-section height for the graphics remains unchanged). The bending part shrinks
+						to one thousandth, the shear part stays the same. The displayed deformation is then
+						practically only the shear deformation.
+						<br>
+						Making the shear coefficient very small instead is less suitable: how small it must be
+						depends on the member length and the units
+						(for a simply supported beam under uniform load, w<sub>b</sub>/w<sub>v</sub> = 5/48&middot;G&middot;A<sub>s</sub>&middot;L<sup>2</sup>/(E&middot;I<sub>y</sub>)).
+						<br>
+						Important: this is exact only for <b>statically determinate</b> systems (simply supported
+						beam, cantilever), where the internal forces do not depend on the stiffnesses. In statically
+						indeterminate systems (continuous beams, fixed ends, frames) the internal forces are
+						redistributed when the ratio of bending to shear stiffness is changed. You then see the
+						deformation of a different, shear-flexible system, i.e. only qualitatively how shear
+						deformations show up.
+					</li>
+				</ul>
 	</p>
 	<p>
 		<br>

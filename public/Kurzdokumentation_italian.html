@@ -69,6 +69,10 @@
 			max-width: 100%;
 			height: auto;
 		}
+		.frage {
+			font-weight: bold;
+			color: #1c1c6a;
+		}
 	</style>
 	</head>
 	<body>
@@ -748,12 +752,12 @@
 			<p>
 				<ul>
 					<li>
-						Domanda: ho inserito alcuni nodi di troppo che ora non mi servono più.
-						Devo eliminarli?
+						<span class="frage">Domanda: ho inserito alcuni nodi di troppo che ora non mi servono più.
+						Devo eliminarli?</span>
 						<br>
 						Risposta: no. I nodi a cui non è collegato alcun elemento vengono ignorati.
 					</li>
-					<li>Domanda: che cos'è l'ID del nodo?
+					<li><span class="frage">Domanda: che cos'è l'ID del nodo?</span>
 						<br>
 						Risposta: ogni nodo ha un proprio numero interno (ID del nodo), che viene
 						generato automaticamente alla creazione del nodo.
@@ -767,6 +771,28 @@
 							title="pulsante modifica nodo"
 							class="icon">
 						e clicchi su un nodo esistente.
+					</li>
+					<li><span class="frage">Domanda: posso vedere la sola deformazione a taglio, senza la parte flessionale?</span>
+						<br>
+						Risposta: sì, con un piccolo trucco. L'abbassamento è composto da una parte flessionale
+						(proporzionale a 1/EI<sub>y</sub>) e da una parte a taglio (proporzionale a 1/(G&middot;A<sub>s</sub>)),
+						vedi il <a href="https://d2beam-gui.statikverstehen.de/Theorie_Timoshenko_deutsch.html#kinematik" target="_blank">manuale teorico, sezione 3.2</a> (in tedesco).
+						Nella finestra di dialogo della sezione moltiplica il momento d'inerzia I<sub>y</sub> per 1000
+						(definizione <i>Caratteristiche della sezione</i>, così I<sub>y</sub> si può inserire direttamente;
+						l'altezza della sezione per la grafica resta invariata). La parte flessionale si riduce
+						a un millesimo, la parte a taglio resta uguale. La deformazione visualizzata è allora
+						praticamente solo la deformazione a taglio.
+						<br>
+						Rendere molto piccolo il fattore di taglio è meno adatto: quanto piccolo debba essere
+						dipende dalla lunghezza dell'asta e dalle unità
+						(per una trave appoggiata con carico uniforme, w<sub>b</sub>/w<sub>v</sub> = 5/48&middot;G&middot;A<sub>s</sub>&middot;L<sup>2</sup>/(E&middot;I<sub>y</sub>)).
+						<br>
+						Importante: ciò vale esattamente solo per sistemi <b>isostatici</b> (trave appoggiata,
+						mensola), in cui le sollecitazioni non dipendono dalle rigidezze. Nei sistemi iperstatici
+						(travi continue, incastri, telai) le sollecitazioni si ridistribuiscono quando si cambia il
+						rapporto tra rigidezza flessionale e a taglio. Si vede allora la deformazione di un altro
+						sistema, deformabile a taglio, cioè solo qualitativamente come si manifestano le
+						deformazioni a taglio.
 					</li>
 				</ul>
 			</p>
