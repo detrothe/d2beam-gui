@@ -3,7 +3,6 @@ console.log("Anfang 0 index.ts")
 import { msg } from '@lit/localize';
 import { allLocales } from './generated/locale-codes.js';
 
-// import './components/dr-about';
 
 // import './styles/global.css';
 import './styles/contextMenu.css';
